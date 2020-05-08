@@ -2,174 +2,298 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC16EC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50A9C54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9FA208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC68215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwY3Eyop"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P/mubhP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEHJ7e (ORCPT
+        id S1727108AbgEHJ7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgEHJ7e (ORCPT
+        Fri, 8 May 2020 05:59:43 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58318 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgEHJ7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:59:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F9CC05BD43;
-        Fri,  8 May 2020 02:59:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z1so694278pfn.3;
-        Fri, 08 May 2020 02:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+BJjmZtifOI5jGhDeai3W5Hb7iEmuSquXtaADjE/3w=;
-        b=NwY3EyoprWx6jUqNizab8yi7ZowKUuwaV8YsBMlSLo+nw05xEZDmLC5EYprEaGLviB
-         AZkR5sSDbN7T8b/GCaagOER9sfzBHvYKOh52GxngyzxTyPkq30Tk2M47ANDCkjDpEn2q
-         /UYGlAPjuJLBSu+OqwB77q0l3CL6jEyEADRZiSisukOvD+L5IJTc74kfZpaKZJEqqYLF
-         N7rAurzQXV/rrCMuOnXbKxizWSr1DNy8Iwf5MxiyyjIHYHFUkIAjxeTvZOednCC+t1nu
-         nEpyJw+3u5XzwlTFgIOgGF7gny5VTYidnDa7OgWWUy4x79bTXyOdF3rAmEqBeYqu8CCk
-         UrcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+BJjmZtifOI5jGhDeai3W5Hb7iEmuSquXtaADjE/3w=;
-        b=EDHrhi/OFcQIzSC3KQsvNzSgbii5QizQcHztqqbu6oGvBrsZKI7TQm7qVGQ+XE7gjH
-         gM7oQIPoXgHtBRvAyd9Lfkt81DE+dJpv/+yfrw8EDiK3TfbHd4CvOiDGnTrSO0RJteXR
-         NS71Z0V6BYzyTB2idHAwukBP1v7anqEJ53Ucmaqyad6TPEJYknaf8dG/xXeBTtyC4kKD
-         j5oHc8P14FeT4vqWYUcnESeaAY0+qZFAPj7Ri+hbjyE0C3ELYxV/+EgKN/+6MmGP6qws
-         8LQCt9uOXGuBubixgYivh4dryltAwj+CvYPPVe45KluDvtwn5n0sTOjsEw8f40IRAHdt
-         Og1Q==
-X-Gm-Message-State: AGi0PuZ5mLb+Sw0q4pETHSjj2NPcszq+82v+vpI6TrOvQXYCL2yct3na
-        7+V7JAC4y+uLQkcOst0lnwO2vHu3kbduIqM4Cf8=
-X-Google-Smtp-Source: APiQypKFZTzfECRBxxLzLcaQcOy/X376LZ+Bvw7Lb3Z7Ut10fgtcqR+zmqToo16LQkK9RY8ByuDgO/aCjwkRcJv5sFQ=
-X-Received: by 2002:a62:f908:: with SMTP id o8mr2009157pfh.170.1588931973494;
- Fri, 08 May 2020 02:59:33 -0700 (PDT)
+        Fri, 8 May 2020 05:59:42 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0489xONv112705;
+        Fri, 8 May 2020 04:59:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588931964;
+        bh=1mP5NZoPz79Fbrm2hSfkRM1/h90PP/Hph3S5iklvqt4=;
+        h=From:To:CC:Subject:Date;
+        b=P/mubhP8oH6A01orrIyzG3BobORJNErVYONBVkgZrRyeOrqs1NJfr6HUUs03VtqZC
+         P6jhZs3C0RyGHbYcpYvN48piVMB7t/LFN4L+wnKXH9pJK3TAeeujlQQgGd9VaoxEgS
+         2Qf1vvO/h1AenNouIZ1K/p8rYvOOBWwqsxUFeAvo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0489xOJb089360
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 8 May 2020 04:59:24 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 8 May
+ 2020 04:59:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 8 May 2020 04:59:23 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0489xMcH052428;
+        Fri, 8 May 2020 04:59:23 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Arnd Bergmann <arnd@arndb.de>, <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net v3] net: ethernet: ti: fix build and remove TI_CPTS_MOD workaround
+Date:   Fri, 8 May 2020 12:59:14 +0300
+Message-ID: <20200508095914.20509-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200505013206.11223-1-david.e.box@linux.intel.com> <20200508021844.6911-1-david.e.box@linux.intel.com>
-In-Reply-To: <20200508021844.6911-1-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 8 May 2020 12:59:27 +0300
-Message-ID: <CAHp75VfDzcQeWKHGF9Z=1=j8Tn+BhZJ6mMOrRfuZ1d5J1jsWDw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Intel Platform Monitoring Technology
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 5:18 AM David E. Box <david.e.box@linux.intel.com> wrote:
->
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring capabilities on a device.
-> With customers increasingly asking for hardware telemetry, engineers not
-> only have to figure out how to measure and collect data, but also how to
-> deliver it and make it discoverable. The latter may be through some device
-> specific method requiring device specific tools to collect the data. This
-> in turn requires customers to manage a suite of different tools in order to
-> collect the differing assortment of monitoring data on their systems.  Even
-> when such information can be provided in kernel drivers, they may require
-> constant maintenance to update register mappings as they change with
-> firmware updates and new versions of hardware. PMT provides a solution for
-> discovering and reading telemetry from a device through a hardware agnostic
-> framework that allows for updates to systems without requiring patches to
-> the kernel or software tools.
->
-> PMT defines several capabilities to support collecting monitoring data from
-> hardware. All are discoverable as separate instances of the PCIE Designated
-> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
-> field uniquely identifies the capability. Each DVSEC also provides a BAR
-> offset to a header that defines capability-specific attributes, including
-> GUID, feature type, offset and length, as well as configuration settings
-> where applicable. The GUID uniquely identifies the register space of any
-> monitor data exposed by the capability. The GUID is associated with an XML
-> file from the vendor that describes the mapping of the register space along
-> with properties of the monitor data. This allows vendors to perform
-> firmware updates that can change the mapping (e.g. add new metrics) without
-> requiring any changes to drivers or software tools. The new mapping is
-> confirmed by an updated GUID, read from the hardware, which software uses
-> with a new XML.
->
-> The current capabilities defined by PMT are Telemetry, Watcher, and
-> Crashlog.  The Telemetry capability provides access to a continuous block
-> of read only data. The Watcher capability provides access to hardware
-> sampling and tracing features. Crashlog provides access to device crash
-> dumps.  While there is some relationship between capabilities (Watcher can
-> be configured to sample from the Telemetry data set) each exists as stand
-> alone features with no dependency on any other. The design therefore splits
-> them into individual, capability specific drivers. MFD is used to create
-> platform devices for each capability so that they may be managed by their
-> own driver. The PMT architecture is (for the most part) agnostic to the
-> type of device it can collect from. Devices nodes are consequently generic
-> in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
-> creates a class to manage the list of devices supporting it.  Software can
-> determine which devices support a PMT feature by searching through each
-> device node entry in the sysfs class folder. It can additionally determine
-> if a particular device supports a PMT feature by checking for a PMT class
-> folder in the device folder.
->
-> This patch set provides support for the PMT framework, along with support
-> for Telemetry on Tiger Lake.
->
+From: Clay McClure <clay@daemons.net>
 
-Some nitpicks per individual patches, also you forgot to send the
-series to PDx86 mailing list and its maintainers (only me included).
+My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
+TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
+form:
 
-> Changes from V1:
->
->         - In the telemetry driver, set the device in device_create() to
->           the parent pci device (the monitoring device) for clear
->           association in sysfs. Was set before to the platform device
->           created by the pci parent.
->         - Move telem struct into driver and delete unneeded header file.
->         - Start telem device numbering from 0 instead of 1. 1 was used
->           due to anticipated changes, no longer needed.
->         - Use helper macros suggested by Andy S.
->         - Rename class to pmt_telemetry, spelling out full name
->         - Move monitor device name defines to common header
->         - Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
->
-> David E. Box (3):
->   PCI: Add #defines for Designated Vendor-Specific Capability
->   mfd: Intel Platform Monitoring Technology support
->   platform/x86: Intel PMT Telemetry capability driver
->
->  MAINTAINERS                            |   6 +
->  drivers/mfd/Kconfig                    |  10 +
->  drivers/mfd/Makefile                   |   1 +
->  drivers/mfd/intel_pmt.c                | 170 ++++++++++++
->  drivers/platform/x86/Kconfig           |  10 +
->  drivers/platform/x86/Makefile          |   1 +
->  drivers/platform/x86/intel_pmt_telem.c | 362 +++++++++++++++++++++++++
->  include/linux/intel-dvsec.h            |  48 ++++
->  include/uapi/linux/pci_regs.h          |   5 +
->  9 files changed, 613 insertions(+)
->  create mode 100644 drivers/mfd/intel_pmt.c
->  create mode 100644 drivers/platform/x86/intel_pmt_telem.c
->  create mode 100644 include/linux/intel-dvsec.h
->
-> --
-> 2.20.1
->
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+ ...
 
+That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+functions) _is_ enabled. So we end up compiling calls to functions that
+don't exist, resulting in the linker errors.
 
+This patch fixes build errors and restores previous behavior by:
+ - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+ - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
+ - remove TI_CPTS_MOD and, instead, add dependencies from CPTS in
+   TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV as below:
+
+   config TI_CPSW_SWITCHDEV
+   ...
+    depends on TI_CPTS || !TI_CPTS
+
+   which will ensure proper dependencies PTP_1588_CLOCK -> TI_CPTS ->
+TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV and build type selection.
+
+Note. For NFS boot + CPTS all of above configs have to be built-in.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Clay McClure <clay@daemons.net>
+[grygorii.strashko@ti.com: rewording, add deps cpsw/netcp from cpts]
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm/configs/keystone_defconfig    |  1 +
+ arch/arm/configs/omap2plus_defconfig   |  1 +
+ drivers/net/ethernet/ti/Kconfig        | 16 ++++++----------
+ drivers/net/ethernet/ti/Makefile       |  2 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c |  2 +-
+ drivers/net/ethernet/ti/cpts.h         |  3 +--
+ drivers/net/ethernet/ti/netcp_ethss.c  | 10 +++++-----
+ 7 files changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 11e2211f9007..84a3b055f253 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -147,6 +147,7 @@ CONFIG_I2C_DAVINCI=y
+ CONFIG_SPI=y
+ CONFIG_SPI_DAVINCI=y
+ CONFIG_SPI_SPIDEV=y
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_GPIOLIB=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 395588209b27..c3f749650d5d 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -274,6 +274,7 @@ CONFIG_SPI_TI_QSPI=m
+ CONFIG_HSI=m
+ CONFIG_OMAP_SSI=m
+ CONFIG_SSI_PROTOCOL=m
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_DEBUG_GPIO=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 8e348780efb6..62f809b67469 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -49,6 +49,7 @@ config TI_CPSW_PHY_SEL
+ config TI_CPSW
+ 	tristate "TI CPSW Switch Support"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
++	depends on TI_CPTS || !TI_CPTS
+ 	select TI_DAVINCI_MDIO
+ 	select MFD_SYSCON
+ 	select PAGE_POOL
+@@ -64,6 +65,7 @@ config TI_CPSW_SWITCHDEV
+ 	tristate "TI CPSW Switch Support with switchdev"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+ 	depends on NET_SWITCHDEV
++	depends on TI_CPTS || !TI_CPTS
+ 	select PAGE_POOL
+ 	select TI_DAVINCI_MDIO
+ 	select MFD_SYSCON
+@@ -77,23 +79,16 @@ config TI_CPSW_SWITCHDEV
+ 	  will be called cpsw_new.
+ 
+ config TI_CPTS
+-	bool "TI Common Platform Time Sync (CPTS) Support"
+-	depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV || COMPILE_TEST
++	tristate "TI Common Platform Time Sync (CPTS) Support"
++	depends on ARCH_OMAP2PLUS || ARCH_KEYSTONE || COMPILE_TEST
+ 	depends on COMMON_CLK
+-	depends on POSIX_TIMERS
++	depends on PTP_1588_CLOCK
+ 	---help---
+ 	  This driver supports the Common Platform Time Sync unit of
+ 	  the CPSW Ethernet Switch and Keystone 2 1g/10g Switch Subsystem.
+ 	  The unit can time stamp PTP UDP/IPv4 and Layer 2 packets, and the
+ 	  driver offers a PTP Hardware Clock.
+ 
+-config TI_CPTS_MOD
+-	tristate
+-	depends on TI_CPTS
+-	depends on PTP_1588_CLOCK
+-	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+-	default m
+-
+ config TI_K3_AM65_CPSW_NUSS
+ 	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
+ 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+@@ -114,6 +109,7 @@ config TI_KEYSTONE_NETCP
+ 	select TI_DAVINCI_MDIO
+ 	depends on OF
+ 	depends on KEYSTONE_NAVIGATOR_DMA && KEYSTONE_NAVIGATOR_QMSS
++	depends on TI_CPTS || !TI_CPTS
+ 	---help---
+ 	  This driver supports TI's Keystone NETCP Core.
+ 
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 53792190e9c2..cb26a9d21869 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
+ ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+-obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
++obj-$(CONFIG_TI_CPTS) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+ ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o cpsw_sl.o cpsw_ethtool.o
+ obj-$(CONFIG_TI_CPSW_SWITCHDEV) += ti_cpsw_new.o
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index fa54efe3be63..19a7370a4188 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -709,7 +709,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
+ 	return ret;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
+ {
+ 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index bb997c11ee15..782e24c78e7a 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -8,7 +8,7 @@
+ #ifndef _TI_CPTS_H_
+ #define _TI_CPTS_H_
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ 
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+@@ -171,5 +171,4 @@ static inline bool cpts_can_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ }
+ #endif
+ 
+-
+ #endif
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index fb36115e9c51..3de1d25128b7 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -181,7 +181,7 @@
+ 
+ #define HOST_TX_PRI_MAP_DEFAULT			0x00000000
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ /* Px_TS_CTL register fields */
+ #define TS_RX_ANX_F_EN				BIT(0)
+ #define TS_RX_VLAN_LT1_EN			BIT(1)
+@@ -2000,7 +2000,7 @@ static int keystone_set_link_ksettings(struct net_device *ndev,
+ 	return phy_ethtool_ksettings_set(phy, cmd);
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ static int keystone_get_ts_info(struct net_device *ndev,
+ 				struct ethtool_ts_info *info)
+ {
+@@ -2532,7 +2532,7 @@ static int gbe_del_vid(void *intf_priv, int vid)
+ 	return 0;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ 
+ static void gbe_txtstamp(void *context, struct sk_buff *skb)
+ {
+@@ -2977,7 +2977,7 @@ static int gbe_close(void *intf_priv, struct net_device *ndev)
+ 	return 0;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ static void init_slave_ts_ctl(struct gbe_slave *slave)
+ {
+ 	slave->ts_ctl.uni = 1;
+@@ -3718,7 +3718,7 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 
+ 	gbe_dev->cpts = cpts_create(gbe_dev->dev, gbe_dev->cpts_reg, cpts_node);
+ 	of_node_put(cpts_node);
+-	if (IS_ENABLED(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
++	if (IS_REACHABLE(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
+ 		ret = PTR_ERR(gbe_dev->cpts);
+ 		goto free_sec_ports;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
