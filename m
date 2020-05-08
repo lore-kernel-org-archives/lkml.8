@@ -2,170 +2,193 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B822EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89FEC54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E016218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSRXMR3d"
+	by mail.kernel.org (Postfix) with ESMTP id 9A9F72184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 18:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588961191;
+	bh=Llo0ppLHEjiUIwHwXrazLds7Sltj/OckCnhe03ATkO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OGvRChQRmQGJbL9eaUZ4WmqdoUKXQTlG67bb2VlNxDHpOSohUT8M1r81bl7TWzgdC
+	 JB9FObt9jbrEaEx58ggsYGiLwcwqSsto14rswbvogaUxn0CzWJZVHxKJKkv1+UYp9Z
+	 ILJDHiLPpkCCWi6m8sF9yEAdWAAQMx00IjdKH6nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEHSGO (ORCPT
+        id S1727933AbgEHSG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 14:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726746AbgEHSGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 14:06:14 -0400
-Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96C7C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 11:06:13 -0700 (PDT)
-Received: by mail-qk1-x74a.google.com with SMTP id l19so2878836qki.14
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 11:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=+Seq80qMnpV5lUbkXBM+vOtEwBiiBytr6Pd0tsbHxHk=;
-        b=KSRXMR3dtf6i0Vu/WYcKhtiHWNQwjnJES99Zqdgjpv5uFksyP4Xk6V2OA0wJDJMbMu
-         3HIFWvbtn7v60z/jkWEgIYf0uKnr4CDYlvgLZe3P9hBrtzo4fJN7S8ahrQB60zGy9WAH
-         zD3QOn46FYuOP8xrnlGAO9LlDm8+hBhqDswgY5HPArWF6rALtrjxJKST0ItTbRCpo0pg
-         YXs4W1B7GLOnZtBk97bfUW3xI2syxucVA3tBgf0ef2TvmrDqpcOQV+L7GhgmLiT41An/
-         mhuRr+IfwGzTZIEzvP7wUQpI/zXZLAlnfode2nHSt6X5rzr7HW1bMqvPo/t+SRdyTcS+
-         AJRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=+Seq80qMnpV5lUbkXBM+vOtEwBiiBytr6Pd0tsbHxHk=;
-        b=bpxy1tOXcfDq9sSohFZzyU1APkH/KRjQGtdwbjkrd7gB12MlnnS6BR6AKH/QWIckZi
-         LgEqHx5fatWWBd5sP4K7NS39ZSosq08AmANwrmCk/NLX3IMZcqK/0btoNSCdPUeXTNBw
-         vOfRUR3xdBbZKy7ZT8tc0bvblm9RKm4c0qrKLAJ9ykqeaqXM1lRK/EixOM7lr3qtgUIl
-         mh6IPnRg994TFFqRIQMSyFgjTj/lskrByYy4Xz9lanC+bRPQToAXFxuUvZeYJAsvYBMn
-         8yYlIgXj0w0EhrQ/LrjiWHAw7/LJftv0tPsANISrTQ5l8YmxCcZAXJjE7mebqVHd0akP
-         1axg==
-X-Gm-Message-State: AGi0PuYMDGff9PEe+T6oZGqxvo+DR2tuQ4HX9GLhuEaOeqNW+lHiQtE4
-        bdJA2g0OCcnzfYi5ggdQ9Wc+JUWaWS8KehzuOes=
-X-Google-Smtp-Source: APiQypIsgbDhDgIf6srlp2D5JZEGmR+qOgu3pjYhtLDbb5bdP2dLggJYkT/YyY7UkdtoSD+4td/VmRmSnvpjfgXAZ5E=
-X-Received: by 2002:a0c:b601:: with SMTP id f1mr3695594qve.99.1588961172818;
- Fri, 08 May 2020 11:06:12 -0700 (PDT)
-Date:   Fri,  8 May 2020 11:05:48 -0700
-In-Reply-To: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
-Message-Id: <20200508180549.212957-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH v3] x86: bitops: fix build regression
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ilie Halip <ilie.halip@gmail.com>, x86@kernel.org,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 8 May 2020 14:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgEHSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 14:06:28 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.50.42.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 861432184D;
+        Fri,  8 May 2020 18:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588961187;
+        bh=Llo0ppLHEjiUIwHwXrazLds7Sltj/OckCnhe03ATkO8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rA28MiJPK34JbYbio9amTTVrqvuuNGuG3Z6s3RoUK5yiBrw3LoQ5FKrdZTyRVRZMz
+         jo7eaISgFyUWWIIC4qUtOtkGbdh07OaHVJnP4gTc//dOm7LxEL7MtarmquT5vi+hQL
+         Rwja0kHcvaI6XeZNzE/hQpW4qvje2f6nVFlm3UTo=
+Date:   Fri, 8 May 2020 23:36:18 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     Bhaumik Bhatt <bbhatt@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org
+Subject: Re: [PATCH v6 3/8] bus: mhi: core: Add range check for channel id
+ received in event ring
+Message-ID: <20200508180618.GA16542@Mani-XPS-13-9360>
+References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
+ <1588718832-4891-4-git-send-email-bbhatt@codeaurora.org>
+ <20200508054518.GA2696@Mani-XPS-13-9360>
+ <82e131f8-8c67-23c3-3ac2-a05eb04d50ba@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82e131f8-8c67-23c3-3ac2-a05eb04d50ba@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+Hi Hemant,
 
-It turns out that if your config tickles __builtin_constant_p via
-differences in choices to inline or not, these statements produce
-invalid assembly:
+On Fri, May 08, 2020 at 10:34:13AM -0700, Hemant Kumar wrote:
+> Hi Mani,
+> 
+> On 5/7/20 10:45 PM, Manivannan Sadhasivam wrote:
+> > On Tue, May 05, 2020 at 03:47:07PM -0700, Bhaumik Bhatt wrote:
+> > > From: Hemant Kumar <hemantk@codeaurora.org>
+> > > 
+> > > MHI data completion handler function reads channel id from event
+> > > ring element. Value is under the control of MHI devices and can be
+> > > any value between 0 and 255. In order to prevent out of bound access
+> > > add a bound check against the max channel supported by controller
+> > > and skip processing of that event ring element.
+> > > 
+> > > Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> > > Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > ---
+> > >   drivers/bus/mhi/core/main.c | 8 ++++++++
+> > >   1 file changed, 8 insertions(+)
+> > > 
+> > > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> > > index 605640c..e60ab21 100644
+> > > --- a/drivers/bus/mhi/core/main.c
+> > > +++ b/drivers/bus/mhi/core/main.c
+> > > @@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+> > >   		case MHI_PKT_TYPE_TX_EVENT:
+> > >   			chan = MHI_TRE_GET_EV_CHID(local_rp);
+> > >   			mhi_chan = &mhi_cntrl->mhi_chan[chan];
+> > 
+> > Check should be done before this statement, isn't it?
+> my bad. thanks for pointing that out.
+> > 
+> > > +			if (WARN_ON(chan >= mhi_cntrl->max_chan))
+> > > +				goto next_event;
+> > > +
+> > 
+> > I don't prefer using gotos for non exit paths but I don't have a better solution
+> > here. But you can try to wrap 'WARN_ON' inside the 'MHI_TRE_GET_EV_CHID'
+> > definition and the just use:
+> Instead of moving WARN_ON to macro as it requires mhi_cntrl->max_chan to
+> compare, how about just adding WARN_ON statement above if condition like
+> this
+> 
+> 		WARN_ON(chan >= mhi_cntrl->max_chan);
 
-$ cat foo.c
-long a(long b, long c) {
-  asm("orb\t%1, %0" : "+q"(c): "r"(b));
-  return c;
-}
-$ gcc foo.c
-foo.c: Assembler messages:
-foo.c:2: Error: `%rax' not allowed with `orb'
+Okay.
 
-Use the `%b` "x86 Operand Modifier" to instead force register allocation
-to select a lower-8-bit GPR operand.
+> 		/*
+>  		 * Only process the event ring elements whose channel
+> 		 * ID is within the maximum supported range.
+> 		 */
+>  		if (chan < mhi_cntrl->max_chan) {
+>                       	mhi_chan = &mhi_cntrl->mhi_chan[chan];
+>                        	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+>                           	event_quota--;
+>  		}
+>  		break;
+> > 
+> > 			/*
+> > 			 * Only process the event ring elements whose channel
+> > 			 * ID is within the maximum supported range.
+> > 			 */
+> > 			if (chan < mhi_cntrl->max_chan) {
+> >                          	mhi_chan = &mhi_cntrl->mhi_chan[chan];
+> >                          	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+> >                          	event_quota--;
+> > 			}
+> > 			break;
+> > 
+> > This looks more clean.
+> 
+> > 
+> > >   			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+> > >   			event_quota--;
+> > >   			break;
+> > > @@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+> > >   			break;
+> > >   		}
+> > > +next_event:
+> > >   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+> > >   		local_rp = ev_ring->rp;
+> > >   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+> > 
+> > So you want the count to get increased for skipped element also?
+> yeah idea is to have total count of events processed even if channel id is
+> not correct for that event. This fix is a security fix considering that the
+> MHI device is considered as non-secured and MHI host is trying
+> to continue function normally and just reporting it as warning.
+> 
 
-The "q" constraint only has meaning on -m32 otherwise is treated as
-"r". Not all GPRs have low-8-bit aliases for -m32.
+Okay.
 
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/961
-Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
-Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
-Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Suggested-by: Brian Gerst <brgerst@gmail.com>
-Suggested-by: H. Peter Anvin <hpa@zytor.com>
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V2 -> V3:
-* use `%b` "x86 Operand Modifier" instead of bitwise op then cast.
-* reword commit message.
-* add Brian and HPA suggested by tags
-* drop Nathan & Sedat Tested by/reviewed by tags (new patch is different
-  enough).
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > @@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+> > >   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+> > >   		chan = MHI_TRE_GET_EV_CHID(local_rp);
+> > > +		if (WARN_ON(chan >= mhi_cntrl->max_chan))
+> > > +			goto next_event;
+> > > +
+> > >   		mhi_chan = &mhi_cntrl->mhi_chan[chan];
+> > >   		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
+> > > @@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+> > >   			event_quota--;
+> > >   		}
+> > > +next_event:
+> > >   		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+> > >   		local_rp = ev_ring->rp;
+> > >   		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+> Even this function has the same goto statement. For consistency i would do
+> same thing here as well. Let me know what do you think about above
+> suggestion for both functions.
 
-Changes V1 -> V2:
-* change authorship/signed-off-by to Ilie
-* add Nathan's Tested by/reviewed by
-* update commit message slightly with info sent to HPA.
+Above looks good to me. So please go ahead.
 
- arch/x86/include/asm/bitops.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks,
+Mani
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index b392571c1f1d..03e24286e4eb 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -52,9 +52,9 @@ static __always_inline void
- arch_set_bit(long nr, volatile unsigned long *addr)
- {
- 	if (__builtin_constant_p(nr)) {
--		asm volatile(LOCK_PREFIX "orb %1,%0"
-+		asm volatile(LOCK_PREFIX "orb %b1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) & 0xff)
-+			: "iq" (CONST_MASK(nr))
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -72,9 +72,9 @@ static __always_inline void
- arch_clear_bit(long nr, volatile unsigned long *addr)
- {
- 	if (__builtin_constant_p(nr)) {
--		asm volatile(LOCK_PREFIX "andb %1,%0"
-+		asm volatile(LOCK_PREFIX "andb %b1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" (CONST_MASK(nr) ^ 0xff));
-+			: "iq" (~CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
--- 
-2.26.2.645.ge9eca65c58-goog
-
+> > > -- 
+> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > > a Linux Foundation Collaborative Project
+> > > 
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
