@@ -2,103 +2,162 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDD1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E93AC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F2C20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CF1208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Jj5o2Eh+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgEHAZ4 (ORCPT
+        id S1726690AbgEHA1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 20:25:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64861 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbgEHAZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 20:25:56 -0400
-IronPort-SDR: 6QnRC7/SMEyIKdIuZKgar/Wy2JG2/BWv7i7MZe0aCzo5J9/NpfC/hh2x0gmdMCPHxzS7s3YS7h
- gBBv+KyqUCBw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 17:25:55 -0700
-IronPort-SDR: prYshu7Xv9nQQs85m90ahwSYXcTuD251frmf7ulcP6LZ9JhJW+G7/15Rh6FEjjqQLDYJmJWjox
- PZPLlfgUGWUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,365,1583222400"; 
-   d="scan'208";a="260706699"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 07 May 2020 17:25:55 -0700
-Date:   Thu, 7 May 2020 17:25:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200508002555.GA24964@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
- <20200506221422.GK3329@linux.intel.com>
- <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
- <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
- <20200507193459.GA24519@linux.intel.com>
- <op.0j9qdhziwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <op.0j9qdhziwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 7 May 2020 20:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726470AbgEHA1w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 20:27:52 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C3AAC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 17:27:52 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 7so4460912pjo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 17:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=V0C3bRiQIupjvnAB404TNg3msK2myuQCmZ2x7HRHG2I=;
+        b=Jj5o2Eh+WgC06ImxPAdAiLKa43hIVr2SX7PjM5ta2/GY9A8rSs1GqK+RFCHZ9xbE0u
+         Oj6CkcxAK/e5keveJNLW6FVl+GLxByi6cVM3Q1SDB3TlG+bD9rIluZ8RJ8OnPVjk1+MN
+         Fn8EaOsdeA5cq27MGG/osiw6jB4oxDEZ8o+xM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=V0C3bRiQIupjvnAB404TNg3msK2myuQCmZ2x7HRHG2I=;
+        b=tMz8PVhMxJh3Qt9vcupGcFCfDElCpk0C47yJv7hT7clXJ6igLNqq41tjnNyYTP46bI
+         O+rcc6sY5FCea94UBiTdfQRDCGLbz2DRrPxK9PSqMfiUlVMZbQCAPpuMv0ldOWZQj3vb
+         fzA9aYlYi7cNTaztE66k6y8xkMQOFfOmCsPkjBX8KEdkaHvbHb3GCZLu9cabxa3NdPaO
+         Z4qVeBI16vle68TTd7LnAp8x4BD5saLZKKon05iNPY1mVf7pIMm+E7ReUST03mKoRsTY
+         DQidKuCy8OcLfzXMrnoI6uOfzPYrjvfrEHPpy6w6DD72RjqV7J+sxn+v0khnUjeBgowb
+         8/Rg==
+X-Gm-Message-State: AGi0PubQplZRpi9lIaF0xqdG16Ay+njDCSNAhNcmo/7/RKZoOJW/t33w
+        Bn+/agyqwQ0I+FQW07EJA7AZvg==
+X-Google-Smtp-Source: APiQypIrISlpFBZ5rGaJiOwmwZHu5iw0N4E5PXxBU6UMHNreuj28ULfxOutLAPlluYPOfVW3wU/lww==
+X-Received: by 2002:a17:90a:3b0c:: with SMTP id d12mr2871289pjc.78.1588897671362;
+        Thu, 07 May 2020 17:27:51 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id gz14sm882677pjb.42.2020.05.07.17.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2020 17:27:50 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v5 0/7] firmware: add partial read support in request_firmware_into_buf
+Date:   Thu,  7 May 2020 17:27:32 -0700
+Message-Id: <20200508002739.19360-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:35:31PM -0500, Haitao Huang wrote:
-> On Thu, 07 May 2020 14:34:59 -0500, Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> 
-> >On Thu, May 07, 2020 at 12:49:15PM -0400, Nathaniel McCallum wrote:
-> >>> For larger size mmap, I think it requires enabling vm overcommit mode
-> >>1:
-> >>> echo 1 | sudo tee /proc/sys/vm/overcommit_memory
-> >
-> >It shouldn't unless the initial mmap is "broken".  Not truly broken, but
-> >broken in the sense that what Enarx is asking for is not actually what it
-> >desires.
-> >
-> So I tried, this passes with mode 1 but fail with ENOMEM by default:
-> 
-> mmap(NULL, 0x100000000000UL, PROT_NONE, MAP_SHARED| MAP_ANONYMOUS, -1, 0);
+Please consider this version series ready for upstream acceptance.
 
-Ah, fudge.  shmem_zero_setup() triggers shmem_acct_size() and thus
-__vm_enough_memory().  Which I should have rememered because I've stared
-at that code several times when dealing with the enclave's backing store.
-I wasn't seeing the issue because I happened to use MAP_PRIVATE.
+This patch series adds partial read support in request_firmware_into_buf.
+In order to accept the enhanced API it has been requested that kernel
+selftests and upstreamed driver utilize the API enhancement and so
+are included in this patch series.
 
-So, bad analysis, good conclusion, i.e. the kernel is still doing the
-right thing, it's just not ideal for userspace.
+Also in this patch series is the addition of a new Broadcom VK driver
+utilizing the new request_firmware_into_buf enhanced API.
 
+Changes from v4:
+ - handle reset issues if card crashes
+ - allow driver to have min required msix
+ - add card utilization information
+Changes from v3:
+ - fix sparse warnings
+ - fix printf format specifiers for size_t
+ - fix 32-bit cross-compiling reports 32-bit shifts
+ - use readl/writel,_relaxed to access pci ioremap memory,
+  removed memory barriers and volatile keyword with such change
+ - driver optimizations for interrupt/poll functionalities
+Changes from v2:
+ - remove unnecessary code and mutex locks in lib/test_firmware.c
+ - remove VK_IOCTL_ACCESS_BAR support from driver and use pci sysfs instead
+ - remove bitfields
+ - remove Kconfig default m
+ - adjust formatting and some naming based on feedback
+ - fix error handling conditions
+ - use appropriate return codes
+ - use memcpy_toio instead of direct access to PCIE bar
 
-Jarkko, we should update the docs and selftest to recommend and use
+Scott Branden (7):
+  fs: introduce kernel_pread_file* support
+  firmware: add offset to request_firmware_into_buf
+  test_firmware: add partial read support for request_firmware_into_buf
+  firmware: test partial file reads of request_firmware_into_buf
+  bcm-vk: add bcm_vk UAPI
+  misc: bcm-vk: add Broadcom VK driver
+  MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
 
-  PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS
+ MAINTAINERS                                   |    7 +
+ drivers/base/firmware_loader/firmware.h       |    5 +
+ drivers/base/firmware_loader/main.c           |   52 +-
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/bcm-vk/Kconfig                   |   29 +
+ drivers/misc/bcm-vk/Makefile                  |   12 +
+ drivers/misc/bcm-vk/bcm_vk.h                  |  435 +++++
+ drivers/misc/bcm-vk/bcm_vk_dev.c              | 1256 +++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_legacy.c           |   89 +
+ drivers/misc/bcm-vk/bcm_vk_msg.c              | 1425 +++++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.h              |  196 +++
+ drivers/misc/bcm-vk/bcm_vk_sg.c               |  271 ++++
+ drivers/misc/bcm-vk/bcm_vk_sg.h               |   60 +
+ drivers/misc/bcm-vk/bcm_vk_tty.c              |  352 ++++
+ drivers/soc/qcom/mdt_loader.c                 |    7 +-
+ fs/exec.c                                     |   96 +-
+ include/linux/firmware.h                      |    8 +-
+ include/linux/fs.h                            |   20 +
+ include/uapi/linux/misc/bcm_vk.h              |   99 ++
+ lib/test_firmware.c                           |  144 +-
+ .../selftests/firmware/fw_filesystem.sh       |   80 +
+ 22 files changed, 4596 insertions(+), 49 deletions(-)
+ create mode 100644 drivers/misc/bcm-vk/Kconfig
+ create mode 100644 drivers/misc/bcm-vk/Makefile
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_dev.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_legacy.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_tty.c
+ create mode 100644 include/uapi/linux/misc/bcm_vk.h
 
-or
+-- 
+2.17.1
 
-  PROT_NONE, MAP_SHARED | MAP_NORESERVE | MAP_ANONYMOUS"
-
-when carving out ELRANGE, with an explicit comment that all the normal
-rules for mapping memory still apply.
