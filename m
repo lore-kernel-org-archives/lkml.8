@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB6DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA39EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B970206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4B9218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942129;
-	bh=lAVFeiT4Fm2Frsb6vpfZaCVrJ1rCwK6Np5lnGwFM0fA=;
+	s=default; t=1588942147;
+	bh=gI8pMIvh5jN8BWPY6uAaQ6DrV5F1LYg7eIi5Fw+94Pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTRfbxBtNxUoTsVH5sczb8++pUaiDcua7IiRgRbSPrvel4H+p5TQX3ZTMwshk87ay
-	 xEA+ij2Dt6PUByUKOaV1DRGLH0W8sCboq/hxzHZQTnNEaGEo1BIyj1x88Q5GTJxfOu
-	 ZRZBmn5FO6+wnoVeXe6kBFuP+HUvVeOMDeG/PcMk=
+	b=jigzzduT7WcUZgB4T0iGU75Ao45yKnHZWR1TsPGPGifceAxcaJRQPwPKkrR06MtBO
+	 Mjz3CNUu3tPgRemCoSU5oT3NDywVL45s9h4yMtymIT9QHV5CJFgSywROCsSsmsMbTF
+	 LfPnWM/GazgUAkd9WXxfMny/SvjtCxyEgsojtp4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgEHMss (ORCPT
+        id S1729696AbgEHMs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53014 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729323AbgEHMso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:48:44 -0400
+        id S1729692AbgEHMst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:48:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C6F21473;
-        Fri,  8 May 2020 12:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D09C821473;
+        Fri,  8 May 2020 12:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942123;
-        bh=lAVFeiT4Fm2Frsb6vpfZaCVrJ1rCwK6Np5lnGwFM0fA=;
+        s=default; t=1588942128;
+        bh=gI8pMIvh5jN8BWPY6uAaQ6DrV5F1LYg7eIi5Fw+94Pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RlQzmTCV3UbInyN6mX7rDdnRlvhYQKPEVBGB9YHRiBOlggEyH0c0zlfIQNaFmmsDJ
-         M9YAS3IDTR8DNfR8SACVzGybk/rpaNBPcgSzreguVLOjIPO4IlW8P/lwnCQyPp6PzU
-         Tn+p0FGMAsCIPaS7SUkWT8519iz/8uUBaNGfyKKs=
+        b=F5/LECh5Vlxx9uqDnllvOW04/bJ/esz4JSHlS6xB9HbckMJdGPTH8SqP1kKW2jybk
+         77Yc5avwbzq9XlG/+gjOCNjg9TjMN8sqUs/Tj/m2K6dhzwbeannuwPTjj36BLapeAu
+         l72EoGslCJVZ3BaG8B4EcAQOkWHLqxaqTMZeIfTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
+        Pravin Shelar <pshelar@ovn.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 305/312] bridge: Fix problems around fdb entries pointing to the bridge device
-Date:   Fri,  8 May 2020 14:34:56 +0200
-Message-Id: <20200508123145.927040915@linuxfoundation.org>
+Subject: [PATCH 4.4 307/312] net: skbuff: Remove errornous length validation in skb_vlan_pop()
+Date:   Fri,  8 May 2020 14:34:58 +0200
+Message-Id: <20200508123146.094231743@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -61,156 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
+From: Shmulik Ladkani <shmulik.ladkani@ravellosystems.com>
 
-commit 7bb90c3715a496c650b2e879225030f9dd9cfafb upstream.
+commit 636c2628086e40c86dac7ddc84a1c4b4fcccc6e3 upstream.
 
-Adding fdb entries pointing to the bridge device uses fdb_insert(),
-which lacks various checks and does not respect added_by_user flag.
+In 93515d53b1
+  "net: move vlan pop/push functions into common code"
+skb_vlan_pop was moved from its private location in openvswitch to
+skbuff common code.
 
-As a result, some inconsistent behavior can happen:
-* Adding temporary entries succeeds but results in permanent entries.
-* Same goes for "dynamic" and "use".
-* Changing mac address of the bridge device causes deletion of
-  user-added entries.
-* Replacing existing entries looks successful from userspace but actually
-  not, regardless of NLM_F_EXCL flag.
+In case skb has non hw-accel vlan tag, the original 'pop_vlan()' assured
+that skb->len is sufficient (if skb->len < VLAN_ETH_HLEN then pop was
+considered a no-op).
 
-Use the same logic as other entries and fix them.
+This validation was moved as is into the new common 'skb_vlan_pop'.
 
-Fixes: 3741873b4f73 ("bridge: allow adding of fdb entries pointing to the bridge device")
-Signed-off-by: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
-Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
+Alas, in its original location (openvswitch), there was a guarantee that
+'data' points to the mac_header, therefore the 'skb->len < VLAN_ETH_HLEN'
+condition made sense.
+However there's no such guarantee in the generic 'skb_vlan_pop'.
+
+For short packets received in rx path going through 'skb_vlan_pop',
+this causes 'skb_vlan_pop' to fail pop-ing a valid vlan hdr (in the non
+hw-accel case) or to fail moving next tag into hw-accel tag.
+
+Remove the 'skb->len < VLAN_ETH_HLEN' condition entirely:
+It is superfluous since inner '__skb_vlan_pop' already verifies there
+are VLAN_ETH_HLEN writable bytes at the mac_header.
+
+Note this presents a slight change to skb_vlan_pop() users:
+In case total length is smaller than VLAN_ETH_HLEN, skb_vlan_pop() now
+returns an error, as opposed to previous "no-op" behavior.
+Existing callers (e.g. tc act vlan, ovs) usually drop the packet if
+'skb_vlan_pop' fails.
+
+Fixes: 93515d53b1 ("net: move vlan pop/push functions into common code")
+Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Cc: Pravin Shelar <pshelar@ovn.org>
+Reviewed-by: Pravin B Shelar <pshelar@ovn.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/br_fdb.c |   52 +++++++++++++++++++++++++++-------------------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+ net/core/skbuff.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/net/bridge/br_fdb.c
-+++ b/net/bridge/br_fdb.c
-@@ -266,7 +266,7 @@ void br_fdb_change_mac_address(struct ne
- 
- 	/* If old entry was unassociated with any port, then delete it. */
- 	f = __br_fdb_get(br, br->dev->dev_addr, 0);
--	if (f && f->is_local && !f->dst)
-+	if (f && f->is_local && !f->dst && !f->added_by_user)
- 		fdb_delete_local(br, NULL, f);
- 
- 	fdb_insert(br, NULL, newaddr, 0);
-@@ -281,7 +281,7 @@ void br_fdb_change_mac_address(struct ne
- 		if (!br_vlan_should_use(v))
- 			continue;
- 		f = __br_fdb_get(br, br->dev->dev_addr, v->vid);
--		if (f && f->is_local && !f->dst)
-+		if (f && f->is_local && !f->dst && !f->added_by_user)
- 			fdb_delete_local(br, NULL, f);
- 		fdb_insert(br, NULL, newaddr, v->vid);
- 	}
-@@ -758,20 +758,25 @@ out:
- }
- 
- /* Update (create or replace) forwarding database entry */
--static int fdb_add_entry(struct net_bridge_port *source, const __u8 *addr,
--			 __u16 state, __u16 flags, __u16 vid)
-+static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
-+			 const __u8 *addr, __u16 state, __u16 flags, __u16 vid)
- {
--	struct net_bridge *br = source->br;
- 	struct hlist_head *head = &br->hash[br_mac_hash(addr, vid)];
- 	struct net_bridge_fdb_entry *fdb;
- 	bool modified = false;
- 
- 	/* If the port cannot learn allow only local and static entries */
--	if (!(state & NUD_PERMANENT) && !(state & NUD_NOARP) &&
-+	if (source && !(state & NUD_PERMANENT) && !(state & NUD_NOARP) &&
- 	    !(source->state == BR_STATE_LEARNING ||
- 	      source->state == BR_STATE_FORWARDING))
- 		return -EPERM;
- 
-+	if (!source && !(state & NUD_PERMANENT)) {
-+		pr_info("bridge: RTM_NEWNEIGH %s without NUD_PERMANENT\n",
-+			br->dev->name);
-+		return -EINVAL;
-+	}
-+
- 	fdb = fdb_find(head, addr, vid);
- 	if (fdb == NULL) {
- 		if (!(flags & NLM_F_CREATE))
-@@ -826,22 +831,28 @@ static int fdb_add_entry(struct net_brid
- 	return 0;
- }
- 
--static int __br_fdb_add(struct ndmsg *ndm, struct net_bridge_port *p,
--	       const unsigned char *addr, u16 nlh_flags, u16 vid)
-+static int __br_fdb_add(struct ndmsg *ndm, struct net_bridge *br,
-+			struct net_bridge_port *p, const unsigned char *addr,
-+			u16 nlh_flags, u16 vid)
- {
- 	int err = 0;
- 
- 	if (ndm->ndm_flags & NTF_USE) {
-+		if (!p) {
-+			pr_info("bridge: RTM_NEWNEIGH %s with NTF_USE is not supported\n",
-+				br->dev->name);
-+			return -EINVAL;
-+		}
- 		local_bh_disable();
- 		rcu_read_lock();
--		br_fdb_update(p->br, p, addr, vid, true);
-+		br_fdb_update(br, p, addr, vid, true);
- 		rcu_read_unlock();
- 		local_bh_enable();
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -4451,9 +4451,8 @@ int skb_vlan_pop(struct sk_buff *skb)
+ 	if (likely(skb_vlan_tag_present(skb))) {
+ 		skb->vlan_tci = 0;
  	} else {
--		spin_lock_bh(&p->br->hash_lock);
--		err = fdb_add_entry(p, addr, ndm->ndm_state,
-+		spin_lock_bh(&br->hash_lock);
-+		err = fdb_add_entry(br, p, addr, ndm->ndm_state,
- 				    nlh_flags, vid);
--		spin_unlock_bh(&p->br->hash_lock);
-+		spin_unlock_bh(&br->hash_lock);
+-		if (unlikely((skb->protocol != htons(ETH_P_8021Q) &&
+-			      skb->protocol != htons(ETH_P_8021AD)) ||
+-			     skb->len < VLAN_ETH_HLEN))
++		if (unlikely(skb->protocol != htons(ETH_P_8021Q) &&
++			     skb->protocol != htons(ETH_P_8021AD)))
+ 			return 0;
+ 
+ 		err = __skb_vlan_pop(skb, &vlan_tci);
+@@ -4461,9 +4460,8 @@ int skb_vlan_pop(struct sk_buff *skb)
+ 			return err;
  	}
+ 	/* move next vlan tag to hw accel tag */
+-	if (likely((skb->protocol != htons(ETH_P_8021Q) &&
+-		    skb->protocol != htons(ETH_P_8021AD)) ||
+-		   skb->len < VLAN_ETH_HLEN))
++	if (likely(skb->protocol != htons(ETH_P_8021Q) &&
++		   skb->protocol != htons(ETH_P_8021AD)))
+ 		return 0;
  
- 	return err;
-@@ -878,6 +889,7 @@ int br_fdb_add(struct ndmsg *ndm, struct
- 				dev->name);
- 			return -EINVAL;
- 		}
-+		br = p->br;
- 		vg = nbp_vlan_group(p);
- 	}
- 
-@@ -889,15 +901,9 @@ int br_fdb_add(struct ndmsg *ndm, struct
- 		}
- 
- 		/* VID was specified, so use it. */
--		if (dev->priv_flags & IFF_EBRIDGE)
--			err = br_fdb_insert(br, NULL, addr, vid);
--		else
--			err = __br_fdb_add(ndm, p, addr, nlh_flags, vid);
-+		err = __br_fdb_add(ndm, br, p, addr, nlh_flags, vid);
- 	} else {
--		if (dev->priv_flags & IFF_EBRIDGE)
--			err = br_fdb_insert(br, NULL, addr, 0);
--		else
--			err = __br_fdb_add(ndm, p, addr, nlh_flags, 0);
-+		err = __br_fdb_add(ndm, br, p, addr, nlh_flags, 0);
- 		if (err || !vg || !vg->num_vlans)
- 			goto out;
- 
-@@ -908,11 +914,7 @@ int br_fdb_add(struct ndmsg *ndm, struct
- 		list_for_each_entry(v, &vg->vlan_list, vlist) {
- 			if (!br_vlan_should_use(v))
- 				continue;
--			if (dev->priv_flags & IFF_EBRIDGE)
--				err = br_fdb_insert(br, NULL, addr, v->vid);
--			else
--				err = __br_fdb_add(ndm, p, addr, nlh_flags,
--						   v->vid);
-+			err = __br_fdb_add(ndm, br, p, addr, nlh_flags, v->vid);
- 			if (err)
- 				goto out;
- 		}
+ 	vlan_proto = skb->protocol;
 
 
