@@ -2,111 +2,91 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2C3C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB59C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1D724954
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465F421655
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 21:56:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rVWxHIzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgEHVzz (ORCPT
+        id S1728083AbgEHV4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 17:55:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19627 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbgEHVzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 17:55:55 -0400
-IronPort-SDR: ddxPC0XhQ8ng1SaWPZeAJR2MaYq0BvirMJu5H4phmP6rNmFAV5p+noA+0SXkhV7LwH9vfI+VnB
- fCrnwYRy0k6w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 14:55:55 -0700
-IronPort-SDR: faDwe0qsW+1ukx6gtqf2FNdfZID/PdXiS9P2RNbqybxyERk/hVALIpsh97hopEwKN2iPWIbwaE
- Ydz+t3Kon7yQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="408247630"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 14:55:54 -0700
-Date:   Fri, 8 May 2020 14:55:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, x86@kernel.org,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] KVM: SVM: Add support for MPK feature on AMD
-Message-ID: <20200508215554.GT27052@linux.intel.com>
-References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
- <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
+        Fri, 8 May 2020 17:56:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbgEHV4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 17:56:34 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03985C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 14:56:34 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id s186so1545083qkd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 14:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8zne5kD9U815Qp7lQoOfSkfWPnKdq4UH7l4ACZ1laQI=;
+        b=rVWxHIzDFvif9rrgKfKEzuzUqpug84jgH+pn6g2K+if7ys4WCpoBTPfsO3vQPvKAhN
+         yVfFa2Lp+fBa+5PTkzDejJhE9e4mKzNB4oFie8Fb4O99NmTGN8QvA+xTxmSSZnk3ibBc
+         HY2i6VFZUdjANcY0MDN1d4b9v0m8v8op+VhiOv7vwRUaW0FVadyL0QI7pMaOVKtzkkDK
+         eICt41IJctDdTY3MUPL17fid7XHKjjKefy0raEReMlnpRuJoXM9b+XyKVFxobwnSPF9F
+         Mh/uSrnjUReBhhaHgRTzE7vs/YNfmZ2ip7aKqPqWJrOr4nWGMCvhk2K4BK7cIVcztiM7
+         Ocsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8zne5kD9U815Qp7lQoOfSkfWPnKdq4UH7l4ACZ1laQI=;
+        b=Rho6/H7Sd+LSlp0LhcJ1Wl0LEZXkuu4O4KTVLO6s3rp93aBEcJ1HuZA9D2lSumKBFY
+         iHqVax2iHa73R57dwMEpMKP/rhH3uHWzFKrF1Uo6hQv8SPYoPrEgpaQXANorocnOWhuI
+         RDUVF6CdqFyltuI8igUNix0dJA3VVRCgTLOvHCeefuGb4zbC3HzkPJV69QEHLcmyyrsK
+         rz1b+XFxbgnRdS1Tuw1vDgB6g4oJtC76KNS4h/DWL39Hs9IZV5LvuxTR/nIF2XQwAfvn
+         DJ6RCON+yvd3P7f19rWn9gLzJw9P08jFcWReBKmjb57CVTIkwBG70PE5lRAVItvNJkqZ
+         9PsQ==
+X-Gm-Message-State: AGi0Pub6O/OQ5ZrHTUT26wjgKY2x7PwWxPq6b5rVFaV9Yc8SM2r8gCIS
+        DkqN/HcgLMlUGhRPzqnpu6f2Bg==
+X-Google-Smtp-Source: APiQypLlrrLFKBShNnNVF90buqGFklh0fnoXQOu7te0s+VgmO3xy05UxmrY5DdaE5ky534ULac25jA==
+X-Received: by 2002:a37:ac08:: with SMTP id e8mr4618592qkm.439.1588974993311;
+        Fri, 08 May 2020 14:56:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id x8sm2438260qti.51.2020.05.08.14.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 14:56:32 -0700 (PDT)
+Date:   Fri, 8 May 2020 17:56:16 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: swap: memcg: fix memcg stats for huge pages
+Message-ID: <20200508215616.GD226164@cmpxchg.org>
+References: <20200508212215.181307-1-shakeelb@google.com>
+ <20200508212215.181307-2-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <158897220354.22378.8514752740721214658.stgit@naples-babu.amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200508212215.181307-2-shakeelb@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:10:03PM -0500, Babu Moger wrote:
-> The Memory Protection Key (MPK) feature provides a way for applications
-> to impose page-based data access protections (read/write, read-only or
-> no access), without requiring modification of page tables and subsequent
-> TLB invalidations when the application changes protection domains.
+On Fri, May 08, 2020 at 02:22:14PM -0700, Shakeel Butt wrote:
+> The commit 2262185c5b28 ("mm: per-cgroup memory reclaim stats") added
+> PGLAZYFREE, PGACTIVATE & PGDEACTIVATE stats for cgroups but missed
+> couple of places and PGLAZYFREE missed huge page handling. Fix that.
+> Also for PGLAZYFREE use the irq-unsafe function to update as the irq is
+> already disabled.
 > 
-> This feature is already available in Intel platforms. Now enable the
-> feature on AMD platforms.
-> 
-> AMD documentation for MPK feature is available at "AMD64 Architecture
-> Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
-> Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
-> obtained at the link below.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
->  arch/x86/kvm/svm/svm.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 2f379bacbb26..37fb41ad9149 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -818,6 +818,10 @@ static __init void svm_set_cpu_caps(void)
->  	if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
->  	    boot_cpu_has(X86_FEATURE_AMD_SSBD))
->  		kvm_cpu_cap_set(X86_FEATURE_VIRT_SSBD);
-> +
-> +	/* PKU is not yet implemented for shadow paging. */
-> +	if (npt_enabled && boot_cpu_has(X86_FEATURE_OSPKE))
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PKU);
+> Fixes: 2262185c5b28 ("mm: per-cgroup memory reclaim stats")
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-This can actually be done in common code as well since both VMX and SVM
-call kvm_set_cpu_caps() after kvm_configure_mmu(), i.e. key off of
-tdp_enabled.
-
->  }
->  
->  static __init int svm_hardware_setup(void)
-> 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
