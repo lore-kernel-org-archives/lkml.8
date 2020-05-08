@@ -2,129 +2,83 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08920C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E34C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2657206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9AA2495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgEHNby (ORCPT
+        id S1728895AbgEHNcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:31:54 -0400
-Received: from elvis.franken.de ([193.175.24.41]:44862 "EHLO elvis.franken.de"
+        Fri, 8 May 2020 09:32:00 -0400
+Received: from elvis.franken.de ([193.175.24.41]:44873 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgEHNbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:31:53 -0400
+        id S1728754AbgEHNbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:31:55 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jX36M-0003ty-01; Fri, 08 May 2020 15:31:42 +0200
+        id 1jX36M-0003ty-04; Fri, 08 May 2020 15:31:42 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 126DDC041B; Fri,  8 May 2020 15:02:23 +0200 (CEST)
-Date:   Fri, 8 May 2020 15:02:23 +0200
+        id 82BA6C041B; Fri,  8 May 2020 15:30:40 +0200 (CEST)
+Date:   Fri, 8 May 2020 15:30:40 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Christoph Hellwig <hch@infradead.org>,
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v7] MIPS: Loongson: Add DMA support for LS7A
-Message-ID: <20200508130223.GB14297@alpha.franken.de>
-References: <1588926965-16134-1-git-send-email-yangtiezhu@loongson.cn>
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 06/20] mips: Add MIPS32 Release 5 support
+Message-ID: <20200508133040.GB15641@alpha.franken.de>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-7-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588926965-16134-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200506174238.15385-7-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:36:05PM +0800, Tiezhu Yang wrote:
-> In the current market, the most used bridge chip on the Loongson platform
-> are RS780E and LS7A, the RS780E bridge chip is already supported by the
-> mainline kernel.
-> 
-> If use the default implementation of __phys_to_dma() and __dma_to_phys()
-> in dma-direct.h when CONFIG_ARCH_HAS_PHYS_TO_DMA is not set, it works
-> well used with LS7A on the Loongson single-way and multi-way platform,
-> and also works well used with RS780E on the Loongson single-way platform,
-> but the DMA address will be wrong on the non-node0 used with RS780E on
-> the Loongson multi-way platform.
-> 
-> Just as the description in the code comment, the devices get node id from
-> 40 bit of HyperTransport bus, so we extract 2 bit node id (bit 44~45) from
-> 48 bit address space of Loongson CPU and embed it into HyperTransport bus
-> (bit 37-38), this operation can be done only at the software level used
-> with RS780E on the Loongson multi-way platform, because it has no hardware
-> function to translate address of node id, this is a hardware compatibility
-> problem.
-> 
-> Device
->     |
->     | DMA address
->     |
-> Host Bridge
->     |
->     | HT bus address (40 bit)
->     |
->    CPU
->     |
->     | physical address (48 bit)
->     |
->    RAM
-> 
-> The LS7A has dma_node_id_offset field in the DMA route config register,
-> the hardware can use the dma_node_id_offset to translate address of
-> node id automatically, so we can get correct address when just use the
-> dma_pfn_offset field in struct device.
-> 
-> For the above reasons, in order to maintain downward compatibility
-> to support the RS780E bridge chip, it is better to use the platform
-> dependent implementation of __phys_to_dma() and __dma_to_phys().
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
-> 
-> v7:
->   - According to the discussion of the v6 patch [1],
->     use the platform dependent implementation of
->     __phys_to_dma() and __dma_to_phys()
->   - Make a slight modification based on the v4 patch [2]
->     to put ls7a things before rs780e things
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1233541/
-> [2] https://lore.kernel.org/patchwork/patch/1220010/
-> 
-> v6:
->   - Make loongson_dma_config() static
->   - Put ls7a things before rs780 things
-> 
-> v5:
->   - Use the default implementation of __phys_to_dma()
->     and __dma_to_phys() in dma-direct.h
-> 
-> v4:
->   - Use LS7A instead of Loongson 7A1000 in the description
->   - Use LS7A or ls7a instead of LS7A1000 or ls7a1000 in the code
-> 
-> v3:
->   - Modify the macro definition NODE_ID_OFFSET_ADDR to
->     make it easy to read
->   - update the commit message
-> 
->  arch/mips/include/asm/mach-loongson64/boot_param.h |  5 +++++
->  arch/mips/loongson64/dma.c                         |  9 ++++++---
->  arch/mips/loongson64/env.c                         |  2 ++
->  arch/mips/loongson64/init.c                        | 17 +++++++++++++++++
->  4 files changed, 30 insertions(+), 3 deletions(-)
+On Wed, May 06, 2020 at 08:42:24PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> We also could add CPU_MIPS64_R5 config support here, but I don't think
+> it's necessary at the moment seeing there is no any real chip ever
+> produced with that arch. Right?
 
-applied to mips-next.
+how much is missing ? Looks like not too much, so it might be worth
+to add it at least for symmetry to the other ISAs...
 
 Thomas.
 
