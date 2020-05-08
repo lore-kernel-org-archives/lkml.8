@@ -2,188 +2,169 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F79C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9676AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8120D20661
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F53E20661
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHLU4 (ORCPT
+        id S1726950AbgEHLVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:20:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58519 "EHLO mga12.intel.com"
+        Fri, 8 May 2020 07:21:55 -0400
+Received: from mga05.intel.com ([192.55.52.43]:64781 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbgEHLUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:20:54 -0400
-IronPort-SDR: b73UGGSDcvgsjMD7FPZE7nxcwvpYjFDSqp/OA8iIiVJETZJ1n+a3d33ySm+GJjZqA6BtOGsxTx
- ewQ04HaJpDww==
+        id S1726616AbgEHLVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:21:54 -0400
+IronPort-SDR: eZ8BD4v1hrMhJzG2YO3dTlTNvmoDzwvQB8tlU6Nw6bfc+dL+bYvhBY55u1oje5rFu4gZ1zQ09U
+ +ZFh0ZxzWFmA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:20:54 -0700
-IronPort-SDR: L3ZS7pIBLFx1WplCTOxs1Usmy4xWOZgzH/gYmTuqoCsyWtA/xFY2jYQ59pIeoK7WZSkIgZouhB
- F9F0e8zfQzLg==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:21:53 -0700
+IronPort-SDR: AWn4JlKcN8+Kxi8TzKAw9JjRTfavnoOzEW0AiPwbQHRL5c+GX//59m/RxVdjoQmAf6vZ6Z3I1w
+ haHJ31QpjNnA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="370429123"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 04:20:52 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH] serial: lantiq: Make driver modular and console configurable
-Date:   Fri,  8 May 2020 19:20:49 +0800
-Message-Id: <42292519ba78f086eb19d058dec6411f5f29da51.1588936756.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+   d="scan'208";a="462202399"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 08 May 2020 04:21:49 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX14i-005PEb-LK; Fri, 08 May 2020 14:21:52 +0300
+Date:   Fri, 8 May 2020 14:21:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vineet Gupta <vgupta@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Message-ID: <20200508112152.GI185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add changes so Lantiq serial driver can be compiled as a module.
-Also, make this driver's use as console selectable/configurable.
++Cc (Vineet, for information you probably know)
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/tty/serial/Kconfig  | 13 +++++++++++--
- drivers/tty/serial/lantiq.c | 43 ++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 51 insertions(+), 5 deletions(-)
+On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
+> Maximum block size DW DMAC configuration corresponds to the max segment
+> size DMA parameter in the DMA core subsystem notation. Lets set it with a
+> value specific to the probed DW DMA controller. It shall help the DMA
+> clients to create size-optimized SG-list items for the controller. This in
+> turn will cause less dw_desc allocations, less LLP reinitializations,
+> better DMA device performance.
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 4b0a7b98f8c7..996782247174 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1034,13 +1034,22 @@ config SERIAL_SIFIVE_CONSOLE
- 	  boot time.)
- 
- config SERIAL_LANTIQ
--	bool "Lantiq serial driver"
-+	tristate "Lantiq serial driver"
- 	depends on (LANTIQ || X86) || COMPILE_TEST
- 	select SERIAL_CORE
-+	help
-+	  Support for UART on Lantiq and Intel SoCs.
-+	  To compile this driver as a module, choose M here, the
-+	  module will be called lantiq.
-+
-+config SERIAL_LANTIQ_CONSOLE
-+	bool "Console on Lantiq UART"
-+	depends on SERIAL_LANTIQ=y
- 	select SERIAL_CORE_CONSOLE
- 	select SERIAL_EARLYCON
- 	help
--	  Support for console and UART on Lantiq SoCs.
-+	  Select this option if you would like to use a Lantiq UART as the
-+	  system console.
- 
- config SERIAL_QE
- 	tristate "Freescale QUICC Engine serial port support"
-diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-index c5e46ff972e4..93ed59bccd11 100644
---- a/drivers/tty/serial/lantiq.c
-+++ b/drivers/tty/serial/lantiq.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/lantiq.h>
-+#include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -597,6 +598,13 @@ static const struct uart_ops lqasc_pops = {
- 	.verify_port =	lqasc_verify_port,
- };
- 
-+
-+/*
-+ * Linux console interface
-+ */
-+
-+#ifdef CONFIG_SERIAL_LANTIQ_CONSOLE
-+
- static void
- lqasc_console_putchar(struct uart_port *port, int ch)
- {
-@@ -705,6 +713,14 @@ lqasc_serial_early_console_setup(struct earlycon_device *device,
- OF_EARLYCON_DECLARE(lantiq, "lantiq,asc", lqasc_serial_early_console_setup);
- OF_EARLYCON_DECLARE(lantiq, "intel,lgm-asc", lqasc_serial_early_console_setup);
- 
-+#define LANTIQ_SERIAL_CONSOLE	(&lqasc_console)
-+
-+#else
-+
-+#define LANTIQ_SERIAL_CONSOLE	NULL
-+
-+#endif
-+
- static struct uart_driver lqasc_reg = {
- 	.owner =	THIS_MODULE,
- 	.driver_name =	DRVNAME,
-@@ -712,7 +728,7 @@ static struct uart_driver lqasc_reg = {
- 	.major =	0,
- 	.minor =	0,
- 	.nr =		MAXPORTS,
--	.cons =		&lqasc_console,
-+	.cons =		LANTIQ_SERIAL_CONSOLE,
- };
- 
- static int fetch_irq_lantiq(struct device *dev, struct ltq_uart_port *ltq_port)
-@@ -899,6 +915,13 @@ lqasc_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int lqasc_remove(struct platform_device *pdev)
-+{
-+	struct uart_port *port = platform_get_drvdata(pdev);
-+
-+	return uart_remove_one_port(&lqasc_reg, port);
-+}
-+
- static const struct ltq_soc_data soc_data_lantiq = {
- 	.fetch_irq = fetch_irq_lantiq,
- 	.request_irq = request_irq_lantiq,
-@@ -916,8 +939,11 @@ static const struct of_device_id ltq_asc_match[] = {
- 	{ .compatible = "intel,lgm-asc", .data = &soc_data_intel },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, ltq_asc_match);
- 
- static struct platform_driver lqasc_driver = {
-+	.probe		= lqasc_probe,
-+	.remove		= lqasc_remove,
- 	.driver		= {
- 		.name	= DRVNAME,
- 		.of_match_table = ltq_asc_match,
-@@ -933,10 +959,21 @@ init_lqasc(void)
- 	if (ret != 0)
- 		return ret;
- 
--	ret = platform_driver_probe(&lqasc_driver, lqasc_probe);
-+	ret = platform_driver_register(&lqasc_driver);
- 	if (ret != 0)
- 		uart_unregister_driver(&lqasc_reg);
- 
- 	return ret;
- }
--device_initcall(init_lqasc);
-+
-+static void __exit exit_lqasc(void)
-+{
-+	platform_driver_unregister(&lqasc_driver);
-+	uart_unregister_driver(&lqasc_reg);
-+}
-+
-+module_init(init_lqasc);
-+module_exit(exit_lqasc);
-+
-+MODULE_DESCRIPTION("Serial driver for Lantiq & Intel gateway SoCs");
-+MODULE_LICENSE("GPL v2");
+Thank you for the patch.
+My comments below.
+
+...
+
+> +		/*
+> +		 * Find maximum block size to be set as the DMA device maximum
+> +		 * segment size. By doing so we'll have size optimized SG-list
+> +		 * items for the channels with biggest block size. This won't
+> +		 * be a problem for the rest of the channels, since they will
+> +		 * still be able to split the requests up by allocating
+> +		 * multiple DW DMA LLP descriptors, which they would have done
+> +		 * anyway.
+> +		 */
+> +		if (dwc->block_size > block_size)
+> +			block_size = dwc->block_size;
+>  	}
+>  
+>  	/* Clear all interrupts on all channels. */
+> @@ -1220,6 +1233,10 @@ int do_dma_probe(struct dw_dma_chip *chip)
+>  			     BIT(DMA_MEM_TO_MEM);
+>  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+>  
+> +	/* Block size corresponds to the maximum sg size */
+> +	dw->dma.dev->dma_parms = &dw->dma_parms;
+> +	dma_set_max_seg_size(dw->dma.dev, block_size);
+> +
+>  	err = dma_async_device_register(&dw->dma);
+>  	if (err)
+>  		goto err_dma_register;
+
+Yeah, I have locally something like this and I didn't dare to upstream because
+there is an issue. We have this information per DMA controller, while we
+actually need this on per DMA channel basis.
+
+Above will work only for synthesized DMA with all channels having same block
+size. That's why above conditional is not needed anyway.
+
+OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
+that Intel Medfield has interesting settings, but I don't remember if DMA
+channels are different inside the same controller).
+
+Vineet, do you have any information that Synopsys customers synthesized DMA
+controllers with different channel characteristics inside one DMA IP?
+
+...
+
+>  #include <linux/bitops.h>
+
+> +#include <linux/device.h>
+
+Isn't enough to supply
+
+struct device;
+
+?
+
+>  #include <linux/interrupt.h>
+>  #include <linux/dmaengine.h>
+
+Also this change needs a separate patch I suppose.
+
+...
+
+> -	struct dma_device	dma;
+> -	char			name[20];
+> -	void __iomem		*regs;
+> -	struct dma_pool		*desc_pool;
+> -	struct tasklet_struct	tasklet;
+> +	struct dma_device		dma;
+> +	struct device_dma_parameters	dma_parms;
+> +	char				name[20];
+> +	void __iomem			*regs;
+> +	struct dma_pool			*desc_pool;
+> +	struct tasklet_struct		tasklet;
+>  
+>  	/* channels */
+> -	struct dw_dma_chan	*chan;
+> -	u8			all_chan_mask;
+> -	u8			in_use;
+> +	struct dw_dma_chan		*chan;
+> +	u8				all_chan_mask;
+> +	u8				in_use;
+
+Please split formatting fixes into a separate patch.
+
+
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
+
 
