@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ABDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFB1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E958214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED91214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 17:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588960206;
-	bh=TrNueBRdYzQt9mYSA71sGkB6vYCquUlYEtQ8RABmWNM=;
+	s=default; t=1588960209;
+	bh=GMvByFCCZ789DltWRWb8g2FH4dTEAQwyMJtUDrsvMcM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=E+VP/0JTuOZKd51XOiH2/FRzpAZBSy24bwg8pd2MzcvgSIbT3rdqVXRQc1uIvmCRc
-	 m90zdf5zQERhmXWOOKCE5tzv4F1/u1PnYg2E/BbWES4bQv+qEqPcoSg6uFYY/2/OPb
-	 J0da3w+u+9mpQFBNQIp1Boo7TAS3DsIBzUSGetZQ=
+	b=pipKsoVuAqDoTt8YtLpl3hNlSWoGQ/Td3UMNfwXOtuqD4Ab1FXEiXhiDgmkyBtP83
+	 zmLlMKfMbMr09Okzp2rl5qxJSBZkOWuOKvquQqn4qCtyqqUzhrjVl3Oe9ftrB3WCzp
+	 0Fr13fxjUgNOaxZfkqztlljXP1eC9UxQjYuOIkpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEHRuF (ORCPT
+        id S1727104AbgEHRuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 13:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 13:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHRuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726767AbgEHRuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 8 May 2020 13:50:05 -0400
-Subject: Re: [GIT PULL] Ceph fixes for 5.7-rc5
+Subject: Re: [GIT PULL] SCSI fixes for 5.7-rc4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588960204;
-        bh=TrNueBRdYzQt9mYSA71sGkB6vYCquUlYEtQ8RABmWNM=;
+        s=default; t=1588960205;
+        bh=GMvByFCCZ789DltWRWb8g2FH4dTEAQwyMJtUDrsvMcM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=L1WYyn5EFNgKvEtLSvdIAx6dgHzV1pXUzAsCAp3ldpM09azj77jpDQBh0rFlbTmB5
-         AQMkRQrDaHvPOfTWYKkDepzImHpd0b+8kYR6lirDnpxqTm/VcK2sR0zjLV//lS2b/t
-         cn4FhphGjem33o3js5sBjjuSSxwnhuATAYYqPL/U=
+        b=S2zm6hZzTJK4vZ+ks9zECqP1gkcmEB4zQnJHKFV86Nrkj+FkQed8nYAglt66IjZY0
+         xIp+/BEZkimJN4je65kylLXhaXjfhOu9m3LHdIvhVCrgQLlUZ/qL7ZMyRHES9xFGkj
+         R7fE7fXZafU2DPe7vkbPktNcQRKlyXpPCtA5Epg8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200508171613.27097-1-idryomov@gmail.com>
-References: <20200508171613.27097-1-idryomov@gmail.com>
+In-Reply-To: <1588959096.3837.12.camel@HansenPartnership.com>
+References: <1588959096.3837.12.camel@HansenPartnership.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200508171613.27097-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.7-rc5
-X-PR-Tracked-Commit-Id: 12ae44a40a1be891bdc6463f8c7072b4ede746ef
+X-PR-Tracked-Message-Id: <1588959096.3837.12.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: b36522150e5b85045f868768d46fbaaa034174b2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eb24fdd8e6f5c6bb95129748a1801c6476492aba
-Message-Id: <158896020488.31681.8447306784194982028.pr-tracker-bot@kernel.org>
-Date:   Fri, 08 May 2020 17:50:04 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: d5eeab8d7e269e8cfc53b915bccd7bd30485bcbf
+Message-Id: <158896020526.31681.2474498197163576882.pr-tracker-bot@kernel.org>
+Date:   Fri, 08 May 2020 17:50:05 +0000
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri,  8 May 2020 19:16:13 +0200:
+The pull request you sent on Fri, 08 May 2020 10:31:36 -0700:
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.7-rc5
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eb24fdd8e6f5c6bb95129748a1801c6476492aba
+https://git.kernel.org/torvalds/c/d5eeab8d7e269e8cfc53b915bccd7bd30485bcbf
 
 Thank you!
 
