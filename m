@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24313C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89E8C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E670524972
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAE324958
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942523;
-	bh=X+8B5r+3ozNjTtxJhR0LgbtW2wp7VlQ+Pb0lz57jQmY=;
+	s=default; t=1588942524;
+	bh=cI6v8CZuocD6h+XIZMxcmeIiHC1Q3wA6Tn75/oE61No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SapN8KFOpOuJKmxE33s+UhEpMvicf4R/438NFQP5u5TV6fijY+iS+liZgQ3Aj+Qv0
-	 FnJgzNxkKTLKIR0y5CnVJgJ77LPeczqhlQ5I3h35PdC7/fPW2JKD+sccOhyz0x0PHq
-	 JOgxjMT85cC50rpdYElgadMQQwZZKX7lVehpXJR8=
+	b=S1Z7wAJV2Z758xy5uAkME0zgWk6J5nJ+x810a/AvjhsIhZy/YMvCZRb+vero60vEm
+	 Fhh+hepswUmo5NMJTTJXsThjrxmPoKJpyDPMoXB3ltFRvIfQKqwU5KSIu1+4B/BrKW
+	 c8EhC3I6lHo0PZgYWtsuOiXANr6YaU4jHmoPqy/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgEHMzV (ORCPT
+        id S1730317AbgEHMzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38094 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbgEHMzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:55:15 -0400
+        id S1728224AbgEHMzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:55:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD3E24967;
-        Fri,  8 May 2020 12:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 528612054F;
+        Fri,  8 May 2020 12:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942515;
-        bh=X+8B5r+3ozNjTtxJhR0LgbtW2wp7VlQ+Pb0lz57jQmY=;
+        s=default; t=1588942512;
+        bh=cI6v8CZuocD6h+XIZMxcmeIiHC1Q3wA6Tn75/oE61No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2EJuMTw7j22QFN5qlMWmfPwB810aTk+EBK4u9XBQ1PUVIZE2/yaZs2OWxNXp6aqU1
-         GFrPgGgLek/Z6PBPYpFIQ2/DoP8WZpzXs26+a6P9iqis2zj1+Va8XjQOV84Q8ebEcV
-         AsChDFtShoaSy3D6VaFhs5GG2I+vu7uHB02IgA6Q=
+        b=mCrpR1TaEl0wENXtaIr0JQpEOaXBR1KXfWMZ2m4hDZsgmVKpIkyuTw55Bq+e9rRcP
+         kdQ5eZSVG+K7PBPIjPfonyYREnpdtnEYvZ44QllqrNJKy72mBMX6BGK1z9C6VBK8qy
+         oYybDQY/+XujH3M7gTOTcz+/DEmEt16l61LdUKUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        Yihao Wu <wuyihao@linux.alibaba.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 09/49] SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
-Date:   Fri,  8 May 2020 14:35:26 +0200
-Message-Id: <20200508123044.289470166@linuxfoundation.org>
+Subject: [PATCH 5.6 08/49] ASoC: topology: Check return value of soc_tplg_dai_config
+Date:   Fri,  8 May 2020 14:35:25 +0200
+Message-Id: <20200508123044.132239672@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -61,50 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yihao Wu <wuyihao@linux.alibaba.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 43e33924c38e8faeb0c12035481cb150e602e39d ]
+[ Upstream commit dd8e871d4e560eeb8d22af82dde91457ad835a63 ]
 
-Deleting list entry within hlist_for_each_entry_safe is not safe unless
-next pointer (tmp) is protected too. It's not, because once hash_lock
-is released, cache_clean may delete the entry that tmp points to. Then
-cache_purge can walk to a deleted entry and tries to double free it.
+Function soc_tplg_dai_config can fail, check for and handle possible
+failure.
 
-Fix this bug by holding only the deleted entry's reference.
-
-Suggested-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Yihao Wu <wuyihao@linux.alibaba.com>
-Reviewed-by: NeilBrown <neilb@suse.de>
-[ cel: removed unused variable ]
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200327204729.397-7-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/cache.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index bd843a81afa0b..d36cea4e270de 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -521,7 +521,6 @@ void cache_purge(struct cache_detail *detail)
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index ca0ac5372b293..e6a17ab433eea 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2524,7 +2524,7 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
  {
- 	struct cache_head *ch = NULL;
- 	struct hlist_head *head = NULL;
--	struct hlist_node *tmp = NULL;
- 	int i = 0;
+ 	struct snd_soc_tplg_dai *dai;
+ 	int count;
+-	int i;
++	int i, ret;
  
- 	spin_lock(&detail->hash_lock);
-@@ -533,7 +532,9 @@ void cache_purge(struct cache_detail *detail)
- 	dprintk("RPC: %d entries in %s cache\n", detail->entries, detail->name);
- 	for (i = 0; i < detail->hash_size; i++) {
- 		head = &detail->hash_table[i];
--		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
-+		while (!hlist_empty(head)) {
-+			ch = hlist_entry(head->first, struct cache_head,
-+					 cache_list);
- 			sunrpc_begin_cache_remove_entry(ch, detail);
- 			spin_unlock(&detail->hash_lock);
- 			sunrpc_end_cache_remove_entry(ch, detail);
+ 	count = le32_to_cpu(hdr->count);
+ 
+@@ -2539,7 +2539,12 @@ static int soc_tplg_dai_elems_load(struct soc_tplg *tplg,
+ 			return -EINVAL;
+ 		}
+ 
+-		soc_tplg_dai_config(tplg, dai);
++		ret = soc_tplg_dai_config(tplg, dai);
++		if (ret < 0) {
++			dev_err(tplg->dev, "ASoC: failed to configure DAI\n");
++			return ret;
++		}
++
+ 		tplg->pos += (sizeof(*dai) + le32_to_cpu(dai->priv.size));
+ 	}
+ 
 -- 
 2.20.1
 
