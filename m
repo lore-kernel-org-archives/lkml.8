@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F13C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235A1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A4B20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0152192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:58:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgEHF6Q (ORCPT
+        id S1727923AbgEHF6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:58:16 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:2686 "EHLO
+        Fri, 8 May 2020 01:58:18 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:2693 "EHLO
         esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgEHF6I (ORCPT
+        with ESMTP id S1727889AbgEHF6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:58:08 -0400
-IronPort-SDR: SHi+DY//0g+rfhPMbYviJCg6GCX9IXkEoKyG9V97MTnOae+Faq4R6ef5WfHtuiD+J65pNRmxXP
- XHem2Vd4lXwHM89nF8XIq8crska4ZtoZSe2V3NnFehFpZtgFk8MOP2zQqg97HRtEYAGCHiET5i
- ghtdGRGC23NPVlsnvXM5lKukyjV9cK6n6DGjIxVrWRfReXg74c/SIsjGlSTW2tGknlrQpntzXu
- cvQ3NMId+MlFMCfufv4oaqQr34Y5ybhLbwZR/UX74DqXG+2PwuzW6yxoa81Fw0zL0McJh15TIv
- THA=
+        Fri, 8 May 2020 01:58:15 -0400
+IronPort-SDR: c5XqVTYIEr0Hx+G+CaJGDiIrT97u5RTAk5UCdHoU9B7wg2mhANCrObuxknKmQZsKsCdcUpCyFR
+ hj1RUFWUFA85oCh8eNDoSc7mGbarhPO/0h5eeq0cC4TGEk8pFRDjexXAQI4QgM3sgWRDZjjU8I
+ 9RIKFx0RPPvRJcLx10eDaEKEac7xS7OcdpWy2qXQqf0ZGyiFGol68AgsDVKJWiOyU/hYLUmLzc
+ NAr+25HfmAhsBY8dFGYimSefZiUFi9yhGeI1MhH6zhdgjrawWb3m5hhyYncdnjEd24nw/8D0Ru
+ CYo=
 X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
-   d="scan'208";a="48589076"
+   d="scan'208";a="48589082"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 07 May 2020 21:58:06 -0800
-IronPort-SDR: O3oGVhCAJWCST6rYedjqaU7hRNEMHGFbZGrKrueSnFTg/nU/DW6e+cGs+k8ec3TjLJ43NWkpS1
- u33M5gmqlL5cxzrOUqprt/35lwFCnOLBGLmGWuAK9yJmsFkMvYiYKNU6g0bRqrVtTYy+qoyp5z
- Y0ET+TPOM+orWHxH+3c7U3foaPouiMaWCsEkJ1Tb3ePbG18cfbxkpaoja9FoJlSwNzfyTpg01Q
- d7jz4GwplT5fI2N+Pb/HWdZwsdPUuHkm87KOaVrC1+ct+sO/jgQ6rM1LgLeDWAkgbyi0zwqhVv
- U3s=
+  by esa2.mentor.iphmx.com with ESMTP; 07 May 2020 21:58:14 -0800
+IronPort-SDR: 5ORKCTmWLj2/EqgAui3Z/gTV3bgAgvOj0mi1Fnxl3TnyR0TUpGHgY9gfTaUWssHR7wz31H5gX/
+ k2hFioXzmPP0fgKDmxmdTNEDaEM1+VAZjV3X74YmFAs+ApGWFIf2jLATfZb+PbliDQSKY49rIp
+ Qh+FdVElyj0Yy9jKnYvTqDAd7Y/itfp7JKacwGlvFYTOAzEWAXDKJ1A+Qo9DVSu83WnvyslfE+
+ RAzimT+gfiufynbMVbDV0F8MwVabwkcmvEpfHa9I19HHzt2jurz21BTKJYJAP3U3IrcahCH4GH
+ 7Jk=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +41,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v11 17/56] Input: atmel_mxt_ts: Rename mxt_fw_version_show to fw_version_show
-Date:   Thu, 7 May 2020 22:56:17 -0700
-Message-ID: <20200508055656.96389-18-jiada_wang@mentor.com>
+Subject: [PATCH v11 19/56] Input: atmel_mxt_ts: rename mxt_update_fw_store to update_fw_store
+Date:   Thu, 7 May 2020 22:56:19 -0700
+Message-ID: <20200508055656.96389-20-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200508055656.96389-1-jiada_wang@mentor.com>
 References: <20200508055656.96389-1-jiada_wang@mentor.com>
@@ -54,37 +54,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename mxt_fw_version_show to fw_version_show to address checkpatch warning
+Rename mxt_update_fw_store to update_fw_store, to address checkpatch
+warning.
 
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 0e30ff372a43..b2a37a9597f3 100644
+index cec823de4096..720574417219 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3104,8 +3104,8 @@ static int mxt_configure_objects(struct mxt_data *data,
+@@ -3366,9 +3366,9 @@ static int mxt_update_file_name(struct device *dev, char **file_name,
+ 	return 0;
  }
  
- /* Firmware Version is returned as Major.Minor.Build */
--static ssize_t mxt_fw_version_show(struct device *dev,
--				   struct device_attribute *attr, char *buf)
-+static ssize_t fw_version_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
+-static ssize_t mxt_update_fw_store(struct device *dev,
+-					struct device_attribute *attr,
+-					const char *buf, size_t count)
++static ssize_t update_fw_store(struct device *dev,
++			       struct device_attribute *attr,
++			       const char *buf, size_t count)
  {
  	struct mxt_data *data = dev_get_drvdata(dev);
- 	struct mxt_info *info = data->info;
-@@ -3403,7 +3403,7 @@ static const struct attribute_group mxt_fw_attr_group = {
- 	.attrs = mxt_fw_attrs,
- };
+ 	int error;
+@@ -3392,7 +3392,7 @@ static ssize_t mxt_update_fw_store(struct device *dev,
+ 	return count;
+ }
  
--static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
-+static DEVICE_ATTR_RO(fw_version);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
+-static DEVICE_ATTR(update_fw, 0200, NULL, mxt_update_fw_store);
++static DEVICE_ATTR_WO(update_fw);
  
+ static struct attribute *mxt_fw_attrs[] = {
+ 	&dev_attr_update_fw.attr,
 -- 
 2.17.1
 
