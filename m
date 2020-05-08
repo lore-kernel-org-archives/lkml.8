@@ -2,134 +2,151 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079A2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980F9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB8F21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7D021841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEHOvZ (ORCPT
+        id S1728109AbgEHOvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:51:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:61971 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbgEHOvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:51:25 -0400
-IronPort-SDR: OX82RHtLRCcpCE7TwGpS5s1kq7/KVrI4kgCkK/EnqozKY5fTiuR1O0lj9AqmDxMG5buwz9ixf4
- blLk+OWrhn6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 07:51:24 -0700
-IronPort-SDR: 6p3MXQuE46g0ihXJKk1UkuZXjFwnAlA5YIP0CwEs/6bjTZLgeNr9j4e5nzzkkrwkX2rHzB51qh
- KKw9hb8PVqRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="249739127"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga007.jf.intel.com with ESMTP; 08 May 2020 07:51:23 -0700
-Date:   Fri, 8 May 2020 07:51:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200508145123.GA1431382@iweiny-DESK2.sc.intel.com>
-References: <20200507221721.0330271c@canb.auug.org.au>
- <20200508114338.02d2b843@canb.auug.org.au>
- <20200507190808.c6cdd5ffd68d0a154ef8ff18@linux-foundation.org>
+        Fri, 8 May 2020 10:51:31 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2175 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726751AbgEHOva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:51:30 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id ED18474328E5A4274316;
+        Fri,  8 May 2020 15:51:28 +0100 (IST)
+Received: from localhost (10.47.95.97) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 8 May 2020
+ 15:51:28 +0100
+Date:   Fri, 8 May 2020 15:51:06 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device
+ tree binding document
+Message-ID: <20200508155050.0000008e@Huawei.com>
+In-Reply-To: <20200507132600.8801-2-i.mikhaylov@yadro.com>
+References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
+        <20200507132600.8801-2-i.mikhaylov@yadro.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507190808.c6cdd5ffd68d0a154ef8ff18@linux-foundation.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.95.97]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 07:08:08PM -0700, Andrew Morton wrote:
-> On Fri, 8 May 2020 11:43:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Thu, 7 May 2020 16:25:59 +0300
+Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+
+> Mostly standard i2c driver with some additional led-current option
+> for vcnl3020.
 > 
-> > Hi all,
-> > 
-> > On Thu, 7 May 2020 22:17:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > After merging the akpm-current tree, today's linux-next build (arm
-> > > collie_defconfig and many others) failed like this:
-> > > 
-> > > arch/arm/mm/dma-mapping.c: In function 'dma_cache_maint_page':
-> > > arch/arm/mm/dma-mapping.c:892:6: error: implicit declaration of function 'kunmap_high' [-Werror=implicit-function-declaration]
-> > >       kunmap_high(page);
-> > >       ^
-> > > arch/arm/mm/flush.c: In function '__flush_dcache_page':
-> > > arch/arm/mm/flush.c:221:6: error: implicit declaration of function 'kunmap_high' [-Werror=implicit-function-declaration]
-> > >       kunmap_high(page + i);
-> > >       ^
-> > > 
-> > > Caused by commit
-> > > 
-> > >   6b66ab470b4d ("arch/kunmap: remove duplicate kunmap implementations")
-> > > 
-> > > kunmap_high() is now only declared when CONFIG_HIGHMEM is defined.
-> > 
-> > Is there anything that can be done quickly about this as it broke a
-> > large number of builds ...
-> 
-> This?  It's based on Ira's v3 series but should work.
-
-Looks like arm is using kmap_high_get() internally which needs a
-kunmap_high()...
-
-> 
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: arch-kunmap-remove-duplicate-kunmap-implementations-fix
-> 
-> fix CONFIG_HIGHMEM=n build on various architectures
-> 
-
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-
-This should probably be squashed into that patch though...
-
-Andrew do you want a V3.1?
-
-Ira
-
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 > ---
+>  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
 > 
->  include/linux/highmem.h |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> --- a/include/linux/highmem.h~arch-kunmap-remove-duplicate-kunmap-implementations-fix
-> +++ a/include/linux/highmem.h
-> @@ -53,6 +53,7 @@ static inline void *kmap(struct page *pa
->  }
->  
->  void kunmap_high(struct page *page);
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> new file mode 100644
+> index 000000000000..408dee17cdf5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  static inline void kunmap(struct page *page)
->  {
->  	might_sleep();
-> @@ -111,6 +112,10 @@ static inline void *kmap(struct page *pa
->  	return page_address(page);
->  }
->  
-> +static inline void kunmap_high(struct page *page)
-> +{
-> +}
+> +title: Integrated Proximity Sensor With Infrared Emitter
 > +
->  static inline void kunmap(struct page *page)
->  {
->  }
-> _
-> 
+> +maintainers:
+> +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> +
+> +description: |
+> +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
+> +  that the infrared emitter is included in the package. It has 16-bit
+> +  resolution. It includes a signal processing IC and features standard I2C
+> +  communication interface. It features an interrupt function.
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl3020
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +  vddio-supply:
+> +    description: Regulator that provides power to the bus
+> +
+> +  vishay,led-current-microamp:
+> +    description:
+> +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> +      higher than decimal 20. The drive current for the LED used in proximity
+> +      sensing.
+
+This text is really confusing. Just let the enum speak for itself and leave text as
+something short like
+
+"The driver current for the LED used in proximity sensing. "
+
+Units and values are clear already.
+
+> +    enum: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+> +          100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000,
+> +          180000, 190000, 200000]
+> +    default: 20000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        proximity@13 {
+> +              compatible = "vishay,vcnl3020";
+> +              reg = <0x13>;
+> +              vishay,led-current-microamp = <200000>;
+> +        };
+> +    };
+
+
