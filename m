@@ -2,91 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D005C47255
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCE5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D963A214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87706218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RncL95G1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrtDG9qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgEHWNs (ORCPT
+        id S1728066AbgEHWQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 18:13:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46229 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727774AbgEHWNr (ORCPT
+        Fri, 8 May 2020 18:16:49 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27858 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727828AbgEHWQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 18:13:47 -0400
+        Fri, 8 May 2020 18:16:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588976026;
+        s=mimecast20190719; t=1588976207;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7XTZwXR9Z9h3mhkEx2o1bmyDVneFoc2pkGAjVYehhi0=;
-        b=RncL95G1n8XUFTaOJapGjDj95acCt1Ym8G7H4dJNG+Pg/r++EnkX0nzb+ThOgN72Me9yXe
-        WsaRj8D9yI3Ucsci75A3DbsOc8Js8j4XzsO78PM5KE213nqNF+F2VD3K2sda8Jq6P0cAh7
-        ocx771djD+y41WVPdMyFq98Bp9i2vPQ=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WtlaW23JDJ9HL5V5AbxLYLZIsw33KhJwstUsDfJ8CX0=;
+        b=XrtDG9qyA42aNySEKcseGad5n9RGf7AujvmLKbvsYE0UHm//ZSOe8KWNxk33j5YFof9XNo
+        uztO83mQ7gdE0tCwzbzo1ygABJGdA+MUidgi52Q1Rcnq6cpVlAQ7CzxdQzp9Mbb6/KTWPj
+        qPcrZCd1azi+4r4TAJlEyWjytO+sQMs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-d2xIQt37O8yux2pmv4ZgAg-1; Fri, 08 May 2020 18:13:42 -0400
-X-MC-Unique: d2xIQt37O8yux2pmv4ZgAg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-174--VLbbYq4OZqQqAlSytfzBw-1; Fri, 08 May 2020 18:16:45 -0400
+X-MC-Unique: -VLbbYq4OZqQqAlSytfzBw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 828A51005510;
-        Fri,  8 May 2020 22:13:39 +0000 (UTC)
-Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74FBC1001B07;
-        Fri,  8 May 2020 22:13:27 +0000 (UTC)
-Date:   Sat, 9 May 2020 06:13:21 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: Re: remove a few uses of ->queuedata
-Message-ID: <20200508221321.GD1389136@T590>
-References: <20200508161517.252308-1-hch@lst.de>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 71E9C107ACCD;
+        Fri,  8 May 2020 22:16:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 928776AD09;
+        Fri,  8 May 2020 22:16:37 +0000 (UTC)
+Subject: [PATCH 0/5] cachefiles, nfs: Fixes
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Lei Xue <carmark.dlut@gmail.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 08 May 2020 23:16:36 +0100
+Message-ID: <158897619675.1119820.2203023452686054109.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508161517.252308-1-hch@lst.de>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 06:15:02PM +0200, Christoph Hellwig wrote:
-> Hi all,
-> 
-> various bio based drivers use queue->queuedata despite already having
-> set up disk->private_data, which can be used just as easily.  This
-> series cleans them up to only use a single private data pointer.
-> 
-> blk-mq based drivers that have code pathes that can't easily get at
-> the gendisk are unaffected by this series.
 
-Yeah, before adding disk, there still may be requests queued to LLD
-for blk-mq based drivers.
+Hi Linus, Trond, Anna,
 
-So are there this similar situation for these bio based drivers?
+Can you pull these fixes for cachefiles and NFS's use of fscache?  Should
+they go through the NFS tree or directly upstream?  The things fixed are:
 
+ (1) The reorganisation of bmap() use accidentally caused the return value
+     of cachefiles_read_or_alloc_pages() to get corrupted.
+
+ (2) The NFS superblock index key accidentally got changed to include a
+     number of kernel pointers - meaning that the key isn't matchable after
+     a reboot.
+
+ (3) A redundant check in nfs_fscache_get_super_cookie().
+
+ (4) The NFS change_attr sometimes set in the auxiliary data for the
+     caching of an file and sometimes not, which causes the cache to get
+     discarded when it shouldn't.
+
+ (5) There's a race between cachefiles_read_waiter() and
+     cachefiles_read_copier() that causes an occasional assertion failure.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	tag fscache-fixes-20200508-2
 
 Thanks,
-Ming
+David
+---
+Dave Wysochanski (3):
+      NFS: Fix fscache super_cookie index_key from changing after umount
+      NFS: Fix fscache super_cookie allocation
+      NFSv4: Fix fscache cookie aux_data to ensure change_attr is included
+
+David Howells (1):
+      cachefiles: Fix corruption of the return value in cachefiles_read_or_alloc_pages()
+
+Lei Xue (1):
+      cachefiles: Fix race between read_waiter and read_copier involving op->to_do
+
+
+ fs/cachefiles/rdwr.c |   12 ++++++------
+ fs/nfs/fscache.c     |   39 ++++++++++++++++++---------------------
+ fs/nfs/super.c       |    1 -
+ 3 files changed, 24 insertions(+), 28 deletions(-)
+
 
