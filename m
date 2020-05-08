@@ -2,75 +2,122 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72131C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB511C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3833F214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88403214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 22:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P48PSq3d"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EkLLPV6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgEHWIY (ORCPT
+        id S1728053AbgEHWJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 18:08:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37175 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726811AbgEHWIY (ORCPT
+        Fri, 8 May 2020 18:09:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43194 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbgEHWJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 18:08:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588975703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Peg2YF2ND29ekNS6MGkynfv7ACrX9QEyGb3a4hyznQ0=;
-        b=P48PSq3dv3W9+44dAxbs2ofUEVRP78yJvMbB5br5Epqv7C5vx9+l0PTbBK3/59AcZ9BDzF
-        W4123traLCKoYlgt2UaI3Z+BmhdxUmFF5WAE5D2BEj36XLIFNZeHnbpecHi68ErGkM07jM
-        CWJ/qM1dPnqUEkP2SaSUqC8LXHuJpTU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-b6UCqDmWNjSy4M4G7KOTOQ-1; Fri, 08 May 2020 18:08:22 -0400
-X-MC-Unique: b6UCqDmWNjSy4M4G7KOTOQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B53880058A;
-        Fri,  8 May 2020 22:08:20 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C0AF2E183;
-        Fri,  8 May 2020 22:08:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
-References: <158897464246.1116213.8184341356151224705.stgit@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] cachefiles, nfs: Fixes
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1118495.1588975692.1@warthog.procyon.org.uk>
-Date:   Fri, 08 May 2020 23:08:12 +0100
-Message-ID: <1118496.1588975692@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 8 May 2020 18:09:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048M3qiu161659;
+        Fri, 8 May 2020 22:09:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=kRJKGgXEcBvkOnkZ00J/8oVZj7ZZskCjtSJZuvcjbbk=;
+ b=EkLLPV6+6vDj7ywobWZNfkVpk42vo4sS6Wavr2iWASmCYK+NZexIWqJKpxtkhn63wQtc
+ wg7wFDZVVRob2exoB5k+88R3KfzYN92b2An084ssEc7X+glnExqPHU36Czrwp6ErPhnG
+ 1kBnoJxXMoujtsoNJJGWGf89MgM8QihpfoSBJGWtZ+MzxfZTjRgn2yhP9/4EpbbAGfEV
+ hGmeHbj5qaDkwFUH35qkoJD5I9IAz1FzgOrSmuK+4BnrT+y3blK7GcPryYxbQ72tTY8X
+ +Q0qMMUAM5J5B7lWZs9C3YOfWClf705gbobq0U85IyCEy8JrbkDDr0PSS9lD+Tq59lv/ 7A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30vtewwe50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 22:09:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 048M5xSe011008;
+        Fri, 8 May 2020 22:07:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30vte193h4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 May 2020 22:07:16 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 048M76d6019813;
+        Fri, 8 May 2020 22:07:06 GMT
+Received: from ovs104.us.oracle.com (/10.149.224.204)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 May 2020 15:07:06 -0700
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     jgross@suse.com, sstabellini@kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH] xen/cpuhotplug: Fix initial CPU offlining for PV(H) guests
+Date:   Fri,  8 May 2020 18:28:43 -0400
+Message-Id: <1588976923-3667-1-git-send-email-boris.ostrovsky@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9615 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 adultscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005080187
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9615 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005080187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops - I forgot to include a patch.  I'll resend.
+Commit a926f81d2f6c ("xen/cpuhotplug: Replace cpu_up/down() with
+device_online/offline()") replaced cpu_down() with device_offline()
+call which requires that the CPU has been registered before. This
+registration, however, happens later from topology_init() which
+is called as subsys_initcall(). setup_vcpu_hotplug_event(), on the
+other hand, is invoked earlier, during arch_initcall().
 
-David
+As result, booting a PV(H) guest with vcpus < maxvcpus causes a crash.
+
+Move setup_vcpu_hotplug_event() (and therefore setup_cpu_watcher()) to
+late_initcall(). In addition, instead of performing all offlining steps
+in setup_cpu_watcher() simply call disable_hotplug_cpu().
+
+Fixes: a926f81d2f6c (xen/cpuhotplug: Replace cpu_up/down() with device_online/offline()"
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+---
+ drivers/xen/cpu_hotplug.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
+index ec975de..b96b11e 100644
+--- a/drivers/xen/cpu_hotplug.c
++++ b/drivers/xen/cpu_hotplug.c
+@@ -93,10 +93,8 @@ static int setup_cpu_watcher(struct notifier_block *notifier,
+ 	(void)register_xenbus_watch(&cpu_watch);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		if (vcpu_online(cpu) == 0) {
+-			device_offline(get_cpu_device(cpu));
+-			set_cpu_present(cpu, false);
+-		}
++		if (vcpu_online(cpu) == 0)
++			disable_hotplug_cpu(cpu);
+ 	}
+ 
+ 	return NOTIFY_DONE;
+@@ -119,5 +117,5 @@ static int __init setup_vcpu_hotplug_event(void)
+ 	return 0;
+ }
+ 
+-arch_initcall(setup_vcpu_hotplug_event);
++late_initcall(setup_vcpu_hotplug_event);
+ 
+-- 
+1.8.3.1
 
