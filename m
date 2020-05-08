@@ -2,114 +2,110 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E56EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C62C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71689218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588966034;
-	bh=VhqAKcrwPY0cVjT8gdoCJ7J8gaWXKFNI6YLceVclDoY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bhtbL5EYmtNwe7Obet5VpnXeWAU3EMhdH6DfIODWcFJqrDkx0z5eIiMMQMKUOk8TU
-	 CQt+ubDtYi6axgcrulSnHSnwJ9rhTy1xAzXvpE0jhdp6ZkE8mehkDGena4jUbDT6IA
-	 P0OCpOvfR/Z7ACkBcbTQ0KsvQydcaeM7sul85KXk=
+	by mail.kernel.org (Postfix) with ESMTP id 54D47218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 19:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgEHT1N (ORCPT
+        id S1727110AbgEHT1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 15:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46508 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 15:27:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41791 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEHT1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 15:27:13 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E095D20CC7;
-        Fri,  8 May 2020 19:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588966033;
-        bh=VhqAKcrwPY0cVjT8gdoCJ7J8gaWXKFNI6YLceVclDoY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fDj+DMEi/SmQgVWwDwS7YLee4L0T/31dur7XaM2FBscsNSoBZLyJ88HhASvA1cepz
-         Bz8CQcGx+XeWTP6pjoPqcHhpIIzs5e/m5G5yZhombwWCdSy7pzfH4uJFDvzHDvaDDp
-         nNFUwe47loM8tgvp8WqkChYCEg+e/zf5mXIQCJ4Y=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: remove blk_plugging in block_operations
-Date:   Fri,  8 May 2020 12:27:11 -0700
-Message-Id: <20200508192711.146175-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+        id S1726797AbgEHT1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 15:27:15 -0400
+IronPort-SDR: tbv4hXfWchF6PCZmTplrmPmt7/LAXTeO/c8ByLxhYYEPwakH0iqNA1yp0VghnXTwQZx/UTC7tQ
+ lJEnjiAbygmA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:27:14 -0700
+IronPort-SDR: pF8J1l9o4UpgFzGa4LQtsBx8ZZ5N7thHTdGIUSDujb0t2rGFj6tppeSRizzVjKjK8TeeEQPU9X
+ yLJeu0cRBDUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="252042190"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 08 May 2020 12:27:08 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX8eM-005T81-HP; Fri, 08 May 2020 22:27:10 +0300
+Date:   Fri, 8 May 2020 22:27:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/17] spi: dw: Fix Rx-only DMA transfers
+Message-ID: <20200508192710.GV185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-17-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508132943.9826-17-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk_plugging doesn't seem to give any benefit.
+On Fri, May 08, 2020 at 04:29:41PM +0300, Serge Semin wrote:
+> Tx-only DMA transfers are working perfectly fine since in this case
+> the code just ignores the Rx FIFO overflow interrupts. But it turns
+> out the SPI Rx-only transfers are broken since nothing pushing any
+> data to the shift registers, so the Rx FIFO is left empty and the
+> SPI core subsystems just returns a timeout error. Since DW DMAC
+> driver doesn't support something like cyclic write operations of
+> a single byte to a device register, the only way to support the
+> Rx-only SPI transfers is to fake it by using a dummy Tx-buffer.
+> This is what we intend to fix in this commit by setting the
+> SPI_CONTROLLER_MUST_TX flag for DMA-capable platform.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/checkpoint.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Hmm... If Mark consider this a right thing to do, then it's fine.
+I didn't investigate what this flag may produce as a side effect.
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 97b6378554b40..cc9dd3bbf2188 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1169,8 +1169,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	struct blk_plug plug;
- 	int err = 0, cnt = 0;
- 
--	blk_start_plug(&plug);
--
- retry_flush_quotas:
- 	f2fs_lock_all(sbi);
- 	if (__need_flush_quota(sbi)) {
-@@ -1198,7 +1196,7 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		f2fs_unlock_all(sbi);
- 		err = f2fs_sync_dirty_inodes(sbi, DIR_INODE);
- 		if (err)
--			goto out;
-+			return err;
- 		cond_resched();
- 		goto retry_flush_quotas;
- 	}
-@@ -1214,7 +1212,7 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		f2fs_unlock_all(sbi);
- 		err = f2fs_sync_inode_meta(sbi);
- 		if (err)
--			goto out;
-+			return err;
- 		cond_resched();
- 		goto retry_flush_quotas;
- 	}
-@@ -1229,7 +1227,7 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
- 		atomic_dec(&sbi->wb_sync_req[NODE]);
- 		if (err)
--			goto out;
-+			return err;
- 		cond_resched();
- 		goto retry_flush_quotas;
- 	}
-@@ -1240,8 +1238,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	 */
- 	__prepare_cp_block(sbi);
- 	up_write(&sbi->node_change);
--out:
--	blk_finish_plug(&plug);
- 	return err;
- }
- 
+> --- a/drivers/spi/spi-dw.c
+> +++ b/drivers/spi/spi-dw.c
+> @@ -524,6 +524,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+>  			dws->dma_inited = 0;
+>  		} else {
+>  			master->can_dma = dws->dma_ops->can_dma;
+> +			master->flags |= SPI_CONTROLLER_MUST_TX;
+>  		}
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.26.2.645.ge9eca65c58-goog
+With Best Regards,
+Andy Shevchenko
+
 
