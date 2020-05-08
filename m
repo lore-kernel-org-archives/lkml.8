@@ -2,87 +2,345 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0009C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197B0C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9825E20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95F4208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 07:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dy6FG3Qt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4KhXPQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEHHqy (ORCPT
+        id S1726807AbgEHHsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 03:46:54 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15023 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726036AbgEHHqy (ORCPT
+        Fri, 8 May 2020 03:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgEHHsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 03:46:54 -0400
-X-UUID: 756646f76ddd4da3b7df7e9be5290050-20200508
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VH3FkscophLr2VZ9hGJSs8XypZWlJDmz13jJccd0dz0=;
-        b=dy6FG3Qt1M9MzeAdMdIy5SqfZd6yrN5zXBGsh657YUwsitPbXJHWi64XpMW83GXZOwYJFWbjaIsdBT85ffQqYxc/OBuRLu7AuKN5UuoAwvuXDAlqRS0ADZPuDw5YPcb6nFL8fXKJ95dfTU4Dxml+XepmrkfMn/Y88aqR84V2d9A=;
-X-UUID: 756646f76ddd4da3b7df7e9be5290050-20200508
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1788322146; Fri, 08 May 2020 15:46:49 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 8 May 2020 15:46:47 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 8 May 2020 15:46:47 +0800
-Message-ID: <1588924008.3197.44.camel@mtkswgap22>
-Subject: RE: [PATCH v7 3/8] scsi: ufs: export ufs_fixup_device_setup()
- function
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Avri Altman <Avri.Altman@wdc.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Date:   Fri, 8 May 2020 15:46:48 +0800
-In-Reply-To: <SN6PR04MB4640777E2AEF4A77A642B81BFCA20@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200508022141.10783-1-stanley.chu@mediatek.com>
-         <20200508022141.10783-4-stanley.chu@mediatek.com>
-         <SN6PR04MB4640777E2AEF4A77A642B81BFCA20@SN6PR04MB4640.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Fri, 8 May 2020 03:48:50 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853C9C05BD43;
+        Fri,  8 May 2020 00:48:50 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so530818pfn.5;
+        Fri, 08 May 2020 00:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sycLZWZ790LDtVoBr1ohu9VVVzp033xCqlBhhkWLJmI=;
+        b=t4KhXPQUd/bKk8UGTivNwFYqXysuCdXlf0SNWeKsnjI/Wkhzs8+N9Gk9P7I/CbcOsw
+         QW5VdlEjHKmPBHf4fCbDV68M5sF/B98onqvpP3Bf1xVLjHFLfrNbQarpbmNZ1ODhRf56
+         OOpmRUaqO8yoJBPOQGNTETu80kVcRYoAFDG6BfpfzTFAAZsP1+TRsPKUY7dGNIKI5gnx
+         B/ghohy9qk1z4CxIN5K7PZ1vpmnfO9LyUZy0xAF70FDokp6Vq//SqW9y9Dh7UiAYX42C
+         e9eLktr4biL0eEf+DDmsc7V1yqHpMIqODDMteJqTdacJ4bdjrZrTiGN6MmLj/yPX6eQM
+         YnQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sycLZWZ790LDtVoBr1ohu9VVVzp033xCqlBhhkWLJmI=;
+        b=qtg+PqkY5WOuyjwhyv3EoO1opiyZf+bl5MzeKP6FpLz0OEJtsT7opEt0q9T92p1xtY
+         rlimzgXLMcfpagRy9+/vcanZ+sM0rdLwtw3F8Xj+kcj7B3tHba8/iKcEfek+PAHiWApd
+         QjjWgB/euGWC/4SJpqNjEV9o/2jW5ifwFSr0y/u/7GM+CSRIY49iV7pfgnxuTRmE6b0t
+         jsTNI1UEDeGJEtVsD01AbA8THFI9Ibot7CsjikOOyyYo//VeX6ENW485ZLVh6WSQorkU
+         Nxef/C2VL1FvA+D8A5iz88x/2g9O1bVwI2GpZC+9nufEgYbbN2dLfp0uze9n4Dn5SufF
+         ro/g==
+X-Gm-Message-State: AGi0PuYcHSWOLUxoh1PeF7WafBXX4/5xjqyedv8C1zNJXgFm9FwLsF5D
+        LMOtvEsNGguMq5sKGpDjvUo=
+X-Google-Smtp-Source: APiQypKDYUwOtckmrxltT6wAV8MFg1eJVOQxM+g7oZqa/mMRn5YBJLrL+Q6HEBeGjnawAtncQ+R3KQ==
+X-Received: by 2002:a63:6a82:: with SMTP id f124mr1071205pgc.378.1588924129692;
+        Fri, 08 May 2020 00:48:49 -0700 (PDT)
+Received: from localhost.localdomain ([124.156.210.110])
+        by smtp.gmail.com with ESMTPSA id m1sm1647378pjg.26.2020.05.08.00.48.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 08 May 2020 00:48:48 -0700 (PDT)
+From:   Yongbo Zhang <giraffesnn123@gmail.com>
+To:     broonie@kernel.org, lgirdwood@gmail.com
+Cc:     alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Yongbo Zhang <giraffesnn123@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Chen Li <licheng0822@thundersoft.com>
+Subject: [PATCH] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+Date:   Fri,  8 May 2020 15:47:53 +0800
+Message-Id: <20200508074753.10362-1-giraffesnn123@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXZyaSwNCg0KT24gRnJpLCAyMDIwLTA1LTA4IGF0IDA3OjQyICswMDAwLCBBdnJpIEFsdG1h
-biB3cm90ZToNCj4gPiANCj4gPiAtc3RhdGljIHZvaWQgdWZzaGNkX2ZpeHVwX2Rldl9xdWlya3Mo
-c3RydWN0IHVmc19oYmEgKmhiYSkNCj4gPiArdm9pZCB1ZnNoY2RfZml4dXBfZGV2X3F1aXJrcyhz
-dHJ1Y3QgdWZzX2hiYSAqaGJhLCBzdHJ1Y3QgdWZzX2Rldl9maXgNCj4gPiAqZml4dXBzKQ0KPiA+
-ICB7DQo+ID4gICAgICAgICBzdHJ1Y3QgdWZzX2Rldl9maXggKmY7DQo+ID4gICAgICAgICBzdHJ1
-Y3QgdWZzX2Rldl9pbmZvICpkZXZfaW5mbyA9ICZoYmEtPmRldl9pbmZvOw0KPiBOb3cgdGhhdCB5
-b3UgYXJlIGV4cG9ydGluZyBpdCwgbWF5YmUgcmV0dXJuIGlmICghZml4dXBzKT8NCj4gDQoNCkdv
-b2QgaWRlYSwgSSB3aWxsIGFkZCBpdCBpbiBuZXh0IHZlcnNpb24uDQoNClRoYW5rcywNClN0YW5s
-ZXkgQ2h1DQo=
+SSI BUSIF buffer is possible to overflow or underflow, especially in a
+hypervisor environment. If there is no interrupt support, it will eventually
+lead to errors in pcm data.
+This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reported-by: Chen Li <licheng0822@thundersoft.com>
+Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
+Tested-by: Chen Li <licheng0822@thundersoft.com>
+---
+ sound/soc/sh/rcar/gen.c  |   8 +++
+ sound/soc/sh/rcar/rsnd.h |   9 +++
+ sound/soc/sh/rcar/ssi.c  | 142 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 159 insertions(+)
+
+diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
+index af19010b9d88..8bd49c8a9517 100644
+--- a/sound/soc/sh/rcar/gen.c
++++ b/sound/soc/sh/rcar/gen.c
+@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
+ 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
+ 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
+ 
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index ea6cbaa9743e..d47608ff5fac 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -189,6 +189,14 @@ enum rsnd_reg {
+ 	SSI_SYS_STATUS5,
+ 	SSI_SYS_STATUS6,
+ 	SSI_SYS_STATUS7,
++	SSI_SYS_INT_ENABLE0,
++	SSI_SYS_INT_ENABLE1,
++	SSI_SYS_INT_ENABLE2,
++	SSI_SYS_INT_ENABLE3,
++	SSI_SYS_INT_ENABLE4,
++	SSI_SYS_INT_ENABLE5,
++	SSI_SYS_INT_ENABLE6,
++	SSI_SYS_INT_ENABLE7,
+ 	HDMI0_SEL,
+ 	HDMI1_SEL,
+ 	SSI9_BUSIF0_MODE,
+@@ -237,6 +245,7 @@ enum rsnd_reg {
+ #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
+ #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
+ #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
++#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
+ 
+ 
+ struct rsnd_priv;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 4a7d3413917f..178f50a91b3e 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	u32 wsr		= ssi->wsr;
+ 	int width;
+ 	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
+ 
+ 	is_tdm		= rsnd_runtime_is_tdm(io);
+ 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
+ 	}
+ 
++	/* enable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable |= 0xf << (id * 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
++
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable |= 0xf << 4;
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++	}
++
+ init_end:
+ 	ssi->cr_own	= cr_own;
+ 	ssi->cr_mode	= cr_mode;
+@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ {
+ 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ 	struct device *dev = rsnd_priv_to_dev(priv);
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+@@ -517,6 +559,37 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ 		ssi->wsr	= 0;
+ 	}
+ 
++	/* disable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++						SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable &= ~(0xf << (id * 4));
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
++
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable &= ~(0xf << 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++
+ 	return 0;
+ }
+ 
+@@ -622,6 +695,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 			int enable)
+ {
+ 	u32 val = 0;
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+@@ -635,6 +713,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (enable)
+ 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
+ 
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++		case 9:
++			val |= 0xff00;
++			break;
++		}
++	}
++
+ 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
+ 
+ 	return 0;
+@@ -651,6 +742,10 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 	u32 status;
+ 	bool elapsed = false;
+ 	bool stop = false;
++	int is_tdm, is_tdm_split;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	spin_lock(&priv->lock);
+ 
+@@ -672,6 +767,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 		stop = true;
+ 	}
+ 
++	status = 0;
++
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_read(mod,
++						       SSI_SYS_STATUS(i * 2));
++				status &= 0xf << (id * 4);
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						       SSI_SYS_STATUS(i * 2),
++						       0xf << (id * 4));
++					stop = true;
++					break;
++				}
++			}
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_write(mod,
++						SSI_SYS_STATUS((i * 2) + 1));
++				status &= 0xf << 4;
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						SSI_SYS_STATUS((i * 2) + 1),
++						0xf << 4);
++					stop = true;
++					break;
++				}
++			}
++			break;
++		}
++	}
++
+ 	rsnd_ssi_status_clear(mod);
+ rsnd_ssi_interrupt_out:
+ 	spin_unlock(&priv->lock);
+-- 
+2.26.2
 
