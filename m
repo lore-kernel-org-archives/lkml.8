@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BF4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E4CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C977B24967
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630A5206B9
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588944003;
-	bh=OKUqUsMF/GSfd3r2wfBBACozUoRiXEVwUIIrInx4V04=;
+	s=default; t=1588944007;
+	bh=dtMqCeN0jf3ytObDrTDdY1U5ezSq4z//xU03AYErxMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJhpnpdUcJfo0asG28KYScIz2NyiYZ/D7wcBZ5Rfz5kXHuSV2yI1sSTmm+l2gKd7z
-	 OvoGpw36a7Disuh4QZVuZjA+bb5ak0U+2/j3qK2O7JOk8Geru2RhR2+4MRt5HnK5l9
-	 ZRYz85l6ZDOT4Bkh9lHA2/3BJqRun76PnX6eZycY=
+	b=g+7uklK3ksCOpoKeMU8G0TftIL6LYr8LAYHE5EpnedxrxpxICefpYJXISnyaDBPJO
+	 u2sGE4haVA5jquQI8t73c5j85uERE5y/XiUC3tLzEjCr/paJivnXispsUu12I1Jk7W
+	 RvI1NZE1cF69n79oVsec2YDL5UR45JBT8B0/kTSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgEHMlM (ORCPT
+        id S1730287AbgEHNUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35228 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgEHMk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:40:59 -0400
+        id S1728790AbgEHMlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:41:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB97A24968;
-        Fri,  8 May 2020 12:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56F4F21835;
+        Fri,  8 May 2020 12:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941658;
-        bh=OKUqUsMF/GSfd3r2wfBBACozUoRiXEVwUIIrInx4V04=;
+        s=default; t=1588941672;
+        bh=dtMqCeN0jf3ytObDrTDdY1U5ezSq4z//xU03AYErxMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/Dm/Ab2cHmBuOhoTT/ZXmFl3m+CkQbUn6X0rFO/o80C44sCxzWjEmG5BA5FVTbVU
-         L3rNPxKLSkCcd7aGAIsuZntm4wJ7Ul5o97whJud9ZRNqcnxO63IfKhYilAieyvt16J
-         2P/98BhT1NGXNnWMOAUmn/WxU0Qd+gBXzAI8iBsc=
+        b=asiy5aWeLzFW2DH09WlycEOSGUdMYplGUzmQubzaMldp5/jzLUY3PWGQjQFX2iA40
+         OZuyd4Y9pyGIMVL6N3xENlPxkmCsshCGSQisPb8AaWTbrdaHQljfDLQXefP6WiHCKp
+         uzKgEtXqMucz1Z9t13qCNPz/Cq3RUO6QO0meXSN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.4 121/312] Input: gpio-keys - fix check for disabling unsupported keys
-Date:   Fri,  8 May 2020 14:31:52 +0200
-Message-Id: <20200508123132.963839150@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 126/312] mac80211: fix mgmt-tx abort cookie and leak
+Date:   Fri,  8 May 2020 14:31:57 +0200
+Message-Id: <20200508123133.362186114@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,92 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 8679ee4204cfd5cf78b996508ccadc1ec6130f1a upstream.
+commit e673a65952b4ab045a3e3eb200fdf408004fb4fd upstream.
 
-Commit 4ea14a53d8f881034fa9e186653821c4e3d9a8fb ("Input: gpio-keys - report
-error when disabling unsupported key") tried let user know that they
-attempted to disable an unsupported key, unfortunately the check is wrong
-as it believes that all codes are invalid. Fix it by ensuring that keys
-that we try to disable are subset of keys (or switches) that device
-reports.
+If a mgmt-tx operation is aborted before it runs, the wrong
+cookie is reported back to userspace, and the ack_skb gets
+leaked since the frame is freed directly instead of freeing
+it using ieee80211_free_txskb(). Fix that.
 
-Fixes: 4ea14a53d8f8 ("Input: gpio-keys - report error when disabling unsupported key")
-Reported-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Tested-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 3b79af973cf4 ("mac80211: stop using pointers as userspace cookies")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/keyboard/gpio_keys.c |   29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ net/mac80211/offchannel.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -96,7 +96,7 @@ struct gpio_keys_drvdata {
-  * Return value of this function can be used to allocate bitmap
-  * large enough to hold all bits for given type.
-  */
--static inline int get_n_events_by_type(int type)
-+static int get_n_events_by_type(int type)
- {
- 	BUG_ON(type != EV_SW && type != EV_KEY);
+--- a/net/mac80211/offchannel.c
++++ b/net/mac80211/offchannel.c
+@@ -308,11 +308,10 @@ void ieee80211_roc_notify_destroy(struct
  
-@@ -104,6 +104,22 @@ static inline int get_n_events_by_type(i
- }
- 
- /**
-+ * get_bm_events_by_type() - returns bitmap of supported events per @type
-+ * @input: input device from which bitmap is retrieved
-+ * @type: type of button (%EV_KEY, %EV_SW)
-+ *
-+ * Return value of this function can be used to allocate bitmap
-+ * large enough to hold all bits for given type.
-+ */
-+static const unsigned long *get_bm_events_by_type(struct input_dev *dev,
-+						  int type)
-+{
-+	BUG_ON(type != EV_SW && type != EV_KEY);
-+
-+	return (type == EV_KEY) ? dev->keybit : dev->swbit;
-+}
-+
-+/**
-  * gpio_keys_disable_button() - disables given GPIO button
-  * @bdata: button data for button to be disabled
-  *
-@@ -213,6 +229,7 @@ static ssize_t gpio_keys_attr_store_help
- 					   const char *buf, unsigned int type)
- {
- 	int n_events = get_n_events_by_type(type);
-+	const unsigned long *bitmap = get_bm_events_by_type(ddata->input, type);
- 	unsigned long *bits;
- 	ssize_t error;
- 	int i;
-@@ -226,6 +243,11 @@ static ssize_t gpio_keys_attr_store_help
- 		goto out;
- 
- 	/* First validate */
-+	if (!bitmap_subset(bits, bitmap, n_events)) {
-+		error = -EINVAL;
-+		goto out;
-+	}
-+
- 	for (i = 0; i < ddata->pdata->nbuttons; i++) {
- 		struct gpio_button_data *bdata = &ddata->data[i];
- 
-@@ -239,11 +261,6 @@ static ssize_t gpio_keys_attr_store_help
- 		}
+ 	/* was never transmitted */
+ 	if (roc->frame) {
+-		cfg80211_mgmt_tx_status(&roc->sdata->wdev,
+-					(unsigned long)roc->frame,
++		cfg80211_mgmt_tx_status(&roc->sdata->wdev, roc->mgmt_tx_cookie,
+ 					roc->frame->data, roc->frame->len,
+ 					false, GFP_KERNEL);
+-		kfree_skb(roc->frame);
++		ieee80211_free_txskb(&roc->sdata->local->hw, roc->frame);
  	}
  
--	if (i == ddata->pdata->nbuttons) {
--		error = -EINVAL;
--		goto out;
--	}
--
- 	mutex_lock(&ddata->disable_lock);
- 
- 	for (i = 0; i < ddata->pdata->nbuttons; i++) {
+ 	if (!roc->mgmt_tx_cookie)
 
 
