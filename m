@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F88C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F45C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198BB2495C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4822054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942494;
-	bh=vEhVLLwSFyJhdLX9Pt2w9y/nEjjsIQJj5jJiyTA4d3g=;
+	s=default; t=1588942497;
+	bh=92fzWmuJDPXuqoNMnvf0B2lwUjxV7b8HmUcTNgIuHfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyk7RyjE1l54uOyFcyx3By6cpk6TRtzloCMAobM3Cto2xi1Cwy7hhhZI0d1hKXJx6
-	 ctszfZxD1BhQKCxwReaCTBsnTJB4/KLl0cwlKGXRsJdnUBbXh/vF5YKC45JhVmo6UI
-	 gvBcY/pk1BoqM6a51zSc/2fJDstBgZmaYYCoi3j4=
+	b=W9ys84kHD8n45GwBw1aXLcsZkj0wCIWW3KzgSjQr4SP5NGyC2qGVpJNQtTcxTnw2N
+	 yqQrl8q6PHcdGfn5+aJtsSkAabphwhwSn89dFD8BfJsuMIvcjNNUPqvxTRSgvyKHWE
+	 Bcex01coAXTQ7dfvdNHoQ0k40ZE5MMphPk1LKhmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgEHMyx (ORCPT
+        id S1730270AbgEHMy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbgEHMys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:54:48 -0400
+        id S1730260AbgEHMyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:54:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650462495C;
-        Fri,  8 May 2020 12:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FA8218AC;
+        Fri,  8 May 2020 12:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942487;
-        bh=vEhVLLwSFyJhdLX9Pt2w9y/nEjjsIQJj5jJiyTA4d3g=;
+        s=default; t=1588942492;
+        bh=92fzWmuJDPXuqoNMnvf0B2lwUjxV7b8HmUcTNgIuHfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSvBAxbguu2BiBqlCpoNS24XzG0IcugL70sZBuozbR2K3SnXJWTLP0Vw4pj9/qt9A
-         6wOBznglO1i/cd9N1zcVisZU6+6t14FSxbWSoX4yaYM4nX38/CeIQg0TM/tX3jJSDL
-         UbVQ2JvyxrFtLyd83eNmJeZhjE56/cSVgd7MSXc0=
+        b=JZvg4QtgaAos3x+pr82AsMD6B8gk5QvBIVEKkbbUbP3v0Z0baEQEeriqk2CNPYFfb
+         4ydlz840EVHx9utsfBYaus4YkbjPl8bVlRHlxZ6+sbrJWNQTZ0dITpNlesV16YJ8C/
+         ul27SbxJCJM/8sPoG6QuVpS96cnwAVPucs/ZLZgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
-        Wu Bo <wubo40@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 15/49] scsi: sg: add sg_remove_request in sg_write
-Date:   Fri,  8 May 2020 14:35:32 +0200
-Message-Id: <20200508123045.161722497@linuxfoundation.org>
+Subject: [PATCH 5.6 17/49] ASoC: topology: Fix endianness issue
+Date:   Fri,  8 May 2020 14:35:34 +0200
+Message-Id: <20200508123045.447295886@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
 References: <20200508123042.775047422@linuxfoundation.org>
@@ -61,38 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 83c6f2390040f188cc25b270b4befeb5628c1aee ]
+[ Upstream commit 26d87881590fd55ccdd8f829498d7b3033f81990 ]
 
-If the __copy_from_user function failed we need to call sg_remove_request
-in sg_write.
+As done in already existing cases, we should use le32_to_cpu macro while
+accessing hdr->magic. Found with sparse.
 
-Link: https://lore.kernel.org/r/610618d9-e983-fd56-ed0f-639428343af7@huawei.com
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20200415162435.31859-2-amadeuszx.slawinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sg.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-index 9c0ee192f0f9c..20472aaaf630a 100644
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -685,8 +685,10 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
- 	hp->flags = input_size;	/* structure abuse ... */
- 	hp->pack_id = old_hdr.pack_id;
- 	hp->usr_ptr = NULL;
--	if (copy_from_user(cmnd, buf, cmd_size))
-+	if (copy_from_user(cmnd, buf, cmd_size)) {
-+		sg_remove_request(sfp, srp);
- 		return -EFAULT;
-+	}
- 	/*
- 	 * SG_DXFER_TO_FROM_DEV is functionally equivalent to SG_DXFER_FROM_DEV,
- 	 * but is is possible that the app intended SG_DXFER_TO_DEV, because there
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index e6a17ab433eea..009d65a6fb43a 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2652,7 +2652,7 @@ static int soc_valid_header(struct soc_tplg *tplg,
+ 	}
+ 
+ 	/* big endian firmware objects not supported atm */
+-	if (hdr->magic == SOC_TPLG_MAGIC_BIG_ENDIAN) {
++	if (le32_to_cpu(hdr->magic) == SOC_TPLG_MAGIC_BIG_ENDIAN) {
+ 		dev_err(tplg->dev,
+ 			"ASoC: pass %d big endian not supported header got %x at offset 0x%lx size 0x%zx.\n",
+ 			tplg->pass, hdr->magic,
 -- 
 2.20.1
 
