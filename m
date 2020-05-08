@@ -2,107 +2,88 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E4C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B6C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11B4C21473
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588939066;
-	bh=IaPvVZXTHvGm+ATBUiQ/C7oCQtJbpR8kBilGLTr3sG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f6FGUb8sI9Tv8RkKWSrr4bo3hZwXQQb9uo4V4M7tst6phEj6/hvcYpud7BmsUk3+w
-	 1Q8z0ZHR4OYUWxConbqEtMUnp4ErtSZYozra5B5tj0eFeECdnslMgYQmXdJ/eSjday
-	 TCFsZaICt417NR9FwWY1fnuWHEw17WoAJ4GsoW00=
+	by mail.kernel.org (Postfix) with ESMTP id F3C6621473
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 11:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEHL5p (ORCPT
+        id S1727067AbgEHL7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 07:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHL5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 07:57:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE63E21473;
-        Fri,  8 May 2020 11:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588939064;
-        bh=IaPvVZXTHvGm+ATBUiQ/C7oCQtJbpR8kBilGLTr3sG8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZW494kp61NfLUQYAXfePRSRyleDGJxwtcVFZqJvIgsF/94FsXRzA+vt03/ffDxoG8
-         6YTwRIsL5i6OwHuFwAoQ5EGnUSQ24pera4q8pAG+luJq54zZABnGGSBNIYUXOgfHG9
-         D9J0C7lNzG5H2olH1jVZiuKuP7+fOgR1xI72rA0I=
-Date:   Fri, 8 May 2020 12:57:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] spi: spi-geni-qcom: Use OPP API to set clk/perf
- state
-Message-ID: <20200508115741.GG4820@sirena.org.uk>
-References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
- <1588507469-31889-3-git-send-email-rnayak@codeaurora.org>
- <acc7baf9-86a3-6c78-4d62-99d4b1baa12e@codeaurora.org>
+        Fri, 8 May 2020 07:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726636AbgEHL7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 07:59:02 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62828C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 04:59:02 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jX1eD-0004Qe-4X; Fri, 08 May 2020 13:58:33 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8CCE1101175; Fri,  8 May 2020 13:58:30 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 4 15/24] x86/db: Split out dr6/7 handling
+In-Reply-To: <20200508085909.GU5298@hirez.programming.kicks-ass.net>
+References: <20200505134926.578885807@linutronix.de> <20200505135314.808628211@linutronix.de> <16c57a7e-8d39-d77e-915d-41b7f5e042fd@oracle.com> <20200508085909.GU5298@hirez.programming.kicks-ass.net>
+Date:   Fri, 08 May 2020 13:58:30 +0200
+Message-ID: <87wo5mk595.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QWpDgw58+k1mSFBj"
-Content-Disposition: inline
-In-Reply-To: <acc7baf9-86a3-6c78-4d62-99d4b1baa12e@codeaurora.org>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Peter Zijlstra <peterz@infradead.org> writes:
+>> > +static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
+>> > +{
+>> > +	/*
+>> > +	 * Disable breakpoints during exception handling; recursive exceptions
+>> > +	 * are exceedingly 'fun'.
+>> > +	 *
+>> > +	 * Since this function is NOKPROBE, and that also applies to
+>> > +	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
+>> > +	 * HW_BREAKPOINT_W on our stack)
+>> > +	 *
+>> > +	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
+>> > +	 * includes the entry stack is excluded for everything.
+>> > +	 */
+>> > +	get_debugreg(*dr7, 6);
+>> 
+>> Do you mean  get_debugreg(*dr7, 7); ?
+>
+> Shees, I have to go buy a new stack of brown paper bags at this rate,
+> don't I :/
 
---QWpDgw58+k1mSFBj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 07, 2020 at 10:30:43PM +0530, Rajendra Nayak wrote:
-
-> Mark, would you be able to review/ack this patch so it can be
-> taken in via the msm tree? 'PATCH 1/6' is Ack'd by Greg, and its
-> going to land via the msm tree as well.
-
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
-
---QWpDgw58+k1mSFBj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61STUACgkQJNaLcl1U
-h9AbIAf/ZLO/7q8DC9SAKDmvIPrErrowNDCXJzdHt+TuIix+rKRTOcnCJPf5Jdri
-SBgkU1oqegEOQoQ+bBo8RJy8j4OYQfIL1+tgwQTb+Ld9gNtCqC34BZi5caCppXR/
-wM/n0QzaWakbnRAHrh6MS2kxu8nqxkV1zk1FfS4mRQs6mLnnObnNQU4kT61eryLy
-AdpSCObETekb+wRAv6nKIGY4zD11Pnw23De7Ghs/+HnVohzPylvEmdBQwJfpXAth
-IZjPGFWf5DXtFrkuCgJ5WHifyBVQDhvzux9O+lbUKbVy5xCpA9fYUUdypw2xk6/D
-ALxErrqF/sZStMojWcRGSZkvUd77uA==
-=TBng
------END PGP SIGNATURE-----
-
---QWpDgw58+k1mSFBj--
+Not only you, but it's also  amazing that the selftests didn't catch
+that.
