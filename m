@@ -2,133 +2,169 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8C3C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAECC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1564220731
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AAy0e1Nk"
+	by mail.kernel.org (Postfix) with ESMTP id C4BFC20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 02:53:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgEHCwX (ORCPT
+        id S1726797AbgEHCw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 22:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgEHCwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 22:52:22 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C8BC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 19:52:22 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a2so110948ejx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 19:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I+1cQWgxt1/5EB9HjjZokgUdamjeR9vKZIDzakJvGZg=;
-        b=AAy0e1Nk3mVl+RuOMUlmFvBi2fP58kdksb+fhyd8Yk6Bo8BHw1pybTBfow3GpZmj60
-         ASg9caTfW7yfGiKiiX9abVjtBqL5hwELUNsIFqaFCVcfwO8h3u9TepWr3T1ZGRZbdJOn
-         fVJjo/cbsa9XujDL9+F50w3zbLSqDsVpyEMLpAL/o9JdVOfCtNTNjuwnyrPzND5+pgAQ
-         oLykSNfH7HCwUBSlFJtXy0UidVAQyurHRsCH+Is44ySOkg5djXe2Wuqaec1n9tS5scfe
-         VkbmvGdGeLyHqu70edmdynyF68+X1R+1EDZYnLVm5T350ZUWj0wGGwTf47btot8y5DXX
-         Lbzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I+1cQWgxt1/5EB9HjjZokgUdamjeR9vKZIDzakJvGZg=;
-        b=rGUt2zi0DYiiUIbhMb7p4hTO0gOJzcNcBh1B0areX7yvyPZpZA/wyGHr5oSSeHXwmB
-         Lcxrwk/GwB7ea1UcXaA25cEp8+nuadbzndG4oNr3T3SF8e9msFNF2eWQF2aBrPhz1I+Q
-         PVMXyQ540eq9Axms3GgWteMP4Bf9QEAjV4ClT6A4fYs8ctvlEw1OWhnqPq181WRNLMSG
-         gnRHNYbvghDjF9PYJdXxBCXO+l+qwV2hmhbmStJgs9pqnMNdlZjO/ifQzZMdLif9NAUu
-         jQZbWMyc4C+Om6RSqKE+C9N7vG9P5KeKm8uTaIsZkUGTj+FiICXHQJGD0KsGuYNNyt+U
-         bKkg==
-X-Gm-Message-State: AGi0PubxrFs1eUFbC5ZEPytsaj5iDrQ5FAZ6mCS46NlDm4YBBNS44Re1
-        Doc1tnsx8gYD5hdlJGm4564tWBL+Gt9+I49mU+qa
-X-Google-Smtp-Source: APiQypIoy6GdXKb146yh6AuN5kdW/00MOaAx9ReHHhW8zKqMsU1nfHRFkS++ItJFML6mGa+GYeDn3Vz0arJiOWV+kKk=
-X-Received: by 2002:a17:906:31da:: with SMTP id f26mr112797ejf.308.1588906340722;
- Thu, 07 May 2020 19:52:20 -0700 (PDT)
+        Thu, 7 May 2020 22:52:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13492 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgEHCw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 22:52:59 -0400
+IronPort-SDR: ZbPzxaWpKGTyUtH3BTslaPPTGKhJcso3YcSLKGQdUpynB/FNuiuRxJbAuJ++VHUlYfrblFISfw
+ peni1BOqeChQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2020 19:52:58 -0700
+IronPort-SDR: M7sXF2aO+FqEQP+nsw3eBRSADkcmd68D/SvPwdvPP3U98L3L9M6UxdT9TtzXrQaxL1SpN1VKgP
+ RC3Dun7vQCxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,366,1583222400"; 
+   d="scan'208";a="278809288"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga002.jf.intel.com with ESMTP; 07 May 2020 19:52:55 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] iommu/vt-d: Disable non-recoverable fault
+ processing before unbind
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200507005534.3080-1-baolu.lu@linux.intel.com>
+ <20200507005534.3080-4-baolu.lu@linux.intel.com>
+ <MWHPR11MB1645CE4337BEDBC4598318A88CA50@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <3c41a395-95b6-f80c-d3fd-bcd1ec166b24@linux.intel.com>
+ <MWHPR11MB16450F77A9A450AFE51D8F7A8CA20@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a6b5018a-4231-23ba-cf21-374a91563e43@linux.intel.com>
+Date:   Fri, 8 May 2020 10:49:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200507185041.GA13930@embeddedor>
-In-Reply-To: <20200507185041.GA13930@embeddedor>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 7 May 2020 22:52:09 -0400
-Message-ID: <CAHC9VhSm_GWWXuzuwrrcTF3QcKCv1WSZv2=WF4t3DB4P7vshoA@mail.gmail.com>
-Subject: Re: [PATCH] audit: Replace zero-length array with flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Eric Paris <eparis@redhat.com>, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <MWHPR11MB16450F77A9A450AFE51D8F7A8CA20@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 2:46 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  include/linux/audit.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/8/20 10:12 AM, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Thursday, May 7, 2020 9:23 PM
+>>
+>> Hi Kevin,
+>>
+>> On 2020/5/7 13:45, Tian, Kevin wrote:
+>>>> From: Lu Baolu<baolu.lu@linux.intel.com>
+>>>> Sent: Thursday, May 7, 2020 8:56 AM
+>>>>
+>>>> When a PASID is used for SVA by the device, it's possible that the PASID
+>>>> entry is cleared before the device flushes all ongoing DMA requests. The
+>>>> IOMMU should ignore the non-recoverable faults caused by these
+>> requests.
+>>>> Intel VT-d provides such function through the FPD bit of the PASID entry.
+>>>> This sets FPD bit when PASID entry is cleared in the mm notifier and
+>>>> clear it when the pasid is unbound.
+>>>>
+>>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>>>> ---
+>>>>    drivers/iommu/intel-iommu.c |  4 ++--
+>>>>    drivers/iommu/intel-pasid.c | 26 +++++++++++++++++++++-----
+>>>>    drivers/iommu/intel-pasid.h |  3 ++-
+>>>>    drivers/iommu/intel-svm.c   |  9 ++++++---
+>>>>    4 files changed, 31 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>>>> index d1866c0905b1..7811422b5a68 100644
+>>>> --- a/drivers/iommu/intel-iommu.c
+>>>> +++ b/drivers/iommu/intel-iommu.c
+>>>> @@ -5352,7 +5352,7 @@ static void
+>> __dmar_remove_one_dev_info(struct
+>>>> device_domain_info *info)
+>>>>    	if (info->dev) {
+>>>>    		if (dev_is_pci(info->dev) && sm_supported(iommu))
+>>>>    			intel_pasid_tear_down_entry(iommu, info->dev,
+>>>> -					PASID_RID2PASID);
+>>>> +					PASID_RID2PASID, false);
+>>>>
+>>>>    		iommu_disable_dev_iotlb(info);
+>>>>    		domain_context_clear(iommu, info->dev);
+>>>> @@ -5587,7 +5587,7 @@ static void aux_domain_remove_dev(struct
+>>>> dmar_domain *domain,
+>>>>    	auxiliary_unlink_device(domain, dev);
+>>>>
+>>>>    	spin_lock(&iommu->lock);
+>>>> -	intel_pasid_tear_down_entry(iommu, dev, domain->default_pasid);
+>>>> +	intel_pasid_tear_down_entry(iommu, dev, domain->default_pasid,
+>>>> false);
+>>>>    	domain_detach_iommu(domain, iommu);
+>>>>    	spin_unlock(&iommu->lock);
+>>>>
+>>>> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+>>>> index 7969e3dac2ad..11aef6c12972 100644
+>>>> --- a/drivers/iommu/intel-pasid.c
+>>>> +++ b/drivers/iommu/intel-pasid.c
+>>>> @@ -292,7 +292,20 @@ static inline void pasid_clear_entry(struct
+>>>> pasid_entry *pe)
+>>>>    	WRITE_ONCE(pe->val[7], 0);
+>>>>    }
+>>>>
+>>>> -static void intel_pasid_clear_entry(struct device *dev, int pasid)
+>>>> +static inline void pasid_clear_entry_with_fpd(struct pasid_entry *pe)
+>>>> +{
+>>>> +	WRITE_ONCE(pe->val[0], PASID_PTE_FPD);
+>>>> +	WRITE_ONCE(pe->val[1], 0);
+>>>> +	WRITE_ONCE(pe->val[2], 0);
+>>>> +	WRITE_ONCE(pe->val[3], 0);
+>>>> +	WRITE_ONCE(pe->val[4], 0);
+>>>> +	WRITE_ONCE(pe->val[5], 0);
+>>>> +	WRITE_ONCE(pe->val[6], 0);
+>>>> +	WRITE_ONCE(pe->val[7], 0);
+>>>> +}
+>>>> +
+>>>> +static void
+>>>> +intel_pasid_clear_entry(struct device *dev, int pasid, bool pf_ignore)
+>>> Hi, Baolu,
+>>>
+>>> Just curious whether it makes sense to always set FPD here. Yes, SVA is
+>>> one known example that non-recoverable fault associated with a PASID
+>>> entry might be caused after the entry is cleared and those are considered
+>>> benign.  But even in a general context (w/o SVA) why do we care about
+>>> such faults after a PASID entry is torn down?
+>>
+>> First level page tables are also used for DMA protection. For example,
+>> thunderbolt peripherals are always untrusted and should be protected
+>> with IOMMU. IOMMU should always report unrecoverable faults generated
+>> by those device to detect possible DMA attacks.
+> 
+> when untrusted devices are protected by IOMMU, I don't think PASID
+> entry (of RID2PASID) will have present bit cleared.
 
-Merged into audit/next, thanks!
+I mean, protect the system from malicious devices. In any case, IOMMU
+should report and log the unrecoverable faults caused by the untrusted
+devices.
 
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index f9ceae57ca8d..2b63aee6e9fa 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -19,7 +19,7 @@
->  struct audit_sig_info {
->         uid_t           uid;
->         pid_t           pid;
-> -       char            ctx[0];
-> +       char            ctx[];
->  };
->
->  struct audit_buffer;
+Best regards,
+baolu
 
--- 
-paul moore
-www.paul-moore.com
+> 
+>>
+>> ATS/PRI devices are always trusted devices, hence we could tolerate
+>> setting FPD bit in the time window between mm_release notifier and
+>> unbind().
+>>
+>> Best regards,
+>> baolu
