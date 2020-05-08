@@ -2,81 +2,113 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09589C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B3CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C72207DD
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8SzckG0"
+	by mail.kernel.org (Postfix) with ESMTP id 015F520CC7
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588953306;
+	bh=hkoRcrZ1SxELIhpc5KMZCtx4k5hgispyhGBzWkKez14=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=f76YcNnNBY5TTt1feIygSoZ91Y8MZmmLLZ1s1r3WuIMX7Ilkldm8uQ3BV5xF1r66m
+	 DP4UNbCn3fa5XJwLJcGcoAdr+Ys9ZO/VE0+iVCj31xzW5HPTckQKrr7gE5yH/qH+Qm
+	 OxwZuJqwtYOpjyPIMmoyMZo9wYJ8RyYbiIvHVBqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgEHPxt (ORCPT
+        id S1727116AbgEHPzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:53:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40200 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726767AbgEHPxr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:53:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588953226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p2cXXVVt6hMQSGVjV4QVW4AzH91k33BUOtcXS/eKqmI=;
-        b=R8SzckG059dopqH7e0D0fIpQPLfLbkTg2mpqEX8aOJjLBuqMjoJHnN/NDh8BHcA7mtCEBH
-        IcBcfwOL/uas7XHqet4UbLfAp4rC3dB11o2P7h+Hu12ppnrwuBCkpV/Kxew9LlrsHjE0NI
-        ikdHyyz+h5SW6PNuD70LccVvbk/2fDM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-lMGPCzd4Ml65WMQz9PceyQ-1; Fri, 08 May 2020 11:53:42 -0400
-X-MC-Unique: lMGPCzd4Ml65WMQz9PceyQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 8 May 2020 11:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgEHPzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 11:55:04 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 781C21800D42;
-        Fri,  8 May 2020 15:53:41 +0000 (UTC)
-Received: from treble (ovpn-115-96.rdu2.redhat.com [10.10.115.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D52BF5D9CA;
-        Fri,  8 May 2020 15:53:37 +0000 (UTC)
-Date:   Fri, 8 May 2020 10:53:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-        joe.lawrence@redhat.com, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] livepatch: Make klp_apply_object_relocs static
-Message-ID: <20200508155335.jyfo4rhdvbyoq5kl@treble>
-References: <1588939594-58255-1-git-send-email-zou_wei@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9657321473;
+        Fri,  8 May 2020 15:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588953304;
+        bh=hkoRcrZ1SxELIhpc5KMZCtx4k5hgispyhGBzWkKez14=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=sRj2GDoBI5l+vIFZbCyEibAI43TQEgdmsihDBxQFwzlVW8ziA1xwr2IAW1GX2vGXc
+         2fQX3xDnfSXUihcW7KBrsdR7voDwS55DYyjVXWNKCfwB2skJzWgGDKJ4N59ifSK0Lt
+         hLiuEOSsLCqaybSpuK8Eb2b4JnF+dsttZ2fzepDc=
+Subject: Re: [PATCH] selftests/vm/keys: fix a broken reference at
+ protection_keys.c
+To:     Sandipan Das <sandipan@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, shuah <shuah@kernel.org>
+References: <d478a2fc5d204691d0cac6e2b416f0e07a26d3d9.1588585390.git.mchehab+huawei@kernel.org>
+ <bd55a74d-1305-9e23-94cd-37e59c11dfcd@intel.com>
+ <43841ceb-f682-26ff-8b57-fed545759193@linux.ibm.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <5ad59d36-ee2d-a37c-cbaa-42c3071a03c0@kernel.org>
+Date:   Fri, 8 May 2020 09:54:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1588939594-58255-1-git-send-email-zou_wei@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <43841ceb-f682-26ff-8b57-fed545759193@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:06:34PM +0800, Samuel Zou wrote:
-> Fix the following sparse warning:
+On 5/4/20 8:38 AM, Sandipan Das wrote:
 > 
-> kernel/livepatch/core.c:748:5: warning: symbol 'klp_apply_object_relocs'
-> was not declared. Should it be static?
+> 
+> On 04/05/20 7:40 pm, Dave Hansen wrote:
+>> On 5/4/20 2:44 AM, Mauro Carvalho Chehab wrote:
+>>> Changeset 1eecbcdca2bd ("docs: move protection-keys.rst to the core-api book")
 
-Yes, it should :-)
+checkpatch doesn't like this commit description.
 
-So instead of the question, the patch description should probably state
-that it should be static because its only caller is in the file.
+ERROR: Please use git commit description style 'commit <12+ chars of 
+sha1> ("<title line>")' - ie: 'commit 1eecbcdca2bd ("docs: move 
+protection-keys.rst to the core-api book")'
+#72:
+Changeset 1eecbcdca2bd ("docs: move protection-keys.rst to the core-api 
+book")
 
-With that change:
+>>> from Jun 7, 2019 converted protection-keys.txt file to ReST.
+>>>
+>>> A recent change at protection_keys.c partially reverted such
+>>> changeset, causing it to point to a non-existing file:
+>>>
+>>> 	- * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
+>>> 	+ * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
+>>>
+>>> It sounds to me that the changeset that introduced such change
+>>> 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
+>>> could also have other side effects, as it sounds that it was not
+>>> generated against uptream code, but, instead, against a version
+>>> older than Jun 7, 2019.
+>>>
+>>> Fixes: 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+WARNING: Unknown commit id '4645e3563673', maybe rebased or not pulled?
+#87:
+Fixes: 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru 
+to a generic name")
 
--- 
-Josh
+This commit didn't land in Linux 5.7-rc4 yet looks like. Probably in mm
+or doc tree and has dependency on it?
 
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
