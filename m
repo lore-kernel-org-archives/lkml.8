@@ -2,91 +2,116 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E488C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37061C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1852070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CE02173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 14:59:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="te8jMgHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEHO65 (ORCPT
+        id S1728216AbgEHO7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 10:58:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:49730 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726690AbgEHO64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 10:58:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C2C01FB;
-        Fri,  8 May 2020 07:58:56 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AC403F305;
-        Fri,  8 May 2020 07:58:53 -0700 (PDT)
-References: <20200507180553.9993-1-john.mathew@unikie.com> <20200507180553.9993-3-john.mathew@unikie.com> <jhjh7wrtpjk.mognet@arm.com> <b974b959-7b9a-2874-dca6-674b74ad5b42@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     John Mathew <john.mathew@unikie.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        tsbogend@alpha.franken.de, lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@basemark.com, rdunlap@infradead.org,
-        Oleg Tsymbal <oleg.tsymbal@unikie.com>
-Subject: Re: [RFC PATCH v3 2/3] docs: scheduler: Add scheduler overview documentation
-In-reply-to: <b974b959-7b9a-2874-dca6-674b74ad5b42@arm.com>
-Date:   Fri, 08 May 2020 15:58:51 +0100
-Message-ID: <jhjd07etqvo.mognet@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Fri, 8 May 2020 10:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgEHO7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 10:59:36 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B832FC061A0C;
+        Fri,  8 May 2020 07:59:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g14so1324646wme.1;
+        Fri, 08 May 2020 07:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=omQwxYvN2PhlFDy4u3NMyWqkH9xoUSaMTqHy0o+Dg6E=;
+        b=te8jMgHyHjutcwR0nqBmfBCAlv+oIqBu6mqcyCWkdAHZgPF0c+pKA5rvJDc4FYAvwL
+         d4vKusWgiKMLhVI2b11kgrV5n8liiWS1qU5bjwUd9KxUU3Fkdh3NFlYUybHvnrSpC6nw
+         QfIJSejye9uT7wWG0EsOwWXy8pWYkl6aQX1/txUQNRJfWCs23BHjWS4pRpI2Ba5Q59kq
+         OM9sBBpzOy4LPe3A864fOuvrhzoF5GunNLZJta74bZitvh2hBxUqzyuEsorglqwl72Ww
+         F48c/ZWMZVK7VyLM9przlpQcclP6/GdZVrsDiYxVP/xFAR+l/60itOJQuu0YhBYmerxb
+         Wh+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=omQwxYvN2PhlFDy4u3NMyWqkH9xoUSaMTqHy0o+Dg6E=;
+        b=l9N/pQQ8iO5yiQ07NhLJpt8NKBPt1kidZxGAISuL6/0b3gaQF1M5uAZMq5o2BJue28
+         /vcHtBwI31ao4DBL9S6CRVPklACxQeAPDscDnWfTVp+iGotqtV9pvf1s3jY1zBuPEgEz
+         od/0OoyVoPekH/WjNP266KkEA6rfojLAGwhHATuhz7t07ikMI3cRXNcKp0t/cMVgXXcz
+         q774ZuAYROdniuJE4BbOWGkA9ZA81auJ/5fFs9RMlYcHemiGLEn2/AJD/+5nc780k+cY
+         hEIZbd29vPelPak/LvvoHxapsWaADmByZyvI19ppYcCQPSnxKeol1oEtGpkdpYOGR8Xg
+         TjLA==
+X-Gm-Message-State: AGi0PuYh67HTax0nYYfnWkd/FJGiqTJbzKsa/bV6GCQ+ZjBQx4KwpgNU
+        kSlJBTz0LA+HV5/wPYNjbQQ=
+X-Google-Smtp-Source: APiQypLUYC24urSp23MfHJ5ukFDPaT+L4BGIZ2RhVIbOhstpCwEOPcUPo9rYl/7ZI0b3qvraFyBeDA==
+X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr17578215wmn.154.1588949974527;
+        Fri, 08 May 2020 07:59:34 -0700 (PDT)
+Received: from ubuntu-G3 (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.googlemail.com with ESMTPSA id e17sm3204111wrr.32.2020.05.08.07.59.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 07:59:34 -0700 (PDT)
+Message-ID: <94072fa2af155d69333b28331bf73073bddf856b.camel@gmail.com>
+Subject: Re: [RESENT PATCH RFC v3 5/5] scsi: ufs: UFS Host Performance
+ Booster(HPB) driver
+From:   Bean Huo <huobean@gmail.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        'Avri Altman' <Avri.Altman@wdc.com>, asutoshd@codeaurora.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        stanley.chu@mediatek.com, beanhuo@micron.com, bvanassche@acm.org,
+        tomas.winkler@intel.com, cang@codeaurora.org,
+        rdunlap@infradead.org, seunguk.shin@samsung.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org
+Date:   Fri, 08 May 2020 16:59:32 +0200
+In-Reply-To: <000401d62544$ab93ead0$02bbc070$@samsung.com>
+References: <20200504142032.16619-1-beanhuo@micron.com>
+         <20200504142032.16619-6-beanhuo@micron.com>
+         <CGME20200508113840epcas5p1cee545219dd59b64eeea287f17d34cde@epcas5p1.samsung.com>
+         <BYAPR04MB462904DA704A8FD42436BA9FFCA20@BYAPR04MB4629.namprd04.prod.outlook.com>
+         <000401d62544$ab93ead0$02bbc070$@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-05-08 at 19:56 +0530, Alim Akhtar wrote:
+> + seunguk.shin (who is one of the original author of the HPB, in case
+> he has some more improvement inputs)
+> 
+> Hi Bean,
+> I second Avri input on splitting this patch series into logical
+> smaller patches, that will helps reviewers.
+> Also if you can add support to build HPB as kernel module that will
+> be useful. 
+> I am looking into the HPB 1.0 spec, will review your patches soon.
+> 
+> Regards,
+> Alim
 
-On 08/05/20 11:58, Dietmar Eggemann wrote:
-> On 07/05/2020 23:15, Valentin Schneider wrote:
->>
->> On 07/05/20 19:05, John Mathew wrote:
->
-> [...]
->
->> It would also be an opportunity to have one place to (at least briefly)
->> describe what the different sched classes do wrt capacity asymmetry - CFS
->> does one thing, RT now does one thing (see Qais' work), and DL will
->> hopefully soon follow (see Dietmar's work).
->>
->> I'd be happy to contribute (some of) that, if it can be deemed useful (I
->> personally think it might).
->
-> I like the idea.
->
-> Essentially all the code which is guarded by the 'if
-> (static_branch_unlikely(&sched_asym_cpucapacity)' condition or which
-> sets it during bring-up.
->
-> * 'Cpu capacity < SCHED_LOAD_SCALE for non-big' CPUs setting during
->    bringup (necessary dt binding, CPUfreq influence)
->
-> * CFS capacity awareness:
->
->   * wakeup - select_idle_capacity() (replaced wake_cap() & slow path to
->              cover DynamIQ and classical big.LITTLE)
->
->   * load_balance - misfit handling
->
-> * RT & DL capacity awareness
->
-> * ... & the relation to EAS (Documentation/scheduler/sched-energy.rst)
->
-> This is what we referred to (at least internally) as CAS (Capacity-Aware
-> Scheduling).
+Hi, Alim
+that is great you added him, if he can give us more inputs,
 
-Yeah, something like that. I'll sharpen my quill and have a go at it,
-though it won't be for right now with OSPM and the other ongoing stuff.
+For the HPB modulization, I did, also prefer it.
+but I don't know how others think about it, since HPB is not a device
+.also, I should export some properties from UFSHCD. let's see if there
+are more supporters, let me try.
+
+
+thanks,
+
+Bean
+ 
+
