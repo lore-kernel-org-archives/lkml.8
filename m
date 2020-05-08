@@ -2,243 +2,253 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B993AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0985AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DBA20A8B
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="RVuAkDh3"
+	by mail.kernel.org (Postfix) with ESMTP id D65E1208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 08:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588926197;
+	bh=sSCdTLxVSQxfqLsYipbKP5DLysQXUOvZrPx43Rlbsrs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YeL6H9+2LZFlLi1VK8mSVm+xo6BJ54nSf8FS5+v8XeIyCFGa6YIdAnOYtxu8M/6nt
+	 UDdsDnpywjuGOyrVTEYtQ2pQfbCsmL1sxxbGQyKR0J++5cJX0cSXuhD6gPbVjG4Y8W
+	 JoWZCSkipVEGsE5IzgQig4oAQ653E8G/MzuW71oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgEHIWW (ORCPT
+        id S1727032AbgEHIXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 04:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgEHIWV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 04:22:21 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DF1C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 01:22:21 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g14so821629otg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 01:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h/Rz9wFnZCM8W9Uzhf8hhBprPQEGzRH3w8O3PZ5rlcQ=;
-        b=RVuAkDh3S7jS0Kb/CZiUVltsuZ4GokIbs2rpfwHHcTjvyFTQUDZxFDyWtlEN5er0iI
-         hSUUXNvqXf+rOosk9LlyKd/N/W+72VACsQkMOb3G9XGrLE7pvfvdrxoPTJus06PP2VjP
-         O0CFprR4EeKWaLwA805ecejwRnd2tAzMzpDAuA2v1kPEunCFfrIimJS6wEreBvKsWneG
-         Uq/aMS1WFnv+6XebTIymmDx7gRdls9XMi/vXSsdl25lmSaOv0w9s1f+Im6B+/kbDviet
-         7YaPDJaYuOBYL0plej7e8WqlURWnI6YmZEjQQtDPl044oTNusOKf3aG+poQNEDz5KpRY
-         6yvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h/Rz9wFnZCM8W9Uzhf8hhBprPQEGzRH3w8O3PZ5rlcQ=;
-        b=JOZuVqSoM52QISsVI+ntJyJwLOE9zOPsEQ7x2rrr9BNrO8Yxv8hwpKswqvqzLLDuPP
-         oDyNLMUls+arOt/LZgwdJ5dol1mtYVJ/F5d4k3BLD/XYuSPgOt1hIiGlxMRWXIA+QyKG
-         hEU/x8TI01KWDLmCkC9KF+rHSqOxSYRH+JbDTQ1xiiFBip5n4VWmtwceEfYFLzxMMog4
-         3UaDxFkzmle7OdwFnwPLz9zt4W8xYqTS2SdbhGuZThdrLhrTxLcVSYTIxbRS5WCEEsJy
-         p9vbky4wniMB5YYrRUyqj4KHHL28vLbSveXvJ4oN+fv1DAGAn8rXSldK0DatfTYeWQWG
-         DgAQ==
-X-Gm-Message-State: AGi0PuYGESJVjiQFjXm+XztaqtCu5m+Hb3xi4KtEd8DJJ2IoujrpQ3S4
-        KDnM8KY2MnmfCnTxm3WgkW0Z3laKd+KP738joj6sSyQ227v1Vp/g
-X-Google-Smtp-Source: APiQypKTZGwRNoLv/Ck2tgsg+o835lb5y9HwhlKTO6Il+1y7ujoxLKejI6aKpY95YigvPXJMUdRs/nSDSHVWCYQxNg4=
-X-Received: by 2002:a05:6830:1212:: with SMTP id r18mr1276000otp.144.1588926140522;
- Fri, 08 May 2020 01:22:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com>
- <CAJZ5v0gX1gx1_zTZg=M+xEOqxPEaq8ZU-N3hwk7OGcGdzrdBTg@mail.gmail.com>
- <CAB4CAweZcN0SPe-a7jbthV=-ip9cCzJOM=NfP9YvtXw97ugKgQ@mail.gmail.com> <5029155.caIQduTdCh@kreacher>
-In-Reply-To: <5029155.caIQduTdCh@kreacher>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Fri, 8 May 2020 16:22:09 +0800
-Message-ID: <CAB4CAwfFeJjrxQvpUz3V6VMW4aHWd7iZD6Xpu6rAnaPv=ZpFeg@mail.gmail.com>
-Subject: Re: System fails to exit s2idle by a keystroke on my laptop
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 8 May 2020 04:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726616AbgEHIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 04:23:16 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C7B20735;
+        Fri,  8 May 2020 08:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588926195;
+        bh=sSCdTLxVSQxfqLsYipbKP5DLysQXUOvZrPx43Rlbsrs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zhPDCZJtBMXL/zvrjsx45fA68iVa+mnjx92oQJ1vPoMqg2PlJvRNR4Q0LPLfnBIU+
+         zyVhma7y2Cam/U9HFkZb8Fkg2+1udxBjqFWBpKZ8ESVCvW7hM4KKAmkiGSYloHapl6
+         K8AdjC5GijuFftN4qYJuz0O2jLsgl627XV+a9vig=
+Date:   Fri, 8 May 2020 17:23:09 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 2 07/18] context_tracking: Ensure that the
+ critical path cannot be instrumented
+Message-Id: <20200508172309.470787329827c8bfcd797eb1@kernel.org>
+In-Reply-To: <20200505134340.811520478@linutronix.de>
+References: <20200505134112.272268764@linutronix.de>
+        <20200505134340.811520478@linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 2:05 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Thursday, May 7, 2020 5:38:11 AM CEST Chris Chiu wrote:
-> > On Wed, May 6, 2020 at 6:19 PM Rafael J. Wysocki <rafael@kernel.org> wr=
-ote:
-> > >
-> > > On Wed, May 6, 2020 at 11:32 AM Rafael J. Wysocki <rafael@kernel.org>=
- wrote:
-> > > >
-> > > >
-> > > > Thanks for the report, the issue evidently is EC-related.
-> > > >
-> > > > > @@ -1024,7 +1024,7 @@ static bool acpi_s2idle_wake(void)
-> > > > >                  * regarded as a spurious one.
-> > > > >                  */
-> > > > >                 if (!acpi_ec_dispatch_gpe())
-> > > > > -                       return false;
-> > > > > +                       return true;
-> > > >
-> > > > Have you tried commenting out simply removing the if () check and t=
-he
-> > > > following return statement?
-> > >
-> > > Scratch that.
-> > >
-> > > Instead, please try doing
-> > >
-> > > acpi_ec_dispatch_gpe()
-> > >
-> > > instead of the if () and the following return statement.
-> >
-> > Yes. I verified with the modification you suggested on my laptop. It's
-> > working OK.
-> > I can wake from a keystroke w/o problem.
-> >
-> > @ -1024,8 +1024,7 @@ static bool acpi_s2idle_wake(void)
-> >                  * If the EC GPE status bit has not been set, the wakeu=
-p is
-> >                  * regarded as a spurious one.
-> >                  */
-> > -               if (!acpi_ec_dispatch_gpe())
-> > -                       return false;
-> > +               acpi_ec_dispatch_gpe();
-> >
-> >                 /*
-> >                  * Cancel the wakeup and process all pending events in =
-case
-> >
->
-> OK, great, thanks for the confirmation!
->
-> Does the appended patch work for you then?
->
-> It should be functionally equivalent to the above change if I didn't mess=
- it up.
->
->
+On Tue, 05 May 2020 15:41:19 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> context tracking lacks a few protection mechanisms against instrumentation:
+> 
+>  - While the core functions are marked NOKPROBE they lack protection
+>    against function tracing which is required as the function entry/exit
+>    points can be utilized by BPF.
+> 
+>  - static functions invoked from the protected functions need to be marked
+>    as well as they can be instrumented otherwise.
+> 
+>  - using plain inline allows the compiler to emit traceable and probable
+>    functions.
+> 
+> Fix this by marking the functions noinstr and converting the plain inlines
+> to __always_inline.
+> 
+> The NOKPROBE_SYMBOL() annotations are removed as the .noinstr.text section
+> is already excluded from being probed.
+> 
+> Cures the following objtool warnings:
+> 
+>  vmlinux.o: warning: objtool: enter_from_user_mode()+0x34: call to __context_tracking_exit() leaves .noinstr.text section
+>  vmlinux.o: warning: objtool: prepare_exit_to_usermode()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
+>  vmlinux.o: warning: objtool: syscall_return_slowpath()+0x29: call to __context_tracking_enter() leaves .noinstr.text section
+>  vmlinux.o: warning: objtool: do_syscall_64()+0x7f: call to __context_tracking_enter() leaves .noinstr.text section
+>  vmlinux.o: warning: objtool: do_int80_syscall_32()+0x3d: call to __context_tracking_enter() leaves .noinstr.text section
+>  vmlinux.o: warning: objtool: do_fast_syscall_32()+0x9c: call to __context_tracking_enter() leaves .noinstr.text section
+> 
+> and generates new ones...
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks!
+
 > ---
->  drivers/acpi/ec.c       |   23 ++++++++++++++---------
->  drivers/acpi/internal.h |    1 -
->  drivers/acpi/sleep.c    |   14 ++------------
->  3 files changed, 16 insertions(+), 22 deletions(-)
->
-> Index: linux-pm/drivers/acpi/sleep.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-pm.orig/drivers/acpi/sleep.c
-> +++ linux-pm/drivers/acpi/sleep.c
-> @@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
->                 if (acpi_check_wakeup_handlers())
->                         return true;
->
-> -               /*
-> -                * If the status bit is set for any enabled GPE other tha=
-n the
-> -                * EC one, the wakeup is regarded as a genuine one.
-> -                */
-> -               if (acpi_ec_other_gpes_active())
-> +               /* Check non-EC GPE wakeups and dispatch the EC GPE. */
-> +               if (acpi_ec_dispatch_gpe())
->                         return true;
->
->                 /*
-> -                * If the EC GPE status bit has not been set, the wakeup =
-is
-> -                * regarded as a spurious one.
-> -                */
-> -               if (!acpi_ec_dispatch_gpe())
-> -                       return false;
-> -
-> -               /*
->                  * Cancel the wakeup and process all pending events in ca=
-se
->                  * there are any wakeup ones in there.
->                  *
-> Index: linux-pm/drivers/acpi/ec.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-pm.orig/drivers/acpi/ec.c
-> +++ linux-pm/drivers/acpi/ec.c
-> @@ -1994,23 +1994,28 @@ void acpi_ec_set_gpe_wake_mask(u8 action
->                 acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+>  include/linux/context_tracking.h       |    6 +++---
+>  include/linux/context_tracking_state.h |    6 +++---
+>  kernel/context_tracking.c              |   14 ++++++++------
+>  3 files changed, 14 insertions(+), 12 deletions(-)
+> 
+> --- a/include/linux/context_tracking.h
+> +++ b/include/linux/context_tracking.h
+> @@ -33,13 +33,13 @@ static inline void user_exit(void)
 >  }
->
-> -bool acpi_ec_other_gpes_active(void)
-> -{
-> -       return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX=
-);
-> -}
-> -
->  bool acpi_ec_dispatch_gpe(void)
+>  
+>  /* Called with interrupts disabled.  */
+> -static inline void user_enter_irqoff(void)
+> +static __always_inline void user_enter_irqoff(void)
 >  {
->         u32 ret;
->
->         if (!first_ec)
-> -               return false;
-> +               return acpi_any_gpe_status_set(U32_MAX);
->
-> +       /*
-> +        * Report wakeup if the status bit is set for any enabled GPE oth=
-er
-> +        * than the EC one.
-> +        */
-> +       if (acpi_any_gpe_status_set(first_ec->gpe))
-> +               return true;
-> +
-> +       /*
-> +        * Dispatch the EC GPE in-band, but do not report wakeup in any c=
-ase
-> +        * to allow the caller to process events properly after that.
-> +        */
->         ret =3D acpi_dispatch_gpe(NULL, first_ec->gpe);
-> -       if (ret =3D=3D ACPI_INTERRUPT_HANDLED) {
-> +       if (ret =3D=3D ACPI_INTERRUPT_HANDLED)
->                 pm_pr_dbg("EC GPE dispatched\n");
-> -               return true;
-> -       }
-> +
->         return false;
+>  	if (context_tracking_enabled())
+>  		__context_tracking_enter(CONTEXT_USER);
+>  
 >  }
->  #endif /* CONFIG_PM_SLEEP */
-> Index: linux-pm/drivers/acpi/internal.h
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux-pm.orig/drivers/acpi/internal.h
-> +++ linux-pm/drivers/acpi/internal.h
-> @@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
->
->  #ifdef CONFIG_PM_SLEEP
->  void acpi_ec_flush_work(void);
-> -bool acpi_ec_other_gpes_active(void);
->  bool acpi_ec_dispatch_gpe(void);
->  #endif
->
->
+> -static inline void user_exit_irqoff(void)
+> +static __always_inline void user_exit_irqoff(void)
+>  {
+>  	if (context_tracking_enabled())
+>  		__context_tracking_exit(CONTEXT_USER);
+> @@ -75,7 +75,7 @@ static inline void exception_exit(enum c
+>   * is enabled.  If context tracking is disabled, returns
+>   * CONTEXT_DISABLED.  This should be used primarily for debugging.
+>   */
+> -static inline enum ctx_state ct_state(void)
+> +static __always_inline enum ctx_state ct_state(void)
+>  {
+>  	return context_tracking_enabled() ?
+>  		this_cpu_read(context_tracking.state) : CONTEXT_DISABLED;
+> --- a/include/linux/context_tracking_state.h
+> +++ b/include/linux/context_tracking_state.h
+> @@ -26,12 +26,12 @@ struct context_tracking {
+>  extern struct static_key_false context_tracking_key;
+>  DECLARE_PER_CPU(struct context_tracking, context_tracking);
+>  
+> -static inline bool context_tracking_enabled(void)
+> +static __always_inline bool context_tracking_enabled(void)
+>  {
+>  	return static_branch_unlikely(&context_tracking_key);
+>  }
+>  
+> -static inline bool context_tracking_enabled_cpu(int cpu)
+> +static __always_inline bool context_tracking_enabled_cpu(int cpu)
+>  {
+>  	return context_tracking_enabled() && per_cpu(context_tracking.active, cpu);
+>  }
+> @@ -41,7 +41,7 @@ static inline bool context_tracking_enab
+>  	return context_tracking_enabled() && __this_cpu_read(context_tracking.active);
+>  }
+>  
+> -static inline bool context_tracking_in_user(void)
+> +static __always_inline bool context_tracking_in_user(void)
+>  {
+>  	return __this_cpu_read(context_tracking.state) == CONTEXT_USER;
+>  }
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(context_tracking_key);
+>  DEFINE_PER_CPU(struct context_tracking, context_tracking);
+>  EXPORT_SYMBOL_GPL(context_tracking);
+>  
+> -static bool context_tracking_recursion_enter(void)
+> +static noinstr bool context_tracking_recursion_enter(void)
+>  {
+>  	int recursion;
+>  
+> @@ -45,7 +45,7 @@ static bool context_tracking_recursion_e
+>  	return false;
+>  }
+>  
+> -static void context_tracking_recursion_exit(void)
+> +static __always_inline void context_tracking_recursion_exit(void)
+>  {
+>  	__this_cpu_dec(context_tracking.recursion);
+>  }
+> @@ -59,7 +59,7 @@ static void context_tracking_recursion_e
+>   * instructions to execute won't use any RCU read side critical section
+>   * because this function sets RCU in extended quiescent state.
+>   */
+> -void __context_tracking_enter(enum ctx_state state)
+> +void noinstr __context_tracking_enter(enum ctx_state state)
+>  {
+>  	/* Kernel threads aren't supposed to go to userspace */
+>  	WARN_ON_ONCE(!current->mm);
+> @@ -77,8 +77,10 @@ void __context_tracking_enter(enum ctx_s
+>  			 * on the tick.
+>  			 */
+>  			if (state == CONTEXT_USER) {
+> +				instr_begin();
+>  				trace_user_enter(0);
+>  				vtime_user_enter(current);
+> +				instr_end();
+>  			}
+>  			rcu_user_enter();
+>  		}
+> @@ -99,7 +101,6 @@ void __context_tracking_enter(enum ctx_s
+>  	}
+>  	context_tracking_recursion_exit();
+>  }
+> -NOKPROBE_SYMBOL(__context_tracking_enter);
+>  EXPORT_SYMBOL_GPL(__context_tracking_enter);
+>  
+>  void context_tracking_enter(enum ctx_state state)
+> @@ -142,7 +143,7 @@ NOKPROBE_SYMBOL(context_tracking_user_en
+>   * This call supports re-entrancy. This way it can be called from any exception
+>   * handler without needing to know if we came from userspace or not.
+>   */
+> -void __context_tracking_exit(enum ctx_state state)
+> +void noinstr __context_tracking_exit(enum ctx_state state)
+>  {
+>  	if (!context_tracking_recursion_enter())
+>  		return;
+> @@ -155,15 +156,16 @@ void __context_tracking_exit(enum ctx_st
+>  			 */
+>  			rcu_user_exit();
+>  			if (state == CONTEXT_USER) {
+> +				instr_begin();
+>  				vtime_user_exit(current);
+>  				trace_user_exit(0);
+> +				instr_end();
+>  			}
+>  		}
+>  		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
+>  	}
+>  	context_tracking_recursion_exit();
+>  }
+> -NOKPROBE_SYMBOL(__context_tracking_exit);
+>  EXPORT_SYMBOL_GPL(__context_tracking_exit);
+>  
+>  void context_tracking_exit(enum ctx_state state)
+> 
 
-=EF=BC=A8i Rafael,
-    Thanks for your patch. I tried it on my laptop and it's also
-working fine. Wake up by keystroke/power button/lid open all work as
-expected. Thanks.
 
-Chris
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
