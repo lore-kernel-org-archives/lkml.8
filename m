@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07522C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F83CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE538218AC
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1853D218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588943643;
-	bh=KSVvn16QkRt1X+Kar8TuyNt30jtJU7AmfhsrCJcYU0w=;
+	s=default; t=1588943650;
+	bh=xguceMokyyz8H/4yiZy08gxUVNB6y1oDK6yO1+sacWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTWcpWpXv3HSO4SJXO3k1IzcsbttTDvJplKexzd8rahI+Fi5HYGhQwmeJdfpyHI+T
-	 b8DcrZMAQulPAKk+DQWMgbstoeXMweQLdGlJyVzizZbaRZH3GOVh0Tgy/6G/6Kyw/N
-	 OZI4Tuku/TXueTX69BR3fcq7kCEZoSMkDZ0emaUI=
+	b=PAPLQrAiO2OpZkE/cjzkXtrQnqS5PmYMLZUDrcJUxSNT/eNNILLaNBO/Qt/wnDS+8
+	 nl4SVOGGU5XHeKG1wjTerk5ST9Na9JuvspMx13OqKYizNREwzjlZ5gJlovViqc41lx
+	 h/0G6YrGTIpF916N7SVMRGsFPf7kvcfgR70tI1QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgEHNOD (ORCPT
+        id S1729849AbgEHNOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50142 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 09:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgEHMr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:47:29 -0400
+        id S1728923AbgEHMrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:47:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E162495E;
-        Fri,  8 May 2020 12:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3897021473;
+        Fri,  8 May 2020 12:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942049;
-        bh=KSVvn16QkRt1X+Kar8TuyNt30jtJU7AmfhsrCJcYU0w=;
+        s=default; t=1588942043;
+        bh=xguceMokyyz8H/4yiZy08gxUVNB6y1oDK6yO1+sacWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwQinPJv1IeMgdmXGBT3H6dUkVq+C/uEMk0TsFhPpdnV5/r2StKafZT86D6ES4TAJ
-         toELa3WCyxhE2L+svlNH5XiH8VLLrtHfYMDoMEuprQJUxOGEI2ORcd52RIAKYehGDr
-         li7MDl/jdrbXq1oJE/d/ywx+Ny+M+T/vt6ZpwSR0=
+        b=j1ROM2+qfBjvAE/NjAytKIGK7F1cHEltH6ZO7cvXSrUFJKJtqLSOjhBmX5GTodFWZ
+         YenqjXYUcIBWyI7MNzS6twTMEsGW3Tg+Ol6l+tj4VrjevlfyCpqsM6oVo62Me98xOw
+         NvGOWBXC99uxRK2BvQdr0yGug56XBoWXW92gCm5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hendrik Donner <hd@os-cillation.de>,
-        David Ahern <dsahern@kernel.org>,
+        stable@vger.kernel.org, David Ahern <dsa@cumulusnetworks.com>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 236/312] ipv4: Fix table id reference in fib_sync_down_addr
-Date:   Fri,  8 May 2020 14:33:47 +0200
-Message-Id: <20200508123141.018140753@linuxfoundation.org>
+Subject: [PATCH 4.4 234/312] net: Dont delete routes in different VRFs
+Date:   Fri,  8 May 2020 14:33:45 +0200
+Message-Id: <20200508123140.882540730@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,36 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-commit e0a312629fefa943534fc46f7bfbe6de3fdaf463 upstream.
+commit 5a56a0b3a45dd0cc5b2f7bec6afd053a474ed9f5 upstream.
 
-Hendrik reported routes in the main table using source address are not
-removed when the address is removed. The problem is that fib_sync_down_addr
-does not account for devices in the default VRF which are associated
-with the main table. Fix by updating the table id reference.
+When deleting an IP address from an interface, there is a clean-up of
+routes which refer to this local address. However, there was no check to
+see that the VRF matched. This meant that deletion wasn't confined to
+the VRF it should have been.
 
-Fixes: 5a56a0b3a45d ("net: Don't delete routes in different VRFs")
-Reported-by: Hendrik Donner <hd@os-cillation.de>
-Signed-off-by: David Ahern <dsahern@kernel.org>
+To solve this, a new field has been added to fib_info to hold a table
+id. When removing fib entries corresponding to a local ip address, this
+table id is also used in the comparison.
+
+The table id is populated when the fib_info is created. This was already
+done in some places, but not in ip_rt_ioctl(). This has now been fixed.
+
+Fixes: 021dd3b8a142 ("net: Add routes to the table associated with the device")
+Acked-by: David Ahern <dsa@cumulusnetworks.com>
+Tested-by: David Ahern <dsa@cumulusnetworks.com>
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/fib_semantics.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/ip_fib.h     |    3 ++-
+ net/ipv4/fib_frontend.c  |    3 ++-
+ net/ipv4/fib_semantics.c |    8 ++++++--
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
+--- a/include/net/ip_fib.h
++++ b/include/net/ip_fib.h
+@@ -112,6 +112,7 @@ struct fib_info {
+ 	unsigned char		fib_scope;
+ 	unsigned char		fib_type;
+ 	__be32			fib_prefsrc;
++	u32			fib_tb_id;
+ 	u32			fib_priority;
+ 	struct dst_metrics	*fib_metrics;
+ #define fib_mtu fib_metrics->metrics[RTAX_MTU-1]
+@@ -320,7 +321,7 @@ void fib_flush_external(struct net *net)
+ /* Exported by fib_semantics.c */
+ int ip_fib_check_default(__be32 gw, struct net_device *dev);
+ int fib_sync_down_dev(struct net_device *dev, unsigned long event, bool force);
+-int fib_sync_down_addr(struct net *net, __be32 local);
++int fib_sync_down_addr(struct net_device *dev, __be32 local);
+ int fib_sync_up(struct net_device *dev, unsigned int nh_flags);
+ void fib_sync_mtu(struct net_device *dev, u32 orig_mtu);
+ 
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -509,6 +509,7 @@ static int rtentry_to_fib_config(struct
+ 		if (!dev)
+ 			return -ENODEV;
+ 		cfg->fc_oif = dev->ifindex;
++		cfg->fc_table = l3mdev_fib_table(dev);
+ 		if (colon) {
+ 			struct in_ifaddr *ifa;
+ 			struct in_device *in_dev = __in_dev_get_rtnl(dev);
+@@ -1034,7 +1035,7 @@ no_promotions:
+ 			 * First of all, we scan fib_info list searching
+ 			 * for stray nexthop entries, then ignite fib_flush.
+ 			 */
+-			if (fib_sync_down_addr(dev_net(dev), ifa->ifa_local))
++			if (fib_sync_down_addr(dev, ifa->ifa_local))
+ 				fib_flush(dev_net(dev));
+ 		}
+ 	}
 --- a/net/ipv4/fib_semantics.c
 +++ b/net/ipv4/fib_semantics.c
-@@ -1358,8 +1358,8 @@ int fib_sync_down_addr(struct net_device
+@@ -1069,6 +1069,7 @@ struct fib_info *fib_create_info(struct
+ 	fi->fib_priority = cfg->fc_priority;
+ 	fi->fib_prefsrc = cfg->fc_prefsrc;
+ 	fi->fib_type = cfg->fc_type;
++	fi->fib_tb_id = cfg->fc_table;
+ 
+ 	fi->fib_nhs = nhs;
+ 	change_nexthops(fi) {
+@@ -1352,18 +1353,21 @@ nla_put_failure:
+  *   referring to it.
+  * - device went down -> we must shutdown all nexthops going via it.
+  */
+-int fib_sync_down_addr(struct net *net, __be32 local)
++int fib_sync_down_addr(struct net_device *dev, __be32 local)
+ {
  	int ret = 0;
  	unsigned int hash = fib_laddr_hashfn(local);
  	struct hlist_head *head = &fib_info_laddrhash[hash];
-+	int tb_id = l3mdev_fib_table(dev) ? : RT_TABLE_MAIN;
- 	struct net *net = dev_net(dev);
--	int tb_id = l3mdev_fib_table(dev);
++	struct net *net = dev_net(dev);
++	int tb_id = l3mdev_fib_table(dev);
  	struct fib_info *fi;
  
  	if (!fib_info_laddrhash || local == 0)
+ 		return 0;
+ 
+ 	hlist_for_each_entry(fi, head, fib_lhash) {
+-		if (!net_eq(fi->fib_net, net))
++		if (!net_eq(fi->fib_net, net) ||
++		    fi->fib_tb_id != tb_id)
+ 			continue;
+ 		if (fi->fib_prefsrc == local) {
+ 			fi->fib_flags |= RTNH_F_DEAD;
 
 
