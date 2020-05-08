@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4029C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1512C38A2A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A874C24959
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8042F24963
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588942401;
-	bh=wIKXzFqMTAINVGKW6QkWm/9DSbQ3VQX2Ny4HMXoVPb4=;
+	s=default; t=1588942409;
+	bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zopPe3Q+QTqMzbpVSrb7Z7DUbFHPf2WGnoqCdD5JoLxuQh/JWmsmkLaapZx/t9Kas
-	 9wv+0XGEk1fYb8F2f/4Sv4Rk6v5/5AcfJiwyL18NjjC6f19Swe/W26qiPqrPIK+z0Z
-	 QSkAzOi37K4saaJYyGyKZ7baZuC0gpWd8ohXictA=
+	b=1ovj/z5hfjPeAGaKk6pm2T5xarkIpunt0cMsz5GOeqaZY1y7OMhhZFXsuTLYtwrjr
+	 utWdMymmrZ1sAyn8v49rl4vPt4zbB4E3DwE3/H0AJywfJxJRfx/A9iGtUb4naQ9/1V
+	 9uRh9hR6Yjefiyb4uh4MSHukl8Z6qUMqjFtAsWJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgEHMxU (ORCPT
+        id S1730083AbgEHMx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729882AbgEHMxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:53:15 -0400
+        id S1730070AbgEHMxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:53:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DADDD24959;
-        Fri,  8 May 2020 12:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C4924953;
+        Fri,  8 May 2020 12:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588942394;
-        bh=wIKXzFqMTAINVGKW6QkWm/9DSbQ3VQX2Ny4HMXoVPb4=;
+        s=default; t=1588942401;
+        bh=/pCLZHYr2OmVi2mS3ZUGZ80/NyMpK1+qw2ThEw/BWPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKMAEXwTLsBSrm2CwaUh9/bxH6mQxydHwVA1X58pV4Q/EjHsjsitU5jgHzz9QneCX
-         lqW4TmyyLu2HciDcM1uOzWM+LEYF983bPdV9iAsCWB5L6G6blbHIKwbGqZs1B2m+sU
-         3aYrM5uW9LXjRBlPE8leQv5oD4y9EZqPjFdrrtig=
+        b=vVv8Y+9lHvNelmXr7QePV2Vt5SBkC1y8x/gXVYS6SzN0ME0+vU5oP2642HYLDzUGN
+         cjzd6EeAHYK67Gme7XGlVv80nbn3qyncv1LeTQnmpF5AEKqc/UPRNjSpY3M8naVdR9
+         z/EGwm8WadvkQg3X7iVWuvBxE7jxYPaT6D8Z0w6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 05/50] ASoC: topology: Check soc_tplg_add_route return value
-Date:   Fri,  8 May 2020 14:35:11 +0200
-Message-Id: <20200508123044.024830545@linuxfoundation.org>
+Subject: [PATCH 5.4 08/50] selftests/ipc: Fix test failure seen after initial test run
+Date:   Fri,  8 May 2020 14:35:14 +0200
+Message-Id: <20200508123044.532376143@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
 References: <20200508123043.085296641@linuxfoundation.org>
@@ -64,38 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
 
-[ Upstream commit 6856e887eae3efc0fe56899cb3f969fe063171c5 ]
+[ Upstream commit b87080eab4c1377706c113fc9c0157f19ea8fed1 ]
 
-Function soc_tplg_add_route can propagate error code from callback, we
-should check its return value and handle fail in correct way.
+After successfully running the IPC msgque test once, subsequent runs
+result in a test failure:
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200327204729.397-5-amadeuszx.slawinski@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  $ sudo ./run_kselftest.sh
+  TAP version 13
+  1..1
+  # selftests: ipc: msgque
+  # Failed to get stats for IPC queue with id 0
+  # Failed to dump queue: -22
+  # Bail out!
+  # # Pass 0 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
+  not ok 1 selftests: ipc: msgque # exit=1
+
+The dump_queue() function loops through the possible message queue index
+values using calls to msgctl(kern_id, MSG_STAT, ...) where kern_id
+represents the index value. The first time the test is ran, the initial
+index value of 0 is valid and the test is able to complete. The index
+value of 0 is not valid in subsequent test runs and the loop attempts to
+try index values of 1, 2, 3, and so on until a valid index value is
+found that corresponds to the message queue created earlier in the test.
+
+The msgctl() syscall returns -1 and sets errno to EINVAL when invalid
+index values are used. The test failure is caused by incorrectly
+comparing errno to -EINVAL when cycling through possible index values.
+
+Fix invalid test failures on subsequent runs of the msgque test by
+correctly comparing errno values to a non-negated EINVAL.
+
+Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/ipc/msgque.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index efe6ad3bfcd9b..e0b40d4d8784c 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1283,7 +1283,9 @@ static int soc_tplg_dapm_graph_elems_load(struct soc_tplg *tplg,
- 		routes[i]->dobj.index = tplg->index;
- 		list_add(&routes[i]->dobj.list, &tplg->comp->dobj_list);
- 
--		soc_tplg_add_route(tplg, routes[i]);
-+		ret = soc_tplg_add_route(tplg, routes[i]);
-+		if (ret < 0)
-+			break;
- 
- 		/* add route, but keep going if some fail */
- 		snd_soc_dapm_add_routes(dapm, routes[i], 1);
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index 4c156aeab6b80..5ec4d9e18806c 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -137,7 +137,7 @@ int dump_queue(struct msgque_data *msgque)
+ 	for (kern_id = 0; kern_id < 256; kern_id++) {
+ 		ret = msgctl(kern_id, MSG_STAT, &ds);
+ 		if (ret < 0) {
+-			if (errno == -EINVAL)
++			if (errno == EINVAL)
+ 				continue;
+ 			printf("Failed to get stats for IPC queue with id %d\n",
+ 					kern_id);
 -- 
 2.20.1
 
