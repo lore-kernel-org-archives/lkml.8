@@ -2,79 +2,88 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66E5C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405D2C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4EB6208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E95420746
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 00:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEHA3G (ORCPT
+        id S1726756AbgEHAeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 May 2020 20:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726480AbgEHA3G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 May 2020 20:29:06 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56134C05BD43;
-        Thu,  7 May 2020 17:29:06 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 55F941193B1A6;
-        Thu,  7 May 2020 17:29:03 -0700 (PDT)
-Date:   Thu, 07 May 2020 17:28:33 -0700 (PDT)
-Message-Id: <20200507.172833.1823250580053812142.davem@davemloft.net>
-To:     arnd@arndb.de
-Cc:     kuba@kernel.org, willemb@google.com, martin.varghese@nokia.com,
-        ap420073@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net: bareudp: avoid uninitialized variable warning
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200505172232.1034560-1-arnd@arndb.de>
-References: <20200505172232.1034560-1-arnd@arndb.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Thu, 7 May 2020 20:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgEHAeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 May 2020 20:34:05 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE8120661;
+        Fri,  8 May 2020 00:34:02 +0000 (UTC)
+Date:   Thu, 7 May 2020 20:34:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: Re: [patch V4 part 1 32/36] sh/ftrace: Move
+ arch_ftrace_nmi_{enter,exit} into nmi exception
+Message-ID: <20200507203400.58fbdf1e@oasis.local.home>
+In-Reply-To: <20200505134101.248881738@linutronix.de>
+References: <20200505131602.633487962@linutronix.de>
+        <20200505134101.248881738@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 May 2020 17:29:03 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Tue,  5 May 2020 19:22:14 +0200
+On Tue, 05 May 2020 15:16:34 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> clang points out that building without IPv6 would lead to returning
-> an uninitialized variable if a packet with family!=AF_INET is
-> passed into bareudp_udp_encap_recv():
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> drivers/net/bareudp.c:139:6: error: variable 'err' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (family == AF_INET)
->             ^~~~~~~~~~~~~~~~~
-> drivers/net/bareudp.c:146:15: note: uninitialized use occurs here
->         if (unlikely(err)) {
->                      ^~~
-> include/linux/compiler.h:78:42: note: expanded from macro 'unlikely'
->  # define unlikely(x)    __builtin_expect(!!(x), 0)
->                                             ^
-> drivers/net/bareudp.c:139:2: note: remove the 'if' if its condition is always true
->         if (family == AF_INET)
->         ^~~~~~~~~~~~~~~~~~~~~~
+> SuperH is the last remaining user of arch_ftrace_nmi_{enter,exit}(),
+> remove it from the generic code and into the SuperH code.
 > 
-> This cannot happen in practice, so change the condition in a way that
-> gcc sees the IPv4 case as unconditionally true here.
-> For consistency, change all the similar constructs in this file the
-> same way, using "if(IS_ENABLED())" instead of #if IS_ENABLED()".
-> 
-> Fixes: 571912c69f0e ("net: UDP tunnel encapsulation module for tunnelling different protocols like MPLS, IP, NSH etc.")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-Applied, thanks.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> ---
+>  Documentation/trace/ftrace-design.rst |    8 --------
+>  arch/sh/Kconfig                       |    1 -
+>  arch/sh/kernel/traps.c                |   12 ++++++++++++
+>  include/linux/ftrace_irq.h            |   11 -----------
+>  kernel/trace/Kconfig                  |   10 ----------
+>  5 files changed, 12 insertions(+), 30 deletions(-)
+> 
+>
