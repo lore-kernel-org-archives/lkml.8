@@ -2,358 +2,171 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C5EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7988C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A1821841
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23F321841
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 15:42:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgEHPle (ORCPT
+        id S1727907AbgEHPmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 11:41:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40314 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgEHPle (ORCPT
+        Fri, 8 May 2020 11:42:19 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43588 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgEHPmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 11:41:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u4so1769168lfm.7;
-        Fri, 08 May 2020 08:41:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kMRstuQ4C+0ueulo9c/PMnnUy//TC/HKKnVfQiSa3p4=;
-        b=hTsfCaYz/kfYHZOe+93LKl8Td9TIropE5njHT1WC5+k9H7whqfEAIvWgUJcxFvs8km
-         33rsqsQo43JnaVSKxvQM8gdKvCavooCtPPEfdar/R7eSy6IQ3sWw5lN+fiULuT9Sa3xB
-         pDA9McK2+cRBd15r7bEltiBe3L5AhR0yQGanksxPAliy3xryMPEbScJ48PqZ1n73PHlD
-         hES1foExJxF5GN8m/0F0eZKXZdPofH/4GqlwTTdw79ouESHekDNjKQdVSBJmuu+lMRV/
-         RbVCwnRqDYCjlPIC2JczWPiXRlhuBREyQDYZgmZcBi0AE8zrshwoddWOnoCzTyCiZill
-         tWlg==
-X-Gm-Message-State: AOAM530aeFue/2wI5Ur1MhgpzCVYP0Nwm75uizISOPvkCRl354zF+RdH
-        Hp3uXlh1GIMt6PTmBjyv2ao=
-X-Google-Smtp-Source: ABdhPJwOQ3UjhGF3Sk/gcmrjirWcblQfl4zumcpIyDW9vS5/2QS0QU51jfSpS/nGaPjp5UntBEw1HA==
-X-Received: by 2002:ac2:58c8:: with SMTP id u8mr2382355lfo.142.1588952490703;
-        Fri, 08 May 2020 08:41:30 -0700 (PDT)
-Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id j29sm1679056lfp.90.2020.05.08.08.41.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 08:41:30 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:40:43 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v12 02/11] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Message-ID: <311fea741bafdcd33804d3187c1642e24275e3e5.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 8 May 2020 11:42:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5471580307C1;
+        Fri,  8 May 2020 15:42:13 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tlhirnE3egQ7; Fri,  8 May 2020 18:42:12 +0300 (MSK)
+Date:   Fri, 8 May 2020 18:42:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 2/2] spi: Add Baikal-T1 System Boot SPI Controller driver
+Message-ID: <20200508154210.r2pp5asadalvf6ij@mobilestation>
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-3-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VdtzdX-sOvq2cZdXqGUmU=0rdzQW_USGD_q0D59pUMTWg@mail.gmail.com>
+ <20200508101541.e3yxaocuilaiyutg@mobilestation>
+ <20200508102210.GC4820@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200508102210.GC4820@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    Add a KUnit test for the linear_ranges helper.
+On Fri, May 08, 2020 at 11:22:10AM +0100, Mark Brown wrote:
+> On Fri, May 08, 2020 at 01:15:41PM +0300, Serge Semin wrote:
+> > On Fri, May 08, 2020 at 01:03:11PM +0300, Andy Shevchenko wrote:
+> 
+> > > > slave device. Taking into account the peculiarities of the controller
+> > > > registers and physically mapped SPI flash access, very limited resources
+> > > > and seeing the normal usecase of the controller is to access an external
+> > > > SPI-nor flash, we decided to create a dedicated SPI driver for it.
+> 
+> > > It seems a lot of code.
+> > > Why can't you use spi-dw-mmio.c et al.?
+> 
+> > I said above why. Even though the registers set is similar It's too specific
+> > to be integrated into the generic DW SSI driver.
+> 
+> Can you be more specific about the issues?  From what you wrote it
+> sounded like the main thing was chip select handling.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
----
+I thought it would be obvious from the patch itself. I've thoroughly described all
+the issues there. Here in cover-letter it's a summary of the main ones.
+Anyway here are all collected at once:
 
-Changes since v11: Added missing dependency to LINEAR_RANGES lib.
+1) Registers mapping. The DW SSI registers are shifted by 0x100 with
+respect to the MMIO region start. The lowest 0x100 registers are
+responsible for the Baikal-T1 Boot Controller settings. There aren't much
+of them there though. Our code is interested only in a flag, which switches
+an accessibility of the DW APB SSI registers and direct SPI flash mapping.
+And this switchability is a reason of another peculiarity (see the next
+item for details).
 
- lib/Kconfig.debug        |  12 +++
- lib/Makefile             |   1 +
- lib/test_linear_ranges.c | 228 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 241 insertions(+)
- create mode 100644 lib/test_linear_ranges.c
+2) SPI flash direct mapping. SPI flash direct mapping and DW APB SSI registers
+are mutual exclusive, so only one of them can be enabled at a time. In
+order to use the dirmap we have to switch the RDA bit off in the Boot
+Controller setup register. If DW APB SSI registers need to be accessed the
+RDA bit should be set. For this reason we have to make sure that dirmap
+operations, SPI operations and SPI-mem-ops operations are exclusive, since
+some of them need to interact with the DW APB SSI registers, while another
+the directly mapped SPI flash MMIO (currently ctlr->io_mutex is responsible
+for this).
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 21d9c5f6e7ec..f3322a620674 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2092,6 +2092,18 @@ config LIST_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
-+config LINEAR_RANGES_TEST
-+	tristate "KUnit test for linear_ranges"
-+	depends on KUNIT
-+	select LINEAR_RANGES
-+	help
-+	  This builds the linear_ranges unit test, which runs on boot.
-+	  Tests the linear_ranges logic correctness.
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 20b9cfdcad69..cd548bfa8df9 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -310,3 +310,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
- 
- # KUnit tests
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-+obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-diff --git a/lib/test_linear_ranges.c b/lib/test_linear_ranges.c
-new file mode 100644
-index 000000000000..676e0b8abcdd
---- /dev/null
-+++ b/lib/test_linear_ranges.c
-@@ -0,0 +1,228 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test for the linear_ranges helper.
-+ *
-+ * Copyright (C) 2020, ROHM Semiconductors.
-+ * Author: Matti Vaittinen <matti.vaittien@fi.rohmeurope.com>
-+ */
-+#include <kunit/test.h>
-+
-+#include <linux/linear_range.h>
-+
-+/* First things first. I deeply dislike unit-tests. I have seen all the hell
-+ * breaking loose when people who think the unit tests are "the silver bullet"
-+ * to kill bugs get to decide how a company should implement testing strategy...
-+ *
-+ * Believe me, it may get _really_ ridiculous. It is tempting to think that
-+ * walking through all the possible execution branches will nail down 100% of
-+ * bugs. This may lead to ideas about demands to get certain % of "test
-+ * coverage" - measured as line coverage. And that is one of the worst things
-+ * you can do.
-+ *
-+ * Ask people to provide line coverage and they do. I've seen clever tools
-+ * which generate test cases to test the existing functions - and by default
-+ * these tools expect code to be correct and just generate checks which are
-+ * passing when ran against current code-base. Run this generator and you'll get
-+ * tests that do not test code is correct but just verify nothing changes.
-+ * Problem is that testing working code is pointless. And if it is not
-+ * working, your test must not assume it is working. You won't catch any bugs
-+ * by such tests. What you can do is to generate a huge amount of tests.
-+ * Especially if you were are asked to proivde 100% line-coverage x_x. So what
-+ * does these tests - which are not finding any bugs now - do?
-+ *
-+ * They add inertia to every future development. I think it was Terry Pratchet
-+ * who wrote someone having same impact as thick syrup has to chronometre.
-+ * Excessive amount of unit-tests have this effect to development. If you do
-+ * actually find _any_ bug from code in such environment and try fixing it...
-+ * ...chances are you also need to fix the test cases. In sunny day you fix one
-+ * test. But I've done refactoring which resulted 500+ broken tests (which had
-+ * really zero value other than proving to managers that we do do "quality")...
-+ *
-+ * After this being said - there are situations where UTs can be handy. If you
-+ * have algorithms which take some input and should produce output - then you
-+ * can implement few, carefully selected simple UT-cases which test this. I've
-+ * previously used this for example for netlink and device-tree data parsing
-+ * functions. Feed some data examples to functions and verify the output is as
-+ * expected. I am not covering all the cases but I will see the logic should be
-+ * working.
-+ *
-+ * Here we also do some minor testing. I don't want to go through all branches
-+ * or test more or less obvious things - but I want to see the main logic is
-+ * working. And I definitely don't want to add 500+ test cases that break when
-+ * some simple fix is done x_x. So - let's only add few, well selected tests
-+ * which ensure as much logic is good as possible.
-+ */
-+
-+/*
-+ * Test Range 1:
-+ * selectors:	2	3	4	5	6
-+ * values (5):	10	20	30	40	50
-+ *
-+ * Test Range 2:
-+ * selectors:	7	8	9	10
-+ * values (4):	100	150	200	250
-+ */
-+
-+#define RANGE1_MIN 10
-+#define RANGE1_MIN_SEL 2
-+#define RANGE1_STEP 10
-+
-+/* 2, 3, 4, 5, 6 */
-+static const unsigned int range1_sels[] = { RANGE1_MIN_SEL, RANGE1_MIN_SEL + 1,
-+					    RANGE1_MIN_SEL + 2,
-+					    RANGE1_MIN_SEL + 3,
-+					    RANGE1_MIN_SEL + 4 };
-+/* 10, 20, 30, 40, 50 */
-+static const unsigned int range1_vals[] = { RANGE1_MIN, RANGE1_MIN +
-+					    RANGE1_STEP,
-+					    RANGE1_MIN + RANGE1_STEP * 2,
-+					    RANGE1_MIN + RANGE1_STEP * 3,
-+					    RANGE1_MIN + RANGE1_STEP * 4 };
-+
-+#define RANGE2_MIN 100
-+#define RANGE2_MIN_SEL 7
-+#define RANGE2_STEP 50
-+
-+/*  7, 8, 9, 10 */
-+static const unsigned int range2_sels[] = { RANGE2_MIN_SEL, RANGE2_MIN_SEL + 1,
-+					    RANGE2_MIN_SEL + 2,
-+					    RANGE2_MIN_SEL + 3 };
-+/* 100, 150, 200, 250 */
-+static const unsigned int range2_vals[] = { RANGE2_MIN, RANGE2_MIN +
-+					    RANGE2_STEP,
-+					    RANGE2_MIN + RANGE2_STEP * 2,
-+					    RANGE2_MIN + RANGE2_STEP * 3 };
-+
-+#define RANGE1_NUM_VALS (ARRAY_SIZE(range1_vals))
-+#define RANGE2_NUM_VALS (ARRAY_SIZE(range2_vals))
-+#define RANGE_NUM_VALS (RANGE1_NUM_VALS + RANGE2_NUM_VALS)
-+
-+#define RANGE1_MAX_SEL (RANGE1_MIN_SEL + RANGE1_NUM_VALS - 1)
-+#define RANGE1_MAX_VAL (range1_vals[RANGE1_NUM_VALS - 1])
-+
-+#define RANGE2_MAX_SEL (RANGE2_MIN_SEL + RANGE2_NUM_VALS - 1)
-+#define RANGE2_MAX_VAL (range2_vals[RANGE2_NUM_VALS - 1])
-+
-+#define SMALLEST_SEL RANGE1_MIN_SEL
-+#define SMALLEST_VAL RANGE1_MIN
-+
-+static struct linear_range testr[] = {
-+	{
-+		.min = RANGE1_MIN,
-+		.min_sel = RANGE1_MIN_SEL,
-+		.max_sel = RANGE1_MAX_SEL,
-+		.step = RANGE1_STEP,
-+	}, {
-+		.min = RANGE2_MIN,
-+		.min_sel = RANGE2_MIN_SEL,
-+		.max_sel = RANGE2_MAX_SEL,
-+		.step = RANGE2_STEP
-+	},
-+};
-+
-+static void range_test_get_value(struct kunit *test)
-+{
-+	int ret, i;
-+	unsigned int sel, val;
-+
-+	for (i = 0; i < RANGE1_NUM_VALS; i++) {
-+		sel = range1_sels[i];
-+		ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
-+		KUNIT_EXPECT_EQ(test, 0, ret);
-+		KUNIT_EXPECT_EQ(test, val, range1_vals[i]);
-+	}
-+	for (i = 0; i < RANGE2_NUM_VALS; i++) {
-+		sel = range2_sels[i];
-+		ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
-+		KUNIT_EXPECT_EQ(test, 0, ret);
-+		KUNIT_EXPECT_EQ(test, val, range2_vals[i]);
-+	}
-+	ret = linear_range_get_value_array(&testr[0], 2, sel + 1, &val);
-+	KUNIT_EXPECT_NE(test, 0, ret);
-+}
-+
-+static void range_test_get_selector_high(struct kunit *test)
-+{
-+	int ret, i;
-+	unsigned int sel;
-+	bool found;
-+
-+	for (i = 0; i < RANGE1_NUM_VALS; i++) {
-+		ret = linear_range_get_selector_high(&testr[0], range1_vals[i],
-+						     &sel, &found);
-+		KUNIT_EXPECT_EQ(test, 0, ret);
-+		KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
-+		KUNIT_EXPECT_TRUE(test, found);
-+	}
-+
-+	ret = linear_range_get_selector_high(&testr[0], RANGE1_MAX_VAL + 1,
-+					     &sel, &found);
-+	KUNIT_EXPECT_LE(test, ret, 0);
-+
-+	ret = linear_range_get_selector_high(&testr[0], RANGE1_MIN - 1,
-+					     &sel, &found);
-+	KUNIT_EXPECT_EQ(test, 0, ret);
-+	KUNIT_EXPECT_FALSE(test, found);
-+	KUNIT_EXPECT_EQ(test, sel, range1_sels[0]);
-+}
-+
-+static void range_test_get_value_amount(struct kunit *test)
-+{
-+	int ret;
-+
-+	ret = linear_range_values_in_range_array(&testr[0], 2);
-+	KUNIT_EXPECT_EQ(test, (int)RANGE_NUM_VALS, ret);
-+}
-+
-+static void range_test_get_selector_low(struct kunit *test)
-+{
-+	int i, ret;
-+	unsigned int sel;
-+	bool found;
-+
-+	for (i = 0; i < RANGE1_NUM_VALS; i++) {
-+		ret = linear_range_get_selector_low_array(&testr[0], 2,
-+							  range1_vals[i], &sel,
-+							  &found);
-+		KUNIT_EXPECT_EQ(test, 0, ret);
-+		KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
-+		KUNIT_EXPECT_TRUE(test, found);
-+	}
-+	for (i = 0; i < RANGE2_NUM_VALS; i++) {
-+		ret = linear_range_get_selector_low_array(&testr[0], 2,
-+							  range2_vals[i], &sel,
-+							  &found);
-+		KUNIT_EXPECT_EQ(test, 0, ret);
-+		KUNIT_EXPECT_EQ(test, sel, range2_sels[i]);
-+		KUNIT_EXPECT_TRUE(test, found);
-+	}
-+
-+	/*
-+	 * Seek value greater than range max => get_selector_*_low should
-+	 * return Ok - but set found to false as value is not in range
-+	 */
-+	ret = linear_range_get_selector_low_array(&testr[0], 2,
-+					range2_vals[RANGE2_NUM_VALS - 1] + 1,
-+					&sel, &found);
-+
-+	KUNIT_EXPECT_EQ(test, 0, ret);
-+	KUNIT_EXPECT_EQ(test, sel, range2_sels[RANGE2_NUM_VALS - 1]);
-+	KUNIT_EXPECT_FALSE(test, found);
-+}
-+
-+static struct kunit_case range_test_cases[] = {
-+	KUNIT_CASE(range_test_get_value_amount),
-+	KUNIT_CASE(range_test_get_selector_high),
-+	KUNIT_CASE(range_test_get_selector_low),
-+	KUNIT_CASE(range_test_get_value),
-+	{},
-+};
-+
-+static struct kunit_suite range_test_module = {
-+	.name = "linear-ranges-test",
-+	.test_cases = range_test_cases,
-+};
-+
-+kunit_test_suites(&range_test_module);
-+
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
+3) A specific access to MMIO (concerning directly mapped SPI flash MMIO).
+The SoC interconnect is designed in a way so we can't use any instruction to
+read/write from/to the MMIO space. It has to be done by lw/sw with
+dword-aligned address passed. Though in this driver we only use a read
+operation from the directly mapped SPI flash memory.
 
+4) No direct handling of the CS. Though this is an issue of all DW SSI
+controllers, here with very small FIFO and no DMA/IRQ supported it mandates to
+workaround any preemption/interruption during a non-GPIO-CS-based transfer.
+For the same reason the driver doesn't support normal spi-messages based
+interface if no GPIO-CS supplied. In addition since FIFO is too small and most
+of our platforms don't have GPIO-CS support we had to create the SPI-mem-ops
+instead of generic SPI-callback.
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+5) MMIO access race condition. As I described in the in-code comment it's a
+very tricky race happening during concurrent access from different cores to the
+APB bus. Due to this if SPI interface is working high frequency like
+12.5 - 25 MHz and there is some another code working with APB bus on another
+core, the SPI data pushing function might not keep up with filling small FIFO
+(8 bytes) on time, since the APB bus has got just 50 MHz frequency. Due to
+this I had artificially limit the SPI bus frequency if there is more than one
+CPU in the system.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+6) A single CS. It's normally connected to an external SPI flash so the
+driver is equipped with mem-ops and dirmap out of the box. BTW normal
+SPI-operations are in fact unneeded on all the platforms currently
+equipped with Baikal-T1 because all of them have got SPI flash attached to
+this interface, and most likely it will be like in new platforms too.
+
+7) No interrupts. Yes, this is another peculiarity. Since this DW APB core
+is a part of the boot controller it just don't need IRQs. Boot controller
+is responsible for the code loading from SPI flash. It has got a dedicated
+RTL which provide a transparent access to the flash just by reading from a
+corresponding MMIO range (see the SPI flash direct mapping described above).
+
+8) No DMA. Yeah, and DMA isn't supported for the same reason.
+
+I am pretty sure I have forgotten something. Anyway it has been much easier
+to create a new driver instead of integrating all of these into a generic
+one. Integrating something like this in the current DW APB SSI driver would
+mean to have it completely overwritten (refactored if you want) which would
+bring us to a new driver anyway. I don't think it would be good to
+complicate the generic driver with so many peculiar things scattered around
+the code with various hooks or ifdef, especially seeing the current code has
+already become a bit messy.
+
+> 
+> > > > The driver provides callbacks for native messages-based SPI interface,
+> > > > SPI-memory and direct mapping read operations. Due to not having any
+> > > > asynchronous signaling interface provided by the core we have no choice
+> 
+> What do you mean by "asynchronous signaling interface provided by the
+> core" here?
+
+By asynchronous signalling I meant DMA and IRQ. Non of them provided by the
+controller.
+
+-Sergey
+
