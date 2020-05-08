@@ -2,154 +2,151 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4BBC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A49C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A15124960
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cf51VBGp"
+	by mail.kernel.org (Postfix) with ESMTP id EAAD7218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588944462;
+	bh=WoFe3YzSoDBlR/QxiETEMCC62eGbgcNbl+XND+75qcg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=awNMeZqvzDXH8TFPx39Y+/bAPzWjBGxUsAmEE4w/eVueAUwmp63hquZovXGKLH51B
+	 9lC+Ed2K2m/lVKQe0M0SmCb0w6P5m3qNHa5VvLv+xZ0KQ8zcNozc0M7p0rSL182RWq
+	 yjCyc+QtVR0HiOkRxH0cnSLtQXbYlmMYB70OSDJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgEHNZ3 (ORCPT
+        id S1727824AbgEHN1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726736AbgEHNZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:25:28 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2944EC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 06:25:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z22so1415944lfd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 06:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sYFngmQuiKj7kYwyJTK5tfHqOHjbxR0GHIB5m/n0A4s=;
-        b=Cf51VBGpTVncNyypzafaMswErlBVVkKsuBZHqtPhOLPKowx6U319ToIwP6m5e6mpRh
-         reAGFanDQBRdo0yq41C6od6xAcZ3/qy1z3Bn4i8/fn9QosxBRl1AWBOQsEvxs/PXTKSK
-         WYEEG4rCEnNKBoipBN5aEhix/DSOgIhR0Bq3b9LfzMFlV/0L5H+QXWEVBsbUzqXrvVIu
-         UJHUplKW+tyy4K5X1A9O2cOqWFbdEjE1XlleUvVb9Lg1AImgfisqVJB002wj0XqGmRdi
-         tZKlPOwCqdV29jhgvG6M3tYzkVD3sYNM5uPHzsEL0GGBYsGYGKwvTh0a3K0cjHgZxayu
-         4tAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sYFngmQuiKj7kYwyJTK5tfHqOHjbxR0GHIB5m/n0A4s=;
-        b=UMhac4+wJ2wt5rjh7p1f5QJ8OvGlJ0tyecOi/n6j1jLLAy+QEW+zkfTVJo41A0fHbI
-         4QV/nc4wQ6fVeU1JtD4YGC14WXynIkNOCPf74SkSsmODA+Awm1jOe1S+XSOrrYlGO2Qi
-         7yN9qeASZu3iFoxUv389n37+KaKPd7q6dr/vvIgiib1bLBbU4QyQ3VPNVfAyxo5/fK5m
-         zGwRhQZq+6Vm0Ln875FYmpInLnX24Wq6UIIc3ioVeeWQKFaAdfQSUo6EqeLqKtQsg+f3
-         mH19y5VtEoPRfbUZ472VihYviQJiDB4Ed7aCEQrF9XaeCvL5EZ4xa6QECgi7sTL8q+n2
-         1foQ==
-X-Gm-Message-State: AOAM5332xNMe2w243Dm4SdiaTqDwWq+PfscDcePtYMYh7bnXMWTNFbfD
-        ppW4Vhh1WbgaBKuqBZxqRP/LKEWgJwPtL57adrOiVw==
-X-Google-Smtp-Source: ABdhPJy6STE2g2CuqlHSTfXqMy2kaHraheaovmbyST2t58vLi5VdRwyOUao8r55gn8pDJZpHRCgsAIkY7YDBnznXW2o=
-X-Received: by 2002:a19:ee19:: with SMTP id g25mr1933226lfb.124.1588944325982;
- Fri, 08 May 2020 06:25:25 -0700 (PDT)
+        Fri, 8 May 2020 09:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgEHN1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 09:27:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 600D4208DB;
+        Fri,  8 May 2020 13:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588944459;
+        bh=WoFe3YzSoDBlR/QxiETEMCC62eGbgcNbl+XND+75qcg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dEKKjcQHeJrZW2rlfo9zA+ChG/wQhnuQRVCbxZdnl1dea2zKgtVo/AeMzC0349xbn
+         9FzfI9IrCWLUKPg8GEOYQug/cup1XRe2nPhrqqJLAQLCRAmIDwXgkmX77e4ne6HHtE
+         3IsxaiLfNUOFDGr9x9CZT9FgqrWKIHhUsVP8pGFE=
+Date:   Fri, 8 May 2020 15:27:37 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>, m.szyprowski@samsung.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 5.4 40/50] dma-direct: exclude dma_direct_map_resource
+ from the min_low_pfn check
+Message-ID: <20200508132737.GA173507@kroah.com>
+References: <20200508123043.085296641@linuxfoundation.org>
+ <20200508123048.730720753@linuxfoundation.org>
+ <CA+G9fYvdD3dhMhGL5=nfT+7xTEdD36zUtceF2fROPF4OQQZbLQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200507204913.18661-1-shakeelb@google.com> <CALOAHbAHK4b2p0oWXY6oHG+WQzK3+TEa46=dPabhYT8ab=65zA@mail.gmail.com>
-In-Reply-To: <CALOAHbAHK4b2p0oWXY6oHG+WQzK3+TEa46=dPabhYT8ab=65zA@mail.gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 8 May 2020 06:25:14 -0700
-Message-ID: <CALvZod7VujYgU=6XfgjSZnzLqDpbHwEYsp2Xbq9MK7w_z=LphA@mail.gmail.com>
-Subject: Re: [PATCH] mm: vmscan: consistent update to pgsteal and pgscan
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYvdD3dhMhGL5=nfT+7xTEdD36zUtceF2fROPF4OQQZbLQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 3:34 AM Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> On Fri, May 8, 2020 at 4:49 AM Shakeel Butt <shakeelb@google.com> wrote:
+On Fri, May 08, 2020 at 06:50:02PM +0530, Naresh Kamboju wrote:
+> On Fri, 8 May 2020 at 18:23, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > One way to measure the efficiency of memory reclaim is to look at the
-> > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > not updated consistently at the system level and the ratio of these are
-> > not very meaningful. The pgsteal and pgscan are updated for only global
-> > reclaim while pgrefill gets updated for global as well as cgroup
-> > reclaim.
+> > From: Christoph Hellwig <hch@lst.de>
 > >
->
-> Hi Shakeel,
->
-> We always use pgscan and pgsteal for monitoring the system level
-> memory pressure, for example, by using sysstat(sar) or some other
-> monitor tools.
+> > commit 68a33b1794665ba8a1d1ef1d3bfcc7c587d380a6 upstream.
+> >
+> > The valid memory address check in dma_capable only makes sense when mapping
+> > normal memory, not when using dma_map_resource to map a device resource.
+> > Add a new boolean argument to dma_capable to exclude that check for the
+> > dma_map_resource case.
+> >
+> > Fixes: b12d66278dd6 ("dma-direct: check for overflows on 32 bit DMA addresses")
+> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> <trim>
+> >
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -327,7 +327,7 @@ static inline bool dma_direct_possible(s
+> >                 size_t size)
+> >  {
+> >         return swiotlb_force != SWIOTLB_FORCE &&
+> > -               dma_capable(dev, dma_addr, size);
+> > +               dma_capable(dev, dma_addr, size, true);
+> 
+> While building kernel Image for arm architecture the following error noticed
+> on stale-rc 5.4 kernel branch.
+> 
+>  # make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
+> arm-linux-gnueabihf-gcc" O=build zImage
+>  #
+>  ../kernel/dma/direct.c: In function ‘dma_direct_possible’:
+>  ../kernel/dma/direct.c:330:3: error: too many arguments to function
+> ‘dma_capable’
+>    330 |   dma_capable(dev, dma_addr, size, true);
+>        |   ^~~~~~~~~~~
+>  In file included from ../include/linux/dma-direct.h:12,
+>                   from ../kernel/dma/direct.c:10:
+>  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+>     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+> addr, size_t size)
+>        |                    ^~~~~~~~~~~
+>  In file included from ../include/linux/init.h:5,
+>                   from ../include/linux/memblock.h:12,
+>                   from ../kernel/dma/direct.c:7:
+>  ../kernel/dma/direct.c: In function ‘dma_direct_map_resource’:
+>  ../kernel/dma/direct.c:379:16: error: too many arguments to function
+> ‘dma_capable’
+>    379 |  if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+>        |                ^~~~~~~~~~~
+>  ../include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
+>     78 | # define unlikely(x) __builtin_expect(!!(x), 0)
+>        |                                          ^
+>  In file included from ../include/linux/dma-direct.h:12,
+>                   from ../kernel/dma/direct.c:10:
+>  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+>     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+> addr, size_t size)
+>        |                    ^~~~~~~~~~~
+>  make[3]: *** [../scripts/Makefile.build:266: kernel/dma/direct.o] Error 1
+>  In file included from ../include/linux/string.h:6,
+>                   from ../include/linux/dma-mapping.h:6,
+>                   from ../include/linux/dma-direct.h:5,
+>                   from ../kernel/dma/swiotlb.c:24:
+>  ../kernel/dma/swiotlb.c: In function ‘swiotlb_map’:
+>  ../kernel/dma/swiotlb.c:681:16: error: too many arguments to function
+> ‘dma_capable’
+>    681 |  if (unlikely(!dma_capable(dev, *dma_addr, size, true))) {
+>        |                ^~~~~~~~~~~
+>  ../include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
+>     78 | # define unlikely(x) __builtin_expect(!!(x), 0)
+>        |                                          ^
+>  In file included from ../include/linux/dma-direct.h:12,
+>                   from ../kernel/dma/swiotlb.c:24:
+>  ../arch/arm/include/asm/dma-direct.h:17:20: note: declared here
+>     17 | static inline bool dma_capable(struct device *dev, dma_addr_t
+> addr, size_t size)
+>        |                    ^~~~~~~~~~
 
-Don't you need pgrefill in addition to pgscan and pgsteal to get the
-full picture of the reclaim activity?
+Ah crap, I think I remember trying to apply this in the past and running
+into these issues.  I'll go drop it now and push out a -rc2, thanks!
 
-> But with this change, these two counters include the memcg pressure as
-> well. It is not easy to know whether the pgscan and pgsteal are caused
-> by system level pressure or only some specific memcgs reaching their
-> memory limit.
->
-> How about adding  cgroup_reclaim() to pgrefill as well ?
->
-
-I am looking for all the reclaim activity on the system. Adding
-!cgroup_reclaim to pgrefill will skip the cgroup reclaim activity.
-Maybe adding pgsteal_cgroup and pgscan_cgroup would be better.
-
-> > Please note that this difference is only for system level vmstats. The
-> > cgroup stats returned by memory.stat are actually consistent. The
-> > cgroup's pgsteal contains number of reclaimed pages for global as well
-> > as cgroup reclaim. So, one way to get the system level stats is to get
-> > these stats from root's memory.stat but root does not expose that
-> > interface. Also for !CONFIG_MEMCG machines /proc/vmstat is the only way
-> > to get these stats. So, make these stats consistent.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > ---
-> >  mm/vmscan.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index cc555903a332..51f7d1efc912 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -1943,8 +1943,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
-> >         reclaim_stat->recent_scanned[file] += nr_taken;
-> >
-> >         item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
-> > -       if (!cgroup_reclaim(sc))
-> > -               __count_vm_events(item, nr_scanned);
-> > +       __count_vm_events(item, nr_scanned);
-> >         __count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
-> >         spin_unlock_irq(&pgdat->lru_lock);
-> >
-> > @@ -1957,8 +1956,7 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
-> >         spin_lock_irq(&pgdat->lru_lock);
-> >
-> >         item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
-> > -       if (!cgroup_reclaim(sc))
-> > -               __count_vm_events(item, nr_reclaimed);
-> > +       __count_vm_events(item, nr_reclaimed);
-> >         __count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
-> >         reclaim_stat->recent_rotated[0] += stat.nr_activate[0];
-> >         reclaim_stat->recent_rotated[1] += stat.nr_activate[1];
-> > --
-> > 2.26.2.526.g744177e7f7-goog
-> >
-> >
->
->
-> --
-> Thanks
-> Yafang
+greg k-h
