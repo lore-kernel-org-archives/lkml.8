@@ -2,108 +2,119 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800CEC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0428C54E4A
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F92208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C74208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgEHJua (ORCPT
+        id S1726873AbgEHJue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:50:30 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34149 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgEHJua (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:50:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 72so1021262otu.1;
-        Fri, 08 May 2020 02:50:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b5uVoI0n1KNv3+qMlrWZ83amX0u3Zd89agbuvXvX3BQ=;
-        b=qbPvHki/Wv18tvrl8EQOd1ZRDvlHWTq4ZDp+fUml6O95rT7/UaAiNlj7ZQzgLx8JoM
-         y/90zprZl8FcPHEPvgC/1p+C49XjWmWqBfq8VwIcpNH6BBAYqU7lYxg6z513WEbl2JwV
-         sJStmpQyVxCxHKl3JT9c34snsMNR+7peb8if8T0pazVFDEZAp5Ju/UhptyYqelBGSkOt
-         SJudahLfv7aELCYLTYpg9A5BK3kY8HweEuo4Rd7xexc4TOk39uFBrEGFw/6Gtzkn2m9z
-         fTA06fSO1uVrIpAd4klzfBqcRSOgE2tg1Ijnk1+Ia7OFuL5JZFqiGxlSqlwO3hPAvr+/
-         KX0A==
-X-Gm-Message-State: AGi0PuYrDlyaOPJEhk5+EqdepZFIsDIYYXE/FFgdKYXfB5dZDjUdPfJa
-        uJFhXncywZKHpX8iwcfsBCXG/5GUXqWuqH9NIOc=
-X-Google-Smtp-Source: APiQypJDV1otoOypylweOFXXW3dlZCPcQtNptWZUNfsC5d7jBL5atkxkLBTRUMF45BNs9jbOlY8aKBznw/nCmv1aAFM=
-X-Received: by 2002:a9d:63da:: with SMTP id e26mr1325383otl.107.1588931429037;
- Fri, 08 May 2020 02:50:29 -0700 (PDT)
+        Fri, 8 May 2020 05:50:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42806 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbgEHJud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 05:50:33 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 583B52AEF2203F4EBEDC;
+        Fri,  8 May 2020 17:50:31 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 8 May 2020 17:50:22 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: shrink spinlock coverage
+Date:   Fri, 8 May 2020 17:50:20 +0800
+Message-ID: <20200508095020.41025-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-References: <20200507112955.23520-1-geert+renesas@glider.be> <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
-In-Reply-To: <CADRPPNTdv3R4t7JsjGuPP5h5APA7vcSMNK1vJMjzPtGw=Uw9-w@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 8 May 2020 11:50:17 +0200
-Message-ID: <CAMuHMdXvHwZ88hhLzKcEW-tFCFiGdWBaABrirG3k1a9Y1=M_2w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] qoriq: Add platform dependencies
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Li,
+In f2fs_try_to_free_nids(), .nid_list_lock spinlock critical region will
+increase as expected shrink number increase, to avoid spining other CPUs
+for long time, we change to release nid caches with small batch each time
+under .nid_list_lock coverage.
 
-On Thu, May 7, 2020 at 11:58 PM Li Yang <leoyang.li@nxp.com> wrote:
-> On Thu, May 7, 2020 at 6:31 AM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Several QorIQ blocks are only present on Freescale or NXP SoCs.
-> > This series adds platform dependencies to the corresponding config
-> > ymbols, to avoid asking the user about them when configuring a kernel
-> > without support for these SoCs.
-> >
-> > Most patches in this series are independent, but the third patch may
-> > cause some Kconfig warnings when applied before the second patch, and
-> > enabling the QorIQ CPU frequency scaling driver in a non-Layerscape
-> > kernel.
-> >
-> > Thanks for your comments!
->
-> Thanks.  The series looks good to me.
->
-> Are we trying to merge them through the various driver subsystems or I
-> can also pull them in through the fsl-soc tree.  If we want to go
-> through driver subsystems:
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2:
+- shrink free nid caches in batch under spinlock coverage.
+ fs/f2fs/node.c | 25 +++++++++++++++----------
+ fs/f2fs/node.h |  3 +++
+ 2 files changed, 18 insertions(+), 10 deletions(-)
 
-"fsl-soc" is safest, if maintainers agree, due to the weak dependency the
-randconfig people may notice.
-Note that Viresh already applied the 2nd patch to the cpufreq tree.
-
-> Acked-by: Li Yang <leoyang.li@nxp.com>
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 4da0d8713df5..1db8cabf727e 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2488,7 +2488,6 @@ void f2fs_alloc_nid_failed(struct f2fs_sb_info *sbi, nid_t nid)
+ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
+ {
+ 	struct f2fs_nm_info *nm_i = NM_I(sbi);
+-	struct free_nid *i, *next;
+ 	int nr = nr_shrink;
+ 
+ 	if (nm_i->nid_cnt[FREE_NID] <= MAX_FREE_NIDS)
+@@ -2497,17 +2496,23 @@ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
+ 	if (!mutex_trylock(&nm_i->build_lock))
+ 		return 0;
+ 
+-	spin_lock(&nm_i->nid_list_lock);
+-	list_for_each_entry_safe(i, next, &nm_i->free_nid_list, list) {
+-		if (nr_shrink <= 0 ||
+-				nm_i->nid_cnt[FREE_NID] <= MAX_FREE_NIDS)
+-			break;
++	while (nr_shrink && nm_i->nid_cnt[FREE_NID] > MAX_FREE_NIDS) {
++		struct free_nid *i, *next;
++		unsigned int batch = SHRINK_NID_BATCH_SIZE;
+ 
+-		__remove_free_nid(sbi, i, FREE_NID);
+-		kmem_cache_free(free_nid_slab, i);
+-		nr_shrink--;
++		spin_lock(&nm_i->nid_list_lock);
++		list_for_each_entry_safe(i, next, &nm_i->free_nid_list, list) {
++			if (!nr_shrink || !batch ||
++				nm_i->nid_cnt[FREE_NID] <= MAX_FREE_NIDS)
++				break;
++			__remove_free_nid(sbi, i, FREE_NID);
++			kmem_cache_free(free_nid_slab, i);
++			nr_shrink--;
++			batch--;
++		}
++		spin_unlock(&nm_i->nid_list_lock);
+ 	}
+-	spin_unlock(&nm_i->nid_list_lock);
++
+ 	mutex_unlock(&nm_i->build_lock);
+ 
+ 	return nr - nr_shrink;
+diff --git a/fs/f2fs/node.h b/fs/f2fs/node.h
+index e05af5df5648..33d677f83569 100644
+--- a/fs/f2fs/node.h
++++ b/fs/f2fs/node.h
+@@ -15,6 +15,9 @@
+ #define FREE_NID_PAGES	8
+ #define MAX_FREE_NIDS	(NAT_ENTRY_PER_BLOCK * FREE_NID_PAGES)
+ 
++/* size of free nid batch when shrinking */
++#define SHRINK_NID_BATCH_SIZE	8
++
+ #define DEF_RA_NID_PAGES	0	/* # of nid pages to be readaheaded */
+ 
+ /* maximum readahead size for node during getting data blocks */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.18.0.rc1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
