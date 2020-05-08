@@ -2,145 +2,147 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869BFC38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A490C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 574222173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:43:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phq+qYMe"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA7920870
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 05:45:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588916728;
+	bh=xl7B0YoVOjHdWRaltXdlzxOy2VDoxVt7dvjedSM273g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Yprix77JaRo+IeSaxyKqu2B57qgRwG93w3shSDcPlIRyrUc3/zdhycvjZz6X+VxS
+	 4BoLNRa7XVXFnI+gQezQ+WV3gUm/g7gB0bAw5fPzE2RkU0R5IRSTA41BfQQi5RDO6V
+	 oAS5PXYtMDPtY6fONwNDOrK6RO0UawLbSyMVcT/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgEHFn4 (ORCPT
+        id S1726797AbgEHFp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 01:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgEHFnz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 01:43:55 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F4BC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu,  7 May 2020 22:43:55 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id c2so330196ybi.7
-        for <linux-kernel@vger.kernel.org>; Thu, 07 May 2020 22:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BiVT8x4Fc5dyq46n+Hw+xDF4oIkQkHtFR1b/SJCs0I4=;
-        b=phq+qYMe/tmA1caYZbha2uS86UrX+JoR3gK3zeZIeQazLEaSE9RApfQAi/p7y5hJ57
-         V5XX0C8acA7Mq1AoSeRo860sfn3QU/+8eYAXZjttoaOuscvEiEwVLqEzYEo3IiKh7zTZ
-         4BrKn8RPhEDBbuXhM3Cr0V5Xdm4nnf6/DEb3su888Yt1ZpxPNs6PXDVOwQCzJ3qqYOfJ
-         4EMGNgyAUD9WadFwdw9wdcslT5yR0AlGXEPPJQIgXYFpbObM6A+WAcHyS8O0IWZTliJ6
-         80tXa6KrLND9zVldwxZuqUsW3zrLDzsbT3P+sbdP5mtvr7xn3zsso/kjiNDQfycEYyRW
-         VCyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BiVT8x4Fc5dyq46n+Hw+xDF4oIkQkHtFR1b/SJCs0I4=;
-        b=jgc6+fH21dBIH4EIblYcQOrx24VQABJSWCMYpOuqeDeFvFTRAP++IgEuAjB70Oz+7Z
-         Py9FxeLIG5fQ4yDaGpEhgO2A6ME0VMfuCu+BgjnMGGSoIk5Rk14YNmRuwTG9NES4f5XY
-         2P5DJre5IYsOkA+JbKrggjUhPHMHptVEDYTaaSKsa9nENQJv9xqLTAGcQ/5BvAqJM/eH
-         h2gZBN+/XmybhUcnZfJw0TXcEIbMi1rk8YYZAkXlF4HT5nt53uRATENgFhD+emiirFq8
-         +oZw5jF7N+1aj7C3cu0pexyaGjIQxIcAk4zSZpl3V6wo8r0sYqwz1s+Dcm+nIODu+h9L
-         b5Ww==
-X-Gm-Message-State: AGi0PubrfcI3r+v0HABAhfyZbTF5q5/3j0BPtE5+f+xFerNJxSWlBQLb
-        Gy/f5Z/quweTuNvHi/JN4BZk8a2qi1/AcRGosG889w==
-X-Google-Smtp-Source: APiQypIpdGKyF4W8GsRGUUk4zGtCDqmFqLpXC0AQwLENnNPtdqCovYxcVCyWnJiASZ0d++HoZhpR7c5m9PF3dfTzUzE=
-X-Received: by 2002:a25:7cc1:: with SMTP id x184mr2015977ybc.403.1588916634370;
- Thu, 07 May 2020 22:43:54 -0700 (PDT)
+        Fri, 8 May 2020 01:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgEHFp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 01:45:27 -0400
+Received: from Mani-XPS-13-9360 (unknown [157.50.45.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BADF20870;
+        Fri,  8 May 2020 05:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588916726;
+        bh=xl7B0YoVOjHdWRaltXdlzxOy2VDoxVt7dvjedSM273g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WlBDb9EwxfnxqPgTBWTPZiayJ7xbuRHy4SFaU1C2LRHWVtucnjfzHBlw0eupdKSa7
+         xa6DR+uUHYfENBxj9hTt00SDnrdYUVjx+29qWFJxBifwvw/NfYxhyLcB7bQRsSzCPU
+         xqycww2M1zVHI12F4FbBMa4yl+M7lALgm9nwis40=
+Date:   Fri, 8 May 2020 11:15:18 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, jhugo@codeaurora.org
+Subject: Re: [PATCH v6 3/8] bus: mhi: core: Add range check for channel id
+ received in event ring
+Message-ID: <20200508054518.GA2696@Mani-XPS-13-9360>
+References: <1588718832-4891-1-git-send-email-bbhatt@codeaurora.org>
+ <1588718832-4891-4-git-send-email-bbhatt@codeaurora.org>
 MIME-Version: 1.0
-References: <20200507081436.49071-1-irogers@google.com> <20200507174835.GB3538@tassilo.jf.intel.com>
- <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com> <20200507214652.GC3538@tassilo.jf.intel.com>
-In-Reply-To: <20200507214652.GC3538@tassilo.jf.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 7 May 2020 22:43:43 -0700
-Message-ID: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] Share events between metrics
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588718832-4891-4-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> > > - without this change events within a metric may get scheduled
-> > >   together, after they may appear as part of a larger group and be
-> > >   multiplexed at different times, lowering accuracy - however, less
-> > >   multiplexing may compensate for this.
-> >
-> > I agree the heuristic in this patch set is naive and would welcome to
-> > improve it from your toplev experience. I think this change is
-> > progress on TopDownL1 - would you agree?
->
-> TopdownL1 in non SMT mode should always fit. Inside a group
-> deduping always makes sense.
->
-> The problem is SMT mode where it doesn't fit. toplev tries
-> to group each node and each level together.
+On Tue, May 05, 2020 at 03:47:07PM -0700, Bhaumik Bhatt wrote:
+> From: Hemant Kumar <hemantk@codeaurora.org>
+> 
+> MHI data completion handler function reads channel id from event
+> ring element. Value is under the control of MHI devices and can be
+> any value between 0 and 255. In order to prevent out of bound access
+> add a bound check against the max channel supported by controller
+> and skip processing of that event ring element.
+> 
+> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  drivers/bus/mhi/core/main.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index 605640c..e60ab21 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>  		case MHI_PKT_TYPE_TX_EVENT:
+>  			chan = MHI_TRE_GET_EV_CHID(local_rp);
+>  			mhi_chan = &mhi_cntrl->mhi_chan[chan];
 
-Thanks Andi, I've provided some examples of TopDownL3_SMT in the cover
-letter of the v3 patch set:
-https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-I tested sandybridge and cascadelake and the results look similar to
-the non-SMT version. Let me know if there's a different variant to
-test.
+Check should be done before this statement, isn't it?
 
-> >
-> > I'm wondering if what is needed are flags to control behavior. For
-> > example, avoiding the use of groups altogether. For TopDownL1 I see.
->
-> Yes the current situation isn't great.
->
-> For Topdown your patch clearly is an improvement, I'm not sure
-> it's for everything though.
->
-> Probably the advanced heuristics are only useful for a few
-> formulas, most are very simple. So maybe it's ok. I guess
-> would need some testing over the existing formulas.
+> +			if (WARN_ON(chan >= mhi_cntrl->max_chan))
+> +				goto next_event;
+> +
 
-Agreed, do you have a pointer on a metric group where things would
-obviously be worse? I started off with a cache miss and hit rate
-metric and similar to topdown this approach is a benefit.
+I don't prefer using gotos for non exit paths but I don't have a better solution
+here. But you can try to wrap 'WARN_ON' inside the 'MHI_TRE_GET_EV_CHID'
+definition and the just use:
 
-In v3 I've added a --metric-no-merge option to retain existing
-grouping behavior, I've also added a --metric-no-group that avoids
-groups for all metrics. This may be useful if the NMI watchdog can't
-be disabled.
+			/*
+			 * Only process the event ring elements whose channel
+			 * ID is within the maximum supported range.
+			 */
+			if (chan < mhi_cntrl->max_chan) {
+                        	mhi_chan = &mhi_cntrl->mhi_chan[chan];
+                        	parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+                        	event_quota--;
+			}
+			break;
 
-Thanks for the input!
-Ian
+This looks more clean.
 
-> -Andi
+>  			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
+>  			event_quota--;
+>  			break;
+> @@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>  			break;
+>  		}
+>  
+> +next_event:
+>  		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+>  		local_rp = ev_ring->rp;
+>  		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+
+So you want the count to get increased for skipped element also?
+
+Thanks,
+Mani
+
+> @@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>  		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>  
+>  		chan = MHI_TRE_GET_EV_CHID(local_rp);
+> +		if (WARN_ON(chan >= mhi_cntrl->max_chan))
+> +			goto next_event;
+> +
+>  		mhi_chan = &mhi_cntrl->mhi_chan[chan];
+>  
+>  		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
+> @@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>  			event_quota--;
+>  		}
+>  
+> +next_event:
+>  		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
+>  		local_rp = ev_ring->rp;
+>  		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
