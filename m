@@ -2,50 +2,53 @@ Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D526C47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C817C54E49
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEA3208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA9F208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 09:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RmPbrrz6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O9BYEco6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHJW1 (ORCPT
+        id S1726922AbgEHJW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 05:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
+        Fri, 8 May 2020 05:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgEHJWZ (ORCPT
+        with ESMTP id S1726746AbgEHJW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 05:22:25 -0400
+        Fri, 8 May 2020 05:22:27 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0C8C05BD43;
-        Fri,  8 May 2020 02:22:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2C6C05BD43;
+        Fri,  8 May 2020 02:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=AKGiii+IEqZ9gOggsApEG4tziI6/WJ3l0tT79BlKIwg=; b=RmPbrrz6Kk0e6owaqjS+q2eHbU
-        G5BKQrZTgzS+1A3FFzmk3b7wy4DTLWkQd8a7NAuzT8d8t14rR1vTvys767YOwnPVrGwqgrtuE+vyX
-        YaxjCyrnZtyyrQ1/6nJ8rhvBdFhERzYQjcrxS0L0bx8HWNmofhBq5k6fjzMIL78fTlIAejMv8n9vW
-        HNWb1r/s9cojIFQwCUsY6eONwjWH0xupnhlBHcOdOzRL4cvHlagNARHeQ2qr+9IYpnKc8kgThYFXO
-        1u4Mym4f3mrlfPIReyhTB4vp3yD8s4Tj3iC8R84YnlaKZFTivOFjQbyPOH6doWYfEp/V7qE3w8GNu
-        YpFgMDdA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=xPhGP2jiYAjHpxSk/ggsWDYG1ptmeqnodXQwagIjz80=; b=O9BYEco6eWqsAs1PWLYmxNpjmD
+        PoBKDzzLadPZjumipcrGt30j682jPS2N/LZPgAjG+d9zE7N64mb9uCLbtiC1w0iSlPNe4pHCebO9J
+        ucCuOlaBfVYZPQ9xMintsgxB3rniNoIJPGggd5MGpbFnGdD8R0JnTVnRa9bt/5C/5036+UID/T3mk
+        dS69zQ2VmCyxnm2Kk6pB3iTZDO3ddwPfeHSrh6Vhj/gNcSUJpttTphD4m9/pRK0ZKO5mdeBscV8AH
+        Ow2hy6r/9QNcOKCd/xVixYFQcSeOEWmZ7zZK+tLbWQE+kZ2ueXryc5miatQD0NAdu+j0jmzAvzqjH
+        5Gn3wVYQ==;
 Received: from [2001:4bb8:180:9d3f:90d7:9df8:7cd:3504] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jWzD6-0008IN-P0; Fri, 08 May 2020 09:22:25 +0000
+        id 1jWzD9-0008Ii-AY; Fri, 08 May 2020 09:22:27 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Subject: clean up kernel_{read,write} & friends
-Date:   Fri,  8 May 2020 11:22:11 +0200
-Message-Id: <20200508092222.2097-1-hch@lst.de>
+Subject: [PATCH 01/11] fs: call file_{start,end}_write from __kernel_write
+Date:   Fri,  8 May 2020 11:22:12 +0200
+Message-Id: <20200508092222.2097-2-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200508092222.2097-1-hch@lst.de>
+References: <20200508092222.2097-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -54,9 +57,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+We always need to take a reference on the file system we are writing
+to.
 
-this series fixes a few issues and cleans up the helpers that read from
-or write to kernel space buffers, and ensures that we don't change the
-address limit if we are using the ->read_iter and ->write_iter methods
-that don't need the changed address limit.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/read_write.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/read_write.c b/fs/read_write.c
+index bbfa9b12b15eb..d5aaf3a4198b9 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -508,6 +508,7 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
+ 	if (!(file->f_mode & FMODE_CAN_WRITE))
+ 		return -EINVAL;
+ 
++	file_start_write(file);
+ 	old_fs = get_fs();
+ 	set_fs(KERNEL_DS);
+ 	p = (__force const char __user *)buf;
+@@ -520,6 +521,7 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
+ 		add_wchar(current, ret);
+ 	}
+ 	inc_syscw(current);
++	file_end_write(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(__kernel_write);
+-- 
+2.26.2
+
