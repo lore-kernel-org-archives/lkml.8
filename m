@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E66C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BE9C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8A642496D
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3150C2496D
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 12:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588941543;
-	bh=g7dkK5wMR0y6SBVbVTqEjvDrlL3ZWZMY2ps1yXBix4c=;
+	s=default; t=1588941546;
+	bh=n0fEWB4p/0Z+k3rXMIsL0JbQVMb8WB2ugcptipI2SlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMsidWDA/rNmh2gr8Cf2QAWr8XWf22K0zLALDVJs9M5f1pKIV43t89WcHOzAOQD1M
-	 dDhVnqVGZM8F62OTCtFhKKhsXL7cloWl6HU0o1xylV6LgXep3kHzcARxqdXT6rRUv2
-	 oE1J77xL7QbRTjSMOljKrndWG6FO3VBPqhULSWZc=
+	b=HLoMtDw2AM/wdPiR6AWt1n95AXYmOcWns8CsadL/LE1WscSoy73xA/l584igrhPl8
+	 CPYGY06CF8A4WfwjKzNjl+c50Cu8mhXXIhFZiYOnLEDv0Yu5vNuxr8jCdyGx3ytu6x
+	 LgbkRuq1MUKYrzphHFz9XAm7B/jYqRkXQZKeXpcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgEHMjC (ORCPT
+        id S1728542AbgEHMjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 08:39:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 08:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbgEHMi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 08:38:58 -0400
+        id S1728512AbgEHMi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 08:38:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03BD2495C;
-        Fri,  8 May 2020 12:38:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE1721835;
+        Fri,  8 May 2020 12:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588941536;
-        bh=g7dkK5wMR0y6SBVbVTqEjvDrlL3ZWZMY2ps1yXBix4c=;
+        s=default; t=1588941538;
+        bh=n0fEWB4p/0Z+k3rXMIsL0JbQVMb8WB2ugcptipI2SlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6jOX1P3Y17lKYxBxJWpd/r5V9kHx+DygimENpSdBsH9wsE1ExGanDB/74SmgJYf7
-         agXbxeDSnI2vBj4+gUDIkfUTRZ+mG9JX1S94gkFqraaikhmFCR5ZFovxgSu8Ot8ag6
-         plF7j+4Yigg2xAUQSRuKbS9g0aw/d45c0TffLkSc=
+        b=SDcMa8pJK75u/ypagyfkBTSYAWhODT/NQkVYKDG67d2eiOf1fSRqgpg2dSkCKGONh
+         yuyFO7qjgQaNJFQJ3WQrWyIak6116k9RGsp5dcqSOGy/lePfzWfHrmMFrsBsx882Zp
+         9tFzM3vdi2CiaE8GsTGijwieLsRQJtluzLe6zYhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Noa Osherovich <noaos@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 072/312] net/mlx5: Avoid passing dma address 0 to firmware
-Date:   Fri,  8 May 2020 14:31:03 +0200
-Message-Id: <20200508123129.605731047@linuxfoundation.org>
+        stable@vger.kernel.org, Kamal Heib <kamalh@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sagi Grimberg <sagig@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 4.4 073/312] IB/mlx5: Fix RC transport send queue overhead computation
+Date:   Fri,  8 May 2020 14:31:04 +0200
+Message-Id: <20200508123129.673349927@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200508123124.574959822@linuxfoundation.org>
 References: <20200508123124.574959822@linuxfoundation.org>
@@ -60,81 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Noa Osherovich <noaos@mellanox.com>
+From: Leon Romanovsky <leon@leon.nu>
 
-commit 6b276190c50a12511d889d9079ffb901ff94a822 upstream.
+commit 75c1657e1d50730dc0130a67977f7831a4e241f4 upstream.
 
-Currently the firmware can't work with a page with dma address 0.
-Passing such an address to the firmware will cause the give_pages
-command to fail.
+Fix the RC QPs send queue overhead computation to take into account
+two additional segments in the WQE which are needed for registration
+operations.
 
-To avoid this, in case we get a 0 dma address of a page from the
-dma engine, we avoid passing it to FW by remapping to get an address
-other than 0.
+The ATOMIC and UMR segments can't coexist together, so chose maximum out
+of them.
 
-Fixes: bf0bf77f6519 ('mlx5: Support communicating arbitrary host...')
-Signed-off-by: Noa Osherovich <noaos@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The commit 9e65dc371b5c ("IB/mlx5: Fix RC transport send queue overhead
+computation") was intended to update RC transport as commit messages
+states, but added the code to UC transport.
+
+Fixes: 9e65dc371b5c ("IB/mlx5: Fix RC transport send queue overhead computation")
+Signed-off-by: Kamal Heib <kamalh@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Sagi Grimberg <sagig@mellanox.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c |   26 +++++++++++++-------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c
-@@ -243,6 +243,7 @@ static void free_4k(struct mlx5_core_dev
- static int alloc_system_page(struct mlx5_core_dev *dev, u16 func_id)
- {
- 	struct page *page;
-+	u64 zero_addr = 1;
- 	u64 addr;
- 	int err;
- 	int nid = dev_to_node(&dev->pdev->dev);
-@@ -252,26 +253,35 @@ static int alloc_system_page(struct mlx5
- 		mlx5_core_warn(dev, "failed to allocate page\n");
- 		return -ENOMEM;
- 	}
-+map:
- 	addr = dma_map_page(&dev->pdev->dev, page, 0,
- 			    PAGE_SIZE, DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(&dev->pdev->dev, addr)) {
- 		mlx5_core_warn(dev, "failed dma mapping page\n");
- 		err = -ENOMEM;
--		goto out_alloc;
-+		goto err_mapping;
- 	}
-+
-+	/* Firmware doesn't support page with physical address 0 */
-+	if (addr == 0) {
-+		zero_addr = addr;
-+		goto map;
-+	}
-+
- 	err = insert_page(dev, addr, page, func_id);
- 	if (err) {
- 		mlx5_core_err(dev, "failed to track allocated page\n");
--		goto out_mapping;
-+		dma_unmap_page(&dev->pdev->dev, addr, PAGE_SIZE,
-+			       DMA_BIDIRECTIONAL);
- 	}
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -271,8 +271,10 @@ static int sq_overhead(enum ib_qp_type q
+ 		/* fall through */
+ 	case IB_QPT_RC:
+ 		size += sizeof(struct mlx5_wqe_ctrl_seg) +
+-			sizeof(struct mlx5_wqe_atomic_seg) +
+-			sizeof(struct mlx5_wqe_raddr_seg);
++			max(sizeof(struct mlx5_wqe_atomic_seg) +
++			    sizeof(struct mlx5_wqe_raddr_seg),
++			    sizeof(struct mlx5_wqe_umr_ctrl_seg) +
++			    sizeof(struct mlx5_mkey_seg));
+ 		break;
  
--	return 0;
--
--out_mapping:
--	dma_unmap_page(&dev->pdev->dev, addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-+err_mapping:
-+	if (err)
-+		__free_page(page);
+ 	case IB_QPT_XRC_TGT:
+@@ -280,9 +282,9 @@ static int sq_overhead(enum ib_qp_type q
  
--out_alloc:
--	__free_page(page);
-+	if (zero_addr == 0)
-+		dma_unmap_page(&dev->pdev->dev, zero_addr, PAGE_SIZE,
-+			       DMA_BIDIRECTIONAL);
+ 	case IB_QPT_UC:
+ 		size += sizeof(struct mlx5_wqe_ctrl_seg) +
+-			sizeof(struct mlx5_wqe_raddr_seg) +
+-			sizeof(struct mlx5_wqe_umr_ctrl_seg) +
+-			sizeof(struct mlx5_mkey_seg);
++			max(sizeof(struct mlx5_wqe_raddr_seg),
++			    sizeof(struct mlx5_wqe_umr_ctrl_seg) +
++			    sizeof(struct mlx5_mkey_seg));
+ 		break;
  
- 	return err;
- }
+ 	case IB_QPT_UD:
 
 
