@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6B5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DDCC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F71424970
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D190D24970
+	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 13:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgEHNJx (ORCPT
+        id S1730659AbgEHNJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 09:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34686 "EHLO
+        Fri, 8 May 2020 09:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730483AbgEHNFT (ORCPT
+        by vger.kernel.org with ESMTP id S1730477AbgEHNFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 09:05:19 -0400
+        Fri, 8 May 2020 09:05:17 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FBB8C05BD43;
-        Fri,  8 May 2020 06:05:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684A1C05BD43;
+        Fri,  8 May 2020 06:05:17 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jX2gj-0007XI-AU; Fri, 08 May 2020 15:05:13 +0200
+        id 1jX2gc-0007Ul-C1; Fri, 08 May 2020 15:05:06 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 37D5C1C0823;
-        Fri,  8 May 2020 15:04:58 +0200 (CEST)
-Date:   Fri, 08 May 2020 13:04:58 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A88671C04CF;
+        Fri,  8 May 2020 15:04:56 +0200 (CEST)
+Date:   Fri, 08 May 2020 13:04:56 -0000
 From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf evsel: Add support for synthesized branch stack
- sample type
+Subject: [tip: perf/core] perf intel-pt: Update documentation about using /proc/kcore
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200429150751.12570-6-adrian.hunter@intel.com>
-References: <20200429150751.12570-6-adrian.hunter@intel.com>
+In-Reply-To: <20200429150751.12570-10-adrian.hunter@intel.com>
+References: <20200429150751.12570-10-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Message-ID: <158894309814.8414.14429126818171355994.tip-bot2@tip-bot2>
+Message-ID: <158894309660.8414.744004103071020836.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,62 +60,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     6cd2cbfc6865589c64ac37ec48937e93725622f1
-Gitweb:        https://git.kernel.org/tip/6cd2cbfc6865589c64ac37ec48937e93725622f1
+Commit-ID:     6dd912cbadb9f9746a525c74f09c0e36cee13ee2
+Gitweb:        https://git.kernel.org/tip/6dd912cbadb9f9746a525c74f09c0e36cee13ee2
 Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Wed, 29 Apr 2020 18:07:47 +03:00
+AuthorDate:    Wed, 29 Apr 2020 18:07:51 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 May 2020 16:35:29 -03:00
+CommitterDate: Tue, 05 May 2020 16:35:30 -03:00
 
-perf evsel: Add support for synthesized branch stack sample type
+perf intel-pt: Update documentation about using /proc/kcore
 
-Allow for a synthesized branch stack to be added to samples. As with
-synthesized call chains, the sample type cannot be changed because it is
-needed to continue to parse events. So add and use helper function
-evsel__has_br_stack() to indicate a branch stack, whether original or
-synthesized.
+Update documentation to reflect the advent of the --kcore option for
+'perf record'.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-6-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200429150751.12570-10-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.h   | 10 ++++++++++
- tools/perf/util/session.c |  2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-intel-pt.txt | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a463bc6..bf999e3 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -417,6 +417,16 @@ static inline bool evsel__has_callchain(const struct evsel *evsel)
- 	       evsel->synth_sample_type & PERF_SAMPLE_CALLCHAIN;
- }
+diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
+index 782eb8a..eb8b7d4 100644
+--- a/tools/perf/Documentation/perf-intel-pt.txt
++++ b/tools/perf/Documentation/perf-intel-pt.txt
+@@ -69,22 +69,22 @@ And profiled with 'perf report' e.g.
+ To also trace kernel space presents a problem, namely kernel self-modifying
+ code.  A fairly good kernel image is available in /proc/kcore but to get an
+ accurate image a copy of /proc/kcore needs to be made under the same conditions
+-as the data capture.  A script perf-with-kcore can do that, but beware that the
+-script makes use of 'sudo' to copy /proc/kcore.  If you have perf installed
+-locally from the source tree you can do:
++as the data capture. 'perf record' can make a copy of /proc/kcore if the option
++--kcore is used, but access to /proc/kcore is restricted e.g.
  
-+static inline bool evsel__has_br_stack(const struct evsel *evsel)
-+{
-+	/*
-+	 * For reporting purposes, an evsel sample can have a recorded branch
-+	 * stack or a branch stack synthesized from AUX area data.
-+	 */
-+	return evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK ||
-+	       evsel->synth_sample_type & PERF_SAMPLE_BRANCH_STACK;
-+}
-+
- struct perf_env *perf_evsel__env(struct evsel *evsel);
+-	~/libexec/perf-core/perf-with-kcore record pt_ls -e intel_pt// -- ls
++	sudo perf record -o pt_ls --kcore -e intel_pt// -- ls
  
- int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0b0bfe5..2b5a08a 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1243,7 +1243,7 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
- 	if (evsel__has_callchain(evsel))
- 		callchain__printf(evsel, sample);
+-which will create a directory named 'pt_ls' and put the perf.data file and
+-copies of /proc/kcore, /proc/kallsyms and /proc/modules into it.  Then to use
+-'perf report' becomes:
++which will create a directory named 'pt_ls' and put the perf.data file (named
++simply 'data') and copies of /proc/kcore, /proc/kallsyms and /proc/modules into
++it.  The other tools understand the directory format, so to use 'perf report'
++becomes:
  
--	if (sample_type & PERF_SAMPLE_BRANCH_STACK)
-+	if (evsel__has_br_stack(evsel))
- 		branch_stack__printf(sample, perf_evsel__has_branch_callstack(evsel));
+-	~/libexec/perf-core/perf-with-kcore report pt_ls
++	sudo perf report -i pt_ls
  
- 	if (sample_type & PERF_SAMPLE_REGS_USER)
+ Because samples are synthesized after-the-fact, the sampling period can be
+ selected for reporting. e.g. sample every microsecond
+ 
+-	~/libexec/perf-core/perf-with-kcore report pt_ls --itrace=i1usge
++	sudo perf report pt_ls --itrace=i1usge
+ 
+ See the sections below for more information about the --itrace option.
+ 
