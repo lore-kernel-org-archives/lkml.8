@@ -6,65 +6,84 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C162C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82097C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 049EC2192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5132620731
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589044040;
-	bh=WvWUoFR5RjANxd1qiacraQ/PkwG98wt/odgEnXsQW5Q=;
+	s=default; t=1589044128;
+	bh=SK+x+QtJMkOjWOTDF9c5W7kaKonfAERKpd7EamMSlF0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dT32QdQm1KgGkhVXDZ/nIvJqwTuZkQNEwPewTZLcNoKHxm8HdCql+dXPwdlvhUQyo
-	 6WnNEqJEmIvi1rtstgDMm1MKk+0tX3psO7MeLma50fS2Vlc5H7aGJmJM+g6iJiATfG
-	 PPlNdQ/JVY5oT0f5R2CCU8V6Xq9gI0TB2rXtWjbM=
+	b=1xalrUXi5IWjQd7UG9MWJ8t0mHYT+vd+ZEnBbySWR3LsixXEkqo3jsLz+9LMD0cnb
+	 eqo9gM0U/QdhvyoIvmSbFCbsV2u3/wCneG16SZTm1WSuzMw6TA6AIacEHwWCX/H4u4
+	 vxqQjm+8akEVJg4H+286aXbYfW38ULQSRwn6RNwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgEIRHS (ORCPT
+        id S1728468AbgEIRIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41806 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 13:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728144AbgEIRHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:07:17 -0400
+        id S1726013AbgEIRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 13:08:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99832184D;
-        Sat,  9 May 2020 17:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0847D2071C;
+        Sat,  9 May 2020 17:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589044036;
-        bh=WvWUoFR5RjANxd1qiacraQ/PkwG98wt/odgEnXsQW5Q=;
+        s=default; t=1589044125;
+        bh=SK+x+QtJMkOjWOTDF9c5W7kaKonfAERKpd7EamMSlF0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UQKV7mHmq9gT1QqVjvt3oc3CUGzez8CokyYeKbs5VYNWKZvZXSz0iFxtw8QMvp/7d
-         bokWfV/jImMT/a3UDiOFNUNHC5XhZFZPjBHuynqPUJeZs0z7IicHjdeBGOl278koGS
-         FwEfTeFtRqL04t2ID8siOrIIF6+hI+jdHIVuyxTs=
-Date:   Sat, 9 May 2020 19:07:14 +0200
+        b=0n5LVcX+gJX092CwscX+RdlddH0MH6vkbpRUMe2bYnOLotAocWNqPoBdFh25FZP36
+         k+5eURSzn42ddVYfoGFsCTAWRadHGCilUELNim5eZJrrzS+tgFonEp6EBQRdssMgo9
+         xOPuaUF8Kd4Lp2OBly0kFaHk5cv7sbxCYwNU8ucg=
+Date:   Sat, 9 May 2020 19:08:43 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matej Dujava <mdujava@kocurkovo.cz>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6656: vt6655: clean Makefiles
-Message-ID: <20200509170714.GC2482887@kroah.com>
-References: <1589015247-738-1-git-send-email-mdujava@kocurkovo.cz>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v2] usb: raw-gadget: fix gadget endpoint selection
+Message-ID: <20200509170843.GD2482887@kroah.com>
+References: <2f05fe9aa7e4bcb1bad3f6d11e48a411c901af68.1588197975.git.andreyknvl@google.com>
+ <875zdabzs3.fsf@kernel.org>
+ <CAAeHK+yxoYigM7uWC3cpKmCjgMLXQ1pT=MkJ7XQYCVRgZ-DdTQ@mail.gmail.com>
+ <87zhahlenu.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589015247-738-1-git-send-email-mdujava@kocurkovo.cz>
+In-Reply-To: <87zhahlenu.fsf@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 11:07:27AM +0200, Matej Dujava wrote:
-> This patch is removing CFLAGS that are defining flags that are not used.
+On Sat, May 09, 2020 at 11:02:13AM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Andrey Konovalov <andreyknvl@google.com> writes:
+> >> here you're changing userspace ABI. Aren't we going to possibly break
+> >> some existing applications?
+> >
+> > Hi Felipe,
+> >
+> >  I've been working on tests for Raw Gadget for the last few weeks [1],
+> > which revealed a few problems with the interface. This isn't yet
+> > included into any released kernel, so my hope that changing the ABI is
+> > OK during the rc stage.
+> 
+> Fair enough. If that's okay with Greg, it's okay with me, but then how
+> do we include it into the -rc seen as it's not really a fix?
+> 
+> Greg, are you okay with me including such large patches during the -rc?
+> They essentially add new IOCTLs to the raw-gadget interface.
 
-You are also modifying the indentation and moving lines around for no
-reason :(
-
-Please only do one thing for a patch, and always describe everything you
-do in the changelog text.
-
-Can you fix this up and send a v2?
+Yes, as the driver only went in for -rc1, it's fine to add fixes like
+this so late as we don't want to ship a -final with it in broken form.
 
 thanks,
 
