@@ -2,90 +2,71 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805E4C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756FBC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F63D2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 496B12184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmAwXjqz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4PmmSPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEIIKc (ORCPT
+        id S1727798AbgEIILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43768 "EHLO
+        Sat, 9 May 2020 04:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgEIIKc (ORCPT
+        by vger.kernel.org with ESMTP id S1725850AbgEIILu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:10:32 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248F4C061A0C;
-        Sat,  9 May 2020 01:10:32 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id a5so2550786vsm.7;
-        Sat, 09 May 2020 01:10:32 -0700 (PDT)
+        Sat, 9 May 2020 04:11:50 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725C6C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 01:11:49 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id m5so3626328ilj.10
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 01:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=hg2j4yDUwU/HdTy91WVT+D8cDbi67SkruoSAu6walPg=;
-        b=cmAwXjqzTs4mGPYVsr1LRa/7NH7QWL+ied3aAdEqVx+8AhccAWLtdFRjQJVW4AujgG
-         NzhEAj/FI/1az32WuUjuIlt/beelqF3cUYZyJkt3uDV0ppjLKRH65s9Oa5Uj2OQnodmN
-         IeETq/CyU5jych/jLblezYeAVvA9S8a6harjeNvjsIXHQdyDTJ/8WgHPsxDn/t+KnqX2
-         isAzn++2aPYs/Bf61eR05iUUmdQ7ND69oNlHPXG3+FA4u3QwlcjtS53Va4OwRzk0Dv30
-         N10GxSA/KX+L5BsSt8RVO4bWTc6khulHWVB5wR1YUhS8Q8KwJFVsod1mVWF8hWAMBDLz
-         6r+g==
+        bh=trcL6JL/P6z4vCS3d8TLuc4KmkB3M51YoritqIkziPk=;
+        b=Y4PmmSPdrqGZ9O/9z6M1BAClnjDC+wdjebUzwpC5fqMXzZYsNdW+jA1kUHbxbimLGc
+         /mmI2EA72uT5ihkSTK2kuTqHj2x1+e1v/a4TpW12wq022tFZEyVJOJOn+45xFoyZvGwB
+         YxJG4EZ5l7m5NEQyA6gu8GjgtWPhpi6dUm0V8JIuLM4mfs8vHdoqVr27OTCiinlxu2kC
+         HIZXznUP4vbfD1HXnVh4/XkWFHjrO1UFdc0yBC7U2UEIIx8yk+99ve4PhVtDG2qRyX41
+         ZZqSJzBY37qlaSMcLkKy1g2xS1xSIjqErA0/BU92BelEHTjchkhQwastD5fZK5bhcYmz
+         n5Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hg2j4yDUwU/HdTy91WVT+D8cDbi67SkruoSAu6walPg=;
-        b=uZS2JNhuL0SJT+JnXoslxNf/1NRYMDxav6Ab4QV5BSYiln2mVLRKPReo71YGCFvltL
-         DsD31BySuZ5FmKmwvr5fOOBeB7asxV9kJ3LReeNC1RHsboU03vjzRVHOD1tInyE4bIXp
-         Jy24ycolFwnt9O4Lkq9j7arDQcHvgh140tVEXnO8Wx2Rw9mGcOrldwwZfXWashM8imF0
-         DeTnLHcr4bOejdEM8fPMDTnMim/qaeWLyT8XyTQmzzZP2hubZIvsFvOn9N5PZNdDvvsf
-         fIOcL8jKutQSeKxdJBD9mPYAML/k+jeF+PnD0Ucup3frYcVH591pPlzFTR9RUnERksmK
-         RrcQ==
-X-Gm-Message-State: AGi0Puag3+oG7poBX5U7XlDePXvFWb47ggnl7mBaOK9z8pnTAdyv1B3s
-        cUnA2ClZX1hAObRUvFVAaE1GFHVr2ADaEqLmUds=
-X-Google-Smtp-Source: APiQypKhiLPAytkBC1so8+Xa11Vq69wFO63GCNQ8pk3I0jEMQahK0ObW836JL5fza3z6uG0EO6M3gq1OoNA5x0K77U4=
-X-Received: by 2002:a67:fe8c:: with SMTP id b12mr4980915vsr.186.1589011831107;
- Sat, 09 May 2020 01:10:31 -0700 (PDT)
+        bh=trcL6JL/P6z4vCS3d8TLuc4KmkB3M51YoritqIkziPk=;
+        b=bmZE2ocwfzdVzZRBx3E95Ug8UAbSuFDqyljuwSLfBy8EhfO4ZUM3hCpURVW2BqVydJ
+         xYwFYsBZGeGVhIO/VItPBQAowZKFbUnpfd5SHYt0YO8dA0/fS1w49jpzzjo5nd31wt2b
+         7DooiV2Xm34LG0RJWi594EAodeVn4Fb6/KA9ItvreN/stfbFu5YxeisF0GFUN9zgpA7f
+         MhMlAqoDKBbYhmom7zqGNjtaWfkeBm8g6mWGfcQVdl+fndkb0BbrWJZepYE+K9u1PaPg
+         cYNdIDppSlnZNE+G9zU7lkc2Iscg1Y/4gIdvlXnDie/MjdTW97M+kh2zmyBjIJM3rCHN
+         hTLg==
+X-Gm-Message-State: AGi0PubjRzoVMS1becRDhVV0rO95z3/hbgUnTn/cyCR/MMXCbdddP/wi
+        GpspYPstAxeVh/qX3SeiujOzRJ0QZNTsGawiYxg=
+X-Google-Smtp-Source: APiQypJEGGvidYhz7vaJLXabTC/HGWu94b/4ibiIxw1/gsZvZ2NKsP9SXVH45+MFpy+V6NB4mvbM7/gSZjyNNEJO5mQ=
+X-Received: by 2002:a92:7c01:: with SMTP id x1mr6540061ilc.122.1589011908683;
+ Sat, 09 May 2020 01:11:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191028215919.83697-1-john.stultz@linaro.org>
- <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
- <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
- <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com> <87h7wqmwrv.fsf@kernel.org>
-In-Reply-To: <87h7wqmwrv.fsf@kernel.org>
-From:   Jun Li <lijun.kernel@gmail.com>
-Date:   Sat, 9 May 2020 16:10:19 +0800
-Message-ID: <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by
- device controller
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, peter.chen@nxp.com,
-        Li Jun <jun.li@nxp.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
+In-Reply-To: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Sat, 9 May 2020 18:11:37 +1000
+Message-ID: <CAOSf1CFNp6+k_y_87r7p2e8cKfX0rK-9wBxeR+K0e0y8R0_TNg@mail.gmail.com>
+Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,122 +74,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, May 9, 2020 at 12:41 AM Qian Cai <cai@lca.pw> wrote:
+>
+>  Booting POWER9 PowerNV has this message,
+>
+> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use early=
+_ioremap() instead=E2=80=9D
+>
+> but use the patch below will result in leaks because it will never call e=
+arly_iounmap() anywhere. However, it looks me it was by design that phb->re=
+gs mapping would be there forever where it would be used in pnv_ioda_get_in=
+val_reg(), so is just that check_early_ioremap_leak() initcall too strong?
 
-Felipe Balbi <balbi@kernel.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=888=E6=97=A5=
-=E5=91=A8=E4=BA=94 =E4=B8=8B=E5=8D=888:33=E5=86=99=E9=81=93=EF=BC=9A
->
->
-> Hi,
->
-> Jun Li <lijun.kernel@gmail.com> writes:
-> > John Stultz <john.stultz@linaro.org> =E4=BA=8E2019=E5=B9=B410=E6=9C=883=
-0=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:18=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >>
-> >> On Tue, Oct 29, 2019 at 2:11 AM Felipe Balbi <balbi@kernel.org> wrote:
-> >> > John Stultz <john.stultz@linaro.org> writes:
-> >> > > From: Yu Chen <chenyu56@huawei.com>
-> >> > >
-> >> > > It needs more time for the device controller to clear the CmdAct o=
-f
-> >> > > DEPCMD on Hisilicon Kirin Soc.
-> >> >
-> >> > Why does it need more time? Why is it so that no other platform need=
-s
-> >> > more time, only this one? And which command, specifically, causes
-> >> > problem?
-> >
-> > Sorry for my back to this so late.
-> >
-> > This change is required on my dwc3 based HW too, I gave a check
-> > and the reason is suspend_clk is used in case the PIPE phy is at P3,
-> > this slow clock makes my EP command below timeout.
->
-> The phy needs to woken up before the command is triggered. Currently we
-> only wake up the HS PHY. Does it help you if we wake up the SS phy as
-> well?
->
-> Something like below ought to do it:
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index a0555252dee0..ee46c2dacaeb 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -274,7 +274,8 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsi=
-gned cmd,
->         const struct usb_endpoint_descriptor *desc =3D dep->endpoint.desc=
-;
->         struct dwc3             *dwc =3D dep->dwc;
->         u32                     timeout =3D 1000;
-> -       u32                     saved_config =3D 0;
-> +       u32                     saved_hs_config =3D 0;
-> +       u32                     saved_ss_config =3D 0;
->         u32                     reg;
->
->         int                     cmd_status =3D 0;
-> @@ -293,19 +294,28 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, un=
-signed cmd,
->         if (dwc->gadget.speed <=3D USB_SPEED_HIGH) {
->                 reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
->                 if (unlikely(reg & DWC3_GUSB2PHYCFG_SUSPHY)) {
-> -                       saved_config |=3D DWC3_GUSB2PHYCFG_SUSPHY;
-> +                       saved_hs_config |=3D DWC3_GUSB2PHYCFG_SUSPHY;
->                         reg &=3D ~DWC3_GUSB2PHYCFG_SUSPHY;
->                 }
->
->                 if (reg & DWC3_GUSB2PHYCFG_ENBLSLPM) {
-> -                       saved_config |=3D DWC3_GUSB2PHYCFG_ENBLSLPM;
-> +                       saved_hs_config |=3D DWC3_GUSB2PHYCFG_ENBLSLPM;
->                         reg &=3D ~DWC3_GUSB2PHYCFG_ENBLSLPM;
->                 }
->
-> -               if (saved_config)
-> +               if (saved_hs_config)
->                         dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
->         }
->
-> +       reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
-> +       if (unlikely(reg & DWC3_GUSB3PIPECTL_SUSPHY)) {
-> +               saved_ss_config |=3D DWC3_GUSB3PIPECTL_SUSPHY;
-> +               reg &=3D ~DWC3_GUSB3PIPECTL_SUSPHY;
-> +       }
-> +
-> +       if (saved_ss_config)
-> +               dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
-> +
->         if (DWC3_DEPCMD_CMD(cmd) =3D=3D DWC3_DEPCMD_STARTTRANSFER) {
->                 int             needs_wakeup;
->
-> @@ -397,12 +407,18 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, un=
-signed cmd,
->                         dwc3_gadget_ep_get_transfer_index(dep);
->         }
->
-> -       if (saved_config) {
-> +       if (saved_hs_config) {
->                 reg =3D dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
-> -               reg |=3D saved_config;
-> +               reg |=3D saved_hs_config;
->                 dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
->         }
->
-> +       if (saved_ss_config) {
-> +               reg =3D dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
-> +               reg |=3D saved_ss_config;
-> +               dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(0), reg);
-> +       }
-> +
->         return ret;
->  }
+The warning there is junk. The PHBs are setup at boot and never torn
+down so we're not "leaking" the mapping. It's supposed to be there for
+the lifetime of the kernel.
 
-Unfortunately this way can't work, once the SS PHY enters P3, disable
-suspend_en can't force SS PHY exit P3, unless do this at the very beginning
-to prevent SS PHY entering P3(e.g. add "snps,dis_u3_susphy_quirk" for test)=
-.
+That said, we could probably move the PCI setup to a point later in
+boot where the normal ioremap can be be used. We would have to check
+for initcalls which depend on the PHBs being setup and delay those too
+though.
 
-thanks
-Li Jun
->
-> --
-> balbi
+Oliver
