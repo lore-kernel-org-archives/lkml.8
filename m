@@ -2,202 +2,236 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA09DC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CEA208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B3B208DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zcKgfplS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgEITqX (ORCPT
+        id S1728551AbgEITxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:46:23 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:53778 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgEITqW (ORCPT
+        Sat, 9 May 2020 15:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727938AbgEITxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:46:22 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Sat, 9 May 2020 15:53:19 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE69C061A0C;
+        Sat,  9 May 2020 12:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=50ywxHpW41ImbkC5vHJi6Ia6Ntj61X/IaD76qF4a0R4=; b=zcKgfplSVU/5cTk4tFp6Nx3SR
+        tTDVq9Rd80NNvWCcB0C3e3s1h1CC/Wpz6GyZCzTMoG33AYDO/tXLrOS3WryoOcd4Nk5HRd+lPVtuH
+        HItUlDL3JmAxdcBTYCVefoirnQ/j3DYBX8GrO/yZYxtxQTNQI71soJBGzw5eDsyMJf23NaIYBlUKn
+        ri6Pf1istaE671WEM3J3PJ6hvawdWLGuVg8j78gUH33zUtakmcWsdObaXpYnzYE5sWMVggI8pbgeA
+        OEH2yFRH51soaKiz+w2KYQIR9MfCuk/Hvtfo0/v+O32mRY19uzfMywUJBWxBzhq8rbfIcWfV68nC2
+        BhpNr9wgg==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:55872)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXVQT-00010n-JQ; Sat, 09 May 2020 13:46:21 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXVQS-0001AK-Ni; Sat, 09 May 2020 13:46:21 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-Date:   Sat, 09 May 2020 14:42:52 -0500
-In-Reply-To: <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Sat, 09 May 2020 14:40:17 -0500")
-Message-ID: <873688zygz.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jXVWx-00051L-6I; Sat, 09 May 2020 20:53:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jXVWg-00038W-Vk; Sat, 09 May 2020 20:52:47 +0100
+Date:   Sat, 9 May 2020 20:52:46 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200509195246.GJ1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk>
+ <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk>
+ <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jXVQS-0001AK-Ni;;;mid=<873688zygz.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+OrFdAy5/7YXr8d4/LPpD0UxlU62AvuFQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 5/5] exec: Move the call of prepare_binprm into search_binary_handler
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 09, 2020 at 03:14:05PM +0200, Matteo Croce wrote:
+> Hi,
+> 
+> When git bisect pointed to 895586d5dc32 ("net: mvpp2: cls: Use RSS
+> contexts to handle RSS tables"), which was merged
+> almost an year after d33ec4525007 ("net: mvpp2: add an RSS
+> classification step for each flow"), so I assume that between these
+> two commits either the feature was working or it was disable and we
+> didn't notice
+> 
+> Without knowing what was happening, which commit should my Fixes tag point to?
 
-The code in prepare_binary_handler needs to be run every time
-search_binary_handler is called so move the call into search_binary_handler
-itself to make the code simpler and easier to understand.
+It is highly likely that 895586d5dc32 is responsible for this breakage.
+I've been investigating this afternoon, and what I've found, comparing
+a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- arch/alpha/kernel/binfmt_loader.c |  3 ---
- fs/binfmt_em86.c                  |  5 -----
- fs/binfmt_misc.c                  |  4 ----
- fs/binfmt_script.c                |  3 ---
- fs/exec.c                         | 12 +++++-------
- include/linux/binfmts.h           |  1 -
- 6 files changed, 5 insertions(+), 23 deletions(-)
+- The table programmed into the hardware via mvpp22_rss_fill_table()
+  appears to be identical with or without the commit.
 
-diff --git a/arch/alpha/kernel/binfmt_loader.c b/arch/alpha/kernel/binfmt_loader.c
-index a90c8b1d5498..ec7b26e4b81a 100644
---- a/arch/alpha/kernel/binfmt_loader.c
-+++ b/arch/alpha/kernel/binfmt_loader.c
-@@ -35,9 +35,6 @@ static int load_binary(struct linux_binprm *bprm)
- 
- 	bprm->file = file;
- 	bprm->loader = loader;
--	retval = prepare_binprm(bprm);
--	if (retval < 0)
--		return retval;
- 	return 1; /* Search for the interpreter */
- }
- 
-diff --git a/fs/binfmt_em86.c b/fs/binfmt_em86.c
-index a9b9ac7f9bb0..2726bfb832b2 100644
---- a/fs/binfmt_em86.c
-+++ b/fs/binfmt_em86.c
-@@ -90,11 +90,6 @@ static int load_em86(struct linux_binprm *bprm)
- 		return PTR_ERR(file);
- 
- 	bprm->file = file;
--
--	retval = prepare_binprm(bprm);
--	if (retval < 0)
--		return retval;
--
- 	return 1; /* Search for the interpreter */
- }
- 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index 16bfafd2671d..6b5e67eed65e 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -221,10 +221,6 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 	if (fmt->flags & MISC_FMT_CREDENTIALS)
- 		bprm->preserve_creds = 1;
- 
--	retval = prepare_binprm(bprm);
--	if (retval < 0)
--		goto error;
--
- 	retval = 1; /* Search for the interpreter */
- ret:
- 	dput(fmt->dentry);
-diff --git a/fs/binfmt_script.c b/fs/binfmt_script.c
-index 76a05696d376..ed4607c7095e 100644
---- a/fs/binfmt_script.c
-+++ b/fs/binfmt_script.c
-@@ -143,9 +143,6 @@ static int load_script(struct linux_binprm *bprm)
- 		return PTR_ERR(file);
- 
- 	bprm->file = file;
--	retval = prepare_binprm(bprm);
--	if (retval < 0)
--		return retval;
- 	return 1; /* Search for the interpreter */
- }
- 
-diff --git a/fs/exec.c b/fs/exec.c
-index 01dbeb025c46..206f18120073 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1628,7 +1628,7 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
-  *
-  * This may be called multiple times for binary chains (scripts for example).
-  */
--int prepare_binprm(struct linux_binprm *bprm)
-+static int prepare_binprm(struct linux_binprm *bprm)
- {
- 	loff_t pos = 0;
- 
-@@ -1647,8 +1647,6 @@ int prepare_binprm(struct linux_binprm *bprm)
- 	return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
- }
- 
--EXPORT_SYMBOL(prepare_binprm);
--
- /*
-  * Arguments are '\0' separated strings found at the location bprm->p
-  * points to; chop off the first by relocating brpm->p to right after
-@@ -1700,6 +1698,10 @@ static int search_binary_handler(struct linux_binprm *bprm)
- 	struct linux_binfmt *fmt;
- 	int retval;
- 
-+	retval = prepare_binprm(bprm);
-+	if (retval < 0)
-+		return retval;
-+
- 	retval = security_bprm_check(bprm);
- 	if (retval)
- 		return retval;
-@@ -1859,10 +1861,6 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	if (retval)
- 		goto out;
- 
--	retval = prepare_binprm(bprm);
--	if (retval < 0)
--		goto out;
--
- 	retval = copy_strings_kernel(1, &bprm->filename, bprm);
- 	if (retval < 0)
- 		goto out;
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index cb016f001e7a..0748afca40cb 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -117,7 +117,6 @@ static inline void insert_binfmt(struct linux_binfmt *fmt)
- 
- extern void unregister_binfmt(struct linux_binfmt *);
- 
--extern int prepare_binprm(struct linux_binprm *);
- extern int __must_check remove_arg_zero(struct linux_binprm *);
- extern int begin_new_exec(struct linux_binprm * bprm);
- extern void setup_new_exec(struct linux_binprm * bprm);
+- When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
+  that c2.attr[0] and c2.attr[2] are written back containing:
+
+   - with 895586d5dc32, failing:    00200000 40000000
+   - without 895586d5dc32, working: 04000000 40000000
+
+- When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
+
+   04000000 00000000
+
+The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
+first value is the queue number, which comprises two fields.  The high
+5 bits are 24:29 and the low three are 21:23 inclusive.  This comes
+from:
+
+       c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
+                     MVPP22_CLS_C2_ATTR0_QLOW(ql);
+#define     MVPP22_CLS_C2_ATTR0_QHIGH(qh)       (((qh) & 0x1f) << 24)
+#define     MVPP22_CLS_C2_ATTR0_QLOW(ql)        (((ql) & 0x7) << 21)
+
+So, the working case gives eth2 a queue id of 4.0, or 32 as per
+port->first_rxq, and the non-working case a queue id of 0.1, or 1.
+
+The allocation of queue IDs seems to be in mvpp2_port_probe():
+
+        if (priv->hw_version == MVPP21)
+                port->first_rxq = port->id * port->nrxqs;
+        else
+                port->first_rxq = port->id * priv->max_port_rxqs;
+
+Where:
+
+        if (priv->hw_version == MVPP21)
+                priv->max_port_rxqs = 8;
+        else
+                priv->max_port_rxqs = 32;
+
+Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
+(eth2) be 32.  It seems the idea is that the first 32 queues belong to
+port 0, the second 32 queues belong to port 1, etc.
+
+mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
+'ctx', which comes from mvpp22_rss_ctx(port, 0).  This returns
+port->rss_ctx[0].
+
+mvpp22_rss_context_create() is responsible for allocating that, which
+it does by looking for an unallocated priv->rss_tables[] pointer.  This
+table is shared amongst all ports on the CP silicon.
+
+When we write the tables in mvpp22_rss_fill_table(), the RSS table
+entry is defined by:
+
+		u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
+                          MVPP22_RSS_INDEX_TABLE_ENTRY(i);
+
+where rss_ctx is the context ID (queue number) and i is the index in
+the table.
+
+#define     MVPP22_RSS_INDEX_TABLE_ENTRY(idx)   (idx)
+#define     MVPP22_RSS_INDEX_TABLE(idx)         ((idx) << 8)
+#define     MVPP22_RSS_INDEX_QUEUE(idx)         ((idx) << 16)
+
+If we look at what is written:
+
+- The first table to be written has "sel" values of 00000000..0000001f,
+  containing values 0..3. This appears to be for eth1.  This is table 0,
+  RX queue number 0.
+- The second table has "sel" values of 00000100..0000011f, and appears
+  to be for eth2.  These contain values 0x20..0x23.  This is table 1,
+  RX queue number 0.
+- The third table has "sel" values of 00000200..0000021f, and appears
+  to be for eth3.  These contain values 0x40..0x43.  This is table 2,
+  RX queue number 0.
+
+Okay, so how do queue numbers translate to the RSS table?  There is
+another table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE
+field of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
+register.  Before 895586d5dc32, it was:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX,
+                   MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
+                   MVPP22_RSS_TABLE_POINTER(port->id));
+
+and after:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
+
+So, before the commit, for eth2, that would've contained '32' for the
+index and '1' for the table pointer - mapping queue 32 to table 1.
+Remember that this is queue-high.queue-low of 4.0.
+
+After the commit, we appear to map queue 1 to table 1.  That again
+looks fine on the face of it.
+
+Section 9.3.1 of the A8040 manual seems indicate the reason that the
+queue number is separated.  queue-low seems to always come from the
+classifier, whereas queue-high can be from the ingress physical port
+number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
+
+We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
+comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
+be where our bug comes from.
+
+mvpp2_cls_oversize_rxq_set() sets this up as:
+
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
+                    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+
+        val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+        val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+
+so, the queue-high for eth2 is _always_ 4, meaning that only queues
+32 through 39 inclusive are available to eth2.  Yet, we're trying to
+tell the classifier to set queue-high, which will be ignored, to zero.
+
+So we end up directing traffic from eth2 not to queue 1, but to queue
+33, and then we tell it to look up queue 33 in the RSS table.  However,
+RSS table has not been programmed for queue 33, and so it ends up
+(presumably) dropping the packets.
+
+It seems that mvpp22_rss_context_create() doesn't take account of the
+fact that the upper 5 bits of the queue ID can't actually be changed
+due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems
+that mvpp2_cls_oversize_rxq_set() has been missed in this commit.
+Either way, these two functions mutually disagree with what queue
+number should be used.
+
+So, 895586d5dc32 is indeed the cause of this problem.
+
 -- 
-2.25.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
