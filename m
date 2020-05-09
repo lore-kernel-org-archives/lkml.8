@@ -2,161 +2,106 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EEDC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB290C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34F3C217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62C124953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgEIHhX (ORCPT
+        id S1729028AbgEIHik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 03:37:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47240 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgEIHhX (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 03:37:23 -0400
-IronPort-SDR: ++L/WuaqRgM+WXRnmMHeNHpOEUtlH36nsTOF+rK16BPn5U8yBtZ4YMKe5SVc6Xq3aakk7wx9+2
- eEa8aH0lDGMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2020 00:37:22 -0700
-IronPort-SDR: OqQCGHtqoV5Vy9KSd2CsLhID824BMBAcWKikzXpnIUzevYVzm3BlNgTahjuH4xmwfbeO3nI2g6
- RbRQ67L5aTZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,370,1583222400"; 
-   d="scan'208";a="370730047"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga001.fm.intel.com with ESMTP; 09 May 2020 00:37:20 -0700
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
- <20200501102337.GA1761222@krava>
- <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
- <20200505000352.GH1916255@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <3e813227-4954-0d4b-bc7a-ca272b18454a@linux.intel.com>
-Date:   Sat, 9 May 2020 15:37:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 9 May 2020 03:38:40 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41832 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbgEIHik (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:38:40 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 19so10585048oiy.8;
+        Sat, 09 May 2020 00:38:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9iOCtd8hInAFwZEEy5/s6oN5yN9LbAgaBCk+Pd2Zfpk=;
+        b=Bbw7gMGmNvBOeJy7+VCtYI+VCwrgpZXeuhgBsebMAdgQDjaCS/B0bZR0L0Qj9FcyuZ
+         vp/yZKTrk+njsHtalSUwDV+bATtkScXQbeYiZY6yPsDm0a5X71ZclR+fWpO7wIwOwhxx
+         HU31zIQNxRhU1QHkfVzGoTiLP6yhND51flb+sdIVulFxNzxjhB0ATjsWqO9p0VwQ5e6D
+         TIrMQ9X3zJIKd8OQNFYfirqa9XE1H+2Q1d3qnUqh8CYkjuqTtyOG5Lq/jU3LguHi7W5i
+         TkRK9SAG1FcHpsVoqeBvyvjGYipExAOqFkRwYRxxZ20D3swUbFEp4OEgOedyhKNahf/v
+         QCFg==
+X-Gm-Message-State: AGi0PuYWAylJItUjeVd0eXdRcGS6DS9Rzpvf8ZRs4rIygaOSKpkje5Cp
+        DvakIf5IqhyW1TbC5K/tsVFodMo9PkKPvjtUUMQ=
+X-Google-Smtp-Source: APiQypIhzI5S6MTE2Rw2TcjkhcBXQU/2d5QohGoiHGR4xXrGldruM5LIRhRBh3PQtIrtKIqOX4QC/wsnF6RwhSrReUE=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr12715510oih.148.1589009919549;
+ Sat, 09 May 2020 00:38:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505000352.GH1916255@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200508223216.6611-1-f.fainelli@gmail.com>
+In-Reply-To: <20200508223216.6611-1-f.fainelli@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 9 May 2020 09:38:28 +0200
+Message-ID: <CAMuHMdU2A1rzqsnNZFt-Gd+ZO5qc6Mzeyunn-LXpbxk_6zq-Ng@mail.gmail.com>
+Subject: Re: [PATCH net] net: broadcom: Imply BROADCOM_PHY for BCMGENET
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Andy Gospodarek <gospo@broadcom.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Hi Florian,
 
-On 5/5/2020 8:03 AM, Jiri Olsa wrote:
-> On Sat, May 02, 2020 at 10:33:59AM +0800, Jin, Yao wrote:
-> 
-> SNIP
-> 
->>>> @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
->>>>    	BUG_ON(!leader->core.fd);
->>>>    	fd = FD(leader, cpu, thread);
->>>> +	if (fd == -1 && leader->core.system_wide)
->>>
->>> fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
->>> has cpumask 0, so other cpus never get open and are 0, and the whole thing
->>> ends up with:
->>>
->>> 	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
->>> 	sys_perf_event_open failed, error -9
->>>
->>> I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
->>>
->>>
->>
->> I have tested on two platforms. On KBL desktop fd is 0 for this case, but on
->> oncascadelakex server, fd is -1, so the BUG_ON(fd == -1) is triggered.
->>
->>>> +		fd = FD(leader, 0, thread);
->>>> +
->>>
->>> so how do we group following events?
->>>
->>>     cstate_pkg/c2-residency/ - cpumask 0
->>>     msr/tsc/                 - all cpus
->>>
->>
->> Not sure if it's enough to only use cpumask 0 because
->> cstate_pkg/c2-residency/ should be per-socket.
->>
->>> cpu 0 is fine.. the rest I have no idea ;-)
->>>
->>
->> Perhaps we directly remove the BUG_ON(fd == -1) assertion?
-> 
-> I think we need to make clear how to deal with grouping over
-> events that comes for different cpus
-> 
-> 	so how do we group following events?
-> 	
-> 	   cstate_pkg/c2-residency/ - cpumask 0
-> 	   msr/tsc/                 - all cpus
-> 
-> 
-> what's the reason/expected output of groups with above events?
-> seems to make sense only if we limit msr/tsc/ to cpumask 0 as well
-> 
-> jirka
-> 
+Thanks for your patch!
 
-On 2-socket machine (e.g cascadelakex), "cstate_pkg/c2-residency/" is per-socket 
-event and the cpumask is 0 and 24.
+On Sat, May 9, 2020 at 12:32 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> The GENET controller on the Raspberry Pi 4 (2711) is typically
+> interfaced with an external Broadcom PHY via a RGMII electrical
+> interface. To make sure that delays are properly configured at the PHY
+> side, ensure that we get a chance to have the dedicated Broadcom PHY
+> driver (CONFIG_BROADCOM_PHY) enabled for this to happen.
 
-root@lkp-csl-2sp5 /sys/devices/cstate_pkg# cat cpumask
-0,24
+I guess it can be interfaced to a different external PHY, too?
 
-We can't limit it to cpumask 0. It should be programmed on CPU0 and CPU24 (the 
-first CPU on each socket).
+> Fixes: 402482a6a78e ("net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed")
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-The "msr/tsc" are per-cpu event, it should be programmed on all cpus. So I don't 
-think we can limit msr/tsc to cpumask 0.
+> --- a/drivers/net/ethernet/broadcom/Kconfig
+> +++ b/drivers/net/ethernet/broadcom/Kconfig
+> @@ -69,6 +69,7 @@ config BCMGENET
+>         select BCM7XXX_PHY
+>         select MDIO_BCM_UNIMAC
+>         select DIMLIB
+> +       imply BROADCOM_PHY if ARCH_BCM2835
 
-The issue is how we deal with get_group_fd().
+Which means support for the BROADCOM_PHY is always included
+on ARCH_BCM2835, even if a different PHY is used?
 
-static int get_group_fd(struct evsel *evsel, int cpu, int thread)
-{
-         struct evsel *leader = evsel->leader;
-         int fd;
+>         help
+>           This driver supports the built-in Ethernet MACs found in the
+>           Broadcom BCM7xxx Set Top Box family chipset.
 
-         if (evsel__is_group_leader(evsel))
-                 return -1;
+Gr{oetje,eeting}s,
 
-         /*
-          * Leader must be already processed/open,
-          * if not it's a bug.
-          */
-         BUG_ON(!leader->core.fd);
+                        Geert
 
-         fd = FD(leader, cpu, thread);
-         BUG_ON(fd == -1);
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-         return fd;
-}
-
-When evsel is "msr/tsc/",
-
-FD(leader, 0, 0) is 3 (3 is the fd of "cstate_pkg/c2-residency/" on CPU0)
-FD(leader, 1, 0) is -1
-BUG_ON asserted.
-
-If we just return group_fd(-1) for "msr/tsc", it looks like it's not a problem, 
-is it?
-
-Thanks
-Jin Yao
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
