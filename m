@@ -2,171 +2,99 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34054C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69582184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvxOe+Py"
+	by mail.kernel.org (Postfix) with ESMTP id 16D0C2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgEILVZ (ORCPT
+        id S1728413AbgEILV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:21:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728318AbgEILVX (ORCPT
+        Sat, 9 May 2020 07:21:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43224 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727093AbgEILVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:21:23 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBF0C061A0C;
-        Sat,  9 May 2020 04:21:23 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x77so2363240pfc.0;
-        Sat, 09 May 2020 04:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yzuOQHdhVHihQi0h5xL8aCO4T4yf1MKXSB1rafT+J6s=;
-        b=FvxOe+PyTOEwk27zK/6HEiUy8Qd8++HiTUMpo9fG42tYl8q0QyBIU9hAHByd7pSW3T
-         JJ2+tn6D5EpGP2VZEUwZdM7s5ZmLjLOzBl7BJQS2JRHzIUkUIotNK5Ppd1RQ6HPFklS1
-         V5/48nHJ4f/3IHa8L4DgfDditgvRlAhFXDxyoC8OPMrBqjrLWfEKIX52KuWDGSzUUrZm
-         uXEhH60KxDm2W7rBIGmR6R2cEXCNxwWXdpc9qkn1+p+8bS1VDWJvurLoGhyWdKvEPf/v
-         Bhm6cxsL/k/tl/YmKCJiIhDT2o+HwjiWQU7mzr3J7au6+la833PUE2+ttl41b2EIkoIP
-         6YVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yzuOQHdhVHihQi0h5xL8aCO4T4yf1MKXSB1rafT+J6s=;
-        b=ccfZGxjMb2uSR19lRByc16zqbKYNLl7N90MJY2Y6hlK6nnw9zSskoWK4imWi/C9uxv
-         pHwZ5yXCQUMrgN7s39Xnw446cdvaIYj6jvQKpaHD/RXISKYHYQVP9jJLy3vEgLYFJaQt
-         sHbgerA90CVFzPz0f58gPsMB/twzAbn5I6cEaYgYVJIfxfrEGlKywGjTU2VTm22ExOrJ
-         od63oMBLTFQ6xoI4p3B4PoqRWv665EXbuTji5UT+pKsndCJonudtONMllY0qYyIaac55
-         zZiOEkoarKn+iwdyGc2O5oqFPKJuooV1KxEAV+S1kaNhTXQfo+GSYCxa8bXVDkikZU0h
-         /X9Q==
-X-Gm-Message-State: AGi0PubgdEz8LEVcU2Kyq1xCVvYm0zTXDgbDY5Z/sDzEtKxf9CJWybiy
-        C0BGEyfg2yiZjmGpeo1eehQzhSW3M48=
-X-Google-Smtp-Source: APiQypJ5vN5L/NTAHyN4apNpjuyAloxRAMKHW4M0GwJgCFoLvojLrV8fMX5WEBivU7sjwSxRz6NCiQ==
-X-Received: by 2002:a63:4f45:: with SMTP id p5mr5956850pgl.41.1589023282497;
-        Sat, 09 May 2020 04:21:22 -0700 (PDT)
-Received: from [192.168.1.7] ([223.72.62.216])
-        by smtp.gmail.com with ESMTPSA id 13sm4438035pfv.95.2020.05.09.04.21.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 04:21:21 -0700 (PDT)
-Subject: Re: [PATCH 1/4] fs: btrfs: fix a data race in
- btrfs_block_group_done()
-To:     Nikolay Borisov <nborisov@suse.com>, clm@fb.com,
-        josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200509052001.2298-1-baijiaju1990@gmail.com>
- <21982360-ee20-edfd-bee9-cbea04b3893f@suse.com>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <d991d28c-986a-0efc-e10e-62fe516dd7c6@gmail.com>
-Date:   Sat, 9 May 2020 19:20:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 9 May 2020 07:21:55 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 049B24kK040623;
+        Sat, 9 May 2020 07:21:54 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws2ctnpq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 09 May 2020 07:21:54 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 049BF20A026573;
+        Sat, 9 May 2020 11:21:51 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 30wm56888w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 09 May 2020 11:21:51 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 049BLnOI6422878
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 9 May 2020 11:21:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1FF7A405F;
+        Sat,  9 May 2020 11:21:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6069A4065;
+        Sat,  9 May 2020 11:21:36 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.51.106])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  9 May 2020 11:21:36 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     leo.yan@linaro.org, sandipan@linux.ibm.com, jolsa@kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf powerpc: Don't ignore sym-handling.c file
+Date:   Sat,  9 May 2020 16:51:13 +0530
+Message-Id: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <21982360-ee20-edfd-bee9-cbea04b3893f@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-09_02:2020-05-08,2020-05-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
+ mlxlogscore=992 bulkscore=0 clxscore=1011 impostorscore=0 adultscore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005090098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+removed powerpc specific sym-handling.c file from Build. This wasn't
+caught by build CI because all functions in this file are declared
+as __weak in common code. Fix it.
 
+Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/arch/powerpc/util/Build | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2020/5/9 18:53, Nikolay Borisov wrote:
->
-> On 9.05.20 г. 8:20 ч., Jia-Ju Bai wrote:
->> The functions btrfs_block_group_done() and caching_thread() are
->> concurrently executed at runtime in the following call contexts:
->>
->> Thread 1:
->>    btrfs_sync_file()
->>      start_ordered_ops()
->>        btrfs_fdatawrite_range()
->>          btrfs_writepages() [via function pointer]
->>            extent_writepages()
->>              extent_write_cache_pages()
->>                __extent_writepage()
->>                  writepage_delalloc()
->>                    btrfs_run_delalloc_range()
->>                      cow_file_range()
->>                        btrfs_reserve_extent()
->>                          find_free_extent()
->>                            btrfs_block_group_done()
->>
->> Thread 2:
->>    caching_thread()
->>
->> In btrfs_block_group_done():
->>    smp_mb();
->>    return cache->cached == BTRFS_CACHE_FINISHED ||
->>        cache->cached == BTRFS_CACHE_ERROR;
->>
->> In caching_thread():
->>    spin_lock(&block_group->lock);
->>    block_group->caching_ctl = NULL;
->>    block_group->cached = ret ? BTRFS_CACHE_ERROR : BTRFS_CACHE_FINISHED;
->>    spin_unlock(&block_group->lock);
->>
->> The values cache->cached and block_group->cached access the same memory,
->> and thus a data race can occur.
->> This data race was found and actually reproduced by our concurrency
->> fuzzer.
->>
->> To fix this race, the spinlock cache->lock is used to protect the
->> access to cache->cached in btrfs_block_group_done().
->>
->> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->> ---
->>   fs/btrfs/block-group.h | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
->> index 107bb557ca8d..fb5f12acea40 100644
->> --- a/fs/btrfs/block-group.h
->> +++ b/fs/btrfs/block-group.h
->> @@ -278,9 +278,13 @@ static inline u64 btrfs_system_alloc_profile(struct btrfs_fs_info *fs_info)
->>   
->>   static inline int btrfs_block_group_done(struct btrfs_block_group *cache)
->>   {
->> +	int flag;
->>   	smp_mb();
->> -	return cache->cached == BTRFS_CACHE_FINISHED ||
->> -		cache->cached == BTRFS_CACHE_ERROR;
->> +	spin_lock(&cache->lock);
->> +	flag = (cache->cached == BTRFS_CACHE_FINISHED ||
->> +		cache->cached == BTRFS_CACHE_ERROR);
->> +	spin_unlock(&cache->lock);
->> +	return flag;
-> Using the lock also obviates the need for the memory barrier.
-> Furthermore this race is benign because even if it occurs and we call
-> into btrfs_cache_block_group we do check cache->cached under
-> btrfs_block_group::lock and do the right thing, though we would have
-> done a bit more unnecessary wor if that's the case. So have you actually
-> measured the effect of adding the the spinlock? This is likely done so
-> as to make the fastpath lock-free. Perhaps a better approach would be to
-> annotate the access of cached with READ/WRITE once so that it's fetched
-> from memory and not optimized out by the compiler and leave the more
-> heavy work in the unlikely path.
->
-> Please exercise some critical thinking when looking into such issues as
-> there might be a good reason why something has been coded in a
-> particular way and it might look wrong on a first look but in fact is not.
+diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+index e5c9504f8586..e86e210bf514 100644
+--- a/tools/perf/arch/powerpc/util/Build
++++ b/tools/perf/arch/powerpc/util/Build
+@@ -2,6 +2,7 @@ perf-y += header.o
+ perf-y += kvm-stat.o
+ perf-y += perf_regs.o
+ perf-y += mem-events.o
++perf-y += sym-handling.o
+ 
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_DWARF) += skip-callchain-idx.o
+-- 
+2.21.1
 
-Okay, thanks a lot for your explanation and advice :)
-
-
-Best wishes,
-Jia-Ju Bai
