@@ -2,116 +2,123 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D44C54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE7BC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C31208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:50:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tkqv2f5g"
+	by mail.kernel.org (Postfix) with ESMTP id F3CEA21582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589064746;
+	bh=qhVNbu7XIwB3nTsRGd4QgqusWcMwu670xwRnnr6GNgI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wKTlpJM3IM+2XnTxfQdD43ttyl+wuOC0IWn/qqiEEnd7u5333beBOdU6IxDORNnvd
+	 RCuraKlgWlQ6GIHZBXco9bfBjRH9IW47JrGyporec5PHtAMSSeOMyDu0MjovC1+CBt
+	 m2bysev41JJGZUX0zs89/5lrPDEfVtAWMEHFgKHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgEIWuB (ORCPT
+        id S1728731AbgEIWwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 18:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgEIWuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 18:50:00 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F967C05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 15:49:59 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id j127so1394227vke.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TXUBBXmljQ5wXNIAowkwYkd4kb/4nsVYm0GYUwUuYac=;
-        b=Tkqv2f5gzC+XAAIPgdH4R2bngWQK+egYnu5AfQSyhmjrOFiaTRmfAv7lxgLnmQRtYh
-         NBnfLaEJwQKjW3zaO8N1Ey2h0IUcGByzxK0QPSE9/2kqI0YP0aHCLIuvqeL3qlQkJmgq
-         GdgmD/Eytja1TI6YPeB/tQ7b4pxyojrn+yLps=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TXUBBXmljQ5wXNIAowkwYkd4kb/4nsVYm0GYUwUuYac=;
-        b=b5Mm9R+ogLVJps1BD8RCHiKpzSOXS/oc3u5TdmAcgv+EHDyhHSKlOLJhZuYLa1zf0Y
-         70KcmwdGpsfw/ZdhsO0KzX+ki+9KRTbb7ickNCMJPGNvQJus0PiNkXC0843PLqN+qrW7
-         u1qq+F8aViv2diDTDTTncmJgAIUrFYuBZ6iS4svQzuz8NUps46IxtzWATy6q+R5vLHkS
-         sNvPMiy3Ov84nG2CrYbLVJVPb8ZpuYX80j64Ano7yrqoAa3/pzglCVoqYQ+QbNFM/mHG
-         8QNqo3oJxoWcP01r4E/O5k73WAA9ehSHLM6+38rnjElIL0vPUieQnH78uaBM7C3Uztv9
-         1KQg==
-X-Gm-Message-State: AOAM533jO1WoIA4aWg2LrhdNqkr8dmxpzq750nSfMaEjgVbkeCJ3l/wR
-        ZE4VFwA/Hz73jocvrCZ3/4nrAGCQy5A=
-X-Google-Smtp-Source: ABdhPJxFp42baQ8hCVlJIp0XUXRsAlE0ZjKt7TsNJ6oMh62wTWXxfW4yThhb8v8ERjPt2O9Zykpqqw==
-X-Received: by 2002:a1f:2655:: with SMTP id m82mr2832983vkm.52.1589064598408;
-        Sat, 09 May 2020 15:49:58 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id g78sm5295540vkf.53.2020.05.09.15.49.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 15:49:57 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id g15so688094uah.5
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:49:57 -0700 (PDT)
-X-Received: by 2002:ab0:45c7:: with SMTP id u65mr7022602uau.8.1589064596879;
- Sat, 09 May 2020 15:49:56 -0700 (PDT)
+        Sat, 9 May 2020 18:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgEIWwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 18:52:24 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B532208DB;
+        Sat,  9 May 2020 22:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589064743;
+        bh=qhVNbu7XIwB3nTsRGd4QgqusWcMwu670xwRnnr6GNgI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ibX0rDDuYQ5S6J85ow0R6cRXRXJwHuvhZ8aZnTk9Kb0tHaROhwdSqu2UOfubfhrYm
+         Yif9OiNvxrbQl1Zjx/UBjVk7U/SpWoIXC/Hdw/NxImVkZsBoAnLbwe5GY8ptIY/ktk
+         QUQf6oSi9CDf0CKUjFImSLBQpR3iuwmmNCImFA2Y=
+Date:   Sat, 9 May 2020 15:52:21 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Timur Tabi <timur@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
+Message-ID: <20200509155221.40e0e3b5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <bce24dff-5287-76e2-ba85-8d31d7e673f8@gmail.com>
+References: <20200509120505.109218-1-arnd@arndb.de>
+        <20200509132427.3d2979d8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
+        <bce24dff-5287-76e2-ba85-8d31d7e673f8@gmail.com>
 MIME-Version: 1.0
-References: <20200508155859.1.I4d29651c0837b4095fb4951253f44036a371732f@changeid>
- <20200509200021.GA30802@ravnborg.org>
-In-Reply-To: <20200509200021.GA30802@ravnborg.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Sat, 9 May 2020 15:49:45 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W+sAfu-A0ScE+hzNOd=jxnf+YZgwygPoR-gFqm0b++5A@mail.gmail.com>
-Message-ID: <CAD=FV=W+sAfu-A0ScE+hzNOd=jxnf+YZgwygPoR-gFqm0b++5A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] panel: simple: Fix size and bpp of BOE NV133FHM-N61
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, 9 May 2020 15:04:04 -0700 Florian Fainelli wrote:
+> On 5/9/2020 2:48 PM, Arnd Bergmann wrote:
+> > On Sat, May 9, 2020 at 10:24 PM Jakub Kicinski <kuba@kernel.org> wrote:  
+> >>
+> >> On Sat,  9 May 2020 14:04:52 +0200 Arnd Bergmann wrote:  
+> >>> I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
+> >>> and CONFIG_GIANFAR=y:
+> >>>
+> >>> x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
+> >>>
+> >>> It seems the same thing can happen with dpaa and ucc_geth, so change
+> >>> all three to do an explicit 'select FIXED_PHY'.
+> >>>
+> >>> The fixed-phy driver actually has an alternative stub function that
+> >>> theoretically allows building network drivers when fixed-phy is
+> >>> disabled, but I don't see how that would help here, as the drivers
+> >>> presumably would not work then.
+> >>>
+> >>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>  
+> >>  
+> >>> +     select FIXED_PHY  
+> >>
+> >> I think FIXED_PHY needs to be optional, depends on what the board has
+> >> connected to the MAC it may not be needed, right PHY folks? We probably
+> >> need the
+> >>
+> >>     depends on FIXED_PHY || !FIXED_PHY  
+> > 
+> > Unfortunately that does not work because it causes a circular dependency:
+> > 
+> > drivers/net/phy/Kconfig:415:error: recursive dependency detected!
+> > drivers/net/phy/Kconfig:415: symbol FIXED_PHY depends on PHYLIB
+> > drivers/net/phy/Kconfig:250: symbol PHYLIB is selected by FSL_PQ_MDIO
+> > drivers/net/ethernet/freescale/Kconfig:60: symbol FSL_PQ_MDIO is
+> > selected by UCC_GETH
+> > drivers/net/ethernet/freescale/Kconfig:75: symbol UCC_GETH depends on FIXED_PHY
 
-On Sat, May 9, 2020 at 1:00 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Douglas
->
-> On Fri, May 08, 2020 at 03:59:00PM -0700, Douglas Anderson wrote:
-> > The BOE NV133FHM-N61 is documented in the original commit to be a
-> > 13.3" panel, but the size listed in our struct doesn't match.
-> > Specifically:
-> >
-> >   math.sqrt(30.0 * 30.0 + 18.7 * 18.7) / 2.54 ==> 13.92
-> >
-> > Searching around on the Internet shows that the size that was in the
-> > structure was the "Outline Size", not the "Display Area".  Let's fix
-> > it.
-> >
-> > Also the Internet says that this panel supports 262K colors.  That's
-> > 6bpp, not 8bpp.
-> >
-> > Fixes: b0c664cc80e8 ("panel: simple: Add BOE NV133FHM-N61")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->
-> Added to drm-misc-next as I did not think this had to be updated in
-> mainline right now. Let me know if you expect it to land in mainline
-> soonish.
+:(
 
-drm-misc-next is perfect, thanks!
+> > I now checked what other drivers use the fixed-phy interface, and found
+> > that all others do select FIXED_PHY except for these three, and they
+> > are also the only ones using fixed_phy_change_carrier().
+> > 
+> > The fixed-phy driver is fairly small, so it probably won't harm too much
+> > to use the select, but maybe I missed another option.  
+> 
+> select FIXED_PHY appears the correct choice here we could think about
+> providing stubs if that is deemed useful, but in general these drivers
+> do tend to have a functional dependency on the fixed PHY and MDIO bus
+> subsystems.
 
--Doug
+The sad thing is - the stubs already exist, it seems we just can't
+express the dependencies in Kconfig well enough to prevent driver 
+to be built in when fixed_phy is a module. Anyway..
+
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Applied to net, thank y'all!
