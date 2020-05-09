@@ -2,203 +2,100 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B7CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9411AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB34217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTLFO1Bh"
+	by mail.kernel.org (Postfix) with ESMTP id 683AB21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgEIG6m (ORCPT
+        id S1728934AbgEIHBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 02:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728471AbgEIG6j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 02:58:39 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA7DC061A0C;
-        Fri,  8 May 2020 23:58:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w65so2144589pfc.12;
-        Fri, 08 May 2020 23:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YXySs4zUZLsOuTSP8VAFnCNIxqD4YlvKNUR69g+WATI=;
-        b=FTLFO1BhyZGIyN9NAcgxU6PdaFrch0mUM/kADDevRFco0mRjcUMeGp3fRcXLjnFs2M
-         HkUDyWaeV+UqEiUYc4sC0h8l8Pj4LAacD7KR10AEg1F3VjMk+Zk5rXEaAO2ovkxFjho8
-         2J1bTAkJ/dJUp8FMG+dQ881N/ZSE6pnTqcOkF63Zck8AnebDsyYkD33Gb827KEEuio84
-         mulmTnyab9MXXOnwgUdWE5csUWJaOOdG4T25B5KEwAEzOBY+pdHkP7NAluiLPyPl0MbN
-         cTdbkgGvdxJQhEIZAMGT+qcsPo68FYvLEDBM5EHdUT6wBfrIUFmuCzOMZvvqzdhx+eRV
-         uuJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YXySs4zUZLsOuTSP8VAFnCNIxqD4YlvKNUR69g+WATI=;
-        b=J/0txmshSymvYdLbnWTqJkPtNRNVFsECa2NCEFB0UgX2JMiJOhTL/6h4fJ4iiSalX3
-         yaCrxctlX5hNAfW3BEYKcXJEZ939xUAw6EAgJkFtDyw9crS+rsYbj2OZbnI12rn1/Qug
-         Q92HXEfiVLXfsxOH6tY08AglCu9ehpCq12q4qPX+GaFWf5SbuP5BbP/BcppN1baE6llq
-         sU39iABf5D0sTaAhevLf7FvpkjBS6zWQiUKzRxniKGnz5MoLtG9tv2IdibfkEDMHzStx
-         hor4mhRashVg4UIkbWpxX89YyvJQGLxrhkeVQ5xGNVPHv2o/Mc3LopoMRJxv9V6vUM6g
-         LZLQ==
-X-Gm-Message-State: AGi0PuaYardxdoz3zbWu+3zObMhKCvMN7xudTpBOrZqvFnamPU/ePXcc
-        /lUzDxfdqbsxwiM4xVj1B7Y=
-X-Google-Smtp-Source: APiQypKJa/F9hGL23m/DdbkZTyV3jDAPDegtFd78ZZNfFPkERLH3hgikEbPDgMsm2gn6tNiCTtuDAQ==
-X-Received: by 2002:a63:41c2:: with SMTP id o185mr5363006pga.139.1589007519639;
-        Fri, 08 May 2020 23:58:39 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id w192sm3811572pff.126.2020.05.08.23.58.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 23:58:39 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, broonie@kernel.org, p.zabel@pengutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, dillonhua@gmail.com,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH 3/3] spi: stm32: Add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
-Date:   Sat,  9 May 2020 14:58:23 +0800
-Message-Id: <1589007503-9523-4-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
-References: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
+        Sat, 9 May 2020 03:01:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4312 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728471AbgEIHBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:01:20 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 70D7CDEC6CEAA25B8B08;
+        Sat,  9 May 2020 15:01:19 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 15:01:13 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: compress: let lz4 compressor handle output buffer budget properly
+Date:   Sat, 9 May 2020 15:01:04 +0800
+Message-ID: <20200509070104.47709-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+Commonly, in order to handle lz4 worst compress case, caller should
+allocate buffer with size of LZ4_compressBound(inputsize) for target
+compressed data storing, however in this case, if caller didn't
+allocate enough space, lz4 compressor still can handle output buffer
+budget properly, and end up compressing when left space in output
+buffer is not enough.
 
-in l3gd20 driver startup, there is a setup failed error return from
-stm32 spi driver
+So we don't have to allocate buffer with size for worst case, then
+we can avoid 2 * 4KB size intermediate buffer allocation when
+log_cluster_size is 2, and avoid unnecessary compressing work of
+compressor if we can not save at least 4KB space.
 
-"
-[    2.687630] st-gyro-spi spi0.0: supply vdd not found, using dummy
-regulator
-[    2.696869] st-gyro-spi spi0.0: supply vddio not found, using dummy
-regulator
-[    2.706707] spi_stm32 40015000.spi: SPI transfer setup failed
-[    2.713741] st-gyro-spi spi0.0: SPI transfer failed: -22
-[    2.721096] spi_master spi0: failed to transfer one message from queue
-[    2.729268] iio iio:device0: failed to read Who-Am-I register.
-[    2.737504] st-gyro-spi: probe of spi0.0 failed with error -22
-"
-
-after debug into spi-stm32 driver, st-gyro-spi split two steps to read
-l3gd20 id
-
-first: send command to l3gd20 with read id command in tx_buf, rx_buf
-is null.
-second: read id with tx_buf is null, rx_buf not null.
-
-so, for second step, stm32 driver recongise this process is SPI_SIMPLE_RX
-from stm32_spi_communication_type, but there is no related process for this
-type in stm32f4_spi_set_mode, then we get error from
-stm32_spi_transfer_one_setup.
-
-we can use two method to fix this bug.
-1, use stm32 spi's "In unidirectional receive-only mode (BIDIMODE=0 and
-RXONLY=1)". but as our code running in sdram, the read latency is too large
-to get so many receive overrun error in interrupts handler.
-
-2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
-null, we must add dummy data sent out before read data.
-so, add stm32f4_spi_tx_dummy to handle this situation.
-
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
+Suggested-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- drivers/spi/spi-stm32.c | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+v2:
+- update commit title/message suggested by Gao Xiang
+ fs/f2fs/compress.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 44ac6eb3..bcf1ba7 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -388,6 +388,13 @@ static int stm32h7_spi_get_fifo_size(struct stm32_spi *spi)
- 	return count;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 5e4947250262..c0880c3e4b6e 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -228,7 +228,12 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
+ 	if (!cc->private)
+ 		return -ENOMEM;
+ 
+-	cc->clen = LZ4_compressBound(PAGE_SIZE << cc->log_cluster_size);
++	/*
++	 * we do not change cc->clen to LZ4_compressBound(inputsize) to
++	 * adapt worst compress case, because lz4 compressor can handle
++	 * output budget properly.
++	 */
++	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+ 	return 0;
  }
  
-+static void stm32f4_spi_tx_dummy(struct stm32_spi *spi)
-+{
-+	if (spi->cur_bpw == 16)
-+		writew_relaxed(0x5555, spi->base + STM32F4_SPI_DR);
-+	else
-+		writeb_relaxed(0x55, spi->base + STM32F4_SPI_DR);
-+}
- /**
-  * stm32f4_spi_get_bpw_mask - Return bits per word mask
-  * @spi: pointer to the spi controller data structure
-@@ -811,7 +818,9 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		mask |= STM32F4_SPI_SR_TXE;
- 	}
+@@ -244,11 +249,9 @@ static int lz4_compress_pages(struct compress_ctx *cc)
  
--	if (!spi->cur_usedma && spi->cur_comm == SPI_FULL_DUPLEX) {
-+	if (!spi->cur_usedma && (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				 spi->cur_comm == SPI_SIMPLEX_RX ||
-+				 spi->cur_comm == SPI_3WIRE_RX)) {
- 		/* TXE flag is set and is handled when RXNE flag occurs */
- 		sr &= ~STM32F4_SPI_SR_TXE;
- 		mask |= STM32F4_SPI_SR_RXNE | STM32F4_SPI_SR_OVR;
-@@ -850,8 +859,10 @@ static irqreturn_t stm32f4_spi_irq_event(int irq, void *dev_id)
- 		stm32f4_spi_read_rx(spi);
- 		if (spi->rx_len == 0)
- 			end = true;
--		else /* Load data for discontinuous mode */
-+		else if (spi->tx_buf)/* Load data for discontinuous mode */
- 			stm32f4_spi_write_tx(spi);
-+		else if (spi->cur_comm == SPI_SIMPLEX_RX)
-+			stm32f4_spi_tx_dummy(spi);
- 	}
- 
- end_irq:
-@@ -1151,7 +1162,9 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- 	/* Enable the interrupts relative to the current communication mode */
- 	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX) {
- 		cr2 |= STM32F4_SPI_CR2_TXEIE;
--	} else if (spi->cur_comm == SPI_FULL_DUPLEX) {
-+	} else if (spi->cur_comm == SPI_FULL_DUPLEX ||
-+				spi->cur_comm == SPI_SIMPLEX_RX ||
-+				spi->cur_comm == SPI_3WIRE_RX) {
- 		/* In transmit-only mode, the OVR flag is set in the SR register
- 		 * since the received data are never read. Therefore set OVR
- 		 * interrupt only when rx buffer is available.
-@@ -1170,6 +1183,8 @@ static int stm32f4_spi_transfer_one_irq(struct stm32_spi *spi)
- 	/* starting data transfer when buffer is loaded */
- 	if (spi->tx_buf)
- 		stm32f4_spi_write_tx(spi);
-+	else if (spi->cur_comm == SPI_SIMPLEX_RX)
-+		stm32f4_spi_tx_dummy(spi);
- 
- 	spin_unlock_irqrestore(&spi->lock, flags);
- 
-@@ -1462,10 +1477,16 @@ static int stm32f4_spi_set_mode(struct stm32_spi *spi, unsigned int comm_type)
- 		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
- 					STM32F4_SPI_CR1_BIDIOE);
--	} else if (comm_type == SPI_FULL_DUPLEX) {
-+	} else if (comm_type == SPI_FULL_DUPLEX ||
-+				comm_type == SPI_SIMPLEX_RX) {
- 		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
- 					STM32F4_SPI_CR1_BIDIMODE |
- 					STM32F4_SPI_CR1_BIDIOE);
-+	} else if (comm_type == SPI_3WIRE_RX) {
-+		stm32_spi_set_bits(spi, STM32F4_SPI_CR1,
-+					STM32F4_SPI_CR1_BIDIMODE);
-+		stm32_spi_clr_bits(spi, STM32F4_SPI_CR1,
-+					STM32F4_SPI_CR1_BIDIOE);
- 	} else {
- 		return -EINVAL;
- 	}
+ 	len = LZ4_compress_default(cc->rbuf, cc->cbuf->cdata, cc->rlen,
+ 						cc->clen, cc->private);
+-	if (!len) {
+-		printk_ratelimited("%sF2FS-fs (%s): lz4 compress failed\n",
+-				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id);
+-		return -EIO;
+-	}
++	if (!len)
++		return -EAGAIN;
++
+ 	cc->clen = len;
+ 	return 0;
+ }
 -- 
-2.7.4
+2.18.0.rc1
 
