@@ -2,101 +2,79 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417D9C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CA9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C77720644
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A2820A8B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:30:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="YkDubO0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgEITV3 (ORCPT
+        id S1728171AbgEITa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:21:29 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51526 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgEITV3 (ORCPT
+        Sat, 9 May 2020 15:30:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727938AbgEITa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:21:29 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1EEA61C0257; Sat,  9 May 2020 21:21:27 +0200 (CEST)
-Date:   Sat, 9 May 2020 21:21:25 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>, Balbir Singh <sblbir@amazon.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-Message-ID: <20200509192125.GA1597@bug>
-References: <20200421184150.68011-1-andraprs@amazon.com>
- <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
- <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
- <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
- <20200507174438.GB1216@bug>
- <620bf5ae-eade-37da-670d-a8704d9b4397@amazon.com>
+        Sat, 9 May 2020 15:30:28 -0400
+Received: from mail.kocurkovo.cz (unknown [IPv6:2a02:2b88:2:1::5b29:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0342DC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 12:30:27 -0700 (PDT)
+Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
+        id 32BF3E5C; Sat,  9 May 2020 21:30:22 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 32BF3E5C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
+        s=mail; t=1589052622;
+        bh=3NqGALpJejJs6fZ2p4UE2vn0NWmO4nMUqcpgpgZA2OU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YkDubO0lgoq4RjOfZ4pS4p8/SWmkZcksTIYnf0vfbdLCguIWi7jvDYlQiMUjkCBoG
+         g4b1WYrHDfM0Xr0B8bPIXso1ISuEDDVBz2nYLDJXtAEYJCGU6hYwmeWWVLNMaOb0AS
+         oDUc8qo4vFcjM1g8OHazyukew77MMq1h37zioEGk=
+Date:   Sat, 9 May 2020 21:30:22 +0200
+From:   Matej Dujava <mdujava@kocurkovo.cz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: vt6655: clean Makefiles
+Message-ID: <20200509193022.GA4665@new.kocurkovo.cz>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <1589015247-738-1-git-send-email-mdujava@kocurkovo.cz>
+ <20200509170714.GC2482887@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <620bf5ae-eade-37da-670d-a8704d9b4397@amazon.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200509170714.GC2482887@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-05-08 10:00:27, Paraschiv, Andra-Irina wrote:
-> 
-> 
-> On 07/05/2020 20:44, Pavel Machek wrote:
-> >
-> >Hi!
-> >
-> >>>it uses its own memory and CPUs + its virtio-vsock emulated device for
-> >>>communication with the primary VM.
-> >>>
-> >>>The memory and CPUs are carved out of the primary VM, they are dedicated
-> >>>for the enclave. The Nitro hypervisor running on the host ensures memory
-> >>>and CPU isolation between the primary VM and the enclave VM.
-> >>>
-> >>>These two components need to reflect the same state e.g. when the
-> >>>enclave abstraction process (1) is terminated, the enclave VM (2) is
-> >>>terminated as well.
-> >>>
-> >>>With regard to the communication channel, the primary VM has its own
-> >>>emulated virtio-vsock PCI device. The enclave VM has its own emulated
-> >>>virtio-vsock device as well. This channel is used, for example, to fetch
-> >>>data in the enclave and then process it. An application that sets up the
-> >>>vsock socket and connects or listens, depending on the use case, is then
-> >>>developed to use this channel; this happens on both ends - primary VM
-> >>>and enclave VM.
-> >>>
-> >>>Let me know if further clarifications are needed.
-> >>Thanks, this is all useful.  However can you please clarify the
-> >>low-level details here?
-> >Is the virtual machine manager open-source? If so, I guess pointer for sources
-> >would be useful.
-> 
-> Hi Pavel,
-> 
-> Thanks for reaching out.
-> 
-> The VMM that is used for the primary / parent VM is not open source.
+On Sat, May 09, 2020 at 07:07:14PM +0200, Greg Kroah-Hartman wrote:
+>On Sat, May 09, 2020 at 11:07:27AM +0200, Matej Dujava wrote:
+>> This patch is removing CFLAGS that are defining flags that are not used.
+>
+>You are also modifying the indentation and moving lines around for no
+>reason :(
+>
+>Please only do one thing for a patch, and always describe everything you
+>do in the changelog text.
 
-Do we want to merge code that opensource community can not test?
+sorry, I will split it into two separate patches and resend as v2
 
-								Pavel
+Thanks,
+Matej
 
--- (english) http://www.livejournal.com/~pavelmachek (cesky, pictures) 
-http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+>
+>Can you fix this up and send a v2?
+>
+>thanks,
+>
+>greg k-h
