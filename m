@@ -2,120 +2,88 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714B4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A08217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E428214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgEINH2 (ORCPT
+        id S1727812AbgEINKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:07:28 -0400
-Received: from mailomta17-sa.btinternet.com ([213.120.69.23]:56388 "EHLO
-        sa-prd-fep-041.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726370AbgEINH2 (ORCPT
+        Sat, 9 May 2020 09:10:31 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58383 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgEINKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:07:28 -0400
-Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
-          by sa-prd-fep-041.btinternet.com with ESMTP
-          id <20200509130726.KSVB7822.sa-prd-fep-041.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
-          Sat, 9 May 2020 14:07:26 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [31.53.141.224]
-X-OWM-Source-IP: 31.53.141.224 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrkeehgdeitdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecuggftrfgrthhtvghrnhepgeeftdfhfeeuiefhgfekfeethedutddtfeduteevleevfedvfefhjeeijefhgffgnecukfhppeefuddrheefrddugedurddvvdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohephhgvnhhrhidrhhhomhgvpdhinhgvthepfedurdehfedrudeguddrvddvgedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeosggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdr
-        ihhnfhhrrgguvggrugdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhrphhiqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgheqpdhrtghpthhtohepoehnshgrvghniihjuhhlihgvnhhnvgesshhushgvrdguvgeq
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry.home (31.53.141.224) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5E3A27DB0FC00535; Sat, 9 May 2020 14:07:26 +0100
-From:   John Oldman <john.oldman@polehill.co.uk>
-To:     nsaenzjulienne@suse.de
-Cc:     gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        John Oldman <john.oldman@polehill.co.uk>
-Subject: [PATCH] staging: vc04_services: interface: vchiq_arm: vchiq_connected.c: Block comments should align the * on each line
-Date:   Sat,  9 May 2020 14:07:14 +0100
-Message-Id: <20200509130714.10586-1-john.oldman@polehill.co.uk>
-X-Mailer: git-send-email 2.17.1
+        Sat, 9 May 2020 09:10:31 -0400
+Received: from windsurf.home (lfbn-tou-1-915-109.w86-210.abo.wanadoo.fr [86.210.146.109])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 837EE20000B;
+        Sat,  9 May 2020 13:10:27 +0000 (UTC)
+Date:   Sat, 9 May 2020 15:10:26 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stefan Chulski <stefanc@marvell.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS
+ contexts to handle RSS tables
+Message-ID: <20200509151026.30abcb6f@windsurf.home>
+In-Reply-To: <20200509124843.GC1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+        <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+        <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+        <20200423170003.GT25745@shell.armlinux.org.uk>
+        <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+        <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+        <20200509114518.GB1551@shell.armlinux.org.uk>
+        <20200509141644.29861e96@windsurf.home>
+        <20200509124843.GC1551@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coding style issue
+On Sat, 9 May 2020 13:48:43 +0100
+Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
----
- .../interface/vchiq_arm/vchiq_connected.c     | 32 +++++++++----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+> > Unfortunately, we are no longer actively working on Marvell platform
+> > support at the moment. We might have a look on a best effort basis, but
+> > this is potentially a non-trivial issue, so I'm not sure when we will
+> > have the chance to investigate and fix this.  
+> 
+> That may be the case, but that doesn't excuse the fact that we have a
+> regression and we need to do something.
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-index 1640906e3929..993535bbc479 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-@@ -15,10 +15,10 @@ static   int                        g_once_init;
- static   struct mutex               g_connected_mutex;
- 
- /****************************************************************************
--*
--* Function to initialize our lock.
--*
--***************************************************************************/
-+ *
-+ * Function to initialize our lock.
-+ *
-+ ***************************************************************************/
- 
- static void connected_init(void)
- {
-@@ -29,13 +29,13 @@ static void connected_init(void)
- }
- 
- /****************************************************************************
--*
--* This function is used to defer initialization until the vchiq stack is
--* initialized. If the stack is already initialized, then the callback will
--* be made immediately, otherwise it will be deferred until
--* vchiq_call_connected_callbacks is called.
--*
--***************************************************************************/
-+ *
-+ * This function is used to defer initialization until the vchiq stack is
-+ * initialized. If the stack is already initialized, then the callback will
-+ * be made immediately, otherwise it will be deferred until
-+ * vchiq_call_connected_callbacks is called.
-+ *
-+ ***************************************************************************/
- 
- void vchiq_add_connected_callback(VCHIQ_CONNECTED_CALLBACK_T callback)
- {
-@@ -64,11 +64,11 @@ void vchiq_add_connected_callback(VCHIQ_CONNECTED_CALLBACK_T callback)
- }
- 
- /****************************************************************************
--*
--* This function is called by the vchiq stack once it has been connected to
--* the videocore and clients can start to use the stack.
--*
--***************************************************************************/
-+ *
-+ * This function is called by the vchiq stack once it has been connected to
-+ * the videocore and clients can start to use the stack.
-+ *
-+ ***************************************************************************/
- 
- void vchiq_call_connected_callbacks(void)
- {
+Absolutely.
+
+> Please can you suggest how we resolve this regression prior to
+> 5.7-final?
+
+Since 5.7 is really close, I would suggest to disable the functionality.
+
+Best regards,
+
+Thomas
 -- 
-2.17.1
-
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
