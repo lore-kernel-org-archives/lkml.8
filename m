@@ -2,243 +2,134 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C51C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E79EC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A56520746
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E737924958
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgEIBOL (ORCPT
+        id S1728415AbgEIBes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEIBOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:14:11 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A561CC061A0C;
-        Fri,  8 May 2020 18:14:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 1D7E72A2EDA
-Received: by earth.universe (Postfix, from userid 1000)
-        id 635103C08C6; Sat,  9 May 2020 03:14:06 +0200 (CEST)
-Date:   Sat, 9 May 2020 03:14:06 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ramakrishna.pallala@intel.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
- for Summit SMB3xx
-Message-ID: <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
-References: <20200329161552.215075-1-david@ixit.cz>
- <20200329162128.218584-5-david@ixit.cz>
- <20200410164905.GA719@bogus>
- <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
- <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
- <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
+        Fri, 8 May 2020 21:34:48 -0400
+Received: from mail-mw2nam12olkn2060.outbound.protection.outlook.com ([40.92.23.60]:10433
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727828AbgEIBer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:34:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fxAt6Yw3a29xPbXCUIsYdXRk6+e7v+cGmZ/HjG1MQRm90Qw0f4jDLLxPsCzc2btto6evkEMWWlycdSelN5yMXhsSRiue/rvTQ4+17C0lyencFn2z4EOfTj0XhEptbe/h7alIN/mGo07vyHr7bVkcniicOTGIu+dTi3kfNLBOcGetWZRiJjZ4RVrLQsvx9CZ9IDIuPqaH8R3jXqbkVzKCu6MXNdc7ZlHld+hRRZFEvqw3NSPfZZgbJn9maqHSQwhAEibtwqqNkg9aA2C38j45HsDX/g+w4dLY5zCowBLOizKhmA6yJcLCEzvnfkx2PyAVnhOICva56pANf3+ge0iP/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zg0OsvzlU1eLMvS0vAoFzf9f4nkJrus+FNqiK+LOu2I=;
+ b=Xnc79Th8Cj+D6eh6Iv2z+22qULBstWjonQ6ShBeGpxY1gbm4LLU8XebPkvQUVg/r7/EhGY5ldLWZv1dvMmGwzUUqe1sbr3HxyzPWFTxFaw/eV8uWF77LM7/Sf2wVYoJqzEbsfDaL81TN/y4F1HYVSdYEByjsQYu63mVzXTBL765xj437Hb3giebRq0Gs/OhMOM50DabHS5ct3VIaae6QCxugStItk0uK+aXJDC2hgRgUqp8EEbtOs+mW3lWL+6TfGx8zdOLbGtEed9iBn5t3mihALBLwDfUyU0BPkLn1Nmj9owKZg3/pYmj2ua1Q14hXyKqD2PC9bMJ7rPuYjLhDPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM12FT019.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc66::51) by
+ BN8NAM12HT197.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::385)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Sat, 9 May
+ 2020 01:34:44 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc66::49) by BN8NAM12FT019.mail.protection.outlook.com
+ (2a01:111:e400:fc66::416) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
+ Transport; Sat, 9 May 2020 01:34:44 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:D3D0BD23F8AD38415164C897CD7B9247A5EB6F568E4DEB138FB449DB98DEBD0E;UpperCasedChecksum:059D37F2A3F4A1A387B49EDA450D39FF8E59769650961E57C50C8618236AF017;SizeAsReceived:7738;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Sat, 9 May 2020
+ 01:34:44 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] tty: serial: samsung: Correct clock selection logic
+Date:   Fri,  8 May 2020 18:34:33 -0700
+Message-ID: <BN6PR04MB06604E63833EA41837EBF77BA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: CO2PR04CA0007.namprd04.prod.outlook.com
+ (2603:10b6:102:1::17) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200509013433.23152-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="trk2swxtlkihf4zn"
-Content-Disposition: inline
-In-Reply-To: <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO2PR04CA0007.namprd04.prod.outlook.com (2603:10b6:102:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Sat, 9 May 2020 01:34:43 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200509013433.23152-1-xc-racer2@live.ca>
+X-TMN:  [NN/Ci17XNAwKoNPXso5hxFZpP2g50cHt4TsXayU35974VRbh31XZ/ItSSL84vS+8]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 78b3340d-b96b-452d-59f6-08d7f3b926bc
+X-MS-TrafficTypeDiagnostic: BN8NAM12HT197:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: S+Pmf+7X1j1nLgegg525J2+23iYcy2bhoHxH+EkC2ENEuS36A+dHlaKl+L/r2a5je2rG37sXbLxkR0w215OhBM0UKKp04P/s0wk3jwcy9hGo3M1Vge4l4nd5xjDKwqKhahvyoqrNBQ5M5b9dHXA4KfXbqT1bM1UOOpfNWTNeWOCOBshLsAXZlb9EYGUaOA76nZjJuun1WKmBTTQe2tW87Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: osNfQuONJHWs8koab4YCXiQIb3SnKhMK3W9431E2kJQRg+sFYCTBJJbSS+BrWYQwCVZN/+BEsywDEW5Bf/Dg8yq/4lOHipVOl0ZJ8eCrcWrH/z+zuzqateBKfPQLVNXhlFe9I6HHfFUumU3qoDh2nys89Ndyg6tH7szq/RW7yAf/LOn9UKRpv9xoLXr6AhG5E3eCcXnXno2nlNKa/mUQHw==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78b3340d-b96b-452d-59f6-08d7f3b926bc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 01:34:44.6349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some variants of the samsung tty driver can pick which clock
+to use for their baud rate generation.  In the DT conversion,
+a default clock was selected to be used if a specific one wasn't
+assigned and then a comparison of which clock rate worked better
+was done.  Unfortunately, the comparison was implemented in such
+a way that only the default clock was ever actually compared.
+Fix this by iterating through all possible clocks, except when a
+specific clock has already been picked via clk_sel (which is
+only possible via board files).
 
---trk2swxtlkihf4zn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/tty/serial/samsung_tty.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Hi,
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 73f951d65b93..9d2b4be44209 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -1281,14 +1281,14 @@ static unsigned int s3c24xx_serial_getclk(struct s3c24xx_uart_port *ourport,
+ 	struct s3c24xx_uart_info *info = ourport->info;
+ 	struct clk *clk;
+ 	unsigned long rate;
+-	unsigned int cnt, baud, quot, clk_sel, best_quot = 0;
++	unsigned int cnt, baud, quot, best_quot = 0;
+ 	char clkname[MAX_CLK_NAME_LENGTH];
+ 	int calc_deviation, deviation = (1 << 30) - 1;
+ 
+-	clk_sel = (ourport->cfg->clk_sel) ? ourport->cfg->clk_sel :
+-			ourport->info->def_clk_sel;
+ 	for (cnt = 0; cnt < info->num_clks; cnt++) {
+-		if (!(clk_sel & (1 << cnt)))
++		/* Keep selected clock if provided */
++		if (ourport->cfg->clk_sel &&
++			!(ourport->cfg->clk_sel & (1 << cnt)))
+ 			continue;
+ 
+ 		sprintf(clkname, "clk_uart_baud%d", cnt);
+-- 
+2.20.1
 
-On Wed, Apr 15, 2020 at 06:30:02PM +0300, Dmitry Osipenko wrote:
-> 15.04.2020 17:27, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrot=
-e:
-> >>
-> >> 10.04.2020 19:49, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >> ...
-> >>>> +  summit,max-chg-curr:
-> >>>> +    description: Maximum current for charging (in uA)
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +
-> >>>> +  summit,max-chg-volt:
-> >>>> +    description: Maximum voltage for charging (in uV)
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +    minimum: 3500000
-> >>>> +    maximum: 4500000
-> >>>> +
-> >>>> +  summit,pre-chg-curr:
-> >>>> +    description: Pre-charging current for charging (in uA)
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +
-> >>>> +  summit,term-curr:
-> >>>> +    description: Charging cycle termination current (in uA)
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> ...
-> >>> These are all properties of the battery attached and we have standard
-> >>> properties for some/all of these.
-> >>
-> >> Looks like only four properties seem to be matching the properties of
-> >> the battery.txt binding.
-> >>
-> >> Are you suggesting that these matching properties should be renamed
-> >> after the properties in battery.txt?
-> >=20
-> > Yes, and that there should be a battery node.
->=20
-> Usually, it's a battery that has a phandle to the power-supply. Isn't it?
-
-There are two things: The infrastructure described by=20
-Documentation/devicetree/bindings/power/supply/power-supply.yaml is
-used for telling the operating system, that a battery is charged
-by some charger. This is done by adding a power-supplies =3D <&phandle>
-in the battery fuel gauge node referencing the charger and probably
-what you mean here.
-
-Then we have the infrastructure described by=20
-Documentation/devicetree/bindings/power/supply/battery.txt, which
-provides data about the battery cell. In an ideal world we would
-have only smart batteries providing this data, but we don't live
-in such a world. So what we currently have is a binding looking
-like this:
-
-bat: dumb-battery {
-    compatible =3D "simple-battery";
-
-    // data about battery cell(s)
-};
-
-fuel-gauge {
-    // fuel-gauge specific data
-
-    supplies =3D <&charger>;
-    monitored-battery =3D <&bat>;
-};
-
-charger: charger {
-    // charger specific data
-
-    monitored-battery =3D <&bat>;
-};
-
-In an ideal world, charger should possibly reference fuel-gauge
-node, which could provide combined data. Right now we do not have
-the infrastructure for that, so it needs to directly reference
-the simple-battery node.
-
-> > Possibly you should add
-> > new properties battery.txt. It's curious that different properties are
-> > needed.
->=20
-> I guess it should be possible to make all these properties generic.
->=20
-> Sebastian, will you be okay if we will add all the required properties
-> to the power_supply_core?
-
-Extending battery.txt is possible when something is missing. As Rob
-mentioned quite a few are already described, though:
-
-summit,max-chg-curr =3D> constant-charge-current-max-microamp
-summit,max-chg-volt =3D> constant-charge-voltage-max-microvolt
-summit,pre-chg-curr =3D> precharge-current-microamp
-summit,term-curr =3D> charge-term-current-microamp
-
-I think at least the battery temperature limits are something, that
-should be added to the generic code.
-
-> > Ultimately, for a given battery technology I would expect
-> > there's a fixed set of properties needed to describe how to charge
-> > them.
->=20
-> Please notice that the charger doesn't "only charge" the battery,
-> usually it also supplies power to the whole device.
->=20
-> For example, when battery is fully-charged and charger is connected to
-> the power source (USB or mains), then battery may not draw any current
-> at all.
-
-It is also a question of how good the charging process should be.
-Technically I can charge a single cell Li-ion battery without
-knowing much, but it can reduce battery life and/or be very slow.
-It might even be dangerous, if charging is done at high
-temperatures. Also some of the properties in the battery binding
-are not about charging, but about gauging. Some devices basically
-have only options to measure voltage and voltage drop over a
-resistor and everything else must be done by the operating system.
-
-> > Perhaps some of these properties can just be derived from other
-> > properties and folks are just picking what a specific charger wants.
->=20
-> Could be so, but I don't know for sure.
-
-I don't think we have things, that can be derived with a reasonable
-amount of effort in the existing simple-battery binding, except for
-energy-full-design-microwatt-hours & charge-full-design-microamp-hours.
-
-> Even if some properties could be derived from the others, it won't hurt
-> if we will specify everything explicitly in the device-tree.
->=20
-> > Unfortunately, we have just a mess of stuff made up for each charger
-> > out there. I don't have the time nor the experience in this area to do
-> > much more than say do better.
->
-> I don't think it's a mess in the kernel. For example, it's common that
-> embedded controllers are exposed to the system as "just a battery",
-> while in fact it's a combined charger + battery controller and the
-> charger parameters just couldn't be changed by SW.
-
-A good EC driver exposes a charger and a battery device, so that
-userspace can easily identify if a charger is connected.
-
-> In a case of the Nexus 7 devices, the battery controller and charger
-> controller are two separate entities in the system. The battery
-> controller (bq27541) only monitors status of the battery (charge level,
-> temperature and etc).
-
--- Sebastian
-
---trk2swxtlkihf4zn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl62A9kACgkQ2O7X88g7
-+pr27BAAnAweg7Qzq9Lo0hr3uEUfsmVoN451+mcf9GIc1ld8kEb/7bcCWuirWqRD
-/eVM0QNp2RF2dpIEpZLpXG/56gxHEf1hsZUNMC9ZtVK6nReHBJxyzt6vKbpiSKX9
-ZXvvodLiUrFp1E6g/AmlpoOwHpe7uQY7npv5NpCWfBqodTGKbVzyhtgEIIXnFe+G
-qxI7R/YTqtoifL1aA8XZGJfpBA0gAjFI6QodXJfYhpom0n6RpbPjFUp4XbgGE78I
-WxMXiqEu8oXR31CrTklTvt9q/szJF6njztZzmrF8pxfLyGpJ879I74js6Kgcg/eY
-uev0EQ+Qv9axcQ4qWHr9+FSvDvdhT99lp3peHCSRx4BbnobydskTeio7dw0oG2eY
-PSMEyFMEbavJR/Ylnupuep3PFP1Dq++9IZ3LUmUUoNGISpaRJ2fMbapIii5zEtEI
-PC4+LGktA/QFDnPhKyHpI8qXLlQniywQmSuDkSMVKRk7d0IYLQogTETnepW4xbkQ
-iQdAf65XTg31IJAT8LF4YHorumWuVtiKx7VaQwcqrMfnrnX+6JIE+ManxY0X5P86
-0CFUqVoXP9Ktr6I26Tsc0ZKmz0epkoAmSthpnZfHzOi56oC8s455sQzGO9Ew/PLN
-mLNbGKmGB7QoPbUaQTY4lgOHGyNWA4UfZKmRo1h1w3Xy8oTBFmM=
-=rBVs
------END PGP SIGNATURE-----
-
---trk2swxtlkihf4zn--
