@@ -2,174 +2,134 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A779CC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D786C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E1620722
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o26Hg63m";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dVEsRVId"
+	by mail.kernel.org (Postfix) with ESMTP id 23D1620722
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589051910;
+	bh=NHH4y//VKaDr/rrlB9l7Pq3HdVIH7OjborNmD9OkkPU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sF5KpbErRVYgsgC3Lwpu1/Ds0TH+Qdp0n6OlT+OeKwJ1cXOeOj3JzlZmZDK0XIvVZ
+	 HHtkFw3vqIYQ/rWjUZvRMomBkHUqD3KkO7VpvwBnhHftks6aZOPYQYi4JEdqQVs6Pu
+	 ZAR9Qu4WdLIeJAgNfUiBIv7+WhqXNVQ5/rrG4yTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgEITRE (ORCPT
+        id S1728384AbgEITS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:17:04 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:64468 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727938AbgEITRD (ORCPT
+        Sat, 9 May 2020 15:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727938AbgEITS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:17:03 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 049JDtKO003631;
-        Sat, 9 May 2020 12:16:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
- b=o26Hg63mul31h0iUh03Lf9ch91acy2XFHKSWspqLRXj0mvGmQqIiH4MxwaB1ZpBw6C2e
- +pdBS5BE/emyRri9ccWv+/lmW2USPXwU6xWMSPWhf7x/t4PipREUlE6SiCNBwB+59D66
- hHh2Xbr+CYgZG6rHLPUsEuJgPQGDkysL2k4= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 30wtbfsjq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Sat, 09 May 2020 12:16:48 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Sat, 9 May 2020 12:16:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XPGJ5zgTUtkcG3wKVuZbK5POoEb0X0jkzVBc8cwjr7XGV/kITv8pHaBI30dXNFRm0AYNy18RMY/8YbF7ChkCgnTIcsPjR0AeHPrhEJB49UgtbfxZ0uu+sLzk5FCiuGoBSph/iTsyMhaumQ3SQlskFRwwyKPcEGuEICCxVHjYId1X8TmaiS+XwVFR7xuaQ7MVQ4n6JnsWWtvqRomUyk+9R36fdVKDwL80n/18m4tAFTwEiBXC1GTsdkp+Aa0A8I/ydGqSZg15l+BbTXy7IM2DBWpM9ZmEiFR4LE4kHAUsZuzaE6h4VIziyOAHHfNJShZvp93fa6jG1nQ0764NlcJxpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
- b=JfhkFHMs9RM0Mcs2xDN7f7u1Jc9VX1fKeY+hn6Yx/r+sRbVzZtjNxfNeO6dL9PZ8XRqL8nrFZipWBhFYd3VVGl32q6CH40Dsk0muamkNwCHZ82Ie2rfzEYztcbtjZXHn4rNIPq+sCpCf8+C9XPsyGl0RFOMH5c4pkCTSf2mmRqGJfwDqb85472ziPw7nGFT7U5kYmP9pGVwTGEztCwfQ7Rnn4yI5gSLpiCI1161PG1y9Y5H9f0+FwL3/vhFa95lbuh8hpwrrJqkcpkV6VMyswffDUs+NO4QWezjCdKCCApLb1GHibtYEzDCS5pDUR4JS6YDkyuJedz67lAxoXFGIdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
- b=dVEsRVIdhcHLUWCBL2TStoGFWzhA19jXMvOEA3HOU4v0nVwO+q1WUNPSpxKQhtjlkxug94U/0tegWbXXNfA3r+Rz9de94KgpMQZRVqRHybPTCo+kVePNH6Dal5wLizs4+RLNfb+kOB2gtXJ58hIcPiQjUINY+pgHKpRmJMX2WwE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Sat, 9 May
- 2020 19:16:44 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::8988:aa27:5d70:6923]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::8988:aa27:5d70:6923%5]) with mapi id 15.20.2958.035; Sat, 9 May 2020
- 19:16:44 +0000
-Subject: Re: [PATCH] libbpf: Replace zero-length array with flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-CC:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200507185057.GA13981@embeddedor>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
-Date:   Sat, 9 May 2020 12:16:41 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
-In-Reply-To: <20200507185057.GA13981@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR21CA0012.namprd21.prod.outlook.com
- (2603:10b6:a03:114::22) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Sat, 9 May 2020 15:18:28 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B8CC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 12:18:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id j3so5188553ljg.8
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MTaQjuSq7+Uk0mjz5XhiS0By4Z0ZIBHeP5OQxoY0AXY=;
+        b=bb8lv33/xdxQCjzNvqgBwiUcCYj652YvhdbqcvSHcY1rj9neVWryv4l1j6MmeGq4jo
+         AEH6Z8NxA7GKp1r/srByCIJnplyXBSDQ62DfynP6rinchtYP4IYYLHytr7y6o8ZD6J1K
+         ZVP3pi5JLSulmR+djlIuZSg8uAVtxAHd0IwZs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MTaQjuSq7+Uk0mjz5XhiS0By4Z0ZIBHeP5OQxoY0AXY=;
+        b=RK2JwdIny9thhrOENM6DucFDF08JHpENIF7LxtJr7N3E0FIyN8zElG82AcjkUkOWbr
+         AUi3UWGJ3NwQp562F4xHegi4OkO0gHKIjGhST+RV641bN31je2iatsgpacwlbiQoQRqU
+         QIWlTSicz4oaXSejXMqbxjiD0bSgaRFw3OWO1eEMNPULdlFCiK4SZXbEjs8+yLuqCAzQ
+         WCoYfsOKTAqaZ7ohQaLkez2xRrVzYWuI5p2E31sUncUibIH/Tk/tdtsO7qdFFiuGg/e/
+         akm+dH+s6lxiKu3/VGTFZ+gE9CoQPy33JW8J8nYEknXSgz2akOOh7j8V2lxmNxikuetA
+         nZCQ==
+X-Gm-Message-State: AOAM532pNd2yo1tkEi2GbYrr5w06T8mLzPLmbQjKXn2SbnmRG6bGGfZB
+        N93doKj8WGSeI15cHQidd+VzzautNpc=
+X-Google-Smtp-Source: ABdhPJxzi+q0bscUQoeXoxqypFexSKhKEiKNtm2YtF5Lp+LODCaoES0lMkV744XhL/gMT0xY+H6p+Q==
+X-Received: by 2002:a2e:8018:: with SMTP id j24mr5568784ljg.246.1589051905347;
+        Sat, 09 May 2020 12:18:25 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id m132sm4894291lfa.94.2020.05.09.12.18.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 12:18:23 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id a4so4098331lfh.12
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:18:23 -0700 (PDT)
+X-Received: by 2002:ac2:418b:: with SMTP id z11mr5854254lfh.30.1589051902927;
+ Sat, 09 May 2020 12:18:22 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:3134) by BYAPR21CA0012.namprd21.prod.outlook.com (2603:10b6:a03:114::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.2 via Frontend Transport; Sat, 9 May 2020 19:16:43 +0000
-X-Originating-IP: [2620:10d:c090:400::5:3134]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1eb30b58-b4dc-4f6c-9707-08d7f44d82c8
-X-MS-TrafficTypeDiagnostic: BYAPR15MB4088:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB408894A7ABCFF650D44E9831D3A30@BYAPR15MB4088.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
-X-Forefront-PRVS: 03982FDC1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uT9k4J2Qa/YTzyMSzwhhq4BZl2a89qEUJpUuQo6RVP99qcqew47PmRwH7dHgso+rr7Rvq8huiWvV2OwWDvNNQ6uALW1URydh/XW5vmRQ4OyWaRTh7DM6xBEs7n+p7BpH4WLWtrUVRcZgGH3fxQCdc7P7gfwu3mJjg05fO2DCEM2eYg1/RvKqlTvQum1sSvu4WXG++wDi0m6WsXl2fqeQSMNlhYNngkKXovRplI5DmoYGOTVERMkcNakimQfKU/cYj+PwCGmR6mbtq8OjMZ5K8BCNPEW4rWrYwQmTx4tSGSSM93FnX88k7Kg0X8sgYalKE+XOpvawwPyvuunQucDa7Sq2A2Hg0B9K9Rl3IDBMHr/5jfwhvJZc2hoKSNxLheHyjy4ErUrqEJu9go1aEUkUSsR1oiDoJL3sgkr0qI04Al2I9tWxg1Cx9MR+DCaNAcrmr0B3Ak7JKX+aIjd2UB5HU+LcqbvtRH3XRowOoDogoPKj1IADQVz0slbA7oHEcxOk3F254e2qusVSfiaHQ44egtjEiY5Bc26pvgxQXevjJNkfbvaBCLypHaoVm8jxtjLAtIXT5JmuCK1geI6w5sTUUZzgFFjQbMxvYXHm38MOBpBeBKRmEM1XX5jYyem6Sfl2JX4oQE9V2J001A3cdFxBbA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(136003)(366004)(376002)(39860400002)(33430700001)(478600001)(2906002)(6486002)(31686004)(966005)(6512007)(31696002)(66946007)(54906003)(6506007)(52116002)(66556008)(66476007)(36756003)(86362001)(2616005)(8936002)(316002)(5660300002)(33440700001)(53546011)(186003)(16526019)(8676002)(110136005)(4326008)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: a99622aa6kSXPo6zfTzqdNbgguZJx1iV/HQIiGTIFEwqIVNpLOPhpjMZEGXexp4lRGAWpoVtdiVtEzXPr0vd8dpn87ycaCALArImAwDL4ZK/eC+A3XhHvNcU1rE8s7RTnUxH5lPfXY6RAj7wEB2XFzFxwyjr0N97Wb8d5dNkbl7Q1obvORDxOePBueE0Nu8XSvqvYWBujtITQoRkCPFGIKJdRSJ5FXHcc2sq1RAFJ0mOp3KX01mhQkfwaerX26FcmLji4RNDoKxZQJsdk2yb2iA2jrdltuZzrQq37/1Hi+bSEzuiVOSqsISeMIYtlW4w93eTS+bbUFKrG3cuyOdPiqTgPo5yXctktBOiwpJ7XydufWJYpWUMO9zBFpI2a6R7ry6NW4Hn/N0UXmjnAoGnPaJvTX/6Tci70ND0aqHqSodVZgnDWel07zPCH8UGtfM9LlpW/xQj5NuDqcaRPvF9olOjT9JFjUAMvtTt08d/gvU3WTimv1RN/Mte4BIXD9wxPezNYOS1Fd246KRlC2jJeg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1eb30b58-b4dc-4f6c-9707-08d7f44d82c8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 19:16:44.3335
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P2zx9pj6ewi6QIkKKkMyPEXtNCL0ULJ+57lx0wLdt9HmSwSJ2exomTXGIRSWhqiz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4088
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-09_07:2020-05-08,2020-05-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- mlxscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1011 malwarescore=0 adultscore=0
- mlxlogscore=997 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2005090168
-X-FB-Internal: deliver
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87blmy6zay.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87blmy6zay.fsf_-_@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 May 2020 12:18:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wguq6FwYb8_WZ_ZOxpHtwyc0xpz+PitNuf4pVxjWFmjFQ@mail.gmail.com>
+Message-ID: <CAHk-=wguq6FwYb8_WZ_ZOxpHtwyc0xpz+PitNuf4pVxjWFmjFQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] exec: Stop open coding mutex_lock_killable of cred_guard_mutex
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 8, 2020 at 11:48 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+>
+> Oleg modified the code that did
+> "mutex_lock_interruptible(&current->cred_guard_mutex)" to return
+> -ERESTARTNOINTR instead of -EINTR, so that userspace will never see a
+> failure to grab the mutex.
+>
+> Slightly earlier Liam R. Howlett defined mutex_lock_killable for
+> exactly the same situation but it does it a little more cleanly.
 
+What what what?
 
-On 5/7/20 11:50 AM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+None of this makes sense. Your commit message is completely wrong, and
+the patch is utter shite.
 
-I think this is probably for bpf-next.
+mutex_lock_interruptible() and mutex_lock_killable() are completely
+different operations, and the difference has absolutely nothing to do
+with  -ERESTARTNOINTR or -EINTR.
 
-Acked-by: Yonghong Song <yhs@fb.com>
+mutex_lock_interruptible() is interrupted by any signal.
+
+mutex_lock_killable() is - surprise surprise - only interrupted by
+SIGKILL (in theory any fatal signal, but we never actually implemented
+that logic, so it's only interruptible by the known-to-always-be-fatal
+SIGKILL).
+
+> Switch the code to mutex_lock_killable so that it is clearer what the
+> code is doing.
+
+This nonsensical patch makes me worry about all your other patches.
+The explanation is wrong, the patch is wrong, and it changes things to
+be fundamentally broken.
+
+Before this, ^C would break out of a blocked execve()/ptrace()
+situation. After this patch, you need special tools to do so.
+
+This patch is completely wrong.
+
+And Kees, what the heck is that "Reviewed-by" for? Worthless review too.
+
+                Linus
