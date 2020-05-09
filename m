@@ -2,95 +2,148 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F46C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07043C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371B42063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="a81IJUwF"
+	by mail.kernel.org (Postfix) with ESMTP id E51ED2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgEIQPb (ORCPT
+        id S1727993AbgEIQ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 12:15:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727787AbgEIQPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 12:15:31 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89EBC05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 09:15:29 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t11so2370863pgg.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 09:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9RfWoa+OyVYhRyq8fc6okRxutf75i2JHWqqPNgwLqfs=;
-        b=a81IJUwFIPM1Hc2xgPStppkTlfmxBdDHqDcxpgY/XOTG1fwZPckIMxmaW3YINucx/H
-         kcuekRUoSNd66nE02LkNOTIxd4XqUPooYRo8WYcx8vzzDT6xbWNX0ejrbqSPv+zHTo86
-         QdMELaRNrcpmyyZ4bIQjSefkyz3xp5ry4wUAHVNHdfQIt9QzBGR6kk3H8NOb7fAJ4qqc
-         NjliGsz3Harvl+UG5hvG9aAjHy2D37LAgyNDJLfhn5CVvIuEwyVauo13CtRBeAWFGwE7
-         1L3JVI6z1qLd5tJslvF/Fvt2Hq7qAXu5VikKYMR0Cup/xHIox+U/z89ifcqbLm6YmU9F
-         k4Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9RfWoa+OyVYhRyq8fc6okRxutf75i2JHWqqPNgwLqfs=;
-        b=mVaexudf983ZYTLw7GaFqV3AemHSMtzhGc9VBXuW/Fltnz513DUP1vNIJMZsUoDcnl
-         iKcnjd/eWWjtvqEyy5ihYbbN6MoY6K0pLUvL7BBAPzD1C2dsDAs6oW0k7DKo8l1akFEl
-         M4ctXYT5+n4/zr62FghKmYqlyMIwFh0kzEH+iABeC1I+EBmfCHkwooVUxiZUWuvJRwgq
-         nJFXwz8E533y3SMXGKILPvRcproC9dnR79/Tsdmf+5hmg0aequHD7I+v98pcabBAnsh0
-         1cg5fkoklBKTnLWjdYXiJzgSz38AOQJVzAPXWHSOrigqjCELSagMkR42wxS7Jp8l3SKL
-         qq3w==
-X-Gm-Message-State: AGi0Puann5+RFtXh4bszwP3T4LBilBgBrObZSvdWgskUtRUkzakwHXkS
-        V3aEros4f79oqDFAseUg9xSBgpE3rpA=
-X-Google-Smtp-Source: APiQypJTJwqxmrzhdmttmXW+QEBXc3SNvFkZ5mkyj4gdo2+P/cFptDi1ZuE81TthfzHU4hk2p9dWyg==
-X-Received: by 2002:a62:3784:: with SMTP id e126mr8525998pfa.303.1589040927999;
-        Sat, 09 May 2020 09:15:27 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id z1sm5162042pjn.43.2020.05.09.09.15.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 09:15:27 -0700 (PDT)
-Subject: Re: [PATCH for-5.7] io_uring: fix zero len do_splice()
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
- <102cad76-9b98-444f-7ccf-6475245f4031@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5c24bcbd-cb68-1929-d3f4-389fe599e8f1@kernel.dk>
-Date:   Sat, 9 May 2020 10:15:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 9 May 2020 12:27:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:5161 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbgEIQ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 12:27:53 -0400
+IronPort-SDR: 0BMjxhmUQSKb8ESE3MBCkddwJaLWhTApPFlXv5iJaxx9E3mN9SfWPUQa1Kh5SgsPloumIB/a6O
+ QWsVR8MUeopA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2020 09:27:53 -0700
+IronPort-SDR: f0Ej0AgKIkycLcG4oEdN13rFi3STZwH5ch1AsRPG0Wd3PJFNjagog87PNnrpBJcEl0xcUhZIUN
+ j4jG+k08EQpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,372,1583222400"; 
+   d="scan'208";a="436142824"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 09 May 2020 09:27:53 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 0EB3C580609;
+        Sat,  9 May 2020 09:27:53 -0700 (PDT)
+Message-ID: <fe38263290a8731199b8f2473d341911a3cd8086.camel@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: Intel PMT Telemetry capability
+ driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Date:   Sat, 09 May 2020 09:27:52 -0700
+In-Reply-To: <CAHp75VcrjFUgUe6Vo8baT969cGzE4MFX6pFL1Vr5HOun=Cm0fA@mail.gmail.com>
+References: <20200505013206.11223-1-david.e.box@linux.intel.com>
+         <20200508021844.6911-4-david.e.box@linux.intel.com>
+         <CAHp75VcrjFUgUe6Vo8baT969cGzE4MFX6pFL1Vr5HOun=Cm0fA@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <102cad76-9b98-444f-7ccf-6475245f4031@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/20 10:07 AM, Pavel Begunkov wrote:
-> On 04/05/2020 23:00, Pavel Begunkov wrote:
->> do_splice() doesn't expect len to be 0. Just always return 0 in this
->> case as splice(2) do.
->>
+On Fri, 2020-05-08 at 12:57 +0300, Andy Shevchenko wrote:
+> On Fri, May 8, 2020 at 5:18 AM David E. Box <
+> david.e.box@linux.intel.com> wrote:
+> > PMT Telemetry is a capability of the Intel Platform Monitoring
+> > Technology.
+> > The Telemetry capability provides access to device telemetry
+> > metrics that
+> > provide hardware performance data to users from continuous, memory
+> > mapped,
+> > read-only register spaces.
+> > 
+> > Register mappings are not provided by the driver. Instead, a GUID
+> > is read
+> > from a header for each endpoint. The GUID identifies the device and
+> > is to
+> > be used with an XML, provided by the vendor, to discover the
+> > available set
+> > of metrics and their register mapping.  This allows firmware
+> > updates to
+> > modify the register space without needing to update the driver
+> > every time
+> > with new mappings. Firmware writes a new GUID in this case to
+> > specify the
+> > new mapping.  Software tools with access to the associated XML file
+> > can
+> > then interpret the changes.
+> > 
+> > This module manages access to all PMT Telemetry endpoints on a
+> > system,
+> > regardless of the device exporting them. It creates a pmt_telemetry
+> > class
+> > to manage the list. For each endpoint, sysfs files provide GUID and
+> > size
+> > information as well as a pointer to the parent device the telemetry
+> > comes
+> > from. Software may discover the association between endpoints and
+> > devices
+> > by iterating through the list in sysfs, or by looking for the
+> > existence of
 > 
-> If it was missed, may you take a look? I reattached the patch btw killing
-> reported warnings.
+> ABI needs documentation.
 
-Thanks for re-sending, I'll queue it up for 5.7.
+We will be releasing a Linux software spec for PMT. We are waiting on
+public release of the PMT spec. For this patch we did document the
+sysfs class ABI.
 
--- 
-Jens Axboe
+> 
+> > the class folder under the device of interest.  A device node of
+> > the same
+> > name allows software to then map the telemetry space for direct
+> > access.
+> 
+> ...
+> 
+> > +config INTEL_PMT_TELEM
+> 
+> TELEMETRY
+> 
+> ...
+> 
+> > +obj-$(CONFIG_INTEL_PMT_TELEM)          += intel_pmt_telem.o
+> 
+> telemetry
+> 
+> (Inside the file it's fine to have telem)
+> 
+> ...
+> 
+> > +       priv->dvsec = dev_get_platdata(&pdev->dev);
+> > +       if (!priv->dvsec) {
+> > +               dev_err(&pdev->dev, "Platform data not found\n");
+> > +               return -ENODEV;
+> > +       }
+> 
+> I don't see how is it being used?
+
+Good catch :). This was initially used to pass the DVSEC info from the
+pci device to the telemetry driver. But with changes all of the needed
+info is now read from the driver's memory resource. It was unnoticed
+that dvsec  fields are no longer used. Will remove in next version.
+
+Okay on other comments.
+
+David
 
