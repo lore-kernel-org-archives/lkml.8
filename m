@@ -2,142 +2,105 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FFEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4900FC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453402495C
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFFF24967
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEIIV7 (ORCPT
+        id S1727835AbgEIIXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:21:59 -0400
-Received: from 8.mo69.mail-out.ovh.net ([46.105.56.233]:51010 "EHLO
-        8.mo69.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgEIIV6 (ORCPT
+        Sat, 9 May 2020 04:23:34 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:30483 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727812AbgEIIXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:21:58 -0400
-Received: from player795.ha.ovh.net (unknown [10.110.171.5])
-        by mo69.mail-out.ovh.net (Postfix) with ESMTP id E05468C124
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 10:13:36 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player795.ha.ovh.net (Postfix) with ESMTPSA id B27E6120BE947;
-        Sat,  9 May 2020 08:13:30 +0000 (UTC)
-Date:   Sat, 9 May 2020 10:13:22 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: Protect INET_ADDR_COOKIE on 32-bit
- architectures
-Message-ID: <20200509101322.12651ba0@heffalump.sk2.org>
-In-Reply-To: <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200508120457.29422-1-steve@sk2.org>
-        <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 9 May 2020 04:23:33 -0400
+Received: from localhost.localdomain ([93.22.149.123])
+        by mwinf5d73 with ME
+        id cYPT2200N2fyvbx03YPU05; Sat, 09 May 2020 10:23:29 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 09 May 2020 10:23:29 +0200
+X-ME-IP: 93.22.149.123
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     milo.kim@ti.com, sre@kernel.org, anton.vorontsov@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH V2] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
+Date:   Sat,  9 May 2020 10:23:23 +0200
+Message-Id: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/9mvdhOCxYpkif46yAk3haxY"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 7363385392269053338
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrkeehgddtudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtjeenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepveelvdeufedvieevffdtueegkeevteehffdtffetleehjeekjeejudffieduteeknecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejleehrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9mvdhOCxYpkif46yAk3haxY
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-Hi,
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-Thanks for taking the time to review my patch.
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+V2: use devm_iio_channel_get instead of iio_channel_get and simplify code
+---
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-On Fri, 8 May 2020 20:50:25 -0700, Jakub Kicinski <kuba@kernel.org> wrote:
-> On Fri,  8 May 2020 14:04:57 +0200 Stephen Kitt wrote:
-> > Commit c7228317441f ("net: Use a more standard macro for
-> > INET_ADDR_COOKIE") added a __deprecated marker to the cookie name on
-> > 32-bit architectures, with the intent that the compiler would flag
-> > uses of the name. However since commit 771c035372a0 ("deprecate the
-> > '__deprecated' attribute warnings entirely and for good"),
-> > __deprecated doesn't do anything and should be avoided.
-> >=20
-> > This patch changes INET_ADDR_COOKIE to declare a dummy struct so that
-> > any subsequent use of the cookie's name will in all likelihood break
-> > the build. It also removes the __deprecated marker.
->=20
-> I think the macro is supposed to cause a warning when the variable
-> itself is accessed. And I don't think that happens with your patch
-> applied.
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index 84a206f42a8e..e7931ffb7151 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -572,27 +572,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
+ 
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
+ 
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -735,7 +722,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	flush_work(&pchg->charger_work);
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-Yes, the warning is what was lost when __deprecated lost its meaning. I was
-trying to preserve that, or rather extend it so that the build would break =
-if
-the cookie was used on 32-bit architectures, and my patch ensures it does if
-the cookie is used in a comparison or assignment, but ...
-
-> +       kfree(&acookie);
-
-I hadn=E2=80=99t thought of taking a pointer to it.
-
-If we want to preserve the use of the macro with a semi-colon, which is what
-Joe=E2=80=99s patch introduced (along with the deprecation warning), we sti=
-ll need
-some sort of declaration which can=E2=80=99t be used. Perhaps
-
-#define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-	struct __name {} __attribute__((unused))
-
-would be better =E2=80=94 it declares the cookie as a struct, not a variabl=
-e, so then
-the build fails if the cookie is used as anything other than a struct. If
-anyone does try to use it as a struct, the build will fail on 64-bit
-architectures...
-
-  CC      net/ipv4/inet_hashtables.o
-net/ipv4/inet_hashtables.c: In function =E2=80=98__inet_lookup_established=
-=E2=80=99:
-net/ipv4/inet_hashtables.c:362:9: error: =E2=80=98acookie=E2=80=99 undeclar=
-ed (first use in this function)
-  kfree(&acookie);
-         ^~~~~~~
-net/ipv4/inet_hashtables.c:362:9: note: each undeclared identifier is repor=
-ted only once for each function it appears in
-make[2]: *** [scripts/Makefile.build:267: net/ipv4/inet_hashtables.o] Error=
- 1
-make[1]: *** [scripts/Makefile.build:488: net/ipv4] Error 2
-make: *** Makefile:1722: net] Error 2
-
-Regards,
-
-Stephen
-
---Sig_/9mvdhOCxYpkif46yAk3haxY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl62ZiIACgkQgNMC9Yht
-g5zjJg/+KlAVGvSNFVCsuRBtGULhWAy7mQpPubb0UBbKPLW7F9yOlXtV/WZyaudp
-ncRtq62brLrsIWvozJLtP4sW8r8A3sL4qLKIy+6xrKCcovr33PRrssPRz2j7iFQF
-P+95CYHoFRygzYgodQVPRZh3Oyqzoff21tW8bgJYj8vORKiYo0KqJ512i6q28CoU
-FSQ6Yf8aPnhYfnDns2Vce7Yh2seghF28sI4+a8H1gf1RE386RYhnq4GMbFlwhIS/
-kqAV1UOspX6RfkbtQrdl/oaHJ0F3GOBPPhJLIP9yZmsdQjYwyaoVE8Nq0Dlw97Y1
-vH06953MaU8YuXuUlvACU2pYi4kUh66qEZnw7oTViv+uYE3sd2JMFr5RU3XqlOFk
-Lzp7hRBEL6KWWtrL7/0woKBTDH3S95zUbWifPDQo5ZKjXo84pZO8nbtJBnhIgdO6
-7yqEDR3hwL4ZEQlQUVlU4LAkVw/iZawCfCeTNM8hxj8ufFvtQs8Pb8P+yFC3SFLT
-2QtfAomXNiuGDqIp2YFa6HnVUTal7c/U/HjglmNaaqmDza9U5Awd/1vpwYN8ZvSM
-C3cz+FVo9bZSyLd9mDn7wnzVSxlKA3E6c9WRu0bLxBY6emMZu13YyRdsVhkizMvQ
-oAKcUpohy5uhhOPCYpjR7S0/4m+R00nypojvaN50Aevtk1CPcwI=
-=YPeA
------END PGP SIGNATURE-----
-
---Sig_/9mvdhOCxYpkif46yAk3haxY--
