@@ -2,84 +2,76 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DE0C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BDEC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E76721582
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BB324953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgEIGay (ORCPT
+        id S1728917AbgEIGbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 02:30:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4364 "EHLO huawei.com"
+        Sat, 9 May 2020 02:31:13 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44698 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726115AbgEIGay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 02:30:54 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ACC85C1323C26D88B3D6;
-        Sat,  9 May 2020 14:30:49 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sat, 9 May 2020
- 14:30:39 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] drm/amd/amdgpu: remove defined but not used 'crtc_offsets'
-Date:   Sat, 9 May 2020 14:29:59 +0800
-Message-ID: <20200509062959.42481-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        id S1726115AbgEIGbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 02:31:13 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 93F6381CBEAC0A11A6BE;
+        Sat,  9 May 2020 14:31:09 +0800 (CST)
+Received: from euler.huawei.com (10.175.101.6) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 14:30:58 +0800
+From:   Hongbo Yao <yaohongbo@huawei.com>
+To:     <jansimon.moeller@gmx.de>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>
+CC:     <yaohongbo@huawei.com>, <chenzhou10@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
+Subject: [PATCH -next] leds: blinkm: remove set but not used variable
+Date:   Sat, 9 May 2020 22:23:57 +0800
+Message-ID: <20200509142357.33702-1-yaohongbo@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
+X-Originating-IP: [10.175.101.6]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following gcc warning:
-
-drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c:65:18: warning: ‘crtc_offsets’
-defined but not used [-Wunused-const-variable=]
- static const u32 crtc_offsets[6] =
-                  ^~~~~~~~~~~~
+Fixes gcc '-Wunused-but-set-variable' warning:
+drivers/leds/leds-blinkm.c:483:6: warning: variable ‘ret’ set
+but not used [-Wunused-but-set-variable]
+  int ret;
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/leds/leds-blinkm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
-index c1a530dbe162..a75e472b4a81 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v6_0.c
-@@ -61,17 +61,6 @@ MODULE_FIRMWARE("amdgpu/si58_mc.bin");
- #define MC_SEQ_MISC0__MT__HBM    0x60000000
- #define MC_SEQ_MISC0__MT__DDR3   0xB0000000
+diff --git a/drivers/leds/leds-blinkm.c b/drivers/leds/leds-blinkm.c
+index e11fe1788242..a493ee0e0fc7 100644
+--- a/drivers/leds/leds-blinkm.c
++++ b/drivers/leds/leds-blinkm.c
+@@ -480,9 +480,8 @@ static int blinkm_led_blue_set(struct led_classdev *led_cdev,
  
--
--static const u32 crtc_offsets[6] =
--{
--	SI_CRTC0_REGISTER_OFFSET,
--	SI_CRTC1_REGISTER_OFFSET,
--	SI_CRTC2_REGISTER_OFFSET,
--	SI_CRTC3_REGISTER_OFFSET,
--	SI_CRTC4_REGISTER_OFFSET,
--	SI_CRTC5_REGISTER_OFFSET
--};
--
- static void gmc_v6_0_mc_stop(struct amdgpu_device *adev)
+ static void blinkm_init_hw(struct i2c_client *client)
  {
- 	u32 blackout;
+-	int ret;
+-	ret = blinkm_transfer_hw(client, BLM_STOP_SCRIPT);
+-	ret = blinkm_transfer_hw(client, BLM_GO_RGB);
++	blinkm_transfer_hw(client, BLM_STOP_SCRIPT);
++	blinkm_transfer_hw(client, BLM_GO_RGB);
+ }
+ 
+ static int blinkm_test_run(struct i2c_client *client)
 -- 
-2.21.1
+2.17.1
 
