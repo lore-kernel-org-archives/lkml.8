@@ -2,142 +2,119 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5955C54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E0EC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F60C20746
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C4820746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0aejT9n"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ia/S2gFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgEIWEH (ORCPT
+        id S1728660AbgEIWNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 18:04:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59866 "EHLO
+        Sat, 9 May 2020 18:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgEIWEH (ORCPT
+        with ESMTP id S1728408AbgEIWNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 18:04:07 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008D7C061A0C;
-        Sat,  9 May 2020 15:04:06 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f6so2616629pgm.1;
-        Sat, 09 May 2020 15:04:06 -0700 (PDT)
+        Sat, 9 May 2020 18:13:48 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68085C05BD09
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 15:13:48 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z72so4962698wmc.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:13:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vO45rBzZP4qUYAWgoBky++9H1SklKJ9deQfkRumUR9E=;
-        b=O0aejT9n9lWNzQ84KsiOjKdl0XezkuotcorNzy23hjxOQSHP7Cnsz7huf1y49juoGZ
-         NQgEh89BmCfwgaAbh81YYwmHHQAQU4IKbjJ+idanpEpaWGySieubEYLuB8awUNCzgUgj
-         wmVCVCCYZxjO/msPpKY/TLgb5IfgUcOQzgYpdek5cNnI+XbzhrHl9xTYepRdkbF4IX8I
-         0Ss8gPgnTsrRELU5YEkCTrUuk2Kw94M19uOjtaVdHwUcJ1JRt6iGLYx0is6C3+PhDTJR
-         MzBcyjz7b4fFtr+Cqr8qJY96MFUXBKUcIFWg3EFtwIN5ymhvx3/lHu53WDVUPyaxR7Yj
-         efCw==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lD31d7YFceTquxmJsFPQZPEcCiTM+43KicNVCvkKBqk=;
+        b=Ia/S2gFcm00jIKuwaz5kSI5Dx0TNSVOE3wST8xvegQacQa6wHM0ySbTqB3S9gvA9yk
+         tUTK4j9Lkpati6Tcu0P+G4IX0BTGhrLdYupCOAjclWsmD/YG/9fKqaHtkj/+TM7b71Kd
+         6VqNnhL1TDDX3mrynAwJH7gthDLBVgtSbxTPk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vO45rBzZP4qUYAWgoBky++9H1SklKJ9deQfkRumUR9E=;
-        b=cBuvEU61vOiOiR05gPgjYh6yQ+pjnL7nP88SU49xx+/9Dyou32dl7/QQEQw26H5n6+
-         X2r0GTAgx4BO8NPljdqf5NEV6JCBtJ4Q0TPyyLV4NyiYUUpfdfy2I78AW+BsYQT1YiL/
-         UT+JIfOMTMc+cthdM/HfDCywwmgWFHGI4OFdCULsQxiVAGLrba4RchhOS0zfUC5W5yWg
-         n8yDRmq/xUl2A9rLUlMoMmFb5kjD6wyem33L+cUY6k0v5JNpN7N/uRol5oZAhyc7Mkpq
-         6QSHZqevXjD5QBB1LkqQnVfVLDdRNh8/SGHNOHTpO/YPBvZ7wJgfa5QkmIZk/vFNJjTn
-         iTRg==
-X-Gm-Message-State: AGi0PubzE4ul0YqnzKmiHH/l8SBZ9YpNvtaDWeOLCiIu+hMjUWf8SlBz
-        028Tsy+wjfh8KUM0Az87+Xk=
-X-Google-Smtp-Source: APiQypJwPAL8GEOL7Ni5ovhZVrk3VmVmieCEJOLH26UkAdgiAiK+lGtjPOQPa79DdEXH6T+lLuOj9g==
-X-Received: by 2002:aa7:9d90:: with SMTP id f16mr9891947pfq.48.1589061846362;
-        Sat, 09 May 2020 15:04:06 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id e4sm4459145pge.45.2020.05.09.15.04.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 15:04:05 -0700 (PDT)
-Subject: Re: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
-To:     Arnd Bergmann <arnd@arndb.de>, Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>
-References: <20200509120505.109218-1-arnd@arndb.de>
- <20200509132427.3d2979d8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <bce24dff-5287-76e2-ba85-8d31d7e673f8@gmail.com>
-Date:   Sat, 9 May 2020 15:04:04 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lD31d7YFceTquxmJsFPQZPEcCiTM+43KicNVCvkKBqk=;
+        b=Ppyetql9cBArx2x64nfSsXZijJWUvfRsCSKP1jDg8L3IgmluUN8Fr33eYHMYaUZV6/
+         K7UO4x3WpJcQ39/xtGbTkIhxhEk1Dd45wW6Y61LDJAjpe4ms1yRgZelJAz5ynVRERwGJ
+         W3HBOnWGkJynsyZMLwAv8tdPDI+j1c2jBGzjxhXPo2AS0RN7bmUPMiQasu/gkhogRh1i
+         G5cnXTJGk22kz+as1JdrQcw+t4qJz/+OHh1en1qYSA3hyho1L6rJq6BLWZmRFu2liRTE
+         PKDkJucloW17u49JEO0jMYVpj3YhiIIt6jznHsF3vHOfb4tjFTcrZXKuuyX0tAsu2/zC
+         aCmQ==
+X-Gm-Message-State: AGi0Pub9M+OdZ1QiaxQxXw99OGCV9jh61LL7TC05vp4/08BOy98AIFtC
+        PPZh1eJUWJHDzjmdiCHK1DHi3h+jUR/QDpyHp4iQ0Q==
+X-Google-Smtp-Source: APiQypIUFrX/jGD2s6yJaEK2Vf/IZY6cocpfJr4dUVpQJp+R1wRt/kWM6nTigZL0ZJgnFyqyz/rv2syLdywi6Bj/2Fk=
+X-Received: by 2002:a05:600c:2:: with SMTP id g2mr23981017wmc.85.1589062426992;
+ Sat, 09 May 2020 15:13:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200507172020.18000-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20200507172020.18000-1-nsaenzjulienne@suse.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Sat, 9 May 2020 18:13:33 -0400
+Message-ID: <CA+-6iNzeBJ9ioG_=HnthUsRUYUQC2Wm=-BOAdFhShs9dy4ovcA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: brcmstb: Assert fundamental reset on initialization
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        s.nawrocki@samsung.com, tim.gover@raspberrypi.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/9/2020 2:48 PM, Arnd Bergmann wrote:
-> On Sat, May 9, 2020 at 10:24 PM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Sat,  9 May 2020 14:04:52 +0200 Arnd Bergmann wrote:
->>> I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
->>> and CONFIG_GIANFAR=y:
->>>
->>> x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
->>>
->>> It seems the same thing can happen with dpaa and ucc_geth, so change
->>> all three to do an explicit 'select FIXED_PHY'.
->>>
->>> The fixed-phy driver actually has an alternative stub function that
->>> theoretically allows building network drivers when fixed-phy is
->>> disabled, but I don't see how that would help here, as the drivers
->>> presumably would not work then.
->>>
->>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>
->>> +     select FIXED_PHY
->>
->> I think FIXED_PHY needs to be optional, depends on what the board has
->> connected to the MAC it may not be needed, right PHY folks? We probably
->> need the
->>
->>     depends on FIXED_PHY || !FIXED_PHY
-> 
-> Unfortunately that does not work because it causes a circular dependency:
-> 
-> drivers/net/phy/Kconfig:415:error: recursive dependency detected!
-> drivers/net/phy/Kconfig:415: symbol FIXED_PHY depends on PHYLIB
-> drivers/net/phy/Kconfig:250: symbol PHYLIB is selected by FSL_PQ_MDIO
-> drivers/net/ethernet/freescale/Kconfig:60: symbol FSL_PQ_MDIO is
-> selected by UCC_GETH
-> drivers/net/ethernet/freescale/Kconfig:75: symbol UCC_GETH depends on FIXED_PHY
-> 
-> I now checked what other drivers use the fixed-phy interface, and found
-> that all others do select FIXED_PHY except for these three, and they
-> are also the only ones using fixed_phy_change_carrier().
-> 
-> The fixed-phy driver is fairly small, so it probably won't harm too much
-> to use the select, but maybe I missed another option.
-
-select FIXED_PHY appears the correct choice here we could think about
-providing stubs if that is deemed useful, but in general these drivers
-do tend to have a functional dependency on the fixed PHY and MDIO bus
-subsystems.
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+On Thu, May 7, 2020 at 1:20 PM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> While preparing the driver for upstream this detail was missed.
+>
+> If not asserted during the initialization process, devices connected on
+> the bus will not be made aware of the internal reset happening. This,
+> potentially resulting in unexpected behavior.
+Hi Nicolas,
+I believe that most chips by design have the PERST signal asserted by
+default during start-up but this will certainly cover any that do not.
+Looks good.
+Regards,
+Jim
+>
+> Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 0b97b94c4a9a..795a03be4150 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -699,6 +699,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+>
+>         /* Reset the bridge */
+>         brcm_pcie_bridge_sw_init_set(pcie, 1);
+> +       brcm_pcie_perst_set(pcie, 1);
+>
+>         usleep_range(100, 200);
+>
+> --
+> 2.26.2
+>
