@@ -2,142 +2,556 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF8DC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D30FC54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340B720CC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:59:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArCp/cIA"
+	by mail.kernel.org (Postfix) with ESMTP id 5216C21473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgEIW7k (ORCPT
+        id S1726645AbgEIXCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 18:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgEIW7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 18:59:40 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B1FC05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 15:59:38 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so5600824iog.13
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Cu5XCMlYmCles9cU1zQwpiIO21jpNUEqhrhXon1DyTk=;
-        b=ArCp/cIAUPJ/JCkJdrEDvwlWmGjF3AzFJHP8CbZpYzbO0cs7JN90wOY2+phy5hmj+m
-         ZkyZnzfpB1wU4gad/X5Ns25I6G4qI6SUAjPPVdAYzqG4oKV5MzhWyGJTGimk4aEvlgoc
-         nDsLQtDt1b+XQb/cPt/0TNgao7ZFig6LbeZCs0umCsKJ4WDOpmksak12b25ipUsQZVHx
-         FbnjECmSWwo8hWHmt8qzZs4Qm1C3dbQJIqRvJHqI3oZYirs+r6sskhltk/wFjEMQh9RJ
-         Y5Ih8GsXENUzVEKpf/nwdi8Ymsienu1DfFgCSDUmk/fvp5psNL/Cc56PJZ1rpdc5Bd9B
-         4o9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Cu5XCMlYmCles9cU1zQwpiIO21jpNUEqhrhXon1DyTk=;
-        b=aPdHqUdD08SrmSCSum0EE2WqgQe9MPlOSkwvibo3qBA3H/VLcHFzP0EJZXKRUq+Xh6
-         GPg+OBA8FrQQjr1vVzywkDEb/0ZQQLp3mPNxQM8Up+Myzi+gNh9+A95hAtomQbbo/oI4
-         u7vmCfWuY60wqk1srTb8BOw6x6vEszitK9pT5aH2OVEnwLAPQKQOJJljsnYjry6Rsk+Q
-         3weMc5TvuIlw4ptEmqwmd8RajnfB3O3BhhJqkTWrFEZ6yUUZs0zcfpcA9z65GVb8y96j
-         CUFrROq3U9ZWlyttSLWwrmallFdoCKKCXut3S146loqYx/8eekUzzOlR6Glh3SPIqj/t
-         uJQQ==
-X-Gm-Message-State: AGi0PuY5zJuyzx2yTjA4KvqCSxm0NtoJoA7BzicYTWZMJ0z0kzrD9wjw
-        /a3DLNp7Cc5P+rWQr6luFEzDwhHia+lFQdWC79MX0w==
-X-Google-Smtp-Source: APiQypJtMK+i9KbHBea1iSvxTMn9QE3F1NEO8HjjwRAUFzoOcJ17K0Cw3CiBAHoqUReKldaUxOrzVyJqSIWwkOJRTiA=
-X-Received: by 2002:a02:c8c7:: with SMTP id q7mr877554jao.111.1589065178240;
- Sat, 09 May 2020 15:59:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw> <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
- <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
-In-Reply-To: <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Sun, 10 May 2020 08:59:27 +1000
-Message-ID: <CAOSf1CEe85Lev54g+hkEoDmmR1HRsF070oxLu8ok7fEtXUH7NQ@mail.gmail.com>
-Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 9 May 2020 19:02:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36106 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbgEIXCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 19:02:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4216DAE5C;
+        Sat,  9 May 2020 23:02:09 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        John Crispin <john@phrozen.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        James Hartley <james.hartley@sondrel.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] MIPS: Only include the platform file needed
+Date:   Sun, 10 May 2020 01:01:47 +0200
+Message-Id: <20200509230150.24466-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 1:51 AM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
->
->
-> Le 08/05/2020 =C3=A0 19:41, Qian Cai a =C3=A9crit :
-> >
-> >
-> >> On May 8, 2020, at 10:39 AM, Qian Cai <cai@lca.pw> wrote:
-> >>
-> >> Booting POWER9 PowerNV has this message,
-> >>
-> >> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use ea=
-rly_ioremap() instead=E2=80=9D
-> >>
-> >> but use the patch below will result in leaks because it will never cal=
-l early_iounmap() anywhere. However, it looks me it was by design that phb-=
->regs mapping would be there forever where it would be used in pnv_ioda_get=
-_inval_reg(), so is just that check_early_ioremap_leak() initcall too stron=
-g?
-> >>
-> >> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> >> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> >> @@ -36,6 +36,7 @@
-> >> #include <asm/firmware.h>
-> >> #include <asm/pnv-pci.h>
-> >> #include <asm/mmzone.h>
-> >> +#include <asm/early_ioremap.h>
-> >>
-> >> #include <misc/cxl-base.h>
-> >>
-> >> @@ -3827,7 +3828,7 @@ static void __init pnv_pci_init_ioda_phb(struct =
-device_node *np,
-> >>         /* Get registers */
-> >>         if (!of_address_to_resource(np, 0, &r)) {
-> >>                 phb->regs_phys =3D r.start;
-> >> -               phb->regs =3D ioremap(r.start, resource_size(&r));
-> >> +               phb->regs =3D early_ioremap(r.start, resource_size(&r)=
-);
-> >>                 if (phb->regs =3D=3D NULL)
-> >>                         pr_err("  Failed to map registers !\n=E2=80=9D=
-);
-> >
-> > This will also trigger a panic with debugfs reads, so isn=E2=80=99t tha=
-t this commit bogus at least for powerpc64?
-> >
-> > d538aadc2718 (=E2=80=9Cpowerpc/ioremap: warn on early use of ioremap()"=
-)
->
-> No d538aadc2718 is not bogus. That's the point, we want to remove all
-> early usages of ioremap() in order to remove the hack with the
-> ioremap_bot stuff and all, and stick to the generic ioremap logic.
->
-> In order to do so, all early use of ioremap() has to be converted to
-> early_ioremap() or to fixmap or anything else that allows to do ioremaps
-> before the slab is ready.
->
-> early_ioremap() is for temporary mappings necessary at boottime. For
-> long lasting mappings, another method is to be used.
->
-> Now, the point is that other architectures like for instance x86 don't
-> seem to have to use early_ioremap() much. Powerpc is for instance doing
-> early mappings for PCI. Seems like x86 initialises PCI once slab is
-> ready. Can't powerpc do the same ?
+Instead of including all Platform files, we simply include the
+needed one and avoid clashes with makefile variables.
 
-Patches welcome.
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/Kbuild.platforms       | 73 +++++++++++++++++++++-------------------
+ arch/mips/alchemy/Platform       |  3 --
+ arch/mips/ar7/Platform           |  1 -
+ arch/mips/ath25/Platform         |  1 -
+ arch/mips/ath79/Platform         |  1 -
+ arch/mips/bcm47xx/Platform       |  1 -
+ arch/mips/bcm63xx/Platform       |  1 -
+ arch/mips/bmips/Platform         |  1 -
+ arch/mips/cavium-octeon/Platform |  1 -
+ arch/mips/cobalt/Platform        |  1 -
+ arch/mips/dec/Platform           |  1 -
+ arch/mips/generic/Platform       |  1 -
+ arch/mips/jazz/Platform          |  1 -
+ arch/mips/jz4740/Platform        |  1 -
+ arch/mips/lantiq/Platform        |  1 -
+ arch/mips/loongson2ef/Platform   |  1 -
+ arch/mips/loongson32/Platform    |  1 -
+ arch/mips/loongson64/Platform    |  1 -
+ arch/mips/mti-malta/Platform     |  1 -
+ arch/mips/netlogic/Platform      |  1 -
+ arch/mips/paravirt/Platform      |  1 -
+ arch/mips/pic32/Platform         |  1 -
+ arch/mips/pistachio/Platform     |  1 -
+ arch/mips/pnx833x/Platform       |  1 -
+ arch/mips/rb532/Platform         |  1 -
+ arch/mips/sgi-ip22/Platform      |  2 --
+ arch/mips/sgi-ip27/Platform      |  3 --
+ arch/mips/sgi-ip30/Platform      |  3 --
+ arch/mips/sgi-ip32/Platform      |  1 -
+ arch/mips/sibyte/Platform        |  4 ---
+ arch/mips/sni/Platform           |  1 -
+ arch/mips/txx9/Platform          |  3 --
+ 32 files changed, 39 insertions(+), 77 deletions(-)
+
+diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
+index 292b59afb4ba..5e3f6ed96292 100644
+--- a/arch/mips/Kbuild.platforms
++++ b/arch/mips/Kbuild.platforms
+@@ -1,39 +1,44 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # All platforms listed in alphabetic order
+ 
+-platforms += alchemy
+-platforms += ar7
+-platforms += ath25
+-platforms += ath79
+-platforms += bcm47xx
+-platforms += bcm63xx
+-platforms += bmips
+-platforms += cavium-octeon
+-platforms += cobalt
+-platforms += dec
+-platforms += generic
+-platforms += jazz
+-platforms += jz4740
+-platforms += lantiq
+-platforms += loongson2ef
+-platforms += loongson32
+-platforms += loongson64
+-platforms += mti-malta
+-platforms += netlogic
+-platforms += paravirt
+-platforms += pic32
+-platforms += pistachio
+-platforms += pnx833x
+-platforms += ralink
+-platforms += rb532
+-platforms += sgi-ip22
+-platforms += sgi-ip27
+-platforms += sgi-ip30
+-platforms += sgi-ip32
+-platforms += sibyte
+-platforms += sni
+-platforms += txx9
+-platforms += vr41xx
++platform-$(CONFIG_MIPS_ALCHEMY)		+= alchemy/
++platform-$(CONFIG_AR7)			+= ar7/
++platform-$(CONFIG_ATH25)		+= ath25/
++platform-$(CONFIG_ATH79)		+= ath79/
++platform-$(CONFIG_BCM47XX)		+= bcm47xx/
++platform-$(CONFIG_BCM63XX)		+= bcm63xx/
++platform-$(CONFIG_BMIPS_GENERIC)	+= bmips/
++platform-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/
++platform-$(CONFIG_MIPS_COBALT)		+= cobalt/
++platform-$(CONFIG_MACH_DECSTATION)	+= dec/
++platform-$(CONFIG_MIPS_GENERIC)		+= generic/
++platform-$(CONFIG_MACH_JAZZ)		+= jazz/
++platform-$(CONFIG_MACH_INGENIC)		+= jz4740/
++platform-$(CONFIG_LANTIQ)		+= lantiq/
++platform-$(CONFIG_MACH_LOONGSON2EF)	+= loongson2ef/
++platform-$(CONFIG_MACH_LOONGSON32)	+= loongson32/
++platform-$(CONFIG_MACH_LOONGSON64)	+= loongson64/
++platform-$(CONFIG_MIPS_MALTA)		+= mti-malta/
++platform-$(CONFIG_NLM_COMMON)		+= netlogic/
++platform-$(CONFIG_MIPS_PARAVIRT)	+= paravirt/
++platform-$(CONFIG_PIC32MZDA)		+= pic32/
++platform-$(CONFIG_MACH_PISTACHIO)	+= pistachio/
++platform-$(CONFIG_SOC_PNX833X)		+= pnx833x/
++platform-$(CONFIG_RALINK)		+= ralink/
++platform-$(CONFIG_MIKROTIK_RB532)	+= rb532/
++platform-$(CONFIG_SGI_IP22)		+= sgi-ip22/
++platform-$(CONFIG_SGI_IP27)		+= sgi-ip27/
++platform-$(CONFIG_SGI_IP28)		+= sgi-ip22/
++platform-$(CONFIG_SGI_IP30)		+= sgi-ip30/
++platform-$(CONFIG_SGI_IP32)		+= sgi-ip32/
++platform-$(CONFIG_SIBYTE_BCM112X)	+= sibyte/
++platform-$(CONFIG_SIBYTE_SB1250)	+= sibyte/
++platform-$(CONFIG_SIBYTE_BCM1x55)	+= sibyte/
++platform-$(CONFIG_SIBYTE_BCM1x80)	+= sibyte/
++platform-$(CONFIG_SNI_RM)		+= sni/
++platform-$(CONFIG_MACH_TX39XX)		+= tx99/
++platform-$(CONFIG_MACH_TX49XX)		+= tx99/
++platform-$(CONFIG_MACH_VR41XX)		+= vr41xx/
+ 
+ # include the platform specific files
+-include $(patsubst %, $(srctree)/arch/mips/%/Platform, $(platforms))
++include $(patsubst %, $(srctree)/arch/mips/%/Platform, $(platform-y))
+diff --git a/arch/mips/alchemy/Platform b/arch/mips/alchemy/Platform
+index 33c9da3b077b..c8cff50b0eda 100644
+--- a/arch/mips/alchemy/Platform
++++ b/arch/mips/alchemy/Platform
+@@ -15,19 +15,16 @@ load-$(CONFIG_MIPS_DB1XXX)	+= 0xffffffff80100000
+ #
+ # 4G-Systems MTX-1 "MeshCube" wireless router
+ #
+-platform-$(CONFIG_MIPS_MTX1)	+= alchemy/
+ load-$(CONFIG_MIPS_MTX1)	+= 0xffffffff80100000
+ 
+ #
+ # MyCable eval board
+ #
+-platform-$(CONFIG_MIPS_XXS1500) += alchemy/
+ load-$(CONFIG_MIPS_XXS1500)	+= 0xffffffff80100000
+ 
+ #
+ # Trapeze ITS GRP board
+ #
+-platform-$(CONFIG_MIPS_GPR)	+= alchemy/
+ load-$(CONFIG_MIPS_GPR)		+= 0xffffffff80100000
+ 
+ # boards can specify their own <gpio.h> in one of their include dirs.
+diff --git a/arch/mips/ar7/Platform b/arch/mips/ar7/Platform
+index 21f9102d533c..a9257cc01c3c 100644
+--- a/arch/mips/ar7/Platform
++++ b/arch/mips/ar7/Platform
+@@ -1,6 +1,5 @@
+ #
+ # Texas Instruments AR7
+ #
+-platform-$(CONFIG_AR7)		+= ar7/
+ cflags-$(CONFIG_AR7)		+= -I$(srctree)/arch/mips/include/asm/mach-ar7
+ load-$(CONFIG_AR7)		+= 0xffffffff94100000
+diff --git a/arch/mips/ath25/Platform b/arch/mips/ath25/Platform
+index ef3f81fa080b..aef098b6f405 100644
+--- a/arch/mips/ath25/Platform
++++ b/arch/mips/ath25/Platform
+@@ -1,6 +1,5 @@
+ #
+ # Atheros AR531X/AR231X WiSoC
+ #
+-platform-$(CONFIG_ATH25)	+= ath25/
+ cflags-$(CONFIG_ATH25)		+= -I$(srctree)/arch/mips/include/asm/mach-ath25
+ load-$(CONFIG_ATH25)		+= 0xffffffff80041000
+diff --git a/arch/mips/ath79/Platform b/arch/mips/ath79/Platform
+index 2bd663647d27..57744472ed2e 100644
+--- a/arch/mips/ath79/Platform
++++ b/arch/mips/ath79/Platform
+@@ -2,6 +2,5 @@
+ # Atheros AR71xx/AR724x/AR913x
+ #
+ 
+-platform-$(CONFIG_ATH79)	+= ath79/
+ cflags-$(CONFIG_ATH79)		+= -I$(srctree)/arch/mips/include/asm/mach-ath79
+ load-$(CONFIG_ATH79)		= 0xffffffff80060000
+diff --git a/arch/mips/bcm47xx/Platform b/arch/mips/bcm47xx/Platform
+index 70783b75fd9d..833b204fe5da 100644
+--- a/arch/mips/bcm47xx/Platform
++++ b/arch/mips/bcm47xx/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Broadcom BCM47XX boards
+ #
+-platform-$(CONFIG_BCM47XX)	+= bcm47xx/
+ cflags-$(CONFIG_BCM47XX)	+=					\
+ 		-I$(srctree)/arch/mips/include/asm/mach-bcm47xx
+ load-$(CONFIG_BCM47XX)		:= 0xffffffff80001000
+diff --git a/arch/mips/bcm63xx/Platform b/arch/mips/bcm63xx/Platform
+index 5f86b2fff6de..882dc40f49a2 100644
+--- a/arch/mips/bcm63xx/Platform
++++ b/arch/mips/bcm63xx/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Broadcom BCM63XX boards
+ #
+-platform-$(CONFIG_BCM63XX)	+= bcm63xx/
+ cflags-$(CONFIG_BCM63XX)	+=					\
+ 		-I$(srctree)/arch/mips/include/asm/mach-bcm63xx/
+ load-$(CONFIG_BCM63XX)		:= 0xffffffff80010000
+diff --git a/arch/mips/bmips/Platform b/arch/mips/bmips/Platform
+index 5f127fd7f4b5..1434ea31ce85 100644
+--- a/arch/mips/bmips/Platform
++++ b/arch/mips/bmips/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Broadcom Generic BMIPS kernel
+ #
+-platform-$(CONFIG_BMIPS_GENERIC)	+= bmips/
+ cflags-$(CONFIG_BMIPS_GENERIC)		+=				\
+ 		-I$(srctree)/arch/mips/include/asm/mach-bmips/
+ load-$(CONFIG_BMIPS_GENERIC)		:= 0xffffffff80010000
+diff --git a/arch/mips/cavium-octeon/Platform b/arch/mips/cavium-octeon/Platform
+index 45be853700e6..4adef38dea9d 100644
+--- a/arch/mips/cavium-octeon/Platform
++++ b/arch/mips/cavium-octeon/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Cavium Octeon
+ #
+-platform-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/
+ cflags-$(CONFIG_CAVIUM_OCTEON_SOC)	+=				\
+ 		-I$(srctree)/arch/mips/include/asm/mach-cavium-octeon
+ load-$(CONFIG_CAVIUM_OCTEON_SOC)	+= 0xffffffff81100000
+diff --git a/arch/mips/cobalt/Platform b/arch/mips/cobalt/Platform
+index 34123efd6dfe..4254895ad6f4 100644
+--- a/arch/mips/cobalt/Platform
++++ b/arch/mips/cobalt/Platform
+@@ -1,6 +1,5 @@
+ #
+ # Cobalt Server
+ #
+-platform-$(CONFIG_MIPS_COBALT)	+= cobalt/
+ cflags-$(CONFIG_MIPS_COBALT)	+= -I$(srctree)/arch/mips/include/asm/mach-cobalt
+ load-$(CONFIG_MIPS_COBALT)	+= 0xffffffff80080000
+diff --git a/arch/mips/dec/Platform b/arch/mips/dec/Platform
+index cf55a6f4e720..c82391e832f9 100644
+--- a/arch/mips/dec/Platform
++++ b/arch/mips/dec/Platform
+@@ -1,7 +1,6 @@
+ #
+ # DECstation family
+ #
+-platform-$(CONFIG_MACH_DECSTATION)	+= dec/
+ cflags-$(CONFIG_MACH_DECSTATION)	+= \
+ 			-I$(srctree)/arch/mips/include/asm/mach-dec
+ libs-$(CONFIG_MACH_DECSTATION)		+= arch/mips/dec/prom/
+diff --git a/arch/mips/generic/Platform b/arch/mips/generic/Platform
+index eaa19d189324..53c33cb72974 100644
+--- a/arch/mips/generic/Platform
++++ b/arch/mips/generic/Platform
+@@ -8,7 +8,6 @@
+ # option) any later version.
+ #
+ 
+-platform-$(CONFIG_MIPS_GENERIC)	+= generic/
+ cflags-$(CONFIG_MIPS_GENERIC)	+= -I$(srctree)/arch/mips/include/asm/mach-generic
+ load-$(CONFIG_MIPS_GENERIC)	+= 0xffffffff80100000
+ all-$(CONFIG_MIPS_GENERIC)	:= vmlinux.gz.itb
+diff --git a/arch/mips/jazz/Platform b/arch/mips/jazz/Platform
+index 3373788acca1..eb0490ae8b09 100644
+--- a/arch/mips/jazz/Platform
++++ b/arch/mips/jazz/Platform
+@@ -1,6 +1,5 @@
+ #
+ # Acer PICA 61, Mips Magnum 4000 and Olivetti M700.
+ #
+-platform-$(CONFIG_MACH_JAZZ)	+= jazz/
+ cflags-$(CONFIG_MACH_JAZZ)	+= -I$(srctree)/arch/mips/include/asm/mach-jazz
+ load-$(CONFIG_MACH_JAZZ)	+= 0xffffffff80080000
+diff --git a/arch/mips/jz4740/Platform b/arch/mips/jz4740/Platform
+index a2a5a85ea1f9..bd35d0621b13 100644
+--- a/arch/mips/jz4740/Platform
++++ b/arch/mips/jz4740/Platform
+@@ -1,4 +1,3 @@
+-platform-$(CONFIG_MACH_INGENIC)	+= jz4740/
+ cflags-$(CONFIG_MACH_INGENIC)	+= -I$(srctree)/arch/mips/include/asm/mach-jz4740
+ load-$(CONFIG_MACH_INGENIC)	+= 0xffffffff80010000
+ zload-$(CONFIG_MACH_INGENIC)	+= 0xffffffff81000000
+diff --git a/arch/mips/lantiq/Platform b/arch/mips/lantiq/Platform
+index b3ec49838fd7..0bc9c0fbd431 100644
+--- a/arch/mips/lantiq/Platform
++++ b/arch/mips/lantiq/Platform
+@@ -2,7 +2,6 @@
+ # Lantiq
+ #
+ 
+-platform-$(CONFIG_LANTIQ)	+= lantiq/
+ cflags-$(CONFIG_LANTIQ)		+= -I$(srctree)/arch/mips/include/asm/mach-lantiq
+ load-$(CONFIG_LANTIQ)		= 0xffffffff80002000
+ cflags-$(CONFIG_SOC_TYPE_XWAY)	+= -I$(srctree)/arch/mips/include/asm/mach-lantiq/xway
+diff --git a/arch/mips/loongson2ef/Platform b/arch/mips/loongson2ef/Platform
+index 3aca42963f35..cdad3c1a9a18 100644
+--- a/arch/mips/loongson2ef/Platform
++++ b/arch/mips/loongson2ef/Platform
+@@ -26,7 +26,6 @@ endif
+ # Loongson Machines' Support
+ #
+ 
+-platform-$(CONFIG_MACH_LOONGSON2EF) += loongson2ef/
+ cflags-$(CONFIG_MACH_LOONGSON2EF) += -I$(srctree)/arch/mips/include/asm/mach-loongson2ef -mno-branch-likely
+ load-$(CONFIG_LEMOTE_FULOONG2E) += 0xffffffff80100000
+ load-$(CONFIG_LEMOTE_MACH2F) += 0xffffffff80200000
+diff --git a/arch/mips/loongson32/Platform b/arch/mips/loongson32/Platform
+index 7f8e342f1ef5..3b9673e7a2fa 100644
+--- a/arch/mips/loongson32/Platform
++++ b/arch/mips/loongson32/Platform
+@@ -1,4 +1,3 @@
+ cflags-$(CONFIG_CPU_LOONGSON32)		+= -march=mips32r2 -Wa,--trap
+-platform-$(CONFIG_MACH_LOONGSON32)	+= loongson32/
+ cflags-$(CONFIG_MACH_LOONGSON32)	+= -I$(srctree)/arch/mips/include/asm/mach-loongson32
+ load-$(CONFIG_CPU_LOONGSON32)		+= 0xffffffff80200000
+diff --git a/arch/mips/loongson64/Platform b/arch/mips/loongson64/Platform
+index d5eb94c9edb4..ec42c5085905 100644
+--- a/arch/mips/loongson64/Platform
++++ b/arch/mips/loongson64/Platform
+@@ -55,6 +55,5 @@ cflags-y += $(call cc-option,-mno-loongson-mmi)
+ # Loongson Machines' Support
+ #
+ 
+-platform-$(CONFIG_MACH_LOONGSON64) += loongson64/
+ cflags-$(CONFIG_MACH_LOONGSON64) += -I$(srctree)/arch/mips/include/asm/mach-loongson64 -mno-branch-likely
+ load-$(CONFIG_CPU_LOONGSON64) += 0xffffffff80200000
+diff --git a/arch/mips/mti-malta/Platform b/arch/mips/mti-malta/Platform
+index 2cc72c9b38e3..41e0d2a2d325 100644
+--- a/arch/mips/mti-malta/Platform
++++ b/arch/mips/mti-malta/Platform
+@@ -1,7 +1,6 @@
+ #
+ # MIPS Malta board
+ #
+-platform-$(CONFIG_MIPS_MALTA)	+= mti-malta/
+ cflags-$(CONFIG_MIPS_MALTA)	+= -I$(srctree)/arch/mips/include/asm/mach-malta
+ ifdef CONFIG_KVM_GUEST
+     load-$(CONFIG_MIPS_MALTA)	+= 0x0000000040100000
+diff --git a/arch/mips/netlogic/Platform b/arch/mips/netlogic/Platform
+index fb8eb4c0c6ec..4195a097f5f2 100644
+--- a/arch/mips/netlogic/Platform
++++ b/arch/mips/netlogic/Platform
+@@ -13,5 +13,4 @@ cflags-$(CONFIG_CPU_XLP)	+= $(call cc-option,-march=xlp,-march=mips64r2)
+ #
+ # NETLOGIC processor support
+ #
+-platform-$(CONFIG_NLM_COMMON)	+= netlogic/
+ load-$(CONFIG_NLM_COMMON)	+= 0xffffffff80100000
+diff --git a/arch/mips/paravirt/Platform b/arch/mips/paravirt/Platform
+index 7e76ef25ea17..0b857580dfdd 100644
+--- a/arch/mips/paravirt/Platform
++++ b/arch/mips/paravirt/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Generic para-virtualized guest.
+ #
+-platform-$(CONFIG_MIPS_PARAVIRT)	+= paravirt/
+ cflags-$(CONFIG_MIPS_PARAVIRT)		+=				\
+ 		-I$(srctree)/arch/mips/include/asm/mach-paravirt
+ 
+diff --git a/arch/mips/pic32/Platform b/arch/mips/pic32/Platform
+index cd2084f44507..1e92e52a137b 100644
+--- a/arch/mips/pic32/Platform
++++ b/arch/mips/pic32/Platform
+@@ -1,7 +1,6 @@
+ #
+ # PIC32MZDA
+ #
+-platform-$(CONFIG_PIC32MZDA)	+= pic32/
+ cflags-$(CONFIG_PIC32MZDA)	+= -I$(srctree)/arch/mips/include/asm/mach-pic32
+ load-$(CONFIG_PIC32MZDA)	+= 0xffffffff88000000
+ all-$(CONFIG_PIC32MZDA)		:= $(COMPRESSION_FNAME).bin
+diff --git a/arch/mips/pistachio/Platform b/arch/mips/pistachio/Platform
+index c3592b374ad2..f73a1a929965 100644
+--- a/arch/mips/pistachio/Platform
++++ b/arch/mips/pistachio/Platform
+@@ -1,7 +1,6 @@
+ #
+ # IMG Pistachio SoC
+ #
+-platform-$(CONFIG_MACH_PISTACHIO)	+= pistachio/
+ cflags-$(CONFIG_MACH_PISTACHIO)		+=				\
+ 		-I$(srctree)/arch/mips/include/asm/mach-pistachio
+ load-$(CONFIG_MACH_PISTACHIO)		+= 0xffffffff80400000
+diff --git a/arch/mips/pnx833x/Platform b/arch/mips/pnx833x/Platform
+index 287260669551..e5286a49fc3e 100644
+--- a/arch/mips/pnx833x/Platform
++++ b/arch/mips/pnx833x/Platform
+@@ -1,5 +1,4 @@
+ # NXP STB225
+-platform-$(CONFIG_SOC_PNX833X)	+= pnx833x/
+ cflags-$(CONFIG_SOC_PNX833X)	+= -I$(srctree)/arch/mips/include/asm/mach-pnx833x
+ load-$(CONFIG_NXP_STB220)	+= 0xffffffff80001000
+ load-$(CONFIG_NXP_STB225)	+= 0xffffffff80001000
+diff --git a/arch/mips/rb532/Platform b/arch/mips/rb532/Platform
+index aeec45a7cbb3..12eaa8790b3e 100644
+--- a/arch/mips/rb532/Platform
++++ b/arch/mips/rb532/Platform
+@@ -1,7 +1,6 @@
+ #
+ # Routerboard 532
+ #
+-platform-$(CONFIG_MIKROTIK_RB532)	+= rb532/
+ cflags-$(CONFIG_MIKROTIK_RB532)		+=				\
+ 		-I$(srctree)/arch/mips/include/asm/mach-rc32434
+ load-$(CONFIG_MIKROTIK_RB532)		+= 0xffffffff80101000
+diff --git a/arch/mips/sgi-ip22/Platform b/arch/mips/sgi-ip22/Platform
+index e8f6b3a42a48..62fa30bb959e 100644
+--- a/arch/mips/sgi-ip22/Platform
++++ b/arch/mips/sgi-ip22/Platform
+@@ -7,7 +7,6 @@
+ # current variable will break so for 64-bit kernels we have to raise the start
+ # address by 8kb.
+ #
+-platform-$(CONFIG_SGI_IP22)		+= sgi-ip22/
+ cflags-$(CONFIG_SGI_IP22)	+= -I$(srctree)/arch/mips/include/asm/mach-ip22
+ ifdef CONFIG_32BIT
+ load-$(CONFIG_SGI_IP22)		+= 0xffffffff88002000
+@@ -29,6 +28,5 @@ ifdef CONFIG_SGI_IP28
+       $(error gcc doesn't support needed option -mr10k-cache-barrier=store)
+   endif
+ endif
+-platform-$(CONFIG_SGI_IP28)		+= sgi-ip22/
+ cflags-$(CONFIG_SGI_IP28)	+= -mr10k-cache-barrier=store -I$(srctree)/arch/mips/include/asm/mach-ip28
+ load-$(CONFIG_SGI_IP28)		+= 0xa800000020004000
+diff --git a/arch/mips/sgi-ip27/Platform b/arch/mips/sgi-ip27/Platform
+index 1fb9c2ea7c8f..e734ee6abd44 100644
+--- a/arch/mips/sgi-ip27/Platform
++++ b/arch/mips/sgi-ip27/Platform
+@@ -5,8 +5,6 @@
+ # symmon, 0xc00000000001c000 for production kernels.  Note that the value must
+ # be 16kb aligned or the handling of the current variable will break.
+ #
+-ifdef CONFIG_SGI_IP27
+-platform-$(CONFIG_SGI_IP27)	+= sgi-ip27/
+ cflags-$(CONFIG_SGI_IP27)	+= -I$(srctree)/arch/mips/include/asm/mach-ip27
+ ifdef CONFIG_MAPPED_KERNEL
+ load-$(CONFIG_SGI_IP27)		+= 0xc00000004001c000
+@@ -16,4 +14,3 @@ else
+ load-$(CONFIG_SGI_IP27)		+= 0xa80000000001c000
+ OBJCOPYFLAGS			:= --change-addresses=0x57ffffff80000000
+ endif
+-endif
+diff --git a/arch/mips/sgi-ip30/Platform b/arch/mips/sgi-ip30/Platform
+index 2b5695c2049a..f6f11517e091 100644
+--- a/arch/mips/sgi-ip30/Platform
++++ b/arch/mips/sgi-ip30/Platform
+@@ -1,8 +1,5 @@
+ #
+ # SGI-IP30 (Octane/Octane2)
+ #
+-ifdef CONFIG_SGI_IP30
+-platform-$(CONFIG_SGI_IP30)		+= sgi-ip30/
+ cflags-$(CONFIG_SGI_IP30)		+= -I$(srctree)/arch/mips/include/asm/mach-ip30
+ load-$(CONFIG_SGI_IP30)			+= 0xa800000020004000
+-endif
+diff --git a/arch/mips/sgi-ip32/Platform b/arch/mips/sgi-ip32/Platform
+index 0fea556f3641..f58a7a02b4ca 100644
+--- a/arch/mips/sgi-ip32/Platform
++++ b/arch/mips/sgi-ip32/Platform
+@@ -6,6 +6,5 @@
+ # a multiple of the kernel stack size or the handling of the current variable
+ # will break.
+ #
+-platform-$(CONFIG_SGI_IP32)	+= sgi-ip32/
+ cflags-$(CONFIG_SGI_IP32)	+= -I$(srctree)/arch/mips/include/asm/mach-ip32
+ load-$(CONFIG_SGI_IP32)		+= 0xffffffff80004000
+diff --git a/arch/mips/sibyte/Platform b/arch/mips/sibyte/Platform
+index af117330ce14..65b2225b76b2 100644
+--- a/arch/mips/sibyte/Platform
++++ b/arch/mips/sibyte/Platform
+@@ -1,10 +1,6 @@
+ #
+ # These are all rather similar so we consider them a single platform
+ #
+-platform-$(CONFIG_SIBYTE_BCM112X)	+= sibyte/
+-platform-$(CONFIG_SIBYTE_SB1250)	+= sibyte/
+-platform-$(CONFIG_SIBYTE_BCM1x55)	+= sibyte/
+-platform-$(CONFIG_SIBYTE_BCM1x80)	+= sibyte/
+ 
+ #
+ # Sibyte SB1250 / BCM1480 family of SOCs
+diff --git a/arch/mips/sni/Platform b/arch/mips/sni/Platform
+index 2644a9d63c0f..b0b3dde0bef8 100644
+--- a/arch/mips/sni/Platform
++++ b/arch/mips/sni/Platform
+@@ -1,7 +1,6 @@
+ #
+ # SNI RM
+ #
+-platform-$(CONFIG_SNI_RM)		+= sni/
+ cflags-$(CONFIG_SNI_RM)		+= -I$(srctree)/arch/mips/include/asm/mach-rm
+ ifdef CONFIG_CPU_LITTLE_ENDIAN
+ load-$(CONFIG_SNI_RM)		+= 0xffffffff80600000
+diff --git a/arch/mips/txx9/Platform b/arch/mips/txx9/Platform
+index a176d1fd5799..7f4429ba22eb 100644
+--- a/arch/mips/txx9/Platform
++++ b/arch/mips/txx9/Platform
+@@ -1,6 +1,3 @@
+-platform-$(CONFIG_MACH_TX39XX)	+= txx9/
+-platform-$(CONFIG_MACH_TX49XX)	+= txx9/
+-
+ cflags-$(CONFIG_MACH_TX39XX)	+=					\
+ 		-I$(srctree)/arch/mips/include/asm/mach-tx39xx
+ cflags-$(CONFIG_MACH_TX49XX)	+=					\
+-- 
+2.16.4
+
