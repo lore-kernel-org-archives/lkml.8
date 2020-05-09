@@ -2,103 +2,125 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EBCC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6F7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A80B21655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kljGBKCX"
+	by mail.kernel.org (Postfix) with ESMTP id E87EB21655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgEIAT3 (ORCPT
+        id S1728367AbgEIAZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727878AbgEIAT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:19:29 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94D2C061A0C;
-        Fri,  8 May 2020 17:19:28 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JnrC50Gdz9sRf;
-        Sat,  9 May 2020 10:19:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588983565;
-        bh=4ltaBj8up08ni1Gj1qR5Eh1Aj9N+2Ghk5iD5CJLi9Lo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kljGBKCX2Xc9bYfsMPxYZeZaqppuoNbzdElQgQgfaceLDS7n6E2ADCYzGM0FmqNdi
-         EalsE/L6NUIp5jsWlep5WY2RY2Z6asDoq/N2IYjYTy8uvl5n4AsmPKQzzKq7sziKgS
-         CcRnhRJsS9ZbiXOKJZm/rZif33LSgnvW+HYaoGfkaog/OGdzXlWScgw+O6bem7NZIb
-         hL+cKc+MvY7vNgBs5amBnMZjlu/wN6qMTrliB1XtLqRSHDPM7uHQUFcoyaeAhqXLGK
-         vRY7vlqgAM2ITEPRyQ79pTfQ79vCLd1X6+Jcu6CbbVcmYL9NAKaO/0n7jMf+epO+CM
-         pWuTZwyxWpx7A==
-Date:   Sat, 9 May 2020 10:19:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: linux-next: Signed-off-bys missing for commits in the akpm-current
- tree
-Message-ID: <20200509101919.36231cf9@canb.auug.org.au>
+        Fri, 8 May 2020 20:25:20 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21538 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727959AbgEIAZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:25:20 -0400
+IronPort-SDR: pIo6F0/8O7TC2UXmiMHEksOej2ZCyC8bMh/SQpPqVqCot+CTTOOAmHk4vLT0ESPUil4bNWQTO1
+ v2Ryrah2CXcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 17:25:19 -0700
+IronPort-SDR: kp/Bvufejq8QaWyJR4D2rYpIQqVsAZcRWvpWTSQV2Ju9IakfrwneT2vv3QgUINgRL/7grVRuo7
+ RISbptYjt02w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="370671781"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 17:25:18 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A22B6301C4C; Fri,  8 May 2020 17:25:18 -0700 (PDT)
+Date:   Fri, 8 May 2020 17:25:18 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH v3 12/14] perf metricgroup: order event groups by size
+Message-ID: <20200509002518.GF3538@tassilo.jf.intel.com>
+References: <20200508053629.210324-1-irogers@google.com>
+ <20200508053629.210324-13-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dzDGQRzlgx.yz6yk50vTN0x";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508053629.210324-13-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dzDGQRzlgx.yz6yk50vTN0x
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 07, 2020 at 10:36:27PM -0700, Ian Rogers wrote:
+> When adding event groups to the group list, insert them in size order.
+> This performs an insertion sort on the group list. By placing the
+> largest groups at the front of the group list it is possible to see if a
+> larger group contains the same events as a later group. This can make
+> the later group redundant - it can reuse the events from the large group.
+> A later patch will add this sharing.
 
-Hi all,
+I'm not sure if size is that great an heuristic. The dedup algorithm should
+work in any case even if you don't order by size, right?
 
-Commits
+I suppose in theory some kind of topological sort would be better.
 
-  a41ffad2df78 ("mm: free_area_init: allow defining max_zone_pfn in descend=
-ing order")
-  ed1e07587fb4 ("mm/gup.c: further document vma_permits_fault()")
-  da5d272cd01a ("checkpatch: test $GIT_DIR changes")
-
-are missing a Signed-off-by from their authors (I haven't reported the
--fix patches).
-
-I guess the first one is actually a fix patch and will be rolled into
-its parent.
-
-Also, the Link tag in this last one is invalid :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/dzDGQRzlgx.yz6yk50vTN0x
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl619wcACgkQAVBC80lX
-0GxoyAf7BC1NsVPvyosai4EjA/IuQISKb124WOTOGRXw+n9ajnt72nToEc1VRJz7
-wJkLlO4jYuRdnptpEHv8D+dVWemRzf83M62OqH70b2qQTPDmyVWeAT4174kKsycU
-Kg3KztbM2jh1TtK06zaFtxQ2hLDhQSyQyMk21Do26Apyw4pdqsxO6CcZV0Vn/vvk
-0yjmqpzJJlq5fFklV+N8unC8sEM/dFTk3dnJ5KGirFX7DIalfLXSoLm2F9dsKIRQ
-PjJYa+7sdRxzgkhdDJcTDwPZhKA1SQYD+mQ9Dh1kuzs7SOB1Iy2udDTvOFzxyYSm
-tI67azH3pbg9hpQS5uhkP0/4EykqPA==
-=CmW8
------END PGP SIGNATURE-----
-
---Sig_/dzDGQRzlgx.yz6yk50vTN0x--
+-Andi
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/metricgroup.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 2a6456fa178b..69fbff47089f 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -520,7 +520,21 @@ static int __metricgroup__add_metric(struct list_head *group_list,
+>  		return -EINVAL;
+>  	}
+>  
+> -	list_add_tail(&eg->nd, group_list);
+> +	if (list_empty(group_list))
+> +		list_add(&eg->nd, group_list);
+> +	else {
+> +		struct list_head *pos;
+> +
+> +		/* Place the largest groups at the front. */
+> +		list_for_each_prev(pos, group_list) {
+> +			struct egroup *old = list_entry(pos, struct egroup, nd);
+> +
+> +			if (hashmap__size(&eg->pctx.ids) <=
+> +			    hashmap__size(&old->pctx.ids))
+> +				break;
+> +		}
+> +		list_add(&eg->nd, pos);
+> +	}
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.26.2.645.ge9eca65c58-goog
+> 
