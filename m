@@ -2,276 +2,120 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903DDC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EE6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536B1214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJ/Fa1XJ"
+	by mail.kernel.org (Postfix) with ESMTP id 87A08217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgEINHP (ORCPT
+        id S1727978AbgEINH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:07:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60209 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726370AbgEINHP (ORCPT
+        Sat, 9 May 2020 09:07:28 -0400
+Received: from mailomta17-sa.btinternet.com ([213.120.69.23]:56388 "EHLO
+        sa-prd-fep-041.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726370AbgEINH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:07:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589029632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nku97G8V8bw48sH90MJkSRFhoFe5/OodK/1xbuz3fno=;
-        b=DJ/Fa1XJ5Yb2mQicyrWwzzkUrYfD40REyWKaxrf8fnvXKOSvplWqALhy4bp3bgw74Vj6kT
-        2LangXMfvQc17P477j6lXKlcvAqaMyOIcbspyDFvwSvnO/yiAQmxriUl1QmkkD5PQRwn0E
-        5C1I3szHfex6P6Uk4mg000G5oh4lOYo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-yY5SRhTlMfqY54yveAsUQw-1; Sat, 09 May 2020 09:07:10 -0400
-X-MC-Unique: yY5SRhTlMfqY54yveAsUQw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A10FA1009600;
-        Sat,  9 May 2020 13:07:09 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-85.ams2.redhat.com [10.36.112.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EDA8704B7;
-        Sat,  9 May 2020 13:07:08 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: Add new intel_atomisp2_led driver
-Date:   Sat,  9 May 2020 15:07:07 +0200
-Message-Id: <20200509130707.219463-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Sat, 9 May 2020 09:07:28 -0400
+Received: from sa-prd-rgout-004.btmx-prd.synchronoss.net ([10.2.38.7])
+          by sa-prd-fep-041.btinternet.com with ESMTP
+          id <20200509130726.KSVB7822.sa-prd-fep-041.btinternet.com@sa-prd-rgout-004.btmx-prd.synchronoss.net>;
+          Sat, 9 May 2020 14:07:26 +0100
+Authentication-Results: btinternet.com;
+    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
+X-Originating-IP: [31.53.141.224]
+X-OWM-Source-IP: 31.53.141.224 (GB)
+X-OWM-Env-Sender: j.oldman998@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduhedrkeehgdeitdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofestddtredtredttdenucfhrhhomheplfhohhhnucfqlhgumhgrnhcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecuggftrfgrthhtvghrnhepgeeftdfhfeeuiefhgfekfeethedutddtfeduteevleevfedvfefhjeeijefhgffgnecukfhppeefuddrheefrddugedurddvvdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohephhgvnhhrhidrhhhomhgvpdhinhgvthepfedurdehfedrudeguddrvddvgedpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeosggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdr
+        ihhnfhhrrgguvggrugdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhrphhiqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgheqpdhrtghpthhtohepoehnshgrvghniihjuhhlihgvnhhnvgesshhushgvrdguvgeq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from henry.home (31.53.141.224) by sa-prd-rgout-004.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
+        id 5E3A27DB0FC00535; Sat, 9 May 2020 14:07:26 +0100
+From:   John Oldman <john.oldman@polehill.co.uk>
+To:     nsaenzjulienne@suse.de
+Cc:     gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        John Oldman <john.oldman@polehill.co.uk>
+Subject: [PATCH] staging: vc04_services: interface: vchiq_arm: vchiq_connected.c: Block comments should align the * on each line
+Date:   Sat,  9 May 2020 14:07:14 +0100
+Message-Id: <20200509130714.10586-1-john.oldman@polehill.co.uk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many Bay Trail and Cherry Trail devices come with a camera attached to
-Intel's Image Signal Processor. Linux currently does not have a driver for
-these, so they do not work as a camera.
+Coding style issue
 
-Some of these camera's have a status LED which is controlled through a GPIO
-in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
-issue where the LED gets turned on at boot.
-
-This commit adds a Linux LED driver for the camera LED on these devices.
-This driver will turn the LED off at boot and also allows controlling the
-LED (so the user can repurpose it) through the sysfs LED interface.
-
-Which GPIO is attached to the LED is usually not described in the ACPI
-tables, so this driver contains per-system info about the GPIO inside the
-driver. This means that this driver only works on systems the driver knows
-about.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
 ---
- MAINTAINERS                               |   6 ++
- drivers/platform/x86/Kconfig              |  21 ++++
- drivers/platform/x86/Makefile             |   1 +
- drivers/platform/x86/intel_atomisp2_led.c | 118 ++++++++++++++++++++++
- 4 files changed, 146 insertions(+)
- create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
+ .../interface/vchiq_arm/vchiq_connected.c     | 32 +++++++++----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2926327e4976..d85e009260ec 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8499,6 +8499,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_atomisp2_pm.c
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
+index 1640906e3929..993535bbc479 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
+@@ -15,10 +15,10 @@ static   int                        g_once_init;
+ static   struct mutex               g_connected_mutex;
  
-+INTEL ATOMISP2 LED DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel_atomisp2_led.c
-+
- INTEL C600 SERIES SAS CONTROLLER DRIVER
- M:	Intel SCU Linux support <intel-linux-scu@intel.com>
- M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0ad7ad8cf8e1..1af4c97447a2 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -750,6 +750,27 @@ config INTEL_ATOMISP2_PM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_atomisp2_pm.
- 
-+config INTEL_ATOMISP2_LED
-+	tristate "Intel AtomISP2 camera LED driver"
-+	depends on GPIOLIB && LEDS_GPIO
-+	help
-+	  Many Bay Trail and Cherry Trail devices come with a camera attached
-+	  to Intel's Image Signal Processor. Linux currently does not have a
-+	  driver for these, so they do not work as a camera. Some of these
-+	  camera's have a LED which is controlled through a GPIO.
-+
-+	  Some of these devices have a firmware issue where the LED gets turned
-+	  on at boot. This driver will turn the LED off at boot and also allows
-+	  controlling the LED (repurposing it) through the sysfs LED interface.
-+
-+	  Which GPIO is attached to the LED is usually not described in the
-+	  ACPI tables, so this driver contains per-system info about the GPIO
-+	  inside the driver, this means that this driver only works on systems
-+	  the driver knows about.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_atomisp2_led.
-+
- config INTEL_CHT_INT33FE
- 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
- 	depends on X86 && ACPI && I2C && REGULATOR
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 53408d965874..969581237abb 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- 
- # Intel
- obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
-+obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
- obj-$(CONFIG_INTEL_CHT_INT33FE)		+= intel_cht_int33fe.o
- intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
- 					   intel_cht_int33fe_typec.o \
-diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel_atomisp2_led.c
-new file mode 100644
-index 000000000000..fb704956cd9d
---- /dev/null
-+++ b/drivers/platform/x86/intel_atomisp2_led.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Driver for controlling LEDs for cameras connected to the Intel atomisp2
-+ * The main purpose of this driver is to turn off LEDs which are on at boot.
+ /****************************************************************************
+-*
+-* Function to initialize our lock.
+-*
+-***************************************************************************/
 + *
-+ * Copyright (C) 2020 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/dmi.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/workqueue.h>
-+
-+/* This must be leds-gpio as the leds-gpio driver binds to the name */
-+#define DEV_NAME		"leds-gpio"
-+
-+static const struct gpio_led atomisp2_leds[] = {
-+	{
-+		.name = "atomisp2::camera",
-+		.default_state  = LEDS_GPIO_DEFSTATE_OFF,
-+	},
-+};
-+
-+static const struct gpio_led_platform_data atomisp2_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(atomisp2_leds),
-+	.leds		= atomisp2_leds,
-+};
-+
-+static struct gpiod_lookup_table asus_t100ta_lookup = {
-+	.dev_id = DEV_NAME,
-+	.table = {
-+		GPIO_LOOKUP_IDX("INT33FC:02", 8, NULL, 0, GPIO_ACTIVE_HIGH),
-+		{ }
-+	}
-+};
-+
-+static struct gpiod_lookup_table asus_t100chi_lookup = {
-+	.dev_id = DEV_NAME,
-+	.table = {
-+		GPIO_LOOKUP_IDX("INT33FC:01", 24, NULL, 0, GPIO_ACTIVE_HIGH),
-+		{ }
-+	}
-+};
-+
-+static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+		.driver_data = &asus_t100ta_lookup,
-+	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+		.driver_data = &asus_t100ta_lookup,
-+	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100CHI"),
-+		},
-+		.driver_data = &asus_t100chi_lookup,
-+	},
-+	{} /* Terminating entry */
-+};
-+MODULE_DEVICE_TABLE(dmi, atomisp2_led_systems);
-+
-+static struct gpiod_lookup_table *gpio_lookup;
-+static struct platform_device *pdev;
-+
-+static int __init atomisp2_led_init(void)
-+{
-+	const struct dmi_system_id *system;
-+
-+	system = dmi_first_match(atomisp2_led_systems);
-+	if (!system)
-+		return -ENODEV;
-+
-+	gpio_lookup = system->driver_data;
-+	gpiod_add_lookup_table(gpio_lookup);
-+
-+	pdev = platform_device_register_resndata(NULL,
-+						 DEV_NAME, PLATFORM_DEVID_NONE,
-+						 NULL, 0, &atomisp2_leds_pdata,
-+						 sizeof(atomisp2_leds_pdata));
-+	if (IS_ERR(pdev)) {
-+		gpiod_remove_lookup_table(gpio_lookup);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit atomisp2_led_cleanup(void)
-+{
-+	platform_device_unregister(pdev);
-+	gpiod_remove_lookup_table(gpio_lookup);
-+}
-+
-+module_init(atomisp2_led_init);
-+module_exit(atomisp2_led_cleanup);
-+
-+/*
-+ * The ACPI INIT method from Asus WMI's code on the T100TA and T200TA turns the
-+ * LED on (without the WMI interface allowing further control over the LED).
-+ * Ensure we are loaded after asus-nb-wmi so that we turn the LED off again.
-+ */
-+MODULE_SOFTDEP("pre: asus_nb_wmi");
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
-+MODULE_DESCRIPTION("Intel atomisp2 camera LED driver");
-+MODULE_LICENSE("GPL");
++ * Function to initialize our lock.
++ *
++ ***************************************************************************/
+ 
+ static void connected_init(void)
+ {
+@@ -29,13 +29,13 @@ static void connected_init(void)
+ }
+ 
+ /****************************************************************************
+-*
+-* This function is used to defer initialization until the vchiq stack is
+-* initialized. If the stack is already initialized, then the callback will
+-* be made immediately, otherwise it will be deferred until
+-* vchiq_call_connected_callbacks is called.
+-*
+-***************************************************************************/
++ *
++ * This function is used to defer initialization until the vchiq stack is
++ * initialized. If the stack is already initialized, then the callback will
++ * be made immediately, otherwise it will be deferred until
++ * vchiq_call_connected_callbacks is called.
++ *
++ ***************************************************************************/
+ 
+ void vchiq_add_connected_callback(VCHIQ_CONNECTED_CALLBACK_T callback)
+ {
+@@ -64,11 +64,11 @@ void vchiq_add_connected_callback(VCHIQ_CONNECTED_CALLBACK_T callback)
+ }
+ 
+ /****************************************************************************
+-*
+-* This function is called by the vchiq stack once it has been connected to
+-* the videocore and clients can start to use the stack.
+-*
+-***************************************************************************/
++ *
++ * This function is called by the vchiq stack once it has been connected to
++ * the videocore and clients can start to use the stack.
++ *
++ ***************************************************************************/
+ 
+ void vchiq_call_connected_callbacks(void)
+ {
 -- 
-2.26.0
+2.17.1
 
