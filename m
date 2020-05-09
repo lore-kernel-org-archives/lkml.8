@@ -2,83 +2,71 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACDAC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A153C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379CA218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WVPofjpp"
+	by mail.kernel.org (Postfix) with ESMTP id 50FE32192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588990262;
+	bh=7WATmBkFHhqVG5vcqGbREpgQfsEQnlS8vAP20J17ipM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1SctNGPQ5YMXq9l5egYG3bcK9Attpbs/Gzz1JNRRC3qUXPC+WC7elVTRfi2c8KbUp
+	 2+cyU4cHhO6u9H0KOohf/2JJOUr8F9u3E1nQLD5mAixyRk3H6f942tZNQdCSOiyEAv
+	 n4Tn300G7tZGZaEERDEJkjurMZTJYQxRftoMQPEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgEICJ1 (ORCPT
+        id S1728625AbgEICLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 22:09:27 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:58238 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727828AbgEICJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 22:09:26 -0400
-X-UUID: c2515d0332a7409a8cc84976834fb513-20200509
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=1B+choKMEWf5xgsDH1Xvz4r98si4Toef2xxzNstIEMc=;
-        b=WVPofjpp0VLBguQpJu5sO7PG4xp585zhHL5kaY5GN4ax6yZyup7ckNf1CfzJCQp/XLQthBFtWydoIccdvERs23acVXpSpUglCYB8UH7mrTzk761XMMrKpPJbKs76zGETv/kNtGgEyB5KaCYcKNJXhpsh9zjT5mi3gzPS7/aqn4o=;
-X-UUID: c2515d0332a7409a8cc84976834fb513-20200509
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1759369874; Sat, 09 May 2020 10:09:24 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 9 May 2020 10:09:23 +0800
-Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 9 May 2020 10:09:17 +0800
-From:   Fengping Yu <fengping.yu@mediatek.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
-CC:     <linux-input@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6] Add mtk matrix keypad driver for keypad on MTK SoC
-Date:   Sat, 9 May 2020 10:04:56 +0800
-Message-ID: <20200509020458.8359-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 8 May 2020 22:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728502AbgEICLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 22:11:01 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89597218AC;
+        Sat,  9 May 2020 02:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588990260;
+        bh=7WATmBkFHhqVG5vcqGbREpgQfsEQnlS8vAP20J17ipM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kjkKP+XSBvc3mr2oqj4XZUg2Yo9omuIKs/OVxXygH3nvEgoqKyPfRwqIBnq//m508
+         NCRQYSSX9FESN/myPWSeDf76ABB33Ms0P1mYgYpoqgwRvtLDn9rSbN2E8YJmolBRle
+         VqBFqU8WzeIid3weJEad+VOfErOOiqCcSxANGkHE=
+Date:   Fri, 8 May 2020 19:10:58 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Vincent Minet <v.minet@criteo.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] umh: fix memory leak on execve failure
+Message-ID: <20200508191058.24158f7a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200507221422.19338-1-v.minet@criteo.com>
+References: <20200507221422.19338-1-v.minet@criteo.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2hhbmdlIHNpbmNlIHY1Og0KLSByZW1vdmUgdW5uZWNlc3NhcnkgaW5jbHVkZSBmaWxlcw0KLSBy
-ZW1vdmUgcmVkdW5kYW50IGNvbW1lbnRzIGFuZCBuZXdsaW5lcw0KLSB1c2UgbG9jYWwgaXJxbnIg
-dmFyaWFibGUgaW5zdGVhZCBvZiBtZW1iZXIgdmFyaWFibGUgb2YgbXRrX2tleXBhZCBzdHJ1Y3QN
-Ci0gdXNlIHJlZ21hcCB0byByZWFkIGFuZCB3cml0ZSByZWdpc3RlcnMNCi0gZHJvcCBrcGRfZ2V0
-X2R0c19pbmZvIGRpcmVjdGx5IGludG8gcHJvYmUgZnVuY3Rpb24NCi0gdXNlIGRldm1fYWRkX2Fj
-dGlvbl9vcl9yZXNldCB0byBhdm9pZCBnb3RvIGVycm9yIGhhbmRsaW5nIHdoZW4gZG8gY2xrIHNl
-dHRpbmcNCi0gdXNlIGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEgYXBpIHRvIHJlcXVlc3QgaXJx
-DQotIHJlbW92ZSBwbGF0Zm9ybV9zZXRfZHJ2ZGF0YQ0KDQpmZW5ncGluZy55dSAoMyk6DQogIGR0
-LWJpbmRpbmdzOiBDaGFuZ2Uga2V5cGFkIGRvY3VtZW50YXRpb24gc2NoZW1hDQogIGRyaXZlcnM6
-IGlucHV0OiBrZXlib2FyZDogQWRkIG10ayBrZXlwYWQgZHJpdmVyDQogIGNvbmZpZ3M6IGRlZmNv
-bmZpZzogQWRkIENPTkZJR19LRVlCT0FSRF9NVEtfS1BEPXkNCg0KIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lucHV0L210ay1rcGQudHh0ICAgICB8ICA2MSAtLS0tLS0tDQogLi4uL2RldmljZXRy
-ZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sICAgIHwgIDkzICsrKysrKysrKysrDQogYXJj
-aC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2
-ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcgICAgICAgICAgICAgICAgfCAgIDUgKy0NCiBkcml2
-ZXJzL2lucHV0L2tleWJvYXJkL210ay1rcGQuYyAgICAgICAgICAgICAgfCAxNTEgKysrKysrKyst
-LS0tLS0tLS0tDQogNSBmaWxlcyBjaGFuZ2VkLCAxNjMgaW5zZXJ0aW9ucygrKSwgMTQ4IGRlbGV0
-aW9ucygtKQ0KIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L210ay1rcGQueWFtbA0KDQotLQ0KMi4xOC4wDQoN
-Cg0K
+On Fri,  8 May 2020 00:14:22 +0200 Vincent Minet wrote:
+> If a UMH process created by fork_usermode_blob() fails to execute,
+> a pair of struct file allocated by umh_pipe_setup() will leak.
+> 
+> Under normal conditions, the caller (like bpfilter) needs to manage the
+> lifetime of the UMH and its two pipes. But when fork_usermode_blob()
+> fails, the caller doesn't really have a way to know what needs to be
+> done. It seems better to do the cleanup ourselves in this case.
+> 
+> Fixes: 449325b52b7a ("umh: introduce fork_usermode_blob() helper")
+> Signed-off-by: Vincent Minet <v.minet@criteo.com>
 
+Applied to net, thank you!
