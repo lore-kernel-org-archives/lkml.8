@@ -2,193 +2,234 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5848C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446ECC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE29C2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4A0218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgEIAJM (ORCPT
+        id S1728380AbgEIAKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:09:12 -0400
-Received: from mga17.intel.com ([192.55.52.151]:23037 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgEIAJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:09:10 -0400
-IronPort-SDR: LFPKURXgjl9ZLfZxQXo9dWUEIOIksGaMDp+QfuIiRA8YZxWkA6vO9DkcRQnUeFH5SeX18o3T+z
- ELudsbypXAvw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 17:09:10 -0700
-IronPort-SDR: Y8YO7D+f89XLasVgvo7I+tiJRACov1CBSDE68TG8unNse8tI9sEOhqaA1F2mAEV03HJ/7P44Nw
- +Xjcv56Isi6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="250608479"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by fmsmga007.fm.intel.com with ESMTP; 08 May 2020 17:09:08 -0700
-Date:   Fri, 8 May 2020 17:09:09 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200509000909.GA79981@otc-nc-03>
-References: <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com>
- <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03>
- <20200508231610.GO19158@mellanox.com>
+        Fri, 8 May 2020 20:10:23 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:60000 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1728355AbgEIAKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:10:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 794C820024AB;
+        Sat,  9 May 2020 08:10:18 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3oVEyN9YLLIf; Sat,  9 May 2020 08:10:18 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 5124120020CB;
+        Sat,  9 May 2020 08:10:18 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [124.217.189.244])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id EA9E5C019F4;
+        Sat,  9 May 2020 08:10:17 +0800 (HKT)
+Subject: Re: [PATCH v0 1/1] spi: spi-rockchip: add support for spi slave_mode
+To:     Emil Renner Berthing <emil.renner.berthing@gmail.com>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, Heiko Stuebner <heiko@sntech.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20200508083729.5560-1-chris.ruehl@gtsys.com.hk>
+ <20200508083729.5560-2-chris.ruehl@gtsys.com.hk>
+ <CANBLGcwA+=OB-_nOYUijWrDBSkLYhR7_PNG1ewO7LZ-zRVGoxg@mail.gmail.com>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <3890ba80-f9f7-7f22-5cb5-5b78bbf042e7@gtsys.com.hk>
+Date:   Sat, 9 May 2020 08:10:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508231610.GO19158@mellanox.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CANBLGcwA+=OB-_nOYUijWrDBSkLYhR7_PNG1ewO7LZ-zRVGoxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason
+Hi Emil,
 
-On Fri, May 08, 2020 at 08:16:10PM -0300, Jason Gunthorpe wrote:
-> On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
-> 
-> > Even when uaccel was under development, one of the options
-> > was to use VFIO as the transport, goal was the same i.e to keep
-> > the user space have one interface. 
-> 
-> I feel a bit out of the loop here, uaccel isn't in today's kernel is
-> it? I've heard about it for a while, it sounds very similar to RDMA,
-> so I hope they took some of my advice...
+thanks for the review and your comments
 
-I think since 5.7 maybe? drivers/misc/uacce. I don't think this is like
-RDMA, its just a plain accelerator. There is no connection management,
-memory registration or other things.. IB was my first job at Intel,
-but saying that i would be giving my age away :)
+On 8/5/2020 9:13 pm, Emil Renner Berthing wrote:
+> Hi Chris,
+>
+> On Fri, 8 May 2020 at 10:47, Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+>> This patch aim to add spi slave mode support to the rockchip driver.
+>> Fix the wrong usage of num_cs set fix to ROCKCHIP_SPI_MAX_CS_NUM,
+>> instead use max_native_cs flag to set the limit of native chip-select.
+>> Enable use_gpio_descriptors to have cs_gpiod for gpio based chip-selects.
+>>
+>> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+>> ---
+>>   drivers/spi/spi-rockchip.c | 46 +++++++++++++++++++++++++++++++++-----
+>>   1 file changed, 41 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+>> index 70ef63e0b6b8..9c1ff52c0f85 100644
+>> --- a/drivers/spi/spi-rockchip.c
+>> +++ b/drivers/spi/spi-rockchip.c
+>> @@ -183,6 +183,9 @@ struct rockchip_spi {
+>>          u8 rsd;
+>>
+>>          bool cs_asserted[ROCKCHIP_SPI_MAX_CS_NUM];
+>> +
+>> +       bool slave_mode;
+>> +       bool slave_abort;
+>>   };
+>>
+>>   static inline void spi_enable_chip(struct rockchip_spi *rs, bool enable)
+>> @@ -359,7 +362,7 @@ static void rockchip_spi_dma_rxcb(void *data)
+>>          struct rockchip_spi *rs = spi_master_get_devdata(master);
+>>          int state = atomic_fetch_andnot(RXDMA, &rs->state);
+>>
+>> -       if (state & TXDMA)
+>> +       if (state & TXDMA && !rs->slave_abort)
+>>                  return;
+>>
+>>          spi_enable_chip(rs, false);
+>> @@ -372,7 +375,7 @@ static void rockchip_spi_dma_txcb(void *data)
+>>          struct rockchip_spi *rs = spi_master_get_devdata(master);
+>>          int state = atomic_fetch_andnot(TXDMA, &rs->state);
+>>
+>> -       if (state & RXDMA)
+>> +       if (state & RXDMA && !rs->slave_abort)
+>>                  return;
+>>
+>>          /* Wait until the FIFO data completely. */
+>> @@ -466,6 +469,10 @@ static void rockchip_spi_config(struct rockchip_spi *rs,
+>>          u32 cr1;
+>>          u32 dmacr = 0;
+>>
+>> +       if (rs->slavemode)
+>> +               cr0 |= CR0_OPM_SLAVE << CR0_OPM_OFFSET;
+>> +       rs->slave_abort = false;
+>> +
+>>          cr0 |= rs->rsd << CR0_RSD_OFFSET;
+>>          cr0 |= (spi->mode & 0x3U) << CR0_SCPH_OFFSET;
+>>          if (spi->mode & SPI_LSB_FIRST)
+>> @@ -535,6 +542,16 @@ static size_t rockchip_spi_max_transfer_size(struct spi_device *spi)
+>>          return ROCKCHIP_SPI_MAX_TRANLEN;
+>>   }
+>>
+>> +static int rockchip_spi_slave_abort(struct spi_master *master)
+>> +{
+>> +       struct rockchip_spi *rs = spi_master_get_devdata(master);
+>> +
+>> +       rs->slave_abort = true;
+>> +       complete(master);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>>   static int rockchip_spi_transfer_one(
+>>                  struct spi_master *master,
+>>                  struct spi_device *spi,
+>> @@ -589,14 +606,25 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+>>          struct spi_master *master;
+>>          struct resource *mem;
+>>          u32 rsd_nsecs;
+>> +       bool slave_mode;
+>> +       u32 num_cs = 1;
+>> +
+>> +       slave_mode = of_property_read_bool(np, "spi-slave");
+>> +
+>> +       if (slave_mode)
+>> +               master = spi_alloc_slave(&pdev->dev,
+>> +                               sizeof(struct rockchip_spi));
+>> +       else
+>> +               master = spi_alloc_master(&pdev->dev,
+>> +                               sizeof(struct rockchip_spi));
+>>
+>> -       master = spi_alloc_master(&pdev->dev, sizeof(struct rockchip_spi));
+>>          if (!master)
+>>                  return -ENOMEM;
+>>
+>>          platform_set_drvdata(pdev, master);
+>>
+>>          rs = spi_master_get_devdata(master);
+>> +       rs->slave_mode = slave_mode;
+> This entry doesn't seem to be read from any of your code, and even it
+> it was, the same information is available in master->slave, so I don't
+> see why you need it in the rockchip_spi struct.
+I haven't see the slave flag in the spi_controller struct, I will store the 
+information
+there.
+>
+> Also spi_master is just #defined to spi_controller in spi.h, so maybe
+> consider changing all 'struct spi_master *master' to 'struct
+> spi_controller *ctrl' now that the driver supports both modes.
+Can do,  but I think that is better to have a separate patch for it,
+make it easier for review.
+>
+>>          /* Get basic io resource and map it */
+>>          mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> @@ -676,7 +704,16 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+>>          master->auto_runtime_pm = true;
+>>          master->bus_num = pdev->id;
+>>          master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LOOP | SPI_LSB_FIRST;
+>> -       master->num_chipselect = ROCKCHIP_SPI_MAX_CS_NUM;
+>> +       if (slave_mode) {
+>> +               master->mode_bits |= SPI_NO_CS;
+>> +               master->slave_abort = rockchip_spi_slave_abort;
+>> +       } else {
+>> +               of_property_read_u32(np, "num-cs", &num_cs);
+>> +               master->num_chipselect = num_cs;
+> If you do something like this you won't need the temporary num_cs variable:
+>
+> if (of_property_read_u32(np, "num-cs", &master->num_chipselect))
+>      master->num_chipselect = 1;
+Like it , can see clearly the fallback to a default if num-cs isn't set in the
+dts.
+>
+> Also it seems like you're changing the default from
+> ROCKCHIP_SPI_MAX_CS_NUM to 1 if there is no num-cs property. Did you
+> check that all boards either have the num-cs property defined or only
+> needs num_chipselect = 1?
+Only spi0 of the rockchip has a 2nd native chip select, all others a single only
+therefore I find it less evil to use 1 vs. ROCKCHIP_SPI_MAX_CS_NUM
 
-> 
-> > But the needs of generic user space application is significantly
-> > different from exporting a more functional device model to guest,
-> > which isn't full emulated device. which is why VFIO didn't make
-> > sense for native use.
-> 
-> I'm not sure this is true. We've done these kinds of emulated SIOV
-> like things already and there is a huge overlap between what a generic
-> user application needs and what the VMM neds. Actually almost a
-> perfect subset except for interrupt remapping (which is quite
-> trivial).
+>> +               master->use_gpio_descriptors = true;
+>> +               master->max_native_cs = ROCKCHIP_SPI_MAX_CS_NUM;
+>> +               master->flags = SPI_MASTER_GPIO_SS;
+>> +       }
+>>          master->dev.of_node = pdev->dev.of_node;
+>>          master->bits_per_word_mask = SPI_BPW_MASK(16) | SPI_BPW_MASK(8) | SPI_BPW_MASK(4);
+>>          master->min_speed_hz = rs->freq / BAUDR_SCKDV_MAX;
+>> @@ -686,7 +723,6 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+>>          master->transfer_one = rockchip_spi_transfer_one;
+>>          master->max_transfer_size = rockchip_spi_max_transfer_size;
+>>          master->handle_err = rockchip_spi_handle_err;
+>> -       master->flags = SPI_MASTER_GPIO_SS;
+>>
+>>          master->dma_tx = dma_request_chan(rs->dev, "tx");
+>>          if (IS_ERR(master->dma_tx)) {
+>> --
+>> 2.20.1
+>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-From a simple user application POV, if we need to do simple compression
-or such with a shared WQ, all the application needs do do is
-bind_mm() that somehow associates the process address space with the 
-IOMMU to create that association and communication channel.
+-- 
+GTSYS Limited RFID Technology
+9/F, Unit E, R07, Kwai Shing Industrial Building Phase 2,
+42-46 Tai Lin Pai Road, Kwai Chung, N.T., Hong Kong
+Tel (852) 9079 9521
 
-For supporting this with guest user, we need to support the same actions
-from a guest OS. i.e a guest OS bind should be serviced and end up with the 
-IOMMU plumbing it with the guest cr3, and making sure the guest 2nd level 
-is plumed right for the nested walk. 
-
-Now we can certainly go bolt all these things again. When VFIO has already 
-done the pluming in a generic way.
-
-> 
-> The things vfio focuses on, like groups and managing a real config
-> space just don't apply here.
-> 
-> > And when we move things from VFIO which is already established
-> > as a general device model and accepted by multiple VMM's it gives
-> > instant footing without a whole redesign. 
-> 
-> Yes, I understand, but I think you need to get more people to support
-> this idea. From my standpoint this is taking secure lean VMMs and
-
-When we decided on VFIO, it was after using the best practices then,
-after discussion with Kirti Wankhede and Alex. Kevin had used it for
-graphics virtualization. It was even presented at KVM forum and such
-dating back to 2017. No one has raised alarms until now :-)
-
-
-> putting emulation code back into them, except in a more dangerous
-> kernel location. This does not seem like a net win to me.
-
-Its not a whole lot of emulation right? mdev are soft partitioned. There is
-just a single PF, but we can create a separate partition for the guest using
-PASID along with the normal BDF (RID). And exposing a consistent PCI like
-interface to user space you get everything else for free.
-
-Yes, its not SRIOV, but giving that interface to user space via VFIO, we get 
-all of that functionality without having to reinvent a different way to do it.
-
-vDPA went the other way, IRC, they went and put a HW implementation of what
-virtio is in hardware. So they sort of fit the model. Here the instance
-looks and feels like real hardware for the setup and control aspect.
-
-
-> 
-> You'd be much better to have some userspace library scheme instead of
-> being completely tied to a kernel interface for modularity.
-
-Couldn't agree more :-).. all I'm asking is if we can do a phased approach to 
-get to that goodness! If we need to move things to user space for emulation
-that's a great goal, but it can be evolutionary.
-
-> 
-> > When we move things from VFIO to uaccel to bolt on the functionality
-> > like VFIO, I suspect we would be moving code/functionality from VFIO
-> > to Uaccel. I don't know what the net gain would be.
-> 
-> Most of VFIO functionality is already decomposed inside the kernel,
-> and you need most of it to do secure user access anyhow.
-> 
-> > For mdev, would you agree we can keep the current architecture,
-> > and investigate moving some emulation code to user space (say even for
-> > standard vfio_pci) and then expand scope later.
-> 
-> I won't hard NAK this, but I think you need more people to support
-> this general idea of more emulation code in the kernel to go ahead -
-> particularly since this is one of many future drivers along this
-> design.
-> 
-> It would be good to hear from the VMM teams that this is what they
-> want (and why), for instance.
-
-IRC Paolo was present I think and we can find other VMM folks to chime in if
-that helps.
+Disclaimer: https://www.gtsys.com.hk/email/classified.html
 
