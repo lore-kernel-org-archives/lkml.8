@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A613C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E2EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA122184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8C62184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588998983;
-	bh=MsHyWUcutHDu0TRrl1L1LHV5yIWyMJML42Cy1l5wH8M=;
+	s=default; t=1588998985;
+	bh=FOYhLatQ928gyoxKqUoLRgFuoUjXoj+oErxZGurj3Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMK8Bi1Dp2IfZJYXqawq1xYsG+YQvwoKGCyKZI+4MX+Q3od9N4hHJQO7a22l0LzZz
-	 NyzCER1h063ttA0CM2F2qW8AsjqxoZfa/71Sarq92q1wvYolx/1yGMLHTNb4yoclRG
-	 BRVPLjXSCbSAITxv8IcQ1TbLuD+OjzSGZbM+CAvs=
+	b=nzvRPk3d2e1si3YKpSj1RoeyiJLDPDHu0VyONaKIjr24LCkXNhPnyBo3YDNW2aLIF
+	 3TCuoS2+VIgx73EqzfkJ7WmkC+TJq+hA0XtFuzmDItTylSoGWp8Fo4DJ0hzerXZiTB
+	 R5mh3Lmb//aYvpsv1LITfXC5f+3XGzxFqQv4PQEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgEIEgV (ORCPT
+        id S1728873AbgEIEgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 00:36:21 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55657 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728811AbgEIEgQ (ORCPT
+        Sat, 9 May 2020 00:36:24 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43377 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728846AbgEIEgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 00:36:16 -0400
-Received: by mail-pj1-f66.google.com with SMTP id k7so229117pjs.5;
-        Fri, 08 May 2020 21:36:14 -0700 (PDT)
+        Sat, 9 May 2020 00:36:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id z6so1625457plk.10;
+        Fri, 08 May 2020 21:36:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k0XUPR8gTRBaK/zVNrQDrzctO9dsoRkXZA68QpWb+cw=;
-        b=hJ0h2BDp55l7fsTlVfnT9HPmIM8rGMSS2nIYaU6P5Xz/m4ewUhNIT2dernZJNy2ulm
-         UJueO0sAGESaVpd+TKmt6ziykKlHrgGW/wRflARfQF093mDTFWGg4xVf6jPlLCdrtKN/
-         VgEnOQZSEJRS7wTGGFTeQbcW9sGu91vc+eQBKFV19JEU1zd/MW9E3wQDdpUVs1yviBSU
-         VFAWF74ajS4jdeG3WagsBf56lTT2XGTktTFtZHXSzn9cVd8JQGV/GzRY8XvoDP0aHWwB
-         Jmb7e1RbUule8TUmeNQIJpUomFA4Kb+ePi9YAzmiQP2X627izT2GtlD7AAPGnW9ZDUoT
-         RMJQ==
-X-Gm-Message-State: AGi0PuYOhFrYUlLMLALcR8Mhj8upw071mYQfGQTIENMJGvC4+gyURe+e
-        97XW1UXrgPHCw0FV9KpA10s=
-X-Google-Smtp-Source: APiQypIpLPKRngDi2nwKB/l9ruVNOfAboQdFftzYLEjRsOGUFsV5rsG+XovjkSD/u+zzSn9mOCV65w==
-X-Received: by 2002:a17:90a:498a:: with SMTP id d10mr10105139pjh.194.1588998974401;
-        Fri, 08 May 2020 21:36:14 -0700 (PDT)
+        bh=WzAUhm9PAzr7uU8H1Lc2ngEyBupzXwHNyDw+1FmrAuk=;
+        b=ABo2hpRjR7QwDjQAzeVuBVN1+ujsAAnhezO+qg1r3MO1zyxXMWsonIYOiPhSECGsLQ
+         kQ76j5GjlBCf6W1vpagB4SE8W5Dx9bRdB+8RzZhV6MMmboiZ9eALX7JE2MwBQAiNHMe1
+         J36mVZlOf6FPKwLJodnBjwcfpv55x7hMCfYRQE9YbwtRNT5DfpECsTQAalBAeQgG+JU7
+         C4Dwel2wfOZpGjBvbMJUOxx9fmnjD874Iw21JqoVc+pPyMzS4u7o8Vvl2Lf8bZ9tX4T2
+         G3+AD0DeQ8hz89fLXfNEZbIg2YzIUH1o+2qKOT1jzKzC/MQWkJ283b+LI8vhRes+QwCm
+         ldXQ==
+X-Gm-Message-State: AGi0PuY6fLMTaLNQ2HrtvXDqfM8Ri5e9i8v/X5tFsHa2geKEJYQt5NmT
+        C6wLYzBrJZ0Rdx9SSd09Q18=
+X-Google-Smtp-Source: APiQypLTFb2RAG3FyXNjeEw4HN1+FeVK1th9HhFtNsa33Z6gZafA063iGaEXxunyudg4OhViLAcglQ==
+X-Received: by 2002:a17:90b:19c9:: with SMTP id nm9mr9798057pjb.86.1588998978909;
+        Fri, 08 May 2020 21:36:18 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 1sm3248272pff.151.2020.05.08.21.36.05
+        by smtp.gmail.com with ESMTPSA id b20sm3293544pff.8.2020.05.08.21.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 21:36:07 -0700 (PDT)
+        Fri, 08 May 2020 21:36:15 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 34880422E5; Sat,  9 May 2020 04:36:01 +0000 (UTC)
+        id 76BD542349; Sat,  9 May 2020 04:36:01 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,11 +63,14 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2@marvell.com
-Subject: [PATCH 09/15] qed: use new module_firmware_crashed()
-Date:   Sat,  9 May 2020 04:35:46 +0000
-Message-Id: <20200509043552.8745-10-mcgrof@kernel.org>
+        linux-wireless@vger.kernel.org,
+        Lennert Buytenhek <buytenh@wantstofly.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Subject: [PATCH 15/15] mwl8k: use new module_firmware_crashed()
+Date:   Sat,  9 May 2020 04:35:52 +0000
+Message-Id: <20200509043552.8745-16-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200509043552.8745-1-mcgrof@kernel.org>
 References: <20200509043552.8745-1-mcgrof@kernel.org>
@@ -86,41 +89,29 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
+Cc: linux-wireless@vger.kernel.org
+Cc: Lennert Buytenhek <buytenh@wantstofly.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_debug.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/mwl8k.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-index f4eebaabb6d0..9cc6287b889b 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-@@ -7854,6 +7854,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 						 REGDUMP_HEADER_SIZE,
- 						 &feature_size);
- 		if (!rc) {
-+			module_firmware_crashed();
- 			*(u32 *)((u8 *)buffer + offset) =
- 			    qed_calc_regdump_header(cdev, PROTECTION_OVERRIDE,
- 						    cur_engine,
-@@ -7869,6 +7870,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		rc = qed_dbg_fw_asserts(cdev, (u8 *)buffer + offset +
- 					REGDUMP_HEADER_SIZE, &feature_size);
- 		if (!rc) {
-+			module_firmware_crashed();
- 			*(u32 *)((u8 *)buffer + offset) =
- 			    qed_calc_regdump_header(cdev, FW_ASSERTS,
- 						    cur_engine, feature_size,
-@@ -7906,6 +7908,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void *buffer)
- 		rc = qed_dbg_grc(cdev, (u8 *)buffer + offset +
- 				 REGDUMP_HEADER_SIZE, &feature_size);
- 		if (!rc) {
-+			module_firmware_crashed();
- 			*(u32 *)((u8 *)buffer + offset) =
- 			    qed_calc_regdump_header(cdev, GRC_DUMP,
- 						    cur_engine,
+diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
+index 97f23f93f6e7..d609ef1bb879 100644
+--- a/drivers/net/wireless/marvell/mwl8k.c
++++ b/drivers/net/wireless/marvell/mwl8k.c
+@@ -1551,6 +1551,7 @@ static int mwl8k_tx_wait_empty(struct ieee80211_hw *hw)
+ 	 * the firmware has crashed
+ 	 */
+ 	if (priv->hw_restart_in_progress) {
++		module_firmware_crashed();
+ 		if (priv->hw_restart_owner == current)
+ 			return 0;
+ 		else
 -- 
 2.25.1
 
