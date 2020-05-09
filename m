@@ -2,155 +2,111 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A2C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7E2C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A438020870
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FB320870
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j23Gv3Wc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgEIBmv (ORCPT
+        id S1728540AbgEIBne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:42:51 -0400
-Received: from mail-bn8nam12olkn2052.outbound.protection.outlook.com ([40.92.21.52]:59105
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727828AbgEIBmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:42:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V+kuVfGYMX1p3eajR43zJeRvnSrhNcl3F2ZKxofObIHk0xRgBztJktEBpurBdZR/9jGxHt9AgqGlM9gdZlKtscvSPdbE85eEXK2o8mVLdDklFlzVqRqlyXgQSIjzkKE34yEo9WZqusnfPLdKOEX/nheBkpZ40RLWXSZZlfUnj1uHc4rou8xFlWoeGVSEYl4dA95tlkEf9AUqh4mZe3LQYZ5CSs+coSKTwFvOnlMx+KOW9985v1uoy195Ear84VubajVHIrn4evjIhWJ3pCH3twqu/7HZg9w/TqOid2KRECW0nb7xFWsDpoysxTCWPS+SSxnM7LYW5Zy/LcVrjmHP7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mDH3p+hzRED8EGf/9tEbqNkQS1G8ID01Publ3nZL6Kg=;
- b=iBDyyOauZXe5S46sD3aAZRJ/1CWmbeem6UtV4ceDPwGmBPUlcolL7UO8nF8Fnzt2FfQOo2QrTfpiQyOhi3s4X3/Rf9vK+BKAVzQU/BFVGsl3Hcqgo3It83EHhQ7k37ChJIIKEeX6wOoybIAnVPDJdmLSz2QYe70Ypj3f4KbMlRGw5RWW41KSdmrenShvai/FXSaK9FZeK9mnR+MpWKerVRttYIoDQ7BaBbjhhxsfx2HvRgLUteZ5zx/RCD5+f+bjW+EsOzKuzndWktozKqYSPytybobs9frXL1hwoBAr8IKgqPSejDLposwysL82bMvsfabEPGA33A89T3lKOF0Ctw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM12FT013.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc66::4d) by
- BN8NAM12HT116.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::225)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Sat, 9 May
- 2020 01:42:49 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc66::41) by BN8NAM12FT013.mail.protection.outlook.com
- (2a01:111:e400:fc66::227) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
- Transport; Sat, 9 May 2020 01:42:49 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:572E685D6E1F76FEC7439EE2BC29B1C4BC66E8E078DBBF84CB493AFCA0BC82C8;UpperCasedChecksum:F37D8874BCE8DB9FE1E43B387C6BC4C07905B5B0A09D28418B12068C5F766B37;SizeAsReceived:7668;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Sat, 9 May 2020
- 01:42:49 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH] iio: light: gp2ap002: Take runtime PM reference on light read
-Date:   Fri,  8 May 2020 18:42:21 -0700
-Message-ID: <BN6PR04MB0660DD24B7B4418DCC2806FBA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: CO1PR15CA0098.namprd15.prod.outlook.com
- (2603:10b6:101:21::18) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200509014221.29882-1-xc-racer2@live.ca>
+        Fri, 8 May 2020 21:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbgEIBnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:43:33 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1289C061A0C;
+        Fri,  8 May 2020 18:43:33 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id g14so3009420otg.10;
+        Fri, 08 May 2020 18:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qj2NsxxrxGvcjEmd9rf19lFO4hTM6QQZYMW5MhboOoc=;
+        b=j23Gv3WcZSw7Qh3HqAqBbX1Mjk+cbqhd9vHrrnXwvLJ+/WbnkeES+9R3aTfdo7Xod0
+         veU/ADpIIVaM3mEWusgjTYeUedB1SAiW7/OTmuN+Kf66JKJglBnJ7NMOY/IwffbCSf+J
+         yA8TMfaM7qK291QvNYtzeQ63u3+8+skbCZQCJysxiZdUK/qVvXMeGQJOS2TPt0lKCtQQ
+         R8V6JWYl48H29SrxpqW9cnmh52gWvviuVKZRanP58AkO9P6/3mkHE7c9AoWuMGF2Ofe2
+         1N0UaPocX4LawQ/PhW6WbgOrQa+rByGoFOIRwk2xHgCfCKCqs763HRE6pmlATn4Ttl24
+         AnWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qj2NsxxrxGvcjEmd9rf19lFO4hTM6QQZYMW5MhboOoc=;
+        b=YbE/brrbiTtbYIJPw3IvGNaYwM8xB+gGuEofqlHNqgS9HayXPq7OmLmVkOLGlsuN9U
+         /q9yzST/fY9IHgNx2dsqtvcxQ3f1BChRUv7e3/yIgRPoLa6Wu1NIH22NTwIZj/FG9dSF
+         y5vRj3Fwl6nPjNaotXI2OvobHh4xhxp5OQuT+vKFa7Un3ylFtTxxeHy2KTrAeKyMLxux
+         7yrRlkXLLQKENFhl/2lFa/0Zp9B3G5zWJY/btqMOE0XrWT1OnAErJe8UdO3PRNkXtMqz
+         qagvsYLPySVWn6DJONYYJw9T/4Receiv4twgw4JVwvG4p7eHTnvkxL6zmEGBFmt+THiP
+         p/sg==
+X-Gm-Message-State: AGi0PubSSfR3XbkhP1sExA/hjZD1xE9kdsjbTLTSAtEO5IV8c6HUZKoa
+        POBZWgjVwhFDmjakCQMi7pM=
+X-Google-Smtp-Source: APiQypLdyi3Jv6TN6mCs4307DPP++qwr5Ww4nk3D7QYpmTgWtl6SDsKHTSCmkKfLPXG3SELlAs5kIQ==
+X-Received: by 2002:a9d:6c09:: with SMTP id f9mr4566004otq.94.1588988612824;
+        Fri, 08 May 2020 18:43:32 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t15sm940863oov.32.2020.05.08.18.43.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 18:43:32 -0700 (PDT)
+Date:   Fri, 8 May 2020 18:43:30 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Sterba <dsterba@suse.com>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Eric Biggers <ebiggers@google.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
+Message-ID: <20200509014330.GA2153306@ubuntu-s3-xlarge-x86>
+References: <20200505135402.29356-1-arnd@arndb.de>
+ <20200506051200.GA831492@ubuntu-s3-xlarge-x86>
+ <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO1PR15CA0098.namprd15.prod.outlook.com (2603:10b6:101:21::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Sat, 9 May 2020 01:42:48 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200509014221.29882-1-xc-racer2@live.ca>
-X-TMN:  [yS5/kVKGvZbsKMM3W8yVvy/1oxLonmGxl7+gJ00f4VoJngVrkrpNtpHHYLpHKDM+]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: d60c85b7-a7e3-4a5d-b1db-08d7f3ba47b9
-X-MS-TrafficTypeDiagnostic: BN8NAM12HT116:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UV9dv3MDqeWELU9BQhq79SH7Z6/KGyDKwisGjMik9MeLMX3P6uq0Obum5/NEb3E31UnIshB1x38NUMA/sAsyhdoeTfKi/erdfLIrm+LSNdvDcVihOhbkF/3aydhVyu+Qd0fyLo3CQO2xDnRZOb02Ksu1+zFxa9ldu8J1fSBUDSOxFUfJmSjBgawDCu8Z7FKHOVaLEOA/mISmq4ob6S1Z8A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: wjY2lAYWnQBDq1OMjklYW/fc51lvjvUCHtZ3UdfWHSXy4kS47tvv3Pf8ZnUDiP7dMs5MCuJun+lR8uRd0qNiXXcSveSJPD37j3sdPX95EozvsSd+CzJBWAXj9skX3CwYml1dRbJedT2xwKPc9WJ648aata8cH3QvD6i/1U3mIz24TRUm0lUVUOmdsJwoGLtxZ0dkP+/M6aSPlPTkwJmDCg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d60c85b7-a7e3-4a5d-b1db-08d7f3ba47b9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 01:42:49.2581
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The light sensor needs the regulators to be enabled which means
-the runtime PM needs to be on.  This only happened when the
-proximity part of the chip was enabled.
+On Fri, May 08, 2020 at 11:31:07PM +0200, Arnd Bergmann wrote:
+> On Wed, May 6, 2020 at 7:12 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > > -
+> > > +#ifdef CONFIG_CC_IS_CLANG
+> >
+> > Given your comment in the bug:
+> >
+> > "The code is written to assume no loops are unrolled"
+> >
+> > Does it make sense to make this unconditional and take compiler
+> > heuristics out of it?
+> >
+> > > +#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
+> > > +#endif
+> > >       for (i = 0; i < 8; ++i)
+> > >               S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
+> 
+> No, that would not work, as gcc does not support this pragma.
+> 
+>         Arnd
 
-As fallout from this change, only report changes to the prox
-state in the interrupt handler when it is explicitly enabled.
+Ah fair enough.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- drivers/iio/light/gp2ap002.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/light/gp2ap002.c b/drivers/iio/light/gp2ap002.c
-index b7ef16b28280..7a2679bdc987 100644
---- a/drivers/iio/light/gp2ap002.c
-+++ b/drivers/iio/light/gp2ap002.c
-@@ -158,6 +158,9 @@ static irqreturn_t gp2ap002_prox_irq(int irq, void *d)
- 	int val;
- 	int ret;
- 
-+	if (!gp2ap002->enabled)
-+		goto err_retrig;
-+
- 	ret = regmap_read(gp2ap002->map, GP2AP002_PROX, &val);
- 	if (ret) {
- 		dev_err(gp2ap002->dev, "error reading proximity\n");
-@@ -247,6 +250,8 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
- 	struct gp2ap002 *gp2ap002 = iio_priv(indio_dev);
- 	int ret;
- 
-+	pm_runtime_get_sync(gp2ap002->dev);
-+
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		switch (chan->type) {
-@@ -255,13 +260,21 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
- 			if (ret < 0)
- 				return ret;
- 			*val = ret;
--			return IIO_VAL_INT;
-+			ret = IIO_VAL_INT;
-+			goto out;
- 		default:
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out;
- 		}
- 	default:
--		return -EINVAL;
-+		ret = -EINVAL;
- 	}
-+
-+out:
-+	pm_runtime_mark_last_busy(gp2ap002->dev);
-+	pm_runtime_put_autosuspend(gp2ap002->dev);
-+
-+	return ret;
- }
- 
- static int gp2ap002_init(struct gp2ap002 *gp2ap002)
--- 
-2.20.1
-
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
