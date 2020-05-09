@@ -2,87 +2,82 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA5EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B08BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D1520722
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64FA20644
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:28:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwP6PDtl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XaIsj1Sr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgEIN0G (ORCPT
+        id S1727811AbgEIN2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:26:06 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47508 "EHLO
+        Sat, 9 May 2020 09:28:50 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40457 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727092AbgEIN0G (ORCPT
+        by vger.kernel.org with ESMTP id S1726013AbgEIN2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:26:06 -0400
+        Sat, 9 May 2020 09:28:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589030764;
+        s=mimecast20190719; t=1589030928;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yJ5RDywFb8p02L3LFUPRLr4TwiBeNt4sPEKLa6XsCZ8=;
-        b=RwP6PDtlaCZfCdkahnKMqxJyX76eodVZ+sseM83tc8row/R96I81zOEDSOTDIzyFMUartV
-        hvvM6Qnv3DHOx3ZxPJFnWt3wTis4YK4qFWmQwoYqmUWw6t5XaAIeHD9C+cAZ+j7J54l2Tv
-        O/1nimbJtz2vb168pjyhrcejQilu8HY=
+        bh=pgV5qMXPn6nUxGDkwIRdUCv59PWTCDtCRVhIT5FCAXg=;
+        b=XaIsj1SrZjx9ca4dPU/oj0VErKs+qo/5ayh1wHIOZVNY0CNvTWDvPzzyzOr42Su86+siRE
+        MVaZBJNurGyJgb1KixhNMQHmhEQ70F3TH+ZScFo7wNTxewCLY9Dc6fglQxlB2jNm9BLMVF
+        sCEc4eTarvZZNL9dDno3XbDGDwwbga0=
 Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
  [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-TT5sWhjpNf2O0V2yzYUufQ-1; Sat, 09 May 2020 09:26:03 -0400
-X-MC-Unique: TT5sWhjpNf2O0V2yzYUufQ-1
-Received: by mail-wr1-f72.google.com with SMTP id g30so430424wrb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:26:02 -0700 (PDT)
+ us-mta-94-7134pw3TMBiwMAw7aBGILQ-1; Sat, 09 May 2020 09:28:46 -0400
+X-MC-Unique: 7134pw3TMBiwMAw7aBGILQ-1
+Received: by mail-wr1-f72.google.com with SMTP id a12so2397945wrv.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:28:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=yJ5RDywFb8p02L3LFUPRLr4TwiBeNt4sPEKLa6XsCZ8=;
-        b=d2hSwKRE/yLADTCu+oCJtub84hRACH6NTVH/d+OLfUUzVaHxg5vYrUGTA2n0vxGtFu
-         qesnBJ2UFNw641PPKGUdjKG6fWFgeXB2uUnHz4fDoxGpc+vHPkN+5CdnWK45B/szOe6C
-         Lpb5s0Vy1lsC/cfgcG4feyn1GElfjPeUQEHcnoMBnoW91UaOOqrb5iPaodm8dRmmaeX9
-         rFbvPINnd2AJf7Dds7lKZZcPo3n5lw6/mAE/NFsVHU/irzJ+7Wf/SSl1MaMeIjbWO3wo
-         IROyfTVijoAxJJUwEOHVHWfEEkqO7pF+wtrQZCdbg1mS2cdKRNrBdqziHCOdrbL0MLx2
-         CvqA==
-X-Gm-Message-State: AGi0PuYbTV9kXb8exNnrKLHjlsexGqKsf+YXIigHYjlyuNa/DYyeQ+6s
-        NQJ6+4KWUklSiMqj+6l2ZFiHghYRUGOVQQj7vNcKHRQDq9ga6dIQ8jiKoazQlYrYjQbN6DFUucs
-        6Miyg8RhnMS2WyNKa3VavJ/rQ
-X-Received: by 2002:a5d:6b86:: with SMTP id n6mr8361515wrx.113.1589030761404;
-        Sat, 09 May 2020 06:26:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLnCucXzjeaAUyze+f/hgWgZ3qMP3bKLXUz3hmKkRqCcX5QdqwGQkNawxAz7P8VSkFF1pNQlw==
-X-Received: by 2002:a5d:6b86:: with SMTP id n6mr8361495wrx.113.1589030761153;
-        Sat, 09 May 2020 06:26:01 -0700 (PDT)
+        bh=pgV5qMXPn6nUxGDkwIRdUCv59PWTCDtCRVhIT5FCAXg=;
+        b=Fiuzi23GbmnBtEFkxeQyMtNCl0bo7D3LOwv0PlH+B1n56NIFD3qE48zvfD7x+lfeys
+         KHBo7ET2F4BkyAI+vPS8/cr5j/hDfUrowLqbw00RrVfI453++G3sS8hVLgbdYQWAZYGu
+         qXE7tRh5tTaYsoEh2eD6IXBLJ8lY85wimp6B2YTIChlXj/MgLvBFn9TwFCWnyk9uASaJ
+         B7FMPbNlB+Ajv2+hdcV1vMJ639NQCL88qXYqgsdsNqTxQBuBRtkL23vRq/2f7rRjRLWd
+         knbYVlTI70H3IV7ZczsmjFejztOhvps3564LmwSkA29Gy7wQuiuavUEStrYoqqzelKoE
+         yJhg==
+X-Gm-Message-State: AGi0PuYgy0gTpauDCTKgT3jVHtPf438ihU6GfV5eEA01snhi2QBDQ0NQ
+        xI9Mm6zyyfacBSF2Hxt5C7Syr+3zaIYtcSfCR12BSxTpLiCik5GstcoFXViz4v8rYKu+8hYuB9V
+        bM6tkFbi9qqEXcr3ePahFjWOj
+X-Received: by 2002:a5d:66c9:: with SMTP id k9mr6288185wrw.307.1589030925672;
+        Sat, 09 May 2020 06:28:45 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI2iks93LwOr88tUV8jDKcOHKVjqxqThuwkg1n5O41W5X1Qga1b8PVXal6PWA7BMuHirdznnQ==
+X-Received: by 2002:a5d:66c9:: with SMTP id k9mr6288169wrw.307.1589030925435;
+        Sat, 09 May 2020 06:28:45 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:1cb4:2b36:6750:73ce? ([2001:b07:6468:f312:1cb4:2b36:6750:73ce])
-        by smtp.gmail.com with ESMTPSA id h74sm8565819wrh.76.2020.05.09.06.26.00
+        by smtp.gmail.com with ESMTPSA id f123sm4155582wmf.44.2020.05.09.06.28.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 06:26:00 -0700 (PDT)
-Subject: Re: [PATCH] kvm: add halt-polling cpu usage stats
-To:     Jon Cargille <jcargill@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     David Matlack <dmatlack@google.com>
-References: <20200508182240.68440-1-jcargill@google.com>
+        Sat, 09 May 2020 06:28:44 -0700 (PDT)
+Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
+ vmcb->save.dr6
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-9-pbonzini@redhat.com> <20200507192808.GK228260@xz-x1>
+ <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
+ <20200508153210.GZ228260@xz-x1>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <914f1aec-de5e-dcc9-9f99-4ffbcd7e8a53@redhat.com>
-Date:   Sat, 9 May 2020 15:25:59 +0200
+Message-ID: <a0dd65bc-bfea-75b8-60d7-5060b9ee6c51@redhat.com>
+Date:   Sat, 9 May 2020 15:28:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200508182240.68440-1-jcargill@google.com>
+In-Reply-To: <20200508153210.GZ228260@xz-x1>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,120 +86,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/05/20 20:22, Jon Cargille wrote:
-> From: David Matlack <dmatlack@google.com>
+On 08/05/20 17:32, Peter Xu wrote:
+> On Fri, May 08, 2020 at 12:33:57AM +0200, Paolo Bonzini wrote:
+>> On 07/05/20 21:28, Peter Xu wrote:
+>>>> -	svm->vcpu.arch.dr6 = dr6;
+>>>> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+>>>> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+>>>> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+>>> I failed to figure out what the above calculation is going to do... 
+>>
+>> The calculation is merging the cause of the #DB with the guest DR6.
+>> It's basically the same effect as kvm_deliver_exception_payload.
 > 
-> Two new stats for exposing halt-polling cpu usage:
-> halt_poll_success_ns
-> halt_poll_fail_ns
-> 
-> Thus sum of these 2 stats is the total cpu time spent polling. "success"
-> means the VCPU polled until a virtual interrupt was delivered. "fail"
-> means the VCPU had to schedule out (either because the maximum poll time
-> was reached or it needed to yield the CPU).
-> 
-> To avoid touching every arch's kvm_vcpu_stat struct, only update and
-> export halt-polling cpu usage stats if we're on x86.
+> Shall we introduce a helper for both kvm_deliver_exception_payload and here
+> (e.g. kvm_merge_dr6)?  Also, wondering whether this could be a bit easier to
+> follow by defining:
 
-I fixed all the other architectures and queued it, thanks.
+It would make sense indeed but I plan to get rid of this in 5.9 (so in
+about a month), as explained in the comment.
 
 Paolo
-
-> 
-> Exporting cpu usage as a u64 and in nanoseconds means we will overflow at
-> ~500 years, which seems reasonably large.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> Signed-off-by: Jon Cargille <jcargill@google.com>
-> Reviewed-by: Jim Mattson <jmattson@google.com>
-> 
-> ---
->  arch/x86/include/asm/kvm_host.h |  2 ++
->  arch/x86/kvm/x86.c              |  2 ++
->  virt/kvm/kvm_main.c             | 20 +++++++++++++++++---
->  3 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index a239a297be33..3287159ab15b 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1032,6 +1032,8 @@ struct kvm_vcpu_stat {
->  	u64 irq_injections;
->  	u64 nmi_injections;
->  	u64 req_event;
-> +	u64 halt_poll_success_ns;
-> +	u64 halt_poll_fail_ns;
->  };
->  
->  struct x86_instruction_info;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 8c0b77ac8dc6..9736d91ce877 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -217,6 +217,8 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
->  	VCPU_STAT("nmi_injections", nmi_injections),
->  	VCPU_STAT("req_event", req_event),
->  	VCPU_STAT("l1d_flush", l1d_flush),
-> +	VCPU_STAT( "halt_poll_success_ns", halt_poll_success_ns),
-> +	VCPU_STAT( "halt_poll_fail_ns", halt_poll_fail_ns),
->  	VM_STAT("mmu_shadow_zapped", mmu_shadow_zapped),
->  	VM_STAT("mmu_pte_write", mmu_pte_write),
->  	VM_STAT("mmu_pte_updated", mmu_pte_updated),
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 33e1eee96f75..348b4a6bde53 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2664,19 +2664,30 @@ static int kvm_vcpu_check_block(struct kvm_vcpu *vcpu)
->  	return ret;
->  }
->  
-> +static inline void
-> +update_halt_poll_stats(struct kvm_vcpu *vcpu, u64 poll_ns, bool waited)
-> +{
-> +#ifdef CONFIG_X86
-> +	if (waited)
-> +		vcpu->stat.halt_poll_fail_ns += poll_ns;
-> +	else
-> +		vcpu->stat.halt_poll_success_ns += poll_ns;
-> +#endif
-> +}
-> +
->  /*
->   * The vCPU has executed a HLT instruction with in-kernel mode enabled.
->   */
->  void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  {
-> -	ktime_t start, cur;
-> +	ktime_t start, cur, poll_end;
->  	DECLARE_SWAITQUEUE(wait);
->  	bool waited = false;
->  	u64 block_ns;
->  
->  	kvm_arch_vcpu_blocking(vcpu);
->  
-> -	start = cur = ktime_get();
-> +	start = cur = poll_end = ktime_get();
->  	if (vcpu->halt_poll_ns && !kvm_arch_no_poll(vcpu)) {
->  		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
->  
-> @@ -2692,7 +2703,7 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  					++vcpu->stat.halt_poll_invalid;
->  				goto out;
->  			}
-> -			cur = ktime_get();
-> +			poll_end = cur = ktime_get();
->  		} while (single_task_running() && ktime_before(cur, stop));
->  	}
->  
-> @@ -2712,6 +2723,9 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  	kvm_arch_vcpu_unblocking(vcpu);
->  	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
->  
-> +	update_halt_poll_stats(
-> +		vcpu, ktime_to_ns(ktime_sub(poll_end, start)), waited);
-> +
->  	if (!kvm_arch_no_poll(vcpu)) {
->  		if (!vcpu_valid_wakeup(vcpu)) {
->  			shrink_halt_poll_ns(vcpu);
-> 
 
