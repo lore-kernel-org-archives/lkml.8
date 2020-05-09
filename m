@@ -2,140 +2,230 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D81C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F235FC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAB421655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB9B208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:43:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mzYvCsSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgEINmv (ORCPT
+        id S1727926AbgEINnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:42:51 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:36594 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726782AbgEINmu (ORCPT
+        Sat, 9 May 2020 09:43:37 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:58252 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgEINng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:42:50 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXPkb-0004NO-Kb; Sat, 09 May 2020 07:42:45 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXPka-0008Hp-Me; Sat, 09 May 2020 07:42:45 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87y2q25knl.fsf_-_@x220.int.ebiederm.org>
-        <202005082228.5C0E44CC6@keescook>
-Date:   Sat, 09 May 2020 08:39:16 -0500
-In-Reply-To: <202005082228.5C0E44CC6@keescook> (Kees Cook's message of "Fri, 8
-        May 2020 22:31:06 -0700")
-Message-ID: <874ksp448r.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sat, 9 May 2020 09:43:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589031813; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3+OUbR3nAMHj6vOkoLNKrouoG7vK2MNU8TiGQFCjkNE=;
+        b=mzYvCsSkmTcvd80dckxAzm86ehgWKmiR+rQMbWEdfhl0qfnXd53qsC+5ePCfu/qkCPfwyp
+        lHMrHUrqXJ/qFUEwRSbjrcH8ezx68Ub8amGNPxkbF3G/Y6lZ1eYIfrR8WJsrbxj5rDH/y6
+        WGniJIlDkxh3l4Xf/F8JAahNCU5JL/Y=
+Date:   Sat, 09 May 2020 15:43:21 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: DRM interaction problems on Ingenic CI20 / jz4780 with dw-hdmi
+ and ingenic-drm
+To:     Paul Boddie <paul@boddie.org.uk>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>
+Message-Id: <9SG2AQ.ALB8O9UHXRT11@crapouillou.net>
+In-Reply-To: <79437309.Fv5JZGVDrq@jeremy>
+References: <ED77DCA8-FF50-4E9E-A4B8-688262774723@goldelico.com>
+        <125Q8Q.9F49TXF6ZICX1@crapouillou.net>
+        <YC8S9Q.M96AR8DWGF0F1@crapouillou.net> <79437309.Fv5JZGVDrq@jeremy>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jXPka-0008Hp-Me;;;mid=<874ksp448r.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/hO8wcopX1eKURjVw/cKNalrZ0rz8JKN0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 5/6] exec: Move handling of the point of no return to the top level
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Hi Paul,
 
-> On Fri, May 08, 2020 at 01:47:10PM -0500, Eric W. Biederman wrote:
->> 
->> Move the handing of the point of no return from search_binary_handler
->> into __do_execve_file so that it is easier to find, and to keep
->> things robust in the face of change.
->> 
->> Make it clear that an existing fatal signal will take precedence over
->> a forced SIGSEGV by not forcing SIGSEGV if a fatal signal is already
->> pending.  This does not change the behavior but it saves a reader
->> of the code the tedium of reading and understanding force_sig
->> and the signal delivery code.
->> 
->> Update the comment in begin_new_exec about where SIGSEGV is forced.
->> 
->> Keep point_of_no_return from being a mystery by documenting
->> what the code is doing where it forces SIGSEGV if the
->> code is past the point of no return.
->> 
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->
-> I had to read the code around these changes a bit carefully, but yeah,
-> this looks like a safe cleanup. It is a behavioral change, though (in
-> that in unmasks non-SEGV fatal signals), so I do wonder if something
-> somewhere might notice this, but I'd agree that it's the more robust
-> behavior.
+Le mar. 5 mai 2020 =E0 20:26, Paul Boddie <paul@boddie.org.uk> a =E9crit :
+> On Monday 4. May 2020 03.05.22 Paul Cercueil wrote:
+>>=20
+>>  > Le sam. 11 avril 2020 =E0 16:14, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a
+>>  > =E9crit :
+>>  >>
+>>  >> So far we have identified two issues.
+>>  >>
+>>  >> The first is that HPD interrupts are not properly processed.
+>>  >>
+>>  >> drm_helper_hpd_irq_event() is called by HPD events but
+>>  >> dev->mode_config.poll_enabled is false.
+>>=20
+>>  This is to be used when there's no hardware interrupt. I believe you
+>>  have one, right? Then call drm_kms_helper_hotplug_event() from the
+>>  interrupt handler instead.
+>=20
+> What we have in drivers/gpu/drm/bridge/synopsys/dw-hdmi.c is a=20
+> function called
+> dw_hdmi_irq which appears to be the thread_fn for HDMI interrupts=20
+> (alongside
+> the dw_hdmi_hardirq which is the handler), initialised by a call to
+> devm_request_threaded_irq.
+>=20
+> In dw_hdmi_irq, a hotplug event seems to cause=20
+> drm_helper_hpd_irq_event to be
+> called. However...
+>=20
+> [...]
+>=20
+>>  >> The jz4780 hdmi subsystem (drm/bridge/dw-hdmi.c) uses
+>>  >>
+>>  >> 	connector->polled =3D DRM_CONNECTOR_POLL_HPD;
+>>  >>
+>>  >> but shouldn't this enable polling? Note that there seems to be
+>>  >> no (direct) call to drm_kms_helper_poll_init().
+>>  >>
+>>  >> If we set dev->mode_config.poll_enabled =3D true in
+>>  >> drm_helper_hpd_irq_event() things start to work.
+>>  >>
+>>  >> Please can you clarify what would be best practise here to
+>>  >> get HPD event handling working.
+>>=20
+>>  Remove that - this stuff is for hardware without interrupts, where
+>>  everything has to be polled.
+>=20
+> Yes, I think this must be a mistake in the driver. In
+> drm_helper_hpd_irq_event, the connector is tested for the
+> DRM_CONNECTOR_POLL_HPD flag and skips the connector. It isn't clear=20
+> whether
+> this actually matters for the other hardware using this technology,
+> documentation being rather thin on the ground.
+>=20
+>>  >> The other issue is in dw-hdmi.c:
+>>  >>
+>>  >> We found out that ingenic_drm_encoder_atomic_check() fails=20
+>> because
+>>  >>
+>>  >> info->num_bus_formats =3D=3D 0
+>>  >>
+>>  >> and not 1. This blocks further initialization.
+>>  >>
+>>  >> The reason seems to be that dw_hdmi_bridge_attach() does not call
+>>  >> drm_display_info_set_bus_formats() with a proper format like
+>>  >> other drivers (e.g. drm/bridge/ti-tfp410.c) are doing.
+>>  >>
+>>  >> We have patched to set a single bus format=20
+>> MEDIA_BUS_FMT_RGB888_1X24
+>>  >> and then DRM setup seems to work (although we still have no valid
+>>  >> HDMI signal but that is likely something else).
+>>  >>
+>>  >> Please can you explain how setting the bus format should be fixed
+>>  >> in dw-hdmi.c.
+>>=20
+>>  I'm not sure, but that information may come from EDID data. Are you
+>>  able to obtain video modes from the connected monitor?
+>=20
+> The modes are definitely received, or at least the list of modes=20
+> given by
+> /sys/devices/platform/13050000.lcd/drm/card0/card0-HDMI-A-1/modes is=20
+> viable.
+>=20
+> However, it rather looked like the bus format information wasn't=20
+> being set and
+> that this inhibited the completion of the initialisation process=20
+> which, if
+> completed, would ultimately cause the format to be set. (This being=20
+> the short
+> version of the story as I remember it right now.) So, the problem=20
+> presents
+> itself as an initialisation order problem.
 
-So the only behavioral change that I can see is that for non-SIGSEGV
-fatal signals the signal handler for SIGSEGV will not be set to SIG_DFL
-and SIGSEGV will not be removed from tasks local blocked signal set.
+It's not an initialization order problem, the ingenic-drm expects the=20
+bus_formats to be provided and the synopsis driver never calls=20
+drm_display_info_set_bus_formats().
 
-I think there is a good case that behavior change is a bug.
+> I removed the flag from the connector to see if it makes any=20
+> difference, but
+> it doesn't look like it. Here is what /sys/kernel/debug/dri/0/state=20
+> contains:
+>=20
+> plane[31]: plane-0
+>         crtc=3D(null)
+>         fb=3D0
+>         crtc-pos=3D0x0+0+0
+>         src-pos=3D0.000000x0.000000+0.000000+0.000000
+>         rotation=3D1
+>         normalized-zpos=3D0
+>         color-encoding=3DITU-R BT.601 YCbCr
+>         color-range=3DYCbCr limited range
+> crtc[32]: crtc-0
+>         enable=3D0
+>         active=3D0
+>         self_refresh_active=3D0
+>         planes_changed=3D0
+>         mode_changed=3D0
+>         active_changed=3D0
+>         connectors_changed=3D0
+>         color_mgmt_changed=3D0
+>         plane_mask=3D0
+>         connector_mask=3D0
+>         encoder_mask=3D0
+>         mode: "": 0 0 0 0 0 0 0 0 0 0 0x0 0x0
+> connector[34]: HDMI-A-1
+>         crtc=3D(null)
+>         self_refresh_aware=3D0
+>=20
+> The crtc member values do not look encouraging. In fact, it just=20
+> looks like
+> most structure members are uninitialised.
+>=20
+> Thanks for the advice: I spent some time the other day reviewing=20
+> various
+> aspects of the Synopsys drivers of different vintages (Ingenic 3.0.8=20
+> non-DRM
+> driver for JZ4780, MIPS/Ingenic 3.18 DRM driver for JZ4780 based on=20
+> Freescale
+> driver code, the recent generic DRM bridge driver), and so this=20
+> information is
+> timely and valuable.
 
-If you think that it was SIGSEGV that was being delivered and
-it was masking an other existing fatal you would be incorrect.
+With a hardcoded bus_format of RGB888 in the ingenic-drm driver, and=20
+jz4780_dw_hdmi_plat_data.input_bus_format initialized too:
 
-If you look at:
+modetest -D /dev/dri/card0 -M ingenic-drm -s 35@32:1280x720-60
 
-fatal_signal_pending - you will see that it tests for SIGKILL on the
-current's tasks queue.
-
-complete_signal() - you will see that when a fatal (non-coredumpable)
-signal is delvered it sets SIGKILL in every threads local queue.  As
-well as setting SIGNAL_GROUP_EXIT
-
-get_signal - It special cases SIGNAL_GROUP_EXIT and fast forwards
-to the end.  So that a signal that has been delivered can not be
-overriden by another signal.
-
-__send_signal - It tests SIGNAL_GROUP_EXIT and if it is set
-gets out early (which applies to force_sigsegv amoung others)
-
-So unless it is de_thread or coredumping that sets the task
-local SIGKILL there is no chance for a force SIGSEGV to do antyhing,
-and the code has already tested for those to in de_thread and
-exit_mmap before point_of_no_return is set.
-
-So except for the SIGSEGV handler and blocked state there are no
-behavior changes.
+My PC monitor sees a signal - unfortunately it says "input not=20
+supported".
 
 
-That does takes some reading through all of that code to see what is
-going on, and just saying !fatal_signal_pending makes it all so much
-clearer.
+> Paul
+>=20
+> P.S. Sorry if this message goes to far too many people. I don't want=20
+> to
+> "personalise" it by taking people off the recipients list, but I=20
+> realise that
+> this is probably not interesting to most recipients, either. Feel=20
+> free to trim
+> recipients if replying.
+
+Again, you shoul send this message to the DRI mailing list. The people=20
+who did work with the Synopsis IP may be able to help.
+
+-Paul
 
 
-In the next patch when I move setting point_of_no_return earlier that
-fatal_signal_pending check ensures that we don't stomp on de_thread or
-coredump state with force_sigsegv(SIGSEGV).  But again that also won't
-be a change in behavior, as we aren't performing the force_sigsegv test
-when it could be either of those things until that patch.  So
-force_sigsegv never gets a chance to stomp on those cases.
-
-Eric
