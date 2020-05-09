@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DAAC54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F06B20A8B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E622192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEIVJ3 (ORCPT
+        id S1728562AbgEIVLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 17:09:29 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:45488 "EHLO
+        Sat, 9 May 2020 17:11:09 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:45634 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgEIVJ2 (ORCPT
+        with ESMTP id S1727108AbgEIVLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 17:09:28 -0400
+        Sat, 9 May 2020 17:11:09 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 25EB42003E;
-        Sat,  9 May 2020 23:09:26 +0200 (CEST)
-Date:   Sat, 9 May 2020 23:09:24 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CE632003E;
+        Sat,  9 May 2020 23:11:06 +0200 (CEST)
+Date:   Sat, 9 May 2020 23:11:04 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Jason Yan <yanaijie@huawei.com>
 Cc:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
         linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] video: fbdev: pxa168fb: make pxa168fb_init_mode() return
  void
-Message-ID: <20200509210924.GB12666@ravnborg.org>
+Message-ID: <20200509211104.GC12666@ravnborg.org>
 References: <20200506061745.19451-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -60,11 +60,6 @@ On Wed, May 06, 2020 at 02:17:45PM +0800, Jason Yan wrote:
 > "0" on line 597
 > 
 > Signed-off-by: Jason Yan <yanaijie@huawei.com>
-
-Thanks, applied to drm-misc-next.
-
-	Sam
-
 > ---
 >  drivers/video/fbdev/pxa168fb.c | 5 +----
 >  1 file changed, 1 insertion(+), 4 deletions(-)
@@ -80,6 +75,12 @@ Thanks, applied to drm-misc-next.
 > -static int pxa168fb_init_mode(struct fb_info *info,
 > +static void pxa168fb_init_mode(struct fb_info *info,
 >  			      struct pxa168fb_mach_info *mi)
+I fixed indent while applying.
+For patches in drivers/gpu/ please use --strict when you verify with
+checkpatch so you catch similar issues yourself.
+
+	Sam
+
 >  {
 >  	struct pxa168fb_info *fbi = info->par;
 >  	struct fb_var_screeninfo *var = &info->var;
