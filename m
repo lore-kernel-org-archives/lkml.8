@@ -2,193 +2,61 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62863C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A9EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEA22495C
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xkEMgR8O"
+	by mail.kernel.org (Postfix) with ESMTP id 737112495C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgEIJMy (ORCPT
+        id S1727950AbgEIJPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbgEIJMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:12:54 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C4CC05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 02:12:53 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a4so3336077lfh.12
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 02:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NH5lD5ReCvuDXdnJIc25F9anPktjSNQNPjUWKb7zcRU=;
-        b=xkEMgR8OVYAbPPTR9yK//LAflR7pjobYWSKUHP3QDgV7tZhNTaULDwbMtzteLEDZRB
-         S8376RVtQI+8Pge8StPfTKPEeV3Z6u0wthHzn8NMzwzok3oNX0JSHiXpRG+DinzeyDwM
-         vFc5UJIWl7iaZKxU4oCr7B6Ao2jZGwuVChQMeXwFVc3ylvSG8c4bYEfOHZO99mMEz58v
-         WatqSgetGsOpE4NjBBSnMeivlinupeTDgsObjz6RPNOCxHxkTQOHv34053QP3lZbBSt/
-         QyDo/ZAkZC5PLjAXplQ4d/DrDLPUVYTqK0ro4bdF0qG3bOFnOgjgIPL6K+qJ5WbFGCUE
-         Azug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NH5lD5ReCvuDXdnJIc25F9anPktjSNQNPjUWKb7zcRU=;
-        b=kT2wYapGPDMBmVSulhkQYSTR2vzui5Bvf/Mtu5pPmcp9zCLSvVHzU6z5yr27hzeXzN
-         AkLGRmp3pRYy0Wrg6xtA8NGJIITbIXaz44GBXs939NeTSle/Ffc9D/pU+klj4qgpyhsk
-         LtwwqTbKIrlpaqOdye5RTsF6MF+IUMUlLbwQlvTx8vz2K0YPFKxKGXjwyUEZmvm5MHqc
-         z95o77ALIMqOq9Dzftyqm3hv2WY1CnFkhEvRmHcxmt8GJRZhgQZ+XrItZcGb2b/yMq8k
-         988mBY+kR+H/KsMb/JmdJ6cXwNKW+9qCSCEGa5LfClNL2B0yxBwtk/FP9A3JWNv6y3Mc
-         kteg==
-X-Gm-Message-State: AOAM530kcHe8TOlfmP3ZNlIyr5noKd84GB25PjWYizW+vCDK6vw/IgSw
-        JSxbJwvBm0pFv+PC2gf3iEBCBAoCt/lV5E51gonN9A==
-X-Google-Smtp-Source: ABdhPJx4q8/q5J3rWO+JsRwO4Wxo+t/KuoDcfklq+xptYCzmO+n4zMtJUF5IkhtxoJBEvReRTmjS5g3O4dJWByCYc8E=
-X-Received: by 2002:a19:3817:: with SMTP id f23mr4480647lfa.6.1589015571823;
- Sat, 09 May 2020 02:12:51 -0700 (PDT)
+        Sat, 9 May 2020 05:15:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4373 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725930AbgEIJPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:15:07 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 37D554A99A968E9739DD;
+        Sat,  9 May 2020 17:15:06 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 17:14:59 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <sparclinux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH -next 0/2] sparc: use snprintf() in show() methods
+Date:   Sat, 9 May 2020 17:18:47 +0800
+Message-ID: <20200509091849.116954-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200508123033.915895060@linuxfoundation.org>
-In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 May 2020 14:42:40 +0530
-Message-ID: <CA+G9fYtjXqhauJOmRHbMO+uw0=dB=5q_wR_eROkyHWHe0h3f3w@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/22] 4.14.180-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 18:21, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.180 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.180-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+snprintf() returns the number of bytes that would be written,
+which may be greater than the the actual length to be written.
+	    
+show() methods should return the number of bytes printed into the
+buffer. This is the return value of scnprintf().
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Chen Zhou (2):
+  sparc: use snprintf() in show_pciobppath_attr() in pci.c
+  sparc: use snprintf() in show_pciobppath_attr() in vio.c
 
-Summary
-------------------------------------------------------------------------
+ arch/sparc/kernel/pci.c | 2 +-
+ arch/sparc/kernel/vio.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-kernel: 4.14.180-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 3b98623002348651d84865b1576cdc13caed64ed
-git describe: v4.14.179-23-g3b9862300234
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.179-23-g3b9862300234
+-- 
+2.20.1
 
-No regressions (compared to build v4.14.179)
-
-No fixes (compared to build v4.14.179)
-
-Ran 29537 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
