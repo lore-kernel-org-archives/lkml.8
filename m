@@ -2,122 +2,134 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E0BC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545B3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD72218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2561A24953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588983026;
-	bh=erSdpvEBA/OBZrmfaYKkP+jqxEzq0wGxMfSHU3w7sVQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n9fkgGdPwbUkiRF3vnldNko+FC3ACE+pBaDqXAatBe6FeqyB4IVfZ5va7/PMesMEk
-	 6V/Xb9Ti/iN7x4TIrtFMXPoT1gnD6pFrJipwle4wzv9XDrpJhzc3QvNCH6BY6Qg8EM
-	 BQe+XIx5WCFQoseNLYi0PK90GQHdhjAHbVQliTU4=
+	s=default; t=1588983073;
+	bh=OCJ83ytuwXv45OnOiAlJSMIZEo8q5Uw1eby5O6JdPes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=o4zHJitlsjydZeE9kXCdGG/qxTWrt60QPDOOXdL3x18Bw2DoCjNEexMheerUgAPYo
+	 uHF5NeQFWZdGXUkZspWd3MkYnpEGEDeQnqZSX/oCxSfMvSvXVPeqIGuTocTIKEIu8R
+	 fNZF7qoAUK77uFiLEOGW88kQ/SRVQTX6OzkpjzaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgEIAKZ (ORCPT
+        id S1728415AbgEIALM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 20:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgEIAKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:10:23 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727890AbgEIALM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:11:12 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646BB24967
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 00:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81BED2184D;
+        Sat,  9 May 2020 00:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588983022;
-        bh=erSdpvEBA/OBZrmfaYKkP+jqxEzq0wGxMfSHU3w7sVQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1qEQFAXwYuggWIen30j4GN1aByRgNZ0uMRePYR8b49xv3+tJ8jnvtW/FhNd19UB6G
-         80o0X7JZPrVoYzbw3QJx7O6pmvCkDn2AR9IT2aE4KxId3dv9f0OP4SFr/5E8FaRtU/
-         oCg6tVjo3XhV9FVkS02h/BYlQ/nyNLbFJ3voSi+4=
-Received: by mail-wm1-f44.google.com with SMTP id u127so12529462wmg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 17:10:22 -0700 (PDT)
-X-Gm-Message-State: AGi0PubXcpZy2wj40qanfSMUxMeQN7DEFeCeg6HHTeIX/SsTroNPAabf
-        Mdp0WxI043Cp9Ac5ldf1otqZ37tYMjdQX6qt1d7qxg==
-X-Google-Smtp-Source: APiQypJQM9LZdB3eqz0cvhVChsH5letETrciK672WbbZCbkDpOcOSZhpit7wEC539rK+AmI7mUxw6rDxd9eBgWh233g=
-X-Received: by 2002:a7b:c74d:: with SMTP id w13mr17996836wmk.36.1588983020820;
- Fri, 08 May 2020 17:10:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505134112.272268764@linutronix.de> <20200505134341.087595319@linutronix.de>
-In-Reply-To: <20200505134341.087595319@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 8 May 2020 17:10:09 -0700
-X-Gmail-Original-Message-ID: <CALCETrVpSj9fVyUHp-Q_tT-xLgTfYR5JFv52AsOuGJsDYeN3-Q@mail.gmail.com>
-Message-ID: <CALCETrVpSj9fVyUHp-Q_tT-xLgTfYR5JFv52AsOuGJsDYeN3-Q@mail.gmail.com>
-Subject: Re: [patch V4 part 2 10/18] x86/entry/64: Check IF in
- __preempt_enable_notrace() thunk
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1588983071;
+        bh=OCJ83ytuwXv45OnOiAlJSMIZEo8q5Uw1eby5O6JdPes=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=axpwNfALf/EVsvKzEzzMW+KXTEoKQb358I0WBAbtpPFljrL8kJsrLQBDjZkf7sAII
+         zdJF+t2MNaadDgYNIXdOFG92HZQYNM18X+ektT/WCk89veErSelzWZvuAEU8GKOlXE
+         jGxzxUIauVOImL7vDDi2/VMD2swE9u5OIgzlYUDI=
+Date:   Sat, 9 May 2020 09:11:07 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+Subject: Re: [PATCH] tools/bootconfig: Fix apply_xbc() to return zero on
+ success
+Message-Id: <20200509091107.eb4f517a93ff2e0ae5e64b93@kernel.org>
+In-Reply-To: <20200509081424.7d0d21270f1725b5cf9a8535@kernel.org>
+References: <20200508111349.3b599bde@gandalf.local.home>
+        <20200509081424.7d0d21270f1725b5cf9a8535@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> The preempt_enable_notrace() ASM thunk is called from tracing, entry code
-> RCU and other places which are already in or going to be in the noinstr
-> section which protects sensitve code from being instrumented.
+On Sat, 9 May 2020 08:14:24 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-This text and $SUBJECT agree that you're talking about
-preempt_enable_notrace(), but:
+> On Fri, 8 May 2020 11:13:49 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > The return of apply_xbc() returns the result of the last write() call, which
+> > is not what is expected. It should only return zero on success.
+> > 
+> > Link: https://lore.kernel.org/r/20200508093059.GF9365@kadam
+> > 
+> 
+> Thanks for fixing!
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
 
-> +       THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace, check_if=1
+Oh, and tested too.
 
-You actually seem to be changing preempt_schedule_notrace().
+---
+...
+test case 40 (samples/good-tree.bconf)... 
+Apply samples/good-tree.bconf to ./initrd-tNhd
+	Number of nodes: 16
+	Size: 136 bytes
+	Checksum: 9171
+		[OK]
 
-The actual code in question has this comment:
+All tests passed
+---
 
-/**
- * preempt_schedule_notrace - preempt_schedule called by tracing
- *
- * The tracing infrastructure uses preempt_enable_notrace to prevent
- * recursion and tracing preempt enabling caused by the tracing
- * infrastructure itself. But as tracing can happen in areas coming
- * from userspace or just about to enter userspace, a preempt enable
- * can occur before user_exit() is called. This will cause the scheduler
- * to be called when the system is still in usermode.
- *
- * To prevent this, the preempt_enable_notrace will use this function
- * instead of preempt_schedule() to exit user context if needed before
- * calling the scheduler.
- */
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Which is no longer really applicable to x86 -- in the state that this
-comment nonsensically refers to as "userspace", x86 *always* has IRQs
-off, which means that preempt_enable() will not schedule.
+BTW, I might better add a test summary to the test script (and move it
+into kselftest?)
 
-So I'm guessing that the issue you're solving is that we have
-redundant preempt disable/enable pairs somewhere in the bowels of
-tracing code that is called with IRQs off, and objtool is now
-complaining.  Could the actual code in question be fixed to assert
-that IRQs are off instead of disabling preemption?  If not, can you
-fix the $SUBJECT and changelog and perhaps add a comment to the code
-as to *why* you're checking IF?  Otherwise some intrepid programmer is
-going to notice it down the road, wonder if it's optimizing anything
-useful at all, and get rid of it.
+Thank you,
+
+> 
+> > Fixes: 8842604446d1 ("tools/bootconfig: Fix resource leak in apply_xbc()")
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  tools/bootconfig/main.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+> > index 001076c51712..0efaf45f7367 100644
+> > --- a/tools/bootconfig/main.c
+> > +++ b/tools/bootconfig/main.c
+> > @@ -337,6 +337,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+> >  		pr_err("Failed to apply a boot config magic: %d\n", ret);
+> >  		goto out;
+> >  	}
+> > +	ret = 0;
+> >  out:
+> >  	close(fd);
+> >  	free(data);
+> > -- 
+> > 2.20.1
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
