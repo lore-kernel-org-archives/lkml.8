@@ -2,121 +2,243 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6AEC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C51C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B9D218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A56520746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgEIBMv (ORCPT
+        id S1728501AbgEIBOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:12:51 -0400
-Received: from cmccmta1.chinamobile.com ([221.176.66.79]:3528 "EHLO
-        cmccmta1.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEIBMv (ORCPT
+        Fri, 8 May 2020 21:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbgEIBOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:12:51 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app01-12001 (RichMail) with SMTP id 2ee15eb60383602-60882; Sat, 09 May 2020 09:12:35 +0800 (CST)
-X-RM-TRANSID: 2ee15eb60383602-60882
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.145.40] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65eb6038203c-643e9;
-        Sat, 09 May 2020 09:12:35 +0800 (CST)
-X-RM-TRANSID: 2ee65eb6038203c-643e9
-Subject: Re: [PATCH] USB: host: ehci: Add error handlinginehci_mxc_drv_probe()
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200508114453.15436-1-tangbin@cmss.chinamobile.com>
- <20200508114858.GA4085349@kroah.com>
- <fb147bdf-faaa-8919-407e-89b4fe1337a6@cmss.chinamobile.com>
- <20200508143110.GA447591@kroah.com>
- <107353c0-09f2-858d-2a87-498e2d8584c6@cmss.chinamobile.com>
- <66a6bbca-4218-fb71-7284-37f73d5a3c58@cogentembedded.com>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <012c911d-e877-d7b8-60ab-2e70e67e62cb@cmss.chinamobile.com>
-Date:   Sat, 9 May 2020 09:13:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 8 May 2020 21:14:11 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A561CC061A0C;
+        Fri,  8 May 2020 18:14:10 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 1D7E72A2EDA
+Received: by earth.universe (Postfix, from userid 1000)
+        id 635103C08C6; Sat,  9 May 2020 03:14:06 +0200 (CEST)
+Date:   Sat, 9 May 2020 03:14:06 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, David Heidelberg <david@ixit.cz>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ramakrishna.pallala@intel.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/9] dt-bindings: power: supply: Add device-tree binding
+ for Summit SMB3xx
+Message-ID: <20200509011406.hs7nj3g7f5pzetxp@earth.universe>
+References: <20200329161552.215075-1-david@ixit.cz>
+ <20200329162128.218584-5-david@ixit.cz>
+ <20200410164905.GA719@bogus>
+ <8c4ab1ce-1947-ab38-3f8c-9055406428e4@gmail.com>
+ <CAL_JsqJgZaQux04vdkShX4vkmOK5T-H6tOXt7Da19jgG0P76-Q@mail.gmail.com>
+ <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <66a6bbca-4218-fb71-7284-37f73d5a3c58@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="trk2swxtlkihf4zn"
+Content-Disposition: inline
+In-Reply-To: <687db60d-fea9-f157-d4ce-907189bb3cc7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei:
 
-On 2020/5/9 4:27, Sergei Shtylyov wrote:
-> On 05/08/2020 06:03 PM, Tang Bin wrote:
+--trk2swxtlkihf4zn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Apr 15, 2020 at 06:30:02PM +0300, Dmitry Osipenko wrote:
+> 15.04.2020 17:27, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Fri, Apr 10, 2020 at 2:02 PM Dmitry Osipenko <digetx@gmail.com> wrot=
+e:
+> >>
+> >> 10.04.2020 19:49, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> ...
+> >>>> +  summit,max-chg-curr:
+> >>>> +    description: Maximum current for charging (in uA)
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >>>> +
+> >>>> +  summit,max-chg-volt:
+> >>>> +    description: Maximum voltage for charging (in uV)
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >>>> +    minimum: 3500000
+> >>>> +    maximum: 4500000
+> >>>> +
+> >>>> +  summit,pre-chg-curr:
+> >>>> +    description: Pre-charging current for charging (in uA)
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >>>> +
+> >>>> +  summit,term-curr:
+> >>>> +    description: Charging cycle termination current (in uA)
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> ...
+> >>> These are all properties of the battery attached and we have standard
+> >>> properties for some/all of these.
+> >>
+> >> Looks like only four properties seem to be matching the properties of
+> >> the battery.txt binding.
+> >>
+> >> Are you suggesting that these matching properties should be renamed
+> >> after the properties in battery.txt?
+> >=20
+> > Yes, and that there should be a battery node.
+>=20
+> Usually, it's a battery that has a phandle to the power-supply. Isn't it?
+
+There are two things: The infrastructure described by=20
+Documentation/devicetree/bindings/power/supply/power-supply.yaml is
+used for telling the operating system, that a battery is charged
+by some charger. This is done by adding a power-supplies =3D <&phandle>
+in the battery fuel gauge node referencing the charger and probably
+what you mean here.
+
+Then we have the infrastructure described by=20
+Documentation/devicetree/bindings/power/supply/battery.txt, which
+provides data about the battery cell. In an ideal world we would
+have only smart batteries providing this data, but we don't live
+in such a world. So what we currently have is a binding looking
+like this:
+
+bat: dumb-battery {
+    compatible =3D "simple-battery";
+
+    // data about battery cell(s)
+};
+
+fuel-gauge {
+    // fuel-gauge specific data
+
+    supplies =3D <&charger>;
+    monitored-battery =3D <&bat>;
+};
+
+charger: charger {
+    // charger specific data
+
+    monitored-battery =3D <&bat>;
+};
+
+In an ideal world, charger should possibly reference fuel-gauge
+node, which could provide combined data. Right now we do not have
+the infrastructure for that, so it needs to directly reference
+the simple-battery node.
+
+> > Possibly you should add
+> > new properties battery.txt. It's curious that different properties are
+> > needed.
+>=20
+> I guess it should be possible to make all these properties generic.
+>=20
+> Sebastian, will you be okay if we will add all the required properties
+> to the power_supply_core?
+
+Extending battery.txt is possible when something is missing. As Rob
+mentioned quite a few are already described, though:
+
+summit,max-chg-curr =3D> constant-charge-current-max-microamp
+summit,max-chg-volt =3D> constant-charge-voltage-max-microvolt
+summit,pre-chg-curr =3D> precharge-current-microamp
+summit,term-curr =3D> charge-term-current-microamp
+
+I think at least the battery temperature limits are something, that
+should be added to the generic code.
+
+> > Ultimately, for a given battery technology I would expect
+> > there's a fixed set of properties needed to describe how to charge
+> > them.
+>=20
+> Please notice that the charger doesn't "only charge" the battery,
+> usually it also supplies power to the whole device.
+>=20
+> For example, when battery is fully-charged and charger is connected to
+> the power source (USB or mains), then battery may not draw any current
+> at all.
+
+It is also a question of how good the charging process should be.
+Technically I can charge a single cell Li-ion battery without
+knowing much, but it can reduce battery life and/or be very slow.
+It might even be dangerous, if charging is done at high
+temperatures. Also some of the properties in the battery binding
+are not about charging, but about gauging. Some devices basically
+have only options to measure voltage and voltage drop over a
+resistor and everything else must be done by the operating system.
+
+> > Perhaps some of these properties can just be derived from other
+> > properties and folks are just picking what a specific charger wants.
+>=20
+> Could be so, but I don't know for sure.
+
+I don't think we have things, that can be derived with a reasonable
+amount of effort in the existing simple-battery binding, except for
+energy-full-design-microwatt-hours & charge-full-design-microamp-hours.
+
+> Even if some properties could be derived from the others, it won't hurt
+> if we will specify everything explicitly in the device-tree.
+>=20
+> > Unfortunately, we have just a mess of stuff made up for each charger
+> > out there. I don't have the time nor the experience in this area to do
+> > much more than say do better.
 >
->>>>> On Fri, May 08, 2020 at 07:44:53PM +0800, Tang Bin wrote:
->>>>>> The function ehci_mxc_drv_probe() does not perform sufficient error
->>>>>> checking after executing platform_get_irq(), thus fix it.
->>>>>>
->>>>>> Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
->>>>>> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->>>>>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->>>>>> ---
->>>>>>     drivers/usb/host/ehci-mxc.c | 2 ++
->>>>>>     1 file changed, 2 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
->>>>>> index a1eb5ee77..a0b42ba59 100644
->>>>>> --- a/drivers/usb/host/ehci-mxc.c
->>>>>> +++ b/drivers/usb/host/ehci-mxc.c
->>>>>> @@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
->>>>>>         }
->>>>>>         irq = platform_get_irq(pdev, 0);
->>>>>> +    if (irq < 0)
->>>>>> +        return irq;
->>>>> <= ?
->>>> In the file 'drivers/base/platform.c'， the function platform_get_irq() is
->>>> explained and used as follows:
->>>>
->>>>        * Gets an IRQ for a platform device and prints an error message if
->>>> finding the
->>>>        * IRQ fails. Device drivers should check the return value for errors so
->>>> as to
->>>>        * not pass a negative integer value to the request_irq() APIs.
->>>>        *
->>>>        * Example:
->>>>        *        int irq = platform_get_irq(pdev, 0);
->>>>        *        if (irq < 0)
->>>>        *            return irq;
->>>>        *
->>>>        * Return: IRQ number on success, negative error number on failure.
->>>>
->>>> And in my hardware experiment, even if I set the irq failed deliberately in
->>>> the DTS, the returned value is negative instead of zero.
->>> Please read the thread at
->>>      https://lore.kernel.org/r/20200501224042.141366-1-helgaas%40kernel.org
->>> for more details about this.
->>>
->> Great, It looks beautiful, finally someone took a knife to the file 'platform.c'.
->     I thought I did that already couple years ago, when returned 0 from platform_get_irq() could mean both IRQ # and error... :-)
-Can you tell me what platform can returned 0? I want to do this test in 
-the hardware.
->> I have been studied this place for a long time, and don't know what platform can return 0, which made me curious.
->>
->> So the example should be:
->>
->>       *        int irq = platform_get_irq(pdev, 0);
->>       *        if (irq <= 0)
->>       *            return irq;
->     And you then return 0 (success) as if your probe() succeeded. Congratulations! :-P
+> I don't think it's a mess in the kernel. For example, it's common that
+> embedded controllers are exposed to the system as "just a battery",
+> while in fact it's a combined charger + battery controller and the
+> charger parameters just couldn't be changed by SW.
 
-Thanks,
+A good EC driver exposes a charger and a battery device, so that
+userspace can easily identify if a charger is connected.
 
-Tang Bin
+> In a case of the Nexus 7 devices, the battery controller and charger
+> controller are two separate entities in the system. The battery
+> controller (bq27541) only monitors status of the battery (charge level,
+> temperature and etc).
 
+-- Sebastian
 
+--trk2swxtlkihf4zn
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl62A9kACgkQ2O7X88g7
++pr27BAAnAweg7Qzq9Lo0hr3uEUfsmVoN451+mcf9GIc1ld8kEb/7bcCWuirWqRD
+/eVM0QNp2RF2dpIEpZLpXG/56gxHEf1hsZUNMC9ZtVK6nReHBJxyzt6vKbpiSKX9
+ZXvvodLiUrFp1E6g/AmlpoOwHpe7uQY7npv5NpCWfBqodTGKbVzyhtgEIIXnFe+G
+qxI7R/YTqtoifL1aA8XZGJfpBA0gAjFI6QodXJfYhpom0n6RpbPjFUp4XbgGE78I
+WxMXiqEu8oXR31CrTklTvt9q/szJF6njztZzmrF8pxfLyGpJ879I74js6Kgcg/eY
+uev0EQ+Qv9axcQ4qWHr9+FSvDvdhT99lp3peHCSRx4BbnobydskTeio7dw0oG2eY
+PSMEyFMEbavJR/Ylnupuep3PFP1Dq++9IZ3LUmUUoNGISpaRJ2fMbapIii5zEtEI
+PC4+LGktA/QFDnPhKyHpI8qXLlQniywQmSuDkSMVKRk7d0IYLQogTETnepW4xbkQ
+iQdAf65XTg31IJAT8LF4YHorumWuVtiKx7VaQwcqrMfnrnX+6JIE+ManxY0X5P86
+0CFUqVoXP9Ktr6I26Tsc0ZKmz0epkoAmSthpnZfHzOi56oC8s455sQzGO9Ew/PLN
+mLNbGKmGB7QoPbUaQTY4lgOHGyNWA4UfZKmRo1h1w3Xy8oTBFmM=
+=rBVs
+-----END PGP SIGNATURE-----
+
+--trk2swxtlkihf4zn--
