@@ -2,89 +2,218 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3587C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF324C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFE321473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF62821582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UDXkhZzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgEIWmk (ORCPT
+        id S1728332AbgEIWs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 18:42:40 -0400
-Received: from smtprelay0083.hostedemail.com ([216.40.44.83]:48244 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726771AbgEIWmk (ORCPT
+        Sat, 9 May 2020 18:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbgEIWs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 18:42:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 0436318029123;
-        Sat,  9 May 2020 22:42:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: force24_16f61c6693f2a
-X-Filterd-Recvd-Size: 2622
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  9 May 2020 22:42:37 +0000 (UTC)
-Message-ID: <fc5cf8da8e70ebb981a9fc3aec6834c74197f0ed.camel@perches.com>
-Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
- paths
-From:   Joe Perches <joe@perches.com>
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, fthain@telegraphics.com.au,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Sat, 09 May 2020 15:42:36 -0700
-In-Reply-To: <20200509111321.51419b19@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200508172557.218132-1-christophe.jaillet@wanadoo.fr>
-         <20200508185402.41d9d068@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <50ef36cd-d095-9abe-26ea-d363d11ce521@wanadoo.fr>
-         <20200509111321.51419b19@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Sat, 9 May 2020 18:48:58 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1F2C05BD0A
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 15:48:58 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id r66so11870304oie.5
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n1z6oppBATgO51fKBm6uoe5dBY+8qJAJ+NcU9svBiBE=;
+        b=UDXkhZzqvn6HISO/zwZFZ7FZVudKN1BUwwPpa1bhMiQAp57zi77qXCZkWGSGbJnaj+
+         CpidWsT8xIRgF3KBvMaUmHntjppKEZZbn2EZCUsY4wsc5xKCasW7y1lBeLcBAmQozU70
+         +WBgYOmN9SKxTya/oya8RORLtmXdR1BuD2x84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n1z6oppBATgO51fKBm6uoe5dBY+8qJAJ+NcU9svBiBE=;
+        b=n6NRfTm317q8ko5ftHboKjibJFjSf2j63zsHh3+WezWELOAiY+8koJZT9wrgKeW28Z
+         P+ai7ktXnf6gsg5AIE9HX9UsGwOIGzbjp2kEgHMyuWB/vxU09PeD3MVCb4uY9q8CNG30
+         nPivI/LDtPdgqokmmNCygDloJ57jU4b0248C9uoZ+lvcSDVtWPnHY1az5SaYG2RGEjUk
+         9PT4JXJ8MG44XG2u4v3LEnZfJZ512V6Ux6aGzXs9a8pL9P7X8bAD26aleKDdFQn9n0Zk
+         Dt54BSyIFS6jVcK1JVie7miE/CeSp3ar0g0IVMWDIL0GBKXM6+AbSn/Bs2h8waQY7tzM
+         p4rQ==
+X-Gm-Message-State: AGi0PuatX8L73O/OBSC7bTKsE4qt2eGhIYQexERSzvnnYjhrPPIKds4G
+        eaeDqboIAlTwEVvk5sExpMq3SdzqRhU=
+X-Google-Smtp-Source: APiQypKf2xfeQejVZYr5xi48sdcvR5oU4kYsfCWlhsYt2JNRfxc4F7SO0wvRu0St2GsNsOqwwND6JA==
+X-Received: by 2002:a54:4585:: with SMTP id z5mr15696440oib.89.1589064537520;
+        Sat, 09 May 2020 15:48:57 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id a124sm1591823oib.43.2020.05.09.15.48.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 15:48:57 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id j26so4608924ots.0
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:48:56 -0700 (PDT)
+X-Received: by 2002:ab0:b13:: with SMTP id b19mr6914696uak.91.1589064534355;
+ Sat, 09 May 2020 15:48:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200507213500.241695-1-dianders@chromium.org> <20200509201511.GD30802@ravnborg.org>
+In-Reply-To: <20200509201511.GD30802@ravnborg.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Sat, 9 May 2020 15:48:42 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+Message-ID: <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
+ Plug Detect
+To:     Sam Ravnborg <sam@ravnborg.org>, LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-05-09 at 11:13 -0700, Jakub Kicinski wrote:
-> On Sat, 9 May 2020 18:47:08 +0200 Christophe JAILLET wrote:
-> > Le 09/05/2020 à 03:54, Jakub Kicinski a écrit :
-> > > On Fri,  8 May 2020 19:25:57 +0200 Christophe JAILLET wrote:  
-> > > > @@ -527,8 +531,9 @@ static int mac_sonic_platform_remove(struct platform_device *pdev)
-> > > >   	struct sonic_local* lp = netdev_priv(dev);
-> > > >   
-> > > >   	unregister_netdev(dev);
-> > > > -	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
-> > > > -	                  lp->descriptors, lp->descriptors_laddr);
-> > > > +	dma_free_coherent(lp->device,
-> > > > +			  SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
-> > > > +			  lp->descriptors, lp->descriptors_laddr);
-> > > >   	free_netdev(dev);
-> > > >   
-> > > >   	return 0;  
-> > > This is a white-space only change, right? Since this is a fix we should
-> > > avoid making cleanups which are not strictly necessary.
-> > 
-> > Right.
-> > 
-> > The reason of this clean-up is that I wanted to avoid a checkpatch 
-> > warning with the proposed patch and I felt that having the same layout 
-> > in the error handling path of the probe function and in the remove 
-> > function was clearer.
-> > So I updated also the remove function.
-> 
-> I understand the motivation is good.
+Hi,
 
-David, maybe I missed some notification about Jakub's role.
+On Sat, May 9, 2020 at 1:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Douglas.
+>
+> On Thu, May 07, 2020 at 02:34:54PM -0700, Douglas Anderson wrote:
+> >
+> > As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
+> > Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
+> > kinda useless, at least for embedded DisplayPort (eDP).  However,
+> > despite the fact that the actual HPD pin on the bridge is mostly
+> > useless for eDP, the concept of HPD for eDP still makes sense.  It
+> > allows us to optimize out a hardcoded delay that many panels need if
+> > HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
+> > events to measure timing from and we have to assume the worst case if
+> > we can't actually read HPD.
+> >
+> > One way to use HPD for eDP without using the mostly useless HPD pin on
+> > ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
+> > like to a GPIO.  This works great because eDP panels aren't physically
+> > hotplugged.  That means the debouncing logic that caused us problems
+> > wasn't really needed and a raw GPIO works great.
+> >
+> > As per the above, a smart board designer would realize the value of
+> > HPD and choose to route it to a GPIO somewhere on the board to avoid
+> > the silly sn65dsi86 debouncing.  While said "smart designer" could
+> > theoretically route HPD anywhere on the board, a really smart designer
+> > would realize that there are several GPIOs on the bridge itself that
+> > are nearly useless for anything but this purpose and route HPD to one
+> > of those.
+> >
+> > This series of patches is intended to allow the scenario described
+> > above.
+> >
+> > This patch has been tested on a board that is not yet mainline.  On
+> > the hardware I have:
+> > - Panel spec says HPD could take up to 200 ms to come up, so without
+> >   HPD hooked up we need to delay 200 ms.
+> > - On my board the panel is powered by the same rail as the
+> >   touchscreen.  By chance of probe order the touchscreen comes up
+> >   first.  This means by the time we check HPD in ti_sn_bridge_enable()
+> >   it's already up.  Thus we can use the panel on 200 ms earlier.
+> > - If I measure HPD on this pane it comes up ~56 ms after the panel is
+> >   powered.  This means I can save 144 ms of delay.
+> >
+> > Side effects (though not main goals) of this series are:
+> > - ti-sn65dsi86 GPIOs are now exported in Linux.
+> > - ti-sn65dsi86 bindings are converted to yaml.
+> > - Common panel bindings now have "hpd-gpios" listed.
+> > - The simple-panel driver in Linux can delay in prepare based on
+> >   "hpd-gpios"
+> > - ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
+> >   if HPD isn't hooked up.
+> >
+> > Changes in v5:
+> > - Use of_xlate so that numbers in dts start at 1, not 0.
+> > - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
+> >
+> > Changes in v4:
+> > - Don't include gpio.h
+> > - Use gpiochip_get_data() instead of container_of() to get data.
+> > - GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
+> > - Use Linus W's favorite syntax to read a bit from a bitfield.
+> > - Define and use SN_GPIO_MUX_MASK.
+> > - Add a comment about why we use a bitmap for gchip_output.
+> > - Tacked on "or is otherwise unusable." to description.
+> >
+> > Changes in v3:
+> > - Becaue => Because
+> > - Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
+> > - More comments about how powering off affects us (get_dir, dir_input).
+> > - Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
+> > - Use a bitmap rather than rolling my own.
+> > - Remind how gpio_get_optional() works in the commit message.
+> > - useful implement => useful to implement
+> >
+> > Changes in v2:
+> > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
+> > - ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
+> > - ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
+> > - specification => specifier.
+> > - power up => power.
+> > - Added back missing suspend-gpios.
+> > - data-lanes and lane-polarities are are the right place now.
+> > - endpoints don't need to be patternProperties.
+> > - Specified more details for data-lanes and lane-polarities.
+> > - Added old example back in, fixing bugs in it.
+> > - Example i2c bus is just called "i2c", not "i2c1" now.
+> > - ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
+> > - ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
+> >
+> > Douglas Anderson (6):
+> >   drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+> >   dt-bindings: display: Add hpd-gpios to panel-common bindings
+> >   drm/panel-simple: Support hpd-gpios for delaying prepare()
+> >   dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
+> >   dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
+> >   arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
+>
+> Applied:
+> >   dt-bindings: display: Add hpd-gpios to panel-common bindings
+> >   drm/panel-simple: Support hpd-gpios for delaying prepare()
+> to drm-misc-next.
+>
+> The others was missing reviews so we need to wait for feedback.
 
-What is Jakub's role in relation to the networking tree?
+Thanks!
 
+Given the previous feedback from Linus W, Stephen, and Laurent I
+expect things are good enough to land now, but it'd be good to get
+confirmation (I removed some of the previous tags just to get
+confirmation).  If we can get review tags early next week maybe it'll
+still be in time to land for 5.8?
 
+-Doug
