@@ -2,85 +2,135 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83EAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E0DC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B4821473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588984859;
-	bh=RCw11NNfdLA9O2Gfd0f9tHY27w1jPYg/KFp+7vwuzdg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k7GknY6CDaZcfx9mT4haLG8Yl8b8UVKrJOAj5y+noxOWp6nLZjCusxLH3rL7lS+y7
-	 H5xgsy0DMfDftAGIxQNQJo3AqUFgpJLtTO8RCJpmS+OUTICyJOAp6JFG4zNlpA4Vpw
-	 05PAcCe+hMSZYbNAXAVShhvhnhNoCNUHWHg8Vqgg=
+	by mail.kernel.org (Postfix) with ESMTP id C0D1820746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BCOtYKeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEIAk6 (ORCPT
+        id S1728417AbgEIAl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgEIAk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:40:58 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C731324956
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 00:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588984858;
-        bh=RCw11NNfdLA9O2Gfd0f9tHY27w1jPYg/KFp+7vwuzdg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yJptV3Wm8w/A4pC+pvYOUyvkPnUZdeANLxfdfyjyGQGrEk9gXrd2NRZBgCoNP4e6i
-         U1vwKIIb4GmzzATiJnBf30UtsbTktKMywC2plS2rUvWjW2CZjXUUnDQU1lkppQRD36
-         ee0+a59lte/mITYaCkmuccYPYHFSpDqeIdI5AvQ0=
-Received: by mail-wm1-f50.google.com with SMTP id m24so2396945wml.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 17:40:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYckpdgxZC1Itgb27fdlBDWLhRZax5y0wVBulDy4+6tv7cCVMps
-        rYZsORpJvU5Hxu0YWFwSBTuT03wZ9DPP9KssP/aNGw==
-X-Google-Smtp-Source: APiQypLkEzHCvuzLfausBBeLT2C0NSBCgttRWUiv4mRrwscFYLcZKHc+Z4XrNWPFi5vEA2Au2LZM9rc/aio/S/tTJXE=
-X-Received: by 2002:a1c:9989:: with SMTP id b131mr18423641wme.176.1588984856328;
- Fri, 08 May 2020 17:40:56 -0700 (PDT)
+        Fri, 8 May 2020 20:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727878AbgEIAl2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:41:28 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8AE6C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 17:41:27 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id o198so1845699ybg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 17:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=apt6PtlX6aCenSSTB3xM+2wfl3pUWi+4h8MqzP3M6e8=;
+        b=BCOtYKeHkJn1rMdkWGn8DLQyW/XIssArSPBRpqsIdRePmOcVhYhV7A7kBYytr7wBTV
+         gjCPDuvKfioGwh3LP1ABMq8WtUgMqFZ/lK4LtjOmm206oksXmKGRTJPeD+hr6TjpeBw5
+         NRn0LhZ1DKqw1ryR/u8kY3VdmD5oPvPQ8l+YNAM7xdDU3vyc0ihsX74ASYtRtO3lp4rh
+         d8iT/6guSGnrYgE8C2qNz3cBOciN5SPlQV50d0UWY4o5WJ/DCS7HnZRR1p4BhdrcM5Cu
+         DBPcaCsQCGniJa8djxiVUQhK/9BlioqAEwamblDF1bfQ9Ap21IAyU7hAYTdbG4vCsY4O
+         ZbLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=apt6PtlX6aCenSSTB3xM+2wfl3pUWi+4h8MqzP3M6e8=;
+        b=s39VEZHe/5js/ocEuATK2kDWZ+Ckbsyn5lhQo1Uijgdd+vhRbB4ubq/C7fK/HTIJ59
+         PDRTZJJNRLofTEmGAP2avw/LGjGrJYi1L4Ngl2vj8h7NbcD0aItVYJL6mQNbQROcePu7
+         tLmHV4cTiF9AjGU/1N7QGe2hF4HK4OGVoURyLPjJCnUfDxmukrlFDK/iXoyFeCg8Zy0G
+         /rM1v52mhXQwG4j9+Iw9PqWp/wclbbx+uJkLdWojJyCOtjayMWVzKzeoa9nLsxsAHyad
+         TUgyohQ82qQZ02LEtBTxk4OFQxxSt5+TBVyRyY8stvF1ihEuNSKSeKqxLN9pfldBZtyY
+         bKeg==
+X-Gm-Message-State: AGi0PuZKNN7QY/KQ60sA5+7Pn2KPzb0tsjH4CPIbT+hibQqIkWE58S/R
+        a+6p2hO5En5kN8hTpAM8tpF5hXkbJfjbqcXGD40z2g==
+X-Google-Smtp-Source: APiQypI98dvYPae1t1/9C5x+HbnaKufpUwiqItw27bjaCb8Vy0Kc2F+ZoR5YTGNY2wGWQ5ZwzUEcQDdxchTTyY2UUAs=
+X-Received: by 2002:a25:d688:: with SMTP id n130mr8769766ybg.324.1588984886878;
+ Fri, 08 May 2020 17:41:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134903.531534675@linutronix.de>
-In-Reply-To: <20200505134903.531534675@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 8 May 2020 17:40:45 -0700
-X-Gmail-Original-Message-ID: <CALCETrWbQKyf2+bvCszt03agZWnfxfLqi-rqeGMKE8a-3ygQxg@mail.gmail.com>
-Message-ID: <CALCETrWbQKyf2+bvCszt03agZWnfxfLqi-rqeGMKE8a-3ygQxg@mail.gmail.com>
-Subject: Re: [patch V4 part 3 03/29] x86/entry: Disable interrupts for
- native_load_gs_index() in C code
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
+References: <20200508053629.210324-1-irogers@google.com> <20200508053629.210324-7-irogers@google.com>
+ <20200509003936.GH3538@tassilo.jf.intel.com>
+In-Reply-To: <20200509003936.GH3538@tassilo.jf.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 8 May 2020 17:41:15 -0700
+Message-ID: <CAP-5=fWr57Z6LP8XcNSBanNfuYPntMjJeNHoXUG6FRusP2KwcQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 06/14] perf evsel: fix 2 memory leaks
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Fri, May 8, 2020 at 5:39 PM Andi Kleen <ak@linux.intel.com> wrote:
 >
-> There is absolutely no point in doing this in ASM code. Move it to C.
+> On Thu, May 07, 2020 at 10:36:21PM -0700, Ian Rogers wrote:
+> > If allocated, perf_pkg_mask and metric_events need freeing.
 >
+> All these patches at the beginning look like straight forward
+> bug fixes and are really independent of the new features.
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Thanks, for context I added them after v1 to make it easier to apply
+the patches.
+
+Ian
+
+> For them
+>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/evsel.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 28683b0eb738..05bb46baad6a 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -1263,6 +1263,8 @@ void evsel__exit(struct evsel *evsel)
+> >       zfree(&evsel->group_name);
+> >       zfree(&evsel->name);
+> >       zfree(&evsel->pmu_name);
+> > +     zfree(&evsel->per_pkg_mask);
+> > +     zfree(&evsel->metric_events);
+> >       perf_evsel__object.fini(evsel);
+> >  }
+> >
+> > --
+> > 2.26.2.645.ge9eca65c58-goog
+> >
