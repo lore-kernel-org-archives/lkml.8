@@ -2,141 +2,259 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F69C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E9EC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BA821775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:03:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="magyDjl8"
+	by mail.kernel.org (Postfix) with ESMTP id 8FEED24953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgEIHDG (ORCPT
+        id S1728954AbgEIHM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 03:03:06 -0400
-Received: from mout.web.de ([217.72.192.78]:51543 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgEIHDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 03:03:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1589007770;
-        bh=kDJTCtXtYcbpkL8hwDBkWtiOYtx0rgVWacu2fHE5bgs=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=magyDjl8pWAeZ96slZ6RUzMA0AsIVXbLL2gMZykCe+0RbUKRz2DMgzfQ/uoNAMEn6
-         0Co31R+o2QQMmv55caPaxnwIFOvhJZxBfh0dbgpJeK3LmY1zYpHrfDwNbV0vX+eOeY
-         g1DrkAXXsF2EGcUSY4DmsGWFji0Y8AWLVz3Sv2mg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.147.78]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MGxQX-1jJrFT33wp-00E5xg; Sat, 09
- May 2020 09:02:48 +0200
-To:     Hongbo Yao <yaohongbo@huawei.com>, linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power: reset: ltc2952: remove set variable but unused
- value
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e40a971a-68b8-8d63-41d1-2617763fb042@web.de>
-Date:   Sat, 9 May 2020 09:02:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5JyDbG3bZgXKd8ldDbOvYEuCINmvvP7IenG8Byblf/EnXDgURO1
- rK/PisbhNrDJxj8JXydUHKe/zX5dMQ8nKmpIUy61FQPo9eTXG949oW358p3pa3Y3w3AyAWB
- +pBIg8uBGa7GUGiEvxO2/2vOWNhgHh28SB9FOSuc/4Aa2Eah/uxr+KeR86l2yVEFOa+HrxE
- WK/xM1vxRQFP6esAucBgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WMeo8hbqx+Q=:2YDgLNqRWUU38a+EQKoLcm
- NiLuIfBQ1krB03Z0pPVpCOAXlxE9NOhNOMjHSFdQSFfi5Xm3icZLDbn3mrf2xjPAdKpGlkE6v
- QMMpbAzNlS1Pq88K8E6jSv68ixX/FgzhDkK0KbzMhRdMNwlZPFvB35XnfAMWZpafcMKVeQiGQ
- T0fO/aZILLhTsyvxzzSQH9KqM3udg1AL34RwznTU09Z4/tcanhdhTaLiKzQOY69exGH0Ow8pU
- uMloq0ShWrgamhyAlmanYzMn6qZiQFQjPcuThTmRjQPOwXA28t47slh33P1s7etbZ44dLgj+1
- GEYPhzvA4g7JxMw19UM9pHgWK4lo48GxL8AC43FTfTkC7hHc0AsCktQLsTFVwvrphbN96DhM9
- KR3s/CSncCJKtsopUOWhEHbNOdHavtiaWSCGKUcXZR8/Z6/cQW+CsgrXDtX6yMPdaMsb+aOkb
- UoRBh9zWUfad3iS9PMQzB67UtYQJLk/13ysILDZOymS8gOKyrL81EhI2EPdI38bdy9kRYswAF
- wh2h+vEjqrgyxJ7CdVFzvbNVjH89DsA2toeFYDEfS4/1qcGdEi1ts6EfRh8hVMn+Wzqlh3RlI
- Uo/hBlHzxiBvscS5YFcKtsBz74jXwUYBpBdesyil3cAAqsao/vwPsstW163iA2LS+67utmaWp
- QaGx1eMHqV/JvBvIoGppTcVVdZmnq7EIZ4ZkBNXW9juJEoCzwea5By7mZoCoVq8F2Y1z/+f85
- 8r45Be44qFOFv1xjfeldL8CF4ZpqaRS7F422lq0iJ4f6h9V2ILBFCzb8/NL+VdvadOl0vlZRQ
- LMcX1btK/BV6MAFm5YJ63fsUE9vqLLLaQ9JW9e+eeQFe6KkoY+t2vHmjt7cck7PFWI5LRA9M3
- cc1eD5vbXF6VT2Rb+u2wzpr4ix7lD9Bwq9XePUZlRjGZjwHB2SGI8rfXRVvgKg1uakuSpVPEq
- 47Y8VrJh+sEIB3C4ZBnRIbEhu9+D/uyD+HMPqNi3Mfye+D6VDJJdfOotq6gu+pWaivCT4DGXt
- lljVVC0lAqQ0BlFWlRZ2g6W3nRvV0Qhwlmol+ph5B+2LvevtjPL9/ans6jjDZD6BWI1Gw183W
- FcOEV076JXxOsv3PGoD2xLozWwp2LpEWocbjO033UYPbtjDDwozCCMXXGgChpmhhPhourLcD8
- Kf4iCOerx4sx3NaZ624F4K28HOrv5ukD8ZvTPMKof1L2/vLQ/MbY4UxZRd1xqdGSfjiqiE+33
- As2RXX13J0rxS31YH
+        Sat, 9 May 2020 03:12:59 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44591 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728625AbgEIHM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:12:59 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf93sV7ZeMnUyAA--.1S3;
+        Sat, 09 May 2020 15:12:46 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH v2 1/2] MIPS: Loongson: Cleanup cpu_hwmon.c
+Date:   Sat,  9 May 2020 15:12:43 +0800
+Message-Id: <1589008364-2294-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxf93sV7ZeMnUyAA--.1S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Gw4xGrW7GF4fWw4xuw48WFg_yoW3ZFW7pr
+        WDJay09F4UWFs7Gan7Zw47Cry5ArnIgay7G3sxu3s7AanxXF4jqa42yFWYyrn3KrWFqa1f
+        JryDXa1DGa1UWF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8NtIDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> drivers/power/reset/ltc2952-poweroff.c:97:16: warning: variable
-> =E2=80=98overruns=E2=80=99 set but not used [-Wunused-but-set-variable]
+Fix the following checkpatch warnings and errors:
 
-I suggest to improve also this commit message.
+ERROR: do not initialise statics to 0
+#14: FILE: drivers/platform/mips/cpu_hwmon.c:14:
++static int csr_temp_enable = 0;
 
-* Can it be helpful to replace the word =E2=80=9CFixes=E2=80=9D by the tex=
-t
-  =E2=80=9CAn issue was pointed out by the compiler.=E2=80=9D?
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#60: FILE: drivers/platform/mips/cpu_hwmon.c:60:
++static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
 
-* How do you think about to add the wording =E2=80=9CThus delete the menti=
-oned variable.=E2=80=9D
-  to the change description?
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#84: FILE: drivers/platform/mips/cpu_hwmon.c:84:
++static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
 
-* The value of an assigned variable was not reused in this function implem=
-entation.
-  Should this detail be better represented in the final commit subject?
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#85: FILE: drivers/platform/mips/cpu_hwmon.c:85:
++static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
 
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#86: FILE: drivers/platform/mips/cpu_hwmon.c:86:
++static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
 
-Regards,
-Markus
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#87: FILE: drivers/platform/mips/cpu_hwmon.c:87:
++static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
+
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#88: FILE: drivers/platform/mips/cpu_hwmon.c:88:
++static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
+
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#89: FILE: drivers/platform/mips/cpu_hwmon.c:89:
++static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
+
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#90: FILE: drivers/platform/mips/cpu_hwmon.c:90:
++static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
+
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+#91: FILE: drivers/platform/mips/cpu_hwmon.c:91:
++static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
+
+WARNING: Missing a blank line after declarations
+#120: FILE: drivers/platform/mips/cpu_hwmon.c:120:
++	int id = (to_sensor_dev_attr(attr))->index - 1;
++	return sprintf(buf, "CPU %d Temperature\n", id);
+
+WARNING: Missing a blank line after declarations
+#128: FILE: drivers/platform/mips/cpu_hwmon.c:128:
++	int value = loongson3_cpu_temp(id);
++	return sprintf(buf, "%d\n", value);
+
+ERROR: spaces required around that '=' (ctx:VxV)
+#135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
++	for (i=0; i<nr_packages; i++)
+ 	      ^
+
+ERROR: spaces required around that '<' (ctx:VxV)
+#135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
++	for (i=0; i<nr_packages; i++)
+ 	           ^
+
+ERROR: spaces required around that '=' (ctx:VxV)
+#145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
++	for (i=0; i<nr_packages; i++)
+ 	      ^
+
+ERROR: spaces required around that '<' (ctx:VxV)
+#145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
++	for (i=0; i<nr_packages; i++)
+ 	           ^
+
+ERROR: spaces required around that '=' (ctx:VxV)
+#156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
++	for (i=0; i<nr_packages; i++) {
+ 	      ^
+
+ERROR: spaces required around that '<' (ctx:VxV)
+#156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
++	for (i=0; i<nr_packages; i++) {
+ 	           ^
+
+WARNING: line over 80 characters
+#175: FILE: drivers/platform/mips/cpu_hwmon.c:175:
++		csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ drivers/platform/mips/cpu_hwmon.c | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
+index 0d27cb7..fa42b13 100644
+--- a/drivers/platform/mips/cpu_hwmon.c
++++ b/drivers/platform/mips/cpu_hwmon.c
+@@ -11,7 +11,7 @@
+ #include <loongson_hwmon.h>
+ #include <loongson_regs.h>
+ 
+-static int csr_temp_enable = 0;
++static int csr_temp_enable;
+ 
+ /*
+  * Loongson-3 series cpu has two sensors inside,
+@@ -44,7 +44,7 @@ int loongson3_cpu_temp(int cpu)
+ 	case PRID_REV_LOONGSON3A_R3_0:
+ 	case PRID_REV_LOONGSON3A_R3_1:
+ 	default:
+-		reg = (reg & 0xffff)*731/0x4000 - 273;
++		reg = (reg & 0xffff) * 731 / 0x4000 - 273;
+ 		break;
+ 	}
+ 
+@@ -57,7 +57,7 @@ static struct device *cpu_hwmon_dev;
+ 
+ static ssize_t get_hwmon_name(struct device *dev,
+ 			struct device_attribute *attr, char *buf);
+-static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
++static SENSOR_DEVICE_ATTR(name, 0444, get_hwmon_name, NULL, 0);
+ 
+ static struct attribute *cpu_hwmon_attributes[] = {
+ 	&sensor_dev_attr_name.dev_attr.attr,
+@@ -81,14 +81,14 @@ static ssize_t get_cpu_temp(struct device *dev,
+ static ssize_t cpu_temp_label(struct device *dev,
+ 			struct device_attribute *attr, char *buf);
+ 
+-static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
+-static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
+-static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
+-static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
+-static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
+-static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
+-static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
+-static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
++static SENSOR_DEVICE_ATTR(temp1_input, 0444, get_cpu_temp, NULL, 1);
++static SENSOR_DEVICE_ATTR(temp1_label, 0444, cpu_temp_label, NULL, 1);
++static SENSOR_DEVICE_ATTR(temp2_input, 0444, get_cpu_temp, NULL, 2);
++static SENSOR_DEVICE_ATTR(temp2_label, 0444, cpu_temp_label, NULL, 2);
++static SENSOR_DEVICE_ATTR(temp3_input, 0444, get_cpu_temp, NULL, 3);
++static SENSOR_DEVICE_ATTR(temp3_label, 0444, cpu_temp_label, NULL, 3);
++static SENSOR_DEVICE_ATTR(temp4_input, 0444, get_cpu_temp, NULL, 4);
++static SENSOR_DEVICE_ATTR(temp4_label, 0444, cpu_temp_label, NULL, 4);
+ 
+ static const struct attribute *hwmon_cputemp[4][3] = {
+ 	{
+@@ -117,6 +117,7 @@ static ssize_t cpu_temp_label(struct device *dev,
+ 			struct device_attribute *attr, char *buf)
+ {
+ 	int id = (to_sensor_dev_attr(attr))->index - 1;
++
+ 	return sprintf(buf, "CPU %d Temperature\n", id);
+ }
+ 
+@@ -125,6 +126,7 @@ static ssize_t get_cpu_temp(struct device *dev,
+ {
+ 	int id = (to_sensor_dev_attr(attr))->index - 1;
+ 	int value = loongson3_cpu_temp(id);
++
+ 	return sprintf(buf, "%d\n", value);
+ }
+ 
+@@ -132,7 +134,7 @@ static int create_sysfs_cputemp_files(struct kobject *kobj)
+ {
+ 	int i, ret = 0;
+ 
+-	for (i=0; i<nr_packages; i++)
++	for (i = 0; i < nr_packages; i++)
+ 		ret = sysfs_create_files(kobj, hwmon_cputemp[i]);
+ 
+ 	return ret;
+@@ -142,7 +144,7 @@ static void remove_sysfs_cputemp_files(struct kobject *kobj)
+ {
+ 	int i;
+ 
+-	for (i=0; i<nr_packages; i++)
++	for (i = 0; i < nr_packages; i++)
+ 		sysfs_remove_files(kobj, hwmon_cputemp[i]);
+ }
+ 
+@@ -153,7 +155,7 @@ static void do_thermal_timer(struct work_struct *work)
+ {
+ 	int i, value, temp_max = 0;
+ 
+-	for (i=0; i<nr_packages; i++) {
++	for (i = 0; i < nr_packages; i++) {
+ 		value = loongson3_cpu_temp(i);
+ 		if (value > temp_max)
+ 			temp_max = value;
+@@ -172,7 +174,8 @@ static int __init loongson_hwmon_init(void)
+ 	pr_info("Loongson Hwmon Enter...\n");
+ 
+ 	if (cpu_has_csr())
+-		csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
++		csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) &
++				  LOONGSON_CSRF_TEMP;
+ 
+ 	cpu_hwmon_dev = hwmon_device_register(NULL);
+ 	if (IS_ERR(cpu_hwmon_dev)) {
+-- 
+2.1.0
+
