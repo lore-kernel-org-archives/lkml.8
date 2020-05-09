@@ -2,169 +2,276 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E43C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903DDC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7528124955
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589029632;
-	bh=LDChgAezC2cELQgFUK931l+lj9IS98Sqd6nkTxmMfyo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JNbQJJT4DCGfw7EoajTpsv0XO1M9zfDA4Gafol8nKXWEYNwQ+XSDTkeIiv9z6euhN
-	 rFJEWreyNo9kkb/dfrOU3XPGU/BNP2tRyUwBeXgI2wUsnPa5XDwALYNxXNdit7HyMu
-	 PYRuYOyOWL797CRRnDL67iMg1kjhq9FupLEBT2RQ=
+	by mail.kernel.org (Postfix) with ESMTP id 536B1214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJ/Fa1XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEINHL (ORCPT
+        id S1727926AbgEINHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgEINHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:07:11 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 9 May 2020 09:07:15 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60209 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726370AbgEINHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 09:07:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589029632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nku97G8V8bw48sH90MJkSRFhoFe5/OodK/1xbuz3fno=;
+        b=DJ/Fa1XJ5Yb2mQicyrWwzzkUrYfD40REyWKaxrf8fnvXKOSvplWqALhy4bp3bgw74Vj6kT
+        2LangXMfvQc17P477j6lXKlcvAqaMyOIcbspyDFvwSvnO/yiAQmxriUl1QmkkD5PQRwn0E
+        5C1I3szHfex6P6Uk4mg000G5oh4lOYo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-yY5SRhTlMfqY54yveAsUQw-1; Sat, 09 May 2020 09:07:10 -0400
+X-MC-Unique: yY5SRhTlMfqY54yveAsUQw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55828214D8;
-        Sat,  9 May 2020 13:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589029630;
-        bh=LDChgAezC2cELQgFUK931l+lj9IS98Sqd6nkTxmMfyo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pE6AviOjbhLTmMGlBQ4CUAwnftlLGIRNd5p189eKB/VlJ0Xl+5O9E/w0AUXSZE1Xx
-         82qB+Bnc+ZB37q3Tk4Yg2QtGG9mc8XKAN9y1eVNmZbuPBA9PH8ZVAupS9mnLixL5BB
-         qwXw4IZwdYf9XoNqdwuiXeRgbFVllybkCT4my1N0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jXPC8-00Aroh-Ia; Sat, 09 May 2020 14:07:08 +0100
-Date:   Sat, 09 May 2020 14:07:07 +0100
-Message-ID: <874ksp1clg.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     "yue.wang@amlogic.com" <yue.wang@amlogic.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
-In-Reply-To: <2020050709433087691414@amlogic.com>
-References: <20200429164230.309922-1-maz@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: yue.wang@amlogic.com, linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, khilman@baylibre.com, bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A10FA1009600;
+        Sat,  9 May 2020 13:07:09 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-85.ams2.redhat.com [10.36.112.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EDA8704B7;
+        Sat,  9 May 2020 13:07:08 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: Add new intel_atomisp2_led driver
+Date:   Sat,  9 May 2020 15:07:07 +0200
+Message-Id: <20200509130707.219463-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yue,
+Many Bay Trail and Cherry Trail devices come with a camera attached to
+Intel's Image Signal Processor. Linux currently does not have a driver for
+these, so they do not work as a camera.
 
-On Thu, 07 May 2020 02:43:31 +0100,
-"yue.wang@amlogic.com" <yue.wang@amlogic.com> wrote:
-> 
-> [1  <text/plain; utf-8 (base64)>]
-> Marc,
-> 
-> This patch looks all right. I tested in my meson board and pcie
-> EP(QCA9888) worked well.
-> 
-> Fast link mode is enabled for simulation purposes, it should be
-> disabled in the real hardware.
+Some of these camera's have a status LED which is controlled through a GPIO
+in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
+issue where the LED gets turned on at boot.
 
-Thanks for confirming my reading of the manual and having tested it.
-Can I take this as an "Acked-by:" and a "Tested-by:"?
+This commit adds a Linux LED driver for the camera LED on these devices.
+This driver will turn the LED off at boot and also allows controlling the
+LED (so the user can repurpose it) through the sysfs LED interface.
 
-Cheers,
+Which GPIO is attached to the LED is usually not described in the ACPI
+tables, so this driver contains per-system info about the GPIO inside the
+driver. This means that this driver only works on systems the driver knows
+about.
 
-	M.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ MAINTAINERS                               |   6 ++
+ drivers/platform/x86/Kconfig              |  21 ++++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_atomisp2_led.c | 118 ++++++++++++++++++++++
+ 4 files changed, 146 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
 
->
-> yue.wang@amlogic.com
->  
-> From: Marc Zyngier
-> Date: 2020-05-06 18:43
-> To: linux-pci; linux-amlogic; linux-arm-kernel; linux-kernel; Kevin Hilman; Yue Wang
-> CC: Bjorn Helgaas; Rob Herring; Lorenzo Pieralisi
-> Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
-> On Wed, 29 Apr 2020 17:42:30 +0100
-> Marc Zyngier <maz@kernel.org> wrote:
->  
-> > My vim3l board stubbornly refuses to play ball with a bog
-> > standard PCIe switch (ASM1184e), spitting all kind of errors
-> > ranging from link never coming up to crazy things like downstream
-> > ports falling off the face of the planet.
-> > 
-> > Upon investigating how the PCIe RC is configured, I found the
-> > following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
-> > section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
-> > as:
-> > 
-> > "Sets all internal timers to fast mode for simulation purposes."
-> > 
-> > I completely understand the need for setting this bit from a simulation
-> > perspective, but what I have on my desk is actual silicon, which
-> > expects timers to have a nominal value (and I expect this is the
-> > case for most people).
-> > 
-> > Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
-> > solves this problem.
-> > 
-> > Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> > index 3715dceca1bf..ca59ba9e0ecd 100644
-> > --- a/drivers/pci/controller/dwc/pci-meson.c
-> > +++ b/drivers/pci/controller/dwc/pci-meson.c
-> > @@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
-> >  meson_cfg_writel(mp, val, PCIE_CFG0);
-> >  
-> >  val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> > - val &= ~LINK_CAPABLE_MASK;
-> > + val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
-> >  meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
-> >  
-> >  val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> > - val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-> > + val |= LINK_CAPABLE_X1;
-> >  meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
-> >  
-> >  val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
->  
-> Yue, Kevin: any comment on this?
->  
-> I found that the issue is reproducible even without a PCIe switch,
-> depending on the single device I plug in this machine (an Intel SSD
-> works fine, while a Marvell Ethernet adapter never shows up) as the
-> LTSSM times out much earlier than it really should (HW timers running
-> too quickly). Applying this patch makes every single device I have
-> lying around work fine.
->  
-> Thanks,
->  
-> M.
-> -- 
-> Jazz is not dead. It just smells funny...
->  
-> [2  <text/html; utf-8 (quoted-printable)>]
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..d85e009260ec 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8499,6 +8499,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_atomisp2_pm.c
+ 
++INTEL ATOMISP2 LED DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel_atomisp2_led.c
++
+ INTEL C600 SERIES SAS CONTROLLER DRIVER
+ M:	Intel SCU Linux support <intel-linux-scu@intel.com>
+ M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0ad7ad8cf8e1..1af4c97447a2 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -750,6 +750,27 @@ config INTEL_ATOMISP2_PM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_atomisp2_pm.
+ 
++config INTEL_ATOMISP2_LED
++	tristate "Intel AtomISP2 camera LED driver"
++	depends on GPIOLIB && LEDS_GPIO
++	help
++	  Many Bay Trail and Cherry Trail devices come with a camera attached
++	  to Intel's Image Signal Processor. Linux currently does not have a
++	  driver for these, so they do not work as a camera. Some of these
++	  camera's have a LED which is controlled through a GPIO.
++
++	  Some of these devices have a firmware issue where the LED gets turned
++	  on at boot. This driver will turn the LED off at boot and also allows
++	  controlling the LED (repurposing it) through the sysfs LED interface.
++
++	  Which GPIO is attached to the LED is usually not described in the
++	  ACPI tables, so this driver contains per-system info about the GPIO
++	  inside the driver, this means that this driver only works on systems
++	  the driver knows about.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_atomisp2_led.
++
+ config INTEL_CHT_INT33FE
+ 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
+ 	depends on X86 && ACPI && I2C && REGULATOR
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 53408d965874..969581237abb 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ 
+ # Intel
+ obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
++obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
+ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= intel_cht_int33fe.o
+ intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
+ 					   intel_cht_int33fe_typec.o \
+diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel_atomisp2_led.c
+new file mode 100644
+index 000000000000..fb704956cd9d
+--- /dev/null
++++ b/drivers/platform/x86/intel_atomisp2_led.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for controlling LEDs for cameras connected to the Intel atomisp2
++ * The main purpose of this driver is to turn off LEDs which are on at boot.
++ *
++ * Copyright (C) 2020 Hans de Goede <hdegoede@redhat.com>
++ */
++
++#include <linux/dmi.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/workqueue.h>
++
++/* This must be leds-gpio as the leds-gpio driver binds to the name */
++#define DEV_NAME		"leds-gpio"
++
++static const struct gpio_led atomisp2_leds[] = {
++	{
++		.name = "atomisp2::camera",
++		.default_state  = LEDS_GPIO_DEFSTATE_OFF,
++	},
++};
++
++static const struct gpio_led_platform_data atomisp2_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(atomisp2_leds),
++	.leds		= atomisp2_leds,
++};
++
++static struct gpiod_lookup_table asus_t100ta_lookup = {
++	.dev_id = DEV_NAME,
++	.table = {
++		GPIO_LOOKUP_IDX("INT33FC:02", 8, NULL, 0, GPIO_ACTIVE_HIGH),
++		{ }
++	}
++};
++
++static struct gpiod_lookup_table asus_t100chi_lookup = {
++	.dev_id = DEV_NAME,
++	.table = {
++		GPIO_LOOKUP_IDX("INT33FC:01", 24, NULL, 0, GPIO_ACTIVE_HIGH),
++		{ }
++	}
++};
++
++static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++		},
++		.driver_data = &asus_t100ta_lookup,
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
++		},
++		.driver_data = &asus_t100ta_lookup,
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100CHI"),
++		},
++		.driver_data = &asus_t100chi_lookup,
++	},
++	{} /* Terminating entry */
++};
++MODULE_DEVICE_TABLE(dmi, atomisp2_led_systems);
++
++static struct gpiod_lookup_table *gpio_lookup;
++static struct platform_device *pdev;
++
++static int __init atomisp2_led_init(void)
++{
++	const struct dmi_system_id *system;
++
++	system = dmi_first_match(atomisp2_led_systems);
++	if (!system)
++		return -ENODEV;
++
++	gpio_lookup = system->driver_data;
++	gpiod_add_lookup_table(gpio_lookup);
++
++	pdev = platform_device_register_resndata(NULL,
++						 DEV_NAME, PLATFORM_DEVID_NONE,
++						 NULL, 0, &atomisp2_leds_pdata,
++						 sizeof(atomisp2_leds_pdata));
++	if (IS_ERR(pdev)) {
++		gpiod_remove_lookup_table(gpio_lookup);
++		return PTR_ERR(pdev);
++	}
++
++	return 0;
++}
++
++static void __exit atomisp2_led_cleanup(void)
++{
++	platform_device_unregister(pdev);
++	gpiod_remove_lookup_table(gpio_lookup);
++}
++
++module_init(atomisp2_led_init);
++module_exit(atomisp2_led_cleanup);
++
++/*
++ * The ACPI INIT method from Asus WMI's code on the T100TA and T200TA turns the
++ * LED on (without the WMI interface allowing further control over the LED).
++ * Ensure we are loaded after asus-nb-wmi so that we turn the LED off again.
++ */
++MODULE_SOFTDEP("pre: asus_nb_wmi");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
++MODULE_DESCRIPTION("Intel atomisp2 camera LED driver");
++MODULE_LICENSE("GPL");
 -- 
-Without deviation from the norm, progress is not possible.
+2.26.0
+
