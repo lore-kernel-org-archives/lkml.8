@@ -2,146 +2,85 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F2C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6485C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20BB206B9
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFB221473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgEIXnm (ORCPT
+        id S1728478AbgEIXpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:43:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34160 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgEIXnm (ORCPT
+        Sat, 9 May 2020 19:45:13 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:36424 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgEIXpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:43:42 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B494F2A01A7
-Received: by earth.universe (Postfix, from userid 1000)
-        id DCAE43C08C7; Sun, 10 May 2020 01:43:38 +0200 (CEST)
-Date:   Sun, 10 May 2020 01:43:38 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     milo.kim@ti.com, anton.vorontsov@linaro.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH V2] power: supply: lp8788: Fix an error handling path in
- 'lp8788_charger_probe()'
-Message-ID: <20200509234338.htilukszgiktza62@earth.universe>
-References: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
+        Sat, 9 May 2020 19:45:12 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 38C3F2996C;
+        Sat,  9 May 2020 19:45:09 -0400 (EDT)
+Date:   Sun, 10 May 2020 09:45:04 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
+ paths
+In-Reply-To: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
+Message-ID: <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fvloof6eixjzfmk4"
-Content-Disposition: inline
-In-Reply-To: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 9 May 2020, Markus Elfring wrote:
 
---fvloof6eixjzfmk4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > While at it, rename a label in order to be slightly more informative and
+> > split some too long lines.
+> 
+> Would you like to add the tag 'Fixes' to the change description?
+> 
 
-Hi,
+Sorry but I don't follow your reasoning here. Are you saying that this 
+needs to be pushed out to -stable branches? If so, stable-kernel-rules.rst 
+would seem to disagree as the bug is theoretical and isn't bothering 
+people.
 
-On Sat, May 09, 2020 at 10:23:23AM +0200, Christophe JAILLET wrote:
-> In the probe function, in case of error, resources allocated in
-> 'lp8788_setup_adc_channel()' must be released.
->=20
-> This can be achieved easily by using the devm_ variant of
-> 'iio_channel_get()'.
-> This has the extra benefit to simplify the remove function and to axe the
-> 'lp8788_release_adc_channel()' function which is now useless.
->=20
-> Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> V2: use devm_iio_channel_get instead of iio_channel_get and simplify code
-> ---
+Is there a way to add a Fixes tag that would not invoke the -stable 
+process? And was that what you had in mind?
 
-Thanks, queued.
+> 
+> > +++ b/drivers/net/ethernet/natsemi/macsonic.c
+> > @@ -506,10 +506,14 @@ static int mac_sonic_platform_probe(struct platform_device *pdev)
+> >
+> >  	err = register_netdev(dev);
+> >  	if (err)
+> > -		goto out;
+> > +		goto undo_probe1;
+> >
+> >  	return 0;
+> >
+> > +undo_probe1:
+> > +	dma_free_coherent(lp->device,
+> > +			  SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
+> > +			  lp->descriptors, lp->descriptors_laddr);
+> >  out:
+> How do you think about the possibility to use the label 'free_dma'?
 
--- Sebastian
+I think 'undo_probe1' is both descriptive and consistent with commit 
+10e3cc180e64 ("net/sonic: Fix a resource leak in an error handling path in 
+'jazz_sonic_probe()'").
 
->  drivers/power/supply/lp8788-charger.c | 18 ++----------------
->  1 file changed, 2 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply=
-/lp8788-charger.c
-> index 84a206f42a8e..e7931ffb7151 100644
-> --- a/drivers/power/supply/lp8788-charger.c
-> +++ b/drivers/power/supply/lp8788-charger.c
-> @@ -572,27 +572,14 @@ static void lp8788_setup_adc_channel(struct device =
-*dev,
->  		return;
-> =20
->  	/* ADC channel for battery voltage */
-> -	chan =3D iio_channel_get(dev, pdata->adc_vbatt);
-> +	chan =3D devm_iio_channel_get(dev, pdata->adc_vbatt);
->  	pchg->chan[LP8788_VBATT] =3D IS_ERR(chan) ? NULL : chan;
-> =20
->  	/* ADC channel for battery temperature */
-> -	chan =3D iio_channel_get(dev, pdata->adc_batt_temp);
-> +	chan =3D devm_iio_channel_get(dev, pdata->adc_batt_temp);
->  	pchg->chan[LP8788_BATT_TEMP] =3D IS_ERR(chan) ? NULL : chan;
->  }
-> =20
-> -static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
-> -{
-> -	int i;
-> -
-> -	for (i =3D 0; i < LP8788_NUM_CHG_ADC; i++) {
-> -		if (!pchg->chan[i])
-> -			continue;
-> -
-> -		iio_channel_release(pchg->chan[i]);
-> -		pchg->chan[i] =3D NULL;
-> -	}
-> -}
-> -
->  static ssize_t lp8788_show_charger_status(struct device *dev,
->  				struct device_attribute *attr, char *buf)
->  {
-> @@ -735,7 +722,6 @@ static int lp8788_charger_remove(struct platform_devi=
-ce *pdev)
->  	flush_work(&pchg->charger_work);
->  	lp8788_irq_unregister(pdev, pchg);
->  	lp8788_psy_unregister(pchg);
-> -	lp8788_release_adc_channel(pchg);
-> =20
->  	return 0;
->  }
-> --=20
-> 2.25.1
->=20
-
---fvloof6eixjzfmk4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl63QCoACgkQ2O7X88g7
-+pqXkw//TQAiHoFVbfj4PDt6JINhpc+KHH09+OYBJASqORFGRahjpl9lRP2KwOWC
-M5slAVpIewYZduNjMSiXLsl3E9THqT4aPlMCQsPbMbqf9opbo+v/N+99eqK6H7zX
-muI5Ujy4mal8dQblR2ePlZiZkXj+rcY85JwW4BndWPDxY6H66GlYdFTuBdphLqIJ
-o3dFznmKZBWVk7jLogVf0Cqa/lK1h4FAg/X9f+9gsX8WEZujUONFdYxccQxlGZXt
-pBVVeTlg4a7PdXvvKDZwNLrhIs4tRI3ePc8cxcjkl2R9GUmk4r2LV2xswrkYbBpt
-dhYnPSHSKwFupk2iDiqL6cZxGdjyI7xHy/06rQO+vo2FgI6xDSsEgYhRFV2WrgME
-4T0FJOUw3wSEXpxndU/Q0339Hbq27n6m5ql3w5CNLOGU5phWFGGFJLxfYj2do8Gj
-9KwXpGGZy0hr03y0G036B+kWWxbrhoPfOE0VPfIo7ZcSFqXQNGPw+fQELbI1DFvI
-ElAndnEVL6hIa2iQyXHAqSkkPo/uq87/miBDo3DyHnmkshZAB3hLVmXEaMG+82Rq
-vPbK+TCz2sqHDKS6CDEAOZ/pG9P0wL5WUHP8uSLBq3dLqkKY+1zsjlhPHqwH9q44
-t9MY0/eLvpGTMWVwIO01U3Rpo4m6FdjN8JwahBASvoRzLEeUh5c=
-=2IDJ
------END PGP SIGNATURE-----
-
---fvloof6eixjzfmk4--
+Your suggestion, 'free_dma' is also good. But coming up with good 
+alternatives is easy. If every good alternative would be considered there 
+would be no obvious way to get a patch merged.
