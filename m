@@ -2,102 +2,136 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E899C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD13CC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2B6206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D0021775
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X9FK/JC5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQVS4ZPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgEIOnC (ORCPT
+        id S1728143AbgEIOob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 10:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48000 "EHLO
+        Sat, 9 May 2020 10:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727840AbgEIOnB (ORCPT
+        by vger.kernel.org with ESMTP id S1726782AbgEIOob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 10:43:01 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A6EC05BD0A
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 07:43:00 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 18so2493527pfv.8
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 07:43:00 -0700 (PDT)
+        Sat, 9 May 2020 10:44:31 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3489C061A0C;
+        Sat,  9 May 2020 07:44:29 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id c18so4203470ile.5;
+        Sat, 09 May 2020 07:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=8qtmaJLYw4IC+4FDva3MHRax/v6YPJc7TOvGR5mHtPY=;
-        b=X9FK/JC5//r6bN8vdxWdP6Knl5vDy4zg+XMFdHWIkRlywRYquT31GmeuUUp+0estnx
-         PvZkQoE119/yNyqOE5+6bpy3vJL3qLTdRiBm4JqVkxA2x7S67+ye74gufcsMBjMNsjxM
-         CFqx5sx7TR+RtPusFB+CZ2q+RfRdRGsK+c3U5YqsCazDh1zMos2M3/kOD1dVPhc/zq9B
-         MG5bUUeoN7mXP1r+eqsZr2kFdFXcVAGIFDyT4WA8LPrbHclWxyx9P+P0A7IxoBxRWBIf
-         5siU0VxFuiJ3QvZGEysjwmKkxTdNcn85P+LLdwxuiNu4JcabL03NynLeiQrHdz4hXh0A
-         hYGw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1hI9ycgQ4zeirYCayZqlQtbGCMAV/8BVRrWbFIPSt1Y=;
+        b=hQVS4ZPoIo4VxX/5nd1aSmJN4WU/ZZmJHcLAK0FoUrWJBAcRAM/ZH0kP2mDH9c2Mcb
+         SWM22Nu6jFYtWbCx6oRXIx6unbYZBjWZofzLjkBui4reST6xR05xkE87GIrR5C1m3dzn
+         /92kWXQcQ9kk25WbZeFThY2H4xFK1gR/Z3VpDt8RMZSIKOLT9SWOYaFBQ2j34qWqxxIC
+         pzM5kaLcIFLGXym3nG8SWO6bc5ZFMNw7EKTB96AW9LEYwK740cX1fJUNN7qoMIvsgLY4
+         5QMAeF0dqAoP2FmIxH0TTchL4SnXXtgR5qK5+41JQbkbw6btTdrYU7O4T8pNf1QtWZRR
+         xqhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8qtmaJLYw4IC+4FDva3MHRax/v6YPJc7TOvGR5mHtPY=;
-        b=G2bBnhWXvLqexuWV6GhwwSN70HoqxoQb0wnhms5KCkg2FZ3aCA4h3cm5PEdOBm2gCk
-         ThpwBbV7NyFVtvYFf2lhGEiLfL9TUinvNNCKAvNv1Xqvb6HnzMv22OIBnCdm5MOxlpLD
-         C51CX3jVWt6AAauGv/AfNYn5Vzbjy3ISnIkTtmcSD1vYbSXmc4vSeSl72BMyyx3ibsns
-         cbK1qZLkWhxbpZtz4dVfmKHz/YcqtzuZM+BBV+vcEm/VwExstUGRa0YxoDMpRUdC14Gh
-         LVIx6I32UeEt8e2NU/Gkp8WLskKikwyPdD8zQeyeMh+mjIX0nm7qhmEeK5iEeGhCxz1/
-         62/A==
-X-Gm-Message-State: AGi0PubGHETJ1km8RcBp7igE6Bk2MXSPA2Je9lAKgXvXIWnnf14YmdxK
-        VVqM2lyZupQd3qUW0lGgGMJqpV8yBac=
-X-Google-Smtp-Source: APiQypLeRR1OSt+0AcoaHdeXNyu/1vZfyZ/IXuWQ6Zk+bz9jVct5eEG+6jPSmcmKcQXQaO6L87T43g==
-X-Received: by 2002:a63:68c3:: with SMTP id d186mr6829910pgc.269.1589035379319;
-        Sat, 09 May 2020 07:42:59 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id w125sm3796396pgw.22.2020.05.09.07.42.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 07:42:58 -0700 (PDT)
-Subject: Re: [RFC] splice/tee: len=0 fast path after validity check
-To:     Pavel Begunkov <asml.silence@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <14d4955e8c232ea7d2cbb2c2409be789499e0452.1589013737.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <29de6592-8d62-5b5d-9859-d7adcc58759b@kernel.dk>
-Date:   Sat, 9 May 2020 08:42:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1hI9ycgQ4zeirYCayZqlQtbGCMAV/8BVRrWbFIPSt1Y=;
+        b=l3WqGezqsxNBlaOipwBMrRoEui4e+kSJ+AcruQyIeFhLbc/2Wxe2v1FrY/i10gsZyI
+         nPEr79sb8zUnSf6nuKvYXRB2B0XiB+spyuhnJfIh7BO1k7/oWgjo60KbJBt2e3xgN6ii
+         eSi55rmOz4qJ0q1/IOTEqPI9tHOrdgdZHHpSbolUtMCvtSVa0DciZ0tSAykQRqbXFu+P
+         w3mbVHA+xmqXUzRvFpj9hd+WSrjUfve0KBRCPcusgeF6uaDRYieJ6ICiPvZx1DgM/QJy
+         46ICpQftHcRYOYpJSWfMC0Zogq4FsvDGerfzVcB6PhoyGoHPNoyzmzs7crXQlb1V7HO/
+         l21g==
+X-Gm-Message-State: AGi0Pub/Z7Blr/skS4ZFWw6V5RDWKuttBTpj44FU2FNyKGb9Iakn8JRr
+        QVvDKydimHH1pLKh1qzjl/Wt7t9Hfo6XPl02dU/UWUpx
+X-Google-Smtp-Source: APiQypJeZbqR8cOxrIaCuTPsIeig2FGnuaB6IFS+w/IMBZaiGq2pK3JXRXRsR8/B4ve1cSseku7gziAyJDlCxouLxY4=
+X-Received: by 2002:a92:5c57:: with SMTP id q84mr8328572ilb.203.1589035469351;
+ Sat, 09 May 2020 07:44:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <14d4955e8c232ea7d2cbb2c2409be789499e0452.1589013737.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200508170630.94406-1-shakeelb@google.com> <20200508214405.GA226164@cmpxchg.org>
+ <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
+In-Reply-To: <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sat, 9 May 2020 22:43:53 +0800
+Message-ID: <CALOAHbBK9XasDO9Wd1Jw9QzjSN--aEd2zuVkQSyVyitVmU8DAg@mail.gmail.com>
+Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Mel Gorman <mgorman@suse.de>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/20 2:46 AM, Pavel Begunkov wrote:
-> When len=0, splice() and tee() return 0 even if specified fds are
-> invalid, hiding errors from users. Move len=0 optimisation later after
-> basic validity checks.
-> 
-> before:
-> splice(len=0, fd_in=-1, ...) == 0;
-> 
-> after:
-> splice(len=0, fd_in=-1, ...) == -EBADF;
+On Sat, May 9, 2020 at 10:06 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
+> > > One way to measure the efficiency of memory reclaim is to look at the
+> > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
+> > > not updated consistently at the system level and the ratio of these are
+> > > not very meaningful. The pgsteal and pgscan are updated for only global
+> > > reclaim while pgrefill gets updated for global as well as cgroup
+> > > reclaim.
+> > >
+> > > Please note that this difference is only for system level vmstats. The
+> > > cgroup stats returned by memory.stat are actually consistent. The
+> > > cgroup's pgsteal contains number of reclaimed pages for global as well
+> > > as cgroup reclaim. So, one way to get the system level stats is to get
+> > > these stats from root's memory.stat, so, expose memory.stat for the root
+> > > cgroup.
+> > >
+> > >       from Johannes Weiner:
+> > >       There are subtle differences between /proc/vmstat and
+> > >       memory.stat, and cgroup-aware code that wants to watch the full
+> > >       hierarchy currently has to know about these intricacies and
+> > >       translate semantics back and forth.
+> > >
+> > >       Generally having the fully recursive memory.stat at the root
+> > >       level could help a broader range of usecases.
+> >
+> > The changelog begs the question why we don't just "fix" the
+> > system-level stats. It may be useful to include the conclusions from
+> > that discussion, and why there is value in keeping the stats this way.
+> >
+>
+> Right. Andrew, can you please add the following para to the changelog?
+>
+> Why not fix the stats by including both the global and cgroup reclaim
+> activity instead of exposing root cgroup's memory.stat? The reason is
+> the benefit of having metrics exposing the activity that happens
+> purely due to machine capacity rather than localized activity that
+> happens due to the limits throughout the cgroup tree. Additionally
+> there are userspace tools like sysstat(sar) which reads these stats to
+> inform about the system level reclaim activity. So, we should not
+> break such use-cases.
+>
 
-I'm not sure what the purpose of this would be. It probably should have
-been done that way from the beginning, but it wasn't.  While there's
-very little risk of breaking any applications due to this change, it
-also seems like a pointless exercise at this point.
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
 
-So my suggestion would be to just leave it alone.
+> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> >
+> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>
+> Thanks a lot.
+
+
 
 -- 
-Jens Axboe
-
+Thanks
+Yafang
