@@ -2,291 +2,269 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA03FC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5D0C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B861221473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A567214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EH6bU/iv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgEIK2l (ORCPT
+        id S1728152AbgEIK3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 06:28:41 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:54538 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726951AbgEIK2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 06:28:40 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax9um_hbZedoQyAA--.7S3;
-        Sat, 09 May 2020 18:28:16 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] MIPS: Loongson: Cleanup cpu_hwmon.c
-To:     Huacai Chen <chenhc@lemote.com>
-References: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
- <1589008364-2294-2-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H5zhwHgtbLXPuj5mcGnv5zfT7iRcxoBdk-rbPTn3vt=RQ@mail.gmail.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a8cc716d-6d6e-6d2a-5cb3-e3dd4e2e6433@loongson.cn>
+        Sat, 9 May 2020 06:29:39 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5023 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726951AbgEIK3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 06:29:39 -0400
+X-UUID: fb7970c2f449403a90bdfbd90fd4b0a0-20200509
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=epJDxfn56pm1KYyJJsHHZHZ67ESMx3iBBECMEcHoO2Q=;
+        b=EH6bU/ivwKNlZGtx3QmkhDPM1Ncw2sUxTOIC6t26jrHHE46HsNwumNC5aVmLPeLp8WX0TNQiGMOJTgU7aIGy4upzWOLIbefjAEw2rmbtDcIAkUeVllVLTV+yqGoLy+QaKwDN1EA8tspEhwgakDJbGlIoohnSn9DV2BfnEaLv630=;
+X-UUID: fb7970c2f449403a90bdfbd90fd4b0a0-20200509
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 571192746; Sat, 09 May 2020 18:29:28 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n1.mediatek.inc
+ (172.21.101.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 9 May
+ 2020 18:29:25 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 9 May 2020 18:29:24 +0800
+Message-ID: <1589020095.24163.150.camel@mhfsdcap03>
+Subject: Re: [PATCH v7 11/11] media: platform: Add jpeg dec/enc feature
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        <srv_heupstream@mediatek.com>
 Date:   Sat, 9 May 2020 18:28:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+In-Reply-To: <20200501173712.GB218308@chromium.org>
+References: <20200303123446.20095-1-xia.jiang@mediatek.com>
+         <20200303123446.20095-12-xia.jiang@mediatek.com>
+         <20200306112337.GA163286@chromium.org>
+         <1587009795.24163.87.camel@mhfsdcap03>
+         <20200501173712.GB218308@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5zhwHgtbLXPuj5mcGnv5zfT7iRcxoBdk-rbPTn3vt=RQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Ax9um_hbZedoQyAA--.7S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw48Cw4xJr48uF4DKF4DJwb_yoWfCFy3pr
-        WDJay09F4UWFn7GanFqw47Cry5Arn0gay7G3sxCa4kAanxXF4Yq3W7AFW5Ar1vkrWrKa1x
-        Xr1DXa97Ca1Ygr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-        IcxG8wCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
-        x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x0JUqeHgUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2020 05:52 PM, Huacai Chen wrote:
-> Hi, Tiezhu,
->
-> On Sat, May 9, 2020 at 3:13 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->> Fix the following checkpatch warnings and errors:
->>
->> ERROR: do not initialise statics to 0
->> #14: FILE: drivers/platform/mips/cpu_hwmon.c:14:
->> +static int csr_temp_enable = 0;
-> I know you are doing things by checkpatch, but I really don't know why
-> not initialise. I think initialise is more human-readable.
-
-Hi Huacai,
-
-Just for cleanup. I think the reason may be:
-
-The static variables are initialised to 0 by GCC.
-Explicit initialization is not necessary.
-
->
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #60: FILE: drivers/platform/mips/cpu_hwmon.c:60:
->> +static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
-> And so does this.
-
-The generic reason is octal is readable and S_<FOO> is unintelligible.
-
-Here is Linus' opinion:
-https://lkml.org/lkml/2016/8/2/1945
-
-Thanks,
-Tiezhu Yang
-
->
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #84: FILE: drivers/platform/mips/cpu_hwmon.c:84:
->> +static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #85: FILE: drivers/platform/mips/cpu_hwmon.c:85:
->> +static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #86: FILE: drivers/platform/mips/cpu_hwmon.c:86:
->> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #87: FILE: drivers/platform/mips/cpu_hwmon.c:87:
->> +static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #88: FILE: drivers/platform/mips/cpu_hwmon.c:88:
->> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #89: FILE: drivers/platform/mips/cpu_hwmon.c:89:
->> +static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #90: FILE: drivers/platform/mips/cpu_hwmon.c:90:
->> +static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
->>
->> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
->> #91: FILE: drivers/platform/mips/cpu_hwmon.c:91:
->> +static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
->>
->> WARNING: Missing a blank line after declarations
->> #120: FILE: drivers/platform/mips/cpu_hwmon.c:120:
->> +       int id = (to_sensor_dev_attr(attr))->index - 1;
->> +       return sprintf(buf, "CPU %d Temperature\n", id);
->>
->> WARNING: Missing a blank line after declarations
->> #128: FILE: drivers/platform/mips/cpu_hwmon.c:128:
->> +       int value = loongson3_cpu_temp(id);
->> +       return sprintf(buf, "%d\n", value);
->>
->> ERROR: spaces required around that '=' (ctx:VxV)
->> #135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
->> +       for (i=0; i<nr_packages; i++)
->>                ^
->>
->> ERROR: spaces required around that '<' (ctx:VxV)
->> #135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
->> +       for (i=0; i<nr_packages; i++)
->>                     ^
->>
->> ERROR: spaces required around that '=' (ctx:VxV)
->> #145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
->> +       for (i=0; i<nr_packages; i++)
->>                ^
->>
->> ERROR: spaces required around that '<' (ctx:VxV)
->> #145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
->> +       for (i=0; i<nr_packages; i++)
->>                     ^
->>
->> ERROR: spaces required around that '=' (ctx:VxV)
->> #156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
->> +       for (i=0; i<nr_packages; i++) {
->>                ^
->>
->> ERROR: spaces required around that '<' (ctx:VxV)
->> #156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
->> +       for (i=0; i<nr_packages; i++) {
->>                     ^
->>
->> WARNING: line over 80 characters
->> #175: FILE: drivers/platform/mips/cpu_hwmon.c:175:
->> +               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   drivers/platform/mips/cpu_hwmon.c | 33 ++++++++++++++++++---------------
->>   1 file changed, 18 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
->> index 0d27cb7..fa42b13 100644
->> --- a/drivers/platform/mips/cpu_hwmon.c
->> +++ b/drivers/platform/mips/cpu_hwmon.c
->> @@ -11,7 +11,7 @@
->>   #include <loongson_hwmon.h>
->>   #include <loongson_regs.h>
->>
->> -static int csr_temp_enable = 0;
->> +static int csr_temp_enable;
->>
->>   /*
->>    * Loongson-3 series cpu has two sensors inside,
->> @@ -44,7 +44,7 @@ int loongson3_cpu_temp(int cpu)
->>          case PRID_REV_LOONGSON3A_R3_0:
->>          case PRID_REV_LOONGSON3A_R3_1:
->>          default:
->> -               reg = (reg & 0xffff)*731/0x4000 - 273;
->> +               reg = (reg & 0xffff) * 731 / 0x4000 - 273;
->>                  break;
->>          }
->>
->> @@ -57,7 +57,7 @@ static struct device *cpu_hwmon_dev;
->>
->>   static ssize_t get_hwmon_name(struct device *dev,
->>                          struct device_attribute *attr, char *buf);
->> -static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
->> +static SENSOR_DEVICE_ATTR(name, 0444, get_hwmon_name, NULL, 0);
->>
->>   static struct attribute *cpu_hwmon_attributes[] = {
->>          &sensor_dev_attr_name.dev_attr.attr,
->> @@ -81,14 +81,14 @@ static ssize_t get_cpu_temp(struct device *dev,
->>   static ssize_t cpu_temp_label(struct device *dev,
->>                          struct device_attribute *attr, char *buf);
->>
->> -static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
->> -static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
->> -static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
->> -static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
->> -static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
->> -static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
->> -static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
->> -static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
->> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, get_cpu_temp, NULL, 1);
->> +static SENSOR_DEVICE_ATTR(temp1_label, 0444, cpu_temp_label, NULL, 1);
->> +static SENSOR_DEVICE_ATTR(temp2_input, 0444, get_cpu_temp, NULL, 2);
->> +static SENSOR_DEVICE_ATTR(temp2_label, 0444, cpu_temp_label, NULL, 2);
->> +static SENSOR_DEVICE_ATTR(temp3_input, 0444, get_cpu_temp, NULL, 3);
->> +static SENSOR_DEVICE_ATTR(temp3_label, 0444, cpu_temp_label, NULL, 3);
->> +static SENSOR_DEVICE_ATTR(temp4_input, 0444, get_cpu_temp, NULL, 4);
->> +static SENSOR_DEVICE_ATTR(temp4_label, 0444, cpu_temp_label, NULL, 4);
->>
->>   static const struct attribute *hwmon_cputemp[4][3] = {
->>          {
->> @@ -117,6 +117,7 @@ static ssize_t cpu_temp_label(struct device *dev,
->>                          struct device_attribute *attr, char *buf)
->>   {
->>          int id = (to_sensor_dev_attr(attr))->index - 1;
->> +
->>          return sprintf(buf, "CPU %d Temperature\n", id);
->>   }
->>
->> @@ -125,6 +126,7 @@ static ssize_t get_cpu_temp(struct device *dev,
->>   {
->>          int id = (to_sensor_dev_attr(attr))->index - 1;
->>          int value = loongson3_cpu_temp(id);
->> +
->>          return sprintf(buf, "%d\n", value);
->>   }
->>
->> @@ -132,7 +134,7 @@ static int create_sysfs_cputemp_files(struct kobject *kobj)
->>   {
->>          int i, ret = 0;
->>
->> -       for (i=0; i<nr_packages; i++)
->> +       for (i = 0; i < nr_packages; i++)
->>                  ret = sysfs_create_files(kobj, hwmon_cputemp[i]);
->>
->>          return ret;
->> @@ -142,7 +144,7 @@ static void remove_sysfs_cputemp_files(struct kobject *kobj)
->>   {
->>          int i;
->>
->> -       for (i=0; i<nr_packages; i++)
->> +       for (i = 0; i < nr_packages; i++)
->>                  sysfs_remove_files(kobj, hwmon_cputemp[i]);
->>   }
->>
->> @@ -153,7 +155,7 @@ static void do_thermal_timer(struct work_struct *work)
->>   {
->>          int i, value, temp_max = 0;
->>
->> -       for (i=0; i<nr_packages; i++) {
->> +       for (i = 0; i < nr_packages; i++) {
->>                  value = loongson3_cpu_temp(i);
->>                  if (value > temp_max)
->>                          temp_max = value;
->> @@ -172,7 +174,8 @@ static int __init loongson_hwmon_init(void)
->>          pr_info("Loongson Hwmon Enter...\n");
->>
->>          if (cpu_has_csr())
->> -               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
->> +               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) &
->> +                                 LOONGSON_CSRF_TEMP;
->>
->>          cpu_hwmon_dev = hwmon_device_register(NULL);
->>          if (IS_ERR(cpu_hwmon_dev)) {
->> --
->> 2.1.0
->>
+T24gRnJpLCAyMDIwLTA1LTAxIGF0IDE3OjM3ICswMDAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
+SGkgWGlhLA0KPiANCj4gT24gVGh1LCBBcHIgMTYsIDIwMjAgYXQgMTI6MDM6MTVQTSArMDgwMCwg
+WGlhIEppYW5nIHdyb3RlOg0KPiA+IE9uIEZyaSwgMjAyMC0wMy0wNiBhdCAyMDoyMyArMDkwMCwg
+VG9tYXN6IEZpZ2Egd3JvdGU6DQo+ID4gPiBIaSBYaWEsDQo+ID4gPiANCj4gPiA+IE9uIFR1ZSwg
+TWFyIDAzLCAyMDIwIGF0IDA4OjM0OjQ2UE0gKzA4MDAsIFhpYSBKaWFuZyB3cm90ZToNCj4gPiA+
+ID4gQWRkIG10ayBqcGVnIGVuY29kZSB2NGwyIGRyaXZlciBiYXNlZCBvbiBqcGVnIGRlY29kZSwg
+YmVjYXVzZSB0aGF0IGpwZWcNCj4gPiA+ID4gZGVjb2RlIGFuZCBlbmNvZGUgaGF2ZSBncmVhdCBz
+aW1pbGFyaXRpZXMgd2l0aCBmdW5jdGlvbiBvcGVyYXRpb24uDQo+ID4gPiANCj4gPiA+IFRoYW5r
+IHlvdSBmb3IgdGhlIHBhdGNoLiBQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4NCj4gPiAN
+Cj4gPiBEZWFyIFRvbWFzeiwNCj4gPiANCj4gPiBUaGFuayB5b3UgZm9yIHlvdXIgcmVwbHkuIEkg
+aGF2ZSBmb2xsb3dlZCB5b3VyIGFkdmljZSBhbmQgc3VibWl0ZWQgdjgNCj4gPiB2ZXJzaW9uIHBh
+dGNoLg0KPiA+IA0KPiA+IFBsZWFzZSBjaGVjayBteSByZXBseSBiZWxvdy4NCkRlYXIgVG9tYXN6
+LA0KSSBoYXZlIHNvbWUgY29uZnVzZSBhYm91dCB5b3VyIGFkdmljZSwgcGxlYXNlIGNoZWNrIG15
+IHJlcGx5IGJlbG93Lg0KPiBbc25pcF0NCj4gPiA+IA0KPiA+ID4gPiAgDQo+ID4gPiA+IC0Jc3dp
+dGNoIChzLT50YXJnZXQpIHsNCj4gPiA+ID4gLQljYXNlIFY0TDJfU0VMX1RHVF9DT01QT1NFOg0K
+PiA+ID4gPiAtCQlzLT5yLmxlZnQgPSAwOw0KPiA+ID4gPiAtCQlzLT5yLnRvcCA9IDA7DQo+ID4g
+PiA+IC0JCWN0eC0+b3V0X3EudyA9IHMtPnIud2lkdGg7DQo+ID4gPiA+IC0JCWN0eC0+b3V0X3Eu
+aCA9IHMtPnIuaGVpZ2h0Ow0KPiA+ID4gPiAtCQlicmVhazsNCj4gPiA+ID4gLQlkZWZhdWx0Og0K
+PiA+ID4gPiAtCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKwkJc3dpdGNoIChzLT50YXJnZXQp
+IHsNCj4gPiA+ID4gKwkJY2FzZSBWNEwyX1NFTF9UR1RfQ1JPUDoNCj4gPiA+ID4gKwkJCXMtPnIu
+bGVmdCA9IDA7DQo+ID4gPiA+ICsJCQlzLT5yLnRvcCA9IDA7DQo+ID4gPiA+ICsJCQljdHgtPm91
+dF9xLncgPSBzLT5yLndpZHRoOw0KPiA+ID4gPiArCQkJY3R4LT5vdXRfcS5oID0gcy0+ci5oZWln
+aHQ7DQo+ID4gPiANCj4gPiA+IFdoYXQgaGFwcGVucyBpZiB0aGUgdXNlcnNwYWNlIHByb3ZpZGVz
+IGEgdmFsdWUgYmlnZ2VyIHRoYW4gY3VycmVudCBmb3JtYXQ/DQo+ID4gd2UgbmVlZCBnZXQgdGhl
+IG1pbiB2YWx1ZSBvZiB1c2Vyc3BhY2UgdmFsdWUgYW5kIGN1cnJlbnQgdmFsdWUsY2hhbmdlZA0K
+PiA+IGl0IGxpa2UgdGhpczoNCj4gPiBjdHgtPm91dF9xLncgPSBtaW4ocy0+ci53aWR0aCwgY3R4
+LT5vdXRfcS53KTsNCj4gPiBjdHgtPm91dF9xLmggPSBtaW4ocy0+ci5oZWlnaHQsY3R4LT5vdXRf
+cS5oKTsNCj4gDQo+IFNpbmNlIGN0eC0+b3V0X3EgaXMgbW9kaWZpZWQgYnkgdGhpcyBmdW5jdGlv
+biwgd291bGRuJ3QgdGhhdCBjYXVzZQ0KPiBwcm9ibGVtcyBpZiBTX1NFTEVDVElPTiB3YXMgY2Fs
+bGVkIHR3byB0aW1lcywgZmlyc3Qgd2l0aCBhIHNtYWxsZXINCj4gcmVjdGFuZ2xlIGFuZCB0aGVu
+IHdpdGggYSBiaWdnZXIgb25lPyBXZSBzaG91bGQgc3RvcmUgdGhlIGFjdGl2ZSBjcm9wDQo+IGFu
+ZCBmb3JtYXQgc2VwYXJhdGVseSBhbmQgdXNlIHRoZSBsYXR0ZXIgZm9yIG1pbigpLg0KQWRkIGEg
+bWVtYmVyIHZhcmlhYmxlKHN0cnVjdCB2NGwyX3JlY3QpIGluIG91dF9xIHN0cnVjdHVyZSBmb3Ig
+c3RvcmluZw0KdGhlIGFjdGl2ZSBjcm9wLCBsaWtlIHRoaXM6DQpzLT5yLndpZHRoID0gIG1pbihz
+LT5yLndpZHRoLCBjdHgtPm91dF9xLncpOw0Kcy0+ci5oZWlnaHQgPSBtaW4ocy0+ci5oZWlnaHQs
+Y3R4LT5vdXRfcS5oKTsNCmN0eC0+b3V0X3EucmVjdC53aWR0aCA9IHMtPnIud2lkdGg7DQpjdHgt
+Pm91dF9xLnJlY3QuaGVpZ2h0ID0gIHMtPnIuaGVpZ2h0Ow0KSXMgdGhhdCBvaz8NCj4gDQo+IFtz
+bmlwXQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJd2hpbGUgKCh2YiA9IG10a19qcGVnX2J1Zl9yZW1v
+dmUoY3R4LCBxLT50eXBlKSkpDQo+ID4gPiA+ICAJCXY0bDJfbTJtX2J1Zl9kb25lKHZiLCBWQjJf
+QlVGX1NUQVRFX0VSUk9SKTsNCj4gPiA+ID4gQEAgLTc3Miw2ICsxMDExLDQ1IEBAIHN0YXRpYyBp
+bnQgbXRrX2pwZWdfc2V0X2RlY19kc3Qoc3RydWN0IG10a19qcGVnX2N0eCAqY3R4LA0KPiA+ID4g
+PiAgCXJldHVybiAwOw0KPiA+ID4gPiAgfQ0KPiA+ID4gPiAgDQo+ID4gPiA+ICtzdGF0aWMgdm9p
+ZCBtdGtfanBlZ19zZXRfZW5jX2RzdChzdHJ1Y3QgbXRrX2pwZWdfY3R4ICpjdHgsIHZvaWQgX19p
+b21lbSAqYmFzZSwNCj4gPiA+ID4gKwkJCQkgc3RydWN0IHZiMl9idWZmZXIgKmRzdF9idWYsDQo+
+ID4gPiA+ICsJCQkJIHN0cnVjdCBtdGtfanBlZ19lbmNfYnMgKmJzKQ0KPiA+ID4gPiArew0KPiA+
+ID4gPiArCWJzLT5kbWFfYWRkciA9IHZiMl9kbWFfY29udGlnX3BsYW5lX2RtYV9hZGRyKGRzdF9i
+dWYsIDApOw0KPiA+ID4gPiArCWJzLT5kbWFfYWRkcl9vZmZzZXQgPSBjdHgtPmVuYWJsZV9leGlm
+ID8gTVRLX0pQRUdfREVGQVVMVF9FWElGX1NJWkUgOiAwOw0KPiA+ID4gDQo+ID4gPiBDb3VsZCB5
+b3UgZXhwbGFpbiB3aGF0IGlzIHRoZSBtZWFuaW5nIG9mIHRoZSBkbWFfYWRkcl9vZmZzZXQgYW5k
+IHdoZXJlIHRoZQ0KPiA+ID4gZGVmYXVsdCBFWElGIHNpemUgY29tZXMgZnJvbT8gQWxzbywgaG93
+IGlzIHRoZSBlbmNvZGVyIG91dHB1dCBhZmZlY3RlZCBieQ0KPiA+ID4gdGhlIGVuYWJsZV9leGlm
+IGZsYWc/DQo+ID4gSWYgZW5hYmxlZCB0aGUgZXhpZiBtb2RlLCB0aGUgcmVhbCBvdXRwdXQgd2ls
+bCBiZSBmaWxsZWQgYXQgdGhlIGxvY2FpdG9uDQo+ID4gb2YgZHN0X2FkZHIrIGRtYV9hZGRyX29m
+ZnNldChleGlmIHNpemUpLlRoZSBkbWFfYWRkcl9vZmZzZXQgd2lsbCBiZQ0KPiA+IGZpbGxlZCBi
+eSB0aGUgYXBwbGljYXRpb24uDQo+ID4gVGhlIGRlZmF1bHQgZXhpZiBzaXplIGlzIHNldHRlZCBh
+cyBjb25zdGFudCB2YWx1ZSA2NGsgYWNjb3JkaW5nIHRvIHRoZQ0KPiA+IHNwZWMuKEV4aWYgbWV0
+YWRhdGEgYXJlIHJlc3RyaWN0ZWQgaW4gc2l6ZSB0byA2NGtCIGluIEpQRUcgaW1hZ2VzDQo+ID4g
+YmVjYXVzZSBhY2NvcmRpbmcgdG8gdGhlIHNwZWNpZmljYXRpb24gdGhpcyBpbmZvcm1hdGlvbiBt
+dXN0IGJlDQo+ID4gY29udGFpbmVkIHdpdGhpbiBhIHNpZ25lZCBKUEVHIEFQUDEgc2VnbWVudCkN
+Cj4gDQo+IE9rYXksIHRoYW5rcy4gVGhlbiBpdCBzb3VuZHMgbGlrZSBNVEtfSlBFR19NQVhfRVhJ
+Rl9TSVpFIGNvdWxkIGJlIGEgbW9yZQ0KPiBhcHByb3ByaWF0ZSBuYW1lLg0KPiANCj4gW3NuaXBd
+DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4gPiA+ID4gIHN0YXRpYyB2b2lkIG10a19qcGVnX2Rl
+dmljZV9ydW4odm9pZCAqcHJpdikNCj4gPiA+ID4gIHsNCj4gPiA+ID4gIAlzdHJ1Y3QgbXRrX2pw
+ZWdfY3R4ICpjdHggPSBwcml2Ow0KPiA+ID4gPiBAQCAtNzgyLDYgKzEwNjAsOCBAQCBzdGF0aWMg
+dm9pZCBtdGtfanBlZ19kZXZpY2VfcnVuKHZvaWQgKnByaXYpDQo+ID4gPiA+ICAJc3RydWN0IG10
+a19qcGVnX3NyY19idWYgKmpwZWdfc3JjX2J1ZjsNCj4gPiA+ID4gIAlzdHJ1Y3QgbXRrX2pwZWdf
+YnMgYnM7DQo+ID4gPiA+ICAJc3RydWN0IG10a19qcGVnX2ZiIGZiOw0KPiA+ID4gPiArCXN0cnVj
+dCBtdGtfanBlZ19lbmNfYnMgZW5jX2JzOw0KPiA+ID4gPiArCXN0cnVjdCBtdGtfanBlZ19lbmNf
+ZmIgZW5jX2ZiOw0KPiA+ID4gPiAgCWludCBpOw0KPiA+ID4gPiAgDQo+ID4gPiA+ICAJc3JjX2J1
+ZiA9IHY0bDJfbTJtX25leHRfc3JjX2J1ZihjdHgtPmZoLm0ybV9jdHgpOw0KPiA+ID4gPiBAQCAt
+NzkyLDMwICsxMDcyLDQ3IEBAIHN0YXRpYyB2b2lkIG10a19qcGVnX2RldmljZV9ydW4odm9pZCAq
+cHJpdikNCj4gPiA+ID4gIAkJZm9yIChpID0gMDsgaSA8IGRzdF9idWYtPnZiMl9idWYubnVtX3Bs
+YW5lczsgaSsrKQ0KPiA+ID4gPiAgCQkJdmIyX3NldF9wbGFuZV9wYXlsb2FkKCZkc3RfYnVmLT52
+YjJfYnVmLCBpLCAwKTsNCj4gPiA+ID4gIAkJYnVmX3N0YXRlID0gVkIyX0JVRl9TVEFURV9ET05F
+Ow0KPiA+ID4gDQo+ID4gPiBBYm91dCBleGlzdGluZyBjb2RlLCBidXQgd2UgbWF5IHdhbnQgdG8g
+ZXhwbGFpbiB0aGlzLg0KPiA+ID4gV2hhdCBpcyB0aGlzIGxhc3QgZnJhbWUgaGFuZGxpbmcgYWJv
+dmUgZm9yPw0KPiA+IGlmIHRoZSB1c2VyIGdpdmVzIHVzIGEgZW1wdHkgYnVmZmVyKG1lYW5zIGl0
+IGlzIHRoZSBsYXN0IGZyYW1lKSx0aGUNCj4gPiBkcml2ZXIgd2lsbCBub3QgZW5jb2RlIGFuZCBk
+b25lIHRoZSBidWZmZXIgdG8gdGhlIHVzZXIuDQo+ID4NCj4gDQo+IEFuIGVtcHR5IGJ1ZmZlciBp
+cyBub3QgYSB2YWxpZCB3YXkgb2Ygc2lnbmFsaW5nIGEgbGFzdCBmcmFtZSBpbiBWNEwyLiBJbg0K
+PiBnZW5lcmFsLCBJJ20gbm90IHN1cmUgdGhlcmUgaXMgc3VjaCBhIHRoaW5nIGluIEpQRUcsIGJl
+Y2F1c2UgYWxsIGZyYW1lcw0KPiBhcmUgc2VwYXJhdGUgZnJvbSBlYWNoIG90aGVyIGFuZCB3ZSBh
+bHdheXMgZXhwZWN0IDEgaW5wdXQgYnVmZmVyIGFuZCAxDQo+IG91dHB1dCBidWZmZXIgZm9yIG9u
+ZSBmcmFtZS4gV2UgbWlnaHQgd2FudCB0byByZW1vdmUgdGhlIHNwZWNpYWwNCj4gaGFuZGxpbmcg
+aW4gYSBmb2xsb3cgdXAgcGF0Y2guDQpIb3cgZG9lcyBhcHBsaWNhdGlvbiB0byBlbmQganBlZyBv
+cGVyYXRpb24gaW4gbW90aW9uIGpwZWcgaWYgd2UgcmVtb3ZlDQp0aGlzPyBJIHRyeWVkIHRvIGVu
+ZCB3aXRoIHRoZSBjb25kaXRpb24gdGhhdCB0aGUgaW5wdXQgbnVtYmVyIGVxdWFscw0Kb3V0cHV0
+IG51bWJlciBpbiBVVCwgYW5kIGlzIG9rLg0KPiANCj4gPiA+ID4gLQkJZ290byBkZWNfZW5kOw0K
+PiA+ID4gPiArCQlnb3RvIGRldmljZV9ydW5fZW5kOw0KPiA+ID4gPiAgCX0NCj4gPiA+ID4gIA0K
+PiA+ID4gPiAtCWlmIChtdGtfanBlZ19jaGVja19yZXNvbHV0aW9uX2NoYW5nZShjdHgsICZqcGVn
+X3NyY19idWYtPmRlY19wYXJhbSkpIHsNCj4gPiA+ID4gLQkJbXRrX2pwZWdfcXVldWVfc3JjX2No
+Z19ldmVudChjdHgpOw0KPiA+ID4gPiAtCQljdHgtPnN0YXRlID0gTVRLX0pQRUdfU09VUkNFX0NI
+QU5HRTsNCj4gPiA+ID4gLQkJdjRsMl9tMm1fam9iX2ZpbmlzaChqcGVnLT5tMm1fZGV2LCBjdHgt
+PmZoLm0ybV9jdHgpOw0KPiA+ID4gPiAtCQlyZXR1cm47DQo+ID4gPiA+IC0JfQ0KPiA+ID4gPiAr
+CWlmIChqcGVnLT5tb2RlID09IE1US19KUEVHX0VOQykgew0KPiA+ID4gPiArCQlzcGluX2xvY2tf
+aXJxc2F2ZSgmanBlZy0+aHdfbG9jaywgZmxhZ3MpOw0KPiA+ID4gPiArCQltdGtfanBlZ19lbmNf
+cmVzZXQoanBlZy0+cmVnX2Jhc2UpOw0KPiA+ID4gDQo+ID4gPiBXaHkgZG8gd2UgbmVlZCB0byBy
+ZXNldCBldmVyeSBmcmFtZT8NCj4gPiBXZSBkbyB0aGlzIG9wZXJhdGlvbiBpcyB0byBlbnN1cmUg
+dGhhdCBhbGwgcmVnaXN0ZXJzIGFyZSBjbGVhcmVkLg0KPiA+IEl0J3Mgc2FmZXIgZnJvbSB0aGUg
+aGFyZHdhcmUgcG9pbnQgb2Ygdmlldy4NCj4gDQo+IFdvdWxkbid0IHRoaXMgb25seSB3YXN0ZSBw
+b3dlcj8gSWYgd2UgcmVzZXQgdGhlIGhhcmR3YXJlIGFmdGVyIHBvd2VyaW5nDQo+IHVwLCB0aGUg
+b25seSByZWdpc3RlcnMgdGhhdCBjb3VsZCBjaGFuZ2Ugd291bGQgYmUgY2hhbmdlZCBieSB0aGUg
+ZHJpdmVyDQo+IGl0c2VsZi4gVGhlIGRyaXZlciBzaG91bGQgcHJvZ3JhbSBhbGwgcmVnaXN0ZXJz
+IHByb3Blcmx5IHdoZW4gc3RhcnRpbmcNCj4gbmV4dCBmcmFtZSBhbnl3YXksIHNvIHN1Y2ggYSBy
+ZXNldCBzaG91bGRuJ3QgYmUgbmVjZXNzYXJ5Lg0KSSBjb25maXJtZWQgd2l0aCBoYXJkd2FyZSBk
+ZXNpZ25lciBhZ2FpbiB0aGF0IHdlIG5lZWQgdG8gcmVzZXQgZXZlcnkNCmZyYW1lLiBJZiB3ZSBk
+byBub3QgZG8gbGlrZSB0aGlzLCB1bmV4cGVjdGVkIG1pc3Rha2VzIG1heSBvY2N1ci4NCj4gDQo+
+ID4gPiANCj4gPiA+ID4gKw0KPiA+ID4gPiArCQltdGtfanBlZ19zZXRfZW5jX2RzdChjdHgsIGpw
+ZWctPnJlZ19iYXNlLCAmZHN0X2J1Zi0+dmIyX2J1ZiwNCj4gPiA+ID4gKwkJCQkgICAgICZlbmNf
+YnMpOw0KPiA+ID4gPiArCQltdGtfanBlZ19zZXRfZW5jX3NyYyhjdHgsIGpwZWctPnJlZ19iYXNl
+LCAmc3JjX2J1Zi0+dmIyX2J1ZiwNCj4gPiA+ID4gKwkJCQkgICAgICZlbmNfZmIpOw0KPiA+ID4g
+PiArCQltdGtfanBlZ19lbmNfc2V0X2N0cmxfY2ZnKGpwZWctPnJlZ19iYXNlLCBjdHgtPmVuYWJs
+ZV9leGlmLA0KPiA+ID4gPiArCQkJCQkgIGN0eC0+ZW5jX3F1YWxpdHksDQo+ID4gPiA+ICsJCQkJ
+CSAgY3R4LT5yZXN0YXJ0X2ludGVydmFsKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCQltdGtfanBl
+Z19lbmNfc3RhcnQoanBlZy0+cmVnX2Jhc2UpOw0KPiA+ID4gPiArCX0gZWxzZSB7DQo+ID4gPiA+
+ICsJCWlmIChtdGtfanBlZ19jaGVja19yZXNvbHV0aW9uX2NoYW5nZQ0KPiA+ID4gPiArCQkJKGN0
+eCwgJmpwZWdfc3JjX2J1Zi0+ZGVjX3BhcmFtKSkgew0KPiA+ID4gPiArCQkJbXRrX2pwZWdfcXVl
+dWVfc3JjX2NoZ19ldmVudChjdHgpOw0KPiA+ID4gPiArCQkJY3R4LT5zdGF0ZSA9IE1US19KUEVH
+X1NPVVJDRV9DSEFOR0U7DQo+ID4gPiA+ICsJCQl2NGwyX20ybV9qb2JfZmluaXNoKGpwZWctPm0y
+bV9kZXYsIGN0eC0+ZmgubTJtX2N0eCk7DQo+ID4gPiANCj4gPiA+IFRoaXMgaXMgYSBiaXQgc3Ry
+YW5nZS4gUmVzb2x1dGlvbiBjaGFuZ2Ugc2hvdWxkIGJlIHNpZ25hbGVkIHdoZW4gdGhlDQo+ID4g
+PiBoYXJkd2FyZSBhdHRlbXB0ZWQgdG8gZGVjb2RlIGEgZnJhbWUgYW5kIGRldGVjdGVkIGEgZGlm
+ZmVyZW50IHJlc29sdXRpb24NCj4gPiA+IHRoYW4gY3VycmVudC4gSXQgc2hvdWxkbid0IGJlIG5l
+Y2Vzc2FyeSBmb3IgdGhlIHVzZXJzcGFjZSB0byBxdWV1ZSBhIHBhaXINCj4gPiA+IG9mIGJ1ZmZl
+cnMgdG8gc2lnbmFsIGl0LCBhcyB3aXRoIHRoZSBjdXJyZW50IGNvZGUuDQo+ID4gSWYgdGhlIHRo
+ZSByZXNvbHV0aW9uIGlzIGJpZ2dlciB0aGFuIGN1cnJlbnQsIHRoZSBjdXJyZW50IGJ1ZmZlciB3
+aWxsDQo+ID4gbm90IGJlIGVub3VnaCBmb3IgdGhlIGNoYW5nZWQgcmVzb2x1dGlvbi5TaG91bGRu
+J3QgaXQgdGVsbCB0aGUgdXNlcnNwYWNlDQo+ID4gdG8gcXVldWUgbmV3IGJ1ZmZlciBhbmQgc3Ry
+ZWFtIG9uIGFnYWluPw0KPiANCj4gVGhlIFY0TDIgZGVjb2RlIGZsb3cgaXMgYXMgZm9sbG93czoN
+Cj4gIC0gYXBwbGljYXRpb24gY29uZmlndXJlcyBhbmQgc3RhcnRzIG9ubHkgdGhlIE9VVFBVVCBx
+dWV1ZSwNCj4gIC0gYXBwbGljYXRpb24gcXVldWVzIGFuIE9VVFBVVCBidWZmZXIgd2l0aCBhIGZy
+YW1lIHdvcnRoIG9mIGJpdHN0cmVhbSwNCj4gIC0gZGVjb2RlciBwYXJzZXMgdGhlIGJpdHN0cmVh
+bSBoZWFkZXJzLCBkZXRlY3RzIENBUFRVUkUgZm9ybWF0IGFuZA0KPiAgICBzaWduYWxzIHRoZSBz
+b3VyY2UgY2hhbmdlIGV2ZW50LA0KPiAgLSBhcHBsaWNhdGlvbiByZWFkcyBDQVBUVVJFIGZvcm1h
+dCBhbmQgY29uZmlndXJlcyBhbmQgc3RhcnRzIHRoZQ0KPiAgICBDQVBUVVJFIHF1ZXVlLA0KPiAg
+LSBhcHBsaWNhdGlvbiBxdWV1ZXMgYSBDQVBUVVJFIGJ1ZmZlciwNCj4gIC0gZGVjb2RlciBkZWNv
+ZGVzIHRoZSBpbWFnZSB0byB0aGUgcXVldWVkIGJ1ZmZlci4NCj4gDQo+IEluIGNhc2Ugb2Ygc3Vi
+c2VxdWVudCAoZHluYW1pYykgcmVzb2x1dGlvbiBjaGFuZ2U6DQo+ICAtIGFwcGxpY2F0aW9uIHF1
+ZXVlcyBhbiBPVVRQVVQgYnVmZmVyIGFuZCBhIENBUFRVUkUgYnVmZmVyLA0KPiAgLSBkZWNvZGVy
+IHBhcnNlcyB0aGUgYml0c3RyZWFtLCBub3RpY2VzIHJlc29sdXRpb24gY2hhbmdlLCB1cGRhdGVz
+DQo+ICAgIENBUFRVUkUgZm9ybWF0IGFuZCBzaWduYWxzIHRoZSBzb3VyY2UgY2hhbmdlIGV2ZW50
+LCByZWZ1c2luZyB0bw0KPiAgICBjb250aW51ZSB0aGUgZGVjb2RpbmcgdW50aWwgdGhlIGFwcGxp
+Y2F0aW9uIGFja25vd2xlZGdlcyBpdCwNCj4gIC0gYXBwbGljYXRpb24gZWl0aGVyIHJlYWxsb2Nh
+dGVzIGl0cyBDQVBUVVJFIGJ1ZmZlcnMgb3IgY29uZmlybXMgdGhhdA0KPiAgICB0aGUgZXhpc3Rp
+bmcgYnVmZmVycyBhcmUgZmluZSBhbmQgYWNrbm93bGVkZ2VzIHJlc29sdXRpb24gY2hhbmdlLA0K
+PiAgLSBkZWNvZGluZyBjb250aW51ZXMuDQo+IA0KPiBGb3IgbW9yZSBkZXRhaWxzLCBwbGVhc2Ug
+Y2hlY2sgdGhlIGludGVyZmFjZSBzcGVjaWZpY2F0aW9uOg0KPiBodHRwczovL3d3dy5rZXJuZWwu
+b3JnL2RvYy9odG1sL2xhdGVzdC9tZWRpYS91YXBpL3Y0bC9kZXYtZGVjb2Rlci5odG1sDQo+IA0K
+SSB0cnllZCB0byBtb3ZlIHRoaXMgb3BlcmF0aW9uIGZyb20gZGV2aWNlX3J1bigpIHRvDQptdGtf
+anBlZ19kZWNfYnVmX3F1ZXVlKCksYnV0IGhhdmUgYSBwcm9ibGVtIGluIG1vdGlvbiBqcGVnLkZv
+ciBleGFtcGxlLEkNCnF1ZXVlZCB0aHJlZSBidWZmZXJzIGNvbnRpbnVvdXNseSx0aGUgdGhpcmQg
+YnVmZmVyIGhhcyByZXNvbHV0aW9uDQpjaGFuZ2UoYmlnZ2VyIHRoYW4gdGhlIHNlY29uZCBidWZm
+ZXIpLGJ1dCB0aGUgY2FwdHVyZSBidWZmZXIgdXNlZCBpbg0KZGV2aWNlIHJ1biBkaWRuJ3QgY2hh
+bmdlZC4NCkhvdyBkbyB3ZSBoYW5kbGUgdGhpcyBjYXNlPw0KPiBbc25pcF0NCj4gPiA+ID4gLQly
+ZXQgPSB2aWRlb19yZWdpc3Rlcl9kZXZpY2UoanBlZy0+ZGVjX3ZkZXYsIFZGTF9UWVBFX0dSQUJC
+RVIsIDMpOw0KPiA+ID4gPiArCXJldCA9IHZpZGVvX3JlZ2lzdGVyX2RldmljZShqcGVnLT52ZmRf
+anBlZywgVkZMX1RZUEVfR1JBQkJFUiwgLTEpOw0KPiA+ID4gDQo+ID4gPiBGWUkgdGhlIHR5cGUg
+Y2hhbmdlZCB0byBWRkxfVFlQRV9WSURFTyByZWNlbnRseS4NCj4gPiBJIGNoYW5nZWQgVkZMX1RZ
+UEVfR1JBQkJFUiB0byBWRkxfVFlQRV9WSURFTyxidXQgYnVpbGRlZCBmYWlsLg0KPiANCj4gV2hh
+dCBrZXJuZWwgdmVyc2lvbiBhcmUgeW91IGJ1aWxkaW5nIHdpdGg/DQpJIGJ1aWxkIGl0IHdpdGgg
+dGhlIGxhdGVzdCBrZXJuZWwgNS43LGJ1dCBidWlsZWQgZmFpbCBhZ2Fpbi4NCj4gDQo+ID4gPiA+
+ICAJaWYgKHJldCkgew0KPiA+ID4gPiAgCQl2NGwyX2VycigmanBlZy0+djRsMl9kZXYsICJGYWls
+ZWQgdG8gcmVnaXN0ZXIgdmlkZW8gZGV2aWNlXG4iKTsNCj4gPiA+ID4gLQkJZ290byBlcnJfZGVj
+X3ZkZXZfcmVnaXN0ZXI7DQo+ID4gPiA+ICsJCWdvdG8gZXJyX3ZmZF9qcGVnX3JlZ2lzdGVyOw0K
+PiA+ID4gPiAgCX0NCj4gPiA+ID4gIA0KPiA+ID4gPiAtCXZpZGVvX3NldF9kcnZkYXRhKGpwZWct
+PmRlY192ZGV2LCBqcGVnKTsNCj4gPiA+ID4gKwl2aWRlb19zZXRfZHJ2ZGF0YShqcGVnLT52ZmRf
+anBlZywganBlZyk7DQo+ID4gPiA+ICAJdjRsMl9pbmZvKCZqcGVnLT52NGwyX2RldiwNCj4gPiA+
+ID4gLQkJICAiZGVjb2RlciBkZXZpY2UgcmVnaXN0ZXJlZCBhcyAvZGV2L3ZpZGVvJWQgKCVkLCVk
+KVxuIiwNCj4gPiA+ID4gLQkJICBqcGVnLT5kZWNfdmRldi0+bnVtLCBWSURFT19NQUpPUiwganBl
+Zy0+ZGVjX3ZkZXYtPm1pbm9yKTsNCj4gPiA+ID4gKwkJICAianBlZyBkZXZpY2UgJWQgcmVnaXN0
+ZXJlZCBhcyAvZGV2L3ZpZGVvJWQgKCVkLCVkKVxuIiwNCj4gPiA+IA0KPiA+ID4gSGVyZSBpdCB3
+b3VsZCBiZSBhY3R1YWxseSB1c2VmdWwgdG8gc3BlY2lhbCBjYXNlIHRoZSBlbmNvZGVyIGFuZCBk
+ZWNvZGVyLA0KPiA+ID4gYmVjYXVzZSBpdCB3b3VsZCBiZSBlYXNpZXIgZm9yIHRoZSB1c2VyIHRv
+IGtub3cgd2hpY2ggZGV2aWNlIGlzIHdoaWNoLg0KPiA+ID4gDQo+IA0KPiBKdXN0IG1ha2luZyBz
+dXJlIHRoaXMgd2Fzbid0IG92ZXJsb29rZWQuDQo+IA0KPiBbc25pcF0NCj4gPiA+ID4gKw0KPiA+
+ID4gPiArdm9pZCBtdGtfanBlZ19lbmNfcmVzZXQodm9pZCBfX2lvbWVtICpiYXNlKQ0KPiA+ID4g
+PiArew0KPiA+ID4gPiArCXdyaXRlbCgweDAwLCBiYXNlICsgSlBFR19FTkNfUlNUQik7DQo+ID4g
+PiA+ICsJd3JpdGVsKEpQRUdfRU5DX1JFU0VUX0JJVCwgYmFzZSArIEpQRUdfRU5DX1JTVEIpOw0K
+PiA+ID4gPiArCXdyaXRlbCgweDAwLCBiYXNlICsgSlBFR19FTkNfQ09ERUNfU0VMKTsNCj4gPiA+
+ID4gK30NCj4gPiA+ID4gKw0KPiA+ID4gPiArdTMyIG10a19qcGVnX2VuY19nZXRfaW50X3N0YXR1
+cyh2b2lkIF9faW9tZW0gKmJhc2UpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICsJdTMyIHJldDsNCj4g
+PiA+ID4gKw0KPiA+ID4gPiArCXJldCA9IHJlYWRsKGJhc2UgKyBKUEVHX0VOQ19JTlRfU1RTKSAm
+DQo+ID4gPiA+ICsJCSAgICBKUEVHX0VOQ19JTlRfU1RBVFVTX01BU0tfQUxMSVJROw0KPiA+ID4g
+PiArCWlmIChyZXQpDQo+ID4gPiA+ICsJCXdyaXRlbCgwLCBiYXNlICsgSlBFR19FTkNfSU5UX1NU
+Uyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArfQ0KPiA+ID4g
+DQo+ID4gPiBEb2VzIGl0IG1ha2Ugc2Vuc2UgdG8gaGF2ZSBhIGZ1bmN0aW9uIGZvciB3aGF0IGlz
+IGVzc2VudGlhbGx5IGp1c3QgMiBsaW5lcz8NCj4gPiA+IEFsc28sIHRoZSBuYW1lIGlzIG1pc2xl
+YWRpbmcsIGFzIHRoZSBmdW5jdGlvbiBub3Qgb25seSBnZXRzIGJ1dCBhbHNvDQo+ID4gPiBjbGVh
+cnMuDQo+ID4gTWFrZSBhbGwgaHcgcmVnaXN0ZXIgc2V0dGluZyBpbiBtdGtfanBlZ19lbmNfaHcu
+YyBpcyBvbmUgcGFydCBvZiBjdXJyZW50DQo+ID4gYXJjaGl0ZWN0dXJlLg0KPiA+IEkgaGF2ZSBj
+aGFuZ2VkIHRoZSBmdW5jdGlvbiBuYW1lIHRvDQo+ID4gbXRrX2pwZWdfZW5jX2dldF9hbmRfY2xl
+YXJfaW50X3N0YXR1cy4NCj4gDQo+IEFzIEkgbWVudGlvbmVkIGJlZm9yZSwgdGhpcyBkcml2ZXIg
+bmVlZHMgYSBiaWcgY2xlYW4gdXAgYW5kIHRoYXQncyB3aHkgSQ0KPiBzdWdnZXN0ZWQgc3RhcnRp
+bmcgb3ZlciB3aXRoIGEgbmV3IG9uZSBmb3IgdGhlIEpQRUcgZW5jb2RlciBwYXJ0LiBTaW5jZQ0K
+PiB3ZSBkZWNpZGVkIHRvIGV4dGVuZCB0aGlzIG9uZSBpbiB0aGUgZW5kLCB3b3VsZCB5b3UgYmUg
+YWJsZSB0byBpbXByb3ZlDQo+IHRoaXMgYXNwZWN0IGFzIHdlbGw/IFRoYW5rcy4NCj4gDQo+IEJl
+c3QgcmVnYXJkcywNCj4gVG9tYXN6DQoNCg==
 
