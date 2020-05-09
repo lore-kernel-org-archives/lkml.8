@@ -2,89 +2,117 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D993CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6BCC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA5FB24953
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tQrFS6W8"
+	by mail.kernel.org (Postfix) with ESMTP id 4B4BD2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgEIGhK (ORCPT
+        id S1728851AbgEIGlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 02:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726106AbgEIGhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 02:37:07 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9870EC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 23:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=mcO8+1EDxZvAX8ZD4A53xevhvEfo/u+dOx6XCDnH4Do=; b=tQrFS6W8yF0rzk4LRpqpeK8Xt9
-        VUn8R+0YHMMYINrzX9E//hI5rJV1rTmbkoyq+L+KZvguwZOatxNJ8Q4vzFyM8IIavIqBCnZEPj86f
-        3uEujsbtM2S902GBpY7lfcd4rkBpA0CQ3J5iWwsnHsElWnEyr762pT4s5mJbhXuRy7S7bA3SBp8Nl
-        PcQZhTxz/BhF1OL45Y+9clGzRy8/848PKGM8LoU2Sj5LuzcxWoOd14famKG9+ZiPuEx3b+EZ713z4
-        jXLDEebJrQ1WDuzERid/GfpC1+J8nSX8Xb87h0OsEedjNiRIan4vVCVnXGkRpnR5aEPH8WlJ0Um87
-        sJ6SeQkw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXJ6Z-0005sH-CZ; Sat, 09 May 2020 06:36:59 +0000
-Subject: Re: [PATCH] drm/panel: visionox-rm69299: Add module license
-To:     Jason Yan <yanaijie@huawei.com>, thierry.reding@gmail.com,
-        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
-        harigovi@codeaurora.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20200509063017.2000-1-yanaijie@huawei.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5d692435-1d55-ade9-fe22-00ffc1cdca64@infradead.org>
-Date:   Fri, 8 May 2020 23:36:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200509063017.2000-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 9 May 2020 02:41:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2357 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgEIGlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 02:41:19 -0400
+IronPort-SDR: drC1Oz23I3VZH7ne6h0fhKttGaZR8VhWCuVXCZsfjo2uCvUXFKAr3RP6TI/X1Jvt0+RFObMzFY
+ 8sXaLp445Q7w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 23:41:19 -0700
+IronPort-SDR: v55QBOIkmvL1Db2Nho/wV13nBwQanrTrSTJ/OK3yJLMtkTmZdoPZVCFIi94RzuVPVjIGtWKBWC
+ rKYwZjCSEEUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,370,1583222400"; 
+   d="scan'208";a="370722447"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 08 May 2020 23:41:17 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v2 1/2] serial: lantiq: Make UART's use as console selectable
+Date:   Sat,  9 May 2020 14:41:14 +0800
+Message-Id: <35f2d002ba1cb26192fe4d9b8cdab275300705bc.1589006353.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 11:30 PM, Jason Yan wrote:
-> Fix the following build warning:
-> 
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-visionox-rm69299.o
-> see include/linux/module.h for more information
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/gpu/drm/panel/panel-visionox-rm69299.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-visionox-rm69299.c b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> index 25fe8b0bb040..ec279ffdbd94 100644
-> --- a/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> +++ b/drivers/gpu/drm/panel/panel-visionox-rm69299.c
-> @@ -300,3 +300,4 @@ static struct mipi_dsi_driver visionox_rm69299_driver = {
->  module_mipi_dsi_driver(visionox_rm69299_driver);
->  
->  MODULE_DESCRIPTION("Visionox RM69299 DSI Panel Driver");
-> +MODULE_LICENSE("GPL");
-> 
+Lantiq UART driver can be used for system console. Add changes to
+make this driver's use as console selectable/configurable.
 
-I sent a patch for this yesterday.
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ drivers/tty/serial/Kconfig  |  9 ++++++++-
+ drivers/tty/serial/lantiq.c | 11 ++++++++++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 4b0a7b98f8c7..bb4009a1135f 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1037,10 +1037,17 @@ config SERIAL_LANTIQ
+ 	bool "Lantiq serial driver"
+ 	depends on (LANTIQ || X86) || COMPILE_TEST
+ 	select SERIAL_CORE
++	help
++	  Support for UART on Lantiq and Intel SoCs.
++
++config SERIAL_LANTIQ_CONSOLE
++	bool "Console on Lantiq UART"
++	depends on SERIAL_LANTIQ=y
+ 	select SERIAL_CORE_CONSOLE
+ 	select SERIAL_EARLYCON
+ 	help
+-	  Support for console and UART on Lantiq SoCs.
++	  Select this option if you would like to use a Lantiq UART as the
++	  system console.
+ 
+ config SERIAL_QE
+ 	tristate "Freescale QUICC Engine serial port support"
+diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
+index c5e46ff972e4..d3b62a1be6ad 100644
+--- a/drivers/tty/serial/lantiq.c
++++ b/drivers/tty/serial/lantiq.c
+@@ -597,6 +597,7 @@ static const struct uart_ops lqasc_pops = {
+ 	.verify_port =	lqasc_verify_port,
+ };
+ 
++#ifdef CONFIG_SERIAL_LANTIQ_CONSOLE
+ static void
+ lqasc_console_putchar(struct uart_port *port, int ch)
+ {
+@@ -705,6 +706,14 @@ lqasc_serial_early_console_setup(struct earlycon_device *device,
+ OF_EARLYCON_DECLARE(lantiq, "lantiq,asc", lqasc_serial_early_console_setup);
+ OF_EARLYCON_DECLARE(lantiq, "intel,lgm-asc", lqasc_serial_early_console_setup);
+ 
++#define LANTIQ_SERIAL_CONSOLE	(&lqasc_console)
++
++#else
++
++#define LANTIQ_SERIAL_CONSOLE	NULL
++
++#endif /* CONFIG_SERIAL_LANTIQ_CONSOLE */
++
+ static struct uart_driver lqasc_reg = {
+ 	.owner =	THIS_MODULE,
+ 	.driver_name =	DRVNAME,
+@@ -712,7 +721,7 @@ static struct uart_driver lqasc_reg = {
+ 	.major =	0,
+ 	.minor =	0,
+ 	.nr =		MAXPORTS,
+-	.cons =		&lqasc_console,
++	.cons =		LANTIQ_SERIAL_CONSOLE,
+ };
+ 
+ static int fetch_irq_lantiq(struct device *dev, struct ltq_uart_port *ltq_port)
 -- 
-~Randy
+2.11.0
 
