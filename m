@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D983AC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD3A721655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B69218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgEINtX (ORCPT
+        id S1728073AbgEINt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:49:23 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54388 "EHLO huawei.com"
+        Sat, 9 May 2020 09:49:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54368 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727122AbgEINtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:49:18 -0400
+        id S1727834AbgEINt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 09:49:29 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3DF4ECD001CE41F9D8CA;
+        by Forcepoint Email with ESMTP id 359F62E12B047D20BB97;
         Sat,  9 May 2020 21:49:14 +0800 (CST)
 Received: from euler.huawei.com (10.175.101.6) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
@@ -33,9 +33,9 @@ To:     <daniel.thompson@linaro.org>, <jason.wessel@windriver.com>,
         <catalin.marinas@arm.com>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
-Subject: [PATCH 2/4] arm64: Extract kprobes_save_local_irqflag() and kprobes_restore_local_irqflag()
-Date:   Sun, 10 May 2020 05:41:57 +0800
-Message-ID: <20200509214159.19680-3-liwei391@huawei.com>
+Subject: [PATCH 3/4] arm64: kgdb: Fix single-stepping into the irq handler wrongly
+Date:   Sun, 10 May 2020 05:41:58 +0800
+Message-ID: <20200509214159.19680-4-liwei391@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200509214159.19680-1-liwei391@huawei.com>
 References: <20200509214159.19680-1-liwei391@huawei.com>
@@ -48,132 +48,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PSTATE.I and PSTATE.D are very important for single-step working.
+After the single-step exception handling oops is fixed, when we execute
+single-step in kdb/kgdb, we may see it jumps to the irq_handler (where
+PSTATE.D is cleared) instead of the next instruction.
 
-Without disabling interrupt on local CPU, there is a chance of
-interrupt occurrence in the period of exception return and start of
-out-of-line single-step, that result in wrongly single stepping
-into the interrupt handler. And if D bit is set then, it results into
-undefined exception and when it's handler enables dbg then single-step
-exception is generated, not as expected.
+Add the prepare and cleanup work for single-step when enabling and
+disabling to maintain the PSTATE.I and PSTATE.D carefully.
 
-As they are maintained well in kprobes_save_local_irqflag() and
-kprobes_restore_local_irqflag() for kprobe module, extract them as
-kernel_prepare_single_step() and kernel_cleanup_single_step() for
-general use.
+Before this patch:
+* kdb:
+Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
 
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+[0]kdb> ss
+
+Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to SS trap @ 0xffff800010082ab8
+[0]kdb> 0xffff800010082ab8
+0xffff800010082ab8 = 0xffff800010082ab8 (el1_irq+0x78)
+[0]kdb>
+
+   0xffff800010082ab0 <+112>:	nop
+   0xffff800010082ab4 <+116>:	msr	daifclr, #0xd
+   0xffff800010082ab8 <+120>:	adrp	x1, 0xffff8000113a7000 <cpu_ops+1288>
+   0xffff800010082abc <+124>:	ldr	x1, [x1, #1408]
+
+* kgdb:
+(gdb) target remote 127.1:23002
+Remote debugging using 127.1:23002
+arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+(gdb) b printk
+Breakpoint 1 at 0xffff8000101486cc: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+(gdb) c
+Continuing.
+[New Thread 287]
+[Switching to Thread 283]
+
+Thread 177 hit Breakpoint 1, printk (fmt=0xffff80001130c9d8 "\001\066sysrq: HELP : ")
+    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+2076	{
+(gdb) stepi
+el1_irq () at /home/liwei/main_code/linux/arch/arm64/kernel/entry.S:608
+608		irq_handler
+(gdb)
+
+After this patch:
+* kdb:
+Entering kdb (current=0xffff8000119d2dc0, pid 0) on processor 0 due to Keyboard Entry
+[0]kdb> bp printk
+Instruction(i) BP #0 at 0xffff80001014874c (printk)
+    is enabled   addr at ffff80001014874c, hardtype=0 installed=0
+
+[0]kdb> g
+
+/ # echo h > /proc/sysrq-trigger
+
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to Breakpoint @ 0xffff80001014874c
+[0]kdb> ss
+
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to SS trap @ 0xffff800010148750
+[0]kdb>
+
+* kgdb:
+(gdb) target remote 127.1:23002
+Remote debugging using 127.1:23002
+arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+(gdb) b printk
+Breakpoint 1 at 0xffff80001014874c: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+(gdb) c
+Continuing.
+[New Thread 277]
+[Switching to Thread 276]
+
+Thread 171 hit Breakpoint 1, printk (fmt=0xffff8000112fc130 "\001\066sysrq: HELP : ")
+    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+2076	{
+(gdb) stepi
+0xffff800010148750	2076	{
+(gdb)
+
+Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
 Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- arch/arm64/include/asm/debug-monitors.h |  4 ++++
- arch/arm64/kernel/debug-monitors.c      | 26 +++++++++++++++++++++++
- arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
- 3 files changed, 32 insertions(+), 26 deletions(-)
+ arch/arm64/kernel/kgdb.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-index 7619f473155f..b62469f3475b 100644
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -113,6 +113,10 @@ void user_fastforward_single_step(struct task_struct *task);
- void kernel_enable_single_step(struct pt_regs *regs);
- void kernel_disable_single_step(void);
- int kernel_active_single_step(void);
-+void kernel_prepare_single_step(unsigned long *flags,
-+						struct pt_regs *regs);
-+void kernel_cleanup_single_step(unsigned long flags,
-+						struct pt_regs *regs);
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 1a157ca33262..3910ac06c261 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -100,6 +100,8 @@ struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] = {
+ 	{ "fpcr", 4, -1 },
+ };
  
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- int reinstall_suspended_bps(struct pt_regs *regs);
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index 48222a4760c2..25ce6b5a52d2 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -429,6 +429,32 @@ int kernel_active_single_step(void)
- }
- NOKPROBE_SYMBOL(kernel_active_single_step);
- 
-+/*
-+ * Interrupts need to be disabled before single-step mode is set, and not
-+ * reenabled until after single-step mode ends.
-+ * Without disabling interrupt on local CPU, there is a chance of
-+ * interrupt occurrence in the period of exception return and  start of
-+ * out-of-line single-step, that result in wrongly single stepping
-+ * into the interrupt handler.
-+ */
-+void kernel_prepare_single_step(unsigned long *flags,
-+						struct pt_regs *regs)
-+{
-+	*flags = regs->pstate & DAIF_MASK;
-+	regs->pstate |= PSR_I_BIT;
-+	/* Unmask PSTATE.D for enabling software step exceptions. */
-+	regs->pstate &= ~PSR_D_BIT;
-+}
-+NOKPROBE_SYMBOL(kernel_prepare_single_step);
++static DEFINE_PER_CPU(unsigned long, kgdb_ss_flags);
 +
-+void kernel_cleanup_single_step(unsigned long flags,
-+						struct pt_regs *regs)
-+{
-+	regs->pstate &= ~DAIF_MASK;
-+	regs->pstate |= flags;
-+}
-+NOKPROBE_SYMBOL(kernel_cleanup_single_step);
+ char *dbg_get_reg(int regno, void *mem, struct pt_regs *regs)
+ {
+ 	if (regno >= DBG_MAX_REG_NUM || regno < 0)
+@@ -200,8 +202,11 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
+ 		/*
+ 		 * Received continue command, disable single step
+ 		 */
+-		if (kernel_active_single_step())
++		if (kernel_active_single_step()) {
++			kernel_cleanup_single_step(per_cpu(kgdb_ss_flags,
++					raw_smp_processor_id()), linux_regs);
+ 			kernel_disable_single_step();
++		}
+ 
+ 		err = 0;
+ 		break;
+@@ -221,8 +226,12 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
+ 		/*
+ 		 * Enable single step handling
+ 		 */
+-		if (!kernel_active_single_step())
++		if (!kernel_active_single_step()) {
++			kernel_prepare_single_step(&per_cpu(kgdb_ss_flags,
++					raw_smp_processor_id()), linux_regs);
+ 			kernel_enable_single_step(linux_regs);
++		}
 +
- /* ptrace API */
- void user_enable_single_step(struct task_struct *task)
- {
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index d1c95dcf1d78..c655b6b543e3 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -168,30 +168,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
- 	__this_cpu_write(current_kprobe, p);
- }
- 
--/*
-- * Interrupts need to be disabled before single-step mode is set, and not
-- * reenabled until after single-step mode ends.
-- * Without disabling interrupt on local CPU, there is a chance of
-- * interrupt occurrence in the period of exception return and  start of
-- * out-of-line single-step, that result in wrongly single stepping
-- * into the interrupt handler.
-- */
--static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
--						struct pt_regs *regs)
--{
--	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
--	regs->pstate |= PSR_I_BIT;
--	/* Unmask PSTATE.D for enabling software step exceptions. */
--	regs->pstate &= ~PSR_D_BIT;
--}
--
--static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
--						struct pt_regs *regs)
--{
--	regs->pstate &= ~DAIF_MASK;
--	regs->pstate |= kcb->saved_irqflag;
--}
--
- static void __kprobes
- set_ss_context(struct kprobe_ctlblk *kcb, unsigned long addr)
- {
-@@ -227,7 +203,7 @@ static void __kprobes setup_singlestep(struct kprobe *p,
- 		set_ss_context(kcb, slot);	/* mark pending ss */
- 
- 		/* IRQs and single stepping do not mix well. */
--		kprobes_save_local_irqflag(kcb, regs);
-+		kernel_prepare_single_step(&kcb->saved_irqflag, regs);
- 		kernel_enable_single_step(regs);
- 		instruction_pointer_set(regs, slot);
- 	} else {
-@@ -414,7 +390,7 @@ kprobe_single_step_handler(struct pt_regs *regs, unsigned int esr)
- 	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
- 
- 	if (retval == DBG_HOOK_HANDLED) {
--		kprobes_restore_local_irqflag(kcb, regs);
-+		kernel_cleanup_single_step(kcb->saved_irqflag, regs);
- 		kernel_disable_single_step();
- 
- 		post_kprobe_handler(kcb, regs);
+ 		err = 0;
+ 		break;
+ 	default:
 -- 
 2.17.1
 
