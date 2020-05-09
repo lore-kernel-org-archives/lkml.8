@@ -2,238 +2,199 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF74C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA46AC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDAD4214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F6A214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcmiKObj"
+	dkim=pass (1024-bit key) header.d=48.io header.i=@48.io header.b="xCPj/Szf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEILTP (ORCPT
+        id S1728301AbgEILTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
+        Sat, 9 May 2020 07:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725920AbgEILTO (ORCPT
+        by vger.kernel.org with ESMTP id S1725920AbgEILTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:19:14 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BB5C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 04:19:12 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x73so3495791lfa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 04:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EgBmZj0YP5lTWm93pdMnUd2XVLO6BkksVU5qHErJs8Y=;
-        b=xcmiKObjaM5wyKpC91Wsx5JQQBvFdiIX2OBBszA7/5tYMi2ItnB0SONo9Ad+IZz6x6
-         0uSTjbQp9+jYDyCVFX72QfHOr/gZrt6uzc9HQ2/Op9Q7gWS1a4bjN2vlSdbyia8FA/iW
-         7WHeY21k+RCQua0JnhnxJrruXa0Uf1RK310ZTciN2CBbyD4icv8qF+D0/8dsb87wpZp0
-         WtMBQkCFAag4jYjtB0CU70GVTal8gM4KsDok/xzk4CiysNpofNjqmycoEPxkLGjFgeZE
-         My7zUS3/UAeN2rbTFyCoWA24xlF1V67Zu8sL0KT5QnI5giTPpAMBj7UpOjbbYoAyVs1p
-         LgLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EgBmZj0YP5lTWm93pdMnUd2XVLO6BkksVU5qHErJs8Y=;
-        b=WczWTslMJke2UYqDbcfaVQTsS5e9pcYNOB9NHKB76sBqSaHU2Em0tdrHvMnPMLQBZZ
-         vDC/QKiqjDH9wotLWaBLv1L/fLpCciSHQC+OaRHlp4ccvhjvpy5qFAUyUx/RdpTNflr6
-         P97aRnIUQiUGfJoN5UbZaIUqLYTZRPDbcJIh2BzCUjKCWkCwlfK94HnyinksC9jYLarY
-         rWqrMkA7gN9HPEEvd/TthYn9KueSl/oemRbNjFHJXR+VVDLAudIIWr4+CzXlIuoGb2cF
-         qKKXaVg//yX6myzFyAqkMN61Nb/W9//SN6fVD88Owu7mH13bboqHd7AuYwtMzXC3OSAu
-         hSrA==
-X-Gm-Message-State: AOAM532Tj5e4gJKRFR9H0FCrrogH58DC3Lg7PuR5N0qK0v9tYUSALFLI
-        l6kaz6ehopvF7a0rJffyGB7ni2PGcPhoYZWJ+28h7A==
-X-Google-Smtp-Source: ABdhPJx5e/hzmoQSQuLG77jg8aLECA0q/iupm4JGBG2FSQvKZNRkkaWp+xx0z4IRNuVmrVBo9hQEFqNSmWtpaGr2lM4=
-X-Received: by 2002:a19:40d2:: with SMTP id n201mr4822268lfa.82.1589023151208;
- Sat, 09 May 2020 04:19:11 -0700 (PDT)
+        Sat, 9 May 2020 07:19:18 -0400
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 09 May 2020 04:19:18 PDT
+Received: from pruto.48.io (48.io [IPv6:2a01:430:17:1::ffff:361])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66977C061A0C;
+        Sat,  9 May 2020 04:19:18 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by pruto.48.io (Postfix) with ESMTPSA id AA1599167A;
+        Sat,  9 May 2020 13:19:16 +0200 (CEST)
+DMARC-Filter: OpenDMARC Filter v1.3.2 pruto.48.io AA1599167A
+Authentication-Results: pruto.48.io; dmarc=none (p=none dis=none) header.from=48.io
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=48.io; s=default;
+        t=1589023156; bh=PD4G1VYzdYofQB3xLNm3Mdoe2zymwjMy9UKjQHmAphY=;
+        h=From:To:Cc:Subject:Date;
+        b=xCPj/SzfAgpQ7IypVAykco6zMAZCdBHNDnx0EZZVwCVNE0rD7DTCIvdg2WMCzlguZ
+         /YJsGK5UjY2YgVkdKKqaETxN6QUVMqT4fEpqzLSJOnTvAv665NvGtTNnhO8iBfj9yn
+         DyWBwnzwYYaMrYGmC84w+ADoSyoR0D7a0sNUK4r8=
+From:   srk@48.io
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Richard Marko <srk@48.io>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 1/1] ARM: dts: novena: Add LVDS-to-eDP bridge bindings
+Date:   Sat,  9 May 2020 13:19:07 +0200
+Message-Id: <20200509111907.26685-1-srk@48.io>
 MIME-Version: 1.0
-References: <20200509064507.085696379@linuxfoundation.org>
-In-Reply-To: <20200509064507.085696379@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 May 2020 16:48:58 +0530
-Message-ID: <CA+G9fYvMHTSev0Me8z5AmVVhN0OVPiQ7gtx+xoOTEh=+tb31VA@mail.gmail.com>
-Subject: Re: [PATCH 4.4 000/306] 4.4.223-rc3 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 at 12:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.223 release.
-> There are 306 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Mon, 11 May 2020 06:44:14 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.223-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Marek Vasut <marex@denx.de>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Add bindings for the LVDS-to-eDP bridge chip, IT6251, which is
+used to connect the standard 1920x1080 panel on Novena laptop.
 
-Summary
-------------------------------------------------------------------------
+Tested on a Kosagi Novena laptop with imx6 display controller.
 
-kernel: 4.4.223-rc3
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 211c2a20b085f3c5c4092afea4c10dd2bccaf96d
-git describe: v4.4.222-307-g211c2a20b085
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.222-307-g211c2a20b085
+Based on v5.7-rc2, applies to drm-misc-next 5e6ed29d72d2
 
-No regressions (compared to build v4.4.222)
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Richard Marko <srk@48.io>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+---
+ arch/arm/boot/dts/imx6q-novena.dts | 57 +++++++++++++++++++++++++++++-
+ 1 file changed, 56 insertions(+), 1 deletion(-)
 
-No fixes (compared to build v4.4.222)
+diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+index 69f170ff31c5..803a97e04dc4 100644
+--- a/arch/arm/boot/dts/imx6q-novena.dts
++++ b/arch/arm/boot/dts/imx6q-novena.dts
+@@ -109,6 +109,12 @@ heartbeat {
+ 	panel: panel {
+ 		compatible = "innolux,n133hse-ea1";
+ 		backlight = <&backlight>;
++
++		port {
++			panel_in_edp0: endpoint {
++				remote-endpoint = <&bridge_out_edp0>;
++			};
++		};
+ 	};
+ 
+ 	reg_2p5v: regulator-2p5v {
+@@ -146,6 +152,7 @@ reg_display: regulator-display {
+ 		startup-delay-us = <200000>;
+ 		gpio = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
++		regulator-always-on;
+ 	};
+ 
+ 	reg_lvds_lcd: regulator-lvds-lcd {
+@@ -155,6 +162,7 @@ reg_lvds_lcd: regulator-lvds-lcd {
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
++		regulator-always-on;
+ 	};
+ 
+ 	reg_pcie: regulator-pcie {
+@@ -212,6 +220,17 @@ &audmux {
+ 	status = "okay";
+ };
+ 
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
++};
++
+ &ecspi3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_ecspi3_novena>;
+@@ -423,6 +442,29 @@ codec: es8328@11 {
+ 					 <&clks IMX6QDL_CLK_CKO1_PODF>;
+ 		assigned-clock-rates = <0 0 722534400 22579200>;
+ 	};
++
++	it6251@5c {
++		compatible = "ite,it6251";
++		reg = <0x5c>, <0x5e>;
++		reg-names = "bridge", "lvds";
++		power-supply = <&reg_display>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_lvdsbridge_novena>;
++
++		ports {
++			port@0 {
++				bridge_out_edp0: endpoint {
++					remote-endpoint = <&panel_in_edp0>;
++				};
++			};
++
++			port@1 {
++				bridge_in_lvds0: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &kpp {
+@@ -443,6 +485,14 @@ lvds-channel@0 {
+ 		fsl,data-width = <24>;
+ 		fsl,panel = <&panel>;
+ 		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&bridge_in_lvds0>;
++			};
++		};
+ 	};
+ };
+ 
+@@ -529,10 +579,15 @@ MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
+ 		>;
+ 	};
+ 
++	pinctrl_lvdsbridge_novena: lvdsbridgegrp-novena {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT10__GPIO5_IO28	0x1b0b1
++		>;
++	};
++
+ 	pinctrl_backlight_novena: backlightgrp-novena {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
+-			MX6QDL_PAD_CSI0_DAT10__GPIO5_IO28	0x1b0b1
+ 			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b1
+ 		>;
+ 	};
+-- 
+2.25.1
 
-Ran 20110 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.223-rc3
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.223-rc3-hikey-20200509-718
-git commit: a9b5de1ee99dbfcffcc1d5a7cf13b8774b503461
-git describe: 4.4.223-rc3-hikey-20200509-718
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.223-rc3-hikey-20200509-718
-
-No regressions (compared to build 4.4.223-rc2-hikey-20200508-717)
-
-No fixes (compared to build 4.4.223-rc2-hikey-20200508-717)
-
-Ran 1814 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
