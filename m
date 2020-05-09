@@ -2,185 +2,166 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D983AC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46425C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B69218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207F7214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LYvqtNTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgEINt3 (ORCPT
+        id S1727930AbgEINvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:49:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54368 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727834AbgEINt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:49:29 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 359F62E12B047D20BB97;
-        Sat,  9 May 2020 21:49:14 +0800 (CST)
-Received: from euler.huawei.com (10.175.101.6) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 21:49:09 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <daniel.thompson@linaro.org>, <jason.wessel@windriver.com>,
-        <dianders@chromium.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-        <mhiramat@kernel.org>, <davem@davemloft.net>, <will@kernel.org>,
-        <catalin.marinas@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
-Subject: [PATCH 3/4] arm64: kgdb: Fix single-stepping into the irq handler wrongly
-Date:   Sun, 10 May 2020 05:41:58 +0800
-Message-ID: <20200509214159.19680-4-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200509214159.19680-1-liwei391@huawei.com>
-References: <20200509214159.19680-1-liwei391@huawei.com>
+        Sat, 9 May 2020 09:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726904AbgEINvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 09:51:20 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42E9C061A0C;
+        Sat,  9 May 2020 06:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2uygEucO5eCGyC1Yl+l/qEGrNAjV1cjP3RBl/px8ykw=; b=LYvqtNTkAfpe2zWTtXqs0AlVr
+        JSY/8pWu8EKEKUpiD3KHRAIrqtN/gZWHmvDAyeY6MYSSAmSw+HjwcOoURlbOlMtkwKx/eYWaE8NAe
+        estJ6I3KznNOQ+XT5SNmMxkySCAiYeQP46EeJpLbeso6Y8i7JQkzn6aN7sAwovHwQVrnnSLUoWnMD
+        ilbvI8F/q0AhjOMwccK28a53kaB6tg7R3G2bnyHC/TP5TqmVJrbWwsESPcr/dVb8e4e1p590UHxg/
+        o8aW5eD5kKR+Vb8IK/zowKmzjpCn3Fzib3PAmwVQNiVk4K6VhAboF9Et6ayykFoPahOH1R55nlk/S
+        tFwQiXG3w==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38036)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jXPsk-00044H-Uh; Sat, 09 May 2020 14:51:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jXPsf-0002u4-W2; Sat, 09 May 2020 14:51:06 +0100
+Date:   Sat, 9 May 2020 14:51:05 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200509135105.GE1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk>
+ <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk>
+ <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the single-step exception handling oops is fixed, when we execute
-single-step in kdb/kgdb, we may see it jumps to the irq_handler (where
-PSTATE.D is cleared) instead of the next instruction.
+On Sat, May 09, 2020 at 03:14:05PM +0200, Matteo Croce wrote:
+> On Sat, May 9, 2020 at 1:45 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Sat, May 09, 2020 at 11:15:58AM +0000, Stefan Chulski wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Matteo Croce <mcroce@redhat.com>
+> > > > Sent: Saturday, May 9, 2020 3:13 AM
+> > > > To: David S . Miller <davem@davemloft.net>
+> > > > Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>; netdev
+> > > > <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Antoine
+> > > > Tenart <antoine.tenart@bootlin.com>; Thomas Petazzoni
+> > > > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
+> > > > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Stefan
+> > > > Chulski <stefanc@marvell.com>; Marcin Wojtas <mw@semihalf.com>; Linux
+> > > > ARM <linux-arm-kernel@lists.infradead.org>; Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk>
+> > > > Subject: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
+> > > > handle RSS tables
+> > > >
+> > > > Hi,
+> > > >
+> > > > What do you think about temporarily disabling it like this?
+> > > >
+> > > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > > @@ -5775,7 +5775,8 @@ static int mvpp2_port_probe(struct platform_device
+> > > > *pdev,
+> > > >                             NETIF_F_HW_VLAN_CTAG_FILTER;
+> > > >
+> > > >         if (mvpp22_rss_is_supported()) {
+> > > > -               dev->hw_features |= NETIF_F_RXHASH;
+> > > > +               if (port->phy_interface != PHY_INTERFACE_MODE_SGMII)
+> > > > +                       dev->hw_features |= NETIF_F_RXHASH;
+> > > >                 dev->features |= NETIF_F_NTUPLE;
+> > > >         }
+> > > >
+> > > >
+> > > > David, is this "workaround" too bad to get accepted?
+> > >
+> > > Not sure that RSS related to physical interface(SGMII), better just remove NETIF_F_RXHASH as "workaround".
+> >
+> > Hmm, I'm not sure this is the right way forward.  This patch has the
+> > effect of disabling:
+> >
+> > d33ec4525007 ("net: mvpp2: add an RSS classification step for each flow")
+> >
+> > but the commit you're pointing at which caused the regression is:
+> >
+> > 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
+> >
+> >
+> 
+> Hi,
+> 
+> When git bisect pointed to 895586d5dc32 ("net: mvpp2: cls: Use RSS
+> contexts to handle RSS tables"), which was merged
+> almost an year after d33ec4525007 ("net: mvpp2: add an RSS
+> classification step for each flow"), so I assume that between these
+> two commits either the feature was working or it was disable and we
+> didn't notice
+> 
+> Without knowing what was happening, which commit should my Fixes tag point to?
 
-Add the prepare and cleanup work for single-step when enabling and
-disabling to maintain the PSTATE.I and PSTATE.D carefully.
+Let me make sure that I get this clear:
 
-Before this patch:
-* kdb:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+- Prior to 895586d5dc32, you can turn on and off rxhash without issue
+  on any port.
+- After 895586d5dc32, turning rxhash on eth2 prevents reception.
 
-[0]kdb> g
+Prior to 895586d5dc32, with rxhash on, it looks like hashing using
+CRC32 is supported but only one context.  So, if it's possible to
+enable rxhash on any port on the mcbin without 895586d5dc32, and the
+port continues to work, I'd say the bug was introduced by
+895586d5dc32.
 
-/ # echo h > /proc/sysrq-trigger
+Of course, that would be reinforced if there was a measurable
+difference in performance due to rxhash on each port.
 
-Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> ss
-
-Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to SS trap @ 0xffff800010082ab8
-[0]kdb> 0xffff800010082ab8
-0xffff800010082ab8 = 0xffff800010082ab8 (el1_irq+0x78)
-[0]kdb>
-
-   0xffff800010082ab0 <+112>:	nop
-   0xffff800010082ab4 <+116>:	msr	daifclr, #0xd
-   0xffff800010082ab8 <+120>:	adrp	x1, 0xffff8000113a7000 <cpu_ops+1288>
-   0xffff800010082abc <+124>:	ldr	x1, [x1, #1408]
-
-* kgdb:
-(gdb) target remote 127.1:23002
-Remote debugging using 127.1:23002
-arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
-21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
-(gdb) b printk
-Breakpoint 1 at 0xffff8000101486cc: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
-(gdb) c
-Continuing.
-[New Thread 287]
-[Switching to Thread 283]
-
-Thread 177 hit Breakpoint 1, printk (fmt=0xffff80001130c9d8 "\001\066sysrq: HELP : ")
-    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
-2076	{
-(gdb) stepi
-el1_irq () at /home/liwei/main_code/linux/arch/arm64/kernel/entry.S:608
-608		irq_handler
-(gdb)
-
-After this patch:
-* kdb:
-Entering kdb (current=0xffff8000119d2dc0, pid 0) on processor 0 due to Keyboard Entry
-[0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff80001014874c (printk)
-    is enabled   addr at ffff80001014874c, hardtype=0 installed=0
-
-[0]kdb> g
-
-/ # echo h > /proc/sysrq-trigger
-
-Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to Breakpoint @ 0xffff80001014874c
-[0]kdb> ss
-
-Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to SS trap @ 0xffff800010148750
-[0]kdb>
-
-* kgdb:
-(gdb) target remote 127.1:23002
-Remote debugging using 127.1:23002
-arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
-21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
-(gdb) b printk
-Breakpoint 1 at 0xffff80001014874c: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
-(gdb) c
-Continuing.
-[New Thread 277]
-[Switching to Thread 276]
-
-Thread 171 hit Breakpoint 1, printk (fmt=0xffff8000112fc130 "\001\066sysrq: HELP : ")
-    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
-2076	{
-(gdb) stepi
-0xffff800010148750	2076	{
-(gdb)
-
-Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- arch/arm64/kernel/kgdb.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 1a157ca33262..3910ac06c261 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -100,6 +100,8 @@ struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] = {
- 	{ "fpcr", 4, -1 },
- };
- 
-+static DEFINE_PER_CPU(unsigned long, kgdb_ss_flags);
-+
- char *dbg_get_reg(int regno, void *mem, struct pt_regs *regs)
- {
- 	if (regno >= DBG_MAX_REG_NUM || regno < 0)
-@@ -200,8 +202,11 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 		/*
- 		 * Received continue command, disable single step
- 		 */
--		if (kernel_active_single_step())
-+		if (kernel_active_single_step()) {
-+			kernel_cleanup_single_step(per_cpu(kgdb_ss_flags,
-+					raw_smp_processor_id()), linux_regs);
- 			kernel_disable_single_step();
-+		}
- 
- 		err = 0;
- 		break;
-@@ -221,8 +226,12 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 		/*
- 		 * Enable single step handling
- 		 */
--		if (!kernel_active_single_step())
-+		if (!kernel_active_single_step()) {
-+			kernel_prepare_single_step(&per_cpu(kgdb_ss_flags,
-+					raw_smp_processor_id()), linux_regs);
- 			kernel_enable_single_step(linux_regs);
-+		}
-+
- 		err = 0;
- 		break;
- 	default:
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
