@@ -2,36 +2,80 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF7FC54E4A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78496C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8897020A8B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3A420A8B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589055599;
+	bh=BY+9H3Ohx9j5ATTOyBORFnwojITRSe1G1ubOQsQy6Io=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zj8g/awgaF1G1dh/94EB2i0rx1IYjAiZMu4/pwbluwAoZ/FXI5KYj5D+Qc9ETmBgD
+	 zG/026vd4DUTk+WCPwUnAF1UBNso4HRDpJVh8SZfwdVMgXNjAhTQBqCayvK7y7TDaz
+	 saWvun01UoVAEfLErqVGKHroj6X9J9k3RTD3zw4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgEIUP4 (ORCPT
+        id S1727786AbgEIUT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 16:15:56 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:47412 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728244AbgEIUPz (ORCPT
+        Sat, 9 May 2020 16:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725960AbgEIUT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 16:15:55 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXVt2-0005eM-E0; Sat, 09 May 2020 14:15:52 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXVt1-0003ZO-Mf; Sat, 09 May 2020 14:15:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Sat, 9 May 2020 16:19:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF5D5C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 13:19:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g4so5306910ljl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 13:19:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DL22TlRhfdhfFFfvaipbz/lSHTNFSjOxjeAvslhNQxU=;
+        b=J2julx2hs6owd62n+pd2JYhe6q2QsRo1OXAtwsVsruYMJBpnQ8uiFOlguFDfLik7YZ
+         rMAAv0+dFxD8QskYZi9nLX3zKberv3nFnMQyidnzE4Vpn2PvYCSA06ICHQfTj4koWuUf
+         oYf9h4WDijg//VNKhtCcE35X/HOZG3u0J2S3k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DL22TlRhfdhfFFfvaipbz/lSHTNFSjOxjeAvslhNQxU=;
+        b=ITR8u0hhnk4iNt9WoJ8QNcJOiTMqNSKHxSUxqngkuFxLVwXweLcWhVyFNLqyO0doO2
+         kiXcON0USLvXk54BiRy69uxJc9X0t1DsySw2LkXsKpoWbjynTHfx7jA++nPjauO67cAl
+         TtatCFNuzbj7zW3pmkPCJ2Fjmtfcp0LOtRwhFDI5hPdF8wGi3OqmDYOI6cGCGVNK4I9x
+         /o9zJVpGyoJojkhlMJLr/Mse5yNDQ9cjb1p0GyluKRhtmmLIxFcs5pRrxc+Aks5rali0
+         pEI+Lpn+eW6n0UuzeIuv8NT7WGhWAJvFssogHWgjSXoZPVdsb77JwQ7CKoLStrtbtT//
+         Hftw==
+X-Gm-Message-State: AOAM532OwoG6MnCZixVrdc5RGL1uPXOWYFf6UjAWDoxl0ppcyf3XGyg6
+        mUAysQpDI/9xd06rqiOHwCvTlPBWyFY=
+X-Google-Smtp-Source: ABdhPJzWlGM1/vLonKwPqkrA/cRbhtEIPTy9cJR0sWEZua1bp+CsOANpzgt3CUEtP4BPYgXrtY6KWQ==
+X-Received: by 2002:a2e:8813:: with SMTP id x19mr5648830ljh.83.1589055595988;
+        Sat, 09 May 2020 13:19:55 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id x83sm4995304lfa.65.2020.05.09.13.19.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 13:19:55 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id y4so5294101ljn.7
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 13:19:54 -0700 (PDT)
+X-Received: by 2002:a2e:8512:: with SMTP id j18mr5609189lji.201.1589055594669;
+ Sat, 09 May 2020 13:19:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
+ <CAHk-=wj-Znzqp3xktZ+kERM5cKF-Yh_6XjyGYof6bqPq2T3F5A@mail.gmail.com> <878si0yijd.fsf@x220.int.ebiederm.org>
+In-Reply-To: <878si0yijd.fsf@x220.int.ebiederm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 May 2020 13:19:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whZ-dXeYEk-meQT4pQmqJxATxDHSYbTSjL4dj56Ne9TFw@mail.gmail.com>
+Message-ID: <CAHk-=whZ-dXeYEk-meQT4pQmqJxATxDHSYbTSjL4dj56Ne9TFw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from __do_execve_file
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
         Kees Cook <keescook@chromium.org>,
@@ -47,58 +91,24 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=wj-Znzqp3xktZ+kERM5cKF-Yh_6XjyGYof6bqPq2T3F5A@mail.gmail.com>
-Date:   Sat, 09 May 2020 15:12:22 -0500
-In-Reply-To: <CAHk-=wj-Znzqp3xktZ+kERM5cKF-Yh_6XjyGYof6bqPq2T3F5A@mail.gmail.com>
-        (Linus Torvalds's message of "Sat, 9 May 2020 13:07:48 -0700")
-Message-ID: <878si0yijd.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jXVt1-0003ZO-Mf;;;mid=<878si0yijd.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19cvWMPbuGySDS9RKEj6OOfBZhbGqCVxX0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from __do_execve_file
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-
-> On Sat, May 9, 2020 at 12:44 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> Now that security_bprm_set_creds is no longer responsible for calling
->> cap_bprm_set_creds, security_bprm_set_creds only does something for
->> the primary file that is being executed (not any interpreters it may
->> have).  Therefore call security_bprm_set_creds from __do_execve_file,
->> instead of from prepare_binprm so that it is only called once, and
->> remove the now unnecessary called_set_creds field of struct binprm.
+On Sat, May 9, 2020 at 1:15 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> Ahh, good, this patch removes the 'called_set_creds' logic from the
-> security subsystems.
->
-> So it does half of what I asked for: please also just rename that
-> "security_bprm_set_creds()" to be "security_primary_bprm_set_creds()"
-> so that the change of semantics also shows up that way.
->
-> And so that there is no confusion about the fact that
-> "cap_bprm_set_creds()" has absolutely nothing to do with
-> "security_bprm_set_creds()" any more.
+> I agree something needs to be renamed, to remove confusion.
 
-I agree something needs to be renamed, to remove confusion.
+Yeah, the alternative is to rename the capability version. I don't
+care much which way it goes, although I do think it's best to call out
+explicitly that the security hook functions get only the "primary"
+executable brpm info.
 
-I am off for a nap now, and tomorrow is Mother's day so I probably won't
-be back to this seriously until Monday.  But please disect these patches
-and I will address any problems.
+Which is why I'd prefer to just rename all those low-level security
+cases. It makes for a slightly bigger patch, but I think it makes for
+better readability, and makes it explicit that that hook is literally
+just for the primary executable, not for the interpreter or whatever.
 
-Eric
-
-
+               Linus
