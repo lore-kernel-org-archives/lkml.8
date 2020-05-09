@@ -2,151 +2,93 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C2C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FF4C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 936A02184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40BB2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsf5L63R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="k4Hx7HSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgEIIrg (ORCPT
+        id S1727123AbgEIIwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbgEIIrf (ORCPT
+        Sat, 9 May 2020 04:52:20 -0400
+Received: from www381.your-server.de ([78.46.137.84]:56354 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgEIIwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:47:35 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195F5C061A0C;
-        Sat,  9 May 2020 01:47:35 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g14so2782945wme.1;
-        Sat, 09 May 2020 01:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vpA2mMnqtCdcczzkn/BswPLFEz3AqGdCg7CXXHUsINQ=;
-        b=fsf5L63RngfsFHogIddKCefBwaJMD0i/7d0SGXzwlzuQj5veMbf37TVxzV3XhU9pPz
-         W3ajImjcN6U19WkMWXjlRHamJXtXoycA2qWpk2mE6P3NhptdU5Yrfri5GHcyqow04Aeu
-         RXDko3XlzZDmtJqLLe67ojhStsta03uAlGDfjh0p1FcSe4yWUMYxG4tT0HHRFh+lLRhI
-         NdVWae3mQ3/hEHGcMkmdPgwsWrnAq33BteCX+tAKcHnVTl6zeFJKgexr10cKOvW3KRJy
-         8XNpqln4a2EZBODt9MIcl+XAwEnOYXh4XzfZQJrf+VQQw0tuPFW9SubM+p0FJeyHqGOs
-         pDkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vpA2mMnqtCdcczzkn/BswPLFEz3AqGdCg7CXXHUsINQ=;
-        b=fqN58LfDSs52XzzazE5KnzNYwKCqMkxVhluubeFKrkBD2glSI8FwajeEqa9Ql4V2mE
-         yVCOZGvB2hIi2Vb6m0jSuntmuhsfGfb6/IrNWECgtQ3xH3eWDO+lhfBSb8JvUHJBx5aQ
-         FdLcC8w5A3j9nPNOFrAC/+PV7KctspnY0N3FQP52jtsnmVrUy0orgRghhCF0B+H+a9AH
-         b081hbZMjqjgW+KHS1UsxpTQH8XhXlf7yx5fKE5o6vAIsvD/b9dCiRa5I3TGB1cgWIZP
-         lnOALqlNLJ67Jxyg6rAfj7RXv7GxFrVxfOzeZ37h++sxEZlFFN0BDJSlXTSyO0b3WPxa
-         n9WQ==
-X-Gm-Message-State: AGi0PuZvGJLS8rL9ZSV4hASmZoRjyjuzRCqeA0y6GTddoBrP3tWDFGQX
-        3as1fevObWnXl5bJhwLQ48aI5TI7
-X-Google-Smtp-Source: APiQypKZkVDG+otFrlSCvBOkm7q7k+tzlXizLMWX5sXQxqKVfB8TYKqQb5B6dyx1LlKk2FYszyfWBQ==
-X-Received: by 2002:a7b:cf23:: with SMTP id m3mr19772826wmg.36.1589014053596;
-        Sat, 09 May 2020 01:47:33 -0700 (PDT)
-Received: from localhost.localdomain ([46.191.65.149])
-        by smtp.gmail.com with ESMTPSA id b20sm16145044wme.9.2020.05.09.01.47.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 01:47:33 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC] splice/tee: len=0 fast path after validity check
-Date:   Sat,  9 May 2020 11:46:18 +0300
-Message-Id: <14d4955e8c232ea7d2cbb2c2409be789499e0452.1589013737.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sat, 9 May 2020 04:52:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UX4id79YvnLmpwLxSRzdIBRSmF4fESpagRYbUVxzdds=; b=k4Hx7HSWchDhaD3UM7WhRDZFA4
+        /E1yaBZNGr67a2zrz/z27HEbSOBpyBa/eSTjHNPV0WUmk7UkuGwfFzqA+c9MJLldEk4k9Quhr/zsY
+        6C4f+pb/41QuLwSh/RYvOXuNhEMm2Wxp+nh0S5cwtXvsY6JgVeufXOkGttz1qci3B+LVU2K4nC5N4
+        x2ufxZYtLg1HuH8lUDQCDXKuK6ZBBOn0BiYPWYrTgmEbz3O4XrbR5vW6R8ZZyNBh+GPflWecTaYwh
+        FFeJQb0cui89jf9cFFNch8XXmWnMikD4qJ5EAxtATY2xWSm68S8Ir5Zsr+6mYjCAeNnGZzJ9v8NFO
+        Zvn9WYOA==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jXLDT-0000KF-5C; Sat, 09 May 2020 10:52:15 +0200
+Received: from [82.135.71.55] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jXLDS-0000wq-Tj; Sat, 09 May 2020 10:52:15 +0200
+Subject: Re: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org
+References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
+Date:   Sat, 9 May 2020 10:52:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200508135348.15229-1-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25806/Fri May  8 14:16:19 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When len=0, splice() and tee() return 0 even if specified fds are
-invalid, hiding errors from users. Move len=0 optimisation later after
-basic validity checks.
+On 5/8/20 3:53 PM, Alexandru Ardelean wrote:
+> [...]
+> What I don't like, is that iio:device3 has iio:buffer3:0 (to 3).
+> This is because the 'buffer->dev.parent = &indio_dev->dev'.
+> But I do feel this is correct.
+> So, now I don't know whether to leave it like that or symlink to shorter
+> versions like 'iio:buffer3:Y' -> 'iio:device3/bufferY'.
+> The reason for naming the IIO buffer devices to 'iio:bufferX:Y' is
+> mostly to make the names unique. It would have looked weird to do
+> '/dev/buffer1' if I would have named the buffer devices 'bufferX'.
+>
+> So, now I'm thinking of whether all this is acceptable.
+> Or what is acceptable?
+> Should I symlink 'iio:device3/iio:buffer3:0' -> 'iio:device3/buffer0'?
+> What else should I consider moving forward?
+> What means forward?
+> Where did I leave my beer?
 
-before:
-splice(len=0, fd_in=-1, ...) == 0;
+Looking at how the /dev/ devices are named I think we can provide a name 
+that is different from the dev_name() of the device. Have a look at 
+device_get_devnode() in drivers/base/core.c. We should be able to 
+provide the name for the chardev through the devnode() callback.
 
-after:
-splice(len=0, fd_in=-1, ...) == -EBADF;
-
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
-
-Totally leaving it at yours judgment, but it'd be nice to have
-for io_uring as well.
-
- fs/splice.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/fs/splice.c b/fs/splice.c
-index a1dd54de24d8..8d6fc690f8e9 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1122,6 +1122,9 @@ long do_splice(struct file *in, loff_t __user *off_in,
- 		     !(out->f_mode & FMODE_WRITE)))
- 		return -EBADF;
- 
-+	if (unlikely(!len))
-+		return 0;
-+
- 	ipipe = get_pipe_info(in);
- 	opipe = get_pipe_info(out);
- 
-@@ -1426,9 +1429,6 @@ SYSCALL_DEFINE6(splice, int, fd_in, loff_t __user *, off_in,
- 	struct fd in, out;
- 	long error;
- 
--	if (unlikely(!len))
--		return 0;
--
- 	if (unlikely(flags & ~SPLICE_F_ALL))
- 		return -EINVAL;
- 
-@@ -1535,7 +1535,6 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
- 	int ret = 0;
- 	bool input_wakeup = false;
- 
--
- retry:
- 	ret = ipipe_prep(ipipe, flags);
- 	if (ret)
-@@ -1769,6 +1768,9 @@ long do_tee(struct file *in, struct file *out, size_t len, unsigned int flags)
- 	 * copying the data.
- 	 */
- 	if (ipipe && opipe && ipipe != opipe) {
-+		if (unlikely(!len))
-+			return 0;
-+
- 		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
- 			flags |= SPLICE_F_NONBLOCK;
- 
-@@ -1795,9 +1797,6 @@ SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
- 	if (unlikely(flags & ~SPLICE_F_ALL))
- 		return -EINVAL;
- 
--	if (unlikely(!len))
--		return 0;
--
- 	error = -EBADF;
- 	in = fdget(fdin);
- 	if (in.file) {
--- 
-2.24.0
+While we are at this, do we want to move the new devices into an iio 
+subfolder? So iio/buffer0:0 instead of iio:buffer0:0?
 
