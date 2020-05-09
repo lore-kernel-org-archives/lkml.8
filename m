@@ -2,72 +2,171 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD52FC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAA1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95AF92184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69582184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvxOe+Py"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgEILUh (ORCPT
+        id S1728409AbgEILVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:20:37 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35674 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725920AbgEILUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:20:37 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 02D1B46098E61140D581;
-        Sat,  9 May 2020 19:20:33 +0800 (CST)
-Received: from localhost (10.166.215.154) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sat, 9 May 2020
- 19:20:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <casey@schaufler-ca.com>, <jmorris@namei.org>, <serge@hallyn.com>,
-        <tglx@linutronix.de>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] Smack: Remove unused inline function smk_ad_setfield_u_fs_path_mnt
-Date:   Sat, 9 May 2020 19:20:19 +0800
-Message-ID: <20200509112019.54164-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 9 May 2020 07:21:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728318AbgEILVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 07:21:23 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBF0C061A0C;
+        Sat,  9 May 2020 04:21:23 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x77so2363240pfc.0;
+        Sat, 09 May 2020 04:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=yzuOQHdhVHihQi0h5xL8aCO4T4yf1MKXSB1rafT+J6s=;
+        b=FvxOe+PyTOEwk27zK/6HEiUy8Qd8++HiTUMpo9fG42tYl8q0QyBIU9hAHByd7pSW3T
+         JJ2+tn6D5EpGP2VZEUwZdM7s5ZmLjLOzBl7BJQS2JRHzIUkUIotNK5Ppd1RQ6HPFklS1
+         V5/48nHJ4f/3IHa8L4DgfDditgvRlAhFXDxyoC8OPMrBqjrLWfEKIX52KuWDGSzUUrZm
+         uXEhH60KxDm2W7rBIGmR6R2cEXCNxwWXdpc9qkn1+p+8bS1VDWJvurLoGhyWdKvEPf/v
+         Bhm6cxsL/k/tl/YmKCJiIhDT2o+HwjiWQU7mzr3J7au6+la833PUE2+ttl41b2EIkoIP
+         6YVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=yzuOQHdhVHihQi0h5xL8aCO4T4yf1MKXSB1rafT+J6s=;
+        b=ccfZGxjMb2uSR19lRByc16zqbKYNLl7N90MJY2Y6hlK6nnw9zSskoWK4imWi/C9uxv
+         pHwZ5yXCQUMrgN7s39Xnw446cdvaIYj6jvQKpaHD/RXISKYHYQVP9jJLy3vEgLYFJaQt
+         sHbgerA90CVFzPz0f58gPsMB/twzAbn5I6cEaYgYVJIfxfrEGlKywGjTU2VTm22ExOrJ
+         od63oMBLTFQ6xoI4p3B4PoqRWv665EXbuTji5UT+pKsndCJonudtONMllY0qYyIaac55
+         zZiOEkoarKn+iwdyGc2O5oqFPKJuooV1KxEAV+S1kaNhTXQfo+GSYCxa8bXVDkikZU0h
+         /X9Q==
+X-Gm-Message-State: AGi0PubgdEz8LEVcU2Kyq1xCVvYm0zTXDgbDY5Z/sDzEtKxf9CJWybiy
+        C0BGEyfg2yiZjmGpeo1eehQzhSW3M48=
+X-Google-Smtp-Source: APiQypJ5vN5L/NTAHyN4apNpjuyAloxRAMKHW4M0GwJgCFoLvojLrV8fMX5WEBivU7sjwSxRz6NCiQ==
+X-Received: by 2002:a63:4f45:: with SMTP id p5mr5956850pgl.41.1589023282497;
+        Sat, 09 May 2020 04:21:22 -0700 (PDT)
+Received: from [192.168.1.7] ([223.72.62.216])
+        by smtp.gmail.com with ESMTPSA id 13sm4438035pfv.95.2020.05.09.04.21.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 04:21:21 -0700 (PDT)
+Subject: Re: [PATCH 1/4] fs: btrfs: fix a data race in
+ btrfs_block_group_done()
+To:     Nikolay Borisov <nborisov@suse.com>, clm@fb.com,
+        josef@toxicpanda.com, dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200509052001.2298-1-baijiaju1990@gmail.com>
+ <21982360-ee20-edfd-bee9-cbea04b3893f@suse.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <d991d28c-986a-0efc-e10e-62fe516dd7c6@gmail.com>
+Date:   Sat, 9 May 2020 19:20:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+In-Reply-To: <21982360-ee20-edfd-bee9-cbea04b3893f@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit a269434d2fb4 ("LSM: separate LSM_AUDIT_DATA_DENTRY from LSM_AUDIT_DATA_PATH")
-left behind this, remove it.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- security/smack/smack.h | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/security/smack/smack.h b/security/smack/smack.h
-index 62529f382942..f244c9d10004 100644
---- a/security/smack/smack.h
-+++ b/security/smack/smack.h
-@@ -505,10 +505,6 @@ static inline void smk_ad_setfield_u_fs_path_dentry(struct smk_audit_info *a,
- 						    struct dentry *d)
- {
- }
--static inline void smk_ad_setfield_u_fs_path_mnt(struct smk_audit_info *a,
--						 struct vfsmount *m)
--{
--}
- static inline void smk_ad_setfield_u_fs_inode(struct smk_audit_info *a,
- 					      struct inode *i)
- {
--- 
-2.17.1
 
 
+On 2020/5/9 18:53, Nikolay Borisov wrote:
+>
+> On 9.05.20 г. 8:20 ч., Jia-Ju Bai wrote:
+>> The functions btrfs_block_group_done() and caching_thread() are
+>> concurrently executed at runtime in the following call contexts:
+>>
+>> Thread 1:
+>>    btrfs_sync_file()
+>>      start_ordered_ops()
+>>        btrfs_fdatawrite_range()
+>>          btrfs_writepages() [via function pointer]
+>>            extent_writepages()
+>>              extent_write_cache_pages()
+>>                __extent_writepage()
+>>                  writepage_delalloc()
+>>                    btrfs_run_delalloc_range()
+>>                      cow_file_range()
+>>                        btrfs_reserve_extent()
+>>                          find_free_extent()
+>>                            btrfs_block_group_done()
+>>
+>> Thread 2:
+>>    caching_thread()
+>>
+>> In btrfs_block_group_done():
+>>    smp_mb();
+>>    return cache->cached == BTRFS_CACHE_FINISHED ||
+>>        cache->cached == BTRFS_CACHE_ERROR;
+>>
+>> In caching_thread():
+>>    spin_lock(&block_group->lock);
+>>    block_group->caching_ctl = NULL;
+>>    block_group->cached = ret ? BTRFS_CACHE_ERROR : BTRFS_CACHE_FINISHED;
+>>    spin_unlock(&block_group->lock);
+>>
+>> The values cache->cached and block_group->cached access the same memory,
+>> and thus a data race can occur.
+>> This data race was found and actually reproduced by our concurrency
+>> fuzzer.
+>>
+>> To fix this race, the spinlock cache->lock is used to protect the
+>> access to cache->cached in btrfs_block_group_done().
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   fs/btrfs/block-group.h | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
+>> index 107bb557ca8d..fb5f12acea40 100644
+>> --- a/fs/btrfs/block-group.h
+>> +++ b/fs/btrfs/block-group.h
+>> @@ -278,9 +278,13 @@ static inline u64 btrfs_system_alloc_profile(struct btrfs_fs_info *fs_info)
+>>   
+>>   static inline int btrfs_block_group_done(struct btrfs_block_group *cache)
+>>   {
+>> +	int flag;
+>>   	smp_mb();
+>> -	return cache->cached == BTRFS_CACHE_FINISHED ||
+>> -		cache->cached == BTRFS_CACHE_ERROR;
+>> +	spin_lock(&cache->lock);
+>> +	flag = (cache->cached == BTRFS_CACHE_FINISHED ||
+>> +		cache->cached == BTRFS_CACHE_ERROR);
+>> +	spin_unlock(&cache->lock);
+>> +	return flag;
+> Using the lock also obviates the need for the memory barrier.
+> Furthermore this race is benign because even if it occurs and we call
+> into btrfs_cache_block_group we do check cache->cached under
+> btrfs_block_group::lock and do the right thing, though we would have
+> done a bit more unnecessary wor if that's the case. So have you actually
+> measured the effect of adding the the spinlock? This is likely done so
+> as to make the fastpath lock-free. Perhaps a better approach would be to
+> annotate the access of cached with READ/WRITE once so that it's fetched
+> from memory and not optimized out by the compiler and leave the more
+> heavy work in the unlikely path.
+>
+> Please exercise some critical thinking when looking into such issues as
+> there might be a good reason why something has been coded in a
+> particular way and it might look wrong on a first look but in fact is not.
+
+Okay, thanks a lot for your explanation and advice :)
+
+
+Best wishes,
+Jia-Ju Bai
