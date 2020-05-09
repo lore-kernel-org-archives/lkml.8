@@ -2,99 +2,144 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34054C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E3FC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16D0C2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C64624960
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s/yXFOFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgEILV4 (ORCPT
+        id S1728454AbgEILWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:21:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43224 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727093AbgEILVz (ORCPT
+        Sat, 9 May 2020 07:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727093AbgEILWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:21:55 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 049B24kK040623;
-        Sat, 9 May 2020 07:21:54 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws2ctnpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 May 2020 07:21:54 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 049BF20A026573;
-        Sat, 9 May 2020 11:21:51 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 30wm56888w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 May 2020 11:21:51 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 049BLnOI6422878
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 9 May 2020 11:21:49 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1FF7A405F;
-        Sat,  9 May 2020 11:21:38 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6069A4065;
-        Sat,  9 May 2020 11:21:36 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.51.106])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  9 May 2020 11:21:36 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     leo.yan@linaro.org, sandipan@linux.ibm.com, jolsa@kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf powerpc: Don't ignore sym-handling.c file
-Date:   Sat,  9 May 2020 16:51:13 +0530
-Message-Id: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 9 May 2020 07:22:12 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CC9C061A0C;
+        Sat,  9 May 2020 04:22:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q24so5445835pjd.1;
+        Sat, 09 May 2020 04:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nc0J+alQfOrvgwIOBD8elSqmi3vnePVNZdws8SziVdQ=;
+        b=s/yXFOFLCfVR6jEU6GzFIKNNpotAKDJUK8b99OGXLCIjN/6huyEwt3Cd9Yw3Mtm71U
+         hH2qaX6gQSZ1pIaEgH37SHvQncbLrulga2SZDgUMzCw0awTWOuBnfLIOrTkf+NNH+w1X
+         /pLd/PMubOFlh1/Vvws3zf+ZsrrWEOGNCAvPsEY291MZ6G0FPA06RfKVO+pmJSkcuFAS
+         Ko5u1eJryTQyBXqeWktV8sBGk4/k3glhbpNKZoxnvBunpNOpHrThP0MVjjha1i5VQ34A
+         qzNIicBHLtCoeGqQP/HoDutdZTVPmyuKetkN7bA3Oa1wrN70wg/PrlD6xg9Ci6GJ9wBv
+         xy6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nc0J+alQfOrvgwIOBD8elSqmi3vnePVNZdws8SziVdQ=;
+        b=PhAlEweKfwo62ZKk8da4Vq7rjx6BhT+r8md5CehbM0x7giTGR74SjSgfxImp+ovTMa
+         kCiSqYl15J7Bsy5orSu+sLe62uyYm1mgBCE6V1p6JRe057xg6E5iMBV/bIDM8qW5LeI4
+         eejQg/2Zs+wOtG25chTnjSjFwQ61JJOaVNkncLAMLdLEZcxbfqQlO2yeWcpOZawqwYI/
+         E3m0FpIyEYNrxPJuE6nIh958ss+OQSIqXifLU0Z0qedNHdOISuhQB4jhnZwrf4cIybPh
+         c6MjhJpYgw4YU/upj2I6k7b53TXQ8omGW2ThmUx4VU959rI1THHc9H8hyWUb2Mgqo/v3
+         ZbtA==
+X-Gm-Message-State: AGi0PuYfeO+OHzplw3cOz4KHGFZ+4pIkEP9IGT2ict3CUvaxS+W597mp
+        17rh+nxEzBUjTrlRXayE2UT5a4osWX9DBkn/fGA=
+X-Google-Smtp-Source: APiQypLqaOrW/kTHlmjah1lQ7VugqF1t6VsA1s5ASMnzgFEDI6a6f6vRMXehV0/h2i/GCrTb1m0ZRADj9jNrMe4iKTg=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11230982pjb.228.1589023331915;
+ Sat, 09 May 2020 04:22:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-09_02:2020-05-08,2020-05-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
- mlxlogscore=992 bulkscore=0 clxscore=1011 impostorscore=0 adultscore=0
- phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005090098
+References: <20200508164819.1.I6f1b6f973ee6c8af1348611370c73a0ec0ea53f1@changeid>
+In-Reply-To: <20200508164819.1.I6f1b6f973ee6c8af1348611370c73a0ec0ea53f1@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 9 May 2020 14:22:00 +0300
+Message-ID: <CAHp75VfF-y6GSrFKMx75b756jiO+0KtJUpa2X=778XVvoTh5dg@mail.gmail.com>
+Subject: Re: [PATCH] iommu/amd: Fix get_acpihid_device_id
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
-removed powerpc specific sym-handling.c file from Build. This wasn't
-caught by build CI because all functions in this file are declared
-as __weak in common code. Fix it.
+On Sat, May 9, 2020 at 1:50 AM Raul E Rangel <rrangel@chromium.org> wrote:
+>
+> acpi_dev_hid_uid_match expects a null pointer for UID if it doesn't
 
-Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
-Reported-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- tools/perf/arch/powerpc/util/Build | 1 +
- 1 file changed, 1 insertion(+)
+acpi_dev_hid_uid_match()
 
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index e5c9504f8586..e86e210bf514 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -2,6 +2,7 @@ perf-y += header.o
- perf-y += kvm-stat.o
- perf-y += perf_regs.o
- perf-y += mem-events.o
-+perf-y += sym-handling.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_DWARF) += skip-callchain-idx.o
+> exist. The acpihid_map_entry contains a char buffer for holding the
+> UID. If no UID was provided in the IVRS table, this buffer will be
+> zeroed. If we pass in a null string, acpi_dev_hid_uid_match will return
+
+acpi_dev_hid_uid_match()
+
+> false because it will try and match an empty string to the ACPI UID of
+> the device.
+
+Thank you for testing and producing a patch! My comments below, after addressing
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+>
+> Fixes: ae5e6c6439c3 ("iommu/amd: Switch to use acpi_dev_hid_uid_match()")
+
+Suggested-by?
+
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+
+
+
+> ---
+>
+>  drivers/iommu/amd_iommu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> index 20cce366e951..06f603366cb1 100644
+> --- a/drivers/iommu/amd_iommu.c
+> +++ b/drivers/iommu/amd_iommu.c
+> @@ -125,7 +125,8 @@ static inline int get_acpihid_device_id(struct device *dev,
+>                 return -ENODEV;
+>
+>         list_for_each_entry(p, &acpihid_map, list) {
+> -               if (acpi_dev_hid_uid_match(adev, p->hid, p->uid)) {
+> +               if (acpi_dev_hid_uid_match(adev, p->hid,
+> +                                          p->uid[0] ? p->uid : NULL)) {
+
+I would still use *p->uid as done in other places in the driver and
+put this all on one line (however, the latter is complete style
+preference depending on maintainer's choice)
+
+>                         if (entry)
+>                                 *entry = p;
+>                         return p->devid;
+> --
+> 2.26.2.645.ge9eca65c58-goog
+>
+
+
 -- 
-2.21.1
-
+With Best Regards,
+Andy Shevchenko
