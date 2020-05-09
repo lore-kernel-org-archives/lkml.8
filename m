@@ -2,169 +2,195 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E8C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A43C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4350C2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0212720736
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvJi5Oqf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GdgIHU4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEII6D (ORCPT
+        id S1727867AbgEII6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:58:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
+        Sat, 9 May 2020 04:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbgEII6D (ORCPT
+        by vger.kernel.org with ESMTP id S1725989AbgEII6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:58:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C65AC061A0C;
-        Sat,  9 May 2020 01:58:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a21so4157685ljb.9;
-        Sat, 09 May 2020 01:58:01 -0700 (PDT)
+        Sat, 9 May 2020 04:58:33 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76FCC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 01:58:31 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e25so4174151ljg.5
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 01:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6sBoYn3WeTZFCcqj57bcpCNR9WzBcjBDg78zlrXn2Bo=;
-        b=IvJi5OqftthYrAXQhCGJSEsNr2Ugk0p4lQGhUpMXBi99TyDjBaGPGU98kHtcygIgoM
-         dl7DoUhZYDjjoo87SDHBuPdevJlXBve6Oha7wQhCl6jYtbCM9UE4PSu5hV31mzRsSahr
-         wZLitRfkJMNIvWhTpo4PgkNHNQlioQYMslFX9wyHmSQJOAGx14vlZt3mu0MN/rl9nKqB
-         LtllpntMrN72NK9ou1yLBxOk7PovAncUkEPgztLCKA72CRBehtj6TjqznyxZ1s4vKPlo
-         VYrRD4vlhkowpqWcqeQ2wvZWrnBjVbZvy153zB4K8b+b+cYWX9DQzaiooNv3jWd+5ApN
-         a4pg==
+         :cc:content-transfer-encoding;
+        bh=5cFq6mnReSJOlIHJ83KboL83Q02sFWdUd1ilkeH//JM=;
+        b=GdgIHU4msEKXyL7U6kPerKF7VB+wU/NhKADbYFiOgPywrGxqyeS7NWTtz6vvYWyLMS
+         XZsgvpRhVWftc2MKfjbyTl4lgEV1wRCg8nHTlFvzQ/Ye4NPw6fNsa+6HATKoC+3v8cc1
+         KQbIdxvQxwZuW7pqEfpHsEhtwp/PoHIzZP0XLfXAoxLR18bhuBluCmbCR1URh82A6uIs
+         ZIp/ANS1b5pBzGVFyJNdjC/j3B0UMEHf6suuq0lX2I6a/GEW3lsHi+HisYB2RNKvQMZa
+         IuFeeLYzhrug7iOQVl1pc3nrFm0tDd5QVW6s2l/gM+z2zN7qPuA28w5tPiM/znwMY34B
+         b7SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6sBoYn3WeTZFCcqj57bcpCNR9WzBcjBDg78zlrXn2Bo=;
-        b=Z2HdyHLUexIeF46kIOIvH8nSiNWx6u1bznKgjg7v4Qb1r+iCnGMaeG3Qs39PB/cAsN
-         wgv8yHW2X+s/vd8C50QfHc5APz6nYPFzyWPDu9mUu0CVGK2NgN4anfP80+j0+hT/pxAh
-         MD5riivrw60279ShzSnqVET6Mgzi2BIHTvrJvZ2j02IxdiJdoDoI08SEzBK4F9BIBWnI
-         LZNq4E+EOJKZW///KMfgeEol5tzVWPA53dDeVx6hkJSQu0WFkBmun1Zaj/8kNCR+6kKU
-         ZX/dWNIjsqKB62NL59TPNe8fZaV8qXSOKrbEz+vNHJ/iNtAUbEva0W3SZZiRpvZKp7DC
-         29zA==
-X-Gm-Message-State: AOAM533XrzV8Nu4NUp+SKO2xsRiIC6+/oESGso3yeZGtJmuLwS41Z7pw
-        we9TuYNhI6aHUuM8myf395RYJyxx8o+m6coTfdg=
-X-Google-Smtp-Source: ABdhPJyRTtqcpC3jRUEkt6dyiDw0ymbF4WnirRlZbb3xJW+dnVzaS2G2GlylUAI5l/EqveHhvpmoQIn3N+E4jEcdptg=
-X-Received: by 2002:a2e:6c08:: with SMTP id h8mr4048684ljc.48.1589014679642;
- Sat, 09 May 2020 01:57:59 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5cFq6mnReSJOlIHJ83KboL83Q02sFWdUd1ilkeH//JM=;
+        b=geL044Zo/OPoPdJwpiWegTufHtC9PW6PGmfueYQ+2DP08s/wMrO0JvL85knS3+Uecj
+         CXZ1awkw6nv8uN9Bdi7xjsfUvx4SzT/H2RMjXJlyNUvbjDgmi4mtSVrhiSbg9bhKpzro
+         PkIo0XFgAbB76sH5NCz8D2W1lcVO6HZkXY82r0BixZPrP31WSsTovSDsaA0NiSSRXYJB
+         VqarAxbXrr5DDKnTlSA0g4umUasDDa7X90j7w7rf0DwAemPV/NGf2dgIj7tLLIJH1MdJ
+         6JBun+rVn1R3/mPCSTYixnMpaKDkxzgOoN3tBfIjcfAdjpJZ/XupQl9nXc6CkcgImEWB
+         Gnig==
+X-Gm-Message-State: AOAM532qed5CMGhDzBtRvTe/bMNNQtodGRLfy/1ezeltZrNiS94VkjZR
+        10Aa3NSrFEchE1pDmBk/nrRyjLsR+PqAKhAxFfB0bg==
+X-Google-Smtp-Source: ABdhPJxFEfJoGGXxvoDb7qDNnc2/eJqU3UrwQaveX6HKMmtgZljtoDc7zxFCIbEYtEpyMx7pOKk+HCBuWgFtzv5leI8=
+X-Received: by 2002:a2e:8999:: with SMTP id c25mr4282861lji.73.1589014710276;
+ Sat, 09 May 2020 01:58:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1587888520.git.baolin.wang7@gmail.com> <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
- <20200427154645.GA1201@infradead.org> <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
- <20200508214639.GA1389136@T590> <fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me>
- <20200508232222.GA1391368@T590>
-In-Reply-To: <20200508232222.GA1391368@T590>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Sat, 9 May 2020 16:57:48 +0800
-Message-ID: <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch processing
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200508132934.548989409@linuxfoundation.org>
+In-Reply-To: <20200508132934.548989409@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 9 May 2020 14:28:18 +0530
+Message-ID: <CA+G9fYs8Q=nMdpLNvzwwJ-+6GiBeZJCqjj5qbpA6nrYPvC8ssw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/49] 5.4.40-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 7:22 AM Ming Lei <ming.lei@redhat.com> wrote:
+On Fri, 8 May 2020 at 19:00, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Hi Sagi,
+> This is the start of the stable review cycle for the 5.4.40 release.
+> There are 49 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> On Fri, May 08, 2020 at 03:19:45PM -0700, Sagi Grimberg wrote:
-> > Hey Ming,
-> >
-> > > > Would it make sense to elevate this flag to a request_queue flag
-> > > > (QUEUE_FLAG_ALWAYS_COMMIT)?
-> > >
-> > > request queue flag usually is writable, however this case just needs
-> > > one read-only flag, so I think it may be better to make it as
-> > > tagset/hctx flag.
-> >
-> > I actually intended it to be writable.
-> >
-> > > > I'm thinking of a possibility that an I/O scheduler may be used
-> > > > to activate this functionality rather than having the driver set
-> > > > it necessarily...
-> > >
-> > > Could you explain a bit why I/O scheduler should activate this
-> > > functionality?
-> >
-> > Sure, I've recently seen some academic work showing the benefits
-> > of batching in tcp/ip based block drivers. The problem with the
-> > approaches taken is that I/O scheduling is exercised deep down in the
-> > driver, which is not the direction I'd like to go if we are want
-> > to adopt some of the batching concepts.
-> >
-> > I spent some (limited) time thinking about this, and it seems to
-> > me that there is an opportunity to implement this as a dedicated
-> > I/O scheduler, and tie it to driver specific LLD stack optimizations
-> > (net-stack for example) relying on the commit_rq/bd->last hints.
-> >
-> > When scanning the scheduler code, I noticed exactly the phenomenon that
-> > this patchset is attempting to solve and Christoph referred me to it.
-> > Now I'm thinking if we can extend this batching optimization for both
-> > use-cases.
+> Responses should be made by Sun, 10 May 2020 13:29:13 +0000.
+> Anything received after that time might be too late.
 >
-> Got it, thanks for the sharing.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.40-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
 >
-> >
-> > > batching submission may be good for some drivers, and currently
-> > > we only do it in limited way. One reason is that there is extra
-> > > cost for full batching submission, such as this patch requires
-> > > one extra .commit_rqs() for each dispatch, and lock is often needed
-> > > in this callback.
-> >
-> > That is not necessarily the case at all.
+> thanks,
 >
-> So far, all in-tree .commit_rqs() implementation requires lock.
->
-> >
-> > > IMO it can be a win for some slow driver or device, but may cause
-> > > a little performance drop for fast driver/device especially in workload
-> > > of not-batching submission.
-> >
-> > You're mostly correct. This is exactly why an I/O scheduler may be
-> > applicable here IMO. Mostly because I/O schedulers tend to optimize for
-> > something specific and always present tradeoffs. Users need to
-> > understand what they are optimizing for.
-> >
-> > Hence I'd say this functionality can definitely be available to an I/O
-> > scheduler should one exist.
-> >
->
-> I guess it is just that there can be multiple requests available from
-> scheduler queue. Actually it can be so for other non-nvme drivers in
-> case of none, such as SCSI.
->
-> Another way is to use one per-task list(such as plug list) to hold the
-> requests for dispatch, then every drivers may see real .last flag, so they
-> may get chance for optimizing batch queuing. I will think about the
-> idea further and see if it is really doable.
+> greg k-h
 
-How about my RFC v1 patch set[1], which allows dispatching more than
-one request from the scheduler to support batch requests?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-[1]
-https://lore.kernel.org/patchwork/patch/1210034/
-https://lore.kernel.org/patchwork/patch/1210035/
+Summary
+------------------------------------------------------------------------
 
--- 
-Baolin Wang
+kernel: 5.4.40-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 695621e788325e527588a26f1a9c6c526b69a2ee
+git describe: v5.4.39-50-g695621e78832
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.39-50-g695621e78832
+
+No regressions (compared to build v5.4.39)
+
+No fixes (compared to build v5.4.39)
+
+Ran 30255 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* kvm-unit-tests
+* libgpiod
+* linux-log-parser
+* ltp-containers-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
