@@ -2,230 +2,210 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F235FC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82511C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB9B208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CCA21655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mzYvCsSk"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fMcZW0Xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgEINnh (ORCPT
+        id S1727952AbgEINoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:43:37 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58252 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgEINng (ORCPT
+        Sat, 9 May 2020 09:44:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59244 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726782AbgEINoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589031813; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3+OUbR3nAMHj6vOkoLNKrouoG7vK2MNU8TiGQFCjkNE=;
-        b=mzYvCsSkmTcvd80dckxAzm86ehgWKmiR+rQMbWEdfhl0qfnXd53qsC+5ePCfu/qkCPfwyp
-        lHMrHUrqXJ/qFUEwRSbjrcH8ezx68Ub8amGNPxkbF3G/Y6lZ1eYIfrR8WJsrbxj5rDH/y6
-        WGniJIlDkxh3l4Xf/F8JAahNCU5JL/Y=
-Date:   Sat, 09 May 2020 15:43:21 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: DRM interaction problems on Ingenic CI20 / jz4780 with dw-hdmi
- and ingenic-drm
-To:     Paul Boddie <paul@boddie.org.uk>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>
-Message-Id: <9SG2AQ.ALB8O9UHXRT11@crapouillou.net>
-In-Reply-To: <79437309.Fv5JZGVDrq@jeremy>
-References: <ED77DCA8-FF50-4E9E-A4B8-688262774723@goldelico.com>
-        <125Q8Q.9F49TXF6ZICX1@crapouillou.net>
-        <YC8S9Q.M96AR8DWGF0F1@crapouillou.net> <79437309.Fv5JZGVDrq@jeremy>
+        Sat, 9 May 2020 09:44:21 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26CF130D;
+        Sat,  9 May 2020 15:44:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589031858;
+        bh=7ujcB1XiyYpi6kSKrCO4PkwZ8y4r1hWPfytMfvnyY4U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fMcZW0Xdwz+2i/Y1YD/XzxevPo9t5tFUqBQrZl8MQUQquRHgWOpZHE1KoxEhfQMxT
+         FoG0ZMRMprkb2BVaQaMm0+f0BY5fuTPWYbRY3wuJxBg+KQCMzAR8FH+i20YZaCz/Vv
+         k83pJTzCERFtUCglPJMmGagn3gFxbRHKpSakbFFo=
+Date:   Sat, 9 May 2020 16:44:10 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     srk@48.io
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Sean Cross <xobs@kosagi.com>
+Subject: Re: [PATCH 1/2] dt-bindings: it6251: add bindings for IT6251
+ LVDS-to-eDP bridge
+Message-ID: <20200509134410.GA5946@pendragon.ideasonboard.com>
+References: <20200509111732.26102-1-srk@48.io>
+ <20200509111732.26102-2-srk@48.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200509111732.26102-2-srk@48.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Richard,
 
-Le mar. 5 mai 2020 =E0 20:26, Paul Boddie <paul@boddie.org.uk> a =E9crit :
-> On Monday 4. May 2020 03.05.22 Paul Cercueil wrote:
->>=20
->>  > Le sam. 11 avril 2020 =E0 16:14, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a
->>  > =E9crit :
->>  >>
->>  >> So far we have identified two issues.
->>  >>
->>  >> The first is that HPD interrupts are not properly processed.
->>  >>
->>  >> drm_helper_hpd_irq_event() is called by HPD events but
->>  >> dev->mode_config.poll_enabled is false.
->>=20
->>  This is to be used when there's no hardware interrupt. I believe you
->>  have one, right? Then call drm_kms_helper_hotplug_event() from the
->>  interrupt handler instead.
->=20
-> What we have in drivers/gpu/drm/bridge/synopsys/dw-hdmi.c is a=20
-> function called
-> dw_hdmi_irq which appears to be the thread_fn for HDMI interrupts=20
-> (alongside
-> the dw_hdmi_hardirq which is the handler), initialised by a call to
-> devm_request_threaded_irq.
->=20
-> In dw_hdmi_irq, a hotplug event seems to cause=20
-> drm_helper_hpd_irq_event to be
-> called. However...
->=20
-> [...]
->=20
->>  >> The jz4780 hdmi subsystem (drm/bridge/dw-hdmi.c) uses
->>  >>
->>  >> 	connector->polled =3D DRM_CONNECTOR_POLL_HPD;
->>  >>
->>  >> but shouldn't this enable polling? Note that there seems to be
->>  >> no (direct) call to drm_kms_helper_poll_init().
->>  >>
->>  >> If we set dev->mode_config.poll_enabled =3D true in
->>  >> drm_helper_hpd_irq_event() things start to work.
->>  >>
->>  >> Please can you clarify what would be best practise here to
->>  >> get HPD event handling working.
->>=20
->>  Remove that - this stuff is for hardware without interrupts, where
->>  everything has to be polled.
->=20
-> Yes, I think this must be a mistake in the driver. In
-> drm_helper_hpd_irq_event, the connector is tested for the
-> DRM_CONNECTOR_POLL_HPD flag and skips the connector. It isn't clear=20
-> whether
-> this actually matters for the other hardware using this technology,
-> documentation being rather thin on the ground.
->=20
->>  >> The other issue is in dw-hdmi.c:
->>  >>
->>  >> We found out that ingenic_drm_encoder_atomic_check() fails=20
->> because
->>  >>
->>  >> info->num_bus_formats =3D=3D 0
->>  >>
->>  >> and not 1. This blocks further initialization.
->>  >>
->>  >> The reason seems to be that dw_hdmi_bridge_attach() does not call
->>  >> drm_display_info_set_bus_formats() with a proper format like
->>  >> other drivers (e.g. drm/bridge/ti-tfp410.c) are doing.
->>  >>
->>  >> We have patched to set a single bus format=20
->> MEDIA_BUS_FMT_RGB888_1X24
->>  >> and then DRM setup seems to work (although we still have no valid
->>  >> HDMI signal but that is likely something else).
->>  >>
->>  >> Please can you explain how setting the bus format should be fixed
->>  >> in dw-hdmi.c.
->>=20
->>  I'm not sure, but that information may come from EDID data. Are you
->>  able to obtain video modes from the connected monitor?
->=20
-> The modes are definitely received, or at least the list of modes=20
-> given by
-> /sys/devices/platform/13050000.lcd/drm/card0/card0-HDMI-A-1/modes is=20
-> viable.
->=20
-> However, it rather looked like the bus format information wasn't=20
-> being set and
-> that this inhibited the completion of the initialisation process=20
-> which, if
-> completed, would ultimately cause the format to be set. (This being=20
-> the short
-> version of the story as I remember it right now.) So, the problem=20
-> presents
-> itself as an initialisation order problem.
+Thank you for the patch.
 
-It's not an initialization order problem, the ingenic-drm expects the=20
-bus_formats to be provided and the synopsis driver never calls=20
-drm_display_info_set_bus_formats().
+On Sat, May 09, 2020 at 01:17:31PM +0200, srk@48.io wrote:
+> From: Marek Vasut <marex@denx.de>
+> 
+> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Richard Marko <srk@48.io>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sean Cross <xobs@kosagi.com>
+> Cc: devicetree@vger.kernel.org
+> To: dri-devel@lists.freedesktop.org
+> ---
+>  .../bindings/display/bridge/ite,it6251.yaml   | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+> new file mode 100644
+> index 000000000000..8daa44a30fa1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ite,it6251.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ITE IT6251 LVDS-to-eDP bridge bindings
+> +
+> +maintainers:
+> +  - Marek Vasut <marex@denx.de>
+> +  - Richard Marko <srk@48.io>
+> +
+> +description: |
+> +  The IT6251 is a high-performance single-chip
+> +  De-SSC LVDS to DisplayPort converter.
+> +  Combined with LVDS receiver and DisplayPort Transmitter,
+> +  the IT6251 supports LVDS input and DisplayPort 1.1a
+> +  output by conversion function.
 
-> I removed the flag from the connector to see if it makes any=20
-> difference, but
-> it doesn't look like it. Here is what /sys/kernel/debug/dri/0/state=20
-> contains:
->=20
-> plane[31]: plane-0
->         crtc=3D(null)
->         fb=3D0
->         crtc-pos=3D0x0+0+0
->         src-pos=3D0.000000x0.000000+0.000000+0.000000
->         rotation=3D1
->         normalized-zpos=3D0
->         color-encoding=3DITU-R BT.601 YCbCr
->         color-range=3DYCbCr limited range
-> crtc[32]: crtc-0
->         enable=3D0
->         active=3D0
->         self_refresh_active=3D0
->         planes_changed=3D0
->         mode_changed=3D0
->         active_changed=3D0
->         connectors_changed=3D0
->         color_mgmt_changed=3D0
->         plane_mask=3D0
->         connector_mask=3D0
->         encoder_mask=3D0
->         mode: "": 0 0 0 0 0 0 0 0 0 0 0x0 0x0
-> connector[34]: HDMI-A-1
->         crtc=3D(null)
->         self_refresh_aware=3D0
->=20
-> The crtc member values do not look encouraging. In fact, it just=20
-> looks like
-> most structure members are uninitialised.
->=20
-> Thanks for the advice: I spent some time the other day reviewing=20
-> various
-> aspects of the Synopsys drivers of different vintages (Ingenic 3.0.8=20
-> non-DRM
-> driver for JZ4780, MIPS/Ingenic 3.18 DRM driver for JZ4780 based on=20
-> Freescale
-> driver code, the recent generic DRM bridge driver), and so this=20
-> information is
-> timely and valuable.
+You could reflow this to the 80 columns limit. It also sounds like
+marketing material copied from the datasheet, with "by conversion
+function" likely a bad translation.
 
-With a hardcoded bus_format of RGB888 in the ingenic-drm driver, and=20
-jz4780_dw_hdmi_plat_data.input_bus_format initialized too:
+> +
+> +properties:
+> +  compatible:
+> +    const: ite,it6251
+> +
+> +  reg:
+> +    items:
+> +      - description: I2C address of the bridge
+> +      - description: I2C address of the LVDS part
+> +
+> +  reg-names:
+> +    items:
+> +      - const: bridge
+> +      - const: lvds
+> +
+> +  ports:
+> +    type: object
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        description: |
+> +         Video port for eDP output (typically panel).
+> +
+> +      port@1:
+> +        type: object
+> +        description: |
+> +          Video port for LVDS input.
 
-modetest -D /dev/dri/card0 -M ingenic-drm -s 35@32:1280x720-60
+We traditionally use port 0 for the input and port 1 for the output. I'd
+rather do the same here to remain consistent, and allow generic code to
+operate on this device.
 
-My PC monitor sees a signal - unfortunately it says "input not=20
-supported".
+> +
+> +    required:
+> +      - port@0
+> +      - port@1
+> +
+> +    additionalProperties: false
+> +
+> +  power-supply: true
 
+There are multiple power supplies for the chip, shouldn't we have
+multiple properties ? I would also name the properties according to the
+supply name.
 
-> Paul
->=20
-> P.S. Sorry if this message goes to far too many people. I don't want=20
-> to
-> "personalise" it by taking people off the recipients list, but I=20
-> realise that
-> this is probably not interesting to most recipients, either. Feel=20
-> free to trim
-> recipients if replying.
+The chip has an HPD input. I would recommend already documenting an
+optional boolean no-hpd property to report when the HPD input is not
+connected.
 
-Again, you shoul send this message to the DRI mailing list. The people=20
-who did work with the Synopsis IP may be able to help.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - power-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    it6251@5c {
+> +      compatible = "ite,it6251";
+> +      reg = <0x5c>, <0x5e>;
+> +      reg-names = "bridge", "lvds";
+> +      power-supply = <&reg_display>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          bridge_out_edp0: endpoint {
+> +            remote-endpoint = <&panel_in_edp0>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          reg = <1>;
+> +          bridge_in_lvds0: endpoint {
+> +            remote-endpoint = <&lvds0_out>;
+> +          };
+> +        };
+> +      };
+> +    };
 
--Paul
+-- 
+Regards,
 
-
+Laurent Pinchart
