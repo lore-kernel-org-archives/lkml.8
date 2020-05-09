@@ -2,123 +2,142 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE7BC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF8DC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CEA21582
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589064746;
-	bh=qhVNbu7XIwB3nTsRGd4QgqusWcMwu670xwRnnr6GNgI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wKTlpJM3IM+2XnTxfQdD43ttyl+wuOC0IWn/qqiEEnd7u5333beBOdU6IxDORNnvd
-	 RCuraKlgWlQ6GIHZBXco9bfBjRH9IW47JrGyporec5PHtAMSSeOMyDu0MjovC1+CBt
-	 m2bysev41JJGZUX0zs89/5lrPDEfVtAWMEHFgKHM=
+	by mail.kernel.org (Postfix) with ESMTP id 340B720CC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 22:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArCp/cIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgEIWwZ (ORCPT
+        id S1726471AbgEIW7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 18:52:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgEIWwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 18:52:24 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B532208DB;
-        Sat,  9 May 2020 22:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589064743;
-        bh=qhVNbu7XIwB3nTsRGd4QgqusWcMwu670xwRnnr6GNgI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ibX0rDDuYQ5S6J85ow0R6cRXRXJwHuvhZ8aZnTk9Kb0tHaROhwdSqu2UOfubfhrYm
-         Yif9OiNvxrbQl1Zjx/UBjVk7U/SpWoIXC/Hdw/NxImVkZsBoAnLbwe5GY8ptIY/ktk
-         QUQf6oSi9CDf0CKUjFImSLBQpR3iuwmmNCImFA2Y=
-Date:   Sat, 9 May 2020 15:52:21 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
-Message-ID: <20200509155221.40e0e3b5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <bce24dff-5287-76e2-ba85-8d31d7e673f8@gmail.com>
-References: <20200509120505.109218-1-arnd@arndb.de>
-        <20200509132427.3d2979d8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
-        <bce24dff-5287-76e2-ba85-8d31d7e673f8@gmail.com>
+        Sat, 9 May 2020 18:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgEIW7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 18:59:40 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B1FC05BD09
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 15:59:38 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id j8so5600824iog.13
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 15:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Cu5XCMlYmCles9cU1zQwpiIO21jpNUEqhrhXon1DyTk=;
+        b=ArCp/cIAUPJ/JCkJdrEDvwlWmGjF3AzFJHP8CbZpYzbO0cs7JN90wOY2+phy5hmj+m
+         ZkyZnzfpB1wU4gad/X5Ns25I6G4qI6SUAjPPVdAYzqG4oKV5MzhWyGJTGimk4aEvlgoc
+         nDsLQtDt1b+XQb/cPt/0TNgao7ZFig6LbeZCs0umCsKJ4WDOpmksak12b25ipUsQZVHx
+         FbnjECmSWwo8hWHmt8qzZs4Qm1C3dbQJIqRvJHqI3oZYirs+r6sskhltk/wFjEMQh9RJ
+         Y5Ih8GsXENUzVEKpf/nwdi8Ymsienu1DfFgCSDUmk/fvp5psNL/Cc56PJZ1rpdc5Bd9B
+         4o9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Cu5XCMlYmCles9cU1zQwpiIO21jpNUEqhrhXon1DyTk=;
+        b=aPdHqUdD08SrmSCSum0EE2WqgQe9MPlOSkwvibo3qBA3H/VLcHFzP0EJZXKRUq+Xh6
+         GPg+OBA8FrQQjr1vVzywkDEb/0ZQQLp3mPNxQM8Up+Myzi+gNh9+A95hAtomQbbo/oI4
+         u7vmCfWuY60wqk1srTb8BOw6x6vEszitK9pT5aH2OVEnwLAPQKQOJJljsnYjry6Rsk+Q
+         3weMc5TvuIlw4ptEmqwmd8RajnfB3O3BhhJqkTWrFEZ6yUUZs0zcfpcA9z65GVb8y96j
+         CUFrROq3U9ZWlyttSLWwrmallFdoCKKCXut3S146loqYx/8eekUzzOlR6Glh3SPIqj/t
+         uJQQ==
+X-Gm-Message-State: AGi0PuY5zJuyzx2yTjA4KvqCSxm0NtoJoA7BzicYTWZMJ0z0kzrD9wjw
+        /a3DLNp7Cc5P+rWQr6luFEzDwhHia+lFQdWC79MX0w==
+X-Google-Smtp-Source: APiQypJtMK+i9KbHBea1iSvxTMn9QE3F1NEO8HjjwRAUFzoOcJ17K0Cw3CiBAHoqUReKldaUxOrzVyJqSIWwkOJRTiA=
+X-Received: by 2002:a02:c8c7:: with SMTP id q7mr877554jao.111.1589065178240;
+ Sat, 09 May 2020 15:59:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw> <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
+ <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
+In-Reply-To: <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Sun, 10 May 2020 08:59:27 +1000
+Message-ID: <CAOSf1CEe85Lev54g+hkEoDmmR1HRsF070oxLu8ok7fEtXUH7NQ@mail.gmail.com>
+Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 15:04:04 -0700 Florian Fainelli wrote:
-> On 5/9/2020 2:48 PM, Arnd Bergmann wrote:
-> > On Sat, May 9, 2020 at 10:24 PM Jakub Kicinski <kuba@kernel.org> wrote:  
+On Sun, May 10, 2020 at 1:51 AM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 08/05/2020 =C3=A0 19:41, Qian Cai a =C3=A9crit :
+> >
+> >
+> >> On May 8, 2020, at 10:39 AM, Qian Cai <cai@lca.pw> wrote:
 > >>
-> >> On Sat,  9 May 2020 14:04:52 +0200 Arnd Bergmann wrote:  
-> >>> I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-> >>> and CONFIG_GIANFAR=y:
-> >>>
-> >>> x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
-> >>>
-> >>> It seems the same thing can happen with dpaa and ucc_geth, so change
-> >>> all three to do an explicit 'select FIXED_PHY'.
-> >>>
-> >>> The fixed-phy driver actually has an alternative stub function that
-> >>> theoretically allows building network drivers when fixed-phy is
-> >>> disabled, but I don't see how that would help here, as the drivers
-> >>> presumably would not work then.
-> >>>
-> >>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>  
-> >>  
-> >>> +     select FIXED_PHY  
+> >> Booting POWER9 PowerNV has this message,
 > >>
-> >> I think FIXED_PHY needs to be optional, depends on what the board has
-> >> connected to the MAC it may not be needed, right PHY folks? We probably
-> >> need the
+> >> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use ea=
+rly_ioremap() instead=E2=80=9D
 > >>
-> >>     depends on FIXED_PHY || !FIXED_PHY  
-> > 
-> > Unfortunately that does not work because it causes a circular dependency:
-> > 
-> > drivers/net/phy/Kconfig:415:error: recursive dependency detected!
-> > drivers/net/phy/Kconfig:415: symbol FIXED_PHY depends on PHYLIB
-> > drivers/net/phy/Kconfig:250: symbol PHYLIB is selected by FSL_PQ_MDIO
-> > drivers/net/ethernet/freescale/Kconfig:60: symbol FSL_PQ_MDIO is
-> > selected by UCC_GETH
-> > drivers/net/ethernet/freescale/Kconfig:75: symbol UCC_GETH depends on FIXED_PHY
+> >> but use the patch below will result in leaks because it will never cal=
+l early_iounmap() anywhere. However, it looks me it was by design that phb-=
+>regs mapping would be there forever where it would be used in pnv_ioda_get=
+_inval_reg(), so is just that check_early_ioremap_leak() initcall too stron=
+g?
+> >>
+> >> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> >> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> >> @@ -36,6 +36,7 @@
+> >> #include <asm/firmware.h>
+> >> #include <asm/pnv-pci.h>
+> >> #include <asm/mmzone.h>
+> >> +#include <asm/early_ioremap.h>
+> >>
+> >> #include <misc/cxl-base.h>
+> >>
+> >> @@ -3827,7 +3828,7 @@ static void __init pnv_pci_init_ioda_phb(struct =
+device_node *np,
+> >>         /* Get registers */
+> >>         if (!of_address_to_resource(np, 0, &r)) {
+> >>                 phb->regs_phys =3D r.start;
+> >> -               phb->regs =3D ioremap(r.start, resource_size(&r));
+> >> +               phb->regs =3D early_ioremap(r.start, resource_size(&r)=
+);
+> >>                 if (phb->regs =3D=3D NULL)
+> >>                         pr_err("  Failed to map registers !\n=E2=80=9D=
+);
+> >
+> > This will also trigger a panic with debugfs reads, so isn=E2=80=99t tha=
+t this commit bogus at least for powerpc64?
+> >
+> > d538aadc2718 (=E2=80=9Cpowerpc/ioremap: warn on early use of ioremap()"=
+)
+>
+> No d538aadc2718 is not bogus. That's the point, we want to remove all
+> early usages of ioremap() in order to remove the hack with the
+> ioremap_bot stuff and all, and stick to the generic ioremap logic.
+>
+> In order to do so, all early use of ioremap() has to be converted to
+> early_ioremap() or to fixmap or anything else that allows to do ioremaps
+> before the slab is ready.
+>
+> early_ioremap() is for temporary mappings necessary at boottime. For
+> long lasting mappings, another method is to be used.
+>
+> Now, the point is that other architectures like for instance x86 don't
+> seem to have to use early_ioremap() much. Powerpc is for instance doing
+> early mappings for PCI. Seems like x86 initialises PCI once slab is
+> ready. Can't powerpc do the same ?
 
-:(
-
-> > I now checked what other drivers use the fixed-phy interface, and found
-> > that all others do select FIXED_PHY except for these three, and they
-> > are also the only ones using fixed_phy_change_carrier().
-> > 
-> > The fixed-phy driver is fairly small, so it probably won't harm too much
-> > to use the select, but maybe I missed another option.  
-> 
-> select FIXED_PHY appears the correct choice here we could think about
-> providing stubs if that is deemed useful, but in general these drivers
-> do tend to have a functional dependency on the fixed PHY and MDIO bus
-> subsystems.
-
-The sad thing is - the stubs already exist, it seems we just can't
-express the dependencies in Kconfig well enough to prevent driver 
-to be built in when fixed_phy is a module. Anyway..
-
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Applied to net, thank y'all!
+Patches welcome.
