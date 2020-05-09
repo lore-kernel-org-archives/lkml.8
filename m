@@ -2,207 +2,131 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52780C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156FAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09CE4218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n4IbKOUq"
+	by mail.kernel.org (Postfix) with ESMTP id ECBCC2192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgEIBzy (ORCPT
+        id S1728556AbgEIB4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEIBzx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:55:53 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B65DC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 18:55:53 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f83so3868323qke.13
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 18:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ta0PteIcwW15qxg0iw1q7p+MN971mzC3jqiLDOQYy+c=;
-        b=n4IbKOUqGcnS8/tenHLhOAsDf89sBGM8dSXtmFP+ybHxg4EYnb+m/e6byWrDzDAjld
-         e0DpAHZjEuclQ0NVAUepVuU51iWczGQ2FTiBYwFeuVwPEpFdVQheLF9jsIXaEcfb7YyW
-         W22/opasUdo6to/eQ/kw7o8AQPT5ffNQ+2eDWUoJsPcZNTaKon180tEZPTylKHOYmeOo
-         AhSy9IjtkyGRyAQk0RAz/fLPA883WV7RuZDaPEbnFALTcDkLVCeEoUBQchOmgrhoW9fK
-         F1FYOX5fIwuv4pGWuYzvZAOgLMsaHNYAc7ZjphimK+O2CxvNfM6kLgXjTB5YorLMjrhT
-         0Jcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ta0PteIcwW15qxg0iw1q7p+MN971mzC3jqiLDOQYy+c=;
-        b=FnpuxHIccuo0RIlbo2XCOp1V0GmwDgtc8L08QI1JqNT+1iSgGBf5cvCebO8ZtKM8vh
-         08eQ/2lQbtn8oOMt4LrN/Jouoav8VwyDmy6fxRIIWIbEIKjNBmXyc4HkuUKIrpyRbFLm
-         6Lv+a46ZihFaEAF7jwkD13WmaPdX9/kD+yILEEHMBcenYp3nTKoxalnjSESE560+s8Kh
-         TLldv/8GZiHsCvsZgNwBw+/HcIYXroyU+2YreGRv2wbATT796WhApraBV0Su5leA80qK
-         nlkpLsn2oo4ttXYybjoSBShhHRYUxgYkGxlx7c+3bH03RmtAo5Jy22aCzoRKykvhB2sV
-         7ZBg==
-X-Gm-Message-State: AGi0PubpmZt9OPmIiY9gYUyWFMTo1KQqm7QLqz98j2bfNKy59xLVX/wF
-        e2QaJ19eQWekVJnZeiwvQwSqVw==
-X-Google-Smtp-Source: APiQypKQBHrDo+HGP6aYmcnuQYXBuQav0/Pd15jIutiiHsPkw6w1O5tqiS3p8qDNYv6D4cZw+uNZ8A==
-X-Received: by 2002:a37:7904:: with SMTP id u4mr5514676qkc.297.1588989352298;
-        Fri, 08 May 2020 18:55:52 -0700 (PDT)
-Received: from ovpn-66-195.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d26sm2571912qkk.69.2020.05.08.18.55.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 May 2020 18:55:51 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     paulus@ozlabs.org, benh@kernel.crashing.org,
-        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] powerpc/kvm: silence kmemleak false positives
-Date:   Fri,  8 May 2020 21:55:38 -0400
-Message-Id: <20200509015538.3183-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Fri, 8 May 2020 21:56:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34426 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727828AbgEIB4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:56:39 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 198A688844991705F75E;
+        Sat,  9 May 2020 09:56:37 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sat, 9 May 2020
+ 09:56:33 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: compress: allow lz4 to compress data
+ partially
+To:     Gao Xiang <hsiangkao@aol.com>
+CC:     <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <chao@kernel.org>
+References: <20200508094709.40048-1-yuchao0@huawei.com>
+ <20200508102306.GA18849@hsiangkao-HP-ZHAN-66-Pro-G1>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <4db0121c-5555-b33d-d727-627ef1640f8d@huawei.com>
+Date:   Sat, 9 May 2020 09:56:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200508102306.GA18849@hsiangkao-HP-ZHAN-66-Pro-G1>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
-pud_populate() and pmd_populate() will use __pa() to reference the newly
-allocated memory. The same is in xive_native_provision_pages().
+Hi Xiang,
 
-Since kmemleak is unable to track the physical memory resulting in false
-positives, silence those by using kmemleak_ignore().
+On 2020/5/8 18:23, Gao Xiang wrote:
+> Hi Chao,
+> 
+> On Fri, May 08, 2020 at 05:47:09PM +0800, Chao Yu wrote:
+>> For lz4 worst compress case, caller should allocate buffer with size
+>> of LZ4_compressBound(inputsize) for target compressed data storing.
+>>
+>> However lz4 supports partial data compression, so we can get rid of
+>> output buffer size limitation now, then we can avoid 2 * 4KB size
+>> intermediate buffer allocation when log_cluster_size is 2, and avoid
+>> unnecessary compressing work of compressor if we can not save at
+>> least 4KB space.
+>>
+>> Suggested-by: Daeho Jeong <daehojeong@google.com>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/compress.c | 15 +++++++++------
+>>  1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>> index 5e4947250262..23825f559bcf 100644
+>> --- a/fs/f2fs/compress.c
+>> +++ b/fs/f2fs/compress.c
+>> @@ -228,7 +228,12 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
+>>  	if (!cc->private)
+>>  		return -ENOMEM;
+>>  
+>> -	cc->clen = LZ4_compressBound(PAGE_SIZE << cc->log_cluster_size);
+>> +	/*
+>> +	 * we do not change cc->clen to LZ4_compressBound(inputsize) to
+>> +	 * adapt worst compress case, because lz4 algorithm supports partial
+>> +	 * compression.
+> 
+> Actually, in this case the lz4 compressed block is not valid (at least not ended
+> in a valid lz4 EOF), and AFAIK the current public lz4 API cannot keep on
+> compressing this block. so IMO "partial compression" for an invalid lz4
+> block may be confusing.
 
-unreferenced object 0xc000201c382a1000 (size 4096):
-  comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
-  hex dump (first 32 bytes):
-    c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
-    c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
-  backtrace:
-    [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
-    kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
-    (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
-    [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
-    [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
-    [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
-    [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
-    [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
-    [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
-    [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
-    [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
-    [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
-    [<000000004afc4310>] system_call_exception+0x114/0x1e0
-    [<00000000fb70a873>] system_call_common+0xf0/0x278
-unreferenced object 0xc0002001f0c03900 (size 256):
-  comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
-  hex dump (first 32 bytes):
-    c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
-    c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
-  backtrace:
-    [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
-    kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
-    (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
-    [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
-    [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
-    [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
-    [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
-    [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
-    [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
-    [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
-    [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
-    [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
-    [<000000004afc4310>] system_call_exception+0x114/0x1e0
-    [<00000000fb70a873>] system_call_common+0xf0/0x278
-unreferenced object 0xc000201b53e90000 (size 65536):
-  comm "qemu-kvm", pid 124557, jiffies 4295650285 (age 364.370s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000acc2fb77>] xive_native_alloc_vp_block+0x168/0x210
-    xive_native_provision_pages at arch/powerpc/sysdev/xive/native.c:645
-    (inlined by) xive_native_alloc_vp_block at arch/powerpc/sysdev/xive/native.c:674
-    [<000000004d5c7964>] kvmppc_xive_compute_vp_id+0x20c/0x3b0 [kvm]
-    [<0000000055317cd2>] kvmppc_xive_connect_vcpu+0xa4/0x4a0 [kvm]
-    [<0000000093dfc014>] kvm_arch_vcpu_ioctl+0x388/0x508 [kvm]
-    [<00000000d25aea0f>] kvm_vcpu_ioctl+0x15c/0x950 [kvm]
-    [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
-    [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
-    [<000000004afc4310>] system_call_exception+0x114/0x1e0
-    [<00000000fb70a873>] system_call_common+0xf0/0x278
+Yes, comments could be improved to avoid confusing.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
- arch/powerpc/sysdev/xive/native.c      |  4 ++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> I think some words like "because lz4 implementation can handle output buffer
+> budget properly" or similar stuff could be better.
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index aa12cd4078b3..bc6c1aa3d0e9 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -353,7 +353,13 @@ static struct kmem_cache *kvm_pmd_cache;
- 
- static pte_t *kvmppc_pte_alloc(void)
- {
--	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-+	pte_t *pte;
-+
-+	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-+	/* pmd_populate() will only reference _pa(pte). */
-+	kmemleak_ignore(pte);
-+
-+	return pte;
- }
- 
- static void kvmppc_pte_free(pte_t *ptep)
-@@ -363,7 +369,13 @@ static void kvmppc_pte_free(pte_t *ptep)
- 
- static pmd_t *kvmppc_pmd_alloc(void)
- {
--	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-+	pmd_t *pmd;
-+
-+	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-+	/* pud_populate() will only reference _pa(pmd). */
-+	kmemleak_ignore(pmd);
-+
-+	return pmd;
- }
- 
- static void kvmppc_pmd_free(pmd_t *pmdp)
-diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-index 5218fdc4b29a..2d19f28967a6 100644
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -18,6 +18,7 @@
- #include <linux/delay.h>
- #include <linux/cpumask.h>
- #include <linux/mm.h>
-+#include <linux/kmemleak.h>
- 
- #include <asm/machdep.h>
- #include <asm/prom.h>
-@@ -647,6 +648,9 @@ static bool xive_native_provision_pages(void)
- 			pr_err("Failed to allocate provisioning page\n");
- 			return false;
- 		}
-+		/* Kmemleak is unable to track the physical address. */
-+		kmemleak_ignore(p);
-+
- 		opal_xive_donate_page(chip, __pa(p));
- 	}
- 	return true;
--- 
-2.21.0 (Apple Git-122.2)
+It's better, let me change to use this, thanks for the advice.
 
+Thanks,
+
+> 
+> The same to the patch title and the commit message.
+> 
+> Thanks,
+> Gao Xiang
+> 
+> 
+>> +	 */
+>> +	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>>  	return 0;
+>>  }
+>>  
+>> @@ -244,11 +249,9 @@ static int lz4_compress_pages(struct compress_ctx *cc)
+>>  
+>>  	len = LZ4_compress_default(cc->rbuf, cc->cbuf->cdata, cc->rlen,
+>>  						cc->clen, cc->private);
+>> -	if (!len) {
+>> -		printk_ratelimited("%sF2FS-fs (%s): lz4 compress failed\n",
+>> -				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id);
+>> -		return -EIO;
+>> -	}
+>> +	if (!len)
+>> +		return -EAGAIN;
+>> +
+>>  	cc->clen = len;
+>>  	return 0;
+>>  }
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
