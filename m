@@ -2,124 +2,115 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CB3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8A8C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C7C2192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wfN2uKNj"
+	by mail.kernel.org (Postfix) with ESMTP id ECB77206D6
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbgEICS0 (ORCPT
+        id S1728567AbgEICYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 22:18:26 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50438 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727878AbgEICSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 22:18:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588990705; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=PdeLtGZ+DGs0gr7xsOcsm7ijC6Gtv17gqP52PwY/Q/k=; b=wfN2uKNj64C9YxjuyW+jNGQGQ+Gb9oMll21DqJ18V5mGrgj9GOp9xOI2X9hdYbsMkhxsrcCk
- YyCafM4wmu9sA8g0BcQVlaypqdekryIdavqkfWtsFxQ9YWnNk+9LYQ6A2jG/SR2txMeRP06I
- tmYkvU4o7LEOHEn+e9IA++jWMzA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb612eb.7f97801e7340-smtp-out-n01;
- Sat, 09 May 2020 02:18:19 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 63567C4478F; Sat,  9 May 2020 02:18:19 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91F16C433D2;
-        Sat,  9 May 2020 02:18:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 91F16C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Sat, 9 May 2020 07:48:12 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, valentin.schneider@arm.com,
-        rjw@rjwysocki.net
-Subject: Re: [RFC 3/4] sched/idle: Disable idle call on least latency
- requirements
-Message-ID: <20200509021812.GM19464@codeaurora.org>
-References: <20200507133723.18325-1-parth@linux.ibm.com>
- <20200507133723.18325-4-parth@linux.ibm.com>
- <20200508083601.GJ19464@codeaurora.org>
- <328de1bf-57d1-023d-29aa-11a540212015@linux.ibm.com>
+        Fri, 8 May 2020 22:24:01 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53710 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728158AbgEICYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 22:24:00 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72ozFLZe5F8yAA--.25S3;
+        Sat, 09 May 2020 10:23:48 +0800 (CST)
+Subject: Re: [PATCH 2/3] MIPS: Loongson: Add hwmon support for generic CPU
+To:     WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
+ <1588938904-924-3-git-send-email-yangtiezhu@loongson.cn>
+ <f7184121-c044-6e79-78ab-dcc9103b27c2@xen0n.name>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <234fe99b-44db-46b9-76fb-6426598f4448@loongson.cn>
+Date:   Sat, 9 May 2020 10:23:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <328de1bf-57d1-023d-29aa-11a540212015@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <f7184121-c044-6e79-78ab-dcc9103b27c2@xen0n.name>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dx72ozFLZe5F8yAA--.25S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw48tr48uF18Gr47tw4fKrg_yoW8WF13pF
+        Z5Kay3ur1jqr1jkanrJw4Uur45Za15KrZ7CFWDA34UZas8Wwnxua4IqFnIyrnrZr4fua12
+        yF4vqa4ruF43ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+        Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
+        zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+        VjvjDU0xZFpf9x0JUHWlkUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 04:49:04PM +0530, Parth Shah wrote:
-> Hi Pavan,
-> 
-> On 5/8/20 2:06 PM, Pavan Kondeti wrote:
-> > On Thu, May 07, 2020 at 07:07:22PM +0530, Parth Shah wrote:
-> >> Restrict the call to deeper idle states when the given CPU has been set for
-> >> the least latency requirements
-> >>
-> >> Signed-off-by: Parth Shah <parth@linux.ibm.com>
-> >> ---
-> >>  kernel/sched/idle.c | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> >> index b743bf38f08f..85d72a6e2521 100644
-> >> --- a/kernel/sched/idle.c
-> >> +++ b/kernel/sched/idle.c
-> >> @@ -262,7 +262,8 @@ static void do_idle(void)
-> >>  		 * broadcast device expired for us, we don't want to go deep
-> >>  		 * idle as we know that the IPI is going to arrive right away.
-> >>  		 */
-> >> -		if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
-> >> +		if (cpu_idle_force_poll || tick_check_broadcast_expired() ||
-> >> +		    per_cpu(nr_lat_sensitive, cpu)) {
-> >>  			tick_nohz_idle_restart_tick();
-> >>  			cpu_idle_poll();
-> >>  		} else {
-> >> -- 
-> >> 2.17.2
-> >>
-> > 
-> > Since nr_lat_sensitive updates can happen remotely (when a latency sensitive
-> > task becomes non-latency sensitive task), we may need to add this condition
-> > in cpu_idle_poll() as well.
-> > 
-> 
-> Right. but if the CPU is running idle_task then it will again come back to
-> do_idle and read the refcount. Its a penalty in power-saving for 1
-> do_idle() loop but it is difficult to put up checks for any change in
-> latency_nice value.
-> 
+On 05/08/2020 08:51 PM, WANG Xuerui wrote:
+> On 2020/5/8 19:55, Tiezhu Yang wrote:
+>
+>> Add PRID_IMP_LOONGSON_64G case to enable hwmon support for Loongson
+>> generic CPU such as 3A4000 and newer CPU.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>   drivers/platform/mips/cpu_hwmon.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/platform/mips/cpu_hwmon.c 
+>> b/drivers/platform/mips/cpu_hwmon.c
+>> index add5f52..7b4bde1 100644
+>> --- a/drivers/platform/mips/cpu_hwmon.c
+>> +++ b/drivers/platform/mips/cpu_hwmon.c
+>> @@ -43,6 +43,7 @@ int loongson3_cpu_temp(int cpu)
+>>           break;
+>>       case PRID_REV_LOONGSON3A_R3_0:
+>>       case PRID_REV_LOONGSON3A_R3_1:
+>> +    case PRID_IMP_LOONGSON_64G:
+>>       default:
+>>           reg = (reg & 0xffff)*731/0x4000 - 273;
+>>           break;
+>
+> Hi,
+>
+> This is obviously wrong, as the value being matched is a PRID_REV. You 
+> can tell from the neighboring match arms.
+>
+> Also, the LOONGSON_64G cores are 3A4000 and newer, that have CSR 
+> support. The csr_temp_enable flag is probed in loongson_hwmon_init, 
+> then the switch is simply never entered for these.
 
-Yes, when the CPU exits to serve an interrupt, we note the change in latency
-task count and enter C-state.
+Hi Xuerui,
 
-I asked this because all checks that are present here are also present in
-cpu_idle_poll().
+Thanks for your review. You are right.
+
+I notice that this feature has been done in the commit 7507445b1993
+("MIPS: Loongson: Add Loongson-3A R4 basic support"). My initial aim
+is to get CPU temperature for the Loongson generic CPU when the flag
+csr_temp_enable is false, but this is just the default case. So this
+patch is meaningless, please ignore it.
+
+Because patch 3/3 depends on this patch 2/3, I will remake and send v2
+patch series without this patch.
 
 Thanks,
-Pavan
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Tiezhu Yang
+
