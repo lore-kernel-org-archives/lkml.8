@@ -6,101 +6,186 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4900FC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354B2C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFFF24967
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFB0217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEIIXe (ORCPT
+        id S1727863AbgEIIX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:23:34 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:30483 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727812AbgEIIXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:23:33 -0400
-Received: from localhost.localdomain ([93.22.149.123])
-        by mwinf5d73 with ME
-        id cYPT2200N2fyvbx03YPU05; Sat, 09 May 2020 10:23:29 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 09 May 2020 10:23:29 +0200
-X-ME-IP: 93.22.149.123
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     milo.kim@ti.com, sre@kernel.org, anton.vorontsov@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH V2] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
-Date:   Sat,  9 May 2020 10:23:23 +0200
-Message-Id: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 9 May 2020 04:23:57 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42004 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727812AbgEIIX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 04:23:57 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 925031A028B;
+        Sat,  9 May 2020 10:23:54 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 349F91A015F;
+        Sat,  9 May 2020 10:23:50 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BB55D40285;
+        Sat,  9 May 2020 16:23:44 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
+Date:   Sat,  9 May 2020 16:14:37 +0800
+Message-Id: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the probe function, in case of error, resources allocated in
-'lp8788_setup_adc_channel()' must be released.
+Convert the i.MX7 reset binding to DT schema format using json-schema.
 
-This can be achieved easily by using the devm_ variant of
-'iio_channel_get()'.
-This has the extra benefit to simplify the remove function and to axe the
-'lp8788_release_adc_channel()' function which is now useless.
-
-Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-V2: use devm_iio_channel_get instead of iio_channel_get and simplify code
----
- drivers/power/supply/lp8788-charger.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/reset/fsl,imx7-src.txt     | 56 -------------------
+ .../devicetree/bindings/reset/fsl,imx7-src.yaml    | 64 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
 
-diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
-index 84a206f42a8e..e7931ffb7151 100644
---- a/drivers/power/supply/lp8788-charger.c
-+++ b/drivers/power/supply/lp8788-charger.c
-@@ -572,27 +572,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
- 		return;
- 
- 	/* ADC channel for battery voltage */
--	chan = iio_channel_get(dev, pdata->adc_vbatt);
-+	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
- 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
- 
- 	/* ADC channel for battery temperature */
--	chan = iio_channel_get(dev, pdata->adc_batt_temp);
-+	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
- 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
- }
- 
--static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
--{
--	int i;
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+deleted file mode 100644
+index e10502d..0000000
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-Freescale i.MX7 System Reset Controller
+-======================================
 -
--	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
--		if (!pchg->chan[i])
--			continue;
+-Please also refer to reset.txt in this directory for common reset
+-controller binding usage.
 -
--		iio_channel_release(pchg->chan[i]);
--		pchg->chan[i] = NULL;
--	}
--}
+-Required properties:
+-- compatible:
+-	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
+-	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
+-	- For i.MX8MP SoCs should be "fsl,imx8mp-src", "syscon"
+-- reg: should be register base and length as documented in the
+-  datasheet
+-- interrupts: Should contain SRC interrupt
+-- #reset-cells: 1, see below
 -
- static ssize_t lp8788_show_charger_status(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
-@@ -735,7 +722,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
- 	flush_work(&pchg->charger_work);
- 	lp8788_irq_unregister(pdev, pchg);
- 	lp8788_psy_unregister(pchg);
--	lp8788_release_adc_channel(pchg);
- 
- 	return 0;
- }
+-example:
+-
+-src: reset-controller@30390000 {
+-     compatible = "fsl,imx7d-src", "syscon";
+-     reg = <0x30390000 0x2000>;
+-     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+-     #reset-cells = <1>;
+-};
+-
+-
+-Specifying reset lines connected to IP modules
+-==============================================
+-
+-The system reset controller can be used to reset various set of
+-peripherals. Device nodes that need access to reset lines should
+-specify them as a reset phandle in their corresponding node as
+-specified in reset.txt.
+-
+-Example:
+-
+-	pcie: pcie@33800000 {
+-
+-		...
+-
+-		resets = <&src IMX7_RESET_PCIEPHY>,
+-			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
+-		reset-names = "pciephy", "apps";
+-
+-		...
+-        };
+-
+-
+-For list of all valid reset indices see
+-<dt-bindings/reset/imx7-reset.h> for i.MX7,
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
+-<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
+-<dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+new file mode 100644
+index 0000000..ad254ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/fsl,imx7-src.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX7 System Reset Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  The system reset controller can be used to reset various set of
++  peripherals. Device nodes that need access to reset lines should
++  specify them as a reset phandle in their corresponding node as
++  specified in reset.txt.
++
++  For list of all valid reset indices see
++    <dt-bindings/reset/imx7-reset.h> for i.MX7,
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
++    <dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
++    <dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - fsl,imx7d-src
++        - fsl,imx8mq-src
++        - fsl,imx8mm-src
++        - fsl,imx8mn-src
++        - fsl,imx8mp-src
++      - const: syscon
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#reset-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    reset-controller@30390000 {
++        compatible = "fsl,imx7d-src", "syscon";
++        reg = <0x30390000 0x2000>;
++        interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++        #reset-cells = <1>;
++    };
++
++...
 -- 
-2.25.1
+2.7.4
 
