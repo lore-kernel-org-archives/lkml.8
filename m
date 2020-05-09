@@ -1,93 +1,108 @@
-Return-Path: <SRS0=wESH=6W=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A75C38A2A
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0941BC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537CF217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  8 May 2020 23:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588982285;
-	bh=YRqqtfHhUeECV3a07G0Ts+WJ74qbMuVFbkgCy+O7SN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qx+sUqBuY4TjOfDCs7JLSRa4mrn0k2TOaV/SMoY9my8N/bJfrByWF4jCRBKkxvUSN
-	 WEJraN8wqqR2Km5ga8JRPMudD+Y3AYghTc1k7CPXXTbU27Ns2IhrZor6kq3HjMT1Ml
-	 dIVk3tjfeO1KW0FRmkHSJRrQ9NL2qba5krWgrRMg=
+	by mail.kernel.org (Postfix) with ESMTP id CA193217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mYwPneG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgEHX6E (ORCPT
+        id S1728349AbgEIAA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 19:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 20:00:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:53975 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbgEHX6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 19:58:04 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726380AbgEIAAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:00:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 691662495C
-        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 23:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588982283;
-        bh=YRqqtfHhUeECV3a07G0Ts+WJ74qbMuVFbkgCy+O7SN4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NIEuabiJEg2cqBqTSKuTtJFiPgB/n5LPuFcktX8Mcpgu56idVl2HZdoP++Hawge3z
-         VmoIHxrHUvJiMyouM6wrw9GCaV2SSOqeaR9cN3Ygci7JgUP6+cEwALfhVuWC3PVluS
-         v9qz0ANxiIjQQi0aFwvJ842DtJJI2qB4rovSVdfE=
-Received: by mail-wm1-f42.google.com with SMTP id m24so2342021wml.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 16:58:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYiZ+HYzUHd82O+7WfuWBZAa0JqIgFiKUzeyxZQ9LI2UOwc7nOZ
-        tL2uMEBKSWhKFoOXyL3iH/crGn20vAjcnVcecxPXpg==
-X-Google-Smtp-Source: APiQypKQZNEwwX4h0fk2nHcrXKPOKkEGYndYO96klga8zo5b2LESL3vuvCxvl69OBwDucGzQm1kbDXFMs9oHRsA/5TA=
-X-Received: by 2002:a7b:c74d:: with SMTP id w13mr17955310wmk.36.1588982281881;
- Fri, 08 May 2020 16:58:01 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49JnQH3pRLz9sSc;
+        Sat,  9 May 2020 10:00:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588982423;
+        bh=at6m1BG7XAUJio6pcjB5ILExirq9FTj8zcY3370amxg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mYwPneG97+rn5H85+L++lLV/7zu1N0OwyWZ4lqyiKSLu0M1UgBBFIbxETCdpUYdz7
+         frCKHFJMZcXwvpmBRjI6Yi5wG7nJ0ZefiBXYykEcKdqgnnpz2+7xLzxl1/DNo8wbGf
+         pOoH2yarL7puVuYS9locZikE9Dn3xqjgsjJnqPmdl9LIwEvonEJ6xPID5HFSKp9ssm
+         vnPHtuVzDjnFidgcIGxC8viMRx9lmmi/qwwabnDo1RzNlDkL3ks2AiwG6UdFOClesw
+         gsK3y3mFX/FK9lhUQSMOSV5XjaaOu1wNJUMEGKkJ200wL9Pu79EyouPAHXjXjiEqSK
+         mWmnDBFqIAeQA==
+Date:   Sat, 9 May 2020 10:00:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Adding a linux-integrity "fixes" branch
+Message-ID: <20200509100021.4d79b426@canb.auug.org.au>
+In-Reply-To: <1588906186.6053.10.camel@linux.ibm.com>
+References: <1588906186.6053.10.camel@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200505134112.272268764@linutronix.de> <20200505134340.703783926@linutronix.de>
-In-Reply-To: <20200505134340.703783926@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 8 May 2020 16:57:50 -0700
-X-Gmail-Original-Message-ID: <CALCETrWAWHByoifmzcXpMpYgcABkRNNM3ihsJ1pe5jzaayvkHA@mail.gmail.com>
-Message-ID: <CALCETrWAWHByoifmzcXpMpYgcABkRNNM3ihsJ1pe5jzaayvkHA@mail.gmail.com>
-Subject: Re: [patch V4 part 2 06/18] x86/entry: Move irq flags tracing to prepare_exit_to_usermode()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/a5DsUSi7kTNw1wVepPEAkMX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> This is another step towards more C-code and less convoluted ASM.
->
-> Similar to the entry path, invoke the tracer before context tracking which
-> might turn off RCU and invoke lockdep as the last step before going back to
-> user space. Annotate the code sections in exit_to_user_mode() accordingly
-> so objtool won't complain about the tracer invocation.
+--Sig_/a5DsUSi7kTNw1wVepPEAkMX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Hi Mimi,
 
-Note to self: the nmi code needs to be reworked to go through
-prepare_exit_to_usermode(), too.  I'll do this once this whole pile
-lands.
+On Thu, 07 May 2020 22:49:46 -0400 Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> In addition to the existing "next-integrity" branch, could you add the
+> "fixes" branch?
+
+Added from Monday.
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/a5DsUSi7kTNw1wVepPEAkMX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl618pUACgkQAVBC80lX
+0GwezAf+OqtayFjhJC8oP+xXOxPLRZVj8PTwUs5H+rWKtDcWrAVietalzziFUqfU
+5t1+lnb1QYbvph49OwV0uBDGkXYtw+ulSD3l13WhLcHt9eQ3EUMot92wcMXbh8vE
+CsCiiEeL8fucFZ79wQiEQ6Ie2VzepRKX0qFHGZFok9QWFPuTAgRHcHvaNVcSam+b
+lXf7FqXz7D8OwiBkeV+U1er5v6ZA57W9OdsIh4yrsvuruVDLHSuVqJEM59rsTmK9
+xFFR7ak1Ozqf4f+TafxbT86iRbZLVrxIMOKh5JQaTC8DdzkDz0XqDf4CNJtG4G8s
+hU6UrpAeoaq51DTdFcZJlMj7vm+D5A==
+=eYfc
+-----END PGP SIGNATURE-----
+
+--Sig_/a5DsUSi7kTNw1wVepPEAkMX--
