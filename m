@@ -2,85 +2,86 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D98C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE508C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C67A218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588988897;
-	bh=1Yq8ETdj2RiWGbRAmpZXiiimnP7VGCPSm9Ed+hkuj0E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=frJGUaMKbkIVBfQNOuXh7FynL79t/cOVJpgLRBxt+52vGcv4i0nCqR2laDOe+jHsA
-	 bgOnXVSPOLh8zAiswkGAKnR+5M2RsXMIfj7eFZIWDfoQP+3tl5pTBax9P0T7Y5G42f
-	 gr6kUl3Wx3mmtEi1L79+z+RnM+MypuH+COIDKS5A=
+	by mail.kernel.org (Postfix) with ESMTP id 8CCAA218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgEIBsQ (ORCPT
+        id S1728532AbgEIBtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbgEIBsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:48:16 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72CF2184D;
-        Sat,  9 May 2020 01:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588988896;
-        bh=1Yq8ETdj2RiWGbRAmpZXiiimnP7VGCPSm9Ed+hkuj0E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jyKl7SXRcWXWq5imKX647QsE8ox1R/mLLI5pgfKj/GuuF5vNyleinXiN1DB6qZIYs
-         2hzFd6LWWdZQB/nBLgNKu/4nmDuJmj9WMSakljsOFYZRP7ZGJMhoEf6VNXKgC5T9lS
-         Vm4EQByrNVHtcl4+8DazaV07KTFjEqnXuJq+HTzQ=
-Date:   Fri, 8 May 2020 18:48:14 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Siva Reddy Kallam <siva.kallam@broadcom.com>,
-        Prashant Sreedharan <prashant@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: tg3: tidy up loop, remove need to compute off with
- a multiply
-Message-ID: <20200508184814.45e10c12@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <160ce1ee-3bb5-3357-64f3-e5dea8c0538d@canonical.com>
-References: <20200508225301.484094-1-colin.king@canonical.com>
-        <1890306fc8c9306abe11186d419d84f784ee6144.camel@perches.com>
-        <160ce1ee-3bb5-3357-64f3-e5dea8c0538d@canonical.com>
+        Fri, 8 May 2020 21:49:55 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4359 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727828AbgEIBtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:49:55 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id ACEE65FB9EFAEC69915B;
+        Sat,  9 May 2020 09:49:49 +0800 (CST)
+Received: from [10.63.139.185] (10.63.139.185) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 09:49:48 +0800
+Subject: Re: [PATCH 3/4] crypto: hisilicon/zip - constify struct debugfs_reg32
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+References: <20200508223502.7258-1-rikard.falkeborn@gmail.com>
+ <20200508223502.7258-4-rikard.falkeborn@gmail.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5EB60C26.8050205@hisilicon.com>
+Date:   Sat, 9 May 2020 09:49:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200508223502.7258-4-rikard.falkeborn@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 00:31:03 +0100 Colin Ian King wrote:
-> > My preference would be for
-> > 
-> > {
-> > 	int i;
-> > 	u32 off = 0;
-> > 
-> > 	for (i = 0; i < TG3_SD_NUM_RECS; i++) {
-> > 		tg3_ape_scratchpad_read(tp, (u32 *)ocir, off, TC3_OCIR_LEN);
-> > 
-> > 		if (ocir->signature != TG3_OCIR_SIG_MAGIC ||
-> > 		    !(ocir->version_flags & TG3_OCIR_FLAG_ACTIVE))
-> > 			memset(ocir, 0, TG3_OCIR_LEN);
-> > 
-> > 		off += TG3_OCIR_LEN;
-> > 		ocir++;
-> > 	}
-> >   
-> OK, I'll send a V3 tomorrow.
+On 2020/5/9 6:35, Rikard Falkeborn wrote:
+> hzip_dfx_regs is never changed and can be made const.
+> 
+> This allows the compiler to put it in the text section instead of the
+> data section.
+> 
+> Before:
+>    text    data     bss     dec     hex filename
+>   15236    6160     480   21876    5574 drivers/crypto/hisilicon/zip/zip_main.o
+> 
+> After:
+>    text    data     bss     dec     hex filename
+>   15620    5776     480   21876    5574 drivers/crypto/hisilicon/zip/zip_main.o
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-I already reviewed and applied v2, just waiting for builds to finish,
-let's leave it.
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+
+Thanks for fixing this.
+
+> ---
+>  drivers/crypto/hisilicon/zip/zip_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+> index 37db11f96fab..6934a03d21e1 100644
+> --- a/drivers/crypto/hisilicon/zip/zip_main.c
+> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
+> @@ -165,7 +165,7 @@ static const u64 core_offsets[] = {
+>  	[HZIP_DECOMP_CORE5] = 0x309000,
+>  };
+>  
+> -static struct debugfs_reg32 hzip_dfx_regs[] = {
+> +static const struct debugfs_reg32 hzip_dfx_regs[] = {
+>  	{"HZIP_GET_BD_NUM                ",  0x00ull},
+>  	{"HZIP_GET_RIGHT_BD              ",  0x04ull},
+>  	{"HZIP_GET_ERROR_BD              ",  0x08ull},
+> 
