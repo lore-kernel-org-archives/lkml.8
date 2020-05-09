@@ -2,69 +2,120 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC3FC54E4B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B77C54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7055920A8B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589055906;
-	bh=d40vE5YHjV8cq2Tbu7iN4MRiNJoI6JVnXkhtzcw0dX8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=V3L6Qyh2mVBnwWQEGLFpBBwt8UlVcTXuguaz5whZXppIzdgDie7NiLrvzBieCFa1l
-	 oWmKmauqneILPtmbX+c7sE/9VIlXU503E/sAvZGBAM47iVOYsKd8Jh87fW++R5WA3Z
-	 8nZgWkREKW6xlNCelYnPRw8B2AVQULxbgGaLngfM=
+	by mail.kernel.org (Postfix) with ESMTP id 1A3EF21473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgEIUZF (ORCPT
+        id S1728098AbgEIUcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 16:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgEIUZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 16:25:05 -0400
-Subject: Re: [GIT PULL] io_uring fixes for 5.7-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589055904;
-        bh=d40vE5YHjV8cq2Tbu7iN4MRiNJoI6JVnXkhtzcw0dX8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=RV3fKHchS3VVDRIKu48eMKiHDwgsNlh/8nDedmIektBH1HSwL/uOUoRkwzpXOv3rf
-         YxMXnfwja1Dx1Jg65Zgt6MV3AjuiJwi6pqzs3v4uKFXC4rYbD0sNZscwy1Idx6pGXg
-         AK9hLtaEcarxY7CYpAeVWiBKsmdSNO6f72JzIRXk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cf931801-dc26-e86b-57aa-d7730baccdc1@kernel.dk>
-References: <cf931801-dc26-e86b-57aa-d7730baccdc1@kernel.dk>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cf931801-dc26-e86b-57aa-d7730baccdc1@kernel.dk>
-X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
- tags/io_uring-5.7-2020-05-08
-X-PR-Tracked-Commit-Id: 63ff822358b276137059520cf16e587e8073e80f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1d3962ae3b3d3a945f7fd5c651cf170a27521a35
-Message-Id: <158905590492.29076.1791242764984106931.pr-tracker-bot@kernel.org>
-Date:   Sat, 09 May 2020 20:25:04 +0000
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Sat, 9 May 2020 16:32:08 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:57360 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725960AbgEIUcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 16:32:08 -0400
+Received: from [192.168.42.210] ([93.23.15.202])
+        by mwinf5d70 with ME
+        id ckXz220064MaNxZ03kXzm4; Sat, 09 May 2020 22:32:06 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 09 May 2020 22:32:06 +0200
+X-ME-IP: 93.23.15.202
+Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
+ paths
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     davem@davemloft.net, fthain@telegraphics.com.au,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200508172557.218132-1-christophe.jaillet@wanadoo.fr>
+ <20200508185402.41d9d068@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <50ef36cd-d095-9abe-26ea-d363d11ce521@wanadoo.fr>
+ <20200509111321.51419b19@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <9f7ed642-c464-feec-2dfd-13333621492f@wanadoo.fr>
+Date:   Sat, 9 May 2020 22:31:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200509111321.51419b19@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 8 May 2020 21:12:49 -0600:
+Le 09/05/2020 à 20:13, Jakub Kicinski a écrit :
+> On Sat, 9 May 2020 18:47:08 +0200 Christophe JAILLET wrote:
+>> Le 09/05/2020 à 03:54, Jakub Kicinski a écrit :
+>>> On Fri,  8 May 2020 19:25:57 +0200 Christophe JAILLET wrote:
+>>>> @@ -527,8 +531,9 @@ static int mac_sonic_platform_remove(struct platform_device *pdev)
+>>>>    	struct sonic_local* lp = netdev_priv(dev);
+>>>>    
+>>>>    	unregister_netdev(dev);
+>>>> -	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
+>>>> -	                  lp->descriptors, lp->descriptors_laddr);
+>>>> +	dma_free_coherent(lp->device,
+>>>> +			  SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
+>>>> +			  lp->descriptors, lp->descriptors_laddr);
+>>>>    	free_netdev(dev);
+>>>>    
+>>>>    	return 0;
+>>> This is a white-space only change, right? Since this is a fix we should
+>>> avoid making cleanups which are not strictly necessary.
+>> Right.
+>>
+>> The reason of this clean-up is that I wanted to avoid a checkpatch
+>> warning with the proposed patch and I felt that having the same layout
+>> in the error handling path of the probe function and in the remove
+>> function was clearer.
+>> So I updated also the remove function.
+> I understand the motivation is good.
+>
+>> Fell free to ignore this hunk if not desired. I will not sent a V2 only
+>> for that.
+> That's not how it works. Busy maintainers don't have time to hand edit
+> patches. I'm not applying this to the networking tree and I'm tossing it
+> from patchwork. Please address the basic feedback.
+>
+> Thank you.
+>
+Hi,
 
-> git://git.kernel.dk/linux-block.git tags/io_uring-5.7-2020-05-08
+that's not the way you would like it to work.
+It happens that some maintainers make some small adjustments in the 
+commit message or the patch itself.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1d3962ae3b3d3a945f7fd5c651cf170a27521a35
+The patch is good enough for me. If you can not accept the additional 
+small clean-up, or don't have time to tweak it by yourself, or by anyone 
+else, please, just reject it.
+The issue I propose to fix is minor and unlikely to happen anyway.
 
-Thank you!
+If anyone else cares to update the proposal, please do.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+I don't want to discuss your motivation, I understand them.
+
+But please, do also understand mine and do not require too futile things 
+from hobbyists.
+
+Spending time only to remove a CR because it does not match your quality 
+standard or your expectation of what a patch is, is of no interest for me.
+That's why I told I would not send a V2.
+
+
+It is up to you to accept it as-is, update it or reject it, according to 
+the value you think this patch has.
+
+Hoping for your understanding and sorry for wasting your time.
+
+Best regards,
+CJ
+
