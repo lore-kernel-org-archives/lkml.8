@@ -2,138 +2,131 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616AAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B21C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCB22184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:00:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="B/IQVjRm"
+	by mail.kernel.org (Postfix) with ESMTP id 13E202184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589011342;
+	bh=RA/fzqk96CmNb7Wg8ZxeIFCcDkjdzdPva6zqPxAaUKg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=fTQK2kUFLiRtpl+d+FNZwsuhTs9z+dCZJFD2KCGkp0X+IRfcaYW1gg8E1O44QkNUS
+	 CJ9nttfFo0mgZeCBYKhUpz5E/6DtZ/Q1qS7/aQaLBd6DxROv1+Hn6E9UsPyFKQTIlk
+	 Kd+tA8pw6PAa9yXrw0FpMu+Pomdl7EbXuUFrFKc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgEIIAa (ORCPT
+        id S1727801AbgEIICV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:00:30 -0400
-Received: from mout.web.de ([212.227.17.11]:47711 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbgEIIA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:00:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1589011215;
-        bh=zrxLDBTMmEIP/qqOFO2evz9mc4UXaGDRoyYKqIZKBmU=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=B/IQVjRmP8sfSP8/V7MLjEWLx3rrOsrPd/mZhydg5iYFJuL0KyQW6coUTsgv9vi1s
-         ddg9OURnBiPErO5xxn6YVHG0tblrf/c5QXr53RTH+EXppUxWukD0zT3g5KFijpoPov
-         k507Q0b+Z1hoH/S74/4UT3LXGlAkLlL/jvW4tqsM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.147.78]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MJWsc-1jr4D91cmO-00K2Tf; Sat, 09
- May 2020 10:00:15 +0200
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 1/4] fs: btrfs: fix a data race in
- btrfs_block_group_done()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, linux-btrfs@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ce41cc75-ee89-61fe-ef7d-6d527ea56e5a@web.de>
-Date:   Sat, 9 May 2020 10:00:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 9 May 2020 04:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725880AbgEIICU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 04:02:20 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D828C061A0C;
+        Sat,  9 May 2020 01:02:20 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id a4so3257309lfh.12;
+        Sat, 09 May 2020 01:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=BuTmdFQyPT/UZt2ymSX/JY4LvFwkZzPp3F14X454bn8=;
+        b=Z/tAs/QevuNrQ0BwYjAZBlqOh1h4Tpajd4iqRsOnOXhX5eUw4oHZxcYnskD9rQ+V+H
+         0J6XgKQA0L6T9HwSn2yizRwLeikcQcY5t7G9kIeagxty6t700t5bKuIog7umtodpU5PK
+         ZSNpN7BkKE8qJp0LOkMGelIBQ5EFJUQrRDK8Fb33En3eA6DY/CNhvz06mjHIhGOtvflA
+         Hq77Ek1/yQfoi/m5Fr/ZWQeO4tVVb5PEOTbnZEeh1yXbASdDE9nFPFauF5VhwwjGWTkg
+         tkhxqsduFwyTpoGgwGREfLxMQsA/928ISmnVkCt+ILv2scrU9kom+ImfzGZfiuSn2BrS
+         AJYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=BuTmdFQyPT/UZt2ymSX/JY4LvFwkZzPp3F14X454bn8=;
+        b=FroSoJFvlx/6h1QHyKSst9FYzu+H1TmKli9cXfUV6KOc9/temTO/SxWeoM/gX3FpO+
+         Z4ps2L3CTjgt1etKb2aLRouTKWfnXnKxfgY2bVcHkOlBieaDtmmsszO2QM2vVKbxXI4g
+         I6TzEJrh7EBzZAyb5OqMCeP+iLqYvB/MmF+l82gczMmG7rNf/YBnk2OU1Y4Sa/hl8cDy
+         D/OojpuC6CqxA/JPKi/wm01f/ehmAQCybhuPCVxTIG8mEuap/JFUmL0tCnmzmIzFVPE8
+         jrW+oyjcNZX/GeoMqjlnKLaEYdeFZQwHMyI5qgg1tnR+Vh1kxTwUzLkk1z4OfWg9JJfy
+         NqKg==
+X-Gm-Message-State: AOAM530dZvOK+q6OexQCxny7x8u1XDgjInEYfXG+jJKvY6BGbaIAgZ/s
+        aLr6UfYHwogSvu6dM37yFtY=
+X-Google-Smtp-Source: ABdhPJyGL1rF/FXwTFL072+D1awC/4HqNexICNeOuN2DuyGoLCL3fJot18CM74NGpLkR1xapK2MLGA==
+X-Received: by 2002:ac2:5199:: with SMTP id u25mr4373879lfi.80.1589011338783;
+        Sat, 09 May 2020 01:02:18 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id q19sm3059482ljj.84.2020.05.09.01.02.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 09 May 2020 01:02:18 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v2] usb: raw-gadget: fix gadget endpoint selection
+In-Reply-To: <CAAeHK+yxoYigM7uWC3cpKmCjgMLXQ1pT=MkJ7XQYCVRgZ-DdTQ@mail.gmail.com>
+References: <2f05fe9aa7e4bcb1bad3f6d11e48a411c901af68.1588197975.git.andreyknvl@google.com> <875zdabzs3.fsf@kernel.org> <CAAeHK+yxoYigM7uWC3cpKmCjgMLXQ1pT=MkJ7XQYCVRgZ-DdTQ@mail.gmail.com>
+Date:   Sat, 09 May 2020 11:02:13 +0300
+Message-ID: <87zhahlenu.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1tlwqMc8g4Mnq+exu4JXQPVrlV0T/nQuXVTVoAlwogzWnURg+6g
- mdQsGd9ebWDdIhQU8D6WNFBEOHXk5JDl7e4kfisY9NgmMyBfWNY9fgEpjDXgyp/bvYdRGLA
- VW279zWxVmO4EK3VBgdgxd+MRyXJmORTKGojJ9qg1LvkpiG8v+c5C4lWwSXjELtBTad+Lph
- 1GiYp9Y3vHFZmB6D3ntWw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IL4ulCApXVA=:axd6i3FmjB7fPueRGR+Ixe
- /KEwzjIySvIJjwRQ8UW1xkrbjxlzzjnqw+HpQYIgVRXA896uX5uSnf4c9Sr7PggjUr6NJI41J
- QiqkyCEM71ouok+FCGXhcFrGHRBzZv+2hkrcxC4vMYjJbHl5LTTmidg0fvsS5nKWcfCApSLvw
- NMJG9cO+JGkagXefquWAlC/5Dc1APhBr5hsFYcfc1/TVA6ud41UiS5r4y1z3LZ0MYvtbW42bF
- 7U9HeRGOVOWvy9cAYdWMXlv9DkHLndqq6JXTqgX0DGKrZbSpPmxRPJJ7tD6AAQH9W4Y5rY9/U
- ylg6UVQIMmPtdLBxOBkJqeMgqG4MgRH9K7jVIcf1GV797xJ8DokuMH0d+VLTd7M1uWpuCU5Kg
- Wrc+Z5ASLm9KTk4wu/kH3En84wjCxKX6+OuYY1ycTTwYg3rDm/Pk48l8v62qnXb/dN4yyN/1F
- ZRUMRiilYKLkhk3LfmtueZw1XKXnptWtmlNFFjsq5W0SG6agNuU7kkB7Z/u9946IkSVJly3IK
- ptzj3SCIzT8DtiHyU7g3xv+HWa+epkSntSIXrnoCtBvoqAeXT56YhsqGYhrs+fQIgnPNZGdv/
- ifu657/S053UxPZQLUN9OfemvAQHyyMUaQtdJdL3s/sufl4j2SkqWy059LCxT3mP/LgAQgm/h
- otEwViu1hURGkDMDEmFvJVInzbT2TQSHoL0dE6A90P7zA0v/FtVrEMMYjl9mfbpvo2wKkUk/p
- zZRo85lkjXVtVfC5MxUAXjPJ4XAAoGej70WNF3PIu44XKqeavde4JIAirZioF+MLKPYWG4xg+
- tYA+0f4jljsn6aXooIedsOmGymr2tMHmaTXM/KZ8wXIEaOMYt+5LpsNAsF0NzDKfdwtNux3F/
- gr9+AhATIiPrkQtlY3Hth8yhwZxgOkqyLrq1fh24c1XQvOxRNxRMfX+ijPbYM5QEjh9S9z/Z5
- aWewm+nmPmXKr1J1d0GpDcTlFvvYeM5YOyiYVLLJR1A2o0CijA3C8FgrVdyh5vi4m51NrNrE3
- FzC1FvYI+EYjfOjA/55mvWjRnWtPSrdPPRWHtDwi4k6v9xP19TFxuO5A4FQUnJtcaYz/qX5oS
- oxAiHgSoQULxHkUbMXId6QRZGnMQPqNNq7o6MVRcwGvJSIYwaRWSCBg+tX6PK8asFutcfwhoD
- G8fLw8KdV0XEoOY4htPDTMKkJ4F4dJwj5xRflpw5GdjEabT/LDKXl+3CxQASIWaxjMQS+kFpF
- FYo5hlNEGjaoWwN3q
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> To fix this race, the spinlock cache->lock is used to protect the
-> access to cache->cached in btrfs_block_group_done().
-
-How do you think about to replace this wording by a variant like the follo=
-wing?
-
-   Thus use the spin lock =E2=80=9Ccache->lock=E2=80=9D to protect the acc=
-ess to
-   the data structure member =E2=80=9Ccached=E2=80=9D in the implementatio=
-n of
-   the function =E2=80=9Cbtrfs_block_group_done=E2=80=9D.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change descri=
-ption?
+Hi,
 
-Regards,
-Markus
+Andrey Konovalov <andreyknvl@google.com> writes:
+>> here you're changing userspace ABI. Aren't we going to possibly break
+>> some existing applications?
+>
+> Hi Felipe,
+>
+>  I've been working on tests for Raw Gadget for the last few weeks [1],
+> which revealed a few problems with the interface. This isn't yet
+> included into any released kernel, so my hope that changing the ABI is
+> OK during the rc stage.
+
+Fair enough. If that's okay with Greg, it's okay with me, but then how
+do we include it into the -rc seen as it's not really a fix?
+
+Greg, are you okay with me including such large patches during the -rc?
+They essentially add new IOCTLs to the raw-gadget interface.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl62Y4YACgkQzL64meEa
+mQYjJA/9Gb9ZWN8TE3Q3M6hAC05iGc3Td3l8aC6OQGmDPB5as3fHiCM9wqHOfHMr
+fL3OhtCRl+C/deIgW28+4y3uQy1wYOnIvgqeEJDUPjhO+1d0I2z+F1jAJwx/9H7w
+4tGD4goEl7uvRdiCwkkxNgWP74LW0+3/a8riL+UKCbgltBWQaXUIFw1ucSziJt/t
+W/Sio0YbQpyRp8MBaAdRmE3slA/EUdM8B74j5d5sT60/9+dH3gqH6/9IaTjhVaJf
+6q7XPbe8ribIS94rf6it04Q47hg1JTvQbvo+MPHuZuVyPj3xRkyevMzELPTp3/yv
+gUwEGp16s5XpELelEtHiixSafGZykzmU9xAM203t9mhzmvqiDenDrgNaT24XASLe
+tG/IjNTxNr65R/9FoUnrSTQquahZLVTE3IzS4wkznUjDK9v0P/+IuQLQVsf/3Xvg
+YFXG1XCU+b6h68CG0T5Wvjbxlcte0Cycq7THcovVRyBsyPpGy7VnyJoRMB42A13G
+dKKugfm5M8czyT6mOcqFQV+UzsFmwWpOjHmZLTP6+6w56FSz2Fx2S/uCduP6jSCd
+yUQ+lE8kguXtonMfhWWRrR9m1jq5lsrvrFxVtDUVxB0G/VHmfL+GiNXzoGQo1IbM
+RcsH7Y+y3hBXzbOE9S6J4WjvLghGrnZEdgbSvuVhh0gtIxVQXVk=
+=O4Si
+-----END PGP SIGNATURE-----
+--=-=-=--
