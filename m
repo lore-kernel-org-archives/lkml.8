@@ -2,171 +2,151 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FFAC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C2C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093DC24957
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936A02184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsf5L63R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgEIIoq (ORCPT
+        id S1727785AbgEIIrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:44:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47368 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgEIIop (ORCPT
+        Sat, 9 May 2020 04:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725989AbgEIIrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:44:45 -0400
-Received: from 89-77-60-66.dynamic.chello.pl (89.77.60.66) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 30bfb3c741368213; Sat, 9 May 2020 10:44:42 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Chris Chiu <chiu@endlessm.com>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>
-Subject: [PATCH v2] ACPI: EC: s2idle: Avoid premature returns from acpi_s2idle_wake()
-Date:   Sat, 09 May 2020 10:44:41 +0200
-Message-ID: <13031978.1nyG40egBz@kreacher>
+        Sat, 9 May 2020 04:47:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195F5C061A0C;
+        Sat,  9 May 2020 01:47:35 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g14so2782945wme.1;
+        Sat, 09 May 2020 01:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vpA2mMnqtCdcczzkn/BswPLFEz3AqGdCg7CXXHUsINQ=;
+        b=fsf5L63RngfsFHogIddKCefBwaJMD0i/7d0SGXzwlzuQj5veMbf37TVxzV3XhU9pPz
+         W3ajImjcN6U19WkMWXjlRHamJXtXoycA2qWpk2mE6P3NhptdU5Yrfri5GHcyqow04Aeu
+         RXDko3XlzZDmtJqLLe67ojhStsta03uAlGDfjh0p1FcSe4yWUMYxG4tT0HHRFh+lLRhI
+         NdVWae3mQ3/hEHGcMkmdPgwsWrnAq33BteCX+tAKcHnVTl6zeFJKgexr10cKOvW3KRJy
+         8XNpqln4a2EZBODt9MIcl+XAwEnOYXh4XzfZQJrf+VQQw0tuPFW9SubM+p0FJeyHqGOs
+         pDkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vpA2mMnqtCdcczzkn/BswPLFEz3AqGdCg7CXXHUsINQ=;
+        b=fqN58LfDSs52XzzazE5KnzNYwKCqMkxVhluubeFKrkBD2glSI8FwajeEqa9Ql4V2mE
+         yVCOZGvB2hIi2Vb6m0jSuntmuhsfGfb6/IrNWECgtQ3xH3eWDO+lhfBSb8JvUHJBx5aQ
+         FdLcC8w5A3j9nPNOFrAC/+PV7KctspnY0N3FQP52jtsnmVrUy0orgRghhCF0B+H+a9AH
+         b081hbZMjqjgW+KHS1UsxpTQH8XhXlf7yx5fKE5o6vAIsvD/b9dCiRa5I3TGB1cgWIZP
+         lnOALqlNLJ67Jxyg6rAfj7RXv7GxFrVxfOzeZ37h++sxEZlFFN0BDJSlXTSyO0b3WPxa
+         n9WQ==
+X-Gm-Message-State: AGi0PuZvGJLS8rL9ZSV4hASmZoRjyjuzRCqeA0y6GTddoBrP3tWDFGQX
+        3as1fevObWnXl5bJhwLQ48aI5TI7
+X-Google-Smtp-Source: APiQypKZkVDG+otFrlSCvBOkm7q7k+tzlXizLMWX5sXQxqKVfB8TYKqQb5B6dyx1LlKk2FYszyfWBQ==
+X-Received: by 2002:a7b:cf23:: with SMTP id m3mr19772826wmg.36.1589014053596;
+        Sat, 09 May 2020 01:47:33 -0700 (PDT)
+Received: from localhost.localdomain ([46.191.65.149])
+        by smtp.gmail.com with ESMTPSA id b20sm16145044wme.9.2020.05.09.01.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 01:47:33 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] splice/tee: len=0 fast path after validity check
+Date:   Sat,  9 May 2020 11:46:18 +0300
+Message-Id: <14d4955e8c232ea7d2cbb2c2409be789499e0452.1589013737.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+When len=0, splice() and tee() return 0 even if specified fds are
+invalid, hiding errors from users. Move len=0 optimisation later after
+basic validity checks.
 
-If the EC GPE status is not set after checking all of the other GPEs,
-acpi_s2idle_wake() returns 'false', to indicate that the SCI event
-that has just triggered is not a system wakeup one, but it does that
-without canceling the pending wakeup and re-arming the SCI for system
-wakeup which is a mistake, because it may cause s2idle_loop() to busy
-spin until the next valid wakeup event.  [If that happens, the first
-spurious wakeup is still pending after acpi_s2idle_wake() has
-returned, so s2idle_enter() does nothing, acpi_s2idle_wake()
-is called again and it sees that the SCI has triggered, but no GPEs
-are active, so 'false' is returned again, and so on.]
+before:
+splice(len=0, fd_in=-1, ...) == 0;
 
-Fix that by moving all of the GPE checking logic from
-acpi_s2idle_wake() to acpi_ec_dispatch_gpe() and making the
-latter return 'true' only if a non-EC GPE has triggered and
-'false' otherwise, which will cause acpi_s2idle_wake() to
-cancel the pending SCI wakeup and re-arm the SCI for system
-wakeup regardless of the EC GPE status.
+after:
+splice(len=0, fd_in=-1, ...) == -EBADF;
 
-This also addresses a lockup observed on an Elitegroup EF20EA laptop
-after attempting to wake it up from suspend-to-idle by a key press.
-
-Fixes: d5406284ff80 ("ACPI: PM: s2idle: Refine active GPEs check")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207603
-Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
-Link: https://lore.kernel.org/linux-acpi/CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com/
-Reported-by: Chris Chiu <chiu@endlessm.com>
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
 
--> v2:
-   * Improve the changelog and add more tags.
+Totally leaving it at yours judgment, but it'd be nice to have
+for io_uring as well.
 
----
- drivers/acpi/ec.c       |   24 ++++++++++++++++--------
- drivers/acpi/internal.h |    1 -
- drivers/acpi/sleep.c    |   14 ++------------
- 3 files changed, 18 insertions(+), 21 deletions(-)
+ fs/splice.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
- 		if (acpi_check_wakeup_handlers())
- 			return true;
+diff --git a/fs/splice.c b/fs/splice.c
+index a1dd54de24d8..8d6fc690f8e9 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1122,6 +1122,9 @@ long do_splice(struct file *in, loff_t __user *off_in,
+ 		     !(out->f_mode & FMODE_WRITE)))
+ 		return -EBADF;
  
--		/*
--		 * If the status bit is set for any enabled GPE other than the
--		 * EC one, the wakeup is regarded as a genuine one.
--		 */
--		if (acpi_ec_other_gpes_active())
-+		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
-+		if (acpi_ec_dispatch_gpe())
- 			return true;
++	if (unlikely(!len))
++		return 0;
++
+ 	ipipe = get_pipe_info(in);
+ 	opipe = get_pipe_info(out);
  
- 		/*
--		 * If the EC GPE status bit has not been set, the wakeup is
--		 * regarded as a spurious one.
--		 */
--		if (!acpi_ec_dispatch_gpe())
--			return false;
+@@ -1426,9 +1429,6 @@ SYSCALL_DEFINE6(splice, int, fd_in, loff_t __user *, off_in,
+ 	struct fd in, out;
+ 	long error;
+ 
+-	if (unlikely(!len))
+-		return 0;
 -
--		/*
- 		 * Cancel the wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1994,23 +1994,31 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
+ 	if (unlikely(flags & ~SPLICE_F_ALL))
+ 		return -EINVAL;
  
--bool acpi_ec_other_gpes_active(void)
--{
--	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
--}
+@@ -1535,7 +1535,6 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
+ 	int ret = 0;
+ 	bool input_wakeup = false;
+ 
 -
- bool acpi_ec_dispatch_gpe(void)
- {
- 	u32 ret;
- 
- 	if (!first_ec)
-+		return acpi_any_gpe_status_set(U32_MAX);
+ retry:
+ 	ret = ipipe_prep(ipipe, flags);
+ 	if (ret)
+@@ -1769,6 +1768,9 @@ long do_tee(struct file *in, struct file *out, size_t len, unsigned int flags)
+ 	 * copying the data.
+ 	 */
+ 	if (ipipe && opipe && ipipe != opipe) {
++		if (unlikely(!len))
++			return 0;
 +
-+	/*
-+	 * Report wakeup if the status bit is set for any enabled GPE other
-+	 * than the EC one.
-+	 */
-+	if (acpi_any_gpe_status_set(first_ec->gpe))
-+		return true;
-+
-+	if (ec_no_wakeup)
- 		return false;
+ 		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
+ 			flags |= SPLICE_F_NONBLOCK;
  
-+	/*
-+	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
-+	 * to allow the caller to process events properly after that.
-+	 */
- 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	if (ret == ACPI_INTERRUPT_HANDLED) {
-+	if (ret == ACPI_INTERRUPT_HANDLED)
- 		pm_pr_dbg("EC GPE dispatched\n");
--		return true;
--	}
-+
- 	return false;
- }
- #endif /* CONFIG_PM_SLEEP */
-Index: linux-pm/drivers/acpi/internal.h
-===================================================================
---- linux-pm.orig/drivers/acpi/internal.h
-+++ linux-pm/drivers/acpi/internal.h
-@@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
+@@ -1795,9 +1797,6 @@ SYSCALL_DEFINE4(tee, int, fdin, int, fdout, size_t, len, unsigned int, flags)
+ 	if (unlikely(flags & ~SPLICE_F_ALL))
+ 		return -EINVAL;
  
- #ifdef CONFIG_PM_SLEEP
- void acpi_ec_flush_work(void);
--bool acpi_ec_other_gpes_active(void);
- bool acpi_ec_dispatch_gpe(void);
- #endif
- 
-
-
+-	if (unlikely(!len))
+-		return 0;
+-
+ 	error = -EBADF;
+ 	in = fdget(fdin);
+ 	if (in.file) {
+-- 
+2.24.0
 
