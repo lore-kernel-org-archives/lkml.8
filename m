@@ -2,178 +2,168 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD79C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF83C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6B8420735
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7E9208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="v2bazMjS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ix6qR2sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgEIOtF (ORCPT
+        id S1728188AbgEIO4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 10:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726782AbgEIOtE (ORCPT
+        Sat, 9 May 2020 10:56:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45624 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728115AbgEIO4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 10:49:04 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A7C061A0C;
-        Sat,  9 May 2020 07:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z6vD6PmD89Ixku9rc/p9RR0bXWZL+mPNX4ud5gSu6aw=; b=v2bazMjSOW3QuO3Cwm/AZIlGa
-        QeYz/rk2irlMaD9bOX5DGoy2dgTbaKVEEuxct7DZEYERsw3AyqIhgYeZJ4cC5B2iu49Dyg7rmeJme
-        pOxw6mHkyeeD7VtZiuGXi0MNe4qAPoKKdfO5WF2F9v4xHYz7P4IvG+F+7tKc86Pm1UB6zjeUdDSzD
-        vpVdafAM1t2inbCi87XoqvbloXpzK4paV0goJ+ZcoP8SJBZYewsCvGgi6EHl7ed9Tz2CLUIXEXhQV
-        NSLlu15mJI8+ZvmzC3QzHzbwqTaNygMdsWwXp26pl1AiLyBNy2sjZ0Q7IggWUB7ur18sdRbtzEAoI
-        eL2Qx7waA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:55780)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jXQmd-0004EY-W2; Sat, 09 May 2020 15:48:56 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jXQmT-0002wF-PJ; Sat, 09 May 2020 15:48:45 +0100
-Date:   Sat, 9 May 2020 15:48:45 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev <netdev@vger.kernel.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
- to handle RSS tables
-Message-ID: <20200509144845.GF1551@shell.armlinux.org.uk>
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
- <20190524100554.8606-4-maxime.chevallier@bootlin.com>
- <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
- <20200423170003.GT25745@shell.armlinux.org.uk>
- <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
- <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
- <20200509114518.GB1551@shell.armlinux.org.uk>
- <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
- <20200509135105.GE1551@shell.armlinux.org.uk>
+        Sat, 9 May 2020 10:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589036196;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=biBEh2xyG7QOz0vWY4fM+UdTv5nwnU3LRB3gcCSBxrI=;
+        b=Ix6qR2sPtCcFcyzRvtTh50vlUGA8puaT9k9Xn7Opv4WQc8jA6/aIXEP9OMr2j3BRpdMBS+
+        7/d85EqKErBCxuTVbUAfL4+UpzzanLLGt2l+865PEfknnHJ85zGuY1tHRHnIw18DLeUakM
+        lRMy9s3+8P1uq0FvZDJzN7irbhwtFdE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-MPQ1STaMOfSNwr8bvkqY-A-1; Sat, 09 May 2020 10:56:32 -0400
+X-MC-Unique: MPQ1STaMOfSNwr8bvkqY-A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08901800D24;
+        Sat,  9 May 2020 14:56:30 +0000 (UTC)
+Received: from x1-fbsd (unknown [10.3.128.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CA879323;
+        Sat,  9 May 2020 14:56:16 +0000 (UTC)
+Date:   Sat, 9 May 2020 10:56:14 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Tso Ted <tytso@mit.edu>, Adrian Bunk <bunk@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Jeff Mahoney <jeffm@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Jessica Yu <jeyu@suse.de>, Takashi Iwai <tiwai@suse.de>,
+        Ann Davis <AnDavis@suse.com>,
+        Richard Palethorpe <rpalethorpe@suse.de>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200509145614.GA6704@x1-fbsd>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
+ <20200507184307.GF205881@optiplex-lnx>
+ <20200507184705.GG205881@optiplex-lnx>
+ <20200507203340.GZ11244@42.do-not-panic.com>
+ <20200507220606.GK205881@optiplex-lnx>
+ <20200507222558.GA11244@42.do-not-panic.com>
+ <20200508124719.GB367616@optiplex-lnx>
+ <20200509034854.GI11244@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509135105.GE1551@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200509034854.GI11244@42.do-not-panic.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 02:51:05PM +0100, Russell King - ARM Linux admin wrote:
-> On Sat, May 09, 2020 at 03:14:05PM +0200, Matteo Croce wrote:
-> > On Sat, May 9, 2020 at 1:45 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Sat, May 09, 2020 at 11:15:58AM +0000, Stefan Chulski wrote:
-> > > >
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Matteo Croce <mcroce@redhat.com>
-> > > > > Sent: Saturday, May 9, 2020 3:13 AM
-> > > > > To: David S . Miller <davem@davemloft.net>
-> > > > > Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>; netdev
-> > > > > <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Antoine
-> > > > > Tenart <antoine.tenart@bootlin.com>; Thomas Petazzoni
-> > > > > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
-> > > > > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Stefan
-> > > > > Chulski <stefanc@marvell.com>; Marcin Wojtas <mw@semihalf.com>; Linux
-> > > > > ARM <linux-arm-kernel@lists.infradead.org>; Russell King - ARM Linux admin
-> > > > > <linux@armlinux.org.uk>
-> > > > > Subject: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
-> > > > > handle RSS tables
+On Sat, May 09, 2020 at 03:48:54AM +0000, Luis Chamberlain wrote:
+> On Fri, May 08, 2020 at 08:47:19AM -0400, Rafael Aquini wrote:
+> > On Thu, May 07, 2020 at 10:25:58PM +0000, Luis Chamberlain wrote:
+> > > On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
+> > > > On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
+> > > > > I *think* that a cmdline route to enable this would likely remove the
+> > > > > need for the kernel config for this. But even with Vlastimil's work
+> > > > > merged, I think we'd want yet-another value to enable / disable this
+> > > > > feature. Do we need yet-another-taint flag to tell us that this feature
+> > > > > was enabled?
 > > > > >
-> > > > > Hi,
-> > > > >
-> > > > > What do you think about temporarily disabling it like this?
-> > > > >
-> > > > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > > > @@ -5775,7 +5775,8 @@ static int mvpp2_port_probe(struct platform_device
-> > > > > *pdev,
-> > > > >                             NETIF_F_HW_VLAN_CTAG_FILTER;
-> > > > >
-> > > > >         if (mvpp22_rss_is_supported()) {
-> > > > > -               dev->hw_features |= NETIF_F_RXHASH;
-> > > > > +               if (port->phy_interface != PHY_INTERFACE_MODE_SGMII)
-> > > > > +                       dev->hw_features |= NETIF_F_RXHASH;
-> > > > >                 dev->features |= NETIF_F_NTUPLE;
-> > > > >         }
-> > > > >
-> > > > >
-> > > > > David, is this "workaround" too bad to get accepted?
-> > > >
-> > > > Not sure that RSS related to physical interface(SGMII), better just remove NETIF_F_RXHASH as "workaround".
-> > >
-> > > Hmm, I'm not sure this is the right way forward.  This patch has the
-> > > effect of disabling:
-> > >
-> > > d33ec4525007 ("net: mvpp2: add an RSS classification step for each flow")
-> > >
-> > > but the commit you're pointing at which caused the regression is:
-> > >
-> > > 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-> > >
+> > > > 
+> > > > I guess it makes sense to get rid of the sysctl interface for
+> > > > proc_on_taint, and only keep it as a cmdline option. 
+> > > 
+> > > That would be easier to support and k3eps this simple.
+> > > 
+> > > > But the real issue seems to be, regardless we go with a cmdline-only option
+> > > > or not, the ability of proc_taint() to set any arbitrary taint flag 
+> > > > other than just marking the kernel with TAINT_USER. 
+> > > 
+> > > I think we would have no other option but to add a new TAINT flag so
+> > > that we know that the taint flag was modified by a user. Perhaps just
+> > > re-using TAINT_USER when proc_taint() would suffice.
 > > >
 > > 
-> > Hi,
-> > 
-> > When git bisect pointed to 895586d5dc32 ("net: mvpp2: cls: Use RSS
-> > contexts to handle RSS tables"), which was merged
-> > almost an year after d33ec4525007 ("net: mvpp2: add an RSS
-> > classification step for each flow"), so I assume that between these
-> > two commits either the feature was working or it was disable and we
-> > didn't notice
-> > 
-> > Without knowing what was happening, which commit should my Fixes tag point to?
+> > We might not need an extra taint flag if, perhaps, we could make these
+> > two features mutually exclusive. The idea here is that bitmasks added 
+> > via panic_on_taint get filtered out in proc_taint(), so a malicious 
+> > user couldn't exploit the latter interface to easily panic the system,
+> > when the first one is also in use. 
 > 
-> Let me make sure that I get this clear:
-> 
-> - Prior to 895586d5dc32, you can turn on and off rxhash without issue
->   on any port.
-> - After 895586d5dc32, turning rxhash on eth2 prevents reception.
-> 
-> Prior to 895586d5dc32, with rxhash on, it looks like hashing using
-> CRC32 is supported but only one context.  So, if it's possible to
-> enable rxhash on any port on the mcbin without 895586d5dc32, and the
-> port continues to work, I'd say the bug was introduced by
-> 895586d5dc32.
-> 
-> Of course, that would be reinforced if there was a measurable
-> difference in performance due to rxhash on each port.
+> I get it, however I I can still see the person who enables enabling
+> panic-on-tain wanting to know if proc_taint() was used. So even if
+> it was not on their mask, if it was modified that seems like important
+> information for a bug report analysis.
+>
 
-I've just run this test, but I can detect no difference in performance
-with or without 895586d5dc32 on eth0 or eth2 on the mcbin (apart from
-eth2 stopping working with 895586d5dc32 applied.)  I tested this by
-reverting almost all changes to the mvpp2 driver between 5.6 and that
-commit.
+For that purpose (tracking user taints) I think sth between these lines
+would work:
 
-That's not too surprising; I'm using my cex7 platform with the Mellanox
-card in for one end of the 10G link, and that platform doesn't seem to
-be able to saturdate a 10G link - it only seems to manage around 4Gbps.
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 8a176d8727a3..651a82c13621 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2602,6 +2602,9 @@ int proc_douintvec(struct ctl_table *table, int write,
+                                 do_proc_douintvec_conv, NULL);
+ }
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
++/* track which taint bits were set by the user */
++static unsigned long user_tainted;
++
+ /*
+  * Taint values can only be increased
+  * This means we can safely use a temporary.
+@@ -2629,11 +2632,20 @@ static int proc_taint(struct ctl_table *table, int write,
+                 */
+                int i;
+                for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
+-                       if ((tmptaint >> i) & 1)
++                       if ((tmptaint >> i) & 1) {
++                               set_bit(i, &user_tainted);
+                                add_taint(i, LOCKDEP_STILL_OK);
++                       }
+                }
+        }
+
++       /*
++        * Users with SYS_ADMIN capability can fiddle with any arbitrary
++        * taint flag through this interface.
++        * If that's the case, we also need to mark the kernel "tainted by user"
++        */
++       add_taint(TAINT_USER, LOCKDEP_STILL_OK);
++
+        return err;
+ }
+
+
+I don't think, though, it's panic_on_taint work to track that. I posted a v3 for
+this feature with a way to select if one wants to avoid user forced taints
+triggering panic() for flags also set for panic_on_taint.
+
+Cheers,
+
+-- Rafael
+
