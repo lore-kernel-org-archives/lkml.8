@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44563C54E4A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95ADC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1F221582
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887D121473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgEIXqg (ORCPT
+        id S1729069AbgEIXqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47434 "EHLO
+        Sat, 9 May 2020 19:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728800AbgEIXqC (ORCPT
+        by vger.kernel.org with ESMTP id S1728794AbgEIXqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:46:02 -0400
+        Sat, 9 May 2020 19:46:01 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055AFC05BD0A;
-        Sat,  9 May 2020 16:46:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE54C05BD0C;
+        Sat,  9 May 2020 16:46:01 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXZAO-004iSK-6U; Sat, 09 May 2020 23:46:00 +0000
+        id 1jXZAO-004iSZ-DN; Sat, 09 May 2020 23:46:00 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, Ivan Hu <ivan.hu@canonical.com>
-Subject: [PATCH 16/20] efi_test: get rid of pointless access_ok()
-Date:   Sun, 10 May 2020 00:45:53 +0100
-Message-Id: <20200509234557.1124086-16-viro@ZenIV.linux.org.uk>
+        linux-fsdevel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 18/20] usb: get rid of pointless access_ok() calls
+Date:   Sun, 10 May 2020 00:45:55 +0100
+Message-Id: <20200509234557.1124086-18-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
 References: <20200509234124.GM23230@ZenIV.linux.org.uk>
@@ -45,58 +46,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-really, people - get_user(), copy_from_user(), memdup_user(), etc.
-all fail if access_ok() does.
+in all affected cases addresses are passed only to
+copy_from()_user or copy_to_user().
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/firmware/efi/test/efi_test.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/usb/core/devices.c          | 2 --
+ drivers/usb/core/devio.c            | 9 ---------
+ drivers/usb/gadget/function/f_hid.c | 6 ------
+ 3 files changed, 17 deletions(-)
 
-diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
-index 7baf48c01e72..ddf9eae396fe 100644
---- a/drivers/firmware/efi/test/efi_test.c
-+++ b/drivers/firmware/efi/test/efi_test.c
-@@ -70,9 +70,6 @@ copy_ucs2_from_user_len(efi_char16_t **dst, efi_char16_t __user *src,
+diff --git a/drivers/usb/core/devices.c b/drivers/usb/core/devices.c
+index 44f28a114c2b..94b6fa6e585e 100644
+--- a/drivers/usb/core/devices.c
++++ b/drivers/usb/core/devices.c
+@@ -598,8 +598,6 @@ static ssize_t usb_device_read(struct file *file, char __user *buf,
+ 		return -EINVAL;
+ 	if (nbytes <= 0)
  		return 0;
+-	if (!access_ok(buf, nbytes))
+-		return -EFAULT;
+ 
+ 	mutex_lock(&usb_bus_idr_lock);
+ 	/* print devices for all busses */
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index 6833c918abce..544769807ab8 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -1127,11 +1127,6 @@ static int proc_control(struct usb_dev_state *ps, void __user *arg)
+ 		ctrl.bRequestType, ctrl.bRequest, ctrl.wValue,
+ 		ctrl.wIndex, ctrl.wLength);
+ 	if (ctrl.bRequestType & 0x80) {
+-		if (ctrl.wLength && !access_ok(ctrl.data,
+-					       ctrl.wLength)) {
+-			ret = -EINVAL;
+-			goto done;
+-		}
+ 		pipe = usb_rcvctrlpipe(dev, 0);
+ 		snoop_urb(dev, NULL, pipe, ctrl.wLength, tmo, SUBMIT, NULL, 0);
+ 
+@@ -1216,10 +1211,6 @@ static int proc_bulk(struct usb_dev_state *ps, void __user *arg)
  	}
+ 	tmo = bulk.timeout;
+ 	if (bulk.ep & 0x80) {
+-		if (len1 && !access_ok(bulk.data, len1)) {
+-			ret = -EINVAL;
+-			goto done;
+-		}
+ 		snoop_urb(dev, NULL, pipe, len1, tmo, SUBMIT, NULL, 0);
  
--	if (!access_ok(src, 1))
--		return -EFAULT;
--
- 	buf = memdup_user(src, len);
- 	if (IS_ERR(buf)) {
- 		*dst = NULL;
-@@ -91,9 +88,6 @@ copy_ucs2_from_user_len(efi_char16_t **dst, efi_char16_t __user *src,
- static inline int
- get_ucs2_strsize_from_user(efi_char16_t __user *src, size_t *len)
- {
--	if (!access_ok(src, 1))
--		return -EFAULT;
--
- 	*len = user_ucs2_strsize(src);
- 	if (*len == 0)
- 		return -EFAULT;
-@@ -118,9 +112,6 @@ copy_ucs2_from_user(efi_char16_t **dst, efi_char16_t __user *src)
- {
- 	size_t len;
- 
--	if (!access_ok(src, 1))
--		return -EFAULT;
--
- 	len = user_ucs2_strsize(src);
- 	if (len == 0)
- 		return -EFAULT;
-@@ -142,9 +133,6 @@ copy_ucs2_to_user_len(efi_char16_t __user *dst, efi_char16_t *src, size_t len)
- 	if (!src)
+ 		usb_unlock_device(dev);
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index f3816a5c861e..df671acdd464 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -252,9 +252,6 @@ static ssize_t f_hidg_read(struct file *file, char __user *buffer,
+ 	if (!count)
  		return 0;
  
--	if (!access_ok(dst, 1))
+-	if (!access_ok(buffer, count))
 -		return -EFAULT;
 -
- 	return copy_to_user(dst, src, len);
- }
+ 	spin_lock_irqsave(&hidg->read_spinlock, flags);
  
+ #define READ_COND (!list_empty(&hidg->completed_out_req))
+@@ -339,9 +336,6 @@ static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
+ 	unsigned long flags;
+ 	ssize_t status = -ENOMEM;
+ 
+-	if (!access_ok(buffer, count))
+-		return -EFAULT;
+-
+ 	spin_lock_irqsave(&hidg->write_spinlock, flags);
+ 
+ #define WRITE_COND (!hidg->write_pending)
 -- 
 2.11.0
 
