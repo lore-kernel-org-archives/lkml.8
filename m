@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8ABC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44563C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540E821473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1F221582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgEIXqe (ORCPT
+        id S1729058AbgEIXqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:46:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
+        Sat, 9 May 2020 19:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728802AbgEIXqC (ORCPT
+        by vger.kernel.org with ESMTP id S1728800AbgEIXqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 May 2020 19:46:02 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECB4C05BD0D;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055AFC05BD0A;
         Sat,  9 May 2020 16:46:02 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXZAO-004iSn-NN; Sat, 09 May 2020 23:46:00 +0000
+        id 1jXZAO-004iSK-6U; Sat, 09 May 2020 23:46:00 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4/4] vmci_host: get rid of pointless access_ok()
-Date:   Sun, 10 May 2020 00:45:57 +0100
-Message-Id: <20200509234557.1124086-20-viro@ZenIV.linux.org.uk>
+        linux-fsdevel@vger.kernel.org, Ivan Hu <ivan.hu@canonical.com>
+Subject: [PATCH 16/20] efi_test: get rid of pointless access_ok()
+Date:   Sun, 10 May 2020 00:45:53 +0100
+Message-Id: <20200509234557.1124086-16-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
 References: <20200509234124.GM23230@ZenIV.linux.org.uk>
@@ -46,27 +45,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-get_user_pages_fast() doesn't need the caller to check that.
-NB: reachable only from ioctl(2) and only under USER_DS
+really, people - get_user(), copy_from_user(), memdup_user(), etc.
+all fail if access_ok() does.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/misc/vmw_vmci/vmci_host.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/firmware/efi/test/efi_test.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
-index ce16d6b99295..2d8328d928d5 100644
---- a/drivers/misc/vmw_vmci/vmci_host.c
-+++ b/drivers/misc/vmw_vmci/vmci_host.c
-@@ -233,8 +233,6 @@ static int vmci_host_setup_notify(struct vmci_ctx *context,
- 	 * about the size.
- 	 */
- 	BUILD_BUG_ON(sizeof(bool) != sizeof(u8));
--	if (!access_ok((void __user *)uva, sizeof(u8)))
--		return VMCI_ERROR_GENERIC;
+diff --git a/drivers/firmware/efi/test/efi_test.c b/drivers/firmware/efi/test/efi_test.c
+index 7baf48c01e72..ddf9eae396fe 100644
+--- a/drivers/firmware/efi/test/efi_test.c
++++ b/drivers/firmware/efi/test/efi_test.c
+@@ -70,9 +70,6 @@ copy_ucs2_from_user_len(efi_char16_t **dst, efi_char16_t __user *src,
+ 		return 0;
+ 	}
  
- 	/*
- 	 * Lock physical page backing a given user VA.
+-	if (!access_ok(src, 1))
+-		return -EFAULT;
+-
+ 	buf = memdup_user(src, len);
+ 	if (IS_ERR(buf)) {
+ 		*dst = NULL;
+@@ -91,9 +88,6 @@ copy_ucs2_from_user_len(efi_char16_t **dst, efi_char16_t __user *src,
+ static inline int
+ get_ucs2_strsize_from_user(efi_char16_t __user *src, size_t *len)
+ {
+-	if (!access_ok(src, 1))
+-		return -EFAULT;
+-
+ 	*len = user_ucs2_strsize(src);
+ 	if (*len == 0)
+ 		return -EFAULT;
+@@ -118,9 +112,6 @@ copy_ucs2_from_user(efi_char16_t **dst, efi_char16_t __user *src)
+ {
+ 	size_t len;
+ 
+-	if (!access_ok(src, 1))
+-		return -EFAULT;
+-
+ 	len = user_ucs2_strsize(src);
+ 	if (len == 0)
+ 		return -EFAULT;
+@@ -142,9 +133,6 @@ copy_ucs2_to_user_len(efi_char16_t __user *dst, efi_char16_t *src, size_t len)
+ 	if (!src)
+ 		return 0;
+ 
+-	if (!access_ok(dst, 1))
+-		return -EFAULT;
+-
+ 	return copy_to_user(dst, src, len);
+ }
+ 
 -- 
 2.11.0
 
