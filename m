@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFB8C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78530C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6AEC24962
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F26324953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588999019;
-	bh=07whU8E+PdoH4NwOYzR8jGBxm037oXhrsUh4WAxtlNA=;
+	s=default; t=1588999025;
+	bh=BYCnthE4syJs/gClOu3uH+seY80VefaejDaatFDyWt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o/SrIoBMX5dZE5DE3FiDlYCJ7Q52LTXYV7Opl8+0pPcDbbSdXS8Y3s+f2ImuZ3Vge
-	 QyqiUMk6A/Q5LMDPiczVVkYadpstNorbXaDdmd1DNeDjzLGWa9VxjmcuPqGrOV2bbE
-	 uhcf1+YWK9Uf+XNlRf107KOq9X5B0sJMa7siXoqQ=
+	b=aqWDFyCXDOPS1LClM/VEzYUkQ3sK4xCRAnFmjpn+xlICDzrUUCxFi+QDo9hcJNJRB
+	 yQP+cGaaaVQE72kJ2/IeuE5iC0EaRmhRkXs0Ee5/TeA0FWSw/7DilhHQwm/glCaKPc
+	 J8fuNNMRjwuJyAjCR9PyrC6Jea2Sv3GRndBSiqCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgEIEg7 (ORCPT
+        id S1728964AbgEIEhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 00:36:59 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33924 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728789AbgEIEgM (ORCPT
+        Sat, 9 May 2020 00:37:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46055 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728697AbgEIEgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 00:36:12 -0400
-Received: by mail-pj1-f65.google.com with SMTP id h12so5932031pjz.1;
-        Fri, 08 May 2020 21:36:12 -0700 (PDT)
+        Sat, 9 May 2020 00:36:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u22so1621274plq.12;
+        Fri, 08 May 2020 21:36:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R8OF7M46D8C3jXOaoBlaMReTLKc3NpL8x+JXeBlXDQg=;
-        b=nvcAwBwQZEc1lhm0aTUd7bqmWD0Ukv1tpbmzlUqeSyXpTDA+DZvi+93KaJ9E/NevpC
-         5TKMOECAxCbY6REFmzfjSMlemCek0BDCl2RFzzNEkCK4jOEYlM5p8ypzLF4EYMsYaNmx
-         CxwjhmEB4Sp6a4BRn8Z2Yu8z0jMVj3/FjzDq+v/FfLsxlGMre0AHHMfEFv4ZKfXorMs/
-         pDCFgfZusTAFA5vhzjPACurJMs5t7Y2w7aBDGJ/Pj5lEvNpxUlSrEADrhFSo2QFSyrtG
-         cFqAre0aHMEHqoTWVzHjynCj2Vcwyn8gJs852bApLN/kn/gS+soLCFyLDxunT7whWaPl
-         M6PQ==
-X-Gm-Message-State: AGi0PuaLZVEv3BxSaTUVVKhbikTTSi1jInjMbCp87xE3HDzOJoIA+XOM
-        2SB4QkbABAnjSrEmk8Yosf0=
-X-Google-Smtp-Source: APiQypJSSjbk0NmFTzHRNzIfQCloTXWW0xkAQE1qPeAZ/jpIIOTv5jKkbRXhFpIU2ohllZvSDW+DGw==
-X-Received: by 2002:a17:902:eb4b:: with SMTP id i11mr5451742pli.19.1588998971874;
-        Fri, 08 May 2020 21:36:11 -0700 (PDT)
+        bh=0bWWkdX4avF5y+Fhcxc52f0/U6sSEQKpeXYMzsUl/gM=;
+        b=onXWjDsDQ19lnrgOgOm5DLJS6aoEtH60+/dhY2ApBekN6ZRgP0lrtC7tf1Vk2pb7IC
+         vrAgN0B5SRejjc5+KS6i7E5J2Jm2MsykaLC3fYFhucReObh3rTlzaGXCwlWxmqXYALxU
+         b276kqNUd8mOYW2I+nNl/Cqz5GC3VLreOID8DsnoC47sRA640xonaibDS1GwnvZlNmSt
+         w89UOyA71lmgUA6Ht09ywj7BaBhIt9+JpV5qkhSueUjH4LRiXeuqrcnc62fagsOPMoRK
+         ipXzVFoofKuwvePeUV+KUaO5XfFNUfSANHaFFBtnRinfwxvcp9pVQKcXD/C/KV2w02EQ
+         sSuQ==
+X-Gm-Message-State: AGi0PuY4Nndv18yAdAkH2bFHOSNuT4+6C/ZRhiqUrE/RrTCjCOjn8BY+
+        RH0AuiuNEianTRjxin3Xi6M=
+X-Google-Smtp-Source: APiQypLfcLbjKv3FFJ4oeocXRf/+RZKgJAG79optjMrdsbZJP3A/Peyt4yONdPGEF4hTmXY+eOThTA==
+X-Received: by 2002:a17:902:7b86:: with SMTP id w6mr5516716pll.292.1588998970940;
+        Fri, 08 May 2020 21:36:10 -0700 (PDT)
 Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id l15sm3565848pjk.56.2020.05.08.21.36.04
+        by smtp.gmail.com with ESMTPSA id f76sm3229588pfa.167.2020.05.08.21.36.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 08 May 2020 21:36:07 -0700 (PDT)
 Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1D69742079; Sat,  9 May 2020 04:36:01 +0000 (UTC)
+        id 063AB41D95; Sat,  9 May 2020 04:36:01 +0000 (UTC)
 From:   Luis Chamberlain <mcgrof@kernel.org>
 To:     jeyu@kernel.org
 Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
@@ -63,10 +63,12 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
         mchehab+samsung@kernel.org, kvalo@codeaurora.org,
         davem@davemloft.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Vishal Kulkarni <vishal@chelsio.com>
-Subject: [PATCH 07/15] cxgb4: use new module_firmware_crashed()
-Date:   Sat,  9 May 2020 04:35:44 +0000
-Message-Id: <20200509043552.8745-8-mcgrof@kernel.org>
+        Rasesh Mody <rmody@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com
+Subject: [PATCH 05/15] bna: use new module_firmware_crashed()
+Date:   Sat,  9 May 2020 04:35:42 +0000
+Message-Id: <20200509043552.8745-6-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20200509043552.8745-1-mcgrof@kernel.org>
 References: <20200509043552.8745-1-mcgrof@kernel.org>
@@ -85,24 +87,26 @@ a reboot.
 
 Using a taint flag allows us to annotate when this happens clearly.
 
-Cc: Vishal Kulkarni <vishal@chelsio.com>
+Cc: Rasesh Mody <rmody@marvell.com>
+Cc: Sudarsana Kalluru <skalluru@marvell.com>
+Cc: GR-Linux-NIC-Dev@marvell.com
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 1 +
+ drivers/net/ethernet/brocade/bna/bfa_ioc.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index a70018f067aa..c67fc86c0e42 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -3646,6 +3646,7 @@ void t4_fatal_err(struct adapter *adap)
- 	 * could be exposed to the adapter.  RDMA MWs for example...
- 	 */
- 	t4_shutdown_adapter(adap);
+diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+index e17bfc87da90..b3f44a912574 100644
+--- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
++++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+@@ -927,6 +927,7 @@ bfa_iocpf_sm_disabled(struct bfa_iocpf *iocpf, enum iocpf_event event)
+ static void
+ bfa_iocpf_sm_initfail_sync_entry(struct bfa_iocpf *iocpf)
+ {
 +	module_firmware_crashed();
- 	for_each_port(adap, port) {
- 		struct net_device *dev = adap->port[port];
- 
+ 	bfa_nw_ioc_debug_save_ftrc(iocpf->ioc);
+ 	bfa_ioc_hw_sem_get(iocpf->ioc);
+ }
 -- 
 2.25.1
 
