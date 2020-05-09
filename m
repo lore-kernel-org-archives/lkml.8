@@ -2,41 +2,39 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711ABC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1360AC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263B4214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB3F2054F
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgEIJ25 (ORCPT
+        id S1728105AbgEIJ27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:28:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4376 "EHLO huawei.com"
+        Sat, 9 May 2020 05:28:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4375 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726946AbgEIJ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:28:56 -0400
+        id S1727787AbgEIJ25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:28:57 -0400
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4EC35A1440E92959CC12;
+        by Forcepoint Email with ESMTP id 4A09986E8AC1AD636F9F;
         Sat,  9 May 2020 17:28:55 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 17:28:49 +0800
+ 14.3.487.0; Sat, 9 May 2020 17:28:48 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 2/5] net: hns3: modify two uncorrect macro names
-Date:   Sat, 9 May 2020 17:27:38 +0800
-Message-ID: <1589016461-10130-3-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 0/5] net: hns3: misc updates for -next
+Date:   Sat, 9 May 2020 17:27:36 +0800
+Message-ID: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
-References: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -46,56 +44,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the UM, command 0x0B03 and 0x0B13 are used to
-query the statistics about TX and RX, not the status, so
-modifies the unsuitable macro name of these two command.
+This patchset includes some misc updates for the HNS3 ethernet driver.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h  | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+#1 & #2 add two cleanups.
+#3 provides an interface for the client to query the CMDQ's status.
+#4 adds a little optimization about debugfs.
+#5 prevents 1000M auto-negotiation off setting.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 9a9d752..e3bab8f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -184,11 +184,11 @@ enum hclge_opcode_type {
- 	/* TQP commands */
- 	HCLGE_OPC_CFG_TX_QUEUE		= 0x0B01,
- 	HCLGE_OPC_QUERY_TX_POINTER	= 0x0B02,
--	HCLGE_OPC_QUERY_TX_STATUS	= 0x0B03,
-+	HCLGE_OPC_QUERY_TX_STATS	= 0x0B03,
- 	HCLGE_OPC_TQP_TX_QUEUE_TC	= 0x0B04,
- 	HCLGE_OPC_CFG_RX_QUEUE		= 0x0B11,
- 	HCLGE_OPC_QUERY_RX_POINTER	= 0x0B12,
--	HCLGE_OPC_QUERY_RX_STATUS	= 0x0B13,
-+	HCLGE_OPC_QUERY_RX_STATS	= 0x0B13,
- 	HCLGE_OPC_STASH_RX_QUEUE_LRO	= 0x0B16,
- 	HCLGE_OPC_CFG_RX_QUEUE_LRO	= 0x0B17,
- 	HCLGE_OPC_CFG_COM_TQP_QUEUE	= 0x0B20,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index f0b1dc9..3ad6a6a 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -552,7 +552,7 @@ static int hclge_tqps_update_stats(struct hnae3_handle *handle)
- 		queue = handle->kinfo.tqp[i];
- 		tqp = container_of(queue, struct hclge_tqp, q);
- 		/* command : HCLGE_OPC_QUERY_IGU_STAT */
--		hclge_cmd_setup_basic_desc(&desc[0], HCLGE_OPC_QUERY_RX_STATUS,
-+		hclge_cmd_setup_basic_desc(&desc[0], HCLGE_OPC_QUERY_RX_STATS,
- 					   true);
- 
- 		desc[0].data[0] = cpu_to_le32((tqp->index & 0x1ff));
-@@ -572,7 +572,7 @@ static int hclge_tqps_update_stats(struct hnae3_handle *handle)
- 		tqp = container_of(queue, struct hclge_tqp, q);
- 		/* command : HCLGE_OPC_QUERY_IGU_STAT */
- 		hclge_cmd_setup_basic_desc(&desc[0],
--					   HCLGE_OPC_QUERY_TX_STATUS,
-+					   HCLGE_OPC_QUERY_TX_STATS,
- 					   true);
- 
- 		desc[0].data[0] = cpu_to_le32((tqp->index & 0x1ff));
+Huazhong Tan (3):
+  net: hns3: remove a redundant register macro definition
+  net: hns3: modify two uncorrect macro names
+  net: hns3: provide .get_cmdq_stat interface for the client
+
+Yufeng Mo (2):
+  net: hns3: optimized the judgment of the input parameters of dump ncl
+    config
+  net: hns3: disable auto-negotiation off with 1000M setting in ethtool
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  7 +++++-
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  4 ++--
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 15 ++++++++-----
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  1 -
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 25 ++++++++++++++--------
+ 6 files changed, 35 insertions(+), 18 deletions(-)
+
 -- 
 2.7.4
 
