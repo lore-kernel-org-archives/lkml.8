@@ -2,143 +2,138 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A59C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0A1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE54021655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F2020731
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgEIDCf (ORCPT
+        id S1728711AbgEIDDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 23:02:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60608 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728353AbgEIDCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 23:02:34 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5A6CC335C76B1BBD74F7;
-        Sat,  9 May 2020 11:02:32 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sat, 9 May 2020
- 11:02:26 +0800
-Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
-To:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <stummala@codeaurora.org>, <linux-kernel@vger.kernel.org>
-References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
- <20200508161052.GA49579@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
-Date:   Sat, 9 May 2020 11:02:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200508161052.GA49579@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Fri, 8 May 2020 23:03:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55091 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728353AbgEIDDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 23:03:37 -0400
+IronPort-SDR: H/exOR5zLCH2BknVlS9DIuuMIAdgvN9porSu+yK0g11VOsiYSDj/CN4BHp2/vrrfl8WMg2fLUt
+ Wl0XqacIck1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 20:03:35 -0700
+IronPort-SDR: p5F7squzwX9c0HwlHNy+7Iqc3has7qwLimi8ARJJMnrHTFNWFEWS56rV4WCz7a3wrbwy0ns8R8
+ dGYT+QawcOgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,370,1583222400"; 
+   d="scan'208";a="408310940"
+Received: from lxy-dell.sh.intel.com ([10.239.159.21])
+  by orsmga004.jf.intel.com with ESMTP; 08 May 2020 20:03:31 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, peterz@infradead.org,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v9 0/8] KVM: Add virtualization support of split lock detection
+Date:   Sat,  9 May 2020 19:05:34 +0800
+Message-Id: <20200509110542.8159-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/9 0:10, Jaegeuk Kim wrote:
-> Hi Sayali,
-> 
-> In order to address the perf regression, how about this?
-> 
->>From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
-> From: Jaegeuk Kim <jaegeuk@kernel.org>
-> Date: Fri, 8 May 2020 09:08:37 -0700
-> Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
-> 
-> There could be a scenario where f2fs_sync_node_pages gets
-> called during checkpoint, which in turn tries to flush
-> inline data and calls iput(). This results in deadlock as
-> iput() tries to hold cp_rwsem, which is already held at the
-> beginning by checkpoint->block_operations().
-> 
-> Call stack :
-> 
-> Thread A		Thread B
-> f2fs_write_checkpoint()
-> - block_operations(sbi)
->  - f2fs_lock_all(sbi);
->   - down_write(&sbi->cp_rwsem);
-> 
->                         - open()
->                          - igrab()
->                         - write() write inline data
->                         - unlink()
-> - f2fs_sync_node_pages()
->  - if (is_inline_node(page))
->   - flush_inline_data()
->    - ilookup()
->      page = f2fs_pagecache_get_page()
->      if (!page)
->       goto iput_out;
->      iput_out:
-> 			-close()
-> 			-iput()
->        iput(inode);
->        - f2fs_evict_inode()
->         - f2fs_truncate_blocks()
->          - f2fs_lock_op()
->            - down_read(&sbi->cp_rwsem);
-> 
-> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/node.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 1db8cabf727ef..626d7daca09de 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
->  				goto continue_unlock;
->  			}
->  
-> -			/* flush inline_data */
-> -			if (is_inline_node(page)) {
-> +			/* flush inline_data, if it's not sync path. */
-> +			if (do_balance && is_inline_node(page)) {
+This series aims to add the virtualization of split lock detection in
+KVM.
 
-IIRC, this flow was designed to avoid running out of free space issue
-during checkpoint:
+Due to the fact that split lock detection is tightly coupled with CPU
+model and CPU model is configurable by host VMM, we elect to use
+paravirt method to expose and enumerate it for guest.
 
-2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+Changes in v9
+ - rebase to v5.7-rc4
+ - Add one patch to rename TIF_SLD to TIF_SLD_DISABLED;
+ - Add one patch to remove bogus case in handle_guest_split_lock;
+ - Introduce flag X86_FEATURE_SPLIT_LOCK_DETECT_FATAL and thus drop
+   sld_state;
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT and X86_FEATURE_SPLIT_LOCK_DETECT_FATAL
+   to determine the SLD state of host;
+ - Introduce split_lock_virt_switch() and two wrappers for KVM instead
+   of sld_update_to(); 
+ - Use paravirt to expose and enumerate split lock detection for guest;
+ - Split lock detection can be exposed to guest when host is sld_fatal,
+   even though host is SMT available. 
 
-The sceanrio is:
-1. create fully node blocks
-2. flush node blocks
-3. write inline_data for all the node blocks again
-4. flush node blocks redundantly
+Changes in v8:
+https://lkml.kernel.org/r/20200414063129.133630-1-xiaoyao.li@intel.com
+ - rebase to v5.7-rc1.
+ - basic enabling of split lock detection already merged.
+ - When host is sld_warn and nosmt, load guest's sld bit when in KVM
+   context, i.e., between vmx_prepare_switch_to_guest() and before
+   vmx_prepare_switch_to_host(), KVM uses guest sld setting.  
 
-I guess this may cause failing one case of fstest.
+Changes in v7:
+https://lkml.kernel.org/r/20200325030924.132881-1-xiaoyao.li@intel.com
+ - only pick patch 1 and patch 2, and hold all the left.
+ - Update SLD bit on each processor based on sld_state.
 
+Changes in v6:
+https://lkml.kernel.org/r/20200324151859.31068-1-xiaoyao.li@intel.com
+ - Drop the sld_not_exist flag and use X86_FEATURE_SPLIT_LOCK_DETECT to
+   check whether need to init split lock detection. [tglx]
+ - Use tglx's method to verify the existence of split lock detectoin.
+ - small optimization of sld_update_msr() that the default value of
+   msr_test_ctrl_cache has split_lock_detect bit cleared.
+ - Drop the patch3 in v5 that introducing kvm_only option. [tglx]
+ - Rebase patch4-8 to kvm/queue.
+ - use the new kvm-cpu-cap to expose X86_FEATURE_CORE_CAPABILITIES in
+   Patch 6.
 
-Since block_operations->f2fs_sync_inode_meta has synced inode cache to
-inode page, so in block_operations->f2fs_sync_node_pages, could we
-check nlink before flush_inline_data():
+Changes in v5:
+https://lkml.kernel.org/r/20200315050517.127446-1-xiaoyao.li@intel.com
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
+   detection is really supported.
+ - Add and export sld related helper functions in their related usecase 
+   kvm patches.
 
-if (is_inline_node(page)) {
-	if (IS_INODE(page) && raw_inode_page->i_links) {
-		flush_inline_data()
-	}
-}
+Xiaoyao Li (8):
+  x86/split_lock: Rename TIF_SLD to TIF_SLD_DISABLED
+  x86/split_lock: Remove bogus case in handle_guest_split_lock()
+  x86/split_lock: Introduce flag X86_FEATURE_SLD_FATAL and drop
+    sld_state
+  x86/split_lock: Introduce split_lock_virt_switch() and two wrappers
+  x86/kvm: Introduce paravirt split lock detection enumeration
+  KVM: VMX: Enable MSR TEST_CTRL for guest
+  KVM: VMX: virtualize split lock detection
+  x86/split_lock: Enable split lock detection initialization when
+    running as an guest on KVM
 
+ Documentation/virt/kvm/cpuid.rst     | 29 +++++++----
+ arch/x86/include/asm/cpu.h           | 35 ++++++++++++++
+ arch/x86/include/asm/cpufeatures.h   |  1 +
+ arch/x86/include/asm/thread_info.h   |  6 +--
+ arch/x86/include/uapi/asm/kvm_para.h |  8 ++--
+ arch/x86/kernel/cpu/intel.c          | 59 ++++++++++++++++-------
+ arch/x86/kernel/kvm.c                |  3 ++
+ arch/x86/kernel/process.c            |  2 +-
+ arch/x86/kvm/cpuid.c                 |  6 +++
+ arch/x86/kvm/vmx/vmx.c               | 72 +++++++++++++++++++++++++---
+ arch/x86/kvm/vmx/vmx.h               |  3 ++
+ arch/x86/kvm/x86.c                   |  6 ++-
+ arch/x86/kvm/x86.h                   |  7 +++
+ 13 files changed, 196 insertions(+), 41 deletions(-)
 
->  				clear_inline_node(page);
->  				unlock_page(page);
->  				flush_inline_data(sbi, ino_of_node(page));
-> 
+-- 
+2.18.2
+
