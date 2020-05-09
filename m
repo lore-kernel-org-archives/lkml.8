@@ -2,92 +2,103 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5357EC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A2224967
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588984591;
-	bh=Q+b8wj5IMigBWbjW6i+jyqgaD1IKhs4HTjZuryGG6LM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1GzqX7Koin+2Zy8XLH4ohnCcfVOY1W0WeukhOKNIBjuojFU1XAY7FaqjQ5sKnsoQd
-	 CcibWaPf/JR4De2jrLLcfK+ld3U/66Ub0phmDN+q+qNTOHl9T2Myrh2t5I3ZcAZRAU
-	 ZA7A4nQtWzdXJMW16OYN+cjqmW/79msYlMUzrq94=
+	by mail.kernel.org (Postfix) with ESMTP id 0901220746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgEIAga (ORCPT
+        id S1728467AbgEIAic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47570 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 20:38:32 -0400
+Received: from mga04.intel.com ([192.55.52.120]:3157 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgEIAga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:36:30 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 478F821473;
-        Sat,  9 May 2020 00:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588984588;
-        bh=Q+b8wj5IMigBWbjW6i+jyqgaD1IKhs4HTjZuryGG6LM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dZp7lwc3gBhD7PG5Kna5Grfef2QfryNCDqvZc034K7yEGdGv9LW4yaKubLNjiP2VA
-         KGXcKkuzN3QZd1jbHwpPCSXmqSxCT1DgEhgpT7C6KFrWMTbeBqrQ35DCVjEebF/RWm
-         LDsSsPqdijmPRfJxvM6tcISpCwVrMx6NbVkSpO4E=
-Date:   Fri, 8 May 2020 17:36:27 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: linux-next: Signed-off-bys missing for commits in the
- akpm-current tree
-Message-Id: <20200508173627.eda3f18b808dd6728a273d8b@linux-foundation.org>
-In-Reply-To: <20200509101919.36231cf9@canb.auug.org.au>
-References: <20200509101919.36231cf9@canb.auug.org.au>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727878AbgEIAib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:38:31 -0400
+IronPort-SDR: aopw/5m44GsnUnkU1UtPtopuLYOg5xUtm14EvccOz4UiwM0pFZW+oFS8saxF4FNlGpEQy55wKv
+ MdQkV1M55APg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 17:38:30 -0700
+IronPort-SDR: q+sV77rbJRSonenXnHAbxIaNJcsxfDDnbUmDtOAuy5/ssIMbKCf1nWEdjdgakP2jskGvmkmC8t
+ JWZnt/bd8Y3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="279197066"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga002.jf.intel.com with ESMTP; 08 May 2020 17:38:30 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 79BCB301C4C; Fri,  8 May 2020 17:38:30 -0700 (PDT)
+Date:   Fri, 8 May 2020 17:38:30 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH v3 13/14] perf metricgroup: remove duped metric group
+ events
+Message-ID: <20200509003830.GG3538@tassilo.jf.intel.com>
+References: <20200508053629.210324-1-irogers@google.com>
+ <20200508053629.210324-14-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508053629.210324-14-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 10:19:19 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  				      struct expr_parse_ctx *pctx,
+> +				      bool has_constraint,
+>  				      struct evsel **metric_events,
+>  				      unsigned long *evlist_used)
+>  {
+> -	struct evsel *ev;
+> -	bool leader_found;
+> -	const size_t idnum = hashmap__size(&pctx->ids);
+> -	size_t i = 0;
+> -	int j = 0;
+> +	struct evsel *ev, *current_leader = NULL;
+>  	double *val_ptr;
+> +	int i = 0, matched_events = 0, events_to_match;
+> +	const int idnum = (int)hashmap__size(&pctx->ids);
 
-> Hi all,
-> 
-> Commits
-> 
->   a41ffad2df78 ("mm: free_area_init: allow defining max_zone_pfn in descending order")
+BTW standard perf data structure would be a rblist or strlist
 
-Look OK to me?
+I think it would be really better to do the deduping in a separate
+pass than trying to add it to find_evsel_group. This leads
+to very complicated logic.
 
-https://ozlabs.org/~akpm/mmotm/broken-out/mm-free_area_init-allow-defining-max_zone_pfn-in-descending-order.patch
+This will likely make it easier to implement more sophisticated
+algorithms too.
 
->   ed1e07587fb4 ("mm/gup.c: further document vma_permits_fault()")
-
-Yeah, I wasn't sent a signoff.  Miles, please send?
-
->   da5d272cd01a ("checkpatch: test $GIT_DIR changes")
-
-Yup, that's a play patch which I'm supposed to test.
-
-> are missing a Signed-off-by from their authors (I haven't reported the
-> -fix patches).
-> 
-> I guess the first one is actually a fix patch and will be rolled into
-> its parent.
-> 
-> Also, the Link tag in this last one is invalid :-(
-
-Private email ;).  If my testing is successful I guess we'll get a real
-version of this.
+-Andi
 
