@@ -2,157 +2,114 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A043AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC5AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F14A21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E2B24953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S02+alZF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjJvzG+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgEIF3w (ORCPT
+        id S1728844AbgEIFbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 01:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
+        Sat, 9 May 2020 01:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgEIF3w (ORCPT
+        with ESMTP id S1725820AbgEIFbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 01:29:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0646C061A0C;
-        Fri,  8 May 2020 22:29:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v63so2082765pfb.10;
-        Fri, 08 May 2020 22:29:50 -0700 (PDT)
+        Sat, 9 May 2020 01:31:09 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A178C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 22:31:09 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k7so261529pjs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 22:31:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=i7Pcj/pO/1wQknbrV0B7XO4re+6riEodPKqMtRylol0=;
-        b=S02+alZFvBSnG4edBHgjeoKwZJcTBdf+B3xcf+hOLAicYwixLUf9C3puvplIChaff0
-         /cn3sPyeu9ma57n+4aj86XcQXRbqY1gJm8SKEsWmo1mHZ6umPGR4JJrrtOqOVBkmhHFC
-         ka6dL2YwKUHAmrniFlOsfGhryZunij9Wk8IwecDSSf77gF+XVavchka3kQNOpVRDktfE
-         SJoX8j16dtLuUDiMn4HYbPYQry6fVFDJnAZKZF/BZNiYahGBtJ5Pk7YavyUyUhrA9pxK
-         CRuigdkfpkE/7evn+iUzBnayFbJzrbmqvtD9XOwo6NVYG5Fjcg4j1Sd5nY3JBm2M/mr0
-         N8Lw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=McjHFsfMyglxdFz38lGhUm1tNt0prdaFRILR+RgnQNE=;
+        b=gjJvzG+5BYX9WeWWRGhrmrGe89rZBPW9DhLd6QVhxuIhYoIUNeXOzRw1XzMcEOGXGQ
+         UJORe9/LSMYQq78oP5uRH6NoLZ0BgkAjfWbDL1D8tTvS9KPAmk5G2GBNIaAv4CgnEWBz
+         TGDxJ6/0VTxGUPrAP7iCKLKp10wQHjOnivZxg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=i7Pcj/pO/1wQknbrV0B7XO4re+6riEodPKqMtRylol0=;
-        b=HD1Uzja2dh3WN/5gvAA66bsbGpudSSzR8/LnDog6pCPGvwH9m9S9Hx00zkMB682hy1
-         kmkxXKHym1Ro6cN/lGY3wsrVQ4/YUI9h+gFBNLq9OHVOP866flFOTaC3CPqWp+Nek1De
-         Wzyoib0Dta9+g8yOuGuDcisP/Qb4TOLHWye7Tv9063LF7rRZ4FfWvQnSu0fak0iP775n
-         bb27SCKaVnjb4GcXRX+KSrF0fZrOLkBvAyQHKkS2+tjF5RIv6smSdWn3CWct/RMi/JQ5
-         8TvZD6qnpzh2lSlhNH7QC5PSOyPIi+MoGiWkgGoAtCHoHjtkD/nqpHfXagvhExwx8hO8
-         Icgw==
-X-Gm-Message-State: AGi0PubvG61R2AueH4lTI6cm6xGucSQSKl/bU8kqnOt12cXLrFnxU9IQ
-        kZD7L0lWZWti6XjFuAAcgZg=
-X-Google-Smtp-Source: APiQypIWeshpliUO6GEvnffQhhhEJaYGENM8Z6IVHrfa/1nfD5X36WWlScsQ/zXOyS+c9ZrtkTFr+w==
-X-Received: by 2002:a62:15c5:: with SMTP id 188mr6059885pfv.66.1589002190226;
-        Fri, 08 May 2020 22:29:50 -0700 (PDT)
-Received: from localhost.localdomain ([223.72.62.216])
-        by smtp.gmail.com with ESMTPSA id w2sm3793805pja.53.2020.05.08.22.29.42
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=McjHFsfMyglxdFz38lGhUm1tNt0prdaFRILR+RgnQNE=;
+        b=iz6fUS5UYhvIWaQfGUrzIn//rDayqvITdM/PxSJ6MHOIwFqgX+mE6TdvLNF35xGB6Y
+         /O15r1ewwo00QeLeaAJuABvrykWBnkv+tD+gc7BmWjKY3L5kxIISHMkvDstMs0TRmuUj
+         uZiHnF9jZ7HqUrSWSc+PEzbJHj6tlD8hR3ntEdjddeF5VcQxrilyHCxDAJpTBaFBvIja
+         /uaVqYXaHYHbwxaIgMj5TXaqOhqhd+/+9+4AR2uWv9s6OLVjrxPoFacWlgeI4LVW06vS
+         9TZKUT8EhwbKtI7b49w0fAP6fCwFsAxrJCX11LyH5sGC6YNtA9/tsjDMTQ7gT6lb2Xhc
+         3Rtw==
+X-Gm-Message-State: AGi0PuYqb2eI/1ZPnMs7XIu9YKtNsvkptXBWvMXEXN7NDVaNTL5qXhbP
+        zewcrSDup+hX3lqFhcg3WGf5jw==
+X-Google-Smtp-Source: APiQypIIxLMFxwPXcizPIo8Mvfojps1POA1H/qHc1k5tXu33u0U5ECVx88mpdV6N2EHhKoLm3p7sLg==
+X-Received: by 2002:a17:902:9044:: with SMTP id w4mr5830489plz.83.1589002268808;
+        Fri, 08 May 2020 22:31:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i185sm3487660pfg.14.2020.05.08.22.31.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 22:29:49 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 3/4] fs: btrfs: fix data races in start_transaction()
-Date:   Sat,  9 May 2020 13:29:07 +0800
-Message-Id: <20200509052907.3324-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 08 May 2020 22:31:08 -0700 (PDT)
+Date:   Fri, 8 May 2020 22:31:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 5/6] exec: Move handling of the point of no return to the
+ top level
+Message-ID: <202005082228.5C0E44CC6@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87y2q25knl.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2q25knl.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions start_transaction() and btrfs_update_delayed_refs_rsv()
-are concurrently executed at runtime in the following call contexts:
+On Fri, May 08, 2020 at 01:47:10PM -0500, Eric W. Biederman wrote:
+> 
+> Move the handing of the point of no return from search_binary_handler
+> into __do_execve_file so that it is easier to find, and to keep
+> things robust in the face of change.
+> 
+> Make it clear that an existing fatal signal will take precedence over
+> a forced SIGSEGV by not forcing SIGSEGV if a fatal signal is already
+> pending.  This does not change the behavior but it saves a reader
+> of the code the tedium of reading and understanding force_sig
+> and the signal delivery code.
+> 
+> Update the comment in begin_new_exec about where SIGSEGV is forced.
+> 
+> Keep point_of_no_return from being a mystery by documenting
+> what the code is doing where it forces SIGSEGV if the
+> code is past the point of no return.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Thread 1:
-  btrfs_sync_file()
-    btrfs_start_transaction()
-      start_transaction()
+I had to read the code around these changes a bit carefully, but yeah,
+this looks like a safe cleanup. It is a behavioral change, though (in
+that in unmasks non-SEGV fatal signals), so I do wonder if something
+somewhere might notice this, but I'd agree that it's the more robust
+behavior.
 
-Thread 2:
-  finish_ordered_fn()
-    btrfs_finish_ordered_io()
-      insert_reserved_file_extent()
-        __btrfs_drop_extents()
-          btrfs_free_extent()
-            btrfs_add_delayed_data_ref()
-              btrfs_update_delayed_refs_rsv()
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-In start_transaction():
-  if (delayed_refs_rsv->full == 0)
-  ...
-  else if (... && !delayed_refs_rsv->full)
-
-In btrfs_update_delayed_refs_rsv():
-  spin_lock(&delayed_rsv->lock);
-  delayed_rsv->size += num_bytes;
-  delayed_rsv->full = 0;
-  spin_unlock(&delayed_rsv->lock);
-
-The values delayed_refs_rsv->full and delayed_rsv->full access the same
-memory, and these data races can occur.
-These data races were found and actually reproduced by our conccurency
-fuzzer.
-
-To fix these races, the spinlock delayed_refs_rsv->lock is used to
-protect the access to delayed_refs_rsv->full in start_transaction().
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- fs/btrfs/transaction.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
-index 8cede6eb9843..ca38d7cf665d 100644
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -524,6 +524,7 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
- 	u64 qgroup_reserved = 0;
- 	bool reloc_reserved = false;
- 	int ret;
-+	unsigned short full = 0;
- 
- 	/* Send isn't supposed to start transactions. */
- 	ASSERT(current->journal_info != BTRFS_SEND_TRANS_STUB);
-@@ -541,6 +542,10 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
- 		goto got_it;
- 	}
- 
-+	spin_lock(&delayed_refs_rsv->lock);
-+	full = delayed_refs_rsv->full;
-+	spin_unlock(&delayed_refs_rsv->lock);
-+
- 	/*
- 	 * Do the reservation before we join the transaction so we can do all
- 	 * the appropriate flushing if need be.
-@@ -563,7 +568,7 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
- 		 * refill that amount for whatever is missing in the reserve.
- 		 */
- 		num_bytes = btrfs_calc_insert_metadata_size(fs_info, num_items);
--		if (delayed_refs_rsv->full == 0) {
-+		if (full == 0) {
- 			delayed_refs_bytes = num_bytes;
- 			num_bytes <<= 1;
- 		}
-@@ -585,7 +590,7 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
- 			num_bytes -= delayed_refs_bytes;
- 		}
- 	} else if (num_items == 0 && flush == BTRFS_RESERVE_FLUSH_ALL &&
--		   !delayed_refs_rsv->full) {
-+		   !full) {
- 		/*
- 		 * Some people call with btrfs_start_transaction(root, 0)
- 		 * because they can be throttled, but have some other mechanism
 -- 
-2.17.1
-
+Kees Cook
