@@ -2,136 +2,173 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5809C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411F9C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6BD214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167F6214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="e3jCTUqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgEINLZ (ORCPT
+        id S1727983AbgEINMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:11:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60258 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726370AbgEINLY (ORCPT
+        Sat, 9 May 2020 09:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgEINMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:11:24 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 049D2H4B033546;
-        Sat, 9 May 2020 09:11:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws22cerg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 May 2020 09:11:05 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 049D2O3I034043;
-        Sat, 9 May 2020 09:11:04 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws22ceqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 May 2020 09:11:04 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 049DB2RM021530;
-        Sat, 9 May 2020 13:11:02 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 30wm558a45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 May 2020 13:11:01 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 049DAxgU60948762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 9 May 2020 13:10:59 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ADA9242045;
-        Sat,  9 May 2020 13:10:59 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2ED042041;
-        Sat,  9 May 2020 13:10:56 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.41.60])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  9 May 2020 13:10:56 +0000 (GMT)
-Subject: Re: [PATCH] MAINTAINERS: adjust to livepatch .klp.arch removal
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200509073258.5970-1-lukas.bulwahn@gmail.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Message-ID: <bfe91b2d-e319-bf12-6a15-4f200d0e8ea4@linux.vnet.ibm.com>
-Date:   Sat, 9 May 2020 18:40:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200509073258.5970-1-lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-09_03:2020-05-08,2020-05-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- suspectscore=0 bulkscore=0 adultscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=771 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005090111
+        Sat, 9 May 2020 09:12:13 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F66CC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 06:12:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id s186so2932557qkd.4
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uZNHLh4ji2HiGvtUwXeMXbue0p7OE33Ogu+s/y62Rjs=;
+        b=e3jCTUqeHQ8ldBUQC1e+KDyk1kwtFBQIPG1wuTBtjpOZnD/Tp5ayjwp1p58WpoE0A9
+         uL3xigHSDtO5/d6kq4eQS6BVDgQhd1zV8z+hMhwjLUODzu9OB71yTuk3vr30q3aJcY5w
+         Bo3LczS3gpIikq8t1zKClP3DdLfMSHeb1+T+j/vJSh6iW/sNOsv5jtWDI8Fq3EdXFjL2
+         okh2iZWE2U8q9vTHAIOBRDyPYdg9vuOsdR0ZZAE5U7drU0QdzkcualIrHe4PhDaPLf2/
+         ScFZpWzwUtA+47p3VFn6ogDyvlur9dth4zCnH7W1Dh/VCBSGD9ioJizdZ1M3qve+vcEn
+         vjvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=uZNHLh4ji2HiGvtUwXeMXbue0p7OE33Ogu+s/y62Rjs=;
+        b=VeVps/EgfOWpXi/C3sxtqCMl5DypRAR5fDyNI3zsDTJArzzkehc8AdWesyufjg7sy4
+         HmuhGoH6LdwAvdt2GT6V3C9b373dXPe/hgsUZKA1nES8iHXTos52AQvtvidAhqHY30Bd
+         VVNafZZ4BGmpt83FI6f8typHA3nxig+E++Hc5NdplWH/6aiKg0UqbxAAyJoTxjrWlDC0
+         MCloOYaF3xRnrWbExoq4S7wJoj43ohz12p9hSBAEFdYZcbhOqpD+XOT5nX8JXFl3EvFG
+         /QffWTU7OqLxqOR5OmlneXL1mj5DQL3jwN2kpOI6KEgRZeXZyy9s2FI8wXODvgPojpkP
+         KDIQ==
+X-Gm-Message-State: AGi0PuaLUQqwzVxHo/xAHo1fb1rpl1ezoeDD2/clvJ9tAwBPPYijRbX3
+        B3DIiqz7cKwV4Ry/+oZHb/8jrg==
+X-Google-Smtp-Source: APiQypKV294SlsFqXKts2w2oeiforaUknW+vbd6TojoXshc+5Kmz2XFjJyxBBo+MHJGoFZN7tvmAvg==
+X-Received: by 2002:a37:9fd5:: with SMTP id i204mr7598243qke.191.1589029932374;
+        Sat, 09 May 2020 06:12:12 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m59sm4028164qtd.46.2020.05.09.06.12.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 May 2020 06:12:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] sched/cputime: silence a -Wunused-function warning
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
+Date:   Sat, 9 May 2020 09:12:10 -0400
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        dietmar.eggemann@arm.com, Steven Rostedt <rostedt@goodmis.org>,
+        bsegall@google.com, Mel Gorman <mgorman@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A8FFFB10-A619-480C-8828-DCD471B13F91@lca.pw>
+References: <1583509304-28508-1-git-send-email-cai@lca.pw>
+ <CAKwvOd=V44ksbiffN5UYw-oVfTK_wdeP59ipWANkOUS_zavxew@mail.gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/20 1:02 PM, Lukas Bulwahn wrote:
-> Commit 1d05334d2899 ("livepatch: Remove .klp.arch") removed
-> arch/x86/kernel/livepatch.c, but missed to adjust the LIVE PATCHING entry
-> in MAINTAINERS.
-> 
-> Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
-> 
->   warning: no file matches  F:  arch/x86/kernel/livepatch.c
-> 
-> So, drop that obsolete file entry in MAINTAINERS.
-
-Patch looks good to me,  you probably want to add following architecture
-specific livepatching header files to the list:
-
-arch/s390/include/asm/livepatch.h
-arch/powerpc/include/asm/livepatch.h
-
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Jiri, please take this minor non-urgent patch for livepatching/for-next.
-> Peter, please ack.
-> 
-> applies cleanly on next-20200508
-> 
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 92657a132417..642f55c4b556 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9909,7 +9909,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.g
->  F:	Documentation/ABI/testing/sysfs-kernel-livepatch
->  F:	Documentation/livepatch/
->  F:	arch/x86/include/asm/livepatch.h
-> -F:	arch/x86/kernel/livepatch.c
->  F:	include/linux/livepatch.h
->  F:	kernel/livepatch/
->  F:	samples/livepatch/
-> 
 
 
--- 
-Kamalesh
+> On Mar 6, 2020, at 12:13 PM, Nick Desaulniers =
+<ndesaulniers@google.com> wrote:
+>=20
+> On Fri, Mar 6, 2020 at 7:42 AM Qian Cai <cai@lca.pw> wrote:
+>>=20
+>> account_other_time() is only used when CONFIG_IRQ_TIME_ACCOUNTING=3Dy =
+(in
+>> irqtime_account_process_tick()) or CONFIG_VIRT_CPU_ACCOUNTING_GEN=3Dy =
+(in
+>> get_vtime_delta()). When both are off, it will generate a compilation
+>> warning from Clang,
+>>=20
+>> kernel/sched/cputime.c:255:19: warning: unused function
+>> 'account_other_time' [-Wunused-function]
+>> static inline u64 account_other_time(u64 max)
+>>=20
+>> Rather than wrapping around this function with a macro expression,
+>>=20
+>> if defined(CONFIG_IRQ_TIME_ACCOUNTING) || \
+>>    defined(CONFIG_VIRT_CPU_ACCOUNTING_GEN)
+>>=20
+>> just use __maybe_unused for this small function which seems like a =
+good
+>> trade-off.
+>>=20
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>=20
+> Hi Qian, thanks for the patch!
+>=20
+> Generally, I'm not a fan of __maybe_unused.  It is a tool in the
+> toolbox for solving this issue, but it's my least favorite.  Should
+> the call sites be eliminated, this may mask an unused and entirely
+> dead function from being removed.  Preprocessor guards based on config
+> give more context into *why* a particular function may be unused.
+>=20
+> So let's take a look at the call sites of account_other_time().  Looks
+> like irqtime_account_process_tick() (guarded by
+> CONFIG_IRQ_TIME_ACCOUNTING) and get_vtime_delta() (guarded by
+> CONFIG_VIRT_CPU_ACCOUNTING_GEN).  If it were one config guard, then I
+> would prefer to move the definition to be within the same guard, just
+> before the function definition that calls it, but we have a more
+> complicated case here.
+>=20
+> The next thing I'd check to see is if there's a dependency between
+> configs.  In this case, both CONFIG_IRQ_TIME_ACCOUNTING and
+> CONFIG_VIRT_CPU_ACCOUNTING_GEN are defined in init/Kconfig.  In this
+> case there's also no dependency between configs, so specifying one
+> doesn't imply the other; so guarding on one of the two configs is also
+> not an option.
+>=20
+> So, as much as I'm not a fan of __maybe_unused, it is indeed the
+> simplest option.  Though, I'd still prefer the ifdef you describe
+> instead, maybe the maintainers can provide guidance/preference?
+> Otherwise,
+>=20
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Peter, can you take a look at this patch when you have a chance? Having =
+Clang to complain this every time is a bit annoying.
+
+>=20
+>> ---
+>> kernel/sched/cputime.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+>> index cff3e656566d..85da4d6dee24 100644
+>> --- a/kernel/sched/cputime.c
+>> +++ b/kernel/sched/cputime.c
+>> @@ -252,7 +252,7 @@ static __always_inline u64 =
+steal_account_process_time(u64 maxtime)
+>> /*
+>>  * Account how much elapsed time was spent in steal, irq, or softirq =
+time.
+>>  */
+>> -static inline u64 account_other_time(u64 max)
+>> +static inline __maybe_unused u64 account_other_time(u64 max)
+>> {
+>>        u64 accounted;
+>>=20
+>> --
+>=20
+> --=20
+> Thanks,
+> ~Nick Desaulniers
+
