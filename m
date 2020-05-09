@@ -2,125 +2,133 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E32C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B75C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC9721775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240FD208DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588996140;
-	bh=Q0CkM/AWUVT8W6ifHxihz7a3YfYK07PSsbfPpaAPOKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0azQ702YGD1EMI8X3pZB5uPzPmNXzlsUuurwf4vr8BCv0PjcWlTXk2JO2IATLRlHQ
-	 dngHWaVzdT0s1gUYbp3MU8PQBRt5ZBQluZgec9zfiQ+QzexqIOf1Q2Fz2JLdpj/ojW
-	 0KwM+LmwR4tTIGkvUVkqt8CwAQuN0sXGM148SFzU=
+	s=default; t=1588996229;
+	bh=XcyjVYykYKddPdKIWQPw8Qg8eEX39q7s1fcySboBfXw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lvrjGcs4Jq2X5tp4O2smRadtSE2DuRamlZJUHuAGmGoRkqNJun1EBskIe4OKbMUeP
+	 CCj/Rao5R2IXoC7eHvc8wICZTTML0OL5CZyKS0dG1r7lEHMPzfVwzE3AqfpMUfWklx
+	 BY9arIfz7wFMT1Q4IfUTyZDwzFKtfAmeK1pP0cPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgEIDtA (ORCPT
+        id S1728773AbgEIDu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 23:49:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41911 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgEIDs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 23:48:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r10so1335611pgv.8;
-        Fri, 08 May 2020 20:48:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hD0R4FU5llXtJjcH0Qaw/mWo7Wc3hOPuTzuuFmKSMr4=;
-        b=ZS5aG6/1kxOHJXVhz2gu1gmYfrZQameu2SkSkabk8a0F+USyoE1XwtoWcxitMpGYHg
-         gm1fHOdgz6LDFLR6Uv8H3OQjMQVB5wextmOFtwDuPAdcRAqSxN7DGSHpTcoUbGGCAyl3
-         CPunHkKzxA9vF7hnD2azdaqN8BzhXwSO4sxYgmbIk4CYGC1+SHggL836vlFllTJGeL6w
-         U8ay73ewUmf3CyFVJSIPjoVK4JieTWPBRi2ZsZ/mRT8oE2UCMXpaRXKrDPfRB8Td5VZL
-         lcKJIaAQeXSyfpAsSaXNogL1eeKuncBCzPgFCsPb3w9QAoEBFGFIMvx7xsP8ODBwl5Jo
-         Cu3w==
-X-Gm-Message-State: AGi0PuZLIxiurkFf1n0t9/l0bKEUFyVs5qI4Y94dxlK5Rtn+zPBwfgAR
-        HudqQ2ox62JOYJcnbjxydWc=
-X-Google-Smtp-Source: APiQypJgqquftLfojmRDQ311OD9XhSFj0W23UlCHJWHNlOTbAGa4+b+T6f+86Ay6aZJLvCi5D/41TA==
-X-Received: by 2002:a63:dc56:: with SMTP id f22mr4823828pgj.284.1588996137062;
-        Fri, 08 May 2020 20:48:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 6sm3199157pfj.123.2020.05.08.20.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 20:48:55 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 642134035F; Sat,  9 May 2020 03:48:54 +0000 (UTC)
-Date:   Sat, 9 May 2020 03:48:54 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Tso Ted <tytso@mit.edu>, Adrian Bunk <bunk@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Jeff Mahoney <jeffm@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Jessica Yu <jeyu@suse.de>, Takashi Iwai <tiwai@suse.de>,
-        Ann Davis <AnDavis@suse.com>,
-        Richard Palethorpe <rpalethorpe@suse.de>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200509034854.GI11244@42.do-not-panic.com>
-References: <20200507180631.308441-1-aquini@redhat.com>
- <20200507182257.GX11244@42.do-not-panic.com>
- <20200507184307.GF205881@optiplex-lnx>
- <20200507184705.GG205881@optiplex-lnx>
- <20200507203340.GZ11244@42.do-not-panic.com>
- <20200507220606.GK205881@optiplex-lnx>
- <20200507222558.GA11244@42.do-not-panic.com>
- <20200508124719.GB367616@optiplex-lnx>
+        Fri, 8 May 2020 23:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgEIDu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 23:50:28 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112AF20722;
+        Sat,  9 May 2020 03:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588996227;
+        bh=XcyjVYykYKddPdKIWQPw8Qg8eEX39q7s1fcySboBfXw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=v+NOZ9ihS91D0GxdpfKFJeEKdSr3cMUz5sMum2mQtJ7ZDtDW/DEN19kUpISGgJ0XS
+         cuTQqwZuNX6c+To2TPjtHxABkyGArm+PA3b5EHotmBBAigvinDiYxDkiBxFLBqPJAM
+         wdKOdjwEJ2U4dA8pie5kE537dnD042DOnLQnGTmM=
+Date:   Fri, 8 May 2020 20:50:25 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: Protect INET_ADDR_COOKIE on 32-bit
+ architectures
+Message-ID: <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200508120457.29422-1-steve@sk2.org>
+References: <20200508120457.29422-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508124719.GB367616@optiplex-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:47:19AM -0400, Rafael Aquini wrote:
-> On Thu, May 07, 2020 at 10:25:58PM +0000, Luis Chamberlain wrote:
-> > On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
-> > > On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
-> > > > I *think* that a cmdline route to enable this would likely remove the
-> > > > need for the kernel config for this. But even with Vlastimil's work
-> > > > merged, I think we'd want yet-another value to enable / disable this
-> > > > feature. Do we need yet-another-taint flag to tell us that this feature
-> > > > was enabled?
-> > > >
-> > > 
-> > > I guess it makes sense to get rid of the sysctl interface for
-> > > proc_on_taint, and only keep it as a cmdline option. 
-> > 
-> > That would be easier to support and k3eps this simple.
-> > 
-> > > But the real issue seems to be, regardless we go with a cmdline-only option
-> > > or not, the ability of proc_taint() to set any arbitrary taint flag 
-> > > other than just marking the kernel with TAINT_USER. 
-> > 
-> > I think we would have no other option but to add a new TAINT flag so
-> > that we know that the taint flag was modified by a user. Perhaps just
-> > re-using TAINT_USER when proc_taint() would suffice.
-> >
+On Fri,  8 May 2020 14:04:57 +0200 Stephen Kitt wrote:
+> Commit c7228317441f ("net: Use a more standard macro for
+> INET_ADDR_COOKIE") added a __deprecated marker to the cookie name on
+> 32-bit architectures, with the intent that the compiler would flag
+> uses of the name. However since commit 771c035372a0 ("deprecate the
+> '__deprecated' attribute warnings entirely and for good"),
+> __deprecated doesn't do anything and should be avoided.
 > 
-> We might not need an extra taint flag if, perhaps, we could make these
-> two features mutually exclusive. The idea here is that bitmasks added 
-> via panic_on_taint get filtered out in proc_taint(), so a malicious 
-> user couldn't exploit the latter interface to easily panic the system,
-> when the first one is also in use. 
+> This patch changes INET_ADDR_COOKIE to declare a dummy struct so that
+> any subsequent use of the cookie's name will in all likelihood break
+> the build. It also removes the __deprecated marker.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+> Changes since v1:
+>   - use a dummy struct rather than a typedef
+> 
+>  include/net/inet_hashtables.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
+> index ad64ba6a057f..889d9b00c905 100644
+> --- a/include/net/inet_hashtables.h
+> +++ b/include/net/inet_hashtables.h
+> @@ -301,8 +301,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
+>  	  ((__sk)->sk_bound_dev_if == (__sdif)))		&&	\
+>  	 net_eq(sock_net(__sk), (__net)))
+>  #else /* 32-bit arch */
+> +/* Break the build if anything tries to use the cookie's name. */
 
-I get it, however I I can still see the person who enables enabling
-panic-on-tain wanting to know if proc_taint() was used. So even if
-it was not on their mask, if it was modified that seems like important
-information for a bug report analysis.
+I think the macro is supposed to cause a warning when the variable
+itself is accessed. And I don't think that happens with your patch
+applied.
 
-  Luis
+diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+index 2bbaaf0c7176..6c4a3904ed8b 100644
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -360,6 +360,8 @@ struct sock *__inet_lookup_established(struct net *net,
+        unsigned int slot = hash & hashinfo->ehash_mask;
+        struct inet_ehash_bucket *head = &hashinfo->ehash[slot];
+ 
++       kfree(&acookie);
+ begin:
+        sk_nulls_for_each_rcu(sk, node, &head->chain) {
+                if (sk->sk_hash != hash)
+
+$ make ARCH=i386
+make[1]: Entering directory `/netdev/net-next/build_allmodconfig_warn_32bit'
+  GEN     Makefile
+  CALL    ../scripts/atomic/check-atomics.sh
+  CALL    ../scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CC      net/ipv4/inet_hashtables.o
+  CHK     kernel/kheaders_data.tar.xz
+  AR      net/ipv4/built-in.a
+  AR      net/built-in.a
+  GEN     .version
+  CHK     include/generated/compile.h
+  UPD     include/generated/compile.h
+  CC      init/version.o
+  AR      init/built-in.a
+  LD      vmlinux.o
+  MODPOST vmlinux.o
+
+Builds fine.
+
+>  #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+> -	const int __name __deprecated __attribute__((unused))
+> +	struct {} __name __attribute__((unused))
+>  
+>  #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
+>  	(((__sk)->sk_portpair == (__ports))		&&		\
+
