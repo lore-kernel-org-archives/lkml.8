@@ -2,73 +2,88 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E5EC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97E8C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE7B214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859C72192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="U4w5dbE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgEIJPT (ORCPT
+        id S1727845AbgEIJVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:15:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4315 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727951AbgEIJPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:15:14 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5FE4CD6C5CCEE7F7E696;
-        Sat,  9 May 2020 17:15:11 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 17:15:02 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <sparclinux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH -next 1/2] sparc: use snprintf() in show_pciobppath_attr() in pci.c
-Date:   Sat, 9 May 2020 17:18:48 +0800
-Message-ID: <20200509091849.116954-2-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200509091849.116954-1-chenzhou10@huawei.com>
-References: <20200509091849.116954-1-chenzhou10@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Sat, 9 May 2020 05:21:37 -0400
+Received: from m15-112.126.com ([220.181.15.112]:55589 "EHLO m15-112.126.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgEIJVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:21:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=npA6K8XR6m/Q7D+a+F
+        d/I+FwASzBrx710iIbSXi75Zw=; b=U4w5dbE1Fuf8bTwppyjMdPTDl0+/3u/6A/
+        LOhMaJS1/zqiUXGpxzNOYsc0ipgi72lPAoGzIfp7V3CN4HThAuopqaK9W4MCMS9Q
+        0oid2UDPQ1i4awOzngUhRUjwgC/DUqcX5EFbmqPwlocTk7BDJl363HDmZEvNhtkg
+        vPo6g/jYE=
+Received: from coding1221.verisilicon.com (unknown [222.65.245.108])
+        by smtp2 (Coremail) with SMTP id DMmowABXjQHjb7Ze7FwJCw--.5965S2;
+        Sat, 09 May 2020 16:54:59 +0800 (CST)
+From:   joe_zhuchg@126.com
+To:     sudeep.holla@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Joe Zhu <Chunguang.Zhu@verisilicon.com>
+Subject: [PATCH 1/1] firmware: arm_scmi/mailbox: ignore notification for tx done using irq
+Date:   Sat,  9 May 2020 16:54:57 +0800
+Message-Id: <20200509085457.31920-1-joe_zhuchg@126.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: DMmowABXjQHjb7Ze7FwJCw--.5965S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZr1rKF4kGFy7XryruF43trb_yoWktFX_Cw
+        nFkw4jgr1UAFyFvwnrAwn3G3sIv3y5Wa4vg3Wqvw12qasrX398Wwnrtws5A34UWr4DZryI
+        kas5Grs5Cwn8WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU5y7K7UUUUU==
+X-Originating-IP: [222.65.245.108]
+X-CM-SenderInfo: pmrhs6xkxfxwa6rslhhfrp/1tbifgMfN1pD-wcCJgAAsQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snprintf() returns the number of bytes that would be written,
-which may be greater than the the actual length to be written.
+From: Joe Zhu <Chunguang.Zhu@verisilicon.com>
 
-show_pciobppath_attr() should return the number of bytes printed
-into the buffer. This is the return value of scnprintf().
+If mailbox uses IRQ method, it already notified framework with
+mbox_chan_txdone() in ISR.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Joe Zhu <Chunguang.Zhu@verisilicon.com>
 ---
- arch/sparc/kernel/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/mailbox.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index 5ed43828e078..a41ad562ed4e 100644
---- a/arch/sparc/kernel/pci.c
-+++ b/arch/sparc/kernel/pci.c
-@@ -593,7 +593,7 @@ show_pciobppath_attr(struct device * dev, struct device_attribute * attr, char *
- 	pdev = to_pci_dev(dev);
- 	dp = pdev->dev.of_node;
- 
--	return snprintf (buf, PAGE_SIZE, "%pOF\n", dp);
-+	return scnprintf(buf, PAGE_SIZE, "%pOF\n", dp);
+diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
+index 73077bbc4ad9..303a5dc42429 100644
+--- a/drivers/firmware/arm_scmi/mailbox.c
++++ b/drivers/firmware/arm_scmi/mailbox.c
+@@ -9,6 +9,7 @@
+ #include <linux/err.h>
+ #include <linux/device.h>
+ #include <linux/mailbox_client.h>
++#include <linux/mailbox_controller.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/slab.h>
+@@ -147,7 +148,8 @@ static void mailbox_mark_txdone(struct scmi_chan_info *cinfo, int ret)
+ 	 * Unfortunately, we have to kick the mailbox framework after we have
+ 	 * received our message.
+ 	 */
+-	mbox_client_txdone(smbox->chan, ret);
++	if (!smbox->chan->mbox->txdone_irq)
++		mbox_client_txdone(smbox->chan, ret);
  }
  
- static DEVICE_ATTR(obppath, S_IRUSR | S_IRGRP | S_IROTH, show_pciobppath_attr, NULL);
+ static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
 -- 
-2.20.1
+2.17.1
 
