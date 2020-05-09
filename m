@@ -2,114 +2,170 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD349C54E4A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D54C54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C191B20735
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3E42495E
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgEIVtS (ORCPT
+        id S1728381AbgEIV5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 17:49:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:49251 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgEIVtP (ORCPT
+        Sat, 9 May 2020 17:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgEIV5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 17:49:15 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Macf4-1j08bD1jis-00cBwH; Sat, 09 May 2020 23:49:13 +0200
-Received: by mail-qt1-f180.google.com with SMTP id q13so4745917qtp.7;
-        Sat, 09 May 2020 14:49:13 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZKh68dXUO5pGwXcBP2j079saIP8wb7HdodKJMAPDgKGfOKZafU
-        K68tdVwvhVsNVbybM1EnUohJUsZTqx2K7e2EbM0=
-X-Google-Smtp-Source: APiQypLpfX4ahqZVPOUpDwBjl1/Gele77d9P59gkG2JtFwvCb51akS0JDBPZXr0gFygmEktloo+7LqloTf/v/1srlSs=
-X-Received: by 2002:ac8:490a:: with SMTP id e10mr7462932qtq.7.1589060952182;
- Sat, 09 May 2020 14:49:12 -0700 (PDT)
+        Sat, 9 May 2020 17:57:20 -0400
+X-Greylist: delayed 112585 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 09 May 2020 14:57:19 PDT
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD78C061A0C;
+        Sat,  9 May 2020 14:57:19 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A91AA389; Sat,  9 May 2020 23:57:15 +0200 (CEST)
+Date:   Sat, 9 May 2020 23:57:13 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200509215713.GE18353@8bytes.org>
+References: <20200508144043.13893-1-joro@8bytes.org>
+ <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
+ <20200508213609.GU8135@suse.de>
+ <CALCETrVxP87o2+aaf=RLW--DSpMrs=BXSQphN6bG5Y4X+OY8GQ@mail.gmail.com>
+ <20200509175217.GV8135@suse.de>
+ <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200509120505.109218-1-arnd@arndb.de> <20200509132427.3d2979d8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200509132427.3d2979d8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 9 May 2020 23:48:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
-Message-ID: <CAK8P3a0figw8FHGp2KqW6XdfbWLu_ZXp3hyuPVoPwpum6XeJ_Q@mail.gmail.com>
-Subject: Re: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:lWqosjHwW39E5UlbmDdQ2FRdaXX7VsnMw8pzzqLD8023eMm7XD9
- 8WjQ1xC/Z+eRndDjPga6Stey1rp/I8NE3Rn1Eoju1R+5waqUdwMJYZGmMht4O8s0gUMKIAg
- zFrGLkFaMP0wMmtHA3vjYnxsyGkTFTmXyt2WdUouRH1L1KFvEKmwPv68b7NOTBu0/HlszDK
- XQH5jTdIYwiM07JW4RzGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:r7C04jp4pcI=:OYW7MXS2Ftn52dWmyfW4cd
- 3R24wBJ9Gq5k1Tlcu/NfPq7PEmca13BHrEsQlrhsgJVldaw9lzxtzdaQr6AeVcWieLs1ZrE1A
- 0etMNdbvvN1/vVKXBYvRdkY0llRWP0XqPG7whWWe7+756GkPpOZoA4628DIazmNNDMqUshiRx
- o1IBrKUkHUScfL4i5jpIls3BvMDAl/skVwVAh49GUgHq7lXAXclysFvGaEP2CmdyEvg1frLYG
- aPJQj/RxVhVkM6XRDbJiRpOuIdFyoSXbTFtSRoFfaQUsStSvZ5v2ZmXfCfS/4ioQS8vKnpNyP
- coQGyMtTgj/ZsKEQ4MbAwS73pUrNQBQBv3vwSsW1GdJKrH88J7cjajac0MYDM3Z4Mn7jqcxKu
- RlXhCp+l4bPUJc9gbCI4SFPl4e9uaJ31blhB3AQ0bzlwYd3kiz1HDqjbRhG8JH7tlKn+XB/tu
- GQU0Y8Svt8r39wAqvU/uTOM7lVGwZ+yE/mRyghkh8ZhUkUSS8nCGQPTzOfhkJ57GL4GCIQoHV
- BmL1RtbkmuBeUvfUWgmGzoEyVvFsl+UCQkkgtQZ+GgY2K6/3XUCz75L7R2aEfaDkLIctzTgcb
- +YS8a2MnCCCKptDeZif2W/4zALBmGyNJo/iWlbWxkoF5itGCNMX4UJdZNKxVG6A5gj4p90y6+
- D6NQwYD7A2xJwlj8JsTAXMaBUSmstiNHi1158tdY/6Di7uy76B+PDt4Eqwc5yq0I8wVv3S43M
- MbUJYWcyqapAQjKGi/64oLd/j+8qeRWZgCs9sM9svohGadZzPd5j+O45bEZR1MIZBfDxYRxg0
- zBdw6Vr/taNL+OQI57UqiXazwWQ6ZxLp0+hwKtsvX1vv9m9Hyo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 10:24 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Sat,  9 May 2020 14:04:52 +0200 Arnd Bergmann wrote:
-> > I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-> > and CONFIG_GIANFAR=y:
-> >
-> > x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
-> >
-> > It seems the same thing can happen with dpaa and ucc_geth, so change
-> > all three to do an explicit 'select FIXED_PHY'.
-> >
-> > The fixed-phy driver actually has an alternative stub function that
-> > theoretically allows building network drivers when fixed-phy is
-> > disabled, but I don't see how that would help here, as the drivers
-> > presumably would not work then.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> > +     select FIXED_PHY
->
-> I think FIXED_PHY needs to be optional, depends on what the board has
-> connected to the MAC it may not be needed, right PHY folks? We probably
-> need the
->
->     depends on FIXED_PHY || !FIXED_PHY
+Hi Andy,
 
-Unfortunately that does not work because it causes a circular dependency:
+On Sat, May 09, 2020 at 12:05:29PM -0700, Andy Lutomirski wrote:
+> 1. Non-PAE.  There is a single 4k top-level page table per mm, and
+> this table contains either 512 or 1024 entries total. Of those
+> entries, some fraction (half or less) control the kernel address
+> space, and some fraction of *that* is for vmalloc space.  Those
+> entries are the *only* thing that needs syncing -- all mms will either
+> have null (not present) in those slots or will have pointers to the
+> *same* next-level-down directories.
 
-drivers/net/phy/Kconfig:415:error: recursive dependency detected!
-drivers/net/phy/Kconfig:415: symbol FIXED_PHY depends on PHYLIB
-drivers/net/phy/Kconfig:250: symbol PHYLIB is selected by FSL_PQ_MDIO
-drivers/net/ethernet/freescale/Kconfig:60: symbol FSL_PQ_MDIO is
-selected by UCC_GETH
-drivers/net/ethernet/freescale/Kconfig:75: symbol UCC_GETH depends on FIXED_PHY
+Not entirely correct, on 32-bit non-PAE there are two levels with 1024
+entries each. In Linux these map to PMD and PTE levels. With 1024
+entries each PMD maps 4MB of address space.
 
-I now checked what other drivers use the fixed-phy interface, and found
-that all others do select FIXED_PHY except for these three, and they
-are also the only ones using fixed_phy_change_carrier().
+How much of these 1024 top-level entries are used for the kernel is
+configuration dependent in Linux, it can be 768, 512, or 256.
 
-The fixed-phy driver is fairly small, so it probably won't harm too much
-to use the select, but maybe I missed another option.
+> 2. PAE.  Depending on your perspective, there could be a grand total
+> of four top-level paging pointers, of which one (IIRC) is for the
+> kernel.
 
-        Arnd
+That is again configuration dependent, up to 3 of the top-level pointers
+could be used for kernel-space.
+
+> That points to the same place for all mms.  Or, if you look at it the
+> other way, PAE is just like #1 except that the top-level table has
+> only four entries and only one points to VMALLOC space.
+
+There are more differences. In PAE an entry is 64-bit, which means each
+PMD-entry only maps 2MB of address space, which means you need two PTE
+pages to map the same amount of address space you could map with one
+page without PAE paging.
+And as noted above, all 3 of the top-level pointers can point to vmalloc
+space (not exclusivly).
+ 
+> So, unless I'm missing something here, there is an absolute maximum of
+> 512 top-level entries that ever need to be synchronized.
+
+And here is where your assumption is wrong. On 32-bit PAE systems it is
+not the top-level entries that need to be synchronized for vmalloc, but
+the second-level entries. And dependent on the kernel configuration,
+there are (in total, not only vmalloc) 1536, 1024, or 512 of these
+second-level entries. How much of them are actually used for vmalloc
+depends on the size of the system RAM (but is at least 64), because
+the vmalloc area begins after the kernel direct-mapping (with an 8MB
+unmapped hole).
+
+With 512MB of RAM you need 256 entries for the kernel direct-mapping (I
+ignore the ISA hole here). After that there are 4 unmapped entries and
+the rest is vmalloc, minus some fixmap and ldt mappings at the end of
+the address space. I havn't looked up the exact number, but 4 entries
+(8MB) for this should be close to the real value.
+
+	  1536 total PMD entries
+	-  256 for direct-mapping
+	-    4 for ISA hole
+	-    4 for stuff at the end of the address space
+
+	= 1272 PMD entries for VMALLOC space which need synchronization.
+
+With less RAM it is even more, and to get rid of faulting and
+synchronization you need to pre-allocate a 4k PTE page for each of these
+PMD entries.
+
+> Now, there's an additional complication.  On x86_64, we have a rule:
+> those entries that need to be synced start out null and may, during
+> the lifetime of the system, change *once*.  They are never unmapped or
+> modified after being allocated.  This means that those entries can
+> only ever point to a page *table* and not to a ginormous page.  So,
+> even if the hardware were to support ginormous pages (which, IIRC, it
+> doesn't), we would be limited to merely immense and not ginormous
+> pages in the vmalloc range.  On x86_32, I don't think we have this
+> rule right now.  And this means that it's possible for one of these
+> pages to be unmapped or modified.
+
+The reason for x86-32 being different is that the address space is
+orders of magnitude smaller than on x86-64. We just have 4 top-level
+entries with PAE paging and can't afford to partition kernel-adress
+space on that level like we do on x86-64. That is the reason the address
+space is partitioned on the second (PMD) level, which is also the reason
+vmalloc synchronization needs to happen on that level. And because
+that's not enough yet, its also the page-table level to map huge-pages.
+
+> So my suggestion is that just apply the x86_64 rule to x86_32 as well.
+> The practical effect will be that 2-level-paging systems will not be
+> able to use huge pages in the vmalloc range, since the rule will be
+> that the vmalloc-relevant entries in the top-level table must point to
+> page *tables* instead of huge pages.
+
+I could very well live with prohibiting huge-page ioremap mappings for
+x86-32. But as I wrote before, this doesn't solve the problems I am
+trying to address with this patch-set, or would only address them if
+significant amount of total system memory is used.
+
+The pre-allocation solution would work for x86-64, it would only need
+256kb of preallocated memory for the vmalloc range to never synchronize
+or fault again. I have thought about that and did the math before
+writing this patch-set, but doing the math for 32 bit drove me away from
+it for reasons written above.
+
+And since a lot of the vmalloc_sync_(un)mappings problems I debugged
+were actually related to 32-bit, I want a solution that works for 32 and
+64-bit x86 (at least until support for x86-32 is removed). And I think
+this patch-set provides a solution that works well for both.
+
+
+	Joerg
