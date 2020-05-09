@@ -2,178 +2,71 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B840BC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE17C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E582054F
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1B12495A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgEIISj (ORCPT
+        id S1727803AbgEIITu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:18:39 -0400
-Received: from v6.sk ([167.172.42.174]:48982 "EHLO v6.sk"
+        Sat, 9 May 2020 04:19:50 -0400
+Received: from verein.lst.de ([213.95.11.211]:56087 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgEIISi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:18:38 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id CC517610B4;
-        Sat,  9 May 2020 08:18:06 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [RESEND PATCH v2 3/3] phy: Add USB HSIC PHY driver for Marvell MMP3 SoC
-Date:   Sat,  9 May 2020 10:17:54 +0200
-Message-Id: <20200509081754.474787-4-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200509081754.474787-1-lkundrak@v3.sk>
-References: <20200509081754.474787-1-lkundrak@v3.sk>
+        id S1725901AbgEIITu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 04:19:50 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 36D5968C7B; Sat,  9 May 2020 10:19:47 +0200 (CEST)
+Date:   Sat, 9 May 2020 10:19:46 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/4] dma-mapping: move the remaining DMA API calls out
+ of line
+Message-ID: <20200509081946.GA21834@lst.de>
+References: <20200414122506.438134-1-hch@lst.de> <20200414122506.438134-2-hch@lst.de> <c2572d30-f03c-450d-e257-3a8673b42d44@ozlabs.ru> <20200415061859.GA32392@lst.de> <5139e8e1-6389-3387-dc39-6983b08ff28d@ozlabs.ru> <20200417075852.GA20049@lst.de> <70296d53-3504-2645-4b16-0eb73b0cd0d9@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70296d53-3504-2645-4b16-0eb73b0cd0d9@ozlabs.ru>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PHY driver for the HSICs found on Marvell MMP3 SoC. The driver is
-rather straightforward -- the PHY essentially just needs to be enabled.
+On Tue, May 05, 2020 at 02:18:37PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 17/04/2020 17:58, Christoph Hellwig wrote:
+> > On Wed, Apr 15, 2020 at 09:21:37PM +1000, Alexey Kardashevskiy wrote:
+> >> And the fact they were exported leaves possibility that there is a
+> >> driver somewhere relying on these symbols or distro kernel won't build
+> >> because the symbol disappeared from exports (I do not know what KABI
+> >> guarantees or if mainline kernel cares).
+> > 
+> > We absolutely do not care.  In fact for abuses of APIs that drivers
+> > should not use we almost care to make them private and break people
+> > abusing them.
+> 
+> ok :)
+> 
+> >> I do not care in particular but
+> >> some might, a line separated with empty lines in the commit log would do.
+> > 
+> > I'll add a blurb for the next version.
+> 
+> 
+> Has it gone anywhere? Thanks,
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
----
-Changes since v1:
-- Explicitely cast drvdata pointer to make sparse happy
-
- drivers/phy/marvell/Kconfig         | 12 +++++
- drivers/phy/marvell/Makefile        |  1 +
- drivers/phy/marvell/phy-mmp3-hsic.c | 82 +++++++++++++++++++++++++++++
- 3 files changed, 95 insertions(+)
- create mode 100644 drivers/phy/marvell/phy-mmp3-hsic.c
-
-diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-index 8f6273c837ec..6c96f2bf5266 100644
---- a/drivers/phy/marvell/Kconfig
-+++ b/drivers/phy/marvell/Kconfig
-@@ -116,3 +116,15 @@ config PHY_MMP3_USB
- 	  The PHY driver will be used by Marvell udc/ehci/otg driver.
- 
- 	  To compile this driver as a module, choose M here.
-+
-+config PHY_MMP3_HSIC
-+	tristate "Marvell MMP3 USB HSIC PHY Driver"
-+	depends on MACH_MMP3_DT || COMPILE_TEST
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support Marvell MMP3 USB HSIC PHY driver for
-+	  Marvell MMP3 SoC. This driver will be used my the Marvell EHCI
-+	  driver to initialize the interface to internal USB HSIC
-+	  components on MMP3-based boards.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-index 5a106b1549f4..7f296ef02829 100644
---- a/drivers/phy/marvell/Makefile
-+++ b/drivers/phy/marvell/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_MMP3_USB)		+= phy-mmp3-usb.o
-+obj-$(CONFIG_PHY_MMP3_HSIC)		+= phy-mmp3-hsic.o
- obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+= phy-mvebu-a3700-comphy.o
- obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+= phy-mvebu-a3700-utmi.o
- obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+= phy-armada38x-comphy.o
-diff --git a/drivers/phy/marvell/phy-mmp3-hsic.c b/drivers/phy/marvell/phy-mmp3-hsic.c
-new file mode 100644
-index 000000000000..47c1e8894939
---- /dev/null
-+++ b/drivers/phy/marvell/phy-mmp3-hsic.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2020 Lubomir Rintel <lkundrak@v3.sk>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+
-+#define HSIC_CTRL	0x08
-+#define HSIC_ENABLE	BIT(7)
-+#define PLL_BYPASS	BIT(4)
-+
-+static int mmp3_hsic_phy_init(struct phy *phy)
-+{
-+	void __iomem *base = (void __iomem *)phy_get_drvdata(phy);
-+	u32 hsic_ctrl;
-+
-+	hsic_ctrl = readl_relaxed(base + HSIC_CTRL);
-+	hsic_ctrl |= HSIC_ENABLE;
-+	hsic_ctrl |= PLL_BYPASS;
-+	writel_relaxed(hsic_ctrl, base + HSIC_CTRL);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops mmp3_hsic_phy_ops = {
-+	.init		= mmp3_hsic_phy_init,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id mmp3_hsic_phy_of_match[] = {
-+	{ .compatible = "marvell,mmp3-hsic-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mmp3_hsic_phy_of_match);
-+
-+static int mmp3_hsic_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct phy_provider *provider;
-+	struct resource *resource;
-+	void __iomem *base;
-+	struct phy *phy;
-+
-+	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, resource);
-+	if (IS_ERR(base)) {
-+		dev_err(dev, "failed to remap PHY regs\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	phy = devm_phy_create(dev, NULL, &mmp3_hsic_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(phy);
-+	}
-+
-+	phy_set_drvdata(phy, (void *)base);
-+	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "failed to register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver mmp3_hsic_phy_driver = {
-+	.probe		= mmp3_hsic_phy_probe,
-+	.driver		= {
-+		.name	= "mmp3-hsic-phy",
-+		.of_match_table = mmp3_hsic_phy_of_match,
-+	},
-+};
-+module_platform_driver(mmp3_hsic_phy_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Marvell MMP3 USB HSIC PHY Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.26.2
-
+I've been hoping for the sg_buf helpers to land first, as they need
+backporting and would conflict.  Do you urgently need the series?
