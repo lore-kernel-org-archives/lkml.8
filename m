@@ -2,57 +2,67 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B83CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E77C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA18120CC7
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF0124955
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgEIPtn (ORCPT
+        id S1728171AbgEIPyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 11:49:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36110 "EHLO pegase1.c-s.fr"
+        Sat, 9 May 2020 11:54:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38197 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgEIPtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 11:49:42 -0400
+        id S1727105AbgEIPyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 11:54:31 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49KBTY630YzB09b3;
-        Sat,  9 May 2020 17:49:37 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49KBb73l86z9v0Zm;
+        Sat,  9 May 2020 17:54:27 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 099NYsCV6Cpu; Sat,  9 May 2020 17:49:37 +0200 (CEST)
+        with ESMTP id hhT93JtYMSPR; Sat,  9 May 2020 17:54:27 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49KBTY4L2qzB09b2;
-        Sat,  9 May 2020 17:49:37 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49KBb72sdxz9v2CW;
+        Sat,  9 May 2020 17:54:27 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B63538B775;
-        Sat,  9 May 2020 17:49:39 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 91C698B775;
+        Sat,  9 May 2020 17:54:29 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 0AQC4Nh5-Sma; Sat,  9 May 2020 17:49:39 +0200 (CEST)
+        with ESMTP id QdzKxSQXGUVx; Sat,  9 May 2020 17:54:29 +0200 (CEST)
 Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C14678B75F;
-        Sat,  9 May 2020 17:49:37 +0200 (CEST)
-Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
-To:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
- <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6232E8B75F;
+        Sat,  9 May 2020 17:54:28 +0200 (CEST)
+Subject: Re: [PATCH v8 8/8] powerpc/vdso: Provide __kernel_clock_gettime64()
+ on vdso32
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr>
+ <e78344d3fcc1d33bfb1782e430b7f0529f6c612f.1588079622.git.christophe.leroy@c-s.fr>
+ <CAK8P3a2aXJRWjxWO8oMRX2AJkfeVeeoYbOPbpd9-UTgjqM4B7g@mail.gmail.com>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
-Date:   Sat, 9 May 2020 17:49:31 +0200
+Message-ID: <d3f303f1-8b2c-0c54-5380-0b9a370a4eb3@csgroup.eu>
+Date:   Sat, 9 May 2020 17:54:25 +0200
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
+In-Reply-To: <CAK8P3a2aXJRWjxWO8oMRX2AJkfeVeeoYbOPbpd9-UTgjqM4B7g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: fr
 Content-Transfer-Encoding: 8bit
@@ -63,54 +73,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 08/05/2020 à 19:41, Qian Cai a écrit :
+Le 28/04/2020 à 18:05, Arnd Bergmann a écrit :
+> On Tue, Apr 28, 2020 at 3:16 PM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>> Provides __kernel_clock_gettime64() on vdso32. This is the
+>> 64 bits version of __kernel_clock_gettime() which is
+>> y2038 compliant.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > 
+> Looks good to me
 > 
->> On May 8, 2020, at 10:39 AM, Qian Cai <cai@lca.pw> wrote:
->>
->> Booting POWER9 PowerNV has this message,
->>
->> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use early_ioremap() instead”
->>
->> but use the patch below will result in leaks because it will never call early_iounmap() anywhere. However, it looks me it was by design that phb->regs mapping would be there forever where it would be used in pnv_ioda_get_inval_reg(), so is just that check_early_ioremap_leak() initcall too strong?
->>
->> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -36,6 +36,7 @@
->> #include <asm/firmware.h>
->> #include <asm/pnv-pci.h>
->> #include <asm/mmzone.h>
->> +#include <asm/early_ioremap.h>
->>
->> #include <misc/cxl-base.h>
->>
->> @@ -3827,7 +3828,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
->>         /* Get registers */
->>         if (!of_address_to_resource(np, 0, &r)) {
->>                 phb->regs_phys = r.start;
->> -               phb->regs = ioremap(r.start, resource_size(&r));
->> +               phb->regs = early_ioremap(r.start, resource_size(&r));
->>                 if (phb->regs == NULL)
->>                         pr_err("  Failed to map registers !\n”);
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 > 
-> This will also trigger a panic with debugfs reads, so isn’t that this commit bogus at least for powerpc64?
+> There was a bug on ARM for the corresponding function, so far it is unclear
+> if this was a problem related to particular hardware, the 32-bit kernel code,
+> or the common implementation of clock_gettime64 in the vdso library,
+> see https://github.com/richfelker/musl-cross-make/issues/96
 > 
-> d538aadc2718 (“powerpc/ioremap: warn on early use of ioremap()")
+> Just to be sure that powerpc is not affected by the same issue, can you
+> confirm that repeatedly calling clock_gettime64 on powerpc32, alternating
+> between vdso and syscall, results in monotically increasing times?
+> 
 
-No d538aadc2718 is not bogus. That's the point, we want to remove all 
-early usages of ioremap() in order to remove the hack with the 
-ioremap_bot stuff and all, and stick to the generic ioremap logic.
-
-In order to do so, all early use of ioremap() has to be converted to 
-early_ioremap() or to fixmap or anything else that allows to do ioremaps 
-before the slab is ready.
-
-early_ioremap() is for temporary mappings necessary at boottime. For 
-long lasting mappings, another method is to be used.
-
-Now, the point is that other architectures like for instance x86 don't 
-seem to have to use early_ioremap() much. Powerpc is for instance doing 
-early mappings for PCI. Seems like x86 initialises PCI once slab is 
-ready. Can't powerpc do the same ?
+I think that's one of the things vdsotest checks, so yes that's ok I think.
 
 Christophe
