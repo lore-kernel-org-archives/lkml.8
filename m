@@ -2,134 +2,143 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545B3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B11C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2561A24953
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588983073;
-	bh=OCJ83ytuwXv45OnOiAlJSMIZEo8q5Uw1eby5O6JdPes=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=o4zHJitlsjydZeE9kXCdGG/qxTWrt60QPDOOXdL3x18Bw2DoCjNEexMheerUgAPYo
-	 uHF5NeQFWZdGXUkZspWd3MkYnpEGEDeQnqZSX/oCxSfMvSvXVPeqIGuTocTIKEIu8R
-	 fNZF7qoAUK77uFiLEOGW88kQ/SRVQTX6OzkpjzaQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9BC812184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgEIALM (ORCPT
+        id S1728436AbgEIALe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:11:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 20:11:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:54032 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgEIALM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:11:12 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81BED2184D;
-        Sat,  9 May 2020 00:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588983071;
-        bh=OCJ83ytuwXv45OnOiAlJSMIZEo8q5Uw1eby5O6JdPes=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=axpwNfALf/EVsvKzEzzMW+KXTEoKQb358I0WBAbtpPFljrL8kJsrLQBDjZkf7sAII
-         zdJF+t2MNaadDgYNIXdOFG92HZQYNM18X+ektT/WCk89veErSelzWZvuAEU8GKOlXE
-         jGxzxUIauVOImL7vDDi2/VMD2swE9u5OIgzlYUDI=
-Date:   Sat, 9 May 2020 09:11:07 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Shiyuan Hu <hushiyuan@huawei.com>,
-        Hewenliang <hewenliang4@huawei.com>
-Subject: Re: [PATCH] tools/bootconfig: Fix apply_xbc() to return zero on
- success
-Message-Id: <20200509091107.eb4f517a93ff2e0ae5e64b93@kernel.org>
-In-Reply-To: <20200509081424.7d0d21270f1725b5cf9a8535@kernel.org>
-References: <20200508111349.3b599bde@gandalf.local.home>
-        <20200509081424.7d0d21270f1725b5cf9a8535@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1727890AbgEIALe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:11:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCB73D6E;
+        Fri,  8 May 2020 17:11:33 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D893F68F;
+        Fri,  8 May 2020 17:11:32 -0700 (PDT)
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
+ <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
+ <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+ <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+ <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
+ <20200508181301.GF298574@lunn.ch>
+ <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
+ <20200508202722.GI298574@lunn.ch>
+ <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
+ <20200508234257.GA338317@lunn.ch>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <8e67dd6c-e83d-d366-9799-940708e6ae3d@arm.com>
+Date:   Fri, 8 May 2020 19:11:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200508234257.GA338317@lunn.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 08:14:24 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Fri, 8 May 2020 11:13:49 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On 5/8/20 6:42 PM, Andrew Lunn wrote:
+> On Fri, May 08, 2020 at 05:48:33PM -0500, Jeremy Linton wrote:
+>> Hi,
+>>
+>> On 5/8/20 3:27 PM, Andrew Lunn wrote:
+>>>>> There is a very small number of devices where the vendor messed up,
+>>>>> and did not put valid contents in the ID registers. In such cases, we
+>>>>> can read the IDs from device tree. These are then used in exactly the
+>>>>> same way as if they were read from the device.
+>>>>>
+>>>>
+>>>> Is that the case here?
+>>>
+>>> Sorry, I don't understand the question?
+>>
+>> I was asking in general, does this machine report the ID's correctly.
 > 
-> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> > 
-> > The return of apply_xbc() returns the result of the last write() call, which
-> > is not what is expected. It should only return zero on success.
-> > 
-> > Link: https://lore.kernel.org/r/20200508093059.GF9365@kadam
-> > 
+> Very likely, it does.
 > 
-> Thanks for fixing!
+>> The embedded single mac:mdio per nic case seems like the normal case, and
+>> most of the existing ACPI described devices are setup that way.
 > 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
+> Somebody in this thread pointed to ACPI patches for the
+> MACCHIATOBin. If i remember the hardware correctly, it has 4 Ethernet
+> interfaces, and two MDIO bus masters. One of the bus masters can only
+> do C22 and the other can only do C45. It is expected that the busses
+> are shared, not a nice one to one mapping.
 
-Oh, and tested too.
-
----
-...
-test case 40 (samples/good-tree.bconf)... 
-Apply samples/good-tree.bconf to ./initrd-tNhd
-	Number of nodes: 16
-	Size: 136 bytes
-	Checksum: 9171
-		[OK]
-
-All tests passed
----
-
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-BTW, I might better add a test summary to the test script (and move it
-into kselftest?)
-
-Thank you,
+Thats whats going on with the NXP too AFAIK. But the mcbin is one of the 
+ones with the "compatible" embedded in the DSD properties.. AKA, they 
+buried the entire DT node there.
 
 > 
-> > Fixes: 8842604446d1 ("tools/bootconfig: Fix resource leak in apply_xbc()")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > ---
-> >  tools/bootconfig/main.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
-> > index 001076c51712..0efaf45f7367 100644
-> > --- a/tools/bootconfig/main.c
-> > +++ b/tools/bootconfig/main.c
-> > @@ -337,6 +337,7 @@ int apply_xbc(const char *path, const char *xbc_path)
-> >  		pr_err("Failed to apply a boot config magic: %d\n", ret);
-> >  		goto out;
-> >  	}
-> > +	ret = 0;
-> >  out:
-> >  	close(fd);
-> >  	free(data);
-> > -- 
-> > 2.20.1
-> > 
+>> But at the same time, that shifts the c22/45 question to the nic
+>> driver, where use of a DSD property before instantiating/probing
+>> MDIO isn't really a problem if needed.
 > 
+> This in fact does not help you. The MAC driver has no idea what PHY is
+> connected to it. The MAC does not know if it is C22 or C45. It uses
+Thats all I was trying to say (the mac side capability is implied by the 
+HID/CID that instantiates it).
+
+> the phylib abstraction which hides all this. Even if you assume 1:1,
+> use phy_find_first(), it will not find a C45 PHY because without
+> knowing there is a C45 PHY, we don't scan for it. And we should expect
+> C45 PHYs to become more popular in the next few years.
 > 
-> -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+>> In fact this embedded nic/mac/mdio/phy 1:1:1 case, is likely a requirement
+>> for passthrough into a generic VM, otherwise someone has to create a virtual
+>> mdio, and pass the phy in for the nic/mac.
+>>
+>> AFAIK, NXP's part avoids this despite having a shared MDIO, because the phy
+>> state never leaves the mgmt side of the picture. It monitors the state and
+>> then feeds that back into their nic mgmt complex rather than using it
+>> directly.
+> 
+> That is the other model. Don't use Linux to drive the PHY, use
+> firmware in the MAC. A number of MACs do that, but it has the usual
+> problems of firmware. It limits you on your choice of PHYs, bugs in
+> the firmware cannot be fixed by the community, no sharing of drivers
+> because firmware is generally proprietary, no 'for free features'
+> because somebody else added features to the linux PHY driver etc.  But
+> it will make ACPI support simple, this whole discussion goes away, no
+> ACPI needed at all.
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Open source firmware! :)
