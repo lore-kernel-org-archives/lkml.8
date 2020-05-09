@@ -2,125 +2,125 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C7C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7BEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE5F206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6058020722
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vv++posi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CC1qQzYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgEINXh (ORCPT
+        id S1727834AbgEINZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:23:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        Sat, 9 May 2020 09:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgEINXg (ORCPT
+        with ESMTP id S1726013AbgEINZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:23:36 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C4DC05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 06:23:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t16so1928559plo.7
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m6rH3XcvlCHD6Smk1GtwJfgqlq+VWlPnqoHpZdRsMeI=;
-        b=vv++posiC5BPmZR4HWX8HS+TzniLdtAGuZFZDPbrPQo1073D3q/ECQEOkg1aMylGI1
-         pWv+JD9zI9AJp/wNJqfhuYsc8R1lC7gLi+pl//nsy4vs0dEKOSB5xkpCrb8YUojJC5Vz
-         6QbTBjWLt8wZG93KzYbQG5Kho2qq6trdt+humq28A4e0AkaRfZvkk6CTcntdGyl7oRXB
-         6iWpykNJXNUNcPBZVSpbbPZTBlVFjgk5c5aohXtD/3SIaPwwsGPN3Vdv9e2iim7kDo0t
-         U5hWGmQHtT2fyGK5ITs9NbkgqJG4B7WOxj9iy2UYJB5YHpyxJSVsj8PBX/9SU2M4g02q
-         mtow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m6rH3XcvlCHD6Smk1GtwJfgqlq+VWlPnqoHpZdRsMeI=;
-        b=t62ETK7z+9KFW+VkaI19/480HlL0eDMj0Tv9k51WIaoXtlwWbgpYDhzxXbpBvIkFRe
-         /gs/tXVX9+JMdEwUbqWoc6xeB/FCUJjBa4CXO8ai4jLV11UAQdwC4m+fmFefMYpl7NMq
-         huXsw8R6TCH2hvKGCFh9yXC2V6HrptQWSR1gLlL8AQau7nav+1WQRJBG2nfTWug9E+Yi
-         /DF6ObeN8cM250pdTCSeehN9iHlBIFuaKQMdIoqFJ76DFOgbgG9BAKtY6S6bNke4VM63
-         n245OfDEKLBnNgcp1n/zJndmxChcbYg5PY6EEtbJThwWdh5ImLZcmXwmAHu9zYpAyTNR
-         0q0w==
-X-Gm-Message-State: AGi0PubsDOUZdoTxKPUac0uLjNdW2gFMXfIQRXMrgMpEpocHCGMnKIux
-        1VdQW7uZdGxyCkP74+lJqp/jeAiH+FtmXlhvxnKoZQ==
-X-Google-Smtp-Source: APiQypLd3DqT21blgK/ByDCDeGLDE/yVcvXALGEMRPzDrr+O9dO+G6ZMeK8jNvsQSMWeSC/9purWjmLv/Y1njyvZz7c=
-X-Received: by 2002:a17:902:4c:: with SMTP id 70mr6810872pla.336.1589030615938;
- Sat, 09 May 2020 06:23:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1588870822.git.andreyknvl@google.com> <459d02069dedefcc30095748f49ef4a426e15b74.1588870822.git.andreyknvl@google.com>
- <873689mtbv.fsf@kernel.org>
-In-Reply-To: <873689mtbv.fsf@kernel.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Sat, 9 May 2020 15:23:25 +0200
-Message-ID: <CAAeHK+zRcz8YH_r+QJVJzSgmC9aY57+COybOo60uR0GJTqfSUg@mail.gmail.com>
-Subject: Re: [PATCH USB v3 3/5] usb: raw-gadget: fix gadget endpoint selection
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     USB list <linux-usb@vger.kernel.org>,
+        Sat, 9 May 2020 09:25:40 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0C6C061A0C;
+        Sat,  9 May 2020 06:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xxlsFN8Q2F7QH7NHZLiYgcMIZjPCMsIK8HIfpq4aIt4=; b=CC1qQzYwUvi3gcWuWkniLvbVn
+        +1SRe5Cwu1ktiXbITbx+OQsj8ufkHeYyYXavUQ5G5gwuX8rEDg/htQ5Z3UTaSlk1FaY3fbig7HjaG
+        4jngtXZSQnGJNq86asL7QOfbiLmUL4ynk0NVBKbW4DfmWiRrCwmjM83LRyssNFOg4ypmuT5CDjrBv
+        p8Hzmc5aThtcAw2lvomwaQSPUA55cbUugMVtTVHNQT2EopMpJlHYOwfb99RjDxWfYUtnWSiC3iwfG
+        X/VuA0b750K672ePelBIBzgBLRIMg+49G/ukh6HsSUZnSw8FcWZI4KjPwFRVaCNsxQL3SqKCMQW1G
+        7KVQRW2aA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38026)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jXPTr-0003zF-P5; Sat, 09 May 2020 14:25:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jXPTo-0002su-Mn; Sat, 09 May 2020 14:25:24 +0100
+Date:   Sat, 9 May 2020 14:25:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Stefan Chulski <stefanc@marvell.com>
+Cc:     Matteo Croce <mcroce@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200509132524.GD1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk>
+ <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <CAGnkfhwV4YyR9f1KC8VFx4FPRYkAoXXUURa715wb3+=23=rr6Q@mail.gmail.com>
+ <DM5PR18MB11462564D691544445CA2A43B0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR18MB11462564D691544445CA2A43B0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 10:00 AM Felipe Balbi <balbi@kernel.org> wrote:
->
-> Andrey Konovalov <andreyknvl@google.com> writes:
->
-> > Currently automatic gadget endpoint selection based on required features
-> > doesn't work. Raw Gadget tries iterating over the list of available
-> > endpoints and finding one that has the right direction and transfer type.
-> > Unfortunately selecting arbitrary gadget endpoints (even if they satisfy
-> > feature requirements) doesn't work, as (depending on the UDC driver) they
-> > might have fixed addresses, and one also needs to provide matching
-> > endpoint addresses in the descriptors sent to the host.
-> >
-> > The composite framework deals with this by assigning endpoint addresses
-> > in usb_ep_autoconfig() before enumeration starts. This approach won't work
-> > with Raw Gadget as the endpoints are supposed to be enabled after a
-> > set_configuration/set_interface request from the host, so it's too late to
-> > patch the endpoint descriptors that had already been sent to the host.
-> >
-> > For Raw Gadget we take another approach. Similarly to GadgetFS, we allow
-> > the user to make the decision as to which gadget endpoints to use.
-> >
-> > This patch adds another Raw Gadget ioctl USB_RAW_IOCTL_EPS_INFO that
-> > exposes information about all non-control endpoints that a currently
-> > connected UDC has. This information includes endpoints addresses, as well
-> > as their capabilities and limits to allow the user to choose the most
-> > fitting gadget endpoint.
-> >
-> > The USB_RAW_IOCTL_EP_ENABLE ioctl is updated to use the proper endpoint
-> > validation routine usb_gadget_ep_match_desc().
-> >
-> > These changes affect the portability of the gadgets that use Raw Gadget
-> > when running on different UDCs. Nevertheless, as long as the user relies
-> > on the information provided by USB_RAW_IOCTL_EPS_INFO to dynamically
-> > choose endpoint addresses, UDC-agnostic gadgets can still be written with
-> > Raw Gadget.
-> >
-> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
->
-> you're adding a new IOCTL, how is this a fix?
+On Sat, May 09, 2020 at 12:31:21PM +0000, Stefan Chulski wrote:
+> > -----Original Message-----
+> > From: Matteo Croce <mcroce@redhat.com>
+> > Sent: Saturday, May 9, 2020 3:16 PM
+> > To: Stefan Chulski <stefanc@marvell.com>
+> > Cc: David S . Miller <davem@davemloft.net>; Maxime Chevallier
+> > <maxime.chevallier@bootlin.com>; netdev <netdev@vger.kernel.org>; LKML
+> > <linux-kernel@vger.kernel.org>; Antoine Tenart
+> > <antoine.tenart@bootlin.com>; Thomas Petazzoni
+> > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
+> > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Marcin
+> > Wojtas <mw@semihalf.com>; Linux ARM <linux-arm-
+> > kernel@lists.infradead.org>; Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk>
+> > Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
+> > handle RSS tables
+> > 
+> > Hi,
+> > 
+> > The point is that RXHASH works fine on all interfaces, but on the gigabit one
+> > (eth2 usually).
+> > And on the 10 gbit interface is very very effective, the throughput goes 4x when
+> > enabled, so it would be a big drawback to disable it on all interfaces.
+> > 
+> > Honestly I don't have any 2.5 gbit hardware to test it on eth3, so I don't know if
+> > rxhash actually only works on the first interface of a unit (so eth0 and eth1), or
+> > if it just doesn't work on the gigabit one.
+> > 
+> > If someone could test it on the 2.5 gbit port, this will be helpful.
+> 
+> RSS tables is part of Packet Processor IP, not MAC(so it's not related to specific speed). Probably issue exist on specific packet processor ports.
+> Since RSS work fine on first port of the CP, we can do the following:
+> if (port-> id == 0)
+> 	dev->hw_features |= NETIF_F_RXHASH;
 
-It's a fix in a sense that without this patch a user can't make
-raw-gadget work with other UDCs besides dummy, and with this patch it
-works (at least with dwc2 I'm currently using for tests).
+I can confirm that Macchiatobin Single Shot eth0 port works with a
+1G Fibre SFP or 10G DA SFP with or without rxhash on.
 
-I guess I could split this patch into two, one that removes the failed
-attempt to auto-assign endpoints, and another one that adds the new
-ioctl. Should I do that?
+So it seems Stefan's hunch that it is port related is correct.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
