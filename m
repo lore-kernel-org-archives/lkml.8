@@ -2,135 +2,116 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133AAC54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAAFC54E7E
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E422F217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76CF21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PA3J3jqx"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MDAMVoXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgEIXmQ (ORCPT
+        id S1728960AbgEIXnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728279AbgEIXlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:41:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2C5C05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 16:41:10 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a7so5932953pju.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 16:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a6bXV7bt3FJwO+6h7hS9wdbWbj+cKT2R8klgQdvy5V4=;
-        b=PA3J3jqxZhR7QLeqwjId3MPNynQJYjylfFHuFHDO93eKIYh0iQYwhqZLfhDgt0tNPx
-         NxHMmZui4QlIyuKxLjsRMXG4PNIvSBqEGu3OoFLfiibivil4eA41JBZI/UtGxAjYryLj
-         xFanC6zXk4byjitJUGh5BrMI4F3rjAjk6STjc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a6bXV7bt3FJwO+6h7hS9wdbWbj+cKT2R8klgQdvy5V4=;
-        b=FnYQtL8Q7sFFyXYp/tQYINLyBQztA7PJr6JRj6QnZiNgm5KXmg0mnVlKQ7q5bBQ4B0
-         nS4m+4OiRerQ1MVb9dQ33xgUP/diw7PQgYhi6yoSYTnsWzYllbE4h7AS40ZaiNtC9AT+
-         /EAS7nnBvMXeYQyuJw++cz1PU1jlIxdUmnh69GXknBsdeBVozJyJJJkCgvcbw6i6y5am
-         UTSht/KnBnd0st7YzCym5i1y2bKgU+QV7Yn0CVJNlxGCk+ODrMI0LxBLm28k0Ai9GqlR
-         3TV7KwYZs8TUUttm84eQh7oF0vihoISoW5+SG71nUwB11arsiXbdUBthLJV4VYVmhZIa
-         c3SQ==
-X-Gm-Message-State: AGi0PuZ/jfgTK6CWGbePUk0WtXCRILGntJf6D8smMzE/VkAHNIZFD14Z
-        nt+cQO8g7gZyAl52Y7mWH7GRZw==
-X-Google-Smtp-Source: APiQypIYGFFNE4CP/IEMoDRh7mGwo0o4z+2NMypaNjHCF3aRnPBRNu9ocJUCntHiguWss1r6vpDHyg==
-X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr14034741pjn.124.1589067669999;
-        Sat, 09 May 2020 16:41:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n23sm5722167pjq.18.2020.05.09.16.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 16:41:06 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH v6 02/18] pstore/platform: Switch pstore_info::name to const
-Date:   Sat,  9 May 2020 16:40:47 -0700
-Message-Id: <20200509234103.46544-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200509234103.46544-1-keescook@chromium.org>
-References: <20200509234103.46544-1-keescook@chromium.org>
+        Sat, 9 May 2020 19:43:15 -0400
+Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:20904
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726356AbgEIXnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 19:43:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F8FdVNqP1iB2W3HN6gnrnXsKD+FffMNqqBpqh14n/ngZyBctdTM0Xf7WEfwtcBQAwihRODSEZknpkVJQuyvkXjnC4EI94VCzLSYDXkifaT0Y5Eu9eOBUQN+v/MMar6/NXaZZAkVzRA0o21YARaovVVC8p6tDLWf7tAkAMcLU010/M2WM9s8g2ocwDBx4z/VIgEbZcRFaSTPaAqyOy0JDTqv8+6082f116s97Z4tiuo5XLUzhdCJfyU+voa6J9vizwNrWuSlCbU0WSQG1eu99oq5lnzfpD4nlsJKEvQllx8LUt6kJKfFi7GOFAFRwZlvcKJbImdZYUjGrPTsskpM6BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pgYq6KM/P6IuNVr6mVZca5TaGpQXZFsn+CkVj+vPooY=;
+ b=SQq5zTTow4QofblKBI5ZqJiJLTcVhoYgdMG/2mAhqMsnhiFUTXNQaSw1cESMRM0BBaQK3mNBM/dbAvFdIdvtkbllYf7Gv1ID2WmwPleClsxl1C/wIYWQ28WE4W0yf2MRpMaylf7eZnnG9lmvT/kHs0rGSwu4ZWi0p9yfNgcB6TBgLVUg39Uxh0/vmv5kb697o4YiqkdxkkSoTvdNX9xnAh+vniEa9S9YtUsxwT6bat5hHZbiXfA/LIlchnZjEax+C/oklPAeyFb+JnARvz8XLRZbz2ZRWOLFrnzZFZ1scVoRqYGrkFwvwQ3vQqnVSZcG1nkkgJ2tS1SCOtO+y2NMrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pgYq6KM/P6IuNVr6mVZca5TaGpQXZFsn+CkVj+vPooY=;
+ b=MDAMVoXLNjFr47D74KB9FCV3ezB87Qkw32tMSNGKoHHip51pY3U0oNcEoVs1koN+14H9Rl8cVjssrKTn5hmLk2yIQQ3iFqT7FLwyRP7OBG2oK5KtrtkzedaBEDBhZvHVAOs96PLBOnR4hI7ioX30208oSiXeLRQ7620R6o+hFiw=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB5054.eurprd05.prod.outlook.com (2603:10a6:803:56::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Sat, 9 May
+ 2020 23:43:08 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2979.033; Sat, 9 May 2020
+ 23:43:08 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "kuba@kernel.org" <kuba@kernel.org>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: Replace zero-length array with flexible-array
+Thread-Topic: [PATCH] net/mlx5: Replace zero-length array with flexible-array
+Thread-Index: AQHWJKEJ3r6Bytxqlka8je+nQhb84qie2csAgAGUHQA=
+Date:   Sat, 9 May 2020 23:43:08 +0000
+Message-ID: <fb46eb601f979d5d8d95ec5749ae06c1bc86d469.camel@mellanox.com>
+References: <20200507185935.GA15169@embeddedor>
+         <20200508163642.273bda4f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200508163642.273bda4f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0ac06079-b72e-4615-6797-08d7f472ba2f
+x-ms-traffictypediagnostic: VI1PR05MB5054:|VI1PR05MB5054:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB50542DA71CF84EC5D574929ABEA30@VI1PR05MB5054.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 03982FDC1D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w38BkahU1nTzhmEe3sJAU+ej2Vl8JHvISOwNv1yjg0q57kyqYdJust6zTZxc62QDJZkP/unVnyvc/Kts1iRjwVncbdnH9is6MLDNMQrZBw5s57Qyv89BCrS9MkLKowzBoia26qpu6gfwTdA/bWdh56bxKEt0HBAJEQ1ylepgLVqmGOGgY3w8+Y4tDMug/rbfZ4ffcImi5YMkCFhCBaWN+bojISZ0brpAZ7pph+LexuFDqyrnxh9xVKKoPVo+qB+yGtFq/Sr8/0Omr7jwq99tX5lmuk5e3zmA2fB6wamj+XkLnzmYCMSt2pJWak17n7I9rsnLj0Eea92PhTFoGjNO/CxomUPkhkqMPNGYBtdmD5H820OA4XJUBm55pJKcF3j6si052nDh66l0jyt1RHgmvA5d+JvaF9Ourft4IGOyLvrzYqaNBlpA1oakGFBMekEVBlMW6BKS95/bfNFs3E7FhRVwLMtiGS8ieHfRJ3YfsBFXg133OZgvYhOXp6PJfkWtbXxEAMCt/Q/MGkIn9J7wIg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(376002)(136003)(366004)(346002)(33430700001)(2906002)(6916009)(478600001)(6512007)(33440700001)(26005)(186003)(2616005)(91956017)(76116006)(6506007)(71200400001)(86362001)(4326008)(36756003)(54906003)(316002)(64756008)(66446008)(66946007)(66476007)(66556008)(6486002)(8676002)(4744005)(8936002)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: cric7TTxQ3wnnbnE9cpabFn/ar4kxpVWbgCaNmFvEKE1efyufLT3IZLnB+EOLM2O64rBjOZ3DK7mFWVcOaAjLO5fjQQGFWcpoLt7G2Qawh4knJKzw/s1YFqK54FA9RTesUpNaW6lKX/d82MDlxiSaGaoqrlBF6BUY6zw9RjzPTBQtcaUcAgQZCmLHWwcPN/uiQ98q+NmrWSNOeGpIFmuEi04AlIZduZkzWmfj2sPjlFxuz/HeLO42A1BYcqfUPxs5oxFLW6FqjUW6G2aNocMB6HNe7G7RmuYpu3RdY95gIhIxJwB6qIRtlzlhQaBTFN8RwZV129QbRvdOXTpZTv3iqpNpNPmSGOAw88OGr2CGygHoSjq2pMjHhLfZvAU4E1OodzxIdmhh1jFw3T/hEcUMLKmGzr+yZ3XxK/PQ+rD6fZ4EHmOhRCqRpz94uhuUOCpw85hsuJN0ThPfIX2KrT8BSNLMztAmLWT4JZqJEjqpzA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A4B4BA085BE3AE4F9963737F65FF4EB9@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ac06079-b72e-4615-6797-08d7f472ba2f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2020 23:43:08.1503
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IiLPdcM258buc4gLgg7KUwUe9FT1BUffzLn2TpKKrFlXPqcwSMsme95dblOqz5VsMDwQgr7eJInFf3nsSA+E3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to more cleanly pass around backend names, make the "name" member
-const. This means the module param needs to be dynamic (technically, it
-was before, so this actually cleans up a minor memory leak if a backend
-was specified and then gets unloaded.)
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/pstore/platform.c   | 3 ++-
- include/linux/pstore.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index b882919b8784..e7bf22f01928 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -626,7 +626,7 @@ int pstore_register(struct pstore_info *psi)
- 	 * Update the module parameter backend, so it is visible
- 	 * through /sys/module/pstore/parameters/backend
- 	 */
--	backend = psi->name;
-+	backend = kstrdup(psi->name, GFP_KERNEL);
- 
- 	pr_info("Registered %s as persistent store backend\n", psi->name);
- 
-@@ -669,6 +669,7 @@ void pstore_unregister(struct pstore_info *psi)
- 	free_buf_for_compression();
- 
- 	psinfo = NULL;
-+	kfree(backend);
- 	backend = NULL;
- 	mutex_unlock(&psinfo_lock);
- }
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index 16a1fdafc167..eb93a54cff31 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -176,7 +176,7 @@ struct pstore_record {
-  */
- struct pstore_info {
- 	struct module	*owner;
--	char		*name;
-+	const char	*name;
- 
- 	struct semaphore buf_lock;
- 	char		*buf;
--- 
-2.20.1
-
+T24gRnJpLCAyMDIwLTA1LTA4IGF0IDE2OjM2IC0wNzAwLCBKYWt1YiBLaWNpbnNraSB3cm90ZToN
+Cj4gT24gVGh1LCA3IE1heSAyMDIwIDEzOjU5OjM1IC0wNTAwIEd1c3Rhdm8gQS4gUi4gU2lsdmEg
+d3JvdGU6DQo+ID4gVGhlIGN1cnJlbnQgY29kZWJhc2UgbWFrZXMgdXNlIG9mIHRoZSB6ZXJvLWxl
+bmd0aCBhcnJheSBsYW5ndWFnZQ0KPiA+IGV4dGVuc2lvbiB0byB0aGUgQzkwIHN0YW5kYXJkLCBi
+dXQgdGhlIHByZWZlcnJlZCBtZWNoYW5pc20gdG8NCj4gPiBkZWNsYXJlDQo+ID4gdmFyaWFibGUt
+bGVuZ3RoIHR5cGVzIHN1Y2ggYXMgdGhlc2Ugb25lcyBpcyBhIGZsZXhpYmxlIGFycmF5DQo+ID4g
+bWVtYmVyWzFdWzJdLA0KPiA+IGludHJvZHVjZWQgaW4gQzk5Og0KPiA+IA0KPiA+IHN0cnVjdCBm
+b28gew0KPiA+ICAgICAgICAgaW50IHN0dWZmOw0KPiA+ICAgICAgICAgc3RydWN0IGJvbyBhcnJh
+eVtdOw0KPiA+IH07DQo+IA0KPiBTYWVlZCwgSSdtIGV4cGVjdGluZyB5b3UgdG8gdGFrZSB0aGlz
+IGFuZCB0aGUgbWx4NCBwYXRjaCB2aWEgeW91cg0KPiB0cmVlcy4NCg0KWWVzIGZvciB0aGUgbWx4
+NSBwYXRjaCwgYnV0IHVzdWFsbHkgRGF2ZSB0YWtlcyBtbHg0IHBhdGNoZXMgZGlyZWN0bHkuDQoN
+CnNpbmNlIHRoZSB2b2x1bWUgb2YgbWx4NCBwYXRjaGVzIGlzIHZlcnkgc21hbGwsIGxldCdzIGFw
+cGx5IHRoZW0NCmRpcmVjdGx5IHRvIG5ldC1uZXh0LCB1bmxlc3MgeW91IHdhbnQgbWUgdG8gaGFu
+ZGxlIHRoZW0gZnJvbSBub3cgb24gYW5kDQptYWtlIHlvdXIgbGlmZSBlYXNpZXIsIHRoZW4gaSBk
+b24ndCBoYXZlIGFueSBpc3N1ZSB3aXRoIHRoYXQuDQoNClNhZWVkLg0KDQoNCg==
