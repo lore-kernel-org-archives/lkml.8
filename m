@@ -2,108 +2,113 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA782C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D16C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9918321473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:04:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQoyld5O"
+	by mail.kernel.org (Postfix) with ESMTP id E210621473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgEIMEi (ORCPT
+        id S1728454AbgEIMFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 08:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726600AbgEIMEi (ORCPT
+        Sat, 9 May 2020 08:05:30 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:43349 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgEIMFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 08:04:38 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F315EC061A0C;
-        Sat,  9 May 2020 05:04:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ms17so5473816pjb.0;
-        Sat, 09 May 2020 05:04:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
-        b=NQoyld5OELIut/6UkNs1QRfi9i+epuoVHUKNHesyhNiHwyCgMz2dsk95CM2YAjdiPb
-         OZhokEcTwLonbVkoSEHArg5P11YL0pYA7FrqZ5Ea6n7pS8ZFYaRk/a4CrGJN24wjf+sT
-         6RVOq4a9iM5M9plD78kt081Z9pD3ZlqQqqb9ibpDiCEzXfhTKChPdU+g8X02t/Jtgxdj
-         iqqIDP79VMLiTWKUI1mPtfu7uKlTsNaJRGGZTyYs61iZLUmBUC0HkymmOUxIBJtsGoE1
-         tAjtALvt8Uwo82olkqA+E8DUC9qhhlv0TRtkv1bkkP/dYmiN0vTUUvvnAmdZ57tDvUjU
-         Fhhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wUpvglT7RVI0VhxUEBL660l9QrPqkvdcztJEgEYZgVE=;
-        b=GAwP5H6ciMIPEGzVn+qj0QpuWr3N7m/coVjcLHfjpNl5El6cy8C5ho2+a9SefevO+J
-         zQUq7sDld5bTuZ6MeANrai0eFwtPbQrU5e3A7izhuZ37kK0b8vQQ2I3CknUuXwV0HSYf
-         S/0cNmNfGHpvzRPEpERGxAAw0lzWOQL+6PmZlsyjM73tkSvaqewWWsUuF1m10jfrKQZ6
-         Ve17gY3/XBFYIzxEauUfLEJOMzWkiOTz1Ol7ptXzBNPtSDRS9uMtiPSUpvUMWLnEO2fp
-         ponzYiRF0ikAtW8Oc1B9aqKc1N+Qv+XXz6+SAGNVDFmSLF8sgi2JJaeLYU1JYvOpPYxk
-         zYrA==
-X-Gm-Message-State: AGi0Pua1QMtVckhkRxodc7X58Kkiu5F/cg7974Ahp/tcxpScfPSsPCT2
-        xqI1C1p/x8ICWwklHYGMzl3PQvF/p8vyupQKJeQ=
-X-Google-Smtp-Source: APiQypI0HEt+PVZf/6IcEtjlof5jsVdsR0hAD/QMKEx2hKai3zkGEHMgEwx0que30ynyNsOLHyxo3+JbdKXsfI5mkvA=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr11395860pjb.228.1589025877306;
- Sat, 09 May 2020 05:04:37 -0700 (PDT)
+        Sat, 9 May 2020 08:05:30 -0400
+Received: from localhost.localdomain ([149.172.19.189]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MjjKf-1irD2q0wW3-00l9tC; Sat, 09 May 2020 14:05:11 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Timur Tabi <timur@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
+Date:   Sat,  9 May 2020 14:04:52 +0200
+Message-Id: <20200509120505.109218-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200508211929.39020-5-alcooperx@gmail.com> <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2005082035460.2445-100000@netrider.rowland.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 9 May 2020 15:04:26 +0300
-Message-ID: <CAHp75VfV8SwKG5aX-POce5aHCoqCHdnfpxzq6C6buJ_TaSacsg@mail.gmail.com>
-Subject: Re: [PATCH v8 4/5] usb: ehci: Add new EHCI driver for Broadcom STB SoC's
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:h9yFrIRXLw4ySr/K8T7dpgPAcNBfXpgdjuBXGgfTWi/oLO0O7b3
+ 3QzmyhOdEV7ue+w9vVDiLKMpf6cEyPrhpuy9ycZaC+mDcp412OwvqT9hbNQh7gk5HYuSKDf
+ K8mIzC0fQBKcYKur5cuxH4YbA41cpKAQcFPb1VACyQRuj3JBvecl++cD0n+A9N6SKNQvShy
+ DGsRjhvWrXU5QOsgnjE1g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zwWkj2Ibg9U=:kPVIN3cDzUWTdqnu8jFYIS
+ nkUvo37MduvMt7rPN+/56KpH3gHA50HYZh1Esv2TFzth9glTaJKAt6rpzbexn0nFJpcxaI0rH
+ 6MDLAWH+SkWx7YkmlTUJrnPX/pEQXPDxWKpChPb8lC/VaksFNfKlAyU9tgq4CJDHyhLHk7343
+ sH+W4fPyfxGSrbCcJ+8k72jxX0hkp2mlaPOcVUuXb+/wPtG+sU57WqTSNudKhuno2wd0ESJz+
+ 8JfWXCLUU4K8rXtpI5NScAbq5xmaMQ1pK6Y0iMkLJrB/H23ytjcIt0fH8xJW0RirIpKNWvtn4
+ 8AvmemEwqRfe49r1yHUdTeT7UkjLffT0c1a7lvyOqdbpcuIa6dX6A9jJKCH+z5543FJ/9OV8B
+ W59/BSZ1RU4XARJmu0bOEzy71RwNKuugm+Gx+CTRr/MhEEKKMILLgiJyaf6B2g0qflONINjy1
+ IBdD1wRGG7aTLHrlS2mcnnXRyWFrFp64tRkwLpgzivoIjL8KRf/rKOXQwMYR7I+glV8YsAKR2
+ DaHDBKnO55lv6IkGmT9H70XqF4NiDCkxPxcD3KYcWi2UmZyeqVdx/+nRJtQzT1h4l3hFNUtjS
+ 8P+DUup30HMxmzHc3c++JQaNPWLZgfJVwdlpuEiyjGnoENYRbo0V9WI6DVjthnwwjwm70rlMy
+ bQWWZR+d5dNbmkXB0YLXn7yOCudBFt0H2ZsAIFkYdGPyuGVXMLfH1fPGig5KXA1cnmzu1MmkA
+ P9YIcEy1XFhvZEGJvEZrGcwpIcFzM4Yh6eMoCdmF0nGjhUUSkeIaVLkK3cKn0KTaNdsjtPwGu
+ Geu1DvgMwtu/oKgqKJYnsV+aUqz9oKxOTVRdN3r5PicFaVO7C0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 3:47 AM Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Fri, 8 May 2020, Al Cooper wrote:
+I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
+and CONFIG_GIANFAR=y:
 
-...
+x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
 
-> > +     irq = platform_get_irq(pdev, 0);
-> > +     if (irq <= 0)
-> > +             return irq;
->
-> I don't want to get involved in the question of whether or not 0 is a
-> valid IRQ number.  The consensus has gone back and forth over the
-> years, and it just doesn't seem important.
->
-> However, as Sergei points out, if 0 is going to be regarded as an
-> invalid value then we shouldn't return 0 from the probe function here.
+It seems the same thing can happen with dpaa and ucc_geth, so change
+all three to do an explicit 'select FIXED_PHY'.
 
-The most of the drivers rely on the fact that on platforms where it's
-the case (yes, we have you-know-which architecture has some legacy
-stuff there) request_irq() will fail anyway.
+The fixed-phy driver actually has an alternative stub function that
+theoretically allows building network drivers when fixed-phy is
+disabled, but I don't see how that would help here, as the drivers
+presumably would not work then.
 
-> I'll leave the decision on how to handle this matter up to Greg.  :-)
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/freescale/Kconfig      | 2 ++
+ drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
+ 2 files changed, 3 insertions(+)
 
-Me too.
-
+diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
+index 2bd7ace0a953..bfc6bfe94d0a 100644
+--- a/drivers/net/ethernet/freescale/Kconfig
++++ b/drivers/net/ethernet/freescale/Kconfig
+@@ -77,6 +77,7 @@ config UCC_GETH
+ 	depends on QUICC_ENGINE && PPC32
+ 	select FSL_PQ_MDIO
+ 	select PHYLIB
++	select FIXED_PHY
+ 	---help---
+ 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
+ 	  which is available on some Freescale SOCs.
+@@ -90,6 +91,7 @@ config GIANFAR
+ 	depends on HAS_DMA
+ 	select FSL_PQ_MDIO
+ 	select PHYLIB
++	select FIXED_PHY
+ 	select CRC32
+ 	---help---
+ 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
+diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
+index 3b325733a4f8..0a54c7e0e4ae 100644
+--- a/drivers/net/ethernet/freescale/dpaa/Kconfig
++++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
+@@ -3,6 +3,7 @@ menuconfig FSL_DPAA_ETH
+ 	tristate "DPAA Ethernet"
+ 	depends on FSL_DPAA && FSL_FMAN
+ 	select PHYLIB
++	select FIXED_PHY
+ 	select FSL_FMAN_MAC
+ 	---help---
+ 	  Data Path Acceleration Architecture Ethernet driver,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.0
+
