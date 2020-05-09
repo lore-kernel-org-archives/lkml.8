@@ -2,104 +2,69 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94513C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E831EC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743A12495C
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CFF206D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgEIHNE (ORCPT
+        id S1728926AbgEIHN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 03:13:04 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44596 "EHLO loongson.cn"
+        Sat, 9 May 2020 03:13:28 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:44590 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728471AbgEIHNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 03:13:04 -0400
+        id S1728714AbgEIHN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:13:27 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf93sV7ZeMnUyAA--.1S4;
-        Sat, 09 May 2020 15:12:47 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf93sV7ZeMnUyAA--.1S2;
+        Sat, 09 May 2020 15:12:46 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v2 2/2] MIPS: Loongson: Reduce possible loop times and add log in do_thermal_timer()
-Date:   Sat,  9 May 2020 15:12:44 +0800
-Message-Id: <1589008364-2294-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 0/2] MIPS: Loongson: Fix some issues of cpu_hwmon.c
+Date:   Sat,  9 May 2020 15:12:42 +0800
+Message-Id: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxf93sV7ZeMnUyAA--.1S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF4UGr1UuF15Kr43JFWUArb_yoW8GF4kpr
-        WfG34YyF48Ww4qq3WUta1j9FW5Gw1DKry7uFy7CwnYyFs8XryaqFyUtFyFyr9rGr4kX3WU
-        Zr1SvFnxWa17uF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBq14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
-        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-        8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw2
-        8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrw
-        CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
-        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUU1rW3UUUUU==
+X-CM-TRANSID: AQAAf9Dxf93sV7ZeMnUyAA--.1S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYO7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
+        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72
+        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280
+        aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
+        ZEXa7VUjrbbtUUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Once the temperature of any CPUs is too high, it can power off immediately,
-no need to check the rest of CPUs, and it is better to print a log before
-power off, this is useful when analysis the abnormal issues.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
-
 v2:
+  - Drop the patch "MIPS: Loongson: Add hwmon support for generic CPU"
   - Reduce possible loop times in do_thermal_timer()
-  - Modify the patch subject and update the commit message
 
- drivers/platform/mips/cpu_hwmon.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Tiezhu Yang (2):
+  MIPS: Loongson: Cleanup cpu_hwmon.c
+  MIPS: Loongson: Reduce possible loop times and add log in
+    do_thermal_timer()
 
-diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
-index fa42b13..c9f35e5 100644
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -153,18 +153,17 @@ static struct delayed_work thermal_work;
- 
- static void do_thermal_timer(struct work_struct *work)
- {
--	int i, value, temp_max = 0;
-+	int i, value;
- 
- 	for (i = 0; i < nr_packages; i++) {
- 		value = loongson3_cpu_temp(i);
--		if (value > temp_max)
--			temp_max = value;
-+		if (value > CPU_THERMAL_THRESHOLD) {
-+			pr_emerg("Power off due to high temp: %d\n", value);
-+			orderly_poweroff(true);
-+		}
- 	}
- 
--	if (temp_max <= CPU_THERMAL_THRESHOLD)
--		schedule_delayed_work(&thermal_work, msecs_to_jiffies(5000));
--	else
--		orderly_poweroff(true);
-+	schedule_delayed_work(&thermal_work, msecs_to_jiffies(5000));
- }
- 
- static int __init loongson_hwmon_init(void)
+ drivers/platform/mips/cpu_hwmon.c | 46 ++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 22 deletions(-)
+
 -- 
 2.1.0
 
