@@ -2,143 +2,103 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B11C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350F3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC812184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B155218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:12:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588983123;
+	bh=Z9ay5G7kVhk0/W94a8FszZdzNnoqYJYAFv5+/llRIMQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RS1WA+jOuKKmInUf//SXblpmcpbP+cpuHXjblUDGKmA5xEzN4fZBz3kavyz0giBM3
+	 sArqoW7cRGpWDMGz4luDw1T9hl2u/oMWqK2hzHFiG1zxXFy2NSobwIoHyHw/enISeZ
+	 gav8IuRhguheBGK+z2dkH3i9ovEXd5wMquIYINzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgEIALe (ORCPT
+        id S1728451AbgEIAMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:11:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:54032 "EHLO foss.arm.com"
+        Fri, 8 May 2020 20:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgEIALe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:11:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCB73D6E;
-        Fri,  8 May 2020 17:11:33 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D893F68F;
-        Fri,  8 May 2020 17:11:32 -0700 (PDT)
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
- <20200508202722.GI298574@lunn.ch>
- <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
- <20200508234257.GA338317@lunn.ch>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <8e67dd6c-e83d-d366-9799-940708e6ae3d@arm.com>
-Date:   Fri, 8 May 2020 19:11:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727890AbgEIAMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:12:01 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2ED24969
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 00:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588983120;
+        bh=Z9ay5G7kVhk0/W94a8FszZdzNnoqYJYAFv5+/llRIMQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NupPm2ODrBD4E2tV0/HJJKWz7akh6IvXH8iWwT7PRfPklPMBDFz0/0zRwHkLsDRA2
+         PtMxLal6bFkdYB91FBi39dSprRPpd7dAkx40KYnfJ8D6vhO7LmSSbybT+7NZ6XgX19
+         UrNrqXsGIOfei01cAHaFS2Tos6LkMzkXHK2zKWrs=
+Received: by mail-wr1-f53.google.com with SMTP id x17so3896964wrt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 17:12:00 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZmw4ynHPEYPBPjJ7vcmkt5H9cp8af2HTcSQZoVFRGNvZDxu1dH
+        T2AqVBJnnaIS6fEqxUgiquk1Zob3zy2wnk/OEeX/Dg==
+X-Google-Smtp-Source: APiQypKHR1tOfFO3FnY67bmAApr7rlEfZ3AKZG8Zmq/g15c31ChGjv30mZdQyzttNu5/dXdSNamINFZusWUp0Hf5HiY=
+X-Received: by 2002:adf:eccf:: with SMTP id s15mr4962321wro.70.1588983119008;
+ Fri, 08 May 2020 17:11:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200508234257.GA338317@lunn.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505134112.272268764@linutronix.de> <20200505134341.272248024@linutronix.de>
+In-Reply-To: <20200505134341.272248024@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 8 May 2020 17:11:47 -0700
+X-Gmail-Original-Message-ID: <CALCETrW7dNE2eoYANRjkRMzdXDh0jDD=cDT4WaKhQKsxYkkb4w@mail.gmail.com>
+Message-ID: <CALCETrW7dNE2eoYANRjkRMzdXDh0jDD=cDT4WaKhQKsxYkkb4w@mail.gmail.com>
+Subject: Re: [patch V4 part 2 12/18] x86,objtool: Make entry_64_compat.S
+ objtool clean
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 6:42 PM, Andrew Lunn wrote:
-> On Fri, May 08, 2020 at 05:48:33PM -0500, Jeremy Linton wrote:
->> Hi,
->>
->> On 5/8/20 3:27 PM, Andrew Lunn wrote:
->>>>> There is a very small number of devices where the vendor messed up,
->>>>> and did not put valid contents in the ID registers. In such cases, we
->>>>> can read the IDs from device tree. These are then used in exactly the
->>>>> same way as if they were read from the device.
->>>>>
->>>>
->>>> Is that the case here?
->>>
->>> Sorry, I don't understand the question?
->>
->> I was asking in general, does this machine report the ID's correctly.
-> 
-> Very likely, it does.
-> 
->> The embedded single mac:mdio per nic case seems like the normal case, and
->> most of the existing ACPI described devices are setup that way.
-> 
-> Somebody in this thread pointed to ACPI patches for the
-> MACCHIATOBin. If i remember the hardware correctly, it has 4 Ethernet
-> interfaces, and two MDIO bus masters. One of the bus masters can only
-> do C22 and the other can only do C45. It is expected that the busses
-> are shared, not a nice one to one mapping.
+On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Currently entry_64_compat is exempt from objtool, but with vmlinux
+> mode there is no hiding it.
+>
+> Make the following changes to make it pass:
+>
+>  - change entry_SYSENTER_compat to STT_NOTYPE; it's not a function
+>    and doesn't have function type stack setup.
+>
+>  - mark all STT_NOTYPE symbols with UNWIND_HINT_EMPTY; so we do
+>    validate them and don't treat them as unreachable.
+>
+>  - don't abuse RSP as a temp register, this confuses objtool
+>    mightily as it (rightfully) thinks we're doing unspeakable
+>    things to the stack.
+>
 
-Thats whats going on with the NXP too AFAIK. But the mcbin is one of the 
-ones with the "compatible" embedded in the DSD properties.. AKA, they 
-buried the entire DT node there.
+Acked-by: Andy Lutomirski <luto@kernel.org>
 
-> 
->> But at the same time, that shifts the c22/45 question to the nic
->> driver, where use of a DSD property before instantiating/probing
->> MDIO isn't really a problem if needed.
-> 
-> This in fact does not help you. The MAC driver has no idea what PHY is
-> connected to it. The MAC does not know if it is C22 or C45. It uses
-Thats all I was trying to say (the mac side capability is implied by the 
-HID/CID that instantiates it).
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> the phylib abstraction which hides all this. Even if you assume 1:1,
-> use phy_find_first(), it will not find a C45 PHY because without
-> knowing there is a C45 PHY, we don't scan for it. And we should expect
-> C45 PHYs to become more popular in the next few years.
-> 
->> In fact this embedded nic/mac/mdio/phy 1:1:1 case, is likely a requirement
->> for passthrough into a generic VM, otherwise someone has to create a virtual
->> mdio, and pass the phy in for the nic/mac.
->>
->> AFAIK, NXP's part avoids this despite having a shared MDIO, because the phy
->> state never leaves the mgmt side of the picture. It monitors the state and
->> then feeds that back into their nic mgmt complex rather than using it
->> directly.
-> 
-> That is the other model. Don't use Linux to drive the PHY, use
-> firmware in the MAC. A number of MACs do that, but it has the usual
-> problems of firmware. It limits you on your choice of PHYs, bugs in
-> the firmware cannot be fixed by the community, no sharing of drivers
-> because firmware is generally proprietary, no 'for free features'
-> because somebody else added features to the linux PHY driver etc.  But
-> it will make ACPI support simple, this whole discussion goes away, no
-> ACPI needed at all.
-
-Open source firmware! :)
+Did a From line get eaten?
