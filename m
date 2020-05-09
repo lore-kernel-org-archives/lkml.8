@@ -2,116 +2,215 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9939CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B97C54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77726214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B2224954
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEIKiQ (ORCPT
+        id S1728186AbgEIKkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 06:38:16 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33997 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgEIKiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 06:38:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c12so9819670oic.1;
-        Sat, 09 May 2020 03:38:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nBe+65cgrmufPqKgCO/WJS9rGOrSoS9DaeQpyO6VPQY=;
-        b=HUXFfZqyQiXplVrHeI/ZPD7fgTu/OyQS1uWandQ6GfholZUozpDA92RXqRtP3552+4
-         QU3UraKKkKBepmI4MM8VVIPVwoKSVc58fm+nR18vHiQTUD114S+ZJ7Z1yqclKOvDyfDw
-         /LAg8vYGyAmWIpSXcfPoxA14/QbxzjQIGrNCcLfV+j4vNoubQ5Lw6Kej6XiDjnDtr/Sm
-         mSjL8ioibecpSpdditmliAoTdksLU0kI/e8QDnJL6gNrAGiDVY9bhRs8tKRKoMOM/4yM
-         fBklMHZ/F0j1KhJwDEC/SGcPxpWd4DK81p+RBhisjz5CIqhRrrNXgUi0x5GI2ktEKXzZ
-         IZ3w==
-X-Gm-Message-State: AGi0Pua8mblCFI4UeA4h/Ojs+ZTIWSRPGsnxdFCxXlARacpXuuCfjEAj
-        oYctl3NkzFVkGH2Q6GDOKkrfZ7dULzyemEM0/O0=
-X-Google-Smtp-Source: APiQypJViR7zf1BxfE4fSiEMumUvdAfdspNngdk/6s5fr4R3Q+whgmTLapvbuOPEuAwW4U0ZD7JgMnKsLrBjVv9lPKw=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr13605566oig.54.1589020691722;
- Sat, 09 May 2020 03:38:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508161517.252308-1-hch@lst.de> <20200508161517.252308-2-hch@lst.de>
-In-Reply-To: <20200508161517.252308-2-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 9 May 2020 12:38:00 +0200
-Message-ID: <CAMuHMdUBRsZQ1BOD9jW99NTm_8NZDootGrqzz3nPeeJ+mUAoTw@mail.gmail.com>
-Subject: Re: [PATCH 01/15] nfblock: use gendisk private_data
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Lars Ellenberg <drbd-dev@lists.linbit.com>,
-        linux-block@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 9 May 2020 06:40:24 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:44350 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726877AbgEIKkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 06:40:23 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FEE42002EE;
+        Sat,  9 May 2020 12:40:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 700A1200102;
+        Sat,  9 May 2020 12:40:17 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CFBE640285;
+        Sat,  9 May 2020 18:40:12 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     jagdish.gediya@nxp.com, priyanka.jain@nxp.com,
+        pramod.kumar_1@nxp.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        "hui.song" <hui.song_1@nxp.com>
+Subject: [PATCH v1 1/3] gpio: mpc8xxx: support fsl-layerscape platform.
+Date:   Sat,  9 May 2020 18:35:35 +0800
+Message-Id: <20200509103537.22865-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+From: "hui.song" <hui.song_1@nxp.com>
 
-On Fri, May 8, 2020 at 6:16 PM Christoph Hellwig <hch@lst.de> wrote:
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Make the MPC8XXX gpio driver to support the fsl-layerscape.
 
-Thanks for your patch!
+Signed-off-by: hui.song <hui.song_1@nxp.com>
+---
+ drivers/gpio/mpc8xxx_gpio.c | 59 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-> --- a/arch/m68k/emu/nfblock.c
-> +++ b/arch/m68k/emu/nfblock.c
-> @@ -61,7 +61,7 @@ struct nfhd_device {
->
->  static blk_qc_t nfhd_make_request(struct request_queue *queue, struct bio *bio)
->  {
-> -       struct nfhd_device *dev = queue->queuedata;
-> +       struct nfhd_device *dev = bio->bi_disk->private_data;
->         struct bio_vec bvec;
->         struct bvec_iter iter;
->         int dir, len, shift;
-> @@ -122,7 +122,6 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
->         if (dev->queue == NULL)
->                 goto free_dev;
->
-> -       dev->queue->queuedata = dev;
->         blk_queue_logical_block_size(dev->queue, bsize);
->
->         dev->disk = alloc_disk(16);
-> @@ -136,6 +135,7 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
->         sprintf(dev->disk->disk_name, "nfhd%u", dev_id);
->         set_capacity(dev->disk, (sector_t)blocks * (bsize / 512));
->         dev->disk->queue = dev->queue;
-> +       dev->disk->private_data = dev;
-
-This is already set above, just before the quoted sprintf() call.
-
->
->         add_disk(dev->disk);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpio/mpc8xxx_gpio.c b/drivers/gpio/mpc8xxx_gpio.c
+index 1dfd22522c..466f5f50cf 100644
+--- a/drivers/gpio/mpc8xxx_gpio.c
++++ b/drivers/gpio/mpc8xxx_gpio.c
+@@ -12,6 +12,8 @@
+ #include <dm.h>
+ #include <mapmem.h>
+ #include <asm/gpio.h>
++#include <asm/io.h>
++#include <dm/of_access.h>
+ 
+ struct ccsr_gpio {
+ 	u32	gpdir;
+@@ -20,6 +22,7 @@ struct ccsr_gpio {
+ 	u32	gpier;
+ 	u32	gpimr;
+ 	u32	gpicr;
++	u32	gpibe;
+ };
+ 
+ struct mpc8xxx_gpio_data {
+@@ -49,31 +52,51 @@ inline u32 gpio_mask(uint gpio)
+ 
+ static inline u32 mpc8xxx_gpio_get_val(struct ccsr_gpio *base, u32 mask)
+ {
++#if CONFIG_ARM
++	return in_le32(&base->gpdat) & mask;
++#else
+ 	return in_be32(&base->gpdat) & mask;
++#endif
+ }
+ 
+ static inline u32 mpc8xxx_gpio_get_dir(struct ccsr_gpio *base, u32 mask)
+ {
++#if CONFIG_ARM
++	return in_le32(&base->gpdir) & mask;
++#else
+ 	return in_be32(&base->gpdir) & mask;
++#endif
+ }
+ 
+ static inline int mpc8xxx_gpio_open_drain_val(struct ccsr_gpio *base, u32 mask)
+ {
++#if CONFIG_ARM
++	return in_le32(&base->gpodr) & mask;
++#else
+ 	return in_be32(&base->gpodr) & mask;
++#endif
+ }
+ 
+ static inline void mpc8xxx_gpio_open_drain_on(struct ccsr_gpio *base, u32
+ 					      gpios)
+ {
++#if CONFIG_ARM
++	setbits_le32(&base->gpodr, gpios);
++#else
+ 	/* GPODR register 1 -> open drain on */
+ 	setbits_be32(&base->gpodr, gpios);
++#endif
+ }
+ 
+ static inline void mpc8xxx_gpio_open_drain_off(struct ccsr_gpio *base,
+ 					       u32 gpios)
+ {
++#if CONFIG_ARM
++	clrbits_le32(&base->gpodr, gpios);
++#else
+ 	/* GPODR register 0 -> open drain off (actively driven) */
+ 	clrbits_be32(&base->gpodr, gpios);
++#endif
+ }
+ 
+ static int mpc8xxx_gpio_direction_input(struct udevice *dev, uint gpio)
+@@ -81,9 +104,13 @@ static int mpc8xxx_gpio_direction_input(struct udevice *dev, uint gpio)
+ 	struct mpc8xxx_gpio_data *data = dev_get_priv(dev);
+ 	u32 mask = gpio_mask(gpio);
+ 
++#if CONFIG_ARM
++	clrbits_le32(&data->base->gpdir, mask);
++#else
+ 	/* GPDIR register 0 -> input */
+ 	clrbits_be32(&data->base->gpdir, mask);
+ 
++#endif
+ 	return 0;
+ }
+ 
+@@ -100,10 +127,19 @@ static int mpc8xxx_gpio_set_value(struct udevice *dev, uint gpio, int value)
+ 		data->dat_shadow &= ~mask;
+ 	}
+ 
++#if CONFIG_ARM
++	gpdir = in_le32(&base->gpdir);
++#else
+ 	gpdir = in_be32(&base->gpdir);
++#endif
+ 	gpdir |= gpio_mask(gpio);
++#if CONFIG_ARM
++	out_le32(&base->gpdat, gpdir & data->dat_shadow);
++	out_le32(&base->gpdir, gpdir);
++#else
+ 	out_be32(&base->gpdat, gpdir & data->dat_shadow);
+ 	out_be32(&base->gpdir, gpdir);
++#endif
+ 
+ 	return 0;
+ }
+@@ -147,13 +183,29 @@ static int mpc8xxx_gpio_ofdata_to_platdata(struct udevice *dev)
+ {
+ 	struct mpc8xxx_gpio_plat *plat = dev_get_platdata(dev);
+ 	fdt_addr_t addr;
++	u32 i;
++#if CONFIG_ARM
++	u32 reg[4];
++
++	dev_read_u32_array(dev, "reg", reg, 4);
++#else
+ 	u32 reg[2];
+ 
+ 	dev_read_u32_array(dev, "reg", reg, 2);
++#endif
++
++#if CONFIG_ARM
++	for (i = 0; i < 2; i++)
++		reg[i] = be32_to_cpu(reg[i]);
++#endif
+ 	addr = dev_translate_address(dev, reg);
+ 
+ 	plat->addr = addr;
++#if CONFIG_ARM
++	plat->size = reg[3];
++#else
+ 	plat->size = reg[1];
++#endif
+ 	plat->ngpios = dev_read_u32_default(dev, "ngpios", 32);
+ 
+ 	return 0;
+@@ -187,6 +239,7 @@ static int mpc8xxx_gpio_platdata_to_priv(struct udevice *dev)
+ static int mpc8xxx_gpio_probe(struct udevice *dev)
+ {
+ 	struct gpio_dev_priv *uc_priv = dev_get_uclass_priv(dev);
++	struct device_node const  *np = dev->node.np;
+ 	struct mpc8xxx_gpio_data *data = dev_get_priv(dev);
+ 	char name[32], *str;
+ 
+@@ -198,6 +251,12 @@ static int mpc8xxx_gpio_probe(struct udevice *dev)
+ 	if (!str)
+ 		return -ENOMEM;
+ 
++	if (of_device_is_compatible(np, "fsl,qoriq-gpio", NULL, NULL)) {
++		unsigned long gpibe = data->addr + sizeof(struct ccsr_gpio);
++
++		out_be32(gpibe, 0xffffffff);
++	}
++
+ 	uc_priv->bank_name = str;
+ 	uc_priv->gpio_count = data->gpio_count;
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
