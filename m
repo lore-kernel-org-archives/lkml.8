@@ -2,147 +2,171 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BA6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAE6C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536F420A8B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB5220820
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgEIRmn (ORCPT
+        id S1728532AbgEIRqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:42:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:60588 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbgEIRmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:42:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A84F1FB;
-        Sat,  9 May 2020 10:42:42 -0700 (PDT)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A42CA3F71F;
-        Sat,  9 May 2020 10:42:41 -0700 (PDT)
-Subject: Re: WARNING in memtype_reserve
-To:     syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
-        bp@alien8.de, dave.hansen@linux.intel.com,
-        dmitry.torokhov@gmail.com, ebiederm@xmission.com,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-References: <000000000000f0d8d205a531f1a3@google.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <a710a5b5-9a1e-1487-9bc9-a4db726fbf26@arm.com>
-Date:   Sat, 9 May 2020 12:42:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 9 May 2020 13:46:23 -0400
+Received: from mail-mw2nam12olkn2032.outbound.protection.outlook.com ([40.92.23.32]:48257
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbgEIRqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 13:46:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TBKGfcQ8r98+P63VZho5A2SLQSV4ExL75O9FkQa6VIk/T4rTL3JMon/OEcD4AGlhCKUiFI+74PA4iWMW4HlpWbt9YimR602MN6Pz1nsXxurU/JyfoAcIS8GkhTajDwJr+DzLI/m0s5oF1AGy9/gmxNp6eCGrcN28J8QZqDzmBKfT1azRMfpofwTA32h7m7JAZiVC20J+JcwgevjMze74BMOt+yGkvM8b3sRMtmpgXT+riTvqSWykjgOM2J5bI7eYa2NUoPRxBKzMlDIouGsOEGXMpN6kAWCb1t/RSgSTd+N5O9h3agP60zHDh6IUY8ii8dF1D4aKVwb/jzSnmXxxUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6P/ysoYMoDg11BymEOP6RDN+u+jBVKqTcBy6+gdoUJo=;
+ b=HaGwjTShiPsHf2bMtBae2qw0ymSP8L72gHuyC9M1mluv4YoUPuabiZo/Gzxl7PaUoGwsxwPYiHjWLkbrWCOc5the4+hX9jKAdwoNLD9hGfIy56PylJImCKyQ5VLBTB9TpgbINNVF0eR9uGj913xuvh+S9OdTXchx7ob9QAmUQ5kCIzi+lC9DM8PzLU9qTlpCd42Xpv1/2jpz7DvbX7okWatsRdT6hKX4Wvk7Asmimi8Kg4+AET/EFWYvtTKd24ZONrl7ecHCPp4waxunzsjxDaPTF/8ftBQfmLzt2dg9dy4edQxWVyTRC/+7OeJHUBN6P/wTxVqKUGUCapsQNlGBAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM12FT003.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc66::46) by
+ BN8NAM12HT163.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::244)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Sat, 9 May
+ 2020 17:46:18 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc66::4f) by BN8NAM12FT003.mail.protection.outlook.com
+ (2a01:111:e400:fc66::61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
+ Transport; Sat, 9 May 2020 17:46:18 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:DEB06BF210B3FDAE410F1418F57562C045E0462DFDFB5843A8DDEA13186CF3F7;UpperCasedChecksum:D7FBC1096683728759D117A5BB5DF5E307CAD3BF03DE15731720358CBAFF8653;SizeAsReceived:7839;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Sat, 9 May 2020
+ 17:46:18 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     nki.dae@samsung.com, jy0922.shim@samsung.com,
+        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
+        airlied@linux.ie, daniel@ffwll.ch, kgene@kernel.org,
+        krzk@kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] drm/exynos: fimc: Add support for S5PV210 variant
+Date:   Sat,  9 May 2020 10:46:00 -0700
+Message-ID: <BN6PR04MB066030DAF82BE31F35A8F3BDA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR14CA0058.namprd14.prod.outlook.com
+ (2603:10b6:300:81::20) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200509174600.6321-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-In-Reply-To: <000000000000f0d8d205a531f1a3@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR14CA0058.namprd14.prod.outlook.com (2603:10b6:300:81::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Sat, 9 May 2020 17:46:15 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200509174600.6321-1-xc-racer2@live.ca>
+X-TMN:  [ucLRUXUy+mSX0hMA08ILpDuZahbW+IW172qB6WNATTwSDrSs+nTl0TzPx0FH+wYN]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: efe460b7-843c-4eb9-15cc-08d7f440dfd6
+X-MS-TrafficTypeDiagnostic: BN8NAM12HT163:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2608ATGCTDg6E58NzDlS3ayKxpuBDKRLqZU8VvFYAaiaJ1qGqmW7e5mJyhLDi9k9s7856AMtEk7Ssuf6cgmVy0FkqGcLAHV4U5rGrB21K2HIJxPQawU8KJeKrKVuRVLdpQA828eRaa1pYPxiu5hYGsv3+s4lhwRKTSrNUGe7yaBT888f2IED++H//l5h3Soo+WhidzRoAzPWruT1q6I2Q6FrvrEv+Sn8G2gDrHGVQoP/Zg1ytGWaVNQA9/XhDN2m
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: nK7xH0aEmE+V5FUMEU50d6c/A/lF28BhUWNl18zz5C7kAYCfg1wHWP15KtHnNBwesrqlB+K1Ws9sYO/SEiv28mPKFvuOROl/fUstOFf2bplEzpGbYXnOc8FsELTMThEPflzz0xFfnfMEK2y6NAfC5umm050MiXT84zvDTu5mmDYcfC4LnGZbSDdMB0vitmMLUHJB/8dCxbyuxiNRj9v2hA==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efe460b7-843c-4eb9-15cc-08d7f440dfd6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 17:46:18.0961
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+S5PV210 can be trivially supported by this driver.  Only one of
+its FIMC devices (#2) supports the same scaling values as Exynos4, and
+it is marked by mainscaler-ext in the DTS (as it is for all of the
+Exynos4 devices).  It's limits are the same as that of id's 0-2 of
+Exynos4 so we don't even need to change the device id check.
 
-On 5/9/20 2:20 AM, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    d5eeab8d Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15093632100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=353be47c9ce21b68b7ed
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168ee02c100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119f3788100000
-> 
-> The bug was bisected to:
-> 
-> commit 2bef9aed6f0e22391c8d4570749b1acc9bc3981e
-> Author: Jeremy Linton <jeremy.linton@arm.com>
-> Date:   Mon May 4 20:13:48 2020 +0000
-> 
->      usb: usbfs: correct kernel->user page attribute mismatch
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1701f168100000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1481f168100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1081f168100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
-> Fixes: 2bef9aed6f0e ("usb: usbfs: correct kernel->user page attribute mismatch")
-> 
-> ------------[ cut here ]------------
-> memtype_reserve failed: [mem 0xffffffffff000-0x00008fff], req write-back
-> WARNING: CPU: 1 PID: 7025 at arch/x86/mm/pat/memtype.c:589 memtype_reserve+0x69f/0x820 arch/x86/mm/pat/memtype.c:589
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 7025 Comm: syz-executor254 Not tainted 5.7.0-rc4-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x188/0x20d lib/dump_stack.c:118
->   panic+0x2e3/0x75c kernel/panic.c:221
->   __warn.cold+0x2f/0x35 kernel/panic.c:582
->   report_bug+0x27b/0x2f0 lib/bug.c:195
->   fixup_bug arch/x86/kernel/traps.c:175 [inline]
->   fixup_bug arch/x86/kernel/traps.c:170 [inline]
->   do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:memtype_reserve+0x69f/0x820 arch/x86/mm/pat/memtype.c:589
-> Code: 48 8b 2c ed c0 00 29 88 e8 ae ad 3e 00 48 8d 4b ff 49 89 e8 4c 89 e2 48 c7 c6 20 01 29 88 48 c7 c7 80 f9 28 88 e8 79 e8 0f 00 <0f> 0b 41 bf ea ff ff ff e9 03 fc ff ff 41 bf ea ff ff ff e9 f8 fb
-> RSP: 0018:ffffc900015e7790 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000009000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815ce181 RDI: fffff520002bcee4
-> RBP: ffffffff8828ff40 R08: ffff888097ce85c0 R09: ffffed1015ce45f1
-> R10: ffff8880ae722f83 R11: ffffed1015ce45f0 R12: 000ffffffffff000
-> R13: 1ffff920002bcef8 R14: dffffc0000000000 R15: 0000000000000000
->   reserve_pfn_range+0x173/0x470 arch/x86/mm/pat/memtype.c:941
->   track_pfn_remap+0x18b/0x280 arch/x86/mm/pat/memtype.c:1033
->   remap_pfn_range+0x202/0xbf0 mm/memory.c:2130
->   dma_direct_mmap+0x197/0x260 kernel/dma/direct.c:453
->   dma_mmap_attrs+0xfe/0x150 kernel/dma/mapping.c:237
->   usbdev_mmap+0x3ae/0x730 drivers/usb/core/devio.c:254
->   call_mmap include/linux/fs.h:1912 [inline]
->   mmap_region+0xafb/0x1540 mm/mmap.c:1772
->   do_mmap+0x849/0x1160 mm/mmap.c:1545
->   do_mmap_pgoff include/linux/mm.h:2553 [inline]
->   vm_mmap_pgoff+0x197/0x200 mm/util.c:506
->   ksys_mmap_pgoff+0x457/0x5b0 mm/mmap.c:1595
->   do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
->   do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
->   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-> 
+It has been tested with a modified libdrm's test from
+https://github.com/tobiasjakobi/libdrm/tree/ippv2
 
-Adding a range check in dma_direct_mmap() looks like a fine fix. I'm 
-curious how the mapping attribute changed though. I expected that would 
-be rare on x86 (ISA devices/etc).
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/gpu/drm/exynos/exynos_drm_fimc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-What is the GCE USB controller here? Its not the same as the virtual 
-qemu/pci/xhci right?
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+index 29ab8be8604c..63e1b8ccb8e9 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+@@ -89,6 +89,7 @@ struct fimc_scaler {
+  * @regs: memory mapped io registers.
+  * @lock: locking of operations.
+  * @clocks: fimc clocks.
++ * @num_clocks: number of fimc clocks
+  * @sc: scaler infomations.
+  * @pol: porarity of writeback.
+  * @id: fimc id.
+@@ -107,6 +108,7 @@ struct fimc_context {
+ 	void __iomem	*regs;
+ 	spinlock_t	lock;
+ 	struct clk	*clocks[FIMC_CLKS_MAX];
++	int		num_clocks;
+ 	struct fimc_scaler	sc;
+ 	int	id;
+ 	int	irq;
+@@ -1183,7 +1185,7 @@ static int fimc_setup_clocks(struct fimc_context *ctx)
+ 	for (i = 0; i < FIMC_CLKS_MAX; i++)
+ 		ctx->clocks[i] = ERR_PTR(-EINVAL);
+ 
+-	for (i = 0; i < FIMC_CLKS_MAX; i++) {
++	for (i = 0; i < ctx->num_clocks; i++) {
+ 		if (i == FIMC_CLK_WB_A || i == FIMC_CLK_WB_B)
+ 			dev = fimc_dev->parent;
+ 		else
+@@ -1210,6 +1212,9 @@ int exynos_drm_check_fimc_device(struct device *dev)
+ {
+ 	int id = of_alias_get_id(dev->of_node, "fimc");
+ 
++	if (!of_property_read_bool(dev->of_node, "samsung,mainscaler-ext"))
++		return -ENODEV;
++
+ 	if (id >= 0 && (BIT(id) & fimc_mask))
+ 		return 0;
+ 	return -ENODEV;
+@@ -1277,6 +1282,11 @@ static int fimc_probe(struct platform_device *pdev)
+ 	ctx->dev = dev;
+ 	ctx->id = of_alias_get_id(dev->of_node, "fimc");
+ 
++	if (of_device_is_compatible(dev->of_node, "samsung,s5pv210-fimc"))
++		ctx->num_clocks = 2;
++	else
++		ctx->num_clocks = FIMC_CLKS_MAX;
++
+ 	/* construct formats/limits array */
+ 	num_formats = ARRAY_SIZE(fimc_formats) + ARRAY_SIZE(fimc_tiled_formats);
+ 	formats = devm_kcalloc(dev, num_formats, sizeof(*formats),
+@@ -1409,6 +1419,7 @@ static const struct dev_pm_ops fimc_pm_ops = {
+ static const struct of_device_id fimc_of_match[] = {
+ 	{ .compatible = "samsung,exynos4210-fimc" },
+ 	{ .compatible = "samsung,exynos4212-fimc" },
++	{ .compatible = "samsung,s5pv210-fimc" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, fimc_of_match);
+-- 
+2.20.1
 
