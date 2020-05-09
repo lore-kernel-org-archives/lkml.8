@@ -2,214 +2,199 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDDFC54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA8FC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3E424956
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0C9218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr8y0xKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgEIKoj (ORCPT
+        id S1728223AbgEIKsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 06:44:39 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56036 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbgEIKoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 06:44:38 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A8601A02B7;
-        Sat,  9 May 2020 12:44:36 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0FE891A02D9;
-        Sat,  9 May 2020 12:44:33 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D8EC6402E6;
-        Sat,  9 May 2020 18:44:28 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     u-boot@linux.nxdi.nxp.com, jiafei.pan@nxp.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        "hui.song" <hui.song_1@nxp.com>
-Subject: [PATCH v1 1/3] gpio: mpc8xxx: support fsl-layerscape platform.
-Date:   Sat,  9 May 2020 18:39:54 +0800
-Message-Id: <20200509103956.26038-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sat, 9 May 2020 06:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726877AbgEIKsS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 06:48:18 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B09BC061A0C;
+        Sat,  9 May 2020 03:48:18 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r26so13400642wmh.0;
+        Sat, 09 May 2020 03:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KPkpTBXFZk8/9lQwGo/IWPlBj9LHEhRMLSp+d9p19Sc=;
+        b=Tr8y0xKXAra5GctwNvLtRyAa1bba2IwoqopYCSTNHICLbOXZewzdKG3+udL1UvFsh0
+         lNiKP14hDcrxr64CbT5564HTEDJ4WPTLmMe8uAA84YyfqxxHW9/OyFLysZqeaKu5Cq8R
+         7ME8lRPiqLeOlcacLG/JJICWBqAuafxmgACnP7pBZsuBk1AsX7k6fcfFbIqNiQyeQmjD
+         qKMoe6YWOalzhwiYIlNfusY9r3SqQcDtMzVex3TZFjcPhRZgxTK5s66919wAkoOey45B
+         b030+OHYlYaXzynu/V2dsq5Vzp4+nWzFKDqLRHN1/dft0MhE/sDZeCcZIzv0cMtYvsVm
+         yA9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KPkpTBXFZk8/9lQwGo/IWPlBj9LHEhRMLSp+d9p19Sc=;
+        b=MDWFr3C+/9aat/Rt3NnQ0v/ycjyF4knr6/PTE2+5FOmYgJDNSCvYlZ64CdAlQTpOKT
+         dknvzNGl8caIKVrasCUNlMAUWgT6RZDTW+9Sc5aN2j0izc9hE0Ke1S1FFkgFB4V6a0Ui
+         kxr/07xGlUxEGDNGMV43UWdKrIoplOUiD1aijT7EWd82p68mU9hO7VsruobMFHWxJ8Vo
+         FHfGBpnrkOtnQIp0XPlHXoSo3IpSrge0k954vg6Xs5sgyryRibx4OxVDNhGUFTWb06Py
+         UZppFE1Gjzp8gxghE4fkZiiFPEeavAQtX+Qe/i33QZdMuhB9FfVyDyEqoeQ2PNruGpCP
+         3Mbg==
+X-Gm-Message-State: AGi0PuaqL9iFjNj9NrAUyfYjKc8WwTz7nVkqdwhNlER6y8hPlI7Rb6rc
+        JNMEcTSuHYUmNfXxZBR7lAI=
+X-Google-Smtp-Source: APiQypKzJQGVgMUTZFyTGkaa+3CHh+R+8aV9dtiRSenGbepLQYS189mR2vWZ/oegBvt0gO7U8I+WjA==
+X-Received: by 2002:a05:600c:24cf:: with SMTP id 15mr20121734wmu.94.1589021296925;
+        Sat, 09 May 2020 03:48:16 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id p7sm7819484wrf.31.2020.05.09.03.48.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 03:48:16 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [v2 PATCH] drivers: gpu: drm: Add MDP5 configuration for MSM8x36.
+Date:   Sat,  9 May 2020 12:48:10 +0200
+Message-Id: <20200509104812.202981-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "hui.song" <hui.song_1@nxp.com>
+This change adds MDP5 configuration for MSM8x36-based SoCs,
+like MSM8936, 8939 and their APQ variants.
+The configuration is based on MSM8916's, but adds some notable
+features, like ad and pp blocks, along with some register
+changes.
 
-Make the MPC8XXX gpio driver to support the fsl-layerscape.
+changes since v1:
+- add an ad block
+- add a second mixer @ 0x47000
+- adjust .max_width
+- write a more descriptive commit message
 
-Signed-off-by: hui.song <hui.song_1@nxp.com>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 ---
- drivers/gpio/mpc8xxx_gpio.c | 59 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 76 ++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/drivers/gpio/mpc8xxx_gpio.c b/drivers/gpio/mpc8xxx_gpio.c
-index 1dfd22522c..466f5f50cf 100644
---- a/drivers/gpio/mpc8xxx_gpio.c
-+++ b/drivers/gpio/mpc8xxx_gpio.c
-@@ -12,6 +12,8 @@
- #include <dm.h>
- #include <mapmem.h>
- #include <asm/gpio.h>
-+#include <asm/io.h>
-+#include <dm/of_access.h>
- 
- struct ccsr_gpio {
- 	u32	gpdir;
-@@ -20,6 +22,7 @@ struct ccsr_gpio {
- 	u32	gpier;
- 	u32	gpimr;
- 	u32	gpicr;
-+	u32	gpibe;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+index e3c4c250238b7..a7df8dbffdc2b 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+@@ -342,6 +342,81 @@ static const struct mdp5_cfg_hw msm8x16_config = {
+ 	.max_clk = 320000000,
  };
  
- struct mpc8xxx_gpio_data {
-@@ -49,31 +52,51 @@ inline u32 gpio_mask(uint gpio)
- 
- static inline u32 mpc8xxx_gpio_get_val(struct ccsr_gpio *base, u32 mask)
- {
-+#if CONFIG_ARM
-+	return in_le32(&base->gpdat) & mask;
-+#else
- 	return in_be32(&base->gpdat) & mask;
-+#endif
- }
- 
- static inline u32 mpc8xxx_gpio_get_dir(struct ccsr_gpio *base, u32 mask)
- {
-+#if CONFIG_ARM
-+	return in_le32(&base->gpdir) & mask;
-+#else
- 	return in_be32(&base->gpdir) & mask;
-+#endif
- }
- 
- static inline int mpc8xxx_gpio_open_drain_val(struct ccsr_gpio *base, u32 mask)
- {
-+#if CONFIG_ARM
-+	return in_le32(&base->gpodr) & mask;
-+#else
- 	return in_be32(&base->gpodr) & mask;
-+#endif
- }
- 
- static inline void mpc8xxx_gpio_open_drain_on(struct ccsr_gpio *base, u32
- 					      gpios)
- {
-+#if CONFIG_ARM
-+	setbits_le32(&base->gpodr, gpios);
-+#else
- 	/* GPODR register 1 -> open drain on */
- 	setbits_be32(&base->gpodr, gpios);
-+#endif
- }
- 
- static inline void mpc8xxx_gpio_open_drain_off(struct ccsr_gpio *base,
- 					       u32 gpios)
- {
-+#if CONFIG_ARM
-+	clrbits_le32(&base->gpodr, gpios);
-+#else
- 	/* GPODR register 0 -> open drain off (actively driven) */
- 	clrbits_be32(&base->gpodr, gpios);
-+#endif
- }
- 
- static int mpc8xxx_gpio_direction_input(struct udevice *dev, uint gpio)
-@@ -81,9 +104,13 @@ static int mpc8xxx_gpio_direction_input(struct udevice *dev, uint gpio)
- 	struct mpc8xxx_gpio_data *data = dev_get_priv(dev);
- 	u32 mask = gpio_mask(gpio);
- 
-+#if CONFIG_ARM
-+	clrbits_le32(&data->base->gpdir, mask);
-+#else
- 	/* GPDIR register 0 -> input */
- 	clrbits_be32(&data->base->gpdir, mask);
- 
-+#endif
- 	return 0;
- }
- 
-@@ -100,10 +127,19 @@ static int mpc8xxx_gpio_set_value(struct udevice *dev, uint gpio, int value)
- 		data->dat_shadow &= ~mask;
- 	}
- 
-+#if CONFIG_ARM
-+	gpdir = in_le32(&base->gpdir);
-+#else
- 	gpdir = in_be32(&base->gpdir);
-+#endif
- 	gpdir |= gpio_mask(gpio);
-+#if CONFIG_ARM
-+	out_le32(&base->gpdat, gpdir & data->dat_shadow);
-+	out_le32(&base->gpdir, gpdir);
-+#else
- 	out_be32(&base->gpdat, gpdir & data->dat_shadow);
- 	out_be32(&base->gpdir, gpdir);
-+#endif
- 
- 	return 0;
- }
-@@ -147,13 +183,29 @@ static int mpc8xxx_gpio_ofdata_to_platdata(struct udevice *dev)
- {
- 	struct mpc8xxx_gpio_plat *plat = dev_get_platdata(dev);
- 	fdt_addr_t addr;
-+	u32 i;
-+#if CONFIG_ARM
-+	u32 reg[4];
++static const struct mdp5_cfg_hw msm8x36_config = {
++	.name = "msm8x36",
++	.mdp = {
++		.count = 1,
++		.base = { 0x0 },
++		.caps = MDP_CAP_SMP |
++			0,
++	},
++	.smp = {
++		.mmb_count = 8,
++		.mmb_size = 10240,
++		.clients = {
++			[SSPP_VIG0] = 1, [SSPP_DMA0] = 4,
++			[SSPP_RGB0] = 7, [SSPP_RGB1] = 8,
++		},
++	},
++	.ctl = {
++		.count = 3,
++		.base = { 0x01000, 0x01200, 0x01400 },
++		.flush_hw_mask = 0x4003ffff,
++	},
++	.pipe_vig = {
++		.count = 1,
++		.base = { 0x04000 },
++		.caps = MDP_PIPE_CAP_HFLIP | MDP_PIPE_CAP_VFLIP |
++				MDP_PIPE_CAP_SCALE | MDP_PIPE_CAP_CSC |
++				MDP_PIPE_CAP_DECIMATION,
++	},
++	.pipe_rgb = {
++		.count = 2,
++		.base = { 0x14000, 0x16000 },
++		.caps = MDP_PIPE_CAP_HFLIP | MDP_PIPE_CAP_VFLIP |
++				MDP_PIPE_CAP_DECIMATION,
++	},
++	.pipe_dma = {
++		.count = 1,
++		.base = { 0x24000 },
++		.caps = MDP_PIPE_CAP_HFLIP | MDP_PIPE_CAP_VFLIP,
++	},
++	.lm = {
++		.count = 2,
++		.base = { 0x44000, 0x47000 },
++		.instances = {
++				{ .id = 0, .pp = 0, .dspp = 0,
++				  .caps = MDP_LM_CAP_DISPLAY, },
++				{ .id = 1, .pp = -1, .dspp = -1,
++				  .caps = MDP_LM_CAP_WB, },
++				},
++		.nb_stages = 8,
++		.max_width = 2560,
++		.max_height = 0xFFFF,
++	},
++	.pp = {
++		.count = 1,
++		.base = { 0x70000 },
++	},
++	.ad = {
++		.count = 1,
++		.base = { 0x78000 },
++	},
++	.dspp = {
++		.count = 1,
++		.base = { 0x54000 },
++	},
++	.intf = {
++		.base = { 0x00000, 0x6a800, 0x6b000 },
++		.connect = {
++			[0] = INTF_DISABLED,
++			[1] = INTF_DSI,
++			[2] = INTF_DSI,
++		},
++	},
++	.max_clk = 366670000,
++};
 +
-+	dev_read_u32_array(dev, "reg", reg, 4);
-+#else
- 	u32 reg[2];
- 
- 	dev_read_u32_array(dev, "reg", reg, 2);
-+#endif
-+
-+#if CONFIG_ARM
-+	for (i = 0; i < 2; i++)
-+		reg[i] = be32_to_cpu(reg[i]);
-+#endif
- 	addr = dev_translate_address(dev, reg);
- 
- 	plat->addr = addr;
-+#if CONFIG_ARM
-+	plat->size = reg[3];
-+#else
- 	plat->size = reg[1];
-+#endif
- 	plat->ngpios = dev_read_u32_default(dev, "ngpios", 32);
- 
- 	return 0;
-@@ -187,6 +239,7 @@ static int mpc8xxx_gpio_platdata_to_priv(struct udevice *dev)
- static int mpc8xxx_gpio_probe(struct udevice *dev)
- {
- 	struct gpio_dev_priv *uc_priv = dev_get_uclass_priv(dev);
-+	struct device_node const  *np = dev->node.np;
- 	struct mpc8xxx_gpio_data *data = dev_get_priv(dev);
- 	char name[32], *str;
- 
-@@ -198,6 +251,12 @@ static int mpc8xxx_gpio_probe(struct udevice *dev)
- 	if (!str)
- 		return -ENOMEM;
- 
-+	if (of_device_is_compatible(np, "fsl,qoriq-gpio", NULL, NULL)) {
-+		unsigned long gpibe = data->addr + sizeof(struct ccsr_gpio);
-+
-+		out_be32(gpibe, 0xffffffff);
-+	}
-+
- 	uc_priv->bank_name = str;
- 	uc_priv->gpio_count = data->gpio_count;
- 
+ static const struct mdp5_cfg_hw msm8x94_config = {
+ 	.name = "msm8x94",
+ 	.mdp = {
+@@ -840,6 +915,7 @@ static const struct mdp5_cfg_handler cfg_handlers_v1[] = {
+ 	{ .revision = 2, .config = { .hw = &msm8x74v2_config } },
+ 	{ .revision = 3, .config = { .hw = &apq8084_config } },
+ 	{ .revision = 6, .config = { .hw = &msm8x16_config } },
++	{ .revision = 8, .config = { .hw = &msm8x36_config } },
+ 	{ .revision = 9, .config = { .hw = &msm8x94_config } },
+ 	{ .revision = 7, .config = { .hw = &msm8x96_config } },
+ 	{ .revision = 11, .config = { .hw = &msm8x76_config } },
 -- 
-2.17.1
+2.26.2
 
