@@ -2,157 +2,319 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7490CC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6CDC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5794324955
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2B721582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPLqtTmk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oz0eqB1g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgEIFkm (ORCPT
+        id S1728815AbgEIFqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 01:40:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20027 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725822AbgEIFkl (ORCPT
+        Sat, 9 May 2020 01:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgEIFqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 01:40:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589002839;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mTjszWW/EefMrw7aIGeEPuK1Cqsav+nLkGOW2S21ZN0=;
-        b=cPLqtTmk0abJ/hBbOqR8Lj/4tS7FTfVExcDTGwffbYb0v5UyzSW2r4d+fIoFmRVDYpiEW/
-        hjrxFlYUYBDRgr38TnSPpZgBRNoWi0O9ahUExLVztEbmrtMmbBXOL1IoKKRSCBKGedYDCb
-        lvZDutk6DZQiB+jHwLv+exODYdBw4jY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-sHyDmu8sOLqJwOvU6GS6jg-1; Sat, 09 May 2020 01:40:36 -0400
-X-MC-Unique: sHyDmu8sOLqJwOvU6GS6jg-1
-Received: by mail-wm1-f72.google.com with SMTP id l21so6245322wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 22:40:36 -0700 (PDT)
+        Sat, 9 May 2020 01:46:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4211FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 22:46:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t11so1918660pgg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 22:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eKlefTYkYBRq2ILWaYaDodjvhLNEhp2y4FI3p3b3Isw=;
+        b=oz0eqB1g0uQwUqumhThKlfvBEw3wpVeMBZAnw5bgJOmcUNIYQSb6fataOOlqgzMmoq
+         6J/wPhZ49ClzRE5W7YRSAUON/VH/pw13TQA5gZcamRkYVeoMkm2qFxIwWOk9rLaA0Ej5
+         G50J0cvNcyI8D968qsEdYa2HJGphiaLPwVWCxB7nenbJ3UHl/xCS5ne3C5XJoRYN1+TB
+         s5rv1BR6fTXtVF6WXPN69Yz6K1MRkXK3dxTvO/8xdYCdGFtOAXR4KKO1gBjzgwYe5VQF
+         eb3GCDdgrlfyv/i8roy0mUF0OiyLGBcpumNBqxQHXsN4mswrbQiI+DRE8Odca93IfZ9r
+         hCUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=mTjszWW/EefMrw7aIGeEPuK1Cqsav+nLkGOW2S21ZN0=;
-        b=lBpVuM3mTPvc8+vad819h6LD3zNGnRbR43qKun1UIvQF1ZoCiItfJK1AN4oajjmcAj
-         1mgcq9kF33soueWEcuswRJoKlUalvpA1h7U8vfqFBhSOSUNHyf4bVdEi99WnNeL5fWXi
-         JfCnnDuDWdHSNVl+9w47l6HwrkvBnVyHrKzQqgqcedHv/zqr/J4Ax0tkPy+IuruQ6oNG
-         JdJUtyi8HLhJ65i72T1nWVZrYTq7YkRS74y9w9v/qvMMq78HFjnJxDy4eNAKlR0z8OZD
-         wghXb53yvc+dpbf/F5G3Um0GDGtOtW0FeFvBS4NDLygZYJTAMioC0brGRe7/AIUKUJAF
-         1Zyg==
-X-Gm-Message-State: AGi0PuamYyqjJp+UInV1Y3iGzrO63kil4iYmpoWLHV1V9ga2jmHfNgdD
-        GGfSw2548g2QWKijVpSm5YK7MU5QGDSrMG1VjTorVJKOyD41buTsFDq/2lgK273F0GSs1BWXymy
-        DmKi+TDi8PLgWEyc9ZFZhPBTN
-X-Received: by 2002:a5d:52ce:: with SMTP id r14mr7021343wrv.334.1589002835868;
-        Fri, 08 May 2020 22:40:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLh46b+OJHiK+BmOVxHBKBIBg126/s6UEDmzeKxMWF5zY7CcNlENVRlnP1JVfzUUAXHjN/rxA==
-X-Received: by 2002:a5d:52ce:: with SMTP id r14mr7021307wrv.334.1589002835393;
-        Fri, 08 May 2020 22:40:35 -0700 (PDT)
-Received: from ?IPv6:2a01:598:b901:53f:9037:7517:2497:29c? ([2a01:598:b901:53f:9037:7517:2497:29c])
-        by smtp.gmail.com with ESMTPSA id z6sm437028wrq.1.2020.05.08.22.40.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2020 22:40:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user space after unloading kmem
-Date:   Sat, 9 May 2020 07:40:33 +0200
-Message-Id: <B72EB609-44DC-4133-820C-9BEA95CA012D@redhat.com>
-References: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        kexec@lists.infradead.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
-In-Reply-To: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eKlefTYkYBRq2ILWaYaDodjvhLNEhp2y4FI3p3b3Isw=;
+        b=oMZT5uvZ5KlTomIbg4r0gKMHQDogy4xNWo9WY0dhw02dUulXAVIeEh79RXnJDF/Kz/
+         0fNbG2/Nd+erYXb2ACvMii2rkkZjY2zeE56XUGfkLUcvaEjzsxUOnGOJxJSdYsbkn3bN
+         /BfZOv6XlG3d97SR6gpXKLyPfy5CleJhZDt6UqsmHw0YeI609+AyMl/419BGekyndq/0
+         cwPlXa9lZiTutIQvYv2jTF6O8LZiMxxwlpuvfdv1POZfVMw/Y9RfjTeYE4ZIAVq1/7oR
+         Mx+bNCLDYwAwT+9dpa6kF0qHOd61R1lL744owC5cVA4Uc2whltBbUj3wkgO9vL9OJOCf
+         DO5A==
+X-Gm-Message-State: AGi0PuaLdnz2tOaM/Om0vwWKIj3CySc/P6EVB0NOuJzrDMBIl7zVf+Y9
+        2iS/qKCcDPkTAYCo6B5/N5DW
+X-Google-Smtp-Source: APiQypLV/DBpGdEnXXdRYxXSWTme9DlM9e0S4pdalY6sKEiicEXmNsxlHR8uIDKaEzsoKFPnD4MezA==
+X-Received: by 2002:aa7:9251:: with SMTP id 17mr6083769pfp.315.1589003211282;
+        Fri, 08 May 2020 22:46:51 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e0c:55d2:2cb4:da01:ad1e:6ad9])
+        by smtp.gmail.com with ESMTPSA id t12sm2698983pgm.37.2020.05.08.22.46.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 08 May 2020 22:46:50 -0700 (PDT)
+Date:   Sat, 9 May 2020 11:16:44 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, jhugo@codeaurora.org
+Subject: Re: [PATCH v7 1/8] bus: mhi: core: Refactor mhi queue APIs
+Message-ID: <20200509054644.GA5845@Mani-XPS-13-9360>
+References: <1588991208-26928-1-git-send-email-bbhatt@codeaurora.org>
+ <1588991208-26928-2-git-send-email-bbhatt@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588991208-26928-2-git-send-email-bbhatt@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 08, 2020 at 07:26:41PM -0700, Bhaumik Bhatt wrote:
+> From: Hemant Kumar <hemantk@codeaurora.org>
+> 
+> Move all the common code to generate TRE from mhi_queue_buf,
+> mhi_queue_dma and mhi_queue_skb to mhi_gen_tre. This helps
+> to centralize the TRE generation code which makes any future
+> bug fixing easier to manage in these APIs.
+> 
+> Suggested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> Am 09.05.2020 um 01:53 schrieb Andrew Morton <akpm@linux-foundation.org>:
->=20
-> =EF=BB=BFOn Fri,  8 May 2020 10:42:14 +0200 David Hildenbrand <david@redha=
-t.com> wrote:
->=20
->> Assume we have kmem configured and loaded:
->>  [root@localhost ~]# cat /proc/iomem
->>  ...
->>  140000000-33fffffff : Persistent Memory$
->>    140000000-1481fffff : namespace0.0
->>    150000000-33fffffff : dax0.0
->>      150000000-33fffffff : System RAM
->>=20
->> Assume we try to unload kmem. This force-unloading will work, even if
->> memory cannot get removed from the system.
->>  [root@localhost ~]# rmmod kmem
->>  [   86.380228] removing memory fails, because memory [0x0000000150000000=
--0x0000000157ffffff] is onlined
->>  ...
->>  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] can=
-not be hotremoved until the next reboot
->>=20
->> Now, we can reconfigure the namespace:
->>  [root@localhost ~]# ndctl create-namespace --force --reconfig=3Dnamespac=
-e0.0 --mode=3Ddevdax
->>  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140=
-000000-0x33fffffff]dax
->>  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16names=
-pace0.0 --mode=3Ddevdax
->>  ...
->>=20
->> This fails as expected due to the busy memory resource, and the memory
->> cannot be used. However, the dax0.0 device is removed, and along its name=
-.
->>=20
->> The name of the memory resource now points at freed memory (name of the
->> device).
->>  [root@localhost ~]# cat /proc/iomem
->>  ...
->>  140000000-33fffffff : Persistent Memory
->>    140000000-1481fffff : namespace0.0
->>    150000000-33fffffff : =EF=BF=BD_=EF=BF=BD^7_=EF=BF=BD=EF=BF=BD/_=EF=BF=
-=BD=EF=BF=BDwR=EF=BF=BD=EF=BF=BDWQ=EF=BF=BD=EF=BF=BD=EF=BF=BD^=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD ...
->>    150000000-33fffffff : System RAM
->>=20
->> We have to make sure to duplicate the string. While at it, remove the
->> superfluous setting of the name and fixup a stale comment.
->>=20
->> Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is u=
-sed like normal RAM")
->> Cc: stable@vger.kernel.org # v5.3
->=20
-> hm.
->=20
-> Is this really -stable material?  These are all privileged operations,
-> I expect?
+Thanks,
+Mani
 
-Yes, my thought was rather that an admin could bring the system into such a s=
-tate (by mistake?). Let=E2=80=98s see if somebody has a suggestion.
-
-I guess if we were really unlucky, we could access invalid memory and trigge=
-r a BUG (e.g., page at the end of memory and does not contain a 0 byte).
-
->=20
-> Assuming "yes", I've queued this separately, staged for 5.7-rcX.  I'll
-> redo patches 2-4 as a three-patch series for 5.8-rc1.
-
-Make sense, let=E2=80=98s wait for review feedback, thanks!=
-
+> ---
+>  drivers/bus/mhi/core/internal.h |   3 +-
+>  drivers/bus/mhi/core/main.c     | 107 +++++++++++++++++-----------------------
+>  2 files changed, 47 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+> index 095d95b..40c47f9 100644
+> --- a/drivers/bus/mhi/core/internal.h
+> +++ b/drivers/bus/mhi/core/internal.h
+> @@ -670,8 +670,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>  irqreturn_t mhi_intvec_handler(int irq_number, void *dev);
+>  
+>  int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+> -		void *buf, void *cb, size_t buf_len, enum mhi_flags flags);
+> -
+> +		struct mhi_buf_info *info, enum mhi_flags flags);
+>  int mhi_map_single_no_bb(struct mhi_controller *mhi_cntrl,
+>  			 struct mhi_buf_info *buf_info);
+>  int mhi_map_single_use_bb(struct mhi_controller *mhi_cntrl,
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index c26eed0..605640c 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -919,9 +919,7 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+>  							     mhi_dev->dl_chan;
+>  	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+> -	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+> -	struct mhi_buf_info *buf_info;
+> -	struct mhi_tre *mhi_tre;
+> +	struct mhi_buf_info buf_info = { };
+>  	int ret;
+>  
+>  	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+> @@ -946,27 +944,15 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+>  
+> -	/* Generate the TRE */
+> -	buf_info = buf_ring->wp;
+> -
+> -	buf_info->v_addr = skb->data;
+> -	buf_info->cb_buf = skb;
+> -	buf_info->wp = tre_ring->wp;
+> -	buf_info->dir = mhi_chan->dir;
+> -	buf_info->len = len;
+> -	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+> -	if (ret)
+> -		goto map_error;
+> -
+> -	mhi_tre = tre_ring->wp;
+> -
+> -	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+> -	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+> -	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
+> +	buf_info.v_addr = skb->data;
+> +	buf_info.cb_buf = skb;
+> +	buf_info.len = len;
+>  
+> -	/* increment WP */
+> -	mhi_add_ring_element(mhi_cntrl, tre_ring);
+> -	mhi_add_ring_element(mhi_cntrl, buf_ring);
+> +	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
+> +	if (unlikely(ret)) {
+> +		read_unlock_bh(&mhi_cntrl->pm_lock);
+> +		return ret;
+> +	}
+>  
+>  	if (mhi_chan->dir == DMA_TO_DEVICE)
+>  		atomic_inc(&mhi_cntrl->pending_pkts);
+> @@ -980,11 +966,6 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	read_unlock_bh(&mhi_cntrl->pm_lock);
+>  
+>  	return 0;
+> -
+> -map_error:
+> -	read_unlock_bh(&mhi_cntrl->pm_lock);
+> -
+> -	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(mhi_queue_skb);
+>  
+> @@ -996,9 +977,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  							     mhi_dev->dl_chan;
+>  	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>  	struct mhi_ring *tre_ring = &mhi_chan->tre_ring;
+> -	struct mhi_ring *buf_ring = &mhi_chan->buf_ring;
+> -	struct mhi_buf_info *buf_info;
+> -	struct mhi_tre *mhi_tre;
+> +	struct mhi_buf_info buf_info = { };
+> +	int ret;
+>  
+>  	/* If MHI host pre-allocates buffers then client drivers cannot queue */
+>  	if (mhi_chan->pre_alloc)
+> @@ -1025,25 +1005,16 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	/* Toggle wake to exit out of M2 */
+>  	mhi_cntrl->wake_toggle(mhi_cntrl);
+>  
+> -	/* Generate the TRE */
+> -	buf_info = buf_ring->wp;
+> -	WARN_ON(buf_info->used);
+> -	buf_info->p_addr = mhi_buf->dma_addr;
+> -	buf_info->pre_mapped = true;
+> -	buf_info->cb_buf = mhi_buf;
+> -	buf_info->wp = tre_ring->wp;
+> -	buf_info->dir = mhi_chan->dir;
+> -	buf_info->len = len;
+> -
+> -	mhi_tre = tre_ring->wp;
+> -
+> -	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+> -	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_info->len);
+> -	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(1, 1, 0, 0);
+> +	buf_info.p_addr = mhi_buf->dma_addr;
+> +	buf_info.cb_buf = mhi_buf;
+> +	buf_info.pre_mapped = true;
+> +	buf_info.len = len;
+>  
+> -	/* increment WP */
+> -	mhi_add_ring_element(mhi_cntrl, tre_ring);
+> -	mhi_add_ring_element(mhi_cntrl, buf_ring);
+> +	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
+> +	if (unlikely(ret)) {
+> +		read_unlock_bh(&mhi_cntrl->pm_lock);
+> +		return ret;
+> +	}
+>  
+>  	if (mhi_chan->dir == DMA_TO_DEVICE)
+>  		atomic_inc(&mhi_cntrl->pending_pkts);
+> @@ -1061,7 +1032,7 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  EXPORT_SYMBOL_GPL(mhi_queue_dma);
+>  
+>  int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+> -		void *buf, void *cb, size_t buf_len, enum mhi_flags flags)
+> +			struct mhi_buf_info *info, enum mhi_flags flags)
+>  {
+>  	struct mhi_ring *buf_ring, *tre_ring;
+>  	struct mhi_tre *mhi_tre;
+> @@ -1073,15 +1044,22 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>  	tre_ring = &mhi_chan->tre_ring;
+>  
+>  	buf_info = buf_ring->wp;
+> -	buf_info->v_addr = buf;
+> -	buf_info->cb_buf = cb;
+> +	WARN_ON(buf_info->used);
+> +	buf_info->pre_mapped = info->pre_mapped;
+> +	if (info->pre_mapped)
+> +		buf_info->p_addr = info->p_addr;
+> +	else
+> +		buf_info->v_addr = info->v_addr;
+> +	buf_info->cb_buf = info->cb_buf;
+>  	buf_info->wp = tre_ring->wp;
+>  	buf_info->dir = mhi_chan->dir;
+> -	buf_info->len = buf_len;
+> +	buf_info->len = info->len;
+>  
+> -	ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+> -	if (ret)
+> -		return ret;
+> +	if (!info->pre_mapped) {
+> +		ret = mhi_cntrl->map_single(mhi_cntrl, buf_info);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	eob = !!(flags & MHI_EOB);
+>  	eot = !!(flags & MHI_EOT);
+> @@ -1090,7 +1068,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>  
+>  	mhi_tre = tre_ring->wp;
+>  	mhi_tre->ptr = MHI_TRE_DATA_PTR(buf_info->p_addr);
+> -	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(buf_len);
+> +	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+>  	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+>  
+>  	/* increment WP */
+> @@ -1107,6 +1085,7 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	struct mhi_chan *mhi_chan = (dir == DMA_TO_DEVICE) ? mhi_dev->ul_chan :
+>  							     mhi_dev->dl_chan;
+>  	struct mhi_ring *tre_ring;
+> +	struct mhi_buf_info buf_info = { };
+>  	unsigned long flags;
+>  	int ret;
+>  
+> @@ -1122,7 +1101,11 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
+>  	if (mhi_is_ring_full(mhi_cntrl, tre_ring))
+>  		return -ENOMEM;
+>  
+> -	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf, len, mflags);
+> +	buf_info.v_addr = buf;
+> +	buf_info.cb_buf = buf;
+> +	buf_info.len = len;
+> +
+> +	ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &buf_info, mflags);
+>  	if (unlikely(ret))
+>  		return ret;
+>  
+> @@ -1323,7 +1306,7 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+>  
+>  		while (nr_el--) {
+>  			void *buf;
+> -
+> +			struct mhi_buf_info info = { };
+>  			buf = kmalloc(len, GFP_KERNEL);
+>  			if (!buf) {
+>  				ret = -ENOMEM;
+> @@ -1331,8 +1314,10 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+>  			}
+>  
+>  			/* Prepare transfer descriptors */
+> -			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, buf, buf,
+> -					  len, MHI_EOT);
+> +			info.v_addr = buf;
+> +			info.cb_buf = buf;
+> +			info.len = len;
+> +			ret = mhi_gen_tre(mhi_cntrl, mhi_chan, &info, MHI_EOT);
+>  			if (ret) {
+>  				kfree(buf);
+>  				goto error_pre_alloc;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
