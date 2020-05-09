@@ -2,136 +2,178 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD13CC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD79C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98D0021775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B8420735
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQVS4ZPo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="v2bazMjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgEIOob (ORCPT
+        id S1728176AbgEIOtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 10:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
+        Sat, 9 May 2020 10:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726782AbgEIOob (ORCPT
+        by vger.kernel.org with ESMTP id S1726782AbgEIOtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 10:44:31 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3489C061A0C;
-        Sat,  9 May 2020 07:44:29 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id c18so4203470ile.5;
-        Sat, 09 May 2020 07:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hI9ycgQ4zeirYCayZqlQtbGCMAV/8BVRrWbFIPSt1Y=;
-        b=hQVS4ZPoIo4VxX/5nd1aSmJN4WU/ZZmJHcLAK0FoUrWJBAcRAM/ZH0kP2mDH9c2Mcb
-         SWM22Nu6jFYtWbCx6oRXIx6unbYZBjWZofzLjkBui4reST6xR05xkE87GIrR5C1m3dzn
-         /92kWXQcQ9kk25WbZeFThY2H4xFK1gR/Z3VpDt8RMZSIKOLT9SWOYaFBQ2j34qWqxxIC
-         pzM5kaLcIFLGXym3nG8SWO6bc5ZFMNw7EKTB96AW9LEYwK740cX1fJUNN7qoMIvsgLY4
-         5QMAeF0dqAoP2FmIxH0TTchL4SnXXtgR5qK5+41JQbkbw6btTdrYU7O4T8pNf1QtWZRR
-         xqhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hI9ycgQ4zeirYCayZqlQtbGCMAV/8BVRrWbFIPSt1Y=;
-        b=l3WqGezqsxNBlaOipwBMrRoEui4e+kSJ+AcruQyIeFhLbc/2Wxe2v1FrY/i10gsZyI
-         nPEr79sb8zUnSf6nuKvYXRB2B0XiB+spyuhnJfIh7BO1k7/oWgjo60KbJBt2e3xgN6ii
-         eSi55rmOz4qJ0q1/IOTEqPI9tHOrdgdZHHpSbolUtMCvtSVa0DciZ0tSAykQRqbXFu+P
-         w3mbVHA+xmqXUzRvFpj9hd+WSrjUfve0KBRCPcusgeF6uaDRYieJ6ICiPvZx1DgM/QJy
-         46ICpQftHcRYOYpJSWfMC0Zogq4FsvDGerfzVcB6PhoyGoHPNoyzmzs7crXQlb1V7HO/
-         l21g==
-X-Gm-Message-State: AGi0Pub/Z7Blr/skS4ZFWw6V5RDWKuttBTpj44FU2FNyKGb9Iakn8JRr
-        QVvDKydimHH1pLKh1qzjl/Wt7t9Hfo6XPl02dU/UWUpx
-X-Google-Smtp-Source: APiQypJeZbqR8cOxrIaCuTPsIeig2FGnuaB6IFS+w/IMBZaiGq2pK3JXRXRsR8/B4ve1cSseku7gziAyJDlCxouLxY4=
-X-Received: by 2002:a92:5c57:: with SMTP id q84mr8328572ilb.203.1589035469351;
- Sat, 09 May 2020 07:44:29 -0700 (PDT)
+        Sat, 9 May 2020 10:49:04 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A7C061A0C;
+        Sat,  9 May 2020 07:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z6vD6PmD89Ixku9rc/p9RR0bXWZL+mPNX4ud5gSu6aw=; b=v2bazMjSOW3QuO3Cwm/AZIlGa
+        QeYz/rk2irlMaD9bOX5DGoy2dgTbaKVEEuxct7DZEYERsw3AyqIhgYeZJ4cC5B2iu49Dyg7rmeJme
+        pOxw6mHkyeeD7VtZiuGXi0MNe4qAPoKKdfO5WF2F9v4xHYz7P4IvG+F+7tKc86Pm1UB6zjeUdDSzD
+        vpVdafAM1t2inbCi87XoqvbloXpzK4paV0goJ+ZcoP8SJBZYewsCvGgi6EHl7ed9Tz2CLUIXEXhQV
+        NSLlu15mJI8+ZvmzC3QzHzbwqTaNygMdsWwXp26pl1AiLyBNy2sjZ0Q7IggWUB7ur18sdRbtzEAoI
+        eL2Qx7waA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:55780)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jXQmd-0004EY-W2; Sat, 09 May 2020 15:48:56 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jXQmT-0002wF-PJ; Sat, 09 May 2020 15:48:45 +0100
+Date:   Sat, 9 May 2020 15:48:45 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200509144845.GF1551@shell.armlinux.org.uk>
+References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
+ <20190524100554.8606-4-maxime.chevallier@bootlin.com>
+ <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
+ <20200423170003.GT25745@shell.armlinux.org.uk>
+ <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk>
+ <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+ <20200509135105.GE1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20200508170630.94406-1-shakeelb@google.com> <20200508214405.GA226164@cmpxchg.org>
- <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
-In-Reply-To: <CALvZod5VHHUV+_AXs4+5sLOPGyxm709kQ1q=uHMPVxW8pwXZ=g@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sat, 9 May 2020 22:43:53 +0800
-Message-ID: <CALOAHbBK9XasDO9Wd1Jw9QzjSN--aEd2zuVkQSyVyitVmU8DAg@mail.gmail.com>
-Subject: Re: [PATCH] memcg: expose root cgroup's memory.stat
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Mel Gorman <mgorman@suse.de>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509135105.GE1551@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 10:06 PM Shakeel Butt <shakeelb@google.com> wrote:
->
-> On Fri, May 8, 2020 at 2:44 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Fri, May 08, 2020 at 10:06:30AM -0700, Shakeel Butt wrote:
-> > > One way to measure the efficiency of memory reclaim is to look at the
-> > > ratio (pgscan+pfrefill)/pgsteal. However at the moment these stats are
-> > > not updated consistently at the system level and the ratio of these are
-> > > not very meaningful. The pgsteal and pgscan are updated for only global
-> > > reclaim while pgrefill gets updated for global as well as cgroup
-> > > reclaim.
+On Sat, May 09, 2020 at 02:51:05PM +0100, Russell King - ARM Linux admin wrote:
+> On Sat, May 09, 2020 at 03:14:05PM +0200, Matteo Croce wrote:
+> > On Sat, May 9, 2020 at 1:45 PM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
 > > >
-> > > Please note that this difference is only for system level vmstats. The
-> > > cgroup stats returned by memory.stat are actually consistent. The
-> > > cgroup's pgsteal contains number of reclaimed pages for global as well
-> > > as cgroup reclaim. So, one way to get the system level stats is to get
-> > > these stats from root's memory.stat, so, expose memory.stat for the root
-> > > cgroup.
+> > > On Sat, May 09, 2020 at 11:15:58AM +0000, Stefan Chulski wrote:
+> > > >
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Matteo Croce <mcroce@redhat.com>
+> > > > > Sent: Saturday, May 9, 2020 3:13 AM
+> > > > > To: David S . Miller <davem@davemloft.net>
+> > > > > Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>; netdev
+> > > > > <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Antoine
+> > > > > Tenart <antoine.tenart@bootlin.com>; Thomas Petazzoni
+> > > > > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
+> > > > > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Stefan
+> > > > > Chulski <stefanc@marvell.com>; Marcin Wojtas <mw@semihalf.com>; Linux
+> > > > > ARM <linux-arm-kernel@lists.infradead.org>; Russell King - ARM Linux admin
+> > > > > <linux@armlinux.org.uk>
+> > > > > Subject: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
+> > > > > handle RSS tables
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > What do you think about temporarily disabling it like this?
+> > > > >
+> > > > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > > > @@ -5775,7 +5775,8 @@ static int mvpp2_port_probe(struct platform_device
+> > > > > *pdev,
+> > > > >                             NETIF_F_HW_VLAN_CTAG_FILTER;
+> > > > >
+> > > > >         if (mvpp22_rss_is_supported()) {
+> > > > > -               dev->hw_features |= NETIF_F_RXHASH;
+> > > > > +               if (port->phy_interface != PHY_INTERFACE_MODE_SGMII)
+> > > > > +                       dev->hw_features |= NETIF_F_RXHASH;
+> > > > >                 dev->features |= NETIF_F_NTUPLE;
+> > > > >         }
+> > > > >
+> > > > >
+> > > > > David, is this "workaround" too bad to get accepted?
+> > > >
+> > > > Not sure that RSS related to physical interface(SGMII), better just remove NETIF_F_RXHASH as "workaround".
 > > >
-> > >       from Johannes Weiner:
-> > >       There are subtle differences between /proc/vmstat and
-> > >       memory.stat, and cgroup-aware code that wants to watch the full
-> > >       hierarchy currently has to know about these intricacies and
-> > >       translate semantics back and forth.
+> > > Hmm, I'm not sure this is the right way forward.  This patch has the
+> > > effect of disabling:
 > > >
-> > >       Generally having the fully recursive memory.stat at the root
-> > >       level could help a broader range of usecases.
-> >
-> > The changelog begs the question why we don't just "fix" the
-> > system-level stats. It may be useful to include the conclusions from
-> > that discussion, and why there is value in keeping the stats this way.
-> >
->
-> Right. Andrew, can you please add the following para to the changelog?
->
-> Why not fix the stats by including both the global and cgroup reclaim
-> activity instead of exposing root cgroup's memory.stat? The reason is
-> the benefit of having metrics exposing the activity that happens
-> purely due to machine capacity rather than localized activity that
-> happens due to the limits throughout the cgroup tree. Additionally
-> there are userspace tools like sysstat(sar) which reads these stats to
-> inform about the system level reclaim activity. So, we should not
-> break such use-cases.
->
+> > > d33ec4525007 ("net: mvpp2: add an RSS classification step for each flow")
+> > >
+> > > but the commit you're pointing at which caused the regression is:
+> > >
+> > > 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
+> > >
+> > >
+> > 
+> > Hi,
+> > 
+> > When git bisect pointed to 895586d5dc32 ("net: mvpp2: cls: Use RSS
+> > contexts to handle RSS tables"), which was merged
+> > almost an year after d33ec4525007 ("net: mvpp2: add an RSS
+> > classification step for each flow"), so I assume that between these
+> > two commits either the feature was working or it was disable and we
+> > didn't notice
+> > 
+> > Without knowing what was happening, which commit should my Fixes tag point to?
+> 
+> Let me make sure that I get this clear:
+> 
+> - Prior to 895586d5dc32, you can turn on and off rxhash without issue
+>   on any port.
+> - After 895586d5dc32, turning rxhash on eth2 prevents reception.
+> 
+> Prior to 895586d5dc32, with rxhash on, it looks like hashing using
+> CRC32 is supported but only one context.  So, if it's possible to
+> enable rxhash on any port on the mcbin without 895586d5dc32, and the
+> port continues to work, I'd say the bug was introduced by
+> 895586d5dc32.
+> 
+> Of course, that would be reinforced if there was a measurable
+> difference in performance due to rxhash on each port.
 
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
+I've just run this test, but I can detect no difference in performance
+with or without 895586d5dc32 on eth0 or eth2 on the mcbin (apart from
+eth2 stopping working with 895586d5dc32 applied.)  I tested this by
+reverting almost all changes to the mvpp2 driver between 5.6 and that
+commit.
 
-> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> >
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->
-> Thanks a lot.
-
-
+That's not too surprising; I'm using my cex7 platform with the Mellanox
+card in for one end of the 10G link, and that platform doesn't seem to
+be able to saturdate a 10G link - it only seems to manage around 4Gbps.
 
 -- 
-Thanks
-Yafang
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
