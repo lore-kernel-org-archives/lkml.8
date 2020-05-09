@@ -2,157 +2,168 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD80DC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10A3C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C720D214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9064320735
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 10:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="BytHNatf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgEIKc2 (ORCPT
+        id S1728084AbgEIKhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 06:32:28 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:33256 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726877AbgEIKc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 06:32:27 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436712|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0310074-0.00171468-0.967278;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.HVnmYjV_1589020342;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HVnmYjV_1589020342)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Sat, 09 May 2020 18:32:22 +0800
-Subject: Re: [PATCH v4 00/12] pstore: mtd: support crash log to block and mtd
- device
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200508064004.57898-1-keescook@chromium.org>
- <202005080020.41C33738@keescook>
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Message-ID: <c1583001-bf03-d198-ad57-3d2a0baf93ca@allwinnertech.com>
-Date:   Sat, 9 May 2020 18:32:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 9 May 2020 06:37:53 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:35020 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726877AbgEIKhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 06:37:53 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 6DBC847CF8;
+        Sat,  9 May 2020 10:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1589020667; x=1590835068; bh=NjhSBdUtDpt27vc8z49oMLxZ6
+        nUA0857EPFame8QyLY=; b=BytHNatf8D2MlXUX0ul4BsFW63pzDKhHPFn0ipZy5
+        AxboSGEY6an84cMvWfbykJfvNX3h6kLNgBTb7ojUKwCnOew6YwpLxwNWIRhOGJ4G
+        KIxjicj25TeZZ33PqAOXyi92V7oG2JjjVlJjdSqHJtZodFVplpS9RJfXnk/ay0lc
+        6E=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id E1ied5mhQ_dK; Sat,  9 May 2020 13:37:47 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 1E96F412CE;
+        Sat,  9 May 2020 13:37:47 +0300 (MSK)
+Received: from localhost.localdomain (10.199.3.114) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Sat, 9 May 2020 13:37:48 +0300
+Message-ID: <61e9c83b910b3df44291a49b5587b772d4145036.camel@yadro.com>
+Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device
+ tree binding document
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 9 May 2020 13:38:46 +0300
+In-Reply-To: <20200508155050.0000008e@Huawei.com>
+References: <20200507132600.8801-1-i.mikhaylov@yadro.com>
+         <20200507132600.8801-2-i.mikhaylov@yadro.com>
+         <20200508155050.0000008e@Huawei.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <202005080020.41C33738@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.3.114]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Kees Cook,
-
-On 2020/5/8 PM 3:27, Kees Cook wrote:
-> On Thu, May 07, 2020 at 11:39:52PM -0700, Kees Cook wrote:
->> So far, I've identified the following stuff left to do:
->> [...]
->>         - implement ramoops-like probe feature for pstore/blk
+On Fri, 2020-05-08 at 15:51 +0100, Jonathan Cameron wrote:
+> On Thu, 7 May 2020 16:25:59 +0300
+> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 > 
-> With the following hack, I'm able to start testing the series:
+> > Mostly standard i2c driver with some additional led-current option
+> > for vcnl3020.
+> > 
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> > ---
+> >  .../iio/proximity/vishay,vcnl3020.yaml        | 65 +++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> > b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> > new file mode 100644
+> > index 000000000000..408dee17cdf5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+> > @@ -0,0 +1,65 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Integrated Proximity Sensor With Infrared Emitter
+> > +
+> > +maintainers:
+> > +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> > +
+> > +description: |
+> > +  The VCNL3020 is a fully integrated proximity sensor. Fully integrated
+> > means
+> > +  that the infrared emitter is included in the package. It has 16-bit
+> > +  resolution. It includes a signal processing IC and features standard I2C
+> > +  communication interface. It features an interrupt function.
+> > +
+> > +  Specifications about the devices can be found at:
+> > +  https://www.vishay.com/docs/84150/vcnl3020.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - vishay,vcnl3020
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  vdd-supply:
+> > +    description: Regulator that provides power to the sensor
+> > +
+> > +  vddio-supply:
+> > +    description: Regulator that provides power to the bus
+> > +
+> > +  vishay,led-current-microamp:
+> > +    description:
+> > +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
+> > +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for values
+> > +      higher than decimal 20. The drive current for the LED used in
+> > proximity
+> > +      sensing.
 > 
-> diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
-> index a736555e1ed3..7145da079267 100644
-> --- a/fs/pstore/blk.c
-> +++ b/fs/pstore/blk.c
-> @@ -373,12 +373,14 @@ int psblk_register_blkdev(unsigned int major, unsigned int flags,
->  	if (IS_ERR(binfo))
->  		return PTR_ERR(binfo);
->  
-> +#if 0
->  	/* only allow driver matching the @blkdev */
->  	if (!binfo->devt || MAJOR(binfo->devt) != major) {
->  		pr_debug("invalid major %u (expect %u)\n",
->  				major, MAJOR(binfo->devt));
->  		return -ENODEV;
->  	}
-> +#endif
->  
->  	/* hold bdev exclusively */
->  	bdev = psblk_get_bdev(holder);
-> @@ -423,7 +425,7 @@ void psblk_unregister_blkdev(unsigned int major)
->  	struct psblk_device dev = {.read = psblk_generic_blk_read};
->  	void *holder = blkdev;
->  
-> -	if (psblk_bdev && MAJOR(psblk_bdev->bd_dev) == major) {
-> +	if (psblk_bdev/* && MAJOR(psblk_bdev->bd_dev) == major*/) {
->  		psblk_unregister_device(&dev);
->  		psblk_put_bdev(psblk_bdev, holder);
->  		blkdev_panic_write = NULL;
-> @@ -476,6 +478,24 @@ int pstore_blk_usr_info(struct pstore_blk_info *info)
->  }
->  EXPORT_SYMBOL_GPL(pstore_blk_usr_info);
->  
-> +static int __init pstore_blk_init(void)
-> +{
-> +	int ret = 0;
-> +
-> +	if (blkdev[0])
-> +		ret = psblk_register_blkdev(0, 0, NULL);
-> +
-> +	return ret;
-> +}
-> +postcore_initcall(pstore_blk_init);
-> +
-> +static void __exit pstore_blk_exit(void)
-> +{
-> +	psblk_unregister_blkdev(0);
-> +}
-> +module_exit(pstore_blk_exit);
-> +
-> +
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
->  MODULE_DESCRIPTION("pstore backend for block devices");
+> This text is really confusing. Just let the enum speak for itself and leave
+> text as
+> something short like
 > 
+> "The driver current for the LED used in proximity sensing. "
 > 
-> Then I can get things up and running with:
-> 
-> # insmod pstore.ko compress=off
-> # insmod pstore_zone.ko
-> # truncate pstore-blk.raw --size 100M
-> # losetup -f --show pstore-blk.raw
-> /dev/loop0
-> # insmod pstore_blk.ko blkdev=/dev/loop0 kmsg_size=16 console_size=64
-> 
-> So far, I've hit a few bugs. The most obvious is that "rmmod" causes a
-> fault, so I think locking and other things need to be fixed up further.
-> After that, it looked like all the compressed files were failing to
-> decompress, which implies some kind of buffer offset problem. When I
-> loaded with pstore.compress=off I got readable logs, but there is a span
-> of garbage between the header and the body in
-> /sys/fs/pstore/dmesg-pstore-zone-1 etc.
+> Units and values are clear already.
 > 
 
-Both of the above two bugs have been fix on series v6.
+Jonathan, just to double check, for preventing further problems with
+misunderstanding, is that what you want?
 
-The following diff is to fix "rmmod" bug.
+  vishay,led-current-microamp:
+    description:
+        The driver current for the LED used in proximity sensing.
 
-@@ -1273,8 +1273,8 @@ static void psz_free_zones(struct pstore_zone
-***pszones, unsigned int *cnt)
-                return;
+    enum: [0..200000] <- just for shortening
+    default: 20000
 
-        while (*cnt > 0) {
--               psz_free_zone(&zones[*cnt]);
-                (*cnt)--;
-+               psz_free_zone(&zones[*cnt]);
-        }
-        kfree(zones);
-        *pszones = NULL;
+Thanks.
 
-> Cool so far! It just needs a bit more testing a polish. :)
-> 
-
--- 
-WeiXiong Liao
