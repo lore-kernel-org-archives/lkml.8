@@ -2,125 +2,102 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9119DC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ED3C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F01208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="BSaFepju";
-	dkim=pass (1024-bit key) header.d=sammserver.com header.i=@sammserver.com header.b="BSaFepju"
+	by mail.kernel.org (Postfix) with ESMTP id BA9E1208DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589066834;
+	bh=h7jcx4RX12UAauOjjaF3CWWs8JN9JlTJ0E1MJWu2ZPY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZmDW55Z0p+MdHIEly9wzmLJSC7+Pj/BhTrH+/MmFzO9qJ8D/RAGmF9IF7ERA+UegR
+	 XilDatzS3GOthBZP6PrdGlv2WfTZCcQ2C2NUV4Yf0ncgAYvV4FdllKEDRv7StOMEsm
+	 7Np3O5KnfIBOfv9WC5JouTViny2W5bqLlhmzd/Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgEIXWa (ORCPT
+        id S1726913AbgEIX1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        Sat, 9 May 2020 19:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725927AbgEIXWa (ORCPT
+        by vger.kernel.org with ESMTP id S1725927AbgEIX1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:22:30 -0400
-X-Greylist: delayed 587 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 09 May 2020 16:22:29 PDT
-Received: from mail.sammserver.com (sammserver.com [IPv6:2001:470:5a5b:1::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A19C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 16:22:29 -0700 (PDT)
-Received: by mail.sammserver.com (Postfix, from userid 5011)
-        id 4CFEAB977F0; Sun, 10 May 2020 01:12:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
-        s=email; t=1589065960;
-        bh=7QaA+216Ra/pqltyIXWSczfrH3JuNxlObZf9vee8Otc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BSaFepjun5Ap/XDWQqdM9N0ugSmJRbj+a9fIg7dX7JSwMomvvUPDi9ka/y5vhPC1V
-         26DvOhQji2FEdW4S1Ah7R8w16xmal1vsFz//z81tn08q2tYFKb0/lbYHWE8tPlygWm
-         YxflshZAgX+Y+xgPE5fTTf8gWUNV1LLKc4GRNcvE=
-Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
-        by mail.sammserver.com (Postfix) with ESMTP id CB21AB977ED;
-        Sun, 10 May 2020 01:12:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sammserver.com;
-        s=email; t=1589065960;
-        bh=7QaA+216Ra/pqltyIXWSczfrH3JuNxlObZf9vee8Otc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BSaFepjun5Ap/XDWQqdM9N0ugSmJRbj+a9fIg7dX7JSwMomvvUPDi9ka/y5vhPC1V
-         26DvOhQji2FEdW4S1Ah7R8w16xmal1vsFz//z81tn08q2tYFKb0/lbYHWE8tPlygWm
-         YxflshZAgX+Y+xgPE5fTTf8gWUNV1LLKc4GRNcvE=
-Received: by fastboi.localdomain (Postfix, from userid 1000)
-        id B1BB31420055; Sun, 10 May 2020 01:12:39 +0200 (CEST)
-Date:   Sun, 10 May 2020 01:12:39 +0200
-From:   Samuel =?utf-8?B?xIxhdm9q?= <sammko@sammserver.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] HID for 5.7
-Message-ID: <20200509231239.ccnbk4km7p77gafu@fastboi.localdomain>
-References: <nycvar.YFH.7.76.2004011353080.19500@cbobk.fhfr.pm>
- <CAHk-=wgy8AM+BOt4jhnoQ+wa=YVyXT4ARg=qEYC=S-OW4ZjZzw@mail.gmail.com>
- <nycvar.YFH.7.76.2004031158280.19713@cbobk.fhfr.pm>
+        Sat, 9 May 2020 19:27:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9DEC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 16:27:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h4so5532624ljg.12
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 16:27:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/526PjPnbjCwilKm7RsHfW0Ne/bEDskYmPkox9dhVf0=;
+        b=J6GSYDTxcjkpJ68uD/bLGdCa08JXEON68qGsC5jjDyX0dXL7P1sV4tN24W7cJuDQLu
+         dwkQCm4gYLNybNoSpRZa/NEVgkvOibr6OUuJ757fJfSIhdWS/WQJ1IByySQn/0+kf1VM
+         3/WoQH/EKw/gyZH0IBGeQF1jLOK27vvFeL5Yw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/526PjPnbjCwilKm7RsHfW0Ne/bEDskYmPkox9dhVf0=;
+        b=WF4QN7utl/bclOfEOf8M3c4AYqFoKiIV9Jz3AlWxfIQzpph/bDlqkGL92Ai/FZaCjB
+         Cpya2u4FrBKXgYs0v6KYUu15ucpjC5dBhH47XPtRVJj4djnVcmEGW4fuvKWAP61e3uwv
+         t9aAQYGRfRO1eOt9gS1PuIWdGaNOIt9Rgduc/zFZBih8ztJ4O2sbq508lGUJvItcH9GM
+         xKxHVIH++s1wZo52vmvqP67+U7G57xh6U5xms4EBlP+sv3By7qAvonlqKt+dmRzqOoup
+         NKcizZmXdeTaDd2uLZzESIkZIg7JoCVCyMpYe7zVj34y4tFYgAcNqCZjR7WuOjktOQFj
+         N1Lg==
+X-Gm-Message-State: AOAM533nvQ0+yLkGSEMqCDLbw8quL2qSXJ8/IuFUxy6ET7MGod0R49s7
+        /GqLw9OP4ezh23wIMHdqsoD7PL5mrtg=
+X-Google-Smtp-Source: ABdhPJwefZjj0ZyF56diMTEgHkD5orv9X7Epx3LUdGMvV0e9aUi7Z6Ev+QfBO6iK2tVmMaX7B1GZsw==
+X-Received: by 2002:a2e:8108:: with SMTP id d8mr5577330ljg.184.1589066830881;
+        Sat, 09 May 2020 16:27:10 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id p2sm5032261lji.40.2020.05.09.16.27.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 16:27:10 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id s9so4387407lfp.1
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 16:27:09 -0700 (PDT)
+X-Received: by 2002:ac2:418b:: with SMTP id z11mr6301034lfh.30.1589066829592;
+ Sat, 09 May 2020 16:27:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.2004031158280.19713@cbobk.fhfr.pm>
+References: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 May 2020 16:26:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=win0EVU_GuO=GuJu3Ck0WG1B3+ub-CjncM3B1G9x5d9cw@mail.gmail.com>
+Message-ID: <CAHk-=win0EVU_GuO=GuJu3Ck0WG1B3+ub-CjncM3B1G9x5d9cw@mail.gmail.com>
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.7-rc5
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Andreas Schwab <schwab@suse.de>
+Cc:     linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.2020 12:05, Jiri Kosina wrote:
-> It would still be possible to access the report via hidraw, and maybe 
-> that's analogy of what the Windows driver/special Glorious software :) 
-> does, I don't know. It's hard to believe that Windows would be actually 
-> willing to report any changes coming through HID_MAIN_ITEM_CONSTANT 
-> reports, but who knows.
+On Fri, May 8, 2020 at 11:47 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> * Adding a note to the VDSO so glibc can check the kernel's version without a
+>   uname().
 
-I did some research of what other HID implementations do in this
-situation and would like to share it here.
+Eww.
 
-Windows, as we already know, does not seem to mind the CONST flag and
-accepts the reports just fine. Of course, whether this is the general
-behaviour or only a special case, we can only speculate, short of
-emulating devices with the descriptors incorrect in some way or another,
-either in software or with some sort of microcontroller. I haven't yet
-set out to do this, but I might eventually.
+I realize other architectures do this, but why add it to new architectures?
 
-macOS (tested a 10.13 hackintosh) accepts the reports just fine. This
-platform is an interesting case, because Apple's HID stack is
-open-source. Assuming I understand the code correctly, the logic which
-filters out padding is found in HIDIsButtonOrValue.c of the IOHIDFamily
-component. The file can be found here[1]. The author(?) helpfully
-provides a description in the changelog:
+glibc depending on kernel version is WRONG. It's bogus. You can't do
+feature detection based on kernel version, it's fundamentally broken.
 
-11/1/99    BWS     [2405720]
-    We need a better check for 'bit padding' items,                                                                                                                   
-    rather than just is constant. We will check to make sure the
-    item is constant, and has no usage, or zero usage.
+So I really would prefer to see glibc fixed not to do that stupid
+thing, instead of adding pointless vdso notes to the kernel.
 
-I am not particularly well-versed in HID, but this sounds like a
-reasonable solution. Is there anything preventing this approach in
-Linux? While doing the initial research when I was working on the
-original patch, I noticed some code was purposefully setting the CONST
-flag in order to get reports ignored. Food for thought, especially for
-someone who knows what they are doing, unlike me :D
+Andreas? Why does glibc care about that ELF note?
 
-FreeBSD, to my limited knowledge, only includes a basic HID driver
-in the kernel, capable of boot protocol mice and keyboards. There is a
-userspace daemon, uhidd, which grabs the raw ugen device and submits
-keycodes to a virtual keyboard (or mouse) with more comprehensive
-support for consumer control and such. It ignores the reports as can be
-seen on L318 of uhidd_cc.c [2].
-
-I don't currently have access to other platforms, although I don't even
-know of any with a comprehensive HID implementation. Maybe game consoles?
-
-Of course, I am not sure this is worth the effort in the first place, I
-was just curious. Also, not sure if I mentioned this before, I reached
-out to the hardware manufacturer about this issue, they haven't
-responded. Not a surprise.
-
-Sam
-
-[1]: https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-1446.61.2/IOHIDSystem/IOHIDDescriptorParser/
-[2]: https://github.com/kaiwang27/uhidd/blob/master/uhidd/uhidd_cc.c#L318
+              Linus
