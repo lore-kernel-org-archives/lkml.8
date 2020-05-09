@@ -2,102 +2,169 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5448EC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F58C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC3321473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0TmtAu0"
+	by mail.kernel.org (Postfix) with ESMTP id 2B2A0214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgEILLo (ORCPT
+        id S1728188AbgEILOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725920AbgEILLn (ORCPT
+        Sat, 9 May 2020 07:14:48 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:34579 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725920AbgEILOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:11:43 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74903C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 04:11:43 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id m12so7888783wmc.0
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 04:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=rgJrLSjHlAQWw14xkbMllSGSwhG0VM0yS2HV2OmYzlg=;
-        b=S0TmtAu0TiFgHaZPxbd8arbZ49KP9evFXFQyDTUuQGsFitk6YyUwcwlpAD8i+w7ZiM
-         oEuJj9xTU+HEKCHQzRGNZvOpIeGzJsiTr87qFJ2nb9JeYHnVfv9Ktwqwh6b7mOCf/mJi
-         Ah5PfJG+QkDwdnCWYNMyrQo0KnCiwfKAawIQN7ZclNoRCzLhSpfV2ehdDUQZt7FCmtVp
-         3ienEgXONmdKdyk/C1T55eoipeLbZCWTYqX1KrAsusxwVn2/QbM5i4pwHYT2WybuL5th
-         lUg9r+oCitKuspc+PTXygii/q8e2dfWGwj7rXNj0wfmW0fIadoptlpbq941KzovPLagk
-         Eozg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=rgJrLSjHlAQWw14xkbMllSGSwhG0VM0yS2HV2OmYzlg=;
-        b=jK+OfAtcgFTi2u1698LwIyVl5W7fVDZeuWIExM0RBoTE0cTLH4y+RrR3SRxr5w8u7c
-         +OS8XqlvlWKTFG6ea4+wWD+0dwlqizunMd4Fobie6YJpZkp62oazcNskPDDIhjpWE7Ii
-         DAmJLbpBJQxWQD1uyvjQLXBFsW3V7Mtl3Vl//7K9nMzz/CbNHjOyllq5IykvxD5aQtpa
-         q2NXKHvafzZQft/0hk1jVmY0e9szOEO22biTfllfGZVsKZVIVP4c2YO+G+mBpVYpg1hT
-         vjwjHie2WK3BjD/iidzXvW90BswUQaWJdN17WoHgwoTY5BxtV41oT/HDw9r2EJJ3zaHY
-         5mtQ==
-X-Gm-Message-State: AGi0Pua6dCgDq4QUEJLREPZyEah2necs5EHQfpH9FkUMEeNotg9Mr+6E
-        h9Mh9PUygUZGvyRUKOPreD58MVNRxldEK/LY4ZwM8QBT
-X-Google-Smtp-Source: APiQypJ3bEsI1jrAVqs2gXeRjY6U2Nd+jvo9MoTEw51MBCXA+5Zzqu/49y23C1W+1kx3iuARuW8L9HU49Tngkw5SvIk=
-X-Received: by 2002:a1c:c287:: with SMTP id s129mr13657428wmf.39.1589022701053;
- Sat, 09 May 2020 04:11:41 -0700 (PDT)
-MIME-Version: 1.0
-From:   Chunyan Wang <yanrrr@gmail.com>
-Date:   Sat, 9 May 2020 12:11:30 +0100
-Message-ID: <CAM0T-t16KMFHZ15wtDLTgtv8yiiP5_8Zu-a643AeBiX5NctCfw@mail.gmail.com>
-Subject: tsc_khz vs cpu_khz clarification
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 9 May 2020 07:14:47 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436316|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0620642-0.00271633-0.935219;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16367;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.HVopGr-_1589022874;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HVopGr-_1589022874)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Sat, 09 May 2020 19:14:40 +0800
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH v5 01/12] printk: pstore: Introduce kmsg_dump_reason_str()
+Date:   Sat,  9 May 2020 19:14:03 +0800
+Message-Id: <1589022854-19821-2-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589022854-19821-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1589022854-19821-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Kees Cook <keescook@chromium.org>
 
-I'm trying to understand exactly what the two variables tsc_khz and
-cpu_khz represent. Information online seems to suggest:
+The pstore subsystem already had a private version of this function.
+With the coming addition of the pstore/zone driver, this needs to be
+shared. As it really should live with printk, move it there instead.
 
-tsc_khz - Is the frequency of the tsc
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/platform.c      | 22 +---------------------
+ include/linux/kmsg_dump.h |  7 +++++++
+ kernel/printk/printk.c    | 21 +++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 21 deletions(-)
 
-cpu_khz - Outputs in /proc/cpuinfo in the processor description, best
-I can tell this is the P0 frequency. Some code examples also seem to
-translate tsc values to real time with this, implying it is also the
-frequency of the tsc.
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index b882919b8784..4fb8ec9f3a1c 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -130,26 +130,6 @@ enum pstore_type_id pstore_name_to_type(const char *name)
+ }
+ EXPORT_SYMBOL_GPL(pstore_name_to_type);
+ 
+-static const char *get_reason_str(enum kmsg_dump_reason reason)
+-{
+-	switch (reason) {
+-	case KMSG_DUMP_PANIC:
+-		return "Panic";
+-	case KMSG_DUMP_OOPS:
+-		return "Oops";
+-	case KMSG_DUMP_EMERG:
+-		return "Emergency";
+-	case KMSG_DUMP_RESTART:
+-		return "Restart";
+-	case KMSG_DUMP_HALT:
+-		return "Halt";
+-	case KMSG_DUMP_POWEROFF:
+-		return "Poweroff";
+-	default:
+-		return "Unknown";
+-	}
+-}
+-
+ static void pstore_timer_kick(void)
+ {
+ 	if (pstore_update_ms < 0)
+@@ -402,7 +382,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
+ 	unsigned int	part = 1;
+ 	int		ret;
+ 
+-	why = get_reason_str(reason);
++	why = kmsg_dump_reason_str(reason);
+ 
+ 	if (down_trylock(&psinfo->buf_lock)) {
+ 		/* Failed to acquire lock: give up if we cannot wait. */
+diff --git a/include/linux/kmsg_dump.h b/include/linux/kmsg_dump.h
+index cfc042066be7..b3ddb0b2ee40 100644
+--- a/include/linux/kmsg_dump.h
++++ b/include/linux/kmsg_dump.h
+@@ -72,6 +72,8 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
+ int kmsg_dump_register(struct kmsg_dumper *dumper);
+ 
+ int kmsg_dump_unregister(struct kmsg_dumper *dumper);
++
++const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason);
+ #else
+ static inline void kmsg_dump(enum kmsg_dump_reason reason)
+ {
+@@ -113,6 +115,11 @@ static inline int kmsg_dump_unregister(struct kmsg_dumper *dumper)
+ {
+ 	return -EINVAL;
+ }
++
++static inline const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
++{
++	return "Disabled";
++}
+ #endif
+ 
+ #endif /* _LINUX_KMSG_DUMP_H */
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 1aab69a8a2bf..67a284830d74 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3144,6 +3144,27 @@ int kmsg_dump_unregister(struct kmsg_dumper *dumper)
+ static bool always_kmsg_dump;
+ module_param_named(always_kmsg_dump, always_kmsg_dump, bool, S_IRUGO | S_IWUSR);
+ 
++const char *kmsg_dump_reason_str(enum kmsg_dump_reason reason)
++{
++	switch (reason) {
++	case KMSG_DUMP_PANIC:
++		return "Panic";
++	case KMSG_DUMP_OOPS:
++		return "Oops";
++	case KMSG_DUMP_EMERG:
++		return "Emergency";
++	case KMSG_DUMP_RESTART:
++		return "Restart";
++	case KMSG_DUMP_HALT:
++		return "Halt";
++	case KMSG_DUMP_POWEROFF:
++		return "Poweroff";
++	default:
++		return "Unknown";
++	}
++}
++EXPORT_SYMBOL_GPL(kmsg_dump_reason_str);
++
+ /**
+  * kmsg_dump - dump kernel log to kernel message dumpers.
+  * @reason: the reason (oops, panic etc) for dumping
+-- 
+1.9.1
 
-For AMD the only information I've found states the tsc frequency will
-be the P0 frequency. The system under test is an SMP one with 2x "AMD
-EPYC 7542 32-Core Processor", which sees the following between 3
-successive boots for these values:
-
-boot 1:
-tsc_khz 2894561
-cpu_khz 2894496
-
-boot 2:
-tsc_khz 2894562
-cpu_khz 2894578
-
-boot 3:
-tsc_khz 2894561
-cpu_khz 2894458
-
-I'd like to understand what these values represent given the reported
-values above.
-
-Please could you keep me cc'd in responses.
-
-Regards,
-Simon
