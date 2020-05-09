@@ -7,129 +7,150 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E79EC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A2C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E737924958
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A438020870
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgEIBes (ORCPT
+        id S1728522AbgEIBmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:34:48 -0400
-Received: from mail-mw2nam12olkn2060.outbound.protection.outlook.com ([40.92.23.60]:10433
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        Fri, 8 May 2020 21:42:51 -0400
+Received: from mail-bn8nam12olkn2052.outbound.protection.outlook.com ([40.92.21.52]:59105
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727828AbgEIBer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:34:47 -0400
+        id S1727828AbgEIBmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:42:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fxAt6Yw3a29xPbXCUIsYdXRk6+e7v+cGmZ/HjG1MQRm90Qw0f4jDLLxPsCzc2btto6evkEMWWlycdSelN5yMXhsSRiue/rvTQ4+17C0lyencFn2z4EOfTj0XhEptbe/h7alIN/mGo07vyHr7bVkcniicOTGIu+dTi3kfNLBOcGetWZRiJjZ4RVrLQsvx9CZ9IDIuPqaH8R3jXqbkVzKCu6MXNdc7ZlHld+hRRZFEvqw3NSPfZZgbJn9maqHSQwhAEibtwqqNkg9aA2C38j45HsDX/g+w4dLY5zCowBLOizKhmA6yJcLCEzvnfkx2PyAVnhOICva56pANf3+ge0iP/g==
+ b=V+kuVfGYMX1p3eajR43zJeRvnSrhNcl3F2ZKxofObIHk0xRgBztJktEBpurBdZR/9jGxHt9AgqGlM9gdZlKtscvSPdbE85eEXK2o8mVLdDklFlzVqRqlyXgQSIjzkKE34yEo9WZqusnfPLdKOEX/nheBkpZ40RLWXSZZlfUnj1uHc4rou8xFlWoeGVSEYl4dA95tlkEf9AUqh4mZe3LQYZ5CSs+coSKTwFvOnlMx+KOW9985v1uoy195Ear84VubajVHIrn4evjIhWJ3pCH3twqu/7HZg9w/TqOid2KRECW0nb7xFWsDpoysxTCWPS+SSxnM7LYW5Zy/LcVrjmHP7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zg0OsvzlU1eLMvS0vAoFzf9f4nkJrus+FNqiK+LOu2I=;
- b=Xnc79Th8Cj+D6eh6Iv2z+22qULBstWjonQ6ShBeGpxY1gbm4LLU8XebPkvQUVg/r7/EhGY5ldLWZv1dvMmGwzUUqe1sbr3HxyzPWFTxFaw/eV8uWF77LM7/Sf2wVYoJqzEbsfDaL81TN/y4F1HYVSdYEByjsQYu63mVzXTBL765xj437Hb3giebRq0Gs/OhMOM50DabHS5ct3VIaae6QCxugStItk0uK+aXJDC2hgRgUqp8EEbtOs+mW3lWL+6TfGx8zdOLbGtEed9iBn5t3mihALBLwDfUyU0BPkLn1Nmj9owKZg3/pYmj2ua1Q14hXyKqD2PC9bMJ7rPuYjLhDPw==
+ bh=mDH3p+hzRED8EGf/9tEbqNkQS1G8ID01Publ3nZL6Kg=;
+ b=iBDyyOauZXe5S46sD3aAZRJ/1CWmbeem6UtV4ceDPwGmBPUlcolL7UO8nF8Fnzt2FfQOo2QrTfpiQyOhi3s4X3/Rf9vK+BKAVzQU/BFVGsl3Hcqgo3It83EHhQ7k37ChJIIKEeX6wOoybIAnVPDJdmLSz2QYe70Ypj3f4KbMlRGw5RWW41KSdmrenShvai/FXSaK9FZeK9mnR+MpWKerVRttYIoDQ7BaBbjhhxsfx2HvRgLUteZ5zx/RCD5+f+bjW+EsOzKuzndWktozKqYSPytybobs9frXL1hwoBAr8IKgqPSejDLposwysL82bMvsfabEPGA33A89T3lKOF0Ctw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
  header.d=live.ca; arc=none
-Received: from BN8NAM12FT019.eop-nam12.prod.protection.outlook.com
- (2a01:111:e400:fc66::51) by
- BN8NAM12HT197.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::385)
+Received: from BN8NAM12FT013.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc66::4d) by
+ BN8NAM12HT116.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc66::225)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11; Sat, 9 May
- 2020 01:34:44 +0000
+ 2020 01:42:49 +0000
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc66::49) by BN8NAM12FT019.mail.protection.outlook.com
- (2a01:111:e400:fc66::416) with Microsoft SMTP Server (version=TLS1_2,
+ (2a01:111:e400:fc66::41) by BN8NAM12FT013.mail.protection.outlook.com
+ (2a01:111:e400:fc66::227) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
- Transport; Sat, 9 May 2020 01:34:44 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:D3D0BD23F8AD38415164C897CD7B9247A5EB6F568E4DEB138FB449DB98DEBD0E;UpperCasedChecksum:059D37F2A3F4A1A387B49EDA450D39FF8E59769650961E57C50C8618236AF017;SizeAsReceived:7738;Count:48
+ Transport; Sat, 9 May 2020 01:42:49 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:572E685D6E1F76FEC7439EE2BC29B1C4BC66E8E078DBBF84CB493AFCA0BC82C8;UpperCasedChecksum:F37D8874BCE8DB9FE1E43B387C6BC4C07905B5B0A09D28418B12068C5F766B37;SizeAsReceived:7668;Count:48
 Received: from BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
  ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2979.033; Sat, 9 May 2020
- 01:34:44 +0000
+ 01:42:49 +0000
 From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
-        jslaby@suse.com, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+To:     linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH] tty: serial: samsung: Correct clock selection logic
-Date:   Fri,  8 May 2020 18:34:33 -0700
-Message-ID: <BN6PR04MB06604E63833EA41837EBF77BA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
+Subject: [PATCH] iio: light: gp2ap002: Take runtime PM reference on light read
+Date:   Fri,  8 May 2020 18:42:21 -0700
+Message-ID: <BN6PR04MB0660DD24B7B4418DCC2806FBA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
 X-Mailer: git-send-email 2.20.1
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: CO2PR04CA0007.namprd04.prod.outlook.com
- (2603:10b6:102:1::17) To BN6PR04MB0660.namprd04.prod.outlook.com
+X-ClientProxiedBy: CO1PR15CA0098.namprd15.prod.outlook.com
+ (2603:10b6:101:21::18) To BN6PR04MB0660.namprd04.prod.outlook.com
  (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200509013433.23152-1-xc-racer2@live.ca>
+X-Microsoft-Original-Message-ID: <20200509014221.29882-1-xc-racer2@live.ca>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO2PR04CA0007.namprd04.prod.outlook.com (2603:10b6:102:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Sat, 9 May 2020 01:34:43 +0000
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO1PR15CA0098.namprd15.prod.outlook.com (2603:10b6:101:21::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Sat, 9 May 2020 01:42:48 +0000
 X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200509013433.23152-1-xc-racer2@live.ca>
-X-TMN:  [NN/Ci17XNAwKoNPXso5hxFZpP2g50cHt4TsXayU35974VRbh31XZ/ItSSL84vS+8]
+X-Microsoft-Original-Message-ID: <20200509014221.29882-1-xc-racer2@live.ca>
+X-TMN:  [yS5/kVKGvZbsKMM3W8yVvy/1oxLonmGxl7+gJ00f4VoJngVrkrpNtpHHYLpHKDM+]
 X-MS-PublicTrafficType: Email
 X-IncomingHeaderCount: 48
 X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 78b3340d-b96b-452d-59f6-08d7f3b926bc
-X-MS-TrafficTypeDiagnostic: BN8NAM12HT197:
+X-MS-Office365-Filtering-Correlation-Id: d60c85b7-a7e3-4a5d-b1db-08d7f3ba47b9
+X-MS-TrafficTypeDiagnostic: BN8NAM12HT116:
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S+Pmf+7X1j1nLgegg525J2+23iYcy2bhoHxH+EkC2ENEuS36A+dHlaKl+L/r2a5je2rG37sXbLxkR0w215OhBM0UKKp04P/s0wk3jwcy9hGo3M1Vge4l4nd5xjDKwqKhahvyoqrNBQ5M5b9dHXA4KfXbqT1bM1UOOpfNWTNeWOCOBshLsAXZlb9EYGUaOA76nZjJuun1WKmBTTQe2tW87Q==
+X-Microsoft-Antispam-Message-Info: UV9dv3MDqeWELU9BQhq79SH7Z6/KGyDKwisGjMik9MeLMX3P6uq0Obum5/NEb3E31UnIshB1x38NUMA/sAsyhdoeTfKi/erdfLIrm+LSNdvDcVihOhbkF/3aydhVyu+Qd0fyLo3CQO2xDnRZOb02Ksu1+zFxa9ldu8J1fSBUDSOxFUfJmSjBgawDCu8Z7FKHOVaLEOA/mISmq4ob6S1Z8A==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: osNfQuONJHWs8koab4YCXiQIb3SnKhMK3W9431E2kJQRg+sFYCTBJJbSS+BrWYQwCVZN/+BEsywDEW5Bf/Dg8yq/4lOHipVOl0ZJ8eCrcWrH/z+zuzqateBKfPQLVNXhlFe9I6HHfFUumU3qoDh2nys89Ndyg6tH7szq/RW7yAf/LOn9UKRpv9xoLXr6AhG5E3eCcXnXno2nlNKa/mUQHw==
+X-MS-Exchange-AntiSpam-MessageData: wjY2lAYWnQBDq1OMjklYW/fc51lvjvUCHtZ3UdfWHSXy4kS47tvv3Pf8ZnUDiP7dMs5MCuJun+lR8uRd0qNiXXcSveSJPD37j3sdPX95EozvsSd+CzJBWAXj9skX3CwYml1dRbJedT2xwKPc9WJ648aata8cH3QvD6i/1U3mIz24TRUm0lUVUOmdsJwoGLtxZ0dkP+/M6aSPlPTkwJmDCg==
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78b3340d-b96b-452d-59f6-08d7f3b926bc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 01:34:44.6349
+X-MS-Exchange-CrossTenant-Network-Message-Id: d60c85b7-a7e3-4a5d-b1db-08d7f3ba47b9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 01:42:49.2581
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT197
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM12HT116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some variants of the samsung tty driver can pick which clock
-to use for their baud rate generation.  In the DT conversion,
-a default clock was selected to be used if a specific one wasn't
-assigned and then a comparison of which clock rate worked better
-was done.  Unfortunately, the comparison was implemented in such
-a way that only the default clock was ever actually compared.
-Fix this by iterating through all possible clocks, except when a
-specific clock has already been picked via clk_sel (which is
-only possible via board files).
+The light sensor needs the regulators to be enabled which means
+the runtime PM needs to be on.  This only happened when the
+proximity part of the chip was enabled.
+
+As fallout from this change, only report changes to the prox
+state in the interrupt handler when it is explicitly enabled.
 
 Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 ---
- drivers/tty/serial/samsung_tty.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/light/gp2ap002.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 73f951d65b93..9d2b4be44209 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -1281,14 +1281,14 @@ static unsigned int s3c24xx_serial_getclk(struct s3c24xx_uart_port *ourport,
- 	struct s3c24xx_uart_info *info = ourport->info;
- 	struct clk *clk;
- 	unsigned long rate;
--	unsigned int cnt, baud, quot, clk_sel, best_quot = 0;
-+	unsigned int cnt, baud, quot, best_quot = 0;
- 	char clkname[MAX_CLK_NAME_LENGTH];
- 	int calc_deviation, deviation = (1 << 30) - 1;
+diff --git a/drivers/iio/light/gp2ap002.c b/drivers/iio/light/gp2ap002.c
+index b7ef16b28280..7a2679bdc987 100644
+--- a/drivers/iio/light/gp2ap002.c
++++ b/drivers/iio/light/gp2ap002.c
+@@ -158,6 +158,9 @@ static irqreturn_t gp2ap002_prox_irq(int irq, void *d)
+ 	int val;
+ 	int ret;
  
--	clk_sel = (ourport->cfg->clk_sel) ? ourport->cfg->clk_sel :
--			ourport->info->def_clk_sel;
- 	for (cnt = 0; cnt < info->num_clks; cnt++) {
--		if (!(clk_sel & (1 << cnt)))
-+		/* Keep selected clock if provided */
-+		if (ourport->cfg->clk_sel &&
-+			!(ourport->cfg->clk_sel & (1 << cnt)))
- 			continue;
++	if (!gp2ap002->enabled)
++		goto err_retrig;
++
+ 	ret = regmap_read(gp2ap002->map, GP2AP002_PROX, &val);
+ 	if (ret) {
+ 		dev_err(gp2ap002->dev, "error reading proximity\n");
+@@ -247,6 +250,8 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
+ 	struct gp2ap002 *gp2ap002 = iio_priv(indio_dev);
+ 	int ret;
  
- 		sprintf(clkname, "clk_uart_baud%d", cnt);
++	pm_runtime_get_sync(gp2ap002->dev);
++
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		switch (chan->type) {
+@@ -255,13 +260,21 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
+ 			if (ret < 0)
+ 				return ret;
+ 			*val = ret;
+-			return IIO_VAL_INT;
++			ret = IIO_VAL_INT;
++			goto out;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto out;
+ 		}
+ 	default:
+-		return -EINVAL;
++		ret = -EINVAL;
+ 	}
++
++out:
++	pm_runtime_mark_last_busy(gp2ap002->dev);
++	pm_runtime_put_autosuspend(gp2ap002->dev);
++
++	return ret;
+ }
+ 
+ static int gp2ap002_init(struct gp2ap002 *gp2ap002)
 -- 
 2.20.1
 
