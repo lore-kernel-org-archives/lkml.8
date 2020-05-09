@@ -2,109 +2,171 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6228C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FFAC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C17A20820
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcvLKoGH"
+	by mail.kernel.org (Postfix) with ESMTP id 093DC24957
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgEIInh (ORCPT
+        id S1727917AbgEIIoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726063AbgEIInh (ORCPT
+        Sat, 9 May 2020 04:44:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47368 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgEIIop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:43:37 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D708AC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 01:43:36 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id f15so1777646plr.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 01:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=MM0pGuoQz+m2i7SaYQltsjhcG+vuQhDEB07kHe3ONp0=;
-        b=kcvLKoGHrq9a+5FfTP8I/NSRlRWu8KC1v695rjWAb9PcXDvN9fvLTi2oFBnMQCjBOY
-         EPu3A2k0S9rM8sVRt4AllKRGzkMHa+mCg07kNipoGXPLoIxr1zaKy3OPelFzOOmwND7+
-         cgkpVRemAhJ+yVySh/spOAaQ5wnLx3cu0pfxBJXEAP3lXJPmIXNN+mJf1OtqtiHIfG7S
-         tXDRZBpYBb5eY7ddn+nJ/QeJl3ZniXG4JIaqkvaRwTvEcD3UFG+JGxjLmBFn9rzxPHlj
-         TqFHybaSAf2rwWCCo8B7A4jeFE8p5+QkzdYbyT/6RuaJA8ed/2SRuqa7RBk6ZKovLbLK
-         JJDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=MM0pGuoQz+m2i7SaYQltsjhcG+vuQhDEB07kHe3ONp0=;
-        b=KFmch7KBx8Dl1qysFsOwVqnF+t5YXTR1jU4w1bU3IJE+G+f8R7QieugYcc9mnEieCk
-         4OexisEA9isBojnSEqz4AJIMuZwxRPZc35zqy/5idqvE7iwxp8hRajGpLXJKd9rse6+r
-         dDtNPVAnUCf3u70Z1SLh698mNAGNQRsiBTbacG/S5iP3y0NNAQJ0YfjXeV5iHKVd64CB
-         kLIareKxsM1CuOentobEjDSCq1AkQNmAJzJacSzYT9hRDxRT4pWphxppV8BYmNo5zZ1n
-         JDrJbWo+233D+jYeTGecLqDIxGuHJNPJXvSLyExxPtdAdroTt8TExD6aFU/BHUVyJwfQ
-         5SPQ==
-X-Gm-Message-State: AGi0PuZ1r8dSvdqEnvlvGgMNjRwB0SFhC4ZQDdLD85AV3Mahum4G5OaD
-        Lc0lHBTKTcBVZ3eyTwWN8kU=
-X-Google-Smtp-Source: APiQypJOeWgThOJc+RzZuE2Da5TBy3JNA8q5LcFNGI6CFT06/rcxe512zRiuVgYXqPtfTYAokEoLdw==
-X-Received: by 2002:a17:90a:f40f:: with SMTP id ch15mr6228382pjb.178.1589013816321;
-        Sat, 09 May 2020 01:43:36 -0700 (PDT)
-Received: from localhost (61-68-214-199.tpgi.com.au. [61.68.214.199])
-        by smtp.gmail.com with ESMTPSA id v9sm4218268pju.3.2020.05.09.01.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 01:43:35 -0700 (PDT)
-Date:   Sat, 09 May 2020 18:43:30 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
-To:     Qian Cai <cai@lca.pw>, Oliver O'Halloran <oohall@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
-        <CAOSf1CFNp6+k_y_87r7p2e8cKfX0rK-9wBxeR+K0e0y8R0_TNg@mail.gmail.com>
-In-Reply-To: <CAOSf1CFNp6+k_y_87r7p2e8cKfX0rK-9wBxeR+K0e0y8R0_TNg@mail.gmail.com>
+        Sat, 9 May 2020 04:44:45 -0400
+Received: from 89-77-60-66.dynamic.chello.pl (89.77.60.66) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 30bfb3c741368213; Sat, 9 May 2020 10:44:42 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chris Chiu <chiu@endlessm.com>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: [PATCH v2] ACPI: EC: s2idle: Avoid premature returns from acpi_s2idle_wake()
+Date:   Sat, 09 May 2020 10:44:41 +0200
+Message-ID: <13031978.1nyG40egBz@kreacher>
 MIME-Version: 1.0
-Message-Id: <1589013519.0fzm2px5cz.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Oliver O'Halloran's message of May 9, 2020 6:11 pm:
-> On Sat, May 9, 2020 at 12:41 AM Qian Cai <cai@lca.pw> wrote:
->>
->>  Booting POWER9 PowerNV has this message,
->>
->> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use earl=
-y_ioremap() instead=E2=80=9D
->>
->> but use the patch below will result in leaks because it will never call =
-early_iounmap() anywhere. However, it looks me it was by design that phb->r=
-egs mapping would be there forever where it would be used in pnv_ioda_get_i=
-nval_reg(), so is just that check_early_ioremap_leak() initcall too strong?
->=20
-> The warning there is junk. The PHBs are setup at boot and never torn
-> down so we're not "leaking" the mapping. It's supposed to be there for
-> the lifetime of the kernel.
->=20
-> That said, we could probably move the PCI setup to a point later in
-> boot where the normal ioremap can be be used. We would have to check
-> for initcalls which depend on the PHBs being setup and delay those too
-> though.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-I think it helps to unify code a bit more and take special cases out of=20
-ioremap to have all these early calls use early_ioremap.
+If the EC GPE status is not set after checking all of the other GPEs,
+acpi_s2idle_wake() returns 'false', to indicate that the SCI event
+that has just triggered is not a system wakeup one, but it does that
+without canceling the pending wakeup and re-arming the SCI for system
+wakeup which is a mistake, because it may cause s2idle_loop() to busy
+spin until the next valid wakeup event.  [If that happens, the first
+spurious wakeup is still pending after acpi_s2idle_wake() has
+returned, so s2idle_enter() does nothing, acpi_s2idle_wake()
+is called again and it sees that the SCI has triggered, but no GPEs
+are active, so 'false' is returned again, and so on.]
 
-We actually do want to move these later if possible too, on radix they=20
-use memblock for page tables, and on hash they don't even set up proper=20
-kernel page tables but just bolt PTEs into the hash table.
+Fix that by moving all of the GPE checking logic from
+acpi_s2idle_wake() to acpi_ec_dispatch_gpe() and making the
+latter return 'true' only if a non-EC GPE has triggered and
+'false' otherwise, which will cause acpi_s2idle_wake() to
+cancel the pending SCI wakeup and re-arm the SCI for system
+wakeup regardless of the EC GPE status.
 
-Thanks,
-Nick
+This also addresses a lockup observed on an Elitegroup EF20EA laptop
+after attempting to wake it up from suspend-to-idle by a key press.
+
+Fixes: d5406284ff80 ("ACPI: PM: s2idle: Refine active GPEs check")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207603
+Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+Link: https://lore.kernel.org/linux-acpi/CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com/
+Reported-by: Chris Chiu <chiu@endlessm.com>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+-> v2:
+   * Improve the changelog and add more tags.
+
+---
+ drivers/acpi/ec.c       |   24 ++++++++++++++++--------
+ drivers/acpi/internal.h |    1 -
+ drivers/acpi/sleep.c    |   14 ++------------
+ 3 files changed, 18 insertions(+), 21 deletions(-)
+
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
+ 		if (acpi_check_wakeup_handlers())
+ 			return true;
+ 
+-		/*
+-		 * If the status bit is set for any enabled GPE other than the
+-		 * EC one, the wakeup is regarded as a genuine one.
+-		 */
+-		if (acpi_ec_other_gpes_active())
++		/* Check non-EC GPE wakeups and dispatch the EC GPE. */
++		if (acpi_ec_dispatch_gpe())
+ 			return true;
+ 
+ 		/*
+-		 * If the EC GPE status bit has not been set, the wakeup is
+-		 * regarded as a spurious one.
+-		 */
+-		if (!acpi_ec_dispatch_gpe())
+-			return false;
+-
+-		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
+ 		 *
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1994,23 +1994,31 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+ 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+ }
+ 
+-bool acpi_ec_other_gpes_active(void)
+-{
+-	return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
+-}
+-
+ bool acpi_ec_dispatch_gpe(void)
+ {
+ 	u32 ret;
+ 
+ 	if (!first_ec)
++		return acpi_any_gpe_status_set(U32_MAX);
++
++	/*
++	 * Report wakeup if the status bit is set for any enabled GPE other
++	 * than the EC one.
++	 */
++	if (acpi_any_gpe_status_set(first_ec->gpe))
++		return true;
++
++	if (ec_no_wakeup)
+ 		return false;
+ 
++	/*
++	 * Dispatch the EC GPE in-band, but do not report wakeup in any case
++	 * to allow the caller to process events properly after that.
++	 */
+ 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+-	if (ret == ACPI_INTERRUPT_HANDLED) {
++	if (ret == ACPI_INTERRUPT_HANDLED)
+ 		pm_pr_dbg("EC GPE dispatched\n");
+-		return true;
+-	}
++
+ 	return false;
+ }
+ #endif /* CONFIG_PM_SLEEP */
+Index: linux-pm/drivers/acpi/internal.h
+===================================================================
+--- linux-pm.orig/drivers/acpi/internal.h
++++ linux-pm/drivers/acpi/internal.h
+@@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
+ 
+ #ifdef CONFIG_PM_SLEEP
+ void acpi_ec_flush_work(void);
+-bool acpi_ec_other_gpes_active(void);
+ bool acpi_ec_dispatch_gpe(void);
+ #endif
+ 
+
+
+
