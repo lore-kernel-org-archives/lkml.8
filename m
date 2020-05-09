@@ -6,189 +6,97 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7CC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A023C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8337214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49147208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589051144;
-	bh=FJqt+joC1S4dk3WKw1lf1NUGd5hPWz0tRXbmftk/Hqk=;
+	s=default; t=1589051333;
+	bh=V7nflp6cNkG5QGevgXa5od/IvI2G15l1QxbDlrMhLNE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Bp8nEwkUJUzm3NINFvnsNkC3BnqyQE3Y6mcufUhPF5NlR/2SqbvNHkzHrdeU0Aj0O
-	 x8dmCwJGEPbH+dPMb0jg+sMIcaPzuJ8S4TXGE41XxE8B5aKAdFFdiSStsKWHqEnzd3
-	 QeSGhVtzfdu8h55ZnKgPzY5SS+Me2e0920x8H9ZE=
+	b=TE2daM7zjYgX5AQDN3KEVetrfth1LitxuIZdQS/MCsFcAVt5k32SA9w3mNWJhghvO
+	 AFwKaRp2yEUb68KEx13S2DVvnETUuOCi6RYCkd09iLtMrv4IeT9LWDQKat9/A7q5M7
+	 G9OwOeJTRLhIBD6h979zR0tNaeoowS7EMe8CR/oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgEITFo (ORCPT
+        id S1728144AbgEITIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 15:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgEITFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:05:43 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        id S1727940AbgEITIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 15:08:52 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69427214D8
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 19:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 978D6208E4
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 19:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589051142;
-        bh=FJqt+joC1S4dk3WKw1lf1NUGd5hPWz0tRXbmftk/Hqk=;
+        s=default; t=1589051331;
+        bh=V7nflp6cNkG5QGevgXa5od/IvI2G15l1QxbDlrMhLNE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h57cjbWT99eEJDd2NqihaM1VMl/CabhJPqmHMgBBpaAtYQP9hAFOj8dcDEsVxcA7S
-         twDbZsiY/kZTxawUphk+iPtyx8L6jiJSsroopSiC7ekvJ/OkCL5LmRQXHxQ90L1jh3
-         tyWFrxnmE8iYXRy298dtRj74/Hv/6K9pK+2mOCO0=
-Received: by mail-wr1-f46.google.com with SMTP id j5so5864578wrq.2
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:05:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PubbouCdnZCu8pwKNI1mQSNBCfXuKuubSnWzcuBR9E2N1E5+qKM6
-        ProY4CxVAJECBv/bkjw8e8cCjv4MbpV1++PPdOL42w==
-X-Google-Smtp-Source: APiQypKo+N9nOe1pea23phVBcD9zIB6R4jO/fMYP4p09htgTDQfAoywcbcN8MwgE60i0o58ACaRTA736h38q6VDu9bQ=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr5001943wrb.18.1589051140875;
- Sat, 09 May 2020 12:05:40 -0700 (PDT)
+        b=JqHGviI5EBrhkQrotH2SE8ZgCg+bRnc6ualxWiI9Y5q6eQZCgI+ONSUoHkcODKpxK
+         vU0OQ6ejhus2pyQ1BWw0OL0CRolUm+vDIzBOX+gI6wjAmU5wPXRXklfKSWJe5itgdk
+         ysjrpk82zFiHOaWlRg+wC5pRv1fj6MHwWnHVBtW8=
+Received: by mail-wm1-f45.google.com with SMTP id y24so14309922wma.4
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:08:51 -0700 (PDT)
+X-Gm-Message-State: AGi0PubTlr2B9eoKzSPsyGkHM9ZiC9pl6jXhDI4UGAFltYteSBYasRX6
+        dBtDbCgShj39jNgnUW6GnkB3CuniQcG8G6g7lmwn/w==
+X-Google-Smtp-Source: APiQypKdBb41feJIlpHU/i82pAmRbOrknH7DpSZcASb4cLU12jXUnMf20fF4zb9Mw9BgFp7S4XdzYly6PJe+7KB4DLI=
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr21726641wmk.36.1589051330110;
+ Sat, 09 May 2020 12:08:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508144043.13893-1-joro@8bytes.org> <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
- <20200508213609.GU8135@suse.de> <CALCETrVxP87o2+aaf=RLW--DSpMrs=BXSQphN6bG5Y4X+OY8GQ@mail.gmail.com>
- <20200509175217.GV8135@suse.de>
-In-Reply-To: <20200509175217.GV8135@suse.de>
+References: <20200505131602.633487962@linutronix.de> <20200505134058.272448010@linutronix.de>
+ <CAJhGHyAetdYdj=bdvoXRfu7bMVZiR8jLhek=_tes-6XPKOxKQQ@mail.gmail.com>
+In-Reply-To: <CAJhGHyAetdYdj=bdvoXRfu7bMVZiR8jLhek=_tes-6XPKOxKQQ@mail.gmail.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 9 May 2020 12:05:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
-Message-ID: <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Date:   Sat, 9 May 2020 12:08:38 -0700
+X-Gmail-Original-Message-ID: <CALCETrVSNPQesBfuKVwZkQXTF-Q-p4s6jH8ocr0RKRErERRzMA@mail.gmail.com>
+Message-ID: <CALCETrVSNPQesBfuKVwZkQXTF-Q-p4s6jH8ocr0RKRErERRzMA@mail.gmail.com>
+Subject: Re: [patch V4 part 1 02/36] x86/hw_breakpoint: Prevent data
+ breakpoints on cpu_entry_area
+To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 10:52 AM Joerg Roedel <jroedel@suse.de> wrote:
+On Sat, May 9, 2020 at 2:23 AM Lai Jiangshan
+<jiangshanlai+lkml@gmail.com> wrote:
 >
-> On Fri, May 08, 2020 at 04:49:17PM -0700, Andy Lutomirski wrote:
-> > On Fri, May 8, 2020 at 2:36 PM Joerg Roedel <jroedel@suse.de> wrote:
-> > >
-> > > On Fri, May 08, 2020 at 02:33:19PM -0700, Andy Lutomirski wrote:
-> > > > On Fri, May 8, 2020 at 7:40 AM Joerg Roedel <joro@8bytes.org> wrote:
-> > >
-> > > > What's the maximum on other system types?  It might make more sense to
-> > > > take the memory hit and pre-populate all the tables at boot so we
-> > > > never have to sync them.
-> > >
-> > > Need to look it up for 5-level paging, with 4-level paging its 64 pages
-> > > to pre-populate the vmalloc area.
-> > >
-> > > But that would not solve the problem on x86-32, which needs to
-> > > synchronize unmappings on the PMD level.
+> On Tue, May 5, 2020 at 10:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 > >
-> > What changes in this series with x86-32?
+> > From: Andy Lutomirski <luto@kernel.org>
+> >
+> > A data breakpoint near the top of an IST stack will cause unresoverable
+> > recursion.  A data breakpoint on the GDT, IDT, or TSS is terrifying.
+> > Prevent either of these from happening.
+> >
 >
-> This series sets ARCH_PAGE_TABLE_SYNC_MASK to PGTBL_PMD_MODIFIED, so
-> that the synchronization happens every time PMD(s) in the vmalloc areas
-> are changed. Before this series this synchronization only happened at
-> arbitrary places calling vmalloc_sync_(un)mappings().
+> What happen when a data breakpoint on the direct GDT (load_direct_gdt())
+> and the debug IDT (load_debug_idt()) which are not considered in this patch?
 >
-> > We already do that synchronization, right?  IOW, in the cases where
-> > the vmalloc *fault* code does anything at all, we should have a small
-> > bound for how much memory to preallocate and, if we preallocate it,
-> > then there is nothing to sync and nothing to fault.  And we have the
-> > benefit that we never need to sync anything on 64-bit, which is kind
-> > of nice.
->
-> Don't really get you here, what is pre-allocated and why is there no
-> need to sync and fault then?
->
-> > Do we actually need PMD-level things for 32-bit?  What if we just
-> > outlawed huge pages in the vmalloc space on 32-bit non-PAE?
->
-> Disallowing huge-pages would at least remove the need to sync
-> unmappings, but we still need to sync new PMD entries. Remember that the
-> size of the vmalloc area on 32 bit is dynamic and depends on the VM-split
-> and the actual amount of RAM on the system.
->
-> A machine wit 512MB of RAM and a 1G/3G split will have around 2.5G of
-> VMALLOC address space. And if we want to avoid vmalloc-faults there, we
-> need to pre-allocate all PTE pages for that area (and the amount of PTE
-> pages needed increases when RAM decreases).
->
-> On a machine with 512M of RAM we would need ca. 1270+ PTE pages, which
-> is around 5M (or 1% of total system memory).
 
-I can never remember which P?D name goes with which level and which
-machine type, but I don't think I agree with your math regardless.  On
-x86, there are two fundamental situations that can occur:
-
-1. Non-PAE.  There is a single 4k top-level page table per mm, and
-this table contains either 512 or 1024 entries total. Of those
-entries, some fraction (half or less) control the kernel address
-space, and some fraction of *that* is for vmalloc space.  Those
-entries are the *only* thing that needs syncing -- all mms will either
-have null (not present) in those slots or will have pointers to the
-*same* next-level-down directories.
-
-2. PAE.  Depending on your perspective, there could be a grand total
-of four top-level paging pointers, of which one (IIRC) is for the
-kernel.  That points to the same place for all mms.  Or, if you look
-at it the other way, PAE is just like #1 except that the top-level
-table has only four entries and only one points to VMALLOC space.
-
-So, unless I'm missing something here, there is an absolute maximum of
-512 top-level entries that ever need to be synchronized.
-
-Now, there's an additional complication.  On x86_64, we have a rule:
-those entries that need to be synced start out null and may, during
-the lifetime of the system, change *once*.  They are never unmapped or
-modified after being allocated.  This means that those entries can
-only ever point to a page *table* and not to a ginormous page.  So,
-even if the hardware were to support ginormous pages (which, IIRC, it
-doesn't), we would be limited to merely immense and not ginormous
-pages in the vmalloc range.  On x86_32, I don't think we have this
-rule right now.  And this means that it's possible for one of these
-pages to be unmapped or modified.
-
-So my suggestion is that just apply the x86_64 rule to x86_32 as well.
-The practical effect will be that 2-level-paging systems will not be
-able to use huge pages in the vmalloc range, since the rule will be
-that the vmalloc-relevant entries in the top-level table must point to
-page *tables* instead of huge pages.
-
-On top of this, if we preallocate these entries, then the maximum
-amount of memory we can possibly waste is 4k * (entries pointing to
-vmalloc space - entries actually used for vmalloc space).  I don't
-know what this number typically is, but I don't think it's very large.
-Preallocating means that vmalloc faults *and* synchronization go away
-entirely.  All of the page tables used for vmalloc will be entirely
-shared by all mms, so all that's needed to modify vmalloc mappings is
-to update init_mm and, if needed, flush TLBs.  No other page tables
-will need modification at all.
-
-On x86_64, the only real advantage is that the handful of corner cases
-that make vmalloc faults unpleasant (mostly relating to vmap stacks)
-go away.  On x86_32, a bunch of mind-bending stuff (everything your
-series deletes but also almost everything your series *adds*) goes
-away.  There may be a genuine tiny performance hit on 2-level systems
-due to the loss of huge pages in vmalloc space, but I'm not sure I
-care or that we use them anyway on these systems.  And PeterZ can stop
-even thinking about RCU.
-
-Am I making sense?
-
-
-(Aside: I *hate* the PMD, etc terminology.  Even the kernel's C types
-can't keep track of whether pmd_t* points to an entire paging
-directory or to a single entry.  Similarly, everyone knows that a
-pte_t is a "page table entry", except that pte_t* might instead be a
-pointer to an array of 512 or 1024 page table entries.)
+I have no idea, and learning the answer may involve talking to the
+respective CPU vendors' microcode engineers.  We should probably block
+those, too.
