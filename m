@@ -2,210 +2,108 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82511C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8955FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62CCA21655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C9721655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fMcZW0Xd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBClKuiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgEINoV (ORCPT
+        id S1727789AbgEINsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:44:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:59244 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726782AbgEINoV (ORCPT
+        Sat, 9 May 2020 09:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgEINs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:44:21 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26CF130D;
-        Sat,  9 May 2020 15:44:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589031858;
-        bh=7ujcB1XiyYpi6kSKrCO4PkwZ8y4r1hWPfytMfvnyY4U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fMcZW0Xdwz+2i/Y1YD/XzxevPo9t5tFUqBQrZl8MQUQquRHgWOpZHE1KoxEhfQMxT
-         FoG0ZMRMprkb2BVaQaMm0+f0BY5fuTPWYbRY3wuJxBg+KQCMzAR8FH+i20YZaCz/Vv
-         k83pJTzCERFtUCglPJMmGagn3gFxbRHKpSakbFFo=
-Date:   Sat, 9 May 2020 16:44:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Sean Cross <xobs@kosagi.com>
-Subject: Re: [PATCH 1/2] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-Message-ID: <20200509134410.GA5946@pendragon.ideasonboard.com>
-References: <20200509111732.26102-1-srk@48.io>
- <20200509111732.26102-2-srk@48.io>
+        Sat, 9 May 2020 09:48:29 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E6FFC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 06:48:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u6so4619025ljl.6
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=97riR7h5mctZpNCGSCsUzKUdKKhONjRhdoAsaVf8nyw=;
+        b=aBClKuiBIJWNgNo6gaPKpc6o8Bx2D2tB1J4jkUiu91comKnJCm77qMPje6ENn0inC7
+         6q/P3ambDpvAHWkzRBxKtcy79WwPgS5TRjDdfsMoAfXlKRR7hPwn8M78VW2yg+FdwZSo
+         7wn9gyzcJN/ewxvhBC9cq/JwxQSeLTAbLCpWJRm6Dw50kqa39v/wjQkqT38YW8Zv2Q3R
+         CpvIV4tJEGnGc50ZCCTEfVJ+g8LVtNF4TbzWBsv1P8848fFZsPBp2RSsCuoOomZ42NgY
+         7jrHoG6JbxAgk0QiB+kFGs0XNvQB9AgMDbIfNr7PGv34g2nncRK1e5kYDyfGr6Cx/7mj
+         3P4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=97riR7h5mctZpNCGSCsUzKUdKKhONjRhdoAsaVf8nyw=;
+        b=YtDWCEi+0lgfqQMsdJM1QYWc27zswprDuqup89crNapYXial9hulJfAwU2l7+HaAaF
+         SEpHehLxLYBfSSFlhZs6Xi+j2SThVkTApZRiVhjLXKGNASrcyJkbMYnPg+3xhLWeT9v7
+         yzW3TiqYIGFI/7rY2PiEi/1aG7eA5sQEwjh5gUChukLLDJ5YxyEUIGXhyLwTeTeQC39F
+         2GrN8/sw3p1QTAxcB73os55gG8p3iyEW1mOOm0pjeTPAgdkXeGg++my61dqvI7JLiRpR
+         ewjJ1MT4DIIYGNuwY4RgZZXz8MqQb6qqsnh1s7oUTwOJSvK6VkMNhCZPWrx3L1EQs4Cl
+         AV8A==
+X-Gm-Message-State: AOAM5334qaIH6YuXsRIfA+J6HIkBxp6o59GEflWNp4e+NMkz16DOwxfQ
+        UBiy6t4Qt+T4ZBV/xm/Bs+g=
+X-Google-Smtp-Source: ABdhPJxpQ/5qZk8wrc4rdW4hRVVzSjbl+JycdDYBicx5ny4EL+DgCn8XoLsyjaFo973ka6XmUYd3Rw==
+X-Received: by 2002:a2e:2a82:: with SMTP id q124mr4991852ljq.155.1589032106552;
+        Sat, 09 May 2020 06:48:26 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
+        by smtp.gmail.com with ESMTPSA id a24sm3928093ljk.10.2020.05.09.06.48.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 06:48:25 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] xen-platform: Constify dev_pm_ops
+Date:   Sat,  9 May 2020 15:47:55 +0200
+Message-Id: <20200509134755.15038-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200509111732.26102-2-srk@48.io>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+dev_pm_ops is never modified, so mark it const to allow the compiler to
+put it in read-only memory.
 
-Thank you for the patch.
+Before:
+   text    data     bss     dec     hex filename
+   2457    1668     256    4381    111d drivers/xen/platform-pci.o
 
-On Sat, May 09, 2020 at 01:17:31PM +0200, srk@48.io wrote:
-> From: Marek Vasut <marex@denx.de>
-> 
-> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
-> 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Sean Cross <xobs@kosagi.com>
-> Cc: devicetree@vger.kernel.org
-> To: dri-devel@lists.freedesktop.org
-> ---
->  .../bindings/display/bridge/ite,it6251.yaml   | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> new file mode 100644
-> index 000000000000..8daa44a30fa1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it6251.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE IT6251 LVDS-to-eDP bridge bindings
-> +
-> +maintainers:
-> +  - Marek Vasut <marex@denx.de>
-> +  - Richard Marko <srk@48.io>
-> +
-> +description: |
-> +  The IT6251 is a high-performance single-chip
-> +  De-SSC LVDS to DisplayPort converter.
-> +  Combined with LVDS receiver and DisplayPort Transmitter,
-> +  the IT6251 supports LVDS input and DisplayPort 1.1a
-> +  output by conversion function.
+After:
+   text    data     bss     dec     hex filename
+   2681    1444     256    4381    111d drivers/xen/platform-pci.o
 
-You could reflow this to the 80 columns limit. It also sounds like
-marketing material copied from the datasheet, with "by conversion
-function" likely a bad translation.
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/xen/platform-pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it6251
-> +
-> +  reg:
-> +    items:
-> +      - description: I2C address of the bridge
-> +      - description: I2C address of the LVDS part
-> +
-> +  reg-names:
-> +    items:
-> +      - const: bridge
-> +      - const: lvds
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: |
-> +         Video port for eDP output (typically panel).
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS input.
-
-We traditionally use port 0 for the input and port 1 for the output. I'd
-rather do the same here to remain consistent, and allow generic code to
-operate on this device.
-
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +  power-supply: true
-
-There are multiple power supplies for the chip, shouldn't we have
-multiple properties ? I would also name the properties according to the
-supply name.
-
-The chip has an HPD input. I would recommend already documenting an
-optional boolean no-hpd property to report when the HPD input is not
-connected.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - power-supply
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    it6251@5c {
-> +      compatible = "ite,it6251";
-> +      reg = <0x5c>, <0x5e>;
-> +      reg-names = "bridge", "lvds";
-> +      power-supply = <&reg_display>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +          bridge_out_edp0: endpoint {
-> +            remote-endpoint = <&panel_in_edp0>;
-> +          };
-> +        };
-> +
-> +        port@1 {
-> +          reg = <1>;
-> +          bridge_in_lvds0: endpoint {
-> +            remote-endpoint = <&lvds0_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-
+diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+index 59e85e408c23..dd911e1ff782 100644
+--- a/drivers/xen/platform-pci.c
++++ b/drivers/xen/platform-pci.c
+@@ -168,7 +168,7 @@ static const struct pci_device_id platform_pci_tbl[] = {
+ 	{0,}
+ };
+ 
+-static struct dev_pm_ops platform_pm_ops = {
++static const struct dev_pm_ops platform_pm_ops = {
+ 	.resume_noirq =   platform_pci_resume,
+ };
+ 
 -- 
-Regards,
+2.26.2
 
-Laurent Pinchart
