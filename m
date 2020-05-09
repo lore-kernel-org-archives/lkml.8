@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE05C54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC27C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A472214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DE521582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgEIJ3H (ORCPT
+        id S1728238AbgEIJ3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:29:07 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4379 "EHLO huawei.com"
+        Sat, 9 May 2020 05:29:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4378 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728126AbgEIJ3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:29:02 -0400
+        id S1727086AbgEIJ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:29:06 -0400
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6A64B25B68EA0FD6FCBA;
+        by Forcepoint Email with ESMTP id 65F8A76E6C49B76A88C6;
         Sat,  9 May 2020 17:29:00 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 17:28:49 +0800
+ 14.3.487.0; Sat, 9 May 2020 17:28:50 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Yufeng Mo <moyufeng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 4/5] net: hns3: optimized the judgment of the input parameters of dump ncl config
-Date:   Sat, 9 May 2020 17:27:40 +0800
-Message-ID: <1589016461-10130-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 5/5] net: hns3: disable auto-negotiation off with 1000M setting in ethtool
+Date:   Sat, 9 May 2020 17:27:41 +0800
+Message-ID: <1589016461-10130-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
 References: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,51 +49,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yufeng Mo <moyufeng@huawei.com>
 
-This patch optimizes the judgment of the input parameters of dump ncl
-config by checking the number and value of the input parameters apart.
-It's clearer and more reasonable.
+The 802.3 specification does not specify the behavior of
+auto-negotiation off with 1000M in PHY. Therefore, some PHY
+compatibility issues occur. This patch forbids the setting of
+this unreasonable mode by ethtool in driver.
 
 Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c    | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 6cfa825..48c115c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -1258,6 +1258,7 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
- {
- #define HCLGE_MAX_NCL_CONFIG_OFFSET	4096
- #define HCLGE_NCL_CONFIG_LENGTH_IN_EACH_CMD	(20 + 24 * 4)
-+#define HCLGE_NCL_CONFIG_PARAM_NUM	2
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index 1a105f2..6b1545f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -773,8 +773,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
+ 		  cmd->base.autoneg, cmd->base.speed, cmd->base.duplex);
  
- 	struct hclge_desc desc[HCLGE_CMD_NCL_CONFIG_BD_NUM];
- 	int bd_num = HCLGE_CMD_NCL_CONFIG_BD_NUM;
-@@ -1267,13 +1268,17 @@ static void hclge_dbg_dump_ncl_config(struct hclge_dev *hdev,
- 	int ret;
- 
- 	ret = sscanf(cmd_buf, "%x %x", &offset, &length);
--	if (ret != 2 || offset >= HCLGE_MAX_NCL_CONFIG_OFFSET ||
--	    length > HCLGE_MAX_NCL_CONFIG_OFFSET - offset) {
--		dev_err(&hdev->pdev->dev, "Invalid offset or length.\n");
-+	if (ret != HCLGE_NCL_CONFIG_PARAM_NUM) {
-+		dev_err(&hdev->pdev->dev,
-+			"Too few parameters, num = %d.\n", ret);
- 		return;
- 	}
--	if (offset < 0 || length <= 0) {
--		dev_err(&hdev->pdev->dev, "Non-positive offset or length.\n");
+ 	/* Only support ksettings_set for netdev with phy attached for now */
+-	if (netdev->phydev)
++	if (netdev->phydev) {
++		if (cmd->base.speed == SPEED_1000 &&
++		    cmd->base.autoneg == AUTONEG_DISABLE)
++			return -EINVAL;
 +
-+	if (offset < 0 || offset >= HCLGE_MAX_NCL_CONFIG_OFFSET ||
-+	    length <= 0 || length > HCLGE_MAX_NCL_CONFIG_OFFSET - offset) {
-+		dev_err(&hdev->pdev->dev,
-+			"Invalid input, offset = %d, length = %d.\n",
-+			offset, length);
- 		return;
- 	}
+ 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
++	}
  
+ 	if (handle->pdev->revision == 0x20)
+ 		return -EOPNOTSUPP;
 -- 
 2.7.4
 
