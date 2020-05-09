@@ -6,264 +6,236 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C78C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05273C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5390208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C9B208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589051025;
-	bh=lODxQLx7dBie1ZnMhupf2FdHGusr1dQe5rGiRUF3Jo0=;
+	s=default; t=1589051117;
+	bh=wKrnNA2AYsARx5wZNKuQANGMtrvs2hACPWxw1AuIe9E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vxXHB6VxAUtUlz4VpKCiV1xXJQcYKS42qHazAAxVGVbI5KbWGnbrkUulr7krQxg56
-	 LrFTl/ItKwxa3EhG/62xyQzYPERE8+G8zFQBMsM7AFWcsK+0IzY+jscmkgbF32Kb4L
-	 vzpEer4eRYOa3a4v4ozeFq590M2DC0ZC+PDF2gwM=
+	b=ez91GR3E0RdJEnhwCesbBMmpEH1mCGW3UdrqoZVNgeLElbplmyIX07oRhpc7d8MGF
+	 NUDzv3sTF4/jw/QhKzwwjQpHtQv2uTcgsXoWeHBI5GQVS4tYDHwDZxHKBPvKiw8cRn
+	 8/gM4ZULDXTl9OJCocLt7cQWNgPA6xU9C8fxhVwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgEITDo (ORCPT
+        id S1728196AbgEITFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgEITDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:03:43 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC1CE206B9;
-        Sat,  9 May 2020 19:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589051022;
-        bh=lODxQLx7dBie1ZnMhupf2FdHGusr1dQe5rGiRUF3Jo0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LTjMTwNBOj/mfAdp1oULKrXa5F6uVH+VTd9N383SHsYike6cDsqCcW4YzqSI8KzII
-         3Wuc41WLdW8xahlJNdN9WAUML9Me44/zhOy9Jddo7QgPUlZ26b7mvhiZwqf3+l/wDu
-         NGpd+SuvMsIZ7kXkPfwLyBehqvML72jly2TMeM+o=
-Date:   Sat, 9 May 2020 12:03:42 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Sayali Lokhande <sayalil@codeaurora.org>,
-        linux-f2fs-devel@lists.sourceforge.net, stummala@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
-Message-ID: <20200509190342.GA11239@google.com>
-References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
- <20200508161052.GA49579@google.com>
- <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
+        Sat, 9 May 2020 15:05:17 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33765 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgEITFQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 15:05:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t7so2152555plr.0;
+        Sat, 09 May 2020 12:05:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kX1sYEK0EbH42tiKl1I6YuGqHEoXG61Xr2I+Gfq3swE=;
+        b=POyz7Zj3c4mykfyW4YdvpQNAzRBuAomx6Xv6wRhF4unp0jh1/YM31/1skbq+PYKa4G
+         Gd/W6R0ZahotpOyqlveN1k7yPpcqpdmRwkOTP2dFW1u7prMN4O0y10syp9aUyukkKcd3
+         8kZBTPRj4i9xxFYbtlo04lREw2ggWXLXsrVrKHuWC+GNZ/wYgnP5qennn2rx0bhLIXTR
+         jt1VAobuJGRXFNlAylF3jabcUJ4UJ9E9SDMzroWkOq/7Vk7wsAgAHvRhAMH3pQj2w+MT
+         2cY8W21Wb9TPin27YL+2cVHFHLleiJjY11EOsWrRGSWSNywUXKp1YQfvchnoyt/txUkk
+         T1PQ==
+X-Gm-Message-State: AGi0PuaIzgYCihdNVfDkytXal++LQQd6u0LOlv5oEN9B0GdR5Lh+OCfR
+        nicYVtGNJnQVNdz9lGUHO2Q=
+X-Google-Smtp-Source: APiQypKSQpO2Mmp+x4Oa/l+JMrQ6UryLvjYLxmdTZxt5kSBq8vLabucL2thDZUQ+BTWgfaR9gzSCSw==
+X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr7710141plx.219.1589051114192;
+        Sat, 09 May 2020 12:05:14 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id p7sm4140203pgg.91.2020.05.09.12.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 12:05:13 -0700 (PDT)
+Date:   Sat, 9 May 2020 12:05:12 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Nava kishore Manne <navam@xilinx.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, Michal Simek <michals@xilinx.com>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+Subject: Re: [PATCH 2/2] fpga: zynq: Add AFI config driver
+Message-ID: <20200509190512.GB6715@epycbox.lan>
+References: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
+ <1586946290-7280-2-git-send-email-nava.manne@xilinx.com>
+ <20200423032854.GB2430@epycbox.lan>
+ <DM6PR02MB5386D0632A60A9C056DB31E6C2A60@DM6PR02MB5386.namprd02.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
+In-Reply-To: <DM6PR02MB5386D0632A60A9C056DB31E6C2A60@DM6PR02MB5386.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09, Chao Yu wrote:
-> On 2020/5/9 0:10, Jaegeuk Kim wrote:
-> > Hi Sayali,
-> > 
-> > In order to address the perf regression, how about this?
-> > 
-> >>From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
-> > From: Jaegeuk Kim <jaegeuk@kernel.org>
-> > Date: Fri, 8 May 2020 09:08:37 -0700
-> > Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
-> > 
-> > There could be a scenario where f2fs_sync_node_pages gets
-> > called during checkpoint, which in turn tries to flush
-> > inline data and calls iput(). This results in deadlock as
-> > iput() tries to hold cp_rwsem, which is already held at the
-> > beginning by checkpoint->block_operations().
-> > 
-> > Call stack :
-> > 
-> > Thread A		Thread B
-> > f2fs_write_checkpoint()
-> > - block_operations(sbi)
-> >  - f2fs_lock_all(sbi);
-> >   - down_write(&sbi->cp_rwsem);
-> > 
-> >                         - open()
-> >                          - igrab()
-> >                         - write() write inline data
-> >                         - unlink()
-> > - f2fs_sync_node_pages()
-> >  - if (is_inline_node(page))
-> >   - flush_inline_data()
-> >    - ilookup()
-> >      page = f2fs_pagecache_get_page()
-> >      if (!page)
-> >       goto iput_out;
-> >      iput_out:
-> > 			-close()
-> > 			-iput()
-> >        iput(inode);
-> >        - f2fs_evict_inode()
-> >         - f2fs_truncate_blocks()
-> >          - f2fs_lock_op()
-> >            - down_read(&sbi->cp_rwsem);
-> > 
-> > Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-> > Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >  fs/f2fs/node.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> > index 1db8cabf727ef..626d7daca09de 100644
-> > --- a/fs/f2fs/node.c
-> > +++ b/fs/f2fs/node.c
-> > @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
-> >  				goto continue_unlock;
-> >  			}
-> >  
-> > -			/* flush inline_data */
-> > -			if (is_inline_node(page)) {
-> > +			/* flush inline_data, if it's not sync path. */
-> > +			if (do_balance && is_inline_node(page)) {
+Hi Nava,
+
+On Mon, May 04, 2020 at 11:55:23AM +0000, Nava kishore Manne wrote:
+> Hi Mortiz,
 > 
-> IIRC, this flow was designed to avoid running out of free space issue
-> during checkpoint:
+> Thanks for proving the comments.
+> Please find my response inline.
 > 
-> 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-> 
-> The sceanrio is:
-> 1. create fully node blocks
-> 2. flush node blocks
-> 3. write inline_data for all the node blocks again
-> 4. flush node blocks redundantly
-> 
-> I guess this may cause failing one case of fstest.
+> > -----Original Message-----
+> > From: Moritz Fischer [mailto:mdf@kernel.org]
+> > Sent: Thursday, April 23, 2020 8:59 AM
+> > To: Nava kishore Manne <navam@xilinx.com>
+> > Cc: mdf@kernel.org; Michal Simek <michals@xilinx.com>; linux-
+> > fpga@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; chinnikishore369@gmail.com
+> > Subject: Re: [PATCH 2/2] fpga: zynq: Add AFI config driver
+> > 
+> > Hi Nava,
+> > 
+> > On Wed, Apr 15, 2020 at 03:54:50PM +0530, Nava kishore Manne wrote:
+> > > This patch Adds AFI config driver. This is useful for the PS to PL
+> > > configuration for the fpga manager On zynq platform.
+> > >
+> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> > > ---
+> > >  drivers/fpga/Kconfig    |  8 +++++
+> > >  drivers/fpga/Makefile   |  1 +
+> > >  drivers/fpga/zynq-afi.c | 81
+> > > +++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 90 insertions(+)
+> > >  create mode 100644 drivers/fpga/zynq-afi.c
+> > >
+> > > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
+> > > 474f304e..60982a0 100644
+> > > --- a/drivers/fpga/Kconfig
+> > > +++ b/drivers/fpga/Kconfig
+> > > @@ -214,4 +214,12 @@ config FPGA_MGR_ZYNQMP_FPGA
+> > >  	  to configure the programmable logic(PL) through PS
+> > >  	  on ZynqMP SoC.
+> > >
+> > > +config FPGA_MGR_ZYNQ_AFI_FPGA
+> > > +	bool "Xilinx AFI FPGA"
+> > > +	depends on FPGA_MGR_ZYNQ_FPGA
+> > Curious. How does this dependency play in here?
+> > > +	help
+> > > +	  Zynq AFI driver support for writing to the AFI registers
+> > > +	  for configuring the PS_PL interface. For some of the bitstream
+> > > +	  or designs to work the PS to PL interfaces need to be configured
+> > > +	  like the data bus-width etc.
+> > >  endif # FPGA
+> > > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
+> > > 312b937..d115e29 100644
+> > > --- a/drivers/fpga/Makefile
+> > > +++ b/drivers/fpga/Makefile
+> > > @@ -26,6 +26,7 @@ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-
+> > bridge.o
+> > >  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-
+> > fpga2sdram.o
+> > >  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
+> > >  obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
+> > > +obj-$(CONFIG_FPGA_MGR_ZYNQ_AFI_FPGA)	+= zynq-afi.o
+> > >
+> > >  # High Level Interfaces
+> > >  obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
+> > > diff --git a/drivers/fpga/zynq-afi.c b/drivers/fpga/zynq-afi.c new
+> > > file mode 100644 index 0000000..7ce0d08
+> > > --- /dev/null
+> > > +++ b/drivers/fpga/zynq-afi.c
+> > > @@ -0,0 +1,81 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Xilinx FPGA AFI driver.
+> > > + * Copyright (c) 2018 Xilinx Inc.
+> > > + */
+> > > +
+> > > +#include <linux/err.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +/* Registers and special values for doing register-based operations */
+> > > +#define AFI_RDCHAN_CTRL_OFFSET	0x00
+> > > +#define AFI_WRCHAN_CTRL_OFFSET	0x14
+> > > +
+> > > +#define AFI_BUSWIDTH_MASK	0x01
+> > > +
+> > > +/**
+> > > + * struct afi_fpga - AFI register description
+> > > + * @membase:	pointer to register struct
+> > > + * @afi_width:	AFI bus width to be written
+> > > + */
+> > > +struct zynq_afi_fpga {
+> > > +	void __iomem	*membase;
+> > > +	u32		afi_width;
+> > > +};
+> > > +
+> > > +static int zynq_afi_fpga_probe(struct platform_device *pdev) {
+> > > +	struct zynq_afi_fpga *afi_fpga;
+> > > +	struct resource *res;
+> > > +	u32 reg_val;
+> > > +	u32 val;
+> > > +
+> > > +	afi_fpga = devm_kzalloc(&pdev->dev, sizeof(*afi_fpga), GFP_KERNEL);
+> > > +	if (!afi_fpga)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +	afi_fpga->membase = devm_ioremap_resource(&pdev->dev, res);
+> > > +	if (IS_ERR(afi_fpga->membase))
+> > > +		return PTR_ERR(afi_fpga->membase);
+> > > +
+> > > +	val = device_property_read_u32(&pdev->dev, "xlnx,afi-width",
+> > > +				       &afi_fpga->afi_width);
+> > > +	if (val) {
+> > > +		dev_err(&pdev->dev, "Fail to get the afi bus width\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	reg_val = readl(afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
+> > > +	reg_val &= ~AFI_BUSWIDTH_MASK;
+> > > +	writel(reg_val | afi_fpga->afi_width,
+> > > +	       afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
+> > > +	reg_val = readl(afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
+> > > +	reg_val &= ~AFI_BUSWIDTH_MASK;
+> > > +	writel(reg_val | afi_fpga->afi_width,
+> > > +	       afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id zynq_afi_fpga_ids[] = {
+> > > +	{ .compatible = "xlnx,zynq-afi-fpga" },
+> > > +	{ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, zynq_afi_fpga_ids);
+> > > +
+> > > +static struct platform_driver zynq_afi_fpga_driver = {
+> > > +	.driver = {
+> > > +		.name = "zynq-afi-fpga",
+> > > +		.of_match_table = zynq_afi_fpga_ids,
+> > > +	},
+> > > +	.probe = zynq_afi_fpga_probe,
+> > > +};
+> > > +module_platform_driver(zynq_afi_fpga_driver);
+> > > +
+> > > +MODULE_DESCRIPTION("ZYNQ FPGA AFI module");
+> > MODULE_AUTHOR("Nava
+> > > +kishore Manne <nava.manne@xilinx.com>"); MODULE_LICENSE("GPL v2");
+> > > --
+> > > 2.7.4
+> > >
+> > 
+> > It looks like all the driver does is writing two registers? How does
+> > that fit into FPGA Manager as a framework. Should this maybe be eithe
+> > for Zynq architecture or a Misc driver instead?
+> > 
+> To establish the proper communication channel between PS and PL, The AXI Interface Bus Width should be configured properly.
+> For a design to design this AXI Interface Bus Width settings are vary. So for Zynq just loading the Bitstream into the PL is not sufficient
+> to establish a proper communication channel between PS and PL we have to do AXI Interface Bus Width settings as per the design
+> after loading the Bit file into the PL. I feel this is more relevant to the FPGA settings so I have placed this driver here.
 
-Yeah, actually I was hitting 204 failure, and thus, revised like this.
-Now, I don't see any regression in fstest.
+Should this maybe be a fpga bridge driver then? From my understanding you'd change that as part of reprogramming the FPGA?
 
-From 8f1882acfb0a5fc43e5a2bbd576a8f3c681a7d2c Mon Sep 17 00:00:00 2001
-From: Sayali Lokhande <sayalil@codeaurora.org>
-Date: Thu, 30 Apr 2020 16:28:29 +0530
-Subject: [PATCH] f2fs: Avoid double lock for cp_rwsem during checkpoint
-
-There could be a scenario where f2fs_sync_node_pages gets
-called during checkpoint, which in turn tries to flush
-inline data and calls iput(). This results in deadlock as
-iput() tries to hold cp_rwsem, which is already held at the
-beginning by checkpoint->block_operations().
-
-Call stack :
-
-Thread A		Thread B
-f2fs_write_checkpoint()
-- block_operations(sbi)
- - f2fs_lock_all(sbi);
-  - down_write(&sbi->cp_rwsem);
-
-                        - open()
-                         - igrab()
-                        - write() write inline data
-                        - unlink()
-- f2fs_sync_node_pages()
- - if (is_inline_node(page))
-  - flush_inline_data()
-   - ilookup()
-     page = f2fs_pagecache_get_page()
-     if (!page)
-      goto iput_out;
-     iput_out:
-			-close()
-			-iput()
-       iput(inode);
-       - f2fs_evict_inode()
-        - f2fs_truncate_blocks()
-         - f2fs_lock_op()
-           - down_read(&sbi->cp_rwsem);
-
-Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/checkpoint.c |  9 ++++++++-
- fs/f2fs/f2fs.h       |  4 ++--
- fs/f2fs/node.c       | 10 +++++-----
- 3 files changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index d49f7a01d8a26..928aea4ff663d 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1168,6 +1168,12 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	};
- 	int err = 0, cnt = 0;
- 
-+	/*
-+	 * Let's flush node pages first to flush inline_data.
-+	 * We'll actually guarantee everything below under f2fs_lock_all.
-+	 */
-+	f2fs_sync_node_pages(sbi, &wbc, false, false, FS_CP_NODE_IO);
-+
- retry_flush_quotas:
- 	f2fs_lock_all(sbi);
- 	if (__need_flush_quota(sbi)) {
-@@ -1222,7 +1228,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
- 		up_write(&sbi->node_write);
- 		atomic_inc(&sbi->wb_sync_req[NODE]);
--		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
-+		err = f2fs_sync_node_pages(sbi, &wbc, false,
-+					true, FS_CP_NODE_IO);
- 		atomic_dec(&sbi->wb_sync_req[NODE]);
- 		if (err) {
- 			up_write(&sbi->node_change);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d916540f12813..ac6ae42b9dd4e 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3286,8 +3286,8 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
- 			struct writeback_control *wbc, bool atomic,
- 			unsigned int *seq_id);
- int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
--			struct writeback_control *wbc,
--			bool do_balance, enum iostat_type io_type);
-+		struct writeback_control *wbc,
-+		bool do_balance, bool sync, enum iostat_type io_type);
- int f2fs_build_free_nids(struct f2fs_sb_info *sbi, bool sync, bool mount);
- bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
- void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 1db8cabf727ef..fd00a8c119088 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1808,8 +1808,8 @@ static bool flush_dirty_inode(struct page *page)
- }
- 
- int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
--				struct writeback_control *wbc,
--				bool do_balance, enum iostat_type io_type)
-+			struct writeback_control *wbc,
-+			bool do_balance, bool sync, enum iostat_type io_type)
- {
- 	pgoff_t index;
- 	struct pagevec pvec;
-@@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
- 				goto continue_unlock;
- 			}
- 
--			/* flush inline_data */
--			if (is_inline_node(page)) {
-+			/* flush inline_data, if it's async context. */
-+			if (!sync && is_inline_node(page)) {
- 				clear_inline_node(page);
- 				unlock_page(page);
- 				flush_inline_data(sbi, ino_of_node(page));
-@@ -1999,7 +1999,7 @@ static int f2fs_write_node_pages(struct address_space *mapping,
- 
- 	diff = nr_pages_to_write(sbi, NODE, wbc);
- 	blk_start_plug(&plug);
--	f2fs_sync_node_pages(sbi, wbc, true, FS_NODE_IO);
-+	f2fs_sync_node_pages(sbi, wbc, true, false, FS_NODE_IO);
- 	blk_finish_plug(&plug);
- 	wbc->nr_to_write = max((long)0, wbc->nr_to_write - diff);
- 
--- 
-2.26.2.645.ge9eca65c58-goog
-
+Thanks,
+Moritz
