@@ -2,126 +2,118 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF49C28CBC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98894C54E49
 	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F67D21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGwdlqQA"
+	by mail.kernel.org (Postfix) with ESMTP id 77DB3214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589039032;
+	bh=o1bX8Zql/kQ5+2VP0PxQWxTrOXX0zwKggYwZhmcqNrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kfOb7dTQa6AIQ6YwlIMtxm8UhV21S2HlZz9gAuBqZqDEIOJ8/RczIuZAP3WGWNrgt
+	 6Y3wGv/Y6UP7hlPFKXtJB7mw2yO0uw4R+J4KKCaCKuSHSjAHP+CZA6yxRGmvD8rIKW
+	 2dvnfem5ehri61u8PggHn9/mXdvK9yR85HarZjPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgEIPnm (ORCPT
+        id S1728144AbgEIPnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 11:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726782AbgEIPnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 11:43:42 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FB3C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 08:43:40 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id c18so4298489ile.5
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 08:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lEIOZtiJn4C44cp9H/kzfk5fMu6jd8Gvk2kf7XAUT3o=;
-        b=UGwdlqQA3m+b9Wg6a49Hwx3fQgTFQhq1p4ImuMAB3MkbEBgWLZCNgiIRyWo0tpu6b/
-         I58M7mVzZghIs2YX1R+4zzdlAbwX1PY+EgyhRod8ZGZ3WPjOIi2/4/z3wOeJX/Sknh2m
-         BNoLrk7wkAJSPf7V12qgSlPYMnhUPsKE8VaZRLUwcfe82imr57du6Bo5OrYtCvZ0/mij
-         tIdI29U2pXmU9YpO2syHa9NVu6Qoi0lBJ5x9kokdAm8A0RiZGt1mvkNsEdRTGNoOri2I
-         2GHJyN4e3utPl2fYrJz5KgkXXYUd959OZ6c1imW2tC4ko5cJ3+mFDlhQ6CpMOn/TYR0X
-         H0BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lEIOZtiJn4C44cp9H/kzfk5fMu6jd8Gvk2kf7XAUT3o=;
-        b=MVEAyFyAwa8fQIMJdtguS6hYGyojJU4YGAm+S00xBFAfgREIJ+HX1oJ3WrIRjHgdBz
-         Dyy8Vqf1QnGvsgNG070zU8XXBOnV+gW/hROXC9UCZl/Ik2pddBKf4Erqo634CDubOtr3
-         FCG2fjzr+t0tuOhFz+edo5sTJfOgAa6ojq0Eu6E8AgZ+Vw7BNPsSQQzncRBY4z+bOsHI
-         HuTmIrvGtfGIFTY5D9TpL8Bpcr4x5PfFozC4rzZGcaSOvg4tDLbjieBaoX0pFma2lg9K
-         OZqd/qzcUBeQJ1Cv6HuOhl+CLrN/Wh3X22tQsXL/jIOClUQfUOAaHAYFA/458D7fTg2r
-         c+QA==
-X-Gm-Message-State: AGi0PuYiHLRTdVxRb0sOANJZKA0lamCZDNTaaXF4nz+JlUHx/xBq1Hxy
-        qXSfUpg2YOqi8RiH9JyqwtuPPQzMo3o8/FZ2Sw==
-X-Google-Smtp-Source: APiQypJOeOZEVWNePluYSilGtyJDJSN71OUtRPQkxSTG1FY8gDB/Q7oH+anSCMBIX0BhsMhliqxYV2twrYxAs9S+POg=
-X-Received: by 2002:a05:6e02:d0c:: with SMTP id g12mr7913391ilj.27.1589039019986;
- Sat, 09 May 2020 08:43:39 -0700 (PDT)
+        Sat, 9 May 2020 11:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726782AbgEIPnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 11:43:49 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CEF2063A;
+        Sat,  9 May 2020 15:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589039029;
+        bh=o1bX8Zql/kQ5+2VP0PxQWxTrOXX0zwKggYwZhmcqNrs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DAXEZFtgE82+8ztfFy+75+0SXtIGD9rjTnRytb7gq+fU+tGx4hbaaWmS2NcxsN+Pt
+         jSeaNmSSiVN2iqylQqSMRdrnQ//OygB2q713StgEDppDnCYpiSQumAGbLQaolzFh+k
+         PJ9TtJmxAEV+9tAf+Z7IF89wjHUFlaKH1C2BrKBQ=
+Date:   Sat, 9 May 2020 10:48:18 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        Kalle Valo <kvalo@qca.qualcomm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wen Gong <wgong@codeaurora.org>,
+        Erik Stromdahl <erik.stromdahl@gmail.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/2] ath10k: fix gcc-10 zero-length-bounds
+ warnings
+Message-ID: <20200509154818.GB27779@embeddedor>
+References: <20200509120707.188595-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20200508182835.228107-1-ndesaulniers@google.com>
- <20200508183230.229464-1-ndesaulniers@google.com> <CAHp75Vcsi9o2eUbyozhmPEz6Tfd_6ZFk2q-vcdrm9QxcVPQwMA@mail.gmail.com>
-In-Reply-To: <CAHp75Vcsi9o2eUbyozhmPEz6Tfd_6ZFk2q-vcdrm9QxcVPQwMA@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Sat, 9 May 2020 11:43:27 -0400
-Message-ID: <CAMzpN2j4PhMMxZ6SOGxV9SfdbEZyuTNM-qNSTCZ8dv+irzi+4A@mail.gmail.com>
-Subject: Re: [PATCH v5] x86: bitops: fix build regression
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Axtens <dja@axtens.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509120707.188595-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 8:20 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, May 8, 2020 at 9:35 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
-> >
-> > It turns out that if your config tickles __builtin_constant_p via
-> > differences in choices to inline or not, these statements produce
-> > invalid assembly:
-> >
-> > $ cat foo.c
-> > long a(long b, long c) {
-> >   asm("orb\t%1, %0" : "+q"(c): "r"(b));
-> >   return c;
-> > }
-> > $ gcc foo.c
-> > foo.c: Assembler messages:
-> > foo.c:2: Error: `%rax' not allowed with `orb'
-> >
-> > Use the `%b` "x86 Operand Modifier" to instead force register allocation
-> > to select a lower-8-bit GPR operand.
-> >
-> > The "q" constraint only has meaning on -m32 otherwise is treated as
-> > "r". Not all GPRs have low-8-bit aliases for -m32.
-> >
->
-> Looks very good!
-> One question though, does it work with minimum supported version of gcc?
+Arnd,
 
-Yes.  The operand width modifiers have been around a long time but not
-well documented until more recently.
+On Sat, May 09, 2020 at 02:06:32PM +0200, Arnd Bergmann wrote:
+> gcc-10 started warning about out-of-bounds access for zero-length
+> arrays:
+> 
+> In file included from drivers/net/wireless/ath/ath10k/core.h:18,
+>                  from drivers/net/wireless/ath/ath10k/htt_rx.c:8:
+> drivers/net/wireless/ath/ath10k/htt_rx.c: In function 'ath10k_htt_rx_tx_fetch_ind':
+> drivers/net/wireless/ath/ath10k/htt.h:1683:17: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct htt_tx_fetch_record[0]' [-Wzero-length-bounds]
+>  1683 |  return (void *)&ind->records[le16_to_cpu(ind->num_records)];
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/ath/ath10k/htt.h:1676:29: note: while referencing 'records'
+>  1676 |  struct htt_tx_fetch_record records[0];
+>       |                             ^~~~~~~
+> 
+> Make records[] a flexible array member to allow this, moving it behind
+> the other zero-length member that is not accessed in a way that gcc
+> warns about.
+> 
+> Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
 
+This treewide patch no longer contains changes for ath10k. I removed them
+since Monday (05/04/2020). So, this "Fixes" tag does not apply.
+
+Thanks
 --
-Brian Gerst
+Gustavo
+
+> Fixes: 22e6b3bc5d96 ("ath10k: add new htt definitions")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/net/wireless/ath/ath10k/htt.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
+> index 8f3710cf28f4..aa056a186402 100644
+> --- a/drivers/net/wireless/ath/ath10k/htt.h
+> +++ b/drivers/net/wireless/ath/ath10k/htt.h
+> @@ -1673,8 +1673,8 @@ struct htt_tx_fetch_ind {
+>  	__le32 token;
+>  	__le16 num_resp_ids;
+>  	__le16 num_records;
+> -	struct htt_tx_fetch_record records[0];
+>  	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
+> +	struct htt_tx_fetch_record records[];
+>  } __packed;
+>  
+>  static inline void *
+> -- 
+> 2.26.0
+> 
