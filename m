@@ -2,116 +2,180 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0443C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAECE21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12F821655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:21:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="euBpYkLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgEIOUp (ORCPT
+        id S1727993AbgEIOVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 10:20:45 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:50696 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgEIOUo (ORCPT
+        Sat, 9 May 2020 10:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727092AbgEIOVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 10:20:44 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXQLJ-0006Tb-Ur; Sat, 09 May 2020 08:20:41 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jXQLI-0001r0-SE; Sat, 09 May 2020 08:20:41 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <875zd66za3.fsf_-_@x220.int.ebiederm.org>
-        <202005082213.8BDD4AC0CC@keescook>
-Date:   Sat, 09 May 2020 09:17:11 -0500
-In-Reply-To: <202005082213.8BDD4AC0CC@keescook> (Kees Cook's message of "Fri,
-        8 May 2020 22:15:43 -0700")
-Message-ID: <87tv0p2nx4.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jXQLI-0001r0-SE;;;mid=<87tv0p2nx4.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18A1U/jWwxjIXHnvSgRraar1VS0tQcBrZU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 4/6] exec: Run sync_mm_rss before taking exec_update_mutex
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        Sat, 9 May 2020 10:21:06 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23789C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 07:21:05 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id bm3so4870181qvb.0
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 07:21:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Ho7QmA8ZMfJz5ce1k/QRjeTlDkjueHSq5xTJ1WkUGPU=;
+        b=euBpYkLZT5GCedcber4H9h9dWGQVNueJcKLCWbi6PjcjCRaXvEO3FSv6oxRwwUAcRX
+         7GMUSbDU/RRorSdHyDULaGTDy/Isb9HnWNv7uSFLIfnAXzEpjWDDZ9ecaAwCn38NKEax
+         0gxXcwOHQME06+ZLRp6AKJRAprFG+BeMW0AMuJwFn4hm7d/fC18Mq2e2iKDvK5mUx0ky
+         cX8PZeU1z8XhY6WWAroJsXpMPBuCNM/A3kiB8uNk78xyddWkFlb8dY2JcUKeYDVVxcxU
+         03HIujUpyoUQNXPgcwuBD82gGKi09HB9Dvm1DNqlyDFFcRnk9xuzcpKm6feAtg5c87Eu
+         SAHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Ho7QmA8ZMfJz5ce1k/QRjeTlDkjueHSq5xTJ1WkUGPU=;
+        b=XPrgJaibEcDfdLRLEE/KjeYQhpMbpLjC5s1IX5L2Jk+iDn6cROM4q+2XtsgNeyLneC
+         FckFVEUNbWZTLcS7hbBRqV7gMgxr0PiBFlx6cxshb5n5sYEMOIWyR3R7zDYLYC8KvXmj
+         oUEhBOfsCoLK+jnW5zMVDpjmD2E99szxd2DxTFctLTDqGS68TzRYreQpm5wWzafH4c7r
+         KcWggMyqz+w4XuuzojRiGBl/Z9goyBCCx1wRVSYgFwJNLmc3YEqMoeNlQi9uIBdAW5vA
+         bEuYWj2jAUT4eMzJITVgMZahQO52sB5hLfvPPBFNC7BwvZuI2q7UB/QgfX8Wo3Dw9mti
+         uNAQ==
+X-Gm-Message-State: AGi0Pubh7IRtnDs3dJYAoSySNuoYxHr4WEid3qz+KB/HwDbAJvvL2Vel
+        9XkCizDvJAsgJNAnkGKmlzC2iKACXmiKZA==
+X-Google-Smtp-Source: APiQypKGo21usv+r+RSAulbzUM6zBXWr78hmsLPYbUwiyIoIbcg45yG57O7MJ//V4xvZCqSUvL0pXA7osc0+UQ==
+X-Received: by 2002:a0c:f2d3:: with SMTP id c19mr7486154qvm.109.1589034063386;
+ Sat, 09 May 2020 07:21:03 -0700 (PDT)
+Date:   Sat,  9 May 2020 07:19:46 -0700
+Message-Id: <20200509141946.158892-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH] mm: fix LRU balancing effect of new transparent huge pages
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-> $ git grep exec_mm_release
-> fs/exec.c:      exec_mm_release(tsk, old_mm);
-> include/linux/sched/mm.h:extern void exec_mm_release(struct task_struct *, struct mm_struct *);
-> kernel/fork.c:void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
->
-> kernel/fork.c:
->
-> void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-> {
->         futex_exit_release(tsk);
->         mm_release(tsk, mm);
-> }
->
-> void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
-> {
->         futex_exec_release(tsk);
->         mm_release(tsk, mm);
-> }
->
-> $ git grep exit_mm_release
-> include/linux/sched/mm.h:extern void exit_mm_release(struct task_struct *, struct mm_struct *);
-> kernel/exit.c:  exit_mm_release(current, mm);
-> kernel/fork.c:void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
->
-> kernel/exit.c:
->
->         exit_mm_release(current, mm);
->         if (!mm)
->                 return;
->         sync_mm_rss(mm);
->
-> It looks to me like both exec_mm_release() and exit_mm_release() could
-> easily have the sync_mm_rss(...) folded into their function bodies and
-> removed from the callers. *shrug*
+Currently, THP are counted as single pages until they are split right
+before being swapped out. However, at that point the VM is already in
+the middle of reclaim, and adjusting the LRU balance then is useless.
 
-Well it would have to be all of:
-	if (mm) 
-		sync_mm_rss(mm);
+Always account THP by the number of basepages, and remove the fixup
+from the splitting path.
 
-I remember reading through exit_mm_release and seeing that nothing
-actually depended upon a non-NULL mm. Unless you have clear_child_tid
-set.
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+Revived the patch from https://lore.kernel.org/patchwork/patch/685703/
 
-I am not up to speed on that part of the mm layer right now to know if
-it is a good idea to put sync_mm_rss in exit_mm_release but at a quick
-look it feels like it.
+ mm/swap.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-Eric
+diff --git a/mm/swap.c b/mm/swap.c
+index 4eb179ee0b72..b75c0ce90418 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -262,14 +262,14 @@ void rotate_reclaimable_page(struct page *page)
+ 	}
+ }
+ 
+-static void update_page_reclaim_stat(struct lruvec *lruvec,
+-				     int file, int rotated)
++static void update_page_reclaim_stat(struct lruvec *lruvec, int file,
++				     int rotated, int nr_pages)
+ {
+ 	struct zone_reclaim_stat *reclaim_stat = &lruvec->reclaim_stat;
+ 
+-	reclaim_stat->recent_scanned[file]++;
++	reclaim_stat->recent_scanned[file] += nr_pages;
+ 	if (rotated)
+-		reclaim_stat->recent_rotated[file]++;
++		reclaim_stat->recent_rotated[file] += nr_pages;
+ }
+ 
+ static void __activate_page(struct page *page, struct lruvec *lruvec,
+@@ -288,7 +288,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
+ 
+ 		__count_vm_events(PGACTIVATE, nr_pages);
+ 		__count_memcg_events(lruvec_memcg(lruvec), PGACTIVATE, nr_pages);
+-		update_page_reclaim_stat(lruvec, file, 1);
++		update_page_reclaim_stat(lruvec, file, 1, nr_pages);
+ 	}
+ }
+ 
+@@ -546,7 +546,7 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+ 		__count_vm_events(PGDEACTIVATE, nr_pages);
+ 		__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_pages);
+ 	}
+-	update_page_reclaim_stat(lruvec, file, 0);
++	update_page_reclaim_stat(lruvec, file, 0, nr_pages);
+ }
+ 
+ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+@@ -564,7 +564,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+ 
+ 		__count_vm_events(PGDEACTIVATE, nr_pages);
+ 		__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE, nr_pages);
+-		update_page_reclaim_stat(lruvec, file, 0);
++		update_page_reclaim_stat(lruvec, file, 0, nr_pages);
+ 	}
+ }
+ 
+@@ -590,7 +590,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+ 
+ 		__count_vm_events(PGLAZYFREE, nr_pages);
+ 		__count_memcg_events(lruvec_memcg(lruvec), PGLAZYFREE, nr_pages);
+-		update_page_reclaim_stat(lruvec, 1, 0);
++		update_page_reclaim_stat(lruvec, 1, 0, nr_pages);
+ 	}
+ }
+ 
+@@ -899,8 +899,6 @@ EXPORT_SYMBOL(__pagevec_release);
+ void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 		       struct lruvec *lruvec, struct list_head *list)
+ {
+-	const int file = 0;
+-
+ 	VM_BUG_ON_PAGE(!PageHead(page), page);
+ 	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
+ 	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
+@@ -926,9 +924,6 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
+ 		add_page_to_lru_list_tail(page_tail, lruvec,
+ 					  page_lru(page_tail));
+ 	}
+-
+-	if (!PageUnevictable(page))
+-		update_page_reclaim_stat(lruvec, file, PageActive(page_tail));
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+@@ -973,7 +968,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+ 	if (page_evictable(page)) {
+ 		lru = page_lru(page);
+ 		update_page_reclaim_stat(lruvec, page_is_file_lru(page),
+-					 PageActive(page));
++					 PageActive(page), nr_pages);
+ 		if (was_unevictable)
+ 			__count_vm_events(UNEVICTABLE_PGRESCUED, nr_pages);
+ 	} else {
+-- 
+2.26.2.645.ge9eca65c58-goog
 
