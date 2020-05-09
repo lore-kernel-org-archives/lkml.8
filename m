@@ -2,118 +2,115 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98894C54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B83CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DB3214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:43:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589039032;
-	bh=o1bX8Zql/kQ5+2VP0PxQWxTrOXX0zwKggYwZhmcqNrs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kfOb7dTQa6AIQ6YwlIMtxm8UhV21S2HlZz9gAuBqZqDEIOJ8/RczIuZAP3WGWNrgt
-	 6Y3wGv/Y6UP7hlPFKXtJB7mw2yO0uw4R+J4KKCaCKuSHSjAHP+CZA6yxRGmvD8rIKW
-	 2dvnfem5ehri61u8PggHn9/mXdvK9yR85HarZjPs=
+	by mail.kernel.org (Postfix) with ESMTP id DA18120CC7
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 15:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgEIPnu (ORCPT
+        id S1727998AbgEIPtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 11:43:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 11:49:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36110 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgEIPnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 11:43:49 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CEF2063A;
-        Sat,  9 May 2020 15:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589039029;
-        bh=o1bX8Zql/kQ5+2VP0PxQWxTrOXX0zwKggYwZhmcqNrs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DAXEZFtgE82+8ztfFy+75+0SXtIGD9rjTnRytb7gq+fU+tGx4hbaaWmS2NcxsN+Pt
-         jSeaNmSSiVN2iqylQqSMRdrnQ//OygB2q713StgEDppDnCYpiSQumAGbLQaolzFh+k
-         PJ9TtJmxAEV+9tAf+Z7IF89wjHUFlaKH1C2BrKBQ=
-Date:   Sat, 9 May 2020 10:48:18 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        Kalle Valo <kvalo@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wen Gong <wgong@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/2] ath10k: fix gcc-10 zero-length-bounds
- warnings
-Message-ID: <20200509154818.GB27779@embeddedor>
-References: <20200509120707.188595-1-arnd@arndb.de>
+        id S1726013AbgEIPtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 11:49:42 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49KBTY630YzB09b3;
+        Sat,  9 May 2020 17:49:37 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 099NYsCV6Cpu; Sat,  9 May 2020 17:49:37 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49KBTY4L2qzB09b2;
+        Sat,  9 May 2020 17:49:37 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B63538B775;
+        Sat,  9 May 2020 17:49:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 0AQC4Nh5-Sma; Sat,  9 May 2020 17:49:39 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C14678B75F;
+        Sat,  9 May 2020 17:49:37 +0200 (CEST)
+Subject: Re: ioremap() called early from pnv_pci_init_ioda_phb()
+To:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <B183CDAA-DA88-4760-9C1B-F73A8F7840E7@lca.pw>
+ <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <a4ae5c50-f317-4224-a5f2-6e1030e62d2b@csgroup.eu>
+Date:   Sat, 9 May 2020 17:49:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509120707.188595-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <229E1896-0C06-418A-B7DE-40AEBFB44F85@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd,
 
-On Sat, May 09, 2020 at 02:06:32PM +0200, Arnd Bergmann wrote:
-> gcc-10 started warning about out-of-bounds access for zero-length
-> arrays:
-> 
-> In file included from drivers/net/wireless/ath/ath10k/core.h:18,
->                  from drivers/net/wireless/ath/ath10k/htt_rx.c:8:
-> drivers/net/wireless/ath/ath10k/htt_rx.c: In function 'ath10k_htt_rx_tx_fetch_ind':
-> drivers/net/wireless/ath/ath10k/htt.h:1683:17: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct htt_tx_fetch_record[0]' [-Wzero-length-bounds]
->  1683 |  return (void *)&ind->records[le16_to_cpu(ind->num_records)];
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/htt.h:1676:29: note: while referencing 'records'
->  1676 |  struct htt_tx_fetch_record records[0];
->       |                             ^~~~~~~
-> 
-> Make records[] a flexible array member to allow this, moving it behind
-> the other zero-length member that is not accessed in a way that gcc
-> warns about.
-> 
-> Fixes: 3ba225b506a2 ("treewide: Replace zero-length array with flexible-array member")
 
-This treewide patch no longer contains changes for ath10k. I removed them
-since Monday (05/04/2020). So, this "Fixes" tag does not apply.
-
-Thanks
---
-Gustavo
-
-> Fixes: 22e6b3bc5d96 ("ath10k: add new htt definitions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/net/wireless/ath/ath10k/htt.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Le 08/05/2020 à 19:41, Qian Cai a écrit :
 > 
-> diff --git a/drivers/net/wireless/ath/ath10k/htt.h b/drivers/net/wireless/ath/ath10k/htt.h
-> index 8f3710cf28f4..aa056a186402 100644
-> --- a/drivers/net/wireless/ath/ath10k/htt.h
-> +++ b/drivers/net/wireless/ath/ath10k/htt.h
-> @@ -1673,8 +1673,8 @@ struct htt_tx_fetch_ind {
->  	__le32 token;
->  	__le16 num_resp_ids;
->  	__le16 num_records;
-> -	struct htt_tx_fetch_record records[0];
->  	__le32 resp_ids[0]; /* ath10k_htt_get_tx_fetch_ind_resp_ids() */
-> +	struct htt_tx_fetch_record records[];
->  } __packed;
->  
->  static inline void *
-> -- 
-> 2.26.0
 > 
+>> On May 8, 2020, at 10:39 AM, Qian Cai <cai@lca.pw> wrote:
+>>
+>> Booting POWER9 PowerNV has this message,
+>>
+>> "ioremap() called early from pnv_pci_init_ioda_phb+0x420/0xdfc. Use early_ioremap() instead”
+>>
+>> but use the patch below will result in leaks because it will never call early_iounmap() anywhere. However, it looks me it was by design that phb->regs mapping would be there forever where it would be used in pnv_ioda_get_inval_reg(), so is just that check_early_ioremap_leak() initcall too strong?
+>>
+>> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+>> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+>> @@ -36,6 +36,7 @@
+>> #include <asm/firmware.h>
+>> #include <asm/pnv-pci.h>
+>> #include <asm/mmzone.h>
+>> +#include <asm/early_ioremap.h>
+>>
+>> #include <misc/cxl-base.h>
+>>
+>> @@ -3827,7 +3828,7 @@ static void __init pnv_pci_init_ioda_phb(struct device_node *np,
+>>         /* Get registers */
+>>         if (!of_address_to_resource(np, 0, &r)) {
+>>                 phb->regs_phys = r.start;
+>> -               phb->regs = ioremap(r.start, resource_size(&r));
+>> +               phb->regs = early_ioremap(r.start, resource_size(&r));
+>>                 if (phb->regs == NULL)
+>>                         pr_err("  Failed to map registers !\n”);
+> 
+> This will also trigger a panic with debugfs reads, so isn’t that this commit bogus at least for powerpc64?
+> 
+> d538aadc2718 (“powerpc/ioremap: warn on early use of ioremap()")
+
+No d538aadc2718 is not bogus. That's the point, we want to remove all 
+early usages of ioremap() in order to remove the hack with the 
+ioremap_bot stuff and all, and stick to the generic ioremap logic.
+
+In order to do so, all early use of ioremap() has to be converted to 
+early_ioremap() or to fixmap or anything else that allows to do ioremaps 
+before the slab is ready.
+
+early_ioremap() is for temporary mappings necessary at boottime. For 
+long lasting mappings, another method is to be used.
+
+Now, the point is that other architectures like for instance x86 don't 
+seem to have to use early_ioremap() much. Powerpc is for instance doing 
+early mappings for PCI. Seems like x86 initialises PCI once slab is 
+ready. Can't powerpc do the same ?
+
+Christophe
