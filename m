@@ -2,75 +2,98 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAA1C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D97DC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3DED218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291C2218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgEICFy (ORCPT
+        id S1728562AbgEICJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 22:05:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45154 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728158AbgEICFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 22:05:53 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 005FD202E1195C7E9547;
-        Sat,  9 May 2020 10:05:51 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 10:04:46 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH -next] powerpc/powernv: add NULL check after kzalloc
-Date:   Sat, 9 May 2020 10:08:38 +0800
-Message-ID: <20200509020838.121660-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 8 May 2020 22:09:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:33908 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgEICJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 22:09:05 -0400
+IronPort-SDR: NKl/ZAJt6k7ReUlFGvO0G1vNZgiYXSX6vVOlnEaVkLLKZyIQ5UDSy0xcRGN6LHO7ayaRIME+/f
+ K55U0N2KfBOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 19:09:04 -0700
+IronPort-SDR: vZwu+/4YRX+uiHbp3aN/4S1dVUxQozEGbco1o2G1Igj89F1KGrw0cQfKn6vGCXqa29I4AUra1i
+ M8/fcm72cdYA==
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="435987332"
+Received: from unknown (HELO [10.239.13.122]) ([10.239.13.122])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 19:09:02 -0700
+Subject: Re: [PATCH] KVM: x86: Restore update of required xstate size in
+ guest's CPUID
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200508233749.3417-1-sean.j.christopherson@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <dd7bfdb9-dcad-8a4b-29bb-c48d4c98b515@intel.com>
+Date:   Sat, 9 May 2020 10:09:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200508233749.3417-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On 5/9/2020 7:37 AM, Sean Christopherson wrote:
+> Restore a guest CPUID update that was unintentional collateral damage
+> when the per-vCPU guest_xstate_size field was removed.
 
-./arch/powerpc/platforms/powernv/opal.c:813:1-5:
-	alloc with no test, possible model on line 814
+It's really unintentional. None of us noticed it. :(
 
-Add NULL check after kzalloc.
+It's good that you catch it!
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/powerpc/platforms/powernv/opal.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 2b3dfd0b6cdd..d95954ad4c0a 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -811,6 +811,10 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
- 		goto out;
- 
- 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-+	if (!attr) {
-+		rc = -ENOMEM;
-+		goto out;
-+	}
- 	name = kstrdup(export_name, GFP_KERNEL);
- 	if (!name) {
- 		rc = -ENOMEM;
--- 
-2.20.1
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Fixes: d87277414b851 ("kvm: x86: Cleanup vcpu->arch.guest_xstate_size")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> There's nothing more thrilling than watching bisect home in on your own
+> commits, only to land on someone else's on the very last step.
+> 
+>   arch/x86/kvm/cpuid.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 35845704cf57a..cd708b0b460a0 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -84,11 +84,13 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>   				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
+>   
+>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
+> -	if (!best)
+> +	if (!best) {
+>   		vcpu->arch.guest_supported_xcr0 = 0;
+> -	else
+> +	} else {
+>   		vcpu->arch.guest_supported_xcr0 =
+>   			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
+> +		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
+> +	}
+>   
+>   	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+>   	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+> 
 
