@@ -2,115 +2,115 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8A8C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF6CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB77206D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEED321655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 02:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="C42SvG0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgEICYB (ORCPT
+        id S1728594AbgEIC05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 22:24:01 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53710 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728158AbgEICYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 22:24:00 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72ozFLZe5F8yAA--.25S3;
-        Sat, 09 May 2020 10:23:48 +0800 (CST)
-Subject: Re: [PATCH 2/3] MIPS: Loongson: Add hwmon support for generic CPU
-To:     WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-References: <1588938904-924-1-git-send-email-yangtiezhu@loongson.cn>
- <1588938904-924-3-git-send-email-yangtiezhu@loongson.cn>
- <f7184121-c044-6e79-78ab-dcc9103b27c2@xen0n.name>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <234fe99b-44db-46b9-76fb-6426598f4448@loongson.cn>
-Date:   Sat, 9 May 2020 10:23:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <f7184121-c044-6e79-78ab-dcc9103b27c2@xen0n.name>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dx72ozFLZe5F8yAA--.25S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw48tr48uF18Gr47tw4fKrg_yoW8WF13pF
-        Z5Kay3ur1jqr1jkanrJw4Uur45Za15KrZ7CFWDA34UZas8Wwnxua4IqFnIyrnrZr4fua12
-        yF4vqa4ruF43ZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-        zVAYIcxG8wCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-        VjvjDU0xZFpf9x0JUHWlkUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 8 May 2020 22:26:57 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51667 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728158AbgEIC05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 22:26:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588991217; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=YtPxi5kfb+cESe9JYSmogjGyixblplgPG0hQEsBH8Jw=; b=C42SvG0bIU+85i2ZZH3W81M7knwxgyjXlEvS8a+ipPoJQiJ8YrdkW6o/p80vOUauyNRtraje
+ PSKxz2gQtmTY8mTHKMXPA06yaQYIpzZjPRgbclYQjpBlv01Dzbvhw17REnQS+0kCVd9DjWB5
+ 0Ln5m3wDT0RHzwATK1sr5yijNKA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb614f0.7f4f9b90d6f8-smtp-out-n05;
+ Sat, 09 May 2020 02:26:56 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1B9AC43636; Sat,  9 May 2020 02:26:55 +0000 (UTC)
+Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0BBBC433F2;
+        Sat,  9 May 2020 02:26:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0BBBC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, jhugo@codeaurora.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v7 0/8] Bug fixes and improved logging in MHI
+Date:   Fri,  8 May 2020 19:26:40 -0700
+Message-Id: <1588991208-26928-1-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 08:51 PM, WANG Xuerui wrote:
-> On 2020/5/8 19:55, Tiezhu Yang wrote:
->
->> Add PRID_IMP_LOONGSON_64G case to enable hwmon support for Loongson
->> generic CPU such as 3A4000 and newer CPU.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   drivers/platform/mips/cpu_hwmon.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/platform/mips/cpu_hwmon.c 
->> b/drivers/platform/mips/cpu_hwmon.c
->> index add5f52..7b4bde1 100644
->> --- a/drivers/platform/mips/cpu_hwmon.c
->> +++ b/drivers/platform/mips/cpu_hwmon.c
->> @@ -43,6 +43,7 @@ int loongson3_cpu_temp(int cpu)
->>           break;
->>       case PRID_REV_LOONGSON3A_R3_0:
->>       case PRID_REV_LOONGSON3A_R3_1:
->> +    case PRID_IMP_LOONGSON_64G:
->>       default:
->>           reg = (reg & 0xffff)*731/0x4000 - 273;
->>           break;
->
-> Hi,
->
-> This is obviously wrong, as the value being matched is a PRID_REV. You 
-> can tell from the neighboring match arms.
->
-> Also, the LOONGSON_64G cores are 3A4000 and newer, that have CSR 
-> support. The csr_temp_enable flag is probed in loongson_hwmon_init, 
-> then the switch is simply never entered for these.
+A set of patches for bug fixes and improved logging in mhi/core/boot.c.
+Verified on x86 and arm64 platforms.
 
-Hi Xuerui,
+v7:
+-Updated commit text for macro inclusion
+-Updated channel ID bound checks
+-Fixed non-uniform placement of function parameters to be within 80 characters
+-Sent to correct Maintainer email ID
 
-Thanks for your review. You are right.
+v6:
+-Updated the MHI_RANDOM_U32_NONZERO to only give a random number upto the
+supplied bitmask
 
-I notice that this feature has been done in the commit 7507445b1993
-("MIPS: Loongson: Add Loongson-3A R4 basic support"). My initial aim
-is to get CPU temperature for the Loongson generic CPU when the flag
-csr_temp_enable is false, but this is just the default case. So this
-patch is meaningless, please ignore it.
+v5:
+-Updated the macro MHI_RANDOM_U32_NONZERO to take a bitmask as the input
+parameter and output a non-zero value between 1 and U32_MAX
 
-Because patch 3/3 depends on this patch 2/3, I will remake and send v2
-patch series without this patch.
+v4:
+-Dropped the change: bus: mhi: core: WARN_ON for malformed vector table
+-Updated bus: mhi: core: Read transfer length from an event properly to include
+parse rsc events
+-Use prandom_u32_max() instead of prandom_u32 to avoid if check in
+bus: mhi: core: Ensure non-zero session or sequence ID values are used
 
-Thanks,
-Tiezhu Yang
+v3:
+-Fixed signed-off-by tags
+-Add a refactor patch for MHI queue APIs
+-Commit text fix in bus: mhi: core: Read transfer length from an event properly
+-Fix channel ID range check for ctrl and data event rings processing
 
+v2:
+-Fix channel ID range check potential infinite loop
+-Add appropriate signed-off-by tags
+
+Bhaumik Bhatt (4):
+  bus: mhi: core: Handle firmware load using state worker
+  bus: mhi: core: Return appropriate error codes for AMSS load failure
+  bus: mhi: core: Improve debug logs for loading firmware
+  bus: mhi: core: Ensure non-zero session or sequence ID values are used
+
+Hemant Kumar (4):
+  bus: mhi: core: Refactor mhi queue APIs
+  bus: mhi: core: Cache intmod from mhi event to mhi channel
+  bus: mhi: core: Add range check for channel id received in event ring
+  bus: mhi: core: Read transfer length from an event properly
+
+ drivers/bus/mhi/core/boot.c     |  75 +++++++++----------
+ drivers/bus/mhi/core/init.c     |   5 +-
+ drivers/bus/mhi/core/internal.h |   5 +-
+ drivers/bus/mhi/core/main.c     | 156 +++++++++++++++++++++-------------------
+ drivers/bus/mhi/core/pm.c       |   6 +-
+ include/linux/mhi.h             |   2 -
+ 6 files changed, 129 insertions(+), 120 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
