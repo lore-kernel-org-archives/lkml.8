@@ -2,162 +2,174 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A779CC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8E9208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E1620722
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o26Hg63m";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dVEsRVId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgEITNF (ORCPT
+        id S1728301AbgEITRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:13:05 -0400
-Received: from 2.mo3.mail-out.ovh.net ([46.105.75.36]:37149 "EHLO
-        2.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgEITNF (ORCPT
+        Sat, 9 May 2020 15:17:04 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:64468 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727938AbgEITRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:13:05 -0400
-Received: from player738.ha.ovh.net (unknown [10.110.208.147])
-        by mo3.mail-out.ovh.net (Postfix) with ESMTP id 9809224DADE
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 21:06:09 +0200 (CEST)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player738.ha.ovh.net (Postfix) with ESMTPSA id 0A9B5124BEB04;
-        Sat,  9 May 2020 19:06:01 +0000 (UTC)
-Date:   Sat, 9 May 2020 21:05:48 +0200
-From:   Stephen Kitt <steve@sk2.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: Protect INET_ADDR_COOKIE on 32-bit
- architectures
-Message-ID: <20200509210548.116c7385@heffalump.sk2.org>
-In-Reply-To: <20200509105914.04fd19c8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200508120457.29422-1-steve@sk2.org>
-        <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200509101322.12651ba0@heffalump.sk2.org>
-        <20200509105914.04fd19c8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 9 May 2020 15:17:03 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 049JDtKO003631;
+        Sat, 9 May 2020 12:16:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
+ b=o26Hg63mul31h0iUh03Lf9ch91acy2XFHKSWspqLRXj0mvGmQqIiH4MxwaB1ZpBw6C2e
+ +pdBS5BE/emyRri9ccWv+/lmW2USPXwU6xWMSPWhf7x/t4PipREUlE6SiCNBwB+59D66
+ hHh2Xbr+CYgZG6rHLPUsEuJgPQGDkysL2k4= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 30wtbfsjq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 09 May 2020 12:16:48 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Sat, 9 May 2020 12:16:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XPGJ5zgTUtkcG3wKVuZbK5POoEb0X0jkzVBc8cwjr7XGV/kITv8pHaBI30dXNFRm0AYNy18RMY/8YbF7ChkCgnTIcsPjR0AeHPrhEJB49UgtbfxZ0uu+sLzk5FCiuGoBSph/iTsyMhaumQ3SQlskFRwwyKPcEGuEICCxVHjYId1X8TmaiS+XwVFR7xuaQ7MVQ4n6JnsWWtvqRomUyk+9R36fdVKDwL80n/18m4tAFTwEiBXC1GTsdkp+Aa0A8I/ydGqSZg15l+BbTXy7IM2DBWpM9ZmEiFR4LE4kHAUsZuzaE6h4VIziyOAHHfNJShZvp93fa6jG1nQ0764NlcJxpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
+ b=JfhkFHMs9RM0Mcs2xDN7f7u1Jc9VX1fKeY+hn6Yx/r+sRbVzZtjNxfNeO6dL9PZ8XRqL8nrFZipWBhFYd3VVGl32q6CH40Dsk0muamkNwCHZ82Ie2rfzEYztcbtjZXHn4rNIPq+sCpCf8+C9XPsyGl0RFOMH5c4pkCTSf2mmRqGJfwDqb85472ziPw7nGFT7U5kYmP9pGVwTGEztCwfQ7Rnn4yI5gSLpiCI1161PG1y9Y5H9f0+FwL3/vhFa95lbuh8hpwrrJqkcpkV6VMyswffDUs+NO4QWezjCdKCCApLb1GHibtYEzDCS5pDUR4JS6YDkyuJedz67lAxoXFGIdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Wt9r2vb3Pid6PaIxRXF6CLOmKX7Qs8NEXMFh55Qsnw=;
+ b=dVEsRVIdhcHLUWCBL2TStoGFWzhA19jXMvOEA3HOU4v0nVwO+q1WUNPSpxKQhtjlkxug94U/0tegWbXXNfA3r+Rz9de94KgpMQZRVqRHybPTCo+kVePNH6Dal5wLizs4+RLNfb+kOB2gtXJ58hIcPiQjUINY+pgHKpRmJMX2WwE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Sat, 9 May
+ 2020 19:16:44 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::8988:aa27:5d70:6923]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::8988:aa27:5d70:6923%5]) with mapi id 15.20.2958.035; Sat, 9 May 2020
+ 19:16:44 +0000
+Subject: Re: [PATCH] libbpf: Replace zero-length array with flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+CC:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200507185057.GA13981@embeddedor>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
+Date:   Sat, 9 May 2020 12:16:41 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
+In-Reply-To: <20200507185057.GA13981@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0012.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::22) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/s1s_w35=OAg5_w9IeCHOaaW"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 18383975156205243802
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrkeehgddufeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:3134) by BYAPR21CA0012.namprd21.prod.outlook.com (2603:10b6:a03:114::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.2 via Frontend Transport; Sat, 9 May 2020 19:16:43 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3134]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1eb30b58-b4dc-4f6c-9707-08d7f44d82c8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB4088:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB408894A7ABCFF650D44E9831D3A30@BYAPR15MB4088.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+X-Forefront-PRVS: 03982FDC1D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uT9k4J2Qa/YTzyMSzwhhq4BZl2a89qEUJpUuQo6RVP99qcqew47PmRwH7dHgso+rr7Rvq8huiWvV2OwWDvNNQ6uALW1URydh/XW5vmRQ4OyWaRTh7DM6xBEs7n+p7BpH4WLWtrUVRcZgGH3fxQCdc7P7gfwu3mJjg05fO2DCEM2eYg1/RvKqlTvQum1sSvu4WXG++wDi0m6WsXl2fqeQSMNlhYNngkKXovRplI5DmoYGOTVERMkcNakimQfKU/cYj+PwCGmR6mbtq8OjMZ5K8BCNPEW4rWrYwQmTx4tSGSSM93FnX88k7Kg0X8sgYalKE+XOpvawwPyvuunQucDa7Sq2A2Hg0B9K9Rl3IDBMHr/5jfwhvJZc2hoKSNxLheHyjy4ErUrqEJu9go1aEUkUSsR1oiDoJL3sgkr0qI04Al2I9tWxg1Cx9MR+DCaNAcrmr0B3Ak7JKX+aIjd2UB5HU+LcqbvtRH3XRowOoDogoPKj1IADQVz0slbA7oHEcxOk3F254e2qusVSfiaHQ44egtjEiY5Bc26pvgxQXevjJNkfbvaBCLypHaoVm8jxtjLAtIXT5JmuCK1geI6w5sTUUZzgFFjQbMxvYXHm38MOBpBeBKRmEM1XX5jYyem6Sfl2JX4oQE9V2J001A3cdFxBbA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(136003)(366004)(376002)(39860400002)(33430700001)(478600001)(2906002)(6486002)(31686004)(966005)(6512007)(31696002)(66946007)(54906003)(6506007)(52116002)(66556008)(66476007)(36756003)(86362001)(2616005)(8936002)(316002)(5660300002)(33440700001)(53546011)(186003)(16526019)(8676002)(110136005)(4326008)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: a99622aa6kSXPo6zfTzqdNbgguZJx1iV/HQIiGTIFEwqIVNpLOPhpjMZEGXexp4lRGAWpoVtdiVtEzXPr0vd8dpn87ycaCALArImAwDL4ZK/eC+A3XhHvNcU1rE8s7RTnUxH5lPfXY6RAj7wEB2XFzFxwyjr0N97Wb8d5dNkbl7Q1obvORDxOePBueE0Nu8XSvqvYWBujtITQoRkCPFGIKJdRSJ5FXHcc2sq1RAFJ0mOp3KX01mhQkfwaerX26FcmLji4RNDoKxZQJsdk2yb2iA2jrdltuZzrQq37/1Hi+bSEzuiVOSqsISeMIYtlW4w93eTS+bbUFKrG3cuyOdPiqTgPo5yXctktBOiwpJ7XydufWJYpWUMO9zBFpI2a6R7ry6NW4Hn/N0UXmjnAoGnPaJvTX/6Tci70ND0aqHqSodVZgnDWel07zPCH8UGtfM9LlpW/xQj5NuDqcaRPvF9olOjT9JFjUAMvtTt08d/gvU3WTimv1RN/Mte4BIXD9wxPezNYOS1Fd246KRlC2jJeg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1eb30b58-b4dc-4f6c-9707-08d7f44d82c8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 19:16:44.3335
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P2zx9pj6ewi6QIkKKkMyPEXtNCL0ULJ+57lx0wLdt9HmSwSJ2exomTXGIRSWhqiz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4088
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-09_07:2020-05-08,2020-05-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ mlxscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 clxscore=1011 malwarescore=0 adultscore=0
+ mlxlogscore=997 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005090168
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s1s_w35=OAg5_w9IeCHOaaW
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, 9 May 2020 10:59:14 -0700, Jakub Kicinski <kuba@kernel.org> wrote:
-> On Sat, 9 May 2020 10:13:22 +0200 Stephen Kitt wrote:
-> > On Fri, 8 May 2020 20:50:25 -0700, Jakub Kicinski <kuba@kernel.org>
-> > wrote: =20
-> > > On Fri,  8 May 2020 14:04:57 +0200 Stephen Kitt wrote:   =20
-> > > > Commit c7228317441f ("net: Use a more standard macro for
-> > > > INET_ADDR_COOKIE") added a __deprecated marker to the cookie name on
-> > > > 32-bit architectures, with the intent that the compiler would flag
-> > > > uses of the name. However since commit 771c035372a0 ("deprecate the
-> > > > '__deprecated' attribute warnings entirely and for good"),
-> > > > __deprecated doesn't do anything and should be avoided.
-> > > >=20
-> > > > This patch changes INET_ADDR_COOKIE to declare a dummy struct so th=
-at
-> > > > any subsequent use of the cookie's name will in all likelihood break
-> > > > the build. It also removes the __deprecated marker.   =20
-> > >=20
-> > > I think the macro is supposed to cause a warning when the variable
-> > > itself is accessed. And I don't think that happens with your patch
-> > > applied.   =20
-> >=20
-> > Yes, the warning is what was lost when __deprecated lost its meaning. I
-> > was trying to preserve that, or rather extend it so that the build would
-> > break if the cookie was used on 32-bit architectures, and my patch
-> > ensures it does if the cookie is used in a comparison or assignment,
-> > but ...=20
-> > > +       kfree(&acookie);   =20
-> >=20
-> > I hadn=E2=80=99t thought of taking a pointer to it.
-> >=20
-> > If we want to preserve the use of the macro with a semi-colon, which is
-> > what Joe=E2=80=99s patch introduced (along with the deprecation warning=
-), we
-> > still need some sort of declaration which can=E2=80=99t be used. Perhaps
-> >=20
-> > #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-> > 	struct __name {} __attribute__((unused))
-> >=20
-> > would be better =E2=80=94 it declares the cookie as a struct, not a var=
-iable, so
-> > then the build fails if the cookie is used as anything other than a
-> > struct. If anyone does try to use it as a struct, the build will fail on
-> > 64-bit architectures...
-> >=20
-> >   CC      net/ipv4/inet_hashtables.o
-> > net/ipv4/inet_hashtables.c: In function =E2=80=98__inet_lookup_establis=
-hed=E2=80=99:
-> > net/ipv4/inet_hashtables.c:362:9: error: =E2=80=98acookie=E2=80=99 unde=
-clared (first use
-> > in this function) kfree(&acookie);
-> >          ^~~~~~~
-> > net/ipv4/inet_hashtables.c:362:9: note: each undeclared identifier is
-> > reported only once for each function it appears in make[2]: ***
-> > [scripts/Makefile.build:267: net/ipv4/inet_hashtables.o] Error 1 make[1=
-]:
-> > *** [scripts/Makefile.build:488: net/ipv4] Error 2 make: ***
-> > Makefile:1722: net] Error 2 =20
->=20
-> Hm. That does seem better. Although thinking about it - we will not get
-> a warning when someone declares a variable with the same name..
 
-Good point!
+On 5/7/20 11:50 AM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-> What if we went back to your original proposal of an empty struct but
-> added in an extern in front? That way we should get linker error on
-> pointer references.
+I think this is probably for bpf-next.
 
-That silently fails to fail if any other link object provides a definition
-for the symbol, even if the type doesn=E2=80=99t match...
-
-I thought of
-
-	register struct {} __name __attribute__((unused))
-
-but that really feels like tacking on more stuff to handle cases as we think
-of them, which makes me wonder what cases I=E2=80=99m not thinking of.
-
-Regards,
-
-Stephen
-
---Sig_/s1s_w35=OAg5_w9IeCHOaaW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl62/wwACgkQgNMC9Yht
-g5wo4BAAjQOE/+/mkcahMWlo0f2dTATJ71MA7sUP0D6bvFV/y663ziTtzHxxCUqm
-0TEZCcmIPcABuqm8BjkfET2R8Q+3dSYOwGQ4oq4ud3s2w/e9vCouDtMPkoXljOhf
-BQK52Pk4cuGDolV8QNKXi1cX3HfXbUXbg1jJ270DwQEs/y7+ENFUTaEE21GRA85d
-66a1mbDKbw08Vls8NlRYIQUa3l3xL6RxtCb/6zlqAB0OY856HBFYbB7ZSR3NQGPl
-WKvNjdB72nkIf4rdWtyd4nyMYn0+IPiUC6JdYKoZhAuunOZLWtL3v4NmA2wPh9vf
-/QPqOHuw3/+z8G/7PjAGnxDslgtFUll+2vJG55qRvl65Ke4zEvws/gJX6ucARltP
-cXPoOEdJZ0YBmUaPzVylafmobveV6Czf5UuHSeF/5eiNaYMHf45ASdpdifJkstu7
-42oYf5VyXObBrkTPJ8BllexkrOVDcvJl545p6ukjYp68RduD7IByvsCHYSt64Tmi
-Hg3nWY1fWysJYAr4GBaMjgpdnWtoKBmBwDQbLKSGuBCytHwuk6wLsWMOI5sPt/y5
-ewRoSV09NCjsCnlkgoD4xGMPqn3ofM46KRh0fr3HYDsKHDm4Recaexq//kgC33dD
-fZPxiykFtaUAT2Erl3yzjJrzY5nwKTbpZu4L+ONmEjTNNS8uKGM=
-=kb27
------END PGP SIGNATURE-----
-
---Sig_/s1s_w35=OAg5_w9IeCHOaaW--
+Acked-by: Yonghong Song <yhs@fb.com>
