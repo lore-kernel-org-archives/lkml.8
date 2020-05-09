@@ -2,134 +2,172 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D786C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D248C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D1620722
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589051910;
-	bh=NHH4y//VKaDr/rrlB9l7Pq3HdVIH7OjborNmD9OkkPU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sF5KpbErRVYgsgC3Lwpu1/Ds0TH+Qdp0n6OlT+OeKwJ1cXOeOj3JzlZmZDK0XIvVZ
-	 HHtkFw3vqIYQ/rWjUZvRMomBkHUqD3KkO7VpvwBnhHftks6aZOPYQYi4JEdqQVs6Pu
-	 ZAR9Qu4WdLIeJAgNfUiBIv7+WhqXNVQ5/rrG4yTQ=
+	by mail.kernel.org (Postfix) with ESMTP id EE9052192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgEITS3 (ORCPT
+        id S1728171AbgEITU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727938AbgEITS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:18:28 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B8CC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 12:18:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j3so5188553ljg.8
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MTaQjuSq7+Uk0mjz5XhiS0By4Z0ZIBHeP5OQxoY0AXY=;
-        b=bb8lv33/xdxQCjzNvqgBwiUcCYj652YvhdbqcvSHcY1rj9neVWryv4l1j6MmeGq4jo
-         AEH6Z8NxA7GKp1r/srByCIJnplyXBSDQ62DfynP6rinchtYP4IYYLHytr7y6o8ZD6J1K
-         ZVP3pi5JLSulmR+djlIuZSg8uAVtxAHd0IwZs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MTaQjuSq7+Uk0mjz5XhiS0By4Z0ZIBHeP5OQxoY0AXY=;
-        b=RK2JwdIny9thhrOENM6DucFDF08JHpENIF7LxtJr7N3E0FIyN8zElG82AcjkUkOWbr
-         AUi3UWGJ3NwQp562F4xHegi4OkO0gHKIjGhST+RV641bN31je2iatsgpacwlbiQoQRqU
-         QIWlTSicz4oaXSejXMqbxjiD0bSgaRFw3OWO1eEMNPULdlFCiK4SZXbEjs8+yLuqCAzQ
-         WCoYfsOKTAqaZ7ohQaLkez2xRrVzYWuI5p2E31sUncUibIH/Tk/tdtsO7qdFFiuGg/e/
-         akm+dH+s6lxiKu3/VGTFZ+gE9CoQPy33JW8J8nYEknXSgz2akOOh7j8V2lxmNxikuetA
-         nZCQ==
-X-Gm-Message-State: AOAM532pNd2yo1tkEi2GbYrr5w06T8mLzPLmbQjKXn2SbnmRG6bGGfZB
-        N93doKj8WGSeI15cHQidd+VzzautNpc=
-X-Google-Smtp-Source: ABdhPJxzi+q0bscUQoeXoxqypFexSKhKEiKNtm2YtF5Lp+LODCaoES0lMkV744XhL/gMT0xY+H6p+Q==
-X-Received: by 2002:a2e:8018:: with SMTP id j24mr5568784ljg.246.1589051905347;
-        Sat, 09 May 2020 12:18:25 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id m132sm4894291lfa.94.2020.05.09.12.18.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 12:18:23 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id a4so4098331lfh.12
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:18:23 -0700 (PDT)
-X-Received: by 2002:ac2:418b:: with SMTP id z11mr5854254lfh.30.1589051902927;
- Sat, 09 May 2020 12:18:22 -0700 (PDT)
+        Sat, 9 May 2020 15:20:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46314 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbgEITU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 15:20:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C5D12AB99;
+        Sat,  9 May 2020 19:20:29 +0000 (UTC)
+Message-ID: <cae7a4e19281fa3a7a0f89bd7812212c8e2e829f.camel@suse.de>
+Subject: Re: [PATCH v8 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>
+Cc:     Rob Herring <robh@kernel.org>, f.fainelli@gmail.com,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-usb@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tim.gover@raspberrypi.org, helgaas@kernel.org,
+        linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Sat, 09 May 2020 21:20:24 +0200
+In-Reply-To: <c9449111-f646-3925-36e6-f4492ad5f90a@gmx.net>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+         <20200505161318.26200-3-nsaenzjulienne@suse.de>
+         <20200507214859.GA562@bogus> <c9449111-f646-3925-36e6-f4492ad5f90a@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-NYv+jnSD7ETBXidQR5XT"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87blmy6zay.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87blmy6zay.fsf_-_@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 9 May 2020 12:18:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wguq6FwYb8_WZ_ZOxpHtwyc0xpz+PitNuf4pVxjWFmjFQ@mail.gmail.com>
-Message-ID: <CAHk-=wguq6FwYb8_WZ_ZOxpHtwyc0xpz+PitNuf4pVxjWFmjFQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] exec: Stop open coding mutex_lock_killable of cred_guard_mutex
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 11:48 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
->
-> Oleg modified the code that did
-> "mutex_lock_interruptible(&current->cred_guard_mutex)" to return
-> -ERESTARTNOINTR instead of -EINTR, so that userspace will never see a
-> failure to grab the mutex.
->
-> Slightly earlier Liam R. Howlett defined mutex_lock_killable for
-> exactly the same situation but it does it a little more cleanly.
 
-What what what?
+--=-NYv+jnSD7ETBXidQR5XT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-None of this makes sense. Your commit message is completely wrong, and
-the patch is utter shite.
+On Sat, 2020-05-09 at 12:02 +0200, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> Am 07.05.20 um 23:48 schrieb Rob Herring:
+> > On Tue,  5 May 2020 18:13:15 +0200, Nicolas Saenz Julienne wrote:
+> > > The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
+> > > that implements xHCI. After a PCI reset, VL805's firmware may either =
+be
+> > > loaded directly from an EEPROM or, if not present, by the SoC's
+> > > co-processor, VideoCore. RPi4's VideoCore OS contains both the non pu=
+blic
+> > > firmware load logic and the VL805 firmware blob. The function this pa=
+tch
+> > > introduces triggers the aforementioned process.
+> > >=20
+> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > >=20
+> > > ---
+> > >=20
+> > > Change since v7:
+> > > - Use usleep_delay()
+> > > - Add comment about PCI errors
+> > > - Don't wait on error
+> > > - Typos
+> > >=20
+> > > Change since v6:
+> > > - Add test to avoid loading the firmware when not needed
+> > > - Since we have it around, print VL805's firmware version, it'll make
+> > > debugging easier in the future
+> > > - Correct typos
+> > > - Add a clearer view of HW topology in patch description
+> > >=20
+> > > Changes since v4:
+> > > - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
+> > >=20
+> > > Changes since v1:
+> > > - Move include into .c file and add forward declaration to .h
+> > >=20
+> > >  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++=
+++
+> > >  include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
+> > >  2 files changed, 68 insertions(+)
+> > >=20
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> i modified the code a little bit for testing, but also successfully
+> tested it without my modifications:
+>=20
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
+i.c
+> index 0d1422b..f3f4c2d 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -337,8 +337,10 @@ int rpi_firmware_init_vl805(struct pci_dev *pdev)
+>          * further down the line.
+>          */
+>         pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+> &version);
+> -       if (version)
+> -               goto exit;
+> +       if (version) {
+> +               pci_info(pdev, "VL805 EEPROM firmware version %08x\n",
+> version);
+> +               return 0;
+> +       }
+> =20
+>         dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 1=
+5 |
+>                    PCI_FUNC(pdev->devfn) << 12;
+> @@ -353,9 +355,8 @@ int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> =20
+>         pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+>                               &version);
+> -exit:
+> -       pci_info(pdev, "VL805 firmware version %08x\n", version);
+> =20
+> +       pci_info(pdev, "VL805 RAM firmware version %08x\n", version);
+>         return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+>=20
+> Here are the my results with 3x Raspberry Pi 4:
+>=20
+> VL805 EEPROM firmware version 000137ad
+> VL805 EEPROM firmware version 00013701
+> VL805 RAM firmware version 000137ad
+>=20
+> So the whole patch series is:
+>=20
+> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-mutex_lock_interruptible() and mutex_lock_killable() are completely
-different operations, and the difference has absolutely nothing to do
-with  -ERESTARTNOINTR or -EINTR.
+Thanks for taking the time!
 
-mutex_lock_interruptible() is interrupted by any signal.
+Regards,
+Nicolas
 
-mutex_lock_killable() is - surprise surprise - only interrupted by
-SIGKILL (in theory any fatal signal, but we never actually implemented
-that logic, so it's only interruptible by the known-to-always-be-fatal
-SIGKILL).
 
-> Switch the code to mutex_lock_killable so that it is clearer what the
-> code is doing.
+--=-NYv+jnSD7ETBXidQR5XT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-This nonsensical patch makes me worry about all your other patches.
-The explanation is wrong, the patch is wrong, and it changes things to
-be fundamentally broken.
+-----BEGIN PGP SIGNATURE-----
 
-Before this, ^C would break out of a blocked execve()/ptrace()
-situation. After this patch, you need special tools to do so.
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl63AngACgkQlfZmHno8
+x/5TSAf7BczpOl3QIubfrvp77qkSKnOA+Vb+zg5XlulurMIug2l+pqDVUw0G/+Gp
+uwxEH4O0JxRg83lzCVFnP3Occ7dH5q5GA2yzBpcgVYvRLmlXw7NECJ1CqfAuB56S
+YDSBEQk1Pm4fcAIufJCJ8hH25TxuMXoK+2qEq2WYY7x9RY3FiarvCFw+XV4ayX4n
+s4rf/5spkVR3L1t6fMxmD6TQaGBwc6Ww2VFDTwJSTMjqxgU7iNHmjypv7XxaLuYl
+MkvpDgAyxuxI0R/MblN/rdNO2Fd2LCAQi5rU3VvEfcrrq6fm5YIt5sxnHzAOMfvK
+aIuwkpFCcR+EWHlJ7pQ4+dYrITgvPg==
+=iV4L
+-----END PGP SIGNATURE-----
 
-This patch is completely wrong.
+--=-NYv+jnSD7ETBXidQR5XT--
 
-And Kees, what the heck is that "Reviewed-by" for? Worthless review too.
-
-                Linus
