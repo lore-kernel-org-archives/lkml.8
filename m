@@ -2,101 +2,86 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42233C54E49
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F03C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 230BB20725
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D543D2495C
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgEIIiz (ORCPT
+        id S1727886AbgEIIjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:38:55 -0400
-Received: from verein.lst.de ([213.95.11.211]:56199 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgEIIiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:38:55 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2B31B68C7B; Sat,  9 May 2020 10:38:50 +0200 (CEST)
-Date:   Sat, 9 May 2020 10:38:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [PATCH 09/15, =?utf-8?B?ZtGWeGVk?=
- =?utf-8?Q?=5D?= lightnvm: stop using ->queuedata
-Message-ID: <20200509083849.GA22173@lst.de>
-References: <20200508161517.252308-1-hch@lst.de> <20200508161517.252308-10-hch@lst.de>
+        Sat, 9 May 2020 04:39:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41964 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725930AbgEIIjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 04:39:14 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A179991BC92CD59751A2;
+        Sat,  9 May 2020 16:39:13 +0800 (CST)
+Received: from huawei.com (10.175.101.78) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 9 May 2020
+ 16:39:05 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <dhowells@redhat.com>, <linux-cachefs@redhat.com>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangyingliang@huawei.com>
+Subject: [PATCH -next] CacheFiles: remove unnecessary comparisons
+Date:   Sat, 9 May 2020 17:02:46 +0800
+Message-ID: <1589014966-8128-1-git-send-email-yangyingliang@huawei.com>
+X-Mailer: git-send-email 1.8.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508161517.252308-10-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The type of some variables are unsigned which always '>=' 0,
+These comparisons are always false, so we can remove them.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
+ fs/cachefiles/daemon.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-fixed the compilation in the print_ppa arguments
-
- drivers/lightnvm/core.c      | 1 -
- drivers/lightnvm/pblk-init.c | 2 +-
- drivers/lightnvm/pblk.h      | 2 +-
- 3 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index db38a68abb6c0..85c5490cdfd2e 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -400,7 +400,6 @@ static int nvm_create_tgt(struct nvm_dev *dev, struct nvm_ioctl_create *create)
- 	}
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 752c1e43416f..24b1797653fd 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -225,7 +225,7 @@ static ssize_t cachefiles_daemon_write(struct file *file,
+ 	if (test_bit(CACHEFILES_DEAD, &cache->flags))
+ 		return -EIO;
  
- 	tdisk->private_data = targetdata;
--	tqueue->queuedata = targetdata;
+-	if (datalen < 0 || datalen > PAGE_SIZE - 1)
++	if (datalen > PAGE_SIZE - 1)
+ 		return -EOPNOTSUPP;
  
- 	mdts = (dev->geo.csecs >> 9) * NVM_MAX_VLBA;
- 	if (dev->geo.mdts) {
-diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
-index 9a967a2e83dd7..bec904ec0f7c0 100644
---- a/drivers/lightnvm/pblk-init.c
-+++ b/drivers/lightnvm/pblk-init.c
-@@ -49,7 +49,7 @@ struct bio_set pblk_bio_set;
+ 	/* drag the command string into the kernel so we can parse it */
+@@ -382,7 +382,7 @@ static int cachefiles_daemon_fstop(struct cachefiles_cache *cache, char *args)
+ 	if (args[0] != '%' || args[1] != '\0')
+ 		return -EINVAL;
  
- static blk_qc_t pblk_make_rq(struct request_queue *q, struct bio *bio)
- {
--	struct pblk *pblk = q->queuedata;
-+	struct pblk *pblk = bio->bi_disk->private_data;
+-	if (fstop < 0 || fstop >= cache->fcull_percent)
++	if (fstop >= cache->fcull_percent)
+ 		return cachefiles_daemon_range_error(cache, args);
  
- 	if (bio_op(bio) == REQ_OP_DISCARD) {
- 		pblk_discard(pblk, bio);
-diff --git a/drivers/lightnvm/pblk.h b/drivers/lightnvm/pblk.h
-index 86ffa875bfe16..49718105bc0dc 100644
---- a/drivers/lightnvm/pblk.h
-+++ b/drivers/lightnvm/pblk.h
-@@ -1255,7 +1255,7 @@ static inline int pblk_boundary_ppa_checks(struct nvm_tgt_dev *tgt_dev,
- 				continue;
- 		}
+ 	cache->fstop_percent = fstop;
+@@ -454,7 +454,7 @@ static int cachefiles_daemon_bstop(struct cachefiles_cache *cache, char *args)
+ 	if (args[0] != '%' || args[1] != '\0')
+ 		return -EINVAL;
  
--		print_ppa(tgt_dev->q->queuedata, ppa, "boundary", i);
-+		print_ppa(tgt_dev->disk->q->private_data, ppa, "boundary", i);
+-	if (bstop < 0 || bstop >= cache->bcull_percent)
++	if (bstop >= cache->bcull_percent)
+ 		return cachefiles_daemon_range_error(cache, args);
  
- 		return 1;
- 	}
+ 	cache->bstop_percent = bstop;
 -- 
-2.26.2
+2.17.1
 
