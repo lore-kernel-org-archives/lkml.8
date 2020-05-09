@@ -2,52 +2,55 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DF0C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A66C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A272192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC9E2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589045821;
-	bh=9853mSKZsku5U79WiBkvplqTJllbx6OfEy4JNS5F/d0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=D5tK4Zt1SEUUDVWrjEZH6EBFO1/AXxPd5rMGgoS9TL/ce6tkPc+67uK6DWA88iRe4
-	 yw7Fhco7Wg+qA3D0RMin7Z8TwaIBFpIvojSH9xjEqsP1AMmRg/hCKfQhX7R3Q1Dy/o
-	 0V8SDJebNi04Hks2CQDjc5rogo96W/gdVKw4E9fk=
+	s=default; t=1589045827;
+	bh=u4mtq4oc2YFCohhLV9L1ke8AzlV9vHB9ppjZwfyugSc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oBEZGb5o2nL9qyKPAszLAOJM4tPQbxkxuggg7Cl8+FI2RuapxnDbfPREOIX3EGS8b
+	 K4/C65k8DktPyUSQNrrbLGRJ1pRpHRSJ3lJ8QTv7ec/Pc7QiHGYLB/lFOmbSWtBJd9
+	 fprh4V3534zAxP3u4uvKYeMBtref8pZE/4qNBIas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgEIRhB (ORCPT
+        id S1728409AbgEIRhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 13:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbgEIRhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:37:00 -0400
+        id S1728285AbgEIRhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 13:37:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B122A20A8B;
-        Sat,  9 May 2020 17:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFFAF24958;
+        Sat,  9 May 2020 17:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589045819;
-        bh=9853mSKZsku5U79WiBkvplqTJllbx6OfEy4JNS5F/d0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OrqzLnS6QyFGGzjQ0Hn4wYuE4HoWmIkWcgqYjwzwzvheUm9ZjCz/DU2H+pFLXi9sf
-         2dXRbfGMIVzq/6BqeSLCN21CVMUXkvyE8uCtZODFkBevOvYpwugQuOvD4nU3x1s4kE
-         DV2O8HFU6Ngm70YVm3jepYxP1ryy9BAuukxMHNiw=
+        s=default; t=1589045823;
+        bh=u4mtq4oc2YFCohhLV9L1ke8AzlV9vHB9ppjZwfyugSc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x69a5JQFcomQzFjVXrGr49uL3BLUMxHcbr2ljFoIWGkhaauZ75AMsYorXp9q3kftz
+         yySUjpERik0j1fuR1AReuFl/aKayvi1sODBiEkNSqb2kMaMPS86X5pm48RKzEaftrc
+         BehPk0vYLCA9t9FjHsYIKUzs6EX5zW0Q6Pl5KfNk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
         chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v11 00/18] Enable FSGSBASE instructions
-Date:   Sat,  9 May 2020 13:36:37 -0400
-Message-Id: <20200509173655.13977-1-sashal@kernel.org>
+Subject: [PATCH v11 03/18] x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+Date:   Sat,  9 May 2020 13:36:40 -0400
+Message-Id: <20200509173655.13977-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200509173655.13977-1-sashal@kernel.org>
+References: <20200509173655.13977-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,98 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Benefits:
-Currently a user process that wishes to read or write the FS/GS base must
-make a system call. But recent X86 processors have added new instructions
-for use in 64-bit mode that allow direct access to the FS and GS segment
-base addresses.  The operating system controls whether applications can
-use these instructions with a %cr4 control bit.
+From: Andy Lutomirski <luto@kernel.org>
 
-In addition to benefits to applications, performance improvements to the
-OS context switch code are possible by making use of these instructions. A
-third party reported out promising performance numbers out of their
-initial benchmarking of the previous version of this patch series [9].
+This is temporary.  It will allow the next few patches to be tested
+incrementally.
 
-Enablement check:
-The kernel provides information about the enabled state of FSGSBASE to
-applications using the ELF_AUX vector. If the HWCAP2_FSGSBASE bit is set in
-the AUX vector, the kernel has FSGSBASE instructions enabled and
-applications can use them.
+Setting unsafe_fsgsbase is a root hole.  Don't do it.
 
-Kernel changes:
-Major changes made in the kernel are in context switch, paranoid path, and
-ptrace. In a context switch, a task's FS/GS base will be secured regardless
-of its selector. In the paranoid path, GS base is unconditionally
-overwritten to the kernel GS base on entry and the original GS base is
-restored on exit. Ptrace includes divergence of FS/GS index and base
-values.
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  3 +++
+ arch/x86/kernel/cpu/common.c                  | 24 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-Security:
-For mitigating the Spectre v1 SWAPGS issue, LFENCE instructions were added
-on most kernel entries. Those patches are dependent on previous behaviors
-that users couldn't load a kernel address into the GS base. These patches
-change that assumption since the user can load any address into GS base.
-The changes to the kernel entry path in this patch series take account of
-the SWAPGS issue.
-
-Changes from v10:
-
- - Rewrite the commit message for patch #1.
- - Document communication/acks from userspace projects that are
-   potentially affected by this.
-
-Andi Kleen (2):
-  x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
-  x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
-
-Andy Lutomirski (4):
-  x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
-  x86/entry/64: Clean up paranoid exit
-  x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
-  x86/fsgsbase/64: Enable FSGSBASE on 64bit by default and add a chicken
-    bit
-
-Chang S. Bae (9):
-  x86/ptrace: Prevent ptrace from clearing the FS/GS selector
-  selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base
-    write
-  x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
-  x86/entry/64: Introduce the FIND_PERCPU_BASE macro
-  x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit
-  x86/entry/64: Document GSBASE handling in the paranoid path
-  x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
-  x86/fsgsbase/64: Use FSGSBASE instructions on thread copy and ptrace
-  selftests/x86/fsgsbase: Test ptracer-induced GS base write with
-    FSGSBASE
-
-Sasha Levin (1):
-  x86/fsgsbase/64: move save_fsgs to header file
-
-Thomas Gleixner (1):
-  Documentation/x86/64: Add documentation for GS/FS addressing mode
-
-Tony Luck (1):
-  x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
-
- .../admin-guide/kernel-parameters.txt         |   2 +
- Documentation/x86/entry_64.rst                |   9 +
- Documentation/x86/x86_64/fsgs.rst             | 199 ++++++++++++++++++
- Documentation/x86/x86_64/index.rst            |   1 +
- arch/x86/entry/calling.h                      |  40 ++++
- arch/x86/entry/entry_64.S                     | 131 +++++++++---
- arch/x86/include/asm/fsgsbase.h               |  45 +++-
- arch/x86/include/asm/inst.h                   |  15 ++
- arch/x86/include/uapi/asm/hwcap2.h            |   3 +
- arch/x86/kernel/cpu/bugs.c                    |   6 +-
- arch/x86/kernel/cpu/common.c                  |  22 ++
- arch/x86/kernel/process.c                     |  10 +-
- arch/x86/kernel/process.h                     |  68 ++++++
- arch/x86/kernel/process_64.c                  | 142 +++++++------
- arch/x86/kernel/ptrace.c                      |  17 +-
- tools/testing/selftests/x86/fsgsbase.c        |  24 ++-
- 16 files changed, 605 insertions(+), 129 deletions(-)
- create mode 100644 Documentation/x86/x86_64/fsgs.rst
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3d9bdfe..af3aaade195b8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3033,6 +3033,9 @@
+ 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
+ 			kernel to use 4-level paging instead.
+ 
++	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
++			replaced with a nofsgsbase flag.
++
+ 	no_console_suspend
+ 			[HW] Never suspend the console
+ 			Disable suspending of consoles during suspend and
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bed0cb83fe245..4224760c74e27 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -418,6 +418,22 @@ static void __init setup_cr_pinning(void)
+ 	static_key_enable(&cr_pinning.key);
+ }
+ 
++/*
++ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
++ * updated. This allows us to get the kernel ready incrementally.
++ *
++ * Once all the pieces are in place, these will go away and be replaced with
++ * a nofsgsbase chicken flag.
++ */
++static bool unsafe_fsgsbase;
++
++static __init int setup_unsafe_fsgsbase(char *arg)
++{
++	unsafe_fsgsbase = true;
++	return 1;
++}
++__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
++
+ /*
+  * Protection Keys are not available in 32-bit mode.
+  */
+@@ -1478,6 +1494,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	setup_smap(c);
+ 	setup_umip(c);
+ 
++	/* Enable FSGSBASE instructions if available. */
++	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
++		if (unsafe_fsgsbase)
++			cr4_set_bits(X86_CR4_FSGSBASE);
++		else
++			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
++	}
++
+ 	/*
+ 	 * The vendor-specific functions might have changed features.
+ 	 * Now we do "generic changes."
 -- 
 2.20.1
 
