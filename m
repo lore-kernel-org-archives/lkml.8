@@ -2,129 +2,82 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA6C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DBBC54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608F020A8B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589047162;
-	bh=3sScCn48hhWnKgXHIohdt15QapiKvWIgKGBDXo4oqkk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xVlGrLdS5suxcuhwx7/BTeMf002KfP+dz4xYjrOBXgjA+QKH50+PntZPTBF/dGxm0
-	 8OsLjMKhDKUmaKJIn2Uphcgm249V3rwKyHRevBNgwLp/Fz0SMw40VaE3xk3XYkHCYl
-	 2FetzHd5wTCAKxVmrjGmQrahobeTx28rUUc3tQ7k=
+	by mail.kernel.org (Postfix) with ESMTP id 91781214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jh95EKvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgEIR7V (ORCPT
+        id S1728564AbgEISFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728648AbgEIR7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:59:16 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEDC3208CA;
-        Sat,  9 May 2020 17:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589047156;
-        bh=3sScCn48hhWnKgXHIohdt15QapiKvWIgKGBDXo4oqkk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o8/pelUrriPmGIul/Hzih1bIVUpEqHHacS3L6rMQ9uRXh4JtgX65MJXWgRM3wD81z
-         AU+3OeOFXHpjzjLn4kH0dOs4TjFKfcGsCD2sDGkuoQaGkr21on8JnScq/7hhSWN5zC
-         3Yrc8BG1aunPeTvQKmCAtS6VQmFozZxepd+PS3ts=
-Date:   Sat, 9 May 2020 10:59:14 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: Protect INET_ADDR_COOKIE on 32-bit
- architectures
-Message-ID: <20200509105914.04fd19c8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200509101322.12651ba0@heffalump.sk2.org>
-References: <20200508120457.29422-1-steve@sk2.org>
-        <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200509101322.12651ba0@heffalump.sk2.org>
+        Sat, 9 May 2020 14:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726214AbgEISFj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 14:05:39 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECABC061A0C;
+        Sat,  9 May 2020 11:05:37 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id f12so4105349edn.12;
+        Sat, 09 May 2020 11:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iylAZ67afhJneULmpXD8hs6yG6pA0hAdphybTMdL2Tg=;
+        b=jh95EKvvRqh0/JOFoEYMmmqP/RxTQ/Wg7UWF3kmx0h6XIYkTSyiAkJK/ZYctPIC0Ug
+         HObErDXhrfaNdXfjkhTu/9Czr3G8PiYtiOFECWsQeJAEI+8J4lhBXc015AaSRi3hqPGX
+         TNT2Mwb0Pq8CffJmqCRO6LB9xuKITunVAg2OskNUwZQIR6lPVEzQSRg02HGeerSRB291
+         NmkkDvBIetQGDiJsmZ6U/JcWeGO1HlrJIhsbwXv28Ni+ZilxdgagfGQ4m8xaZKMdCpWQ
+         gsmwXsJ0m8LR/E0M/n/qqPOekKqdgJcRxy/H6qeyTPQQweEXL9GaeS7fBDIfP8IA0zd+
+         I8Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iylAZ67afhJneULmpXD8hs6yG6pA0hAdphybTMdL2Tg=;
+        b=gG4DbmNWmeX1/QYNbRbTBal05JCAY6w1r19Fit2Uzmcakk+/Y2qFeE9L2X4kLH0Ee9
+         nbX4s1lARlBl6RZcIYGXW62ruxODkUbpNIEDOyYXhx50OOA/7FTJJr8Sq//uvSHaJKZJ
+         gJHjKCrcIyHZWULPv/OKA2cM9uQOhI5ZB0m23t28IBe0SMYEOLEaez3fL+kJQ++47P4U
+         lGAtnxFx3MHohHhWMaBm/fi5O0Du7aZUqxtS7Pdbe8Fx87yKHGK4UkweKL5XqecnJXcZ
+         LJyVL5PgowVQiaeS7wfvamDeYdJ1Z0fH1iM6xt229oCOO+T8hhzVxZK5fkTbpNQCdX5t
+         EHWg==
+X-Gm-Message-State: AGi0PubKKVbUqDj7lnCCanlyo2291BFUkITZpOKwU6mlVdUYZfuBmOBG
+        sSlvuZfMOWN3LiJzdNnVixYpqRCOeod9NAaVu/Y=
+X-Google-Smtp-Source: APiQypLoVDkS1aQi1ev2bBIGhd/Kk0xDc7qFO2h8NcA8QPs7gLtSAv8Zf+9cQ3JJ5J3F/s78XtFuBW5tjzAK4SyZt3w=
+X-Received: by 2002:a05:6402:391:: with SMTP id o17mr7109516edv.71.1589047536466;
+ Sat, 09 May 2020 11:05:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200509103956.26038-3-hui.song_1@nxp.com> <20200509103956.26038-2-hui.song_1@nxp.com>
+ <20200509153315.GR208718@lunn.ch> <20200509172724.GG1551@shell.armlinux.org.uk>
+In-Reply-To: <20200509172724.GG1551@shell.armlinux.org.uk>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Sat, 9 May 2020 23:34:59 +0530
+Message-ID: <CABHD4K_tPkCherpY5zUtxV1wcKc=7aj3ayr9yxG-sLFZeMf3Dw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] armv8: gpio: add gpio feature
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>, u-boot@linux.nxdi.nxp.com,
+        Hui Song <hui.song_1@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jiafei.pan@nxp.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 10:13:22 +0200 Stephen Kitt wrote:
-> Hi,
->=20
-> Thanks for taking the time to review my patch.
->=20
-> On Fri, 8 May 2020 20:50:25 -0700, Jakub Kicinski <kuba@kernel.org> wrote:
-> > On Fri,  8 May 2020 14:04:57 +0200 Stephen Kitt wrote: =20
-> > > Commit c7228317441f ("net: Use a more standard macro for
-> > > INET_ADDR_COOKIE") added a __deprecated marker to the cookie name on
-> > > 32-bit architectures, with the intent that the compiler would flag
-> > > uses of the name. However since commit 771c035372a0 ("deprecate the
-> > > '__deprecated' attribute warnings entirely and for good"),
-> > > __deprecated doesn't do anything and should be avoided.
-> > >=20
-> > > This patch changes INET_ADDR_COOKIE to declare a dummy struct so that
-> > > any subsequent use of the cookie's name will in all likelihood break
-> > > the build. It also removes the __deprecated marker. =20
-> >=20
-> > I think the macro is supposed to cause a warning when the variable
-> > itself is accessed. And I don't think that happens with your patch
-> > applied. =20
->=20
-> Yes, the warning is what was lost when __deprecated lost its meaning. I w=
-as
-> trying to preserve that, or rather extend it so that the build would brea=
-k if
-> the cookie was used on 32-bit architectures, and my patch ensures it does=
- if
-> the cookie is used in a comparison or assignment, but ...
->=20
-> > +       kfree(&acookie); =20
->=20
-> I hadn=E2=80=99t thought of taking a pointer to it.
->=20
-> If we want to preserve the use of the macro with a semi-colon, which is w=
-hat
-> Joe=E2=80=99s patch introduced (along with the deprecation warning), we s=
-till need
-> some sort of declaration which can=E2=80=99t be used. Perhaps
->=20
-> #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-> 	struct __name {} __attribute__((unused))
->=20
-> would be better =E2=80=94 it declares the cookie as a struct, not a varia=
-ble, so then
-> the build fails if the cookie is used as anything other than a struct. If
-> anyone does try to use it as a struct, the build will fail on 64-bit
-> architectures...
->=20
->   CC      net/ipv4/inet_hashtables.o
-> net/ipv4/inet_hashtables.c: In function =E2=80=98__inet_lookup_establishe=
-d=E2=80=99:
-> net/ipv4/inet_hashtables.c:362:9: error: =E2=80=98acookie=E2=80=99 undecl=
-ared (first use in this function)
->   kfree(&acookie);
->          ^~~~~~~
-> net/ipv4/inet_hashtables.c:362:9: note: each undeclared identifier is rep=
-orted only once for each function it appears in
-> make[2]: *** [scripts/Makefile.build:267: net/ipv4/inet_hashtables.o] Err=
-or 1
-> make[1]: *** [scripts/Makefile.build:488: net/ipv4] Error 2
-> make: *** Makefile:1722: net] Error 2
+> From what I can tell, these patches are not for the kernel.  The
+> filenames don't match th kernel layout.
 
-Hm. That does seem better. Although thinking about it - we will not get
-a warning when someone declares a variable with the same name..
-
-What if we went back to your original proposal of an empty struct but
-added in an extern in front? That way we should get linker error on
-pointer references.
+These files looks to be from U-boot, and must be intended for U-boot
+as I see U-boot mailing
+address in recipient's address?
