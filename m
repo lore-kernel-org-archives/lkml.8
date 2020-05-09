@@ -2,145 +2,104 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F70C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D450FC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA10521655
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B37E324954
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dScxEOEP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="m4Zd9Phc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgEILpi (ORCPT
+        id S1728420AbgEILrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
+        Sat, 9 May 2020 07:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726063AbgEILpi (ORCPT
+        by vger.kernel.org with ESMTP id S1726063AbgEILrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:45:38 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BB9C061A0C;
-        Sat,  9 May 2020 04:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KiW60T3hTB2qpy6736Bxcw2MHOpni1wIvO5W/zMNZ1U=; b=dScxEOEPFAX93tSikUpNlmorU
-        Ud2kA2lUknBqfsPTkWQ2niqbdThBKyTUvRHH3rKqgp5Ikovwkw3E1j5LwaXgrODtJ1Q34TqSdZ3Lc
-        DJuqL9okq9w+0UJ+gG49wEiY7SbY7URGE520Z3WoWT3zGowMr1bQqXeX25ddgdWGmRWeuO4GZIcmo
-        tahxCA17P2BuoHENH/I0g5X9Ewa0e/vcpS25lTh7AE+nbBee1eNOLNGOrtA93dL19erh1olQjeALZ
-        8yG0PBo7SFlNS8hsROxrwr+tIRxsjNRl9qi5n94y8FuAvcAupkRKteByPPXw5GAK/bkoaFLlaBZID
-        CmNhNf3dA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:55720)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jXNv1-0003gT-TW; Sat, 09 May 2020 12:45:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jXNuw-0002pE-BR; Sat, 09 May 2020 12:45:18 +0100
-Date:   Sat, 9 May 2020 12:45:18 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Stefan Chulski <stefanc@marvell.com>,
-        Matteo Croce <mcroce@redhat.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
- to handle RSS tables
-Message-ID: <20200509114518.GB1551@shell.armlinux.org.uk>
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
- <20190524100554.8606-4-maxime.chevallier@bootlin.com>
- <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
- <20200423170003.GT25745@shell.armlinux.org.uk>
- <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
- <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
-MIME-Version: 1.0
+        Sat, 9 May 2020 07:47:25 -0400
+Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684D1C061A0C;
+        Sat,  9 May 2020 04:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589024842;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=CnyAW9uMCr42mJ9XRQIidfqlX3YlRpsHNruTNJCl9aY=;
+        b=m4Zd9Phc0FqF6wltRJYRqxRS3bQm7jSZtWcqtCEtVi9zflIo9hj570qKgw4nNM8wuL
+        RE+4CZ95nA2n9tFv51MzBs7nSZG3xsynd7RiZg1xFjVwrkRBn37jfYJK38EsthBi9I8z
+        9sPAGP9ufo3VztFLNTocYLa1tkTydyaHB92EignvpNmC4yU2ziFWsS0B/e8zI+DnI1Ni
+        Hg4hmqkTsOl+NcVocRme5sYZWH6Z3uqmgbcxJkcL6YDRyvGMgALzMvPLIMaIpb5iX1F3
+        Rg8oxYenwl6fYJty5U66A7mZXm3nYj0TYaNPM5yxOzqwDJ9Af1O9z62dpcMBTVrzoROS
+        qtbQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAvw47pEAA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
+        with ESMTPSA id R0acebw49BlC7kw
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Sat, 9 May 2020 13:47:12 +0200 (CEST)
+Subject: Re: [PATCHv3] w1: omap-hdq: Simplify driver with PM runtime autosuspend
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200429213817.GU37466@atomide.com>
+Date:   Sat, 9 May 2020 13:47:12 +0200
+Cc:     Andreas Kemnade <andreas@kemnade.info>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "Andrew F . Davis" <afd@ti.com>, Vignesh R <vigneshr@ti.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <313BDBD2-DBF1-44A7-B021-92F1CAC0BC67@goldelico.com>
+References: <20200421180220.GB37466@atomide.com> <70F19A6E-7B36-4873-9364-F284A14EE3A0@goldelico.com> <20200421182017.GC37466@atomide.com> <D3E40A6A-39B8-4F3F-9ABC-28EAE8D623A6@goldelico.com> <20200422120418.49a40c75@aktux> <6E3A50D9-0F15-4A56-8C5E-7CDC63E8AF9F@goldelico.com> <A2AC3E81-49B2-4CF2-A7CF-6075AEB1B72D@goldelico.com> <44AD9673-AE02-498F-A5CC-48499DF226E3@goldelico.com> <E8575FE4-4BC2-41B7-B574-339C58D9CB5E@goldelico.com> <891CBD28-3F91-493D-AD80-6575608846A4@goldelico.com> <20200429213817.GU37466@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 11:15:58AM +0000, Stefan Chulski wrote:
+Hi Tony,
+
+> Am 29.04.2020 um 23:38 schrieb Tony Lindgren <tony@atomide.com>:
 > 
+> * H. Nikolaus Schaller <hns@goldelico.com> [200429 21:35]:
+>> I have reworked the way the spinlocks, setting and resetting
+>> of the hdq_irqstatus bits are done and now it works right from
+>> start of boot. Without any timeouts or delays.
+>> 
+>> I am not exactly sure what went wrong, but it seems as if
+>> the read is already done when the write interrupt status
+>> bit is processed. Then, the old logic did wipe out both
+>> bits by hdq_reset_irqstatus() and the read code did timeout
+>> because it did not notice that the data had already been
+>> available. This may depend on other system activities so
+>> that it can explain why other tests didn't reveal it.
+>> 
+>> omap_hdq_runtime_resume() and omap_hdq_runtime_suspend()
+>> also behave fine.
+>> 
+>> Before I can post something I need to clean up my hacks
+>> and add similar fixes to omap_hdq_break() and omap_w1_triplet()
+>> where I hope that I don't break those...
 > 
-> > -----Original Message-----
-> > From: Matteo Croce <mcroce@redhat.com>
-> > Sent: Saturday, May 9, 2020 3:13 AM
-> > To: David S . Miller <davem@davemloft.net>
-> > Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>; netdev
-> > <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Antoine
-> > Tenart <antoine.tenart@bootlin.com>; Thomas Petazzoni
-> > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
-> > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Stefan
-> > Chulski <stefanc@marvell.com>; Marcin Wojtas <mw@semihalf.com>; Linux
-> > ARM <linux-arm-kernel@lists.infradead.org>; Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk>
-> > Subject: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
-> > handle RSS tables
-> > 
-> > Hi,
-> > 
-> > What do you think about temporarily disabling it like this?
-> > 
-> > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > @@ -5775,7 +5775,8 @@ static int mvpp2_port_probe(struct platform_device
-> > *pdev,
-> >                             NETIF_F_HW_VLAN_CTAG_FILTER;
-> > 
-> >         if (mvpp22_rss_is_supported()) {
-> > -               dev->hw_features |= NETIF_F_RXHASH;
-> > +               if (port->phy_interface != PHY_INTERFACE_MODE_SGMII)
-> > +                       dev->hw_features |= NETIF_F_RXHASH;
-> >                 dev->features |= NETIF_F_NTUPLE;
-> >         }
-> > 
-> > 
-> > David, is this "workaround" too bad to get accepted?
-> 
-> Not sure that RSS related to physical interface(SGMII), better just remove NETIF_F_RXHASH as "workaround".
+> OK good to hear you were able to figure out what is
+> going on here.
 
-Hmm, I'm not sure this is the right way forward.  This patch has the
-effect of disabling:
+I have found another small bug and a dev_dbg format weakness
+and now it seems to work well even if I remove or reinsert the
+battery while read operations are ongoing.
 
-d33ec4525007 ("net: mvpp2: add an RSS classification step for each flow")
+Still I need more time to fix up the patch(es).
 
-but the commit you're pointing at which caused the regression is:
+BR and thanks,
+Nikolaus
 
-895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-
-
-Looking at the timeline here, it looks like Matteo raised the issue
-very quickly after the patch was sent on the 14th April, and despite
-following up on it, despite me following up on it, bootlin have
-remained quiet.  For a regression, that's not particularly good, and
-doesn't leave many options but to ask davem to revert a commit, or
-if possible fix it (which there doesn't seem to be any willingness
-for either - maybe it's a feature no one uses on this platform?)
-
-Would reverting the commit you point to as the cause (895586d5dc32)
-resolve the problem, and have any advantage over entirely disabling
-RSS?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
