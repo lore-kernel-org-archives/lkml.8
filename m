@@ -2,101 +2,69 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACB8C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C93C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5F7321473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlGfhXiq"
+	by mail.kernel.org (Postfix) with ESMTP id EB2CF21473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEIXpt (ORCPT
+        id S1728713AbgEIXqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47374 "EHLO
+        Sat, 9 May 2020 19:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726209AbgEIXps (ORCPT
+        by vger.kernel.org with ESMTP id S1726209AbgEIXp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:45:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ABCC061A0C;
-        Sat,  9 May 2020 16:45:48 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r14so2901338pfg.2;
-        Sat, 09 May 2020 16:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=crdP2tN+7nK5nK8+EdCmx+ONI5XbzqOYoFu/3nqOihQ=;
-        b=UlGfhXiqI/DCNydBA7vcaeO73tgWeq3fFtmKX8VfBkURAK6tOgK3qUpb31CwIDlU+6
-         pkK0ohm0vQiUBM7UTtCZcAOhXjGvvFZSbmmtgDun5zjrYLc78U0x2BZXL1m/RKViA3aY
-         4wsNaxhccMYtSSHPW4WVjglAjEqHeo3U5YJMVno1G75nmr8PPT/W1ftBYAADvt3t4LL/
-         EdxbfpWkVrQ79socDsbJLBmRfAJCjhLcf08nv1r+8z5HBNm+d8cJ0/psg7D6DCcEP3QO
-         p5U3Jmfug2JsaBQ0jHlhWzApkDE+QE/7mwNVEZ12PnnANH3xqx0S1IbBuk10BDfSyiE2
-         2V0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=crdP2tN+7nK5nK8+EdCmx+ONI5XbzqOYoFu/3nqOihQ=;
-        b=aoz0ZAqMvovd04WcVSXkkI4HF+ireEdPJRJE8pcxbZCeNWKNAwHpto8+S3wM1TG+dw
-         kNdV8jNHMkf1MDdoZSyWD0ZerZSoxkx+Fwt8LSSQNWEEm2Pum6msiAQZfvHEb2vyZT19
-         f576L6O7PjL99I2LeXwu+/3K4/Sfl3sqqb+1ThdJkUZSi27DpR6PmH0jReM6Lp6i/XiJ
-         noIJCehvwkr74uhpghrs0elqkF+2ES8YYD+dR2KLnv6ErX/4tfIUOz2kYkrUZdNofSBc
-         S+YBEbF8A3KnlB5Jxhx2jfoMzHGaafqrFn39iGrkOtMU1FgmnmOpMNctg20i/8gnyNPP
-         MvUg==
-X-Gm-Message-State: AGi0Pub2cuV70NXrozEX6I3odtWJxmKYn5YKN+YaH+8ZJ24ruhvHp1bL
-        NAhGsuYjYKTmsjSjX4GvnCAY3Rhb
-X-Google-Smtp-Source: APiQypJvT7t/yFC77G4E81nrRp5dMLZFFcv/Enc7XbA/12fCsRFheVtWkjZnj9onCg3TPAPjvruo5A==
-X-Received: by 2002:a62:7c16:: with SMTP id x22mr9680949pfc.267.1589067947319;
-        Sat, 09 May 2020 16:45:47 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h13sm5369203pfk.86.2020.05.09.16.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 16:45:46 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     kuba@kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: dsa: loop: Add module soft dependency
-Date:   Sat,  9 May 2020 16:45:44 -0700
-Message-Id: <20200509234544.17088-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 9 May 2020 19:45:59 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F160C061A0C;
+        Sat,  9 May 2020 16:45:59 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXZAL-004iR5-VJ; Sat, 09 May 2020 23:45:58 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 01/20] dlmfs_file_write(): get rid of pointless access_ok()
+Date:   Sun, 10 May 2020 00:45:38 +0100
+Message-Id: <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200509234124.GM23230@ZenIV.linux.org.uk>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a soft dependency against dsa_loop_bdinfo.ko which sets up the
-MDIO device registration, since there are no symbols referenced by
-dsa_loop.ko, there is no automatic loading of dsa_loop_bdinfo.ko which
-is needed.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-Fixes: 98cd1552ea27 ("net: dsa: Mock-up driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+address passed only to copy_from_user()
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/net/dsa/dsa_loop.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/dlmfs/dlmfs.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/dsa/dsa_loop.c b/drivers/net/dsa/dsa_loop.c
-index fdcb70b9f0e4..400207c5c7de 100644
---- a/drivers/net/dsa/dsa_loop.c
-+++ b/drivers/net/dsa/dsa_loop.c
-@@ -360,6 +360,7 @@ static void __exit dsa_loop_exit(void)
- }
- module_exit(dsa_loop_exit);
+diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+index 1de77f1a600b..a06f19b67d3b 100644
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -291,9 +291,6 @@ static ssize_t dlmfs_file_write(struct file *filp,
+ 	if (!count)
+ 		return 0;
  
-+MODULE_SOFTDEP("pre: dsa_loop_bdinfo");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Florian Fainelli");
- MODULE_DESCRIPTION("DSA loopback driver");
+-	if (!access_ok(buf, count))
+-		return -EFAULT;
+-
+ 	lvb_buf = kmalloc(count, GFP_NOFS);
+ 	if (!lvb_buf)
+ 		return -ENOMEM;
 -- 
-2.17.1
+2.11.0
 
