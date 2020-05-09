@@ -2,151 +2,94 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D52C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C902BC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BAA21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588999546;
-	bh=wSTK54E25Ch1a0hpNUaj3uwvdUAqW3DXrh/a2HNYaZU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTw8Pe+xFj5ESqHT4VEX5eWJSYJYJBAYhlHq7I9qr9Zglne3N5PeTtvo7nbC0ZHna
-	 LNTmE4uqD4Lu8SyoGvsKGAeSM5pQkpYSXERntra2hLJHZsgApNRosh30GmihuLsVas
-	 qhqdihzi022HbqMxkHClMopFAbpQol06PrBd1KdU=
+	by mail.kernel.org (Postfix) with ESMTP id A730C208DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 04:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgEIEpp (ORCPT
+        id S1728681AbgEIEr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 00:45:45 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52441 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgEIEpp (ORCPT
+        Sat, 9 May 2020 00:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgEIEr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 00:45:45 -0400
-Received: by mail-pj1-f68.google.com with SMTP id a5so5227716pjh.2;
-        Fri, 08 May 2020 21:45:43 -0700 (PDT)
+        Sat, 9 May 2020 00:47:28 -0400
+X-Greylist: delayed 458 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 08 May 2020 21:47:28 PDT
+Received: from omr1.cc.vt.edu (omr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:c6:2117:b0e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B13BC05BD09
+        for <linux-kernel@vger.kernel.org>; Fri,  8 May 2020 21:47:28 -0700 (PDT)
+Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 0494lRbO018937
+        for <linux-kernel@vger.kernel.org>; Sat, 9 May 2020 00:47:27 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 0494lM4j002403
+        for <linux-kernel@vger.kernel.org>; Sat, 9 May 2020 00:47:27 -0400
+Received: by mail-qt1-f199.google.com with SMTP id n22so4369210qtp.15
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 21:47:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=npAHADQxLDEpywMh/GQmSV8cKhjaz9uo2pCJ37X1d7Q=;
-        b=kYhjC2EBjfqXoUxy/zTQ4+eiC42XU2VTyClMoza3b5B+lwSLp/pHM7DMgZ1a1KiBIa
-         WoK2xvFhVw2P+QNluVDvFW9Ht35ULTfrM7U9xn2QM+htptM3Wh94p0hO99VdZQ3sjLvI
-         p++9H47Rq0EhVMgiZhbQmDRxfIxnVHH9xYP9ML/S1pItRwX7KG0Obs2xRIUeQwzUzE5f
-         3gGj+m3KvZ5cDQhiYUi5f0GhfMRamsIlvh43A3TBki6sMkAry6BOyixXXv79zx59dAcv
-         iRczBExRBCPiseIjKSm/c0vXMIDUhkT3hVYjEwUxBbUX9HdADoOcOBDk/RKnbs41ZnmR
-         zR/w==
-X-Gm-Message-State: AGi0Pub57GCEKRc6UK0BEzENjDcSZ8p65ZiUhNUJpzXJfYK7snH3Tskd
-        k/Z3rxJ2biXi2joFlE2fD9E=
-X-Google-Smtp-Source: APiQypLw6+nO2U4QWAJVDVbU2UVUQLz4x2Pd3twtzhhiEU7+VFbAvujZRZehlC9onWqGj3VvwxWp/A==
-X-Received: by 2002:a17:902:ff09:: with SMTP id f9mr5748286plj.236.1588999542861;
-        Fri, 08 May 2020 21:45:42 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h13sm2547498pgm.69.2020.05.08.21.45.41
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=CieMS2rA989SLT5WdlqR3SNmJMU/gOjJ8XfYOw251Ak=;
+        b=DnhKaWp4dpAc2ZB4pyQpXgONMjv1N/8zgmonRHUXQuN3ggX/hcfo2E3MkSjY/wFt0K
+         oXms1FFa1tgXQBddCDpPAJC0ef3/7Qky+MQX4Tt7X7jPCkeXCJAvZdg25mfB70e6t+7O
+         RHLlXoklWZK30Sm5LTaDtSHdHT/t2wdeq9lR41LKr30ppKXTlQ+85TyfeauEi+lu0VaX
+         z+FfxuTYvVuvnhrkpa3uFxeioor0xo0/eHdwdEq8SD5VYqIKrsJTerK1QEptRPNj6C08
+         NIr00DZhEXk3g/2puqLekAH3DRRSJo8t9h42YlCOWOgKEdSqR9+ibkvWf/3wZzQ0h9y5
+         7JKw==
+X-Gm-Message-State: AGi0PuYZul5AEo8ruT99PuOp9dGlVYw617nXvM6TCuq6YGvU4NI0xFU0
+        uUoP4tUYOlsSsWsNoScjJhYwPaFGkM6hJ7IAOxOx22q+VVF55nrS8/LAtGXFWlP70MvRDs0GySZ
+        iRJpPHrWnZTqyYPsHsor15MJfSY+9YW+rmWM=
+X-Received: by 2002:aed:2765:: with SMTP id n92mr6561187qtd.73.1588999642176;
+        Fri, 08 May 2020 21:47:22 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKrdwg9wFkSZEGyvIVNHrNxASjnM/WoZIv/+zUsBOK23ts64KQdieyMlQLlRE6tvAKySSZD6A==
+X-Received: by 2002:aed:2765:: with SMTP id n92mr6561176qtd.73.1588999641925;
+        Fri, 08 May 2020 21:47:21 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id d6sm2783247qkj.72.2020.05.08.21.47.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 21:45:41 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 54DB142337; Sat,  9 May 2020 04:36:01 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     jeyu@kernel.org
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org
-Subject: [PATCH 12/15] ath10k: use new module_firmware_crashed()
-Date:   Sat,  9 May 2020 04:35:49 +0000
-Message-Id: <20200509043552.8745-13-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200509043552.8745-1-mcgrof@kernel.org>
-References: <20200509043552.8745-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 08 May 2020 21:47:20 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     Sam Ravnborg <sam@ravnborg.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] bpfilter: document build requirements for bpfilter_umh
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Sat, 09 May 2020 00:47:19 -0400
+Message-ID: <131136.1588999639@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes use of the new module_firmware_crashed() to help
-annotate when firmware for device drivers crash. When firmware
-crashes devices can sometimes become unresponsive, and recovery
-sometimes requires a driver unload / reload and in the worst cases
-a reboot.
+It's not intuitively obvious that bpfilter_umh is a statically linked binary.
+Mention the toolchain requirement in the Kconfig help, so people
+have an easier time figuring out what's needed.
 
-Using a taint flag allows us to annotate when this happens clearly.
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-Cc: linux-wireless@vger.kernel.org
-Cc: ath10k@lists.infradead.org
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/net/wireless/ath/ath10k/pci.c  | 2 ++
- drivers/net/wireless/ath/ath10k/sdio.c | 2 ++
- drivers/net/wireless/ath/ath10k/snoc.c | 1 +
- 3 files changed, 5 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index 1d941d53fdc9..6bd0f3b518b9 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1767,6 +1767,7 @@ static void ath10k_pci_fw_dump_work(struct work_struct *work)
- 		scnprintf(guid, sizeof(guid), "n/a");
- 
- 	ath10k_err(ar, "firmware crashed! (guid %s)\n", guid);
-+	module_firmware_crashed();
- 	ath10k_print_driver_info(ar);
- 	ath10k_pci_dump_registers(ar, crash_data);
- 	ath10k_ce_dump_registers(ar, crash_data);
-@@ -2837,6 +2838,7 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
- 	if (ret) {
- 		if (ath10k_pci_has_fw_crashed(ar)) {
- 			ath10k_warn(ar, "firmware crashed during chip reset\n");
-+			module_firmware_crashed();
- 			ath10k_pci_fw_crashed_clear(ar);
- 			ath10k_pci_fw_crashed_dump(ar);
- 		}
-diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
-index e2aff2254a40..d34ad289380f 100644
---- a/drivers/net/wireless/ath/ath10k/sdio.c
-+++ b/drivers/net/wireless/ath/ath10k/sdio.c
-@@ -794,6 +794,7 @@ static int ath10k_sdio_mbox_proc_dbg_intr(struct ath10k *ar)
- 
- 	/* TODO: Add firmware crash handling */
- 	ath10k_warn(ar, "firmware crashed\n");
-+	module_firmware_crashed();
- 
- 	/* read counter to clear the interrupt, the debug error interrupt is
- 	 * counter 0.
-@@ -915,6 +916,7 @@ static int ath10k_sdio_mbox_proc_cpu_intr(struct ath10k *ar)
- 	if (cpu_int_status & MBOX_CPU_STATUS_ENABLE_ASSERT_MASK) {
- 		ath10k_err(ar, "firmware crashed!\n");
- 		queue_work(ar->workqueue, &ar->restart_work);
-+		module_firmware_crashed();
- 	}
- 	return ret;
- }
-diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
-index 354d49b1cd45..7cfc123c345c 100644
---- a/drivers/net/wireless/ath/ath10k/snoc.c
-+++ b/drivers/net/wireless/ath/ath10k/snoc.c
-@@ -1451,6 +1451,7 @@ void ath10k_snoc_fw_crashed_dump(struct ath10k *ar)
- 		scnprintf(guid, sizeof(guid), "n/a");
- 
- 	ath10k_err(ar, "firmware crashed! (guid %s)\n", guid);
-+	module_firmware_crashed();
- 	ath10k_print_driver_info(ar);
- 	ath10k_msa_dump_memory(ar, crash_data);
- 	mutex_unlock(&ar->dump_mutex);
--- 
-2.25.1
+diff --git a/net/bpfilter/Kconfig b/net/bpfilter/Kconfig
+index fed9290e3b41..0ec6c7958c20 100644
+--- a/net/bpfilter/Kconfig
++++ b/net/bpfilter/Kconfig
+@@ -13,4 +13,8 @@ config BPFILTER_UMH
+ 	default m
+ 	help
+ 	  This builds bpfilter kernel module with embedded user mode helper
++
++	  Note: your toolchain must support building static binaries, since
++	  rootfs isn't mounted at the time when __init functions are called
++	  and do_execv won't be able to find the elf interpreter.
+ endif
 
