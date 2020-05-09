@@ -2,119 +2,129 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A99C54E4A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493CEC54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03EC214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2475524954
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589059182;
-	bh=VmwPVJKT2v+erZFsLCasdEboGnLPwgraIeEZ+VZKOMs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CKwUJPTTRhiD4wb4x4rXVk0acPS5ll5LMC6lc1AY6ciuVxU54w+MZd87wztJ9/NQ+
-	 ljDPhXNlUTqP2pYbTcvKf3bnOJHKH+O8MtJXPODYcGw3jOx2ZnGeFg9ZniK1ul17fb
-	 0mXidymQZXG8JENiFYd82XVIPfDzsUGUOtX+4PRE=
+	s=default; t=1589060216;
+	bh=6w+HaMVXvNvAGAgI/+dduwymJoXKvzZJ1gnXCbQLYB8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UIGRFfpA3CAExAaXLh9IlXnMjpgIHdAqNqjXieFZXr9yaAfdvGlIJkfXanrw0nj1H
+	 EyD0pQEsjurWxS6HiI6cdIo19Rr5UCBPQXmB3Qe/c29e0dBx0rUvSVsR8fQ9h2eJea
+	 z7gibqhUp1j1OrDBTlNYRUI2T8qSdStLlQtPDYUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgEIVTl (ORCPT
+        id S1728285AbgEIVgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 17:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 17:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgEIVTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 17:19:41 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        id S1726120AbgEIVgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 17:36:55 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C45721473;
-        Sat,  9 May 2020 21:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7512D2184D;
+        Sat,  9 May 2020 21:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589059180;
-        bh=VmwPVJKT2v+erZFsLCasdEboGnLPwgraIeEZ+VZKOMs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wOsCHPDrh0mHaFSaxipTFAcZ+JRW6Ycicfqco2CcTCCoSv8LTi4yHScET00RKIYxj
-         XigbMqA5U4m4L26IkmKQZA2J7gSDX3c261EmTEcfeS5rO4ZHOTPzNW0Ygo5JRt10+d
-         WUiPtLUW6z1rpQW4iaBOK7mJf4U9EkLVQXYt+EmY=
-Date:   Sat, 9 May 2020 14:19:38 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH net 2/2 RESEND] ipmr: Add lockdep expression to
- ipmr_for_each_table macro
-Message-ID: <20200509141938.028fa959@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200509072243.3141-2-frextrite@gmail.com>
-References: <20200509072243.3141-1-frextrite@gmail.com>
-        <20200509072243.3141-2-frextrite@gmail.com>
+        s=default; t=1589060214;
+        bh=6w+HaMVXvNvAGAgI/+dduwymJoXKvzZJ1gnXCbQLYB8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=B7IGCvEHi+IOFDA/KixGSbi0jykouuo+7RUKjCJwgTOST1aBU0fKZM6b59erzmkd4
+         xfNLZnybRtzSMT0vUoP1lGoT769DddtFPklFiM1dTkEwKI2mHmkUZUyXevGXfocSmw
+         2HcFf6TQJ1MzRii9kvP+9uL4RaB5Fk/UE2H1ymso=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5B3EA35226E4; Sat,  9 May 2020 14:36:54 -0700 (PDT)
+Date:   Sat, 9 May 2020 14:36:54 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Will Deacon <will@kernel.org>, Elver Marco <elver@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in
+ osq_lock
+Message-ID: <20200509213654.GO2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200509161217.GN2869@paulmck-ThinkPad-P72>
+ <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 May 2020 12:52:44 +0530 Amol Grover wrote:
-> ipmr_for_each_table() uses list_for_each_entry_rcu() for
-> traversing outside of an RCU read-side critical section but
-> under the protection of pernet_ops_rwsem. Hence add the
-> corresponding lockdep expression to silence the following
-> false-positive warning at boot:
-
-Thanks for the fix, the warning has been annoying me as well!
-
-> [    0.645292] =============================
-> [    0.645294] WARNING: suspicious RCU usage
-> [    0.645296] 5.5.4-stable #17 Not tainted
-> [    0.645297] -----------------------------
-> [    0.645299] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-
-please provide a fuller stack trace, it would have helped the review
-
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
->  net/ipv4/ipmr.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+On Sat, May 09, 2020 at 12:53:38PM -0400, Qian Cai wrote:
 > 
-> diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-> index 99c864eb6e34..950ffe9943da 100644
-> --- a/net/ipv4/ipmr.c
-> +++ b/net/ipv4/ipmr.c
-> @@ -109,9 +109,10 @@ static void mroute_clean_tables(struct mr_table *mrt, int flags);
->  static void ipmr_expire_process(struct timer_list *t);
->  
->  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
-> -#define ipmr_for_each_table(mrt, net) \
-> -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-> -				lockdep_rtnl_is_held())
-> +#define ipmr_for_each_table(mrt, net)					\
-> +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
-> +				lockdep_rtnl_is_held() ||		\
-> +				lockdep_is_held(&pernet_ops_rwsem))
+> 
+> > On May 9, 2020, at 12:12 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > Ah, and I forgot to ask.  Why "if (data_race(prev->next == node)" instead
+> > of "if (data_race(prev->next) == node"?
+> 
+> I think the one you suggested is slightly better to point out the exact race. Do you want me to resend or you could squash it instead?
 
-This is a strange condition, IMHO. How can we be fine with either
-lock.. This is supposed to be the writer side lock, one can't have 
-two writer side locks..
+The patch was still at the top of my stack, so I just amended it.  Here
+is the updated version.
 
-I think what is happening is this:
+							Thanx, Paul
 
-ipmr_net_init() -> ipmr_rules_init() -> ipmr_new_table()
+------------------------------------------------------------------------
 
-ipmr_new_table() returns an existing table if there is one, but
-obviously none can exist at init.  So a better fix would be:
+commit 13e69ca01ce1621ce74248bda86cfad47fa5a0fa
+Author: Qian Cai <cai@lca.pw>
+Date:   Tue Feb 11 08:54:15 2020 -0500
 
-#define ipmr_for_each_table(mrt, net)					\
-	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
-				lockdep_rtnl_is_held() ||		\
-				list_empty(&net->ipv4.mr_tables))
+    locking/osq_lock: Annotate a data race in osq_lock
+    
+    The prev->next pointer can be accessed concurrently as noticed by KCSAN:
+    
+     write (marked) to 0xffff9d3370dbbe40 of 8 bytes by task 3294 on cpu 107:
+      osq_lock+0x25f/0x350
+      osq_wait_next at kernel/locking/osq_lock.c:79
+      (inlined by) osq_lock at kernel/locking/osq_lock.c:185
+      rwsem_optimistic_spin
+      <snip>
+    
+     read to 0xffff9d3370dbbe40 of 8 bytes by task 3398 on cpu 100:
+      osq_lock+0x196/0x350
+      osq_lock at kernel/locking/osq_lock.c:157
+      rwsem_optimistic_spin
+      <snip>
+    
+    Since the write only stores NULL to prev->next and the read tests if
+    prev->next equals to this_cpu_ptr(&osq_node). Even if the value is
+    shattered, the code is still working correctly. Thus, mark it as an
+    intentional data race using the data_race() macro.
+    
+    Signed-off-by: Qian Cai <cai@lca.pw>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Thoughts?
+diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+index 1f77349..1de006e 100644
+--- a/kernel/locking/osq_lock.c
++++ b/kernel/locking/osq_lock.c
+@@ -154,7 +154,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+ 	 */
+ 
+ 	for (;;) {
+-		if (prev->next == node &&
++		/*
++		 * cpu_relax() below implies a compiler barrier which would
++		 * prevent this comparison being optimized away.
++		 */
++		if (data_race(prev->next) == node &&
+ 		    cmpxchg(&prev->next, node, NULL) == node)
+ 			break;
+ 
