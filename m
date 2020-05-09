@@ -2,106 +2,130 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB290C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10660C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62C124953
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD41A24966
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="bL03iyjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgEIHik (ORCPT
+        id S1729040AbgEIHkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 03:38:40 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41832 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728471AbgEIHik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 03:38:40 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 19so10585048oiy.8;
-        Sat, 09 May 2020 00:38:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9iOCtd8hInAFwZEEy5/s6oN5yN9LbAgaBCk+Pd2Zfpk=;
-        b=Bbw7gMGmNvBOeJy7+VCtYI+VCwrgpZXeuhgBsebMAdgQDjaCS/B0bZR0L0Qj9FcyuZ
-         vp/yZKTrk+njsHtalSUwDV+bATtkScXQbeYiZY6yPsDm0a5X71ZclR+fWpO7wIwOwhxx
-         HU31zIQNxRhU1QHkfVzGoTiLP6yhND51flb+sdIVulFxNzxjhB0ATjsWqO9p0VwQ5e6D
-         TIrMQ9X3zJIKd8OQNFYfirqa9XE1H+2Q1d3qnUqh8CYkjuqTtyOG5Lq/jU3LguHi7W5i
-         TkRK9SAG1FcHpsVoqeBvyvjGYipExAOqFkRwYRxxZ20D3swUbFEp4OEgOedyhKNahf/v
-         QCFg==
-X-Gm-Message-State: AGi0PuYWAylJItUjeVd0eXdRcGS6DS9Rzpvf8ZRs4rIygaOSKpkje5Cp
-        DvakIf5IqhyW1TbC5K/tsVFodMo9PkKPvjtUUMQ=
-X-Google-Smtp-Source: APiQypIhzI5S6MTE2Rw2TcjkhcBXQU/2d5QohGoiHGR4xXrGldruM5LIRhRBh3PQtIrtKIqOX4QC/wsnF6RwhSrReUE=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr12715510oih.148.1589009919549;
- Sat, 09 May 2020 00:38:39 -0700 (PDT)
+        Sat, 9 May 2020 03:40:39 -0400
+Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:19683
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726120AbgEIHki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:40:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PLiQvmxt3sEX8ne/KOIwj0kmZjrjKx4FtZx34bFYqmmV6JoQ1eult65zgxndVNob6FcSWKWSc+P4FDYkLBhmYcHMsVNlYBxWDxXQNwQr6IadflGRrGxYYKdFqH85p+KqaJaMXcM1GnVzM+buSkw/Bx9Gd5jZasmpN9jCmMEo5GB4GUk9plTNNUwHQpUZuw57rMcMLOhiVr5ZNrhhUCqbfjXDIMTPsnhy3AcpSZO75Sux7g16VjWTH1cbtz7+xohTbnPhOkPaygQobIEdGnYI8b9n6UExXvYVr07sdhdnAPy7d/YjcClB9vwbzEbcJyfDh19GFSf3yAaavx/b6Xh/qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=npbLoiRmQDOKeFbXPZz01SuahXe3S56M+aQ+7fQVSag=;
+ b=Dk2uKSbF1xIXvQ6JpH0GeEoP24+VC9fxu4qQ27hUeElE8bVj0DK66WUBH8F5md9UXl7rJUuNMmB8P8GjqO4ZYiUkgGyed+fVfrgsuYBG7J1Zsetn7t5vIiHuE3QzbmvETM2aneHyDtnYIGciGM5tcTtbhTqjm99PtM1AdPdRrvJnh0m2qBUW/pBYgB+PIWPDMYiUJwGHswVWd2uB8K/PSAzLEQ1nrnhhjIzCPUwvftb9PiucYLJsDxwGG4O6jxu2oQr9Icrl/FRFVxyNRk0og5YnDacumCnJ8aJXHQ05qm26v33PcYfdAFvyAkDGODN1E36rpaUb++nRubJIx4kLUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=npbLoiRmQDOKeFbXPZz01SuahXe3S56M+aQ+7fQVSag=;
+ b=bL03iyjI7t3aoL9kbSEn/iCB7nPvLEqu5j8X7ku+pyHPrLvs+2S1Uq8bV9hhuRtnN5PmalSfBt8T3Ik8BazjNka4UnB7rklY72Lm/RNeUZLbPFNrCgGZkyUBcRAQqvFuTSakApNl3Wo5flkDDu0va6dLOOg9uof4gNh+sXBzXbI=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB5038.eurprd05.prod.outlook.com (2603:10a6:803:61::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Sat, 9 May
+ 2020 07:40:33 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2979.033; Sat, 9 May 2020
+ 07:40:33 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "leon@kernel.org" <leon@kernel.org>
+CC:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the net-next tree with the rdma tree
+Thread-Topic: linux-next: manual merge of the net-next tree with the rdma tree
+Thread-Index: AQHWJOdqvf+wE0yjPU+ZM+uXTwctcaifYFoA
+Date:   Sat, 9 May 2020 07:40:32 +0000
+Message-ID: <e24d65c568803c48fa15524d6395655c98010979.camel@mellanox.com>
+References: <20200508131851.5818d84d@canb.auug.org.au>
+In-Reply-To: <20200508131851.5818d84d@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=none action=none
+ header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9417aa0e-9958-49fd-f91b-08d7f3ec417c
+x-ms-traffictypediagnostic: VI1PR05MB5038:|VI1PR05MB5038:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB5038517B47AD7D3B85F27B47BEA30@VI1PR05MB5038.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03982FDC1D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Qsac5T0tFco1c1fR/eka5NYlp+G0UGXbAXcqkZTEOtFdOO9hAzPdeWu1oZpy8UlqBJssTLHr4pYA/xASrv+xTWtIl2oR6MlaDRBKoMJQ/6PVyze1pUQ+dhd9WTxUhZ/sxxXSYb2121/CTnEdY7uF5TD0MH8YjnkTLEkf0b3+8mVwx3MJ4u4geii2kU7FZeneViUCVxzWHTL8DOw/BkrREffa/oSNpFqlSUs478/G0XQfSSEpisoQ/FfNTtH38lpC0GzE9JR37MQfxsdHY8Wqxk3cHmk62NRxP31qLsghtHB0jtSrYCA65T53QUBX8dDw/ChJvqzjJ4Y/lTJGiQ7Fe3YjaTHHpa9jFE1CcT81oOpOJhvGjSyb9MBPm41H4LgOvwLfKWDrMII7vQmMIsm4WlWkaWC1H0I3E36UXzMlzvQhrP7Oa/BJaxQz79ab42R1fMuabfEE6loctaHJPCqihNbWo59rTpIZuhDBlDnHUbTSwsN6ng3C3vICMqfexFBGWNs1Cbi3KHPNvSljmvQVRQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(33430700001)(110136005)(66446008)(6512007)(2616005)(33440700001)(8936002)(186003)(4326008)(26005)(76116006)(91956017)(71200400001)(54906003)(5660300002)(2906002)(6486002)(36756003)(64756008)(86362001)(66476007)(8676002)(6506007)(66946007)(66556008)(316002)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: U2dDqMKDQwxCWOR3wAQFEIDm6qLc1P17wa9FxbxJf0FQuz+Fau+g2of94aHmBs/+kJCrZGCvdp4nh+3786YQ0hIu8eIwdjXEcT10ZdoDv6y8eUKIZlfgk0dLQycNu8RHhk+dSAOXz3SALWrxX1KbP9F5ycUEqgpTblSliWGZ9qwBqYZ9lG7td8cZ5Fpcyd/SacIFv31I///R+ZQyJr6CjrdJVOFez2eWT61VCxv58lswOwe7BtmiJ05J81lta0OG4IskPOAlQg5C4QNwNqw4hOKBNBHy199qrT1kjTeKHHTY7KWHyHVmL5segHO2Sn8WATi0PIkr4GZg4x/dOYg6Xp4qaM41qKpRXc9HQAt7P8Ke9t989xNjspS9rSXe/4pNE+0nSFPqGwMUbDDdlSRRUBGXhY18HHv0R3R6ifKTALV6eQPYSxh+2/l9dxFCbGRcxzAFNvkDzrBKXJ0APGDpV/BVBYf8jn2gZlPxRap7Wdg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <99A37935A22DAC46961A78453C04F1D1@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200508223216.6611-1-f.fainelli@gmail.com>
-In-Reply-To: <20200508223216.6611-1-f.fainelli@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 9 May 2020 09:38:28 +0200
-Message-ID: <CAMuHMdU2A1rzqsnNZFt-Gd+ZO5qc6Mzeyunn-LXpbxk_6zq-Ng@mail.gmail.com>
-Subject: Re: [PATCH net] net: broadcom: Imply BROADCOM_PHY for BCMGENET
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9417aa0e-9958-49fd-f91b-08d7f3ec417c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2020 07:40:33.1116
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kgYNfE/zRVtLZGN9FP1VZ9YLP4ukaD85BfL5EX2dL1fcz3fmt7IR4GZedItECym9cb+LnmDnVK7Cgd/bWnnY7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
-
-Thanks for your patch!
-
-On Sat, May 9, 2020 at 12:32 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> The GENET controller on the Raspberry Pi 4 (2711) is typically
-> interfaced with an external Broadcom PHY via a RGMII electrical
-> interface. To make sure that delays are properly configured at the PHY
-> side, ensure that we get a chance to have the dedicated Broadcom PHY
-> driver (CONFIG_BROADCOM_PHY) enabled for this to happen.
-
-I guess it can be interfaced to a different external PHY, too?
-
-> Fixes: 402482a6a78e ("net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed")
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> --- a/drivers/net/ethernet/broadcom/Kconfig
-> +++ b/drivers/net/ethernet/broadcom/Kconfig
-> @@ -69,6 +69,7 @@ config BCMGENET
->         select BCM7XXX_PHY
->         select MDIO_BCM_UNIMAC
->         select DIMLIB
-> +       imply BROADCOM_PHY if ARCH_BCM2835
-
-Which means support for the BROADCOM_PHY is always included
-on ARCH_BCM2835, even if a different PHY is used?
-
->         help
->           This driver supports the built-in Ethernet MACs found in the
->           Broadcom BCM7xxx Set Top Box family chipset.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gRnJpLCAyMDIwLTA1LTA4IGF0IDEzOjE4ICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBhbGwsDQo+IA0KPiBUb2RheSdzIGxpbnV4LW5leHQgbWVyZ2Ugb2YgdGhlIG5ldC1u
+ZXh0IHRyZWUgZ290IGEgY29uZmxpY3QgaW46DQo+IA0KPiAgIGRyaXZlcnMvbmV0L2JvbmRpbmcv
+Ym9uZF9tYWluLmMNCj4gDQo+IGJldHdlZW4gY29tbWl0czoNCj4gDQo+ICAgZWQ3ZDRmMDIzYjFh
+ICgiYm9uZGluZzogUmVuYW1lIHNsYXZlX2FyciB0byB1c2FibGVfc2xhdmVzIikNCj4gICBjMDcx
+ZDkxZDJhODkgKCJib25kaW5nOiBBZGQgaGVscGVyIGZ1bmN0aW9uIHRvIGdldCB0aGUgeG1pdCBz
+bGF2ZQ0KPiBiYXNlZCBvbiBoYXNoIikNCj4gICAyOWQ1YmJjY2IzYTEgKCJib25kaW5nOiBBZGQg
+aGVscGVyIGZ1bmN0aW9uIHRvIGdldCB0aGUgeG1pdCBzbGF2ZQ0KPiBpbiByciBtb2RlIikNCj4g
+DQo+IGZyb20gdGhlIHJkbWEgYW5kIG1seDUtbmV4dCB0cmVlcyBhbmQgY29tbWl0Og0KPiANCj4g
+ICBhZTQ2ZjE4NGJjMWYgKCJib25kaW5nOiBwcm9wYWdhdGUgdHJhbnNtaXQgc3RhdHVzIikNCj4g
+DQo+IGZyb20gdGhlIG5ldC1uZXh0IHRyZWUuDQo+IA0KPiBJIGZpeGVkIGl0IHVwIChJIHRoaW5r
+IC0gc2VlIGJlbG93KSBhbmQgY2FuIGNhcnJ5IHRoZSBmaXggYXMNCj4gbmVjZXNzYXJ5LiBUaGlz
+IGlzIG5vdyBmaXhlZCBhcyBmYXIgYXMgbGludXgtbmV4dCBpcyBjb25jZXJuZWQsIGJ1dA0KPiBh
+bnkNCj4gbm9uIHRyaXZpYWwgY29uZmxpY3RzIHNob3VsZCBiZSBtZW50aW9uZWQgdG8geW91ciB1
+cHN0cmVhbSBtYWludGFpbmVyDQo+IHdoZW4geW91ciB0cmVlIGlzIHN1Ym1pdHRlZCBmb3IgbWVy
+Z2luZy4gIFlvdSBtYXkgYWxzbyB3YW50IHRvDQo+IGNvbnNpZGVyDQo+IGNvb3BlcmF0aW5nIHdp
+dGggdGhlIG1haW50YWluZXIgb2YgdGhlIGNvbmZsaWN0aW5nIHRyZWUgdG8gbWluaW1pc2UNCj4g
+YW55DQo+IHBhcnRpY3VsYXJseSBjb21wbGV4IGNvbmZsaWN0cy4NCj4gDQoNCkhpIFN0ZXBoZW4g
+YW5kIHRoYW5rcyBmb3IgdGhlIHJlcG9ydC4gDQoNCllvdXIgZml4IHNlZW1zIHRvIGJlIG9rLCBp
+IHRoaW5rIGl0IGlzIG1pc3Npbmcgc29tZSBodW5rcyBmb3INCmJvbmRfZ2V0X3NsYXZlX2J5X2lk
+IGZ1bmN0aW9uIGFuZCBzb21lICJsaWtlbHkiIGRpcmVjdGl2ZXMgYXJlIG1pc3NpbmcsDQp3aGlj
+aCB3ZXJlIGFkZGVkIGJ5IE1hb3IncyBvciBFcmljJ3MgcGF0Y2hlcy4NCg0KQW55d2F5IHRoaXMg
+aXMgYWxyZWFkeSBmaXhlZCB1cCBpbiBteSBuZXQtbmV4dC1tbHg1IHRyZWUgYW5kIHdpbGwgYmUN
+CnN1Ym1pdHRlZCB2ZXJ5IHNvb24gdG8gbmV0LW5leHQgd2l0aCB0aGUgY29uZmxpY3QgZml4dXAg
+Li4gDQoNClRoYW5rcywNClNhZWVkLg0K
