@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72ECC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A192C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59062192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FB02192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589045853;
-	bh=42vi448p+mrkPGZCOyniyT8x08SXAABtZ5W56U5+AFk=;
+	s=default; t=1589045858;
+	bh=/Y6JDEC90w0GBqbdeWrZTksp0NgWDLpS8ypWQddiY5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJSYUIIDHzufehbio94OXpPmsmA22WfkJmf8GR5gzFF+H7sH9kGp0q+FdSchSYczb
-	 vpmqYja/fh/ywvpUlRdc/Wy/dcXG5A3215qSuTgiFKAGBemz/ZFNE7o7UVF0BCKmuL
-	 AwHJPXjY1ybdHC6EiYbYac0tAPjtpAu9YJVkFQPA=
+	b=2wG8dGSEsDDP/qGtBZYpVjBEF38/8QHDLfC5yj/USQtYSlJLTjcAtV0mLG2gw+qG1
+	 vNADasBDYGK8riSaIXTgmelXdpmiMvunXsTYA16po8rgutv8uujwmlEQM2GmCYTZvZ
+	 Fnzo8DOesdkef3JB/8Oe1nvE3+b3Fqa3bk9aZ0S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgEIRhc (ORCPT
+        id S1728629AbgEIRhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54798 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 13:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728663AbgEIRh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:37:26 -0400
+        id S1728579AbgEIRhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 13:37:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFD5424956;
-        Sat,  9 May 2020 17:37:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4749420A8B;
+        Sat,  9 May 2020 17:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589045845;
-        bh=42vi448p+mrkPGZCOyniyT8x08SXAABtZ5W56U5+AFk=;
+        s=default; t=1589045835;
+        bh=/Y6JDEC90w0GBqbdeWrZTksp0NgWDLpS8ypWQddiY5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XBtLanETlYMDRPlL7zhKBrz0GeHuiJwWcAnZrQdKwNZ+ZUyoIIYVXly+vonhJ175E
-         /uWgxaQjzi8hCYPeLNUgY/CgtF8dp07QNTvT1mxHPAEQFJZvU+rbBu9sW5LlWAcZrM
-         1FA6YulvMYZJWVAEtIbLkHkkgUE+qVIGoQAHpHAg=
+        b=hxzhRnhXhtQM6aIIKoTpf3aoCQ6MsdQvBTCvJKlppbU3SoSYsKh/EUeg0F2RnHl8p
+         df7jC2YJaZjYrEkvQvcIyyXI+M/Ue4xTB1WeoKli7/ANYUQ4HGNGUaVohQysRtg2jn
+         fwCjwZCKyz1e+1xIdXFVj7kmjXsLC0Yb+wdiNGfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v11 18/18] Documentation/x86/64: Add documentation for GS/FS addressing mode
-Date:   Sat,  9 May 2020 13:36:55 -0400
-Message-Id: <20200509173655.13977-19-sashal@kernel.org>
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v11 11/18] x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
+Date:   Sat,  9 May 2020 13:36:48 -0400
+Message-Id: <20200509173655.13977-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200509173655.13977-1-sashal@kernel.org>
 References: <20200509173655.13977-1-sashal@kernel.org>
@@ -60,18 +58,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Andy Lutomirski <luto@kernel.org>
 
-Explain how the GS/FS based addressing can be utilized in user space
-applications along with the differences between the generic prctl() based
-GS/FS base control and the FSGSBASE version available on newer CPUs.
+With the new FSGSBASE instructions, FS/GS base can be efficiently read
+and written in __switch_to(). Use that capability to preserve the full
+state.
 
-Originally-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+This will enable user code to do whatever it wants with the new
+instructions without any kernel-induced gotchas.  (There can still be
+architectural gotchas: movl %gs,%eax; movl %eax,%gs may change GS base
+if WRGSBASE was used, but users are expected to read the CPU manual
+before doing things like that.)
+
+This is a considerable speedup. It seems to save about 100 cycles per
+context switch compared to the baseline 4.6-rc1 behavior on a Skylake
+laptop.
+
+[ chang: 5~10% performance improvements were seen by a context switch
+  benchmark that ran threads with different FS/GS base values (to the
+  baseline 4.16). ]
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -79,228 +89,62 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
 ---
- Documentation/x86/x86_64/fsgs.rst  | 199 +++++++++++++++++++++++++++++
- Documentation/x86/x86_64/index.rst |   1 +
- 2 files changed, 200 insertions(+)
- create mode 100644 Documentation/x86/x86_64/fsgs.rst
+ arch/x86/kernel/process_64.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/x86/x86_64/fsgs.rst b/Documentation/x86/x86_64/fsgs.rst
-new file mode 100644
-index 0000000000000..50960e09e1f66
---- /dev/null
-+++ b/Documentation/x86/x86_64/fsgs.rst
-@@ -0,0 +1,199 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index aaa65f284b9b9..e066750be89a0 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -199,8 +199,18 @@ static __always_inline void save_fsgs(struct task_struct *task)
+ {
+ 	savesegment(fs, task->thread.fsindex);
+ 	savesegment(gs, task->thread.gsindex);
+-	save_base_legacy(task, task->thread.fsindex, FS);
+-	save_base_legacy(task, task->thread.gsindex, GS);
++	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
++		/*
++		 * If FSGSBASE is enabled, we can't make any useful guesses
++		 * about the base, and user code expects us to save the current
++		 * value.  Fortunately, reading the base directly is efficient.
++		 */
++		task->thread.fsbase = rdfsbase();
++		task->thread.gsbase = x86_gsbase_read_cpu_inactive();
++	} else {
++		save_base_legacy(task, task->thread.fsindex, FS);
++		save_base_legacy(task, task->thread.gsindex, GS);
++	}
+ }
+ 
+ #if IS_ENABLED(CONFIG_KVM)
+@@ -279,10 +289,22 @@ static __always_inline void load_seg_legacy(unsigned short prev_index,
+ static __always_inline void x86_fsgsbase_load(struct thread_struct *prev,
+ 					      struct thread_struct *next)
+ {
+-	load_seg_legacy(prev->fsindex, prev->fsbase,
+-			next->fsindex, next->fsbase, FS);
+-	load_seg_legacy(prev->gsindex, prev->gsbase,
+-			next->gsindex, next->gsbase, GS);
++	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
++		/* Update the FS and GS selectors if they could have changed. */
++		if (unlikely(prev->fsindex || next->fsindex))
++			loadseg(FS, next->fsindex);
++		if (unlikely(prev->gsindex || next->gsindex))
++			loadseg(GS, next->gsindex);
 +
-+Using FS and GS segments in user space applications
-+===================================================
-+
-+The x86 architecture supports segmentation. Instructions which access
-+memory can use segment register based addressing mode. The following
-+notation is used to address a byte within a segment:
-+
-+  Segment-register:Byte-address
-+
-+The segment base address is added to the Byte-address to compute the
-+resulting virtual address which is accessed. This allows to access multiple
-+instances of data with the identical Byte-address, i.e. the same code. The
-+selection of a particular instance is purely based on the base-address in
-+the segment register.
-+
-+In 32-bit mode the CPU provides 6 segments, which also support segment
-+limits. The limits can be used to enforce address space protections.
-+
-+In 64-bit mode the CS/SS/DS/ES segments are ignored and the base address is
-+always 0 to provide a full 64bit address space. The FS and GS segments are
-+still functional in 64-bit mode.
-+
-+Common FS and GS usage
-+------------------------------
-+
-+The FS segment is commonly used to address Thread Local Storage (TLS). FS
-+is usually managed by runtime code or a threading library. Variables
-+declared with the '__thread' storage class specifier are instantiated per
-+thread and the compiler emits the FS: address prefix for accesses to these
-+variables. Each thread has its own FS base address so common code can be
-+used without complex address offset calculations to access the per thread
-+instances. Applications should not use FS for other purposes when they use
-+runtimes or threading libraries which manage the per thread FS.
-+
-+The GS segment has no common use and can be used freely by
-+applications. GCC and Clang support GS based addressing via address space
-+identifiers.
-+
-+Reading and writing the FS/GS base address
-+------------------------------------------
-+
-+There exist two mechanisms to read and write the FS/GS base address:
-+
-+ - the arch_prctl() system call
-+
-+ - the FSGSBASE instruction family
-+
-+Accessing FS/GS base with arch_prctl()
-+--------------------------------------
-+
-+ The arch_prctl(2) based mechanism is available on all 64-bit CPUs and all
-+ kernel versions.
-+
-+ Reading the base:
-+
-+   arch_prctl(ARCH_GET_FS, &fsbase);
-+   arch_prctl(ARCH_GET_GS, &gsbase);
-+
-+ Writing the base:
-+
-+   arch_prctl(ARCH_SET_FS, fsbase);
-+   arch_prctl(ARCH_SET_GS, gsbase);
-+
-+ The ARCH_SET_GS prctl may be disabled depending on kernel configuration
-+ and security settings.
-+
-+Accessing FS/GS base with the FSGSBASE instructions
-+---------------------------------------------------
-+
-+ With the Ivy Bridge CPU generation Intel introduced a new set of
-+ instructions to access the FS and GS base registers directly from user
-+ space. These instructions are also supported on AMD Family 17H CPUs. The
-+ following instructions are available:
-+
-+  =============== ===========================
-+  RDFSBASE %reg   Read the FS base register
-+  RDGSBASE %reg   Read the GS base register
-+  WRFSBASE %reg   Write the FS base register
-+  WRGSBASE %reg   Write the GS base register
-+  =============== ===========================
-+
-+ The instructions avoid the overhead of the arch_prctl() syscall and allow
-+ more flexible usage of the FS/GS addressing modes in user space
-+ applications. This does not prevent conflicts between threading libraries
-+ and runtimes which utilize FS and applications which want to use it for
-+ their own purpose.
-+
-+FSGSBASE instructions enablement
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+ The instructions are enumerated in CPUID leaf 7, bit 0 of EBX. If
-+ available /proc/cpuinfo shows 'fsgsbase' in the flag entry of the CPUs.
-+
-+ The availability of the instructions does not enable them
-+ automatically. The kernel has to enable them explicitly in CR4. The
-+ reason for this is that older kernels make assumptions about the values in
-+ the GS register and enforce them when GS base is set via
-+ arch_prctl(). Allowing user space to write arbitrary values to GS base
-+ would violate these assumptions and cause malfunction.
-+
-+ On kernels which do not enable FSGSBASE the execution of the FSGSBASE
-+ instructions will fault with a #UD exception.
-+
-+ The kernel provides reliable information about the enabled state in the
-+ ELF AUX vector. If the HWCAP2_FSGSBASE bit is set in the AUX vector, the
-+ kernel has FSGSBASE instructions enabled and applications can use them.
-+ The following code example shows how this detection works::
-+
-+   #include <sys/auxv.h>
-+   #include <elf.h>
-+
-+   /* Will be eventually in asm/hwcap.h */
-+   #ifndef HWCAP2_FSGSBASE
-+   #define HWCAP2_FSGSBASE        (1 << 1)
-+   #endif
-+
-+   ....
-+
-+   unsigned val = getauxval(AT_HWCAP2);
-+
-+   if (val & HWCAP2_FSGSBASE)
-+        printf("FSGSBASE enabled\n");
-+
-+FSGSBASE instructions compiler support
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+GCC version 4.6.4 and newer provide instrinsics for the FSGSBASE
-+instructions. Clang 5 supports them as well.
-+
-+  =================== ===========================
-+  _readfsbase_u64()   Read the FS base register
-+  _readfsbase_u64()   Read the GS base register
-+  _writefsbase_u64()  Write the FS base register
-+  _writegsbase_u64()  Write the GS base register
-+  =================== ===========================
-+
-+To utilize these instrinsics <immintrin.h> must be included in the source
-+code and the compiler option -mfsgsbase has to be added.
-+
-+Compiler support for FS/GS based addressing
-+-------------------------------------------
-+
-+GCC version 6 and newer provide support for FS/GS based addressing via
-+Named Address Spaces. GCC implements the following address space
-+identifiers for x86:
-+
-+  ========= ====================================
-+  __seg_fs  Variable is addressed relative to FS
-+  __seg_gs  Variable is addressed relative to GS
-+  ========= ====================================
-+
-+The preprocessor symbols __SEG_FS and __SEG_GS are defined when these
-+address spaces are supported. Code which implements fallback modes should
-+check whether these symbols are defined. Usage example::
-+
-+  #ifdef __SEG_GS
-+
-+  long data0 = 0;
-+  long data1 = 1;
-+
-+  long __seg_gs *ptr;
-+
-+  /* Check whether FSGSBASE is enabled by the kernel (HWCAP2_FSGSBASE) */
-+  ....
-+
-+  /* Set GS base to point to data0 */
-+  _writegsbase_u64(&data0);
-+
-+  /* Access offset 0 of GS */
-+  ptr = 0;
-+  printf("data0 = %ld\n", *ptr);
-+
-+  /* Set GS base to point to data1 */
-+  _writegsbase_u64(&data1);
-+  /* ptr still addresses offset 0! */
-+  printf("data1 = %ld\n", *ptr);
-+
-+
-+Clang does not provide the GCC address space identifiers, but it provides
-+address spaces via an attribute based mechanism in Clang 2.6 and newer
-+versions:
-+
-+ ==================================== =====================================
-+  __attribute__((address_space(256))  Variable is addressed relative to GS
-+  __attribute__((address_space(257))  Variable is addressed relative to FS
-+ ==================================== =====================================
-+
-+FS/GS based addressing with inline assembly
-+-------------------------------------------
-+
-+In case the compiler does not support address spaces, inline assembly can
-+be used for FS/GS based addressing mode::
-+
-+	mov %fs:offset, %reg
-+	mov %gs:offset, %reg
-+
-+	mov %reg, %fs:offset
-+	mov %reg, %gs:offset
-diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index d6eaaa5a35fcd..a56070fc8e77a 100644
---- a/Documentation/x86/x86_64/index.rst
-+++ b/Documentation/x86/x86_64/index.rst
-@@ -14,3 +14,4 @@ x86_64 Support
-    fake-numa-for-cpusets
-    cpu-hotplug-spec
-    machinecheck
-+   fsgs
++		/* Update the bases. */
++		wrfsbase(next->fsbase);
++		x86_gsbase_write_cpu_inactive(next->gsbase);
++	} else {
++		load_seg_legacy(prev->fsindex, prev->fsbase,
++				next->fsindex, next->fsbase, FS);
++		load_seg_legacy(prev->gsindex, prev->gsbase,
++				next->gsindex, next->gsbase, GS);
++	}
+ }
+ 
+ static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
 -- 
 2.20.1
 
