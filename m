@@ -2,176 +2,166 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDD2C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B831FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98C9206D6
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:37:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjyOLtI5"
+	by mail.kernel.org (Postfix) with ESMTP id 9043F20746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589042553;
+	bh=nqU6n9bIwZeqnN00jDSiZM7+mMOg5e/Hhz3dhPnWl00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NGORmLViVTP6rPjknS66ewr6VMofoIFeTLGXmq5KS4WYQbhaF+ibRkKbjIpmHGNQo
+	 2jSYOtk/Sz3hffbmqyLeg5uMbtGlx6J4WnUBy/HbDo0voOBPO09rc+QEGWDtwr9xLr
+	 MfJNUy0VAHq+5ciRVRRyoclGQAS6hBisXMPOjBpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgEIQhP (ORCPT
+        id S1728294AbgEIQmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 12:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727787AbgEIQhO (ORCPT
+        Sat, 9 May 2020 12:42:32 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35840 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgEIQmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 12:37:14 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FF6C05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 09:37:14 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id v12so5530427wrp.12
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 09:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=we46FIk+yEWMBMHgbSqPJ/2W+VM8O37RwWGSP9VSwog=;
-        b=CjyOLtI5Vf6zJUjIHGQ0rnuAZdktroS/UUIsJ1qXmlKpkauo0V8SqUzjMQL2ubkZrY
-         Zr4CsT6+GWNmvejXbce8CpFXkMPB4/1bdogbKppq1/5rU3Zvqiy3WN8KBrUyB1+sbzF+
-         8Cza3vK09tz9ONJm3bZ6Z5CX/dFeUMsbYyDtftFTFNDRNFdRFklS8y/Z0OJKckKWFa60
-         KEPIBk/jglytnDysls94a6jk6WYH8Iz+nmUDgBvm15jFesJ4Jjxl0w3VuS/PhX/C3MvG
-         BKCn1XBRCBR068oGscEHX/JlHOaoq4ixlHy2bNOb8WqwVvVRUgOhHh1wnT6f2DIdn/Jo
-         UnqQ==
+        Sat, 9 May 2020 12:42:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d22so2385591pgk.3;
+        Sat, 09 May 2020 09:42:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=we46FIk+yEWMBMHgbSqPJ/2W+VM8O37RwWGSP9VSwog=;
-        b=SdFiZdjlocInMcaAu7tTl+jIGA6vlt0A3TDXOJVK+6fxnYN+OPLNTZlJlpkq+bjKNY
-         CX0ZQCzttiX4NL0LZTMt/TXoZHrbZ7bdfs/2qbpp+1gK/Dpa57vY1DpO7pYg5y3GoUnd
-         mTs7cJzjoInP0JX9GjiwUclDM+6iirXARKUOxy710jFEeMKsOvGovV6raqp59cv6bYaG
-         JKmdnWydQJpXfbt7vgR7pO31QpTTSUNtOgvN0ja7e9yEqIPzolV0MxDo7YKqPBirkxnx
-         i2QOnWPJvNpheisAi1HckgY678T/7XXGJ1N+b8zs3MaY6AgJiyvFfz7SPEZPkTiFGawy
-         q7pQ==
-X-Gm-Message-State: AGi0PuaIhMv4KrEo7pTuY6WlQ9IEm0LENRDb9ZQtsn6ap6ID+ZikAOW3
-        Z9QQnNfyuzkS9W/DmowNF0FHwFMCg4A=
-X-Google-Smtp-Source: APiQypLa82q6Cj7QuABjnJFI0GlnqDZs3cRKpiuWLDsGG/Kc2bCtzgNvYiDtrM1+elacNGtdMy8SYA==
-X-Received: by 2002:adf:f907:: with SMTP id b7mr9332246wrr.203.1589042232419;
-        Sat, 09 May 2020 09:37:12 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id c190sm19379331wme.4.2020.05.09.09.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 09:37:11 -0700 (PDT)
-Subject: Re: [PATCH] usb: roles: Switch on role-switch uevent reporting
-To:     Wen Yang <wenyang@linux.alibaba.com>,
-        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        chenqiwu <chenqiwu@xiaomi.com>, linux-kernel@vger.kernel.org
-References: <20200508162937.2566818-1-bryan.odonoghue@linaro.org>
- <fbd660ca-fe2a-8ca7-5076-f898acd1ca74@linux.alibaba.com>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <10ca119e-ff09-70e7-311d-420aba612df6@linaro.org>
-Date:   Sat, 9 May 2020 17:37:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8jIgzvH4fNfg2RY0Swgxb6K62M+FnWLsvdH44dQgXpM=;
+        b=lxGNYsN0gEfYzxH9C4344vbW8PaJ75TkrYscC/8OpIAUtgXGq1hV9U/inqGeahc3mU
+         egfEe4XpvbB71A1o2R4HYfaz7wKEWltpo5uHJB33ww2LGs3oXW2qycyZQ2rBWtM9D6CD
+         FEBtEY+poitRw2c35OOKUNtEM4DsuN9gJVWst4tqe5HlmCA9/VspFbVDjEPEDCGCDSeb
+         UaoFkCFukUUiGTFhLbsy45R2UKKqioA8ef6TbLyGEkyKJ35O1tAvwZQq0k99aTN4YOsE
+         qM+3I1jCTABjSbCHVLZ81rhFyuLAgwPgEXnTRf7Ja3/LrIBVgOPAffL4eFFA3w/elZZi
+         CadA==
+X-Gm-Message-State: AGi0PuZPlAlfMLhDQh8OPknKvw8WACE49Lx+KSy5Kdu9E2lmcmMYIkH8
+        QfhQHYBL5yex9Sqb6J7K9OA=
+X-Google-Smtp-Source: APiQypIcF3+bU4Vm9XT8ddunGpEipyNfQt5dyqexc745XTg2dKpGxnV/JV4WFmnxGMctTaowHblfYw==
+X-Received: by 2002:a62:fc4f:: with SMTP id e76mr8658178pfh.222.1589042551811;
+        Sat, 09 May 2020 09:42:31 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 71sm5137262pfw.111.2020.05.09.09.42.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 09:42:30 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B449B40605; Sat,  9 May 2020 16:42:29 +0000 (UTC)
+Date:   Sat, 9 May 2020 16:42:29 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Igor Russkikh <irusskikh@marvell.com>
+Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
+        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
+        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
+        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
+        daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>
+Subject: Re: [EXT] [PATCH 09/15] qed: use new module_firmware_crashed()
+Message-ID: <20200509164229.GJ11244@42.do-not-panic.com>
+References: <20200509043552.8745-1-mcgrof@kernel.org>
+ <20200509043552.8745-10-mcgrof@kernel.org>
+ <2aaddb69-2292-ff3f-94c7-0ab9dbc8e53c@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <fbd660ca-fe2a-8ca7-5076-f898acd1ca74@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2aaddb69-2292-ff3f-94c7-0ab9dbc8e53c@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2020 04:24, Wen Yang wrote:
+On Sat, May 09, 2020 at 09:32:51AM +0300, Igor Russkikh wrote:
+> 
+> > This makes use of the new module_firmware_crashed() to help
+> > annotate when firmware for device drivers crash. When firmware
+> > crashes devices can sometimes become unresponsive, and recovery
+> > sometimes requires a driver unload / reload and in the worst cases
+> > a reboot.
+> > 
+> > Using a taint flag allows us to annotate when this happens clearly.
+> > 
+> > Cc: Ariel Elior <aelior@marvell.com>
+> > Cc: GR-everest-linux-l2@marvell.com
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> >  drivers/net/ethernet/qlogic/qed/qed_debug.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c
+> > b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+> > index f4eebaabb6d0..9cc6287b889b 100644
+> > --- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
+> > +++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+> > @@ -7854,6 +7854,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void
+> > *buffer)
+> >  						 REGDUMP_HEADER_SIZE,
+> >  						 &feature_size);
+> >  		if (!rc) {
+> > +			module_firmware_crashed();
+> >  			*(u32 *)((u8 *)buffer + offset) =
+> >  			    qed_calc_regdump_header(cdev,
+> > PROTECTION_OVERRIDE,
+> >  						    cur_engine,
+> > @@ -7869,6 +7870,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void
+> > *buffer)
+> >  		rc = qed_dbg_fw_asserts(cdev, (u8 *)buffer + offset +
+> >  					REGDUMP_HEADER_SIZE,
+> > &feature_size);
+> >  		if (!rc) {
+> > +			module_firmware_crashed();
+> >  			*(u32 *)((u8 *)buffer + offset) =
+> >  			    qed_calc_regdump_header(cdev, FW_ASSERTS,
+> >  						    cur_engine,
+> > feature_size,
+> > @@ -7906,6 +7908,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void
+> > *buffer)
+> >  		rc = qed_dbg_grc(cdev, (u8 *)buffer + offset +
+> >  				 REGDUMP_HEADER_SIZE, &feature_size);
+> >  		if (!rc) {
+> > +			module_firmware_crashed();
+> >  			*(u32 *)((u8 *)buffer + offset) =
+> >  			    qed_calc_regdump_header(cdev, GRC_DUMP,
+> >  						    cur_engine,
 > 
 > 
-> 在 2020/5/9 上午12:29, Bryan O'Donoghue 写道:
->> Right now we don't report to user-space a role switch when doing a
->> usb_role_switch_set_role() despite having registered the uevent 
->> callbacks.
->>
->> This patch switches on the notifications allowing user-space to see
->> role-switch change notifications and subsequently determine the current
->> controller data-role.
->>
->> example:
->> PFX=/devices/platform/soc/78d9000.usb/ci_hdrc.0
->>
->> root@somebox# udevadm monitor -p
->>
->> KERNEL[49.894994] change $PFX/usb_role/ci_hdrc.0-role-switch (usb_role)
->> ACTION=change
->> DEVPATH=$PFX/usb_role/ci_hdrc.0-role-switch
->> SUBSYSTEM=usb_role
->> DEVTYPE=usb_role_switch
->> USB_ROLE_SWITCH=ci_hdrc.0-role-switch
->> SEQNUM=2432
->>
->> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> Cc: Wen Yang <wenyang@linux.alibaba.com>
->> Cc: chenqiwu <chenqiwu@xiaomi.com>
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>   drivers/usb/roles/class.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
->> index 5b17709821df..27d92af29635 100644
->> --- a/drivers/usb/roles/class.c
->> +++ b/drivers/usb/roles/class.c
->> @@ -49,8 +49,10 @@ int usb_role_switch_set_role(struct usb_role_switch 
->> *sw, enum usb_role role)
->>       mutex_lock(&sw->lock);
->>       ret = sw->set(sw, role);
->> -    if (!ret)
->> +    if (!ret) {
->>           sw->role = role;
->> +        kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE);
->> +    }
->>       mutex_unlock(&sw->lock);
->>
+> Hi Luis,
 > 
-> Hi, we may also need to deal with the return value of kobject_uevent(). 
+> qed_dbg_all_data is being used to gather debug dump from device. Failures
+> inside it may happen due to various reasons, but they normally do not indicate
+> FW failure.
+> 
+> So I think its not a good place to insert this call.
+> Its hard to find exact good place to insert it in qed.
 
-For an KOBJ_ADD you'd return an error.
+Is there a way to check if what happened was indeed a fw crash?
 
-grep -r "= kobject_uevent(" *
-drivers/misc/cxl/sysfs.c:	rc = kobject_uevent(&cr->kobj, KOBJ_ADD);
-drivers/uio/uio.c:		ret = kobject_uevent(&map->kobj, KOBJ_ADD);
-drivers/uio/uio.c:		ret = kobject_uevent(&portio->kobj, KOBJ_ADD);
-drivers/visorbus/visorchipset.c:	res = 
-kobject_uevent(&chipset_dev->acpi_device->dev.kobj, KOBJ_ONLINE);
-drivers/visorbus/visorchipset.c:	int res = 
-kobject_uevent(&chipset_dev->acpi_device->dev.kobj,
+> One more thing is that AFAIU taint flag gets permanent on kernel, but for
+> example our device can recover itself from some FW crashes, thus it'd be
+> transparent for user.
 
-For a KOBJ_CHANGE I guess we could print an error
+Similar things are *supposed* to recoverable with other device, however
+this can also sometimes lead to a situation where devices are not usable
+anymore, and require a full driver unload / load.
 
-if (kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE)
-     dev_err(&sw->dev, "failed to signal USB role-switch uevent\n");
+> Whats the logical purpose of module_firmware_crashed? Does it mean fatal
+> unrecoverable error on device?
 
-Nobody else seems that bothered about it.
+Its just to annotate on the module and kernel that this has happened.
 
-grep -r "if (kobject_uevent(" *
+I take it you may agree that, firmware crashing *often* is not good design,
+and these issues should be reported to / fixed by vendors. In cases
+where driver bugs are reported it is good to see if a firmware crash has
+happened before, so that during analysis this is ruled out.
 
-> Should we move it under the line mutex_unlock(&sw->lock)?
-
-I think probably not. the mutex serializes the notification. In theory 
-outside the mutex you could get an out-of-order notification.
-
-The main reason I put it where it is, is we already test ret and should 
-only notify the change, when the role-switch has suceeded.
-
-As I say, in theory anyway, the mutex enforces the signalling, whatever 
-about the reception, of the role-switch change, so IMO inside the bounds 
-of the mutex is the right place to put it.
-
----
-bod
+  Luis
