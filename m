@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6A4C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71851C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D99724957
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549B124962
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEIIwf (ORCPT
+        id S1727986AbgEIIwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:52:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56016 "EHLO huawei.com"
+        Sat, 9 May 2020 04:52:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56036 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727833AbgEIIwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727886AbgEIIwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 9 May 2020 04:52:34 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1C42ED414EE3D2EB59B8;
+        by Forcepoint Email with ESMTP id 2720840CDD1CBC2CEBAA;
         Sat,  9 May 2020 16:52:32 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 16:52:23 +0800
+ 14.3.487.0; Sat, 9 May 2020 16:52:21 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
         <borntraeger@de.ibm.com>
 CC:     <linux-s390@vger.kernel.or>, <linux-kernel@vger.kernel.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH -next 2/3] s390: use scnprintf() in sys_##_prefix##_##_name##_show
-Date:   Sat, 9 May 2020 16:56:07 +0800
-Message-ID: <20200509085608.41061-3-chenzhou10@huawei.com>
+Subject: [PATCH -next 1/3] s390/crypto: use scnprintf() instead of snprintf()
+Date:   Sat, 9 May 2020 16:56:06 +0800
+Message-ID: <20200509085608.41061-2-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200509085608.41061-1-chenzhou10@huawei.com>
 References: <20200509085608.41061-1-chenzhou10@huawei.com>
@@ -54,22 +54,70 @@ buffer. This is the return value of scnprintf().
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/s390/kernel/ipl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/crypto/prng.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/kernel/ipl.c b/arch/s390/kernel/ipl.c
-index ccea9a245867..90a2a17239b0 100644
---- a/arch/s390/kernel/ipl.c
-+++ b/arch/s390/kernel/ipl.c
-@@ -181,7 +181,7 @@ static ssize_t sys_##_prefix##_##_name##_show(struct kobject *kobj,	\
- 		struct kobj_attribute *attr,				\
- 		char *page)						\
- {									\
--	return snprintf(page, PAGE_SIZE, _format, ##args);		\
-+	return scnprintf(page, PAGE_SIZE, _format, ##args);		\
+diff --git a/arch/s390/crypto/prng.c b/arch/s390/crypto/prng.c
+index d977643fa627..e1ae23911ccd 100644
+--- a/arch/s390/crypto/prng.c
++++ b/arch/s390/crypto/prng.c
+@@ -693,7 +693,7 @@ static ssize_t prng_chunksize_show(struct device *dev,
+ 				   struct device_attribute *attr,
+ 				   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", prng_chunk_size);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", prng_chunk_size);
  }
+ static DEVICE_ATTR(chunksize, 0444, prng_chunksize_show, NULL);
  
- #define IPL_ATTR_CCW_STORE_FN(_prefix, _name, _ipl_blk)			\
+@@ -712,7 +712,7 @@ static ssize_t prng_counter_show(struct device *dev,
+ 		counter = prng_data->prngws.byte_counter;
+ 	mutex_unlock(&prng_data->mutex);
+ 
+-	return snprintf(buf, PAGE_SIZE, "%llu\n", counter);
++	return scnprintf(buf, PAGE_SIZE, "%llu\n", counter);
+ }
+ static DEVICE_ATTR(byte_counter, 0444, prng_counter_show, NULL);
+ 
+@@ -721,7 +721,7 @@ static ssize_t prng_errorflag_show(struct device *dev,
+ 				   struct device_attribute *attr,
+ 				   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", prng_errorflag);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", prng_errorflag);
+ }
+ static DEVICE_ATTR(errorflag, 0444, prng_errorflag_show, NULL);
+ 
+@@ -731,9 +731,9 @@ static ssize_t prng_mode_show(struct device *dev,
+ 			      char *buf)
+ {
+ 	if (prng_mode == PRNG_MODE_TDES)
+-		return snprintf(buf, PAGE_SIZE, "TDES\n");
++		return scnprintf(buf, PAGE_SIZE, "TDES\n");
+ 	else
+-		return snprintf(buf, PAGE_SIZE, "SHA512\n");
++		return scnprintf(buf, PAGE_SIZE, "SHA512\n");
+ }
+ static DEVICE_ATTR(mode, 0444, prng_mode_show, NULL);
+ 
+@@ -756,7 +756,7 @@ static ssize_t prng_reseed_limit_show(struct device *dev,
+ 				      struct device_attribute *attr,
+ 				      char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", prng_reseed_limit);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", prng_reseed_limit);
+ }
+ static ssize_t prng_reseed_limit_store(struct device *dev,
+ 				       struct device_attribute *attr,
+@@ -787,7 +787,7 @@ static ssize_t prng_strength_show(struct device *dev,
+ 				  struct device_attribute *attr,
+ 				  char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "256\n");
++	return scnprintf(buf, PAGE_SIZE, "256\n");
+ }
+ static DEVICE_ATTR(strength, 0444, prng_strength_show, NULL);
+ 
 -- 
 2.20.1
 
