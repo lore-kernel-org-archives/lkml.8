@@ -2,187 +2,268 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4B7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD22AC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1FB217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="blAbgB6L"
+	by mail.kernel.org (Postfix) with ESMTP id 8AF8E217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgEIJn1 (ORCPT
+        id S1728090AbgEIJpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:43:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60593 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726885AbgEIJn0 (ORCPT
+        Sat, 9 May 2020 05:45:17 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39894 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbgEIJpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589017404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l8D8Ae345rAYDqawjkcSExOxW2YprJe5XqaST1kNQ6s=;
-        b=blAbgB6LYoumV5wXSHp6j+mMGsHOFMYCLHYR1SKUb0oVrpjtb3sjxnjSeHwM20DBLlt4ru
-        GfZMUNq4rcMXLfqyBy9FZAJ5i5q+QjmwHGnK2UE0UwnxVuxCOQUySVpB8hosvaOD2SkTdJ
-        rPtg5XirLtJXwZOTt3ku0hE2HuS03ro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-rAyD8qh5NLyXbbJ-2MeO7Q-1; Sat, 09 May 2020 05:43:22 -0400
-X-MC-Unique: rAyD8qh5NLyXbbJ-2MeO7Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3763C107ACCA;
-        Sat,  9 May 2020 09:43:20 +0000 (UTC)
-Received: from T590 (ovpn-12-90.pek2.redhat.com [10.72.12.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15F1D5D9CD;
-        Sat,  9 May 2020 09:43:10 +0000 (UTC)
-Date:   Sat, 9 May 2020 17:43:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
- processing
-Message-ID: <20200509094306.GA1414369@T590>
-References: <cover.1587888520.git.baolin.wang7@gmail.com>
- <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
- <20200427154645.GA1201@infradead.org>
- <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
- <20200508214639.GA1389136@T590>
- <fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me>
- <20200508232222.GA1391368@T590>
- <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
+        Sat, 9 May 2020 05:45:16 -0400
+Received: by mail-il1-f193.google.com with SMTP id r2so3760367ilo.6;
+        Sat, 09 May 2020 02:45:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ixvi5cH52QFRH8JcnvoBtXBDpHulut9OBY2UXdoFzNk=;
+        b=nFY99wP3c9pdSTUl8Uov6qhEuVkK4aMmzDR/7l9MmGY4MJtLwkBuGfFu3MqetmuSkb
+         Ub5t+3Esv55wyeL4PU79TICUszTieURyeJJv/ZGTN2Gn99wsdLmoopkSQZEJfDY/CtIS
+         phyhbKo4VmqdL354ayCBWZVAS0LevPZhI9VvkgnCMW8ncME/mqKcMBl3LSpvoxgbEJGa
+         pfbd3NoLcCge1snjWctiwZ3jRTaxgGPdTPcDPADsyDPE9n3f8P6WeNfOyvgRlnAco2H1
+         i03M31YdZeeZO9JHL4LseK96YFOAtxQaWhLTobbspsfiB4dE5ORhNJjwyMw2fAFVEhr0
+         w85g==
+X-Gm-Message-State: AGi0PuYBMBF9ebj6VimjDEbTXhdH91KDSW+O/U6A76z+cn0n77aT335j
+        4VeRBbLSbhzRi8KCga5YKlMYj7W+Tm9seDTdgcqZN+14
+X-Google-Smtp-Source: APiQypIL4uDqNhjoW8ACYwhOCMGqholXKO9mdIuyKFA66hLXur+bRKaQrbxTYbuCq6QT6AheAC1r/kBNpaAjbXvsVDc=
+X-Received: by 2002:a92:bad5:: with SMTP id t82mr7419606ill.171.1589017514883;
+ Sat, 09 May 2020 02:45:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <1589008364-2294-1-git-send-email-yangtiezhu@loongson.cn> <1589008364-2294-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1589008364-2294-2-git-send-email-yangtiezhu@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Sat, 9 May 2020 17:52:56 +0800
+Message-ID: <CAAhV-H5zhwHgtbLXPuj5mcGnv5zfT7iRcxoBdk-rbPTn3vt=RQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] MIPS: Loongson: Cleanup cpu_hwmon.c
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 04:57:48PM +0800, Baolin Wang wrote:
-> On Sat, May 9, 2020 at 7:22 AM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > Hi Sagi,
-> >
-> > On Fri, May 08, 2020 at 03:19:45PM -0700, Sagi Grimberg wrote:
-> > > Hey Ming,
-> > >
-> > > > > Would it make sense to elevate this flag to a request_queue flag
-> > > > > (QUEUE_FLAG_ALWAYS_COMMIT)?
-> > > >
-> > > > request queue flag usually is writable, however this case just needs
-> > > > one read-only flag, so I think it may be better to make it as
-> > > > tagset/hctx flag.
-> > >
-> > > I actually intended it to be writable.
-> > >
-> > > > > I'm thinking of a possibility that an I/O scheduler may be used
-> > > > > to activate this functionality rather than having the driver set
-> > > > > it necessarily...
-> > > >
-> > > > Could you explain a bit why I/O scheduler should activate this
-> > > > functionality?
-> > >
-> > > Sure, I've recently seen some academic work showing the benefits
-> > > of batching in tcp/ip based block drivers. The problem with the
-> > > approaches taken is that I/O scheduling is exercised deep down in the
-> > > driver, which is not the direction I'd like to go if we are want
-> > > to adopt some of the batching concepts.
-> > >
-> > > I spent some (limited) time thinking about this, and it seems to
-> > > me that there is an opportunity to implement this as a dedicated
-> > > I/O scheduler, and tie it to driver specific LLD stack optimizations
-> > > (net-stack for example) relying on the commit_rq/bd->last hints.
-> > >
-> > > When scanning the scheduler code, I noticed exactly the phenomenon that
-> > > this patchset is attempting to solve and Christoph referred me to it.
-> > > Now I'm thinking if we can extend this batching optimization for both
-> > > use-cases.
-> >
-> > Got it, thanks for the sharing.
-> >
-> > >
-> > > > batching submission may be good for some drivers, and currently
-> > > > we only do it in limited way. One reason is that there is extra
-> > > > cost for full batching submission, such as this patch requires
-> > > > one extra .commit_rqs() for each dispatch, and lock is often needed
-> > > > in this callback.
-> > >
-> > > That is not necessarily the case at all.
-> >
-> > So far, all in-tree .commit_rqs() implementation requires lock.
-> >
-> > >
-> > > > IMO it can be a win for some slow driver or device, but may cause
-> > > > a little performance drop for fast driver/device especially in workload
-> > > > of not-batching submission.
-> > >
-> > > You're mostly correct. This is exactly why an I/O scheduler may be
-> > > applicable here IMO. Mostly because I/O schedulers tend to optimize for
-> > > something specific and always present tradeoffs. Users need to
-> > > understand what they are optimizing for.
-> > >
-> > > Hence I'd say this functionality can definitely be available to an I/O
-> > > scheduler should one exist.
-> > >
-> >
-> > I guess it is just that there can be multiple requests available from
-> > scheduler queue. Actually it can be so for other non-nvme drivers in
-> > case of none, such as SCSI.
-> >
-> > Another way is to use one per-task list(such as plug list) to hold the
-> > requests for dispatch, then every drivers may see real .last flag, so they
-> > may get chance for optimizing batch queuing. I will think about the
-> > idea further and see if it is really doable.
-> 
-> How about my RFC v1 patch set[1], which allows dispatching more than
-> one request from the scheduler to support batch requests?
-> 
-> [1]
-> https://lore.kernel.org/patchwork/patch/1210034/
-> https://lore.kernel.org/patchwork/patch/1210035/
+Hi, Tiezhu,
 
-Basically, my idea is to dequeue request one by one, and for each
-dequeued request:
+On Sat, May 9, 2020 at 3:13 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> Fix the following checkpatch warnings and errors:
+>
+> ERROR: do not initialise statics to 0
+> #14: FILE: drivers/platform/mips/cpu_hwmon.c:14:
+> +static int csr_temp_enable = 0;
+I know you are doing things by checkpatch, but I really don't know why
+not initialise. I think initialise is more human-readable.
 
-- we try to get a budget and driver tag, if both succeed, add the
-request to one per-task list which can be stored in stack variable,
-then continue to dequeue more request
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #60: FILE: drivers/platform/mips/cpu_hwmon.c:60:
+> +static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
+And so does this.
 
-- if either budget or driver tag can't be allocated for this request,
-marks the last request in the per-task list as .last, and send the
-batching requests stored in the list to LLD
-
-- when queueing batching requests to LLD, if one request isn't queued
-to driver successfully, calling .commit_rqs() like before, meantime
-adding the remained requests in the per-task list back to scheduler
-queue or hctx->dispatch.
-
-One issue is that this way might degrade sequential IO performance if
-the LLD just tells queue busy to blk-mq via return value of .queue_rq(),
-so I guess we still may need one flag, such as BLK_MQ_F_BATCHING_SUBMISSION.
-
-
-thanks, 
-Ming
-
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #84: FILE: drivers/platform/mips/cpu_hwmon.c:84:
+> +static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #85: FILE: drivers/platform/mips/cpu_hwmon.c:85:
+> +static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #86: FILE: drivers/platform/mips/cpu_hwmon.c:86:
+> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #87: FILE: drivers/platform/mips/cpu_hwmon.c:87:
+> +static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #88: FILE: drivers/platform/mips/cpu_hwmon.c:88:
+> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #89: FILE: drivers/platform/mips/cpu_hwmon.c:89:
+> +static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #90: FILE: drivers/platform/mips/cpu_hwmon.c:90:
+> +static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
+>
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> #91: FILE: drivers/platform/mips/cpu_hwmon.c:91:
+> +static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
+>
+> WARNING: Missing a blank line after declarations
+> #120: FILE: drivers/platform/mips/cpu_hwmon.c:120:
+> +       int id = (to_sensor_dev_attr(attr))->index - 1;
+> +       return sprintf(buf, "CPU %d Temperature\n", id);
+>
+> WARNING: Missing a blank line after declarations
+> #128: FILE: drivers/platform/mips/cpu_hwmon.c:128:
+> +       int value = loongson3_cpu_temp(id);
+> +       return sprintf(buf, "%d\n", value);
+>
+> ERROR: spaces required around that '=' (ctx:VxV)
+> #135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
+> +       for (i=0; i<nr_packages; i++)
+>               ^
+>
+> ERROR: spaces required around that '<' (ctx:VxV)
+> #135: FILE: drivers/platform/mips/cpu_hwmon.c:135:
+> +       for (i=0; i<nr_packages; i++)
+>                    ^
+>
+> ERROR: spaces required around that '=' (ctx:VxV)
+> #145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
+> +       for (i=0; i<nr_packages; i++)
+>               ^
+>
+> ERROR: spaces required around that '<' (ctx:VxV)
+> #145: FILE: drivers/platform/mips/cpu_hwmon.c:145:
+> +       for (i=0; i<nr_packages; i++)
+>                    ^
+>
+> ERROR: spaces required around that '=' (ctx:VxV)
+> #156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
+> +       for (i=0; i<nr_packages; i++) {
+>               ^
+>
+> ERROR: spaces required around that '<' (ctx:VxV)
+> #156: FILE: drivers/platform/mips/cpu_hwmon.c:156:
+> +       for (i=0; i<nr_packages; i++) {
+>                    ^
+>
+> WARNING: line over 80 characters
+> #175: FILE: drivers/platform/mips/cpu_hwmon.c:175:
+> +               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  drivers/platform/mips/cpu_hwmon.c | 33 ++++++++++++++++++---------------
+>  1 file changed, 18 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
+> index 0d27cb7..fa42b13 100644
+> --- a/drivers/platform/mips/cpu_hwmon.c
+> +++ b/drivers/platform/mips/cpu_hwmon.c
+> @@ -11,7 +11,7 @@
+>  #include <loongson_hwmon.h>
+>  #include <loongson_regs.h>
+>
+> -static int csr_temp_enable = 0;
+> +static int csr_temp_enable;
+>
+>  /*
+>   * Loongson-3 series cpu has two sensors inside,
+> @@ -44,7 +44,7 @@ int loongson3_cpu_temp(int cpu)
+>         case PRID_REV_LOONGSON3A_R3_0:
+>         case PRID_REV_LOONGSON3A_R3_1:
+>         default:
+> -               reg = (reg & 0xffff)*731/0x4000 - 273;
+> +               reg = (reg & 0xffff) * 731 / 0x4000 - 273;
+>                 break;
+>         }
+>
+> @@ -57,7 +57,7 @@ static struct device *cpu_hwmon_dev;
+>
+>  static ssize_t get_hwmon_name(struct device *dev,
+>                         struct device_attribute *attr, char *buf);
+> -static SENSOR_DEVICE_ATTR(name, S_IRUGO, get_hwmon_name, NULL, 0);
+> +static SENSOR_DEVICE_ATTR(name, 0444, get_hwmon_name, NULL, 0);
+>
+>  static struct attribute *cpu_hwmon_attributes[] = {
+>         &sensor_dev_attr_name.dev_attr.attr,
+> @@ -81,14 +81,14 @@ static ssize_t get_cpu_temp(struct device *dev,
+>  static ssize_t cpu_temp_label(struct device *dev,
+>                         struct device_attribute *attr, char *buf);
+>
+> -static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, get_cpu_temp, NULL, 1);
+> -static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, cpu_temp_label, NULL, 1);
+> -static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, get_cpu_temp, NULL, 2);
+> -static SENSOR_DEVICE_ATTR(temp2_label, S_IRUGO, cpu_temp_label, NULL, 2);
+> -static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, get_cpu_temp, NULL, 3);
+> -static SENSOR_DEVICE_ATTR(temp3_label, S_IRUGO, cpu_temp_label, NULL, 3);
+> -static SENSOR_DEVICE_ATTR(temp4_input, S_IRUGO, get_cpu_temp, NULL, 4);
+> -static SENSOR_DEVICE_ATTR(temp4_label, S_IRUGO, cpu_temp_label, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, get_cpu_temp, NULL, 1);
+> +static SENSOR_DEVICE_ATTR(temp1_label, 0444, cpu_temp_label, NULL, 1);
+> +static SENSOR_DEVICE_ATTR(temp2_input, 0444, get_cpu_temp, NULL, 2);
+> +static SENSOR_DEVICE_ATTR(temp2_label, 0444, cpu_temp_label, NULL, 2);
+> +static SENSOR_DEVICE_ATTR(temp3_input, 0444, get_cpu_temp, NULL, 3);
+> +static SENSOR_DEVICE_ATTR(temp3_label, 0444, cpu_temp_label, NULL, 3);
+> +static SENSOR_DEVICE_ATTR(temp4_input, 0444, get_cpu_temp, NULL, 4);
+> +static SENSOR_DEVICE_ATTR(temp4_label, 0444, cpu_temp_label, NULL, 4);
+>
+>  static const struct attribute *hwmon_cputemp[4][3] = {
+>         {
+> @@ -117,6 +117,7 @@ static ssize_t cpu_temp_label(struct device *dev,
+>                         struct device_attribute *attr, char *buf)
+>  {
+>         int id = (to_sensor_dev_attr(attr))->index - 1;
+> +
+>         return sprintf(buf, "CPU %d Temperature\n", id);
+>  }
+>
+> @@ -125,6 +126,7 @@ static ssize_t get_cpu_temp(struct device *dev,
+>  {
+>         int id = (to_sensor_dev_attr(attr))->index - 1;
+>         int value = loongson3_cpu_temp(id);
+> +
+>         return sprintf(buf, "%d\n", value);
+>  }
+>
+> @@ -132,7 +134,7 @@ static int create_sysfs_cputemp_files(struct kobject *kobj)
+>  {
+>         int i, ret = 0;
+>
+> -       for (i=0; i<nr_packages; i++)
+> +       for (i = 0; i < nr_packages; i++)
+>                 ret = sysfs_create_files(kobj, hwmon_cputemp[i]);
+>
+>         return ret;
+> @@ -142,7 +144,7 @@ static void remove_sysfs_cputemp_files(struct kobject *kobj)
+>  {
+>         int i;
+>
+> -       for (i=0; i<nr_packages; i++)
+> +       for (i = 0; i < nr_packages; i++)
+>                 sysfs_remove_files(kobj, hwmon_cputemp[i]);
+>  }
+>
+> @@ -153,7 +155,7 @@ static void do_thermal_timer(struct work_struct *work)
+>  {
+>         int i, value, temp_max = 0;
+>
+> -       for (i=0; i<nr_packages; i++) {
+> +       for (i = 0; i < nr_packages; i++) {
+>                 value = loongson3_cpu_temp(i);
+>                 if (value > temp_max)
+>                         temp_max = value;
+> @@ -172,7 +174,8 @@ static int __init loongson_hwmon_init(void)
+>         pr_info("Loongson Hwmon Enter...\n");
+>
+>         if (cpu_has_csr())
+> -               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) & LOONGSON_CSRF_TEMP;
+> +               csr_temp_enable = csr_readl(LOONGSON_CSR_FEATURES) &
+> +                                 LOONGSON_CSRF_TEMP;
+>
+>         cpu_hwmon_dev = hwmon_device_register(NULL);
+>         if (IS_ERR(cpu_hwmon_dev)) {
+> --
+> 2.1.0
+>
