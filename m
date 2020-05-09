@@ -2,29 +2,29 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031A7C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F617C54E4B
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5C0224956
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D5D214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgEILO6 (ORCPT
+        id S1728392AbgEILPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:14:58 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48965 "EHLO
+        Sat, 9 May 2020 07:15:04 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53702 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728244AbgEILOz (ORCPT
+        by vger.kernel.org with ESMTP id S1728283AbgEILPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:14:55 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.155575-0.000220005-0.844205;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=20;RT=20;SR=0;TI=SMTPD_---.HVopGr-_1589022874;
+        Sat, 9 May 2020 07:15:00 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0101699-0.000419339-0.989411;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03295;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=20;RT=20;SR=0;TI=SMTPD_---.HVopGr-_1589022874;
 Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HVopGr-_1589022874)
           by smtp.aliyun-inc.com(10.147.44.129);
-          Sat, 09 May 2020 19:14:46 +0800
+          Sat, 09 May 2020 19:14:48 +0800
 From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
 To:     Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
@@ -45,9 +45,9 @@ To:     Kees Cook <keescook@chromium.org>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org,
         WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v5 06/12] pstore/blk: Add console frontend support
-Date:   Sat,  9 May 2020 19:14:08 +0800
-Message-Id: <1589022854-19821-7-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [PATCH v5 08/12] Documentation: Add details for pstore/blk
+Date:   Sat,  9 May 2020 19:14:10 +0800
+Message-Id: <1589022854-19821-9-git-send-email-liaoweixiong@allwinnertech.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1589022854-19821-1-git-send-email-liaoweixiong@allwinnertech.com>
 References: <1589022854-19821-1-git-send-email-liaoweixiong@allwinnertech.com>
@@ -56,331 +56,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support backend for console. To enable console backend, just make
-console_size be greater than 0 and a multiple of 4096.
+Add details on using pstore/blk, the new backend of pstore to record
+dumps to block devices, in Documentation/admin-guide/pstore-blk.rst
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Link: https://lore.kernel.org/r/1585126506-18635-6-git-send-email-liaoweixiong@allwinnertech.com
+Link: https://lore.kernel.org/r/1585126506-18635-8-git-send-email-liaoweixiong@allwinnertech.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/Kconfig           | 12 +++++++
- fs/pstore/blk.c             | 12 ++++++-
- fs/pstore/zone.c            | 80 +++++++++++++++++++++++++++++++++++++++++----
- include/linux/pstore_zone.h |  4 ++-
- 4 files changed, 100 insertions(+), 8 deletions(-)
+ Documentation/admin-guide/pstore-blk.rst | 229 +++++++++++++++++++++++++++++++
+ MAINTAINERS                              |   1 +
+ fs/pstore/Kconfig                        |   2 +
+ 3 files changed, 232 insertions(+)
+ create mode 100644 Documentation/admin-guide/pstore-blk.rst
 
+diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin-guide/pstore-blk.rst
+new file mode 100644
+index 000000000000..484a1502fb49
+--- /dev/null
++++ b/Documentation/admin-guide/pstore-blk.rst
+@@ -0,0 +1,229 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++pstore block oops/panic logger
++==============================
++
++Introduction
++------------
++
++pstore block (pstore/blk) is an oops/panic logger that writes its logs to a
++block device before the system crashes. You can get these log files by
++mounting pstore filesystem like::
++
++    mount -t pstore pstore /sys/fs/pstore
++
++
++pstore block concepts
++---------------------
++
++pstore/blk provides efficient configuration method for pstore/blk, which
++divides all configurations into two parts, configurations for user and
++configurations for driver.
++
++Configurations for user determine how pstore/blk works, such as pmsg_size,
++kmsg_size and so on. All of them support both Kconfig and module parameters,
++but module parameters have priority over Kconfig.
++
++Configurations for driver are all about block device, such as total_size
++of block device and read/write operations.
++
++Configurations for user
++-----------------------
++
++All of these configurations support both Kconfig and module parameters, but
++module parameters have priority over Kconfig.
++
++Here is an example for module parameters::
++
++        pstore_blk.blkdev=179:7 pstore_blk.kmsg_size=64
++
++The detail of each configurations may be of interest to you.
++
++blkdev
++~~~~~~
++
++The block device to use. Most of the time, it is a partition of block device.
++It's required for pstore/blk.
++
++It accepts the following variants:
++
++1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
++   leading 0x, for example b302.
++#. /dev/<disk_name> represents the device number of disk
++#. /dev/<disk_name><decimal> represents the device number of partition - device
++   number of disk plus the partition number
++#. /dev/<disk_name>p<decimal> - same as the above; this form is used when disk
++   name of partitioned disk ends with a digit.
++#. PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF represents the unique id of
++   a partition if the partition table provides it. The UUID may be either an
++   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
++   where SSSSSSSS is a zero-filled hex representation of the 32-bit
++   "NT disk signature", and PP is a zero-filled hex representation of the
++   1-based partition number.
++#. PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to a
++   partition with a known unique id.
++#. <major>:<minor> major and minor number of the device separated by a colon.
++
++kmsg_size
++~~~~~~~~~
++
++The chunk size in KB for oops/panic front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care oops/panic log.
++
++There are multiple chunks for oops/panic front-end depending on the remaining
++space except other pstore front-ends.
++
++pstore/blk will log to oops/panic chunks one by one, and always overwrite the
++oldest chunk if there is no more free chunk.
++
++pmsg_size
++~~~~~~~~~
++
++The chunk size in KB for pmsg front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care pmsg log.
++
++Unlike oops/panic front-end, there is only one chunk for pmsg front-end.
++
++Pmsg is a user space accessible pstore object. Writes to */dev/pmsg0* are
++appended to the chunk. On reboot the contents are available in
++*/sys/fs/pstore/pmsg-pstore-blk-0*.
++
++console_size
++~~~~~~~~~~~~
++
++The chunk size in KB for console front-end.  It **MUST** be a multiple of 4.
++It's optional if you do not care console log.
++
++Similar to pmsg front-end, there is only one chunk for console front-end.
++
++All log of console will be appended to the chunk. On reboot the contents are
++available in */sys/fs/pstore/console-pstore-blk-0*.
++
++ftrace_size
++~~~~~~~~~~~
++
++The chunk size in KB for ftrace front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care console log.
++
++Similar to oops front-end, there are multiple chunks for ftrace front-end
++depending on the count of cpu processors. Each chunk size is equal to
++ftrace_size / processors_count.
++
++All log of ftrace will be appended to the chunk. On reboot the contents are
++combined and available in */sys/fs/pstore/ftrace-pstore-blk-0*.
++
++Persistent function tracing might be useful for debugging software or hardware
++related hangs. Here is an example of usage::
++
++ # mount -t pstore pstore /sys/fs/pstore
++ # mount -t debugfs debugfs /sys/kernel/debug/
++ # echo 1 > /sys/kernel/debug/pstore/record_ftrace
++ # reboot -f
++ [...]
++ # mount -t pstore pstore /sys/fs/pstore
++ # tail /sys/fs/pstore/ftrace-pstore-blk-0
++ CPU:0 ts:5914676 c0063828  c0063b94  call_cpuidle <- cpu_startup_entry+0x1b8/0x1e0
++ CPU:0 ts:5914678 c039ecdc  c006385c  cpuidle_enter_state <- call_cpuidle+0x44/0x48
++ CPU:0 ts:5914680 c039e9a0  c039ecf0  cpuidle_enter_freeze <- cpuidle_enter_state+0x304/0x314
++ CPU:0 ts:5914681 c0063870  c039ea30  sched_idle_set_state <- cpuidle_enter_state+0x44/0x314
++ CPU:1 ts:5916720 c0160f59  c015ee04  kernfs_unmap_bin_file <- __kernfs_remove+0x140/0x204
++ CPU:1 ts:5916721 c05ca625  c015ee0c  __mutex_lock_slowpath <- __kernfs_remove+0x148/0x204
++ CPU:1 ts:5916723 c05c813d  c05ca630  yield_to <- __mutex_lock_slowpath+0x314/0x358
++ CPU:1 ts:5916724 c05ca2d1  c05ca638  __ww_mutex_lock <- __mutex_lock_slowpath+0x31c/0x358
++
++max_reason
++~~~~~~~~~~
++
++Limiting which kinds of kmsg dumps are stored can be controlled via
++the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
++``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
++``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
++``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
++(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
++``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
++otherwise KMSG_DUMP_MAX.
++
++Configurations for driver
++-------------------------
++
++Only a block device driver cares about these configurations. A block device
++driver uses ``psblk_register_blkdev`` to register to pstore/blk.
++
++.. kernel-doc:: fs/pstore/blk.c
++   :identifiers: psblk_register_blkdev
++
++Compression and header
++----------------------
++
++Block device is large enough for uncompressed oops data. Actually we do not
++recommend data compression because pstore/blk will insert some information into
++the first line of oops/panic data. For example::
++
++        Panic: Total 16 times
++
++It means that it's OOPS|Panic for the 16th time since the first booting.
++Sometimes the number of occurrences of oops|panic since the first booting is
++important to judge whether the system is stable.
++
++The following line is inserted by pstore filesystem. For example::
++
++        Oops#2 Part1
++
++It means that it's OOPS for the 2nd time on the last boot.
++
++Reading the data
++----------------
++
++The dump data can be read from the pstore filesystem. The format for these
++files is ``dmesg-pstore-blk-[N]`` for oops/panic front-end,
++``pmsg-pstore-blk-0`` for pmsg front-end and so on.  The timestamp of the
++dump file records the trigger time. To delete a stored record from block
++device, simply unlink the respective pstore file.
++
++Attentions in panic read/write APIs
++-----------------------------------
++
++If on panic, the kernel is not going to run for much longer, the tasks will not
++be scheduled and most kernel resources will be out of service. It
++looks like a single-threaded program running on a single-core computer.
++
++The following points require special attention for panic read/write APIs:
++
++1. Can **NOT** allocate any memory.
++   If you need memory, just allocate while the block driver is initializing
++   rather than waiting until the panic.
++#. Must be polled, **NOT** interrupt driven.
++   No task schedule any more. The block driver should delay to ensure the write
++   succeeds, but NOT sleep.
++#. Can **NOT** take any lock.
++   There is no other task, nor any shared resource; you are safe to break all
++   locks.
++#. Just use CPU to transfer.
++   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
++#. Control registers directly.
++   Please control registers directly rather than use Linux kernel resources.
++   Do I/O map while initializing rather than wait until a panic occurs.
++#. Reset your block device and controller if necessary.
++   If you are not sure of the state of your block device and controller when
++   a panic occurs, you are safe to stop and reset them.
++
++pstore/blk supports psblk_blkdev_info(), which is defined in
++*linux/pstore_blk.h*, to get information of using block device, such as the
++device number, sector count and start sector of the whole disk.
++
++pstore block internals
++----------------------
++
++For developer reference, here are all the important structures and APIs:
++
++.. kernel-doc:: fs/pstore/zone.c
++   :internal:
++
++.. kernel-doc:: include/linux/pstore_zone.h
++   :internal:
++
++.. kernel-doc:: fs/pstore/blk.c
++   :export:
++
++.. kernel-doc:: include/linux/pstore_blk.h
++   :internal:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db31497..9c1f4feff418 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13660,6 +13660,7 @@ M:	Tony Luck <tony.luck@intel.com>
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+ F:	Documentation/admin-guide/ramoops.rst
++F:	Documentation/admin-guide/pstore-blk.rst
+ F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+ F:	drivers/acpi/apei/erst.c
+ F:	drivers/firmware/efi/efi-pstore.c
 diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index f18cd126d83f..f1484f751c5e 100644
+index 16a0440d8d5a..8371d29651a6 100644
 --- a/fs/pstore/Kconfig
 +++ b/fs/pstore/Kconfig
-@@ -236,3 +236,15 @@ config PSTORE_BLK_PMSG_SIZE
+@@ -171,6 +171,8 @@ config PSTORE_BLK
+ 	  This enables panic and oops message to be logged to a block dev
+ 	  where it can be read back at some later point.
  
- 	  NOTE that, both Kconfig and module parameters can configure
- 	  pstore/blk, but module parameters have priority over Kconfig.
++	  For more information, see Documentation/admin-guide/pstore-blk.rst
 +
-+config PSTORE_BLK_CONSOLE_SIZE
-+	int "Size in Kbytes of console to store"
-+	depends on PSTORE_BLK
-+	depends on PSTORE_CONSOLE
-+	default 64
-+	help
-+	  This just sets size of console (console_size) for pstore/blk. The
-+	  size is in KB and must be a multiple of 4.
-+
-+	  NOTE that, both Kconfig and module parameters can configure
-+	  pstore/blk, but module parameters have priority over Kconfig.
-diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
-index 02c0223f08fc..acdeb5d7b5f3 100644
---- a/fs/pstore/blk.c
-+++ b/fs/pstore/blk.c
-@@ -32,6 +32,14 @@
- module_param(pmsg_size, long, 0400);
- MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
+ 	  If unsure, say N.
  
-+#if IS_ENABLED(CONFIG_PSTORE_CONSOLE)
-+static long console_size = CONFIG_PSTORE_BLK_CONSOLE_SIZE;
-+#else
-+static long console_size = -1;
-+#endif
-+module_param(console_size, long, 0400);
-+MODULE_PARM_DESC(console_size, "console size in kbytes");
-+
- /*
-  * blkdev - The block device to use.
-  *
-@@ -83,7 +91,8 @@
-  *		whole disk).
-  *		On success, the number of bytes should be returned, others
-  *		means error.
-- * @write:	The same as @read.
-+ * @write:	The same as @read, but the following error number:
-+ *		-EBUSY means try to write again later.
-  * @panic_write:The write operation only used for panic case. It's optional
-  *		if you do not care panic log. The parameters and return value
-  *		are the same as @read.
-@@ -133,6 +142,7 @@ static int psblk_register_do(struct psblk_device *dev)
- 
- 	verify_size(kmsg_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
- 	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
-+	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
- #undef verify_size
- 
- 	pstore_zone_info->total_size = dev->total_size;
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 89f7d2c42336..427b458aa675 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -87,10 +87,12 @@ struct pstore_zone {
-  *
-  * @opszs: oops/panic storage zones
-  * @ppsz: pmsg storage zone
-+ * @cpsz: console storage zone
-  * @oops_max_cnt: max count of @opszs
-  * @oops_read_cnt: counter to read oops zone
-  * @oops_write_cnt: counter to write
-  * @pmsg_read_cnt: counter to read pmsg zone
-+ * @console_read_cnt: counter to read console zone
-  * @oops_counter: counter to oops
-  * @panic_counter: counter to panic
-  * @recovered: whether finish recovering data from storage
-@@ -102,10 +104,12 @@ struct pstore_zone {
- struct psz_context {
- 	struct pstore_zone **opszs;
- 	struct pstore_zone *ppsz;
-+	struct pstore_zone *cpsz;
- 	unsigned int oops_max_cnt;
- 	unsigned int oops_read_cnt;
- 	unsigned int oops_write_cnt;
- 	unsigned int pmsg_read_cnt;
-+	unsigned int console_read_cnt;
- 	/*
- 	 * the counter should be recovered when recover.
- 	 * It records the oops/panic times after burning rather than booting.
-@@ -125,6 +129,9 @@ struct psz_context {
- };
- static struct psz_context psz_cxt;
- 
-+static void psz_flush_all_dirty_zones(struct work_struct *);
-+static DECLARE_DELAYED_WORK(psz_cleaner, psz_flush_all_dirty_zones);
-+
- /**
-  * enum psz_flush_mode - flush mode for psz_zone_write()
-  *
-@@ -235,6 +242,9 @@ static int psz_zone_write(struct pstore_zone *zone,
- 	return 0;
- dirty:
- 	atomic_set(&zone->dirty, true);
-+	/* flush dirty zones nicely */
-+	if (wcnt == -EBUSY && !is_on_panic())
-+		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(500));
- 	return -EBUSY;
- }
- 
-@@ -291,6 +301,21 @@ static int psz_move_zone(struct pstore_zone *old, struct pstore_zone *new)
- 	return 0;
- }
- 
-+static void psz_flush_all_dirty_zones(struct work_struct *work)
-+{
-+	int ret = 0;
-+	struct psz_context *cxt = &psz_cxt;
-+
-+	if (cxt->ppsz)
-+		ret |= psz_flush_dirty_zone(cxt->ppsz);
-+	if (cxt->cpsz)
-+		ret |= psz_flush_dirty_zone(cxt->cpsz);
-+	if (cxt->opszs)
-+		ret |= psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
-+	if (ret && cxt->pstore_zone_info)
-+		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(1000));
-+}
-+
- static int psz_recover_oops_data(struct psz_context *cxt)
- {
- 	struct pstore_zone_info *info = cxt->pstore_zone_info;
-@@ -546,6 +571,10 @@ static inline int psz_recovery(struct psz_context *cxt)
- 	if (ret)
- 		goto recover_fail;
- 
-+	ret = psz_recover_zone(cxt, cxt->cpsz);
-+	if (ret)
-+		goto recover_fail;
-+
- 	pr_debug("recover end!\n");
- 	atomic_set(&cxt->recovered, 1);
- 	return 0;
-@@ -561,6 +590,7 @@ static int psz_pstore_open(struct pstore_info *psi)
- 
- 	cxt->oops_read_cnt = 0;
- 	cxt->pmsg_read_cnt = 0;
-+	cxt->console_read_cnt = 0;
- 	return 0;
- }
- 
-@@ -625,8 +655,9 @@ static int psz_pstore_erase(struct pstore_record *record)
- 		return psz_oops_erase(cxt, cxt->opszs[record->id], record);
- 	case PSTORE_TYPE_PMSG:
- 		return psz_record_erase(cxt, cxt->ppsz);
--	default:
--		return -EINVAL;
-+	case PSTORE_TYPE_CONSOLE:
-+		return psz_record_erase(cxt, cxt->cpsz);
-+	default: return -EINVAL;
- 	}
- }
- 
-@@ -689,10 +720,10 @@ static int notrace psz_oops_write(struct psz_context *cxt,
- 		return -ENOSPC;
- 
- 	ret = psz_oops_write_record(cxt, record);
--	if (!ret) {
-+	if (!ret && is_on_panic()) {
-+		/* ensure all data are flushed to storage when panic */
- 		pr_debug("try to flush other dirty zones\n");
--		psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
--		psz_flush_dirty_zone(cxt->ppsz);
-+		psz_flush_all_dirty_zones(NULL);
- 	}
- 
- 	/* always return 0 as we had handled it on buffer */
-@@ -754,9 +785,18 @@ static int notrace psz_pstore_write(struct pstore_record *record)
- 			record->reason == KMSG_DUMP_PANIC)
- 		atomic_set(&cxt->on_panic, 1);
- 
-+	/*
-+	 * if on panic, do not write except panic records
-+	 * Fix case that panic_write prints log which wakes up console backend.
-+	 */
-+	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
-+		return -EBUSY;
-+
- 	switch (record->type) {
- 	case PSTORE_TYPE_DMESG:
- 		return psz_oops_write(cxt, record);
-+	case PSTORE_TYPE_CONSOLE:
-+		return psz_record_write(cxt->cpsz, record);
- 	case PSTORE_TYPE_PMSG:
- 		return psz_record_write(cxt->ppsz, record);
- 	default:
-@@ -781,6 +821,13 @@ static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
- 			return zone;
- 	}
- 
-+	if (cxt->console_read_cnt == 0) {
-+		cxt->console_read_cnt++;
-+		zone = cxt->cpsz;
-+		if (psz_old_ok(zone))
-+			return zone;
-+	}
-+
- 	return NULL;
- }
- 
-@@ -891,6 +938,8 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
- 		readop = psz_oops_read;
- 		record->id = cxt->oops_read_cnt - 1;
- 		break;
-+	case PSTORE_TYPE_CONSOLE:
-+		fallthrough;
- 	case PSTORE_TYPE_PMSG:
- 		readop = psz_record_read;
- 		break;
-@@ -1039,6 +1088,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
- 		psz_free_zones(&cxt->opszs, &cxt->oops_max_cnt);
- 	if (cxt->ppsz)
- 		psz_free_zone(&cxt->ppsz);
-+	if (cxt->cpsz)
-+		psz_free_zone(&cxt->cpsz);
- }
- 
- static int psz_alloc_zones(struct psz_context *cxt)
-@@ -1055,6 +1106,14 @@ static int psz_alloc_zones(struct psz_context *cxt)
- 		goto free_out;
- 	}
- 
-+	off_size += info->console_size;
-+	cxt->cpsz = psz_init_zone(PSTORE_TYPE_CONSOLE, &off,
-+			info->console_size);
-+	if (IS_ERR(cxt->cpsz)) {
-+		err = PTR_ERR(cxt->cpsz);
-+		goto free_out;
-+	}
-+
- 	cxt->opszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
- 			info->total_size - off_size,
- 			info->kmsg_size, &cxt->oops_max_cnt);
-@@ -1088,7 +1147,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 		return -EINVAL;
- 	}
- 
--	if (!info->kmsg_size && !info->pmsg_size) {
-+	if (!info->kmsg_size && !info->pmsg_size && !info->console_size) {
- 		pr_warn("at least one of the records be non-zero\n");
- 		return -EINVAL;
- 	}
-@@ -1116,6 +1175,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 	check_size(total_size, 4096);
- 	check_size(kmsg_size, SECTOR_SIZE);
- 	check_size(pmsg_size, SECTOR_SIZE);
-+	check_size(console_size, SECTOR_SIZE);
- 
- #undef check_size
- 
-@@ -1143,6 +1203,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
- 	pr_debug("\toops size : %ld Bytes\n", info->kmsg_size);
- 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
-+	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
- 
- 	err = psz_alloc_zones(cxt);
- 	if (err) {
-@@ -1175,6 +1236,10 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
- 		pr_cont(" pmsg");
- 	}
-+	if (info->console_size) {
-+		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-+		pr_cont(" console");
-+	}
- 	pr_cont("\n");
- 
- 	err = pstore_register(&cxt->pstore);
-@@ -1206,6 +1271,9 @@ void unregister_pstore_zone(struct pstore_zone_info *info)
- {
- 	struct psz_context *cxt = &psz_cxt;
- 
-+	psz_flush_all_dirty_zones(NULL);
-+	flush_delayed_work(&psz_cleaner);
-+
- 	pstore_unregister(&cxt->pstore);
- 	kfree(cxt->pstore.buf);
- 	cxt->pstore.bufsize = 0;
-diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
-index 39c2cb944123..da294e6d7661 100644
---- a/include/linux/pstore_zone.h
-+++ b/include/linux/pstore_zone.h
-@@ -18,11 +18,12 @@
-  *		it must be multiple of SECTOR_SIZE(512 Bytes).
-  * @max_reason: Maximum kmsg dump reason to store.
-  * @pmsg_size:	The size of pmsg zone which is the same as @kmsg_size.
-+ * @console_size:The size of console zone which is the same as @kmsg_size.
-  * @read:	The general read operation. Both of the function parameters
-  *		@size and @offset are relative value to storage.
-  *		On success, the number of bytes should be returned, others
-  *		means error.
-- * @write:	The same as @read.
-+ * @write:	The same as @read, but -EBUSY means try to write again later.
-  * @panic_write:The write operation only used for panic case. It's optional
-  *		if you do not care panic log. The parameters and return value
-  *		are the same as @read.
-@@ -35,6 +36,7 @@ struct pstore_zone_info {
- 	unsigned long kmsg_size;
- 	int max_reason;
- 	unsigned long pmsg_size;
-+	unsigned long console_size;
- 	psz_read_op read;
- 	psz_write_op write;
- 	psz_write_op panic_write;
+ config PSTORE_BLK_BLKDEV
 -- 
 1.9.1
 
