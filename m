@@ -2,73 +2,76 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B66C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3139C54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C2521473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A9021473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 14:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="winqAkfG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5RZD77/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgEIOPQ (ORCPT
+        id S1728053AbgEIOQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 10:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726782AbgEIOPQ (ORCPT
+        Sat, 9 May 2020 10:16:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50500 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727840AbgEIOQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 10:15:16 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EB1C05BD09
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 07:15:14 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f134so920428wmf.1
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 07:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=klJtd5PzI5Rt7cUpJ7e/G3oZQmMxv27qO8Ox/Of2dxI=;
-        b=winqAkfGQ7LRxq3XxMw8IKOT9qWSeogO74Y00SJyhhfO0fb/K9esUndwFGg5FKP0Dj
-         MHJfucIu07RwfgShD4GhV0IJddHqx33BZs6NDmJg5EsvdQA6hTtRrif+LBTTfNI0+7U+
-         TElCUd4KAJMYY0EAGrDMPwigGAtWTYExnHg9KRrWFB4TJxYq1cXbpjnKICtaQp6GENlr
-         oUzYPLWDj9yrBPOFNfvmHtOL7S1vgESkVhcbmNniqKoMtqKsnBWhNADTY0u+1JYSK8t4
-         PGcMAfYK/m3dnqTAo23JqvRC5l4zTepNeysMYww56c3c9aE+v4raB4qwxpt2QF+K089Z
-         srdg==
+        Sat, 9 May 2020 10:16:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589033805;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rHjTn2dsi89n+bmwnI8/mn+rjn6MipnID9zbEJHvSgc=;
+        b=a5RZD77/NAZ8Q8l6Zkn1DUyovcl7PUvfR1mU+q7l05Luvd8ckSqnesD3hidcU5toh6ZRBa
+        ozvOU43mZffyTZHl7DnzcJaG7qmU390rMFdDUzAB7wS28Q3P3fwPIX5+NgvQLss6s49GM7
+        atWmnPoq8Yay0p8WRO1pLx7djXeL2JM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-60U6vMm0O5uXEmafB0cVfg-1; Sat, 09 May 2020 10:16:40 -0400
+X-MC-Unique: 60U6vMm0O5uXEmafB0cVfg-1
+Received: by mail-wr1-f71.google.com with SMTP id 30so2432132wrq.15
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 07:16:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=klJtd5PzI5Rt7cUpJ7e/G3oZQmMxv27qO8Ox/Of2dxI=;
-        b=GSDHdRSQIBzgRC/+naTf5WGnylC2BYF+oaa5XquWsFXb9VWZtotP9NpdVgtxi6rMae
-         LbcVF38kxxGM9ASSGdRlcs7yXp79TSjCI/YQmw10f8ki/bKIxAdxw34hGevSBKsKgn47
-         YoH56ik40RLzTJUj6VjGJ9CwnEoUr29vDAEWxqlR22GVOWbaipxhqSFGYBt1ycVDVOMb
-         BMy3VwX2bHtDpybPAHWjMhSxShuyMf+KiQhgrSQBJeV3B7ERPIRsAASqeTTuSCosFoWS
-         TlnRadIIDs31fkAdLNkjpz4pZndkwzIjsjMZl9YfgSNW9RZ+i/NqDgDWtOFfi7a7RIEk
-         GOiA==
-X-Gm-Message-State: AGi0PubgY540mVdrfA7cXbCBpx8HsZbkBN2YoRGJJIGuvhcJxR2XO+KA
-        5H/NVIeVJMvHV2SbcTZVHzq+lw==
-X-Google-Smtp-Source: APiQypL/POtcf6/x5ltcZf0Zve8IjTv13UIsM2PXQyT16F2xj1FlE5+MVtkuTPR8ro7mqT7Yr/HQ6w==
-X-Received: by 2002:a1c:1f83:: with SMTP id f125mr1954225wmf.5.1589033713120;
-        Sat, 09 May 2020 07:15:13 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id t4sm8638963wri.54.2020.05.09.07.15.11
+        bh=rHjTn2dsi89n+bmwnI8/mn+rjn6MipnID9zbEJHvSgc=;
+        b=PJzNZ8Lk9oyXmfSjiTgRtFoJ8bNygu//F+DVG9VnZUXrArBQOT4Lqxr4SKsRL+P+Z8
+         Qxzz5gQogmYtC0pY4ZzywP3fZHC1Ls1DGrNKLZ4po8hSl40HuPjLoIITV8gFDE1GO+U6
+         LfG4YO4hR8hoLt19UXW537louwfngzyXjqurY1mNPl5iKltwwOuswCxMKhmiPQMUlGvq
+         S4j3FZRlAuqKIJoqE/yUQTvlhvUO6dEqtzI8uB5rwupDj5u3RUedAH/+kBogqrElufr+
+         jGF5pHd3pSZZYMEwSJkSQb0hdtrthNLZ412/HQLUUHrgcc2p4kW8Jtp8FXKA8dR4pAD2
+         s3nA==
+X-Gm-Message-State: AGi0PuZYeNbDzSq33tWHw5BeOaGufqKV4ZpAQJx0t60wyfM2El3qkzOa
+        O+DkZu3BPLyslWNWtBa7jMUz2pH7F7Z4QMgKs3VTK4/iPWuTItppoeWMPY10g0QVGoYGqpsNE5/
+        lJUc/U7nCcYDt3sajDa9H9Z6P
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr21548978wmd.95.1589033798884;
+        Sat, 09 May 2020 07:16:38 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKREsLCLIr+USziB/WduDKj8G7m2OP44M3QbttWguPUKJjf4TtfLBWVR5wkFGD4Q6idIx3zhw==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr21548958wmd.95.1589033798686;
+        Sat, 09 May 2020 07:16:38 -0700 (PDT)
+Received: from turbo.teknoraver.net (net-2-44-90-75.cust.vodafonedsl.it. [2.44.90.75])
+        by smtp.gmail.com with ESMTPSA id p23sm12668665wmj.37.2020.05.09.07.16.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 07:15:12 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpiolib: notify user-space about line status changes after flags are set
-Date:   Sat,  9 May 2020 16:15:07 +0200
-Message-Id: <20200509141507.19531-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        Sat, 09 May 2020 07:16:38 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Subject: [PATCH net] mvpp2: enable rxhash only on the first port
+Date:   Sat,  9 May 2020 16:15:46 +0200
+Message-Id: <20200509141546.5750-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,83 +79,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Currently rxhash only works on the first port of the CP (Communication
+Processor). Enabling it on other ports completely blocks packet reception.
+This patch only adds rxhash as supported feature to the first port,
+so rxhash can't be enabled on other ports:
 
-Currently we emit the REQUESTED line state event after the line is
-requested but before the flags are configured. This is obviously wrong
-as we want to pass the updated lineinfo to user-space together with the
-event.
+	# ethtool -K eth0 rxhash on
+	# ethtool -K eth1 rxhash on
+	# ethtool -K eth2 rxhash on
+	Cannot change receive-hashing
+	Could not change any device features
+	# ethtool -K eth3 rxhash on
+	Cannot change receive-hashing
+	Could not change any device features
 
-Since the flags can be configured in different ways depending on how the
-line is being requested - we need to call the notifier chain in different
-places separately.
-
-Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
 ---
-This comes late in the release cycle but I only recently got down to
-writing libgpiod support for this new ioctl(). When writing test cases
-I noticed this doesn't really work as expected. This patch fixes the
-issue I identified this week. There may be more coming the following
-week though...
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- drivers/gpio/gpiolib.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 40f2d7f69be2..550751a6e51c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -729,6 +729,10 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 			if (ret)
- 				goto out_free_descs;
- 		}
-+
-+		atomic_notifier_call_chain(&desc->gdev->notifier,
-+					   GPIOLINE_CHANGED_REQUESTED, desc);
-+
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
- 	}
-@@ -1083,6 +1087,9 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	if (ret)
- 		goto out_free_desc;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 2b5dad2ec650..ba71583c7ae3 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -5423,7 +5423,8 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 			    NETIF_F_HW_VLAN_CTAG_FILTER;
  
-+	atomic_notifier_call_chain(&desc->gdev->notifier,
-+				   GPIOLINE_CHANGED_REQUESTED, desc);
-+
- 	le->irq = gpiod_to_irq(desc);
- 	if (le->irq <= 0) {
- 		ret = -ENODEV;
-@@ -2975,8 +2982,6 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 	}
- done:
- 	spin_unlock_irqrestore(&gpio_lock, flags);
--	atomic_notifier_call_chain(&desc->gdev->notifier,
--				   GPIOLINE_CHANGED_REQUESTED, desc);
- 	return ret;
- }
- 
-@@ -4938,6 +4943,9 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
- 		return ERR_PTR(ret);
+ 	if (mvpp22_rss_is_supported()) {
+-		dev->hw_features |= NETIF_F_RXHASH;
++		if (port->id == 0)
++			dev->hw_features |= NETIF_F_RXHASH;
+ 		dev->features |= NETIF_F_NTUPLE;
  	}
  
-+	atomic_notifier_call_chain(&desc->gdev->notifier,
-+				   GPIOLINE_CHANGED_REQUESTED, desc);
-+
- 	return desc;
- }
- EXPORT_SYMBOL_GPL(gpiod_get_index);
-@@ -5003,6 +5011,9 @@ struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
- 		return ERR_PTR(ret);
- 	}
- 
-+	atomic_notifier_call_chain(&desc->gdev->notifier,
-+				   GPIOLINE_CHANGED_REQUESTED, desc);
-+
- 	return desc;
- }
- EXPORT_SYMBOL_GPL(fwnode_get_named_gpiod);
 -- 
-2.25.0
+2.26.2
 
