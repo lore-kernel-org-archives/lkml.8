@@ -2,142 +2,130 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4137C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C542C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED2624953
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF5D24955
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drSdq+Vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgEIGl1 (ORCPT
+        id S1728879AbgEIGpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 02:41:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:51306 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgEIGlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 02:41:25 -0400
-IronPort-SDR: piFth/WoSK8/glW9ye7CfYYXBgno5EGltp69YJ86mhVZlClXrZQZzvgUujUcUv3q6mo039fcdQ
- NtwzvtJXfajg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 23:41:23 -0700
-IronPort-SDR: YJehiYscluXueXQs/gNYZzNglJ2ZUgA7gfrzwKaAzb40JSnRpXyf2kufy/NfCn/LYI0D/N4OCp
- cP1FPhhbWhjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,370,1583222400"; 
-   d="scan'208";a="279251600"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga002.jf.intel.com with ESMTP; 08 May 2020 23:41:21 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 2/2] serial: lantiq: Make driver modular
-Date:   Sat,  9 May 2020 14:41:15 +0800
-Message-Id: <7ca89173492b17207da6c85dbec0abed6d4708c7.1589006353.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <35f2d002ba1cb26192fe4d9b8cdab275300705bc.1589006353.git.rahul.tanwar@linux.intel.com>
-References: <35f2d002ba1cb26192fe4d9b8cdab275300705bc.1589006353.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <35f2d002ba1cb26192fe4d9b8cdab275300705bc.1589006353.git.rahul.tanwar@linux.intel.com>
-References: <35f2d002ba1cb26192fe4d9b8cdab275300705bc.1589006353.git.rahul.tanwar@linux.intel.com>
+        Sat, 9 May 2020 02:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725940AbgEIGpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 02:45:42 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E696CC061A0C;
+        Fri,  8 May 2020 23:45:40 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id q124so1939564pgq.13;
+        Fri, 08 May 2020 23:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Z5YwzXDO2wr4NdgAQEK2OLWbJWnD0XZQ+LroAMbjKBI=;
+        b=drSdq+VnJZ2Ez7DszCXKTAZJjtjTGW/SEExiJ4AElgFBQxydLTOAvLdz82ctGVPqAg
+         20vT+/++U3HqnctlRR+EpjX3VOTdDbdnrcql+44MmHk4hl5O8R2yl2oh6V7oC8uMIo5u
+         ljn7dJ4jDEAeDQ4zu6eqyB2oW2zqQhf/wafg0Pu6vcoZSBMTRJmRVNFNNXW2QrW3njKN
+         9R66P8oi1REQvs7na6y0fASCKJFQgsqb7U0TV3d6cbHv2yknngPfi5npFbWT4ZDNdYzD
+         MVnf/9x3sEJrUckEe0kx1+whxHwq2CF842kdn4WANFb8XJ/4cEKOEVjY7pTI1/6HH5YF
+         oIXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z5YwzXDO2wr4NdgAQEK2OLWbJWnD0XZQ+LroAMbjKBI=;
+        b=UPsiPOWWHz2H5i0Bu7J0o2yWywJV33maeP/QhJu7H0v/6inNuP5CzvUvnC/ZfBNE9i
+         n/7csM8YbUaAo4+zNKNE86qoQ8iC4Zio9x4SrFN7mBbj8lhlDQHHAhyHEd2q8K9ipj96
+         RzGvSGUofS7Z2N1CJmdHZbAnehiBfiJc7kQEpcYvgoBe+KPsELzwKvOVnU7r1fkpFVGr
+         5wKOIMBndfgtIVPi5k9taLQpDusR8QabayGCTqBIGeVZ5icYfOoyMEjk82v6Ibg01wfc
+         j715FKrWRvnrnCDpyp4If6C3D7Bls2+JzzAzKmZLbFmg3UF0UsugNkwKFOPNGOUBF6dM
+         Pv/w==
+X-Gm-Message-State: AGi0PuZyEUDrGCwdwnXDg/p0QK96WrEqkWcIn+t7V4MfUW6qP9EEBMEC
+        NAP2VDkU4IhBtmvaAeABehc=
+X-Google-Smtp-Source: APiQypLocseS27AE3Gkh6ABthIP0T5m7WOtu89Q31DK7gG6cPiIlcLSkoGHD6s/wYX0DCRhM8C5UYQ==
+X-Received: by 2002:a63:f809:: with SMTP id n9mr5456305pgh.355.1589006740271;
+        Fri, 08 May 2020 23:45:40 -0700 (PDT)
+Received: from kernel-dev-lenovo ([103.87.56.89])
+        by smtp.gmail.com with ESMTPSA id k5sm3978916pjl.32.2020.05.08.23.45.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 23:45:39 -0700 (PDT)
+Date:   Sat, 9 May 2020 12:15:31 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Qian Cai <cai@lca.pw>, Dmitry Vyukov <dvyukov@google.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        syzbot <syzbot+1519f497f2f9f08183c6@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        "paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ ipmr_get_table
+Message-ID: <20200509064531.GA7563@kernel-dev-lenovo>
+References: <000000000000df9a9805a455e07b@google.com>
+ <CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com>
+ <34558B83-103E-4205-8D3D-534978D5A498@lca.pw>
+ <20200507061635.449f9495@canb.auug.org.au>
+ <20200507062601.7befefa6@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507062601.7befefa6@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add changes so Lantiq serial driver can be compiled as a module.
+On Thu, May 07, 2020 at 06:26:01AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Thu, 7 May 2020 06:16:35 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi Qian,
+> > 
+> > On Tue, 28 Apr 2020 09:56:59 -0400 Qian Cai <cai@lca.pw> wrote:
+> > >  
+> > > > On Apr 28, 2020, at 4:57 AM, Dmitry Vyukov <dvyukov@google.com> wrote:    
+> > > >> net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!    
+> > > 
+> > > https://lore.kernel.org/netdev/20200222063835.14328-2-frextrite@gmail.com/
+> > > 
+> > > Never been picked up for a few months due to some reasons. You could probably
+> > > need to convince David, Paul, Steven or Linus to unblock the bot or carry patches
+> > > on your own?  
+> > 
+> > Did you resubmit the patch series as Dave Miller asked you to (now that
+> > net-next is based on v5.7-rc1+)?
+> 
+> In any case, I have added the 2 commits in this series to my fixes tree
+> from today - I will remove them when some other tree has a solution
+> applied.
+> 
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/tty/serial/Kconfig  |  4 +++-
- drivers/tty/serial/lantiq.c | 26 ++++++++++++++++++++++++--
- 2 files changed, 27 insertions(+), 3 deletions(-)
+Hi Stephen
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index bb4009a1135f..c0681da66653 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1034,11 +1034,13 @@ config SERIAL_SIFIVE_CONSOLE
- 	  boot time.)
- 
- config SERIAL_LANTIQ
--	bool "Lantiq serial driver"
-+	tristate "Lantiq serial driver"
- 	depends on (LANTIQ || X86) || COMPILE_TEST
- 	select SERIAL_CORE
- 	help
- 	  Support for UART on Lantiq and Intel SoCs.
-+	  To compile this driver as a module, select M here. The
-+	  module will be called lantiq.
- 
- config SERIAL_LANTIQ_CONSOLE
- 	bool "Console on Lantiq UART"
-diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-index d3b62a1be6ad..42fa52a224f7 100644
---- a/drivers/tty/serial/lantiq.c
-+++ b/drivers/tty/serial/lantiq.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/lantiq.h>
-+#include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -908,6 +909,13 @@ lqasc_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int lqasc_remove(struct platform_device *pdev)
-+{
-+	struct uart_port *port = platform_get_drvdata(pdev);
-+
-+	return uart_remove_one_port(&lqasc_reg, port);
-+}
-+
- static const struct ltq_soc_data soc_data_lantiq = {
- 	.fetch_irq = fetch_irq_lantiq,
- 	.request_irq = request_irq_lantiq,
-@@ -925,8 +933,11 @@ static const struct of_device_id ltq_asc_match[] = {
- 	{ .compatible = "intel,lgm-asc", .data = &soc_data_intel },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, ltq_asc_match);
- 
- static struct platform_driver lqasc_driver = {
-+	.probe		= lqasc_probe,
-+	.remove		= lqasc_remove,
- 	.driver		= {
- 		.name	= DRVNAME,
- 		.of_match_table = ltq_asc_match,
-@@ -942,10 +953,21 @@ init_lqasc(void)
- 	if (ret != 0)
- 		return ret;
- 
--	ret = platform_driver_probe(&lqasc_driver, lqasc_probe);
-+	ret = platform_driver_register(&lqasc_driver);
- 	if (ret != 0)
- 		uart_unregister_driver(&lqasc_reg);
- 
- 	return ret;
- }
--device_initcall(init_lqasc);
-+
-+static void __exit exit_lqasc(void)
-+{
-+	platform_driver_unregister(&lqasc_driver);
-+	uart_unregister_driver(&lqasc_reg);
-+}
-+
-+module_init(init_lqasc);
-+module_exit(exit_lqasc);
-+
-+MODULE_DESCRIPTION("Serial driver for Lantiq & Intel gateway SoCs");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+I'll follow up with David regarding this patch series.
+
+Thanks
+Amol
+
+> -- 
+> Cheers,
+> Stephen Rothwell
+
 
