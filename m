@@ -2,240 +2,193 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05273C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7CC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C9B208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8337214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589051117;
-	bh=wKrnNA2AYsARx5wZNKuQANGMtrvs2hACPWxw1AuIe9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ez91GR3E0RdJEnhwCesbBMmpEH1mCGW3UdrqoZVNgeLElbplmyIX07oRhpc7d8MGF
-	 NUDzv3sTF4/jw/QhKzwwjQpHtQv2uTcgsXoWeHBI5GQVS4tYDHwDZxHKBPvKiw8cRn
-	 8/gM4ZULDXTl9OJCocLt7cQWNgPA6xU9C8fxhVwg=
+	s=default; t=1589051144;
+	bh=FJqt+joC1S4dk3WKw1lf1NUGd5hPWz0tRXbmftk/Hqk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Bp8nEwkUJUzm3NINFvnsNkC3BnqyQE3Y6mcufUhPF5NlR/2SqbvNHkzHrdeU0Aj0O
+	 x8dmCwJGEPbH+dPMb0jg+sMIcaPzuJ8S4TXGE41XxE8B5aKAdFFdiSStsKWHqEnzd3
+	 QeSGhVtzfdu8h55ZnKgPzY5SS+Me2e0920x8H9ZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgEITFR (ORCPT
+        id S1728314AbgEITFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:05:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33765 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgEITFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:05:16 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t7so2152555plr.0;
-        Sat, 09 May 2020 12:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kX1sYEK0EbH42tiKl1I6YuGqHEoXG61Xr2I+Gfq3swE=;
-        b=POyz7Zj3c4mykfyW4YdvpQNAzRBuAomx6Xv6wRhF4unp0jh1/YM31/1skbq+PYKa4G
-         Gd/W6R0ZahotpOyqlveN1k7yPpcqpdmRwkOTP2dFW1u7prMN4O0y10syp9aUyukkKcd3
-         8kZBTPRj4i9xxFYbtlo04lREw2ggWXLXsrVrKHuWC+GNZ/wYgnP5qennn2rx0bhLIXTR
-         jt1VAobuJGRXFNlAylF3jabcUJ4UJ9E9SDMzroWkOq/7Vk7wsAgAHvRhAMH3pQj2w+MT
-         2cY8W21Wb9TPin27YL+2cVHFHLleiJjY11EOsWrRGSWSNywUXKp1YQfvchnoyt/txUkk
-         T1PQ==
-X-Gm-Message-State: AGi0PuaIzgYCihdNVfDkytXal++LQQd6u0LOlv5oEN9B0GdR5Lh+OCfR
-        nicYVtGNJnQVNdz9lGUHO2Q=
-X-Google-Smtp-Source: APiQypKSQpO2Mmp+x4Oa/l+JMrQ6UryLvjYLxmdTZxt5kSBq8vLabucL2thDZUQ+BTWgfaR9gzSCSw==
-X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr7710141plx.219.1589051114192;
-        Sat, 09 May 2020 12:05:14 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id p7sm4140203pgg.91.2020.05.09.12.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 12:05:13 -0700 (PDT)
-Date:   Sat, 9 May 2020 12:05:12 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Nava kishore Manne <navam@xilinx.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, Michal Simek <michals@xilinx.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
-Subject: Re: [PATCH 2/2] fpga: zynq: Add AFI config driver
-Message-ID: <20200509190512.GB6715@epycbox.lan>
-References: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
- <1586946290-7280-2-git-send-email-nava.manne@xilinx.com>
- <20200423032854.GB2430@epycbox.lan>
- <DM6PR02MB5386D0632A60A9C056DB31E6C2A60@DM6PR02MB5386.namprd02.prod.outlook.com>
+        Sat, 9 May 2020 15:05:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbgEITFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 15:05:43 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69427214D8
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 19:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589051142;
+        bh=FJqt+joC1S4dk3WKw1lf1NUGd5hPWz0tRXbmftk/Hqk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h57cjbWT99eEJDd2NqihaM1VMl/CabhJPqmHMgBBpaAtYQP9hAFOj8dcDEsVxcA7S
+         twDbZsiY/kZTxawUphk+iPtyx8L6jiJSsroopSiC7ekvJ/OkCL5LmRQXHxQ90L1jh3
+         tyWFrxnmE8iYXRy298dtRj74/Hv/6K9pK+2mOCO0=
+Received: by mail-wr1-f46.google.com with SMTP id j5so5864578wrq.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:05:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PubbouCdnZCu8pwKNI1mQSNBCfXuKuubSnWzcuBR9E2N1E5+qKM6
+        ProY4CxVAJECBv/bkjw8e8cCjv4MbpV1++PPdOL42w==
+X-Google-Smtp-Source: APiQypKo+N9nOe1pea23phVBcD9zIB6R4jO/fMYP4p09htgTDQfAoywcbcN8MwgE60i0o58ACaRTA736h38q6VDu9bQ=
+X-Received: by 2002:adf:a389:: with SMTP id l9mr5001943wrb.18.1589051140875;
+ Sat, 09 May 2020 12:05:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB5386D0632A60A9C056DB31E6C2A60@DM6PR02MB5386.namprd02.prod.outlook.com>
+References: <20200508144043.13893-1-joro@8bytes.org> <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
+ <20200508213609.GU8135@suse.de> <CALCETrVxP87o2+aaf=RLW--DSpMrs=BXSQphN6bG5Y4X+OY8GQ@mail.gmail.com>
+ <20200509175217.GV8135@suse.de>
+In-Reply-To: <20200509175217.GV8135@suse.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 9 May 2020 12:05:29 -0700
+X-Gmail-Original-Message-ID: <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
+Message-ID: <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nava,
+On Sat, May 9, 2020 at 10:52 AM Joerg Roedel <jroedel@suse.de> wrote:
+>
+> On Fri, May 08, 2020 at 04:49:17PM -0700, Andy Lutomirski wrote:
+> > On Fri, May 8, 2020 at 2:36 PM Joerg Roedel <jroedel@suse.de> wrote:
+> > >
+> > > On Fri, May 08, 2020 at 02:33:19PM -0700, Andy Lutomirski wrote:
+> > > > On Fri, May 8, 2020 at 7:40 AM Joerg Roedel <joro@8bytes.org> wrote:
+> > >
+> > > > What's the maximum on other system types?  It might make more sense to
+> > > > take the memory hit and pre-populate all the tables at boot so we
+> > > > never have to sync them.
+> > >
+> > > Need to look it up for 5-level paging, with 4-level paging its 64 pages
+> > > to pre-populate the vmalloc area.
+> > >
+> > > But that would not solve the problem on x86-32, which needs to
+> > > synchronize unmappings on the PMD level.
+> >
+> > What changes in this series with x86-32?
+>
+> This series sets ARCH_PAGE_TABLE_SYNC_MASK to PGTBL_PMD_MODIFIED, so
+> that the synchronization happens every time PMD(s) in the vmalloc areas
+> are changed. Before this series this synchronization only happened at
+> arbitrary places calling vmalloc_sync_(un)mappings().
+>
+> > We already do that synchronization, right?  IOW, in the cases where
+> > the vmalloc *fault* code does anything at all, we should have a small
+> > bound for how much memory to preallocate and, if we preallocate it,
+> > then there is nothing to sync and nothing to fault.  And we have the
+> > benefit that we never need to sync anything on 64-bit, which is kind
+> > of nice.
+>
+> Don't really get you here, what is pre-allocated and why is there no
+> need to sync and fault then?
+>
+> > Do we actually need PMD-level things for 32-bit?  What if we just
+> > outlawed huge pages in the vmalloc space on 32-bit non-PAE?
+>
+> Disallowing huge-pages would at least remove the need to sync
+> unmappings, but we still need to sync new PMD entries. Remember that the
+> size of the vmalloc area on 32 bit is dynamic and depends on the VM-split
+> and the actual amount of RAM on the system.
+>
+> A machine wit 512MB of RAM and a 1G/3G split will have around 2.5G of
+> VMALLOC address space. And if we want to avoid vmalloc-faults there, we
+> need to pre-allocate all PTE pages for that area (and the amount of PTE
+> pages needed increases when RAM decreases).
+>
+> On a machine with 512M of RAM we would need ca. 1270+ PTE pages, which
+> is around 5M (or 1% of total system memory).
 
-On Mon, May 04, 2020 at 11:55:23AM +0000, Nava kishore Manne wrote:
-> Hi Mortiz,
-> 
-> Thanks for proving the comments.
-> Please find my response inline.
-> 
-> > -----Original Message-----
-> > From: Moritz Fischer [mailto:mdf@kernel.org]
-> > Sent: Thursday, April 23, 2020 8:59 AM
-> > To: Nava kishore Manne <navam@xilinx.com>
-> > Cc: mdf@kernel.org; Michal Simek <michals@xilinx.com>; linux-
-> > fpga@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; chinnikishore369@gmail.com
-> > Subject: Re: [PATCH 2/2] fpga: zynq: Add AFI config driver
-> > 
-> > Hi Nava,
-> > 
-> > On Wed, Apr 15, 2020 at 03:54:50PM +0530, Nava kishore Manne wrote:
-> > > This patch Adds AFI config driver. This is useful for the PS to PL
-> > > configuration for the fpga manager On zynq platform.
-> > >
-> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > > ---
-> > >  drivers/fpga/Kconfig    |  8 +++++
-> > >  drivers/fpga/Makefile   |  1 +
-> > >  drivers/fpga/zynq-afi.c | 81
-> > > +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 90 insertions(+)
-> > >  create mode 100644 drivers/fpga/zynq-afi.c
-> > >
-> > > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
-> > > 474f304e..60982a0 100644
-> > > --- a/drivers/fpga/Kconfig
-> > > +++ b/drivers/fpga/Kconfig
-> > > @@ -214,4 +214,12 @@ config FPGA_MGR_ZYNQMP_FPGA
-> > >  	  to configure the programmable logic(PL) through PS
-> > >  	  on ZynqMP SoC.
-> > >
-> > > +config FPGA_MGR_ZYNQ_AFI_FPGA
-> > > +	bool "Xilinx AFI FPGA"
-> > > +	depends on FPGA_MGR_ZYNQ_FPGA
-> > Curious. How does this dependency play in here?
-> > > +	help
-> > > +	  Zynq AFI driver support for writing to the AFI registers
-> > > +	  for configuring the PS_PL interface. For some of the bitstream
-> > > +	  or designs to work the PS to PL interfaces need to be configured
-> > > +	  like the data bus-width etc.
-> > >  endif # FPGA
-> > > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
-> > > 312b937..d115e29 100644
-> > > --- a/drivers/fpga/Makefile
-> > > +++ b/drivers/fpga/Makefile
-> > > @@ -26,6 +26,7 @@ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-
-> > bridge.o
-> > >  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-
-> > fpga2sdram.o
-> > >  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
-> > >  obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
-> > > +obj-$(CONFIG_FPGA_MGR_ZYNQ_AFI_FPGA)	+= zynq-afi.o
-> > >
-> > >  # High Level Interfaces
-> > >  obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-> > > diff --git a/drivers/fpga/zynq-afi.c b/drivers/fpga/zynq-afi.c new
-> > > file mode 100644 index 0000000..7ce0d08
-> > > --- /dev/null
-> > > +++ b/drivers/fpga/zynq-afi.c
-> > > @@ -0,0 +1,81 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Xilinx FPGA AFI driver.
-> > > + * Copyright (c) 2018 Xilinx Inc.
-> > > + */
-> > > +
-> > > +#include <linux/err.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/platform_device.h>
-> > > +
-> > > +/* Registers and special values for doing register-based operations */
-> > > +#define AFI_RDCHAN_CTRL_OFFSET	0x00
-> > > +#define AFI_WRCHAN_CTRL_OFFSET	0x14
-> > > +
-> > > +#define AFI_BUSWIDTH_MASK	0x01
-> > > +
-> > > +/**
-> > > + * struct afi_fpga - AFI register description
-> > > + * @membase:	pointer to register struct
-> > > + * @afi_width:	AFI bus width to be written
-> > > + */
-> > > +struct zynq_afi_fpga {
-> > > +	void __iomem	*membase;
-> > > +	u32		afi_width;
-> > > +};
-> > > +
-> > > +static int zynq_afi_fpga_probe(struct platform_device *pdev) {
-> > > +	struct zynq_afi_fpga *afi_fpga;
-> > > +	struct resource *res;
-> > > +	u32 reg_val;
-> > > +	u32 val;
-> > > +
-> > > +	afi_fpga = devm_kzalloc(&pdev->dev, sizeof(*afi_fpga), GFP_KERNEL);
-> > > +	if (!afi_fpga)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	afi_fpga->membase = devm_ioremap_resource(&pdev->dev, res);
-> > > +	if (IS_ERR(afi_fpga->membase))
-> > > +		return PTR_ERR(afi_fpga->membase);
-> > > +
-> > > +	val = device_property_read_u32(&pdev->dev, "xlnx,afi-width",
-> > > +				       &afi_fpga->afi_width);
-> > > +	if (val) {
-> > > +		dev_err(&pdev->dev, "Fail to get the afi bus width\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	reg_val = readl(afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-> > > +	reg_val &= ~AFI_BUSWIDTH_MASK;
-> > > +	writel(reg_val | afi_fpga->afi_width,
-> > > +	       afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-> > > +	reg_val = readl(afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-> > > +	reg_val &= ~AFI_BUSWIDTH_MASK;
-> > > +	writel(reg_val | afi_fpga->afi_width,
-> > > +	       afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id zynq_afi_fpga_ids[] = {
-> > > +	{ .compatible = "xlnx,zynq-afi-fpga" },
-> > > +	{ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, zynq_afi_fpga_ids);
-> > > +
-> > > +static struct platform_driver zynq_afi_fpga_driver = {
-> > > +	.driver = {
-> > > +		.name = "zynq-afi-fpga",
-> > > +		.of_match_table = zynq_afi_fpga_ids,
-> > > +	},
-> > > +	.probe = zynq_afi_fpga_probe,
-> > > +};
-> > > +module_platform_driver(zynq_afi_fpga_driver);
-> > > +
-> > > +MODULE_DESCRIPTION("ZYNQ FPGA AFI module");
-> > MODULE_AUTHOR("Nava
-> > > +kishore Manne <nava.manne@xilinx.com>"); MODULE_LICENSE("GPL v2");
-> > > --
-> > > 2.7.4
-> > >
-> > 
-> > It looks like all the driver does is writing two registers? How does
-> > that fit into FPGA Manager as a framework. Should this maybe be eithe
-> > for Zynq architecture or a Misc driver instead?
-> > 
-> To establish the proper communication channel between PS and PL, The AXI Interface Bus Width should be configured properly.
-> For a design to design this AXI Interface Bus Width settings are vary. So for Zynq just loading the Bitstream into the PL is not sufficient
-> to establish a proper communication channel between PS and PL we have to do AXI Interface Bus Width settings as per the design
-> after loading the Bit file into the PL. I feel this is more relevant to the FPGA settings so I have placed this driver here.
+I can never remember which P?D name goes with which level and which
+machine type, but I don't think I agree with your math regardless.  On
+x86, there are two fundamental situations that can occur:
 
-Should this maybe be a fpga bridge driver then? From my understanding you'd change that as part of reprogramming the FPGA?
+1. Non-PAE.  There is a single 4k top-level page table per mm, and
+this table contains either 512 or 1024 entries total. Of those
+entries, some fraction (half or less) control the kernel address
+space, and some fraction of *that* is for vmalloc space.  Those
+entries are the *only* thing that needs syncing -- all mms will either
+have null (not present) in those slots or will have pointers to the
+*same* next-level-down directories.
 
-Thanks,
-Moritz
+2. PAE.  Depending on your perspective, there could be a grand total
+of four top-level paging pointers, of which one (IIRC) is for the
+kernel.  That points to the same place for all mms.  Or, if you look
+at it the other way, PAE is just like #1 except that the top-level
+table has only four entries and only one points to VMALLOC space.
+
+So, unless I'm missing something here, there is an absolute maximum of
+512 top-level entries that ever need to be synchronized.
+
+Now, there's an additional complication.  On x86_64, we have a rule:
+those entries that need to be synced start out null and may, during
+the lifetime of the system, change *once*.  They are never unmapped or
+modified after being allocated.  This means that those entries can
+only ever point to a page *table* and not to a ginormous page.  So,
+even if the hardware were to support ginormous pages (which, IIRC, it
+doesn't), we would be limited to merely immense and not ginormous
+pages in the vmalloc range.  On x86_32, I don't think we have this
+rule right now.  And this means that it's possible for one of these
+pages to be unmapped or modified.
+
+So my suggestion is that just apply the x86_64 rule to x86_32 as well.
+The practical effect will be that 2-level-paging systems will not be
+able to use huge pages in the vmalloc range, since the rule will be
+that the vmalloc-relevant entries in the top-level table must point to
+page *tables* instead of huge pages.
+
+On top of this, if we preallocate these entries, then the maximum
+amount of memory we can possibly waste is 4k * (entries pointing to
+vmalloc space - entries actually used for vmalloc space).  I don't
+know what this number typically is, but I don't think it's very large.
+Preallocating means that vmalloc faults *and* synchronization go away
+entirely.  All of the page tables used for vmalloc will be entirely
+shared by all mms, so all that's needed to modify vmalloc mappings is
+to update init_mm and, if needed, flush TLBs.  No other page tables
+will need modification at all.
+
+On x86_64, the only real advantage is that the handful of corner cases
+that make vmalloc faults unpleasant (mostly relating to vmap stacks)
+go away.  On x86_32, a bunch of mind-bending stuff (everything your
+series deletes but also almost everything your series *adds*) goes
+away.  There may be a genuine tiny performance hit on 2-level systems
+due to the loss of huge pages in vmalloc space, but I'm not sure I
+care or that we use them anyway on these systems.  And PeterZ can stop
+even thinking about RCU.
+
+Am I making sense?
+
+
+(Aside: I *hate* the PMD, etc terminology.  Even the kernel's C types
+can't keep track of whether pmd_t* points to an entire paging
+directory or to a single entry.  Similarly, everyone knows that a
+pte_t is a "page table entry", except that pte_t* might instead be a
+pointer to an array of 512 or 1024 page table entries.)
