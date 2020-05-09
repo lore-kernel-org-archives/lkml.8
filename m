@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD35C47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24611C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C80214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D59F24956
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgEINtP (ORCPT
+        id S1728008AbgEINtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:49:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4385 "EHLO huawei.com"
+        Sat, 9 May 2020 09:49:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54300 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbgEINtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:49:13 -0400
+        id S1726013AbgEINtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 09:49:17 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1D5195B74FBBEA43C7F2;
-        Sat,  9 May 2020 21:49:09 +0800 (CST)
+        by Forcepoint Email with ESMTP id 2D35DFA87879A8FDE183;
+        Sat,  9 May 2020 21:49:14 +0800 (CST)
 Received: from euler.huawei.com (10.175.101.6) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 21:49:08 +0800
+ 14.3.487.0; Sat, 9 May 2020 21:49:11 +0800
 From:   Wei Li <liwei391@huawei.com>
 To:     <daniel.thompson@linaro.org>, <jason.wessel@windriver.com>,
         <dianders@chromium.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
@@ -33,9 +33,9 @@ To:     <daniel.thompson@linaro.org>, <jason.wessel@windriver.com>,
         <catalin.marinas@arm.com>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
-Subject: [PATCH 1/4] arm64: kgdb: Fix single-step exception handling oops
-Date:   Sun, 10 May 2020 05:41:56 +0800
-Message-ID: <20200509214159.19680-2-liwei391@huawei.com>
+Subject: [PATCH 4/4] arm64: kgdb: Set PSTATE.SS to 1 to reenable single-step
+Date:   Sun, 10 May 2020 05:41:59 +0800
+Message-ID: <20200509214159.19680-5-liwei391@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200509214159.19680-1-liwei391@huawei.com>
 References: <20200509214159.19680-1-liwei391@huawei.com>
@@ -48,104 +48,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After entering kdb due to breakpoint, when we execute 'ss' or 'go' (will
-delay installing breakpoints, do single-step first), it won't work
-correctly, and it will enter kdb due to oops.
+After fixing wrongly single-stepping into the irq handler, when we execute
+single-step in kdb/kgdb, we can see only the first step can work.
 
-It's because the reason gotten in kdb_stub() is not as expected, and it
-seems that the ex_vector for single-step should be 0, like what arch
-powerpc/sh/parisc has implemented.
+Refer to the ARM Architecture Reference Manual (ARM DDI 0487E.a) D2.12,
+i think PSTATE.SS=1 should be set each step for transferring the PE to the
+'Active-not-pending' state. The problem here is PSTATE.SS=1 is not set
+since the second single-step.
 
-Before the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+After the first single-step, the PE transferes to the 'Inactive' state,
+with PSTATE.SS=0 and MDSCR.SS=1, thus PSTATE.SS won't be set to 1 due to
+kernel_active_single_step()=true. Then the PE transferes to the
+'Active-pending' state when ERET and returns to the debugger by step
+exception.
+
+Before this patch:
+* kdb:
+Entering kdb (current=0xffff8000119d2dc0, pid 0) on processor 0 due to Keyboard Entry
 [0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+Instruction(i) BP #0 at 0xffff80001014874c (printk)
+    is enabled   addr at ffff80001014874c, hardtype=0 installed=0
 
 [0]kdb> g
 
 / # echo h > /proc/sysrq-trigger
 
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 due to Breakpoint @ 0xffff8000101486cc
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 3 due to Breakpoint @ 0xffff80001014874c
 [3]kdb> ss
 
-Entering kdb (current=0xffff0000fa878040, pid 266) on processor 3 Oops: (null)
-due to oops @ 0xffff800010082ab8
-CPU: 3 PID: 266 Comm: sh Not tainted 5.7.0-rc4-13839-gf0e5ad491718 #6
-Hardware name: linux,dummy-virt (DT)
-pstate: 00000085 (nzcv daIf -PAN -UAO)
-pc : el1_irq+0x78/0x180
-lr : __handle_sysrq+0x80/0x190
-sp : ffff800015003bf0
-x29: ffff800015003d20 x28: ffff0000fa878040
-x27: 0000000000000000 x26: ffff80001126b1f0
-x25: ffff800011b6a0d8 x24: 0000000000000000
-x23: 0000000080200005 x22: ffff8000101486cc
-x21: ffff800015003d30 x20: 0000ffffffffffff
-x19: ffff8000119f2000 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : ffff800015003e50
-x7 : 0000000000000002 x6 : 00000000380b9990
-x5 : ffff8000106e99e8 x4 : ffff0000fadd83c0
-x3 : 0000ffffffffffff x2 : ffff800011b6a0d8
-x1 : ffff800011b6a000 x0 : ffff80001130c9d8
-Call trace:
- el1_irq+0x78/0x180
- printk+0x0/0x84
- write_sysrq_trigger+0xb0/0x118
- proc_reg_write+0xb4/0xe0
- __vfs_write+0x18/0x40
- vfs_write+0xb0/0x1b8
- ksys_write+0x64/0xf0
- __arm64_sys_write+0x14/0x20
- el0_svc_common.constprop.2+0xb0/0x168
- do_el0_svc+0x20/0x98
- el0_sync_handler+0xec/0x1a8
- el0_sync+0x140/0x180
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 3 due to SS trap @ 0xffff800010148750
+[3]kdb> ss
 
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 3 due to SS trap @ 0xffff800010148750
+[3]kdb> ss
+
+Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 3 due to SS trap @ 0xffff800010148750
 [3]kdb>
 
-After the patch:
-Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+* kgdb:
+(gdb) target remote 127.1:23002
+Remote debugging using 127.1:23002
+arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+(gdb) b printk
+Breakpoint 1 at 0xffff80001014874c: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+(gdb) c
+Continuing.
+[New Thread 277]
+[Switching to Thread 276]
+
+Thread 171 hit Breakpoint 1, printk (fmt=0xffff8000112fc130 "\001\066sysrq: HELP : ")
+    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+2076	{
+(gdb) stepi
+0xffff800010148750	2076	{
+(gdb) stepi
+0xffff800010148750	2076	{
+(gdb) stepi
+0xffff800010148750	2076	{
+(gdb)
+
+After this patch:
+* kdb:
+Entering kdb (current=0xffff8000119d2dc0, pid 0) on processor 0 due to Keyboard Entry
 [0]kdb> bp printk
-Instruction(i) BP #0 at 0xffff8000101486cc (printk)
-    is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
+Instruction(i) BP #0 at 0xffff80001014874c (printk)
+    is enabled   addr at ffff80001014874c, hardtype=0 installed=0
 
 [0]kdb> g
 
 / # echo h > /proc/sysrq-trigger
 
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> g
+Entering kdb (current=0xffff0000fa800040, pid 264) on processor 2 due to Breakpoint @ 0xffff80001014874c
+[2]kdb> ss
 
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to Breakpoint @ 0xffff8000101486cc
-[0]kdb> ss
+Entering kdb (current=0xffff0000fa800040, pid 264) on processor 2 due to SS trap @ 0xffff800010148750
+[2]kdb> ss
 
-Entering kdb (current=0xffff0000fa852bc0, pid 268) on processor 0 due to SS trap @ 0xffff800010082ab8
-[0]kdb>
+Entering kdb (current=0xffff0000fa800040, pid 264) on processor 2 due to SS trap @ 0xffff800010148754
+[2]kdb> ss
+
+Entering kdb (current=0xffff0000fa800040, pid 264) on processor 2 due to SS trap @ 0xffff800010148758
+[2]kdb>
+
+* kgdb:
+(gdb) target remote 127.1:23002
+Remote debugging using 127.1:23002
+arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+21		asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+(gdb) b printk
+Breakpoint 1 at 0xffff80001014874c: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+(gdb) c
+Continuing.
+[New Thread 281]
+[New Thread 280]
+[Switching to Thread 281]
+
+Thread 174 hit Breakpoint 1, printk (fmt=0xffff8000112fc138 "\001\066sysrq: HELP : ")
+    at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+2076	{
+(gdb) stepi
+0xffff800010148750	2076	{
+(gdb) stepi
+2080		va_start(args, fmt);
+(gdb) stepi
+0xffff800010148758	2080		va_start(args, fmt);
+(gdb)
 
 Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
 Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- arch/arm64/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/debug-monitors.h | 2 ++
+ arch/arm64/kernel/debug-monitors.c      | 2 +-
+ arch/arm64/kernel/kgdb.c                | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+index b62469f3475b..a48b507c89ee 100644
+--- a/arch/arm64/include/asm/debug-monitors.h
++++ b/arch/arm64/include/asm/debug-monitors.h
+@@ -78,6 +78,8 @@ struct step_hook {
+ 	int (*fn)(struct pt_regs *regs, unsigned int esr);
+ };
+ 
++void set_regs_spsr_ss(struct pt_regs *regs);
++
+ void register_user_step_hook(struct step_hook *hook);
+ void unregister_user_step_hook(struct step_hook *hook);
+ 
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index 25ce6b5a52d2..7a58233677de 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -141,7 +141,7 @@ postcore_initcall(debug_monitors_init);
+ /*
+  * Single step API and exception handling.
+  */
+-static void set_regs_spsr_ss(struct pt_regs *regs)
++void set_regs_spsr_ss(struct pt_regs *regs)
+ {
+ 	regs->pstate |= DBG_SPSR_SS;
+ }
 diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 43119922341f..1a157ca33262 100644
+index 3910ac06c261..093ad9d2e5e6 100644
 --- a/arch/arm64/kernel/kgdb.c
 +++ b/arch/arm64/kernel/kgdb.c
-@@ -252,7 +252,7 @@ static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- 	if (!kgdb_single_step)
- 		return DBG_HOOK_ERROR;
+@@ -230,7 +230,8 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
+ 			kernel_prepare_single_step(&per_cpu(kgdb_ss_flags,
+ 					raw_smp_processor_id()), linux_regs);
+ 			kernel_enable_single_step(linux_regs);
+-		}
++		} else
++			set_regs_spsr_ss(linux_regs);
  
--	kgdb_handle_exception(1, SIGTRAP, 0, regs);
-+	kgdb_handle_exception(0, SIGTRAP, 0, regs);
- 	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_step_brk_fn);
+ 		err = 0;
+ 		break;
 -- 
 2.17.1
 
