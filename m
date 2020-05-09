@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A3C54E7E
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA89FC54E49
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3EBA21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0F221473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgEIXqD (ORCPT
+        id S1729037AbgEIXqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
+        Sat, 9 May 2020 19:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728344AbgEIXp7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728808AbgEIXqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:45:59 -0400
+        Sat, 9 May 2020 19:46:02 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1036C061A0C;
-        Sat,  9 May 2020 16:45:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78021C05BD0E;
+        Sat,  9 May 2020 16:46:02 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXZAM-004iRM-Em; Sat, 09 May 2020 23:45:58 +0000
+        id 1jXZAN-004iS6-TR; Sat, 09 May 2020 23:45:59 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 04/20] FIEMAP: don't bother with access_ok()
-Date:   Sun, 10 May 2020 00:45:41 +0100
-Message-Id: <20200509234557.1124086-4-viro@ZenIV.linux.org.uk>
+        linux-fsdevel@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH 13/20] drivers/crypto/ccp/sev-dev.c: get rid of pointless access_ok()
+Date:   Sun, 10 May 2020 00:45:50 +0100
+Message-Id: <20200509234557.1124086-13-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
 References: <20200509234124.GM23230@ZenIV.linux.org.uk>
@@ -45,46 +46,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-we use copy_to_user() on that thing anyway (and always had).
+Contrary to the comments, those do *NOT* verify anything about
+writability of memory, etc.
+
+In all cases addresses are passed only to copy_to_user().
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/ext4/ioctl.c | 5 -----
- fs/ioctl.c      | 5 -----
- 2 files changed, 10 deletions(-)
+ drivers/crypto/ccp/sev-dev.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index bfc1281fc4cb..a0afd0338722 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -784,11 +784,6 @@ static int ext4_ioctl_get_es_cache(struct file *filp, unsigned long arg)
- 	fieinfo.fi_extents_max = fiemap.fm_extent_count;
- 	fieinfo.fi_extents_start = ufiemap->fm_extents;
+diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+index 896f190b9a50..7f97164cbafb 100644
+--- a/drivers/crypto/ccp/sev-dev.c
++++ b/drivers/crypto/ccp/sev-dev.c
+@@ -371,8 +371,7 @@ static int sev_ioctl_do_pek_csr(struct sev_issue_cmd *argp, bool writable)
+ 		goto cmd;
  
--	if (fiemap.fm_extent_count != 0 &&
--	    !access_ok(fieinfo.fi_extents_start,
--		       fieinfo.fi_extents_max * sizeof(struct fiemap_extent)))
+ 	/* allocate a physically contiguous buffer to store the CSR blob */
+-	if (!access_ok(input.address, input.length) ||
+-	    input.length > SEV_FW_BLOB_MAX_SIZE) {
++	if (input.length > SEV_FW_BLOB_MAX_SIZE) {
+ 		ret = -EFAULT;
+ 		goto e_free;
+ 	}
+@@ -609,12 +608,6 @@ static int sev_ioctl_do_get_id2(struct sev_issue_cmd *argp)
+ 	if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+ 		return -EFAULT;
+ 
+-	/* Check if we have write access to the userspace buffer */
+-	if (input.address &&
+-	    input.length &&
+-	    !access_ok(input.address, input.length))
 -		return -EFAULT;
 -
- 	if (fieinfo.fi_flags & FIEMAP_FLAG_SYNC)
- 		filemap_write_and_wait(inode->i_mapping);
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+@@ -730,15 +723,13 @@ static int sev_ioctl_do_pdh_export(struct sev_issue_cmd *argp, bool writable)
+ 		goto cmd;
  
-diff --git a/fs/ioctl.c b/fs/ioctl.c
-index 282d45be6f45..f8181e2c2168 100644
---- a/fs/ioctl.c
-+++ b/fs/ioctl.c
-@@ -215,11 +215,6 @@ static int ioctl_fiemap(struct file *filp, struct fiemap __user *ufiemap)
- 	fieinfo.fi_extents_max = fiemap.fm_extent_count;
- 	fieinfo.fi_extents_start = ufiemap->fm_extents;
+ 	/* Allocate a physically contiguous buffer to store the PDH blob. */
+-	if ((input.pdh_cert_len > SEV_FW_BLOB_MAX_SIZE) ||
+-	    !access_ok(input.pdh_cert_address, input.pdh_cert_len)) {
++	if (input.pdh_cert_len > SEV_FW_BLOB_MAX_SIZE) {
+ 		ret = -EFAULT;
+ 		goto e_free;
+ 	}
  
--	if (fiemap.fm_extent_count != 0 &&
--	    !access_ok(fieinfo.fi_extents_start,
--		       fieinfo.fi_extents_max * sizeof(struct fiemap_extent)))
--		return -EFAULT;
--
- 	if (fieinfo.fi_flags & FIEMAP_FLAG_SYNC)
- 		filemap_write_and_wait(inode->i_mapping);
- 
+ 	/* Allocate a physically contiguous buffer to store the cert chain blob. */
+-	if ((input.cert_chain_len > SEV_FW_BLOB_MAX_SIZE) ||
+-	    !access_ok(input.cert_chain_address, input.cert_chain_len)) {
++	if (input.cert_chain_len > SEV_FW_BLOB_MAX_SIZE) {
+ 		ret = -EFAULT;
+ 		goto e_free;
+ 	}
 -- 
 2.11.0
 
