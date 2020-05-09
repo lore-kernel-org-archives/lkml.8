@@ -2,105 +2,119 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78EC54E4A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A99C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E622192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03EC214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589059182;
+	bh=VmwPVJKT2v+erZFsLCasdEboGnLPwgraIeEZ+VZKOMs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CKwUJPTTRhiD4wb4x4rXVk0acPS5ll5LMC6lc1AY6ciuVxU54w+MZd87wztJ9/NQ+
+	 ljDPhXNlUTqP2pYbTcvKf3bnOJHKH+O8MtJXPODYcGw3jOx2ZnGeFg9ZniK1ul17fb
+	 0mXidymQZXG8JENiFYd82XVIPfDzsUGUOtX+4PRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgEIVLJ (ORCPT
+        id S1728564AbgEIVTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 17:11:09 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:45634 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgEIVLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 17:11:09 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Sat, 9 May 2020 17:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbgEIVTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 17:19:41 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CE632003E;
-        Sat,  9 May 2020 23:11:06 +0200 (CEST)
-Date:   Sat, 9 May 2020 23:11:04 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] video: fbdev: pxa168fb: make pxa168fb_init_mode() return
- void
-Message-ID: <20200509211104.GC12666@ravnborg.org>
-References: <20200506061745.19451-1-yanaijie@huawei.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C45721473;
+        Sat,  9 May 2020 21:19:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589059180;
+        bh=VmwPVJKT2v+erZFsLCasdEboGnLPwgraIeEZ+VZKOMs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wOsCHPDrh0mHaFSaxipTFAcZ+JRW6Ycicfqco2CcTCCoSv8LTi4yHScET00RKIYxj
+         XigbMqA5U4m4L26IkmKQZA2J7gSDX3c261EmTEcfeS5rO4ZHOTPzNW0Ygo5JRt10+d
+         WUiPtLUW6z1rpQW4iaBOK7mJf4U9EkLVQXYt+EmY=
+Date:   Sat, 9 May 2020 14:19:38 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH net 2/2 RESEND] ipmr: Add lockdep expression to
+ ipmr_for_each_table macro
+Message-ID: <20200509141938.028fa959@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200509072243.3141-2-frextrite@gmail.com>
+References: <20200509072243.3141-1-frextrite@gmail.com>
+        <20200509072243.3141-2-frextrite@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506061745.19451-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=i0EeH86SAAAA:8 a=e5mUnYsNAAAA:8
-        a=LIjMPlzXlnp3mKN0Lz4A:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason.
+On Sat,  9 May 2020 12:52:44 +0530 Amol Grover wrote:
+> ipmr_for_each_table() uses list_for_each_entry_rcu() for
+> traversing outside of an RCU read-side critical section but
+> under the protection of pernet_ops_rwsem. Hence add the
+> corresponding lockdep expression to silence the following
+> false-positive warning at boot:
 
-On Wed, May 06, 2020 at 02:17:45PM +0800, Jason Yan wrote:
-> No other functions use the return value of pxa168fb_init_mode() and the
-> return value is always 0 now. Make it return void. This fixes the
-> following coccicheck warning:
-> 
-> drivers/video/fbdev/pxa168fb.c:565:5-8: Unneeded variable: "ret". Return
-> "0" on line 597
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Thanks for the fix, the warning has been annoying me as well!
+
+> [    0.645292] =============================
+> [    0.645294] WARNING: suspicious RCU usage
+> [    0.645296] 5.5.4-stable #17 Not tainted
+> [    0.645297] -----------------------------
+> [    0.645299] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
+
+please provide a fuller stack trace, it would have helped the review
+
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 > ---
->  drivers/video/fbdev/pxa168fb.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+>  net/ipv4/ipmr.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/video/fbdev/pxa168fb.c b/drivers/video/fbdev/pxa168fb.c
-> index aef8a3042590..eedfbd3572a8 100644
-> --- a/drivers/video/fbdev/pxa168fb.c
-> +++ b/drivers/video/fbdev/pxa168fb.c
-> @@ -557,12 +557,11 @@ static const struct fb_ops pxa168fb_ops = {
->  	.fb_imageblit	= cfb_imageblit,
->  };
+> diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+> index 99c864eb6e34..950ffe9943da 100644
+> --- a/net/ipv4/ipmr.c
+> +++ b/net/ipv4/ipmr.c
+> @@ -109,9 +109,10 @@ static void mroute_clean_tables(struct mr_table *mrt, int flags);
+>  static void ipmr_expire_process(struct timer_list *t);
 >  
-> -static int pxa168fb_init_mode(struct fb_info *info,
-> +static void pxa168fb_init_mode(struct fb_info *info,
->  			      struct pxa168fb_mach_info *mi)
-I fixed indent while applying.
-For patches in drivers/gpu/ please use --strict when you verify with
-checkpatch so you catch similar issues yourself.
+>  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
+> -#define ipmr_for_each_table(mrt, net) \
+> -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
+> -				lockdep_rtnl_is_held())
+> +#define ipmr_for_each_table(mrt, net)					\
+> +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+> +				lockdep_rtnl_is_held() ||		\
+> +				lockdep_is_held(&pernet_ops_rwsem))
 
-	Sam
+This is a strange condition, IMHO. How can we be fine with either
+lock.. This is supposed to be the writer side lock, one can't have 
+two writer side locks..
 
->  {
->  	struct pxa168fb_info *fbi = info->par;
->  	struct fb_var_screeninfo *var = &info->var;
-> -	int ret = 0;
->  	u32 total_w, total_h, refresh;
->  	u64 div_result;
->  	const struct fb_videomode *m;
-> @@ -593,8 +592,6 @@ static int pxa168fb_init_mode(struct fb_info *info,
->  	div_result = 1000000000000ll;
->  	do_div(div_result, total_w * total_h * refresh);
->  	var->pixclock = (u32)div_result;
-> -
-> -	return ret;
->  }
->  
->  static int pxa168fb_probe(struct platform_device *pdev)
-> -- 
-> 2.21.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I think what is happening is this:
+
+ipmr_net_init() -> ipmr_rules_init() -> ipmr_new_table()
+
+ipmr_new_table() returns an existing table if there is one, but
+obviously none can exist at init.  So a better fix would be:
+
+#define ipmr_for_each_table(mrt, net)					\
+	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+				lockdep_rtnl_is_held() ||		\
+				list_empty(&net->ipv4.mr_tables))
+
+Thoughts?
