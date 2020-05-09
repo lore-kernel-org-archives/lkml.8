@@ -2,195 +2,126 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5D6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7330C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A00220746
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DC6624953
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 07:50:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r2FXD0dJ"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="coXpCjTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgEIHqE (ORCPT
+        id S1726877AbgEIHuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 03:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725850AbgEIHqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 03:46:04 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78FCC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 00:46:03 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t2so3240086lfc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 00:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4AtfOSkLqdRJzIOPh2+ApauL+nZtTPP0VHGdRGfP1Sw=;
-        b=r2FXD0dJHpRiuIh15AM+qqyE3ZikLukkdLdVX8FpNQHu6uMG8YbnpRCFwRWubfYuRL
-         C/ySoqMPjaNu0HHvLbmQJTncHeZqGdRLy2bU9BAfqVbjOjeyygN9nBn3WVbLL/YNeb7v
-         4wtxth+9f1xOiwrCkm/+uRPKBoe3uIhUyslitK8OJNP3TWQicF4Mh7I3d4Ka8mjO+nKP
-         2jWtSwP6P+7d6SvBoy28xqwXX1iPfRlEXgo5u8ckkr2qeLN/bqD+HIvr8HV4vp98yI2j
-         0YZhpDDd5RHOFN+Pu8E2wvu7Mc/Z1bm4/CV516W6aTGG7RI0hBr/dJmL1oPhiP30b5LH
-         ReMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4AtfOSkLqdRJzIOPh2+ApauL+nZtTPP0VHGdRGfP1Sw=;
-        b=bCnPDuNFDIX6zj6ljWVJ/2YfiKlDAlxRpGJS5cvlu9Z8JK++/wH1g7J39u92MZPKMj
-         +zy005g8BTp7Gq+QpMmXcZpoNXYpK8bB8N/IIfzLZqnGcv78fNszPOhnjiWZngW9xFXk
-         lDtrl60VyhnaEOYtqCyJpnIV5nkw3/kPUcQIl67tSxaGAG1XmGqvlkNVSqTy0rJ9TSM1
-         KtnUEc8mSP+2DuyB+KUGBcitmWwSgFcN5y7byceINoA7AEQ5hTa8kRYBsOBwWJ9k27FI
-         iVJmxvu5AFyCkHFm7xHT7sZBBkAAAxJZUy9YsK1UPYIUU0tzCr0ah+oC1JWXDTjHMHcC
-         0wRA==
-X-Gm-Message-State: AOAM533WvaptB/D7v+tR2VPcloZmMYWi6qzxZgLca1KSSYTwn8ZffxvM
-        BxDm28cypQFQDqFhy4N0Fw1Xg77cYME6L/Mlo93DYiHkAD3O4A==
-X-Google-Smtp-Source: ABdhPJxOCRbu8A8q4BkFcPDtJPezbkcVlY8FkJlcElqcgfvFVPM3kVP1zzBdRSXrDTKOSVBlnEE0cN1aLxGQ1Ra8yZQ=
-X-Received: by 2002:a19:40d2:: with SMTP id n201mr4360470lfa.82.1589010361888;
- Sat, 09 May 2020 00:46:01 -0700 (PDT)
+        Sat, 9 May 2020 03:50:02 -0400
+Received: from mail-eopbgr150075.outbound.protection.outlook.com ([40.107.15.75]:29837
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725850AbgEIHuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 03:50:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BEg3I6cqg+zxIu0wS7Xq5XQat8X4tDKZMQdaJ3BMuGXCXW3GSJpFPOu4e+Y32WFGUyFU0eruS46+8EO3bATuZZGWc3wWZ+aZsVUCg/bzbUj0OSaTf34HW1fMgX5nHcSwiHrEVkGV7zjBZTh25gBXGLA5ALhwtz0iRStAmpN8YMDUpF4+rvLwG8+i95SzjBYqRCBDioDCI7hwJajrX0hi2DucBjJrKgNO1PFaW++4Ee11IL37rYMQdRBU8fg/PfJVt4gh3kk4aZu6vq3EbUJUz/Z4EhEWRbOLQwxEtC0vjrGEk3C1pdRkmf+7J11YqCRpZ5APLoFeu8PliBS4SGOVVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6xDLkTyWywng7PGXnVekYvcEAAm0i4kpM0VVBYtIYQw=;
+ b=LOtymBayc4iYm8zEs/3mF25WG1zhzOBB6pXVmWg5aEsQXmSxnoBKBCCN269BRjJxOT/9YtBzQziPO3D0PGrFLwLdSy42EmCXSYmJd8AMgj72RKezaRV79a8VTg+HIX1IGU/mreKWWoXDxXtsgPIASN2r3EJr/mWs9xGkhSpcUK3tRte5TZ9WzBJqrDuQNFiV2H7ak3Yzo6dtNrn+17RSwoDr3U3x1CFb5da/g8E97tLm9/uJb2uefqGtzZmG8UFFd6ui0TnZI2tAVzz+YG7chT3ekmbZSYL0O69HNzvMbyVzTqjAhRhvec+5egjArEeDPdmOCaZ1pAuSGt5p2DMhcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6xDLkTyWywng7PGXnVekYvcEAAm0i4kpM0VVBYtIYQw=;
+ b=coXpCjTnULlpELbSAW5+FDNZzup3gfs00lv+B9qvomuHGXTdmnZqTQpiS6K5gISDVYMbhGx4yMEFep9mwrtvPapMNxLL4nbKAjv3zLvFRhW7qtzXxU9GIiD+DRB2KhnZ/DoK7jokCrdexfYfrP5PfA6c+Vs6/Q8a837Kf9DU0+o=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6462.eurprd05.prod.outlook.com (2603:10a6:803:f3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Sat, 9 May
+ 2020 07:49:58 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2979.033; Sat, 9 May 2020
+ 07:49:58 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "dledford@redhat.com" <dledford@redhat.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "edumazet@google.com" <edumazet@google.com>
+Subject: Re: linux-next: manual merge of the net-next tree with the rdma tree
+Thread-Topic: linux-next: manual merge of the net-next tree with the rdma tree
+Thread-Index: AQHWJOdqvf+wE0yjPU+ZM+uXTwctcaieIJoAgAFCdAA=
+Date:   Sat, 9 May 2020 07:49:58 +0000
+Message-ID: <730d7ae9690cb153afd7a39207f009b75d858d91.camel@mellanox.com>
+References: <20200508131851.5818d84d@canb.auug.org.au>
+         <20200508123550.GG19158@mellanox.com>
+In-Reply-To: <20200508123550.GG19158@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: mellanox.com; dkim=none (message not signed)
+ header.d=none;mellanox.com; dmarc=none action=none header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9c1fc9dc-5d6c-4095-4b72-08d7f3ed9250
+x-ms-traffictypediagnostic: VI1PR05MB6462:|VI1PR05MB6462:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB64626EC25295E7416CB5D9F9BEA30@VI1PR05MB6462.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 03982FDC1D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: max3UJpiCA2zRn+ez54m/vv60Dnep7L5imjjiipATPfAXX5JR2sjxzHMjy+6hJ61AhSOaTHCKzYpuVsYLux9Go8TK23lTnm8ZD7BYus+1En2vT0w845bEms1jF7Jm9RDZI5zEopclx8FkriRhqgJnXHxoYhTZIwQZTYTmPAZX3Dgrkbp89I1SrRgKFMeSs9WvQ+lN3hy5r0Oc3vaPn14vymGWKL1uDl+C3QFiBbhYfjGwIzQiIODH9PPnjr5LoFymT9QN6dLecDnbeymaa9Rj8knc11PujgGbSge7qpOLgt0rZuL2JG9yeUiRnVwUBFDFUwDXIP0PXgS0u7MG5rRA++wt92kxRHBrHjGtyvGTUpAqEiOmPEZTnJkhFkx7cT4iSDs0QtcY5r0SsGKDagBjq5sV+KnKzmScGwEJ/Ae6Txxiv3sFQysHjnEuuxU6ZdWHxwB30yGhM61xJ834BKT+XrojtW9X3CK9Mp/xV2f9n3uxfXjWSYS1M74ordHqKd/e4Yv76L0rum1A/0JrV+UuQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(33430700001)(6486002)(2906002)(26005)(4326008)(36756003)(6512007)(6506007)(86362001)(33440700001)(110136005)(54906003)(5660300002)(66446008)(71200400001)(316002)(186003)(478600001)(8936002)(2616005)(76116006)(91956017)(66946007)(64756008)(66556008)(8676002)(66476007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: H5/hmdeBf/RxzdgBz2IrOUhoPiAP9LSuAbAB/QYtvCKjLomN7wfMdo1I9N6Vkaevf4WTqRIxo5lqQzet7ZsCS0HA/jVGLgZJyPhgrJKPo6wSEYLnCaB9GSRG1wdbowcUT2ca6OD8heXNTEyXMQnMR+bFfO3jzOZKkI0nXkXNurkz3QeNnvA2EiPObp6AQ94El+Q5YoHCllb1YECYQJQiShcE+pm8Hd2DYfIiNWiqkpEyAByNhaGXHVsyjVQG35VZ7bO0FX1r7934OqZ4tQeumpFJGIBmnZLuTlI9M6/bi0M6eQjhjtFyw3k7wmZm/mxvsI/kFcvngdIPrlzbIqLZSE1QS2KMy2dGrJc2rnszpyLGOBEwFzgWgOI2f/8ZjYHTJu/e28FHES4YzM56E445SnKpu2pR9wkodYowt1vTNCOpeUb2JK5u7IqMhkQPcrokzuGxFQAJRBTDnICZlHAyf2L8wySbKOXQGu2WkzTf3Z8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <12E8EF14DFB330429CB2E9D82FF4B175@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200508123042.775047422@linuxfoundation.org>
-In-Reply-To: <20200508123042.775047422@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 9 May 2020 13:15:48 +0530
-Message-ID: <CA+G9fYv6g1ArV5u1raGkFtFKRqVJreP8dRe8r+XtOASPhN+PzQ@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/49] 5.6.12-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c1fc9dc-5d6c-4095-4b72-08d7f3ed9250
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2020 07:49:58.2739
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pE6sfAKPVmv6UMsit1ywMz23Rl00ELV3HVZAuoKpGRNub1N7cJJkgL6Krg9uAeEJ7E6oxv5APtTxwo8GwS3eKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6462
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 at 18:25, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.6.12 release.
-> There are 49 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.12-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.6.12-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: 27749cf494a88f40047cf4c13a13536a41b454ed
-git describe: v5.6.11-50-g27749cf494a8
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.11-50-g27749cf494a8
-
-No regressions (compared to build v5.6.11)
-
-No fixes (compared to build v5.6.11)
-
-Ran 30848 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-containers-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* kselftest/net
-* kselftest/networking
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* ltp-sched-tests
-* network-basic-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+T24gRnJpLCAyMDIwLTA1LTA4IGF0IDA5OjM1IC0wMzAwLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6
+DQo+IE9uIEZyaSwgTWF5IDA4LCAyMDIwIGF0IDAxOjE4OjUxUE0gKzEwMDAsIFN0ZXBoZW4gUm90
+aHdlbGwgd3JvdGU6DQo+ID4gSGkgYWxsLA0KPiA+IA0KPiA+IFRvZGF5J3MgbGludXgtbmV4dCBt
+ZXJnZSBvZiB0aGUgbmV0LW5leHQgdHJlZSBnb3QgYSBjb25mbGljdCBpbjoNCj4gPiANCj4gPiAg
+IGRyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMNCj4gPiANCj4gPiBiZXR3ZWVuIGNvbW1p
+dHM6DQo+ID4gDQo+ID4gICBlZDdkNGYwMjNiMWEgKCJib25kaW5nOiBSZW5hbWUgc2xhdmVfYXJy
+IHRvIHVzYWJsZV9zbGF2ZXMiKQ0KPiA+ICAgYzA3MWQ5MWQyYTg5ICgiYm9uZGluZzogQWRkIGhl
+bHBlciBmdW5jdGlvbiB0byBnZXQgdGhlIHhtaXQgc2xhdmUNCj4gPiBiYXNlZCBvbiBoYXNoIikN
+Cj4gPiAgIDI5ZDViYmNjYjNhMSAoImJvbmRpbmc6IEFkZCBoZWxwZXIgZnVuY3Rpb24gdG8gZ2V0
+IHRoZSB4bWl0IHNsYXZlDQo+ID4gaW4gcnIgbW9kZSIpDQo+ID4gDQo+ID4gZnJvbSB0aGUgcmRt
+YSBhbmQgbWx4NS1uZXh0IHRyZWVzIGFuZCBjb21taXQ6DQo+ID4gDQo+ID4gICBhZTQ2ZjE4NGJj
+MWYgKCJib25kaW5nOiBwcm9wYWdhdGUgdHJhbnNtaXQgc3RhdHVzIikNCj4gPiANCj4gPiBmcm9t
+IHRoZSBuZXQtbmV4dCB0cmVlLg0KPiANCj4gU2FlZWQ/IFRoZXNlIHBhdGNoZXMgaW4gdGhlIHNo
+YXJlZCBicmFuY2ggd2VyZSBzdXBwb3NlZCB0byBiZSBhIFBSIHRvDQo+IG5ldC1uZXQ/IEkgc2Vl
+IGl0IGhhc24ndCBoYXBwZW5lZCB5ZXQgYW5kIG5vdyB3ZSBoYXZlIGNvbmZsaWN0cz8/IA0KPiAN
+Cg0KWWVzLCBJIGRvbid0IHVzdWFsbHkgc2VuZCBzdGFuZGFsb25lIFBScyBvZiBtbHg1LW5leHQs
+IGFuZCBJIG9ubHkgZG8gaXQNCndpdGggdGhlIGNvcnJlc3BvbmRpbmcgKGRlcGVuZGluZyBvbikg
+cGF0Y2hlcyBmcm9tIG5ldC1uZXh0LW1seDUsIGJ1dCBJDQphZ3JlZSB0aGlzIG9uZSB3YXMgZGlm
+ZmVyZW50IEkgc2hvdWxkIGhhdmUgc3VibWl0dGVkIGl0IC4uIGFueXdheSB0aGUNCmNvbmZsaWN0
+IGlzIG1pbm9yLCBpIGFscmVhZHkgZml4ZWQgaXQgdXAgYW5kIHdpbGwgc3VibWl0IHNvb24uLg0K
+DQpUaGFua3MsDQpTYWVlZC4NCg==
