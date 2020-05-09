@@ -2,81 +2,89 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B9FC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47489C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D92DB21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CF9214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 16:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qFs16vID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgEIQrT (ORCPT
+        id S1728365AbgEIQxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 12:47:19 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:27301 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgEIQrS (ORCPT
+        Sat, 9 May 2020 12:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726214AbgEIQxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 12:47:18 -0400
-Received: from [192.168.42.210] ([93.22.151.218])
-        by mwinf5d41 with ME
-        id cgn9220054iyQ5p03gn9Tp; Sat, 09 May 2020 18:47:16 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 09 May 2020 18:47:16 +0200
-X-ME-IP: 93.22.151.218
-Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
- paths
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     davem@davemloft.net, fthain@telegraphics.com.au,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200508172557.218132-1-christophe.jaillet@wanadoo.fr>
- <20200508185402.41d9d068@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <50ef36cd-d095-9abe-26ea-d363d11ce521@wanadoo.fr>
-Date:   Sat, 9 May 2020 18:47:08 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200508185402.41d9d068@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Sat, 9 May 2020 12:53:40 -0400
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80340C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 09:53:40 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id w18so2479213qvs.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 09:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=v9n7nUQ6BLocSh8QyJi1U2YpynP7/+J+TFH6Gxsb30Y=;
+        b=qFs16vID/5+OQQ9e/MZmB45bW49we+0yycpTS9fxgcC2Xn4c4+qElKzH23Ut6mnxFD
+         dITX/LrIy8hCMLZCcSVjnfd59cG8qd3zpfgU4L/YypF613l6Yio+PcvOcZ5m2u9gaC8s
+         2b4E2CQ2o3Qm6BHkRqiT0H8ZsX6azu2lqIcNhqD6skcXAWLy9Ex5xfYlWtNJpJnFcc+3
+         17hpkUjvNeGMIQmRqaIE/72Hq36NCg0HczS+7A+go5LsSg8pTQtyB9qctfz2KjimuvoL
+         XZHHCnBh8PQ/CIfw5PNMPFnGVlp/3AGKBN4SejYh+uB7fQI6CKjCCp/RTfG/fB6pyQE4
+         uHSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=v9n7nUQ6BLocSh8QyJi1U2YpynP7/+J+TFH6Gxsb30Y=;
+        b=dk7jmUgT4ZFi/emE+mOLOLvl01krpZBlxV/RZesytqgefPCpHDpeIcVAlOr1hW5ANm
+         GLbkGEV75XetvrWOentZBXyDrGmzrR7WS8unBh7v+EL0xGJCMUaLPbHIIbXI+3Fl+mZh
+         uCtpqHW1gkMOc5vjl1cp9pxxudnwjzGLwtoNtfFlpTvmeZnIpiXzrYeDPIgBNnX3msHP
+         xVGCqA/9S8m8CaBkMpfoLLmW8u+Ivp+v7xatgn84oxStxCtZa92AGdOC7EJIIpU1Lozb
+         U1usBvwGltdMSsw1RvjMNxwWQccIeyrfP9/z05JQsx3UENknSnF3D0EmMFVbSwycIq+X
+         rNNA==
+X-Gm-Message-State: AGi0PuYN3MiEwrSelFRgA/BjhD4vU+3ik+qlTIaVvh6jocEqomXIP/m1
+        S9uSBv6/8BqSYgoDn3zWY/dHuOqJjLKFew==
+X-Google-Smtp-Source: APiQypJ3CD/mAwPWe5YW/aYfZV0QikFvLBDdCE7V8q0rKGpDvtLAoTFxKtxOsgpnJGdz7BKOoKhWmg==
+X-Received: by 2002:a0c:ac41:: with SMTP id m1mr8162790qvb.71.1589043219371;
+        Sat, 09 May 2020 09:53:39 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 202sm3919656qko.135.2020.05.09.09.53.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 09:53:38 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in osq_lock
+Date:   Sat, 9 May 2020 12:53:38 -0400
+Message-Id: <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
+References: <20200509161217.GN2869@paulmck-ThinkPad-P72>
+Cc:     Will Deacon <will@kernel.org>, Elver Marco <elver@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+In-Reply-To: <20200509161217.GN2869@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 09/05/2020 à 03:54, Jakub Kicinski a écrit :
-> On Fri,  8 May 2020 19:25:57 +0200 Christophe JAILLET wrote:
->> @@ -527,8 +531,9 @@ static int mac_sonic_platform_remove(struct platform_device *pdev)
->>   	struct sonic_local* lp = netdev_priv(dev);
->>   
->>   	unregister_netdev(dev);
->> -	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
->> -	                  lp->descriptors, lp->descriptors_laddr);
->> +	dma_free_coherent(lp->device,
->> +			  SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
->> +			  lp->descriptors, lp->descriptors_laddr);
->>   	free_netdev(dev);
->>   
->>   	return 0;
-> This is a white-space only change, right? Since this is a fix we should
-> avoid making cleanups which are not strictly necessary.
->
-Right.
 
-The reason of this clean-up is that I wanted to avoid a checkpatch 
-warning with the proposed patch and I felt that having the same layout 
-in the error handling path of the probe function and in the remove 
-function was clearer.
-So I updated also the remove function.
 
-Fell free to ignore this hunk if not desired. I will not sent a V2 only 
-for that.
+> On May 9, 2020, at 12:12 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+>=20
+> Ah, and I forgot to ask.  Why "if (data_race(prev->next =3D=3D node)" inst=
+ead
+> of "if (data_race(prev->next) =3D=3D node"?
 
-CJ
-
+I think the one you suggested is slightly better to point out the exact race=
+. Do you want me to resend or you could squash it instead?=
