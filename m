@@ -6,79 +6,73 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC27C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90DE521582
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E01A21974
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgEIJ3P (ORCPT
+        id S1728272AbgEIJ3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:29:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4378 "EHLO huawei.com"
+        Sat, 9 May 2020 05:29:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:32988 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727086AbgEIJ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:29:06 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 65F8A76E6C49B76A88C6;
-        Sat,  9 May 2020 17:29:00 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 9 May 2020 17:28:50 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 5/5] net: hns3: disable auto-negotiation off with 1000M setting in ethtool
-Date:   Sat, 9 May 2020 17:27:41 +0800
-Message-ID: <1589016461-10130-6-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
-References: <1589016461-10130-1-git-send-email-tanhuazhong@huawei.com>
+        id S1726885AbgEIJ3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:29:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B8EAA1A5248D2D890D87;
+        Sat,  9 May 2020 17:29:49 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 17:29:41 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <sound-open-firmware@alsa-project.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] ASoC: SOF: core: fix error return code in sof_probe_continue()
+Date:   Sat, 9 May 2020 09:33:37 +0000
+Message-ID: <20200509093337.78897-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+Fix to return negative error code -ENOMEM from the IPC init error
+handling case instead of 0, as done elsewhere in this function.
 
-The 802.3 specification does not specify the behavior of
-auto-negotiation off with 1000M in PHY. Therefore, some PHY
-compatibility issues occur. This patch forbids the setting of
-this unreasonable mode by ethtool in driver.
-
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/sof/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 1a105f2..6b1545f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -773,8 +773,13 @@ static int hns3_set_link_ksettings(struct net_device *netdev,
- 		  cmd->base.autoneg, cmd->base.speed, cmd->base.duplex);
- 
- 	/* Only support ksettings_set for netdev with phy attached for now */
--	if (netdev->phydev)
-+	if (netdev->phydev) {
-+		if (cmd->base.speed == SPEED_1000 &&
-+		    cmd->base.autoneg == AUTONEG_DISABLE)
-+			return -EINVAL;
-+
- 		return phy_ethtool_ksettings_set(netdev->phydev, cmd);
-+	}
- 
- 	if (handle->pdev->revision == 0x20)
- 		return -EOPNOTSUPP;
--- 
-2.7.4
+diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+index 94a2cb58ab9a..ef9be4f45e27 100644
+--- a/sound/soc/sof/core.c
++++ b/sound/soc/sof/core.c
+@@ -176,6 +176,7 @@ static int sof_probe_continue(struct snd_sof_dev *sdev)
+ 	/* init the IPC */
+ 	sdev->ipc = snd_sof_ipc_init(sdev);
+ 	if (!sdev->ipc) {
++		ret = -ENOMEM;
+ 		dev_err(sdev->dev, "error: failed to init DSP IPC %d\n", ret);
+ 		goto ipc_err;
+ 	}
+
+
 
