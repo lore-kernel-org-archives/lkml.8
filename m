@@ -2,166 +2,83 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46425C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281C6C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 207F7214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:51:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LYvqtNTk"
+	by mail.kernel.org (Postfix) with ESMTP id 08D8C24955
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEINvV (ORCPT
+        id S1727790AbgEIN5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726904AbgEINvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:51:20 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42E9C061A0C;
-        Sat,  9 May 2020 06:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2uygEucO5eCGyC1Yl+l/qEGrNAjV1cjP3RBl/px8ykw=; b=LYvqtNTkAfpe2zWTtXqs0AlVr
-        JSY/8pWu8EKEKUpiD3KHRAIrqtN/gZWHmvDAyeY6MYSSAmSw+HjwcOoURlbOlMtkwKx/eYWaE8NAe
-        estJ6I3KznNOQ+XT5SNmMxkySCAiYeQP46EeJpLbeso6Y8i7JQkzn6aN7sAwovHwQVrnnSLUoWnMD
-        ilbvI8F/q0AhjOMwccK28a53kaB6tg7R3G2bnyHC/TP5TqmVJrbWwsESPcr/dVb8e4e1p590UHxg/
-        o8aW5eD5kKR+Vb8IK/zowKmzjpCn3Fzib3PAmwVQNiVk4K6VhAboF9Et6ayykFoPahOH1R55nlk/S
-        tFwQiXG3w==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38036)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jXPsk-00044H-Uh; Sat, 09 May 2020 14:51:11 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jXPsf-0002u4-W2; Sat, 09 May 2020 14:51:06 +0100
-Date:   Sat, 9 May 2020 14:51:05 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev <netdev@vger.kernel.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
- to handle RSS tables
-Message-ID: <20200509135105.GE1551@shell.armlinux.org.uk>
-References: <20190524100554.8606-1-maxime.chevallier@bootlin.com>
- <20190524100554.8606-4-maxime.chevallier@bootlin.com>
- <CAGnkfhzsx_uEPkZQC-_-_NamTigD8J0WgcDioqMLSHVFa3V6GQ@mail.gmail.com>
- <20200423170003.GT25745@shell.armlinux.org.uk>
- <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
- <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
- <20200509114518.GB1551@shell.armlinux.org.uk>
- <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+        Sat, 9 May 2020 09:57:45 -0400
+Received: from muru.com ([72.249.23.125]:53662 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgEIN5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 09:57:44 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 86121809C;
+        Sat,  9 May 2020 13:58:33 +0000 (UTC)
+Date:   Sat, 9 May 2020 06:57:42 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
+Subject: Re: ofono for d4: less hcked and more working version was Re: USB
+ networking news, ofono for d4: less hacked version
+Message-ID: <20200509135742.GA37466@atomide.com>
+References: <20200506101125.GA7490@amd>
+ <20200506144338.GT37466@atomide.com>
+ <20200506230525.GA22354@amd>
+ <20200507140732.GU37466@atomide.com>
+ <20200508100211.GA19646@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508100211.GA19646@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 03:14:05PM +0200, Matteo Croce wrote:
-> On Sat, May 9, 2020 at 1:45 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Sat, May 09, 2020 at 11:15:58AM +0000, Stefan Chulski wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Matteo Croce <mcroce@redhat.com>
-> > > > Sent: Saturday, May 9, 2020 3:13 AM
-> > > > To: David S . Miller <davem@davemloft.net>
-> > > > Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>; netdev
-> > > > <netdev@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>; Antoine
-> > > > Tenart <antoine.tenart@bootlin.com>; Thomas Petazzoni
-> > > > <thomas.petazzoni@bootlin.com>; gregory.clement@bootlin.com;
-> > > > miquel.raynal@bootlin.com; Nadav Haklai <nadavh@marvell.com>; Stefan
-> > > > Chulski <stefanc@marvell.com>; Marcin Wojtas <mw@semihalf.com>; Linux
-> > > > ARM <linux-arm-kernel@lists.infradead.org>; Russell King - ARM Linux admin
-> > > > <linux@armlinux.org.uk>
-> > > > Subject: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts to
-> > > > handle RSS tables
-> > > >
-> > > > Hi,
-> > > >
-> > > > What do you think about temporarily disabling it like this?
-> > > >
-> > > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > > @@ -5775,7 +5775,8 @@ static int mvpp2_port_probe(struct platform_device
-> > > > *pdev,
-> > > >                             NETIF_F_HW_VLAN_CTAG_FILTER;
-> > > >
-> > > >         if (mvpp22_rss_is_supported()) {
-> > > > -               dev->hw_features |= NETIF_F_RXHASH;
-> > > > +               if (port->phy_interface != PHY_INTERFACE_MODE_SGMII)
-> > > > +                       dev->hw_features |= NETIF_F_RXHASH;
-> > > >                 dev->features |= NETIF_F_NTUPLE;
-> > > >         }
-> > > >
-> > > >
-> > > > David, is this "workaround" too bad to get accepted?
-> > >
-> > > Not sure that RSS related to physical interface(SGMII), better just remove NETIF_F_RXHASH as "workaround".
-> >
-> > Hmm, I'm not sure this is the right way forward.  This patch has the
-> > effect of disabling:
-> >
-> > d33ec4525007 ("net: mvpp2: add an RSS classification step for each flow")
-> >
-> > but the commit you're pointing at which caused the regression is:
-> >
-> > 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-> >
-> >
+* Pavel Machek <pavel@ucw.cz> [200508 10:03]:
+> Hi!
 > 
-> Hi,
+> > > But I might be confused. I recall some audio patches were needed for
+> > > basic phone calls (setting up mixers to connect gsm<->audio), but
+> > > those worked before gsmux support was enabled. (Maybe some hardcoded
+> > > commands were needed to be sent to gsmmux somewhere).
+> > 
+> > We're currently reconfiguring the TDM transport that based on the
+> > unsolicited messages on dlci1. I still need to figure out how to add
+> > that back while keeping the serdev-ngsm driver generic.
 > 
-> When git bisect pointed to 895586d5dc32 ("net: mvpp2: cls: Use RSS
-> contexts to handle RSS tables"), which was merged
-> almost an year after d33ec4525007 ("net: mvpp2: add an RSS
-> classification step for each flow"), so I assume that between these
-> two commits either the feature was working or it was disable and we
-> didn't notice
-> 
-> Without knowing what was happening, which commit should my Fixes tag point to?
+> Is it really neccessary? I believe I was simply configuring codecs for
+> voice call and left them like that.
 
-Let me make sure that I get this clear:
+Yes something needs to call set_tdm_slot() for voice calls. AFAIK we have
+only the dlci1 messages indicating a voice call is happening.
 
-- Prior to 895586d5dc32, you can turn on and off rxhash without issue
-  on any port.
-- After 895586d5dc32, turning rxhash on eth2 prevents reception.
+So I got that added directly into the snd-soc-motmdm driver where it now
+listens to notifications on dlci1 while we still have /dev/gsmtty1 for
+userspace. Looks like I still need to fix the mixer controls before I can
+test voice calls again though.. Will post the patches as soon as I get
+that done.
 
-Prior to 895586d5dc32, with rxhash on, it looks like hashing using
-CRC32 is supported but only one context.  So, if it's possible to
-enable rxhash on any port on the mcbin without 895586d5dc32, and the
-port continues to work, I'd say the bug was introduced by
-895586d5dc32.
+I'm not yet sure what's the preferred way to do notifications with ALSA,
+but based on the earlier comments the piece of code calling set_tdm_slot()
+should not be the codec driver. Instead, it should be called by either
+snd-soc-audio-graph-card or a custom card driver for the device.
 
-Of course, that would be reinforced if there was a measurable
-difference in performance due to rxhash on each port.
+> I pushed new version of ofono: I'm still not sure about those incoming
+> sms (but _some_ sms are received). Rest should be better.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+OK
+
+Regards,
+
+Tony
