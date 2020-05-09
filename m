@@ -2,71 +2,71 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84472C54E7E
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B78C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E63624962
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E8C21655
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 21:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589061493;
+	bh=8LDwYge0vi4f67R9PaFiUhi9lpFstDMiQuOLGmpth7k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1mkBwYSO8Tl2orM70R2UULtHaf/FWiyjSm5kJGgsrh5epF0dahbNJITPn9BF4GvL7
+	 b1fXfVt774UOlEw3gymoTiWN9bk9WVeH9wjm9b9NdDP5uuSodQwLIbAgQhcQqW5IMw
+	 Aeptdu0Hq3ekSND1ZbxbHlfbC9V6tcPk6vvT/srE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgEIV6B (ORCPT
+        id S1728718AbgEIV6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 17:58:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50198 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgEIV6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 17:58:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jXXTo-00055J-Lw; Sat, 09 May 2020 21:57:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: usb: qmi_wwan: remove redundant assignment to variable status
-Date:   Sat,  9 May 2020 22:57:55 +0100
-Message-Id: <20200509215756.506840-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 9 May 2020 17:58:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728408AbgEIV6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 17:58:08 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1159320A8B;
+        Sat,  9 May 2020 21:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589061488;
+        bh=8LDwYge0vi4f67R9PaFiUhi9lpFstDMiQuOLGmpth7k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K2+i6h0Qfml79Q9GynUDuEHqxkFRC42Z/v4aibYZA8p+JTUZ+9dxA+4oAZ3Ec2477
+         MZMt2m2FmiLtUmRripbB0L640+1e5RedlLKQ+vSpGzloTIU0UHMsSMK15HJ4FJCopm
+         0uhWtMvUV6IWBjE4pzIntuYKps9WjI8r19kBahBA=
+Date:   Sat, 9 May 2020 14:58:06 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Matteo Croce <mcroce@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Subject: Re: [PATCH net] mvpp2: enable rxhash only on the first port
+Message-ID: <20200509145806.3e82a710@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200509202355.GL1551@shell.armlinux.org.uk>
+References: <20200509141546.5750-1-mcroce@redhat.com>
+        <20200509202355.GL1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sat, 9 May 2020 21:23:55 +0100 Russell King - ARM Linux admin wrote:
+> I seem to have discovered the cause of the problem in the old thread,
+> so I suggest we wait and see whether anyone offers up a proper
+> solution to this regression before we rush to completely disable
+> this feature.
+> 
+> I would suggest with a high degress of confidence based on my
+> research that prior to the offending commit (895586d5dc32), rx
+> hashing was working fine, distributing interrupts across the cores.
 
-The variable status is being initializeed with a value that is never read
-and it is being updated later with a new value. The initialization
-is redundant and can be removed.
-
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/usb/qmi_wwan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 4bb8552a00d3..b0eab6e5279d 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -719,7 +719,7 @@ static int qmi_wwan_change_dtr(struct usbnet *dev, bool on)
- 
- static int qmi_wwan_bind(struct usbnet *dev, struct usb_interface *intf)
- {
--	int status = -1;
-+	int status;
- 	u8 *buf = intf->cur_altsetting->extra;
- 	int len = intf->cur_altsetting->extralen;
- 	struct usb_interface_descriptor *desc = &intf->cur_altsetting->desc;
--- 
-2.25.1
-
+Ack, dropping this from patchwork for now. Thanks for the guidance.
