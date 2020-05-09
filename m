@@ -2,69 +2,70 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A39C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AC6C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD9C24957
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B932495A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgEIIYf (ORCPT
+        id S1727844AbgEII1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:24:35 -0400
-Received: from verein.lst.de ([213.95.11.211]:56136 "EHLO verein.lst.de"
+        Sat, 9 May 2020 04:27:14 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52808 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgEIIYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:24:34 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8260E68CEC; Sat,  9 May 2020 10:24:31 +0200 (CEST)
-Date:   Sat, 9 May 2020 10:24:31 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Jim Paris <jim@jtan.com>, Geoff Levand <geoff@infradead.org>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: Re: remove a few uses of ->queuedata
-Message-ID: <20200509082431.GC21834@lst.de>
-References: <20200508161517.252308-1-hch@lst.de> <20200508221321.GD1389136@T590>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508221321.GD1389136@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1727768AbgEII1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 04:27:14 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E09C201613;
+        Sat,  9 May 2020 10:27:12 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C7DE2200299;
+        Sat,  9 May 2020 10:27:05 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BC6D640297;
+        Sat,  9 May 2020 16:26:57 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, horia.geanta@nxp.com,
+        peng.fan@nxp.com, l.stach@pengutronix.de, agx@sigxcpu.org,
+        leonard.crestez@nxp.com, andrew.smirnov@gmail.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mq: Add src node interrupts
+Date:   Sat,  9 May 2020 16:17:50 +0800
+Message-Id: <1589012271-12740-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 06:13:21AM +0800, Ming Lei wrote:
-> On Fri, May 08, 2020 at 06:15:02PM +0200, Christoph Hellwig wrote:
-> > Hi all,
-> > 
-> > various bio based drivers use queue->queuedata despite already having
-> > set up disk->private_data, which can be used just as easily.  This
-> > series cleans them up to only use a single private data pointer.
-> > 
-> > blk-mq based drivers that have code pathes that can't easily get at
-> > the gendisk are unaffected by this series.
-> 
-> Yeah, before adding disk, there still may be requests queued to LLD
-> for blk-mq based drivers.
-> 
-> So are there this similar situation for these bio based drivers?
+Interrupts is a required property according to SRC binding, add
+it for SRC node.
 
-bio submittsion is based on the gendisk, so we can't submit before
-it is added.  The passthrough request based path obviously doesn't apply
-here.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index bab8836..ea8699c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -602,6 +602,7 @@
+ 			src: reset-controller@30390000 {
+ 				compatible = "fsl,imx8mq-src", "syscon";
+ 				reg = <0x30390000 0x10000>;
++				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
+ 			};
+ 
+-- 
+2.7.4
+
