@@ -2,176 +2,872 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD4FC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE0BC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8319320731
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589054665;
-	bh=ZG2dfDm6+lxhvg4jAOBRNUdywRJlzyhvEwgyvWsBEsA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UnPKywr2Jlw+3/+tpTNYSv/vEAUunvcBGmor1cdUndgh+qPA3tYJmNg9N7Wf5Uq5e
-	 R7cQD/cohTCN2fsouUky4LnLzs0NPOFRsn8c3KLGgb7EXWkPZFENesPFXEBLoSU6jI
-	 5fFQEyIEjDAO5QfGQEo52nMFMsOXYo9rF3N5Wma8=
+	by mail.kernel.org (Postfix) with ESMTP id 2D85E20731
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 20:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgEIUEY (ORCPT
+        id S1728775AbgEIUHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 16:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727938AbgEIUEX (ORCPT
+        Sat, 9 May 2020 16:07:05 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:60666 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbgEIUHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 16:04:23 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B56C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 13:04:23 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f18so5253065lja.13
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 13:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wWejqRu9NOZoWVx2r5ZhYYkg3on/D2ic/z20ZX+wyUE=;
-        b=H93dwpRMxxEpejouhAhGa7npVZCP7wAT6FtICQgrremLWQQRtm5D50jO1ZcAf4w+V6
-         720SNM4lfLRzTqLb19Nngf3P1lsMgAq0CEBagaPG5WURf/G4uS7fW9uD79CV1SbBTZGB
-         aHbSY7BTO76NKGZ5X3tsRZYbXQ5w4H2rT+sFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wWejqRu9NOZoWVx2r5ZhYYkg3on/D2ic/z20ZX+wyUE=;
-        b=tcKQPqFnGZ8ToaLW7zYjajKHJ7ea9Mu3m1KTr6qhAaxZ3uFFLY0SCc6WbEGDZ/t3ga
-         MdHIv2Rk9dTT5Us/VOG72BAt2jUMR+GzTrMXHSz/KAroPuJuRWoS3mohdEcqIMFr0HfK
-         A+c89cVJ6LkhTW3vRdZV8+HuPNtj8/IhAt8+f6p1G0aA6nY250OEPK8PZOFFKIvf/ReY
-         g4QxQB4LzYt1JnG1K/DvmCB8TyOYvc3hUnzZSryYSTnmEoN35AzJQMhkcOk91sAShiwO
-         Yi03BzKjBnHo/juxueG+kw/TyIrOZIwqzOGjWqoRa7iFoDRtwgWl+4V2wsGw0K8JdEeB
-         5rNA==
-X-Gm-Message-State: AOAM532GNE1XVB4ikqhkWh2eP+el7M9/ts1c9pUsJuy/S/LeKddmFap0
-        syIyal0CWAy1E4FhzEjRgKFu60X59go=
-X-Google-Smtp-Source: ABdhPJyuqTkJOl8STXwDsGLlOUbmoc+MS+Liq7DpMbPueTnvs4wDBnvk5u0/pEY4r2NOR0LaQPYBDg==
-X-Received: by 2002:a2e:9d87:: with SMTP id c7mr5633457ljj.181.1589054661794;
-        Sat, 09 May 2020 13:04:21 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id a25sm4852095lfb.87.2020.05.09.13.04.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 13:04:21 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id o14so4209594ljp.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 13:04:21 -0700 (PDT)
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr5448255ljg.204.1589054661055;
- Sat, 09 May 2020 13:04:21 -0700 (PDT)
+        Sat, 9 May 2020 16:07:03 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id F41A1804C8;
+        Sat,  9 May 2020 22:06:55 +0200 (CEST)
+Date:   Sat, 9 May 2020 22:06:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     dillon min <dillon.minfei@gmail.com>
+Cc:     mcoquelin.stm32@gmail.com,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org, airlied@linux.ie,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
+        thierry.reding@gmail.com, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 5/5] drm/panel: add panel driver for Ilitek ili9341
+ panels
+Message-ID: <20200509200654.GC30802@ravnborg.org>
+References: <1588911194-12433-1-git-send-email-dillon.minfei@gmail.com>
+ <1588911194-12433-6-git-send-email-dillon.minfei@gmail.com>
+ <20200508090247.GA11575@ravnborg.org>
+ <CAL9mu0LcT3pPiM6PdJRvAJRMbXY6KACF1wNg8yOS-6D8aq6AeA@mail.gmail.com>
 MIME-Version: 1.0
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> <87pnbczyka.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87pnbczyka.fsf_-_@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 9 May 2020 13:04:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjfesjgqNmWY5zNxaADcQ04ZNfBq7KMkx20Xq-sDB5A7A@mail.gmail.com>
-Message-ID: <CAHk-=wjfesjgqNmWY5zNxaADcQ04ZNfBq7KMkx20Xq-sDB5A7A@mail.gmail.com>
-Subject: Re: [PATCH 1/5] exec: Call cap_bprm_set_creds directly from prepare_binprm
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL9mu0LcT3pPiM6PdJRvAJRMbXY6KACF1wNg8yOS-6D8aq6AeA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=IkcTkHD0fZMA:10 a=7gkXJVJtAAAA:8 a=pGLkceISAAAA:8 a=cju8CbfmAAAA:8
+        a=e5mUnYsNAAAA:8 a=c09kIg6loUqEFg6rm08A:9 a=zQxtVPS5AgWpr2h3:21
+        a=twjbzVjysccmSbdJ:21 a=QEXdDO2ut3YA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=YB-nZ-73YzLyBzHtmm9I:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 12:44 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> The function cap_bprm_set_creds is the only instance of
-> security_bprm_set_creds that does something for the primary executable
-> file and for every interpreter the rest of the implementations of
-> security_bprm_set_creds do something only for the primary executable
-> file even if that file is a shell script.
+Hi Dillon.
 
-Eric, can you please re-write that sentence as something that can be
-parsed and understood?
+On Fri, May 08, 2020 at 06:13:43PM +0800, dillon min wrote:
+> Hi Sam,
+> 
+>   Thanks for your comments, i will rework this panel driver after l3gd20
+> patch submission.
+> 
+> Sam Ravnborg <sam@ravnborg.org> 于2020年5月8日周五 下午5:02写道：
+> 
+> > Hi Dillon.
+> >
+> > Patch submissions starts to look fine.
+> >
+> > On Fri, May 08, 2020 at 12:13:14PM +0800, dillon.minfei@gmail.com wrote:
+> > > From: dillon min <dillon.minfei@gmail.com>
+> > >
+> > > This is a driver for 320x240 TFT panels, accepting a rgb input
+> > > streams that get adapted and scaled to the panel.
+> > This driver is, I suppose, prepared to be a driver for ILI9341 based
+> > panles, and as such not for a fixed resolution.
+> > I expect (hope) we in the future will see more panels added.
+> >
+> > As i checked ili9341 datasheets, this panel just support 240x320
+> resolution only.  if i'm wrong , please correct me. thanks
+> https://cdn-shop.adafruit.com/datasheets/ILI9341.pdf
+> 
+> This panel can support 9 different kinds of interface , "3/4-line Serial
+> Interface" have been supported by tiny/ili9341.c. i was verified it
+> but the performance on stm32f4 is very low.
+It had somehow escaped my mind we already have a driver for ili9341
+based panels.
+And we do not want onyl one driver for this IC.
+So please extent the current driver to match your panel as well as
+the original panel.
+And then also extend the current binding for ili9341, which
+you may have to convert to DT Schema in the process.
 
-I'm pretty sure that what you are talking about is the whole
-"called_set_creds" flag logic, where the logic is that some security
-layers only react to the first one, while the capability checks are
-done for every one.
+This is more work now but when it is done we end up with a much better
+solution than if we introduce an additional driver for ili9341.
 
-But there is no way to realize that from your description above. In
-fact, the description above is actively incorrect and misleading,
-since you say that "cap_bprm_set_creds is the only instance [..] that
-does something for the primary executable"
+Sorry for not catching this in the inital review.
 
-I think that you mean to say that it does something for *every*
-instance of the executable, not just the primary one.
+	Sam
 
-> The function cap_bprm_set_creds is also special in that it is called
-> even when CONFIG_SECURITY is unset.
->
-> So calling cap_bprm_set_creds separately to make these two cases explicit,
-> and allow future changes to take advantages of these differences
-> to simplify the code.
 
-I think you need to rename "security_bprm_set_creds()" too, to show
-what it does. Since it clearly no longer does that "bprm_set_creds()"
-from the common capabilities.
+> 
+> currently, i just have stm32f429-disco in hands, with 18-bit parallel rgb
+> bus connected on this board. reference to panel-ilitek-ili9322 and
+> panel-ilitek-ili9881 driver, i have some plan to rewrite this driver.
+> 
+> 1 add your below comments in.
+> 2 use dc-gpio, reset-gpio, rgb-interface-bits from dts to config panel
+> interface.
+> 3 drop regmap, porting drm_mipi_dbi's mipi_dbi_command to config panel
+> paramter. like tiny/ili9341.c
+> 4 support rgb-16, rgb-18 interface.
+> 5 use optional regulator or power gpio to control panel's power, as panel
+> power is always on for my board, so i can't test this part. could i add the
+> code which can't be tested?
+> 6 support rotation in panel config (currently , i rotate the screen by
+> kernel cmdline paramter)
+> 
+> if you have any other common panel configuration should be add , please
+> inform me.
+> 
+> thanks.
+> 
+> >
+> > Some things to fix, see comments in the follwoing.
+> >
+> >         Sam
+> >
+> > >
+> > > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/panel/Kconfig                |   8 +
+> > >  drivers/gpu/drm/panel/Makefile               |   1 +
+> > >  drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 561
+> > +++++++++++++++++++++++++++
+> > >  3 files changed, 570 insertions(+)
+> > >  create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > >
+> > > diff --git a/drivers/gpu/drm/panel/Kconfig
+> > b/drivers/gpu/drm/panel/Kconfig
+> > > index a1723c1..e42692c 100644
+> > > --- a/drivers/gpu/drm/panel/Kconfig
+> > > +++ b/drivers/gpu/drm/panel/Kconfig
+> > > @@ -95,6 +95,14 @@ config DRM_PANEL_ILITEK_IL9322
+> > >         Say Y here if you want to enable support for Ilitek IL9322
+> > >         QVGA (320x240) RGB, YUV and ITU-T BT.656 panels.
+> > >
+> > > +config DRM_PANEL_ILITEK_IL9341
+> > ILI9341 - so the config name matches the name of the driver IC.
+> >
+> > > +     tristate "Ilitek ILI9341 240x320 QVGA panels"
+> > > +     depends on OF && SPI
+> > > +     select REGMAP
+> > > +     help
+> > > +       Say Y here if you want to enable support for Ilitek IL9341
+> > > +       QVGA (240x320) RGB panels.
+> > See comment to the changelog, the driver is more generic - I assume.
+> > So the wording here can be improved to express this.
+> >
+> > Add support RGB 16bits and RGB 18bits bus only ?
+> 
+> > > +
+> > >  config DRM_PANEL_ILITEK_ILI9881C
+> > >       tristate "Ilitek ILI9881C-based panels"
+> > >       depends on OF
+> > > diff --git a/drivers/gpu/drm/panel/Makefile
+> > b/drivers/gpu/drm/panel/Makefile
+> > > index 96a883c..d123543 100644
+> > > --- a/drivers/gpu/drm/panel/Makefile
+> > > +++ b/drivers/gpu/drm/panel/Makefile
+> > > @@ -8,6 +8,7 @@ obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) +=
+> > panel-elida-kd35t133.o
+> > >  obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) +=
+> > panel-feixin-k101-im2ba02.o
+> > >  obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) +=
+> > panel-feiyang-fy07024di26a30d.o
+> > >  obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
+> > > +obj-$(CONFIG_DRM_PANEL_ILITEK_IL9341) += panel-ilitek-ili9341.o
+> > >  obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
+> > >  obj-$(CONFIG_DRM_PANEL_INNOLUX_P079ZCA) += panel-innolux-p079zca.o
+> > >  obj-$(CONFIG_DRM_PANEL_JDI_LT070ME05000) += panel-jdi-lt070me05000.o
+> > > diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > new file mode 100644
+> > > index 0000000..ec22d80
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+> > > @@ -0,0 +1,561 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Ilitek ILI9341 TFT LCD drm_panel driver.
+> > > + *
+> > > + * This panel can be configured to support:
+> > > + * - 16-bit parallel RGB interface
+> > The interface to ILI9341 is SPI, and the interface between the ILI9341
+> > and the panel is more of an itnernal thing. Or did I get this worng?
+> >
+> > SPI is for register configuration.  RGB parallel for data transfer
+> 
+> > + *
+> > > + * Copyright (C) 2020 Dillon Min <dillon.minfei@gmail.com>
+> > > + * Derived from drivers/drm/gpu/panel/panel-ilitek-ili9322.c
+> > > + */
+> > > +
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_device.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/regulator/consumer.h>
+> > > +#include <linux/spi/spi.h>
+> > > +
+> > > +#include <video/mipi_display.h>
+> > > +#include <video/of_videomode.h>
+> > > +#include <video/videomode.h>
+> > > +
+> > > +#include <drm/drm_modes.h>
+> > > +#include <drm/drm_panel.h>
+> > > +#include <drm/drm_print.h>
+> > > +
+> > > +#define DEFAULT_SPI_SPEED    10000000
+> > > +
+> >
+> > Please use same case for hex numbers in the driver.
+> > My personal preferences is lower-case.
+> >
+> > in next patch, spi speed will be configured by dts, not hardcode here.
+> below register address will change to lower-case hex numbers.
+> 
+> 
+> > > +#define ILI9341_SLEEP_OUT            0x11   /* Sleep out register */
+> > > +#define ILI9341_GAMMA                0x26   /* Gamma register */
+> > > +#define ILI9341_DISPLAY_OFF          0x28   /* Display off register */
+> > > +#define ILI9341_DISPLAY_ON           0x29   /* Display on register */
+> > > +#define ILI9341_COLUMN_ADDR          0x2A   /* Colomn address register
+> > */
+> > > +#define ILI9341_PAGE_ADDR            0x2B   /* Page address register */
+> > > +#define ILI9341_GRAM                 0x2C   /* GRAM register */
+> > > +#define ILI9341_MAC                  0x36   /* Memory Access Control
+> > register*/
+> > > +#define ILI9341_PIXEL_FORMAT         0x3A   /* Pixel Format register */
+> > > +#define ILI9341_WDB                  0x51   /* Write Brightness Display
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_WCD                  0x53   /* Write Control Display
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_RGB_INTERFACE        0xB0   /* RGB Interface Signal
+> > Control */
+> > > +#define ILI9341_FRC                  0xB1   /* Frame Rate Control
+> > register */
+> > > +#define ILI9341_BPC                  0xB5   /* Blanking Porch Control
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_DFC                  0xB6   /* Display Function Control
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_POWER1               0xC0   /* Power Control 1 register
+> > */
+> > > +#define ILI9341_POWER2               0xC1   /* Power Control 2 register
+> > */
+> > > +#define ILI9341_VCOM1                0xC5   /* VCOM Control 1 register
+> > */
+> > > +#define ILI9341_VCOM2                0xC7   /* VCOM Control 2 register
+> > */
+> > > +#define ILI9341_POWERA               0xCB   /* Power control A register
+> > */
+> > > +#define ILI9341_POWERB               0xCF   /* Power control B register
+> > */
+> > > +#define ILI9341_PGAMMA               0xE0   /* Positive Gamma Correction
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_NGAMMA               0xE1   /* Negative Gamma Correction
+> > > +                                          * register
+> > > +                                          */
+> > > +#define ILI9341_DTCA                 0xE8   /* Driver timing control A
+> > */
+> > > +#define ILI9341_DTCB                 0xEA   /* Driver timing control B
+> > */
+> > > +#define ILI9341_POWER_SEQ            0xED   /* Power on sequence
+> > register */
+> > > +#define ILI9341_3GAMMA_EN            0xF2   /* 3 Gamma enable register
+> > */
+> > > +#define ILI9341_INTERFACE            0xF6   /* Interface control
+> > register */
+> > > +#define ILI9341_PRC                  0xF7   /* Pump ratio control
+> > register */
+> > > +
+> >
+> > All the following should be const.
+> >
+> ok
+> 
+> 
+> > Can any of the below be replaces by DEFINED constants?
+> > > +static u8 ili9341_cmd0[] = {0xc3, 0x08, 0x50};
+> > > +static u8 ili9341_powerb[] = {0x00, 0xc1, 0x30};
+> > > +static u8 ili9341_power_seq[] = {0x64, 0x03, 0x12, 0x81};
+> > > +static u8 ili9341_dtca[] = {0x85, 0x00, 0x78};
+> > > +static u8 ili9341_powera[] = {0x39, 0x2c, 0x00, 0x34, 0x02};
+> > > +static u8 ili9341_prc[] = {0x20};
+> > > +static u8 ili9341_dtcb[] = {0x00, 0x00};
+> > > +static u8 ili9341_frc[] = {0x00, 0x1b};
+> > > +static u8 ili9341_dfc1[] = {0x0a, 0xa2};
+> > > +static u8 ili9341_power1[] = {0x10};
+> > > +static u8 ili9341_power2[] = {0x10};
+> > > +static u8 ili9341_vcom1[] = {0x45, 0x15};
+> > > +static u8 ili9341_vcom2[] = {0x90};
+> > > +static u8 ili9341_mac[] = {0xc8};
+> > > +static u8 ili9341_gamma_en[] = {0x00};
+> > > +static u8 ili9341_rgb_intr[] = {0xc2};
+> > > +static u8 ili9341_dfc2[] = {0x0a, 0xa7, 0x27, 0x04};
+> > > +static u8 ili9341_column_addr[] = {0x00, 0x00, 0x00, 0xef};
+> > > +static u8 ili9341_page_addr[] = {0x00, 0x00, 0x01, 0x3f};
+> > > +static u8 ili9341_intr[] = {0x01, 0x00, 0x06};
+> > > +static u8 ili9341_gamma[] = {0x01};
+> > > +static u8 ili9341_pgamma[] = {0x0f, 0x29, 0x24, 0x0c, 0x0e, 0x09, 0x4e,
+> > 0x78,
+> > > +                             0x3c, 0x09, 0x13, 0x05, 0x17, 0x11, 0x00};
+> > > +static u8 ili9341_ngamma[] = {0x00, 0x16, 0x1b, 0x04, 0x11, 0x07, 0x31,
+> > 0x33,
+> > > +                             0x42, 0x05, 0x0c, 0x0a, 0x28, 0x2f, 0x0f};
+> > > +
+> > > +/**
+> > > + * enum ili9341_input - the format of the incoming signal to the panel
+> > > + *
+> > > + * The panel can be connected to various input streams and four of them
+> > can
+> > > + * be selected by electronic straps on the display. However it is
+> > possible
+> > > + * to select another mode or override the electronic default with this
+> > > + * setting.
+> > > + */
+> > > +enum ili9341_input {
+> > > +     ILI9341_INPUT_PRGB_THROUGH = 0x0,
+> > > +     ILI9341_INPUT_PRGB_ALIGNED = 0x1,
+> > > +     ILI9341_INPUT_UNKNOWN = 0xf,
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct ili9341_config - the system specific ILI9341 configuration
+> > > + * @width_mm: physical panel width [mm]
+> > > + * @height_mm: physical panel height [mm]
+> > > + * @input: the input/entry type used in this system, if this is set to
+> > > + * ILI9341_INPUT_UNKNOWN the driver will try to figure it out by probing
+> > > + * the hardware
+> > > + * @dclk_active_high: data/pixel clock active high, data will be clocked
+> > > + * in on the rising edge of the DCLK (this is usually the case).
+> > > + * @de_active_high: DE (data entry) is active high
+> > > + * @hsync_active_high: HSYNC is active high
+> > > + * @vsync_active_high: VSYNC is active high
+> > > + */
+> > > +struct ili9341_config {
+> > > +     u32 width_mm;
+> > > +     u32 height_mm;
+> > > +     enum ili9341_input input;
+> > > +     bool dclk_active_high;
+> > > +     bool de_active_high;
+> > > +     bool hsync_active_high;
+> > > +     bool vsync_active_high;
+> > > +};
+> > > +
+> > > +struct ili9341 {
+> > > +     struct device *dev;
+> > > +     const struct ili9341_config *conf;
+> > > +     struct drm_panel panel;
+> > > +     struct regmap *regmap;
+> > > +     struct gpio_desc *reset_gpio;
+> > > +     struct gpio_desc *dc_gpio;
+> > > +     enum ili9341_input input;
+> >
+> > > +     struct videomode vm;
+> > videomode is not used. So drop this field and drop the include files
+> > that are no logner needed.
+> >
+> > ok
+> 
+> > > +};
+> > > +
+> > > +static inline struct ili9341 *panel_to_ili9341(struct drm_panel *panel)
+> > > +{
+> > > +     return container_of(panel, struct ili9341, panel);
+> > > +}
+> > > +
+> > > +int ili9341_spi_transfer(struct spi_device *spi, u32 speed_hz,
+> > > +                       u8 bpw, const void *buf, size_t len)
+> > > +{
+> > > +     size_t max_chunk = spi_max_transfer_size(spi);
+> > > +     struct spi_transfer tr = {
+> > const?
+> >
+> > ok
+> 
+> > > +             .bits_per_word = bpw,
+> > > +             .speed_hz = speed_hz,
+> > > +             .len = len,
+> > > +     };
+> > > +     struct spi_message m;
+> > > +     size_t chunk;
+> > > +     int ret;
+> > > +
+> > > +     spi_message_init_with_transfers(&m, &tr, 1);
+> > > +
+> > > +     while (len) {
+> > > +             chunk = min(len, max_chunk);
+> > > +
+> > > +             tr.tx_buf = buf;
+> > > +             tr.len = chunk;
+> > > +             buf += chunk;
+> > > +             len -= chunk;
+> > > +
+> > > +             ret = spi_sync(spi, &m);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +     }
+> > > +     return 0;
+> > > +}
+> > > +static int ili9341_regmap_spi_write(void *context, const void *data,
+> > > +                                 size_t count)
+> > > +{
+> > > +     struct device *dev = context;
+> > > +     struct spi_device *spi = to_spi_device(dev);
+> > > +     struct ili9341 *ili = spi_get_drvdata(spi);
+> > > +     int ret = 0;
+> > > +
+> > > +     gpiod_set_value_cansleep(ili->dc_gpio, 0);
+> > > +
+> > > +     ret = ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+0, 1);
+> > > +     if (ret || count == 1 ||
+> > > +                     ((u8 *)data)[0] == ILI9341_GRAM ||
+> > > +                     ((u8 *)data)[0] == ILI9341_DISPLAY_ON ||
+> > > +                     ((u8 *)data)[0] == ILI9341_SLEEP_OUT ||
+> > > +                     ((u8 *)data)[0] == ILI9341_DISPLAY_OFF)
+> > > +             return ret;
+> > > +
+> > > +     gpiod_set_value_cansleep(ili->dc_gpio, 1);
+> > > +
+> > > +     return ili9341_spi_transfer(spi, DEFAULT_SPI_SPEED, 8, data+1,
+> > count-1);
+> > > +}
+> > > +
+> > > +static int ili9341_regmap_spi_read(void *context, const void *reg,
+> > > +                                size_t reg_size, void *val, size_t
+> > val_size)
+> > > +{
+> > > +     return 0;
+> > > +}
+> > Is this function really needed? If not delete it.
+> >
+> > regmap will be drop in next patch.
+> 
+> > > +
+> > > +static struct regmap_bus ili9341_regmap_bus = {
+> > > +     .write = ili9341_regmap_spi_write,
+> > > +     .read = ili9341_regmap_spi_read,
+> > > +     .reg_format_endian_default = REGMAP_ENDIAN_BIG,
+> > > +     .val_format_endian_default = REGMAP_ENDIAN_BIG,
+> > > +};
+> > > +
+> > > +static bool ili9341_volatile_reg(struct device *dev, unsigned int reg)
+> > > +{
+> > > +     return false;
+> > > +}
+> > Is this function really nedded? If not delete it.
+> >
+> > > +
+> > > +static bool ili9341_writeable_reg(struct device *dev, unsigned int reg)
+> > > +{
+> > > +     /* Just register 0 is read-only */
+> > > +     if (reg == 0x00)
+> > > +             return false;
+> > > +     return true;
+> > > +}
+> > > +
+> > > +static const struct regmap_config ili9341_regmap_config = {
+> > > +     .reg_bits = 8,
+> > > +     .val_bits = 8,
+> > > +     .max_register = 0xff,
+> > > +     .cache_type = REGCACHE_RBTREE,
+> > > +     .volatile_reg = ili9341_volatile_reg,
+> > > +     .writeable_reg = ili9341_writeable_reg,
+> > > +};
+> > > +
+> >
+> > No error checks - consider something like:
+> >
+> > static int bulk_write(struct ili9341 *ili, u8 reg, const u8[] data, int
+> > len)
+> > {
+> >         int err = ili->err;
+> >
+> >         if (!err) {
+> >                 err = regmap_bulk_write(ili->regmap, reg, data, len);
+> >                 if (err) {
+> >                         dev_err(...);
+> >                         ili->err = err;
+> >                 }
+> >         }
+> >
+> >         return err;
+> > }
+> >
+> > Then you can use this in the following, and make this more readable.
+> >
+> > ok, thanks for detail guide.
+> 
+> 
+> > > +static int ili9341_init(struct drm_panel *panel, struct ili9341 *ili)
+> > > +{
+> > > +     regmap_bulk_write(ili->regmap, 0xca,
+> > > +                                     ili9341_cmd0,
+> > sizeof(ili9341_cmd0));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_POWERB,
+> > > +                             ili9341_powerb, sizeof(ili9341_powerb));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_POWER_SEQ,
+> > > +                             ili9341_power_seq,
+> > sizeof(ili9341_power_seq));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_DTCA,
+> > > +                             ili9341_dtca, sizeof(ili9341_dtca));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_POWERA,
+> > > +                             ili9341_powera, sizeof(ili9341_powera));
+> > > +     regmap_write(ili->regmap, ILI9341_PRC, ili9341_prc[0]);
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_DTCB,
+> > > +                             ili9341_dtcb, sizeof(ili9341_dtcb));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_FRC,
+> > > +                             ili9341_frc, sizeof(ili9341_frc));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> > > +                             ili9341_dfc1, sizeof(ili9341_dfc1));
+> > > +     regmap_write(ili->regmap, ILI9341_POWER1, ili9341_power1[0]);
+> > > +     regmap_write(ili->regmap, ILI9341_POWER2, ili9341_power2[0]);
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_VCOM1,
+> > > +                             ili9341_vcom1, sizeof(ili9341_vcom1));
+> > > +     regmap_write(ili->regmap, ILI9341_VCOM2, ili9341_vcom2[0]);
+> > > +     regmap_write(ili->regmap, ILI9341_MAC, ili9341_mac[0]);
+> > > +     regmap_write(ili->regmap, ILI9341_3GAMMA_EN, ili9341_gamma_en[0]);
+> > > +     regmap_write(ili->regmap, ILI9341_RGB_INTERFACE,
+> > ili9341_rgb_intr[0]);
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_DFC,
+> > > +                             ili9341_dfc2, sizeof(ili9341_dfc2));
+> > > +
+> > > +     /* colomn address set */
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_COLUMN_ADDR,
+> > > +                     ili9341_column_addr, sizeof(ili9341_column_addr));
+> > > +
+> > > +     /* Page Address Set */
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_PAGE_ADDR,
+> > > +                             ili9341_page_addr,
+> > sizeof(ili9341_page_addr));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_INTERFACE,
+> > > +                             ili9341_intr, sizeof(ili9341_intr));
+> > > +     regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> > > +     msleep(200);
+> > > +
+> > > +     regmap_write(ili->regmap, ILI9341_GAMMA, ili9341_gamma[0]);
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_PGAMMA,
+> > > +                             ili9341_pgamma, sizeof(ili9341_pgamma));
+> > > +     regmap_bulk_write(ili->regmap, ILI9341_NGAMMA,
+> > > +                             ili9341_ngamma, sizeof(ili9341_ngamma));
+> > > +     regmap_write(ili->regmap, ILI9341_SLEEP_OUT, 0);
+> > > +     msleep(200);
+> > > +
+> > > +     regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> > > +
+> > > +     /* GRAM start writing */
+> > > +     regmap_write(ili->regmap, ILI9341_GRAM, 0);
+> > > +
+> > > +     dev_info(ili->dev, "initialized display\n");
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/*
+> > > + * This power-on sequence if from the datasheet, page 57.
+> > > + */
+> > > +static int ili9341_power_on(struct ili9341 *ili)
+> > > +{
+> > > +     /* Assert RESET */
+> > > +     gpiod_set_value(ili->reset_gpio, 1);
+> > > +
+> > > +     msleep(20);
+> > > +
+> > > +     /* De-assert RESET */
+> > > +     gpiod_set_value(ili->reset_gpio, 0);
+> > > +
+> > > +     msleep(10);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int ili9341_power_off(struct ili9341 *ili)
+> > > +{
+> >
+> >         Assert reset?
+> > will add reset-pin control here.
+> >
+> 
+> 
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int ili9341_disable(struct drm_panel *panel)
+> > > +{
+> > > +     struct ili9341 *ili = panel_to_ili9341(panel);
+> > > +     int ret;
+> > > +
+> > > +     ret = regmap_write(ili->regmap, ILI9341_DISPLAY_OFF, 0);
+> > > +     if (ret) {
+> > > +             dev_err(ili->dev, "unable to go to standby mode\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int ili9341_unprepare(struct drm_panel *panel)
+> > > +{
+> > > +     struct ili9341 *ili = panel_to_ili9341(panel);
+> > > +
+> > > +     return ili9341_power_off(ili);
+> > > +}
+> > > +
+> > > +static int ili9341_prepare(struct drm_panel *panel)
+> > > +{
+> > > +     struct ili9341 *ili = panel_to_ili9341(panel);
+> > > +     int ret;
+> > > +
+> > > +     ret = ili9341_power_on(ili);
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     ret = ili9341_init(panel, ili);
+> > > +     if (ret < 0)
+> > > +             ili9341_unprepare(panel);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int ili9341_enable(struct drm_panel *panel)
+> > > +{
+> > > +     struct ili9341 *ili = panel_to_ili9341(panel);
+> > > +     int ret;
+> > > +
+> > > +     ret = regmap_write(ili->regmap, ILI9341_DISPLAY_ON, 0);
+> > > +     if (ret) {
+> > > +             dev_err(ili->dev, "unable to enable panel\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/* This is the only mode listed for parallel RGB in the datasheet */
+> > > +static const struct drm_display_mode prgb_320x240_mode = {
+> > > +     .clock = 6100,
+> > > +     .hdisplay = 240,
+> > > +     .hsync_start = 240 + 10,
+> > > +     .hsync_end = 240 + 10 + 10,
+> > > +     .htotal = 280,
+> > > +     .vdisplay = 320,
+> > > +     .vsync_start = 320 + 4,
+> > > +     .vsync_end = 320 + 4 + 2,
+> > > +     .vtotal = 328,
+> > > +     .vrefresh = 60,
+> > > +     .flags = 0,
+> > > +};
+> > > +
+> > > +static int ili9341_get_modes(struct drm_panel *panel,
+> > > +                             struct drm_connector *connector)
+> > > +{
+> > > +     struct ili9341 *ili = panel_to_ili9341(panel);
+> > > +     struct drm_device *drm = connector->dev;
+> > > +     struct drm_display_mode *mode;
+> > > +     struct drm_display_info *info;
+> > > +
+> > > +     info = &connector->display_info;
+> > > +     info->width_mm = ili->conf->width_mm;
+> > > +     info->height_mm = ili->conf->height_mm;
+> > > +     if (ili->conf->dclk_active_high)
+> > > +             info->bus_flags |= DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE;
+> > > +     else
+> > > +             info->bus_flags |= DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE;
+> > > +
+> > > +     if (ili->conf->de_active_high)
+> > > +             info->bus_flags |= DRM_BUS_FLAG_DE_HIGH;
+> > > +     else
+> > > +             info->bus_flags |= DRM_BUS_FLAG_DE_LOW;
+> > > +
+> > > +     switch (ili->input) {
+> > > +     case ILI9341_INPUT_PRGB_THROUGH:
+> > > +     case ILI9341_INPUT_PRGB_ALIGNED:
+> > > +             mode = drm_mode_duplicate(drm, &prgb_320x240_mode);
+> > > +             break;
+> > > +     default:
+> > > +             mode = NULL;
+> > > +             break;
+> > > +     }
+> > > +     if (!mode) {
+> > > +             DRM_ERROR("bad mode or failed to add mode\n");
+> > > +             return -EINVAL;
+> > > +     }
+> > > +     drm_mode_set_name(mode);
+> > > +     /*
+> > > +      * This is the preferred mode because most people are going
+> > > +      * to want to use the display with VGA type graphics.
+> > > +      */
+> > > +     mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> > > +
+> > > +     /* Set up the polarity */
+> > > +     if (ili->conf->hsync_active_high)
+> > > +             mode->flags |= DRM_MODE_FLAG_PHSYNC;
+> > > +     else
+> > > +             mode->flags |= DRM_MODE_FLAG_NHSYNC;
+> > > +     if (ili->conf->vsync_active_high)
+> > > +             mode->flags |= DRM_MODE_FLAG_PVSYNC;
+> > > +     else
+> > > +             mode->flags |= DRM_MODE_FLAG_NVSYNC;
+> > > +
+> > > +     mode->width_mm = ili->conf->width_mm;
+> > > +     mode->height_mm = ili->conf->height_mm;
+> > > +     drm_mode_probed_add(connector, mode);
+> > > +
+> > > +     return 1; /* Number of modes */
+> > > +}
+> > > +
+> > > +static const struct drm_panel_funcs ili9341_drm_funcs = {
+> > > +     .disable = ili9341_disable,
+> > > +     .unprepare = ili9341_unprepare,
+> > > +     .prepare = ili9341_prepare,
+> > > +     .enable = ili9341_enable,
+> > > +     .get_modes = ili9341_get_modes,
+> > > +};
+> > > +
+> > > +static int ili9341_probe(struct spi_device *spi)
+> > > +{
+> > > +     struct device *dev = &spi->dev;
+> > > +     struct ili9341 *ili;
+> > > +     const struct regmap_config *regmap_config;
+> > > +     int ret;
+> > > +
+> > > +     ili = devm_kzalloc(dev, sizeof(struct ili9341), GFP_KERNEL);
+> > > +     if (!ili)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     spi_set_drvdata(spi, ili);
+> > > +
+> > > +     ili->dev = dev;
+> > > +     /*
+> > > +      * Every new incarnation of this display must have a unique
+> > > +      * data entry for the system in this driver.
+> > > +      */
+> > > +     ili->conf = of_device_get_match_data(dev);
+> > > +     if (!ili->conf) {
+> > > +             dev_err(dev, "missing device configuration\n");
+> > > +             return -ENODEV;
+> > > +     }
+> > > +
+> > > +     ili->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> > GPIOD_OUT_HIGH);
+> > > +     if (IS_ERR(ili->reset_gpio)) {
+> > > +             dev_err(dev, "failed to get RESET GPIO\n");
+> > > +             return PTR_ERR(ili->reset_gpio);
+> > > +     }
+> > > +
+> > > +     ili->dc_gpio = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
+> > > +     if (IS_ERR(ili->dc_gpio)) {
+> > > +             dev_err(dev, "failed to get DC GPIO\n");
+> > > +             return PTR_ERR(ili->dc_gpio);
+> > > +     }
+> > > +
+> > > +     spi->bits_per_word = 8;
+> > > +     ret = spi_setup(spi);
+> > > +     if (ret < 0) {
+> > > +             dev_err(dev, "spi setup failed.\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     regmap_config = &ili9341_regmap_config;
+> > > +
+> > > +     ili->regmap = devm_regmap_init(dev, &ili9341_regmap_bus, dev,
+> > > +                                    regmap_config);
+> > > +     if (IS_ERR(ili->regmap)) {
+> > > +             dev_err(dev, "failed to allocate register map\n");
+> > > +             return PTR_ERR(ili->regmap);
+> > > +     }
+> > > +
+> > > +     ili->input = ili->conf->input;
+> > > +
+> > > +     drm_panel_init(&ili->panel, dev, &ili9341_drm_funcs,
+> > > +                    DRM_MODE_CONNECTOR_DPI);
+> > > +
+> > > +     return drm_panel_add(&ili->panel);
+> > > +}
+> > > +
+> > > +static int ili9341_remove(struct spi_device *spi)
+> > > +{
+> > > +     struct ili9341 *ili = spi_get_drvdata(spi);
+> > > +
+> > > +     ili9341_power_off(ili);
+> > > +     drm_panel_remove(&ili->panel);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/*
+> > > + * The Stm32f429-disco board has a panel ili9341 connected to ltdc
+> > controller
+> > > + */
+> > > +static const struct ili9341_config ili9341_data = {
+> > This should be named "disco" something as this is m32f429-disco
+> > specific.
+> >
+> > ok
+> 
+> > > +     .width_mm = 65,
+> > > +     .height_mm = 50,
+> > > +     .input = ILI9341_INPUT_PRGB_THROUGH,
+> > > +     .dclk_active_high = true,
+> > > +     .de_active_high = false,
+> > > +     .hsync_active_high = false,
+> > > +     .vsync_active_high = false,
+> > > +};
+> > > +
+> > > +static const struct of_device_id ili9341_of_match[] = {
+> > > +     {
+> > > +             .compatible = "stm32f429,ltdc-panel",
+> > > +             .data = &ili9341_data,
+> > > +     },
+> >
+> >
+> > > +     {
+> > > +             .compatible = "ilitek,ili9341",
+> > > +             .data = NULL,
+> > This part is wrong, as ilitek,ili9341 is just the generic part.
+> > Only the first entry is relevant.
+> >
+> >
+> > ok
+> 
+> > > +     },
+> > > +     { }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, ili9341_of_match);
+> > > +
+> > > +static struct spi_driver ili9341_driver = {
+> > > +     .probe = ili9341_probe,
+> > > +     .remove = ili9341_remove,
+> > > +     .driver = {
+> > > +             .name = "panel-ilitek-ili9341",
+> > > +             .of_match_table = ili9341_of_match,
+> > > +     },
+> > > +};
+> > > +module_spi_driver(ili9341_driver);
+> > > +
+> > > +MODULE_AUTHOR("Dillon Min <dillon.minfei@gmail.com>");
+> > > +MODULE_DESCRIPTION("ILI9341 LCD panel driver");
+> > > +MODULE_LICENSE("GPL v2");
+> > > --
+> > > 2.7.4
+> >
 
-In fact, I think it would probably be good to change the patch too, so
-that it is actually understandable what the heck the logic is.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Instead of
-
-        retval = security_bprm_set_creds(bprm);
-        if (retval)
-                return retval;
-        bprm->called_set_creds = 1;
-        retval = cap_bprm_set_creds(bprm);
-        if (retval)
-                return retval;
-
-which makes no sense at all when you read it, do this:
-
-        /* Every instance of the executable gets called for capabilities */
-        retval = cap_bprm_set_creds(bprm);
-        if (retval)
-                return retval;
-
-        /* Other security layers only want the primary executable */
-        if (!bprm->called_set_creds) {
-                retval = security_primary_bprm_set_creds(bprm);
-                if (retval)
-                         return retval;
-                bprm->called_set_creds = 1;
-        }
-
-which now actually describes what is going on.
-
-Then remove the 'called_set_creds' logic from the security layers, and
-rename those 'xyz_bprm_set_creds()' to be
-'xyz_primary_bprm_set_creds()'.
-
-After that, and with a proper commit message that actually explains
-this _properly_, this looks like a cleanup.
-
-Because right now that patch description makes zero sense at all, and
-the patch itself results in this insane situation where
-"security_bprm_set_creds()" expressly doesn't call the basic
-"cap_bprm_set_creds()" at all, which just makes things very very
-confusing and the naming actively misleading.
-
-               Linus
