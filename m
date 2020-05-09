@@ -2,111 +2,85 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7E2C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D98C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FB320870
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:43:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j23Gv3Wc"
+	by mail.kernel.org (Postfix) with ESMTP id 7C67A218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588988897;
+	bh=1Yq8ETdj2RiWGbRAmpZXiiimnP7VGCPSm9Ed+hkuj0E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=frJGUaMKbkIVBfQNOuXh7FynL79t/cOVJpgLRBxt+52vGcv4i0nCqR2laDOe+jHsA
+	 bgOnXVSPOLh8zAiswkGAKnR+5M2RsXMIfj7eFZIWDfoQP+3tl5pTBax9P0T7Y5G42f
+	 gr6kUl3Wx3mmtEi1L79+z+RnM+MypuH+COIDKS5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgEIBne (ORCPT
+        id S1728524AbgEIBsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEIBnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:43:33 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1289C061A0C;
-        Fri,  8 May 2020 18:43:33 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g14so3009420otg.10;
-        Fri, 08 May 2020 18:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Qj2NsxxrxGvcjEmd9rf19lFO4hTM6QQZYMW5MhboOoc=;
-        b=j23Gv3WcZSw7Qh3HqAqBbX1Mjk+cbqhd9vHrrnXwvLJ+/WbnkeES+9R3aTfdo7Xod0
-         veU/ADpIIVaM3mEWusgjTYeUedB1SAiW7/OTmuN+Kf66JKJglBnJ7NMOY/IwffbCSf+J
-         yA8TMfaM7qK291QvNYtzeQ63u3+8+skbCZQCJysxiZdUK/qVvXMeGQJOS2TPt0lKCtQQ
-         R8V6JWYl48H29SrxpqW9cnmh52gWvviuVKZRanP58AkO9P6/3mkHE7c9AoWuMGF2Ofe2
-         1N0UaPocX4LawQ/PhW6WbgOrQa+rByGoFOIRwk2xHgCfCKCqs763HRE6pmlATn4Ttl24
-         AnWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Qj2NsxxrxGvcjEmd9rf19lFO4hTM6QQZYMW5MhboOoc=;
-        b=YbE/brrbiTtbYIJPw3IvGNaYwM8xB+gGuEofqlHNqgS9HayXPq7OmLmVkOLGlsuN9U
-         /q9yzST/fY9IHgNx2dsqtvcxQ3f1BChRUv7e3/yIgRPoLa6Wu1NIH22NTwIZj/FG9dSF
-         y5vRj3Fwl6nPjNaotXI2OvobHh4xhxp5OQuT+vKFa7Un3ylFtTxxeHy2KTrAeKyMLxux
-         7yrRlkXLLQKENFhl/2lFa/0Zp9B3G5zWJY/btqMOE0XrWT1OnAErJe8UdO3PRNkXtMqz
-         qagvsYLPySVWn6DJONYYJw9T/4Receiv4twgw4JVwvG4p7eHTnvkxL6zmEGBFmt+THiP
-         p/sg==
-X-Gm-Message-State: AGi0PubSSfR3XbkhP1sExA/hjZD1xE9kdsjbTLTSAtEO5IV8c6HUZKoa
-        POBZWgjVwhFDmjakCQMi7pM=
-X-Google-Smtp-Source: APiQypLdyi3Jv6TN6mCs4307DPP++qwr5Ww4nk3D7QYpmTgWtl6SDsKHTSCmkKfLPXG3SELlAs5kIQ==
-X-Received: by 2002:a9d:6c09:: with SMTP id f9mr4566004otq.94.1588988612824;
-        Fri, 08 May 2020 18:43:32 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t15sm940863oov.32.2020.05.08.18.43.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 18:43:32 -0700 (PDT)
-Date:   Fri, 8 May 2020 18:43:30 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Sterba <dsterba@suse.com>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Eric Biggers <ebiggers@google.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] crypto: blake2b - Fix clang optimization for ARMv7-M
-Message-ID: <20200509014330.GA2153306@ubuntu-s3-xlarge-x86>
-References: <20200505135402.29356-1-arnd@arndb.de>
- <20200506051200.GA831492@ubuntu-s3-xlarge-x86>
- <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
+        Fri, 8 May 2020 21:48:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgEIBsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:48:16 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72CF2184D;
+        Sat,  9 May 2020 01:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588988896;
+        bh=1Yq8ETdj2RiWGbRAmpZXiiimnP7VGCPSm9Ed+hkuj0E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jyKl7SXRcWXWq5imKX647QsE8ox1R/mLLI5pgfKj/GuuF5vNyleinXiN1DB6qZIYs
+         2hzFd6LWWdZQB/nBLgNKu/4nmDuJmj9WMSakljsOFYZRP7ZGJMhoEf6VNXKgC5T9lS
+         Vm4EQByrNVHtcl4+8DazaV07KTFjEqnXuJq+HTzQ=
+Date:   Fri, 8 May 2020 18:48:14 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: tg3: tidy up loop, remove need to compute off with
+ a multiply
+Message-ID: <20200508184814.45e10c12@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <160ce1ee-3bb5-3357-64f3-e5dea8c0538d@canonical.com>
+References: <20200508225301.484094-1-colin.king@canonical.com>
+        <1890306fc8c9306abe11186d419d84f784ee6144.camel@perches.com>
+        <160ce1ee-3bb5-3357-64f3-e5dea8c0538d@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2LAgEG7epWFtUZrcgk9OwpVJd+ji9Ru_rq4L-Qk_dYbg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:31:07PM +0200, Arnd Bergmann wrote:
-> On Wed, May 6, 2020 at 7:12 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > > -
-> > > +#ifdef CONFIG_CC_IS_CLANG
-> >
-> > Given your comment in the bug:
-> >
-> > "The code is written to assume no loops are unrolled"
-> >
-> > Does it make sense to make this unconditional and take compiler
-> > heuristics out of it?
-> >
-> > > +#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
-> > > +#endif
-> > >       for (i = 0; i < 8; ++i)
-> > >               S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
-> 
-> No, that would not work, as gcc does not support this pragma.
-> 
->         Arnd
+On Sat, 9 May 2020 00:31:03 +0100 Colin Ian King wrote:
+> > My preference would be for
+> > 
+> > {
+> > 	int i;
+> > 	u32 off = 0;
+> > 
+> > 	for (i = 0; i < TG3_SD_NUM_RECS; i++) {
+> > 		tg3_ape_scratchpad_read(tp, (u32 *)ocir, off, TC3_OCIR_LEN);
+> > 
+> > 		if (ocir->signature != TG3_OCIR_SIG_MAGIC ||
+> > 		    !(ocir->version_flags & TG3_OCIR_FLAG_ACTIVE))
+> > 			memset(ocir, 0, TG3_OCIR_LEN);
+> > 
+> > 		off += TG3_OCIR_LEN;
+> > 		ocir++;
+> > 	}
+> >   
+> OK, I'll send a V3 tomorrow.
 
-Ah fair enough.
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+I already reviewed and applied v2, just waiting for builds to finish,
+let's leave it.
