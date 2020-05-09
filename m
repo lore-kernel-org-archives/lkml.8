@@ -2,110 +2,74 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94A2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41F0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA7224955
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589003912;
-	bh=vEVp4ZM8+5FOQMgtlwLDv2fPcu5BE4CM5MCDTzrtfE4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M7kbLMuXUOB5pOjakddGFG8w6A+y9QPW2jsYFunszp62EY325i4sBU/H30a/Nv7bX
-	 0S8/gzyu6cY0sFgwGWW0iyjHYURjm9dWojIXBlzUyEm0GFTHmJ9N1/JO0q1KE6hcBP
-	 qI8li7AAdUaqMukhit2ahF3ySGUEKJlg7b/GgaCM=
+	by mail.kernel.org (Postfix) with ESMTP id D1348214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 06:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgEIF6c (ORCPT
+        id S1728858AbgEIGA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 01:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbgEIF6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 01:58:31 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF66D21582;
-        Sat,  9 May 2020 05:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589003911;
-        bh=vEVp4ZM8+5FOQMgtlwLDv2fPcu5BE4CM5MCDTzrtfE4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lBypPstpmdRtZHZEmvO6U1DLXwxBnjwFnjd4K4VnMet519UGRGbyTkkDgSOs8HLy+
-         A4CUz00w4gbYZvhcn5BzKZ4JZlO2aaOfl992Om+t5SF/kHDeTmh7NfM7nuK/VVtVWW
-         YszoJzmGpLH39Ba6TbzBaTvLPTvkZN4a7ArAqW9w=
-Date:   Fri, 8 May 2020 22:58:29 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Zefan Li <lizefan@huawei.com>
-Cc:     Tejun Heo <tj@kernel.org>, David Miller <davem@davemloft.net>,
-        yangyingliang <yangyingliang@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <huawei.libin@huawei.com>, <guofan5@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2] netprio_cgroup: Fix unlimited memory leak of v2
- cgroups
-Message-ID: <20200508225829.0880cf8b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <2fcd921d-8f42-9d33-951c-899d0bbdd92d@huawei.com>
-References: <939566f5-abe3-3526-d4ff-ec6bf8e8c138@huawei.com>
-        <2fcd921d-8f42-9d33-951c-899d0bbdd92d@huawei.com>
+        Sat, 9 May 2020 02:00:56 -0400
+Received: from mail.windriver.com ([147.11.1.11]:42447 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgEIGA4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 02:00:56 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 04960XXu025859
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Fri, 8 May 2020 23:00:34 -0700 (PDT)
+Received: from pek-lpggp2 (128.224.153.75) by ALA-HCB.corp.ad.wrs.com
+ (147.11.189.41) with Microsoft SMTP Server id 14.3.487.0; Fri, 8 May 2020
+ 23:00:14 -0700
+Received: by pek-lpggp2 (Postfix, from userid 20544)    id C8FAA724897; Sat,  9
+ May 2020 13:59:43 +0800 (CST)
+From:   Jiping Ma <jiping.ma2@windriver.com>
+To:     <will.deacon@arm.com>, <paul.gortmaker@windriver.com>,
+        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <jiping.ma2@windriver.com>, <bruce.ashfield@gmail.com>,
+        <yue.tao@windriver.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
+Subject: [PATCH][V2] perf: perf can not parser the backtrace of app with dwarf mode in the 32bit system and 64bit kernel.
+Date:   Sat, 9 May 2020 13:59:43 +0800
+Message-ID: <1589003983-2885-1-git-send-email-jiping.ma2@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 11:32:10 +0800 Zefan Li wrote:
-> If systemd is configured to use hybrid mode which enables the use of
-> both cgroup v1 and v2, systemd will create new cgroup on both the default
-> root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
-> task to the two cgroups. If the task does some network thing then the v2
-> cgroup can never be freed after the session exited.
-> 
-> One of our machines ran into OOM due to this memory leak.
-> 
-> In the scenario described above when sk_alloc() is called cgroup_sk_alloc()
-> thought it's in v2 mode, so it stores the cgroup pointer in sk->sk_cgrp_data
-> and increments the cgroup refcnt, but then sock_update_netprioidx() thought
-> it's in v1 mode, so it stores netprioidx value in sk->sk_cgrp_data, so the
-> cgroup refcnt will never be freed.
-> 
-> Currently we do the mode switch when someone writes to the ifpriomap cgroup
-> control file. The easiest fix is to also do the switch when a task is attached
-> to a new cgroup.
-> 
-> Fixes: bd1060a1d671("sock, cgroup: add sock->sk_cgroup")
+Record PC value from regs[15], it should be regs[32] in REGS_ABI_32 mode,
+which cause perf parser the backtrace failed.
 
-                     ^ space missing here
+Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+---
+ arch/arm64/kernel/perf_regs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-> Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-> Signed-off-by: Zefan Li <lizefan@huawei.com>
-> ---
-> 
-> forgot to rebase to the latest kernel.
-> 
-> ---
->  net/core/netprio_cgroup.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/core/netprio_cgroup.c b/net/core/netprio_cgroup.c
-> index 8881dd9..9bd4cab 100644
-> --- a/net/core/netprio_cgroup.c
-> +++ b/net/core/netprio_cgroup.c
-> @@ -236,6 +236,8 @@ static void net_prio_attach(struct cgroup_taskset *tset)
->  	struct task_struct *p;
->  	struct cgroup_subsys_state *css;
->  
-> +	cgroup_sk_alloc_disable();
-> +
->  	cgroup_taskset_for_each(p, css, tset) {
->  		void *v = (void *)(unsigned long)css->id;
->  
+diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+index 0bbac61..0ef2880 100644
+--- a/arch/arm64/kernel/perf_regs.c
++++ b/arch/arm64/kernel/perf_regs.c
+@@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 	if ((u32)idx == PERF_REG_ARM64_PC)
+ 		return regs->pc;
+ 
++	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
++		&& idx == 15)
++		return regs->pc;
++
+ 	return regs->regs[idx];
+ }
+ 
+-- 
+1.9.1
 
