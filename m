@@ -2,155 +2,209 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7B1C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC1FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D31B21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589022545;
-	bh=HXuz8ZMVZDl8Y+vHXxyX3R8hI8IxiYazDXF3IQj5F7M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HC1pwSky8xJaFh796mmkTlxSmgjzmF/p92Nd7MDhFDzAaboM0lmd6LDTzXUFrWm1s
-	 snQECZ8Q8V1EMgDUdaVEu5NDGsBcYUYCAZop605w2l60FakCn2WEv1jKFG2Mw5KlTG
-	 fK1T0YNxDjvsVuBNreXpmZ5oGGlvjKfBKVoBlli4=
+	by mail.kernel.org (Postfix) with ESMTP id E8AA221473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgEILJB (ORCPT
+        id S1728199AbgEILKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:09:01 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:52554 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgEILJA (ORCPT
+        Sat, 9 May 2020 07:10:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgEILJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:09:00 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 049B8TGB019771;
-        Sat, 9 May 2020 20:08:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 049B8TGB019771
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589022510;
-        bh=T9AGnaI49ilVpVFvPCs2mRRQGAPg1sYG/5bfmVNCeKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iGJMWAvpVbbomUe6H94322ZC42OtmM12LwlmFxH0yVgqwoI6UXfML+/4Y33WGQRjH
-         nTiCQeQHtLxPQ6laDjoA4j+eecj0NevKTAEYOnOPUMfyglahk9qwu/57KaCAnAJXmk
-         nJZFcRovp+/nENMICarDOzAtk+dzDDsh8yYZmzCZA3bIkMDo66RhWTw4U2awIyWzny
-         zZq93cuxXQpyrfYvJXfs1GmVpnrh58Nct+9tiLk4Uu+p5zJrFdZXabvxZoTzMgLiTL
-         TClOHl9f1q3PIeX+Mv+MZav1ZhXi7IzywsszQLdmmY6Nvv8DIV8q7I7cwD87ESLgEy
-         uQZeqx2SaGN7A==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id e10so2668890vsp.12;
-        Sat, 09 May 2020 04:08:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaAEOR7J663FS9aTqsDlq1FklASaTQjaG+EBU/CgnlrBbb4gcbh
-        F8Y/ZjI8kh6IrMRTjE58kql2FJZjybkhaSNjuAI=
-X-Google-Smtp-Source: APiQypJJNwRWO3ga/F8SM/zTZXyOwULYR5luFTgX4WluozXetan8cuFLhrppaB6XnCQ7WCZ7mjsqBkaafkwI2PA3+3A=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr5262295vsc.181.1589022508905;
- Sat, 09 May 2020 04:08:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200503001141.9647-1-changbin.du@gmail.com> <CAK7LNATBt1NxRSWiv8Ab-pKBRemp43WUs96KWELTf+vFq_VPTA@mail.gmail.com>
- <20200507091807.0a789fbd@gandalf.local.home> <20200508140047.rln4iogroxw7esxa@mail.google.com>
-In-Reply-To: <20200508140047.rln4iogroxw7esxa@mail.google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 9 May 2020 20:07:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARt3k47OSJYFTcc6z6MWb2oSLmQZwRwecsxu6j9r9dnVw@mail.gmail.com>
-Message-ID: <CAK7LNARt3k47OSJYFTcc6z6MWb2oSLmQZwRwecsxu6j9r9dnVw@mail.gmail.com>
-Subject: Re: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 9 May 2020 07:09:59 -0400
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F9FCC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 04:09:59 -0700 (PDT)
+Received: from mr1.cc.vt.edu (mr1.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 049B9uMd032166
+        for <linux-kernel@vger.kernel.org>; Sat, 9 May 2020 07:09:56 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 049B9pLV018886
+        for <linux-kernel@vger.kernel.org>; Sat, 9 May 2020 07:09:56 -0400
+Received: by mail-qk1-f198.google.com with SMTP id b7so2072303qkk.6
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 04:09:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
+         :content-transfer-encoding:date:message-id;
+        bh=vIjUaVr8lXgICZvNCCHOLX8uh9Z0/aUAOCq842hnMgE=;
+        b=Nv7oe+tup8mIjfT2Z2P1bdOqmqkEYuc6af0KLHKrca6s1Nd0dnGL9CfEah1LenzFtQ
+         c8CO4hc5XcoIv0DbkMfsn8TnJxKxdktqAII/Iqu5SSJ59N+Li82o+imJKC5uh9KVdljC
+         bMDUnwEX3VwV1+a+bJ7XS5c/3KEhfn3Woli80tgqKfFtHJGLx8+WNVHl8g0A0h6TGu3i
+         Al5uhfrh0FvNUjTPSWKXjj4qjQgwrTBBX7b3gJVAWVgbGV5DDn/hFJqiXY/xFCAVtMPU
+         Ej3DiZ1vMiNF/3UPS707iLcFjsVu9WRIzhjSP8Z2o88VFr/1c+RkDtfMJEhBKnj5ruu2
+         +KZg==
+X-Gm-Message-State: AGi0PubE9ZS3kU3mUlPYQgG9U2oQAUUZA6nBQMSBHF4t9BN1yCbwX1ix
+        zOSj7WiKSYroDRO6E6qzLDjDwC6lbTe46busdH99dhoyozxWxPgsmqUwM3NawtGdPknrsWciahp
+        Lwm0H0GkT44S8WqdF7itQ+Xthe2bC06sidhk=
+X-Received: by 2002:a37:7786:: with SMTP id s128mr7164213qkc.497.1589022590815;
+        Sat, 09 May 2020 04:09:50 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLc8IvWBaSGDhyMTl5B9gxpmnXDY7zrvRffUZM1qewb4/r7Sxa5/smmEBjIDGRf7TUUf6kwyw==
+X-Received: by 2002:a37:7786:: with SMTP id s128mr7164185qkc.497.1589022590368;
+        Sat, 09 May 2020 04:09:50 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id 10sm4316594qtp.4.2020.05.09.04.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 May 2020 04:09:49 -0700 (PDT)
+From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: linux-next 20200508 - build failure in kernel/resource.c w/ SPARSEMEM=n
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1589022587_4501P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 09 May 2020 07:09:48 -0400
+Message-ID: <17362.1589022588@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 11:00 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> On Thu, May 07, 2020 at 09:18:07AM -0400, Steven Rostedt wrote:
-> > On Thu, 7 May 2020 12:19:57 +0900
-> > Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > > On Sun, May 3, 2020 at 9:11 AM Changbin Du <changbin.du@gmail.com> wrote:
-> > > >
-> > > > Sometimes it is useful to preserve batches of configs when making
-> > > > localmodconfig. For example, I usually don't want any usb and fs
-> > > > modules to be disabled. Now we can do it by:
-> > > >
-> > > >  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
-> > > >
-> > > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > > >
-> > > > ---
-> > > > v4: fix typo.
-> > > > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-> > > > v2: fix typo in documentation. (Randy Dunlap)
-> > > > ---
-> > >
-> > >
-> > > Personally, I do not mind the long LOCALMODCONFIG_PRESERVE,
-> >
-> > Perhasp we allow both? ;-)
-> >
-> > And just have one set to the other.
-> >
-> > > but this tends to be bike-sheding.
-> > > I do not have a strong opinion.
-> > >
-> > >
-> > > >  Documentation/admin-guide/README.rst |  8 +++++++-
-> > > >  scripts/kconfig/Makefile             |  1 +
-> > > >  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
-> > > >  3 files changed, 31 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> > > > index cc6151fc0845..1371deab8bc7 100644
-> > > > --- a/Documentation/admin-guide/README.rst
-> > > > +++ b/Documentation/admin-guide/README.rst
-> > > > @@ -209,10 +209,16 @@ Configuring the kernel
-> > > >                             store the lsmod of that machine into a file
-> > > >                             and pass it in as a LSMOD parameter.
-> > > >
-> > > > +                           Also, you can preserve modules in certain folders
-> > > > +                           or kconfig files by specifying their paths in
-> > > > +                           parameter LMC_KEEP.
-> > > > +
-> > > >                     target$ lsmod > /tmp/mylsmod
-> > > >                     target$ scp /tmp/mylsmod host:/tmp
-> > > >
-> > > > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> > > > +                   host$ make LSMOD=/tmp/mylsmod \
-> > > > +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \
-> > >
-> > >
-> > > This might be another bike-sheding item, but
-> > > can you use a space for the delimiter?
-> > >
-> > >
-> > > LMC_KEEP="drivers/usb drivers/gpu fs"
-> > >
-> > > If you pass multiple directories,
-> > > you will need to surround them with double-quotes.
-> >
-> > I agree that spaces look better.
-> >
-> I am okay with space. But what about ":" which is used by shell PATH and many
-> others?
+--==_Exmh_1589022587_4501P
+Content-Type: text/plain; charset=us-ascii
+
+So I did a 'make allmodconfig' and then a 'make' on an RPi4 ARM box, and it
+decided that CONFIG_SPARSEMEM=n was OK (so an include of linux/mmzone.h doesn't
+define some needed values).
+
+The offending code in resource.c is wrapped in a #ifdef CONFIG_DEVICE_PRIVATE,
+which throws a whinge during 'make menuconfig' or 'make allmodconfig':
+
+WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
+  Depends on [n]: ZONE_DEVICE [=n]
+  Selected by [m]:
+  - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && DRM_NOUVEAU [=m] && MMU [=y] && STAGING [=y]
+
+after which I end up with CONFIG_DEVICE_PRIVATE=y in the .config file.
+
+make menuconfig tells me:
+Symbol: ZONE_DEVICE [=n]
+   Type  : bool
+   Defined at mm/Kconfig:779
+     Prompt: Device memory (pmem, HMM, etc...) hotplug support
+     Depends on: MEMORY_HOTPLUG [=n] && MEMORY_HOTREMOVE [=n] && SPARSEMEM_VMEMMAP [=n] && ARCH_HAS_PTE_DEVMAP [=n]
+     Location:
+   (1) -> Memory Management options
+   Selects: XARRAY_MULTI [=n]
+
+Pretty obviously a Kconfig whoops, but I have no idea what the proper Kconfig
+fix is for this..
+
+May be related to:
+
+commit 0092908d16c604b8207c2141ec64b0fa4473bb03
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Wed Jun 26 14:27:06 2019 +0200
+
+    mm: factor out a devm_request_free_mem_region helper
+
+which added the #ifdef CONFIG_DEVICE_PRIVATE code in question, except that's a
+pretty old commit...  The only thing I'm sure of is that DEVICE_PRIVATE=y and
+SPARSEMEM=n blows up. :)
+
+  CC      kernel/resource.o
+In file included from ./include/linux/cache.h:5,
+                 from ./include/linux/printk.h:9,
+                 from ./include/linux/kernel.h:15,
+                 from ./include/asm-generic/bug.h:19,
+                 from ./arch/arm/include/asm/bug.h:60,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/gfp.h:5,
+                 from ./include/linux/slab.h:15,
+                 from kernel/resource.c:17:
+kernel/resource.c: In function '__request_free_mem_region':
+kernel/resource.c:1653:28: error: 'PA_SECTION_SHIFT' undeclared (first use in this function); did you mean 'SECTION_SHIFT'?
+  size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+                            ^~~~~~~~~~~~~~~~
+./include/uapi/linux/kernel.h:11:47: note: in definition of macro '__ALIGN_KERNEL_MASK'
+ #define __ALIGN_KERNEL_MASK(x, mask) (((x) + (mask)) & ~(mask))
+                                               ^~~~
+./include/linux/kernel.h:33:22: note: in expansion of macro '__ALIGN_KERNEL'
+ #define ALIGN(x, a)  __ALIGN_KERNEL((x), (a))
+                      ^~~~~~~~~~~~~~
+kernel/resource.c:1653:9: note: in expansion of macro 'ALIGN'
+  size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+         ^~~~~
+kernel/resource.c:1653:28: note: each undeclared identifier is reported only once for each function it appears in
+  size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+                            ^~~~~~~~~~~~~~~~
+./include/uapi/linux/kernel.h:11:47: note: in definition of macro '__ALIGN_KERNEL_MASK'
+ #define __ALIGN_KERNEL_MASK(x, mask) (((x) + (mask)) & ~(mask))
+                                               ^~~~
+./include/linux/kernel.h:33:22: note: in expansion of macro '__ALIGN_KERNEL'
+ #define ALIGN(x, a)  __ALIGN_KERNEL((x), (a))
+                      ^~~~~~~~~~~~~~
+kernel/resource.c:1653:9: note: in expansion of macro 'ALIGN'
+  size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+         ^~~~~
+In file included from ./include/asm-generic/bug.h:19,
+                 from ./arch/arm/include/asm/bug.h:60,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/gfp.h:5,
+                 from ./include/linux/slab.h:15,
+                 from kernel/resource.c:17:
+kernel/resource.c:1654:48: error: 'MAX_PHYSMEM_BITS' undeclared (first use in this function); did you mean 'MAX_UINSN_BYTES'?
+  end = min_t(unsigned long, base->end, (1UL << MAX_PHYSMEM_BITS) - 1);
+                                                ^~~~~~~~~~~~~~~~
+./include/linux/kernel.h:848:40: note: in definition of macro '__typecheck'
+   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                                        ^
+./include/linux/kernel.h:872:24: note: in expansion of macro '__safe_cmp'
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^~~~~~~~~~
+./include/linux/kernel.h:940:27: note: in expansion of macro '__careful_cmp'
+ #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
+                           ^~~~~~~~~~~~~
+kernel/resource.c:1654:8: note: in expansion of macro 'min_t'
+  end = min_t(unsigned long, base->end, (1UL << MAX_PHYSMEM_BITS) - 1);
+        ^~~~~
+./include/linux/kernel.h:872:2: error: first argument to '__builtin_choose_expr' not a constant
+  __builtin_choose_expr(__safe_cmp(x, y), \
+  ^~~~~~~~~~~~~~~~~~~~~
+./include/linux/kernel.h:940:27: note: in expansion of macro '__careful_cmp'
+ #define min_t(type, x, y) __careful_cmp((type)(x), (type)(y), <)
+                           ^~~~~~~~~~~~~
+kernel/resource.c:1654:8: note: in expansion of macro 'min_t'
+  end = min_t(unsigned long, base->end, (1UL << MAX_PHYSMEM_BITS) - 1);
+        ^~~~~
+make[1]: *** [scripts/Makefile.build:273: kernel/resource.o] Error 1
+make: *** [Makefile:1726: kernel] Error 2
 
 
-I am not sure 'many others',
-but you can pick what you like.
+--==_Exmh_1589022587_4501P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
+iQIVAwUBXraPewdmEQWDXROgAQJVZQ//ZMYAfRDOaGeRcZmhKpgaMq3MR3P7L5Aa
+w4TzHp31ZVyuGt7Tb9o7WZRYlgPHPQoBqWUbI0ZL5Ev80E//7g+fXQqxrPtpUGGR
+LAyOaQ/adybmzSTW79V1Yf2tTIfBwqRQ/WnYQkXl3azERaU62sAGETWoFyVfAspo
+kEBKh07eWfhTk2e0Gh2BQzNw0215kh9pyEhnkDizYkUe9yx/wMBSwrBpO6s3xTCx
+/qJmwzs8VvXE482CAL5qcyzZAr+A8cnWhIzi9tLQHT2hDu+LSY2jENHpvY18fUMr
+nRZtx4oNwz6rW7s7CQMX0QB/yo1ZIahJzGbzOM7Pm+fcMR+uj6THFRj4sElu/bqY
+u/d+dDYj1x7GbBenCiK06lGLHnM0RThzLSKQblGCy93B9hQSJFx5vtmxH/asb7uU
+qUh0F12kGZ9iVBQkEhhcxMtf8mGOAIdGZtqf+wvG1vPIWywf4V0pIIOW4gEk3/RP
+KFlM0/GqulJzCvM1I1t5vufM19vJxcz5W20HldN1y1+zyWL6vw7KpUesHp2342oj
+uRij4XiNEgI5W+dyb5XSJIwvIlTBuKu6JC4dAU19vAbN9sY8Ot5fMmwp6Z8gLX1k
+c0PMIOewx6jKfsg6vJQEV/zy9SMaMM7Tp9ePDkzyAyXYDLzVRhUSCg2HuIeVCHRt
+6xH7VQNFUvg=
+=t/Th
+-----END PGP SIGNATURE-----
 
-
-
--- 
-Best Regards
-Masahiro Yamada
+--==_Exmh_1589022587_4501P--
