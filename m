@@ -4,88 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E61CC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37C5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62F30217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF9E217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgEIDTw (ORCPT
+        id S1728614AbgEIDYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 23:19:52 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4361 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728471AbgEIDTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 23:19:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3B481973F3FFD9566F27;
-        Sat,  9 May 2020 11:19:49 +0800 (CST)
-Received: from [10.133.206.78] (10.133.206.78) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.487.0; Sat, 9 May 2020
- 11:19:40 +0800
-To:     Tejun Heo <tj@kernel.org>, David Miller <davem@davemloft.net>
-CC:     yangyingliang <yangyingliang@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        <huawei.libin@huawei.com>, <guofan5@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>
-From:   Zefan Li <lizefan@huawei.com>
-Subject: [PATCH] netprio_cgroup: Fix unlimited memory leak of v2 cgroup
-Message-ID: <939566f5-abe3-3526-d4ff-ec6bf8e8c138@huawei.com>
-Date:   Sat, 9 May 2020 11:19:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 8 May 2020 23:24:12 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:37030 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728355AbgEIDYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 23:24:11 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Txzw3bb_1588994648;
+Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0Txzw3bb_1588994648)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 09 May 2020 11:24:08 +0800
+Subject: Re: [PATCH] usb: roles: Switch on role-switch uevent reporting
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        chenqiwu <chenqiwu@xiaomi.com>, linux-kernel@vger.kernel.org
+References: <20200508162937.2566818-1-bryan.odonoghue@linaro.org>
+From:   Wen Yang <wenyang@linux.alibaba.com>
+Message-ID: <fbd660ca-fe2a-8ca7-5076-f898acd1ca74@linux.alibaba.com>
+Date:   Sat, 9 May 2020 11:24:08 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.206.78]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200508162937.2566818-1-bryan.odonoghue@linaro.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If systemd is configured to use hybrid mode which enables the use of
-both cgroup v1 and v2, systemd will create new cgroup on both the default
-root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
-task to the two cgroups. If the task does some network thing then the v2
-cgroup can never be freed after the session exited.
 
-One of our machines ran into OOM due to this memory leak.
 
-In the scenario described above when sk_alloc() is called cgroup_sk_alloc()
-thought it's in v2 mode, so it stores the cgroup pointer in sk->sk_cgrp_data
-and increments the cgroup refcnt, but then sock_update_netprioidx() thought
-it's in v1 mode, so it stores netprioidx value in sk->sk_cgrp_data, so the
-cgroup refcnt will never be freed.
+ÔÚ 2020/5/9 ÉÏÎç12:29, Bryan O'Donoghue Ð´µÀ:
+> Right now we don't report to user-space a role switch when doing a
+> usb_role_switch_set_role() despite having registered the uevent callbacks.
+> 
+> This patch switches on the notifications allowing user-space to see
+> role-switch change notifications and subsequently determine the current
+> controller data-role.
+> 
+> example:
+> PFX=/devices/platform/soc/78d9000.usb/ci_hdrc.0
+> 
+> root@somebox# udevadm monitor -p
+> 
+> KERNEL[49.894994] change $PFX/usb_role/ci_hdrc.0-role-switch (usb_role)
+> ACTION=change
+> DEVPATH=$PFX/usb_role/ci_hdrc.0-role-switch
+> SUBSYSTEM=usb_role
+> DEVTYPE=usb_role_switch
+> USB_ROLE_SWITCH=ci_hdrc.0-role-switch
+> SEQNUM=2432
+> 
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: chenqiwu <chenqiwu@xiaomi.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>   drivers/usb/roles/class.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index 5b17709821df..27d92af29635 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -49,8 +49,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
+>   	mutex_lock(&sw->lock);
+>   
+>   	ret = sw->set(sw, role);
+> -	if (!ret)
+> +	if (!ret) {
+>   		sw->role = role;
+> +		kobject_uevent(&sw->dev.kobj, KOBJ_CHANGE);
+> +	}
+>   
+>   	mutex_unlock(&sw->lock);
+>   
+> 
 
-Currently we do the mode switch when someone writes to the ifpriomap cgroup
-control file. The easiest fix is to also do the switch when a task is attached
-to a new cgroup.
+Hi, we may also need to deal with the return value of kobject_uevent(). 
+Should we move it under the line mutex_unlock(&sw->lock)?
 
-Fixes: bd1060a1d671("sock, cgroup: add sock->sk_cgroup")
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Tested-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Zefan Li <lizefan@huawei.com>
----
- net/core/netprio_cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/core/netprio_cgroup.c b/net/core/netprio_cgroup.c
-index b905747..2397866 100644
---- a/net/core/netprio_cgroup.c
-+++ b/net/core/netprio_cgroup.c
-@@ -240,6 +240,8 @@ static void net_prio_attach(struct cgroup_taskset *tset)
- 	struct task_struct *p;
- 	struct cgroup_subsys_state *css;
- 
-+	cgroup_sk_alloc_disable();
-+
- 	cgroup_taskset_for_each(p, css, tset) {
- 		void *v = (void *)(unsigned long)css->cgroup->id;
- 
--- 
-2.7.4
+Regards,
+Wen
 
