@@ -2,115 +2,105 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B903C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1436EC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBAA20820
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:51:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7c957zD"
+	by mail.kernel.org (Postfix) with ESMTP id E77FF20820
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgEIMve (ORCPT
+        id S1727978AbgEIMwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 08:51:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35862 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726017AbgEIMvd (ORCPT
+        Sat, 9 May 2020 08:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgEIMwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 08:51:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589028691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZsSizwN3KlfPsuv6zYOV+aQzzPjSLBPKuOPVAQfWcDY=;
-        b=W7c957zDPzuy3yS4stxxsLtFayjaCKEBZeV3uI3kaDVJxuc4jykBsdhHNLTlXqQ4ka0R15
-        54Z91cOZUxiGOnXk+2gNr2dmGWcDXJ0jZCftWyQDvCcfUJ49r6DswopOZZXL/99lYW0enq
-        zleJ6251eZozJYAP9gUl6rONgGx4mW0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-9rFQDP0TM-OE7a6NWamaPw-1; Sat, 09 May 2020 08:51:30 -0400
-X-MC-Unique: 9rFQDP0TM-OE7a6NWamaPw-1
-Received: by mail-wr1-f70.google.com with SMTP id g30so393042wrb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 05:51:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZsSizwN3KlfPsuv6zYOV+aQzzPjSLBPKuOPVAQfWcDY=;
-        b=EURpkKyKFo5rkhbyaZcgI/Gz1gDxBRHnPsArwtwo1G3t07PvWWWZXig0LaJsj++57U
-         MYnrvxrQ2stE5Jaro8TOcMHZrm7cM/gJaRjy1R7PRmCF+GONu8l/+2T8ZiPC2S3QcQy6
-         zCeoaxJhq6BymLibsvysddUT0fVnoP3yDGkb+meMxVN4y/Av3kzfuTiRIZInoezZlUaK
-         9iTaG0o4nj5WW5/oq3+P3ktBGog32gD5/MiLZLKZX7/Dc8IJqWulri9muVwe3kxvuuDd
-         iQjHrDNmqYOGo0Pi1j73GvpIZ+r7nKtbPVcJFM7NByQMswnZeTM+nBXIdWMge3gV5Oos
-         mG/g==
-X-Gm-Message-State: AGi0PuZmQOdQAtDyk7XZkJVoytzK7AtSFxoNiL/moD/EdEdm4QpNcBjb
-        vRk9pX4FWLcv8CVfqUeWoxegQHZRBZwMHkPV+8E+A7QxkxOw7OAoKEPSDeMTIxQz4Vfxk6ZpU7d
-        UpremhfnIGRr2ibNhON5xtXjW
-X-Received: by 2002:a1c:44d4:: with SMTP id r203mr16403614wma.35.1589028689107;
-        Sat, 09 May 2020 05:51:29 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJTN47vffkcAKbNDjHwMXuOJf5f4riYk34PnCsy1WC2C9b/CkIxCWcUJ/yHM4NLtu8EsZCBWw==
-X-Received: by 2002:a1c:44d4:: with SMTP id r203mr16403592wma.35.1589028688841;
-        Sat, 09 May 2020 05:51:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1cb4:2b36:6750:73ce? ([2001:b07:6468:f312:1cb4:2b36:6750:73ce])
-        by smtp.gmail.com with ESMTPSA id i6sm7922763wrw.97.2020.05.09.05.51.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 05:51:28 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: Restore update of required xstate size in
- guest's CPUID
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200508233749.3417-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bec6f18e-510e-c5bd-b5b4-d9e188153bc7@redhat.com>
-Date:   Sat, 9 May 2020 14:51:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 9 May 2020 08:52:04 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6716C061A0C;
+        Sat,  9 May 2020 05:52:03 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 13BBF2A2CA6
+Message-ID: <458fcdc1d934c12a81a3bd9728cdca9cd2ad874c.camel@collabora.com>
+Subject: Re: [PATCH v2 7/9] media: MAINTAINERS: rkisp1: add path to
+ dt-bindings
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        robh+dt@kernel.org, heiko@sntech.de, kernel@collabora.com,
+        dafna.hirschfeld@collabora.com, mark.rutland@arm.com,
+        karthik.poduval@gmail.com, jbx6244@gmail.com, kishon@ti.com
+Date:   Sat, 09 May 2020 09:51:49 -0300
+In-Reply-To: <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
+References: <20200403161538.1375908-1-helen.koike@collabora.com>
+         <20200403161538.1375908-8-helen.koike@collabora.com>
+         <9a95d227-9592-2c5c-fe6d-dff9b84f4292@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-In-Reply-To: <20200508233749.3417-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/20 01:37, Sean Christopherson wrote:
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 35845704cf57a..cd708b0b460a0 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -84,11 +84,13 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
-> -	if (!best)
-> +	if (!best) {
->  		vcpu->arch.guest_supported_xcr0 = 0;
-> -	else
-> +	} else {
->  		vcpu->arch.guest_supported_xcr0 =
->  			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
-> +		best->ebx = xstate_required_size(vcpu->arch.xcr0, false);
-> +	}
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
->  	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
-> -- 2.26.0
+Hi Hans,
 
-Ugh, I'll write a testcase as penance.  Squashed, thanks.
+On Fri, 2020-04-17 at 09:18 +0200, Hans Verkuil wrote:
+> On 03/04/2020 18:15, Helen Koike wrote:
+> > The Rockchip ISP bindings was moved out of staging.
+> > Update MAINTAINERS file with the new path.
+> 
+> Shouldn't there be a reference to Documentation/devicetree/bindings/phy/rockchip-mipi-dphy-rx0.yaml
+> as well in MAINTAINERS?
+> 
 
-Paolo
+Indeed, and I can take care of that later. I was planning to move
+this PHY driver out of staging, but was waiting on patches 4 and 5
+of this series.
+
+They seem fine, would you mind picking them?
+
+Thanks!
+Ezequiel
+
+> Regards,
+> 
+> 	Hans
+> 
+> > Suggested-by: Johan Jonker <jbx6244@gmail.com>
+> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > ---
+> > 
+> > V2:
+> > - This is a new patch in the series
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index d66ac41ef5872..726044b84cf23 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14303,6 +14303,7 @@ M:	Helen Koike <helen.koike@collabora.com>
+> >  L:	linux-media@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/staging/media/rkisp1/
+> > +F:	Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >  
+> >  ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+> >  M:	Jacob Chen <jacob-chen@iotwrt.com>
+> > 
+> 
+> 
+
 
