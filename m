@@ -2,112 +2,177 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E7DC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C3DC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DDB20746
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588995797;
-	bh=nWXeJpc0x1vqSAQgcfyf4MiW0bgjg46tgn+2BpKXhV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=syldNEHqqbxqC7HSG8U3JQVX+f29dDEI+1HSV/dKJ31H3uoAKuTFMDflQVpOsoOFV
-	 NpFN9ub0C1XwtTtzKJ2m0o6QtD2GpN5Ung+NB5CVgCxE5rb+lcAIZToYQY9WpAWg7Q
-	 NxLhb9uyGxsfFbFlxZWwIpnQGVvHCozzf3tOuIs0=
+	by mail.kernel.org (Postfix) with ESMTP id F1C4620746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 03:43:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPTNqe5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgEIDnQ (ORCPT
+        id S1728697AbgEIDni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 23:43:16 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38246 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgEIDnP (ORCPT
+        Fri, 8 May 2020 23:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgEIDnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 23:43:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m7so1604052plt.5;
-        Fri, 08 May 2020 20:43:15 -0700 (PDT)
+        Fri, 8 May 2020 23:43:37 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632BCC061A0C;
+        Fri,  8 May 2020 20:43:37 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r22so233814pga.12;
+        Fri, 08 May 2020 20:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zwupl3WGz7M6JVBmi772VknIH5KdfnHALsH9I+tZ89U=;
+        b=aPTNqe5WbqSNRyOKhg2DzNKpOUIEY2gNqFp9kNVjAlg4+kzztxJjt/Jaox/7Tv1pVA
+         ZFZ+jRy4QFoIcy+zEdsSP1R6lDIQbBG+Pqi58hLFYbc80MGfm8y4dlllN68X9IGEeXwJ
+         XeThMGj7ud1Zs+UIei8w43oFpPJZ+Iufk1mCKl2adhbDc0tOgsTzeTk5I8CwKcpj7WPW
+         bhFWg+P1NvD059QRETkgG26mwwWTUnqQIuXazSrjry3TNuUb60G9wYt5ie22fWO1FhLY
+         nwMJAxtvf3KCi/6suFpc+8enJXeL+NEzwC5g5vqys2pru4xj8XT7NgnEkemQ2syzMFlf
+         GVUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TjuBVWE/+eZ0TK+8Wvbs1LYOJWs+7y04K5bauGvqpt8=;
-        b=d802CIPVAlLy/bqhbqwxJfO//Cnpr+07SS6LNwLmJsz1xcp/zflEGe/+4zRJXPYpOF
-         0l/ImCivqg2bEDFN8yKz0jVJ1LU70P66sT7z3nqbMlsJMUlEOMqrqfmSg4S96p8qKX9U
-         hFjE1zRWwFBGd9xp2jeG3C4jNDtIPXvAWw5wFnykQTw02TJn5kLwtY+gHHrwd58nir27
-         7/EUYyAg/QrdZxvBtV4MqhfjNTbfsJJ1sp2C6QfTHRz3UjGEwhGn2glZjJYy3e9NBc80
-         A5mW0zXrcpWcahtV5p5sODdjKbvyWX7O/pRyYOcuFX3JFgM0N02cXxRFkxEs3Spy6kC+
-         Au2Q==
-X-Gm-Message-State: AGi0PuaT8MFEP0PxB0qcKb/2qodh4nuk7wiDxqqacqd30TBDna2G6Za7
-        tuU2khwqI5pTnItDc4UDAQg=
-X-Google-Smtp-Source: APiQypLIdVp5JwarFVdiMg5ajBb9Ax3XybAUdje6DcZLjicgg28JrA5/PNlJYvyyw0xjvasWFQRF9w==
-X-Received: by 2002:a17:90a:3327:: with SMTP id m36mr8336012pjb.116.1588995794881;
-        Fri, 08 May 2020 20:43:14 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 127sm3265500pfw.72.2020.05.08.20.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 20:43:13 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E67004035F; Sat,  9 May 2020 03:43:12 +0000 (UTC)
-Date:   Sat, 9 May 2020 03:43:12 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v1 0/6] block: add error handling for *add_disk*()
-Message-ID: <20200509034312.GH11244@42.do-not-panic.com>
-References: <20200429074844.6241-1-mcgrof@kernel.org>
- <896ca55e-0daa-fb62-f9cb-0714389936a5@acm.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zwupl3WGz7M6JVBmi772VknIH5KdfnHALsH9I+tZ89U=;
+        b=FilsuaPjo4QSWepRhA044XzqjlpVxP7lHwkYZ3ySnRnW5lC0x1HDoFwZ7Ufq0jEbA1
+         8FOWxOTrwbhsTzR3MuxtesYOqH+8ucR2Adt9KRAuqyM+GXHea6+tz2K5419BZqQKkZKr
+         uhDOHBsHQR25U8NbLJvXowrJGNzL3dF53zXpCcKsYj+zBO9MaTCfHK0G7hiIx3whcBg+
+         4DMvfWHsRtUxyakQNGaO8Jzzc3JWj6heXvNEck93jcvqUUkjY6IrqzTXURaXTcGT61Qv
+         8SpKydnthOPX0Fgu7Xd7CxmzaFkgvcq+p+T+b5HR1nxTWyXQsDfK+lDqo0OHVz93DC5I
+         t0HQ==
+X-Gm-Message-State: AGi0PuY68ITuimxF48TvvH8gDhb00xcefv0hTM+luL9/cV8ycZ8izEZK
+        9vNPynx15NPfRAt+EptfPWs=
+X-Google-Smtp-Source: APiQypJhEZpA+1sunLzyJ03wkE9n1DG4PJ7kXdlcEWYn/nx8Z9KxqQBGY3wxbfDHrzdtgXaqbYqF6Q==
+X-Received: by 2002:aa7:80cf:: with SMTP id a15mr6551155pfn.124.1588995815945;
+        Fri, 08 May 2020 20:43:35 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id n9sm3583656pjt.29.2020.05.08.20.43.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 20:43:35 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] Documentation: LKMM: Move MP+onceassign+derefonce
+ to new litmus-tests/rcu/
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
+Cc:     vpillai@digitalocean.com, Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+Date:   Sat, 9 May 2020 12:43:30 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <896ca55e-0daa-fb62-f9cb-0714389936a5@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200323015735.236279-1-joel@joelfernandes.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:18:22PM -0700, Bart Van Assche wrote:
-> On 2020-04-29 00:48, Luis Chamberlain wrote:
-> > While working on some blktrace races I noticed that we don't do
-> > error handling on *add_disk*() and friends. This is my initial
-> > work on that.
-> > 
-> > This is based on linux-next tag next-20200428, you can also get this
-> > on my branch 20200428-block-fixes [0].
-> > 
-> > Let me know what you think.
-> Hi Luis,
+Hi Joel,
+
+Sorry for the late response but I've noticed some glitches.
+ 
+On Sun, 22 Mar 2020 21:57:32 -0400, Joel Fernandes (Google) wrote:
+> Move MP+onceassign+derefonce to the new Documentation/litmus-tests/rcu/
+> directory.
+
+MP+onceassign+derefonce.litmus is called out in
+tools/memory-model/Documentation/recipes.txt as a representative example
+of RCU related litmus test.
+
+So I think it should be kept under tools/memory-model/litmus-tests.
+
+Further RCU-related litmus tests can be added under Documentation/litmus-tests/.
+
+IIUC, this change is not picked up by tip tree yet. So we have time to respin
+the series targeting v5.9.
+
 > 
-> Thank you for having done this work.
+> More RCU-related litmus tests would be added here.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> 
+> ---
+> Cc: vpillai@digitalocean.com
+> 
+>  Documentation/litmus-tests/README                        | 9 +++++++++
 
-My pleasure, I just made one minor change to this series, but that's
-all so far. Note that break-blktrace run_0004.sh still yields:
+Please note that later patches to add atomic litmus tests under
+Documentation/litmus-tests/ by Boqun put README as
+Documentation/litums-tests/atomic/README.
 
-debugfs: Directory 'loop0' with parent 'block' already present!
+This patch's location of RCU's README as Documentation/litmus-tests/README
+looks asymmetric to me.
 
-And so I suspect something else is up, this is even after. That's using
-my latest:
+I'm OK with either merging atomic's README with the top-level one or
+moving RCU's README to under Documentation/litmus-tests/rcu.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200508-block-fixes
+Joel, Boqum, can you sort out the location of README?
 
-Some more eyebealls on that would be useful.
+        Thanks, Akira
 
-> Since triggering error paths can be
-> challenging, how about adding fault injection capabilities that make it
-> possible to trigger all modified error paths and how about adding
-> blktests that trigger these paths? That is the strategy that I followed
-> myself recently to fix an error path in blk_mq_realloc_hw_ctxs().
-
-Sure thing, but I get the impression that adding this may make it odd
-to or harder to review. Shouldn't this be done after we have *some*
-error handling? Right now we shouldn't regress as we never fail, and
-that seemss worse.
-
-Let me know, either way, I'll start work on it.
-
-  Luis
+>  .../litmus-tests/rcu}/MP+onceassign+derefonce.litmus     | 0
+>  tools/memory-model/litmus-tests/README                   | 3 ---
+>  3 files changed, 9 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/litmus-tests/README
+>  rename {tools/memory-model/litmus-tests => Documentation/litmus-tests/rcu}/MP+onceassign+derefonce.litmus (100%)
+> 
+> diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+> new file mode 100644
+> index 0000000000000..84208bc197f2e
+> --- /dev/null
+> +++ b/Documentation/litmus-tests/README
+> @@ -0,0 +1,9 @@
+> +============
+> +LITMUS TESTS
+> +============
+> +
+> +RCU (/rcu directory)
+> +--------------------
+> +MP+onceassign+derefonce.litmus
+> +    Demonstrates that rcu_assign_pointer() and rcu_dereference() to
+> +    ensure that an RCU reader will not see pre-initialization garbage.
+> diff --git a/tools/memory-model/litmus-tests/MP+onceassign+derefonce.litmus b/Documentation/litmus-tests/rcu/MP+onceassign+derefonce.litmus
+> similarity index 100%
+> rename from tools/memory-model/litmus-tests/MP+onceassign+derefonce.litmus
+> rename to Documentation/litmus-tests/rcu/MP+onceassign+derefonce.litmus
+> diff --git a/tools/memory-model/litmus-tests/README b/tools/memory-model/litmus-tests/README
+> index 681f9067fa9ed..79e1b1ed4929a 100644
+> --- a/tools/memory-model/litmus-tests/README
+> +++ b/tools/memory-model/litmus-tests/README
+> @@ -63,9 +63,6 @@ LB+poonceonces.litmus
+>  	As above, but with store-release replaced with WRITE_ONCE()
+>  	and load-acquire replaced with READ_ONCE().
+>  
+> -MP+onceassign+derefonce.litmus
+> -	As below, but with rcu_assign_pointer() and an rcu_dereference().
+> -
+>  MP+polockmbonce+poacquiresilsil.litmus
+>  	Protect the access with a lock and an smp_mb__after_spinlock()
+>  	in one process, and use an acquire load followed by a pair of
+> 
