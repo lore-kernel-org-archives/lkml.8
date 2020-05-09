@@ -2,69 +2,76 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D2EC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B7DC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24B9E24956
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789DB218AC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 01:10:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgEIBJN (ORCPT
+        id S1728467AbgEIBKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 21:09:13 -0400
-Received: from tragedy.dreamhost.com ([66.33.205.236]:57206 "EHLO
-        tragedy.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgEIBJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 21:09:13 -0400
-X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 May 2020 21:09:13 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by tragedy.dreamhost.com (Postfix) with ESMTPS id 9A53F15F89D;
-        Fri,  8 May 2020 18:03:16 -0700 (PDT)
-Date:   Sat, 9 May 2020 01:03:14 +0000 (UTC)
-From:   Sage Weil <sage@newdream.net>
-X-X-Sender: sage@piezo.novalocal
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: Re: linux-next: new contact(s) for the ceph tree?
-In-Reply-To: <20200509094515.7082eb92@canb.auug.org.au>
-Message-ID: <alpine.DEB.2.21.2005090103060.29336@piezo.novalocal>
-References: <20200509094515.7082eb92@canb.auug.org.au>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 8 May 2020 21:10:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48620 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727828AbgEIBKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 21:10:46 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 05541825B28897CE8A93;
+        Sat,  9 May 2020 09:10:44 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 9 May 2020 09:10:35 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <jpoimboe@redhat.com>, <jikos@kernel.org>, <mbenes@suse.cz>,
+        <pmladek@suse.com>, <joe.lawrence@redhat.com>
+CC:     <live-patching@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Samuel Zou" <zou_wei@huawei.com>
+Subject: [PATCH -next v2] livepatch: Make klp_apply_object_relocs static
+Date:   Sat, 9 May 2020 09:16:41 +0800
+Message-ID: <1588987001-27863-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-VR-STATUS: OK
-X-VR-SCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrkeeggdefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvufgjkfhffgggtgesthdtredttdervdenucfhrhhomhepufgrghgvucghvghilhcuoehsrghgvgesnhgvfigurhgvrghmrdhnvghtqeenucggtffrrghtthgvrhhnpeeuffeihfdvhfdvvdehjedutefgheetfeevheffhefhhfdvjeehfeduhfeuieffffenucfkphepuddvjedrtddrtddrudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopehlohgtrghlhhhoshhtpdhinhgvthepuddvjedrtddrtddruddprhgvthhurhhnqdhprghthhepufgrghgvucghvghilhcuoehsrghgvgesnhgvfigurhgvrghmrdhnvghtqedpmhgrihhlfhhrohhmpehsrghgvgesnhgvfigurhgvrghmrdhnvghtpdhnrhgtphhtthhopehjlhgrhihtohhnsehkvghrnhgvlhdrohhrgh
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org>
+Fix the following sparse warning:
 
-Thanks, Stephen!
-sage
+kernel/livepatch/core.c:748:5: warning: symbol 'klp_apply_object_relocs' was not declared.
 
+The klp_apply_object_relocs() has only one call site within core.c
+It should be static
 
-On Sat, 9 May 2020, Stephen Rothwell wrote:
+Fixes: 7c8e2bdd5f0d ("livepatch: Apply vmlinux-specific KLP relocations early")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ kernel/livepatch/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Hi all,
-> 
-> I noticed commit
-> 
->   3a5ccecd9af7 ("MAINTAINERS: remove myself as ceph co-maintainer")
-> 
-> appear recently.  So who should I now list as the contact(s) for the
-> ceph tree?
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 96d2da1..f76fdb9 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -745,7 +745,8 @@ static int klp_init_func(struct klp_object *obj, struct klp_func *func)
+ 			   func->old_sympos ? func->old_sympos : 1);
+ }
+ 
+-int klp_apply_object_relocs(struct klp_patch *patch, struct klp_object *obj)
++static int klp_apply_object_relocs(struct klp_patch *patch,
++				   struct klp_object *obj)
+ {
+ 	int i, ret;
+ 	struct klp_modinfo *info = patch->mod->klp_info;
+-- 
+2.6.2
+
