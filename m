@@ -2,111 +2,162 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EFFC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB6C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEB94208E4
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ic2jDBAU"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8E9208E4
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 19:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgEITKt (ORCPT
+        id S1728073AbgEITNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 15:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727938AbgEITKt (ORCPT
+        Sat, 9 May 2020 15:13:05 -0400
+Received: from 2.mo3.mail-out.ovh.net ([46.105.75.36]:37149 "EHLO
+        2.mo3.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbgEITNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 15:10:49 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46907C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 12:10:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d184so2705492pfd.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 12:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wf1n+hj5e8dyRivUQoz1C3c50QpmiVcBTEYF2ohJ06I=;
-        b=ic2jDBAUdykvb8NzpOOfuQtQCAJskZi9+smoiPzH0xhkiX4pmSJiinej0vTVKH/221
-         gnrKMP7IOys7u092mkVJTRxQoojh82vCi5NVTTM9PF5p0zLJ9waRrFkClTf7fi/2WpPA
-         uBgj5Ja5hpJz90iREzYY3zV5EovyF5+UvyYYQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wf1n+hj5e8dyRivUQoz1C3c50QpmiVcBTEYF2ohJ06I=;
-        b=QRZtMU1IIpdC8ZFK6Fa9wzM+LOn3x9UJthfgqwESJWhSeBt6l1FEHvU2rfswVwXkd+
-         v2/y4zLFkxkOOHzxK3PV4Y7vE96b1ae5ds1qdVffBcHJ9IRmLrr04Vc5onxqiTs7iiY8
-         wDVR9pn6MKtUzJL8NbBOyRrpp+dK4I3sg0P9KBbJZ+gA4pT0oHcGwcggba9zOgaZs5F8
-         cE7ICOvzSXTKZjIAVV3S8XpDMaCoPbZbni5aABB3+SA9ZRvbFvdjgO/+KSplB/pK1y3p
-         1oo1aGl/YHCxn6wGNMKJo3n2ANnrTTT6XzZYU2rXmg5oo5rZJncfQw0p+b0VGdDYd7wL
-         NVdA==
-X-Gm-Message-State: AGi0PuZ9+sQlpj+sCVa+2jade5KRBXU/r3RarTT3uHOo8EPia+aPA3YA
-        2+QSDJtHGdOkZWs5EJAUusFX0w==
-X-Google-Smtp-Source: APiQypIUCMS5XnSujPmoONFpTKJIcwb1UPhXWiVcur5+r5JlPaWLbFnndT7Bb71vHTwjtrn39ZObjQ==
-X-Received: by 2002:a63:7b42:: with SMTP id k2mr7065532pgn.299.1589051448671;
-        Sat, 09 May 2020 12:10:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x7sm5289404pfj.122.2020.05.09.12.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2020 12:10:47 -0700 (PDT)
-Date:   Sat, 9 May 2020 12:10:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        Sat, 9 May 2020 15:13:05 -0400
+Received: from player738.ha.ovh.net (unknown [10.110.208.147])
+        by mo3.mail-out.ovh.net (Postfix) with ESMTP id 9809224DADE
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 21:06:09 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player738.ha.ovh.net (Postfix) with ESMTPSA id 0A9B5124BEB04;
+        Sat,  9 May 2020 19:06:01 +0000 (UTC)
+Date:   Sat, 9 May 2020 21:05:48 +0200
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/12] pstore: mtd: support crash log to block and mtd
- device
-Message-ID: <202005091209.406DB4C@keescook>
-References: <20200508064004.57898-1-keescook@chromium.org>
- <202005080020.41C33738@keescook>
- <c1583001-bf03-d198-ad57-3d2a0baf93ca@allwinnertech.com>
+Subject: Re: [PATCH v2] net: Protect INET_ADDR_COOKIE on 32-bit
+ architectures
+Message-ID: <20200509210548.116c7385@heffalump.sk2.org>
+In-Reply-To: <20200509105914.04fd19c8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200508120457.29422-1-steve@sk2.org>
+        <20200508205025.3207a54e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200509101322.12651ba0@heffalump.sk2.org>
+        <20200509105914.04fd19c8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1583001-bf03-d198-ad57-3d2a0baf93ca@allwinnertech.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/s1s_w35=OAg5_w9IeCHOaaW"; protocol="application/pgp-signature"
+X-Ovh-Tracer-Id: 18383975156205243802
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrkeehgddufeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeevledvueefvdeivefftdeugeekveethefftdffteelheejkeejjeduffeiudetkeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 06:32:28PM +0800, WeiXiong Liao wrote:
-> The following diff is to fix "rmmod" bug.
-> 
-> @@ -1273,8 +1273,8 @@ static void psz_free_zones(struct pstore_zone
-> ***pszones, unsigned int *cnt)
->                 return;
-> 
->         while (*cnt > 0) {
-> -               psz_free_zone(&zones[*cnt]);
->                 (*cnt)--;
-> +               psz_free_zone(&zones[*cnt]);
->         }
->         kfree(zones);
->         *pszones = NULL;
+--Sig_/s1s_w35=OAg5_w9IeCHOaaW
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Ah-ha! Thanks; I'd almost found that. I got confused because I wasn't
-see NULL free()s, and I finally noticed that the zones had left over
-ERR_PTRs:
+On Sat, 9 May 2020 10:59:14 -0700, Jakub Kicinski <kuba@kernel.org> wrote:
+> On Sat, 9 May 2020 10:13:22 +0200 Stephen Kitt wrote:
+> > On Fri, 8 May 2020 20:50:25 -0700, Jakub Kicinski <kuba@kernel.org>
+> > wrote: =20
+> > > On Fri,  8 May 2020 14:04:57 +0200 Stephen Kitt wrote:   =20
+> > > > Commit c7228317441f ("net: Use a more standard macro for
+> > > > INET_ADDR_COOKIE") added a __deprecated marker to the cookie name on
+> > > > 32-bit architectures, with the intent that the compiler would flag
+> > > > uses of the name. However since commit 771c035372a0 ("deprecate the
+> > > > '__deprecated' attribute warnings entirely and for good"),
+> > > > __deprecated doesn't do anything and should be avoided.
+> > > >=20
+> > > > This patch changes INET_ADDR_COOKIE to declare a dummy struct so th=
+at
+> > > > any subsequent use of the cookie's name will in all likelihood break
+> > > > the build. It also removes the __deprecated marker.   =20
+> > >=20
+> > > I think the macro is supposed to cause a warning when the variable
+> > > itself is accessed. And I don't think that happens with your patch
+> > > applied.   =20
+> >=20
+> > Yes, the warning is what was lost when __deprecated lost its meaning. I
+> > was trying to preserve that, or rather extend it so that the build would
+> > break if the cookie was used on 32-bit architectures, and my patch
+> > ensures it does if the cookie is used in a comparison or assignment,
+> > but ...=20
+> > > +       kfree(&acookie);   =20
+> >=20
+> > I hadn=E2=80=99t thought of taking a pointer to it.
+> >=20
+> > If we want to preserve the use of the macro with a semi-colon, which is
+> > what Joe=E2=80=99s patch introduced (along with the deprecation warning=
+), we
+> > still need some sort of declaration which can=E2=80=99t be used. Perhaps
+> >=20
+> > #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+> > 	struct __name {} __attribute__((unused))
+> >=20
+> > would be better =E2=80=94 it declares the cookie as a struct, not a var=
+iable, so
+> > then the build fails if the cookie is used as anything other than a
+> > struct. If anyone does try to use it as a struct, the build will fail on
+> > 64-bit architectures...
+> >=20
+> >   CC      net/ipv4/inet_hashtables.o
+> > net/ipv4/inet_hashtables.c: In function =E2=80=98__inet_lookup_establis=
+hed=E2=80=99:
+> > net/ipv4/inet_hashtables.c:362:9: error: =E2=80=98acookie=E2=80=99 unde=
+clared (first use
+> > in this function) kfree(&acookie);
+> >          ^~~~~~~
+> > net/ipv4/inet_hashtables.c:362:9: note: each undeclared identifier is
+> > reported only once for each function it appears in make[2]: ***
+> > [scripts/Makefile.build:267: net/ipv4/inet_hashtables.o] Error 1 make[1=
+]:
+> > *** [scripts/Makefile.build:488: net/ipv4] Error 2 make: ***
+> > Makefile:1722: net] Error 2 =20
+>=20
+> Hm. That does seem better. Although thinking about it - we will not get
+> a warning when someone declares a variable with the same name..
 
-        if (IS_ERR(cxt->fpszs)) {
-                err = PTR_ERR(cxt->fpszs);
-+               cxt->fpszs = NULL;
-                goto free_out;
-        }
+Good point!
 
-I'll fix those and your v5 and my lastest tree merged.
+> What if we went back to your original proposal of an empty struct but
+> added in an extern in front? That way we should get linker error on
+> pointer references.
 
--- 
-Kees Cook
+That silently fails to fail if any other link object provides a definition
+for the symbol, even if the type doesn=E2=80=99t match...
+
+I thought of
+
+	register struct {} __name __attribute__((unused))
+
+but that really feels like tacking on more stuff to handle cases as we think
+of them, which makes me wonder what cases I=E2=80=99m not thinking of.
+
+Regards,
+
+Stephen
+
+--Sig_/s1s_w35=OAg5_w9IeCHOaaW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl62/wwACgkQgNMC9Yht
+g5wo4BAAjQOE/+/mkcahMWlo0f2dTATJ71MA7sUP0D6bvFV/y663ziTtzHxxCUqm
+0TEZCcmIPcABuqm8BjkfET2R8Q+3dSYOwGQ4oq4ud3s2w/e9vCouDtMPkoXljOhf
+BQK52Pk4cuGDolV8QNKXi1cX3HfXbUXbg1jJ270DwQEs/y7+ENFUTaEE21GRA85d
+66a1mbDKbw08Vls8NlRYIQUa3l3xL6RxtCb/6zlqAB0OY856HBFYbB7ZSR3NQGPl
+WKvNjdB72nkIf4rdWtyd4nyMYn0+IPiUC6JdYKoZhAuunOZLWtL3v4NmA2wPh9vf
+/QPqOHuw3/+z8G/7PjAGnxDslgtFUll+2vJG55qRvl65Ke4zEvws/gJX6ucARltP
+cXPoOEdJZ0YBmUaPzVylafmobveV6Czf5UuHSeF/5eiNaYMHf45ASdpdifJkstu7
+42oYf5VyXObBrkTPJ8BllexkrOVDcvJl545p6ukjYp68RduD7IByvsCHYSt64Tmi
+Hg3nWY1fWysJYAr4GBaMjgpdnWtoKBmBwDQbLKSGuBCytHwuk6wLsWMOI5sPt/y5
+ewRoSV09NCjsCnlkgoD4xGMPqn3ofM46KRh0fr3HYDsKHDm4Recaexq//kgC33dD
+fZPxiykFtaUAT2Erl3yzjJrzY5nwKTbpZu4L+ONmEjTNNS8uKGM=
+=kb27
+-----END PGP SIGNATURE-----
+
+--Sig_/s1s_w35=OAg5_w9IeCHOaaW--
