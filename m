@@ -2,103 +2,104 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6050C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7DBC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A13720661
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB23F24957
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TM31AFba"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LqHS/VLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgEIJXc (ORCPT
+        id S1728025AbgEIJZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55074 "EHLO
+        Sat, 9 May 2020 05:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725930AbgEIJXb (ORCPT
+        by vger.kernel.org with ESMTP id S1725930AbgEIJZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:23:31 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1680C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 02:23:31 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id k6so4305608iob.3
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 02:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=npUCSug3UNmvoID4U4QjZrQryTMG/6PUbxsaJOR4T28=;
-        b=TM31AFba3DfHCrEv6efBqjc5asmfKIAX5qK8448CR2SCW4RuZMPfdPDyaPyMU2xgHT
-         5sueQWG1vPyOt/KzIibm6A0+NMj9kTMmFpWeZQKBxGCGzq6hPMr2onN0RlU4TpBc56Al
-         PctXOx5V46kH2vXzLqOVscXgYxzfsb7T8z51BfozgWXs+qtr4A7oEBB+VfCmmhCLaxvv
-         3TU4VFyAOzNYymYWoC19ULVREZ1oLpYVigTv0KzeE/RgBk2rpVSlVXiofXlBaVgRM/sd
-         ay0FwbQGqMIqj4q1oGpHCYQQC0M7e8DKGW4fpzWpCM5KdICjq0kwD4HACP7ncUfrxSzB
-         SWyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npUCSug3UNmvoID4U4QjZrQryTMG/6PUbxsaJOR4T28=;
-        b=NUSR+1lhd3prZEPPxrQEg9s0e4E8m90dyLz0E5BqUAFjdhHMLTVAzUvbnz2oehiA77
-         HhNDcRxX86GWuAcwuQzUckOVGWEIxrxQxwQK9oByJqfOFsUackFzz+eTzP1LxhM8UpL1
-         y9CDouKBn0LSXGhp4uLafBXOZKfqpvn69xa4fcZ2zIs9/7MsqkWIesmNB7zsE1zHUGHW
-         vZ59/XhcCyWeRdboiUJwj9HqFB6CpUYRuooBCHXMRNU6jqQxqMiEvMHA8tMiL64B7R8I
-         /BB6COqilMxd7J59P/GwE9bbh3y7Nqezmwr3NwmD0h70iPsRuwHUuMYVV834oXn2g8WH
-         pcfQ==
-X-Gm-Message-State: AGi0PuZMw4tMMutcxJ7dEdiSAutAqiqsqG9a9d09r0ZsnENmdwnW+CA6
-        DXK95E+195aKkwRQZhbChQB8A6xm0/hYDr87slU=
-X-Google-Smtp-Source: APiQypJTo+iHmgKOwr7znP0jcjAroPrnAacktBKv3E9YmNJoP6PNKBM81igz0/RNbvATdEWY6mYeNODi6BRo1UaqPOk=
-X-Received: by 2002:a02:6a1e:: with SMTP id l30mr6254957jac.98.1589016211189;
- Sat, 09 May 2020 02:23:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505131602.633487962@linutronix.de> <20200505134058.272448010@linutronix.de>
-In-Reply-To: <20200505134058.272448010@linutronix.de>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Sat, 9 May 2020 17:23:20 +0800
-Message-ID: <CAJhGHyAetdYdj=bdvoXRfu7bMVZiR8jLhek=_tes-6XPKOxKQQ@mail.gmail.com>
-Subject: Re: [patch V4 part 1 02/36] x86/hw_breakpoint: Prevent data
- breakpoints on cpu_entry_area
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
+        Sat, 9 May 2020 05:25:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6288C061A0C;
+        Sat,  9 May 2020 02:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bA5nO5V8ZyRNYM2NOJh3nHt5mHB7m7A6hzO/Xb8C0mA=; b=LqHS/VLYuKSWgHx/3b4w+O5Hre
+        mznk17I+H+n7V4tjG+K4HbsbQurnpIFGfHXy5NQYxvY8nEkRe2DplXdtbl947B6niE2R2Q+RoDAp8
+        1jmbn0GDUrM1YeuwmzFIJHDKbVSRucfX9eMz29/dmS3lWpqODgM/Aqe8ipHw5RfjPwmHexiU+vtTS
+        jZo4P11lUQ6EEyFE6V4xaiwdK0lRNTIlo9OCvFQh6BL3FF7uMzmCL1Jqs0CDO0MFWLqe6qqhg47KH
+        w9QIu+x1SzOCiwvZXhc8kpcO85+YQOy7ujwb58mxLpGiVj3d5mCQP5DS55jczRX4P4e02mhXgznn9
+        8onTSIOw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXLjT-0007YB-Ts; Sat, 09 May 2020 09:25:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33E48301EFB;
+        Sat,  9 May 2020 11:25:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 23A77203AA832; Sat,  9 May 2020 11:25:16 +0200 (CEST)
+Date:   Sat, 9 May 2020 11:25:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200509092516.GC2957@hirez.programming.kicks-ass.net>
+References: <20200508144043.13893-1-joro@8bytes.org>
+ <20200508192000.GB2957@hirez.programming.kicks-ass.net>
+ <20200508213407.GT8135@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508213407.GT8135@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Andy Lutomirski <luto@kernel.org>
->
-> A data breakpoint near the top of an IST stack will cause unresoverable
-> recursion.  A data breakpoint on the GDT, IDT, or TSS is terrifying.
-> Prevent either of these from happening.
->
+On Fri, May 08, 2020 at 11:34:07PM +0200, Joerg Roedel wrote:
+> Hi Peter,
+> 
+> thanks for reviewing this!
+> 
+> On Fri, May 08, 2020 at 09:20:00PM +0200, Peter Zijlstra wrote:
+> > The only concern I have is the pgd_lock lock hold times.
+> > 
+> > By not doing on-demand faults anymore, and consistently calling
+> > sync_global_*(), we iterate that pgd_list thing much more often than
+> > before if I'm not mistaken.
+> 
+> Should not be a problem, from what I have seen this function is not
+> called often on x86-64.  The vmalloc area needs to be synchronized at
+> the top-level there, which is by now P4D (with 4-level paging). And the
+> vmalloc area takes 64 entries, when all of them are populated the
+> function will not be called again.
 
-What happen when a data breakpoint on the direct GDT (load_direct_gdt())
-and the debug IDT (load_debug_idt()) which are not considered in this patch?
+Right; it's just that the moment you do trigger it, it'll iterate that
+pgd_list and that is potentially huge. Then again, that's not a new
+problem.
 
-Thanks
-Lai
+I suppose we can deal with it if/when it becomes an actual problem.
+
+I had a quick look and I think it might be possible to make it an RCU
+managed list. We'd have to remove the pgd_list entry in
+put_task_struct_rcu_user(). Then we can play games in sync_global_*()
+and use RCU iteration. New tasks (which can be missed in the RCU
+iteration) will already have a full clone of the PGD anyway.
+
+But like said, something for later I suppose.
