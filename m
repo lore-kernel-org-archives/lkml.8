@@ -2,120 +2,287 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C17CC54E4B
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AC8C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B3424967
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDCE24957
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 08:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s3J3L8Vl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EhBjk+RZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgEIIkf (ORCPT
+        id S1727768AbgEIInO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 04:40:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37375 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728070AbgEIIk2 (ORCPT
+        Sat, 9 May 2020 04:43:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40281 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726063AbgEIInN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 04:40:28 -0400
-X-UUID: f3c53d4f55134e16967f923e729c10c0-20200509
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CJeloX2LqvuI/dnpF7lv9RpSaPjcGxrPB01SIxCcvJ4=;
-        b=s3J3L8VldYu0mSndSD9vtZd4DcTRBnT5J5hbpKabTyvtx3tVKU0gh1yKomqrfDujNqFM6WyQPAq3k7PfKBLvV93m6+e5bOG4pGw60nTcGwEyxYOrzIQyfU6w3jmmLMNvwFnquQVNr91spIf+qRBxbiOpf7Ne76Z60xiIEDf0WwE=;
-X-UUID: f3c53d4f55134e16967f923e729c10c0-20200509
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 922219923; Sat, 09 May 2020 16:40:23 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sat, 9 May 2020 16:40:20 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 9 May 2020 16:40:19 +0800
-From:   Chao Hao <chao.hao@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>, FY Yang <fy.yang@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>
-Subject: [PATCH v3 7/7] iommu/mediatek: Add mt6779 basic support
-Date:   Sat, 9 May 2020 16:36:54 +0800
-Message-ID: <20200509083654.5178-8-chao.hao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200509083654.5178-1-chao.hao@mediatek.com>
-References: <20200509083654.5178-1-chao.hao@mediatek.com>
+        Sat, 9 May 2020 04:43:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589013792; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=7q6ciT5kWTeLY/TWplHoNnQfdOa1lllVc1nno43F/RI=; b=EhBjk+RZXsi6TVPqg+HuMbXb433pmATfrRvgrdMMmDry5qR7NskF88/pf4bJKny7Be4ziwYe
+ JI1yjNJ5L54w0kGMrO5+kIarFYT65ZLsGdqq+s/2s956JmFzDCgvu8+adxSmhM1vrSkVbOSh
+ Pkt182XzH9XjYJ98ADUPgz/KA+4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb66d15.7f3d25ce3ca8-smtp-out-n03;
+ Sat, 09 May 2020 08:43:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9D137C433BA; Sat,  9 May 2020 08:43:01 +0000 (UTC)
+Received: from [10.110.20.51] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DA83C433D2;
+        Sat,  9 May 2020 08:42:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DA83C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
+ requirements
+To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <1588888768-25315-1-git-send-email-wcheng@codeaurora.org>
+ <1588888768-25315-2-git-send-email-wcheng@codeaurora.org>
+ <878si2mw7i.fsf@kernel.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <f966ac74-94d9-7aca-dc10-71052a8f82a9@codeaurora.org>
+Date:   Sat, 9 May 2020 01:42:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 3A137A09BE077EE258C0837B180446A21F7D2EEC13F5CA1EF7311B16A30ACAD62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <878si2mw7i.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MS4gU3RhcnQgZnJvbSBtdDY3NzksIElOVkxEVF9TRUwgbW92ZSB0byBvZmZzZXQ9MHgyYywgc28g
-d2UgYWRkDQogICBSRUdfTU1VX0lOVl9TRUxfR0VOMiBkZWZpbml0aW9uIGFuZCBtdDY3NzkgdXNl
-cyBpdC4NCjIuIENoYW5nZSBQUk9URUNUX1BBX0FMSUdOIGZyb20gMTI4IGJ5dGUgdG8gMjU2IGJ5
-dGUuDQozLiBGb3IgUkVHX01NVV9DVFJMX1JFRyByZWdpc3Rlciwgd2Ugb25seSBuZWVkIHRvIGNo
-YW5nZSBiaXRbMjowXSwNCiAgIG90aGVycyBiaXRzIGtlZXAgZGVmYXVsdCB2YWx1ZSwgZXg6IGVu
-YWJsZSB2aWN0aW0gdGxiLg0KNC4gQWRkIG10Njc3OV9kYXRhIHRvIHN1cHBvcnQgbW1faW9tbXUg
-SFcgaW5pdC4NCg0KU2lnbmVkLW9mZi1ieTogQ2hhbyBIYW8gPGNoYW8uaGFvQG1lZGlhdGVrLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgfCAxOCArKysrKysrKysrKysrKyst
-LS0NCiBkcml2ZXJzL2lvbW11L210a19pb21tdS5oIHwgIDEgKw0KIDIgZmlsZXMgY2hhbmdlZCwg
-MTYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-aW9tbXUvbXRrX2lvbW11LmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQppbmRleCBkYzlh
-ZTk0NGU3MTIuLjM0YzRmZmI3N2M3MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lv
-bW11LmMNCisrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCkBAIC0zNyw2ICszNyw3IEBA
-DQogI2RlZmluZSBSRUdfTU1VX0lOVkxEX1NUQVJUX0EJCQkweDAyNA0KICNkZWZpbmUgUkVHX01N
-VV9JTlZMRF9FTkRfQQkJCTB4MDI4DQogDQorI2RlZmluZSBSRUdfTU1VX0lOVl9TRUxfR0VOMgkJ
-CTB4MDJjDQogI2RlZmluZSBSRUdfTU1VX0lOVl9TRUxfR0VOMQkJCTB4MDM4DQogI2RlZmluZSBG
-X0lOVkxEX0VOMAkJCQlCSVQoMCkNCiAjZGVmaW5lIEZfSU5WTERfRU4xCQkJCUJJVCgxKQ0KQEAg
-LTk3LDcgKzk4LDcgQEANCiAjZGVmaW5lIEZfTU1VX0lOVF9JRF9MQVJCX0lEKGEpCQkJKCgoYSkg
-Pj4gNykgJiAweDcpDQogI2RlZmluZSBGX01NVV9JTlRfSURfUE9SVF9JRChhKQkJCSgoKGEpID4+
-IDIpICYgMHgxZikNCiANCi0jZGVmaW5lIE1US19QUk9URUNUX1BBX0FMSUdOCQkJMTI4DQorI2Rl
-ZmluZSBNVEtfUFJPVEVDVF9QQV9BTElHTgkJCTI1Ng0KIA0KIC8qDQogICogR2V0IHRoZSBsb2Nh
-bCBhcmJpdGVyIElEIGFuZCB0aGUgcG9ydGlkIHdpdGhpbiB0aGUgbGFyYiBhcmJpdGVyDQpAQCAt
-NTU0LDExICs1NTUsMTIgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfaHdfaW5pdChjb25zdCBzdHJ1
-Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEpDQogCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQorCXJlZ3Zh
-bCA9IHJlYWRsX3JlbGF4ZWQoZGF0YS0+YmFzZSArIFJFR19NTVVfQ1RSTF9SRUcpOw0KIAlpZiAo
-ZGF0YS0+cGxhdF9kYXRhLT5tNHVfcGxhdCA9PSBNNFVfTVQ4MTczKQ0KLQkJcmVndmFsID0gRl9N
-TVVfUFJFRkVUQ0hfUlRfUkVQTEFDRV9NT0QgfA0KKwkJcmVndmFsIHw9IEZfTU1VX1BSRUZFVENI
-X1JUX1JFUExBQ0VfTU9EIHwNCiAJCQkgRl9NTVVfVEZfUFJPVF9UT19QUk9HUkFNX0FERFJfTVQ4
-MTczOw0KIAllbHNlDQotCQlyZWd2YWwgPSBGX01NVV9URl9QUk9UX1RPX1BST0dSQU1fQUREUjsN
-CisJCXJlZ3ZhbCB8PSBGX01NVV9URl9QUk9UX1RPX1BST0dSQU1fQUREUjsNCiAJd3JpdGVsX3Jl
-bGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVHX01NVV9DVFJMX1JFRyk7DQogDQogCXJlZ3Zh
-bCA9IEZfTDJfTVVMSVRfSElUX0VOIHwNCkBAIC04MDQsNiArODA2LDE1IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDI3MTJfZGF0YSA9IHsNCiAJLmxhcmJpZF9y
-ZW1hcCA9IHt7MH0sIHsxfSwgezJ9LCB7M30sIHs0fSwgezV9LCB7Nn0sIHs3fX0sDQogfTsNCiAN
-CitzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ2Nzc5X2RhdGEgPSB7
-DQorCS5tNHVfcGxhdCA9IE00VV9NVDY3NzksDQorCS5sYXJiaWRfcmVtYXAgPSB7ezB9LCB7MX0s
-IHsyfSwgezN9LCB7NX0sIHs3LCA4fSwgezEwfSwgezl9fSwNCisJLmhhc19zdWJfY29tbSA9IHRy
-dWUsDQorCS5oYXNfd3JfbGVuID0gdHJ1ZSwNCisJLmhhc19taXNjX2N0cmwgPSB0cnVlLA0KKwku
-aW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUxfR0VOMiwNCit9Ow0KKw0KIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDgxNzNfZGF0YSA9IHsNCiAJLm00dV9wbGF0
-ICAgICA9IE00VV9NVDgxNzMsDQogCS5oYXNfNGdiX21vZGUgPSB0cnVlLA0KQEAgLTgyMiw2ICs4
-MzMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTgzX2Rh
-dGEgPSB7DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2lvbW11X29m
-X2lkc1tdID0gew0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi1tNHUiLCAuZGF0
-YSA9ICZtdDI3MTJfZGF0YX0sDQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Nzc5LW00
-dSIsIC5kYXRhID0gJm10Njc3OV9kYXRhfSwNCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
-dDgxNzMtbTR1IiwgLmRhdGEgPSAmbXQ4MTczX2RhdGF9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE4My1tNHUiLCAuZGF0YSA9ICZtdDgxODNfZGF0YX0sDQogCXt9DQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11
-LmgNCmluZGV4IDk5NzFjZWRkNzJlYS4uZmI3OWU3MTBjOGQ5IDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9pb21tdS9tdGtfaW9tbXUuaA0KKysrIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KQEAg
-LTMxLDYgKzMxLDcgQEAgc3RydWN0IG10a19pb21tdV9zdXNwZW5kX3JlZyB7DQogZW51bSBtdGtf
-aW9tbXVfcGxhdCB7DQogCU00VV9NVDI3MDEsDQogCU00VV9NVDI3MTIsDQorCU00VV9NVDY3Nzks
-DQogCU00VV9NVDgxNzMsDQogCU00VV9NVDgxODMsDQogfTsNCi0tIA0KMi4xOC4wDQo=
 
+
+On 5/8/2020 5:45 AM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Wesley Cheng <wcheng@codeaurora.org> writes:
+>> Some devices have USB compositions which may require multiple endpoints
+>> that support EP bursting.  HW defined TX FIFO sizes may not always be
+>> sufficient for these compositions.  By utilizing flexible TX FIFO
+>> allocation, this allows for endpoints to request the required FIFO depth to
+>> achieve higher bandwidth.  With some higher bMaxBurst configurations, using
+>> a larger TX FIFO size results in better TX throughput.
+> 
+> This needs to be carefully thought out as it can introduce situations
+> where gadget drivers that worked previously stop working.
+> 
+
+Hi Felipe,
+
+Thanks for the feedback.  I agree, the TX FIFO resizing logic should be
+reviewed carefully to, in order not to cause any regressions.  Would you
+be willing to shed some light on some of the failures you've seen
+previously where the gadget drivers stopped working?  (would help
+possibly come up with better approaches, etc...)
+
+>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>> index 4c171a8..e815c13 100644
+>> --- a/drivers/usb/dwc3/core.h
+>> +++ b/drivers/usb/dwc3/core.h
+>> @@ -675,6 +675,7 @@ struct dwc3_event_buffer {
+>>   *		isochronous START TRANSFER command failure workaround
+>>   * @start_cmd_status: the status of testing START TRANSFER command with
+>>   *		combo_num = 'b00
+>> + * @fifo_depth: allocated TXFIFO depth
+>>   */
+>>  struct dwc3_ep {
+>>  	struct usb_ep		endpoint;
+>> @@ -718,6 +719,7 @@ struct dwc3_ep {
+>>  	u8			resource_index;
+>>  	u32			frame_number;
+>>  	u32			interval;
+>> +	int			fifo_depth;
+>>  
+>>  	char			name[20];
+>>  
+>> @@ -1004,6 +1006,7 @@ struct dwc3_scratchpad_array {
+>>   * 	1	- utmi_l1_suspend_n
+>>   * @is_fpga: true when we are using the FPGA board
+>>   * @pending_events: true when we have pending IRQs to be handled
+>> + * @needs_fifo_resize: not all users might want fifo resizing, flag it
+>>   * @pullups_connected: true when Run/Stop bit is set
+>>   * @setup_packet_pending: true when there's a Setup Packet in FIFO. Workaround
+>>   * @three_stage_setup: set if we perform a three phase setup
+>> @@ -1044,6 +1047,7 @@ struct dwc3_scratchpad_array {
+>>   * @dis_metastability_quirk: set to disable metastability quirk.
+>>   * @imod_interval: set the interrupt moderation interval in 250ns
+>>   *                 increments or 0 to disable.
+>> + * @last_fifo_depth: total TXFIFO depth of all enabled USB IN/INT endpoints
+>>   */
+>>  struct dwc3 {
+>>  	struct work_struct	drd_work;
+>> @@ -1204,6 +1208,7 @@ struct dwc3 {
+>>  	unsigned		is_utmi_l1_suspend:1;
+>>  	unsigned		is_fpga:1;
+>>  	unsigned		pending_events:1;
+>> +	unsigned		needs_fifo_resize:1;
+> 
+> Instead of passing a flag, this could be detected in runtime during ->udc_start()
+> 
+
+The flag was going to serve the purpose of allowing platforms to define
+if they want to enable the TX FIFO resizing logic or not.  Maybe in
+their particular HW platform, the HW default FIFO settings are sufficient.
+
+>> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+>> index 6dee4da..7ee2302 100644
+>> --- a/drivers/usb/dwc3/ep0.c
+>> +++ b/drivers/usb/dwc3/ep0.c
+>> @@ -611,6 +612,43 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, struct usb_ctrlrequest *ctrl)
+>>  		return -EINVAL;
+>>  
+>>  	case USB_STATE_ADDRESS:
+> 
+> are you sure it's safe to fiddle with TX FIFO allocation at SetAddress()
+> time?
+> 
+
+It should be acceptable, as the function drivers shouldn't be calling
+usb_ep_enable() until we receive a SET_CONFIG from the host to enable
+the configuration.  __dwc3_gadget_ep_enable() -->
+dwc3_gadget_set_ep_config() is where we'd assign the EP to a particular
+TX FIFO.
+
+>> +		/*
+>> +		 * If tx-fifo-resize flag is not set for the controller, then
+>> +		 * do not clear existing allocated TXFIFO since we do not
+>> +		 * allocate it again in dwc3_gadget_resize_tx_fifos
+>> +		 */
+>> +		if (dwc->needs_fifo_resize) {
+>> +			/* Read ep0IN related TXFIFO size */
+>> +			dep = dwc->eps[1];
+>> +			size = dwc3_readl(dwc->regs, DWC3_GTXFIFOSIZ(0));
+>> +			if (dwc3_is_usb31(dwc))
+>> +				dep->fifo_depth = DWC31_GTXFIFOSIZ_TXFDEP(size);
+>> +			else
+>> +				dep->fifo_depth = DWC3_GTXFIFOSIZ_TXFDEP(size);
+>> +
+>> +			dwc->last_fifo_depth = dep->fifo_depth;
+>> +			/* Clear existing TXFIFO for all IN eps except ep0 */
+>> +			for (num = 3; num < min_t(int, dwc->num_eps,
+>> +				DWC3_ENDPOINTS_NUM); num += 2) {
+>> +				dep = dwc->eps[num];
+>> +				/* Don't change TXFRAMNUM on usb31 version */
+>> +				size = dwc3_is_usb31(dwc) ?
+>> +					dwc3_readl(dwc->regs,
+>> +						   DWC3_GTXFIFOSIZ(num >> 1)) &
+>> +						   DWC31_GTXFIFOSIZ_TXFRAMNUM :
+>> +						   0;
+>> +
+>> +				dwc3_writel(dwc->regs,
+>> +					    DWC3_GTXFIFOSIZ(num >> 1),
+>> +					    size);
+>> +				dep->fifo_depth = 0;
+>> +
+>> +				dev_dbg(dwc->dev, "%s(): %s fifo_depth:%x\n",
+>> +					__func__, dep->name,
+>> +					dep->fifo_depth);
+> 
+> no dev_dbg() calls in this driver, please.
+> 
+
+Got it.
+
+>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>> index 00746c2..6baca05 100644
+>> --- a/drivers/usb/dwc3/gadget.c
+>> +++ b/drivers/usb/dwc3/gadget.c
+>> @@ -540,6 +540,97 @@ static int dwc3_gadget_start_config(struct dwc3_ep *dep)
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * dwc3_gadget_resize_tx_fifos - reallocate fifo spaces for current use-case
+>> + * @dwc: pointer to our context structure
+>> + *
+>> + * This function will a best effort FIFO allocation in order
+>> + * to improve FIFO usage and throughput, while still allowing
+>> + * us to enable as many endpoints as possible.
+>> + *
+>> + * Keep in mind that this operation will be highly dependent
+>> + * on the configured size for RAM1 - which contains TxFifo -,
+>> + * the amount of endpoints enabled on coreConsultant tool, and
+>> + * the width of the Master Bus.
+>> + *
+>> + * In the ideal world, we would always be able to satisfy the
+>> + * following equation:
+>> + *
+>> + * ((512 + 2 * MDWIDTH-Bytes) + (Number of IN Endpoints - 1) * \
+>> + * (3 * (1024 + MDWIDTH-Bytes) + MDWIDTH-Bytes)) / MDWIDTH-Bytes
+>> + *
+>> + * Unfortunately, due to many variables that's not always the case.
+>> + */
+>> +static int dwc3_gadget_resize_tx_fifos(struct dwc3 *dwc, struct dwc3_ep *dep)
+>> +{
+>> +	int fifo_size, mdwidth, max_packet = 1024;
+>> +	int tmp, mult = 1, fifo_0_start, ram1_depth;
+>> +
+>> +	if (!dwc->needs_fifo_resize)
+>> +		return 0;
+>> +
+>> +	/* resize IN endpoints excepts ep0 */
+> 
+> typo: excepts
+> 
+
+Got it.
+
+>> +	if (!usb_endpoint_dir_in(dep->endpoint.desc) || dep->number <= 1)
+>> +		return 0;
+>> +
+>> +	/* Don't resize already resized IN endpoint */
+>> +	if (dep->fifo_depth) {
+>> +		dev_dbg(dwc->dev, "%s fifo_depth:%d is already set\n",
+>> +					dep->endpoint.name, dep->fifo_depth);
+> 
+> no dev_dbg()
+> 
+
+Understood.
+
+>> @@ -620,6 +711,10 @@ static int __dwc3_gadget_ep_enable(struct dwc3_ep *dep, unsigned int action)
+>>  	int			ret;
+>>  
+>>  	if (!(dep->flags & DWC3_EP_ENABLED)) {
+>> +		ret = dwc3_gadget_resize_tx_fifos(dwc, dep);
+> 
+> technically, you're no resizing a single FIFO. In any case, what happens
+> when you run out of space midway through the resizing? You already
+> accepted the gadget driver, you're already bound to it, then you resize
+> the FIFOs and things start to fall apart. How do we handle that?
+> 
+
+Yes, that is a valid concern.  At the moment, if we returned -ENOMEM due
+to the resizing logic failing, then the function driver would receive an
+error during usb_ep_enable().  This would then most likely result in the
+data path not being enabled for each subsequent function driver.  Would
+the situation be better if we avoid binding to the UDC entirely if our
+TXFIFO was out of memory?
+
+Thanks again for the input!
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
