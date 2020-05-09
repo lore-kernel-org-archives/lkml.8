@@ -2,239 +2,238 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA9FC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF74C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E5C214D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAD4214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 11:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bWiaLslB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcmiKObj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgEILQb (ORCPT
+        id S1728182AbgEILTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 07:16:31 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22850 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727993AbgEILQ3 (ORCPT
+        Sat, 9 May 2020 07:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725920AbgEILTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 07:16:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589022987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=i65u0loZ+URx1fB/wqG6cjTO7Ynjzo+5bpMPHJof7I0=;
-        b=bWiaLslBj1Kchbzs7zG+iZoX2vp7C5AUXeot6X23NiroeRP3JYjzsAVzXn0GBY97GeJhWb
-        lKk5sXRglyni6i2fw8om42sxq57V5g/oATg1D+6RT1siy+yk10p24gNI7XtZCPtIdA3Jqa
-        0xGrUXOkaiqtmpC2QNtYAmeGYUjSQsM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-pgXS5jojMwenKNne6iLgaA-1; Sat, 09 May 2020 07:16:24 -0400
-X-MC-Unique: pgXS5jojMwenKNne6iLgaA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E42A80058A;
-        Sat,  9 May 2020 11:16:23 +0000 (UTC)
-Received: from virtlab710.virt.lab.eng.bos.redhat.com (virtlab710.virt.lab.eng.bos.redhat.com [10.19.152.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 998DA61982;
-        Sat,  9 May 2020 11:16:22 +0000 (UTC)
-From:   Cathy Avery <cavery@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Subject: [PATCH kvm-unit-tests] svm: Test V_IRQ injection
-Date:   Sat,  9 May 2020 07:16:22 -0400
-Message-Id: <20200509111622.2184-1-cavery@redhat.com>
+        Sat, 9 May 2020 07:19:14 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BB5C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 04:19:12 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id x73so3495791lfa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 04:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EgBmZj0YP5lTWm93pdMnUd2XVLO6BkksVU5qHErJs8Y=;
+        b=xcmiKObjaM5wyKpC91Wsx5JQQBvFdiIX2OBBszA7/5tYMi2ItnB0SONo9Ad+IZz6x6
+         0uSTjbQp9+jYDyCVFX72QfHOr/gZrt6uzc9HQ2/Op9Q7gWS1a4bjN2vlSdbyia8FA/iW
+         7WHeY21k+RCQua0JnhnxJrruXa0Uf1RK310ZTciN2CBbyD4icv8qF+D0/8dsb87wpZp0
+         WtMBQkCFAag4jYjtB0CU70GVTal8gM4KsDok/xzk4CiysNpofNjqmycoEPxkLGjFgeZE
+         My7zUS3/UAeN2rbTFyCoWA24xlF1V67Zu8sL0KT5QnI5giTPpAMBj7UpOjbbYoAyVs1p
+         LgLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EgBmZj0YP5lTWm93pdMnUd2XVLO6BkksVU5qHErJs8Y=;
+        b=WczWTslMJke2UYqDbcfaVQTsS5e9pcYNOB9NHKB76sBqSaHU2Em0tdrHvMnPMLQBZZ
+         vDC/QKiqjDH9wotLWaBLv1L/fLpCciSHQC+OaRHlp4ccvhjvpy5qFAUyUx/RdpTNflr6
+         P97aRnIUQiUGfJoN5UbZaIUqLYTZRPDbcJIh2BzCUjKCWkCwlfK94HnyinksC9jYLarY
+         rWqrMkA7gN9HPEEvd/TthYn9KueSl/oemRbNjFHJXR+VVDLAudIIWr4+CzXlIuoGb2cF
+         qKKXaVg//yX6myzFyAqkMN61Nb/W9//SN6fVD88Owu7mH13bboqHd7AuYwtMzXC3OSAu
+         hSrA==
+X-Gm-Message-State: AOAM532Tj5e4gJKRFR9H0FCrrogH58DC3Lg7PuR5N0qK0v9tYUSALFLI
+        l6kaz6ehopvF7a0rJffyGB7ni2PGcPhoYZWJ+28h7A==
+X-Google-Smtp-Source: ABdhPJx5e/hzmoQSQuLG77jg8aLECA0q/iupm4JGBG2FSQvKZNRkkaWp+xx0z4IRNuVmrVBo9hQEFqNSmWtpaGr2lM4=
+X-Received: by 2002:a19:40d2:: with SMTP id n201mr4822268lfa.82.1589023151208;
+ Sat, 09 May 2020 04:19:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200509064507.085696379@linuxfoundation.org>
+In-Reply-To: <20200509064507.085696379@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 9 May 2020 16:48:58 +0530
+Message-ID: <CA+G9fYvMHTSev0Me8z5AmVVhN0OVPiQ7gtx+xoOTEh=+tb31VA@mail.gmail.com>
+Subject: Re: [PATCH 4.4 000/306] 4.4.223-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test V_IRQ injection from L1 to L2 with V_TPR less
-than or greater than V_INTR_PRIO. Also test VINTR
-intercept with differing V_TPR and V_INTR_PRIO.
+On Sat, 9 May 2020 at 12:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.223 release.
+> There are 306 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Mon, 11 May 2020 06:44:14 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.223-rc3.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Cathy Avery <cavery@redhat.com>
----
- x86/svm_tests.c | 150 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 150 insertions(+)
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-diff --git a/x86/svm_tests.c b/x86/svm_tests.c
-index 65008ba..aa6f3c2 100644
---- a/x86/svm_tests.c
-+++ b/x86/svm_tests.c
-@@ -1595,6 +1595,153 @@ static bool exc_inject_check(struct svm_test *test)
-     return count_exc == 1 && get_test_stage(test) == 3;
- }
- 
-+static volatile bool virq_fired;
-+
-+static void virq_isr(isr_regs_t *regs)
-+{
-+    virq_fired = true;
-+}
-+
-+static void virq_inject_prepare(struct svm_test *test)
-+{
-+    handle_irq(0xf1, virq_isr);
-+    default_prepare(test);
-+    vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-+                            (0x0f << V_INTR_PRIO_SHIFT); // Set to the highest priority
-+    vmcb->control.int_vector = 0xf1;
-+    virq_fired = false;
-+    set_test_stage(test, 0);
-+}
-+
-+static void virq_inject_test(struct svm_test *test)
-+{
-+    if (virq_fired) {
-+        report(false, "virtual interrupt fired before L2 sti");
-+        set_test_stage(test, -1);
-+        vmmcall();
-+    }
-+
-+    irq_enable();
-+    asm volatile ("nop");
-+    irq_disable();
-+
-+    if (!virq_fired) {
-+        report(false, "virtual interrupt not fired after L2 sti");
-+        set_test_stage(test, -1);
-+    }
-+
-+    vmmcall();
-+
-+    if (virq_fired) {
-+        report(false, "virtual interrupt fired before L2 sti after VINTR intercept");
-+        set_test_stage(test, -1);
-+        vmmcall();
-+    }
-+
-+    irq_enable();
-+    asm volatile ("nop");
-+    irq_disable();
-+
-+    if (!virq_fired) {
-+        report(false, "virtual interrupt not fired after return from VINTR intercept");
-+        set_test_stage(test, -1);
-+    }
-+
-+    vmmcall();
-+
-+    irq_enable();
-+    asm volatile ("nop");
-+    irq_disable();
-+
-+    if (virq_fired) {
-+        report(false, "virtual interrupt fired when V_IRQ_PRIO less than V_TPR");
-+        set_test_stage(test, -1);
-+    }
-+
-+    vmmcall();
-+    vmmcall();
-+}
-+
-+static bool virq_inject_finished(struct svm_test *test)
-+{
-+    vmcb->save.rip += 3;
-+
-+    switch (get_test_stage(test)) {
-+    case 0:
-+        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-+            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-+                   vmcb->control.exit_code);
-+            return true;
-+        }
-+        if (vmcb->control.int_ctl & V_IRQ_MASK) {
-+            report(false, "V_IRQ not cleared on VMEXIT after firing");
-+            return true;
-+        }
-+        virq_fired = false;
-+        vmcb->control.intercept |= (1ULL << INTERCEPT_VINTR);
-+        vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-+                            (0x0f << V_INTR_PRIO_SHIFT);
-+        break;
-+
-+    case 1:
-+        if (vmcb->control.exit_code != SVM_EXIT_VINTR) {
-+            report(false, "VMEXIT not due to vintr. Exit reason 0x%x",
-+                   vmcb->control.exit_code);
-+            return true;
-+        }
-+        if (virq_fired) {
-+            report(false, "V_IRQ fired before SVM_EXIT_VINTR");
-+            return true;
-+        }
-+        vmcb->control.intercept &= ~(1ULL << INTERCEPT_VINTR);
-+        break;
-+
-+    case 2:
-+        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-+            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-+                   vmcb->control.exit_code);
-+            return true;
-+        }
-+        virq_fired = false;
-+        // Set irq to lower priority
-+        vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-+                            (0x08 << V_INTR_PRIO_SHIFT);
-+        // Raise guest TPR
-+        vmcb->control.int_ctl |= 0x0a & V_TPR_MASK;
-+        break;
-+
-+    case 3:
-+        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-+            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-+                   vmcb->control.exit_code);
-+            return true;
-+        }
-+        vmcb->control.intercept |= (1ULL << INTERCEPT_VINTR);
-+        break;
-+
-+    case 4:
-+        // INTERCEPT_VINTR should be ignored because V_INTR_PRIO < V_TPR
-+        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-+            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-+                   vmcb->control.exit_code);
-+            return true;
-+        }
-+        break;
-+
-+    default:
-+        return true;
-+    }
-+
-+    inc_test_stage(test);
-+
-+    return get_test_stage(test) == 5;
-+}
-+
-+static bool virq_inject_check(struct svm_test *test)
-+{
-+    return get_test_stage(test) == 5;
-+}
-+
- #define TEST(name) { #name, .v2 = name }
- 
- /*
-@@ -1750,6 +1897,9 @@ struct svm_test svm_tests[] = {
-     { "nmi_hlt", smp_supported, nmi_prepare,
-       default_prepare_gif_clear, nmi_hlt_test,
-       nmi_hlt_finished, nmi_hlt_check },
-+    { "virq_inject", default_supported, virq_inject_prepare,
-+      default_prepare_gif_clear, virq_inject_test,
-+      virq_inject_finished, virq_inject_check },
-     TEST(svm_guest_state_test),
-     { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
- };
--- 
-2.20.1
+Summary
+------------------------------------------------------------------------
 
+kernel: 4.4.223-rc3
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 211c2a20b085f3c5c4092afea4c10dd2bccaf96d
+git describe: v4.4.222-307-g211c2a20b085
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.222-307-g211c2a20b085
+
+No regressions (compared to build v4.4.222)
+
+No fixes (compared to build v4.4.222)
+
+Ran 20110 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest/net
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.223-rc3
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.223-rc3-hikey-20200509-718
+git commit: a9b5de1ee99dbfcffcc1d5a7cf13b8774b503461
+git describe: 4.4.223-rc3-hikey-20200509-718
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.223-rc3-hikey-20200509-718
+
+No regressions (compared to build 4.4.223-rc2-hikey-20200508-717)
+
+No fixes (compared to build 4.4.223-rc2-hikey-20200508-717)
+
+Ran 1814 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
