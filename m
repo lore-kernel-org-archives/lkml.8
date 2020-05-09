@@ -6,109 +6,111 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D16C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550E1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E210621473
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A97421473
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgEIMFa (ORCPT
+        id S1728507AbgEIMHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 08:05:30 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:43349 "EHLO
+        Sat, 9 May 2020 08:07:42 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:40871 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbgEIMFa (ORCPT
+        with ESMTP id S1727093AbgEIMHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 08:05:30 -0400
+        Sat, 9 May 2020 08:07:41 -0400
 Received: from localhost.localdomain ([149.172.19.189]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MjjKf-1irD2q0wW3-00l9tC; Sat, 09 May 2020 14:05:11 +0200
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N7RDn-1j3u291OAv-017q80; Sat, 09 May 2020 14:07:28 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Madalin Bucur <madalin.bucur@nxp.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Timur Tabi <timur@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: freescale: select CONFIG_FIXED_PHY where needed
-Date:   Sat,  9 May 2020 14:04:52 +0200
-Message-Id: <20200509120505.109218-1-arnd@arndb.de>
+        Maharaja Kennadyrajan <mkenna@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 2/2] ath10k: fix ath10k_pci struct layout
+Date:   Sat,  9 May 2020 14:06:33 +0200
+Message-Id: <20200509120707.188595-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200509120707.188595-1-arnd@arndb.de>
+References: <20200509120707.188595-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:h9yFrIRXLw4ySr/K8T7dpgPAcNBfXpgdjuBXGgfTWi/oLO0O7b3
- 3QzmyhOdEV7ue+w9vVDiLKMpf6cEyPrhpuy9ycZaC+mDcp412OwvqT9hbNQh7gk5HYuSKDf
- K8mIzC0fQBKcYKur5cuxH4YbA41cpKAQcFPb1VACyQRuj3JBvecl++cD0n+A9N6SKNQvShy
- DGsRjhvWrXU5QOsgnjE1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zwWkj2Ibg9U=:kPVIN3cDzUWTdqnu8jFYIS
- nkUvo37MduvMt7rPN+/56KpH3gHA50HYZh1Esv2TFzth9glTaJKAt6rpzbexn0nFJpcxaI0rH
- 6MDLAWH+SkWx7YkmlTUJrnPX/pEQXPDxWKpChPb8lC/VaksFNfKlAyU9tgq4CJDHyhLHk7343
- sH+W4fPyfxGSrbCcJ+8k72jxX0hkp2mlaPOcVUuXb+/wPtG+sU57WqTSNudKhuno2wd0ESJz+
- 8JfWXCLUU4K8rXtpI5NScAbq5xmaMQ1pK6Y0iMkLJrB/H23ytjcIt0fH8xJW0RirIpKNWvtn4
- 8AvmemEwqRfe49r1yHUdTeT7UkjLffT0c1a7lvyOqdbpcuIa6dX6A9jJKCH+z5543FJ/9OV8B
- W59/BSZ1RU4XARJmu0bOEzy71RwNKuugm+Gx+CTRr/MhEEKKMILLgiJyaf6B2g0qflONINjy1
- IBdD1wRGG7aTLHrlS2mcnnXRyWFrFp64tRkwLpgzivoIjL8KRf/rKOXQwMYR7I+glV8YsAKR2
- DaHDBKnO55lv6IkGmT9H70XqF4NiDCkxPxcD3KYcWi2UmZyeqVdx/+nRJtQzT1h4l3hFNUtjS
- 8P+DUup30HMxmzHc3c++JQaNPWLZgfJVwdlpuEiyjGnoENYRbo0V9WI6DVjthnwwjwm70rlMy
- bQWWZR+d5dNbmkXB0YLXn7yOCudBFt0H2ZsAIFkYdGPyuGVXMLfH1fPGig5KXA1cnmzu1MmkA
- P9YIcEy1XFhvZEGJvEZrGcwpIcFzM4Yh6eMoCdmF0nGjhUUSkeIaVLkK3cKn0KTaNdsjtPwGu
- Geu1DvgMwtu/oKgqKJYnsV+aUqz9oKxOTVRdN3r5PicFaVO7C0=
+X-Provags-ID: V03:K1:PwCZxgyuJPTotwKY546enVLNSjcEZwvUHNxW+ZeWlIbFQWRywio
+ zufRY0iO7HkMQ8lpmHRn7fJ7AYqhTdmqsbL4v/355PdA91ANvQzywOGv32/DXJRqAzoINys
+ YI1hF8rtOMGIYhcGlOLQvSRJB+NxU1YCGGTFGdB1h3UOqf1PfcOw8D2VVKjSHwdNXuWUWqx
+ wS8L4ildOaTnVsG7hvJ4g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pQykyiEsgvc=:5PhDczXHDy7IquzkJB7qTx
+ /TzHKhDP4SwR+IAaOr6xcVgCWBKtTo4cZXwMyTyZSPvlnPeIDkbsJWDsJnhBuEHtt9e+HzHF4
+ eRR3/J1QXBWDNRKTUKdxDCOkvg4bbkDqABbaMM0agEkDoLrnGj/f3NepIcaKGW228mgtbtu8C
+ s4Kc8sFNIu4AdyYrfEStC7jccU2QsSyq2lQDMhf1wJaKrYxtwaeyfYYgbFY9OaOxBKxcUGV1w
+ EkrQgy+lkZrZY8WJ0kWCZDlGYIUJB9HrAhwxVyW6dO92OemvzlrOjRAu4ZImR8V69bCoWGJJ0
+ 4I+wcFjVecW2davHhm4mN3QQmmCgx30e1gTSUlRTAu93V6+2vudc5QgwBUedYCI86kN+x9Beo
+ r+okGwG/0QqR0UyHnC+xJ6NdK71oo4zSghPiHYtLOTPsRqNRCttYs6s7ZAndqMJfxG+uJa7uD
+ NESEzJTIYhpBW+d9wbt+QRl9m0vXj8lrAHf9vExbOSGyl6br9wuyfoPpDWUhgz1zlAv7q+PcO
+ /9cpPmMeDMYjKNnKDLmfAWPsUM2g5kG7B6Wl682HScUYZDjmwts9cTvjD6Wp/DiRJ2Z8plHaD
+ Q7/+e5gfUd7VDBrSw4XQvm6tQFxxrkIAtoFCzZCJoyEcAZbfJ2Z5kByMuT37zVb7lzNg5EOnU
+ rs2QXjHQh6HSbSnEYrSNaAAcWVYx8XStXWaz9gyzr5Rx4cJLEavX0SJPLK+nd/wCq95+XWAvi
+ rUl2iiomWXVzH3yr75qsmE5QZjWp1mMkgUMPGBDDgJyh9wIi4oK/+WWnIbuMmLoUE+GSK722i
+ +mzFCSq72AE9Nwq49GRlcizgTFDuZhr+DSP8QmUvBVXYM77A8Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-and CONFIG_GIANFAR=y:
+gcc-10 correctly points out a bug with a zero-length array in
+struct ath10k_pci:
 
-x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
+drivers/net/wireless/ath/ath10k/ahb.c: In function 'ath10k_ahb_remove':
+drivers/net/wireless/ath/ath10k/ahb.c:30:9: error: array subscript 0 is outside the bounds of an interior zero-length array 'struct ath10k_ahb[0]' [-Werror=zero-length-bounds]
+   30 |  return &((struct ath10k_pci *)ar->drv_priv)->ahb[0];
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/net/wireless/ath/ath10k/ahb.c:13:
+drivers/net/wireless/ath/ath10k/pci.h:185:20: note: while referencing 'ahb'
+  185 |  struct ath10k_ahb ahb[0];
+      |                    ^~~
 
-It seems the same thing can happen with dpaa and ucc_geth, so change
-all three to do an explicit 'select FIXED_PHY'.
+The last addition to the struct ignored the comments and added
+new members behind the array that must remain last.
 
-The fixed-phy driver actually has an alternative stub function that
-theoretically allows building network drivers when fixed-phy is
-disabled, but I don't see how that would help here, as the drivers
-presumably would not work then.
+Change it to a flexible-array member and move it last again to
+make it work correctly, prevent the same thing from happening
+again (all compilers warn about flexible-array members in the
+middle of a struct) and get it to build without warnings.
 
+Fixes: 521fc37be3d8 ("ath10k: Avoid override CE5 configuration for QCA99X0 chipsets")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/freescale/Kconfig      | 2 ++
- drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
- 2 files changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath10k/pci.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
-index 2bd7ace0a953..bfc6bfe94d0a 100644
---- a/drivers/net/ethernet/freescale/Kconfig
-+++ b/drivers/net/ethernet/freescale/Kconfig
-@@ -77,6 +77,7 @@ config UCC_GETH
- 	depends on QUICC_ENGINE && PPC32
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	---help---
- 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
- 	  which is available on some Freescale SOCs.
-@@ -90,6 +91,7 @@ config GIANFAR
- 	depends on HAS_DMA
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	select CRC32
- 	---help---
- 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
-diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
-index 3b325733a4f8..0a54c7e0e4ae 100644
---- a/drivers/net/ethernet/freescale/dpaa/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
-@@ -3,6 +3,7 @@ menuconfig FSL_DPAA_ETH
- 	tristate "DPAA Ethernet"
- 	depends on FSL_DPAA && FSL_FMAN
- 	select PHYLIB
-+	select FIXED_PHY
- 	select FSL_FMAN_MAC
- 	---help---
- 	  Data Path Acceleration Architecture Ethernet driver,
+diff --git a/drivers/net/wireless/ath/ath10k/pci.h b/drivers/net/wireless/ath/ath10k/pci.h
+index e3cbd259a2dc..862d0901c5b8 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.h
++++ b/drivers/net/wireless/ath/ath10k/pci.h
+@@ -178,15 +178,16 @@ struct ath10k_pci {
+ 	 */
+ 	u32 (*targ_cpu_to_ce_addr)(struct ath10k *ar, u32 addr);
+ 
++	struct ce_attr *attr;
++	struct ce_pipe_config *pipe_config;
++	struct ce_service_to_pipe *serv_to_pipe;
++
+ 	/* Keep this entry in the last, memory for struct ath10k_ahb is
+ 	 * allocated (ahb support enabled case) in the continuation of
+ 	 * this struct.
+ 	 */
+-	struct ath10k_ahb ahb[0];
++	struct ath10k_ahb ahb[];
+ 
+-	struct ce_attr *attr;
+-	struct ce_pipe_config *pipe_config;
+-	struct ce_service_to_pipe *serv_to_pipe;
+ };
+ 
+ static inline struct ath10k_pci *ath10k_pci_priv(struct ath10k *ar)
 -- 
 2.26.0
 
