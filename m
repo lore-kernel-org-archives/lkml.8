@@ -2,163 +2,125 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C278DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C7C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A005E2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE5F206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 13:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="elWpvb1r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vv++posi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEINTM (ORCPT
+        id S1727787AbgEINXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 09:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35016 "EHLO
+        Sat, 9 May 2020 09:23:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgEINTM (ORCPT
+        with ESMTP id S1726942AbgEINXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 09:19:12 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DE6C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 06:19:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h26so3907187qtu.8
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:19:11 -0700 (PDT)
+        Sat, 9 May 2020 09:23:36 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C4DC05BD09
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 06:23:36 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t16so1928559plo.7
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 06:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=c3S74qnfjRD4b2Wdq7OyXA9G4DMNeJPdnBeSuCdDvso=;
-        b=elWpvb1roqtRswDoNOxnBJvGEQy9WooHuez8YPM/O00mnWKJxjqRh6WUqKd1u1CSAv
-         3u4xhPNQSBwBA2lAyTNgE7Kn+8Jv+Jap1F1w+55GLKlmBSc+8SnvZ/qe/WGJ2h139z9N
-         f6vh7l4bd7YP1mMzTduYLdPo590AajSgnrV/iSMPPWDWShJAUIJHAtIUXg3MiJTEdqSL
-         lUpCrdk8Mz/h0sxTbNfO3MJkEYAD5oFCcuUSRQ0VrGKHdGG84cdKPrAhuGRZAMNpkz6H
-         ustx4xnoTZK3RDyB3JIHkdm8s1VGMOx/EoT8uSNYih9YVwE/eSyt+v5O7YCERdCyK/DB
-         Kuww==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m6rH3XcvlCHD6Smk1GtwJfgqlq+VWlPnqoHpZdRsMeI=;
+        b=vv++posiC5BPmZR4HWX8HS+TzniLdtAGuZFZDPbrPQo1073D3q/ECQEOkg1aMylGI1
+         pWv+JD9zI9AJp/wNJqfhuYsc8R1lC7gLi+pl//nsy4vs0dEKOSB5xkpCrb8YUojJC5Vz
+         6QbTBjWLt8wZG93KzYbQG5Kho2qq6trdt+humq28A4e0AkaRfZvkk6CTcntdGyl7oRXB
+         6iWpykNJXNUNcPBZVSpbbPZTBlVFjgk5c5aohXtD/3SIaPwwsGPN3Vdv9e2iim7kDo0t
+         U5hWGmQHtT2fyGK5ITs9NbkgqJG4B7WOxj9iy2UYJB5YHpyxJSVsj8PBX/9SU2M4g02q
+         mtow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=c3S74qnfjRD4b2Wdq7OyXA9G4DMNeJPdnBeSuCdDvso=;
-        b=fMwRR33mKo56RIZXAoZI/t4QiesOxJsuXaMAS1h+5wD1nuFMAK8DrjBmzpTeGX+tgE
-         93FFb4FTQnEnTceYG8BOuJBZXSguhOtq0gtsysouN/3jNDdIJDBYrl9x8bDJoVJB1tV1
-         ji7NuFJaKS/Tv+dUdvL5SnZAZD1H0X2daWl1YpSq1LTz72NrHBiGAJ4RDVV6uZ8lYQrm
-         Zmh3bp1EAiTXiUwK3clr36MP7w77MBU8JR2nZlcPsxqQWsyje5h7YTRXhGVISQKs8Znl
-         c+FV5CplR2loQs73z/05BV3G0EoT+rWXMNMIBMUCgGglATG8ECEY6z2UwzOaeXFxuDGC
-         XdaQ==
-X-Gm-Message-State: AGi0PuYpw9NMq6JSFdC3/Y+uwqRtx/CsuHw14GK630uSPyX2CuOWBTyG
-        fUWeeA8x/KycLdsOgiVf75AAyIEuKquciw==
-X-Google-Smtp-Source: APiQypLLtYrBFiPepvraIPHBoc177IPldZwLVLY1Tc4DTogqSShZhaXrdR5qCR+aXYadNZEY2OZPXw==
-X-Received: by 2002:ac8:1c3d:: with SMTP id a58mr6763870qtk.52.1589030351100;
-        Sat, 09 May 2020 06:19:11 -0700 (PDT)
-Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id c11sm3561527qkj.78.2020.05.09.06.19.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 May 2020 06:19:10 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3] powerpc/64s/pgtable: fix an undefined behaviour
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <952c3921-5aa8-bff5-9a87-baf5f901c535@c-s.fr>
-Date:   Sat, 9 May 2020 09:19:09 -0400
-Cc:     rashmicy@gmail.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m6rH3XcvlCHD6Smk1GtwJfgqlq+VWlPnqoHpZdRsMeI=;
+        b=t62ETK7z+9KFW+VkaI19/480HlL0eDMj0Tv9k51WIaoXtlwWbgpYDhzxXbpBvIkFRe
+         /gs/tXVX9+JMdEwUbqWoc6xeB/FCUJjBa4CXO8ai4jLV11UAQdwC4m+fmFefMYpl7NMq
+         huXsw8R6TCH2hvKGCFh9yXC2V6HrptQWSR1gLlL8AQau7nav+1WQRJBG2nfTWug9E+Yi
+         /DF6ObeN8cM250pdTCSeehN9iHlBIFuaKQMdIoqFJ76DFOgbgG9BAKtY6S6bNke4VM63
+         n245OfDEKLBnNgcp1n/zJndmxChcbYg5PY6EEtbJThwWdh5ImLZcmXwmAHu9zYpAyTNR
+         0q0w==
+X-Gm-Message-State: AGi0PubsDOUZdoTxKPUac0uLjNdW2gFMXfIQRXMrgMpEpocHCGMnKIux
+        1VdQW7uZdGxyCkP74+lJqp/jeAiH+FtmXlhvxnKoZQ==
+X-Google-Smtp-Source: APiQypLd3DqT21blgK/ByDCDeGLDE/yVcvXALGEMRPzDrr+O9dO+G6ZMeK8jNvsQSMWeSC/9purWjmLv/Y1njyvZz7c=
+X-Received: by 2002:a17:902:4c:: with SMTP id 70mr6810872pla.336.1589030615938;
+ Sat, 09 May 2020 06:23:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1588870822.git.andreyknvl@google.com> <459d02069dedefcc30095748f49ef4a426e15b74.1588870822.git.andreyknvl@google.com>
+ <873689mtbv.fsf@kernel.org>
+In-Reply-To: <873689mtbv.fsf@kernel.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Sat, 9 May 2020 15:23:25 +0200
+Message-ID: <CAAeHK+zRcz8YH_r+QJVJzSgmC9aY57+COybOo60uR0GJTqfSUg@mail.gmail.com>
+Subject: Re: [PATCH USB v3 3/5] usb: raw-gadget: fix gadget endpoint selection
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     USB list <linux-usb@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AE5E859B-E1B8-4066-8EB2-670F72713EE2@lca.pw>
-References: <20200306044852.3236-1-cai@lca.pw>
- <952c3921-5aa8-bff5-9a87-baf5f901c535@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 9, 2020 at 10:00 AM Felipe Balbi <balbi@kernel.org> wrote:
+>
+> Andrey Konovalov <andreyknvl@google.com> writes:
+>
+> > Currently automatic gadget endpoint selection based on required features
+> > doesn't work. Raw Gadget tries iterating over the list of available
+> > endpoints and finding one that has the right direction and transfer type.
+> > Unfortunately selecting arbitrary gadget endpoints (even if they satisfy
+> > feature requirements) doesn't work, as (depending on the UDC driver) they
+> > might have fixed addresses, and one also needs to provide matching
+> > endpoint addresses in the descriptors sent to the host.
+> >
+> > The composite framework deals with this by assigning endpoint addresses
+> > in usb_ep_autoconfig() before enumeration starts. This approach won't work
+> > with Raw Gadget as the endpoints are supposed to be enabled after a
+> > set_configuration/set_interface request from the host, so it's too late to
+> > patch the endpoint descriptors that had already been sent to the host.
+> >
+> > For Raw Gadget we take another approach. Similarly to GadgetFS, we allow
+> > the user to make the decision as to which gadget endpoints to use.
+> >
+> > This patch adds another Raw Gadget ioctl USB_RAW_IOCTL_EPS_INFO that
+> > exposes information about all non-control endpoints that a currently
+> > connected UDC has. This information includes endpoints addresses, as well
+> > as their capabilities and limits to allow the user to choose the most
+> > fitting gadget endpoint.
+> >
+> > The USB_RAW_IOCTL_EP_ENABLE ioctl is updated to use the proper endpoint
+> > validation routine usb_gadget_ep_match_desc().
+> >
+> > These changes affect the portability of the gadgets that use Raw Gadget
+> > when running on different UDCs. Nevertheless, as long as the user relies
+> > on the information provided by USB_RAW_IOCTL_EPS_INFO to dynamically
+> > choose endpoint addresses, UDC-agnostic gadgets can still be written with
+> > Raw Gadget.
+> >
+> > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+>
+> you're adding a new IOCTL, how is this a fix?
 
+It's a fix in a sense that without this patch a user can't make
+raw-gadget work with other UDCs besides dummy, and with this patch it
+works (at least with dwc2 I'm currently using for tests).
 
-> On Mar 6, 2020, at 1:56 AM, Christophe Leroy <christophe.leroy@c-s.fr> =
-wrote:
->=20
->=20
->=20
-> Le 06/03/2020 =C3=A0 05:48, Qian Cai a =C3=A9crit :
->> Booting a power9 server with hash MMU could trigger an undefined
->> behaviour because pud_offset(p4d, 0) will do,
->> 0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
->> Fix it by converting pud_index() and friends to static inline
->> functions.
->> UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
->> shift exponent 34 is too large for 32-bit type 'int'
->> CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ =
-#13
->> Call Trace:
->> dump_stack+0xf4/0x164 (unreliable)
->> ubsan_epilogue+0x18/0x78
->> __ubsan_handle_shift_out_of_bounds+0x160/0x21c
->> walk_pagetables+0x2cc/0x700
->> walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
->> (inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
->> ptdump_check_wx+0x8c/0xf0
->> mark_rodata_ro+0x48/0x80
->> kernel_init+0x74/0x194
->> ret_from_kernel_thread+0x5c/0x74
->> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Signed-off-by: Qian Cai <cai@lca.pw>
->=20
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Michael, can you take a look at this patch when you have a chance? It =
-looks falling through the cracks.
-
->=20
->> ---
->> v3: convert pud_index() etc to static inline functions.
->> v2: convert pud_offset() etc to static inline functions.
->>  arch/powerpc/include/asm/book3s/64/pgtable.h | 23 =
-++++++++++++++++----
->>  1 file changed, 19 insertions(+), 4 deletions(-)
->> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h =
-b/arch/powerpc/include/asm/book3s/64/pgtable.h
->> index 201a69e6a355..bd432c6706b9 100644
->> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
->> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
->> @@ -998,10 +998,25 @@ extern struct page *pgd_page(pgd_t pgd);
->>  #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
->>  #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
->>  -#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & =
-(PTRS_PER_PGD - 1))
->> -#define pud_index(address) (((address) >> (PUD_SHIFT)) & =
-(PTRS_PER_PUD - 1))
->> -#define pmd_index(address) (((address) >> (PMD_SHIFT)) & =
-(PTRS_PER_PMD - 1))
->> -#define pte_index(address) (((address) >> (PAGE_SHIFT)) & =
-(PTRS_PER_PTE - 1))
->> +static inline unsigned long pgd_index(unsigned long address)
->> +{
->> +	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
->> +}
->> +
->> +static inline unsigned long pud_index(unsigned long address)
->> +{
->> +	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
->> +}
->> +
->> +static inline unsigned long pmd_index(unsigned long address)
->> +{
->> +	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
->> +}
->> +
->> +static inline unsigned long pte_index(unsigned long address)
->> +{
->> +	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
->> +}
->>    /*
->>   * Find an entry in a page-table-directory.  We combine the address =
-region
-
+I guess I could split this patch into two, one that removes the failed
+attempt to auto-assign endpoints, and another one that adds the new
+ioctl. Should I do that?
