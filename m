@@ -2,78 +2,111 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A82C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B1CC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A324420735
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9E0214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 12:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cpqzcQ4B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J5sy+26B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgEIM6l (ORCPT
+        id S1727915AbgEIM70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 08:58:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54185 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726807AbgEIM6k (ORCPT
+        Sat, 9 May 2020 08:59:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34953 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727810AbgEIM7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 08:58:40 -0400
+        Sat, 9 May 2020 08:59:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589029118;
+        s=mimecast20190719; t=1589029163;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KMVWh1mEzqEp+H77U0A+zFW74/ES0KTqoqYD9zfDHVk=;
-        b=cpqzcQ4By5UH501M6QNbvHuKKlwkHjO4toDRa/GbaN48G4yj+D6ag/D+xP1r4R53TNf5DL
-        lDnTH2CiIBuidrqXj1PllEvzaSrn6bpY1oi20SgKaFRYIQ+Zs1NCDt/m4e53ZaTryxyzQM
-        vvPnQv+d9p4wcEvcFjtWVAyvNbH+3eU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-tJ57hkl0MZq9ezS9MOSFIg-1; Sat, 09 May 2020 08:58:35 -0400
-X-MC-Unique: tJ57hkl0MZq9ezS9MOSFIg-1
-Received: by mail-wr1-f70.google.com with SMTP id g10so2350881wrr.10
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 05:58:34 -0700 (PDT)
+        bh=pQw8wIihcr8z9SG9JkhXrUc3pHs+9HPhqleZu+dS0tc=;
+        b=J5sy+26BKRGGq9QC2SIQZUWh6KGsA9VzUVxbKjzX7FXtdr8XKvTGTCyl5o6TbsJMMjAAOJ
+        VjZJIXaQ88K6ZgY3r2vGpyLSKEDWdowoaA5E2Wn6O+q5yqz+SMG128MAWXKMB4IyuIcBrN
+        mPM+EKRJO8QGWeeyiNZDwYNxTzaH+Y0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-G7_6vJ-iN3y6CC_NZ5ZhOA-1; Sat, 09 May 2020 08:59:21 -0400
+X-MC-Unique: G7_6vJ-iN3y6CC_NZ5ZhOA-1
+Received: by mail-wm1-f69.google.com with SMTP id a67so305703wme.6
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 05:59:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=KMVWh1mEzqEp+H77U0A+zFW74/ES0KTqoqYD9zfDHVk=;
-        b=LwPRBQRTKbppX/whn3V0YRDjl0nE3q623avQgqL7tY1UwFRTP+l3yl5lJKCS8m9zvI
-         GNvMrWfVN/LzKlf9sFE+UuVtArDx59yFRHbFnTHDno5C9i8dHSVYCR/wBpr0SmvcSIwN
-         f9LCT5nSd8eheDFQVTuP3YIQnuJ1eBAFQCivyB6juiK6o6vm3LhjX/4NFUGhqlUADFbt
-         i6frECiEOtM2PGkYrDJYwGZWBFGDaP2I8Pr7Y5u9gRle9NVUoEK2oDHJbIsavlwippPT
-         LZ8IzvhCB45PbijjocIK6Ghlg7Q96dkqmyMAsyK2hXhBspePT3QtRNTc3ax+UkW2R5uE
-         s+BQ==
-X-Gm-Message-State: AGi0PubvJYXJok1WgBF84Oeihccm5v6pOq36WZjn6i5eeaW5Fc1iIcR3
-        H6zx0r810uoTwJCSqAkjBj4HLFgdTksXjbSDqzOfMsTlBAGZV+aOfkDZvzDAPSXSspYd6p54Q2Y
-        U8LBHYNUtxco5MH+CKD2UShzj
-X-Received: by 2002:a1c:bbc4:: with SMTP id l187mr1466335wmf.183.1589029113622;
-        Sat, 09 May 2020 05:58:33 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKq4Rk8OD2T4G72wvoaVVvKImJJwsZJ+gbZPfWKklL8AEJZ1rTGr/sDTr1PsG7tp0d8p/dZEg==
-X-Received: by 2002:a1c:bbc4:: with SMTP id l187mr1466307wmf.183.1589029113323;
-        Sat, 09 May 2020 05:58:33 -0700 (PDT)
+        bh=pQw8wIihcr8z9SG9JkhXrUc3pHs+9HPhqleZu+dS0tc=;
+        b=U7cO6ctqZYX+wVUmyDUb3ebmPA7jPVsoeOQbKtXIg7iu134N+DSAuoZBJMmGn0lM0g
+         4mGiuFYwnyw11L8z9OQMcx90T/thOCsZ8OUffOZbCBo9oRHYVlELTLSvCZMQrcG6OHWb
+         HB0V3ufLbrGlG3lsb9YjuWMoGsQmRNi+UxqoGI0Xcf+UEdTCDzCiKewEUJPA4XhOFid2
+         Kp4l/zW4o5IllttEnQdUR5M7Yb7NGmpxKOkQrai6WO4+W8D0ioAqy5b8Ev5c9lbbjDd4
+         SnHN9ugmey35iL/rV1k8CR6SGuIfON//aGzJvyND327qHwaVzLEOrBQf3QMJ/wN6+QQ0
+         DlaQ==
+X-Gm-Message-State: AGi0PuZbwO9aVcB2EJEE24JxS+5VxMIujGeTfRxrsUCtEFDxufzkIMig
+        kPhypSlqHQwFIt/mLwrcp++6PxhnOviFpLtw/Cf9XN5LDS1VgPyLQVhvilussjk0Nh1s87g41AW
+        vG07Ae+FbhiEyFlNa2RqbZ6U9
+X-Received: by 2002:adf:81e4:: with SMTP id 91mr8859431wra.143.1589029160735;
+        Sat, 09 May 2020 05:59:20 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKyvtlkWX1zEIAN3peqtORXIi11YJ6t6OrIjcvtaKt8KFtk61ibvPPJ0tYsrkzhC5wen/OCNg==
+X-Received: by 2002:adf:81e4:: with SMTP id 91mr8859378wra.143.1589029160513;
+        Sat, 09 May 2020 05:59:20 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:1cb4:2b36:6750:73ce? ([2001:b07:6468:f312:1cb4:2b36:6750:73ce])
-        by smtp.gmail.com with ESMTPSA id x12sm8175828wrp.55.2020.05.09.05.58.32
+        by smtp.gmail.com with ESMTPSA id u16sm8073375wrq.17.2020.05.09.05.59.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 05:58:32 -0700 (PDT)
-Subject: Re: [PATCH kvm-unit-tests] svm: Test V_IRQ injection
-To:     Cathy Avery <cavery@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200509111622.2184-1-cavery@redhat.com>
+        Sat, 09 May 2020 05:59:19 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] KVM: x86: Move pkru save/restore to x86.c
+To:     Jim Mattson <jmattson@google.com>, Babu Moger <babu.moger@amd.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        mchehab+samsung@kernel.org, changbin.du@intel.com,
+        Nadav Amit <namit@vmware.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>, arjunroy@google.com,
+        logang@deltatee.com, Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        pawan.kumar.gupta@linux.intel.com,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
+References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
+ <158897219574.22378.9077333868984828038.stgit@naples-babu.amd.com>
+ <CALMp9eQj_aFcqR+v9SvFjKFxVjaHHzU44udcczJVqOR5vLQbWQ@mail.gmail.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <4097f4fe-f941-a8ef-8d93-3164f0b0441d@redhat.com>
-Date:   Sat, 9 May 2020 14:58:32 +0200
+Message-ID: <90657d4b-cb2b-0678-fd9c-a281bb85fadf@redhat.com>
+Date:   Sat, 9 May 2020 14:59:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200509111622.2184-1-cavery@redhat.com>
+In-Reply-To: <CALMp9eQj_aFcqR+v9SvFjKFxVjaHHzU44udcczJVqOR5vLQbWQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,187 +115,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/20 13:16, Cathy Avery wrote:
-> Test V_IRQ injection from L1 to L2 with V_TPR less
-> than or greater than V_INTR_PRIO. Also test VINTR
-> intercept with differing V_TPR and V_INTR_PRIO.
+On 09/05/20 00:09, Jim Mattson wrote:
+>> +       if (static_cpu_has(X86_FEATURE_PKU) &&
+>> +           kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
+>> +           vcpu->arch.pkru != vcpu->arch.host_pkru)
+>> +               __write_pkru(vcpu->arch.pkru);
+> This doesn't seem quite right to me. Though rdpkru and wrpkru are
+> contingent upon CR4.PKE, the PKRU resource isn't. It can be read with
+> XSAVE and written with XRSTOR. So, if we don't set the guest PKRU
+> value here, the guest can read the host value, which seems dodgy at
+> best.
 > 
-> Signed-off-by: Cathy Avery <cavery@redhat.com>
-> ---
->  x86/svm_tests.c | 150 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 150 insertions(+)
-> 
-> diff --git a/x86/svm_tests.c b/x86/svm_tests.c
-> index 65008ba..aa6f3c2 100644
-> --- a/x86/svm_tests.c
-> +++ b/x86/svm_tests.c
-> @@ -1595,6 +1595,153 @@ static bool exc_inject_check(struct svm_test *test)
->      return count_exc == 1 && get_test_stage(test) == 3;
->  }
->  
-> +static volatile bool virq_fired;
-> +
-> +static void virq_isr(isr_regs_t *regs)
-> +{
-> +    virq_fired = true;
-> +}
-> +
-> +static void virq_inject_prepare(struct svm_test *test)
-> +{
-> +    handle_irq(0xf1, virq_isr);
-> +    default_prepare(test);
-> +    vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-> +                            (0x0f << V_INTR_PRIO_SHIFT); // Set to the highest priority
-> +    vmcb->control.int_vector = 0xf1;
-> +    virq_fired = false;
-> +    set_test_stage(test, 0);
-> +}
-> +
-> +static void virq_inject_test(struct svm_test *test)
-> +{
-> +    if (virq_fired) {
-> +        report(false, "virtual interrupt fired before L2 sti");
-> +        set_test_stage(test, -1);
-> +        vmmcall();
-> +    }
-> +
-> +    irq_enable();
-> +    asm volatile ("nop");
-> +    irq_disable();
-> +
-> +    if (!virq_fired) {
-> +        report(false, "virtual interrupt not fired after L2 sti");
-> +        set_test_stage(test, -1);
-> +    }
-> +
-> +    vmmcall();
-> +
-> +    if (virq_fired) {
-> +        report(false, "virtual interrupt fired before L2 sti after VINTR intercept");
-> +        set_test_stage(test, -1);
-> +        vmmcall();
-> +    }
-> +
-> +    irq_enable();
-> +    asm volatile ("nop");
-> +    irq_disable();
-> +
-> +    if (!virq_fired) {
-> +        report(false, "virtual interrupt not fired after return from VINTR intercept");
-> +        set_test_stage(test, -1);
-> +    }
-> +
-> +    vmmcall();
-> +
-> +    irq_enable();
-> +    asm volatile ("nop");
-> +    irq_disable();
-> +
-> +    if (virq_fired) {
-> +        report(false, "virtual interrupt fired when V_IRQ_PRIO less than V_TPR");
-> +        set_test_stage(test, -1);
-> +    }
-> +
-> +    vmmcall();
-> +    vmmcall();
-> +}
-> +
-> +static bool virq_inject_finished(struct svm_test *test)
-> +{
-> +    vmcb->save.rip += 3;
-> +
-> +    switch (get_test_stage(test)) {
-> +    case 0:
-> +        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-> +            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-> +                   vmcb->control.exit_code);
-> +            return true;
-> +        }
-> +        if (vmcb->control.int_ctl & V_IRQ_MASK) {
-> +            report(false, "V_IRQ not cleared on VMEXIT after firing");
-> +            return true;
-> +        }
-> +        virq_fired = false;
-> +        vmcb->control.intercept |= (1ULL << INTERCEPT_VINTR);
-> +        vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-> +                            (0x0f << V_INTR_PRIO_SHIFT);
-> +        break;
-> +
-> +    case 1:
-> +        if (vmcb->control.exit_code != SVM_EXIT_VINTR) {
-> +            report(false, "VMEXIT not due to vintr. Exit reason 0x%x",
-> +                   vmcb->control.exit_code);
-> +            return true;
-> +        }
-> +        if (virq_fired) {
-> +            report(false, "V_IRQ fired before SVM_EXIT_VINTR");
-> +            return true;
-> +        }
-> +        vmcb->control.intercept &= ~(1ULL << INTERCEPT_VINTR);
-> +        break;
-> +
-> +    case 2:
-> +        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-> +            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-> +                   vmcb->control.exit_code);
-> +            return true;
-> +        }
-> +        virq_fired = false;
-> +        // Set irq to lower priority
-> +        vmcb->control.int_ctl = V_INTR_MASKING_MASK | V_IRQ_MASK |
-> +                            (0x08 << V_INTR_PRIO_SHIFT);
-> +        // Raise guest TPR
-> +        vmcb->control.int_ctl |= 0x0a & V_TPR_MASK;
-> +        break;
-> +
-> +    case 3:
-> +        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-> +            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-> +                   vmcb->control.exit_code);
-> +            return true;
-> +        }
-> +        vmcb->control.intercept |= (1ULL << INTERCEPT_VINTR);
-> +        break;
-> +
-> +    case 4:
-> +        // INTERCEPT_VINTR should be ignored because V_INTR_PRIO < V_TPR
-> +        if (vmcb->control.exit_code != SVM_EXIT_VMMCALL) {
-> +            report(false, "VMEXIT not due to vmmcall. Exit reason 0x%x",
-> +                   vmcb->control.exit_code);
-> +            return true;
-> +        }
-> +        break;
-> +
-> +    default:
-> +        return true;
-> +    }
-> +
-> +    inc_test_stage(test);
-> +
-> +    return get_test_stage(test) == 5;
-> +}
-> +
-> +static bool virq_inject_check(struct svm_test *test)
-> +{
-> +    return get_test_stage(test) == 5;
-> +}
-> +
->  #define TEST(name) { #name, .v2 = name }
->  
->  /*
-> @@ -1750,6 +1897,9 @@ struct svm_test svm_tests[] = {
->      { "nmi_hlt", smp_supported, nmi_prepare,
->        default_prepare_gif_clear, nmi_hlt_test,
->        nmi_hlt_finished, nmi_hlt_check },
-> +    { "virq_inject", default_supported, virq_inject_prepare,
-> +      default_prepare_gif_clear, virq_inject_test,
-> +      virq_inject_finished, virq_inject_check },
->      TEST(svm_guest_state_test),
->      { NULL, NULL, NULL, NULL, NULL, NULL, NULL }
->  };
+> Perhaps the second conjunct should be: (kvm_read_cr4_bits(vcpu,
+> X86_CR4_PKE) || (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU)).
+
+You're right.  The bug was preexistent, but we should fix it in 5.7 and
+stable as well.
+
+>>  }
+>>  EXPORT_SYMBOL_GPL(kvm_load_guest_xsave_state);
+>>
+>>  void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu)
+>>  {
+>> +       /*
+>> +        * eager fpu is enabled if PKEY is supported and CR4 is switched
+>> +        * back on host, so it is safe to read guest PKRU from current
+>> +        * XSAVE.
+>> +        */
+> I don't understand the relevance of this comment to the code below.
 > 
 
-Queued, thanks.
+It's probably stale.
 
 Paolo
 
