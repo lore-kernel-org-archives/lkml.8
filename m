@@ -2,108 +2,151 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A475BC47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DF0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E53208CA
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xfOv35rV"
+	by mail.kernel.org (Postfix) with ESMTP id C1A272192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 17:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589045821;
+	bh=9853mSKZsku5U79WiBkvplqTJllbx6OfEy4JNS5F/d0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D5tK4Zt1SEUUDVWrjEZH6EBFO1/AXxPd5rMGgoS9TL/ce6tkPc+67uK6DWA88iRe4
+	 yw7Fhco7Wg+qA3D0RMin7Z8TwaIBFpIvojSH9xjEqsP1AMmRg/hCKfQhX7R3Q1Dy/o
+	 0V8SDJebNi04Hks2CQDjc5rogo96W/gdVKw4E9fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgEIR1n (ORCPT
+        id S1728275AbgEIRhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 13:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgEIR1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 13:27:41 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20CAC061A0C;
-        Sat,  9 May 2020 10:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eA6zPwUAfsQm1w0Nmrjy4EvhkeArGomb4D8sTfYI5Jw=; b=xfOv35rVdMnTnm7BCEp6i1iyh
-        jcn3+drA3NPfXsmhOtc6bzRBpAGWHgT8kI7MEaZEXboVZ610QLsZdYPehF+bRp2FsmdW2CxSev1aM
-        YC2+69RqKDmilfvUZJ8DTBnP5J9Mt/T8btEjEpcB3h9vIz4TWpBBNz5F+uWca4jDo0Ltky9cTWbSC
-        j2L7bWBwi/Om9bEPBa+NNSuqMujHDspKt2LzjmTrsDs5lRJHHDbUdPgeWyHIIBCGVXz3quhTt0+Q6
-        JbxR/uwa9n4EiM/kvI9OILasKYfrEboP8UwYLsop0boLqwNC/jajz+Dw3Ib3brZlWeJwq6bSr3SPx
-        9juq4A+mw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58268)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jXTG3-0004dA-Nl; Sat, 09 May 2020 18:27:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jXTG0-00031g-UW; Sat, 09 May 2020 18:27:24 +0100
-Date:   Sat, 9 May 2020 18:27:24 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Hui Song <hui.song_1@nxp.com>, u-boot@linux.nxdi.nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jiafei.pan@nxp.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 2/3] armv8: gpio: add gpio feature
-Message-ID: <20200509172724.GG1551@shell.armlinux.org.uk>
-References: <20200509103956.26038-3-hui.song_1@nxp.com>
- <20200509103956.26038-2-hui.song_1@nxp.com>
- <20200509153315.GR208718@lunn.ch>
+        Sat, 9 May 2020 13:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbgEIRhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 13:37:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B122A20A8B;
+        Sat,  9 May 2020 17:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589045819;
+        bh=9853mSKZsku5U79WiBkvplqTJllbx6OfEy4JNS5F/d0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OrqzLnS6QyFGGzjQ0Hn4wYuE4HoWmIkWcgqYjwzwzvheUm9ZjCz/DU2H+pFLXi9sf
+         2dXRbfGMIVzq/6BqeSLCN21CVMUXkvyE8uCtZODFkBevOvYpwugQuOvD4nU3x1s4kE
+         DV2O8HFU6Ngm70YVm3jepYxP1ryy9BAuukxMHNiw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        luto@kernel.org
+Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v11 00/18] Enable FSGSBASE instructions
+Date:   Sat,  9 May 2020 13:36:37 -0400
+Message-Id: <20200509173655.13977-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509153315.GR208718@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 05:33:15PM +0200, Andrew Lunn wrote:
-> On Sat, May 09, 2020 at 06:39:55PM +0800, Hui Song wrote:
-> > From: "hui.song" <hui.song_1@nxp.com>
-> > 
-> > add one struct mpc8xxx_gpio_plat to enable gpio feature.
-> > 
-> > Signed-off-by: hui.song <hui.song_1@nxp.com>
-> > ---
-> >  .../include/asm/arch-fsl-layerscape/gpio.h    | 22 +++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >  create mode 100644 arch/arm/include/asm/arch-fsl-layerscape/gpio.h
-> > 
-> > diff --git a/arch/arm/include/asm/arch-fsl-layerscape/gpio.h b/arch/arm/include/asm/arch-fsl-layerscape/gpio.h
-> > new file mode 100644
-> > index 0000000000..d8dd750a72
-> > --- /dev/null
-> > +++ b/arch/arm/include/asm/arch-fsl-layerscape/gpio.h
-> > @@ -0,0 +1,22 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * Copyright 2014 Freescale Semiconductor, Inc.
-> > + */
-> > +
-> > +/*
-> > + * Dummy header file to enable CONFIG_OF_CONTROL.
-> > + * If CONFIG_OF_CONTROL is enabled, lib/fdtdec.c is compiled.
-> > + * It includes <asm/arch/gpio.h> via <asm/gpio.h>, so those SoCs that enable
-> > + * OF_CONTROL must have arch/gpio.h.
-> > + */
-> 
-> This does not seem right. You would expect each sub arch to have a
-> subdirectory in arch/arm/include/asm/ when in fact none do.
+Benefits:
+Currently a user process that wishes to read or write the FS/GS base must
+make a system call. But recent X86 processors have added new instructions
+for use in 64-bit mode that allow direct access to the FS and GS segment
+base addresses.  The operating system controls whether applications can
+use these instructions with a %cr4 control bit.
 
-From what I can tell, these patches are not for the kernel.  The
-filenames don't match th kernel layout.
+In addition to benefits to applications, performance improvements to the
+OS context switch code are possible by making use of these instructions. A
+third party reported out promising performance numbers out of their
+initial benchmarking of the previous version of this patch series [9].
+
+Enablement check:
+The kernel provides information about the enabled state of FSGSBASE to
+applications using the ELF_AUX vector. If the HWCAP2_FSGSBASE bit is set in
+the AUX vector, the kernel has FSGSBASE instructions enabled and
+applications can use them.
+
+Kernel changes:
+Major changes made in the kernel are in context switch, paranoid path, and
+ptrace. In a context switch, a task's FS/GS base will be secured regardless
+of its selector. In the paranoid path, GS base is unconditionally
+overwritten to the kernel GS base on entry and the original GS base is
+restored on exit. Ptrace includes divergence of FS/GS index and base
+values.
+
+Security:
+For mitigating the Spectre v1 SWAPGS issue, LFENCE instructions were added
+on most kernel entries. Those patches are dependent on previous behaviors
+that users couldn't load a kernel address into the GS base. These patches
+change that assumption since the user can load any address into GS base.
+The changes to the kernel entry path in this patch series take account of
+the SWAPGS issue.
+
+Changes from v10:
+
+ - Rewrite the commit message for patch #1.
+ - Document communication/acks from userspace projects that are
+   potentially affected by this.
+
+Andi Kleen (2):
+  x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
+  x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
+
+Andy Lutomirski (4):
+  x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+  x86/entry/64: Clean up paranoid exit
+  x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
+  x86/fsgsbase/64: Enable FSGSBASE on 64bit by default and add a chicken
+    bit
+
+Chang S. Bae (9):
+  x86/ptrace: Prevent ptrace from clearing the FS/GS selector
+  selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base
+    write
+  x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+  x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+  x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit
+  x86/entry/64: Document GSBASE handling in the paranoid path
+  x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
+  x86/fsgsbase/64: Use FSGSBASE instructions on thread copy and ptrace
+  selftests/x86/fsgsbase: Test ptracer-induced GS base write with
+    FSGSBASE
+
+Sasha Levin (1):
+  x86/fsgsbase/64: move save_fsgs to header file
+
+Thomas Gleixner (1):
+  Documentation/x86/64: Add documentation for GS/FS addressing mode
+
+Tony Luck (1):
+  x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ Documentation/x86/entry_64.rst                |   9 +
+ Documentation/x86/x86_64/fsgs.rst             | 199 ++++++++++++++++++
+ Documentation/x86/x86_64/index.rst            |   1 +
+ arch/x86/entry/calling.h                      |  40 ++++
+ arch/x86/entry/entry_64.S                     | 131 +++++++++---
+ arch/x86/include/asm/fsgsbase.h               |  45 +++-
+ arch/x86/include/asm/inst.h                   |  15 ++
+ arch/x86/include/uapi/asm/hwcap2.h            |   3 +
+ arch/x86/kernel/cpu/bugs.c                    |   6 +-
+ arch/x86/kernel/cpu/common.c                  |  22 ++
+ arch/x86/kernel/process.c                     |  10 +-
+ arch/x86/kernel/process.h                     |  68 ++++++
+ arch/x86/kernel/process_64.c                  | 142 +++++++------
+ arch/x86/kernel/ptrace.c                      |  17 +-
+ tools/testing/selftests/x86/fsgsbase.c        |  24 ++-
+ 16 files changed, 605 insertions(+), 129 deletions(-)
+ create mode 100644 Documentation/x86/x86_64/fsgs.rst
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.20.1
+
