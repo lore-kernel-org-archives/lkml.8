@@ -2,103 +2,103 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8EC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CB9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0901220746
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B8320746
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgEIAic (ORCPT
+        id S1728477AbgEIAig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:38:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3157 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgEIAib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:38:31 -0400
-IronPort-SDR: aopw/5m44GsnUnkU1UtPtopuLYOg5xUtm14EvccOz4UiwM0pFZW+oFS8saxF4FNlGpEQy55wKv
- MdQkV1M55APg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 17:38:30 -0700
-IronPort-SDR: q+sV77rbJRSonenXnHAbxIaNJcsxfDDnbUmDtOAuy5/ssIMbKCf1nWEdjdgakP2jskGvmkmC8t
- JWZnt/bd8Y3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
-   d="scan'208";a="279197066"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga002.jf.intel.com with ESMTP; 08 May 2020 17:38:30 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 79BCB301C4C; Fri,  8 May 2020 17:38:30 -0700 (PDT)
-Date:   Fri, 8 May 2020 17:38:30 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH v3 13/14] perf metricgroup: remove duped metric group
- events
-Message-ID: <20200509003830.GG3538@tassilo.jf.intel.com>
-References: <20200508053629.210324-1-irogers@google.com>
- <20200508053629.210324-14-irogers@google.com>
+        Fri, 8 May 2020 20:38:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55480 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbgEIAie (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:38:34 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 9C32F2A04C1
+Received: by earth.universe (Postfix, from userid 1000)
+        id 7F6DE3C08C6; Sat,  9 May 2020 02:38:30 +0200 (CEST)
+Date:   Sat, 9 May 2020 02:38:30 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Mathew King <mathewk@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Cleanup power_supply_sysfs.c
+Message-ID: <20200509003830.bnajxac4vb7yll7x@earth.universe>
+References: <20200504202930.228453-1-mathewk@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tg6rfky5idyprao4"
 Content-Disposition: inline
-In-Reply-To: <20200508053629.210324-14-irogers@google.com>
+In-Reply-To: <20200504202930.228453-1-mathewk@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->  				      struct expr_parse_ctx *pctx,
-> +				      bool has_constraint,
->  				      struct evsel **metric_events,
->  				      unsigned long *evlist_used)
->  {
-> -	struct evsel *ev;
-> -	bool leader_found;
-> -	const size_t idnum = hashmap__size(&pctx->ids);
-> -	size_t i = 0;
-> -	int j = 0;
-> +	struct evsel *ev, *current_leader = NULL;
->  	double *val_ptr;
-> +	int i = 0, matched_events = 0, events_to_match;
-> +	const int idnum = (int)hashmap__size(&pctx->ids);
 
-BTW standard perf data structure would be a rblist or strlist
+--tg6rfky5idyprao4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think it would be really better to do the deduping in a separate
-pass than trying to add it to find_evsel_group. This leads
-to very complicated logic.
+Hi,
 
-This will likely make it easier to implement more sophisticated
-algorithms too.
+Thanks for this nice patchset, I queued all patches to power-supply's
+for-next branch. Next time please rebase to latest state of for-next
+branch before sending new patch versions. I had to fix patch context
+to apply them because of
 
--Andi
+de46e0289310 ("power: supply: core: reduce power_supply_show_usb_type() par=
+ameters")
 
+-- Sebastian
+
+On Mon, May 04, 2020 at 02:29:26PM -0600, Mathew King wrote:
+> A few various patches to cleanup the power_supply sysfs implementation.
+> ---
+> v2: - Don't create attributes for unlisted properties
+>     - Use a char array for lower case name so no allocations neeed in
+>       init
+>     - Fix patch #2 does not compile because of change meant for patch #3
+>=20
+> Mathew King (4):
+>   power_supply: Cleanup power supply sysfs attribute list
+>   power_supply: Use designated initializer for property text arrays
+>   power_supply: Add a macro that maps enum properties to text values
+>   power_supply: Add power supply type property to uevent env
+>=20
+>  drivers/power/supply/power_supply_sysfs.c | 471 ++++++++++++----------
+>  1 file changed, 255 insertions(+), 216 deletions(-)
+>=20
+> --=20
+> 2.26.2.526.g744177e7f7-goog
+>=20
+
+--tg6rfky5idyprao4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl61+4YACgkQ2O7X88g7
++ppxvhAAkw65RJOoOACuodO/L19xuVGodin+p9Rz7I3LA7p1YcWnhVstfO/IZXbY
+x6/Dq3ijFYhnsUI134f9n569oGFZYS7B5/13zkweRhEG7yl9mIkmk33m2QdEbQ7P
+QelqTxjbc/NnImTo2Tw1Hd3csCNKTxN6RxjYFs/qsu28zKXlZ7AWRnF/3jggQFay
+cpcpXg153rHfbFzrCTkbtZe7ACC92cKBG4AMSDA0U1nqlDohnT7xfftj7XkLvwGi
+Hx9ii/L3YLq2CiOa8evj9SEzmVyV89eaGAEfzYwyZxTy1JH9U5lQl45cBvCPVxuf
+qR6iN4nEJwvWbOlKNQJlzXoc2relF6tzZZzKIP0a5/5Ldu7kTD+m07JP24TOU43/
+fryQjnc2hOtIB02FOXJ1G57vOF8+AmrQZO6b0w5/yMdnJPlMDkbqmG0N7O2s3GEn
+WqV1GXHbRAfrmKSKOtKPlc7IC5sWw4v6cu6O1MPTahlIq4X1e1K6bSI98TTVKeuo
+vzgJtqiaENZ9heXL9g9jUO+XJ9Kz2TAtKCMit8gluvojwjSqWRjNk2Fkmy8GE+C7
+3ud00EBr1XXsrN31z6KjwjM03otkjZLtXfSyxkK1lDZSxG8BCslT0CWZy0RLJCdT
+9u5I/vpZPghJbF5K82H2rDjmbtyfNoqR1SJ500IUa2JdtBhMInc=
+=Ydtk
+-----END PGP SIGNATURE-----
+
+--tg6rfky5idyprao4--
