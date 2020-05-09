@@ -2,116 +2,146 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAAFC54E7E
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F2C47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76CF21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="MDAMVoXL"
+	by mail.kernel.org (Postfix) with ESMTP id B20BB206B9
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgEIXnP (ORCPT
+        id S1728658AbgEIXnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:43:15 -0400
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:20904
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726356AbgEIXnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:43:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F8FdVNqP1iB2W3HN6gnrnXsKD+FffMNqqBpqh14n/ngZyBctdTM0Xf7WEfwtcBQAwihRODSEZknpkVJQuyvkXjnC4EI94VCzLSYDXkifaT0Y5Eu9eOBUQN+v/MMar6/NXaZZAkVzRA0o21YARaovVVC8p6tDLWf7tAkAMcLU010/M2WM9s8g2ocwDBx4z/VIgEbZcRFaSTPaAqyOy0JDTqv8+6082f116s97Z4tiuo5XLUzhdCJfyU+voa6J9vizwNrWuSlCbU0WSQG1eu99oq5lnzfpD4nlsJKEvQllx8LUt6kJKfFi7GOFAFRwZlvcKJbImdZYUjGrPTsskpM6BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgYq6KM/P6IuNVr6mVZca5TaGpQXZFsn+CkVj+vPooY=;
- b=SQq5zTTow4QofblKBI5ZqJiJLTcVhoYgdMG/2mAhqMsnhiFUTXNQaSw1cESMRM0BBaQK3mNBM/dbAvFdIdvtkbllYf7Gv1ID2WmwPleClsxl1C/wIYWQ28WE4W0yf2MRpMaylf7eZnnG9lmvT/kHs0rGSwu4ZWi0p9yfNgcB6TBgLVUg39Uxh0/vmv5kb697o4YiqkdxkkSoTvdNX9xnAh+vniEa9S9YtUsxwT6bat5hHZbiXfA/LIlchnZjEax+C/oklPAeyFb+JnARvz8XLRZbz2ZRWOLFrnzZFZ1scVoRqYGrkFwvwQ3vQqnVSZcG1nkkgJ2tS1SCOtO+y2NMrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pgYq6KM/P6IuNVr6mVZca5TaGpQXZFsn+CkVj+vPooY=;
- b=MDAMVoXLNjFr47D74KB9FCV3ezB87Qkw32tMSNGKoHHip51pY3U0oNcEoVs1koN+14H9Rl8cVjssrKTn5hmLk2yIQQ3iFqT7FLwyRP7OBG2oK5KtrtkzedaBEDBhZvHVAOs96PLBOnR4hI7ioX30208oSiXeLRQ7620R6o+hFiw=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB5054.eurprd05.prod.outlook.com (2603:10a6:803:56::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Sat, 9 May
- 2020 23:43:08 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::9d19:a564:b84e:7c19%7]) with mapi id 15.20.2979.033; Sat, 9 May 2020
- 23:43:08 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "kuba@kernel.org" <kuba@kernel.org>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5: Replace zero-length array with flexible-array
-Thread-Topic: [PATCH] net/mlx5: Replace zero-length array with flexible-array
-Thread-Index: AQHWJKEJ3r6Bytxqlka8je+nQhb84qie2csAgAGUHQA=
-Date:   Sat, 9 May 2020 23:43:08 +0000
-Message-ID: <fb46eb601f979d5d8d95ec5749ae06c1bc86d469.camel@mellanox.com>
-References: <20200507185935.GA15169@embeddedor>
-         <20200508163642.273bda4f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200508163642.273bda4f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0ac06079-b72e-4615-6797-08d7f472ba2f
-x-ms-traffictypediagnostic: VI1PR05MB5054:|VI1PR05MB5054:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB50542DA71CF84EC5D574929ABEA30@VI1PR05MB5054.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 03982FDC1D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w38BkahU1nTzhmEe3sJAU+ej2Vl8JHvISOwNv1yjg0q57kyqYdJust6zTZxc62QDJZkP/unVnyvc/Kts1iRjwVncbdnH9is6MLDNMQrZBw5s57Qyv89BCrS9MkLKowzBoia26qpu6gfwTdA/bWdh56bxKEt0HBAJEQ1ylepgLVqmGOGgY3w8+Y4tDMug/rbfZ4ffcImi5YMkCFhCBaWN+bojISZ0brpAZ7pph+LexuFDqyrnxh9xVKKoPVo+qB+yGtFq/Sr8/0Omr7jwq99tX5lmuk5e3zmA2fB6wamj+XkLnzmYCMSt2pJWak17n7I9rsnLj0Eea92PhTFoGjNO/CxomUPkhkqMPNGYBtdmD5H820OA4XJUBm55pJKcF3j6si052nDh66l0jyt1RHgmvA5d+JvaF9Ourft4IGOyLvrzYqaNBlpA1oakGFBMekEVBlMW6BKS95/bfNFs3E7FhRVwLMtiGS8ieHfRJ3YfsBFXg133OZgvYhOXp6PJfkWtbXxEAMCt/Q/MGkIn9J7wIg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(376002)(136003)(366004)(346002)(33430700001)(2906002)(6916009)(478600001)(6512007)(33440700001)(26005)(186003)(2616005)(91956017)(76116006)(6506007)(71200400001)(86362001)(4326008)(36756003)(54906003)(316002)(64756008)(66446008)(66946007)(66476007)(66556008)(6486002)(8676002)(4744005)(8936002)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: cric7TTxQ3wnnbnE9cpabFn/ar4kxpVWbgCaNmFvEKE1efyufLT3IZLnB+EOLM2O64rBjOZ3DK7mFWVcOaAjLO5fjQQGFWcpoLt7G2Qawh4knJKzw/s1YFqK54FA9RTesUpNaW6lKX/d82MDlxiSaGaoqrlBF6BUY6zw9RjzPTBQtcaUcAgQZCmLHWwcPN/uiQ98q+NmrWSNOeGpIFmuEi04AlIZduZkzWmfj2sPjlFxuz/HeLO42A1BYcqfUPxs5oxFLW6FqjUW6G2aNocMB6HNe7G7RmuYpu3RdY95gIhIxJwB6qIRtlzlhQaBTFN8RwZV129QbRvdOXTpZTv3iqpNpNPmSGOAw88OGr2CGygHoSjq2pMjHhLfZvAU4E1OodzxIdmhh1jFw3T/hEcUMLKmGzr+yZ3XxK/PQ+rD6fZ4EHmOhRCqRpz94uhuUOCpw85hsuJN0ThPfIX2KrT8BSNLMztAmLWT4JZqJEjqpzA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A4B4BA085BE3AE4F9963737F65FF4EB9@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sat, 9 May 2020 19:43:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34160 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgEIXnm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 19:43:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id B494F2A01A7
+Received: by earth.universe (Postfix, from userid 1000)
+        id DCAE43C08C7; Sun, 10 May 2020 01:43:38 +0200 (CEST)
+Date:   Sun, 10 May 2020 01:43:38 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     milo.kim@ti.com, anton.vorontsov@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH V2] power: supply: lp8788: Fix an error handling path in
+ 'lp8788_charger_probe()'
+Message-ID: <20200509234338.htilukszgiktza62@earth.universe>
+References: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ac06079-b72e-4615-6797-08d7f472ba2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2020 23:43:08.1503
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IiLPdcM258buc4gLgg7KUwUe9FT1BUffzLn2TpKKrFlXPqcwSMsme95dblOqz5VsMDwQgr7eJInFf3nsSA+E3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5054
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fvloof6eixjzfmk4"
+Content-Disposition: inline
+In-Reply-To: <20200509082323.223884-1-christophe.jaillet@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTA4IGF0IDE2OjM2IC0wNzAwLCBKYWt1YiBLaWNpbnNraSB3cm90ZToN
-Cj4gT24gVGh1LCA3IE1heSAyMDIwIDEzOjU5OjM1IC0wNTAwIEd1c3Rhdm8gQS4gUi4gU2lsdmEg
-d3JvdGU6DQo+ID4gVGhlIGN1cnJlbnQgY29kZWJhc2UgbWFrZXMgdXNlIG9mIHRoZSB6ZXJvLWxl
-bmd0aCBhcnJheSBsYW5ndWFnZQ0KPiA+IGV4dGVuc2lvbiB0byB0aGUgQzkwIHN0YW5kYXJkLCBi
-dXQgdGhlIHByZWZlcnJlZCBtZWNoYW5pc20gdG8NCj4gPiBkZWNsYXJlDQo+ID4gdmFyaWFibGUt
-bGVuZ3RoIHR5cGVzIHN1Y2ggYXMgdGhlc2Ugb25lcyBpcyBhIGZsZXhpYmxlIGFycmF5DQo+ID4g
-bWVtYmVyWzFdWzJdLA0KPiA+IGludHJvZHVjZWQgaW4gQzk5Og0KPiA+IA0KPiA+IHN0cnVjdCBm
-b28gew0KPiA+ICAgICAgICAgaW50IHN0dWZmOw0KPiA+ICAgICAgICAgc3RydWN0IGJvbyBhcnJh
-eVtdOw0KPiA+IH07DQo+IA0KPiBTYWVlZCwgSSdtIGV4cGVjdGluZyB5b3UgdG8gdGFrZSB0aGlz
-IGFuZCB0aGUgbWx4NCBwYXRjaCB2aWEgeW91cg0KPiB0cmVlcy4NCg0KWWVzIGZvciB0aGUgbWx4
-NSBwYXRjaCwgYnV0IHVzdWFsbHkgRGF2ZSB0YWtlcyBtbHg0IHBhdGNoZXMgZGlyZWN0bHkuDQoN
-CnNpbmNlIHRoZSB2b2x1bWUgb2YgbWx4NCBwYXRjaGVzIGlzIHZlcnkgc21hbGwsIGxldCdzIGFw
-cGx5IHRoZW0NCmRpcmVjdGx5IHRvIG5ldC1uZXh0LCB1bmxlc3MgeW91IHdhbnQgbWUgdG8gaGFu
-ZGxlIHRoZW0gZnJvbSBub3cgb24gYW5kDQptYWtlIHlvdXIgbGlmZSBlYXNpZXIsIHRoZW4gaSBk
-b24ndCBoYXZlIGFueSBpc3N1ZSB3aXRoIHRoYXQuDQoNClNhZWVkLg0KDQoNCg==
+
+--fvloof6eixjzfmk4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, May 09, 2020 at 10:23:23AM +0200, Christophe JAILLET wrote:
+> In the probe function, in case of error, resources allocated in
+> 'lp8788_setup_adc_channel()' must be released.
+>=20
+> This can be achieved easily by using the devm_ variant of
+> 'iio_channel_get()'.
+> This has the extra benefit to simplify the remove function and to axe the
+> 'lp8788_release_adc_channel()' function which is now useless.
+>=20
+> Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> V2: use devm_iio_channel_get instead of iio_channel_get and simplify code
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/lp8788-charger.c | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply=
+/lp8788-charger.c
+> index 84a206f42a8e..e7931ffb7151 100644
+> --- a/drivers/power/supply/lp8788-charger.c
+> +++ b/drivers/power/supply/lp8788-charger.c
+> @@ -572,27 +572,14 @@ static void lp8788_setup_adc_channel(struct device =
+*dev,
+>  		return;
+> =20
+>  	/* ADC channel for battery voltage */
+> -	chan =3D iio_channel_get(dev, pdata->adc_vbatt);
+> +	chan =3D devm_iio_channel_get(dev, pdata->adc_vbatt);
+>  	pchg->chan[LP8788_VBATT] =3D IS_ERR(chan) ? NULL : chan;
+> =20
+>  	/* ADC channel for battery temperature */
+> -	chan =3D iio_channel_get(dev, pdata->adc_batt_temp);
+> +	chan =3D devm_iio_channel_get(dev, pdata->adc_batt_temp);
+>  	pchg->chan[LP8788_BATT_TEMP] =3D IS_ERR(chan) ? NULL : chan;
+>  }
+> =20
+> -static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+> -{
+> -	int i;
+> -
+> -	for (i =3D 0; i < LP8788_NUM_CHG_ADC; i++) {
+> -		if (!pchg->chan[i])
+> -			continue;
+> -
+> -		iio_channel_release(pchg->chan[i]);
+> -		pchg->chan[i] =3D NULL;
+> -	}
+> -}
+> -
+>  static ssize_t lp8788_show_charger_status(struct device *dev,
+>  				struct device_attribute *attr, char *buf)
+>  {
+> @@ -735,7 +722,6 @@ static int lp8788_charger_remove(struct platform_devi=
+ce *pdev)
+>  	flush_work(&pchg->charger_work);
+>  	lp8788_irq_unregister(pdev, pchg);
+>  	lp8788_psy_unregister(pchg);
+> -	lp8788_release_adc_channel(pchg);
+> =20
+>  	return 0;
+>  }
+> --=20
+> 2.25.1
+>=20
+
+--fvloof6eixjzfmk4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl63QCoACgkQ2O7X88g7
++pqXkw//TQAiHoFVbfj4PDt6JINhpc+KHH09+OYBJASqORFGRahjpl9lRP2KwOWC
+M5slAVpIewYZduNjMSiXLsl3E9THqT4aPlMCQsPbMbqf9opbo+v/N+99eqK6H7zX
+muI5Ujy4mal8dQblR2ePlZiZkXj+rcY85JwW4BndWPDxY6H66GlYdFTuBdphLqIJ
+o3dFznmKZBWVk7jLogVf0Cqa/lK1h4FAg/X9f+9gsX8WEZujUONFdYxccQxlGZXt
+pBVVeTlg4a7PdXvvKDZwNLrhIs4tRI3ePc8cxcjkl2R9GUmk4r2LV2xswrkYbBpt
+dhYnPSHSKwFupk2iDiqL6cZxGdjyI7xHy/06rQO+vo2FgI6xDSsEgYhRFV2WrgME
+4T0FJOUw3wSEXpxndU/Q0339Hbq27n6m5ql3w5CNLOGU5phWFGGFJLxfYj2do8Gj
+9KwXpGGZy0hr03y0G036B+kWWxbrhoPfOE0VPfIo7ZcSFqXQNGPw+fQELbI1DFvI
+ElAndnEVL6hIa2iQyXHAqSkkPo/uq87/miBDo3DyHnmkshZAB3hLVmXEaMG+82Rq
+vPbK+TCz2sqHDKS6CDEAOZ/pG9P0wL5WUHP8uSLBq3dLqkKY+1zsjlhPHqwH9q44
+t9MY0/eLvpGTMWVwIO01U3Rpo4m6FdjN8JwahBASvoRzLEeUh5c=
+=2IDJ
+-----END PGP SIGNATURE-----
+
+--fvloof6eixjzfmk4--
