@@ -2,140 +2,157 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C699C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7490CC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C60221775
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5794324955
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 05:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8HaRP/f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPLqtTmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgEIFfI (ORCPT
+        id S1728745AbgEIFkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 01:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgEIFfI (ORCPT
+        Sat, 9 May 2020 01:40:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20027 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725822AbgEIFkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 01:35:08 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E324C061A0C;
-        Fri,  8 May 2020 22:35:08 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id m7so1668452plt.5;
-        Fri, 08 May 2020 22:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oVPqgvFYpDmjHxtwZexyhCeh0mu3Dntz+mgij6nVzYY=;
-        b=U8HaRP/fXpygxd+qh4WQ0oKNQCpdght8A3mk6BcJtbFiqDIaMMSunNcdSqGyfRksSj
-         9ippqZvDQkxJsJvHR2sDIKSKa9ZX7M78w+kFV+ouHXfTC/IummTNHD5uQrQORIwNJyz1
-         DWf6eeXlBuMurn9zDL3DcY3sw8hMfcvX+hAGVZ3u8Dsuf4HgXug6wcYsR6VkCiylivfn
-         +ax3ZJwvoTs817VAjPX5cLWMQiJ5aVvGK46V8Y/fbYLI6COm96wIRF24iIrgML7GeJRr
-         JLtzDGlnFe3jdU6URCSeATAheRgEcUW9Su3s+b0aP9Nt/6IYBnt44hsgNDcs96jz8Y+a
-         jAWw==
+        Sat, 9 May 2020 01:40:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589002839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mTjszWW/EefMrw7aIGeEPuK1Cqsav+nLkGOW2S21ZN0=;
+        b=cPLqtTmk0abJ/hBbOqR8Lj/4tS7FTfVExcDTGwffbYb0v5UyzSW2r4d+fIoFmRVDYpiEW/
+        hjrxFlYUYBDRgr38TnSPpZgBRNoWi0O9ahUExLVztEbmrtMmbBXOL1IoKKRSCBKGedYDCb
+        lvZDutk6DZQiB+jHwLv+exODYdBw4jY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-sHyDmu8sOLqJwOvU6GS6jg-1; Sat, 09 May 2020 01:40:36 -0400
+X-MC-Unique: sHyDmu8sOLqJwOvU6GS6jg-1
+Received: by mail-wm1-f72.google.com with SMTP id l21so6245322wmh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 08 May 2020 22:40:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oVPqgvFYpDmjHxtwZexyhCeh0mu3Dntz+mgij6nVzYY=;
-        b=E5LKH4Eqeo2HSNu6/zMyJp55ZXnEjWFfbHRdVMS0tsKsosdZQ33WUshEjoWJMo9pjV
-         Q0c5UNepFTwk0nfiZH7X3pUT5rPY1vOQYEwVOiDv668wnstMSU5k3A/G6RMG2C6OLJTH
-         Z1YbTSCWdaC7M4HGSI3A2kTvIVyY53mG/aYdVwiIbUdNlB1Oc1J0Q1C/60ZEuHO0EMfU
-         2oQNblLkKXqjJu9ZJApYIPf7zSN8ZhGFzCbvGkwWx1opclXE2iZN8j/lbXma7AUo5c5G
-         oRVmsPWNEyw4ZptdU39oObQwm+gSaikclJj1HAZgTcuVdhrd4ZAEp13Na6hMjil3dZsw
-         kgbQ==
-X-Gm-Message-State: AGi0PuZ7QjhE3zaajO6Q0t+79tNWVZfmC3ifNYSdq2q08Ex2FMKU2eCu
-        NgZky5cgRuMQDT8fvH5Yc/Y=
-X-Google-Smtp-Source: APiQypKux7Upd6mNxAE6TgYDmQtn6jZce4bi7lkCCj2wMxp51AS6zMkwHH3IJ9LmX39rSMrXLx4+BQ==
-X-Received: by 2002:a17:90a:8b:: with SMTP id a11mr9393946pja.163.1589002507599;
-        Fri, 08 May 2020 22:35:07 -0700 (PDT)
-Received: from localhost.localdomain ([223.72.62.216])
-        by smtp.gmail.com with ESMTPSA id w23sm2707446pge.92.2020.05.08.22.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 22:35:06 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 4/4] fs: btrfs: fix a data race in btrfs_block_rsv_release()
-Date:   Sat,  9 May 2020 13:34:31 +0800
-Message-Id: <20200509053431.3860-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=mTjszWW/EefMrw7aIGeEPuK1Cqsav+nLkGOW2S21ZN0=;
+        b=lBpVuM3mTPvc8+vad819h6LD3zNGnRbR43qKun1UIvQF1ZoCiItfJK1AN4oajjmcAj
+         1mgcq9kF33soueWEcuswRJoKlUalvpA1h7U8vfqFBhSOSUNHyf4bVdEi99WnNeL5fWXi
+         JfCnnDuDWdHSNVl+9w47l6HwrkvBnVyHrKzQqgqcedHv/zqr/J4Ax0tkPy+IuruQ6oNG
+         JdJUtyi8HLhJ65i72T1nWVZrYTq7YkRS74y9w9v/qvMMq78HFjnJxDy4eNAKlR0z8OZD
+         wghXb53yvc+dpbf/F5G3Um0GDGtOtW0FeFvBS4NDLygZYJTAMioC0brGRe7/AIUKUJAF
+         1Zyg==
+X-Gm-Message-State: AGi0PuamYyqjJp+UInV1Y3iGzrO63kil4iYmpoWLHV1V9ga2jmHfNgdD
+        GGfSw2548g2QWKijVpSm5YK7MU5QGDSrMG1VjTorVJKOyD41buTsFDq/2lgK273F0GSs1BWXymy
+        DmKi+TDi8PLgWEyc9ZFZhPBTN
+X-Received: by 2002:a5d:52ce:: with SMTP id r14mr7021343wrv.334.1589002835868;
+        Fri, 08 May 2020 22:40:35 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLh46b+OJHiK+BmOVxHBKBIBg126/s6UEDmzeKxMWF5zY7CcNlENVRlnP1JVfzUUAXHjN/rxA==
+X-Received: by 2002:a5d:52ce:: with SMTP id r14mr7021307wrv.334.1589002835393;
+        Fri, 08 May 2020 22:40:35 -0700 (PDT)
+Received: from ?IPv6:2a01:598:b901:53f:9037:7517:2497:29c? ([2a01:598:b901:53f:9037:7517:2497:29c])
+        by smtp.gmail.com with ESMTPSA id z6sm437028wrq.1.2020.05.08.22.40.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 May 2020 22:40:34 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user space after unloading kmem
+Date:   Sat, 9 May 2020 07:40:33 +0200
+Message-Id: <B72EB609-44DC-4133-820C-9BEA95CA012D@redhat.com>
+References: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        kexec@lists.infradead.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+In-Reply-To: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions btrfs_block_rsv_release() and
-btrfs_update_delayed_refs_rsv() are concurrently executed at runtime in
-the following call contexts:
 
-Thread 1:
-  btrfs_file_write_iter()
-    btrfs_buffered_write()
-      btrfs_delalloc_release_extents()
-        btrfs_inode_rsv_release()
-          __btrfs_block_rsv_release()
 
-Thread 2:
-  finish_ordered_fn()
-    btrfs_finish_ordered_io()
-      insert_reserved_file_extent()
-        __btrfs_drop_extents()
-          btrfs_free_extent()
-            btrfs_add_delayed_data_ref()
-              btrfs_update_delayed_refs_rsv()
+> Am 09.05.2020 um 01:53 schrieb Andrew Morton <akpm@linux-foundation.org>:
+>=20
+> =EF=BB=BFOn Fri,  8 May 2020 10:42:14 +0200 David Hildenbrand <david@redha=
+t.com> wrote:
+>=20
+>> Assume we have kmem configured and loaded:
+>>  [root@localhost ~]# cat /proc/iomem
+>>  ...
+>>  140000000-33fffffff : Persistent Memory$
+>>    140000000-1481fffff : namespace0.0
+>>    150000000-33fffffff : dax0.0
+>>      150000000-33fffffff : System RAM
+>>=20
+>> Assume we try to unload kmem. This force-unloading will work, even if
+>> memory cannot get removed from the system.
+>>  [root@localhost ~]# rmmod kmem
+>>  [   86.380228] removing memory fails, because memory [0x0000000150000000=
+-0x0000000157ffffff] is onlined
+>>  ...
+>>  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] can=
+not be hotremoved until the next reboot
+>>=20
+>> Now, we can reconfigure the namespace:
+>>  [root@localhost ~]# ndctl create-namespace --force --reconfig=3Dnamespac=
+e0.0 --mode=3Ddevdax
+>>  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140=
+000000-0x33fffffff]dax
+>>  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16names=
+pace0.0 --mode=3Ddevdax
+>>  ...
+>>=20
+>> This fails as expected due to the busy memory resource, and the memory
+>> cannot be used. However, the dax0.0 device is removed, and along its name=
+.
+>>=20
+>> The name of the memory resource now points at freed memory (name of the
+>> device).
+>>  [root@localhost ~]# cat /proc/iomem
+>>  ...
+>>  140000000-33fffffff : Persistent Memory
+>>    140000000-1481fffff : namespace0.0
+>>    150000000-33fffffff : =EF=BF=BD_=EF=BF=BD^7_=EF=BF=BD=EF=BF=BD/_=EF=BF=
+=BD=EF=BF=BDwR=EF=BF=BD=EF=BF=BDWQ=EF=BF=BD=EF=BF=BD=EF=BF=BD^=EF=BF=BD=EF=BF=
+=BD=EF=BF=BD ...
+>>    150000000-33fffffff : System RAM
+>>=20
+>> We have to make sure to duplicate the string. While at it, remove the
+>> superfluous setting of the name and fixup a stale comment.
+>>=20
+>> Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is u=
+sed like normal RAM")
+>> Cc: stable@vger.kernel.org # v5.3
+>=20
+> hm.
+>=20
+> Is this really -stable material?  These are all privileged operations,
+> I expect?
 
-In __btrfs_block_rsv_release():
-  else if (... && !delayed_rsv->full)
+Yes, my thought was rather that an admin could bring the system into such a s=
+tate (by mistake?). Let=E2=80=98s see if somebody has a suggestion.
 
-In btrfs_update_delayed_refs_rsv():
-  spin_lock(&delayed_rsv->lock);
-  delayed_rsv->size += num_bytes;
-  delayed_rsv->full = 0;
-  spin_unlock(&delayed_rsv->lock);
+I guess if we were really unlucky, we could access invalid memory and trigge=
+r a BUG (e.g., page at the end of memory and does not contain a 0 byte).
 
-Thus a data race for delayed_rsv->full can occur.
-This race was found and actually reproduced by our conccurency fuzzer.
+>=20
+> Assuming "yes", I've queued this separately, staged for 5.7-rcX.  I'll
+> redo patches 2-4 as a three-patch series for 5.8-rc1.
 
-To fix this race, the spinlock delayed_rsv->lock is used to
-protect the access to delayed_rsv->full in btrfs_block_rsv_release().
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- fs/btrfs/block-rsv.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/fs/btrfs/block-rsv.c b/fs/btrfs/block-rsv.c
-index 27efec8f7c5b..89c53a7137b4 100644
---- a/fs/btrfs/block-rsv.c
-+++ b/fs/btrfs/block-rsv.c
-@@ -277,6 +277,11 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
- 	struct btrfs_block_rsv *global_rsv = &fs_info->global_block_rsv;
- 	struct btrfs_block_rsv *delayed_rsv = &fs_info->delayed_refs_rsv;
- 	struct btrfs_block_rsv *target = NULL;
-+	unsigned short full = 0;
-+
-+	spin_lock(&delayed_rsv->lock);
-+	full = delayed_rsv->full;
-+	spin_unlock(&delayed_rsv->lock);
- 
- 	/*
- 	 * If we are the delayed_rsv then push to the global rsv, otherwise dump
-@@ -284,7 +289,7 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
- 	 */
- 	if (block_rsv == delayed_rsv)
- 		target = global_rsv;
--	else if (block_rsv != global_rsv && !delayed_rsv->full)
-+	else if (block_rsv != global_rsv && !full)
- 		target = delayed_rsv;
- 
- 	if (target && block_rsv->space_info != target->space_info)
--- 
-2.17.1
+Make sense, let=E2=80=98s wait for review feedback, thanks!=
 
