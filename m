@@ -2,68 +2,62 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663CDC47255
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB3EC47255
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E93121582
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589067006;
-	bh=3m5vLMMt7xSTQVM1ToBPEDlQIEW02c2ZOV9SkMuqvoY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Rw7HVyBDkvWilS/5cwoje1tSNiYl40s1RjgKxVF29FhdOCypL7fUEDtioJqwWslwG
-	 YP2tp6zjtTq9mvyKN6kOUbeayq+YgxDZADjIT2iXlp+R24GvFrL6jp72oRPr+4kDD0
-	 f4N+KTzLVO2JK16icAHF2fKKoXCVpvCWUH3uJf9U=
+	by mail.kernel.org (Postfix) with ESMTP id 2B18021582
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 23:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEIXaF (ORCPT
+        id S1727887AbgEIXcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 19:30:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbgEIXaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 19:30:05 -0400
-Subject: Re: [GIT PULL] RISC-V Fixes for 5.7-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589067004;
-        bh=3m5vLMMt7xSTQVM1ToBPEDlQIEW02c2ZOV9SkMuqvoY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CF45wfgqyH6zN0ImOw/jdsgSCkyi+8NPxUyPWCiz1SslEJrtTNmje8IS2No4Kj22f
-         Qi8tuKxEsRXt7M7JlXBvL+6zc+8VRGe/1l9ieqaSE++9nqX/r2TQ90yG3IZdPVaj8I
-         QLhZHiwalGYleqUKmu/abD65Gv2/y4WQkNZrpn7w=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
-References: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
- tags/riscv-for-linus-5.7-rc5
-X-PR-Tracked-Commit-Id: 73cb8e2a5863ccc5215660f5123db621bd57dff7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2e28f3b13a41b8a7d36a73ddf4bb41972a9c1dd9
-Message-Id: <158906700480.4509.666765554431792903.pr-tracker-bot@kernel.org>
-Date:   Sat, 09 May 2020 23:30:04 +0000
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+        Sat, 9 May 2020 19:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725927AbgEIXcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 19:32:21 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7129C061A0C;
+        Sat,  9 May 2020 16:32:21 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8407B128ED627;
+        Sat,  9 May 2020 16:32:18 -0700 (PDT)
+Date:   Sat, 09 May 2020 16:32:17 -0700 (PDT)
+Message-Id: <20200509.163217.1372289149714306397.davem@davemloft.net>
+To:     joe@perches.com
+Cc:     kuba@kernel.org, christophe.jaillet@wanadoo.fr,
+        fthain@telegraphics.com.au, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
+ paths
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <fc5cf8da8e70ebb981a9fc3aec6834c74197f0ed.camel@perches.com>
+References: <50ef36cd-d095-9abe-26ea-d363d11ce521@wanadoo.fr>
+        <20200509111321.51419b19@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <fc5cf8da8e70ebb981a9fc3aec6834c74197f0ed.camel@perches.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 09 May 2020 16:32:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 08 May 2020 11:47:13 -0700 (PDT):
+From: Joe Perches <joe@perches.com>
+Date: Sat, 09 May 2020 15:42:36 -0700
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.7-rc5
+> David, maybe I missed some notification about Jakub's role.
+> 
+> What is Jakub's role in relation to the networking tree?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2e28f3b13a41b8a7d36a73ddf4bb41972a9c1dd9
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+He is the co-maintainer of the networking tree and you should respect
+his actions and feedback as if it were coming from me.
