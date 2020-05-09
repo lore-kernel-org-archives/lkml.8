@@ -2,102 +2,96 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3BAC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD58C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEC12184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589049351;
-	bh=QmAmcuBAZpUIMlw5HlYzqJsGCOS1nyVcTJJrmxl+o8I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qQC4vFdXiFR3dOTvhuTz5jZ0spcTJev0F39V2ykePfNpK07t0r9wC+KzGJEukZJwG
-	 gGwv6e/Y51LMe7rXYAVfmjcuM/L1EEBz8we44g4ijcS6JWX3qYTrZUXZGKLDB4ZFNd
-	 nMGyywcUrJmyYQC9OnsIUaVjaiPLMTfzCkOE2rTk=
+	by mail.kernel.org (Postfix) with ESMTP id 3717B214D8
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 18:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNin6+nW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgEISfu (ORCPT
+        id S1728123AbgEISrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 14:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbgEISft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 14:35:49 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE57208E4;
-        Sat,  9 May 2020 18:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589049349;
-        bh=QmAmcuBAZpUIMlw5HlYzqJsGCOS1nyVcTJJrmxl+o8I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CPNViKbJ4P2YAC4mzyMHEyU/Dv1agQ2e7Ez3A26Z29NotTIHzIODp7vylN3E+Sihi
-         9mfHXYRTMrbQvCTdFCJ47Jz92YHKcPv2iFoYP4EaBIJE2mJ3DvcANHMNDHFnMcWrxr
-         DVynt0+0pdboSAXxlG9zGQS1QHqyb34xz4rjKiPo=
-Date:   Sat, 9 May 2020 11:35:46 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>, Jiri Pirko <jiri@resnulli.us>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
-        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] net: taint when the device driver firmware
- crashes
-Message-ID: <20200509113546.7dcd1599@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200509043552.8745-1-mcgrof@kernel.org>
-References: <20200509043552.8745-1-mcgrof@kernel.org>
+        Sat, 9 May 2020 14:47:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727993AbgEISrN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 14:47:13 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E98C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 11:47:13 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x73so4074148lfa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 11:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=r2VqzdQ3t3l9GLlfIblPu8fIc2SHZonPe2y2Y9yrzwA=;
+        b=GNin6+nWM1QP0m2z2hzY8zsRxqDBXtplG9wjFmOI1ojkUNRLK/92I4+Q7OAX+WzfxJ
+         jeP6kJWDxAzjEZPTJifP7QYUSRiOgFJ0ke4eAeXHoWxJc0jOMZjK1g5wF0zWOpZxTuhv
+         sv0T/R7VPmB2U+RjECSIWuLjjX+Gx2KuWI36/teOaZZHLHYxC3t51ccoY/x9Hv9XdvK6
+         jV09Kal555yn4AtGCKL0piKHqimwgL45NBm2bp5fgO9slMCOhh0JzQ+CHBC4lhDoLPvp
+         i4ihRv9OUGLBDyKhHPev4lxHDLhsTsxQ34cMV7CmmZYgwfYd/TG5gdUR7BY59qve9I0v
+         uyew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=r2VqzdQ3t3l9GLlfIblPu8fIc2SHZonPe2y2Y9yrzwA=;
+        b=Mn0JRafyelVOK220VApp6vjC/VMyUqeOI68kdynX7XFYCAaeGrpFTOeibbnqDDjn2P
+         rxlB7MzPY8ZU9S5bCTR54DIx81vJy5aQDtxfO847zopiFYYY/JNE4v7GOzsrLYzgKb5v
+         Qs7Y0xJdcZWAaC7xLKBo2GX6Y1SiIskdoQbP6fi+1brA3c40W5qoJzUXomZvqWGe4k99
+         zIDq8XWLWUsQS3leJq9mfsQHip7EvpbuaBwZCfJLvZgUht4vBuBye/bW90nKr/f9003J
+         XeG20V1R3hgx+Rdg8zV9E4ooyWPBsEfV7+VjbOo5YK0uDsEQLvVGX+PlPhTwIJLi8/qf
+         r+YQ==
+X-Gm-Message-State: AOAM533c07+/QDosc9qLweWugbXSAmmzO9czZxyklvtxRnWvHH+Arfi3
+        lY4yl+S6otp+N27tDut55Cus6GuoATtA1UiBzb8=
+X-Google-Smtp-Source: ABdhPJy9gyB1ktrqC1Zd3HyibZp0l6obehCp4vpCDO0qkgRUMj3Vjub/ykfUERbE41LdjhQm/0RhnA0bO0Yeti7gp9Q=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr5705467lfi.21.1589050031766;
+ Sat, 09 May 2020 11:47:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200509130714.10586-1-john.oldman@polehill.co.uk> <20200509171131.GA2495033@kroah.com>
+In-Reply-To: <20200509171131.GA2495033@kroah.com>
+Reply-To: john.oldman@polehill.co.uk
+From:   John Oldman <john.oldman60@gmail.com>
+Date:   Sat, 9 May 2020 19:47:00 +0100
+Message-ID: <CAMJX__Skgr+1ZO5JxwnwRt6A1C5rBc50cUDSN+6BM4pmYGPY4w@mail.gmail.com>
+Subject: Re: [PATCH] staging: vc04_services: interface: vchiq_arm:
+ vchiq_connected.c: Block comments should align the * on each line
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     John Oldman <john.oldman@polehill.co.uk>, nsaenzjulienne@suse.de,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 May 2020 04:35:37 +0000 Luis Chamberlain wrote:
-> Device driver firmware can crash, and sometimes, this can leave your
-> system in a state which makes the device or subsystem completely
-> useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-> of scraping some magical words from the kernel log, which is driver
-> specific, is much easier. So instead this series provides a helper which
-> lets drivers annotate this and shows how to use this on networking
-> drivers.
-> 
-> My methodology for finding when firmware crashes is to git grep for
-> "crash" and then doing some study of the code to see if this indeed
-> a place where the firmware crashes. In some places this is quite
-> obvious.
-> 
-> I'm starting off with networking first, if this gets merged later on I
-> can focus on the other drivers, but I already have some work done on
-> other subsytems.
-> 
-> Review, flames, etc are greatly appreciated.
+Hi Greg
 
-Tainting itself may be useful, but that's just the first step. I'd much
-rather see folks start using the devlink health infrastructure. Devlink
-is netlink based, but it's _not_ networking specific (many of its
-optional features obviously are, but don't let that mislead you).
+Yea, thanks for the feedback.
 
-With devlink health we get (a) a standard notification on the failure; 
-(b) information/state dump in a (somewhat) structured form, which can be
-collected & shared with vendors; (c) automatic remediation (usually
-device reset of some scope).
+Will fix and resend...
 
-Now regarding the tainting - as I said it may be useful, but don't we
-have to define what constitutes a "firmware crash"? There are many
-failure modes, some perfectly recoverable (e.g. processing queue hang), 
-some mere bugs (e.g. device fails to initialize some functions). All of
-them may impact the functioning of the system. How do we choose those
-that taint? 
+John
 
+
+On Sat, 9 May 2020 at 18:11, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, May 09, 2020 at 02:07:14PM +0100, John Oldman wrote:
+> > Coding style issue
+>
+> Your subject line needs to be much shorter, don't you think?
+>
+> Please fix up and resend.
+>
+> greg k-h
