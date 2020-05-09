@@ -2,78 +2,94 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EDC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DE0C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E60921974
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E5A24954
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 00:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588985824;
-	bh=4yUVtrpxoQBIJBTheEsMFv5lta2YpekhvrR7qBnK398=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tLtiJah3zTtbvhmLPtx2JuVHZGJ95+E+yzpijEDDWIvY+pkivS7AYggcdWH9xWeC+
-	 7fI8WhjLrt0SxHe1Ut5iisy6O6RRz3Py9M9tNfUPFbYcND5FaAn8WBwAyezlnJijbr
-	 gEqUQhOjvO5KCRIfIlnlMGEmmCvszfajuRHHnUbo=
+	s=default; t=1588985912;
+	bh=o0oOWkkVx9b7PKne5AE+R9D6GHpCKQaRAe27yC1DLyo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Agxwo/FF54ghkifTykfEcV1kYdl5VtlFqH5OSMAcTvHwvbs5cC1jAPpNQ139Hbyq1
+	 /Vszuf1lhaevXXYNLn+cj1YmrE5yqQ19gJgMmkSpw1nthhHJq5zKM4QQMcEcVYKklO
+	 eXYp4x7eub2/8uyuwUZvVnNGsFEvdosw//Indezo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgEIA5D (ORCPT
+        id S1728536AbgEIA6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 May 2020 20:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42100 "EHLO mail.kernel.org"
+        Fri, 8 May 2020 20:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgEIA5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 May 2020 20:57:03 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726842AbgEIA6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 May 2020 20:58:30 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAAFB216FD;
-        Sat,  9 May 2020 00:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BA9221974;
+        Sat,  9 May 2020 00:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588985823;
-        bh=4yUVtrpxoQBIJBTheEsMFv5lta2YpekhvrR7qBnK398=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ko9Oe0HO0up7Glh3WC/NxoguOR31RW5qkjDhgnToBwtnBNdRv31Q9uJ+9xosFNedZ
-         D4zoiR6/1Lt6deZevPX6A/903dGfcn0h3OleUbPuQHugTHeDacN2gxAHASVGXcNZZ/
-         KQNA8eYcWRYzQGTmxHDTHFZqcDSti+dskRHuKTW8=
-Date:   Fri, 8 May 2020 17:57:01 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, fthain@telegraphics.com.au,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
- paths
-Message-ID: <20200508175701.4eee970d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200508172557.218132-1-christophe.jaillet@wanadoo.fr>
-References: <20200508172557.218132-1-christophe.jaillet@wanadoo.fr>
+        s=default; t=1588985910;
+        bh=o0oOWkkVx9b7PKne5AE+R9D6GHpCKQaRAe27yC1DLyo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sOHVbB2gUBXJwOeGoZjU1DsAG+TG6dg60mcwUkE7E5FnDHnfKdzL30OMhOVFnNTeV
+         53qqXsJ6UGT8L17TBI74hU6JdyZhROna74QNF+RRW7Qf9XTcnonZwYr/L1kIiLc5Lk
+         00KQ49SD2RCuz5jTXSsDt6BX9+iob2EVeb+pLg3c=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Shiyuan Hu <hushiyuan@huawei.com>,
+        Hewenliang <hewenliang4@huawei.com>
+Subject: [PATCH] tools/bootconfig: Add a summary of test cases and return error
+Date:   Sat,  9 May 2020 09:58:25 +0900
+Message-Id: <158898590533.22749.10269622752797822320.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200509091107.eb4f517a93ff2e0ae5e64b93@kernel.org>
+References: <20200509091107.eb4f517a93ff2e0ae5e64b93@kernel.org>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  8 May 2020 19:25:57 +0200 Christophe JAILLET wrote:
-> Only macsonic has been compile tested. I don't have the needed setup to
-> compile xtsonic
+Add summary lines of test cases and return an error
+code if any test case fails so that tester don't have
+to monitor the output.
 
-Well, we gotta do that before we apply the patch :S
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/bootconfig/test-bootconfig.sh |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Does the driver actually depend on some platform stuff, or can we 
-do this:
-
-diff --git a/drivers/net/ethernet/natsemi/Kconfig b/drivers/net/ethernet/natsemi/Kconfig
-@@ -58,7 +58,7 @@ config NS83820
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 81b350ffd03f..eff16b77d5eb 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -124,9 +124,16 @@ for i in samples/good-* ; do
+   xpass $BOOTCONF -a $i $INITRD
+ done
  
- config XTENSA_XT2000_SONIC
-        tristate "Xtensa XT2000 onboard SONIC Ethernet support"
--       depends on XTENSA_PLATFORM_XT2000
-+       depends on XTENSA_PLATFORM_XT2000 || COMPILE_TEST
-        ---help---
-          This is the driver for the onboard card of the Xtensa XT2000 board.
- 
-?
++
++echo
++echo "=== Summary ==="
++echo "# of Passed: $(expr $NO - $NG - 1)"
++echo "# of Failed: $NG"
++
+ echo
+ if [ $NG -eq 0 ]; then
+ 	echo "All tests passed"
+ else
+ 	echo "$NG tests failed"
++	exit 1
+ fi
+
