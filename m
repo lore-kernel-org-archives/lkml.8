@@ -2,88 +2,188 @@ Return-Path: <SRS0=dqcu=6X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97E8C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3184C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859C72192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF5124957
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 May 2020 09:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="U4w5dbE1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SiqQS9i+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgEIJVh (ORCPT
+        id S1727980AbgEIJWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 05:21:37 -0400
-Received: from m15-112.126.com ([220.181.15.112]:55589 "EHLO m15-112.126.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgEIJVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 05:21:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=npA6K8XR6m/Q7D+a+F
-        d/I+FwASzBrx710iIbSXi75Zw=; b=U4w5dbE1Fuf8bTwppyjMdPTDl0+/3u/6A/
-        LOhMaJS1/zqiUXGpxzNOYsc0ipgi72lPAoGzIfp7V3CN4HThAuopqaK9W4MCMS9Q
-        0oid2UDPQ1i4awOzngUhRUjwgC/DUqcX5EFbmqPwlocTk7BDJl363HDmZEvNhtkg
-        vPo6g/jYE=
-Received: from coding1221.verisilicon.com (unknown [222.65.245.108])
-        by smtp2 (Coremail) with SMTP id DMmowABXjQHjb7Ze7FwJCw--.5965S2;
-        Sat, 09 May 2020 16:54:59 +0800 (CST)
-From:   joe_zhuchg@126.com
-To:     sudeep.holla@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Joe Zhu <Chunguang.Zhu@verisilicon.com>
-Subject: [PATCH 1/1] firmware: arm_scmi/mailbox: ignore notification for tx done using irq
-Date:   Sat,  9 May 2020 16:54:57 +0800
-Message-Id: <20200509085457.31920-1-joe_zhuchg@126.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: DMmowABXjQHjb7Ze7FwJCw--.5965S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZr1rKF4kGFy7XryruF43trb_yoWktFX_Cw
-        nFkw4jgr1UAFyFvwnrAwn3G3sIv3y5Wa4vg3Wqvw12qasrX398Wwnrtws5A34UWr4DZryI
-        kas5Grs5Cwn8WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU5y7K7UUUUU==
-X-Originating-IP: [222.65.245.108]
-X-CM-SenderInfo: pmrhs6xkxfxwa6rslhhfrp/1tbifgMfN1pD-wcCJgAAsQ
+        Sat, 9 May 2020 05:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727867AbgEIJWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 05:22:17 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25B6C05BD09
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 02:22:16 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u15so4225336ljd.3
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 02:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3r2q7lbwhYacRNyV9QGzwXdGy2ioZNd6LAcHxLVxfTo=;
+        b=SiqQS9i+Kqa3biT4qPmmxUQDUS1krFphNwUKlArZHcnOSrlMgA+gPCgjW3sYKO4PH0
+         czoqI9I++l2cLH9K+Ey8uIfF+LldntFQQQfIe5DEmR08D4MZsQv2Nm+YE8W00984lLui
+         kN6KuHX0+L6MArCv7KvMa5lR33X0K8e1+kp8J1OSo57QPPyUbfKwfg0g7Uj0HhVbL4gI
+         YASg34tV49C6laY56+sF3Mn0e9bqFYu9PRN6TSgSZmPFvNGvGEPdHAONBqzQ37mNLeOH
+         a0rQDiDOTc7tBXOi8r0MsYmX+wfvrhHmZ4pREkiRGUrD2Os16oKUnLFyNxumzrVtpCpu
+         Q4QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3r2q7lbwhYacRNyV9QGzwXdGy2ioZNd6LAcHxLVxfTo=;
+        b=nBQOG+dO5wpJvdGyfz5u+cV2dUqmxLn/hSr3qgz/7V9VNyYW9aJW/jl9Ys26T5dc9Y
+         U88i8TbHWC59DFm9T3+fLB8ILoA4QLhfccqLjp/BSnafaFj7xKa3NPl0OhBuvtXsAXei
+         /SyojJi5JFmFMQcQufoNOs/xPlP/5VxWY15y4YOy74CPZkEMEvhryUhfjFtbdvvFbkQh
+         AV29VNKwyxq5QW02VDe14ZLqG1WFPspcvAKZ2vhi03ASqrPKzkBbpt8Srh9lZF2exdvp
+         F9yPPkC0JyCIP+yqhBzTy1eFG3oZPnpEgWHGICb+bGVRBqVTzsklTdvJoGHhPJwpRZJ0
+         9NMA==
+X-Gm-Message-State: AOAM5323nU1CpvFWo/dfKijDfh1w8luWGmc34FAJZEw+xLMLSkIWmhQn
+        DTiGMHaAMDnRjgdpDJ5flcr4bx02mUW+IQJYtNQNJjutpGmpQg==
+X-Google-Smtp-Source: ABdhPJwiCAHcvsa9foC0mSIq82cdg1PIgxRM/MwMbvWz4exhaHajPnSGKaxPeG0CRmVX/tlpuLxnJNa9O3k8SbiyJCE=
+X-Received: by 2002:a2e:8912:: with SMTP id d18mr4437132lji.123.1589016135071;
+ Sat, 09 May 2020 02:22:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508123030.497793118@linuxfoundation.org>
+In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 9 May 2020 14:52:03 +0530
+Message-ID: <CA+G9fYsWg1y28V36jwo0k=FuAzMQcDUAVW9r7LCyeziU+n8PpQ@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/18] 4.9.223-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Zhu <Chunguang.Zhu@verisilicon.com>
+On Fri, 8 May 2020 at 18:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.223 release.
+> There are 18 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.223-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-If mailbox uses IRQ method, it already notified framework with
-mbox_chan_txdone() in ISR.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Signed-off-by: Joe Zhu <Chunguang.Zhu@verisilicon.com>
----
- drivers/firmware/arm_scmi/mailbox.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Summary
+------------------------------------------------------------------------
 
-diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-index 73077bbc4ad9..303a5dc42429 100644
---- a/drivers/firmware/arm_scmi/mailbox.c
-+++ b/drivers/firmware/arm_scmi/mailbox.c
-@@ -9,6 +9,7 @@
- #include <linux/err.h>
- #include <linux/device.h>
- #include <linux/mailbox_client.h>
-+#include <linux/mailbox_controller.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/slab.h>
-@@ -147,7 +148,8 @@ static void mailbox_mark_txdone(struct scmi_chan_info *cinfo, int ret)
- 	 * Unfortunately, we have to kick the mailbox framework after we have
- 	 * received our message.
- 	 */
--	mbox_client_txdone(smbox->chan, ret);
-+	if (!smbox->chan->mbox->txdone_irq)
-+		mbox_client_txdone(smbox->chan, ret);
- }
- 
- static void mailbox_fetch_response(struct scmi_chan_info *cinfo,
--- 
-2.17.1
+kernel: 4.9.223-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 7d23d52af97eef655fac0057e12d85ce7d4894c3
+git describe: v4.9.222-19-g7d23d52af97e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.222-19-g7d23d52af97e
 
+No regressions (compared to build v4.9.222)
+
+No fixes (compared to build v4.9.222)
+
+Ran 30701 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kvm-unit-tests
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest/net
+* kselftest/networking
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/filesystems
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
