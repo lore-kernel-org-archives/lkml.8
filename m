@@ -2,77 +2,88 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4F7C35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CC6C54E4B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0831C208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589089647;
-	bh=PQW18kKBWbAlWkdnFkxJP6/JkC5E/quNbULzZyjKpn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HjUJqNl0FuWxm5r+LHDyb0Ap73zzkYefT29qj3xqkNNgMWocY/f/gUsXcfFYoKLy6
-	 ie3ip62+dfLmHsMTc3Ds03wkht9LuZEPmToSqLlZEC+yYSUqv9Gzyf+aedbbvDf96+
-	 707rS9B2inFshOeFE77x0zu3MyGutf6wiYeIpzno=
+	by mail.kernel.org (Postfix) with ESMTP id E5939208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgEJFr0 (ORCPT
+        id S1725994AbgEJGDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 01:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgEJFrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 01:47:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E128208DB;
-        Sun, 10 May 2020 05:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589089644;
-        bh=PQW18kKBWbAlWkdnFkxJP6/JkC5E/quNbULzZyjKpn8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zxysiI+G3s1Pvj6eLxx/1R02SWLh/ifTeNg9BtlEhjxOYuEXaxadA4kVWVl2g7ycN
-         nCxIJ5kv10ohnpWkSGn5aTgYME0f5Kq77o0udCByPUmx4JOC5qc4iVqr6Et9tJwxJz
-         oE7obs0cgSC6og6ASDEtvLev0830C/G16RNNG2V0=
-Date:   Sun, 10 May 2020 07:47:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dio Putra <dioput12@gmail.com>
-Cc:     oneukum@suse.com, linux-usb@vger.kernel.org,
-        linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org
-Subject: Re: USB Attached SCSI breakage due no udev involvement
-Message-ID: <20200510054717.GA3365021@kroah.com>
-References: <CAOyCV0zW_20Jq6Rrb9=fhZQAHeqMMs_oHBJdTVt8Nqje0Zoeig@mail.gmail.com>
+        Sun, 10 May 2020 02:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgEJGD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 02:03:29 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9350EC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 23:03:29 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jXf3e-0001nR-1o; Sun, 10 May 2020 08:03:26 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jXf3d-0006YI-9c; Sun, 10 May 2020 08:03:25 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v1 1/2] MIPS: ath79: ar9331_dpt_module: update led nodes
+Date:   Sun, 10 May 2020 08:03:23 +0200
+Message-Id: <20200510060324.25134-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOyCV0zW_20Jq6Rrb9=fhZQAHeqMMs_oHBJdTVt8Nqje0Zoeig@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 09:55:57AM +0700, Dio Putra wrote:
-> Hi, it's first time for me to report user-space breakage in here, so
-> i'm begging your pardon.
-> 
-> I want to report that Linux 5.4 breaking my USB mount workflow due
-> udevadm monitor report here (I'm using vanilla kernel 5.4.39 on
-> Slackware64 Current and vanilla kernel 4.4.221 on Slackware64 14.2):
+Fit led nodes to the latest naming schema.
 
-<snip>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Sorry, but what actually changed that you can see in the logs?
+diff --git a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+index 969d3384b0dd0..8be54465207a7 100644
+--- a/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
++++ b/arch/mips/boot/dts/qca/ar9331_dpt_module.dts
+@@ -3,6 +3,7 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
+ 
+ #include "ar9331.dtsi"
+ 
+@@ -22,8 +23,9 @@ memory@0 {
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		system {
+-			label = "dpt-module:green:system";
++		led-0 {
++			function = LED_FUNCTION_STATUS;
++			color = <LED_COLOR_ID_GREEN>;
+ 			gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+ 			default-state = "off";
+ 		};
+-- 
+2.26.2
 
-What functionality broke?  What used to work that no longer does work?
-
-And 4.4.221 is quite different from 5.4, is that the jump that you are
-seeing breakage in, or is it in some smaller jump?
-
-thanks,
-
-greg k-h
