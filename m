@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBADC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C1CC54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988BE214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B512208CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:24:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGepYG0i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGyHdo9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgEJMYp (ORCPT
+        id S1729010AbgEJMYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:24:45 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41999 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728882AbgEJMYl (ORCPT
+        Sun, 10 May 2020 08:24:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26195 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728874AbgEJMYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:24:41 -0400
+        Sun, 10 May 2020 08:24:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589113480;
+        s=mimecast20190719; t=1589113482;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1jCpyDLqlIGSqPuFPAMnszucwhMTJg1A0PnKx2QioIw=;
-        b=YGepYG0ivnmKYv7hHikjJ18z9h6A5g5fOCOJ5sFIz38b5TRVs8457v82wejMsy+7xC4l9M
-        EbFWAKp7gXPGtnYhqTK7WI/ulird3YDRERSCIswjQAptqjgaZPx/1uRVasCMNbqbT8cjbP
-        Em//bHFloN1hfwKQKar6k8EMSGR6Szo=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vaSfusBfcGuWtpLDZO+nitz176bAfcWOMkB3GTG1aLs=;
+        b=EGyHdo9R7dMaV7C/oTUj9Qo6CksFdE4UhRTe//oUrvA1eLUUHbtRSYZDccusKo2cdHBgRj
+        S5MgcFZgcVWZh1epqJ81+nkX5/1wLqMes0KLQzKlFDpGJmUz6Qe5IKsArtYhOLwtbHumaY
+        gNMfpHytXF7zUE2E+9vkdtAPmfbmneQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-QR3hjDK4P6Cf3xWbIMC9mA-1; Sun, 10 May 2020 08:24:35 -0400
-X-MC-Unique: QR3hjDK4P6Cf3xWbIMC9mA-1
+ us-mta-215-_rjgrsf6NoS5RNnuspAfRA-1; Sun, 10 May 2020 08:24:38 -0400
+X-MC-Unique: _rjgrsf6NoS5RNnuspAfRA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0AD5107ACCA;
-        Sun, 10 May 2020 12:24:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B5E1835B41;
+        Sun, 10 May 2020 12:24:37 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-112-76.ams2.redhat.com [10.36.112.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B99C05D9C9;
-        Sun, 10 May 2020 12:24:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 834BD5D9C9;
+        Sun, 10 May 2020 12:24:36 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] platform/x86: asus-wmi: Move asus_wmi_input_init and _exit lower in the file
-Date:   Sun, 10 May 2020 14:24:30 +0200
-Message-Id: <20200510122432.123751-1-hdegoede@redhat.com>
+Subject: [PATCH 3/3] platform/x86: asus-wmi: Ignore WMI events with code 0x79
+Date:   Sun, 10 May 2020 14:24:32 +0200
+Message-Id: <20200510122432.123751-3-hdegoede@redhat.com>
+In-Reply-To: <20200510122432.123751-1-hdegoede@redhat.com>
+References: <20200510122432.123751-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
@@ -60,115 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the asus_wmi_input_init() and asus_wmi_input_exit() functions to
-below the WMI helpers, so that further patches in this patch-set can use
-the WMI helpers inside asus_wmi_input_init() without needing a forward
-declaration.
+On some Asus devices, e.g. the T100TA, when the charger is connected
+we not only get a WMI event with code 0x58, but immediately after that
+event we also get an even with code 0x79.
 
-Note this commit makes no functional changes, the moved block of code
-is completely unchanged.
+This is likely related to these devices having an Asus WMI device with a
+device-id of 0x00120066, which seems to provide some sort of charger-type
+info. The T100TA charger over a micro-USB connector, the embedded-
+controller register read when calling asus_wmi_get_devstate(0x00120066)
+returns different values when connected to a USB port (max 500mA charging)
+vs when connected to a 2A capable wall-charger. But the AML code reading
+this mangles the return value so that we can no longer tell the difference.
+So for now the meaning of the value return when getting the status of
+device-id 0x00120066 is unclear.
+
+This commit adds a key-mapping of code 0x79 to KE_IGNORE, silencing the
+kernel logging the following message every time the charger is plugged-in:
+
+[   79.639548] asus_wmi: Unknown key 79 pressed
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/asus-wmi.c | 78 ++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 39 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index e705ae66c083..25ec821dae21 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -222,45 +222,6 @@ struct asus_wmi {
- 	struct asus_wmi_driver *driver;
- };
- 
--/* Input **********************************************************************/
--
--static int asus_wmi_input_init(struct asus_wmi *asus)
--{
--	int err;
--
--	asus->inputdev = input_allocate_device();
--	if (!asus->inputdev)
--		return -ENOMEM;
--
--	asus->inputdev->name = asus->driver->input_name;
--	asus->inputdev->phys = asus->driver->input_phys;
--	asus->inputdev->id.bustype = BUS_HOST;
--	asus->inputdev->dev.parent = &asus->platform_device->dev;
--	set_bit(EV_REP, asus->inputdev->evbit);
--
--	err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
--	if (err)
--		goto err_free_dev;
--
--	err = input_register_device(asus->inputdev);
--	if (err)
--		goto err_free_dev;
--
--	return 0;
--
--err_free_dev:
--	input_free_device(asus->inputdev);
--	return err;
--}
--
--static void asus_wmi_input_exit(struct asus_wmi *asus)
--{
--	if (asus->inputdev)
--		input_unregister_device(asus->inputdev);
--
--	asus->inputdev = NULL;
--}
--
- /* WMI ************************************************************************/
- 
- static int asus_wmi_evaluate_method3(u32 method_id,
-@@ -381,6 +342,45 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
- 	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
- }
- 
-+/* Input **********************************************************************/
-+
-+static int asus_wmi_input_init(struct asus_wmi *asus)
-+{
-+	int err;
-+
-+	asus->inputdev = input_allocate_device();
-+	if (!asus->inputdev)
-+		return -ENOMEM;
-+
-+	asus->inputdev->name = asus->driver->input_name;
-+	asus->inputdev->phys = asus->driver->input_phys;
-+	asus->inputdev->id.bustype = BUS_HOST;
-+	asus->inputdev->dev.parent = &asus->platform_device->dev;
-+	set_bit(EV_REP, asus->inputdev->evbit);
-+
-+	err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
-+	if (err)
-+		goto err_free_dev;
-+
-+	err = input_register_device(asus->inputdev);
-+	if (err)
-+		goto err_free_dev;
-+
-+	return 0;
-+
-+err_free_dev:
-+	input_free_device(asus->inputdev);
-+	return err;
-+}
-+
-+static void asus_wmi_input_exit(struct asus_wmi *asus)
-+{
-+	if (asus->inputdev)
-+		input_unregister_device(asus->inputdev);
-+
-+	asus->inputdev = NULL;
-+}
-+
- /* Battery ********************************************************************/
- 
- /* The battery maximum charging percentage */
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 6f12747a359a..b2887556fd4d 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -472,6 +472,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
+ 	{ KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
++	{ KE_IGNORE, 0x79, },  /* Charger type dectection notification */
+ 	{ KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle */
+ 	{ KE_KEY, 0x7c, { KEY_MICMUTE } },
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
 -- 
 2.26.0
 
