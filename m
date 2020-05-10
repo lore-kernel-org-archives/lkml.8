@@ -2,86 +2,80 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68633C54E4B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46103C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 437B3208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCC720801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgEJQEt (ORCPT
+        id S1729146AbgEJQOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:04:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbgEJQEt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:04:49 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B85CC061A0C;
-        Sun, 10 May 2020 09:04:49 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3DBF02A0563
-Received: by earth.universe (Postfix, from userid 1000)
-        id 55D2B3C08C7; Sun, 10 May 2020 18:04:45 +0200 (CEST)
-Date:   Sun, 10 May 2020 18:04:45 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/11] Support ROHM BD99954 charger IC
-Message-ID: <20200510160445.6fg2v7jug2vlepkv@earth.universe>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+        Sun, 10 May 2020 12:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728762AbgEJQOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 12:14:24 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE43320736;
+        Sun, 10 May 2020 16:14:22 +0000 (UTC)
+Date:   Sun, 10 May 2020 12:14:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [ANNOUNCE] 5.4.39-rt23
+Message-ID: <20200510121421.463651fa@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k67hcptim6stu57b"
-Content-Disposition: inline
-In-Reply-To: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---k67hcptim6stu57b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Dear RT Folks,
 
-Hi,
+I'm pleased to announce the 5.4.39-rt23 stable release.
 
-On Fri, May 08, 2020 at 06:38:17PM +0300, Matti Vaittinen wrote:
-> Please note that this series should be applied to two trees. Patches
-> 1-4 (or 1-5 as suggested by Sebastian) should go to regulator tree.
-> Perhaps Mark can provide an immutable branch to Sebastian? Rest of the
-> patches can then go to power-supply tree.
 
-Thanks, I merged the pull-request from Mark and queued patches 5-11.
+This release is just an update to the new stable 5.4.39 version
+and no RT specific changes have been made.
 
--- Sebastian
 
---k67hcptim6stu57b
-Content-Type: application/pgp-signature; name="signature.asc"
+You can get this release via the git tree at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64Jh0ACgkQ2O7X88g7
-+prR0A//aCqBAlia1d0xSZZue2lV8hlTJIUPfa6+6b+Mkl9YmFWu0vJFxwRdpsj1
-bfgv1N4s6Cvj7JLfEMQ5WbNFz89qRKk5zuB8qZVR5ZwfKd0hZXDipmob3lViBqZP
-y+cYm1RBvfnvoZSY/+zUdRJS7UzmNytb6sSjZze7Hys6BXS+5H54X0wDVSShxOoI
-GcCD7jDswjYqvPQzlZQXGQ4RlYsvBsazNLKWTKZnuRLIeGjX1IWmTq58TKB8albF
-/UgdURZiuEUZc4Ybr6RDyuARquTGxj/ZcUHtiboNbkBnj6436D/RKAKE80WqMYzu
-X/yxxGHlF3jFWvvr83Yr7NMZJigfi9k2pyvEBMcbEyJErgEjE5qeJ85xiLGd9ga2
-E0XQuaogbcIn9u7H0JId1eysKDn4Tmt0B1NlN6+2OQcOnkOvjDP/oeOuClQHgts4
-Vj+dmxBzP3XdjdK6SeRuU+Gpia+bVQKcwBMOCVaT5CZEoQkEBcDhlZb78KY04pi1
-bw2ceIkMrFe012hqeqHjlAdsOzUZGRTFZDpvdRfGf9hBNddMbaKl/UmnpaircnWf
-XHVFqiw5HLO7FCt3R5V3+qqp60m+e8Ljq02wNrjOw2wUyIfRHoYFVIBX30W979py
-q4Eis19au99FpOHZXgFZoR9A2Mw0zzOnv5vap6N9dwt/xYSY9wg=
-=vbvd
------END PGP SIGNATURE-----
+  branch: v5.4.39-rt
+  Head SHA1: 
 
---k67hcptim6stu57b--
+
+Or to build 5.4.39-rt23 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.39.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.39.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4.39/patch-5.4.39-rt23.patch.xz
+
+
+
+
+Enjoy,
+
+-- Steve
+
