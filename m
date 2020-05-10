@@ -2,107 +2,112 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C36EC47255
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E033C47257
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38B90208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5CBUnEh"
+	by mail.kernel.org (Postfix) with ESMTP id 7B4BD20CC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589069777;
+	bh=rcEsrsDljCvjlGQcVUHPCm18WB0VkP4lxtaiG5DbAyw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hZ2BXV1BLNEmZ4ek40q4B3aakD8GjH0HWaVOg33ykFBYJsPSZ5A8fd65QJXN2ffqX
+	 4y9/3izfMEMCqeuuNpyeMR0+TrpC98aO+BekKm1693WHQIL4/Xl7kOTpkUihLCESH6
+	 Vxc/zo/FMzf6wPQS8rDmYLux9684U4kfC0sGWMRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgEJAKH (ORCPT
+        id S1727770AbgEJAQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 20:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726356AbgEJAKG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 20:10:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A84C061A0C;
-        Sat,  9 May 2020 17:10:05 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f15so2319658plr.3;
-        Sat, 09 May 2020 17:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IWHKhYQFFhVmAZdVEU3sdVLO9m2nC9E3mlrDhLHlqis=;
-        b=D5CBUnEh+bRiWY/vqnwtVKpq9Urnov0iFESmWTqaczl16jrXAXQw7kmPYh2pWJhhZ3
-         6HkYqtUDcdGc3mlvYEfgKfX64/PglVxJVdKSHzYRqNjvp+M7SGb0wveaoIlFB4ScHeJn
-         t3C2MpDL9lYPYcqJdfK+jqAGULdkZkEZjhNaM/XoB3pHZKb6TH/EFXjlfcxuwGiFG7jy
-         0b3IS1M4s7vUZpxMthG7NxWBPJVI0r9pCslec6WLa68boAw8fJYTpsRSY7fBFzJduae+
-         t4xFd8WC6h386KnkO9tDYb29KDPuQ7tbW87Xjm6EwJ4nkdcqFNWPOeG0BFMRy22ulYmh
-         QUNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IWHKhYQFFhVmAZdVEU3sdVLO9m2nC9E3mlrDhLHlqis=;
-        b=CFFf4ERFPOeFdpTre7c9HGmqXogFj1qFNAgb1scmDIeYmKm/oQW1gMyU3hPdldAPL4
-         K6EDuf6xf/X1YlyQp37AgfOBFKSeIK5eIceM3KGzMj2tdKPF0wFS7ztrfhj1NlvRSa5i
-         bdEWvKtDktj74BC/DVBSv+KA63T9YkqqDpLSmkQZlSt4h4TAiKg98j32jMMvIz2GwO+e
-         P+zudb8/qURrN1j+AgF8GSH41TSqvjcyZRWdV/nm8cvuQwgsb0YEFImc0eC8sUVCkz9P
-         /4jofyfpahAQ5LnOh+8Vh9/I53Grg9QY0IsR+nCe1dRZ2dtCXml3wS7Ida/S+4j6oc0I
-         ngdw==
-X-Gm-Message-State: AGi0Pua4NLJIxerS4p3HMk2X9eAbIl3aP7QQv1mDBXbskIVQrqyJxbg3
-        pfEUOCr0DysYsSAIjEsZGnJPBQJp
-X-Google-Smtp-Source: APiQypJBUsj6tQWvSALt3UCSpQdMpN3teunVgIuZvwgUCzR+bJ4G0HP861FM2ilWCahiq4aTImnSnA==
-X-Received: by 2002:a17:90a:648d:: with SMTP id h13mr13656731pjj.12.1589069405125;
-        Sat, 09 May 2020 17:10:05 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q62sm5926926pjh.57.2020.05.09.17.10.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 17:10:04 -0700 (PDT)
-Subject: Re: [PATCH net-next 3/4] net: phy: broadcom: add cable test support
-To:     Michael Walle <michael@walle.cc>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20200509223714.30855-1-michael@walle.cc>
- <20200509223714.30855-4-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <5e8c2d6e-44be-3500-4d46-e94cdfcd98b5@gmail.com>
-Date:   Sat, 9 May 2020 17:09:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200509223714.30855-4-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sat, 9 May 2020 20:16:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726356AbgEJAQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 20:16:14 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 924AF20735;
+        Sun, 10 May 2020 00:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589069774;
+        bh=rcEsrsDljCvjlGQcVUHPCm18WB0VkP4lxtaiG5DbAyw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W/CJP4rfOuAYUekGlno04mT1Bs4lSQLdciQD+tx1rHltWBYBtvFb+B4LUrQlbHjBw
+         UW04g6EtzWPm5sfdxjNzKUcndsgGiQnoKqJbwTmr1gRmhfy5sziX1U8aQ0QHjqGc6a
+         IYL4qvBvGH/VJgSMEmkxSCU36sL9Vj/k7/fB2KjE=
+Date:   Sat, 9 May 2020 17:16:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
+Subject: Re: [PATCH hmm v2 1/5] mm/hmm: make CONFIG_DEVICE_PRIVATE into a
+ select
+Message-Id: <20200509171612.94ee332ad4f494521d911ac0@linux-foundation.org>
+In-Reply-To: <1-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+References: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+        <1-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  1 May 2020 15:20:44 -0300 Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-
-On 5/9/2020 3:37 PM, Michael Walle wrote:
-> Most modern broadcom PHYs support ECD (enhanced cable diagnostics). Add
-> support for it in the bcm-phy-lib so they can easily be used in the PHY
-> driver.
+> From: Jason Gunthorpe <jgg@mellanox.com>
 > 
-> There are two access methods for ECD: legacy by expansion registers and
-> via the new RDB registers which are exclusive. Provide functions in two
-> variants where the PHY driver can from. To keep things simple for now,
-> we just switch the register access to expansion registers in the RDB
-> variant for now. On the flipside, we have to keep a bus lock to prevent
-> any other non-legacy access on the PHY.
+> There is no reason for a user to select this or not directly - it should
+> be selected by drivers that are going to use the feature, similar to how
+> CONFIG_HMM_MIRROR works.
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> Currently all drivers provide a feature kconfig that will disable use of
+> DEVICE_PRIVATE in that driver, allowing users to avoid enabling this if
+> they don't want the overhead.
+> 
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+I'm not too sure what's going on here, but i386 allmodconfig broke.
 
-Thanks for dealing with the legacy expansion vs. RDB access method, this
-looks really nice, now I just need to test it on a variety of devices :)
--- 
-Florian
+kernel/resource.c: In function '__request_free_mem_region':
+kernel/resource.c:1653:28: error: 'PA_SECTION_SHIFT' undeclared (first use in this function); did you mean 'SECTIONS_PGSHIFT'?
+  size = ALIGN(size, 1UL << PA_SECTION_SHIFT);
+
+because in current mainline, allmodconfig produces
+CONFIG_DEVICE_PRIVATE=n but in current linux-next, allmodconfig
+produces CONFIG_DEVICE_PRIVATE=y.  But CONFIG_SPARSEMEM=n so the build
+breaks.
+
+Bisection fingers this commit, but reverting it doesn't seem to fix
+things.  Could you take a look please?
+
+I'm seeing this from menuconfig:
+
+WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
+  Depends on [n]: ZONE_DEVICE [=n]
+  Selected by [m]:
+  - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && DRM_NOUVEAU [=m] && MMU [=y] && STAGING [=y]
+  - TEST_HMM [=m] && RUNTIME_TESTING_MENU [=y] && TRANSPARENT_HUGEPAGE [=y]
+
+`select' rather sucks this way - easy to break dependencies.  Quite a
+number of years ago the Kconfig gurus were saying "avoid", but I don't
+recall the details.
+
+
+
