@@ -2,114 +2,199 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE76C54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C9C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B6C20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F7F20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgEJL7X (ORCPT
+        id S1728743AbgEJMEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 07:59:23 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54582 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726629AbgEJL7W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 07:59:22 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-236-yr5hR8jROKGsvosUIzCW6w-1; Sun, 10 May 2020 12:59:18 +0100
-X-MC-Unique: yr5hR8jROKGsvosUIzCW6w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 12:59:18 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 10 May 2020 12:59:18 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'H. Peter Anvin'" <hpa@zytor.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Brian Gerst <brgerst@gmail.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        stable <stable@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Daniel Axtens <dja@axtens.net>,
-        "Masahiro Yamada" <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] x86: bitops: fix build regression
-Thread-Topic: [PATCH] x86: bitops: fix build regression
-Thread-Index: AQHWJV6GnFcKS0TA9USbY8l3s67J1qihNCig
-Date:   Sun, 10 May 2020 11:59:17 +0000
-Message-ID: <b1072e7116774e0c9e6e7e6f55bae4a3@AcuMS.aculab.com>
-References: <20200505174423.199985-1-ndesaulniers@google.com>
- <8A776DBC-03AF-485B-9AA6-5920E3C4ACB2@zytor.com>
- <20200507113422.GA3762@hirez.programming.kicks-ass.net>
- <CAMzpN2hXUYvLuTA63N56ef4DEzyWXt_uVVq6PV0r8YQT-YN42g@mail.gmail.com>
- <CAKwvOd=a3MR7osKBpbq=d41ieo7G9FtOp5Kok5por1P5ZS9s4g@mail.gmail.com>
- <CAKwvOd=Ogbp0oVgmF2B9cePjyWnvLLFRSp2EnaonA-ZFN3K7Dg@mail.gmail.com>
- <CAMzpN2gu4stkRKTsMTVxyzckO3SMhfA+dmCnSu6-aMg5QAA_JQ@mail.gmail.com>
- <CAKwvOd=hVKrFU+imSGeX+MEKMpW97gE7bzn1C637qdns9KSnUA@mail.gmail.com>
- <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
-In-Reply-To: <8f53b69e-86cc-7ff9-671e-5e0a67ff75a2@zytor.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 10 May 2020 08:04:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:40304 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbgEJMEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 08:04:09 -0400
+IronPort-SDR: ZoRVd+ZU1iUdYWyXE9ySfGYVuRkGuNPZkFqk1dCFhYw9gtq8ZJ3wVsN5vxvD+e1SCy/APO9A3g
+ 9QFTOAkLd7KQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 05:04:08 -0700
+IronPort-SDR: HqL5CisKaYq2I6Fp9GazTuvweKAxIMGw+8WFPB2/v97nU4vimulV8CGnQBYkKzU74/sXCHMkdU
+ f2pL2UmzJFLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,375,1583222400"; 
+   d="scan'208";a="279513234"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2020 05:04:03 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXkgc-0005Ey-UN; Sun, 10 May 2020 20:04:02 +0800
+Date:   Sun, 10 May 2020 20:03:11 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     kbuild-all@lists.01.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
+        Andrew_Gabbasov@mentor.com, jiada_wang@mentor.com
+Subject: Re: [PATCH v11 54/56] input: atmel_mxt_ts: added sysfs interface to
+ update atmel T38 data
+Message-ID: <202005101947.mMD4gvx7%lkp@intel.com>
+References: <20200508055656.96389-55-jiada_wang@mentor.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508055656.96389-55-jiada_wang@mentor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGV0ZXIgQW52aW4NCj4gU2VudDogMDggTWF5IDIwMjAgMTg6MzINCj4gT24gMjAyMC0w
-NS0wOCAxMDoyMSwgTmljayBEZXNhdWxuaWVycyB3cm90ZToNCj4gPj4NCj4gPj4gT25lIGxhc3Qg
-c3VnZ2VzdGlvbi4gIEFkZCB0aGUgImIiIG1vZGlmaWVyIHRvIHRoZSBtYXNrIG9wZXJhbmQ6ICJv
-cmINCj4gPj4gJWIxLCAlMCIuICBUaGF0IGZvcmNlcyB0aGUgY29tcGlsZXIgdG8gdXNlIHRoZSA4
-LWJpdCByZWdpc3RlciBuYW1lDQo+ID4+IGluc3RlYWQgb2YgdHJ5aW5nIHRvIGRlZHVjZSB0aGUg
-d2lkdGggZnJvbSB0aGUgaW5wdXQuDQo+ID4NCj4gPiBBaCByaWdodDogaHR0cHM6Ly9nY2MuZ251
-Lm9yZy9vbmxpbmVkb2NzL2djYy9FeHRlbmRlZC1Bc20uaHRtbCN4ODZPcGVyYW5kbW9kaWZpZXJz
-DQo+ID4NCj4gPiBMb29rcyBsaWtlIHRoYXQgd29ya3MgZm9yIGJvdGggY29tcGlsZXJzLiAgSW4g
-dGhhdCBjYXNlLCB3ZSBjYW4gbGlrZWx5DQo+ID4gZHJvcCB0aGUgYCYgMHhmZmAsIHRvby4gIExl
-dCBtZSBwbGF5IHdpdGggdGhhdCwgdGhlbiBJJ2xsIGhvcGVmdWxseQ0KPiA+IHNlbmQgYSB2MyB0
-b2RheS4NCj4gPg0KPiANCj4gR29vZCBpZGVhLiBJIHJlcXVlc3RlZCBhIHdoaWxlIGFnbyB0aGF0
-IHRoZXkgZG9jdW1lbnQgdGhlc2UgbW9kaWZpZXJzOyB0aGV5DQo+IGNob3NlIG5vdCB0byBkb2N1
-bWVudCB0aGVtIGFsbCB3aGljaCBpbiBzb21lIHdheXMgaXMgZ29vZDsgaXQgc2hvd3Mgd2hhdCB0
-aGV5DQo+IGFyZSB3aWxsaW5nIHRvIGNvbW1pdCB0byBpbmRlZmluaXRlbHkuDQoNCkkgdGhvdWdo
-dCB0aGUgaW50ZW50aW9uIGhlcmUgd2FzIHRvIGV4cGxpY2l0bHkgZG8gYSBieXRlIGFjY2Vzcy4N
-CklmIHRoZSBjb25zdGFudCBiaXQgbnVtYmVyIGhhcyBoYWQgYSBkaXYvbW9kIGJ5IDggZG9uZSBv
-biBpdCB0aGVuDQp0aGUgYWRkcmVzcyBjYW4gYmUgbWlzYWxpZ25lZCAtIHNvIHlvdSBtdXN0bid0
-IGRvIGEgbm9uLWJ5dGUgc2l6ZWQNCmxvY2tlZCBhY2Nlc3MuDQoNCk9UT0ggdGhlIG9yaWdpbmFs
-IGJhc2UgYWRkcmVzcyBtdXN0IGJlIGFsaWduZWQuDQoNCkxvb2tpbmcgYXQgc29tZSBpbnN0cnVj
-dGlvbiB0aW1pbmcsIEJUUy9CVFIgYXJlbid0IHRvbyBiYWQgaWYgdGhlDQpiaXQgbnVtYmVyIGlz
-IGEgY29uc3RhbnQuIEJ1dCBhcmUgNiBvciA3IGNsb2NrcyBzbG93ZXIgaWYgaXQgaXMgaW4gJWNs
-Lg0KR2l2ZW4gdGhlc2UgYXJlIGxvY2tlZCBSTVcgYnVzIGN5Y2xlcyB0aGV5J2xsIGFsd2F5cyBi
-ZSBzbG93IQ0KDQpIb3cgYWJvdXQgYW4gYXNtIG11bHRpLXBhcnQgYWx0ZXJuYXRpdmUgdGhhdCB1
-c2VzIGEgYnl0ZSBvZmZzZXQNCmFuZCBieXRlIGNvbnN0YW50IGlmIHRoZSBjb21waWxlciB0aGlu
-a3MgdGhlIG1hc2sgaXMgY29uc3RhbnQNCm9yIGEgNC1ieXRlIG9mZnNldCBhbmQgMzJiaXQgbWFz
-ayBpZiBpdCBkb2Vzbid0Lg0KDQpUaGUgb3RoZXIgYWx0ZXJuYXRpdmUgaXMgdG8ganVzdCB1c2Ug
-QlRTL0JUUyBhbmQgKG1heWJlKSByZWx5IG9uIHRoZQ0KYXNzZW1ibGVyIHRvIGFkZCBpbiB0aGUg
-d29yZCBvZmZzZXQgdG8gdGhlIGJhc2UgYWRkcmVzcy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVy
-ZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5
-bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Hi Jiada,
 
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on input/next]
+[also build test WARNING on xen-tip/linux-next robh/for-next linus/master v5.7-rc4 next-20200508]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Jiada-Wang/atmel_mxt_ts-misc/20200509-031552
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+cppcheck warnings: (new ones prefixed by >>)
+
+>> drivers/input/touchscreen/atmel_mxt_ts.c:4045:8: warning: %d in format string (no. 2) requires 'int *' but the argument type is 'unsigned int *'. [invalidScanfArgType_int]
+    ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
+          ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1993:20: warning: Unsigned expression 'byte_offset' can't be negative so it is unnecessary to test it. [unsignedPositive]
+      if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
+                      ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1024:33: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_RESET ? " RESET" : "",
+                                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1025:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_OFL ? " OFL" : "",
+                                 ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1026:34: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_SIGERR ? " SIGERR" : "",
+                                    ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1027:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_CAL ? " CAL" : "",
+                                 ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1028:34: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_CFGERR ? " CFGERR" : "",
+                                    ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1029:35: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+      status & MXT_T6_STATUS_COMSERR ? " COMSERR" : "");
+                                     ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1346:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     status & 0x01 ? "FREQCHG " : "",
+                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1347:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     status & 0x02 ? "APXCHG " : "",
+                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1348:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     status & 0x04 ? "ALGOERR " : "",
+                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1349:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     status & 0x10 ? "STATCHG " : "",
+                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:1350:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
+     status & 0x20 ? "NLVLCHG " : "");
+                   ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:274:20: warning: struct member 'mxt_dbg::t37_buf' is never used. [unusedStructMember]
+    struct t37_debug *t37_buf;
+                      ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:275:15: warning: struct member 'mxt_dbg::t37_pages' is never used. [unusedStructMember]
+    unsigned int t37_pages;
+                 ^
+   drivers/input/touchscreen/atmel_mxt_ts.c:276:15: warning: struct member 'mxt_dbg::t37_nodes' is never used. [unusedStructMember]
+    unsigned int t37_nodes;
+
+vim +4045 drivers/input/touchscreen/atmel_mxt_ts.c
+
+  4024	
+  4025	static ssize_t t38_data_store(struct device *dev,
+  4026				      struct device_attribute *attr,
+  4027				      const char *buf, size_t count)
+  4028	{
+  4029		struct mxt_data *data = dev_get_drvdata(dev);
+  4030		struct mxt_object *object;
+  4031		ssize_t ret = 0, pos, offset;
+  4032		unsigned int i, len, index;
+  4033		u8 *t38_buf;
+  4034	
+  4035		if (!data->object_table)
+  4036			return -ENXIO;
+  4037	
+  4038		object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
+  4039	
+  4040		/* Pre-allocate buffer large enough to hold max size of t38 object.*/
+  4041		t38_buf = kmalloc(mxt_obj_size(object), GFP_KERNEL);
+  4042		if (!t38_buf)
+  4043			return -ENOMEM;
+  4044	
+> 4045		ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
+  4046		if (ret != 2) {
+  4047			dev_err(dev, "Bad format: Invalid parameter to update t38\n");
+  4048			ret = -EINVAL;
+  4049			goto end;
+  4050		}
+  4051	
+  4052		if (len == 0) {
+  4053			dev_err(dev,
+  4054				"Bad format: Data length should not be equal to 0\n");
+  4055			ret = -EINVAL;
+  4056			goto end;
+  4057		}
+  4058	
+  4059		if (offset < 0 || ((offset + len) > 64)) {
+  4060			dev_err(dev, "Invalid offset value to update t38\n");
+  4061			ret = -EINVAL;
+  4062			goto end;
+  4063		}
+  4064	
+  4065		index = pos;
+  4066		for (i = 0; i < len; i++) {
+  4067			ret = sscanf(buf + index, "%hhx%zd", t38_buf + i, &pos);
+  4068			if (ret != 1) {
+  4069				dev_err(dev, "Bad format: Invalid Data\n");
+  4070				ret = -EINVAL;
+  4071				goto end;
+  4072			}
+  4073			index += pos;
+  4074		}
+  4075	
+  4076		ret = __mxt_write_reg(data->client, object->start_address + offset,
+  4077				      len, t38_buf);
+  4078		if (ret)
+  4079			goto end;
+  4080	
+  4081		ret = mxt_t6_command(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE,
+  4082				     true);
+  4083		if (ret)
+  4084			dev_err(dev, "backup command failed\n");
+  4085		else
+  4086			ret = count;
+  4087	end:
+  4088		kfree(t38_buf);
+  4089		return ret;
+  4090	}
+  4091	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
