@@ -3,110 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304C5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69386C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A66C2082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555BF2082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgEJSrq (ORCPT
+        id S1729178AbgEJSwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgEJSrq (ORCPT
+        Sun, 10 May 2020 14:52:03 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:43870 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbgEJSwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:47:46 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2159C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 11:47:45 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jXqyq-00044P-T3; Sun, 10 May 2020 20:47:17 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 13593100D21; Sun, 10 May 2020 20:47:16 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 2 10/18] x86/entry/64: Check IF in __preempt_enable_notrace() thunk
-In-Reply-To: <87k11l4d7l.fsf@nanos.tec.linutronix.de>
-References: <20200505134112.272268764@linutronix.de> <20200505134341.087595319@linutronix.de> <CALCETrVpSj9fVyUHp-Q_tT-xLgTfYR5JFv52AsOuGJsDYeN3-Q@mail.gmail.com> <87k11l4d7l.fsf@nanos.tec.linutronix.de>
-Date:   Sun, 10 May 2020 20:47:16 +0200
-Message-ID: <87k11j4ogb.fsf@nanos.tec.linutronix.de>
+        Sun, 10 May 2020 14:52:03 -0400
+X-AuditID: c0a8fbf4-473ff70000004419-75-5eb84d51c019
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D5.36.17433.15D48BE5; Sun, 10 May 2020 20:52:01 +0200 (CEST)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Sun, 10 May 2020 20:51:53 +0200
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v12 00/11] Support ROHM BD99954 charger IC
+Thread-Topic: [PATCH v12 00/11] Support ROHM BD99954 charger IC
+Thread-Index: AQHWJU7PJ3Z/Wwfk3U+H3drETuWBPqihXU2AgAAur4A=
+Date:   Sun, 10 May 2020 18:51:53 +0000
+Message-ID: <501265638c16ffa06a77be37e1feeb2c9cb732bb.camel@fi.rohmeurope.com>
+References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200510160445.6fg2v7jug2vlepkv@earth.universe>
+In-Reply-To: <20200510160445.6fg2v7jug2vlepkv@earth.universe>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0EBFE37509FB5543A95BEB02E3824F45@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SW0wTQRSGmd1tO6WsDgVkwAvaxBg0gBAiG6LIk9Yb0eiTRnCRtUVKS7at
+        giERDIjUK6kaacAggtcEZFWojQ/agAFjIERFNEVTICA3XySI1qC7rgpP88355z//SeZAUjun
+        iIa5ZhvHm1mTThlMPbsTEOL27HJnrq+4r2F6+50kc8U/rGRm3pwhmNeeGiXz9Xw7YGoaOylm
+        YCIjXaV3DzQA/RPXgEpfJ9j1wr1Kpf6rsGK3Yr9mYzZrO7Y312BOSDukMbY0B5QFHlToHJxW
+        loAy5ABqiFEyFgYuKhwgGGpRH8AztycJ+dIJ8OPBq6QDQKhEG7HjvUrCcLQVV1/WS14SvSRw
+        RZVF4jCUhm+M9gKJw9Fm7Ju9QMmcittP/1BKTKHV2H2ulJSYRhl4usf3h7WoEP+cqv/zRo02
+        YVdpFyExQMtxZckXQs6KxMLIN4U8M8INT3tImSPw2NDc3/oq3PatiZLGJFEsbvYkyJiOPU07
+        5C6r8OWzfpU8QSjuqh6mLoElrgUBrnmza97sWmB2LTDXAcU9gPPZXJOBtXGJ8Txnj+ctxnzx
+        OGzJF4D8n9Nu8Mu7zQsICLwgChK6CDo1xJ2pXZRtySkyslZjFm83cVYvwJDUhdNVhY8ytXQO
+        W3SC4y3/pKWQ0kXSa/xVB7VIysrjuAKO/6cug1CHaXqn2DSU5wxc4ZFck21eJqBaah4cHW7l
+        zDkcz9ptxixpN7Ks4nJIUoiY279DtNPWAjZfrMrWl2AdvDRWW0/C9trGelJLmS1mLjqS7n3e
+        lqlF0lOj3fw/aBxEQqALo/ukOULEpf7fZ1yMIMQI/2irFGFj56XoEuC9e636Zt2+hJyHzp2J
+        Hd3uoOagjxcmPsz4umN8qqSyO2Waxa6SiFflcQ8Nowc8PWpDUcr1pBc4j3wQp69fORKTwidv
+        954r3hCYaj267Pu7FjjZ8dk5G2O5dbKGqXIIn9zOxlfJeUFb9MXHk8pP9S3va2lqbfM40dvA
+        UGesL6pdR1mNbOJakreyvwG7mUcZkQMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Andy Lutomirski <luto@kernel.org> writes:
->> On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> /**
->>  * preempt_schedule_notrace - preempt_schedule called by tracing
->>  *
->>  * The tracing infrastructure uses preempt_enable_notrace to prevent
->>  * recursion and tracing preempt enabling caused by the tracing
->>  * infrastructure itself. But as tracing can happen in areas coming
->>  * from userspace or just about to enter userspace, a preempt enable
->>  * can occur before user_exit() is called. This will cause the scheduler
->>  * to be called when the system is still in usermode.
->>  *
->>  * To prevent this, the preempt_enable_notrace will use this function
->>  * instead of preempt_schedule() to exit user context if needed before
->>  * calling the scheduler.
->>  */
->>
->> Which is no longer really applicable to x86 -- in the state that this
->> comment nonsensically refers to as "userspace", x86 *always* has IRQs
->> off, which means that preempt_enable() will not schedule.
-
-Yeah.
-
->> So I'm guessing that the issue you're solving is that we have
->> redundant preempt disable/enable pairs somewhere in the bowels of
->> tracing code that is called with IRQs off, and objtool is now
->> complaining.  Could the actual code in question be fixed to assert
->> that IRQs are off instead of disabling preemption?  If not, can you
->> fix the $SUBJECT and changelog and perhaps add a comment to the code
->> as to *why* you're checking IF?  Otherwise some intrepid programmer is
->> going to notice it down the road, wonder if it's optimizing anything
->> useful at all, and get rid of it.
->
-> Let me stare into that again.
-
-There are a few preempt_disable/enable() pairs in some of the helper
-functions which are called in various places. That means we would have
-to chase all of them and provide 'naked' helpers for these particular
-call chains. I'll fix the changelog and add a comment to make clear what
-this is about.
-
-Thanks,
-
-        tglx
-
+VGhhbmtzIGEgbG90IFNlYmFzdGlhbiBhbmQgTWFyayENCg0KT24gU3VuLCAyMDIwLTA1LTEwIGF0
+IDE4OjA0ICswMjAwLCBTZWJhc3RpYW4gUmVpY2hlbCB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBG
+cmksIE1heSAwOCwgMjAyMCBhdCAwNjozODoxN1BNICswMzAwLCBNYXR0aSBWYWl0dGluZW4gd3Jv
+dGU6DQo+ID4gUGxlYXNlIG5vdGUgdGhhdCB0aGlzIHNlcmllcyBzaG91bGQgYmUgYXBwbGllZCB0
+byB0d28gdHJlZXMuDQo+ID4gUGF0Y2hlcw0KPiA+IDEtNCAob3IgMS01IGFzIHN1Z2dlc3RlZCBi
+eSBTZWJhc3RpYW4pIHNob3VsZCBnbyB0byByZWd1bGF0b3IgdHJlZS4NCj4gPiBQZXJoYXBzIE1h
+cmsgY2FuIHByb3ZpZGUgYW4gaW1tdXRhYmxlIGJyYW5jaCB0byBTZWJhc3RpYW4/IFJlc3Qgb2YN
+Cj4gPiB0aGUNCj4gPiBwYXRjaGVzIGNhbiB0aGVuIGdvIHRvIHBvd2VyLXN1cHBseSB0cmVlLg0K
+PiANCj4gVGhhbmtzLCBJIG1lcmdlZCB0aGUgcHVsbC1yZXF1ZXN0IGZyb20gTWFyayBhbmQgcXVl
+dWVkIHBhdGNoZXMgNS0xMS4NCj4gDQoNCkkgdGhpbmsgaXQncyBmYWlyIHRvIHBvaW50IG91dCBh
+bHNvIGZvciBTZWJhc3RpYW4gdGhhdCBNYXJrIHNwb3R0ZWQgYQ0KY29tcGlsZSB0aW1lIHdhcm5p
+bmcgZnJvbSBsaW5lYXJfcmFuZ2VzIHdoZW4gaXQgaXMgY29tcGlsZWQgYXMgYQ0KbW9kdWxlLiBU
+aGlzIGlzIG9ubHkgb2NjdXJyaW5nIHdoZW4gbGluZWFyX3JhbmdlcyBpcyBjb21waWxlZCBhcyBh
+DQptb2R1bGUuIEFuZCB0aGF0IHJlcXVpcmVzIENPTkZJR19SRUdVTEFUT1IgdG8gYmUgbiBhbmQg
+bGluZWFyX3Jhbmdlcw0KdGVzdCB0byBiZSBtLiBJIGd1ZXNzIHRoaXMgaXMgdW5saWtlbHkgYXMg
+SSB0aGluayBlbmFibGluZw0KbGluZWFyX3JhbmdlcyB0ZXN0IGNvZGUgaXMgbm90IGNvbW1vbiBm
+b3Igc2V0dXBzIHRoYXQgYXJlIG5vdCB1c2luZw0KbGluZWFyIHJhbmdlcyAtIGJ1dCBmb3Igc3Vy
+ZSBzb21lIHRlc3Qgc2V0dXAgaGl0cyB0aGlzIHNvbWV3aGVyZS4NCg0KUHJvYmxlbSBpcyB0aGF0
+IGxpbmVhcl9yYW5nZXMgY2FuIGJlIGNvbXBpbGVkIGFzIG1vZHVsZSAoaXQncyB0cmlzdGF0ZWQN
+CmluIEtjb25maWcpIGJ1dCBkb2VzIG5vdCBkZWNsYXJlIE1PRFVMRV9MSUNFTkNFIG1hY3JvLg0K
+DQpJIHNlbnQgdGhpcyBpbmNyZW1lbnRhbCBwYXRjaCB3aGljaCBzaG91bGQgZml4IHRoZSBpc3N1
+ZToNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA1MDkxNTE1MTkuR0E3MTAwQGxv
+Y2FsaG9zdC5sb2NhbGRvbWFpbi8NCg0KIC0gYnV0IGRvZXMgYXBwbHlpbmcgaXQgdG8gZWl0aGVy
+IHBvd2VyLXN1cHBseSBvciByZWd1bGF0b3IgY2F1c2UgYQ0KY29uZmxpY3Q/DQoNCkkganVzdCB3
+YW50ZWQgdG8gcG9pbnQgdGhpcyBvdXQgLSBzb3JyeSBmb3IgdGhlIHRyb3VibGUhIEFuZCBwbGVh
+c2UgbGV0DQptZSBrbm93IGlmIHlvdSB3aXNoIG1lIHRvIHNlbmQgc29tZSBvdGhlciBmaXguIEkg
+d2lsbCBnbGFkbHkgZG8gc28gYW5kDQpjb3JyZWN0IG15IGJ1Z3MgOikNCg0KLS1NYXR0aQ0KDQo=
