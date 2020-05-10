@@ -2,133 +2,92 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146E5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54416C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A4820731
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:30:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NUhhd54+"
+	by mail.kernel.org (Postfix) with ESMTP id 344B120731
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589142690;
+	bh=LfFf6ZVT2QkA6Dtvvht9TOnFtd+bdPkSZsNrSwHsybo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P3XLbgc0s063Eh8JWFoBkL8Un+WSfriltmD2HjWbGl34nyCFpDL1H6ZCTnnH7UxlN
+	 HqHpqP0W0aBq2UPrNV60IrQGrPsk3fGW/fAOtQwEJ+dxf9qcV6PdWBidTYp4QqgIx8
+	 Jr/fU/eeihP+np5dwxXKcAEMQbsro+VrObocrjfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgEJUa5 (ORCPT
+        id S1729321AbgEJUb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728468AbgEJUa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:30:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CC8C061A0C;
-        Sun, 10 May 2020 13:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=lbFI9MBD40QBYokysPHLxu6F41fz0KpiRSnXqnhfN8g=; b=NUhhd54+ZYe3CR+WRaIQU7YnbU
-        sGWKq6LYixYvxdlKYJ4qd05yekwVJJIjHlm6g6WqBzhi0+EmDPAK8YRA9Le/ID5pNwr3AMdS3IKAb
-        Cp6TfPiO2u8Pjlv6zuKfVH4GE2kuAzJYAZKZHrB/CJFZeKV8pvcYTxA+pwh03Ae4jIQXNhbYpm0S0
-        NAmN+VEWt8jqqyi6Jjf/i4XhB2GHa/+7Q5t8INF7ma4I/p0wg6Hx1dq6CPKRCyY/c3SLRiZ1Syz/q
-        2FGJbKRgOMN4mKUiJ5RdVX1jWb5iTWJOEpAADo+tBfKnmwEN1/fol8JM7yatvMkwg2sd2jG3iF/Se
-        DjXU1KUg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXsb7-0003zz-Gr; Sun, 10 May 2020 20:30:53 +0000
-Subject: Re: Using a custom LDFLAG for all objects and binaries
-To:     Mahmood Naderan <mahmood.nt@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
- <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org>
- <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
- <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
- <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
- <a8c709ff-67df-09b6-25ff-a4b46a5a2a79@infradead.org>
- <CADa2P2WqYxUjZWMYw5aq_5e8XLf8zRCnTsMaF98sFg8==F+WNw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ae0bfc33-312a-6163-9381-786db6264024@infradead.org>
-Date:   Sun, 10 May 2020 13:30:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 16:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728468AbgEJUb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 16:31:28 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EA420731
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:31:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589142688;
+        bh=LfFf6ZVT2QkA6Dtvvht9TOnFtd+bdPkSZsNrSwHsybo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2NupWFCZ3k0yTEcTI14LQv+FJnLP7aZ+u9axLeO+nzvK/ofiShJfbA4zKx0STIrtz
+         5rGvWNK1zGM+Qdw36s+kloNPxySOtzDqBC2RQHCF6FS4AMgy7+cehprcKv4GbxIDd2
+         Y43nDyerY/uG28I3mg5b8UxBLlZCZrhq8iBgixLs=
+Received: by mail-wm1-f48.google.com with SMTP id u16so16843557wmc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 13:31:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaeQK/sYELr878E8jW+i3eIZ7ed9GH2taZGAnyiUCa+NCQ08tXg
+        C6rPD61CCneEiaHrSG1A307Dc/6rR+4S84ng8OS2Vw==
+X-Google-Smtp-Source: APiQypJ6xO7jNX24c2MwAVgxgagog95NUtkNmOpqwlQ/nIEPmIByfqutAZZ0BPV6VeoidLZdW7OmqZmjG64p347cqNo=
+X-Received: by 2002:a7b:c5d3:: with SMTP id n19mr20552281wmk.21.1589142686852;
+ Sun, 10 May 2020 13:31:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CADa2P2WqYxUjZWMYw5aq_5e8XLf8zRCnTsMaF98sFg8==F+WNw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505134354.774943181@linutronix.de> <20200505134903.949227617@linutronix.de>
+In-Reply-To: <20200505134903.949227617@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 10 May 2020 13:31:15 -0700
+X-Gmail-Original-Message-ID: <CALCETrX=dgHba0yQVwi2a30w3RJTe2v7O7m+6pHVJXickVcEEA@mail.gmail.com>
+Message-ID: <CALCETrX=dgHba0yQVwi2a30w3RJTe2v7O7m+6pHVJXickVcEEA@mail.gmail.com>
+Subject: Re: [patch V4 part 3 07/29] x86/entry: Distangle idtentry
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/20 12:53 PM, Mahmood Naderan wrote:
->> OK, I suggest that you reorder the options like so:
->>
->>        KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE) --emit-relocs
-> 
-> 
-> I did that. After
-> 
-> $ make V=1
-> $ sudo make modules_install V=1
-> $ sudo make install
-> 
-> I grepped for "emit-relocs" in the log and saw many instances such as
-> 
->   gcc -Wp,-MD,drivers/rtc/.rtc-ds1305.o.d  -nostdinc -isystem
-> /usr/lib/gcc/x86_64-linux-gnu/5/include -I./arch/x86/include
-> -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi
-> -I./arch/x86/include/generated/uapi -I./include/uapi
-> -I./include/generated/uapi -include ./include/linux/kconfig.h -include
-> ./include/linux/compiler_types.h -D__KERNEL__ -Wall -Wundef
-> -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common
-> -fshort-wchar -Werror-implicit-function-declaration
-> -Wno-format-security -std=gnu89 -fno-PIE -mno-sse -mno-mmx -mno-sse2
-> -mno-3dnow -mno-avx -m64 -falign-jumps=1 -falign-loops=1 -mno-80387
-> -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup
-> -mtune=generic -mno-red-zone -mcmodel=kernel -funit-at-a-time
-> -DCONFIG_X86_X32_ABI -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1
-> -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_FXSAVEQ=1 -DCONFIG_AS_SSSE3=1
-> -DCONFIG_AS_CRC32=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1
-> -DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1
-> -pipe -Wno-sign-compare -fno-asynchronous-unwind-tables
-> -mindirect-branch=thunk-extern -mindirect-branch-register
-> -fno-jump-tables -fno-delete-null-pointer-checks -O2
-> --param=allow-store-data-races=0 -Wframe-larger-than=1024
-> -fstack-protector-strong -Wno-unused-but-set-variable
-> -fno-omit-frame-pointer -fno-optimize-sibling-calls
-> -fno-var-tracking-assignments -g -gdwarf-4 -pg -mrecord-mcount
-> -mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement
-> -Wno-pointer-sign -fno-strict-overflow -fno-merge-all-constants
-> -fmerge-constants -fno-stack-check -fconserve-stack
-> -Werror=implicit-int -Werror=strict-prototypes -Werror=date-time
-> -Werror=incompatible-pointer-types -Werror=designated-init  -DMODULE
-> -DKBUILD_BASENAME='"rtc_ds1305"' -DKBUILD_MODNAME='"rtc_ds1305"' -c -o
-> drivers/rtc/rtc-ds1305.o drivers/rtc/rtc-ds1305.c
->    ./tools/objtool/objtool check  --module --retpoline
-> "drivers/scsi/aacraid/dpcsup.o";
-> 
-> OR
-> 
->   ld -r -m elf_x86_64 --emit-relocs  -z max-page-size=0x200000 -T
-> ./scripts/module-common.lds  --build-id  -o
-> sound/usb/line6/snd-usb-line6.ko sound/usb/line6/snd-usb-line6.o
-> sound/usb/line6/snd-usb-line6.mod.o ;  true
-> 
-> 
-> 
-> I guess that all kernel modules are now use --emit-relocs.
-> I would like to be sure that libc and those files related to syscalls
-> are also using that.
-> 
-> I grepped for "libc.so" but it seems that there is no such match.
-> Did I miss something?
+On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Thomas Gleixner <tglx@linutronix.de>
+>
+> idtentry is a completely unreadable maze. Split it into distinct idtentry
+> variants which only contain the minimal code:
+>
+>   - idtentry for regular exceptions
+>   - idtentry_mce_debug for #MCE and #DB
+>   - idtentry_df for #DF
+>
+> The generated binary code is equivalent.
 
-The kernel doesn't use libc...
-
--- 
-~Randy
-
+Acked-by: Andy Lutomirski <luto@kernel.org>
