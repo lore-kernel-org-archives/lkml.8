@@ -2,112 +2,186 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB943C54E8C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00C1C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF40C20725
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C468C206F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgEJUJl (ORCPT
+        id S1729186AbgEJURp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:09:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41608 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbgEJUJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:09:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 1354C2A0428
-Received: by earth.universe (Postfix, from userid 1000)
-        id 024F13C08C7; Sun, 10 May 2020 22:09:37 +0200 (CEST)
-Date:   Sun, 10 May 2020 22:09:36 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] power: supply: max17040: Correct voltage reading
-Message-ID: <20200510200936.hsygnezoxgbxsahv@earth.universe>
-References: <20200504221300.3153-1-xc-racer2@live.ca>
- <BN6PR04MB0660DA4AED9364441DA33094A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Sun, 10 May 2020 16:17:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:35954 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728468AbgEJURp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 16:17:45 -0400
+IronPort-SDR: x3gaxqufZR9jPgNn7qaM5fWluB8A9Fo5ZpfXUHtH25LlNPjtpPUdhliiE4YfXtEPFiRezTLrCa
+ 8JT6sFmmrARA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 13:17:45 -0700
+IronPort-SDR: gNML2oFOSPG5DE7Pxdk6EATh9VPlC5eRDPSyc6prKIPeqkuiaHltQFxA9Uzq+6orVppUoNxZ+c
+ aWkiDSTF6zFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,377,1583222400"; 
+   d="scan'208";a="408701289"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 10 May 2020 13:17:43 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXsOM-000J7k-Ti; Mon, 11 May 2020 04:17:42 +0800
+Date:   Mon, 11 May 2020 04:17:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 506c28aae936a300b6eb16e4fe8472755b10ae44
+Message-ID: <5eb86145.j+C+piZbINoYXdkG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hx7bg2ldd57usdl5"
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660DA4AED9364441DA33094A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 506c28aae936a300b6eb16e4fe8472755b10ae44  Merge branch 'core/core'
 
---hx7bg2ldd57usdl5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 705m
 
-Hi,
+configs tested: 119
+configs skipped: 1
 
-On Mon, May 04, 2020 at 03:12:58PM -0700, Jonathan Bakker wrote:
-> According to the datasheet available at (1), the bottom four
-> bits are always zero and the actual voltage is 1.25x this value
-> in mV.  Since the kernel API specifies that voltages should be in
-> uV, it should report 1250x the shifted value.
->=20
-> 1) https://datasheets.maximintegrated.com/en/ds/MAX17040-MAX17041.pdf
->=20
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks, queued.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200510
+i386                 randconfig-a005-20200510
+i386                 randconfig-a003-20200510
+i386                 randconfig-a001-20200510
+i386                 randconfig-a004-20200510
+i386                 randconfig-a002-20200510
+i386                 randconfig-a006-20200511
+i386                 randconfig-a005-20200511
+i386                 randconfig-a003-20200511
+i386                 randconfig-a001-20200511
+i386                 randconfig-a004-20200511
+i386                 randconfig-a002-20200511
+x86_64               randconfig-a005-20200510
+x86_64               randconfig-a003-20200510
+x86_64               randconfig-a001-20200510
+x86_64               randconfig-a005-20200511
+x86_64               randconfig-a003-20200511
+x86_64               randconfig-a006-20200511
+x86_64               randconfig-a004-20200511
+x86_64               randconfig-a001-20200511
+x86_64               randconfig-a002-20200511
+x86_64               randconfig-a016-20200510
+x86_64               randconfig-a012-20200510
+x86_64               randconfig-a015-20200510
+x86_64               randconfig-a013-20200510
+x86_64               randconfig-a014-20200510
+x86_64               randconfig-a011-20200510
+i386                 randconfig-a012-20200510
+i386                 randconfig-a016-20200510
+i386                 randconfig-a014-20200510
+i386                 randconfig-a011-20200510
+i386                 randconfig-a013-20200510
+i386                 randconfig-a015-20200510
+i386                 randconfig-a012-20200511
+i386                 randconfig-a016-20200511
+i386                 randconfig-a014-20200511
+i386                 randconfig-a011-20200511
+i386                 randconfig-a013-20200511
+i386                 randconfig-a015-20200511
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                                  kexec
+x86_64                              fedora-25
 
--- Sebastian
-
->  drivers/power/supply/max17040_battery.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supp=
-ly/max17040_battery.c
-> index 8a1f0ee493aa..48aa44665e2f 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -126,7 +126,7 @@ static void max17040_get_vcell(struct i2c_client *cli=
-ent)
-> =20
->  	vcell =3D max17040_read_reg(client, MAX17040_VCELL);
-> =20
-> -	chip->vcell =3D vcell;
-> +	chip->vcell =3D (vcell >> 4) * 1250;
->  }
-> =20
->  static void max17040_get_soc(struct i2c_client *client)
-> --=20
-> 2.20.1
->=20
-
---hx7bg2ldd57usdl5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64X4AACgkQ2O7X88g7
-+ppo7RAAlh68rjdG0EAT4vqwdeC0NZ1Xjjdj1UoXNQ1aI1k6q4DGDgwbDsGhqjap
-jQeG2gg9NqyGC9heqLYpb2vQJ5nDh6vyKKMwLz1Bt3EOXJ8ljRtcr0x67UBDOYNG
-5MuYFPTwkV8KLVzhNTVzQRqqWFX+YZNXPrPND+/IKP71mnkaJSvdS1s6579t28LX
-KlntSRf4kElQYoFqyD49Sj7Egn7G3ajQ43OygdmFokKOEywKAfoI7so+U3zRohZ2
-beg9fiIOldk4YvOUnS7jXhR5K8COh/4SySkh6HQ9aoFI7mGm0lJ72IfFLoFb+Vcx
-Rk/2+RLRHM/US/E4TIL6YjUM8qGdU+9sSFoKoDxcRILVmA5uR/UqwobTPqR5U/ql
-EEjVTJwrR4l+2LwgC4l61FR3+qN8OZxuu1+zZU7oBW0JXBUpdN00goKACh2zDBLR
-1dfftNk/AfSwHYYH36RVhxrurIWaNSFF8s+P9HjWWlp8oRXODeFX3VNpzHS8MkG+
-XQlNS/XtgJSdxe7dE5NNLPOjg1HD5M4K6jzlPWgPrgRNowfxyZ2n1igKnrDh/hax
-Up6foKwsZv2t/Y1DWknK+GCH5sZ/Bpeb8W29BR5SS38FCi4tfE2Xhn9ck7KuZqst
-Nq8oVlNVH+Nq2ngAetMvHTwN4W3w0g2W/sxJHiUbN0pdJyiV02c=
-=970P
------END PGP SIGNATURE-----
-
---hx7bg2ldd57usdl5--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
