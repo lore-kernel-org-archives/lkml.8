@@ -2,157 +2,150 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD554C35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF229C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B76208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589093305;
-	bh=Jt2ZmI4jxEXSvlstEfwyzyeZhTT/glbADv+7sZp1TwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ieoice44IKKY8KuJ0PAM8fz0/YR3pQxuhXUHM/eNRur8Srej1sEFVRAkGAUgcp7Sx
-	 SGcw0oORuFYBcBp1fUg/uassQELl0OLyVQNpeMngzYZ+k7Y5IwuXuFmxqQatlAs0N6
-	 s/2PvDSx7+ol0qkT1pvaBgK+Y4U6wPTxtiUXHlZg=
+	by mail.kernel.org (Postfix) with ESMTP id 779552070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byOnXGnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgEJGsY (ORCPT
+        id S1727789AbgEJGse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 02:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgEJGsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 02:48:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF9B120746;
-        Sun, 10 May 2020 06:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589093303;
-        bh=Jt2ZmI4jxEXSvlstEfwyzyeZhTT/glbADv+7sZp1TwM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RxXU+/m2DIjg87amFaxqurQLKs8quLyPScABwqfg6oUVQYOgHAk22GwA8BT4I/ZOg
-         vo0hj6YZunBgBahCuG69MHoD4rN8o9pa80PXNORzq+RacX1jBiDvZEbEBVs5N6nWCn
-         /tH+qpAMgsDVE0olYy6weZqNYg1ccGSbjgU9K6nQ=
-Date:   Sun, 10 May 2020 08:48:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     rananta@codeaurora.org
-Cc:     jslaby@suse.com, andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-Message-ID: <20200510064819.GB3400311@kroah.com>
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+        Sun, 10 May 2020 02:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725810AbgEJGsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 02:48:33 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6229C061A0C;
+        Sat,  9 May 2020 23:48:33 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t40so6189228pjb.3;
+        Sat, 09 May 2020 23:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l/8M9WGtxo6PbsxhSHfbtuvDOM6UKdX+q+/zdI2w/Dw=;
+        b=byOnXGnfKoI8tIQG9NZ1UOLtVgbChvyiBOYc7BuDW9t/w0KSM5B0xIDhb4Xza6PDM4
+         IlY9mNb6hRgNfEFDjDlVjS/LBS8vN0ubXNz1Ag1pylQJRewpBWTNF4nc4Ju8X76jcOUq
+         a8s6iPFY4Hr1TDkCqr8ugUnsIhBQbW/8QKlvkjiC/RSwS7xKd8sG47OHxeNN4AEEOP3C
+         XhYrElDJYeJZjYS1GSdqha+bCIN4crpYvabg5Aia0zZOoKonwh8jEAiHN50lWA5xmQKb
+         kR6Sn2ov0OlLsS4WpCaJ25Q1cItsWyzQZOSx5W22mwAUE21kf58lweCzr5Ktg+/5m2uQ
+         /itA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l/8M9WGtxo6PbsxhSHfbtuvDOM6UKdX+q+/zdI2w/Dw=;
+        b=XMPXrxGkR9Ir82VJYUxT8nSN9jUEPGUGhesPE0LwmObdo4a6+XWiHfro+WgnZqjiQL
+         qIFA3tG81u1dVh+5r9AWdKSvaosifNstEtIE+xZL7BsB8/pfpaU0QRH7ZSPljXgsxV7X
+         wi9Sh6FgCHSPSkVTdSGgkEq/tE6HdUtaYaeQh+rF3ZtY8y0FXF7a3QaD3FPjzK1xTxet
+         XkaMOp9G3zSyx/pWyyWA9lCZoPHGTFkz+yrAj9cqCNMpRivOQPhCB6rxUWcqLjQ8Qs48
+         PHF7mNkul4QbYmc2UjnDrYunJ/JMJabG6Zb40TchuCZRvUSp0Y7W5OiE3eYrSucDxAGH
+         BBnw==
+X-Gm-Message-State: AGi0PuaUbNkgdCV4LNyWX7NCGTYlhJ3YBEyPltvxVDxm4yHnXDMjKfZu
+        WxzAZKiyyBRsNF5wWJCa1tDHLtk8
+X-Google-Smtp-Source: APiQypJ+2JyRPcnqESYdW+4iYrPZYrPa/bZhrQndJw3KOcbNOSFFmTW93Nobsr6ie+4qZhB35QlpjQ==
+X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr15875216pjb.146.1589093312825;
+        Sat, 09 May 2020 23:48:32 -0700 (PDT)
+Received: from ASMDT.1 ([114.125.231.97])
+        by smtp.gmail.com with ESMTPSA id z15sm6472198pjt.20.2020.05.09.23.48.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 23:48:32 -0700 (PDT)
+Subject: Re: USB Attached SCSI breakage due no udev involvement
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     oneukum@suse.com, linux-usb@vger.kernel.org,
+        linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org
+References: <CAOyCV0zW_20Jq6Rrb9=fhZQAHeqMMs_oHBJdTVt8Nqje0Zoeig@mail.gmail.com>
+ <20200510054717.GA3365021@kroah.com>
+From:   Dio Putra <dioput12@gmail.com>
+Message-ID: <1f9c0b30-f440-de43-366f-28ccba6a22e2@gmail.com>
+Date:   Sun, 10 May 2020 13:48:24 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+In-Reply-To: <20200510054717.GA3365021@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
-> On 2020-05-06 02:48, Greg KH wrote:
-> > On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
-> > > Potentially, hvc_open() can be called in parallel when two tasks calls
-> > > open() on /dev/hvcX. In such a scenario, if the
-> > > hp->ops->notifier_add()
-> > > callback in the function fails, where it sets the tty->driver_data to
-> > > NULL, the parallel hvc_open() can see this NULL and cause a memory
-> > > abort.
-> > > Hence, serialize hvc_open and check if tty->private_data is NULL
-> > > before
-> > > proceeding ahead.
-> > > 
-> > > The issue can be easily reproduced by launching two tasks
-> > > simultaneously
-> > > that does nothing but open() and close() on /dev/hvcX.
-> > > For example:
-> > > $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
-> > > 
-> > > Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-> > > ---
-> > >  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
-> > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/tty/hvc/hvc_console.c
-> > > b/drivers/tty/hvc/hvc_console.c
-> > > index 436cc51c92c3..ebe26fe5ac09 100644
-> > > --- a/drivers/tty/hvc/hvc_console.c
-> > > +++ b/drivers/tty/hvc/hvc_console.c
-> > > @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
-> > >   */
-> > >  static DEFINE_MUTEX(hvc_structs_mutex);
-> > > 
-> > > +/* Mutex to serialize hvc_open */
-> > > +static DEFINE_MUTEX(hvc_open_mutex);
-> > >  /*
-> > >   * This value is used to assign a tty->index value to a hvc_struct
-> > > based
-> > >   * upon order of exposure via hvc_probe(), when we can not match it
-> > > to
-> > > @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
-> > > *driver, struct tty_struct *tty)
-> > >   */
-> > >  static int hvc_open(struct tty_struct *tty, struct file * filp)
-> > >  {
-> > > -	struct hvc_struct *hp = tty->driver_data;
-> > > +	struct hvc_struct *hp;
-> > >  	unsigned long flags;
-> > >  	int rc = 0;
-> > > 
-> > > +	mutex_lock(&hvc_open_mutex);
-> > > +
-> > > +	hp = tty->driver_data;
-> > > +	if (!hp) {
-> > > +		rc = -EIO;
-> > > +		goto out;
-> > > +	}
-> > > +
-> > >  	spin_lock_irqsave(&hp->port.lock, flags);
-> > >  	/* Check and then increment for fast path open. */
-> > >  	if (hp->port.count++ > 0) {
-> > >  		spin_unlock_irqrestore(&hp->port.lock, flags);
-> > >  		hvc_kick();
-> > > -		return 0;
-> > > +		goto out;
-> > >  	} /* else count == 0 */
-> > >  	spin_unlock_irqrestore(&hp->port.lock, flags);
-> > 
-> > Wait, why isn't this driver just calling tty_port_open() instead of
-> > trying to open-code all of this?
-> > 
-> > Keeping a single mutext for open will not protect it from close, it will
-> > just slow things down a bit.  There should already be a tty lock held by
-> > the tty core for open() to keep it from racing things, right?
-> The tty lock should have been held, but not likely across ->install() and
-> ->open() callbacks, thus resulting in a race between hvc_install() and
-> hvc_open(),
+On 5/10/20 12:47 PM, Greg KH wrote:
+> On Sun, May 10, 2020 at 09:55:57AM +0700, Dio Putra wrote:
+>> Hi, it's first time for me to report user-space breakage in here, so
+>> i'm begging your pardon.
+>>
+>> I want to report that Linux 5.4 breaking my USB mount workflow due
+>> udevadm monitor report here (I'm using vanilla kernel 5.4.39 on
+>> Slackware64 Current and vanilla kernel 4.4.221 on Slackware64 14.2):
+> 
+> <snip>
+> 
+> Sorry, but what actually changed that you can see in the logs?
+Sorry, what do you mean? The dmesg log or the kernel changelogs?
 
-How?  The tty lock is held in install, and should not conflict with
-open(), otherwise we would be seeing this happen in all tty drivers,
-right?
+> 
+> What functionality broke?  What used to work that no longer does work?
+> 
+Yes, it supposed that just work and kernel could talk with udev, not just handled by the kernel.
 
-> where hvc_install() sets a data and the hvc_open() clears it. hvc_open()
-> doesn't
-> check if the data was set to NULL and proceeds.
+Here's my personal conclusion:
 
-What data is being set that hvc_open is checking?
+[Slackware64-Current linux-5.4.39]$ sudo strace -p 2417
+strace: Process 2417 attached
+write(1, "KERNEL[672.150926] remove   /dev"..., 84) = 84
+epoll_wait(3, [{EPOLLIN, {u32=5, u64=5}}], 4, -1) = 1
+recvmsg(5, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=0x000001}, msg_namelen=128->12, msg_iov=[{iov_base="remove@/devices/pci0000:00/0000:"..., iov_len=8192}], msg_iovlen=1, msg_control=[{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, cmsg_data={pid=0, uid=0, gid=0}}], msg_controllen=32, msg_flags=0}, 0) = 269
+write(1, "KERNEL[672.151622] remove   /dev"..., 122) = 122
+epoll_wait(3, [{EPOLLIN, {u32=5, u64=5}}], 4, -1) = 1
+recvmsg(5, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=0x000001}, msg_namelen=128->12, msg_iov=[{iov_base="remove@/devices/pci0000:00/0000:"..., iov_len=8192}], msg_iovlen=1, msg_control=[{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, cmsg_data={pid=0, uid=0, gid=0}}], msg_controllen=32, msg_flags=0}, 0) = 255
+write(1, "KERNEL[672.152396] remove   /dev"..., 138) = 138
+epoll_wait(3, [{EPOLLIN, {u32=5, u64=5}}], 4, -1) = 1
+recvmsg(5, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=0x000001}, msg_namelen=128->12, msg_iov=[{iov_base="remove@/devices/virtual/bdi/11:0"..., iov_len=8192}], msg_iovlen=1, msg_control=[{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, cmsg_data={pid=0, uid=0, gid=0}}], msg_controllen=32, msg_flags=0}, 0) = 107
+write(1, "KERNEL[672.153191] remove   /dev"..., 60) = 60
+...<snip>...
 
-And you are not grabbing a lock in your install callback, you are only
-serializing your open call here, I don't see how this is fixing anything
-other than perhaps slowing down your codepaths.
+"So the summary of syscall on linux-5.4.39 it's something like: write -->  epoll_wait --> recvmsg (direct call from kernel only, no udev dependencies has been called ever) --> write"
 
-As an arument why this isn't correct, can you answer why this same type
-of change wouldn't be required for all tty drivers in the tree?
+[Slackware64-14.2 linux-kernel-4.4.221] $ sudo strace -p 2102
+strace: Process 2102 attached
+write(1, "KERNEL[160.475104] remove   /dev"..., 84) = 84
+epoll_wait(3, [{EPOLLIN, {u32=4, u64=4}}], 4, -1) = 1
+recvmsg(4, {msg_name(12)={sa_family=AF_NETLINK, pid=598, groups=00000002}, msg_iov(1)=[{"libudev\0\376\355\312\376(\0\0\0(\0\0\0\375\0\0\0\5w\305\345\261\2Ge"..., 8192}], msg_controllen=32, [{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, {pid=2116, uid=0, gid=0}}], msg_flags=0}, 0) = 293
+write(1, "UDEV  [160.476746] remove   /dev"..., 84) = 84
+epoll_wait(3, [{EPOLLIN, {u32=5, u64=5}}], 4, -1) = 1
+recvmsg(5, {msg_name(12)={sa_family=AF_NETLINK, pid=0, groups=00000001}, msg_iov(1)=[{"remove@/devices/pci0000:00/0000:"..., 8192}], msg_controllen=32, [{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, {pid=0, uid=0, gid=0}}], msg_flags=0}, 0) = 256
+write(1, "KERNEL[160.478096] remove   /dev"..., 76) = 76
+epoll_wait(3, [{EPOLLIN, {u32=4, u64=4}}], 4, -1) = 1
+recvmsg(4, {msg_name(12)={sa_family=AF_NETLINK, pid=598, groups=00000002}, msg_iov(1)=[{"libudev\0\376\355\312\376(\0\0\0(\0\0\0\26\2\0\0\5w\305\345'\370\365\f"..., 8192}], msg_controllen=32, [{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, {pid=2116, uid=0, gid=0}}], msg_flags=0}, 0) = 574
+write(1, "UDEV  [160.495353] remove   /dev"..., 76) = 76
+epoll_wait(3, [{EPOLLIN, {u32=5, u64=5}}], 4, -1) = 1
+recvmsg(5, {msg_name(12)={sa_family=AF_NETLINK, pid=0, groups=00000001}, msg_iov(1)=[{"add@/devices/pci0000:00/0000:00:"..., 8192}], msg_controllen=32, [{cmsg_len=28, cmsg_level=SOL_SOCKET, cmsg_type=SCM_CREDENTIALS, {pid=0, uid=0, gid=0}}], msg_flags=0}, 0) = 250
+write(1, "KERNEL[161.109310] add      /dev"..., 76) = 76
+...<snip>...
 
-thanks,
+"So the summary of syscall on linux-4.4.221 it's something like: write --> epoll_wait --> recvmsg (libudev has been called) --> write (UDEV has been called) --> epoll_wait -> recvmsg (libudev has been called again)-> write"
+  
+> And 4.4.221 is quite different from 5.4, is that the jump that you are
+> seeing breakage in, or is it in some smaller jump?
+> 
+Yeah, I know it's really different between linux-4.4 and linux-5.4
 
-greg k-h
+> thanks,
+> 
+> greg k-h
+> 
