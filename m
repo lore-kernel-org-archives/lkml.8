@@ -2,223 +2,154 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B8C54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C1DC54E8B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE95208E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64029208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589105823;
-	bh=+0kDXWCp+FqkNWlLvZ+TWB7dPSP/xtLz8CjN8Au1pfY=;
+	s=default; t=1589105902;
+	bh=hWjMKAwdWJ/o3HUisSHzH/Arf2sL2ZTVDPjCrm5zbH4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PMJEmDOa3qkbko9DztnyfKK147I41+ukaWdD8OxfBkWYmoXd7aONzEBUO5d4mtbJo
-	 DIk6KDFEeuLwYXnMgPY9aCMPwJzW8kjpaMwNI6q/vAhu8WditpxeE4yMJPYHuC6477
-	 LnQIs2fs4LMhe5bitsUUYqiwmmGDTb/MXtmnhTpc=
+	b=1ouzidtgLDBdo5GdNQ1osbaZOYjkyuYCol5aXDsF6n1YzN1K7xsWnl3+1B02N5sMA
+	 4MXfN26LcKQ/6PM8cBw2Ab/Nu0gZoPAWDGQkw1Yy6J4WMH+WbAf9bnchp+lI0byI1M
+	 UCOQU4P29qnGUGKWefAIdQa4cbik1Y7eopts5Sbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgEJKRD (ORCPT
+        id S1728660AbgEJKSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 06:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
+        Sun, 10 May 2020 06:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgEJKRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 06:17:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1725839AbgEJKSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 06:18:21 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DEB8206A3;
-        Sun, 10 May 2020 10:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B354206A3;
+        Sun, 10 May 2020 10:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589105821;
-        bh=+0kDXWCp+FqkNWlLvZ+TWB7dPSP/xtLz8CjN8Au1pfY=;
+        s=default; t=1589105900;
+        bh=hWjMKAwdWJ/o3HUisSHzH/Arf2sL2ZTVDPjCrm5zbH4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SCq/ffd0ndynT5J+/zSojwIXSnyvVOS5dyJf7h09dTyq1QpTCh1IlWOSMK7ZB9CGA
-         T7V0luZDjAb7hyGAp4OehAahjoR6e5a9lVercD0SZuQK8TWjodALDgPRombn1SJcL0
-         MIabkHSZA8F1SerF0Mb9pV99Ragti8oDB1tsI+gg=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jXj11-00B1Pu-20; Sun, 10 May 2020 11:16:59 +0100
-Date:   Sun, 10 May 2020 11:16:54 +0100
-Message-ID: <871rns14dl.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     David Brazdil <dbrazdil@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/15] arm64: kvm: Formalize host-hyp hypcall ABI
-In-Reply-To: <20200507133320.GA16899@google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
-        <20200430144831.59194-3-dbrazdil@google.com>
-        <87d07fj3g9.wl-maz@kernel.org>
-        <20200507133320.GA16899@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: qperret@google.com, dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        b=OGLl2JKDfvH2Ur+1aNbw18uED6v58CRY5LqE65pjP90KaaC//OKKJyYjVK5Z3kH/l
+         9KfWvCxjfjMuOO5cfA/GOxJVAOBt0psGHlIafhBjFqgWldl32u2Jd7jilwaBAEWkst
+         9ru1gVeloHx6i0AwiKvHN+MdnvJ/wwWD9PrR10k0=
+Date:   Sun, 10 May 2020 11:18:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] staging: iio: ad5933: attach life-cycle of kfifo
+ buffer to parent device
+Message-ID: <20200510111817.07e6bf72@archlinux>
+In-Reply-To: <20200508143936.17845-1-alexandru.ardelean@analog.com>
+References: <20200508143936.17845-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Quentin,
+On Fri, 8 May 2020 17:39:35 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-On Thu, 07 May 2020 14:33:20 +0100,
-Quentin Perret <qperret@google.com> wrote:
-> 
-> Hey Marc,
-> 
-> On Thursday 07 May 2020 at 14:10:30 (+0100), Marc Zyngier wrote:
-> > Hi David, Quentin,
+> This change makes the use of devm_iio_kfifo_allocate() to attach the
+> life-cycle of the kfifo buffer to the parent (client->dev) object.
+>=20
+> This removes the need to explicitly free 'indio_dev->buffer' via
+> iio_kfifo_free(), which is the main intent.
+>=20
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+*mutters darkly*.  Technically this patch adds a non obvious ordering
+issue in remove, but then you fix it in the next one so I'll let that go.
 
-[...]
+However, you've not tried building patch 1 on it's own..
 
-> > > +#define __KVM_HOST_HCALL_TABLE_IDX___vgic_v3_save_aprs		13
-> > > +__KVM_HOST_HCALL(__vgic_v3_save_aprs)
-> > > +
-> > > +#define __KVM_HOST_HCALL_TABLE_IDX_SIZE				14
-> > 
-> > This whole thing screams "enum" into my ears. Having to maintain these
-> > as #defines feels like a pain, specially if the numbers are never used
-> > in assembly code. (and for that, we have asm-offset.h).
-> 
-> This is essentially inspired from the various 'unistd.h' files we have
-> in the kernel, e.g. include/uapi/asm-generic/unistd.h, which have
-> exactly this type of construct. So, this was really just for consistency,
-> but no strong opinion from me.
+drivers/staging/iio/impedance-analyzer/ad5933.c:752:17: error: label 'error=
+_unreg_ring' was not declared
+drivers/staging/iio/impedance-analyzer/ad5933.c:756:17: error: label 'error=
+_unreg_ring' was not declared
+  CC [M]  drivers/staging/iio/impedance-analyzer/ad5933.o
+drivers/staging/iio/impedance-analyzer/ad5933.c: In function =E2=80=98ad593=
+3_probe=E2=80=99:
+drivers/staging/iio/impedance-analyzer/ad5933.c:756:3: error: label =E2=80=
+=98error_unreg_ring=E2=80=99 used but not defined
+  756 |   goto error_unreg_ring;
+      |   ^~~~
+make[4]: *** [scripts/Makefile.build:267: drivers/staging/iio/impedance-ana=
+lyzer/ad5933.o] Error 1
+make[3]: *** [scripts/Makefile.build:488: drivers/staging/iio/impedance-ana=
+lyzer] Error 2
+make[2]: *** [scripts/Makefile.build:488: drivers/staging/iio] Error 2
+make[1]: *** [scripts/Makefile.build:488: drivers/staging] Error 2
+make: *** [Makefile:1722: drivers] Error 2
 
-I think part of the of the reason for not using an enum in the syscall
-code is that part of is is (was?) used from assembly code. In our
-case, I'm pretty sure we won't go back to handling calls from asm any
-time soon, so a generated enum (and associated function pointer array)
-would be better.
+Easiest option here is just to merge the two patches into one. I've
+done that and mashed the two commit messages into one semi-coherent whole.
 
-> 
-> > 
-> > > +
-> > > +/* XXX - Arbitrary offset for KVM-related hypercalls */
-> > > +#define __KVM_HOST_HCALL_BASE_SHIFT 8
-> > > +#define __KVM_HOST_HCALL_BASE (1ULL << __KVM_HOST_HCALL_BASE_SHIFT)
-> > > +#define __KVM_HOST_HCALL_END (__KVM_HOST_HCALL_BASE + \
-> > > +			      __KVM_HOST_HCALL_TABLE_IDX_SIZE)
-> > 
-> > I don't really get what is this offset for. It is too small to be used
-> > to skip the stub hypercalls (you'd need to start at 0x1000).
-> 
-> Oh, OK. I assumed anything above HVC_STUB_HCALL_NR would be fine. But
-> yes, this offset is really arbitrary, so if 0x1000 is better then that
-> totally works. For my education, where is that 0x1000 coming from ?
+Applied both patches as one to the togreg branch of iio.git and pushed out
+as testing for the autobuilders to play with it.
 
-We assumed that we wouldn't get a function pointer in the first 4kB,
-and documented as such in hyp.S. I would say that either we keep the
-current convention of leaving the first 4k function codes for the
-hyp-stubs, or we drop any sort of gap.
+thanks,
 
-Another thing to consider is that there is at least *one* external
-hypervisor (Jailhouse) that uses the stubs, so I'd like to make sure
-we don't break that (even if we made no promise whatsoever in that
-respect).
+Jonathan
 
-> 
-> > Given
-> > that you store the whole thing in an array, you're wasting some
-> > memory. I'm sure you have a good story for it though! ;-)
-> 
-> Note that the array's length is __KVM_HOST_HCALL_TABLE_IDX_SIZE, which
-> doesn't include the offset, so we shouldn't be wasting memory here.
+> ---
+>  drivers/staging/iio/impedance-analyzer/ad5933.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/st=
+aging/iio/impedance-analyzer/ad5933.c
+> index af0bcf95ee8a..633adf1a08c1 100644
+> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
+> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> @@ -602,11 +602,12 @@ static const struct iio_buffer_setup_ops ad5933_rin=
+g_setup_ops =3D {
+>  	.postdisable =3D ad5933_ring_postdisable,
+>  };
+> =20
+> -static int ad5933_register_ring_funcs_and_init(struct iio_dev *indio_dev)
+> +static int ad5933_register_ring_funcs_and_init(struct device *dev,
+> +					       struct iio_dev *indio_dev)
+>  {
+>  	struct iio_buffer *buffer;
+> =20
+> -	buffer =3D iio_kfifo_allocate();
+> +	buffer =3D devm_iio_kfifo_allocate(dev);
+>  	if (!buffer)
+>  		return -ENOMEM;
+> =20
+> @@ -742,7 +743,7 @@ static int ad5933_probe(struct i2c_client *client,
+>  	indio_dev->channels =3D ad5933_channels;
+>  	indio_dev->num_channels =3D ARRAY_SIZE(ad5933_channels);
+> =20
+> -	ret =3D ad5933_register_ring_funcs_and_init(indio_dev);
+> +	ret =3D ad5933_register_ring_funcs_and_init(&client->dev, indio_dev);
+>  	if (ret)
+>  		goto error_disable_mclk;
+> =20
+> @@ -756,8 +757,6 @@ static int ad5933_probe(struct i2c_client *client,
+> =20
+>  	return 0;
+> =20
+> -error_unreg_ring:
+> -	iio_kfifo_free(indio_dev->buffer);
+>  error_disable_mclk:
+>  	clk_disable_unprepare(st->mclk);
+>  error_disable_reg:
+> @@ -772,7 +771,6 @@ static int ad5933_remove(struct i2c_client *client)
+>  	struct ad5933_state *st =3D iio_priv(indio_dev);
+> =20
+>  	iio_device_unregister(indio_dev);
+> -	iio_kfifo_free(indio_dev->buffer);
+>  	regulator_disable(st->reg);
+>  	clk_disable_unprepare(st->mclk);
+> =20
 
-Ah, you're right. I got confused between _SIZE and _END.
-
-> 
-> > > +
-> > > +/* Hypercall number = kvm offset + table idx */
-> > > +#define KVM_HOST_HCALL_NR(name) (__KVM_HOST_HCALL_TABLE_IDX_##name + \
-> > > +				 __KVM_HOST_HCALL_BASE)
-> > > diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-> > > index 8c9880783839..29e2b2cd2fbc 100644
-> > > --- a/arch/arm64/kvm/hyp/Makefile
-> > > +++ b/arch/arm64/kvm/hyp/Makefile
-> > > @@ -9,7 +9,7 @@ ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
-> > >  obj-$(CONFIG_KVM) += hyp.o
-> > >  
-> > >  hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
-> > > -	 debug-sr.o entry.o switch.o fpsimd.o tlb.o hyp-entry.o
-> > > +	 debug-sr.o entry.o switch.o fpsimd.o tlb.o host_hypercall.o hyp-entry.o
-> > >  
-> > >  # KVM code is run at a different exception code with a different map, so
-> > >  # compiler instrumentation that inserts callbacks or checks into the code may
-> > > diff --git a/arch/arm64/kvm/hyp/host_hypercall.c b/arch/arm64/kvm/hyp/host_hypercall.c
-> > > new file mode 100644
-> > > index 000000000000..6b31310f36a8
-> > > --- /dev/null
-> > > +++ b/arch/arm64/kvm/hyp/host_hypercall.c
-> > > @@ -0,0 +1,22 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Copyright (C) 2020 Google, inc
-> > > + */
-> > > +
-> > > +#include <asm/kvm_hyp.h>
-> > > +
-> > > +typedef long (*kvm_hcall_fn_t)(void);
-> > > +
-> > > +static long __hyp_text kvm_hc_ni(void)
-> > > +{
-> > > +       return -ENOSYS;
-> > > +}
-> > > +
-> > > +#undef __KVM_HOST_HCALL
-> > > +#define __KVM_HOST_HCALL(name) \
-> > > +	[__KVM_HOST_HCALL_TABLE_IDX_##name] = (long (*)(void))name,
-> > > +
-> > > +const kvm_hcall_fn_t kvm_hcall_table[__KVM_HOST_HCALL_TABLE_IDX_SIZE] = {
-> > > +	[0 ... __KVM_HOST_HCALL_TABLE_IDX_SIZE-1] = kvm_hc_ni,
-> > > +#include <asm/kvm_host_hypercalls.h>
-> > > +};
-> > 
-> > Cunning. At the same time, if you can do this once, you can do it
-> > twice, and generating the __KVM_HOST_HCALL_TABLE_IDX_* as an enum
-> > should be pretty easy, and could live in its own include file.
-> 
-> Right, and that again is inspired from the arm64 syscall table (see
-> arch/arm64/kernel/sys.c). So the first intention was to keep things
-> consistent. But again, no strong opinion :)
-
-So let's try to build it with an enum instead, and see if it works. If
-it doesn't, at least we will know why.
-
-[...]
-
-> > > +	/* Find hcall function pointer in the table */
-> > > +	ldr	x10, =kvm_hcall_table
-> > > +	ksym_hyp_va	x10, x9
-> > 
-> > Can't kvm_hcall_table be referenced with adr or adr_l? It'd certainly
-> > be nice to avoid the extra load for something that is essentially a
-> > build-time constant.
-> 
-> In fact David already has a nice patch that transforms the whole thing
-> in a jump table, which is much nicer. I'll let him share the details
-> :)
-
-Ah! Looking forward to reviewing it then!
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
