@@ -2,203 +2,184 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894D1C54E8C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D4C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CF6208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE412082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589108423;
+	bh=y6Q7eSTVZ1KzZiuOCrv0FQwCH4hWBWN3Tp4Umxf+9W8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=l/W4q0roGp/BNN2q9sUzdCNQ2YQjTnMxZ6GFvjXEsB2qTO+VEsjDrJR2faOe+ag9Z
+	 khb3xPXWwZUm7LZcQ57TjY00LJMZtOlx7Oa1EFcv3/eSHnSwPYcDsJjHGQDoFNSxoF
+	 mCJ80cKU3cRvR0hxHlxBsbLJzj1XSAB+0SVzkQx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgEJK64 (ORCPT
+        id S1729086AbgEJLAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 06:58:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:46576 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgEJK6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 06:58:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 92AB38030791;
-        Sun, 10 May 2020 10:58:44 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8Rk4FAtzyDFb; Sun, 10 May 2020 13:58:43 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Jack Mitchell <ml@embed.me.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 7/7] watchdog: dw_wdt: Add DebugFS files
-Date:   Sun, 10 May 2020 13:58:07 +0300
-Message-ID: <20200510105807.880-8-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
- <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
+        Sun, 10 May 2020 07:00:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgEJLAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 07:00:22 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70A1F20708;
+        Sun, 10 May 2020 11:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589108421;
+        bh=y6Q7eSTVZ1KzZiuOCrv0FQwCH4hWBWN3Tp4Umxf+9W8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NnfImhX7HKPftayZYG9B2Q1EKNznqqfYZTsww3lfw3LQ+FdmCHYB5R/96Ju+SLww1
+         f4vzU5fE3bFiOSOlWXZL7qcnJKD93o3YWi4t+WOgNkYH7y3vZz+6JcJ0MYby4YehTl
+         5u+PGAxSoPGDWmmUJxiEFDmneOTUHTeEK6P4oJZQ=
+Date:   Sun, 10 May 2020 12:00:16 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] iio: light: cm32181: Switch to new style
+ i2c-driver probe function
+Message-ID: <20200510120016.7b360d81@archlinux>
+In-Reply-To: <e30bbcb4-c0cd-e95f-501a-89270f8dd19e@redhat.com>
+References: <20200504125551.434647-1-hdegoede@redhat.com>
+        <20200510104806.63ffeae5@archlinux>
+        <e30bbcb4-c0cd-e95f-501a-89270f8dd19e@redhat.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the sake of the easier device-driver debug procedure, we added a
-DebugFS file with the controller registers state. It's available only if
-kernel is configured with DebugFS support.
+On Sun, 10 May 2020 12:03:08 +0200
+Hans de Goede <hdegoede@redhat.com> wrote:
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+> Hi,
+> 
+> On 5/10/20 11:48 AM, Jonathan Cameron wrote:
+> > On Mon,  4 May 2020 14:55:41 +0200
+> > Hans de Goede <hdegoede@redhat.com> wrote:
+> >   
+> >> Switch to the new style i2c-driver probe_new probe function and drop the
+> >> unnecessary i2c_device_id table (we do not have any old style board files
+> >> using this).
+> >>
+> >> This is a preparation patch for adding ACPI binding support.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>  
+> > Hi Hans,
+> > 
+> > Seems these have all been sent with mime type of quoted-printable.
+> > As git am really doesn't like that I ended up pulling these down from
+> > patchwork.
+> > 
+> > Please try and sort that email issue out for future patch sets until
+> > we get git am that works with it in standard distro packages (assuming
+> > it ever does)  
+> 
+> Weird, I used git send-email to send the patches, as I always do.
+> I contribute to a lot of subsystems and this is the first complaint I'm
+> getting about this ?
+It's not been true of the previous ones you've sent me.
 
----
+A bit of googling suggests git-send-email will do this if it finds a CR
+in the patch.  Perhaps that's what happened?
 
-Changelog v2:
-- Rearrange SoBs.
-- Discard timeout/pretimeout/ping/enable DebugFS nodes. Registers state
-  dump node is only left.
----
- drivers/watchdog/dw_wdt.c | 68 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+Maybe try sending them one at a time and see if a particular patch is causing
+it to happen.  Then play detective on why.
 
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 3cd7c485cd70..012681baaa6d 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -28,6 +28,7 @@
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/watchdog.h>
-+#include <linux/debugfs.h>
- 
- #define WDOG_CONTROL_REG_OFFSET		    0x00
- #define WDOG_CONTROL_REG_WDT_EN_MASK	    0x01
-@@ -39,8 +40,14 @@
- #define WDOG_COUNTER_RESTART_KICK_VALUE	    0x76
- #define WDOG_INTERRUPT_STATUS_REG_OFFSET    0x10
- #define WDOG_INTERRUPT_CLEAR_REG_OFFSET     0x14
-+#define WDOG_COMP_PARAMS_5_REG_OFFSET       0xe4
-+#define WDOG_COMP_PARAMS_4_REG_OFFSET       0xe8
-+#define WDOG_COMP_PARAMS_3_REG_OFFSET       0xec
-+#define WDOG_COMP_PARAMS_2_REG_OFFSET       0xf0
- #define WDOG_COMP_PARAMS_1_REG_OFFSET       0xf4
- #define WDOG_COMP_PARAMS_1_USE_FIX_TOP      BIT(6)
-+#define WDOG_COMP_VERSION_REG_OFFSET        0xf8
-+#define WDOG_COMP_TYPE_REG_OFFSET           0xfc
- 
- /* There are sixteen TOPs (timeout periods) that can be set in the watchdog. */
- #define DW_WDT_NUM_TOPS		16
-@@ -85,6 +92,10 @@ struct dw_wdt {
- 	/* Save/restore */
- 	u32			control;
- 	u32			timeout;
-+
-+#ifdef CONFIG_DEBUG_FS
-+	struct dentry		*dbgfs_dir;
-+#endif
- };
- 
- #define to_dw_wdt(wdd)	container_of(wdd, struct dw_wdt, wdd)
-@@ -484,6 +495,59 @@ static int dw_wdt_init_timeouts(struct dw_wdt *dw_wdt, struct device *dev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_FS
-+
-+#define DW_WDT_DBGFS_REG(_name, _off) \
-+{				      \
-+	.name = _name,		      \
-+	.offset = _off		      \
-+}
-+
-+static const struct debugfs_reg32 dw_wdt_dbgfs_regs[] = {
-+	DW_WDT_DBGFS_REG("cr", WDOG_CONTROL_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("torr", WDOG_TIMEOUT_RANGE_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("ccvr", WDOG_CURRENT_COUNT_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("crr", WDOG_COUNTER_RESTART_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("stat", WDOG_INTERRUPT_STATUS_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param5", WDOG_COMP_PARAMS_5_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param4", WDOG_COMP_PARAMS_4_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param3", WDOG_COMP_PARAMS_3_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param2", WDOG_COMP_PARAMS_2_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("param1", WDOG_COMP_PARAMS_1_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("version", WDOG_COMP_VERSION_REG_OFFSET),
-+	DW_WDT_DBGFS_REG("type", WDOG_COMP_TYPE_REG_OFFSET)
-+};
-+
-+static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt)
-+{
-+	struct device *dev = dw_wdt->wdd.parent;
-+	struct debugfs_regset32 *regset;
-+
-+	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
-+	if (!regset)
-+		return;
-+
-+	regset->regs = dw_wdt_dbgfs_regs;
-+	regset->nregs = ARRAY_SIZE(dw_wdt_dbgfs_regs);
-+	regset->base = dw_wdt->regs;
-+
-+	dw_wdt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-+
-+	debugfs_create_regset32("registers", 0444, dw_wdt->dbgfs_dir, regset);
-+}
-+
-+static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt)
-+{
-+	debugfs_remove_recursive(dw_wdt->dbgfs_dir);
-+}
-+
-+#else /* !CONFIG_DEBUG_FS */
-+
-+static void dw_wdt_dbgfs_init(struct dw_wdt *dw_wdt) {}
-+static void dw_wdt_dbgfs_clear(struct dw_wdt *dw_wdt) {}
-+
-+#endif /* !CONFIG_DEBUG_FS */
-+
- static int dw_wdt_drv_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -607,6 +671,8 @@ static int dw_wdt_drv_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_disable_pclk;
- 
-+	dw_wdt_dbgfs_init(dw_wdt);
-+
- 	return 0;
- 
- out_disable_pclk:
-@@ -621,6 +687,8 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- {
- 	struct dw_wdt *dw_wdt = platform_get_drvdata(pdev);
- 
-+	dw_wdt_dbgfs_clear(dw_wdt);
-+
- 	watchdog_unregister_device(&dw_wdt->wdd);
- 	reset_control_assert(dw_wdt->rst);
- 	clk_disable_unprepare(dw_wdt->pclk);
--- 
-2.25.1
+Or just take it as one of those things and ignore it unless it happens again!
+
+J
+
+> 
+> > Otherwise, a bit of fuzz from the patch that dropped the of_match_ptr
+> > protections.
+> > 
+> > Series applied to the togreg branch of iio.git and pushed out as testing for
+> > the autobuilders to play with it.  
+> 
+> Great, thank you.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> >> ---
+> >> Changes in v4:
+> >> - Set indio_dev->name to "cm32181" instead of setting it to dev_name(dev)
+> >>
+> >> Changes in v3:
+> >> - This is a new patch in v3 of this patch-set
+> >> ---
+> >>   drivers/iio/light/cm32181.c | 15 +++------------
+> >>   1 file changed, 3 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+> >> index 5f4fb5674fa0..2c139d85ef0c 100644
+> >> --- a/drivers/iio/light/cm32181.c
+> >> +++ b/drivers/iio/light/cm32181.c
+> >> @@ -294,8 +294,7 @@ static const struct iio_info cm32181_info = {
+> >>   	.attrs			= &cm32181_attribute_group,
+> >>   };
+> >>   
+> >> -static int cm32181_probe(struct i2c_client *client,
+> >> -			const struct i2c_device_id *id)
+> >> +static int cm32181_probe(struct i2c_client *client)
+> >>   {
+> >>   	struct cm32181_chip *cm32181;
+> >>   	struct iio_dev *indio_dev;
+> >> @@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
+> >>   	indio_dev->channels = cm32181_channels;
+> >>   	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
+> >>   	indio_dev->info = &cm32181_info;
+> >> -	indio_dev->name = id->name;
+> >> +	indio_dev->name = "cm32181";
+> >>   	indio_dev->modes = INDIO_DIRECT_MODE;
+> >>   
+> >>   	ret = cm32181_reg_init(cm32181);
+> >> @@ -338,13 +337,6 @@ static int cm32181_probe(struct i2c_client *client,
+> >>   	return 0;
+> >>   }
+> >>   
+> >> -static const struct i2c_device_id cm32181_id[] = {
+> >> -	{ "cm32181", 0 },
+> >> -	{ }
+> >> -};
+> >> -
+> >> -MODULE_DEVICE_TABLE(i2c, cm32181_id);
+> >> -
+> >>   static const struct of_device_id cm32181_of_match[] = {
+> >>   	{ .compatible = "capella,cm32181" },
+> >>   	{ }
+> >> @@ -356,8 +348,7 @@ static struct i2c_driver cm32181_driver = {
+> >>   		.name	= "cm32181",
+> >>   		.of_match_table = of_match_ptr(cm32181_of_match),
+> >>   	},
+> >> -	.id_table       = cm32181_id,
+> >> -	.probe		= cm32181_probe,
+> >> +	.probe_new	= cm32181_probe,
+> >>   };
+> >>   
+> >>   module_i2c_driver(cm32181_driver);  
+> >   
+> 
 
