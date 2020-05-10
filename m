@@ -2,135 +2,159 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D4BC47255
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5960C47257
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7323E208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589074263;
-	bh=ZFWESm7BCWR/1W4jYyjzg2GMZbin6TOpjGg+VzUNEZw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jbogJ+lu36pEJf05V7VsS4zYm4HPmu4zxNypKKC/PpamEhRRpBqkJCZ9ZvTn7iAtN
-	 jyG0Dp8HNUOzq7FZ3vslmrvvLTEZDcJdw5mcXHxQlj3gaqQqpjfJL0T6AsfK3te/n+
-	 sZPPm7V0+pjrIqaf2O14zv5qpIrwPmjklZFi8KQU=
+	by mail.kernel.org (Postfix) with ESMTP id BCA1421582
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XNNddfZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgEJBbC (ORCPT
+        id S1728928AbgEJBbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 21:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgEJBbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 21:31:02 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sat, 9 May 2020 21:31:08 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57023 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726630AbgEJBbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 21:31:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589074267; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=SWmr21JzBeyX3B6jEnsPhNXgkMNcdb2+W8/646mE2VI=;
+ b=XNNddfZbNJHW/DazX3/UqCVsatTha52pRab6vdNeO9k2aj1vFf2GGphA2ySzdlpj4EBMEGr2
+ JJbNtUXN8G3XxiNw3YAT8qRH8976oIUC1vGUPYja5mOrv8tWD1Xp1/mxTTRxLD6muL0VS8uB
+ Kr6UYaULija4U4MrtkAQgX9lfKk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb75952.7f38d4bdb458-smtp-out-n01;
+ Sun, 10 May 2020 01:30:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2513EC43636; Sun, 10 May 2020 01:30:57 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB0621775
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 01:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589074261;
-        bh=ZFWESm7BCWR/1W4jYyjzg2GMZbin6TOpjGg+VzUNEZw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WixNi7vGq6fwF+jXK+YId/1rB8G+PTd4s4v9spXxhIej/fIqTIBM7l1xQ622g4SRs
-         FJK4xHHtNzpB3AfmcDFaDThmjEcrTB2GPoJXeccEy7GlFLAUL4Jefturov6uDNdr0O
-         F2R3x80oOncFEJNRshjB7qwvtjunQXppRuJOHWW0=
-Received: by mail-ej1-f43.google.com with SMTP id x20so1229876ejb.11
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 18:31:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYGmtP0CLqiYbGulgWkfh1y5+n01WvEkYaeBSDkuqsYDdibqumY
-        sL5h3VItcpMbxQh6MVwe+Xbm3YCmOjNhXlPLMg==
-X-Google-Smtp-Source: APiQypLLpbjrFxVDPm7x548/daha8AvlKc41zGr1ENz1S4CiuA/k3u8aVFCV/n89pbH/JXLI098lhHIujmbMaZ4UR7k=
-X-Received: by 2002:a17:906:2503:: with SMTP id i3mr7553000ejb.293.1589074259573;
- Sat, 09 May 2020 18:30:59 -0700 (PDT)
+        (Authenticated sender: rananta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 772E0C433F2;
+        Sun, 10 May 2020 01:30:56 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200506124255.9477-1-bernard@vivo.com>
-In-Reply-To: <20200506124255.9477-1-bernard@vivo.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 10 May 2020 09:30:49 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__L44OeoDeyhbSRQRiTSksDsW-H5c0VZNv_1h7yXC3Oww@mail.gmail.com>
-Message-ID: <CAAOTY__L44OeoDeyhbSRQRiTSksDsW-H5c0VZNv_1h7yXC3Oww@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: eliminate the magic number in array size
-To:     Bernard Zhao <bernard@vivo.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 09 May 2020 18:30:56 -0700
+From:   rananta@codeaurora.org
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+In-Reply-To: <20200506094851.GA2787548@kroah.com>
+References: <20200428032601.22127-1-rananta@codeaurora.org>
+ <20200506094851.GA2787548@kroah.com>
+Message-ID: <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+X-Sender: rananta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bernard:
+On 2020-05-06 02:48, Greg KH wrote:
+> On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
+>> Potentially, hvc_open() can be called in parallel when two tasks calls
+>> open() on /dev/hvcX. In such a scenario, if the 
+>> hp->ops->notifier_add()
+>> callback in the function fails, where it sets the tty->driver_data to
+>> NULL, the parallel hvc_open() can see this NULL and cause a memory 
+>> abort.
+>> Hence, serialize hvc_open and check if tty->private_data is NULL 
+>> before
+>> proceeding ahead.
+>> 
+>> The issue can be easily reproduced by launching two tasks 
+>> simultaneously
+>> that does nothing but open() and close() on /dev/hvcX.
+>> For example:
+>> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+>> 
+>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+>> ---
+>>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/tty/hvc/hvc_console.c 
+>> b/drivers/tty/hvc/hvc_console.c
+>> index 436cc51c92c3..ebe26fe5ac09 100644
+>> --- a/drivers/tty/hvc/hvc_console.c
+>> +++ b/drivers/tty/hvc/hvc_console.c
+>> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
+>>   */
+>>  static DEFINE_MUTEX(hvc_structs_mutex);
+>> 
+>> +/* Mutex to serialize hvc_open */
+>> +static DEFINE_MUTEX(hvc_open_mutex);
+>>  /*
+>>   * This value is used to assign a tty->index value to a hvc_struct 
+>> based
+>>   * upon order of exposure via hvc_probe(), when we can not match it 
+>> to
+>> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver 
+>> *driver, struct tty_struct *tty)
+>>   */
+>>  static int hvc_open(struct tty_struct *tty, struct file * filp)
+>>  {
+>> -	struct hvc_struct *hp = tty->driver_data;
+>> +	struct hvc_struct *hp;
+>>  	unsigned long flags;
+>>  	int rc = 0;
+>> 
+>> +	mutex_lock(&hvc_open_mutex);
+>> +
+>> +	hp = tty->driver_data;
+>> +	if (!hp) {
+>> +		rc = -EIO;
+>> +		goto out;
+>> +	}
+>> +
+>>  	spin_lock_irqsave(&hp->port.lock, flags);
+>>  	/* Check and then increment for fast path open. */
+>>  	if (hp->port.count++ > 0) {
+>>  		spin_unlock_irqrestore(&hp->port.lock, flags);
+>>  		hvc_kick();
+>> -		return 0;
+>> +		goto out;
+>>  	} /* else count == 0 */
+>>  	spin_unlock_irqrestore(&hp->port.lock, flags);
+> 
+> Wait, why isn't this driver just calling tty_port_open() instead of
+> trying to open-code all of this?
+> 
+> Keeping a single mutext for open will not protect it from close, it 
+> will
+> just slow things down a bit.  There should already be a tty lock held 
+> by
+> the tty core for open() to keep it from racing things, right?
+The tty lock should have been held, but not likely across ->install() 
+and
+->open() callbacks, thus resulting in a race between hvc_install() and 
+hvc_open(),
+where hvc_install() sets a data and the hvc_open() clears it. hvc_open() 
+doesn't
+check if the data was set to NULL and proceeds.
+> 
+> Try just removing all of this logic and replacing it with a call to
+> tty_port_open() and see if that fixes this issue.
+> 
+> As "proof" of this, I don't see other serial drivers needing a single
+> mutex for their open calls, do you?
+> 
+> thanks,
+> 
+> greg k-h
 
-Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=97=A5=
- =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=888:43=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Eiminate the magic number in array size, there macro defines in
-> hdmi.h.
-
-Applied to mediatek-drm-next [1], thanks.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
-
-Regards,
-Chun-Kuang
-
->
-> Signed-off-by: Bernard Zhao <bernard@vivo.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
-ek/mtk_hdmi.c
-> index ff43a3d80410..4c962c7f06e5 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-> @@ -982,7 +982,7 @@ static int mtk_hdmi_setup_avi_infoframe(struct mtk_hd=
-mi *hdmi,
->                                         struct drm_display_mode *mode)
->  {
->         struct hdmi_avi_infoframe frame;
-> -       u8 buffer[17];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AVI_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D drm_hdmi_avi_infoframe_from_display_mode(&frame,
-> @@ -1008,7 +1008,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->                                         const char *product)
->  {
->         struct hdmi_spd_infoframe frame;
-> -       u8 buffer[29];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_SPD_INFOFRAME_SIZE];
->         ssize_t err;
->
->         err =3D hdmi_spd_infoframe_init(&frame, vendor, product);
-> @@ -1031,7 +1031,7 @@ static int mtk_hdmi_setup_spd_infoframe(struct mtk_=
-hdmi *hdmi,
->  static int mtk_hdmi_setup_audio_infoframe(struct mtk_hdmi *hdmi)
->  {
->         struct hdmi_audio_infoframe frame;
-> -       u8 buffer[14];
-> +       u8 buffer[HDMI_INFOFRAME_HEADER_SIZE + HDMI_AUDIO_INFOFRAME_SIZE]=
-;
->         ssize_t err;
->
->         err =3D hdmi_audio_infoframe_init(&frame);
-> --
-> 2.26.2
->
+Thank you.
+Raghavendra
