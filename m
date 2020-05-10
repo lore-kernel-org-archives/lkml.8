@@ -2,191 +2,123 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4314FC54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9BD20801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:18:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0SesddC"
+	by mail.kernel.org (Postfix) with ESMTP id 3FDEF20736
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgEJQSW (ORCPT
+        id S1728866AbgEJQ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
+        Sun, 10 May 2020 12:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726446AbgEJQSV (ORCPT
+        by vger.kernel.org with ESMTP id S1728381AbgEJQ2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:18:21 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87984C061A0C;
-        Sun, 10 May 2020 09:18:21 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x12so5901074qts.9;
-        Sun, 10 May 2020 09:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=CCDwBmXaa9BIAQ2zuOaJ1GngjhFRFzM8zE9mn4mKapw=;
-        b=N0SesddCH/TSHZU0Arzstfn5pbmtr8zI0DuwZP+16wTEmKDnRweZ/zK8QpEFbnEKsQ
-         9YwAiYPkz0JVUiPMwaO72qCcrLH59HiIlSls6+4HvWPV2C/vShdLjE+zus8PhYm+zmr6
-         IwYimCg6OAhhgNqw5rIs41cbwV9hw9AHoT6kzU9C5l4qo+yJ04UBoxEa2jTFpaBusmPw
-         11pOoCpHqmgaGnZg3mJ/WTVAe1uNdEmAEp1LfeNqQXsxEYZKif2qtvI9MT/znrXzx9vm
-         wLYR8VN6q38xXijuanahV5OnsqRtdENy/mqJG2iwkn1BRUug8TD2w+6O0cy77PW0RO4s
-         l3UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=CCDwBmXaa9BIAQ2zuOaJ1GngjhFRFzM8zE9mn4mKapw=;
-        b=ZcubsPBLdiHwBUiQbaD16hf3lSzlyr8bFILmu0EX2btJ1zfXHbdOA877mweZw5MXe+
-         rbO5XG2CIKK0Z7U82CH2PoIoqPk7HxeBQNh/jFqFMWypjmV0t9ysxJyizTfL/Zn/J/9M
-         zUsIXmkD761K6SwANP21Gc3QGu68TIjTcqMJkTcjFXlKo2r4XO8u4vyT32bvjW8/tgON
-         dEtWfmTCQG9wfwWVx0goDQjwjfzA0pAHq5oB9OEdvkqYR/VNasbnlk0njFLzaJUtZ6tB
-         7XUscuFARzjadcHbMofS8WVR0WEZd3NCHyh6yVL7Tezc2eGHvd/AJxBn5ubQeKWUugbF
-         LAjA==
-X-Gm-Message-State: AGi0PuYYIdHsQpeDP4Mg+bzDF3cInFveIX3QW6eJrJAdic8mDbCvDAVX
-        p2clCNgZKocsWmtmnrfQ16dwsUF9t4w=
-X-Google-Smtp-Source: APiQypIWVHulUPbfG29QekqU8prAAB1vTCUuwZld8aMu1x7lVWdsXWHr5FIAt6vZ2QFMov/q0nmnYQ==
-X-Received: by 2002:ac8:66da:: with SMTP id m26mr12251999qtp.342.1589127500684;
-        Sun, 10 May 2020 09:18:20 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id k138sm2776710qke.55.2020.05.10.09.18.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 09:18:20 -0700 (PDT)
-Date:   Sun, 10 May 2020 13:18:12 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200510112336.444906c1@oasis.local.home>
-References: <20200510150628.16610-1-changbin.du@gmail.com> <20200510112336.444906c1@oasis.local.home>
+        Sun, 10 May 2020 12:28:12 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC64C061A0C;
+        Sun, 10 May 2020 09:28:12 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 069CE260136
+Received: by earth.universe (Postfix, from userid 1000)
+        id 23E433C08C7; Sun, 10 May 2020 18:28:09 +0200 (CEST)
+Date:   Sun, 10 May 2020 18:28:09 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     David Heidelberg <david@ixit.cz>
+Cc:     Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
+        Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] power: supply: smb347-charger: IRQSTAT_D is volatile
+Message-ID: <20200510162809.m7ucijygbb5wq3ww@earth.universe>
+References: <20200329161552.215075-1-david@ixit.cz>
+ <20200329161552.215075-2-david@ixit.cz>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 00/19] perf: ftrace enhancement
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Changbin Du <changbin.du@gmail.com>
-CC:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <3F63D994-4AD6-4EDE-899B-4B5D6B416B6D@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="l7dyf4tjcoatcnna"
+Content-Disposition: inline
+In-Reply-To: <20200329161552.215075-2-david@ixit.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--l7dyf4tjcoatcnna
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On May 10, 2020 12:23:36 PM GMT-03:00, Steven Rostedt <rostedt@goodmis=2Eo=
-rg> wrote:
->On Sun, 10 May 2020 23:06:09 +0800
->Changbin Du <changbin=2Edu@gmail=2Ecom> wrote:
->
->> The perf has basic kernel ftrace support but lack support of most
->tracing
->> options=2E This serias is target to enhance the perf ftrace
->functionality so
->> that we can make full use of kernel ftrace with only perf=2E
->>=20
->> In general, this serias be cataloged into two main changes:
->>   1) Improve usability of existing functions=2E For example, we don't
->need to type
->>      extra option to select the tracer=2E
->>   2) Add new options to support all other ftrace functions=2E
->>=20
->> Here is a glance of all ftrace functions with this serias:
->>   * - improved existing options=2E
->>   + - new added options=2E
->>=20
->> $ sudo perf ftrace -h
->>=20
->>  Usage: perf ftrace [<options>] [<command>]
->>     or: perf ftrace [<options>] -- <command> [<options>]
->>=20
->> *   -a, --all-cpus        system-wide collection from all CPUs
->> +   -b, --buffer-size <n>
->>                           size of per cpu buffer in kb
->>     -C, --cpu <cpu>       list of cpus to monitor
->> +   -d, --delay <n>       Wait <n> ms before tracing
->>     -D, --graph-depth <n>
->>                           Max depth for function graph tracer
->> *   -G, --graph-funcs <func>
->>                           Set graph filter on given functions (imply
->to use function_graph tracer)
->>     -g, --nograph-funcs <func>
->>                           Set nograph filter on given functions
->(imply to use function_graph tracer)
->> +   -L, --list-functions  List available functions to filter
->> +   -l, --long-info       Show process names, PIDs, timestamps,
->irq-info if available
->>     -N, --notrace-funcs <func>
->>                           do not trace given functions
->> +   -P, --no-pager        Do not use pager
->>     -p, --pid <pid>       trace on existing process id
->> +   -s, --func-stack-trace
->>                           Show kernel stack trace for function tracer
->> +   -t, --tid <tid>       trace on existing thread id (exclusive to
->--pid)
->>     -T, --trace-funcs <func>
->>                           trace given functions only
->> +   -u, --userstacktrace  Show stacktrace of the current user space
->thread
->>     -v, --verbose         be more verbose
->> +       --funcgraph-tail  Show function tails comment (function_graph
->only)
->> +       --latency-format  displays additional information about the
->latency (function_graph only)
->> +       --nofuncgraph-irqs
->>                           Ignore functions that happen inside
->interrupt (function_graph only)
->> +       --nosleep-time    Measure on-CPU time only (function_graph
->only)
->> +       --trace-children  Trace children processes
->> +       --tracing-thresh <n>
->>                           Only show functions of which the duration
->is greater than <n>=C2=B5s
->>=20
->
->Note, we are working on making more of the trace-cmd functionality into
->libraries=2E See this work here:
->
->https://lore=2Ekernel=2Eorg/r/20191219113502=2E28964-2-tz=2Estoyanov@gmai=
-l=2Ecom
->
->Which introduces a libtracefs, that is to handle all the work needed to
->interact with the tracefs directory=2E This will also be useful for perf
->to read the event directory without having to open code that work=2E
->
->I'm all for giving perf the functionality of ftrace, but I would like
->to have it do so with a more generic solution that other tools could
->benefit from as well=2E
->
+Hi,
 
-I think in time things will fall into place, 'perf ftrace' has potential a=
-s a way for perf users to have a familiar interface to ftrace, and that I t=
-hink it's its raison d'=C3=AAtre, in time well go on finding ways to have c=
-ommon code=2E
+On Sun, Mar 29, 2020 at 06:15:44PM +0200, David Heidelberg wrote:
+> From: Dmitry Osipenko <digetx@gmail.com>
+>=20
+> Fix failure when USB cable is connected:
+> smb347 2-006a: reading IRQSTAT_D failed
+>=20
+> Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic =
+for charger faults")
+>=20
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
 
-Tomorrow I'll go over this patch set,
+Thanks, queued to power-supply's for-next branch.
 
-Thanks,
+-- Sebastian
 
-- Arnaldo
+>  drivers/power/supply/smb347-charger.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply=
+/smb347-charger.c
+> index c1d124b8be0c..d102921b3ab2 100644
+> --- a/drivers/power/supply/smb347-charger.c
+> +++ b/drivers/power/supply/smb347-charger.c
+> @@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev,=
+ unsigned int reg)
+>  	switch (reg) {
+>  	case IRQSTAT_A:
+>  	case IRQSTAT_C:
+> +	case IRQSTAT_D:
+>  	case IRQSTAT_E:
+>  	case IRQSTAT_F:
+>  	case STAT_A:
+> --=20
+> 2.25.0
+>=20
 
->Thanks!
->
->-- Steve
+--l7dyf4tjcoatcnna
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64K5EACgkQ2O7X88g7
++poDxBAAju60k1uqjPUMzvMSKsrgLeZjZEJk7+Mo5ciFqRs4WrtyORtc0WVo48I8
+/Ms9Xh63nX6Buf2RSgeM/HVwKVo8r5USwHQspW24XwLEwQb2ZIlBac7NFGPucrLv
+yIEbUBFwSKeouFfgyWyNG7vjlsmpqIl96pPX94EtKzCdoA6LyjkY4iEdKXmyUgBI
+L1pp+1J3k8rYvEoCRZN52qjy+/HOuAxUqttpIlnftB4Eplvzs7IIl8xJEflDeXEW
+ylTVO8KC6TsGU80yDQ2Umyvx+JH0WNaFNISmAG9FkeUPjTFcI8It5FS754Ph4tQH
+Jvt9pNYu343b4vqrI0bvh9H71nWEd5AFmPVe3AbJSqfgAsug6YkWKAXL7oKlALQA
+im5Q0Yk9kbiIKKzO0kecldZ4R8ou8AcwJsBwgUPe19pwQFqbZ1DjSFhYV7mD38WR
+5n7TIdjRKiRCustbs+NWvbmmZI9UWjVfedh0QVWoolIElOXDPd/07aE4to7HUpst
+Mud5RJROz/+P0AXHKDXavCROmjTH4uc91dSkBQo9sQoE+3hzyGffAb5Rk6vNWZAJ
+bOA8lIklqq/hWN614ZuxWwNT0TIYmjEOER/eSxVtxJxgExhXNp2lHV12nBrytG30
+3XSjX6R2SeURnV8EPJ2hGLJ/OYBJjJsebfACKBOvp9eGwwTRFzc=
+=XnbJ
+-----END PGP SIGNATURE-----
+
+--l7dyf4tjcoatcnna--
