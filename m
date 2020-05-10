@@ -2,84 +2,116 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31462C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E896C54E8E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD70208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589144570;
-	bh=fiSMKVu1l4jCjDxko+mRVFCFIvy0QxVX6nymNmzbzyI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tM7Wn8K8+qrryxW/PQoHown/3yPs2f1QKXBqwgxoxf+XcYfAGE2ZrkMtxncGqRpd6
-	 7dd5axBmy+jAc7rCISf7Prv/5V/X+AjOmYdReBVlnWd/a5aXa1DqAzAUj82zznHT51
-	 28mZLBxrVmxWyaVMcHNKKafxTKJI+USCPBiFPsC8=
+	by mail.kernel.org (Postfix) with ESMTP id 131772080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:08:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TLbp6h/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgEJVCt (ORCPT
+        id S1729128AbgEJVIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 17:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgEJVCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 17:02:48 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 10 May 2020 17:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726955AbgEJVIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 17:08:11 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE435C061A0C;
+        Sun, 10 May 2020 14:08:10 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B0D2192A
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589144568;
-        bh=fiSMKVu1l4jCjDxko+mRVFCFIvy0QxVX6nymNmzbzyI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R4RwKpd5yKP9U6Y8Vz2dllnPpMdY3Xf5ZFGzJ6vOvw4Lf/kFmo556kjqsSSZI3oq7
-         mqeu45OcogcOOCgw4YLFh0FcYoR5trNyXrZ8bO1jkcQuFgWr3lG/UGn1YWXNQTcQmd
-         v7fBh+dMqzzOkRkWHGgmItQTfY1zj4UqPOZYiTmY=
-Received: by mail-wr1-f44.google.com with SMTP id k1so8472868wrx.4
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 14:02:47 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaxFqcoV1/P0mdgx1Ejck0/pkZqs8YVebM047rUSkXKTiX+MXQM
-        wqyJi4F5qSVYsgSIvV+SYUZk/EX2Byn4Sbdk+j3LPA==
-X-Google-Smtp-Source: APiQypJQglxscP90vUcIIJU5+ow4N9EVg91Hh/bKRT0Kt6Ry2gsCTRSXDzaXajLwKChp+e1LWsUoE0WEHhWmknnukrE=
-X-Received: by 2002:adf:eccf:: with SMTP id s15mr14244642wro.70.1589144566465;
- Sun, 10 May 2020 14:02:46 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49KxVc0KNWz9sSc;
+        Mon, 11 May 2020 07:08:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589144889;
+        bh=8achXUmhmB+0x7mbwnDwdLNhr89i1XYUHsil6l3G/S4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TLbp6h/Xa/+Euu6yIdgD4xRS942D6ZX6qxeSzAAje1qBjDQiPHd6gHClhDQkulMyo
+         byye5DoCwmSlme5PdJ2Z5Bfv93bygEwz49HUum59AJtMieu2pFrPx03GieJSGFL1kt
+         rYvevDmahpyf/UKFlHJNyo/137kVzlKLKDNO2sJpfp8ADd/nQJ3OLmXUav3oyPBzr5
+         JfHr9jg5cI0d3w1H11qnS8+jdnGuFYOLyls+qQmHGFVv2Xtucn2g1sve5vKU7keIxK
+         Bs4SkyozIWxo9Q2P/1T4Q+MpS34UNHNDzVvLelDMl7kuewkmUFRLkmq3dUp/CHn+xD
+         c/EOp6/fG/kxg==
+Date:   Mon, 11 May 2020 07:08:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Sage Weil <sage@newdream.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: linux-next: new contact(s) for the ceph tree?
+Message-ID: <20200511070806.397e0584@canb.auug.org.au>
+In-Reply-To: <CAOi1vP8JjtBZoy0zAgz7=wwMuHiiRPCvxz7ZKicE9nh-NZXz2Q@mail.gmail.com>
+References: <20200509094515.7082eb92@canb.auug.org.au>
+        <alpine.DEB.2.21.2005090103060.29336@piezo.novalocal>
+        <20200509134751.147d747d@canb.auug.org.au>
+        <CAOi1vP8JjtBZoy0zAgz7=wwMuHiiRPCvxz7ZKicE9nh-NZXz2Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134904.058904490@linutronix.de>
-In-Reply-To: <20200505134904.058904490@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 May 2020 14:02:34 -0700
-X-Gmail-Original-Message-ID: <CALCETrWpqAeNG7sv3R_JHt7jagNycQAZWXH-VbG47VuqsTbDcg@mail.gmail.com>
-Message-ID: <CALCETrWpqAeNG7sv3R_JHt7jagNycQAZWXH-VbG47VuqsTbDcg@mail.gmail.com>
-Subject: Re: [patch V4 part 3 08/29] x86/entry/64: Provide sane error entry/exit
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/nVpoGKp4BWwuSVivqla8Tp3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> For gradual conversion provide a macro parameter and the required code
-> which allows to handle instrumentation and interrupt flags tracking in C.
+--Sig_/nVpoGKp4BWwuSVivqla8Tp3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Hi Ilya,
+
+On Sun, 10 May 2020 09:40:07 +0200 Ilya Dryomov <idryomov@gmail.com> wrote:
+>
+> On Sat, May 9, 2020 at 5:47 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+> >
+> > On Sat, 9 May 2020 01:03:14 +0000 (UTC) Sage Weil <sage@newdream.net> w=
+rote: =20
+> > >
+> > > Jeff Layton <jlayton@kernel.org> =20
+> >
+> > Done. =20
+> > > On Sat, 9 May 2020, Stephen Rothwell wrote: =20
+> > > >
+> > > > I noticed commit
+> > > >
+> > > >   3a5ccecd9af7 ("MAINTAINERS: remove myself as ceph co-maintainer")
+> > > >
+> > > > appear recently.  So who should I now list as the contact(s) for the
+> > > > ceph tree? =20
+>=20
+> I thought maintainers were on the list automatically.  If there is
+> a separate list, please add me as well.
+
+Done.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nVpoGKp4BWwuSVivqla8Tp3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64bTYACgkQAVBC80lX
+0Gy8tAgAkHXKTZlO+QgrnQ8qct+AnpOmnpzWuL8sZKW24dWc9LchlOOFFr8fOCTR
+pEL81+W83y1CWZaSqf6+WZPD9Zl3jlkBLSvN7NWbQKg1GJ/2nLGvxeKLd9CffbZj
+NWtUuqVi/E7UAnNDWts/u6nCXgU8P8bb6+E/5ZC5jiTRAFuU7NyJ0eVmqaSTxDuu
+SPI5vPsXKtEjixl9OuzwJJ+bLvh2G2CAjXYjZ4CjbaDFCWMBScKyVXwjIRaUfSCf
+Z/LCF3IjYk0JhIyo+7/iT2wDUwyZlwDa1ooBJGYfkB43dmZ2yR0Y2FHr0E+qHrHt
+AJNTc4lHyrrn7IfeTIuMe24CGRrCSw==
+=qBJb
+-----END PGP SIGNATURE-----
+
+--Sig_/nVpoGKp4BWwuSVivqla8Tp3--
