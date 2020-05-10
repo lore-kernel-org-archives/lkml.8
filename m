@@ -2,123 +2,79 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4452C54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DC3C54E8B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4521973
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5286B2137B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589095983;
-	bh=OhPzK8XvsgbaPEDXqL+qrrB3wHcSJuyDPUOAY9QGoSs=;
+	s=default; t=1589096056;
+	bh=ga2TeOqeHG7jn271obXjzKtTc+UJPjddCGS+woKggY4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iNChTYsBmkDP9WU1G93VUyiauFOFBTO+lHDuo0kbMEz4t3WTwRC+/S4Z4xmgkXJ9N
-	 rQ5Dbn4Aa0gVe8BCBP1mgp6BHMovP6GKOQmiVF+foJeAgjwjR1pNkypyiYNeYVA5Z6
-	 XQJK13nmY1gc/EXrypZ2adC7wLGY/6k3lzePMHXs=
+	b=mKYyrpRSlmnjd3rThWMubll/bxEVq5E4b+TN23M4/JWxazzTm6FZtSlChL1F79duG
+	 M1fHb0Csszo/YlRB1x/0O+BxmXXvEH79SseKiCD2TiHUYmaMH5zTdbJmg5wrb2fTxz
+	 WN3Zul4XbaDevVugrKgK3LGpOO2r+oYunDyxlQKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgEJHdC (ORCPT
+        id S1728098AbgEJHeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 03:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
+        Sun, 10 May 2020 03:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgEJHdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 03:33:02 -0400
+        id S1725810AbgEJHeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 03:34:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DA420801;
-        Sun, 10 May 2020 07:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 300D720801;
+        Sun, 10 May 2020 07:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589095981;
-        bh=OhPzK8XvsgbaPEDXqL+qrrB3wHcSJuyDPUOAY9QGoSs=;
+        s=default; t=1589096054;
+        bh=ga2TeOqeHG7jn271obXjzKtTc+UJPjddCGS+woKggY4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AwPkx+XOlkgPmm1u/VxrKPB2XtBOo7KThsn7W3xTHMSasLGE2cUAQ6R7m2bOvcs+g
-         NpEwM5UT2g7roXeQDMgvv7Zh2rczQqJ3uHX8Yo+Lv+Iy6xoMliTQFRBFlnpBE8t/jM
-         HafNTlreBYEmfjI69z0B7znDajewadxfgt2oDtHw=
-Date:   Sun, 10 May 2020 09:32:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dio Putra <dioput12@gmail.com>
-Cc:     oneukum@suse.com, linux-usb@vger.kernel.org,
-        linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org
-Subject: Re: USB Attached SCSI breakage due no udev involvement
-Message-ID: <20200510073258.GA3474912@kroah.com>
-References: <CAOyCV0zW_20Jq6Rrb9=fhZQAHeqMMs_oHBJdTVt8Nqje0Zoeig@mail.gmail.com>
- <20200510054717.GA3365021@kroah.com>
- <1f9c0b30-f440-de43-366f-28ccba6a22e2@gmail.com>
- <20200510065416.GA3434442@kroah.com>
- <e409bbfe-c446-2ba3-423d-c6e198abef33@gmail.com>
+        b=thghNFdCYS9Ke65nRrcVT0L1sZaX9H6teqN+As8Nl/yVWGeOeizrycTcRhpEDYoT8
+         GdAKEcq/fTjT43cr5vCAixlm70vONtWIMTr6wGx2CQKumWnFNtNMvwV3GWirHrNYt2
+         JIPUA+6oNegaKhqiPcIxgiCZJY/zYc338mNxjpPA=
+Date:   Sun, 10 May 2020 09:34:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/306] 4.4.223-rc3 review
+Message-ID: <20200510073411.GB3474912@kroah.com>
+References: <20200509064507.085696379@linuxfoundation.org>
+ <2e986f85-e3c5-fa22-73cf-82c78db18663@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e409bbfe-c446-2ba3-423d-c6e198abef33@gmail.com>
+In-Reply-To: <2e986f85-e3c5-fa22-73cf-82c78db18663@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 02:10:04PM +0700, Dio Putra wrote:
-> On 5/10/20 1:54 PM, Greg KH wrote:
-> > On Sun, May 10, 2020 at 01:48:24PM +0700, Dio Putra wrote:
-> >> On 5/10/20 12:47 PM, Greg KH wrote:
-> >>> On Sun, May 10, 2020 at 09:55:57AM +0700, Dio Putra wrote:
-> >>>> Hi, it's first time for me to report user-space breakage in here, so
-> >>>> i'm begging your pardon.
-> >>>>
-> >>>> I want to report that Linux 5.4 breaking my USB mount workflow due
-> >>>> udevadm monitor report here (I'm using vanilla kernel 5.4.39 on
-> >>>> Slackware64 Current and vanilla kernel 4.4.221 on Slackware64 14.2):
-> >>>
-> >>> <snip>
-> >>>
-> >>> Sorry, but what actually changed that you can see in the logs?
-> >> Sorry, what do you mean? The dmesg log or the kernel changelogs?
+On Sat, May 09, 2020 at 06:17:05AM -0700, Guenter Roeck wrote:
+> On 5/8/20 11:51 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.4.223 release.
+> > There are 306 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > Either, your message made them pretty impossible to compare with all of
-> > the line-wrapping :(
+> > Responses should be made by Mon, 11 May 2020 06:44:14 +0000.
+> > Anything received after that time might be too late.
 > > 
-> I'm so sorry for first message mess, because that message has been sent by
-> Gmail Website. Can I send my logs as attachment? I try to convenient everyone
-> here. ( FYI, I just switched to Thunderbird with these settings:
-> https://www.kernel.org/doc/html/v4.12/process/email-clients.html#thunderbird-gui ) 
+> 
+> Build results:
+> 	total: 169 pass: 169 fail: 0
+> Qemu test results:
+> 	total: 331 pass: 331 fail: 0
 
-Sure, attachments work, but better yet, if you can show the difference
-in a few lines that is much nicer than having to dig through large
-numbers of log files.
-
-> >>> What functionality broke?  What used to work that no longer does work?
-> >>>
-> >> Yes, it supposed that just work and kernel could talk with udev, not just handled by the kernel.
-> > 
-> > I don't understand, what functionality changed?  What exactly used to
-> > work that no longer does?
-> linux-5.4 has been never called the udev dependencies whereas
-> linux-4.4 will call any udev dependencies if necessary, that's the problem.
-
-I do not understand what exactly you mean by "call udev dependencies".
-
-udev is used to create symlinks and set user/group permissions on device
-nodes in /dev/ which is created by devtmpfs.  What exactly is not
-happening in your /dev/ with the move to a newer kernel?
-
-> > Did you change anything else other than the kernel on your system?  Did
-> > you change to a newer version of udev/systemd or anything else?
-> > 
-> I'm using eudev-master from their official mirror github:
-> https://github.com/gentoo/eudev
-
-Have you contacted the eudev developers to see if something different
-needs to be set in your kernel when moving 4 years in kernel development
-forward?  Are you sure you have all the correct config options enabled?
-
-Why such a huge leap forward all at once, how about going from 4.4.y to
-4.9.y and then 4.14.y and then 5.4.y?  That might help narrow things
-down a bit easier.
-
-thanks,
+Wonderful, thanks for your help with this and testing all of the other
+ones and letting me know.
 
 greg k-h
