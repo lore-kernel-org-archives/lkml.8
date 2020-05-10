@@ -2,105 +2,78 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE82C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DAFC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08B120736
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YMZySFv5"
+	by mail.kernel.org (Postfix) with ESMTP id A36B6208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589134086;
+	bh=q+p1x7jramLXjA1HgBdN5wJV5zpzaierkP/jplwSBS0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P+nLdpM8cibOa9RM1snZI6Dp4Gyn6NC1f2Fct9DnW5zRNoPCsDrg0qMWvmUAyIV4E
+	 CfyRP5T1I9qmZOGKv04ehbjFF6IteBRunMXJiS0iw9HUV7MmBIR6kX2On7aZjK/qen
+	 31MKihMfXwylUtavIF46ITCnrBRYCOkXaxS/HRPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgEJRuL (ORCPT
+        id S1729032AbgEJSIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 13:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726744AbgEJRuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 13:50:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4239BC061A0C;
-        Sun, 10 May 2020 10:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=6+0hqBa3ewO7D+7BOeRzGEBHEbr46c1CCbxLxiI0IS4=; b=YMZySFv5qmnzTKkkoA4yzp11MO
-        z9jKcufeqIcTRS/ZTYvJ3GVu0Orfqqe13rkNLdiL9IJYHxYk7EmSavo6mxx4T48z/SmQCLJ0TaLlx
-        y1QM+QJPPDL1XIZ8OqBIo1fttMk+YbWAmlR49O3WvzDllZzrN1+PFQat6Umq/HXbDvTnwcP3ozW0Q
-        tcEFnMuqydtIJSsVUB3/16wmnny29Foe7KwZabNaeLVEIXRf9V3gTiTSmKePS+MhC5ijZ4B2CIRb+
-        PlakRG++V4L0yETOJL1zCXUlI6ZAtD4hS45lD/24aQtkkbEjCjZpCpg5T7ccnWjzKc+9sVxQCxakH
-        n1HWGkHA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXq5X-0004N2-0I; Sun, 10 May 2020 17:50:07 +0000
-Subject: Re: Using a custom LDFLAG for all objects and binaries
-To:     Mahmood Naderan <mahmood.nt@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
- <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org>
- <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
-Date:   Sun, 10 May 2020 10:50:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 14:08:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728123AbgEJSIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 14:08:05 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4FE22082E;
+        Sun, 10 May 2020 18:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589134085;
+        bh=q+p1x7jramLXjA1HgBdN5wJV5zpzaierkP/jplwSBS0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M0smx+dPwpDHNw0JNGYFZAYHN7GQU9+Z9h7h12MBdOcewsUIzgUMlsV8eM7Y7f4Ms
+         Zw4cztSBo2pgefwmXG4Z6x/PPAAToLOr4xWK+uqyorEq1h4WyPThw4eJmpEYhuArsc
+         by9+E8dkx7N58zUSAE6v6lQr7VLAbt8PrH0v03Ts=
+Date:   Sun, 10 May 2020 11:08:02 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kbuild-all@lists.01.org,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] dsa: sja1105: fix semicolon.cocci warnings
+Message-ID: <20200510110802.2f3019f8@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200510122656.GA13196@fc4585639931>
+References: <202005102051.kMOxhZW6%lkp@intel.com>
+        <20200510122656.GA13196@fc4585639931>
 MIME-Version: 1.0
-In-Reply-To: <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/20 10:13 AM, Mahmood Naderan wrote:
->> Have you read Documentation/kbuild/makefiles.rst ?
->>
->>     LDFLAGS
->>         Generic $(LD) options
->>
->>         Flags used for all invocations of the linker.
+On Sun, 10 May 2020 20:26:56 +0800 kbuild test robot wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/net/dsa/sja1105/sja1105_ethtool.c:481:11-12: Unneeded semicolon
 > 
 > 
-> What I see is this in Documentation/kbuild/makefiles.txt
+>  Remove unneeded semicolon.
 > 
->     LDFLAGS             Generic $(LD) options
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
 > 
->         Flags used for all invocations of the linker.
->         Often specifying the emulation is sufficient.
-> 
->         Example:
->                 #arch/s390/Makefile
->                 LDFLAGS         := -m elf_s390
->         Note: ldflags-y can be used to further customise
->         the flags used. See chapter 3.7.
-> 
-> 
-> 
-> I have two questions then:
-> 1- Can I use that as a bash variable? Like "LDFLAGS=--emit-relocs make"
+> Fixes: ae1804de93f6 ("dsa: sja1105: dynamically allocate stats structure")
+> CC: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 
-I don't know. You could experiment with it to see.
-(again by using 'make V=1' to see the commands that are being used)
+Hm, looks like this didn't get into patchwork for some reason.
 
-> or
-> 2- Editing arch/x86/Makefile with
->    KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
-
-That should work.
-
-> Thanks for your help.
-
-It would be better to ask these questions on the linux-kbuild mailing list
-(added now).
-
--- 
-~Randy
-
+Applied, thanks.
