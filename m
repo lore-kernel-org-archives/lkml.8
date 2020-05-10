@@ -2,121 +2,171 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C65C54E4B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E15C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E032495E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86DB207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZbX19e3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgEJQyx (ORCPT
+        id S1729111AbgEJQzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
+        Sun, 10 May 2020 12:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728681AbgEJQyw (ORCPT
+        by vger.kernel.org with ESMTP id S1728849AbgEJQzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:54:52 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BEEC061A0C;
-        Sun, 10 May 2020 09:54:52 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 092F12A0A58
-Received: by earth.universe (Postfix, from userid 1000)
-        id 1DC893C08C7; Sun, 10 May 2020 18:54:49 +0200 (CEST)
-Date:   Sun, 10 May 2020 18:54:49 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] power: charger: max14577: Add proper dt-compatible
- strings
-Message-ID: <20200510165449.d5vuqzo4fgkxu4re@earth.universe>
-References: <20200220145127.21273-1-m.szyprowski@samsung.com>
- <CGME20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08@eucas1p1.samsung.com>
- <20200220145127.21273-3-m.szyprowski@samsung.com>
+        Sun, 10 May 2020 12:55:45 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A01C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:43 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id s8so7936397wrt.9
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+yH7k9gYgB13VpgYEG3/Nblh9Wnj5tBiFfhJeIl7DDs=;
+        b=WZbX19e3hZcwLTtyejO//MC5pLm3CMTwEEijlQoQvY7YPA6Ak7elm34dF6giZQ5LRR
+         n4NLp2mH5WdAQhauFMYLXz7vCuXH9z2ONe4zBnkoX2b+3+euVm2FQC5TxzqTTAwXG4GS
+         3Z0Sk07D/l76RQCp1wBVCnMYCpML4m6Beab4yAXEFAFjNuDqYR477//SaltCfhgQDAKv
+         YZ+lBOpLJRZcQYcTM2Dm4/YITYssgZG2nGt63nQ7aE3zK56h87pYI8mJHFFNVYFtx7LG
+         11vyofZFHHTbXvw3e91k8tO7502muM8M3dtZbAqEQT5eVDPnGwqoTLkNBYwpvGAcjV3B
+         uy+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+yH7k9gYgB13VpgYEG3/Nblh9Wnj5tBiFfhJeIl7DDs=;
+        b=ACVvDOrhIp601rethjZlq9ekn2GZJdRf4bPOqAB1Ubw4LrLy2s7cab/wbxumHKJwBB
+         SXJL8cDV91+CyzFLZUwS0SLwCkNJBgd2XOawHmsInt00ZY7eQWSzkRMVtbd01xFUgJEH
+         m7XHVa69bMuRNKPL6Hc6uc7T7vwowvyA+lj8tMfH6Az9q03YYX5uGG1HuBhnNOo6VUR+
+         xtIhVNXFjTQigAYhOYh1COPufDhwoo8REaGNEvm7bsfnbpO9ZlRtWOyRyNdsKjPeukxa
+         WGajd5rquQJmM2PaMRO8VjdSxup23KckjlfKsoTcNOhl2HZx1W4CAzxVceQSgFhlkdv1
+         9FWA==
+X-Gm-Message-State: AGi0PuZmOnaBC4TVjdj41glnAhvAuF7T5CEiOvnRAdXXvdW0AI7aSzwC
+        TFeym/NcPonZc76LD/kePGA=
+X-Google-Smtp-Source: APiQypKO460W1UO0ySq0DC1F1clgOS2zZOWECa6qEnCMEpsIWu09PeM5rrGZWTiQ+sx8PX0ES5vpfw==
+X-Received: by 2002:adf:a74b:: with SMTP id e11mr13248517wrd.99.1589129742124;
+        Sun, 10 May 2020 09:55:42 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:1cc8:b1f1:a2b8:a1ee])
+        by smtp.gmail.com with ESMTPSA id g15sm13637670wrp.96.2020.05.10.09.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 May 2020 09:55:41 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 00/15][RFC] Add regulator devfreq support to Panfrost
+Date:   Sun, 10 May 2020 18:55:23 +0200
+Message-Id: <20200510165538.19720-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ut7sdpq7tngbdbjc"
-Content-Disposition: inline
-In-Reply-To: <20200220145127.21273-3-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ut7sdpq7tngbdbjc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Thu, Feb 20, 2020 at 03:51:27PM +0100, Marek Szyprowski wrote:
-> Add device tree compatible strings and create proper modalias structures
-> to let this driver load automatically if compiled as module, because
-> max14577 MFD driver creates MFD cells with such compatible strings.
->=20
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/power/supply/max14577_charger.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supp=
-ly/max14577_charger.c
-> index 8a59feac6468..891ba9f6f295 100644
-> --- a/drivers/power/supply/max14577_charger.c
-> +++ b/drivers/power/supply/max14577_charger.c
-> @@ -623,6 +623,15 @@ static const struct platform_device_id max14577_char=
-ger_id[] =3D {
->  };
->  MODULE_DEVICE_TABLE(platform, max14577_charger_id);
-> =20
-> +static const struct of_device_id of_max14577_charger_dt_match[] =3D {
-> +	{ .compatible =3D "maxim,max77836-charger",
-> +	  .data =3D (void *)MAXIM_DEVICE_TYPE_MAX77836, },
-> +	{ .compatible =3D "maxim,max14577-charger",
-> +	  .data =3D (void *)MAXIM_DEVICE_TYPE_MAX14577, },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_max14577_charger_dt_match);
-> +
->  static struct platform_driver max14577_charger_driver =3D {
->  	.driver =3D {
->  		.name	=3D "max14577-charger",
+This serie cleans and adds regulator support to Panfrost devfreq.
+This is mostly based on comment for the freshly introduced lima
+devfreq.
 
-Independently of the discussion in patch 1 this is missing the link
-to the of table in platform_driver->driver->of_match_table.
+We need to add regulator support because on Allwinner the GPU OPP
+table defines both frequencies and voltages.
 
--- Sebastian
+First patches [01-08] should not change the actual behavior
+and introduce a proper panfrost_devfreq struct.
 
---ut7sdpq7tngbdbjc
-Content-Type: application/pgp-signature; name="signature.asc"
+Fatches after are WIP and add regulator support.
 
------BEGIN PGP SIGNATURE-----
+However I got several issues first we need to avoid getting regulator
+if devfreq get by itself the regulator, but as of today the OPP
+framework only get and don't enable the regulator...
+An HACK for now is to add regulator-always-on in the device-tree.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64MdQACgkQ2O7X88g7
-+pon5BAAgLSR2GaiG7ZcwcUyWL3Fl65dPuLl45Xbr3fPQykYwbzUvVmJ6jwDc8yo
-lwbJzAxW7L/USAYQ/gLKW1Cs+sEE035GA9V0MdxaasuIUFqc2KIoU2mw/TCvt/CN
-fNOCwpavTbNpMtWHuyBlY2Z1qMJPOb29ji9W4Rd8w1pSy75gmGtkZ+Lrm7//Y8wb
-tX/eNqMl/3mrYWLk8ft/yFVWdsEdkmA9+b4t9SZ5hqba9sR9tEfOshiKw7rhoEec
-9Zzxd8LbMZziN3KuUGd5UuG9IqRa7hn0Mslkmk4l7Zq6Y9Q6j6RgJMSB6iB8fqNz
-gZqvZm9VJ0xxcxziO0keFOylw80JaxFOzJGbE5knf2vhpuPUnHRJwunoEajdUVR2
-1auNHy1Gc8Q1dQadowuoubnWm9bNdxekccWZne59cUXVCAPT8wtgx4BfjfOqKt0n
-hXd0LT9KoSUVtiY7o+P+z6BS3iHRegv2wGRd1nResH+ZVPbk46AFlHJQPreT/1XH
-NZPPGD3zW3Z+sIiV5U5NjiyxNVAwXTNj8PDChgubj32cw2vjL8bppmBoYZWFYGoD
-oTbU/1b6FrfkZ49CPcj4T+n3se2kmCSF7QyT7A/M/uCT6hOOQNW+40bFowcevkrk
-YY2kUgTcPX+YWNddNMUdNtLU1wz+jVahr/1oWCDHhE55qJOUtJE=
-=aaxC
------END PGP SIGNATURE-----
+Then when I enable devfreq I got several faults like.
+I'm totally noob on GPU sched/fault and couldn't be helpfull with this.
 
---ut7sdpq7tngbdbjc--
+I got this running glmark2 on T720 (Allwinner H6) with Mesa 20.0.5.
+# glmark2-es2-drm
+=======================================================
+    glmark2 2017.07
+=======================================================
+    OpenGL Information
+    GL_VENDOR:     Panfrost
+    GL_RENDERER:   Mali T720 (Panfrost)
+    GL_VERSION:    OpenGL ES 2.0 Mesa 20.0.5
+=======================================================
+
+[   93.550063] panfrost 1800000.gpu: GPU Fault 0x00000088 (UNKNOWN) at 0x0000000080117100
+[   94.045401] panfrost 1800000.gpu: gpu sched timeout, js=0, config=0x3700, status=0x8, head=0x21d6c00, tail=0x21d6c00, sched_job=00000000e3c2132f
+
+[  328.871070] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA 0x0000000000000000
+[  328.871070] Reason: TODO
+[  328.871070] raw fault status: 0xAA0003C2
+[  328.871070] decoded fault status: SLAVE FAULT
+[  328.871070] exception type 0xC2: TRANSLATION_FAULT_LEVEL2
+[  328.871070] access type 0x3: WRITE
+[  328.871070] source id 0xAA00
+[  329.373327] panfrost 1800000.gpu: gpu sched timeout, js=1, config=0x3700, status=0x8, head=0xa1a4900, tail=0xa1a4900, sched_job=000000007ac31097
+[  329.386527] panfrost 1800000.gpu: js fault, js=0, status=DATA_INVALID_FAULT, head=0xa1a4c00, tail=0xa1a4c00
+[  329.396293] panfrost 1800000.gpu: gpu sched timeout, js=0, config=0x3700, status=0x58, head=0xa1a4c00, tail=0xa1a4c00, sched_job=0000000004c90381
+[  329.411521] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA 0x0000000000000000
+[  329.411521] Reason: TODO
+[  329.411521] raw fault status: 0xAA0003C2
+[  329.411521] decoded fault status: SLAVE FAULT
+[  329.411521] exception type 0xC2: TRANSLATION_FAULT_LEVEL2
+[  329.411521] access type 0x3: WRITE
+[  329.411521] source id 0xAA00
+
+Thanks for your reviews, help on this serie,
+Clement
+
+Clément Péron (15):
+  drm/panfrost: avoid static declaration
+  drm/panfrost: clean headers in devfreq
+  drm/panfrost: don't use pfdevfreq.busy_count to know if hw is idle
+  drm/panfrost: introduce panfrost_devfreq struct
+  drm/panfrost: use spinlock instead of atomic
+  drm/panfrost: properly handle error in probe
+  drm/panfrost: use device_property_present to check for OPP
+  drm/panfrost: move devfreq_init()/fini() in device
+  drm/panfrost: dynamically alloc regulators
+  drm/panfrost: add regulators to devfreq
+  drm/panfrost: set devfreq clock name
+  arm64: defconfig: Enable devfreq cooling device
+  arm64: dts: allwinner: h6: Add cooling map for GPU
+  [DO NOT MERGE] arm64: dts: allwinner: h6: Add GPU OPP table
+  [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be always
+
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   1 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 102 ++++++++++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c   | 190 ++++++++++++------
+ drivers/gpu/drm/panfrost/panfrost_devfreq.h   |  32 ++-
+ drivers/gpu/drm/panfrost/panfrost_device.c    |  56 ++++--
+ drivers/gpu/drm/panfrost/panfrost_device.h    |  14 +-
+ drivers/gpu/drm/panfrost/panfrost_drv.c       |  15 +-
+ drivers/gpu/drm/panfrost/panfrost_job.c       |  10 +-
+ 9 files changed, 310 insertions(+), 111 deletions(-)
+
+-- 
+2.20.1
+
