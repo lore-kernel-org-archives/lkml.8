@@ -2,199 +2,147 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C9C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383BAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F7F20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E926820820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M09fODKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgEJMEJ (ORCPT
+        id S1728849AbgEJMNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:04:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40304 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgEJMEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:04:09 -0400
-IronPort-SDR: ZoRVd+ZU1iUdYWyXE9ySfGYVuRkGuNPZkFqk1dCFhYw9gtq8ZJ3wVsN5vxvD+e1SCy/APO9A3g
- 9QFTOAkLd7KQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 05:04:08 -0700
-IronPort-SDR: HqL5CisKaYq2I6Fp9GazTuvweKAxIMGw+8WFPB2/v97nU4vimulV8CGnQBYkKzU74/sXCHMkdU
- f2pL2UmzJFLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,375,1583222400"; 
-   d="scan'208";a="279513234"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 10 May 2020 05:04:03 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jXkgc-0005Ey-UN; Sun, 10 May 2020 20:04:02 +0800
-Date:   Sun, 10 May 2020 20:03:11 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     kbuild-all@lists.01.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, erosca@de.adit-jv.com,
-        Andrew_Gabbasov@mentor.com, jiada_wang@mentor.com
-Subject: Re: [PATCH v11 54/56] input: atmel_mxt_ts: added sysfs interface to
- update atmel T38 data
-Message-ID: <202005101947.mMD4gvx7%lkp@intel.com>
-References: <20200508055656.96389-55-jiada_wang@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508055656.96389-55-jiada_wang@mentor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 10 May 2020 08:13:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35323 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726863AbgEJMNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 08:13:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589112789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qP/sxaANp1JY7bumO45mdIobp9ZW6EsO7vb9OqH2jFM=;
+        b=M09fODKFt9rfQjK6laSNbYgg3E++kkevi0880vST1Oy6/D6+76jflEmF1zxJ65PNhgHvpR
+        ncyoRVwmYFQCclI/8m0N5eZORGc1BupngcjJvht3NyJCnRKj5thxtz54mBLH/4uTp4lv2T
+        ORissmH02F3shIOB0td4KQVmk7hSz/M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-lcTXQcuvOVOjDDiNIm7p9w-1; Sun, 10 May 2020 08:13:03 -0400
+X-MC-Unique: lcTXQcuvOVOjDDiNIm7p9w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77E66460;
+        Sun, 10 May 2020 12:13:02 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E4BA6AD10;
+        Sun, 10 May 2020 12:13:00 +0000 (UTC)
+Message-ID: <a221de5c2a823c508e09b664ce38db4e980e83d6.camel@redhat.com>
+Subject: Re: [PATCH v2] KVM: SVM: Disable AVIC before setting V_IRQ
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     joro@8bytes.org, jon.grimm@amd.com
+Date:   Sun, 10 May 2020 15:13:00 +0300
+In-Reply-To: <793e7151-e14c-f254-7911-a4371ad635aa@redhat.com>
+References: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
+         <793e7151-e14c-f254-7911-a4371ad635aa@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+On Thu, 2020-05-07 at 10:27 +0200, Paolo Bonzini wrote:
+> On 07/05/20 04:35, Suravee Suthikulpanit wrote:
+> > The commit 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window
+> > while running L2 with V_INTR_MASKING=1") introduced a WARN_ON,
+> > which checks if AVIC is enabled when trying to set V_IRQ
+> > in the VMCB for enabling irq window.
+> > 
+> > The following warning is triggered because the requesting vcpu
+> > (to deactivate AVIC) does not get to process APICv update request
+> > for itself until the next #vmexit.
+> > 
+> > WARNING: CPU: 0 PID: 118232 at arch/x86/kvm/svm/svm.c:1372 enable_irq_window+0x6a/0xa0 [kvm_amd]
+> >  RIP: 0010:enable_irq_window+0x6a/0xa0 [kvm_amd]
+> >  Call Trace:
+> >   kvm_arch_vcpu_ioctl_run+0x6e3/0x1b50 [kvm]
+> >   ? kvm_vm_ioctl_irq_line+0x27/0x40 [kvm]
+> >   ? _copy_to_user+0x26/0x30
+> >   ? kvm_vm_ioctl+0xb3e/0xd90 [kvm]
+> >   ? set_next_entity+0x78/0xc0
+> >   kvm_vcpu_ioctl+0x236/0x610 [kvm]
+> >   ksys_ioctl+0x8a/0xc0
+> >   __x64_sys_ioctl+0x1a/0x20
+> >   do_syscall_64+0x58/0x210
+> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > Fixes by sending APICV update request to all other vcpus, and
+> > immediately update APIC for itself.
+> > 
+> > Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> > Link: https://lkml.org/lkml/2020/5/2/167
+> > Fixes: 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window while running L2 with V_INTR_MASKING=1")
+> > ---
+> >  arch/x86/kvm/x86.c | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index df473f9..69a01ea 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -8085,6 +8085,7 @@ void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
+> >   */
+> >  void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
+> >  {
+> > +	struct kvm_vcpu *except;
+> >  	unsigned long old, new, expected;
+> >  
+> >  	if (!kvm_x86_ops.check_apicv_inhibit_reasons ||
+> > @@ -8110,7 +8111,17 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
+> >  	trace_kvm_apicv_update_request(activate, bit);
+> >  	if (kvm_x86_ops.pre_update_apicv_exec_ctrl)
+> >  		kvm_x86_ops.pre_update_apicv_exec_ctrl(kvm, activate);
+> > -	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
+> > +
+> > +	/*
+> > +	 * Sending request to update APICV for all other vcpus,
+> > +	 * while update the calling vcpu immediately instead of
+> > +	 * waiting for another #VMEXIT to handle the request.
+> > +	 */
+> > +	except = kvm_get_running_vcpu();
+> > +	kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
+> > +					 except);
+> > +	if (except)
+> > +		kvm_vcpu_update_apicv(except);
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_request_apicv_update);
+> >  
+> > 
+> 
+> Queued, thanks.
+> 
+> Paolo
+> 
+I tested this patch today on top of kvm/queue,
+the patch that add kvm_make_all_cpus_request_except and this patch
+(the former patch needs slight adjustment to apply).
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on input/next]
-[also build test WARNING on xen-tip/linux-next robh/for-next linus/master v5.7-rc4 next-20200508]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Jiada-Wang/atmel_mxt_ts-misc/20200509-031552
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+Best regards,
+	Maxim Levitsky
 
 
-cppcheck warnings: (new ones prefixed by >>)
 
->> drivers/input/touchscreen/atmel_mxt_ts.c:4045:8: warning: %d in format string (no. 2) requires 'int *' but the argument type is 'unsigned int *'. [invalidScanfArgType_int]
-    ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
-          ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1993:20: warning: Unsigned expression 'byte_offset' can't be negative so it is unnecessary to test it. [unsignedPositive]
-      if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
-                      ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1024:33: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_RESET ? " RESET" : "",
-                                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1025:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_OFL ? " OFL" : "",
-                                 ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1026:34: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_SIGERR ? " SIGERR" : "",
-                                    ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1027:31: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_CAL ? " CAL" : "",
-                                 ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1028:34: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_CFGERR ? " CFGERR" : "",
-                                    ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1029:35: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-      status & MXT_T6_STATUS_COMSERR ? " COMSERR" : "");
-                                     ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1346:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-     status & 0x01 ? "FREQCHG " : "",
-                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1347:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-     status & 0x02 ? "APXCHG " : "",
-                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1348:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-     status & 0x04 ? "ALGOERR " : "",
-                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1349:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-     status & 0x10 ? "STATCHG " : "",
-                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:1350:17: warning: Clarify calculation precedence for '&' and '?'. [clarifyCalculation]
-     status & 0x20 ? "NLVLCHG " : "");
-                   ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:274:20: warning: struct member 'mxt_dbg::t37_buf' is never used. [unusedStructMember]
-    struct t37_debug *t37_buf;
-                      ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:275:15: warning: struct member 'mxt_dbg::t37_pages' is never used. [unusedStructMember]
-    unsigned int t37_pages;
-                 ^
-   drivers/input/touchscreen/atmel_mxt_ts.c:276:15: warning: struct member 'mxt_dbg::t37_nodes' is never used. [unusedStructMember]
-    unsigned int t37_nodes;
-
-vim +4045 drivers/input/touchscreen/atmel_mxt_ts.c
-
-  4024	
-  4025	static ssize_t t38_data_store(struct device *dev,
-  4026				      struct device_attribute *attr,
-  4027				      const char *buf, size_t count)
-  4028	{
-  4029		struct mxt_data *data = dev_get_drvdata(dev);
-  4030		struct mxt_object *object;
-  4031		ssize_t ret = 0, pos, offset;
-  4032		unsigned int i, len, index;
-  4033		u8 *t38_buf;
-  4034	
-  4035		if (!data->object_table)
-  4036			return -ENXIO;
-  4037	
-  4038		object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
-  4039	
-  4040		/* Pre-allocate buffer large enough to hold max size of t38 object.*/
-  4041		t38_buf = kmalloc(mxt_obj_size(object), GFP_KERNEL);
-  4042		if (!t38_buf)
-  4043			return -ENOMEM;
-  4044	
-> 4045		ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
-  4046		if (ret != 2) {
-  4047			dev_err(dev, "Bad format: Invalid parameter to update t38\n");
-  4048			ret = -EINVAL;
-  4049			goto end;
-  4050		}
-  4051	
-  4052		if (len == 0) {
-  4053			dev_err(dev,
-  4054				"Bad format: Data length should not be equal to 0\n");
-  4055			ret = -EINVAL;
-  4056			goto end;
-  4057		}
-  4058	
-  4059		if (offset < 0 || ((offset + len) > 64)) {
-  4060			dev_err(dev, "Invalid offset value to update t38\n");
-  4061			ret = -EINVAL;
-  4062			goto end;
-  4063		}
-  4064	
-  4065		index = pos;
-  4066		for (i = 0; i < len; i++) {
-  4067			ret = sscanf(buf + index, "%hhx%zd", t38_buf + i, &pos);
-  4068			if (ret != 1) {
-  4069				dev_err(dev, "Bad format: Invalid Data\n");
-  4070				ret = -EINVAL;
-  4071				goto end;
-  4072			}
-  4073			index += pos;
-  4074		}
-  4075	
-  4076		ret = __mxt_write_reg(data->client, object->start_address + offset,
-  4077				      len, t38_buf);
-  4078		if (ret)
-  4079			goto end;
-  4080	
-  4081		ret = mxt_t6_command(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE,
-  4082				     true);
-  4083		if (ret)
-  4084			dev_err(dev, "backup command failed\n");
-  4085		else
-  4086			ret = count;
-  4087	end:
-  4088		kfree(t38_buf);
-  4089		return ret;
-  4090	}
-  4091	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
