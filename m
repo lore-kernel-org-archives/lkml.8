@@ -2,68 +2,149 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7113C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B57CC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69412098B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589136058;
-	bh=tR/IFz9g/5KCFDPAMwVRLyColMmVlLz/GYzR7rK84GU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YqZ6LgnN8wCIX7YWdlqUQELYtK3x0vn4MrNFCLhN+B9EmdAR8P7Xt39KxYIlyWmpW
-	 xVSEPpUdjEwFPUY/+rBX4yc9xmUxwzkmyeKU7tbmFpv0AhByNE/QyZdb84qbjERU85
-	 D9cyoYelHdl6+jztSHedw56f6FWTEQWjb5MSIoPE=
+	by mail.kernel.org (Postfix) with ESMTP id 6F5D82082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="qEpnndRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgEJSk6 (ORCPT
+        id S1729201AbgEJSon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgEJSk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:40:57 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 10 May 2020 14:44:43 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:46332 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728123AbgEJSom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 14:44:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id AEEAE412C8;
+        Sun, 10 May 2020 18:44:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1589136277; x=
+        1590950678; bh=PSI18hXbAiF6Rl0cvh8JPPtd4V9SLr9MH8CKSH/UjpU=; b=q
+        EpnndRf3AIJPZ3mTOXZe/w3C6T3gPqnU9r8PUQTidCEqEGXwiQdubxaS5ZMjpU86
+        vLRvWn8l+kQlL9jUHt6ZaBY2yfDchtdo5Uztdmo5sYb8lt/8/Ia1Petl7anTSDCO
+        fpF02s1HWsJHFEw4O+orRfxzhWWIDLum3E5iLb4Xys=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id S0AXsxSTtZcK; Sun, 10 May 2020 21:44:37 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10CAA2080C;
-        Sun, 10 May 2020 18:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589136057;
-        bh=tR/IFz9g/5KCFDPAMwVRLyColMmVlLz/GYzR7rK84GU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cHecr9sZeP1MjsMDDwqcXVqSMgcNDGJBQ1TTmKtOURgKhBrSQ0KVpaMQQn7Kzh5Ic
-         GRrYIlUJcVNp5Nkp7Io/KzDRKVA4wk8jQXoH/alN1GOMGU+a8h4/XBFtCutNYl3bfq
-         g4KwjPFTORHcdrIS8AChMAbj3H2tVulTrE7PmjvE=
-Date:   Sun, 10 May 2020 11:40:55 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH net] net: dsa: loop: Add module soft dependency
-Message-ID: <20200510114055.7c3c7c33@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200509234544.17088-1-f.fainelli@gmail.com>
-References: <20200509234544.17088-1-f.fainelli@gmail.com>
+        by mta-01.yadro.com (Postfix) with ESMTPS id 6E6ED412C4;
+        Sun, 10 May 2020 21:44:37 +0300 (MSK)
+Received: from localhost.dev.yadro.com (10.199.3.114) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Sun, 10 May 2020 21:44:38 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v14 0/2] iio: proximity: driver for vcnl3020
+Date:   Sun, 10 May 2020 21:45:35 +0300
+Message-ID: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.3.114]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 May 2020 16:45:44 -0700 Florian Fainelli wrote:
-> There is a soft dependency against dsa_loop_bdinfo.ko which sets up the
-> MDIO device registration, since there are no symbols referenced by
-> dsa_loop.ko, there is no automatic loading of dsa_loop_bdinfo.ko which
-> is needed.
-> 
-> Fixes: 98cd1552ea27 ("net: dsa: Mock-up driver")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-Applied, thank you!
+Changes from v13:
+   1. description change for LED current.
+
+Changes from v12:
+   1. forgot to change path inside yaml.
+
+Changes from v11:
+   1. minor changes to yaml.
+
+Changes from v10:
+   1. add vcnl3020_property struct for optional properties.
+
+Changes from v9:
+   1. minor changes.
+   2. pass microamps from dts, not register value.
+
+Changes from v8:
+   1. add vcnl3020 prefix into get_and_apply_property function.
+   2. add bsd license into yaml.
+   3. vishay,led-current-milliamp -> vishay,led-current-microamp.
+   4. add default value into vishay,led-current-microamp and change
+      register values into microamps.
+
+Changes from v7:
+   1. forgot to add Reviewed-by tag.
+
+Changes from v6:
+   1. minor changes
+     1.1 remove VCNL_DRV_NAME
+     1.2 add braces in get_and_apply_property
+
+Changes from v5:
+   1. add get_and_apply_property function for optional parameters.
+   2. minor changes.
+
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp in yaml.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
+
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
+
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
+
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
+
+Ivan Mikhaylov (2):
+  dt-bindings: proximity: provide vcnl3020 device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
+
+ .../iio/proximity/vishay,vcnl3020.yaml        |  62 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 258 ++++++++++++++++++
+ 4 files changed, 332 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
+
+-- 
+2.21.1
+
