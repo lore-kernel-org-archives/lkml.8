@@ -2,122 +2,89 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68AFC54E90
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A976FC54E8E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9166320737
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AFE20737
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XImq2gJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgEJUwt (ORCPT
+        id S1729514AbgEJUxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:52:49 -0400
-Received: from mail.ispras.ru ([83.149.199.45]:52912 "EHLO mail.ispras.ru"
+        Sun, 10 May 2020 16:53:44 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35761 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729389AbgEJUwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:52:32 -0400
-Received: from localhost.localdomain (unknown [46.188.10.168])
-        by mail.ispras.ru (Postfix) with ESMTPSA id E0888CD46B;
-        Sun, 10 May 2020 23:52:29 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Monakov <amonakov@ispras.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Brian Woods <brian.woods@amd.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: [PATCH 3/3] EDAC/amd64: Add AMD family 17h model 60h PCI IDs
-Date:   Sun, 10 May 2020 20:48:42 +0000
-Message-Id: <20200510204842.2603-4-amonakov@ispras.ru>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200510204842.2603-1-amonakov@ispras.ru>
-References: <20200510204842.2603-1-amonakov@ispras.ru>
+        id S1729286AbgEJUxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 16:53:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Kx9x5Z72z9sSc;
+        Mon, 11 May 2020 06:53:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589144022;
+        bh=8dIeqj8UmZeUONqXWGUCIGyCxacc5cARWZsktLH4P14=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XImq2gJX1Cl4P8xCHqbT4dPTxi12blxsx/w1JtQi2/zqEVJCvKY+VzdOc1HK8yWeH
+         BaxRY0j4LRAysCX2IdPB1/nInZbpzw56RLCLEpZFBfTJ8RztwpJxgpSdB3fceAzjT0
+         mmWTmLW5J+hCGgJ4O1L7ad71Z8v3Yex0lg1+tD7rBGj8PFi8smZTPo0vtbWmEpYJ+6
+         cl8Mj1c35vbFd4l7YMs4fLMwGZnaj5cqGIqwbyLQ7KHv4O1OdKQXv1x0JaFEu26OZ8
+         V2pOZg5NsR3sV+tJhUU/rNY5kO8SQLKhtBhTTZifNGzdOAsD6ZNV4RE6Y2rfKOT2Lm
+         417qbIFnrSprQ==
+Date:   Mon, 11 May 2020 06:53:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: Signed-off-by missing for commit in the gfs2 tree
+Message-ID: <20200511065340.6cdb452a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/UDVwFwbKCJdme0QuB+RV/M/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for AMD Renoir (4000-series Ryzen CPUs).
+--Sig_/UDVwFwbKCJdme0QuB+RV/M/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Brian Woods <brian.woods@amd.com>
-Cc: Clemens Ladisch <clemens@ladisch.de>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-edac@vger.kernel.org
----
- drivers/edac/amd64_edac.c | 14 ++++++++++++++
- drivers/edac/amd64_edac.h |  3 +++
- 2 files changed, 17 insertions(+)
+Hi all,
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 1136500c5f53..d50365e9217a 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2319,6 +2319,16 @@ static struct amd64_family_type family_types[] = {
- 			.dbam_to_cs		= f17_addr_mask_to_cs_size,
- 		}
- 	},
-+	[F17_M60H_CPUS] = {
-+		.ctl_name = "F17h_M60h",
-+		.f0_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F0,
-+		.f6_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F6,
-+		.max_mcs = 2,
-+		.ops = {
-+			.early_channel_count	= f17_early_channel_count,
-+			.dbam_to_cs		= f17_addr_mask_to_cs_size,
-+		}
-+	},
- 	[F17_M70H_CPUS] = {
- 		.ctl_name = "F17h_M70h",
- 		.f0_id = PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
-@@ -3357,6 +3367,10 @@ static struct amd64_family_type *per_family_init(struct amd64_pvt *pvt)
- 			fam_type = &family_types[F17_M30H_CPUS];
- 			pvt->ops = &family_types[F17_M30H_CPUS].ops;
- 			break;
-+		} else if (pvt->model >= 0x60 && pvt->model <= 0x6f) {
-+			fam_type = &family_types[F17_M60H_CPUS];
-+			pvt->ops = &family_types[F17_M60H_CPUS].ops;
-+			break;
- 		} else if (pvt->model >= 0x70 && pvt->model <= 0x7f) {
- 			fam_type = &family_types[F17_M70H_CPUS];
- 			pvt->ops = &family_types[F17_M70H_CPUS].ops;
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index abbf3c274d74..52b5d03eeba0 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -120,6 +120,8 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F0 0x1448
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F6 0x144e
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
- #define PCI_DEVICE_ID_AMD_19H_DF_F0	0x1650
-@@ -293,6 +295,7 @@ enum amd_families {
- 	F17_CPUS,
- 	F17_M10H_CPUS,
- 	F17_M30H_CPUS,
-+	F17_M60H_CPUS,
- 	F17_M70H_CPUS,
- 	F19_CPUS,
- 	NUM_FAMILIES,
--- 
-2.26.2
+Commit
 
+  de80f184535d ("gfs2: Don't ignore inode write errors during inode_go_sync=
+")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/UDVwFwbKCJdme0QuB+RV/M/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64adQACgkQAVBC80lX
+0GzO3AgAgxRMG6buu3bdSkHw3TH6ypT3LZUIufRtp8sQWUHTlYKNjof1lDb8s1+6
+Kj8Fe0CO8LxDdxHhpEfGDv63fRUQ/ZfUIh/y9QRRE5gZKASjF2Ru8WzRIuUHVxpO
+CaF3KRgFUtsajBZ7/mvjA17CZj6YnYeelrfDTIM2c/VAG7I5kR/A98tuEXafmCwK
+O7Y12acKvb5D6eLRE3KnsZ3CcMGpjdytM2BLHWxkGBUbmALcunRbMB2S50CU9UdN
+kaOfceAkMyRMV+tLZL5llQoVmoRv3VTim5QyjBKvjos59IElXRZ2t2Dl4UWmdV0z
+JgDDyDgu4IBGzK+G85a4c7QcYmHtQw==
+=NLJK
+-----END PGP SIGNATURE-----
+
+--Sig_/UDVwFwbKCJdme0QuB+RV/M/--
