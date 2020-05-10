@@ -2,88 +2,232 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780B6C35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9859C35280
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C2220735
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49AA20735
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:18:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YkA+bNRD"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rmYgUAkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgEJFRE (ORCPT
+        id S1726085AbgEJFSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 01:17:04 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36204 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726245AbgEJFRE (ORCPT
+        Sun, 10 May 2020 01:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgEJFSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 01:17:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589087823;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tCJf3aD47ctQEj0+bjTncfKWspILH0i2eRAlZk7YIas=;
-        b=YkA+bNRDfKCq+NmOCS2CsehwT+8p7u3Brk/3C/kSzRC9vUa2Op3Gz+55ebaBTpU36NAr4H
-        E5zKt1n3A53puuQihq9HHS4raC005hHPJExsTnMw+PlCBCWzTtcGejx5XythiSwYiwu2pe
-        J2nJBDeTQ5Lme2XAvcWZdpPUP+l19WA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-1wSi7USNNkmzpDGYI08JnQ-1; Sun, 10 May 2020 01:17:00 -0400
-X-MC-Unique: 1wSi7USNNkmzpDGYI08JnQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23DD980058A;
-        Sun, 10 May 2020 05:16:57 +0000 (UTC)
-Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B8EB7704C6;
-        Sun, 10 May 2020 05:16:48 +0000 (UTC)
-Date:   Sun, 10 May 2020 13:16:46 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Rafael Aquini <aquini@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kexec@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, dyoung@redhat.com, corbet@lwn.net,
-        mcgrof@kernel.org, keescook@chromium.org,
-        akpm@linux-foundation.org, cai@lca.pw, tytso@mit.edu,
-        bunk@kernel.org, torvalds@linux-foundation.org,
-        gregkh@linuxfoundation.org, labbott@redhat.com, jeffm@suse.com,
-        jikos@kernel.org, jeyu@suse.de, tiwai@suse.de, AnDavis@suse.com,
-        rpalethorpe@suse.de
-Subject: Re: [PATCH v3] kernel: add panic_on_taint
-Message-ID: <20200510051646.GF5029@MiWiFi-R3L-srv>
-References: <20200509135737.622299-1-aquini@redhat.com>
- <20200510025921.GA10165@MiWiFi-R3L-srv>
- <acab7971-7522-3511-c976-e0237ceda4d0@infradead.org>
+        Sun, 10 May 2020 01:18:44 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8FDC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 22:18:44 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id l1so1664104qtp.6
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 22:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/lcyVkFvW6Q2XtFR89qoX9NO7slQxZQ5eBaDk/SNENo=;
+        b=rmYgUAkvZpyFKZcqeGRIyvvBHeg1jJroQIIofbBodDDku0mcvJo/BQqa8SHRnYFJaI
+         iqRx162shMpOm75JtRUCjAztD6+DXrguzJeHeiY0iDxuUsed8YT2MBAQ/dfri9YyfUp8
+         6bnqunS5v3p+wvBbGonBj8t9Z8x3KvRuUgMi8iC2VSOtO5C6jXY36T5uOUnPdGbG/1ZL
+         1X6XVaJ89ce89/aFmh9J7wCcKb+tPmp5rcuzf/s8MkrvYGJOaHuBeUmI9Q8OCZRdbTy4
+         Xmc6apEkT+68fWOBPlI1a52fi1BLx2dAZ1yz5z5Lo8NpgrnK32By/KQX+EBLeJ1rx1Va
+         RFjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/lcyVkFvW6Q2XtFR89qoX9NO7slQxZQ5eBaDk/SNENo=;
+        b=qle3qy/cFoXnVTYibTF/vZ8I5XyDJg0ltIrxZwY6paDpxh7kpCK9DjpJN4BB8U2Tbb
+         qEP+s3t7F2O/Ju91uewbu0N+hnsxMFezCHdNG6KWjHa64hpcWtgb3LMQECbhDKtUlzyL
+         +yzBxLfqmAYDFv7eq3btdIf46wtRmg6oFDGeg61lwolu0m7fNMvYX2XPMpw/OH9QZZs6
+         oGxFYWnifdUhqNALML920yw1jwYgf8cPLNbKUv652YOQSLYFvUOB/twKLhHuFxZUUT+D
+         2HPMUJ3uPtD7Mmud1Eja5g61VSaWXcrmnkHKLVQFdEL8yLEvfYiTdOTwp25h/QZh1MXC
+         k76Q==
+X-Gm-Message-State: AGi0PuaZmtwwPS10c7/vmW5FX55//0UnM0wm5n4jzUo5R4EMbJDeUdAx
+        MqerxwwkruPWe4B6D5uRwpW3ng==
+X-Google-Smtp-Source: APiQypK5nCri8dvQyy2Srb2XSRl+X2gaOjzChXlYZVh4WI3iYi/fXLwXzIeA9OlCUfW0kVaa22XLVw==
+X-Received: by 2002:ac8:4987:: with SMTP id f7mr10426013qtq.160.1589087923115;
+        Sat, 09 May 2020 22:18:43 -0700 (PDT)
+Received: from ovpn-112-80.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p31sm6067732qtf.11.2020.05.09.22.18.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 09 May 2020 22:18:42 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au
+Cc:     benh@kernel.crashing.org, paulus@samba.org, aik@ozlabs.ru,
+        paulmck@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] powerpc/kvm/book3s64/vio: fix some RCU-list locks
+Date:   Sun, 10 May 2020 01:18:34 -0400
+Message-Id: <20200510051834.2011-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acab7971-7522-3511-c976-e0237ceda4d0@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/20 at 09:10pm, Randy Dunlap wrote:
-> On 5/9/20 7:59 PM, Baoquan He wrote:
-> > Read admin-guide/tainted-kernels.rst, but still do not get what 'G' means.
-> 
-> I interpret 'G' as GPL (strictly it means that no proprietary module has
-> been loaded).  But I don't see why TAINT_PROPRIETARY_MODULE is the only
-> taint flag that has a non-blank c_false character.  It could just be blank
-> also AFAICT.  Then the 'G' would not be there to confuse us.  :)
+It is unsafe to traverse kvm->arch.spapr_tce_tables and
+stt->iommu_tables without the RCU read lock held. Also, add
+cond_resched_rcu() in places with the RCU read lock held that could take
+a while to finish.
 
-Yeah, seems c_false character is not so necessary. If no 'P' set, then
-it means no proprietary modules loaded naturally. We may need clean up
-the c_false in struct taint_flag, since c_true is enough to indicate
-what want to check.
+ arch/powerpc/kvm/book3s_64_vio.c:76 RCU-list traversed in non-reader section!!
 
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ no locks held by qemu-kvm/4265.
+
+ stack backtrace:
+ CPU: 96 PID: 4265 Comm: qemu-kvm Not tainted 5.7.0-rc4-next-20200508+ #2
+ Call Trace:
+ [c000201a8690f720] [c000000000715948] dump_stack+0xfc/0x174 (unreliable)
+ [c000201a8690f770] [c0000000001d9470] lockdep_rcu_suspicious+0x140/0x164
+ [c000201a8690f7f0] [c008000010b9fb48] kvm_spapr_tce_release_iommu_group+0x1f0/0x220 [kvm]
+ [c000201a8690f870] [c008000010b8462c] kvm_spapr_tce_release_vfio_group+0x54/0xb0 [kvm]
+ [c000201a8690f8a0] [c008000010b84710] kvm_vfio_destroy+0x88/0x140 [kvm]
+ [c000201a8690f8f0] [c008000010b7d488] kvm_put_kvm+0x370/0x600 [kvm]
+ [c000201a8690f990] [c008000010b7e3c0] kvm_vm_release+0x38/0x60 [kvm]
+ [c000201a8690f9c0] [c0000000005223f4] __fput+0x124/0x330
+ [c000201a8690fa20] [c000000000151cd8] task_work_run+0xb8/0x130
+ [c000201a8690fa70] [c0000000001197e8] do_exit+0x4e8/0xfa0
+ [c000201a8690fb70] [c00000000011a374] do_group_exit+0x64/0xd0
+ [c000201a8690fbb0] [c000000000132c90] get_signal+0x1f0/0x1200
+ [c000201a8690fcc0] [c000000000020690] do_notify_resume+0x130/0x3c0
+ [c000201a8690fda0] [c000000000038d64] syscall_exit_prepare+0x1a4/0x280
+ [c000201a8690fe20] [c00000000000c8f8] system_call_common+0xf8/0x278
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:368 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 2 locks held by qemu-kvm/4264:
+  #0: c000201ae2d000d8 (&vcpu->mutex){+.+.}-{3:3}, at: kvm_vcpu_ioctl+0xdc/0x950 [kvm]
+  #1: c000200c9ed0c468 (&kvm->srcu){....}-{0:0}, at: kvmppc_h_put_tce+0x88/0x340 [kvm]
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:108 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by qemu-kvm/4257:
+  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:146 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by qemu-kvm/4257:
+  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/powerpc/kvm/book3s_64_vio.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 50555ad1db93..4f5016bab723 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -73,6 +73,7 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
+ 	struct kvmppc_spapr_tce_iommu_table *stit, *tmp;
+ 	struct iommu_table_group *table_group = NULL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
+ 
+ 		table_group = iommu_group_get_iommudata(grp);
+@@ -87,7 +88,9 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
+ 				kref_put(&stit->kref, kvm_spapr_tce_liobn_put);
+ 			}
+ 		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
+ }
+ 
+ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+@@ -105,12 +108,14 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 	if (!f.file)
+ 		return -EBADF;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
+ 		if (stt == f.file->private_data) {
+ 			found = true;
+ 			break;
+ 		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	fdput(f);
+ 
+@@ -143,6 +148,7 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 	if (!tbl)
+ 		return -EINVAL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
+ 		if (tbl != stit->tbl)
+ 			continue;
+@@ -150,14 +156,17 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 		if (!kref_get_unless_zero(&stit->kref)) {
+ 			/* stit is being destroyed */
+ 			iommu_tce_table_put(tbl);
++			rcu_read_unlock();
+ 			return -ENOTTY;
+ 		}
+ 		/*
+ 		 * The table is already known to this KVM, we just increased
+ 		 * its KVM reference counter and can return.
+ 		 */
++		rcu_read_unlock();
+ 		return 0;
+ 	}
++	rcu_read_unlock();
+ 
+ 	stit = kzalloc(sizeof(*stit), GFP_KERNEL);
+ 	if (!stit) {
+@@ -365,18 +374,20 @@ static long kvmppc_tce_validate(struct kvmppc_spapr_tce_table *stt,
+ 	if (kvmppc_tce_to_ua(stt->kvm, tce, &ua))
+ 		return H_TOO_HARD;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
+ 		unsigned long hpa = 0;
+ 		struct mm_iommu_table_group_mem_t *mem;
+ 		long shift = stit->tbl->it_page_shift;
+ 
+ 		mem = mm_iommu_lookup(stt->kvm->mm, ua, 1ULL << shift);
+-		if (!mem)
+-			return H_TOO_HARD;
+-
+-		if (mm_iommu_ua_to_hpa(mem, ua, shift, &hpa))
++		if (!mem || mm_iommu_ua_to_hpa(mem, ua, shift, &hpa)) {
++			rcu_read_unlock();
+ 			return H_TOO_HARD;
++		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
+ 
+ 	return H_SUCCESS;
+ }
+-- 
+2.21.0 (Apple Git-122.2)
 
