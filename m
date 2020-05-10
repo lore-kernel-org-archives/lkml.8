@@ -2,158 +2,96 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD4C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B5AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFD420801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F4B20801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:52:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfaR0nZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgEJTvE (ORCPT
+        id S1729335AbgEJTwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 15:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
+        Sun, 10 May 2020 15:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729032AbgEJTvE (ORCPT
+        by vger.kernel.org with ESMTP id S1729195AbgEJTwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 15:51:04 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC744C061A0C;
-        Sun, 10 May 2020 12:51:03 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id A6A532A08CD
-Received: by earth.universe (Postfix, from userid 1000)
-        id AA8803C08C7; Sun, 10 May 2020 21:50:59 +0200 (CEST)
-Date:   Sun, 10 May 2020 21:50:59 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Mark Brown <broonie@kernel.org>,
-        linux-pm@vger.kernel.org, brendanhiggins@google.com,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com
-Subject: Re: [PATCH] lib: linear_ranges: Add missing MODULE_LICENSE()
-Message-ID: <20200510195059.dijv6ysac42a6nuq@earth.universe>
-References: <20200509151519.GA7100@localhost.localdomain>
+        Sun, 10 May 2020 15:52:12 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E208C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 12:52:12 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id v12so8288843wrp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 12:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ev0gVa/MeZtNVLRSEHKJLWUsQeV9Y9ZcxTr8PwODIP0=;
+        b=QfaR0nZ5+bPcvhnSmQsi58zM9q7KBGLdwmlhOXGbhFXjcWmhabac21g3D2BnWXSK3f
+         v/ZkMSWcmOIdLvbPyLi4IppBNGM46VDFy9RsPgb7BEyIL8Bzie2U371oiECLD28TzRBk
+         YOZvUUt/7bVjlOYYCyc7L/YTI7643YqoWTWQ1muknuAg7tgJHsgoqKCt6ZTmt7bdKoPZ
+         nbNM35zz/UDc7DX19FUkxwsEVrEkTa5HLoyClYIjxzZx56SjegEcMm7U4RrUJ7maI5xA
+         i1d6HZdAEKKYA0t+AXKS7fQcyH8nAd8ysA1LfjAqNuNZGk2VDKkerfxQ6y6p2qNdccuB
+         9r8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ev0gVa/MeZtNVLRSEHKJLWUsQeV9Y9ZcxTr8PwODIP0=;
+        b=pAcNp7iE3fMeloHnV3FWD5cu9baonICWpkRJhhOGNiUCayUyDhGWqYk0r2eqj8O3zu
+         li+lrDdDe9QSWHS+EF83RYlha6NySHOuLWuoXFOZZOAZJrws7KwwUd/ILHXMYcZgYg7T
+         VZLQXLJ5R7zTZd1X2Uc1OS55noJ8gMdPtK2B8pJ90KP+dlGCbuvILhz2Bnh7mWwoVkHQ
+         SLrlSCQ3VNGrDl76mWgCJ5g4E0AQZj97fA/0IAhAUpHWaCgLjObuVWNDTXIGF8S3yesB
+         qi7bfA9E/4WcoC9+uq+EogtrEF82/QAH0TxnC/I37y1zj5g9D0ak35KHt6qlGfR1cLAx
+         e4Ig==
+X-Gm-Message-State: AGi0PubDy2tiMES6CiwUmu85xC6zAZlAaSWjCHrWomTmHJNoCzul/tYq
+        xCy/lZC591Mh3qagXvV8pVuFFhSG
+X-Google-Smtp-Source: APiQypKSPzeLW70VVH8h+5+6V6ehsgDTv/l/qVwKIpRbQesWfdY8AcjsCcwOivqjUFFttqnOydl/+w==
+X-Received: by 2002:a5d:4745:: with SMTP id o5mr13682424wrs.128.1589140330910;
+        Sun, 10 May 2020 12:52:10 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id l5sm14492680wrr.72.2020.05.10.12.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 May 2020 12:52:09 -0700 (PDT)
+Subject: Re: [PATCH] ARM: mm: Remove virtual address print from B15 RAC driver
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Russell King <linux@armlinux.org.uk>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200506233708.422-1-f.fainelli@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <74e3f5f8-468f-b535-526f-b17c3ac8b4f2@gmail.com>
+Date:   Sun, 10 May 2020 12:52:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yg3s6qf7ohrjd3se"
-Content-Disposition: inline
-In-Reply-To: <20200509151519.GA7100@localhost.localdomain>
+In-Reply-To: <20200506233708.422-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---yg3s6qf7ohrjd3se
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 5/6/2020 4:37 PM, Florian Fainelli wrote:
+> We would be trying to print the kernel virtual address of the base
+> register address which is not very useful and is not displayed by
+> default because of pointer restriction. Print the Device Tree node name
+> instead which is what was originally intended.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-On Sat, May 09, 2020 at 06:15:19PM +0300, Matti Vaittinen wrote:
-> When linear_ranges is compiled as module we get warning
-> about missing MODULE_LICENSE(). Fix it by adding
-> MODULE_LICENSE("GPL") as is suggested by SPDX and EXPORTs.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->=20
-> I saw Mark applied the linear-ranges patch. So I sent this fix as
-> incremental patch - but I still use the same Linus tree as a base of
-> this fix - the linear-ranges file should be unchanged in regulator tree.
-> If this does not apply I can clone regulator tree and create this fix on
-> it.
->=20
-> I don't know if this is the correct way to fix this as the linear-ranges
-> should be merged to power-supply tree.
->=20
-> I guess we can either:
-> - Use this patch to fix regulator tree and create fixed tag for
->   power-supply(?)
-> - Add this fix in the original series and resend whole series(?)
-> - re-create the series and drop the already applied patches. Add this
->   fix as a fixup patch in new series and apply it to power-supply tree
->   after the linear-ranges from regulator is merged to power-supply.
->=20
->  Please adviece me if this patch is not the way to go.
->=20
-> Oh, and I am really sorry for the trouble. I saw I had regulators=3Dy
-> in all of my compilations due to some pincontrol dependencies. So
-> linear-ranges was not built as module in any of my test compilations :(
->=20
-> Thanks for testing Mark!
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-I think it makes sense to just queue this through the regulator tree.
-Apart from that you should add a MAINTAINERS file entry for the
-linear_ranges lib. Main user is regulators, so future patches should
-probably be queued through its tree.
-
--- Sebastian
-
->  lib/linear_ranges.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/lib/linear_ranges.c b/lib/linear_ranges.c
-> index d1336c75ccd7..9495ef3572b7 100644
-> --- a/lib/linear_ranges.c
-> +++ b/lib/linear_ranges.c
-> @@ -12,6 +12,7 @@
->  #include <linux/export.h>
->  #include <linux/kernel.h>
->  #include <linux/linear_range.h>
-> +#include <linux/module.h>
-> =20
->  /**
->   * linear_range_values_in_range - return the amount of values in a range
-> @@ -239,3 +240,6 @@ int linear_range_get_selector_high(const struct linea=
-r_range *r,
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(linear_range_get_selector_high);
-> +
-> +MODULE_DESCRIPTION("linear-ranges helper");
-> +MODULE_LICENSE("GPL");
-> --=20
-> 2.21.0
->=20
->=20
-> --=20
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->=20
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =3D]=20
-
---yg3s6qf7ohrjd3se
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64Wx0ACgkQ2O7X88g7
-+pofrw//YFyv13THGq5MxNK50UVeuJkY4S79XhCf8X1P09EnZRmVkD1bZUgQ1McD
-yLW7YB8JAJ8XVtbJ1Mh4/uoyppdW9RrqnBbzdRNpU79eVb/sF7/sZHHsfFC8WHdz
-Ff2XXQBEy0vu6dyEbaXkiTzYgfRAt5e04FQ4I/pFWtwEguCcx5LqV7lzYfhtNfTK
-bmR+dtnnrPu/otNNNHKKTXYj+HQijNyRviVzrbNRlZmYL78Bjfqjp46SXAvktK6/
-RzqwtKyV9UpmY33oiiXhTP5q4Wg8SCQ8hFNj8fgFT4hecm8hO4S8aNojPrtJvjzk
-7hSO76elClvE0GjFN3b/GuqpUM5FApqeTM047Ml0UO1+P9n6mxHiNOXPMPl1mdvB
-2WjNOii30IOZYAsrasPY+oHBkpSHdSN3u1e+rsEBHqzbHNm729GZtzHDh8t4NzrT
-6cKDHf7LvP3og+xzm8PYgGj5biqo3wzqQtkN93kYd0DvpQ5OZPx4qDPgPJtVqUwT
-3jWy1zw4GacA2KjQn13pGoMDbZbKWEpkQKk9lQc5levoBxORYazzHKC66QYP3VLt
-gO1N0YCHmog90krF9x0Po31G+YhSacmFkUsbW16zkw472/oWKhol5cyNHWEiBw0l
-QF3Uep26aL5XE/Hd8+553tm9+ZHZev+hh291neLz2GdTywCXeT0=
-=fi0g
------END PGP SIGNATURE-----
-
---yg3s6qf7ohrjd3se--
+Applied to soc/next, thanks!
+-- 
+Florian
