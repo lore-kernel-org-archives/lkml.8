@@ -2,60 +2,61 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534CBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59663C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2951D206F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A6C20737
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jxnIlVzj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="drD03wch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgEJUYt (ORCPT
+        id S1729406AbgEJUYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
+        Sun, 10 May 2020 16:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729356AbgEJUYq (ORCPT
+        by vger.kernel.org with ESMTP id S1729378AbgEJUYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:24:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A33C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 13:24:45 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k7so1771477pjs.5
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 13:24:45 -0700 (PDT)
+        Sun, 10 May 2020 16:24:48 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DCEC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 13:24:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u22so3011735plq.12
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 13:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jMnvmwdf0lD4TWDxpQeCiDqgUg/BNY/6yd0J6c0RUaw=;
-        b=jxnIlVzjg4LuX0x4ZxxB1JEkhMutYk9n+d2bj8maSEKQYCpP8QW0AvSZM2+MydWo17
-         hFg6spS4Y8qyZldiFLK7H6lD7DqCwh+ptn93hbbWPLowJU5q3HpQS2XQ7NI8YXkdrfmC
-         XKExDDq/gQbLg5YH+GX/v6KMd7og+GDHK5M8k=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9b96+3F3UdF82FBwaSU5JLnw5ZdkMBQ4NVk3N1vy02U=;
+        b=drD03wchFJ8JSi6NQlZOTRxtpLpre/PHVvk/pEeOVs/q7ZaC4QUP/gCZnLxqf1X9sk
+         ytvjnrKwpw83qgDcoxIjucYAFsZ9QFtqdYQPRbOC/ItUOPjzt9OX3OK8tDNL+7XUv22B
+         hPRWWXJBNSFKLTXd/IMgvZws7SyBYTA1VDjBQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jMnvmwdf0lD4TWDxpQeCiDqgUg/BNY/6yd0J6c0RUaw=;
-        b=RmJE6OtlUTV0kBqQQr4arS0F9qo/e9w2WFF0e5tRZ/flWCeZF0N+S+ffENYMO9JJlX
-         vuYl7q74DRk9WKMWdPEI7Jicft0Tc1QQRulWrfIu1eD39C63SVEicoVi9KrzYOMF/Ntf
-         Yeon5gGCtM649bIE+4/OzSjs6hqxmOJKphy/ZnND83JRQAElbDuxM1FkimHoCytONocx
-         l5TmftfbtpY9VSjLaFnNIEaxzx4YrA47AFdjkB1o3zHSZKHp/jJidbZGiYM3t9cvHYJs
-         TuyeKCgFvCY0yKPq1fEp48Lbw3HxhwaBqr6Xqb5SmrUQxxTuwftdG5ddSft6V5X6WnD7
-         NHyA==
-X-Gm-Message-State: AGi0PubqeHKHzC2ZwdF3x6PgaORsAvCsJoBWlldzrXMaxMGUwuUiHBdJ
-        hXIOzhxdKK2nbUtPoBCKkNT3jQ==
-X-Google-Smtp-Source: APiQypLvN7WjM+iFu647e6o7NyvuJP0SZANsYUCqdd2Q7tf4QMuUe/X50yR6CDzAlEROB6zdXlLglg==
-X-Received: by 2002:a17:902:9b8e:: with SMTP id y14mr12182467plp.109.1589142285531;
-        Sun, 10 May 2020 13:24:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9b96+3F3UdF82FBwaSU5JLnw5ZdkMBQ4NVk3N1vy02U=;
+        b=jm5UuedYoIz4JrhDyEFUcffIavkGYXdxGbDtPXVsu0NforlnfwTwlK/bHOEWQ932a0
+         31SNB7sMUKKXfhB1f/BQvu1Pr1Jfofa9nk+KhZnQk7FBySeNm6ueJw6l5NdMeTRgc2GI
+         noio1p1qrSh3fh0+x9hO7rTYQpHxFhPtCFxitd25851JpEKiFXpHaZKIfl+Aoxl26Pys
+         Oy5p/pGlKkPL7j8QNlKNJVUGZN4OZ0hxj0O+wyV2zEpKetY3KFt9x5rYQP7mcBdrIzkT
+         bl041eTRETNWMM/QZ+uNztboC6gbA/XwLAvkrLCxTy1/UOq3FQtE68Q1U2H264zPFtiY
+         z26w==
+X-Gm-Message-State: AGi0PubAQpL7eIeCLG8fjRTGHivWhRn1XXxzrLiaLtVabEVDbA0hXArh
+        BcVI21qlxKaAwAnWDpNRYd35ug==
+X-Google-Smtp-Source: APiQypK13VGjWO1X5uy4YJUs3elsqkv3kZFShDVm0qrPduOIuFGQ3nyFICLCIiUDGDPwI3WjCC6x/w==
+X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr18453170pjc.0.1589142287117;
+        Sun, 10 May 2020 13:24:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id gm3sm7871240pjb.49.2020.05.10.13.24.41
+        by smtp.gmail.com with ESMTPSA id u5sm7508379pfu.198.2020.05.10.13.24.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 13:24:41 -0700 (PDT)
+        Sun, 10 May 2020 13:24:45 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -73,10 +74,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org
-Subject: [PATCH v7 00/18] pstore: mtd: support crash log to block and mtd device
-Date:   Sun, 10 May 2020 13:24:18 -0700
-Message-Id: <20200510202436.63222-1-keescook@chromium.org>
+Subject: [PATCH v7 05/18] pstore/ram: Refactor ftrace buffer merging
+Date:   Sun, 10 May 2020 13:24:23 -0700
+Message-Id: <20200510202436.63222-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200510202436.63222-1-keescook@chromium.org>
+References: <20200510202436.63222-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,82 +87,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+This changes the ftrace record merging code to be agnostic of
+pstore/ram, as the first step to making it available as a generic
+routine for other backends to use, such as pstore/zone.
 
-Well, I guess I spoke too soon. :) Here is v7. Hopefully this is
-it. WeiXiong, can you test this and make sure you're happy with the
-results?
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/pstore/ram.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-Take care!
-
--Kees
-
-v7:
-- more renamings in the exported APIs and structs
-- fix mtd build
-- replace psblk_blkdev_info with passing in a struct to fill
-- consolidate bdev opening/checking
-- rename psblk_device -> pstore_device_info
-- kerndoc for pstore_blk_get_config
-- fix hunks in wrong patch
-- add missing "static"s for local functions (0day)
-
-v6: https://lore.kernel.org/lkml/20200509234103.46544-1-keescook@chromium.org/
-v5: https://lore.kernel.org/lkml/1589022854-19821-1-git-send-email-liaoweixiong@allwinnertech.com/
-v4: https://lore.kernel.org/lkml/20200508064004.57898-1-keescook@chromium.org/
-v3: https://lore.kernel.org/lkml/1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com/
-v2: https://lore.kernel.org/lkml/1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com/
-v1: https://lore.kernel.org/lkml/1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com/
-
-
-Kees Cook (8):
-  pstore/ram: Move dump_oops to end of module_param list
-  pstore/platform: Switch pstore_info::name to const
-  pstore/platform: Move module params after declarations
-  pstore/platform: Use backend name for console registration
-  pstore/ram: Refactor ftrace buffer merging
-  pstore/ftrace: Provide ftrace log merging routine
-  printk: Introduce kmsg_dump_reason_str()
-  pstore/blk: Introduce "best_effort" mode
-
-WeiXiong Liao (10):
-  pstore/zone: Introduce common layer to manage storage zones
-  pstore/blk: Introduce backend for block devices
-  pstore/zone,blk: Add support for pmsg frontend
-  pstore/zone,blk: Add console frontend support
-  pstore/zone,blk: Add ftrace frontend support
-  Documentation: Add details for pstore/blk
-  pstore/zone: Provide way to skip "broken" zone for MTD devices
-  pstore/blk: Provide way to query pstore configuration
-  pstore/blk: Support non-block storage devices
-  mtd: Support kmsg dumper based on pstore/blk
-
- Documentation/admin-guide/pstore-blk.rst |  243 ++++
- MAINTAINERS                              |    1 +
- drivers/mtd/Kconfig                      |   10 +
- drivers/mtd/Makefile                     |    1 +
- drivers/mtd/mtdpstore.c                  |  564 +++++++++
- fs/pstore/Kconfig                        |  109 ++
- fs/pstore/Makefile                       |    6 +
- fs/pstore/blk.c                          |  520 ++++++++
- fs/pstore/ftrace.c                       |   54 +
- fs/pstore/internal.h                     |    9 +
- fs/pstore/platform.c                     |   40 +-
- fs/pstore/ram.c                          |   70 +-
- fs/pstore/zone.c                         | 1463 ++++++++++++++++++++++
- include/linux/kmsg_dump.h                |    7 +
- include/linux/pstore.h                   |    2 +-
- include/linux/pstore_blk.h               |  118 ++
- include/linux/pstore_zone.h              |   60 +
- kernel/printk/printk.c                   |   21 +
- 18 files changed, 3210 insertions(+), 88 deletions(-)
- create mode 100644 Documentation/admin-guide/pstore-blk.rst
- create mode 100644 drivers/mtd/mtdpstore.c
- create mode 100644 fs/pstore/blk.c
- create mode 100644 fs/pstore/zone.c
- create mode 100644 include/linux/pstore_blk.h
- create mode 100644 include/linux/pstore_zone.h
-
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 7f956053f4e5..672ad80646c5 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -172,8 +172,9 @@ static bool prz_ok(struct persistent_ram_zone *prz)
+ 			   persistent_ram_ecc_string(prz, NULL, 0));
+ }
+ 
+-static ssize_t ftrace_log_combine(struct persistent_ram_zone *dest,
+-				  struct persistent_ram_zone *src)
++static
++ssize_t ftrace_log_combine(char **dest_log, size_t *dest_log_size,
++			   const char *src_log, size_t src_log_size)
+ {
+ 	size_t dest_size, src_size, total, dest_off, src_off;
+ 	size_t dest_idx = 0, src_idx = 0, merged_idx = 0;
+@@ -181,19 +182,19 @@ static ssize_t ftrace_log_combine(struct persistent_ram_zone *dest,
+ 	struct pstore_ftrace_record *drec, *srec, *mrec;
+ 	size_t record_size = sizeof(struct pstore_ftrace_record);
+ 
+-	dest_off = dest->old_log_size % record_size;
+-	dest_size = dest->old_log_size - dest_off;
++	dest_off = *dest_log_size % record_size;
++	dest_size = *dest_log_size - dest_off;
+ 
+-	src_off = src->old_log_size % record_size;
+-	src_size = src->old_log_size - src_off;
++	src_off = src_log_size % record_size;
++	src_size = src_log_size - src_off;
+ 
+ 	total = dest_size + src_size;
+ 	merged_buf = kmalloc(total, GFP_KERNEL);
+ 	if (!merged_buf)
+ 		return -ENOMEM;
+ 
+-	drec = (struct pstore_ftrace_record *)(dest->old_log + dest_off);
+-	srec = (struct pstore_ftrace_record *)(src->old_log + src_off);
++	drec = (struct pstore_ftrace_record *)(*dest_log + dest_off);
++	srec = (struct pstore_ftrace_record *)(src_log + src_off);
+ 	mrec = (struct pstore_ftrace_record *)(merged_buf);
+ 
+ 	while (dest_size > 0 && src_size > 0) {
+@@ -217,9 +218,9 @@ static ssize_t ftrace_log_combine(struct persistent_ram_zone *dest,
+ 		src_size -= record_size;
+ 	}
+ 
+-	kfree(dest->old_log);
+-	dest->old_log = merged_buf;
+-	dest->old_log_size = total;
++	kfree(*dest_log);
++	*dest_log = merged_buf;
++	*dest_log_size = total;
+ 
+ 	return 0;
+ }
+@@ -295,7 +296,11 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
+ 				tmp_prz->corrected_bytes +=
+ 						prz_next->corrected_bytes;
+ 				tmp_prz->bad_blocks += prz_next->bad_blocks;
+-				size = ftrace_log_combine(tmp_prz, prz_next);
++
++				size = ftrace_log_combine(&tmp_prz->old_log,
++						&tmp_prz->old_log_size,
++						prz_next->old_log,
++						prz_next->old_log_size);
+ 				if (size)
+ 					goto out;
+ 			}
 -- 
 2.20.1
 
