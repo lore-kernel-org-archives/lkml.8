@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF4DC54E8C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9ABC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5A52495C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A955820820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyrpJtPg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGe+4boF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgEJQzz (ORCPT
+        id S1729248AbgEJQz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36766 "EHLO
+        Sun, 10 May 2020 12:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729138AbgEJQzx (ORCPT
+        by vger.kernel.org with ESMTP id S1729216AbgEJQzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 10 May 2020 12:55:53 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EB1C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g13so7934749wrb.8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:51 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17828C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:53 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so7949775wra.7
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MuMQv3TQjzWt0xJoCSiQfhuulnnGfideK7v9jTFs0HY=;
-        b=fyrpJtPgFlcuvkPOW5j1/lp3g5iSo+9OUeH0bx+WR5wQrt065deyEwRAZAIiP4QDHh
-         l05jlqveetvPYT3qYFdt1AFfz1c0c248txugCWMoglvRmKOoOwxa1kVUVBq2/kbLrgd7
-         LqAsaszQO0AUmkCBS05LFzSY7OgZY4kwklq4SlR9FzZiIu32Pc6DKSzq2M+oJa4cFclQ
-         Yo02ZOomugp+YuW/rL+dKJR2/f7/6hoSJnH24YIqrt/xv1d0/7JJjQredljULXeczIVn
-         DbSfHXahnDECsQERLAMw73eQuNo1dPEB11NFgjqm9V+Azayp5UEyBPD8fI03fqhpwXqS
-         9suA==
+        bh=J2NZIexCjyou0gnqYIxLphqp5NvK6vqVAKw4e0qfsGY=;
+        b=iGe+4boFyoyEwgcr1y1fulRfHhw6r8Ulz+Va19XbTLSKAXEQJY/VLrxeMxnXkekHgB
+         pcFdEzlQC5SWySsC5piU84siiG2iBeGEz7zQQCszq4bE6p/+hn42Is2oNoJ5JrOwf1pu
+         Xj0eYH2DDv6JABQd00ejfmGxJBCCXkB+3mchmx6J4YnWtWt6cm/d7Lhyi5DH3Yn3foHl
+         cpKUvarDGiHQYzCTDFLFkPf4Ab0zVJjpjnjcnoysLFWLjcg8+LgJ+6zxNti88Mh65j0A
+         QFCFeR9nL1AWmNiFjGdm6TJJ/pZQi0kdqkDWNbMaiytGy2G2yxo4MIrU/wrS6fbua3po
+         B8Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MuMQv3TQjzWt0xJoCSiQfhuulnnGfideK7v9jTFs0HY=;
-        b=fEy2miDQ+ThsNDhTXAjhkXPiLUFHrwoP0roatXdiKvwDsVFKJS+xbuXjeWKM0R8d5v
-         629/0Gi9VqA9DG0e7EoWxnkFoMOooAw/2sg69lsD1SRfrdFpjjijUQM4UKvvpVggaVhp
-         iK+1RkiwxY1j8gsNpKgx7V3hCc1RNHaPteOKmNUdflC/82sW0jxcLsjVu8Yvg6y3aKWl
-         Xilqq/5Cp0VuzgqSm6XYB5ZPozJAA+6f10ssC8gzX9Iv+ny43zbeSv6vEit0L4BeBqnS
-         4jxcCyuLfivoYBlK10MkBzi56Lo6h97CeHTvEIkA7F0rl8MIAB/Cj6RyPorhGzu+Xzkt
-         SI4Q==
-X-Gm-Message-State: AGi0PuboEmFppjOFsy6xeL+eKqTvjCzfcW0liONkgko0mCxM1bMgqGTU
-        YM2vmYgS/3lyhHDjEuWlx04=
-X-Google-Smtp-Source: APiQypJodrcduJhPQ3zVroQSWDBWm48ib5AjP1g8GZC5uLIlDPvSPS+1i5tb3xOxIgjp+i1tXZwetQ==
-X-Received: by 2002:adf:8403:: with SMTP id 3mr13603230wrf.186.1589129750653;
-        Sun, 10 May 2020 09:55:50 -0700 (PDT)
+        bh=J2NZIexCjyou0gnqYIxLphqp5NvK6vqVAKw4e0qfsGY=;
+        b=AYjsWlYmU42bntgZHY1X0mLUeIsSo/ZUzsjU7FDWEflp/ErzQbpSOzpYfVOmHmLQgD
+         5AcjfNINMZXBgFfu9xPlzfVmaqBHuN5LKfEq1W3CZNr/bSe8rE8hLENpLfUZtoQuUnoS
+         dtCdMgRFTtkM22qMLmxRcHnDnVN71AT81oOM6ox1NQWwZKGCylNJaB5bGoDbXBKJY5X5
+         MD91vAT/JNPgZMGYYjYlgpeQoZUbazkwqzXOONstWPrP6RV46YqFyUORs3woJxF8+Id0
+         BfXHr7/tDY/2k6EWGZilGPaCkoskE9848fSnOlrJAqh7/m0lX5WefzRjb1fy+Lj/qCwI
+         guyQ==
+X-Gm-Message-State: AGi0PuY9jdl4KyjlSJ6jtYgVGAU23a1/SQBnr8PjlvwphabS1x3TvZeH
+        wTRsjdHqzCBSAVLZbWbwa/o=
+X-Google-Smtp-Source: APiQypKuHzFrSqsTFi5saBMKe2/BUEXB5RxULRmhIUQ8PWuoFXrEHmx2Phfsf7zofiPwkCYLAdGceA==
+X-Received: by 2002:a5d:68cb:: with SMTP id p11mr13857358wrw.349.1589129751769;
+        Sun, 10 May 2020 09:55:51 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:1cc8:b1f1:a2b8:a1ee])
-        by smtp.gmail.com with ESMTPSA id g15sm13637670wrp.96.2020.05.10.09.55.49
+        by smtp.gmail.com with ESMTPSA id g15sm13637670wrp.96.2020.05.10.09.55.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 09:55:49 -0700 (PDT)
+        Sun, 10 May 2020 09:55:51 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 08/15] drm/panfrost: move devfreq_init()/fini() in device
-Date:   Sun, 10 May 2020 18:55:31 +0200
-Message-Id: <20200510165538.19720-9-peron.clem@gmail.com>
+Subject: [PATCH 09/15] drm/panfrost: dynamically alloc regulators
+Date:   Sun, 10 May 2020 18:55:32 +0200
+Message-Id: <20200510165538.19720-10-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200510165538.19720-1-peron.clem@gmail.com>
 References: <20200510165538.19720-1-peron.clem@gmail.com>
@@ -85,167 +85,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Later we will introduce devfreq probing regulator if they
-are present. As regulator should be probe only one time we
-need to get this logic in the device_init().
+We will later introduce regulators managed by OPP.
 
-panfrost_device is already taking care of devfreq_resume()
-and devfreq_suspend(), so it's not totally illogic to move
-the devfreq_init() and devfreq_fini() here.
+Only alloc regulators when it's needed. This also help use
+to release the regulators only when they are allocated.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_device.c | 37 ++++++++++++++--------
- drivers/gpu/drm/panfrost/panfrost_drv.c    | 15 ++-------
- 2 files changed, 25 insertions(+), 27 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_device.c | 14 +++++++++-----
+ drivers/gpu/drm/panfrost/panfrost_device.h |  3 +--
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 8136babd3ba9..f480127205d6 100644
+index f480127205d6..67eedf64e82d 100644
 --- a/drivers/gpu/drm/panfrost/panfrost_device.c
 +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -212,59 +212,67 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 		return err;
- 	}
+@@ -90,9 +90,11 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
+ {
+ 	int ret, i;
  
-+	err = panfrost_devfreq_init(pfdev);
-+	if (err) {
-+		dev_err(pfdev->dev, "devfreq init failed %d\n", err);
-+		goto err_out0;
-+	}
+-	if (WARN(pfdev->comp->num_supplies > ARRAY_SIZE(pfdev->regulators),
+-			"Too many supplies in compatible structure.\n"))
+-		return -EINVAL;
++	pfdev->regulators = devm_kcalloc(pfdev->dev, pfdev->comp->num_supplies,
++					 sizeof(*pfdev->regulators),
++					 GFP_KERNEL);
++	if (!pfdev->regulators)
++		return -ENOMEM;
+ 
+ 	for (i = 0; i < pfdev->comp->num_supplies; i++)
+ 		pfdev->regulators[i].supply = pfdev->comp->supply_names[i];
+@@ -117,8 +119,10 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
+ 
+ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+ {
+-	regulator_bulk_disable(pfdev->comp->num_supplies,
+-			pfdev->regulators);
++	if (!pfdev->regulators)
++		return;
 +
- 	err = panfrost_regulator_init(pfdev);
- 	if (err) {
- 		dev_err(pfdev->dev, "regulator init failed %d\n", err);
--		goto err_out0;
-+		goto err_out1;
- 	}
- 
- 	err = panfrost_reset_init(pfdev);
- 	if (err) {
- 		dev_err(pfdev->dev, "reset init failed %d\n", err);
--		goto err_out1;
-+		goto err_out2;
- 	}
- 
- 	err = panfrost_pm_domain_init(pfdev);
- 	if (err)
--		goto err_out2;
-+		goto err_out3;
- 
- 	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
- 	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
- 	if (IS_ERR(pfdev->iomem)) {
- 		dev_err(pfdev->dev, "failed to ioremap iomem\n");
- 		err = PTR_ERR(pfdev->iomem);
--		goto err_out3;
-+		goto err_out4;
- 	}
- 
- 	err = panfrost_gpu_init(pfdev);
- 	if (err)
--		goto err_out3;
-+		goto err_out4;
- 
- 	err = panfrost_mmu_init(pfdev);
- 	if (err)
--		goto err_out4;
-+		goto err_out5;
- 
- 	err = panfrost_job_init(pfdev);
- 	if (err)
--		goto err_out5;
-+		goto err_out6;
- 
- 	err = panfrost_perfcnt_init(pfdev);
- 	if (err)
--		goto err_out6;
-+		goto err_out7;
- 
- 	return 0;
--err_out6:
-+err_out7:
- 	panfrost_job_fini(pfdev);
--err_out5:
-+err_out6:
- 	panfrost_mmu_fini(pfdev);
--err_out4:
-+err_out5:
- 	panfrost_gpu_fini(pfdev);
--err_out3:
-+err_out4:
- 	panfrost_pm_domain_fini(pfdev);
--err_out2:
-+err_out3:
- 	panfrost_reset_fini(pfdev);
--err_out1:
-+err_out2:
- 	panfrost_regulator_fini(pfdev);
-+err_out1:
-+	panfrost_devfreq_fini(pfdev);
- err_out0:
- 	panfrost_clk_fini(pfdev);
- 	return err;
-@@ -278,6 +286,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
- 	panfrost_gpu_fini(pfdev);
- 	panfrost_pm_domain_fini(pfdev);
- 	panfrost_reset_fini(pfdev);
-+	panfrost_devfreq_fini(pfdev);
- 	panfrost_regulator_fini(pfdev);
- 	panfrost_clk_fini(pfdev);
++	regulator_bulk_disable(pfdev->comp->num_supplies, pfdev->regulators);
  }
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 882fecc33fdb..4dda68689015 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -14,7 +14,6 @@
- #include <drm/drm_utils.h>
  
- #include "panfrost_device.h"
--#include "panfrost_devfreq.h"
- #include "panfrost_gem.h"
- #include "panfrost_mmu.h"
- #include "panfrost_job.h"
-@@ -606,13 +605,6 @@ static int panfrost_probe(struct platform_device *pdev)
- 		goto err_out0;
- 	}
+ static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+index 2efa59c9d1c5..953f7536a773 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.h
++++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+@@ -22,7 +22,6 @@ struct panfrost_job;
+ struct panfrost_perfcnt;
  
--	err = panfrost_devfreq_init(pfdev);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Fatal error during devfreq init\n");
--		goto err_out1;
--	}
--
- 	pm_runtime_set_active(pfdev->dev);
- 	pm_runtime_mark_last_busy(pfdev->dev);
- 	pm_runtime_enable(pfdev->dev);
-@@ -625,16 +617,14 @@ static int panfrost_probe(struct platform_device *pdev)
- 	 */
- 	err = drm_dev_register(ddev, 0);
- 	if (err < 0)
--		goto err_out2;
-+		goto err_out1;
+ #define NUM_JOB_SLOTS 3
+-#define MAX_REGULATORS 2
+ #define MAX_PM_DOMAINS 3
  
- 	panfrost_gem_shrinker_init(ddev);
- 
- 	return 0;
- 
--err_out2:
--	pm_runtime_disable(pfdev->dev);
--	panfrost_devfreq_fini(pfdev);
- err_out1:
-+	pm_runtime_disable(pfdev->dev);
- 	panfrost_device_fini(pfdev);
- err_out0:
- 	drm_dev_put(ddev);
-@@ -650,7 +640,6 @@ static int panfrost_remove(struct platform_device *pdev)
- 	panfrost_gem_shrinker_cleanup(ddev);
- 
- 	pm_runtime_get_sync(pfdev->dev);
--	panfrost_devfreq_fini(pfdev);
- 	panfrost_device_fini(pfdev);
- 	pm_runtime_put_sync_suspend(pfdev->dev);
- 	pm_runtime_disable(pfdev->dev);
+ struct panfrost_features {
+@@ -81,7 +80,7 @@ struct panfrost_device {
+ 	void __iomem *iomem;
+ 	struct clk *clock;
+ 	struct clk *bus_clock;
+-	struct regulator_bulk_data regulators[MAX_REGULATORS];
++	struct regulator_bulk_data *regulators;
+ 	struct reset_control *rstc;
+ 	/* pm_domains for devices with more than one. */
+ 	struct device *pm_domain_devs[MAX_PM_DOMAINS];
 -- 
 2.20.1
 
