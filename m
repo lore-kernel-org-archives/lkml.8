@@ -2,83 +2,101 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F35DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A4C54E8E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182F820731
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A055B20746
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NS8UgBqK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iN5hwNVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgEJUf4 (ORCPT
+        id S1729376AbgEJUta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:35:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24166 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729106AbgEJUfz (ORCPT
+        Sun, 10 May 2020 16:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729216AbgEJUta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:35:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589142954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DSFlNYwfdCpOV/I7s5/Tc33w1643YGxcvEZSHoh8T7o=;
-        b=NS8UgBqKolxq01iX4MHBcj+MMAHW9gRcQwpP0q9cacQlV0TeYVRL8vACjC73UBW/s60ZOf
-        GbufZIP9xDdY+CrbUqO9ZmCyUzBa5A1l9AQM1FJTEXeDgUwnMQaT2Iq4ryCZaictX5huOS
-        Y/Sd2EIdi6htTsN7VFgA//aUfkoWUjo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-K3k0KoFINIa8H5p22cqmrw-1; Sun, 10 May 2020 16:35:52 -0400
-X-MC-Unique: K3k0KoFINIa8H5p22cqmrw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sun, 10 May 2020 16:49:30 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216D3C061A0C;
+        Sun, 10 May 2020 13:49:30 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68F19107ACCA;
-        Sun, 10 May 2020 20:35:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C83C160DB4;
-        Sun, 10 May 2020 20:35:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <d4efead1d6dba67f5c862a8d00ca88dd3c45dd34.camel@hammerspace.com>
-References: <d4efead1d6dba67f5c862a8d00ca88dd3c45dd34.camel@hammerspace.com> <158897619675.1119820.2203023452686054109.stgit@warthog.procyon.org.uk>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     dhowells@redhat.com,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "cmaiolino@redhat.com" <cmaiolino@redhat.com>,
-        "carmark.dlut@gmail.com" <carmark.dlut@gmail.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        "dwysocha@redhat.com" <dwysocha@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 0/5] cachefiles, nfs: Fixes
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Kx51663xz9sSc;
+        Mon, 11 May 2020 06:49:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589143766;
+        bh=mJUvh5jroj1ztaJp3MGTxckhrhGeFpIRDrh7kNWFb/8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iN5hwNVf7jztA841KkPITOpWsf9kBUZEX+L8RWxf8oD64S9FoQbUoaChpwC22KJWz
+         utTYFyOSOyO2T5ezdYdZBAK74RhAP1iqELKNudASMc/0F06AI5vjiFn5rrREJm9ejE
+         ylV9kb4Zk4nwURDSn0oY5k/fUpCBFeSAEIWJa6Gnk2dALxgRII5QtDSFnIaSrJKY0K
+         6RIQQHezrXlcVYua08heTzPO68m9edE6f3AW08hJWUkAgP7JRrHZcNLJdg9dtwgo0B
+         iE5wciu71GnvMDgy4KiQjGr5i+jjfymWshPMwLCUpXu9yfykV3phR6by0hal7wAC9C
+         7rpTnROShd2JA==
+Date:   Mon, 11 May 2020 06:49:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Foster <bfoster@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the xfs tree
+Message-ID: <20200511064919.5cd5dd28@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1787829.1589142943.1@warthog.procyon.org.uk>
-Date:   Sun, 10 May 2020 21:35:43 +0100
-Message-ID: <1787830.1589142943@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: multipart/signed; boundary="Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> wrote:
+--Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> I can pull this branch, and send it together with the NFS client
-> bugfixes for 5.7-rc5.
+Hi all,
 
-Thanks!
+In commit
 
-David
+  43dc0aa84ef7 ("xfs: fix unused variable warning in buffer completion on !=
+DEBUG")
 
+Fixes tag
+
+  Fixes: 7376d745473 ("xfs: random buffer write failure errortag")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64aNAACgkQAVBC80lX
+0GzCkgf9FC1x7wXEAObLtB6g4ioTF0mbUq/Z8iNuPaJjnEHCm3EIEtGx/GTKQsVx
+rhKLGG98kGDx6lT1Y58Cgw8bk2NMNrPm+wLyEWhOAFpi/YWFtmZNqGHiWSX+YA8p
+BoGXbvIbU032y5yeEQfKC5NP2g3DRMPs1Ze5S2Tu2UsPXV/1DIDHMRu+CH3FD0pS
+bWhWscOGeoZrJhrKTRWh39wxUUSzIxHvZ+inX4JHSD2MumU+EG2eyEaxwWCXM09t
+bnTAk0PuEe+BiEcypcuVobMHr8Rex99N9UG0Xs1HndVcsUcIvORcUBCN49iKzKSd
+64R1/c1ukLMHuQJ61LZmnFfyccl0gA==
+=tLlb
+-----END PGP SIGNATURE-----
+
+--Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R--
