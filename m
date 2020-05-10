@@ -2,76 +2,103 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371DAC47255
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706C8C47255
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B66220735
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A7F20735
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfRiwM+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgEJBEY (ORCPT
+        id S1728820AbgEJBEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 21:04:24 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59364 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbgEJBEY (ORCPT
+        Sat, 9 May 2020 21:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728597AbgEJBEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 21:04:24 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04A14KL4042726;
-        Sun, 10 May 2020 10:04:20 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Sun, 10 May 2020 10:04:20 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04A14KVP042723
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 10 May 2020 10:04:20 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 05/20] tomoyo_write_control(): get rid of pointless
- access_ok()
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20200509234124.GM23230@ZenIV.linux.org.uk>
- <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
- <20200509234557.1124086-5-viro@ZenIV.linux.org.uk>
- <b67a5f6e-0192-f350-e797-455fe570ce93@i-love.sakura.ne.jp>
- <CAHk-=wgqyW2ow6yO+yz_0v4aKd162Lwtr24c5nKjZRG-2vW8PA@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <db18b423-22b5-585b-db91-45f2251bae66@i-love.sakura.ne.jp>
-Date:   Sun, 10 May 2020 10:04:16 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 9 May 2020 21:04:46 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A43C061A0C;
+        Sat,  9 May 2020 18:04:45 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s9so4475447lfp.1;
+        Sat, 09 May 2020 18:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f9OMJ4QqO80W6llrJvtktoKcBibXIt97DfEYZTwrp+I=;
+        b=JfRiwM+DA54Yb3KW3YcaBNYYA7zjOFzPII3+AfFCs++UpE3u0ni3a57OSI8UoUa/py
+         y2tfRxfw/u71ojnNnOIebELUbuUCbUv9qunoV4ZgfKU0i/PnvHQH4+OC3NJdLUeD08a3
+         qm9KDZrT7kmvFHsjY7UN4lZXE2RHgK1n8acbF3JeFOtfkcXUYlOBNFRNgtK6RcYD9dhY
+         UwIwUHgv+vKGXDMpyjv6kI/Gewuqx8eJrMz7KZ9Jr3PF8/P7XpulWDcAj1uioZzpKQ0O
+         MblxCAHuXLpCTtvtwMh2xM3o25n6Z0ZA12Ul+jyPjYjVBwdhnrVcM8f3lgb5NOGJvPFK
+         kB0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f9OMJ4QqO80W6llrJvtktoKcBibXIt97DfEYZTwrp+I=;
+        b=tE9vt3ERSFXB48/TTkwzXqdMb65+mKm5zLG/GHuxCjvFj2haGCk9ElfhxkRiSHY9Bz
+         9KWxayMI2F05PR9pr9am/A7JcH4CFvfQLQQeTtaBz1HD9i1njJJC6ivDdeLSbh23mWrQ
+         j0KdStMf417fB74P0u0M86CdxfzX3L+rfCy0QKy8NEkGF/GPISu7Wng6wOx4fRGCdC1e
+         8mRu/DVwuoW+nw9bn4K6l2pkmyGny/3iRubwORSn8HTl9O+DVIp/vLgkpNB56GRI2JCh
+         y2K0Q6wfJSHHWm/LQcVxtZjqfYlVxZ1P58rsHwsTT17H3D4loh8j06jZQXDkGHftWENP
+         +TAQ==
+X-Gm-Message-State: AOAM533HBJm44FfvB3SrV3WDof3PkmNsTzTDYMW1+6+u8DYwzlG4hizR
+        0myQOwLdbwvc6I2+iWgm4FEtOwwgb74tnhDTE+k=
+X-Google-Smtp-Source: ABdhPJyPxH8lACy7OQ9qPIfDShUjzuMcC8PErrHH9XH7PduJIqq/pVypBNAIZ9nYVSnE9O+0PX86JvGv8hSHbUBAPC8=
+X-Received: by 2002:ac2:442f:: with SMTP id w15mr6381987lfl.73.1589072684189;
+ Sat, 09 May 2020 18:04:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgqyW2ow6yO+yz_0v4aKd162Lwtr24c5nKjZRG-2vW8PA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200509073915.860588-1-masahiroy@kernel.org>
+In-Reply-To: <20200509073915.860588-1-masahiroy@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 9 May 2020 18:04:32 -0700
+Message-ID: <CAADnVQJvJWwziwDj0ZgPc02iHNNk8EJetDqNZ6SoWq045C-gXQ@mail.gmail.com>
+Subject: Re: [PATCH] bpfilter: check if $(CC) can static link in Kconfig
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Network Development <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/10 9:57, Linus Torvalds wrote:
-> On Sat, May 9, 2020 at 5:51 PM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> I think that this access_ok() check helps reducing partial writes (either
->> "whole amount was processed" or "not processed at all" unless -ENOMEM).
-> 
-> No it doesn't.
-> 
-> "access_ok()" only checks the range being a valid user address range.
-> 
+On Sat, May 9, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Fedora, linking static libraries requires the glibc-static RPM
+> package, which is not part of the glibc-devel package.
+>
+> CONFIG_CC_CAN_LINK does not check the capability of static linking,
+> so you can enable CONFIG_BPFILTER_UMH, then fail to build.
+>
+>   HOSTLD  net/bpfilter/bpfilter_umh
+> /usr/bin/ld: cannot find -lc
+> collect2: error: ld returned 1 exit status
+>
+> Add CONFIG_CC_CAN_LINK_STATIC, and make CONFIG_BPFILTER_UMH depend
+> on it.
+>
+> Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-I see. Thank you.
-
-Acked-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Thanks!
+Acked-by: Alexei Starovoitov <ast@kernel.org>
