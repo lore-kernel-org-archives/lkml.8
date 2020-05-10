@@ -2,90 +2,223 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1565EC54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B8C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE466206A3
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FE95208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589105823;
+	bh=+0kDXWCp+FqkNWlLvZ+TWB7dPSP/xtLz8CjN8Au1pfY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PMJEmDOa3qkbko9DztnyfKK147I41+ukaWdD8OxfBkWYmoXd7aONzEBUO5d4mtbJo
+	 DIk6KDFEeuLwYXnMgPY9aCMPwJzW8kjpaMwNI6q/vAhu8WditpxeE4yMJPYHuC6477
+	 LnQIs2fs4LMhe5bitsUUYqiwmmGDTb/MXtmnhTpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgEJKPu (ORCPT
+        id S1728856AbgEJKRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 06:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725839AbgEJKPt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 06:15:49 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB5EC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 03:15:49 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jXizf-0004wH-LN; Sun, 10 May 2020 12:15:35 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 987FC100D21; Sun, 10 May 2020 12:15:34 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     tony.luck@intel.com, ak@linux.intel.com, chang.seok.bae@intel.com,
-        x86@kernel.org, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, luto@kernel.org
-Subject: Re: [PATCH v10 00/18] Enable FSGSBASE instructions
-In-Reply-To: <d7111932-6ba5-1484-4347-210d9e80316f@oracle.com>
-References: <20200423232207.5797-1-sashal@kernel.org> <5a6a0ef5-4dfc-d0b1-9181-5df4211cfcd9@oracle.com> <d7111932-6ba5-1484-4347-210d9e80316f@oracle.com>
-Date:   Sun, 10 May 2020 12:15:34 +0200
-Message-ID: <87h7wo3xkp.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sun, 10 May 2020 06:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgEJKRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 06:17:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DEB8206A3;
+        Sun, 10 May 2020 10:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589105821;
+        bh=+0kDXWCp+FqkNWlLvZ+TWB7dPSP/xtLz8CjN8Au1pfY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SCq/ffd0ndynT5J+/zSojwIXSnyvVOS5dyJf7h09dTyq1QpTCh1IlWOSMK7ZB9CGA
+         T7V0luZDjAb7hyGAp4OehAahjoR6e5a9lVercD0SZuQK8TWjodALDgPRombn1SJcL0
+         MIabkHSZA8F1SerF0Mb9pV99Ragti8oDB1tsI+gg=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jXj11-00B1Pu-20; Sun, 10 May 2020 11:16:59 +0100
+Date:   Sun, 10 May 2020 11:16:54 +0100
+Message-ID: <871rns14dl.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     David Brazdil <dbrazdil@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/15] arm64: kvm: Formalize host-hyp hypcall ABI
+In-Reply-To: <20200507133320.GA16899@google.com>
+References: <20200430144831.59194-1-dbrazdil@google.com>
+        <20200430144831.59194-3-dbrazdil@google.com>
+        <87d07fj3g9.wl-maz@kernel.org>
+        <20200507133320.GA16899@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: qperret@google.com, dbrazdil@google.com, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vegard Nossum <vegard.nossum@oracle.com> writes:
-> On 5/10/20 10:09 AM, Vegard Nossum wrote:
->
-> I spoke a few minutes too soon. Just hit this, if anybody wants to have
-> a look:
->
-> [ 6402.786418] ------------[ cut here ]------------
-> [ 6402.787769] WARNING: CPU: 0 PID: 13802 at arch/x86/kernel/traps.c:811 
-> do_debug+0x16c/0x210
+Hi Quentin,
 
-> [ 6402.820353] Call Trace:
-> [ 6402.821043]  <#DB>
-> [ 6402.821622]  debug+0x37/0x70
-> [ 6402.822449] RIP: 0010:arch_stack_walk_user+0x79/0x110
+On Thu, 07 May 2020 14:33:20 +0100,
+Quentin Perret <qperret@google.com> wrote:
+> 
+> Hey Marc,
+> 
+> On Thursday 07 May 2020 at 14:10:30 (+0100), Marc Zyngier wrote:
+> > Hi David, Quentin,
 
-That's a cute way to trigger that WARN_ON in the #DB handler.
+[...]
 
-> [ 6402.816468] DR0: 0000000000000001 DR1: 0000000040006070 DR2: 00007ffff7ffd000
-> [ 6402.818406] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000003b3062a
+> > > +#define __KVM_HOST_HCALL_TABLE_IDX___vgic_v3_save_aprs		13
+> > > +__KVM_HOST_HCALL(__vgic_v3_save_aprs)
+> > > +
+> > > +#define __KVM_HOST_HCALL_TABLE_IDX_SIZE				14
+> > 
+> > This whole thing screams "enum" into my ears. Having to maintain these
+> > as #defines feels like a pain, specially if the numbers are never used
+> > in assembly code. (and for that, we have asm-offset.h).
+> 
+> This is essentially inspired from the various 'unistd.h' files we have
+> in the kernel, e.g. include/uapi/asm-generic/unistd.h, which have
+> exactly this type of construct. So, this was really just for consistency,
+> but no strong opinion from me.
 
-#DB recursion
+I think part of the of the reason for not using an enum in the syscall
+code is that part of is is (was?) used from assembly code. In our
+case, I'm pretty sure we won't go back to handling calls from asm any
+time soon, so a generated enum (and associated function pointer array)
+would be better.
 
-  [ 6402.832288] RDX: 0000000040006073 
+> 
+> > 
+> > > +
+> > > +/* XXX - Arbitrary offset for KVM-related hypercalls */
+> > > +#define __KVM_HOST_HCALL_BASE_SHIFT 8
+> > > +#define __KVM_HOST_HCALL_BASE (1ULL << __KVM_HOST_HCALL_BASE_SHIFT)
+> > > +#define __KVM_HOST_HCALL_END (__KVM_HOST_HCALL_BASE + \
+> > > +			      __KVM_HOST_HCALL_TABLE_IDX_SIZE)
+> > 
+> > I don't really get what is this offset for. It is too small to be used
+> > to skip the stub hypercalls (you'd need to start at 0x1000).
+> 
+> Oh, OK. I assumed anything above HVC_STUB_HCALL_NR would be fine. But
+> yes, this offset is really arbitrary, so if 0x1000 is better then that
+> totally works. For my education, where is that 0x1000 coming from ?
 
-27:	48 8b 1a      mov    (%rdx),%rbx
+We assumed that we wouldn't get a function pointer in the first 4kB,
+and documented as such in hyp.S. I would say that either we keep the
+current convention of leaving the first 4k function codes for the
+hyp-stubs, or we drop any sort of gap.
 
-Breakpoint on user space stack, #DB triggers and the low level ASM
-irqflags tracepoint has stacktrace enabled which unwinds into the user
-stack and triggers #DB again.
+Another thing to consider is that there is at least *one* external
+hypervisor (Jailhouse) that uses the stubs, so I'd like to make sure
+we don't break that (even if we made no promise whatsoever in that
+respect).
 
-Bah. I know why I want to ban all that tracing muck from low level entry code.
+> 
+> > Given
+> > that you store the whole thing in an array, you're wasting some
+> > memory. I'm sure you have a good story for it though! ;-)
+> 
+> Note that the array's length is __KVM_HOST_HCALL_TABLE_IDX_SIZE, which
+> doesn't include the offset, so we shouldn't be wasting memory here.
 
-> It might not be related to the patch set, mind.
+Ah, you're right. I got confused between _SIZE and _END.
 
-It's unrelated.
+> 
+> > > +
+> > > +/* Hypercall number = kvm offset + table idx */
+> > > +#define KVM_HOST_HCALL_NR(name) (__KVM_HOST_HCALL_TABLE_IDX_##name + \
+> > > +				 __KVM_HOST_HCALL_BASE)
+> > > diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+> > > index 8c9880783839..29e2b2cd2fbc 100644
+> > > --- a/arch/arm64/kvm/hyp/Makefile
+> > > +++ b/arch/arm64/kvm/hyp/Makefile
+> > > @@ -9,7 +9,7 @@ ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
+> > >  obj-$(CONFIG_KVM) += hyp.o
+> > >  
+> > >  hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o sysreg-sr.o \
+> > > -	 debug-sr.o entry.o switch.o fpsimd.o tlb.o hyp-entry.o
+> > > +	 debug-sr.o entry.o switch.o fpsimd.o tlb.o host_hypercall.o hyp-entry.o
+> > >  
+> > >  # KVM code is run at a different exception code with a different map, so
+> > >  # compiler instrumentation that inserts callbacks or checks into the code may
+> > > diff --git a/arch/arm64/kvm/hyp/host_hypercall.c b/arch/arm64/kvm/hyp/host_hypercall.c
+> > > new file mode 100644
+> > > index 000000000000..6b31310f36a8
+> > > --- /dev/null
+> > > +++ b/arch/arm64/kvm/hyp/host_hypercall.c
+> > > @@ -0,0 +1,22 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (C) 2020 Google, inc
+> > > + */
+> > > +
+> > > +#include <asm/kvm_hyp.h>
+> > > +
+> > > +typedef long (*kvm_hcall_fn_t)(void);
+> > > +
+> > > +static long __hyp_text kvm_hc_ni(void)
+> > > +{
+> > > +       return -ENOSYS;
+> > > +}
+> > > +
+> > > +#undef __KVM_HOST_HCALL
+> > > +#define __KVM_HOST_HCALL(name) \
+> > > +	[__KVM_HOST_HCALL_TABLE_IDX_##name] = (long (*)(void))name,
+> > > +
+> > > +const kvm_hcall_fn_t kvm_hcall_table[__KVM_HOST_HCALL_TABLE_IDX_SIZE] = {
+> > > +	[0 ... __KVM_HOST_HCALL_TABLE_IDX_SIZE-1] = kvm_hc_ni,
+> > > +#include <asm/kvm_host_hypercalls.h>
+> > > +};
+> > 
+> > Cunning. At the same time, if you can do this once, you can do it
+> > twice, and generating the __KVM_HOST_HCALL_TABLE_IDX_* as an enum
+> > should be pretty easy, and could live in its own include file.
+> 
+> Right, and that again is inspired from the arm64 syscall table (see
+> arch/arm64/kernel/sys.c). So the first intention was to keep things
+> consistent. But again, no strong opinion :)
+
+So let's try to build it with an enum instead, and see if it works. If
+it doesn't, at least we will know why.
+
+[...]
+
+> > > +	/* Find hcall function pointer in the table */
+> > > +	ldr	x10, =kvm_hcall_table
+> > > +	ksym_hyp_va	x10, x9
+> > 
+> > Can't kvm_hcall_table be referenced with adr or adr_l? It'd certainly
+> > be nice to avoid the extra load for something that is essentially a
+> > build-time constant.
+> 
+> In fact David already has a nice patch that transforms the whole thing
+> in a jump table, which is much nicer. I'll let him share the details
+> :)
+
+Ah! Looking forward to reviewing it then!
 
 Thanks,
 
-        tglx
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
