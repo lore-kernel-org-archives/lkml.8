@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653EAC54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839A8C54E4B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED1C207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FDD9207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUNYevQ0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="un/h33bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgEJQoT (ORCPT
+        id S1729211AbgEJQno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:44:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        Sun, 10 May 2020 12:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729215AbgEJQnp (ORCPT
+        by vger.kernel.org with ESMTP id S1728360AbgEJQnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:43:45 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0637C061A0C;
-        Sun, 10 May 2020 09:43:43 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e16so7922827wra.7;
-        Sun, 10 May 2020 09:43:43 -0700 (PDT)
+        Sun, 10 May 2020 12:43:40 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E0FC061A0C;
+        Sun, 10 May 2020 09:43:40 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id h4so15412221wmb.4;
+        Sun, 10 May 2020 09:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=l8yu63bzu9EKtUcTab5iO3gnV0kmnc7EqpMOcQXFQvg=;
-        b=YUNYevQ0UNIGvx85zB3sVCx9g7ar7pBDkt4kCRxexjEbek2e8/0934Ijp0s87zUBxE
-         UDPKM9GQKs7r2HOlh968aJcYWhFm25QQPzqri2dU/okDOHjb4qfuGOG7vx3p9I3qLMwH
-         KckumHE0kc64ueNfJ9z5C8eZC7Ofr9mlSeLToWi28dRa0tTqG3OwVoD0RYtPcK26Or8r
-         RikAek5PEes7MpLo/L7U5vpImVdSJbZLRGPtA4l7u4rzkhFBqWOIRSlkQKcpTG3ggBdl
-         WIIAL66suyiYNVd8p4PdaIgJBm2GQHWKvZA+0NmuV0Fb44ndBOjqSxNIuFEodBIjLOj9
-         EH7w==
+        bh=tjPoKBQLdBCmIv/BSjsK87xqPqvAOHh8klv/pK8e1nA=;
+        b=un/h33bcQW0CA+P9TMKksDpA5sJguFfJ+QITRgP5pmZQnYoMKZtbuk0a1P7Dw9PavX
+         XhdTuNFNLySQw9o9X+/a5aGw94D5dEcUvI0XLcnxwGkgGkgHDlHbOJzy9F6VefYyHmxt
+         gWbEs/y97eqJi7aJA2n1ppIAOOYeIEvkOSp40vTcGPjoXVR4f9oJyxcRyVpAK17WpVhs
+         XqdjIslnhGEurANXbUQdibWwKf4Ne3XyravWIF/nYNBpv27wpE26KEOYi/jHaH1WRCvK
+         tJVR/R5Bw8gbEHRvStakhh8gW7k9e/iKAqkvHMBDM+5GStPEGbIyBOFyv2M/ql0TmPMP
+         U6Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=l8yu63bzu9EKtUcTab5iO3gnV0kmnc7EqpMOcQXFQvg=;
-        b=nvNJ/7S4sJGLoXRHSXnWYrRyUhp24/uW7fm47lCRAzQ1OV5m5A9KFVaYeo+oOY8qfQ
-         m9IcjlthLKBAAksfOT14dN0tv+TShADJAUYCDp8uOY8CHYAbK7G9PS/CTSjvcAMc36eQ
-         +b4FxceZCWjWUArc9FUyXQQMMTLefSx+kfTPVQwITvCyD3yVHYbPuY1zfSU1WUGGeRiH
-         TtASNNpsUWeReeOnveOhHATsRa/XDBVwDba8PeugMSXo8tVz0GO1xJ3aCPDjwcQo5UZe
-         BOYRKPCl9xW4Bn66Xqr1rmYl9YWJSEYqyWzmucyOrhmDHYUmrvOmXMPJWVwCRM0Z2IM0
-         oNbw==
-X-Gm-Message-State: AGi0PuYkXBZ38+VgLgWc/CwFEUhpF5F/2iuUq5iuSAe18PezJ096sATZ
-        XfagGS+uyyQUdrgkgN5i670=
-X-Google-Smtp-Source: APiQypIPQNCYU6ysbOb8zMT4G8P6PRZpRjQEND+e/XYCxKXrhzNPj535kJ7R9L/UB/AmSmlzmp+QFA==
-X-Received: by 2002:adf:8563:: with SMTP id 90mr13754478wrh.74.1589129022388;
-        Sun, 10 May 2020 09:43:42 -0700 (PDT)
+        bh=tjPoKBQLdBCmIv/BSjsK87xqPqvAOHh8klv/pK8e1nA=;
+        b=dBKO1LOq/EnEGQBllquIMx2GBYyvKjjImFbUqPsByldNWdCUDYfJvxBLamAYYKZien
+         6jbS/qbsHVgd6NVrDSkleBOfXsI2VugPApcnGDCI9HkKci1FAiIMB4iL1LUCpJV8Sr1C
+         bRzNMvScj114rH2+ZZA3k+msIXfr8MDaW+K16n/G/1iP1XKksBbRLAmYpJjeAm4PApTL
+         e+s/pqRH6HtOf74Dr5XozhEuf6S65KJ1mepq1QOvS5XwY4+ZSjJqehU5dkt7/KG3JeAZ
+         2vDML7+FlNaCyzelipF7+qAZ/th40Xp2A6buElmMPpYTqHfo6FOMwrNVu8d1WHFt+Aej
+         ZTFw==
+X-Gm-Message-State: AGi0PuaUFtfuBcywkLEFlmuc0zr8x1Dd6U30hH4aKKjpiE4PVjE17gE6
+        qNXqeZcp/iwJwKjVX40dPHQ=
+X-Google-Smtp-Source: APiQypKctZhDDaokPrvj/CLeh1F0VT57/ZccBOyC+PN5589x+zoyvnvIMjqRF0eYr5+FRyaoXmqaYA==
+X-Received: by 2002:a1c:750a:: with SMTP id o10mr26541341wmc.124.1589129019252;
+        Sun, 10 May 2020 09:43:39 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id i1sm13390916wrx.22.2020.05.10.09.43.41
+        by smtp.gmail.com with ESMTPSA id i1sm13390916wrx.22.2020.05.10.09.43.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 09:43:41 -0700 (PDT)
+        Sun, 10 May 2020 09:43:38 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 13/15] net: dsa: sja1105: implement a common frame memory partitioning function
-Date:   Sun, 10 May 2020 19:42:53 +0300
-Message-Id: <20200510164255.19322-14-olteanv@gmail.com>
+Subject: [PATCH net-next 10/15] net: dsa: tag_sja1105: implement sub-VLAN decoding
+Date:   Sun, 10 May 2020 19:42:50 +0300
+Message-Id: <20200510164255.19322-11-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200510164255.19322-1-olteanv@gmail.com>
 References: <20200510164255.19322-1-olteanv@gmail.com>
@@ -74,160 +74,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Create a subvlan_map as part of each port's tagger private structure.
+This keeps reverse mappings of bridge-to-dsa_8021q VLAN retagging rules.
 
-There are 2 different features that require some reserved frame memory
-space: VLAN retagging and virtual links. Create a central function that
-modifies the static config and ensures frame memory is never
-overcommitted.
+Note that as of this patch, this piece of code is never engaged, due to
+the fact that the driver hasn't installed any retagging rule, so we'll
+always see packets with a subvlan code of 0 (untagged).
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/sja1105/sja1105.h             |  2 +
- drivers/net/dsa/sja1105/sja1105_main.c        | 37 +++++++++++++++++++
- .../net/dsa/sja1105/sja1105_static_config.h   |  1 +
- drivers/net/dsa/sja1105/sja1105_vl.c          | 20 +---------
- 4 files changed, 42 insertions(+), 18 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c |  4 ++++
+ include/linux/dsa/sja1105.h            |  1 +
+ net/dsa/tag_sja1105.c                  | 19 +++++++++++++++++++
+ 3 files changed, 24 insertions(+)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 1ecdfd6be4c2..198d2a7d7f95 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -244,6 +244,8 @@ enum sja1105_reset_reason {
- int sja1105_static_config_reload(struct sja1105_private *priv,
- 				 enum sja1105_reset_reason reason);
- 
-+void sja1105_frame_memory_partitioning(struct sja1105_private *priv);
-+
- /* From sja1105_spi.c */
- int sja1105_xfer_buf(const struct sja1105_private *priv,
- 		     sja1105_spi_rw_mode_t rw, u64 reg_addr,
 diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 4ea77e829d70..9e93a9af4913 100644
+index 34006b2def32..d298098232cb 100644
 --- a/drivers/net/dsa/sja1105/sja1105_main.c
 +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -412,6 +412,41 @@ static int sja1105_init_l2_forwarding_params(struct sja1105_private *priv)
- 	return 0;
- }
+@@ -2835,6 +2835,7 @@ static int sja1105_probe(struct spi_device *spi)
+ 		struct sja1105_port *sp = &priv->ports[port];
+ 		struct dsa_port *dp = dsa_to_port(ds, port);
+ 		struct net_device *slave;
++		int subvlan;
  
-+void sja1105_frame_memory_partitioning(struct sja1105_private *priv)
-+{
-+	struct sja1105_l2_forwarding_params_entry *l2_fwd_params;
-+	struct sja1105_vl_forwarding_params_entry *vl_fwd_params;
-+	struct sja1105_table *table;
-+	int max_mem;
-+
-+	/* VLAN retagging is implemented using a loopback port that consumes
-+	 * frame buffers. That leaves less for us.
-+	 */
-+	if (priv->vlan_state == SJA1105_VLAN_BEST_EFFORT)
-+		max_mem = SJA1105_MAX_FRAME_MEMORY_RETAGGING;
-+	else
-+		max_mem = SJA1105_MAX_FRAME_MEMORY;
-+
-+	table = &priv->static_config.tables[BLK_IDX_L2_FORWARDING_PARAMS];
-+	l2_fwd_params = table->entries;
-+	l2_fwd_params->part_spc[0] = max_mem;
-+
-+	/* If we have any critical-traffic virtual links, we need to reserve
-+	 * some frame buffer memory for them. At the moment, hardcode the value
-+	 * at 100 blocks of 128 bytes of memory each. This leaves 829 blocks
-+	 * remaining for best-effort traffic. TODO: figure out a more flexible
-+	 * way to perform the frame buffer partitioning.
-+	 */
-+	if (!priv->static_config.tables[BLK_IDX_VL_FORWARDING].entry_count)
-+		return;
-+
-+	table = &priv->static_config.tables[BLK_IDX_VL_FORWARDING_PARAMS];
-+	vl_fwd_params = table->entries;
-+
-+	l2_fwd_params->part_spc[0] -= SJA1105_VL_FRAME_MEMORY;
-+	vl_fwd_params->partspc[0] = SJA1105_VL_FRAME_MEMORY;
-+}
-+
- static int sja1105_init_general_params(struct sja1105_private *priv)
- {
- 	struct sja1105_general_params_entry default_general_params = {
-@@ -2196,6 +2231,8 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 	l2_lookup_params = table->entries;
- 	l2_lookup_params->shared_learn = want_tagging;
- 
-+	sja1105_frame_memory_partitioning(priv);
-+
- 	rc = sja1105_static_config_reload(priv, SJA1105_VLAN_FILTERING);
- 	if (rc)
- 		dev_err(ds->dev, "Failed to change VLAN Ethertype\n");
-diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
-index d96044d86b11..5946847bb5b9 100644
---- a/drivers/net/dsa/sja1105/sja1105_static_config.h
-+++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
-@@ -108,6 +108,7 @@ enum sja1105_blk_idx {
- 
- #define SJA1105_MAX_FRAME_MEMORY			929
- #define SJA1105_MAX_FRAME_MEMORY_RETAGGING		910
-+#define SJA1105_VL_FRAME_MEMORY				100
- 
- #define SJA1105E_DEVICE_ID				0x9C00000Cull
- #define SJA1105T_DEVICE_ID				0x9E00030Eull
-diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja1105/sja1105_vl.c
-index aa9b0b92f437..9ce2b15b65d8 100644
---- a/drivers/net/dsa/sja1105/sja1105_vl.c
-+++ b/drivers/net/dsa/sja1105/sja1105_vl.c
-@@ -5,7 +5,6 @@
- #include <linux/dsa/8021q.h>
- #include "sja1105.h"
- 
--#define SJA1105_VL_FRAME_MEMORY			100
- #define SJA1105_SIZE_VL_STATUS			8
- 
- /* The switch flow classification core implements TTEthernet, which 'thinks' in
-@@ -141,8 +140,6 @@ static bool sja1105_vl_key_lower(struct sja1105_vl_lookup_entry *a,
- static int sja1105_init_virtual_links(struct sja1105_private *priv,
- 				      struct netlink_ext_ack *extack)
- {
--	struct sja1105_l2_forwarding_params_entry *l2_fwd_params;
--	struct sja1105_vl_forwarding_params_entry *vl_fwd_params;
- 	struct sja1105_vl_policing_entry *vl_policing;
- 	struct sja1105_vl_forwarding_entry *vl_fwd;
- 	struct sja1105_vl_lookup_entry *vl_lookup;
-@@ -153,10 +150,6 @@ static int sja1105_init_virtual_links(struct sja1105_private *priv,
- 	int max_sharindx = 0;
- 	int i, j, k;
- 
--	table = &priv->static_config.tables[BLK_IDX_L2_FORWARDING_PARAMS];
--	l2_fwd_params = table->entries;
--	l2_fwd_params->part_spc[0] = SJA1105_MAX_FRAME_MEMORY;
--
- 	/* Figure out the dimensioning of the problem */
- 	list_for_each_entry(rule, &priv->flow_block.rules, list) {
- 		if (rule->type != SJA1105_RULE_VL)
-@@ -308,17 +301,6 @@ static int sja1105_init_virtual_links(struct sja1105_private *priv,
- 	if (!table->entries)
- 		return -ENOMEM;
- 	table->entry_count = 1;
--	vl_fwd_params = table->entries;
--
--	/* Reserve some frame buffer memory for the critical-traffic virtual
--	 * links (this needs to be done). At the moment, hardcode the value
--	 * at 100 blocks of 128 bytes of memory each. This leaves 829 blocks
--	 * remaining for best-effort traffic. TODO: figure out a more flexible
--	 * way to perform the frame buffer partitioning.
--	 */
--	l2_fwd_params->part_spc[0] = SJA1105_MAX_FRAME_MEMORY -
--				     SJA1105_VL_FRAME_MEMORY;
--	vl_fwd_params->partspc[0] = SJA1105_VL_FRAME_MEMORY;
- 
- 	for (i = 0; i < num_virtual_links; i++) {
- 		unsigned long cookie = vl_lookup[i].flow_cookie;
-@@ -342,6 +324,8 @@ static int sja1105_init_virtual_links(struct sja1105_private *priv,
+ 		if (!dsa_is_user_port(ds, port))
+ 			continue;
+@@ -2855,6 +2856,9 @@ static int sja1105_probe(struct spi_device *spi)
  		}
+ 		skb_queue_head_init(&sp->xmit_queue);
+ 		sp->xmit_tpid = ETH_P_SJA1105;
++
++		for (subvlan = 0; subvlan < DSA_8021Q_N_SUBVLAN; subvlan++)
++			sp->subvlan_map[subvlan] = VLAN_N_VID;
  	}
  
-+	sja1105_frame_memory_partitioning(priv);
-+
  	return 0;
+diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
+index e47acf0965c5..cac168852321 100644
+--- a/include/linux/dsa/sja1105.h
++++ b/include/linux/dsa/sja1105.h
+@@ -54,6 +54,7 @@ struct sja1105_skb_cb {
+ 	((struct sja1105_skb_cb *)DSA_SKB_CB_PRIV(skb))
+ 
+ struct sja1105_port {
++	u16 subvlan_map[DSA_8021Q_N_SUBVLAN];
+ 	struct kthread_worker *xmit_worker;
+ 	struct kthread_work xmit_work;
+ 	struct sk_buff_head xmit_queue;
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 0a95fdd7bff8..f690511b6d31 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -241,6 +241,20 @@ static struct sk_buff
+ 	return skb;
  }
  
++static void sja1105_decode_subvlan(struct sk_buff *skb, u16 subvlan)
++{
++	struct dsa_port *dp = dsa_slave_to_port(skb->dev);
++	struct sja1105_port *sp = dp->priv;
++	u16 vid = sp->subvlan_map[subvlan];
++	u16 vlan_tci;
++
++	if (vid == VLAN_N_VID)
++		return;
++
++	vlan_tci = (skb->priority << VLAN_PRIO_SHIFT) | vid;
++	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
++}
++
+ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 				   struct net_device *netdev,
+ 				   struct packet_type *pt)
+@@ -250,6 +264,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 	struct ethhdr *hdr;
+ 	u16 tpid, vid, tci;
+ 	bool is_link_local;
++	u16 subvlan = 0;
+ 	bool is_tagged;
+ 	bool is_meta;
+ 
+@@ -273,6 +288,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 		source_port = dsa_8021q_rx_source_port(vid);
+ 		switch_id = dsa_8021q_rx_switch_id(vid);
+ 		skb->priority = (tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT;
++		subvlan = dsa_8021q_rx_subvlan(vid);
+ 	} else if (is_link_local) {
+ 		/* Management traffic path. Switch embeds the switch ID and
+ 		 * port ID into bytes of the destination MAC, courtesy of
+@@ -297,6 +313,9 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 		return NULL;
+ 	}
+ 
++	if (subvlan)
++		sja1105_decode_subvlan(skb, subvlan);
++
+ 	return sja1105_rcv_meta_state_machine(skb, &meta, is_link_local,
+ 					      is_meta);
+ }
 -- 
 2.17.1
 
