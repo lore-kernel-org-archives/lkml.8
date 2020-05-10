@@ -2,72 +2,70 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B840C47257
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA89C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59090208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FFF217BA
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589073881;
-	bh=VDbINtk/hHh41cZphTvVQ8Ky+q+Za8dszq3rcDCuDgg=;
+	s=default; t=1589074232;
+	bh=ix8iTjqF132SnVv4OLbjsHPr6YEm5+jXddQ2kFsg3vw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=19HhXUwUit0Wtbbn7qAy2Qu6crwqKcG2NB2jPtRgOF03L9P0omyjH6j3AVmqb7xdv
-	 difdTFGFAvgfNZCg88dsw7765Ns80Lg0XqO8IhMZ69cDDdsZRuzy3FnI5oGq0xHbyB
-	 4/aYxN9vd/sEyjPJj8nemZLF83IiCQkv75G81cAg=
+	b=GTVVtQ8ElJ3s6MHvBFVcZxpSyeq2qQO0bz+yyqtLE3Z13m733dcZoCgRttMksIGmG
+	 xVZMureR/mlN3V7Tr+lZtqiiy3rMoam5+FsobYw8swNQ07d8n8fX0nNensDX5tSMzn
+	 UfIPuNKflBvcMG+rCafqM/IRIZEHRHdV3AbVxdc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgEJBYk (ORCPT
+        id S1728849AbgEJBab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 21:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36442 "EHLO mail.kernel.org"
+        Sat, 9 May 2020 21:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726565AbgEJBYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 21:24:40 -0400
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+        id S1728068AbgEJBab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 21:30:31 -0400
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379C62495E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 01:24:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 736BB2495C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 01:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589073879;
-        bh=VDbINtk/hHh41cZphTvVQ8Ky+q+Za8dszq3rcDCuDgg=;
+        s=default; t=1589074230;
+        bh=ix8iTjqF132SnVv4OLbjsHPr6YEm5+jXddQ2kFsg3vw=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2s5RwkcCgY+7iBY9+BSxiC+PdZ3wCBfzORu1ikUu7+4VooqNCZ3Tp2S4MfpDzYqxD
-         /Aiv27Fw5wwj6oC2C5Q0YbYIiWsI04Mf0rUOHlM+gZOIGafmPPxIGvmo/ldBlY9SzS
-         bmWdTDX7rnr0Tn4kc9+cT7MdRhvcIb9g4jkIxy7M=
-Received: by mail-ej1-f51.google.com with SMTP id n17so4779106ejh.7
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 18:24:39 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYEcpL/lwjE2cc+tylixmHaFR02Xk58LiSOzG8SPNVazUoCKPKl
-        CKviAwPtTT1lRJE3b8SBtGGECtX1KxzhMo/vGQ==
-X-Google-Smtp-Source: APiQypJQq9WhDnA9jUZbUiITcFvF3ELgL4vCwkLG+ADbvWTfS2qBr5SHAnlXV3hHEHN/KVbA4TLWtj15E1RhlIcsNFA=
-X-Received: by 2002:a17:906:7717:: with SMTP id q23mr7983742ejm.38.1589073877528;
- Sat, 09 May 2020 18:24:37 -0700 (PDT)
+        b=arqNH5DtBFhnacg4lStoi4lNJYTnb2RlB6XUtJJsAdb8c0mmuLuhOW8n7UaPejrbO
+         Vh/48l5zE6UuV8E3rFQQzC0UDjJjgYsFGd30Az6rQaJWWo1vEnAVMyXKjegcNMmflz
+         tD38h0xKZf3ZIK1giEPPxk7a3V6ggVe9nB031U2A=
+Received: by mail-ed1-f50.google.com with SMTP id r7so4759133edo.11
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 18:30:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ8LCrn26v8FLVcpm4pThZNVZSf4W0bBjerqWtMu4JT8UdRKIok
+        BKMtInygVTvtFflIhQhl6Q7ogdAQxWpNPPzbTQ==
+X-Google-Smtp-Source: APiQypKavV96F5Rfs0zUVAMo0khKlR0Q9NlSm0iglorzoQwicEWvMXuImhm7hoN6zToXdJcUiR0llqZOfr2lVHvghjo=
+X-Received: by 2002:aa7:c649:: with SMTP id z9mr8191853edr.288.1589074228868;
+ Sat, 09 May 2020 18:30:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200504141408.60877-1-enric.balletbo@collabora.com>
-In-Reply-To: <20200504141408.60877-1-enric.balletbo@collabora.com>
+References: <20200506123356.9147-1-bernard@vivo.com>
+In-Reply-To: <20200506123356.9147-1-bernard@vivo.com>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sun, 10 May 2020 09:24:26 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8vMG1k86V+qBhs0YH5QHELmgtJ0PNOAzWTHoTy2j=R2Q@mail.gmail.com>
-Message-ID: <CAAOTY_8vMG1k86V+qBhs0YH5QHELmgtJ0PNOAzWTHoTy2j=R2Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Convert mtk-dpi to drm_bridge API
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
+Date:   Sun, 10 May 2020 09:30:18 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__QR52YjdKZ6YPbjyfFQPVyNWSjrSRxYxuTH0pLEkQyrg@mail.gmail.com>
+Message-ID: <CAAOTY__QR52YjdKZ6YPbjyfFQPVyNWSjrSRxYxuTH0pLEkQyrg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/mediatek: cleanup coding style in mediatek a bit
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        opensource.kernel@vivo.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,44 +73,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+Hi, Bernard:
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B45=E6=9C=884=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:14=E5=AF=AB=
-=E9=81=93=EF=BC=9A
+Bernard Zhao <bernard@vivo.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=886=E6=97=A5=
+ =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=888:34=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> The mtk-dpi driver still uses the drm_encoder API which is now somehow
-> deprecated. We started to move all the Mediatek drivers to the drm_bridge=
- API,
-> like we did for the mtk-dsi driver [1], this is another small step to be =
-able to
-> fully convert the DRM Mediatek drivers to the drm_bridge API. A dummy
-> drm_encoder is maintained in the mtk-dpi driver but the end goal is move =
-all the
-> dummy drm_encoder (mtk-dsi, mtk-dpi, etc) to the main mtk_drm_drv driver.
+> This code change is to make code bit more readable.
+>
 
-For this series, applied to mediatek-drm-next [1], thanks.
+Applied to mediatek-drm-next [1], thanks.
 
 [1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
 log/?h=3Dmediatek-drm-next
 
 Regards,
-Chun-Kuang.
+Chun-Kuang
 
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
 >
-> Best regards,
->  Enric
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index ff43a3d80410..43e9876fd50c 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -311,14 +311,10 @@ static void mtk_hdmi_hw_send_info_frame(struct mtk_=
+hdmi *hdmi, u8 *buffer,
+>         u8 checksum;
+>         int ctrl_frame_en =3D 0;
 >
-> [1] https://lore.kernel.org/patchwork/project/lkml/list/?series=3D441559
+> -       frame_type =3D *buffer;
+> -       buffer +=3D 1;
+> -       frame_ver =3D *buffer;
+> -       buffer +=3D 1;
+> -       frame_len =3D *buffer;
+> -       buffer +=3D 1;
+> -       checksum =3D *buffer;
+> -       buffer +=3D 1;
+> +       frame_type =3D *buffer++;
+> +       frame_ver =3D *buffer++;
+> +       frame_len =3D *buffer++;
+> +       checksum =3D *buffer++;
+>         frame_data =3D buffer;
 >
-> Enric Balletbo i Serra (3):
->   drm/mediatek: mtk_dpi: Rename bridge to next_bridge
->   drm/mediatek: mtk_dpi: Convert to bridge driver
->   drm/mediatek: mtk_dpi: Use simple encoder
->
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 84 ++++++++++++++----------------
->  1 file changed, 39 insertions(+), 45 deletions(-)
->
+>         dev_dbg(hdmi->dev,
 > --
 > 2.26.2
 >
