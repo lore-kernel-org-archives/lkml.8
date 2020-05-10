@@ -2,96 +2,119 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F3C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2354C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675F020820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7607B214DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UeUEESe2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iH5BKeNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgEJM5H (ORCPT
+        id S1729037AbgEJM5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:57:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25770 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726863AbgEJM5G (ORCPT
+        Sun, 10 May 2020 08:57:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726863AbgEJM5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:57:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589115425; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=xbNlNcKRFd58rmwKnqoHJadbCNL3+FrGOdfqkWJ4rUI=; b=UeUEESe2AXb7xpDp0Ud+yu1mgizU4Bkwq7s8k6xPhUkq5v3wAiHHkm5uJbj/0GKPUU6y7Z1n
- pbtoqFGOG/I8M8WZ/J10Mux2JD1OCX9AAkJIRDZjNXxjW7pHJEz9oAFMW439m6iXG9KkDxYt
- Zdv4/ca2ZR+vVdxjytKXJXnc3Os=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb7fa21.7f5a2c165c38-smtp-out-n05;
- Sun, 10 May 2020 12:57:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3DEA1C44788; Sun, 10 May 2020 12:57:04 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C134DC433F2;
-        Sun, 10 May 2020 12:56:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C134DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 10 May 2020 08:57:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319EBC061A0C;
+        Sun, 10 May 2020 05:57:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so7368647wrn.6;
+        Sun, 10 May 2020 05:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zSSzgZJ2ruA4nJC33X8E8VAN7DAGf5BP0u/CxtrtLx0=;
+        b=iH5BKeNOhFLBEpN+M/P3twrB0aP0uBQYfQsx6orVfhMPAfupkoxj1N9vtRgJC0jixJ
+         mE5Y+zxd1RmH9cCvXLWEilv1cuo2zI8BgW4FfKr05fH7LfqI2U1o14rOEkOg/Med2zSx
+         fUKmL+M+KMtyKl3iscMJzpuSaFYRuY6NXTkyfA8JDRsA6tiIKGUBTwx51px5G0EZWqHB
+         +EE4M0J39uvcJf11bysbd9Ki3TuxFldI5yD5dJSW17up+hfXpIaP9LThvt/miH3foviA
+         iZLJWzYB/gjRqA0cXFjvQfGSALhQ1410H90qVDyxf6RlLdsF/V/S7tD45dexd5JnFktw
+         GD2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zSSzgZJ2ruA4nJC33X8E8VAN7DAGf5BP0u/CxtrtLx0=;
+        b=Lf2KeqBMTn1QiSpUqzVSV6yhdzEyiNnKCuRqwaxOFl9ntu7PKIIGP5vzxvGCQaYg5J
+         NuHo3+zO6Q4ne7dMiQCiNl4ohz6YTiu42jqZ6RJFyb9q75KmQnoiRkwXR42sQb38jgGk
+         wDeGTZleBgHw/SJicm81l9kjFVusrjYvDWuQokfQWFkSCp33rOqgdsPjY19qH0quHvzW
+         jxFfu3W2SC0JbfOOFzPkkZZ8G/huokE1YhMAsWjQyqKm1noboH6RFe9IshZwEO4vESiD
+         EvhSIpYdzpD7tDXqRNhpbOVPrpp5zw+VY3r+MYKULxQejnOU19Zi26WfNa5hkW/WOeJC
+         YMOg==
+X-Gm-Message-State: AGi0PuYyVzCF3JuXHrzKX+VdUOs5E63KjmaVBWzB/LFRIa97OdTTTay/
+        w1hVyEofkz8YrAauzwvWjhMzWH5T98pJAFx0
+X-Google-Smtp-Source: APiQypKjx9pY0cnYf+p+xvYTLNTeHRZbik4IOpqbrRJPR1SdBS0VXZ7b+XKZMhkQM9rWrm21tJzwpQ==
+X-Received: by 2002:a5d:514b:: with SMTP id u11mr13257245wrt.53.1589115439458;
+        Sun, 10 May 2020 05:57:19 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id z11sm12454556wro.48.2020.05.10.05.57.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 May 2020 05:57:18 -0700 (PDT)
+Date:   Sun, 10 May 2020 14:57:11 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH] sched/debug: Fix requested task uclamp values shown in procfs
-Date:   Sun, 10 May 2020 18:26:41 +0530
-Message-Id: <1589115401-26391-1-git-send-email-pkondeti@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/3] tools/memory-model, Documentation/litmus-test: Sort
+ out location of litmus test and README
+Message-ID: <20200510125711.GA13991@andrea>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intention of commit 96e74ebf8d59 ("sched/debug: Add task uclamp
-values to SCHED_DEBUG procfs") was to print requested and effective
-task uclamp values. The requested values printed are read from p->uclamp,
-which holds the last effective values. Fix this by printing the values
-from p->uclamp_req.
+> Akira Yokosawa (3):
+>   tools/memory-model: Fix reference to litmus test in recipes.txt
+>   Revert "Documentation: LKMM: Move MP+onceassign+derefonce to new
+>     litmus-tests/rcu/"
+>   Documentation/litmus-tests: Merge atomic's README into top-level one
 
-Fixes: 96e74ebf8d59 ("sched/debug: Add task uclamp values to SCHED_DEBUG procfs")
-Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
----
- kernel/sched/debug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For the series:
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index a562df5..239970b 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -948,8 +948,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 	P(se.avg.util_est.enqueued);
- #endif
- #ifdef CONFIG_UCLAMP_TASK
--	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
--	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
-+	__PS("uclamp.min", p->uclamp_req[UCLAMP_MIN].value);
-+	__PS("uclamp.max", p->uclamp_req[UCLAMP_MAX].value);
- 	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
- 	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
- #endif
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+
+Thanks,
+  Andrea
+
+
+> 
+>  Documentation/litmus-tests/README             | 22 ++++++++++++++++---
+>  Documentation/litmus-tests/atomic/README      | 16 --------------
+>  tools/memory-model/Documentation/recipes.txt  |  2 +-
+>  .../MP+onceassign+derefonce.litmus            |  0
+>  tools/memory-model/litmus-tests/README        |  3 +++
+>  5 files changed, 23 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/litmus-tests/atomic/README
+>  rename {Documentation/litmus-tests/rcu => tools/memory-model/litmus-tests}/MP+onceassign+derefonce.litmus (100%)
+> 
+> -- 
+> 2.17.1
+> 
+> 
