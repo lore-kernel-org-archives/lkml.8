@@ -2,207 +2,153 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399DC54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03671C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA6A2137B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589101186;
-	bh=/RntUQgZ4VxLxMu4+YNoen/YFz9jHRYb9h2qimOY4zI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DaJs74DwW+Z/LnV/fxD/bkYzsNdstM1CYXll+5jbzh3ZWHh57ASNBFakyLPHIyS9I
-	 9eoc+0HgQjiDsPeiDiaOx+5B9sjtfZcTohtswHcgoe9WalZelvk3BQQdcBM9Sz1fKt
-	 +uMnGM5h0uSMoQSZrXWXH/fxqijZFiy7ucKwwS1I=
+	by mail.kernel.org (Postfix) with ESMTP id BE132208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:07:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cmijcPAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgEJI7p (ORCPT
+        id S1728868AbgEJJHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 04:59:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55388 "EHLO mail.kernel.org"
+        Sun, 10 May 2020 05:07:43 -0400
+Received: from mout.web.de ([212.227.17.11]:39841 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgEJI7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 04:59:44 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 367B9208DB;
-        Sun, 10 May 2020 08:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589101183;
-        bh=/RntUQgZ4VxLxMu4+YNoen/YFz9jHRYb9h2qimOY4zI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HNsh0B/2fbkkfKqwDlJ6WNg6+tgtHSwmphr8OrRhTD986IKOz0KikcMko3h0lnP4s
-         MDPvuIH6Rf2CCgePtqjqBoSxKU2KWPrB2fjWtrhElXZvIx6KQPnEc2Y20NKk6ej3gt
-         tDgGgbrOx84K7Xr18Uif4Sgs9KTqTqOFCuD3uOgM=
-Date:   Sun, 10 May 2020 17:59:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     <daniel.thompson@linaro.org>, <jason.wessel@windriver.com>,
-        <dianders@chromium.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-        <davem@davemloft.net>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <liwei1412@163.com>
-Subject: Re: [PATCH 2/4] arm64: Extract kprobes_save_local_irqflag() and
- kprobes_restore_local_irqflag()
-Message-Id: <20200510175938.7c888bd01f82d29203995c63@kernel.org>
-In-Reply-To: <20200509214159.19680-3-liwei391@huawei.com>
-References: <20200509214159.19680-1-liwei391@huawei.com>
-        <20200509214159.19680-3-liwei391@huawei.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725833AbgEJJHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 05:07:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589101641;
+        bh=4GbuQyEtR+gvm8iGl3qLYfG/5nQH9qggKEPBZ9K128Y=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=cmijcPAFRSqYvMPIl5DBRk1BMRYK1Xfxa8q+fIv1E8uLv5fehceAthfOZ2cLXGMz4
+         uD/B9y+XOx5yzjj+6OMf56Kk+vHehh993rBeCsn3mSarvgcwXtiYSFCxOIcSlJza9r
+         0a3oVvqSi1UC2DG2Ce8KqG0JpmlA0R6bLbNQ8jcQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.31.72]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M9ISr-1jROoA2JWR-006SBF; Sun, 10
+ May 2020 11:07:21 +0200
+Subject: Re: net/sonic: Fix some resource leaks in error handling paths
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
+ <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
+ <9d279f21-6172-5318-4e29-061277e82157@web.de>
+ <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
+Date:   Sun, 10 May 2020 11:07:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pkmm0tEJ6Uvf0/63tzWKAQ/XltEOWFsBIQyKr8oggmxvVJHcuG2
+ 5KvznoDaCGqwDj7EBKfEJR8bT4nj1lW00bU4e7fFurtEPZVJX4exCi3/X8Z9KeCnqm87lKr
+ HsREoj0CGYBGcObWutfYH6qyieNW2QYcvNxuop0qmQ2gEj86Rdb5FDxFlym51qzKJcSB1gF
+ AqsxFUAZBhAXmMcLtnRvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yC4r+r9Jh4Y=:RVTo9dE9EH/dKgRgaPueic
+ jr0cyTb7/bsvywM9WkIGuzEpLb6bez6zp29gmvNH451YBs/YmTUmegk2ySvywJ4ibCuT8h1+O
+ jBM7s3K8Qa+WFGaxM0gTgEbDkPbBeMcaGrElM7Oh7/vvLNkYC2uld90HXD15u96lshh+I6EjR
+ HCiPHeKJfvQ7cxC3DL10SlwEllL09kiUOKF54juvAIlor//k16AOp5s9CUSIPzACBIuzfhHH8
+ ykRB1bY8ghNUYAj/mCgW6J/bhsJLn8pWiAeo1bwYRsQJSTR4btaRzh1mJ9RgDdwFDH6tbxR+Z
+ nckn2I4/aN26pRcsiqkQQJtAYRQcMGsZr5PXRKMS6WstnzGEA4SnpzLrcVGTtBwkRWVLPDVEx
+ wv2lY0hrU+NZWQC6cxw17rp8aQX3jSTSvS1Iniv051Jf0qgj88XPmUAzt2urH9QE/IjxWUSX5
+ odymtuNCRnT990rEzNczGyCHxwWJKZZYEVUrOB2tM+xqvU2iC2w75GeOBdwU/2iPseIKbBpvX
+ VqVwD+YG0Hq34g3cmhpXdasBzDDJEg7cXzoMzy5U3yIV80tpSKJiPRhnGJ2WV+OGtfma1R2JL
+ 7Tfyxpz3iaKwNhz9bp+8XhusGPU9sJWyBbv7vkRGv+vnqgFXXA1ZB5hq5lU6/YXRN4I1aGs4I
+ c9LtdqLSo7s898N/b10C43dnOei3un4xcY+Z5K88XGMX2I2/eM22qxnKvfljiblx442SyQLcO
+ wlIB7pXQWzk5NdMLbdbyICDcMHbZ28VUqQSCnpgPpWszp4YAeIdrA8VLO+e6RWBYCdqH9MI/v
+ 1/sjkeTXVZDaXRSl5nJU6WFWBvIoKY4DDDzWD1Q7kYDJLqp08d9qWkx0pYin9GcMNy2SMeFcE
+ yX6LrtlnKPdDKrAGWukTBga0lKHXyX5r19AYYpHn2SYxYGZoeOlfvtjYkQHLmHd1Sk4XJKrmS
+ xnUa4wmo4+ImhwqciKFRuPK7sHii9TPqZYNHaQXZV8Bs5xDWgIw8buuErQFQuu5aSDtmXBHOE
+ N4zupa1AJTSC0LWzioLiGoE4v0zO3vsapqwfVBwA7hPCCtiylAlroQYdc0atH5XrymMQFELgg
+ ouxtxLlcyo1D8j9fYTLlx1W5tSPFguF3/wkOjFvd3MqWfGENeUQChD2pm6Kn/U3FflULk5g7Q
+ czgfeK2h8R9ugZLTwq/3ftEKhhig/k9Gs8+js1g5Usn+ZbC98jl9qEMvBHjS9aXgFZHLV07iv
+ mQNPXU+1VQDZT5GFB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
+>> https://lore.kernel.org/lkml/20200427061803.53857-1-christophe.jaillet@=
+wanadoo.fr/
+>
+> Do you know when these bugs were introduced?
 
-On Sun, 10 May 2020 05:41:57 +0800
-Wei Li <liwei391@huawei.com> wrote:
-
-> PSTATE.I and PSTATE.D are very important for single-step working.
-> 
-> Without disabling interrupt on local CPU, there is a chance of
-> interrupt occurrence in the period of exception return and start of
-> out-of-line single-step, that result in wrongly single stepping
-> into the interrupt handler. And if D bit is set then, it results into
-> undefined exception and when it's handler enables dbg then single-step
-> exception is generated, not as expected.
-> 
-> As they are maintained well in kprobes_save_local_irqflag() and
-> kprobes_restore_local_irqflag() for kprobe module, extract them as
-> kernel_prepare_single_step() and kernel_cleanup_single_step() for
-> general use.
-
-Agreed, these prepare/cleanup should be generic.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you!
-
-> 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
->  arch/arm64/include/asm/debug-monitors.h |  4 ++++
->  arch/arm64/kernel/debug-monitors.c      | 26 +++++++++++++++++++++++
->  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
->  3 files changed, 32 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-> index 7619f473155f..b62469f3475b 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -113,6 +113,10 @@ void user_fastforward_single_step(struct task_struct *task);
->  void kernel_enable_single_step(struct pt_regs *regs);
->  void kernel_disable_single_step(void);
->  int kernel_active_single_step(void);
-> +void kernel_prepare_single_step(unsigned long *flags,
-> +						struct pt_regs *regs);
-> +void kernel_cleanup_single_step(unsigned long flags,
-> +						struct pt_regs *regs);
->  
->  #ifdef CONFIG_HAVE_HW_BREAKPOINT
->  int reinstall_suspended_bps(struct pt_regs *regs);
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index 48222a4760c2..25ce6b5a52d2 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -429,6 +429,32 @@ int kernel_active_single_step(void)
->  }
->  NOKPROBE_SYMBOL(kernel_active_single_step);
->  
-> +/*
-> + * Interrupts need to be disabled before single-step mode is set, and not
-> + * reenabled until after single-step mode ends.
-> + * Without disabling interrupt on local CPU, there is a chance of
-> + * interrupt occurrence in the period of exception return and  start of
-> + * out-of-line single-step, that result in wrongly single stepping
-> + * into the interrupt handler.
-> + */
-> +void kernel_prepare_single_step(unsigned long *flags,
-> +						struct pt_regs *regs)
-> +{
-> +	*flags = regs->pstate & DAIF_MASK;
-> +	regs->pstate |= PSR_I_BIT;
-> +	/* Unmask PSTATE.D for enabling software step exceptions. */
-> +	regs->pstate &= ~PSR_D_BIT;
-> +}
-> +NOKPROBE_SYMBOL(kernel_prepare_single_step);
-> +
-> +void kernel_cleanup_single_step(unsigned long flags,
-> +						struct pt_regs *regs)
-> +{
-> +	regs->pstate &= ~DAIF_MASK;
-> +	regs->pstate |= flags;
-> +}
-> +NOKPROBE_SYMBOL(kernel_cleanup_single_step);
-> +
->  /* ptrace API */
->  void user_enable_single_step(struct task_struct *task)
->  {
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index d1c95dcf1d78..c655b6b543e3 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -168,30 +168,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
->  	__this_cpu_write(current_kprobe, p);
->  }
->  
-> -/*
-> - * Interrupts need to be disabled before single-step mode is set, and not
-> - * reenabled until after single-step mode ends.
-> - * Without disabling interrupt on local CPU, there is a chance of
-> - * interrupt occurrence in the period of exception return and  start of
-> - * out-of-line single-step, that result in wrongly single stepping
-> - * into the interrupt handler.
-> - */
-> -static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
-> -						struct pt_regs *regs)
-> -{
-> -	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
-> -	regs->pstate |= PSR_I_BIT;
-> -	/* Unmask PSTATE.D for enabling software step exceptions. */
-> -	regs->pstate &= ~PSR_D_BIT;
-> -}
-> -
-> -static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
-> -						struct pt_regs *regs)
-> -{
-> -	regs->pstate &= ~DAIF_MASK;
-> -	regs->pstate |= kcb->saved_irqflag;
-> -}
-> -
->  static void __kprobes
->  set_ss_context(struct kprobe_ctlblk *kcb, unsigned long addr)
->  {
-> @@ -227,7 +203,7 @@ static void __kprobes setup_singlestep(struct kprobe *p,
->  		set_ss_context(kcb, slot);	/* mark pending ss */
->  
->  		/* IRQs and single stepping do not mix well. */
-> -		kprobes_save_local_irqflag(kcb, regs);
-> +		kernel_prepare_single_step(&kcb->saved_irqflag, regs);
->  		kernel_enable_single_step(regs);
->  		instruction_pointer_set(regs, slot);
->  	} else {
-> @@ -414,7 +390,7 @@ kprobe_single_step_handler(struct pt_regs *regs, unsigned int esr)
->  	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
->  
->  	if (retval == DBG_HOOK_HANDLED) {
-> -		kprobes_restore_local_irqflag(kcb, regs);
-> +		kernel_cleanup_single_step(kcb->saved_irqflag, regs);
->  		kernel_disable_single_step();
->  
->  		post_kprobe_handler(kcb, regs);
-> -- 
-> 2.17.1
-> 
+I suggest to take another look at a provided tag =E2=80=9CFixes=E2=80=9D.
+To which commit would you like to refer to for the proposed adjustment of
+the function =E2=80=9Cmac_sonic_platform_probe=E2=80=9D?
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> Naming goto labels is just painting another bikeshed. Yes, some
+> alternatives are preferable but it takes too long to identify them and
+> finding consensus is unlikely anyway, as it's a matter of taste.
+
+Would you find numbered labels unwanted according to a possible interpreta=
+tion
+related to =E2=80=9CGW-BASIC=E2=80=9D identifier selection?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?id=3De99332e7b4cda6e60f5b5916cf9943a7=
+9dbef902#n460
+
+Can programming preferences evolve into the direction of =E2=80=9Csay what=
+ the goto does=E2=80=9D?
+
+Regards,
+Markus
