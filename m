@@ -2,156 +2,161 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A0BC54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8818FC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250C8208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UqjdcjEM"
+	by mail.kernel.org (Postfix) with ESMTP id 635192137B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgEJJKb (ORCPT
+        id S1727887AbgEJJ2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 05:10:31 -0400
-Received: from mout.gmx.net ([212.227.15.19]:52861 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725833AbgEJJKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 05:10:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1589101823;
-        bh=RnTcmEx5qoAJbFLaa3pbcn/t4m8FJU30wWNSGdhiRfs=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=UqjdcjEMiph1OuovZsbjRKMsWEWNgvu8pH8r0h8x7ucIvHMGumrPN0JbdqTSfeprx
-         DCFxWEeVoBbwBvnCEDxFL7PQc3vWMpdmkrazESylODVvnkT88iDqG61E/YO2Ei+nJV
-         d1WgnjqjEjDP/pJSkv5oqJAr6sNt0xgjztxohEXY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MvK4Z-1jFd1j1Q9p-00rHZb; Sun, 10 May 2020 11:10:23 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: vt6656: Remove logically dead code
-Date:   Sun, 10 May 2020 11:09:50 +0200
-Message-Id: <20200510090950.7633-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 10 May 2020 05:28:22 -0400
+Received: from smtp-8fa9.mail.infomaniak.ch ([83.166.143.169]:44977 "EHLO
+        smtp-8fa9.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgEJJ2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 05:28:22 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Kdz73c83zlhlbf;
+        Sun, 10 May 2020 11:28:19 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Kdz52pvmzmgvLW;
+        Sun, 10 May 2020 11:28:17 +0200 (CEST)
+Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
+To:     deven.desai@linux.microsoft.com, agk@redhat.com, axboe@kernel.dk,
+        snitzer@redhat.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, jannh@google.com
+Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
+        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
+        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net
+References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
+Date:   Sun, 10 May 2020 11:28:16 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LAtPG/5BH3DRfe+GQcJ9fBH7tC1pg8Lo0EEGG7tE45bglIk4HD2
- A84NWs16OwynIpPYFO0t54DwOr9IBDjP56fOLEy+E257n4KeK2OZDk01Nnh+rx0/FP8zIna
- qkgdav/LrHiAkUGKFQ3xp2RA3dTw1pLsgNuj1+B7Fy+4DqViQ9ihd3fVzjBBtbwG7okZxOU
- KDWVtj7c8koItU9kqejgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AMH1ANeRsy4=:JbGy5T25FJNTV8OudkXP4P
- pj6b7y+nr0Lqz0IS3kFblgV53ffCMetEvPZ7qY8lVYsejFLjTFr+mgsbTO5TKXkGZMQxGO1cD
- tZwKvx+tIIur8UwXjBpTVCrbYXUJosSfa9s+pBQ/MJdFytRf3cJtXmCrD6Vv947XIQ/KhwzFo
- /gRew5Kphxjayh65IbTUhDsdojZ0nVuA/NgjaVj7hBgnYzpAKyTetuzi8w1wFTe2o5cdAfJ8b
- m1RW+9SNjFt07qKdv4ZXcieY9bUqQ4r4dYoLRIUYbC+N4LaFCfaepcIj0dZMY3I66Z0AXtROw
- JpgeM1BROjVPmaBnuDvyd2J6EndQT6JPr5c2KnTVMzGB4+7Ao7855GFpPZNSIHgHQFJiXn/DI
- JM3V69HxITqZxQg46deoZpDglFUYdAJ/S2uUS/rXkyHO6fn1O+FqnDZKQY8lkTiHZXVwBZ7Dl
- swuTyD+XnAYQv5/PkmOuJE7csK3h6/O4LxiMETFIy3QF5RBXsYLekjzajUmkhbsS0yCSLWdpU
- lt+DkLHl891N88hL0ZlPt7JK7K4ZTNdRWVp8jIik1GnJS2n3eiuTNjIwdbdbTAHdE0J1ezEJc
- ZIAGctAuTneguLvueLSvj0I+yG6iHxgkF+WUr/zrAGcY9W4LQ/kbuE190b/S7jomEKR7ew1Zp
- KswRQ+VZounetcn0GbjxIBozH/HoJ5j3rqvy0DAollm9G2LfYbc7ILkY7ugUUew/dJzWo5xxd
- a9GFsy211JKqXfEuaYjOzZj3cgvCU44VDIx/4ERXOVtB783lhSaBlDvFXkfzWznsT3tfZMV5q
- C4fxc+VZCNLp7DfAjcqsJrXx9gjTfo9ifX55k2ftm5wF1af6XdnW9+UyLOJSPcBTw0couh7hD
- 6dxB8A0yjGuk9xMP7jc42Tj9qQIw5KjjKQu4koCWvCpy7pc76zgqXzLqVsUr0LDgSTfbSVm4x
- jrKJtTtozr6hFctOSLkJbqzaomHseIKtyBbCihGxxT7G4GP4+eKs7+uuHx5KXYEJsT6NLMxhg
- YlgVVxUkE0PBLqoBIJUmoWX/ragJWehg5F1pmjsmdn2nTfMXJgFE7Qevq0i1aiXCmIJt1BdF8
- P21+yNtKNJsSE99E5zyBqvza/3JWwUwnlyMaVGRaTYtsHOIHthpy94AL5oNFrBw/BR4oHjvhR
- jFziQMY0gpv8KKt4i+VXZdQ530RZxpSen3qwY5b3npKvUL0hoh76tqDA2kUL9pzf2i+pn4qiG
- JaOdIRWaLfaKN244R
+In-Reply-To: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the start of the "vnt_rf_set_txpower" function the "power" variable
-is set at most to VNT_RF_MAX_POWER (hex =3D 0x3f, dec =3D 63). Then, in th=
-e
-switch statement there are four comparisons with the "power" variable
-against AL7230_PWR_IDX_LEN (dec =3D 64), VT3226_PWR_IDX_LEN (dec =3D 64),
-VT3342_PWR_IDX_LEN (dec =3D 64). Due to all the commented comparisons are
-to check if the "power" variable is "greater than or equal" to 64, this
-never happens. So, remove the logically dead code.
 
-Also, remove all the defines that are no longer required.
+On 15/04/2020 18:25, deven.desai@linux.microsoft.com wrote:
+> From: Deven Bowers <deven.desai@linux.microsoft.com>
+> 
+> Overview:
+> ------------------------------------
+> 
+> IPE is a Linux Security Module which allows for a configurable
+> policy to enforce integrity requirements on the whole system. It
+> attempts to solve the issue of Code Integrity: that any code being
+> executed (or files being read), are identical to the version that
+> was built by a trusted source.
+> 
+> The type of system for which IPE is designed for use is an embedded device
+> with a specific purpose (e.g. network firewall device in a data center),
+> where all software and configuration is built and provisioned by the owner.
+> 
+> Specifically, a system which leverages IPE is not intended for general
+> purpose computing and does not utilize any software or configuration
+> built by a third party. An ideal system to leverage IPE has both mutable
+> and immutable components, however, all binary executable code is immutable.
+> 
+> The scope of IPE is constrained to the OS. It is assumed that platform
+> firmware verifies the the kernel and optionally the root filesystem (e.g.
+> via U-Boot verified boot). IPE then utilizes LSM hooks to enforce a
+> flexible, kernel-resident integrity verification policy.
+> 
+> IPE differs from other LSMs which provide integrity checking (for instance,
+> IMA), as it has no dependency on the filesystem metadata itself. The
+> attributes that IPE checks are deterministic properties that exist solely
+> in the kernel. Additionally, IPE provides no additional mechanisms of
+> verifying these files (e.g. IMA Signatures) - all of the attributes of
+> verifying files are existing features within the kernel, such as dm-verity
+> or fsverity.
+> 
+> IPE provides a policy that allows owners of the system to easily specify
+> integrity requirements and uses dm-verity signatures to simplify the
+> authentication of allowed objects like authorized code and data.
+> 
+> IPE supports two modes, permissive (similar to SELinux's permissive mode)
+> and enforce. Permissive mode performs the same checks, and logs policy
+> violations as enforce mode, but will not enforce the policy. This allows
+> users to test policies before enforcing them.
+> 
+> The default mode is enforce, and can be changed via the kernel commandline
+> parameter `ipe.enforce=(0|1)`, or the sysctl `ipe.enforce=(0|1)`. The
+> ability to switch modes can be compiled out of the LSM via setting the
+> config CONFIG_SECURITY_IPE_PERMISSIVE_SWITCH to N.
+> 
+> IPE additionally supports success auditing. When enabled, all events
+> that pass IPE policy and are not blocked will emit an audit event. This
+> is disabled by default, and can be enabled via the kernel commandline
+> `ipe.success_audit=(0|1)` or the sysctl `ipe.success_audit=(0|1)`.
+> 
+> Policies can be staged at runtime through securityfs and activated through
+> sysfs. Please see the Deploying Policies section of this cover letter for
+> more information.
+> 
+> The IPE LSM is compiled under CONFIG_SECURITY_IPE.
+> 
+> Policy:
+> ------------------------------------
+> 
+> IPE policy is designed to be both forward compatible and backwards
+> compatible. There is one required line, at the top of the policy,
+> indicating the policy name, and the policy version, for instance:
+> 
+>   policy_name="Ex Policy" policy_version=0.0.0
+> 
+> The policy version indicates the current version of the policy (NOT the
+> policy syntax version). This is used to prevent roll-back of policy to
+> potentially insecure previous versions of the policy.
+> 
+> The next portion of IPE policy, are rules. Rules are formed by key=value
+> pairs, known as properties. IPE rules require two properties: "action",
+> which determines what IPE does when it encounters a match against the
+> policy, and "op", which determines when that rule should be evaluated.
+> Thus, a minimal rule is:
+> 
+>   op=EXECUTE action=ALLOW
+> 
+> This example will allow any execution. Additional properties are used to
+> restrict attributes about the files being evaluated. These properties are
+> intended to be deterministic attributes that are resident in the kernel.
+> Available properties for IPE described in the properties section of this
+> cover-letter, the repository available in Appendix A, and the kernel
+> documentation page.
+> 
+> Order does not matter for the rule's properties - they can be listed in
+> any order, however it is encouraged to have the "op" property be first,
+> and the "action" property be last, for readability.
+> 
+> Additionally, rules are evaluated top-to-bottom. As a result, any
+> revocation rules, or denies should be placed early in the file to ensure
+> that these rules are evaluated before a rule with "action=ALLOW" is hit.
+> 
+> IPE policy is designed to be forward compatible and backwards compatible,
+> thus any failure to parse a rule will result in the line being ignored,
+> and a warning being emitted. If backwards compatibility is not required,
+> the kernel commandline parameter and sysctl, ipe.strict_parse can be
+> enabled, which will cause these warnings to be fatal.
 
-Addresses-Coverity-ID: 1230228 ("Logically dead code")
-Fixes: f53d9f12c51a ("staging: vt6656: rf.c additional power.")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/rf.c | 17 -----------------
- 1 file changed, 17 deletions(-)
-
-diff --git a/drivers/staging/vt6656/rf.c b/drivers/staging/vt6656/rf.c
-index fb708467b99b..5b8da06e3916 100644
-=2D-- a/drivers/staging/vt6656/rf.c
-+++ b/drivers/staging/vt6656/rf.c
-@@ -28,15 +28,9 @@
- #include "usbpipe.h"
-
- #define CB_AL2230_INIT_SEQ    15
--
- #define CB_AL7230_INIT_SEQ    16
--#define AL7230_PWR_IDX_LEN    64
--
- #define CB_VT3226_INIT_SEQ    11
--#define VT3226_PWR_IDX_LEN    64
--
- #define CB_VT3342_INIT_SEQ    13
--#define VT3342_PWR_IDX_LEN    64
-
- static u8 al2230_init_table[CB_AL2230_INIT_SEQ][3] =3D {
- 	{0x03, 0xf7, 0x90},
-@@ -658,9 +652,6 @@ static int vnt_rf_set_txpower(struct vnt_private *priv=
-, u8 power,
- 		if (ret)
- 			return ret;
-
--		if (power >=3D AL7230_PWR_IDX_LEN)
--			return -EINVAL;
--
- 		/*
- 		 * 0x080F1B00 for 3 wire control TxGain(D10)
- 		 * and 0x31 as TX Gain value
-@@ -671,16 +662,11 @@ static int vnt_rf_set_txpower(struct vnt_private *pr=
-iv, u8 power,
- 		break;
-
- 	case RF_VT3226:
--		if (power >=3D VT3226_PWR_IDX_LEN)
--			return -EINVAL;
- 		power_setting =3D ((0x3f - power) << 20) | (0x17 << 8);
-
- 		ret =3D vnt_rf_write_embedded(priv, power_setting);
- 		break;
- 	case RF_VT3226D0:
--		if (power >=3D VT3226_PWR_IDX_LEN)
--			return -EINVAL;
--
- 		if (ch->flags & IEEE80211_CHAN_NO_OFDM) {
- 			u16 hw_value =3D ch->hw_value;
-
-@@ -731,9 +717,6 @@ static int vnt_rf_set_txpower(struct vnt_private *priv=
-, u8 power,
- 		break;
-
- 	case RF_VT3342A0:
--		if (power >=3D VT3342_PWR_IDX_LEN)
--			return -EINVAL;
--
- 		power_setting =3D  ((0x3f - power) << 20) | (0x27 << 8);
-
- 		ret =3D vnt_rf_write_embedded(priv, power_setting);
-=2D-
-2.20.1
-
+Ignoring unknown command may lead to inconsistent beaviors. To achieve
+forward compatibility, I think it would be better to never ignore
+unknown rule but to give a way to userspace to known what is the current
+kernel ABI. This could be done with a securityfs file listing the
+current policy grammar.
