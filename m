@@ -2,88 +2,110 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D072C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB49FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282C720725
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16F7214DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ag6DvP0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgEJXT5 (ORCPT
+        id S1729208AbgEJXY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 19:19:57 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32356 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbgEJXT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 19:19:57 -0400
-IronPort-SDR: femZO/HCqNMpkjA8ITOUxLmQowXiHgEsTYM8bF9njviYDF0ZEUzt53m+B/VDTvJNNNmlCjUpIk
- EUoATwhVX2zA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 16:19:56 -0700
-IronPort-SDR: bMVr+HfzhLC7IDcW8Rgd6plGgxxu9+/Eji/jiXNKDERKa1e19pHZ6VicKFtf8Dpfrh0Rmd2H7z
- fTYtNw4Yfwng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,377,1583222400"; 
-   d="scan'208";a="279614189"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by orsmga002.jf.intel.com with ESMTP; 10 May 2020 16:19:53 -0700
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Daniel Drake <drake@endlessm.com>,
-        Derrick Jonathan <jonathan.derrick@intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v4 0/3] Replace private domain with per-group default
- domain
-To:     Joerg Roedel <joro@8bytes.org>
-References: <20200506015947.28662-1-baolu.lu@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7928dd48-93da-62f0-b455-6e6b248d0fae@linux.intel.com>
-Date:   Mon, 11 May 2020 07:16:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 19:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgEJXY4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 19:24:56 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD6AC061A0C;
+        Sun, 10 May 2020 16:24:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L0XM1Sbrz9sNH;
+        Mon, 11 May 2020 09:24:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589153094;
+        bh=vV9k04WFwMB+UjRxfNNv5jSFprCu9yxZkIT8Vp9Y9IM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ag6DvP0xmBuO+nKkKilufxDIW/XsGkFs3Vz7zUJk086MqDn0nCq11jGgs/XL6sGZN
+         KiSP5f3dpU9jBTsxI419VTmRyB0D5azM8zQGQAq9orok1O5xX87+eoGXscu3eZ8Usu
+         PdaDMKtN1qXSIwSc1aUEOoW/6HIFCPuPjqJ6GGgBJRLGUE21z3BqKwgYUzlgq+tWlx
+         oeJLtPNTugiuX80CBr/qDnyeFceWgnwG4A8NIQnut6xu3hL33Hr5aKTJOC5Xia8wux
+         o3pDmqbrqbpxxO5d011djPAv671Zv1AOnWIt0LVwzkAMxkI/7Ly5NeKcEaiA1NTaqL
+         zmC/CG5F6/gtA==
+Date:   Mon, 11 May 2020 09:24:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: linux-next: manual merge of the mips tree with the clk tree
+Message-ID: <20200511092448.65c5d790@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200506015947.28662-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Z4I+Np8IVo026EuKEaw6R+d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+--Sig_/Z4I+Np8IVo026EuKEaw6R+d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/6/20 9:59 AM, Lu Baolu wrote:
-> Some devices are required to use a specific type (identity or dma) of
-> default domain when they are used with a vendor iommu. When the system
-> level default domain type is different from it, the vendor iommu driver
-> has to request a new default domain with either
-> iommu_request_dma_domain_for_dev() or iommu_request_dm_for_dev() in the
-> add_dev() callback. Unfortunately, these two helpers only work when the
-> group hasn't been assigned to any other devices, hence, some vendor iommu
-> driver has to use a private domain if it fails to request a new default
-> one.
-> 
-> Joerg proposed an on-going proposal which makes the default domain
-> framework to support configuring per-group default domain during boot
-> process.
-> 
-> https://lkml.org/lkml/2020/4/14/616
-> [This has been applied in iommu/next.]
-> 
-> Hence, there is no need to keep the private domain implementation
-> in the Intel IOMMU driver. This patch series aims to remove it.
+Hi all,
 
-Can you please take this series to iommu/next for wider test?
+Today's linux-next merge of the mips tree got a conflict in:
 
-Best regards,
-baolu
+  arch/mips/loongson2ef/Kconfig
+
+between commit:
+
+  bbd7ffdbef68 ("clk: Allow the common clk framework to be selectable")
+
+from the clk tree and commit:
+
+  c02e96304451 ("mips: loongsoon2ef: remove private clk api")
+
+from the mips tree.
+
+I fixed it up (the end result of both is to remove HAVE_CLK) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Z4I+Np8IVo026EuKEaw6R+d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64jUEACgkQAVBC80lX
+0GwnZgf/fAGEPcUQPTHFCF6xZT+/VQroPntTMAULD5Fc0RZkZLt2t4gBZOHZNJsx
+eMduUm/HFpIK10yR7wbUxhKWNhOVA4mCO6tEE8Fs/ovs7s6oD5DrRzbcefH71rZh
+twn40EnuH6YQVk+wKxkaKwYwUNluLUSKiFx0CouyCP42C7xVQ+Xsl8aJ9sPmIso/
+rP6ytTV9pgkZLbQBfUz6aRGQlVZvzmzMo7497T3f+Kb28EbhuScowhAqmEp/qfwC
+eUb6sZxzsNEA0mmwq+4OGOE/hauuXFSu3pNAHmAXUqnMhU4EY0zxG5OVfQrh1zzm
+YInDw5MadrJs10xSxGERP1HY3+O5gQ==
+=Ovaa
+-----END PGP SIGNATURE-----
+
+--Sig_/Z4I+Np8IVo026EuKEaw6R+d--
