@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434C4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025D7C54E4B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAA820820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFB220820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:56:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVaFtRRU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="henRzJnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgEJQ4B (ORCPT
+        id S1729324AbgEJQ4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:56:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36800 "EHLO
+        Sun, 10 May 2020 12:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729267AbgEJQz7 (ORCPT
+        by vger.kernel.org with ESMTP id S1729246AbgEJQz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:55:59 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E523C05BD09
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:59 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k1so7959146wrx.4
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:59 -0700 (PDT)
+        Sun, 10 May 2020 12:55:56 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52125C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:56 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id h4so15441818wmb.4
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LrpA01gh5f+4wCQVfiK/c2w8CUJsi/9aedeoRmkPm1A=;
-        b=NVaFtRRUuIuJfOZ9VWEnsEcaHQLlxP0KjmHTYVaEol0TnaJzw14uuF0Ej7tBkZ/dXf
-         q0cdIPbQ2ReTKQaZIx08FJyyfpQc46H2PP4lMAzaqienz9TjB71dMtXN47KrqWcqxFbO
-         o1GK6lICcOVrfd0JUYo7eFmGGoXkfVH4g5DyGe4DFL2x74lhjkHAhAKErSB3hDhAXgYX
-         bk95+Er61/m+x/X2LdsArOEZHganSOruTT+9efLroE+3vQu55tRQknbws3XuQKzD6QoT
-         IhjlB0qHt90lQUSKTqPGVmIAJ1qjyAp27DajDztvQ0ZQsoWHXMxcgrFUIIdhtqbkj+dD
-         UM+w==
+        bh=QVJ+1fAj4aJcfIzG7KLUGxoLD4NHFj6b20tXq5SEIa4=;
+        b=henRzJnuYReSCrFO8dT8/0yYkackqR7nMOzx+CWB4oeFTv+AEszy5e9EDWTTCZQRpu
+         uXNji3zyuyRcjh6FpWhtXxFTODH/BlKbRc8ad91BkmERYkTJZXs1TUCg1YV2dQ6h798p
+         o77l3IGx2Fv0gJ36qFihNpy/RYpdw1TT4FDh49jdB4Evh6940qKAV+Bmx97B2kSe7BnI
+         dCFjplGGED5nzeXyp08yRQ2NxSlyPU1UC7Kwi8lu9Bn/mjRrz3tj3jtNxdd+Mo026ucw
+         aeW8Re/ql4XxYQSuHsC6lLidLn8xVp6oKGL1AumKlgVuNfsPyG8aOhDVtXeBGQBqGVQW
+         wJ4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LrpA01gh5f+4wCQVfiK/c2w8CUJsi/9aedeoRmkPm1A=;
-        b=KrQiUUb/DOUQwjqwvLyDxzvwe31tLJ4add+X3ST4SSS93hxnC1H8kRU6L9LaRK5sdO
-         g0RN4m6kLc2+IdvI/MAdvTSCjdoMQGz5u4qa5nC6eaHwAUrKSXPDUJJkjUEOabtZx8ob
-         f9omXJyt8SA870wWSrejnwsLlpOJrgufFKWbl3XHmbUy9NNZofdxZmEC1e631C80nbK6
-         Cs5qli8YDgd1FhAsmuj8mTH4Yc3peBV+2+teGPDeccWy1QfN1nSMiN706+23r2YpcgWZ
-         aV7i58HaR6ZCu9PG1xFIESI65EATj/nWMun2G/+3hOmJKgEQflZLjknR0Lul3EajUj1T
-         M+TA==
-X-Gm-Message-State: AGi0PubzCEcqT6SbbBOZXCAT2QD/g5OjM8mZo+2N2OJt3KjB+NzFJcxp
-        KH0JaKvNBjmL1x8wZZrqSC4=
-X-Google-Smtp-Source: APiQypKucmou8UiKBQJLi/Cx8j6Ix30yatDbTUUMPyd8Dq8FziM9EgDPuGCXjSGiQ84ZMUcD+phxZA==
-X-Received: by 2002:a5d:46c7:: with SMTP id g7mr14131363wrs.293.1589129757999;
-        Sun, 10 May 2020 09:55:57 -0700 (PDT)
+        bh=QVJ+1fAj4aJcfIzG7KLUGxoLD4NHFj6b20tXq5SEIa4=;
+        b=PW7t+IDFtGjWrAC3ypuWlJAO9HVclXN+nVU/eRv3kOY3RXTdi4SMbUrFD3ZNy7eYvB
+         5GCGtn3TGo0HZj8lrr5EbbtYXTw0IfAQqJBZ3J6OXpGH8nfK/OBQtfYjIqd49wDgEtIX
+         SXzdIk7eyf7H8gbNkvh+PQSUAjRyqIL/Yp0WlEsJEYURdcgBvjgT1UqZS3LIIf5WfYC5
+         MdbPEEfbCosoJoa1OtPkeggP/n0QTdmh6kfHDi2cwhjwlsPligqAoWlavnUkDkbcnHqp
+         DiXa0StD2hsYOBUloljnyoLyJCpKaHNx/2t47kqc3I/ZBEgfvOQLftByVwb0La/BbrPC
+         UyiQ==
+X-Gm-Message-State: AGi0PuYBgNi7Z7BNtVo9kQP+VM3Im5KcsLgMDU8nFaLNkbDeuah3YwG5
+        XldEGPk6tsIN+dlvcz3wE7wu1M+kjpI=
+X-Google-Smtp-Source: APiQypK2evGKLkliWXP4Ao/8KEZGZEAKSrvQQOjhvUGgeRvZRYLGZZbaiAPW9psfNBrE9jGOqSgWnA==
+X-Received: by 2002:a1c:4304:: with SMTP id q4mr28949907wma.152.1589129754970;
+        Sun, 10 May 2020 09:55:54 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0:1cc8:b1f1:a2b8:a1ee])
-        by smtp.gmail.com with ESMTPSA id g15sm13637670wrp.96.2020.05.10.09.55.57
+        by smtp.gmail.com with ESMTPSA id g15sm13637670wrp.96.2020.05.10.09.55.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 09:55:57 -0700 (PDT)
+        Sun, 10 May 2020 09:55:54 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
@@ -71,9 +71,9 @@ To:     Rob Herring <robh@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 15/15] [DO NOT MERGE] arm64: dts: allwinner: force GPU regulator to be always
-Date:   Sun, 10 May 2020 18:55:38 +0200
-Message-Id: <20200510165538.19720-16-peron.clem@gmail.com>
+Subject: [PATCH 12/15] arm64: defconfig: Enable devfreq cooling device
+Date:   Sun, 10 May 2020 18:55:35 +0200
+Message-Id: <20200510165538.19720-13-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200510165538.19720-1-peron.clem@gmail.com>
 References: <20200510165538.19720-1-peron.clem@gmail.com>
@@ -85,23 +85,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Devfreq cooling device framework is used in Panfrost
+to throttle GPU in order to regulate its temperature.
+
+Enable this driver for ARM64 SoC.
+
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 1 +
+ arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-index 3f7ceeb1a767..14257f7476b8 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
-@@ -245,6 +245,7 @@
- 			};
- 
- 			reg_dcdcc: dcdcc {
-+				regulator-always-on;
- 				regulator-enable-ramp-delay = <32000>;
- 				regulator-min-microvolt = <810000>;
- 				regulator-max-microvolt = <1080000>;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 66941024418c..42d85c2c0945 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -496,6 +496,7 @@ CONFIG_SENSORS_INA2XX=m
+ CONFIG_SENSORS_INA3221=m
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+ CONFIG_CPU_THERMAL=y
++CONFIG_DEVFREQ_THERMAL=y
+ CONFIG_THERMAL_EMULATION=y
+ CONFIG_QORIQ_THERMAL=m
+ CONFIG_SUN8I_THERMAL=y
 -- 
 2.20.1
 
