@@ -2,156 +2,147 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D4C54E8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26047C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673C5208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECDB5208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tusd/kAI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XP6oOf4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgEJTFv (ORCPT
+        id S1729240AbgEJTIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 15:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
+        Sun, 10 May 2020 15:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgEJTFu (ORCPT
+        with ESMTP id S1728385AbgEJTI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 15:05:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4567C061A0C;
-        Sun, 10 May 2020 12:05:50 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d22so3495231pgk.3;
-        Sun, 10 May 2020 12:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TrDysAnyzIqn5Cn1iMOx1jHu5Zp3yUHwKX37t/G/0oo=;
-        b=Tusd/kAIJ93DCgBlGio6JGtGTJMloGM3X+oLDhyeqDPqSqCXLICnX9B8HMn/Jd0Tik
-         +k7rp+0JfNDOaOh23t8jMPC6KRZz/xaa8oDPLQ+uXPvlcS1bGZ1DLNaxEcN5K35fNAUQ
-         K4+XmSRSvOCSjx8VciY3xSCCEOJy8x4ot1c6rf6Kzelxqy31GZ+6vunnB01XxySlLljG
-         nKgOxJLV8Qb0HRTMNhZNqOejR93rP3pryODWevJvGCthrkNvR2P1xPBlvkfvmDyxSxTH
-         wJlGEMaTgD4KvDzqEGV1cq7HxVl6HOFnLM2W1f9zS4HlohudcR0q29xfWtlTGa7bPjpw
-         Je0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TrDysAnyzIqn5Cn1iMOx1jHu5Zp3yUHwKX37t/G/0oo=;
-        b=nU3K3FfvENJIKEtD5yCrNbaiuNwQbD91+pmL60KA3Kz6h6+pohF9PfK3yrhVifU8LA
-         W7AAgVwMgBp/2MMqZE2vq5nMuZ0+6OjwO2bGoAmqXtrMc0PolQwXdlwORb6nvU4bIiMz
-         kGp10xYT+YDmZbMtJoxuXQ2aJSFErjHLpoEkesjnyK9ipabcFdM8LKLglOrq22MpVpup
-         WA1128OOgT0MVCWgCCVOBzIvo1Ugr4lOAuZwzFfbghSbMO01wBo2rGS4KzvMDjG+C5LW
-         mX+yvpOX+g6n1ZpvDNMdLi0497Qxhr+BHq4ABwuAzK9tylffTogQW+4DWsaREJwOd0m5
-         hcSw==
-X-Gm-Message-State: AGi0PuZncimxjfZ58V9lpjl7wxFboiksifoxXxSDedQErzw2tXLPuw7D
-        pJYaZWDaMi18vK1P2cZGgRpakmF1V15WTn3Modw=
-X-Google-Smtp-Source: APiQypLeReEsRK6CfvZljwNh3sLkBBj5r2qTM7yV0oIgFRo3EmuOUB97cNaBFdGIXnDDJM4DwzZIgvCMuvjhuSRGYZ8=
-X-Received: by 2002:a65:6251:: with SMTP id q17mr11271737pgv.4.1589137550161;
- Sun, 10 May 2020 12:05:50 -0700 (PDT)
+        Sun, 10 May 2020 15:08:29 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C01C061A0C;
+        Sun, 10 May 2020 12:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=jyfzrM7jx8UkKgrYyqm9TZ9ytI+tCynSEk/Htl77plI=; b=XP6oOf4sGCMwfj3cgyuZdsepDt
+        vpVlFLJYZf7FS6ITsfJG2j3MkTlVeifMMR48iGViaOm7IGTiCC96/hdTO9b5JBvZ9VHR6DQeyYtzk
+        Z+kLe5VN15nB6k/JuJ8BD22wQ04ufSwiM8QcX+EixjCGTFu4Vr1lPnfmjK5wWOgia85Z5cj5Ctpra
+        HnwpNYEM/lbOAmwuLdeCnGBb/GJZ7S5NSKYmHt7+SXX2eGSQIkyyAtgFYw7tUkRdf63sWPm+tkgKb
+        ecRU4T2Z4BKe/uG1EUAUDhUr2m6jHhLvKaiBaYQgNq67+uMeOfRiehtUkHHaUiuL64FJG0BBNE6Io
+        NqnlF8zg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXrJK-0005vz-Jt; Sun, 10 May 2020 19:08:26 +0000
+Subject: Re: Using a custom LDFLAG for all objects and binaries
+To:     Mahmood Naderan <mahmood.nt@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
+ <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org>
+ <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
+ <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
+ <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a8c709ff-67df-09b6-25ff-a4b46a5a2a79@infradead.org>
+Date:   Sun, 10 May 2020 12:08:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.1588460322.git.syednwaris@gmail.com> <20200504114109.GE185537@smile.fi.intel.com>
- <20200504143638.GA4635@shinobu> <CAHp75Vf_vP1qM9x81dErPeaJ4-cK-GOMnmEkxkhPY2gCvtmVbA@mail.gmail.com>
- <20200505145250.GA5979@shinobu> <CACG_h5pcb3uOn+or-6L8bMk3bBNFXWJre9C9pRi3hNgFxGkd_g@mail.gmail.com>
-In-Reply-To: <CACG_h5pcb3uOn+or-6L8bMk3bBNFXWJre9C9pRi3hNgFxGkd_g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 10 May 2020 22:05:38 +0300
-Message-ID: <CAHp75VcRztO-DPnUin-2TU9e10k0VViD7=S3ypQ0vQ=ittxNkw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Introduce the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 7:36 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> On Tue, May 5, 2020 at 8:24 PM William Breathitt Gray
-> <vilhelm.gray@gmail.com> wrote:
-> > On Tue, May 05, 2020 at 04:51:56PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 4, 2020 at 5:41 PM William Breathitt Gray
-> > > <vilhelm.gray@gmail.com> wrote:
-> > > > On Mon, May 04, 2020 at 02:41:09PM +0300, Andy Shevchenko wrote:
-> > > > > On Sun, May 03, 2020 at 04:38:36AM +0530, Syed Nayyar Waris wrote:
+On 5/10/20 12:04 PM, Mahmood Naderan wrote:
+>>> or
+>>> 2- Editing arch/x86/Makefile with
+>>>    KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
+>>
+>> That should work.
+> 
+> 
+> Seems not... I ran the following commands:
+> 
+> $ cp -v /boot/config-$(uname -r) .config
+> $ make menuconfig  -> Exit -> Save
+> $ vim arch/x86/Makefile
+>      KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
+> $ make V=1
 
-...
+OK, I suggest that you reorder the options like so:
 
-> > > > > Looking into the last patches where we have examples I still do not see a
-> > > > > benefit of variadic clump sizes. power of 2 sizes would make sense (and be
-> > > > > optimized accordingly (64-bit, 32-bit).
+	KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE) --emit-relocs
 
-> > > > There is of course benefit in defining for_each_set_clump with clump
-> > > > sizes of powers of 2 (we can optimize for 32 and 64 bit sizes and avoid
-> > > > boundary checks that we know will not occur), but at the very least the
-> > > > variable size bitmap_set_value and bitmap_get_value provide significant
-> > > > benefit for the readability of the gpio-xilinx code:
-> > > >
-> > > >         bitmap_set_value(old, state[0], 0, width[0]);
-> > > >         bitmap_set_value(old, state[1], width[0], width[1]);
-> > > >         ...
-> > > >         state[0] = bitmap_get_value(new, 0, width[0]);
-> > > >         state[1] = bitmap_get_value(new, width[0], width[1]);
-> > > >
-> > > > These lines are simple and clear to read: we know immediately what they
-> > > > do. But if we did not have bitmap_set_value/bitmap_get_value, we'd have
-> > > > to use several bitwise operations for each line; the obfuscation of the
-> > > > code would be an obvious hinderance here.
-> > >
-> > > Do I understand correctly that width[0] and width[1] may not be power
-> > > of two and it's actually the case?
+I.e., don't split -m and the machine type.
 
-> > I'm under the impression that width[0] and width[1] are arbitrarily
-> > chosen by the user and could be any integer. I have never used this
-> > hardware so I'm hoping one of the gpio-xilinx or GPIO subsystem
-> > maintainers in this thread will respond with some guidance.
-> >
-> > If the values of width[0] and width[1] are restricted to powers of 2,
-> > then I agree that there is no need for generic bitmap_set_value and
-> > bitmap_get_value functions and we can instead use more optimized power
-> > of 2 versions.
 
-> Regarding the question that whether width[0] and width[1] can have any
-> value or they are restricted to power-of-2.
->
-> Referring to the document (This xilinx GPIO IP was mentioned in the
-> gpio-xilinx.c file):
-> https://www.xilinx.com/support/documentation/ip_documentation/axi_gpio/v2_0/pg144-axi-gpio.pdf
->
-> On page 8, we can see that the GPIO widths for the 2 channels can have
-> values different from power-of-2.For example: 5, 15 etc.
->
-> So, I think we should keep the 'for_each_set_clump',
-> 'bitmap_get_value' and 'bitmap_set_value' as completely generic.
->
-> I am proceeding further for my next patchset submission keeping above
-> findings in mind. If you guys think something else or would like to
-> add something, let me know.
+> This is the error that I get
+> 
+> make -f ./scripts/Makefile.build obj=usr need-builtin=1
+> /bin/bash ./usr/gen_initramfs_list.sh -l -d > usr/.initramfs_data.cpio.d
+> (cat /dev/null; ) > usr/modules.order
+> make -f ./scripts/Makefile.build obj=arch/x86 need-builtin=1
+> make -f ./scripts/Makefile.build obj=arch/x86/crypto need-builtin=1
+> make -f ./scripts/Makefile.build obj=arch/x86/crypto/sha1-mb need-builtin=
+> (cat /dev/null;   echo kernel/arch/x86/crypto/sha1-mb/sha1-mb.ko;) >
+> arch/x86/crypto/sha1-mb/modules.order
+>   ld -m --emit-relocs elf_x86_64     -r -o
+> arch/x86/crypto/sha1-mb/sha1-mb.o arch/x86/crypto/sha1-mb/sha1_mb.o
+> arch/x86/crypto/sha1-mb/sha1_mb_mgr_flush_avx2.o
+> arch/x86/crypto/sha1-mb/sha1_mb_mgr_init_avx2.o
+> arch/x86/crypto/sha1-mb/sha1_mb_mgr_submit_avx2.o
+> arch/x86/crypto/sha1-mb/sha1_x8_avx2.o
+> ld: unrecognised emulation mode: --emit-relocs
+> Supported emulations: elf_x86_64 elf32_x86_64 elf_i386 elf_iamcu
+> i386linux elf_l1om elf_k1om i386pep i386pe
+> scripts/Makefile.build:516: recipe for target
+> 'arch/x86/crypto/sha1-mb/sha1-mb.o' failed
+> make[3]: *** [arch/x86/crypto/sha1-mb/sha1-mb.o] Error 1
+> scripts/Makefile.build:544: recipe for target 'arch/x86/crypto/sha1-mb' failed
+> make[2]: *** [arch/x86/crypto/sha1-mb] Error 2
+> scripts/Makefile.build:544: recipe for target 'arch/x86/crypto' failed
+> make[1]: *** [arch/x86/crypto] Error 2
+> Makefile:1053: recipe for target 'arch/x86' failed
+> make: *** [arch/x86] Error 2
+> 
+> 
+> 
+> 
+> 
+> ORIGINAL QUESTION:
+> 
+>> Hi
+>> I would like to modify the kernel makefile in a way to include
+>> --emit-relocs for every file that is linked during the process of
+>> kernel make.
+>> I see
+>>
+>> KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+>> LDFLAGS_MODULE  =
+>> LDFLAGS_vmlinux =
+>> ...
+>>
+>> But I don't know which one is the main. Should I put that option in
+>> front of every LD* variable? Or it is possible to apply one variable
+>> for every file that is linked?
+>> Appreciate your help.
+>>
+> 
+> 
+> Regards,
+> Mahmood
+> 
 
-Thank you for investigation. So, if Xilinx is okay with the change, I
-have no objections.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+~Randy
+
