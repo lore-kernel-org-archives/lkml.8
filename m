@@ -2,101 +2,83 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A4C54E8E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02CEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A055B20746
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iN5hwNVf"
+	by mail.kernel.org (Postfix) with ESMTP id AA43D20737
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 20:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgEJUta (ORCPT
+        id S1729446AbgEJUwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 16:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729216AbgEJUta (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 16:49:30 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216D3C061A0C;
-        Sun, 10 May 2020 13:49:30 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Kx51663xz9sSc;
-        Mon, 11 May 2020 06:49:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589143766;
-        bh=mJUvh5jroj1ztaJp3MGTxckhrhGeFpIRDrh7kNWFb/8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iN5hwNVf7jztA841KkPITOpWsf9kBUZEX+L8RWxf8oD64S9FoQbUoaChpwC22KJWz
-         utTYFyOSOyO2T5ezdYdZBAK74RhAP1iqELKNudASMc/0F06AI5vjiFn5rrREJm9ejE
-         ylV9kb4Zk4nwURDSn0oY5k/fUpCBFeSAEIWJa6Gnk2dALxgRII5QtDSFnIaSrJKY0K
-         6RIQQHezrXlcVYua08heTzPO68m9edE6f3AW08hJWUkAgP7JRrHZcNLJdg9dtwgo0B
-         iE5wciu71GnvMDgy4KiQjGr5i+jjfymWshPMwLCUpXu9yfykV3phR6by0hal7wAC9C
-         7rpTnROShd2JA==
-Date:   Mon, 11 May 2020 06:49:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Foster <bfoster@redhat.com>
-Subject: linux-next: Fixes tag needs some work in the xfs tree
-Message-ID: <20200511064919.5cd5dd28@canb.auug.org.au>
+        Sun, 10 May 2020 16:52:34 -0400
+Received: from mail.ispras.ru ([83.149.199.45]:52852 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729380AbgEJUwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 16:52:32 -0400
+Received: from localhost.localdomain (unknown [46.188.10.168])
+        by mail.ispras.ru (Postfix) with ESMTPSA id C7DFECD464;
+        Sun, 10 May 2020 23:52:28 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Monakov <amonakov@ispras.ru>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Brian Woods <brian.woods@amd.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: [PATCH 0/3] k10temp and EDAC support for AMD Renoir
+Date:   Sun, 10 May 2020 20:48:39 +0000
+Message-Id: <20200510204842.2603-1-amonakov@ispras.ru>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello!
 
-Hi all,
+This simple patch series adds support for new AMD Ryzen CPU generation
+(model 17h family 60h) by adding the new PCI IDs as appropriate in the
+amd_nb, k10temp and amd64_edac drivers.
 
-In commit
+The change in k10temp is the one most important for users (temperature
+sensors of the new CPUs), the amd_nb patch is a prerequisite for that,
+and finally edac_amd64 patch is necessary, because otherwise loading
+that module produces a warning due to incomplete support.
 
-  43dc0aa84ef7 ("xfs: fix unused variable warning in buffer completion on !=
-DEBUG")
+Thank you.
 
-Fixes tag
+Alexander Monakov (3):
+  x86/amd_nb: add AMD family 17h model 60h PCI IDs
+  hwmon: (k10temp) Add AMD family 17h model 60h PCI match
+  EDAC/amd64: Add AMD family 17h model 60h PCI IDs
 
-  Fixes: 7376d745473 ("xfs: random buffer write failure errortag")
+ arch/x86/kernel/amd_nb.c  |  5 +++++
+ drivers/edac/amd64_edac.c | 14 ++++++++++++++
+ drivers/edac/amd64_edac.h |  3 +++
+ drivers/hwmon/k10temp.c   |  1 +
+ include/linux/pci_ids.h   |  1 +
+ 5 files changed, 24 insertions(+)
 
-has these problem(s):
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Brian Woods <brian.woods@amd.com>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+-- 
+2.26.2
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64aNAACgkQAVBC80lX
-0GzCkgf9FC1x7wXEAObLtB6g4ioTF0mbUq/Z8iNuPaJjnEHCm3EIEtGx/GTKQsVx
-rhKLGG98kGDx6lT1Y58Cgw8bk2NMNrPm+wLyEWhOAFpi/YWFtmZNqGHiWSX+YA8p
-BoGXbvIbU032y5yeEQfKC5NP2g3DRMPs1Ze5S2Tu2UsPXV/1DIDHMRu+CH3FD0pS
-bWhWscOGeoZrJhrKTRWh39wxUUSzIxHvZ+inX4JHSD2MumU+EG2eyEaxwWCXM09t
-bnTAk0PuEe+BiEcypcuVobMHr8Rex99N9UG0Xs1HndVcsUcIvORcUBCN49iKzKSd
-64R1/c1ukLMHuQJ61LZmnFfyccl0gA==
-=tLlb
------END PGP SIGNATURE-----
-
---Sig_/+/xVCeJAwV=Cl3X=Ao=Yk2R--
