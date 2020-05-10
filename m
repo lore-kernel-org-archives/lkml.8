@@ -2,100 +2,95 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC87C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 13:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EB2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332EB20708
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 13:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DE1206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgEJNyL (ORCPT
+        id S1729102AbgEJOEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 09:54:11 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:50328 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728238AbgEJNyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 09:54:10 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-93-qTjZfLg2MzOw8fXQ9VV1_g-1; Sun, 10 May 2020 14:54:06 +0100
-X-MC-Unique: qTjZfLg2MzOw8fXQ9VV1_g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 14:54:06 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 10 May 2020 14:54:06 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Nick Desaulniers' <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-CC:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "kernelci . org bot" <bot@kernelci.org>,
-        "Andy Shevchenko" <andriy.shevchenko@intel.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Axtens <dja@axtens.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH v5] x86: bitops: fix build regression
-Thread-Topic: [PATCH v5] x86: bitops: fix build regression
-Thread-Index: AQHWJWcgTwstYk7YbkS06CUW1UwkZqihWGDQ
-Date:   Sun, 10 May 2020 13:54:06 +0000
-Message-ID: <1da278190d8145da95caced0de76c0a1@AcuMS.aculab.com>
-References: <20200508182835.228107-1-ndesaulniers@google.com>
- <20200508183230.229464-1-ndesaulniers@google.com>
-In-Reply-To: <20200508183230.229464-1-ndesaulniers@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 10 May 2020 10:04:44 -0400
+Received: from mga18.intel.com ([134.134.136.126]:38950 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728238AbgEJOEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 10:04:44 -0400
+IronPort-SDR: BcBDwOTcOBLt/g7L31Pn/CAe7shbLCEwRiQngeuA2JcsbK9LCbdaco98R7Ty6LC6elN7S/FDIc
+ KUcsiftVqfuQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 07:04:43 -0700
+IronPort-SDR: bl3XDiT7te0cAyBOPrwMvbKwKR5Am1GNLi3xLixuKpSfIxwZxOnvlK9IFSbKBgGa5/KYhhEwl0
+ 3Y4pne9HshlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,375,1583222400"; 
+   d="scan'208";a="296642298"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 10 May 2020 07:04:42 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXmZN-000Aux-QD; Sun, 10 May 2020 22:04:41 +0800
+Date:   Sun, 10 May 2020 22:03:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: arch/x86/kernel/apm_32.c:428:43: sparse: sparse: cast truncates bits
+ from constant value (c0000400 becomes 400)
+Message-ID: <202005102246.mLhqhR0Y%lkp@intel.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTmljayBEZXNhdWxuaWVycw0KPiBTZW50OiAwOCBNYXkgMjAyMCAxOTozMg0KLi4NCj4g
-SXQgdHVybnMgb3V0IHRoYXQgaWYgeW91ciBjb25maWcgdGlja2xlcyBfX2J1aWx0aW5fY29uc3Rh
-bnRfcCB2aWENCj4gZGlmZmVyZW5jZXMgaW4gY2hvaWNlcyB0byBpbmxpbmUgb3Igbm90LCB0aGVz
-ZSBzdGF0ZW1lbnRzIHByb2R1Y2UNCj4gaW52YWxpZCBhc3NlbWJseToNCi4uLg0KPiBkaWZmIC0t
-Z2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vYml0b3BzLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9iaXRvcHMuaA0KPiBpbmRleCBiMzkyNTcxYzFmMWQuLjM1NDYwZmVmMzliOCAxMDA2NDQNCj4g
-LS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vYml0b3BzLmgNCj4gKysrIGIvYXJjaC94ODYvaW5j
-bHVkZS9hc20vYml0b3BzLmgNCj4gQEAgLTUyLDkgKzUyLDkgQEAgc3RhdGljIF9fYWx3YXlzX2lu
-bGluZSB2b2lkDQo+ICBhcmNoX3NldF9iaXQobG9uZyBuciwgdm9sYXRpbGUgdW5zaWduZWQgbG9u
-ZyAqYWRkcikNCj4gIHsNCj4gIAlpZiAoX19idWlsdGluX2NvbnN0YW50X3AobnIpKSB7DQo+IC0J
-CWFzbSB2b2xhdGlsZShMT0NLX1BSRUZJWCAib3JiICUxLCUwIg0KPiArCQlhc20gdm9sYXRpbGUo
-TE9DS19QUkVGSVggIm9yYiAlYjEsJTAiDQo+ICAJCQk6IENPTlNUX01BU0tfQUREUihuciwgYWRk
-cikNCj4gLQkJCTogImlxIiAoQ09OU1RfTUFTSyhucikgJiAweGZmKQ0KPiArCQkJOiAiaXEiIChD
-T05TVF9NQVNLKG5yKSkNCj4gIAkJCTogIm1lbW9yeSIpOw0KDQpXaGF0IGhhcHBlbnMgaWYgQ09O
-U1RfTUFTSygpIGlzIGNoYW5nZWQgdG86DQojZGVmaW5lIENPTlNUX01BU0tfKG4pIChuID09IDAg
-PyAxIDogbiA9PSAxID8gMiA6IG4gLi4uLikNCiNkZWZpbmUgQ09OU1RfTUFTSyhuKSBDT05TVF9N
-QVNLXygoKG4pICYgNykpDQoNCmFuZCBhIHNlcGFyYXRlIGRlZmluaXRpb24gZm9yIHRoZSBpbnZl
-cnNlIG1hc2suDQoNClRoZSBsYWNrIG9mIGFyaXRobWV0aWMgcHJvbW90aW9uIG1heSBtZWFuIHRo
-YXQgdGhlIG9ubHkgImkiDQpjb25zdHJhaW50IGlzIG5lZWRlZC4NCg0KCURhdmlkDQoNCi0NClJl
-Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
-b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
-Cg==
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   e99332e7b4cda6e60f5b5916cf9943a79dbef902
+commit: 1651e700664b4597ddf4f8adfe435252a0d11277 x86: Fix bitops.h warning with a moved cast
+date:   8 weeks ago
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-191-gc51a0382-dirty
+        git checkout 1651e700664b4597ddf4f8adfe435252a0d11277
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> arch/x86/kernel/apm_32.c:428:43: sparse: sparse: cast truncates bits from constant value (c0000400 becomes 400)
+
+vim +428 arch/x86/kernel/apm_32.c
+
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  421  
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  422  /*
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  423   * Set up a segment that references the real mode segment 0x40
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  424   * that extends up to the end of page zero (that we have reserved).
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  425   * This is for buggy BIOS's that refer to (real mode) segment 0x40
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  426   * even though they are called in protected mode.
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  427   */
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09 @428  static struct desc_struct bad_bios_desc = GDT_ENTRY_INIT(0x4092,
+c7425314c755d5 arch/x86/kernel/apm_32.c Akinobu Mita   2009-08-09  429  			(unsigned long)__va(0x400UL), PAGE_SIZE - 0x400 - 1);
+^1da177e4c3f41 arch/i386/kernel/apm.c   Linus Torvalds 2005-04-16  430  
+
+:::::: The code at line 428 was first introduced by commit
+:::::: c7425314c755d5f94da7c978205c85a7c6201212 x86: Introduce GDT_ENTRY_INIT(), initialize bad_bios_desc statically
+
+:::::: TO: Akinobu Mita <akinobu.mita@gmail.com>
+:::::: CC: Ingo Molnar <mingo@elte.hu>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
