@@ -7,142 +7,124 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 383BAC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48111C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E926820820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269932082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M09fODKF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bv47s5Mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgEJMNL (ORCPT
+        id S1728705AbgEJMUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:13:11 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35323 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726863AbgEJMNK (ORCPT
+        Sun, 10 May 2020 08:20:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43773 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726863AbgEJMUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:13:10 -0400
+        Sun, 10 May 2020 08:20:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589112789;
+        s=mimecast20190719; t=1589113253;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qP/sxaANp1JY7bumO45mdIobp9ZW6EsO7vb9OqH2jFM=;
-        b=M09fODKFt9rfQjK6laSNbYgg3E++kkevi0880vST1Oy6/D6+76jflEmF1zxJ65PNhgHvpR
-        ncyoRVwmYFQCclI/8m0N5eZORGc1BupngcjJvht3NyJCnRKj5thxtz54mBLH/4uTp4lv2T
-        ORissmH02F3shIOB0td4KQVmk7hSz/M=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=g9Dn44+cFb12x40JqLl4ticSILx3WB/Lga9fyKMHGmo=;
+        b=bv47s5MmodbpUzC6RqRuYyZsakP9YvaTD3MJMq51wlrjahPUJgSLog7+I0KtZn2MkBuM2P
+        hCv+J7CFzZHeUEIGsOjK9UYpjy7dB2V2w9axu1usxVAErLgo/f5HMvKcVigmEN/6OqU15i
+        vCCuZiIdYEPQ2arv4dXB6eWEublswcE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-lcTXQcuvOVOjDDiNIm7p9w-1; Sun, 10 May 2020 08:13:03 -0400
-X-MC-Unique: lcTXQcuvOVOjDDiNIm7p9w-1
+ us-mta-123-iHbUSThTNuaV1H9awFwoKw-1; Sun, 10 May 2020 08:20:51 -0400
+X-MC-Unique: iHbUSThTNuaV1H9awFwoKw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77E66460;
-        Sun, 10 May 2020 12:13:02 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E4BA6AD10;
-        Sun, 10 May 2020 12:13:00 +0000 (UTC)
-Message-ID: <a221de5c2a823c508e09b664ce38db4e980e83d6.camel@redhat.com>
-Subject: Re: [PATCH v2] KVM: SVM: Disable AVIC before setting V_IRQ
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     joro@8bytes.org, jon.grimm@amd.com
-Date:   Sun, 10 May 2020 15:13:00 +0300
-In-Reply-To: <793e7151-e14c-f254-7911-a4371ad635aa@redhat.com>
-References: <1588818939-54264-1-git-send-email-suravee.suthikulpanit@amd.com>
-         <793e7151-e14c-f254-7911-a4371ad635aa@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D29E107ACCA;
+        Sun, 10 May 2020 12:20:50 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-76.ams2.redhat.com [10.36.112.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5367C6AD10;
+        Sun, 10 May 2020 12:20:49 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: intel-vbtn: Move detect_tablet_mode() to higher in the file
+Date:   Sun, 10 May 2020 14:20:46 +0200
+Message-Id: <20200510122047.123613-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-07 at 10:27 +0200, Paolo Bonzini wrote:
-> On 07/05/20 04:35, Suravee Suthikulpanit wrote:
-> > The commit 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window
-> > while running L2 with V_INTR_MASKING=1") introduced a WARN_ON,
-> > which checks if AVIC is enabled when trying to set V_IRQ
-> > in the VMCB for enabling irq window.
-> > 
-> > The following warning is triggered because the requesting vcpu
-> > (to deactivate AVIC) does not get to process APICv update request
-> > for itself until the next #vmexit.
-> > 
-> > WARNING: CPU: 0 PID: 118232 at arch/x86/kvm/svm/svm.c:1372 enable_irq_window+0x6a/0xa0 [kvm_amd]
-> >  RIP: 0010:enable_irq_window+0x6a/0xa0 [kvm_amd]
-> >  Call Trace:
-> >   kvm_arch_vcpu_ioctl_run+0x6e3/0x1b50 [kvm]
-> >   ? kvm_vm_ioctl_irq_line+0x27/0x40 [kvm]
-> >   ? _copy_to_user+0x26/0x30
-> >   ? kvm_vm_ioctl+0xb3e/0xd90 [kvm]
-> >   ? set_next_entity+0x78/0xc0
-> >   kvm_vcpu_ioctl+0x236/0x610 [kvm]
-> >   ksys_ioctl+0x8a/0xc0
-> >   __x64_sys_ioctl+0x1a/0x20
-> >   do_syscall_64+0x58/0x210
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > Fixes by sending APICV update request to all other vcpus, and
-> > immediately update APIC for itself.
-> > 
-> > Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> > Link: https://lkml.org/lkml/2020/5/2/167
-> > Fixes: 64b5bd270426 ("KVM: nSVM: ignore L1 interrupt window while running L2 with V_INTR_MASKING=1")
-> > ---
-> >  arch/x86/kvm/x86.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index df473f9..69a01ea 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -8085,6 +8085,7 @@ void kvm_vcpu_update_apicv(struct kvm_vcpu *vcpu)
-> >   */
-> >  void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
-> >  {
-> > +	struct kvm_vcpu *except;
-> >  	unsigned long old, new, expected;
-> >  
-> >  	if (!kvm_x86_ops.check_apicv_inhibit_reasons ||
-> > @@ -8110,7 +8111,17 @@ void kvm_request_apicv_update(struct kvm *kvm, bool activate, ulong bit)
-> >  	trace_kvm_apicv_update_request(activate, bit);
-> >  	if (kvm_x86_ops.pre_update_apicv_exec_ctrl)
-> >  		kvm_x86_ops.pre_update_apicv_exec_ctrl(kvm, activate);
-> > -	kvm_make_all_cpus_request(kvm, KVM_REQ_APICV_UPDATE);
-> > +
-> > +	/*
-> > +	 * Sending request to update APICV for all other vcpus,
-> > +	 * while update the calling vcpu immediately instead of
-> > +	 * waiting for another #VMEXIT to handle the request.
-> > +	 */
-> > +	except = kvm_get_running_vcpu();
-> > +	kvm_make_all_cpus_request_except(kvm, KVM_REQ_APICV_UPDATE,
-> > +					 except);
-> > +	if (except)
-> > +		kvm_vcpu_update_apicv(except);
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_request_apicv_update);
-> >  
-> > 
-> 
-> Queued, thanks.
-> 
-> Paolo
-> 
-I tested this patch today on top of kvm/queue,
-the patch that add kvm_make_all_cpus_request_except and this patch
-(the former patch needs slight adjustment to apply).
+This is a preparation patch for calling detect_tablet_mode() from
+intel_vbtn_input_setup() without needing a forward declaration.
 
-Best regards,
-	Maxim Levitsky
+Note this commit makes no functional changes, the moved block of code
+is completely unchanged.
 
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 36 +++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 4efc70b693a7..29984154f8e4 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -60,6 +60,24 @@ struct intel_vbtn_priv {
+ 	bool wakeup_mode;
+ };
+ 
++static void detect_tablet_mode(struct platform_device *device)
++{
++	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	unsigned long long vgbs;
++	acpi_status status;
++	int m;
++
++	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
++	if (ACPI_FAILURE(status))
++		return;
++
++	m = !(vgbs & TABLET_MODE_FLAG);
++	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
++	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
++	input_report_switch(priv->input_dev, SW_DOCK, m);
++}
++
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+@@ -138,24 +156,6 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+ }
+ 
+-static void detect_tablet_mode(struct platform_device *device)
+-{
+-	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+-	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	unsigned long long vgbs;
+-	acpi_status status;
+-	int m;
+-
+-	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+-	if (ACPI_FAILURE(status))
+-		return;
+-
+-	m = !(vgbs & TABLET_MODE_FLAG);
+-	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
+-	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
+-	input_report_switch(priv->input_dev, SW_DOCK, m);
+-}
+-
+ static bool intel_vbtn_has_buttons(acpi_handle handle)
+ {
+ 	acpi_status status;
+-- 
+2.26.0
 
