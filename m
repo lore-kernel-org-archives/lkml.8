@@ -2,184 +2,142 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D4C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24549C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE412082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589108423;
-	bh=y6Q7eSTVZ1KzZiuOCrv0FQwCH4hWBWN3Tp4Umxf+9W8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=l/W4q0roGp/BNN2q9sUzdCNQ2YQjTnMxZ6GFvjXEsB2qTO+VEsjDrJR2faOe+ag9Z
-	 khb3xPXWwZUm7LZcQ57TjY00LJMZtOlx7Oa1EFcv3/eSHnSwPYcDsJjHGQDoFNSxoF
-	 mCJ80cKU3cRvR0hxHlxBsbLJzj1XSAB+0SVzkQx4=
+	by mail.kernel.org (Postfix) with ESMTP id EA4A72082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kwOM9dPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgEJLAX (ORCPT
+        id S1728129AbgEJLCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 07:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgEJLAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 07:00:22 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A1F20708;
-        Sun, 10 May 2020 11:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589108421;
-        bh=y6Q7eSTVZ1KzZiuOCrv0FQwCH4hWBWN3Tp4Umxf+9W8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NnfImhX7HKPftayZYG9B2Q1EKNznqqfYZTsww3lfw3LQ+FdmCHYB5R/96Ju+SLww1
-         f4vzU5fE3bFiOSOlWXZL7qcnJKD93o3YWi4t+WOgNkYH7y3vZz+6JcJ0MYby4YehTl
-         5u+PGAxSoPGDWmmUJxiEFDmneOTUHTeEK6P4oJZQ=
-Date:   Sun, 10 May 2020 12:00:16 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] iio: light: cm32181: Switch to new style
- i2c-driver probe function
-Message-ID: <20200510120016.7b360d81@archlinux>
-In-Reply-To: <e30bbcb4-c0cd-e95f-501a-89270f8dd19e@redhat.com>
-References: <20200504125551.434647-1-hdegoede@redhat.com>
-        <20200510104806.63ffeae5@archlinux>
-        <e30bbcb4-c0cd-e95f-501a-89270f8dd19e@redhat.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 May 2020 07:02:23 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:7454 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgEJLCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 07:02:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589108542; x=1620644542;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=kRA32J9VjPd5GhXxmUjtK9WR+tdYKtXlyIKqjRjvds4=;
+  b=kwOM9dPoNKU0tdkaz3jMuVkZYLl72dECF7EWw9463waGE+M7ua2Ugl64
+   GlwvCShwz4GvqEuDOBiveed8l+b8/eKHumirFXbr5r+zCFJMWMgmf6S0z
+   TSX7m9TbdH+GXve/TfVXUuOLwrrfRAWpt5BAmkyzAZJV/qS8wEdGkX99t
+   Q=;
+IronPort-SDR: MwGxtAgcSS4nmDlykRZalRVijBBroxmPd+GcNzGvuCZ1UIY6VFnz0hwuRBflNbKCYLzpl6rJ6b
+ rbHganDI9qRg==
+X-IronPort-AV: E=Sophos;i="5.73,375,1583193600"; 
+   d="scan'208";a="42326554"
+Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
+Thread-Topic: [PATCH v1 00/15] Add support for Nitro Enclaves
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 May 2020 11:02:20 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 2BE10A1E8B;
+        Sun, 10 May 2020 11:02:18 +0000 (UTC)
+Received: from EX13D10UWA003.ant.amazon.com (10.43.160.248) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 11:02:18 +0000
+Received: from EX13D21UWA003.ant.amazon.com (10.43.160.184) by
+ EX13D10UWA003.ant.amazon.com (10.43.160.248) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 11:02:18 +0000
+Received: from EX13D21UWA003.ant.amazon.com ([10.43.160.184]) by
+ EX13D21UWA003.ant.amazon.com ([10.43.160.184]) with mapi id 15.00.1497.006;
+ Sun, 10 May 2020 11:02:18 +0000
+From:   "Herrenschmidt, Benjamin" <benh@amazon.com>
+To:     "pavel@ucw.cz" <pavel@ucw.cz>,
+        "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Liguori, Anthony" <aliguori@amazon.com>,
+        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
+        "Graf (AWS), Alexander" <graf@amazon.de>,
+        "ne-devel-upstream@amazon.com" <ne-devel-upstream@amazon.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "van der Linden, Frank" <fllinden@amazon.com>,
+        "Smith, Stewart" <trawets@amazon.com>,
+        "Pohlack, Martin" <mpohlack@amazon.de>,
+        "Wilson, Matt" <msw@amazon.com>, "Dannowski, Uwe" <uwed@amazon.de>,
+        "Doebel, Bjoern" <doebel@amazon.de>
+Thread-Index: AQHWJQZmwcsXbLPvp0aDqkxP7IsAE6igJAKAgAEG3wA=
+Date:   Sun, 10 May 2020 11:02:18 +0000
+Message-ID: <1b00857202884c2a27d0e381d6de312201d17868.camel@amazon.com>
+References: <20200421184150.68011-1-andraprs@amazon.com>
+         <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
+         <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
+         <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
+         <20200507174438.GB1216@bug>
+         <620bf5ae-eade-37da-670d-a8704d9b4397@amazon.com>
+         <20200509192125.GA1597@bug>
+In-Reply-To: <20200509192125.GA1597@bug>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.200]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2CEE01186C01554B923E06BDA18EFCCA@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 12:03:08 +0200
-Hans de Goede <hdegoede@redhat.com> wrote:
-
-> Hi,
-> 
-> On 5/10/20 11:48 AM, Jonathan Cameron wrote:
-> > On Mon,  4 May 2020 14:55:41 +0200
-> > Hans de Goede <hdegoede@redhat.com> wrote:
-> >   
-> >> Switch to the new style i2c-driver probe_new probe function and drop the
-> >> unnecessary i2c_device_id table (we do not have any old style board files
-> >> using this).
-> >>
-> >> This is a preparation patch for adding ACPI binding support.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>  
-> > Hi Hans,
-> > 
-> > Seems these have all been sent with mime type of quoted-printable.
-> > As git am really doesn't like that I ended up pulling these down from
-> > patchwork.
-> > 
-> > Please try and sort that email issue out for future patch sets until
-> > we get git am that works with it in standard distro packages (assuming
-> > it ever does)  
-> 
-> Weird, I used git send-email to send the patches, as I always do.
-> I contribute to a lot of subsystems and this is the first complaint I'm
-> getting about this ?
-It's not been true of the previous ones you've sent me.
-
-A bit of googling suggests git-send-email will do this if it finds a CR
-in the patch.  Perhaps that's what happened?
-
-Maybe try sending them one at a time and see if a particular patch is causing
-it to happen.  Then play detective on why.
-
-Or just take it as one of those things and ignore it unless it happens again!
-
-J
-
-> 
-> > Otherwise, a bit of fuzz from the patch that dropped the of_match_ptr
-> > protections.
-> > 
-> > Series applied to the togreg branch of iio.git and pushed out as testing for
-> > the autobuilders to play with it.  
-> 
-> Great, thank you.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> >> ---
-> >> Changes in v4:
-> >> - Set indio_dev->name to "cm32181" instead of setting it to dev_name(dev)
-> >>
-> >> Changes in v3:
-> >> - This is a new patch in v3 of this patch-set
-> >> ---
-> >>   drivers/iio/light/cm32181.c | 15 +++------------
-> >>   1 file changed, 3 insertions(+), 12 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-> >> index 5f4fb5674fa0..2c139d85ef0c 100644
-> >> --- a/drivers/iio/light/cm32181.c
-> >> +++ b/drivers/iio/light/cm32181.c
-> >> @@ -294,8 +294,7 @@ static const struct iio_info cm32181_info = {
-> >>   	.attrs			= &cm32181_attribute_group,
-> >>   };
-> >>   
-> >> -static int cm32181_probe(struct i2c_client *client,
-> >> -			const struct i2c_device_id *id)
-> >> +static int cm32181_probe(struct i2c_client *client)
-> >>   {
-> >>   	struct cm32181_chip *cm32181;
-> >>   	struct iio_dev *indio_dev;
-> >> @@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
-> >>   	indio_dev->channels = cm32181_channels;
-> >>   	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
-> >>   	indio_dev->info = &cm32181_info;
-> >> -	indio_dev->name = id->name;
-> >> +	indio_dev->name = "cm32181";
-> >>   	indio_dev->modes = INDIO_DIRECT_MODE;
-> >>   
-> >>   	ret = cm32181_reg_init(cm32181);
-> >> @@ -338,13 +337,6 @@ static int cm32181_probe(struct i2c_client *client,
-> >>   	return 0;
-> >>   }
-> >>   
-> >> -static const struct i2c_device_id cm32181_id[] = {
-> >> -	{ "cm32181", 0 },
-> >> -	{ }
-> >> -};
-> >> -
-> >> -MODULE_DEVICE_TABLE(i2c, cm32181_id);
-> >> -
-> >>   static const struct of_device_id cm32181_of_match[] = {
-> >>   	{ .compatible = "capella,cm32181" },
-> >>   	{ }
-> >> @@ -356,8 +348,7 @@ static struct i2c_driver cm32181_driver = {
-> >>   		.name	= "cm32181",
-> >>   		.of_match_table = of_match_ptr(cm32181_of_match),
-> >>   	},
-> >> -	.id_table       = cm32181_id,
-> >> -	.probe		= cm32181_probe,
-> >> +	.probe_new	= cm32181_probe,
-> >>   };
-> >>   
-> >>   module_i2c_driver(cm32181_driver);  
-> >   
-> 
-
+T24gU2F0LCAyMDIwLTA1LTA5IGF0IDIxOjIxICswMjAwLCBQYXZlbCBNYWNoZWsgd3JvdGU6DQo+
+IA0KPiBPbiBGcmkgMjAyMC0wNS0wOCAxMDowMDoyNywgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3
+cm90ZToNCj4gPiANCj4gPiANCj4gPiBPbiAwNy8wNS8yMDIwIDIwOjQ0LCBQYXZlbCBNYWNoZWsg
+d3JvdGU6DQo+ID4gPiANCj4gPiA+IEhpIQ0KPiA+ID4gDQo+ID4gPiA+ID4gaXQgdXNlcyBpdHMg
+b3duIG1lbW9yeSBhbmQgQ1BVcyArIGl0cyB2aXJ0aW8tdnNvY2sgZW11bGF0ZWQgZGV2aWNlIGZv
+cg0KPiA+ID4gPiA+IGNvbW11bmljYXRpb24gd2l0aCB0aGUgcHJpbWFyeSBWTS4NCj4gPiA+ID4g
+PiANCj4gPiA+ID4gPiBUaGUgbWVtb3J5IGFuZCBDUFVzIGFyZSBjYXJ2ZWQgb3V0IG9mIHRoZSBw
+cmltYXJ5IFZNLCB0aGV5IGFyZSBkZWRpY2F0ZWQNCj4gPiA+ID4gPiBmb3IgdGhlIGVuY2xhdmUu
+IFRoZSBOaXRybyBoeXBlcnZpc29yIHJ1bm5pbmcgb24gdGhlIGhvc3QgZW5zdXJlcyBtZW1vcnkN
+Cj4gPiA+ID4gPiBhbmQgQ1BVIGlzb2xhdGlvbiBiZXR3ZWVuIHRoZSBwcmltYXJ5IFZNIGFuZCB0
+aGUgZW5jbGF2ZSBWTS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGVzZSB0d28gY29tcG9uZW50
+cyBuZWVkIHRvIHJlZmxlY3QgdGhlIHNhbWUgc3RhdGUgZS5nLiB3aGVuIHRoZQ0KPiA+ID4gPiA+
+IGVuY2xhdmUgYWJzdHJhY3Rpb24gcHJvY2VzcyAoMSkgaXMgdGVybWluYXRlZCwgdGhlIGVuY2xh
+dmUgVk0gKDIpIGlzDQo+ID4gPiA+ID4gdGVybWluYXRlZCBhcyB3ZWxsLg0KPiA+ID4gPiA+IA0K
+PiA+ID4gPiA+IFdpdGggcmVnYXJkIHRvIHRoZSBjb21tdW5pY2F0aW9uIGNoYW5uZWwsIHRoZSBw
+cmltYXJ5IFZNIGhhcyBpdHMgb3duDQo+ID4gPiA+ID4gZW11bGF0ZWQgdmlydGlvLXZzb2NrIFBD
+SSBkZXZpY2UuIFRoZSBlbmNsYXZlIFZNIGhhcyBpdHMgb3duIGVtdWxhdGVkDQo+ID4gPiA+ID4g
+dmlydGlvLXZzb2NrIGRldmljZSBhcyB3ZWxsLiBUaGlzIGNoYW5uZWwgaXMgdXNlZCwgZm9yIGV4
+YW1wbGUsIHRvIGZldGNoDQo+ID4gPiA+ID4gZGF0YSBpbiB0aGUgZW5jbGF2ZSBhbmQgdGhlbiBw
+cm9jZXNzIGl0LiBBbiBhcHBsaWNhdGlvbiB0aGF0IHNldHMgdXAgdGhlDQo+ID4gPiA+ID4gdnNv
+Y2sgc29ja2V0IGFuZCBjb25uZWN0cyBvciBsaXN0ZW5zLCBkZXBlbmRpbmcgb24gdGhlIHVzZSBj
+YXNlLCBpcyB0aGVuDQo+ID4gPiA+ID4gZGV2ZWxvcGVkIHRvIHVzZSB0aGlzIGNoYW5uZWw7IHRo
+aXMgaGFwcGVucyBvbiBib3RoIGVuZHMgLSBwcmltYXJ5IFZNDQo+ID4gPiA+ID4gYW5kIGVuY2xh
+dmUgVk0uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gTGV0IG1lIGtub3cgaWYgZnVydGhlciBjbGFy
+aWZpY2F0aW9ucyBhcmUgbmVlZGVkLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhhbmtzLCB0aGlzIGlz
+IGFsbCB1c2VmdWwuICBIb3dldmVyIGNhbiB5b3UgcGxlYXNlIGNsYXJpZnkgdGhlDQo+ID4gPiA+
+IGxvdy1sZXZlbCBkZXRhaWxzIGhlcmU/DQo+ID4gPiANCj4gPiA+IElzIHRoZSB2aXJ0dWFsIG1h
+Y2hpbmUgbWFuYWdlciBvcGVuLXNvdXJjZT8gSWYgc28sIEkgZ3Vlc3MgcG9pbnRlciBmb3Igc291
+cmNlcw0KPiA+ID4gd291bGQgYmUgdXNlZnVsLg0KPiA+IA0KPiA+IEhpIFBhdmVsLA0KPiA+IA0K
+PiA+IFRoYW5rcyBmb3IgcmVhY2hpbmcgb3V0Lg0KPiA+IA0KPiA+IFRoZSBWTU0gdGhhdCBpcyB1
+c2VkIGZvciB0aGUgcHJpbWFyeSAvIHBhcmVudCBWTSBpcyBub3Qgb3BlbiBzb3VyY2UuDQo+IA0K
+PiBEbyB3ZSB3YW50IHRvIG1lcmdlIGNvZGUgdGhhdCBvcGVuc291cmNlIGNvbW11bml0eSBjYW4g
+bm90IHRlc3Q/DQoNCkhlaGUuLiB0aGlzIGlzbid0IHF1aXRlIHRoZSBzdG9yeSBQYXZlbCA6KQ0K
+DQpXZSBtZXJnZSBzdXBwb3J0IGZvciBwcm9wcmlldGFyeSBoeXBlcnZpc29ycywgdGhpcyBpcyBu
+byBkaWZmZXJlbnQuIFlvdQ0KY2FuIHRlc3QgaXQsIHdlbGwgYXQgbGVhc3QgeW91J2xsIGJlIGFi
+bGUgdG8gLi4uIHdoZW4gQVdTIGRlcGxveXMgdGhlDQpmdW5jdGlvbmFsaXR5LiBZb3UgZG9uJ3Qg
+bmVlZCB0aGUgaHlwZXJ2aXNvciBpdHNlbGYgdG8gYmUgb3BlbiBzb3VyY2UuDQoNCkluIGZhY3Qs
+IGluIHRoaXMgY2FzZSwgaXQncyBub3QgZXZlbiBsb3cgbGV2ZWwgaW52YXNpdmUgYXJjaCBjb2Rl
+IGxpa2UNCnNvbWUgb2YgdGhlIGFib3ZlIGNhbiBiZS4gSXQncyBhIGRyaXZlciBmb3IgYSBQQ0kg
+ZGV2aWNlIDotKSBHcmFudGVkIGENCnZpcnR1YWwgb25lLiBXZSBtZXJnZSBkcml2ZXJzIGZvciBQ
+Q0kgZGV2aWNlcyByb3V0aW5lbHkgd2l0aG91dCB0aGUgUlRMDQpvciBmaXJtd2FyZSBvZiB0aG9z
+ZSBkZXZpY2VzIGJlaW5nIG9wZW4gc291cmNlLg0KDQpTbyB5ZXMsIHdlIHByb2JhYmx5IHdhbnQg
+dGhpcyBpZiBpdCdzIGdvaW5nIHRvIGJlIGEgdXNlZnVsIGZlYXR1cmVzIHRvDQp1c2VycyB3aGVu
+IHJ1bm5pbmcgb24gQVdTIEVDMi4gKERpc2NsYWltZXI6IEkgd29yayBmb3IgQVdTIHRoZXNlIGRh
+eXMpLg0KDQpDaGVlcnMsDQpCZW4uDQoNCg==
