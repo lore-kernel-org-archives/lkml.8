@@ -2,101 +2,103 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3481C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D063DC54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8151921973
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DF020801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyJjvVE6"
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="olgW/Ws8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgEJHkF (ORCPT
+        id S1728340AbgEJHl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 03:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
+        Sun, 10 May 2020 03:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEJHkE (ORCPT
+        with ESMTP id S1725810AbgEJHl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 03:40:04 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CE9C061A0C;
-        Sun, 10 May 2020 00:40:04 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id c18so5469204ile.5;
-        Sun, 10 May 2020 00:40:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mX8obe5Y6OipJrXkhzZBoUFMFO3dCzXyeTyerYVN23U=;
-        b=TyJjvVE63gFmRfrm8OFUipIF7lrBFXHJ9BQRoE1D4gmlnOwf820qZhXBIxh8nVXnrB
-         KrhuhRPUeR7SIxXxrmA7bNxsC1xppIbUcPRJtJZ2BJjzIy8Mg26sEaYj6ghyw55Hjqi4
-         TG5yorVfjmSkcyFJ2QLz/ILv+eoI980aB7TXywOreEnNfa3Ri4GG25M9TdZ4x0JMTQe/
-         E88pFQyczxpdzYmmqUgdoDB2rJdPY1aptkHE5FEo1w/3YM9Ei49cnVCt+RL9ibvpqGL6
-         U7jP9IZ35J1PpT2t3+B/oaqd8dF1D5tr8h7F4NRYk9bBhWPA+S2eQA5/mYU1K7v/oKJ8
-         dFcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mX8obe5Y6OipJrXkhzZBoUFMFO3dCzXyeTyerYVN23U=;
-        b=Ct7nnOQ5OnWnUoQmxEpSkUqOWz5td8jYbo59F7tecWz3x9dYcgERrBlcxyKEwW/Vq4
-         ap2Qc7xLf/ujSvFFM174LWTrSA+t34/G5LN183aveGLm/knmnyNSB0Iq4MoZplurF2OF
-         2Y22WkHjLhVC1SBNr0NXh1CkAfLo5QxlAI+vu++Qkfc4hdpsU/GHEpHlSvf6vz+M33HX
-         e93Jz2LvckHgc4YkKR0zTnKBJJtd7Y+HPxJ04SREkOkhevACwH2zsK1DtTP/89x8CUcw
-         qpC4cOosigmrc2VqNXoPnfAUrE3ttfbnT2lcDYor5ntWE5VqSAb/mt6hzG8upLVizVUy
-         TcfA==
-X-Gm-Message-State: AGi0PuZ6ZzzoJ7HzFxOsEkBsXHuC+n+9/zbpHPKjZ4/k1PYgy+jXqsBX
-        KWq6qHIQmx6ivCNxcC0b4vxLTzl2ghofmaI+GuXd/yz0
-X-Google-Smtp-Source: APiQypLQ66tcffOC+J0ZOTG8iVHhQoQTFHTZlpuibvLAzE0MpgEfQpRwRzAY+6ba19Ul5oTkBO7XXA1oy+cOomrOoWY=
-X-Received: by 2002:a92:d5cf:: with SMTP id d15mr11149078ilq.131.1589096403781;
- Sun, 10 May 2020 00:40:03 -0700 (PDT)
+        Sun, 10 May 2020 03:41:28 -0400
+Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F655C061A0C;
+        Sun, 10 May 2020 00:41:27 -0700 (PDT)
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 04A7fH88024809
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 10 May 2020 09:41:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1589096478; bh=0ektno/eixWqJUCCiVzDc/aHhKtbibJjf6a3mIpikDc=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=olgW/Ws8kwtuB8HJdniFdFLhEJC7qutQa4C36OHLCmbDH3Img5r70ZHnXUO+z1LV1
+         49+FwDwaK47stz/ZyUhlq8cvlPoAxYkI75f+iLdOnrdomu0eH1Z6OekEd8J5Pdpc0W
+         kVpLq7wQ19uIiYBYArnnxOOc+4fhZ5hih+0ocK9k=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1jXgaK-0008K3-RX; Sun, 10 May 2020 09:41:16 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: remove redundant assignment to variable status
+Organization: m
+References: <20200509215756.506840-1-colin.king@canonical.com>
+        <20200509215756.506840-2-colin.king@canonical.com>
+Date:   Sun, 10 May 2020 09:41:16 +0200
+In-Reply-To: <20200509215756.506840-2-colin.king@canonical.com> (Colin King's
+        message of "Sat, 9 May 2020 22:57:56 +0100")
+Message-ID: <87a72gck4j.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200509094515.7082eb92@canb.auug.org.au> <alpine.DEB.2.21.2005090103060.29336@piezo.novalocal>
- <20200509134751.147d747d@canb.auug.org.au>
-In-Reply-To: <20200509134751.147d747d@canb.auug.org.au>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Sun, 10 May 2020 09:40:07 +0200
-Message-ID: <CAOi1vP8JjtBZoy0zAgz7=wwMuHiiRPCvxz7ZKicE9nh-NZXz2Q@mail.gmail.com>
-Subject: Re: linux-next: new contact(s) for the ceph tree?
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Sage Weil <sage@newdream.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 5:47 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Colin King <colin.king@canonical.com> writes:
+
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Hi Sage,
+> The variable status is being initializeed with a value that is never read
+> and it is being updated later with a new value. The initialization
+> is redundant and can be removed.
 >
-> On Sat, 9 May 2020 01:03:14 +0000 (UTC) Sage Weil <sage@newdream.net> wrote:
-> >
-> > Jeff Layton <jlayton@kernel.org>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/usb/qmi_wwan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Done.
-> > On Sat, 9 May 2020, Stephen Rothwell wrote:
-> > >
-> > > I noticed commit
-> > >
-> > >   3a5ccecd9af7 ("MAINTAINERS: remove myself as ceph co-maintainer")
-> > >
-> > > appear recently.  So who should I now list as the contact(s) for the
-> > > ceph tree?
+> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+> index 4bb8552a00d3..b0eab6e5279d 100644
+> --- a/drivers/net/usb/qmi_wwan.c
+> +++ b/drivers/net/usb/qmi_wwan.c
+> @@ -719,7 +719,7 @@ static int qmi_wwan_change_dtr(struct usbnet *dev, bo=
+ol on)
+>=20=20
+>  static int qmi_wwan_bind(struct usbnet *dev, struct usb_interface *intf)
+>  {
+> -	int status =3D -1;
+> +	int status;
+>  	u8 *buf =3D intf->cur_altsetting->extra;
+>  	int len =3D intf->cur_altsetting->extralen;
+>  	struct usb_interface_descriptor *desc =3D &intf->cur_altsetting->desc;
 
-Hi Stephen,
 
-I thought maintainers were on the list automatically.  If there is
-a separate list, please add me as well.
+Yes, looks like this initialization was made redundant when the CDC
+descriptor parsing was moved to usbcore. Thanks.
 
-Thanks,
+Adding Fixes for documentation only, not as a stable hint.  This is
+cleanup only and not suitable for stable IMHO.
 
-                Ilya
+Acked-by: Bj=C3=B8rn Mork <bjorn@mork.no>
+Fixes: 8492ed45aa5d ("qmi-wwan: use common parser")
