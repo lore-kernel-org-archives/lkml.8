@@ -2,112 +2,88 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7507C54E8E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D072C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10DB20A8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:51:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cKINoK47"
+	by mail.kernel.org (Postfix) with ESMTP id 282C720725
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 23:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgEJWvV (ORCPT
+        id S1729126AbgEJXT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 18:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729138AbgEJWvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 18:51:20 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B609C061A0C;
-        Sun, 10 May 2020 15:51:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Kznc70rgz9sNH;
-        Mon, 11 May 2020 08:51:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589151077;
-        bh=7BlllL2/3F1gIHYS8xqf9z5ityPG0xFi+1ZN8YLJgmU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cKINoK47Qqeh6jAnMyXX3NBIRPlcv7vxoQVEhR+QUarouXhF1EKYTCxrfegf/aF02
-         Qs7saAdvv1X2FWJzY3f53eW28V2uvtUWaFQlQgeImNJPzdwjbGbtp9IpC142beMIET
-         RWdGaWtGFxlLkDjKRCPZ7xUD3JhBJLw6SJyhLIHKTWoSfGN9Kr8uqfHRvIzTipbJzs
-         3ZQatjAq4cHV6CvmtMd6jJ8Pyom2SAhWxij9UNjIq2OZBfw0zOXmsCZIgEXSK4l8M5
-         0X+AAC4YQUE54gaT/w4t2AFqzhVb/mMy5gTlPqQnPRTxUZsOomoJJqCM3j9HHOuRWm
-         9aAONlBC4+BWg==
-Date:   Mon, 11 May 2020 08:51:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
-        Thierry Reding <treding@nvidia.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: linux-next: build failure after merge of the tegra tree
-Message-ID: <20200511085114.0cde64d9@canb.auug.org.au>
+        Sun, 10 May 2020 19:19:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:32356 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728856AbgEJXT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 19:19:57 -0400
+IronPort-SDR: femZO/HCqNMpkjA8ITOUxLmQowXiHgEsTYM8bF9njviYDF0ZEUzt53m+B/VDTvJNNNmlCjUpIk
+ EUoATwhVX2zA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 16:19:56 -0700
+IronPort-SDR: bMVr+HfzhLC7IDcW8Rgd6plGgxxu9+/Eji/jiXNKDERKa1e19pHZ6VicKFtf8Dpfrh0Rmd2H7z
+ fTYtNw4Yfwng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,377,1583222400"; 
+   d="scan'208";a="279614189"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2020 16:19:53 -0700
+Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
+        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Daniel Drake <drake@endlessm.com>,
+        Derrick Jonathan <jonathan.derrick@intel.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v4 0/3] Replace private domain with per-group default
+ domain
+To:     Joerg Roedel <joro@8bytes.org>
+References: <20200506015947.28662-1-baolu.lu@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7928dd48-93da-62f0-b455-6e6b248d0fae@linux.intel.com>
+Date:   Mon, 11 May 2020 07:16:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Bgik5G9xxWjzot7jVu5gas8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200506015947.28662-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Bgik5G9xxWjzot7jVu5gas8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Joerg,
 
-Hi all,
+On 5/6/20 9:59 AM, Lu Baolu wrote:
+> Some devices are required to use a specific type (identity or dma) of
+> default domain when they are used with a vendor iommu. When the system
+> level default domain type is different from it, the vendor iommu driver
+> has to request a new default domain with either
+> iommu_request_dma_domain_for_dev() or iommu_request_dm_for_dev() in the
+> add_dev() callback. Unfortunately, these two helpers only work when the
+> group hasn't been assigned to any other devices, hence, some vendor iommu
+> driver has to use a private domain if it fails to request a new default
+> one.
+> 
+> Joerg proposed an on-going proposal which makes the default domain
+> framework to support configuring per-group default domain during boot
+> process.
+> 
+> https://lkml.org/lkml/2020/4/14/616
+> [This has been applied in iommu/next.]
+> 
+> Hence, there is no need to keep the private domain implementation
+> in the Intel IOMMU driver. This patch series aims to remove it.
 
-After merging the tegra tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Can you please take this series to iommu/next for wider test?
 
-ERROR: modpost: "host1x_driver_register_full" [drivers/staging/media/tegra-=
-video/tegra-video.ko] undefined!
-ERROR: modpost: "host1x_device_exit" [drivers/staging/media/tegra-video/teg=
-ra-video.ko] undefined!
-ERROR: modpost: "host1x_client_unregister" [drivers/staging/media/tegra-vid=
-eo/tegra-video.ko] undefined!
-ERROR: modpost: "host1x_driver_unregister" [drivers/staging/media/tegra-vid=
-eo/tegra-video.ko] undefined!
-ERROR: modpost: "host1x_device_init" [drivers/staging/media/tegra-video/teg=
-ra-video.ko] undefined!
-ERROR: modpost: "host1x_syncpt_free" [drivers/staging/media/tegra-video/teg=
-ra-video.ko] undefined!
-ERROR: modpost: "host1x_syncpt_request" [drivers/staging/media/tegra-video/=
-tegra-video.ko] undefined!
-ERROR: modpost: "host1x_client_register" [drivers/staging/media/tegra-video=
-/tegra-video.ko] undefined!
-
-Caused by commit
-
-  423d10a99b30 ("media: tegra: Add Tegra210 Video input driver")
-
-I removed CONFIG_COMPILE_TEST for this driver for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Bgik5G9xxWjzot7jVu5gas8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64hWIACgkQAVBC80lX
-0GxkBgf/SIfydvYzbbXUYRk9KNwasUv+TPDPUKpM14LwoAuFd8NUw2OMft7lS/f4
-DXvbkwMQG85OMleEg3wHAJgnJy2b2vv7KzFgg7cqR356t5w6ExK2Mj2Y20irJ+CJ
-aKZbxJ2kLpH8pQQ9cUtsXa+j7aPgKz5kdOLuISz9wWzRv9B3qQn8oDwkACRLG/Pr
-SP4SUMFzMbTj/hFpA93SjKyBlI9TgM0HXKhi0MqEan2TGXD7M5tsGTv7UPFSLgXB
-yvpVqrxd9RfMFtA3Kc7eMnjFgliLOCU4jH4M0p+TCm9cKqDREXs1OLs5V5yBWozA
-1UWWcEuYv0XNgwCNQMTvxhBtPYVZtg==
-=TNpS
------END PGP SIGNATURE-----
-
---Sig_/Bgik5G9xxWjzot7jVu5gas8--
+Best regards,
+baolu
