@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F4FC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAAAC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F267208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2602082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJBHmSbm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOyaXBeL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgEJPKf (ORCPT
+        id S1729306AbgEJPKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 11:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
+        Sun, 10 May 2020 11:10:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728849AbgEJPKf (ORCPT
+        with ESMTP id S1728762AbgEJPKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 11:10:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAFAC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so2811308plo.7
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:35 -0700 (PDT)
+        Sun, 10 May 2020 11:10:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1B8C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:43 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a7so6499937pju.2
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UwWrCXO3EiMCCi/VR56OQtOH8VL67AQVe2Td23eGNBo=;
-        b=XJBHmSbmFs4/mmJZsFtukL3kXcrxNpRmnKfwTujxxb8wey3PABRkXjNovoopXXO15u
-         //e2mT7jWi5e2rJh2ZUOKhrwYPjTUnE5mDStAqgUaMGOzKQ+49N1lUNFVZP2zkIDjdxH
-         JUGGzGN2stZbpteYGlh5cTGHxOitMQbML3yHcUHlJTgBdFoQvYm/Uy5lryDViYqKlgiM
-         RQjc472sd5n89XH6n4Ps7SA2PXvfy/U5pwFgT3QtUj2CHX0aloHLzPF8R/62Q8p74Lak
-         R3a0NzlchvFHtE5EOo6tM8ScMOevbIHJ6p9YsGF6oJzlfpQGYTq+bOa++EF0praSyDym
-         5e2A==
+        bh=DdKThAFo5i3EeaIla8I972Z4kJMfuus/AHP62b9JxPE=;
+        b=lOyaXBeLH2SzZd1X/R44gLrgCWdolRgZ3GDKTHUtwUraKQ7CH4CrYghTs0Q+2i9h7t
+         sOzG5gBedKzKilGr8qjVUFbNI1pc/B3oIf+c7NiEVbsny/E/EqGQY8nVGplIrskHUaim
+         b+vyNJ9tWLfBAImJ8cV3tb8upWNGOK+EgU0kJtw2cnBua5kPF13wxzSJawlAPZx4GXkB
+         fZRB+aDNwb40D+5MyFG9vUMIyAHAo90LRmx0DF2aX0Afs1GukLT00SApAGhVUe9BNmfX
+         2d/0tB1SxsESt4kjSpIoi+iWqJIsQs20BP1QJokLz4pOoSB+P2l9rv8LUUZTUcz/rzcQ
+         kXQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UwWrCXO3EiMCCi/VR56OQtOH8VL67AQVe2Td23eGNBo=;
-        b=KVdhEnZGRpJSCu7f2Nfr2OZ9950HUudelgCBxlHeua1m91UNVjFiZyMxpo9+CdfTMB
-         +1wvqJyLLCXyG4h+zpluXw3LNwHDu8xSzcFR3sOzUl2p3knou+U99MDvN/mx6GlHBps5
-         5bYdmiuunrDzaYdXZLEOs80wjHWArpTdFONGtasHmEMtlixcosq3LbWIB7T7EuZhzufU
-         T9kvuYv2v62xmyTbROvBOmhn4lgCTXAsJPdGU19+3ebbIMsRuDPHgjw/L+LCOt6LR/OB
-         643I9zOiU6hTCWSBcgOF0CJNfEOVuQH8W+5EekL5Db4tA1xxi2QOr4LojSYLL1OC3BfY
-         +dCw==
-X-Gm-Message-State: AGi0PuZRMj8oPZt59DTs7OsZhbWz1rIesHwbUdQbvkDqu+4cyByt8SjZ
-        JJTF91HGw256K89Tz0u1nYgJjUNDjGY=
-X-Google-Smtp-Source: APiQypJeAHZ1fUexZr4VTzdBZ6eMQm78ghNqz0DshJFEqxmXyV4QxZIc14/yUzeecEDKlw0KO4zRxw==
-X-Received: by 2002:a17:902:207:: with SMTP id 7mr10881495plc.331.1589123434717;
-        Sun, 10 May 2020 08:10:34 -0700 (PDT)
+        bh=DdKThAFo5i3EeaIla8I972Z4kJMfuus/AHP62b9JxPE=;
+        b=JTf0vnW/pLl4ieZ23HnjJ1nu87M8hX71l17PbDGP+cXrexRXZK8YOwvOipJM0lukyC
+         dxmTJZRVEdoe9Bk/9Dw4aff17H+GFmsu9jX6uSHkI5dsu044mivdY+UutP+YVdhiqCU/
+         mD4N1doR6ff1Nqfht3x8MM1L8ytRiXwRdc+h85eOdoXf3wg/htTAf/D2CYnD4dCDKHXy
+         9ubF+E0syOjllXLw7I8SUqeqROySpauAyUflQuBjxxXfFUwFz2mwOmfL/9KvTH6JEJQF
+         NaarTW64X2QI90zkPVm4qyv6HrPhepbKo0akxdhtgXgb8kVcTcXP4s2MZv4NsG9BRPD7
+         S75A==
+X-Gm-Message-State: AGi0PuaqDnMq2l7AUj/MCvACT3dkc8X/1EoguMQF29gN10R3lrUveZ+v
+        b5+hSxjv5jUmUw5EhzZsnmI=
+X-Google-Smtp-Source: APiQypInqi92M43bcl5lj8erSbyMpJGNfWsaVGxGzwpHpCfeb8QFpRkvi0iX5o/oH5ksrcVKuy52xw==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr17507309pjb.107.1589123443415;
+        Sun, 10 May 2020 08:10:43 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id v7sm6870909pfm.146.2020.05.10.08.10.28
+        by smtp.gmail.com with ESMTPSA id v7sm6870909pfm.146.2020.05.10.08.10.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 08:10:34 -0700 (PDT)
+        Sun, 10 May 2020 08:10:42 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 18/19] perf ftrace: add option --latency-format to display more info about delay
-Date:   Sun, 10 May 2020 23:06:27 +0800
-Message-Id: <20200510150628.16610-19-changbin.du@gmail.com>
+Subject: [PATCH 19/19] perf ftrace: add change log
+Date:   Sun, 10 May 2020 23:06:28 +0800
+Message-Id: <20200510150628.16610-20-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200510150628.16610-1-changbin.du@gmail.com>
 References: <20200510150628.16610-1-changbin.du@gmail.com>
@@ -81,84 +81,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is for the function graph tracer to display more info about latency.
-The execution context is shown in this case.
-
-$ sudo perf ftrace -G --latency-format
-\# tracer: function_graph
-\#
- 1)  .... |   0.992 us    |  mutex_unlock();
- 1)  .... |   1.404 us    |  __fsnotify_parent();
- 1)  .... |   1.023 us    |  fsnotify();
- 1)  .... |   0.335 us    |  __sb_end_write();
- 1)  d... |   0.439 us    |  fpregs_assert_state_consistent();
- 1)  d... |               |  do_syscall_64() {
- 1)  .... |               |    __x64_sys_close() {
+Add a change log after previous enhancements.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/builtin-ftrace.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/perf/builtin-ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index d376b37c53fc..fd8e2f305136 100644
+index fd8e2f305136..8170746f94fd 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -44,6 +44,7 @@ struct perf_ftrace {
- 	bool			nosleep_time;
- 	bool			nofuncgraph_irqs;
- 	bool			funcgraph_tail;
-+	bool			latency_format;
- 	bool			long_info;
- 	unsigned		tracing_thresh;
- 	bool			trace_children;
-@@ -217,6 +218,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
- 	write_tracing_option_file("sleep-time", "1");
- 	write_tracing_option_file("funcgraph-irqs", "1");
- 	write_tracing_option_file("funcgraph-tail", "0");
-+	write_tracing_option_file("latency-format", "0");
- 	write_tracing_option_file("funcgraph-proc", "0");
- 	write_tracing_option_file("funcgraph-abstime", "0");
- 	write_tracing_option_file("irq-info", "0");
-@@ -456,6 +458,17 @@ static int set_tracing_funcgraph_tail(struct perf_ftrace *ftrace)
- 	return 0;
- }
+@@ -3,6 +3,7 @@
+  * builtin-ftrace.c
+  *
+  * Copyright (c) 2013  LG Electronics,  Namhyung Kim <namhyung@kernel.org>
++ * Copyright (c) 2020  Changbin Du <changbin.du@gmail.com>, significant enhancement.
+  */
  
-+static int set_tracing_latency_format(struct perf_ftrace *ftrace)
-+{
-+	if (!ftrace->latency_format)
-+		return 0;
-+
-+	if (write_tracing_option_file("latency-format", "1") < 0)
-+		return -1;
-+
-+	return 0;
-+}
-+
- static int set_tracing_trace_children(struct perf_ftrace *ftrace)
- {
- 	if (!ftrace->trace_children)
-@@ -579,6 +592,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
- 	}
- 
-+	if (set_tracing_latency_format(ftrace) < 0) {
-+		pr_err("failed to set tracing option latency-format\n");
-+		goto out_reset;
-+	}
-+
- 	if (set_tracing_trace_children(ftrace) < 0) {
- 		pr_err("failed to set tracing option function-fork\n");
- 		goto out_reset;
-@@ -748,6 +766,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		    "Ignore functions that happen inside interrupt (function_graph only)"),
- 	OPT_BOOLEAN(0, "funcgraph-tail", &ftrace.funcgraph_tail,
- 		    "Show function tails comment (function_graph only)"),
-+	OPT_BOOLEAN(0, "latency-format", &ftrace.latency_format,
-+		    "displays additional information about the latency (function_graph only)"),
- 	OPT_BOOLEAN('l', "long-info", &ftrace.long_info,
- 		    "Show process names, PIDs, timestamps, irq-info if available"),
- 	OPT_UINTEGER(0, "tracing-thresh", &ftrace.tracing_thresh,
+ #include "builtin.h"
 -- 
 2.25.1
 
