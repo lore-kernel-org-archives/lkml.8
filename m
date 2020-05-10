@@ -2,147 +2,83 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26047C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B0C54E8B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECDB5208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:08:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XP6oOf4s"
+	by mail.kernel.org (Postfix) with ESMTP id 097872098B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgEJTIa (ORCPT
+        id S1729255AbgEJTYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 15:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgEJTI3 (ORCPT
+        Sun, 10 May 2020 15:24:24 -0400
+Received: from mailscanner01.zoner.fi ([84.34.166.10]:53974 "EHLO
+        mailscanner01.zoner.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbgEJTYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 15:08:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C01C061A0C;
-        Sun, 10 May 2020 12:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=jyfzrM7jx8UkKgrYyqm9TZ9ytI+tCynSEk/Htl77plI=; b=XP6oOf4sGCMwfj3cgyuZdsepDt
-        vpVlFLJYZf7FS6ITsfJG2j3MkTlVeifMMR48iGViaOm7IGTiCC96/hdTO9b5JBvZ9VHR6DQeyYtzk
-        Z+kLe5VN15nB6k/JuJ8BD22wQ04ufSwiM8QcX+EixjCGTFu4Vr1lPnfmjK5wWOgia85Z5cj5Ctpra
-        HnwpNYEM/lbOAmwuLdeCnGBb/GJZ7S5NSKYmHt7+SXX2eGSQIkyyAtgFYw7tUkRdf63sWPm+tkgKb
-        ecRU4T2Z4BKe/uG1EUAUDhUr2m6jHhLvKaiBaYQgNq67+uMeOfRiehtUkHHaUiuL64FJG0BBNE6Io
-        NqnlF8zg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXrJK-0005vz-Jt; Sun, 10 May 2020 19:08:26 +0000
-Subject: Re: Using a custom LDFLAG for all objects and binaries
-To:     Mahmood Naderan <mahmood.nt@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
- <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org>
- <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
- <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
- <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a8c709ff-67df-09b6-25ff-a4b46a5a2a79@infradead.org>
-Date:   Sun, 10 May 2020 12:08:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 15:24:23 -0400
+X-Greylist: delayed 545 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 May 2020 15:24:22 EDT
+Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
+        by mailscanner01.zoner.fi (Postfix) with ESMTPS id 4096440C20;
+        Sun, 10 May 2020 22:15:05 +0300 (EEST)
+Received: from mail.zoner.fi ([84.34.147.244])
+        by www25.zoner.fi with esmtp (Exim 4.93.0.4)
+        (envelope-from <lasse.collin@tukaani.org>)
+        id 1jXrPv-0002j1-VD; Sun, 10 May 2020 22:15:15 +0300
+Date:   Sun, 10 May 2020 22:15:07 +0300
+From:   Lasse Collin <lasse.collin@tukaani.org>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Dongyang Zhan <zdyzztq@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Possible memory leak in unxz()
+Message-ID: <20200510221507.53c65961@tukaani.org>
+In-Reply-To: <daf2f87a-155c-0836-cf82-0b409b860d6d@infradead.org>
+References: <CAFSR4csKYu95qak02h_sAH6Rpa13PUtHUZ+7Z7Vd7tmBQCNaqg@mail.gmail.com>
+        <daf2f87a-155c-0836-cf82-0b409b860d6d@infradead.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/20 12:04 PM, Mahmood Naderan wrote:
->>> or
->>> 2- Editing arch/x86/Makefile with
->>>    KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
->>
->> That should work.
-> 
-> 
-> Seems not... I ran the following commands:
-> 
-> $ cp -v /boot/config-$(uname -r) .config
-> $ make menuconfig  -> Exit -> Save
-> $ vim arch/x86/Makefile
->      KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
-> $ make V=1
+> On 5/3/20 12:23 AM, Dongyang Zhan wrote:
+> > I am a security researcher, my name is Dongyang Zhan. I found a
+> > potential bug.
 
-OK, I suggest that you reorder the options like so:
+Thank you for looking for bugs!
 
-	KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE) --emit-relocs
+On 2020-05-03 Randy Dunlap wrote:
+> On 5/3/20 12:23 AM, Dongyang Zhan wrote:
+> > /lib/decompress_unxz.c forgets to free the pointer 'in', when  the
+> > statement if (fill == NULL && flush == NULL) is true.  
+> 
+> Adding xz contributor to email.
+> 
+> I think that you are correct. (I am looking at 5.7-rc4.)
+> 
+> However, I don't see any calls to __decompress() in the
+> Linux kernel that pass a first argument of NULL, so while
+> the code in unxz() could be fixed, we aren't currently leaking
+> any memory AFAICT.
 
-I.e., don't split -m and the machine type.
+The supposedly leaked memory is allocated only when in == NULL, and
+it's not freed when fill == NULL && flush == NULL. However, "in" and
+"fill" must never be NULL at the same time if the caller is following
+the decompress_fn API defined in include/linux/decompress/generic.h. So
+there is no leak.
 
-
-> This is the error that I get
-> 
-> make -f ./scripts/Makefile.build obj=usr need-builtin=1
-> /bin/bash ./usr/gen_initramfs_list.sh -l -d > usr/.initramfs_data.cpio.d
-> (cat /dev/null; ) > usr/modules.order
-> make -f ./scripts/Makefile.build obj=arch/x86 need-builtin=1
-> make -f ./scripts/Makefile.build obj=arch/x86/crypto need-builtin=1
-> make -f ./scripts/Makefile.build obj=arch/x86/crypto/sha1-mb need-builtin=
-> (cat /dev/null;   echo kernel/arch/x86/crypto/sha1-mb/sha1-mb.ko;) >
-> arch/x86/crypto/sha1-mb/modules.order
->   ld -m --emit-relocs elf_x86_64     -r -o
-> arch/x86/crypto/sha1-mb/sha1-mb.o arch/x86/crypto/sha1-mb/sha1_mb.o
-> arch/x86/crypto/sha1-mb/sha1_mb_mgr_flush_avx2.o
-> arch/x86/crypto/sha1-mb/sha1_mb_mgr_init_avx2.o
-> arch/x86/crypto/sha1-mb/sha1_mb_mgr_submit_avx2.o
-> arch/x86/crypto/sha1-mb/sha1_x8_avx2.o
-> ld: unrecognised emulation mode: --emit-relocs
-> Supported emulations: elf_x86_64 elf32_x86_64 elf_i386 elf_iamcu
-> i386linux elf_l1om elf_k1om i386pep i386pe
-> scripts/Makefile.build:516: recipe for target
-> 'arch/x86/crypto/sha1-mb/sha1-mb.o' failed
-> make[3]: *** [arch/x86/crypto/sha1-mb/sha1-mb.o] Error 1
-> scripts/Makefile.build:544: recipe for target 'arch/x86/crypto/sha1-mb' failed
-> make[2]: *** [arch/x86/crypto/sha1-mb] Error 2
-> scripts/Makefile.build:544: recipe for target 'arch/x86/crypto' failed
-> make[1]: *** [arch/x86/crypto] Error 2
-> Makefile:1053: recipe for target 'arch/x86' failed
-> make: *** [arch/x86] Error 2
-> 
-> 
-> 
-> 
-> 
-> ORIGINAL QUESTION:
-> 
->> Hi
->> I would like to modify the kernel makefile in a way to include
->> --emit-relocs for every file that is linked during the process of
->> kernel make.
->> I see
->>
->> KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
->> LDFLAGS_MODULE  =
->> LDFLAGS_vmlinux =
->> ...
->>
->> But I don't know which one is the main. Should I put that option in
->> front of every LD* variable? Or it is possible to apply one variable
->> for every file that is linked?
->> Appreciate your help.
->>
-> 
-> 
-> Regards,
-> Mahmood
-> 
-
+Some implementations of the API explicitly check for input == NULL &&
+fill == NULL while some don't. E.g. decompress_unlz4.c checks it but in
+addition it seems to also reject the case where input != NULL && fill
+!= NULL. Perhaps that combination isn't used anywhere but it is allowed
+by the API ("input" would be a temporary buffer for "fill"). I think
+the decompress_fn API is more complex than it looks at glance.
 
 -- 
-~Randy
-
+Lasse Collin  |  IRC: Larhzu @ IRCnet & Freenode
