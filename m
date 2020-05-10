@@ -2,121 +2,100 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93623C54E4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C8C47257
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 788DA20801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01CA24955
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:12:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sIcN8Hg6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgEJBJm (ORCPT
+        id S1728763AbgEJBMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 21:09:42 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:53229 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgEJBJm (ORCPT
+        Sat, 9 May 2020 21:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726565AbgEJBMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 21:09:42 -0400
-Received: by mail-pj1-f65.google.com with SMTP id a5so6006543pjh.2;
-        Sat, 09 May 2020 18:09:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=gOcLyyohxD8fco16zhhFVMtG6mh2DzURAsZz1+qZQfg=;
-        b=Ylj8y6WB/uCAneP8NB3cNfpzsRxHAVNZoykVmqDT1tYpfUG2Z2dJU8m6zUqkW7TEef
-         jHgoLkM7UcmWRNXiHA869jFcXORzLQNMTGPWtWb68fFzoCnQ9cNhDi1QM3gvt4VgQvNj
-         dC8NPBkHqqa+RzYTdzXjSQG3LzA7Mp/BBrhPTDdLB+lCtSkjMrdFJMIhZ2pV14UdNagq
-         8Yr8kC1RLwZHSbmLTUHMx6Cf1fqiAiOWnlkxmOzVhAJvm8+QPiZPoL2yJpA9ndO3ikBC
-         3kE+CdH/lMFgQaqPuiG8waJo7Nh7jocw8ju2zbf7OPs1IwnRI2gJcZTf8jTu+K3UmvmL
-         8V9A==
-X-Gm-Message-State: AGi0PuaOOaafITySyLwkucHalYue4EfC1f0aQpx4pPaz4tsRG+qBMz3W
-        1bCWe9Id0fPjBr/rlXKg0rqTxPco3AA=
-X-Google-Smtp-Source: APiQypKXnzTMKz71+jj7Jy5Gm44PD+czEJydMUHxGMcmgw2UJtLGXJebGPFv3iZ4X2dYs6A787wQig==
-X-Received: by 2002:a17:90a:3266:: with SMTP id k93mr14580851pjb.118.1589072980528;
-        Sat, 09 May 2020 18:09:40 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:8ef:746a:4fe7:1df? ([2601:647:4000:d7:8ef:746a:4fe7:1df])
-        by smtp.gmail.com with ESMTPSA id go21sm6037539pjb.45.2020.05.09.18.09.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 18:09:39 -0700 (PDT)
-Subject: Re: [PATCH v4 4/5] blktrace: break out of blktrace setup on
- concurrent calls
-To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200509031058.8239-1-mcgrof@kernel.org>
- <20200509031058.8239-5-mcgrof@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org>
-Date:   Sat, 9 May 2020 18:09:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 9 May 2020 21:12:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A858C061A0C;
+        Sat,  9 May 2020 18:12:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=X7BNwZm/qeSoH9rk5fDt+Xdu9teDBRzeq1dYQOdzLtQ=; b=sIcN8Hg6HHavcmr49SGf56f5l5
+        cGi+tKsydbSSSzCjWR/1pHj2ymlF3jcWYTC7vk+JghdQUSyROOh9UubwC6c0zHZkQG6ai1pkI+2Ma
+        V6ipDtighug9Y32X8MvqrdHVOFND8L2TdBI2i7g84zgCvtl9ot/a1hme67GC5uPdWKoE9FYZ8MQyu
+        B3grFCxDZ+7aGj7shhExulokE6uClW2/hoAFiDx+Ayb9tDRNTvHEYuDHtxPCMJTCKpwgTsmKJ1QcF
+        qbWrcUfYDp2hx5vDhXGC9xkmE+2FiwRn3Musd1aFQlEOtnuNp+KcxXSSopMDQ61GtAgRzCe/LUq6b
+        HZF01I8Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXaVZ-0008UL-UC; Sun, 10 May 2020 01:11:57 +0000
+Date:   Sat, 9 May 2020 18:11:57 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
+        x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200510011157.GU16070@bombadil.infradead.org>
+References: <20200508144043.13893-1-joro@8bytes.org>
+ <20200508192000.GB2957@hirez.programming.kicks-ass.net>
+ <20200508213407.GT8135@suse.de>
+ <20200509092516.GC2957@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200509031058.8239-5-mcgrof@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509092516.GC2957@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-08 20:10, Luis Chamberlain wrote:
-> @@ -493,6 +496,12 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
->  	 */
->  	strreplace(buts->name, '/', '_');
->  
-> +	if (q->blk_trace) {
-> +		pr_warn("Concurrent blktraces are not allowed on %s\n",
-> +			buts->name);
-> +		return -EBUSY;
-> +	}
-> +
->  	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
->  	if (!bt)
->  		return -ENOMEM;
+On Sat, May 09, 2020 at 11:25:16AM +0200, Peter Zijlstra wrote:
+> On Fri, May 08, 2020 at 11:34:07PM +0200, Joerg Roedel wrote:
+> > On Fri, May 08, 2020 at 09:20:00PM +0200, Peter Zijlstra wrote:
+> > > The only concern I have is the pgd_lock lock hold times.
+> > > 
+> > > By not doing on-demand faults anymore, and consistently calling
+> > > sync_global_*(), we iterate that pgd_list thing much more often than
+> > > before if I'm not mistaken.
+> > 
+> > Should not be a problem, from what I have seen this function is not
+> > called often on x86-64.  The vmalloc area needs to be synchronized at
+> > the top-level there, which is by now P4D (with 4-level paging). And the
+> > vmalloc area takes 64 entries, when all of them are populated the
+> > function will not be called again.
+> 
+> Right; it's just that the moment you do trigger it, it'll iterate that
+> pgd_list and that is potentially huge. Then again, that's not a new
+> problem.
+> 
+> I suppose we can deal with it if/when it becomes an actual problem.
+> 
+> I had a quick look and I think it might be possible to make it an RCU
+> managed list. We'd have to remove the pgd_list entry in
+> put_task_struct_rcu_user(). Then we can play games in sync_global_*()
+> and use RCU iteration. New tasks (which can be missed in the RCU
+> iteration) will already have a full clone of the PGD anyway.
 
-Is this really sufficient? Shouldn't concurrent do_blk_trace_setup()
-calls that refer to the same request queue be serialized to really
-prevent that debugfs attribute creation fails?
-
-How about using the block device name instead of the partition name in
-the error message since the concurrency context is the block device and
-not the partition?
-
-Thanks,
-
-Bart.
-
-
+One of the things on my long-term todo list is to replace mm_struct.mmlist
+with an XArray containing all mm_structs.  Then we can use one mark
+to indicate maybe-swapped and another mark to indicate ... whatever it
+is pgd_list indicates.  Iterating an XArray (whether the entire thing
+or with marks) is RCU-safe and faster than iterating a linked list,
+so this should solve the problem?
