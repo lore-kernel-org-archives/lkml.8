@@ -2,96 +2,96 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60047C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F3C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4002D20820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675F020820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UeUEESe2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgEJMrS convert rfc822-to-8bit (ORCPT
+        id S1728943AbgEJM5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:47:18 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:31193 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726863AbgEJMrR (ORCPT
+        Sun, 10 May 2020 08:57:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:25770 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726863AbgEJM5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:47:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-111-wTKvyRDLNUioeEmIP5t2pw-1; Sun, 10 May 2020 13:47:13 +0100
-X-MC-Unique: wTKvyRDLNUioeEmIP5t2pw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 13:47:13 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 10 May 2020 13:47:13 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
-        "Oleksandr Natalenko" <oleksandr@redhat.com>
-CC:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: RE: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-Thread-Topic: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-Thread-Index: AQHWJUo8bK79Vz6Er0qWTasVui4yHqihRWbA
-Date:   Sun, 10 May 2020 12:47:13 +0000
-Message-ID: <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
-References: <20200507224530.2993316-1-Jason@zx2c4.com>
-         <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
-         <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
-         <20200508113336.2vdfdnc6tqyx4pu6@butterfly.localdomain>
-         <CAK8P3a0dJ0vNnktcoWFiPKB4NJbeyf7nvwWf0YLyeUyxT5pvQg@mail.gmail.com>
- <c774d7371a9599526090e63e85f61e69bddf4795.camel@perches.com>
-In-Reply-To: <c774d7371a9599526090e63e85f61e69bddf4795.camel@perches.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Sun, 10 May 2020 08:57:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589115425; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=xbNlNcKRFd58rmwKnqoHJadbCNL3+FrGOdfqkWJ4rUI=; b=UeUEESe2AXb7xpDp0Ud+yu1mgizU4Bkwq7s8k6xPhUkq5v3wAiHHkm5uJbj/0GKPUU6y7Z1n
+ pbtoqFGOG/I8M8WZ/J10Mux2JD1OCX9AAkJIRDZjNXxjW7pHJEz9oAFMW439m6iXG9KkDxYt
+ Zdv4/ca2ZR+vVdxjytKXJXnc3Os=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb7fa21.7f5a2c165c38-smtp-out-n05;
+ Sun, 10 May 2020 12:57:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3DEA1C44788; Sun, 10 May 2020 12:57:04 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C134DC433F2;
+        Sun, 10 May 2020 12:56:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C134DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH] sched/debug: Fix requested task uclamp values shown in procfs
+Date:   Sun, 10 May 2020 18:26:41 +0530
+Message-Id: <1589115401-26391-1-git-send-email-pkondeti@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches
-> Sent: 08 May 2020 16:06
-> On Fri, 2020-05-08 at 13:49 +0200, Arnd Bergmann wrote:
-> > Personally, I'm more interested in improving compile speed of the kernel
-> 
-> Any opinion on precompiled header support?
+The intention of commit 96e74ebf8d59 ("sched/debug: Add task uclamp
+values to SCHED_DEBUG procfs") was to print requested and effective
+task uclamp values. The requested values printed are read from p->uclamp,
+which holds the last effective values. Fix this by printing the values
+from p->uclamp_req.
 
-When ever I've been anywhere near it it is always a disaster.
-It may make sense for C++ where there is lots of complicated
-code to parse in .h files. Parsing C headers is usually easier.
+Fixes: 96e74ebf8d59 ("sched/debug: Add task uclamp values to SCHED_DEBUG procfs")
+Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+---
+ kernel/sched/debug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-One this I have done that significantly speeds up .h file
-processing is to take the long list of '-I directory' parameters
-that are passed to the compiler and copy the first version
-of each file into a separate 'object headers' directory.
-This saves the compiler doing lots of 'failed opens'.
-
-If each fragment makefile lists its 'public' headers make
-can generate dependency rules that do the copies.
-
-FWIW make is much faster if you delete all the builtin and
-suffix rules and rely on explicit rules for each file.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index a562df5..239970b 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -948,8 +948,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	P(se.avg.util_est.enqueued);
+ #endif
+ #ifdef CONFIG_UCLAMP_TASK
+-	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
+-	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
++	__PS("uclamp.min", p->uclamp_req[UCLAMP_MIN].value);
++	__PS("uclamp.max", p->uclamp_req[UCLAMP_MAX].value);
+ 	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
+ 	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
+ #endif
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
