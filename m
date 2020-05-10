@@ -2,183 +2,71 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0A8C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEB9C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F07D2082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:12:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="ZgVFZrzA"
+	by mail.kernel.org (Postfix) with ESMTP id 6846B2098B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589134480;
+	bh=WwBN30P51vXg7WQY6bZLhZOJRsWCwmtP9TBZN7uIZhQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WqNnLph2nU3BepcAUJoQY3RFtOAWregSNalfFh8vYOMtFBiF054p/4Zh5b4axfRFk
+	 QaybU3jfrNwsN14T1doAuA/2nW9TsG7okoSAzTEpkdk+AWqgxs4QBVpDjDxybREKkR
+	 5ijo4qBb/mlJkhTXKPnNRWVsAgJWIXOLAqiA3NMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgEJSMH (ORCPT
+        id S1729138AbgEJSOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:12:07 -0400
-Received: from gproxy10-pub.mail.unifiedlayer.com ([69.89.20.226]:51222 "EHLO
-        gproxy10-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728385AbgEJSMH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:12:07 -0400
-Received: from CMGW (unknown [10.9.0.13])
-        by gproxy10.mail.unifiedlayer.com (Postfix) with ESMTP id 1A378140D9E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 12:12:04 -0600 (MDT)
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-        by cmsmtp with ESMTP
-        id XqQjje01QtoKZXqQljHIup; Sun, 10 May 2020 12:12:04 -0600
-X-Authority-Reason: nr=8
-X-Authority-Analysis: v=2.2 cv=SfWHTrZu c=1 sm=1 tr=0
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=LfuyaZh/8e9VOkaVZk0aRw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=sTwFKg_x9MkA:10
- a=oz0wMknONp8A:10 a=vU9dKmh3AAAA:8 a=VwQbUJbxAAAA:8 a=9eRCeKCxr6mOf_OUt6IA:9
- a=GWRvtodc5lQpLaii:21 a=Ohp1ws75Cw8cpDCh:21 a=QEXdDO2ut3YA:10
- a=sfIEtMYjypgA:10 a=rsP06fVo5MYu2ilr0aT5:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OvLi804xCZ6xtXakpo4loaLqT7X+ucK02sepeBhNHRc=; b=ZgVFZrzARaLCKT1J2MrUDfTHMZ
-        /AeJZZOhwqb3sV4v62yJfJshPH5O0iLuSvlLqVSIv2jM4ZkN7nVvxtZELcHsyXEgf0A2sTFniHx4g
-        Z//8AagL4UWfTNswCZq/MKJlB9PTwwu8lhvrpryK9/0wDjAUuZFNfKlnUlc0uBdqcRhBrs62FmMBc
-        PQMSKqHPAvSQaPAN6a2KfleljZfeJyl7x9ja6UFyo9kq9PeFYNiT5+AwyChfiicuAQFEBMUUVmzY3
-        4xqPuDrjc51FVooYPbl6M5fvVubB5XvtsaggrYjsO1hQZ+HtHlsJVa8yRk6vtzNNW1rMCTXHmDfTm
-        4G/UUvHw==;
-Received: from p5dcfef04.dip0.t-ipconnect.de ([93.207.239.4]:43660 helo=[192.168.0.104])
-        by md-in-79.webhostbox.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <saravanan@linumiz.com>)
-        id 1jXqQi-00045H-HA; Sun, 10 May 2020 18:12:00 +0000
-From:   Saravanan Sekar <saravanan@linumiz.com>
-Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-References: <20200429133943.18298-1-saravanan@linumiz.com>
- <20200429133943.18298-4-saravanan@linumiz.com>
- <20200503130103.16a92131@archlinux>
-Message-ID: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-Date:   Sun, 10 May 2020 20:11:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 14:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728381AbgEJSOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 14:14:39 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60F9320801;
+        Sun, 10 May 2020 18:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589134478;
+        bh=WwBN30P51vXg7WQY6bZLhZOJRsWCwmtP9TBZN7uIZhQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pI2zBJTzs4fs8MD5RXCSBWNvQTJBOXv2uTnUIdc5viZ/7JdszbwLdd+EECVaUxu7K
+         /MHurI6PyeVKKB69u6YS4r2l02Mb3zF9vWTb2LGsKdXjH8Vp5M5mpFClv2R6p15ZIb
+         Jv3ZCWC3Rjb/v9FG4uHWObC+8VG+EkOct8x0EiP4=
+Date:   Sun, 10 May 2020 11:14:36 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     =?UTF-8?B?QmrDuHJu?= Mork <bjorn@mork.no>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: remove redundant assignment to
+ variable status
+Message-ID: <20200510111436.66d8838f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200509215756.506840-2-colin.king@canonical.com>
+References: <20200509215756.506840-1-colin.king@canonical.com>
+        <20200509215756.506840-2-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20200503130103.16a92131@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 93.207.239.4
-X-Source-L: No
-X-Exim-ID: 1jXqQi-00045H-HA
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: p5dcfef04.dip0.t-ipconnect.de ([192.168.0.104]) [93.207.239.4]:43660
-X-Source-Auth: saravanan@linumiz.com
-X-Email-Count: 9
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On Sat,  9 May 2020 22:57:56 +0100 Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable status is being initializeed with a value that is never read
+> and it is being updated later with a new value. The initialization
+> is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-On 03/05/20 2:01 pm, Jonathan Cameron wrote:
-> On Wed, 29 Apr 2020 15:39:42 +0200
-> Saravanan Sekar<saravanan@linumiz.com>  wrote:
->
->> Add documentation about device operating mode and output data range
->> supported according to operating mode
->>
->> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
->> ---
->>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
->>   1 file changed, 23 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->> new file mode 100644
->> index 000000000000..5979f2b8aa1a
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
->> @@ -0,0 +1,23 @@
->> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
->> +KernelVersion:	5.7
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Reading gives range of sample frequencies available for current operating mode
->> +		after one data has generated.
-> This is standard ABI so should be the main docs, not here.
-> It also takes absolute precedence over the power modes (as mentioned below, no
-> standard userspace will be able to use those).  So if the frequency is
-> only available in high perf mode, then we change to high perf mode.
->
->> +
->> +		Access: Read
->> +		Valid values: represented in Hz
->> +		- range [12.5, 1600] for high permormance mode
->> +		- range [1.6, 200] for normal/low power mode
->> +
->> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
->> +KernelVersion:	5.7
->> +Contact:	linux-iio@vger.kernel.org
->> +Description:
->> +		Represents the device operating mode. High performance mode gives high output
->> +		data rate and low noise compared to normal mode. Normal mode consumes less
->> +		current.  In single shot device enters to lowpower after one data has
->> +		generated.
->> +
->> +		Access: Read, Write
->> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"
-> The issue with these sort of 'mode' interface is almost no userspace will ever use them.
-> They are too unpredictable across different types of devices.
-I don't understand how can we assume or say no one will use this. The 
-device supports multiple features
-and my understanding is driver should support according to device, not 
-reverse. This is more or
-less device specific and no sure idea about bring all the device in one 
-umbrella.
-> Some of these should also not be exposed to userspace anyway as they are about 'how'
-> you are using the driver.  For example, if you aren't doing triggered capture then
-> single_shot is almost always the correct option. Annoyingly I see high performance
-> mode gives lower noise...
->
-> So no need to expose single_shot to userspace.
->
-> For the others we are just looking at different power vs speed and accuracy trade offs.
-> Those are better exposed by what they effect.  Here the big control for that is
-> sampling frequency.
->
-> So if we assume the user is never going to touch this control (if it's even there)
-> then we probably want to assume they want the best possible accuracy for whatever
-> frequency they are running at.  So transition across the modes to provide that.
->
-> Should we ever support low power mode?  It sounds nice on paper, but in reality
-> userspace won't use so I suspect we should just drop it - certainly in an initial
-> patch submission (as it will hold up acceptance).  Even if we did support
-> it, as mentioned above ABI controls will take precedence so we are looking
-> at a 'hint' not a control of mode.
->
-> ABI is a pain, and we will put a lot of effort into not expanding it unless
-> there is a good usecase plus no way of mapping to existing ABI.
-Obviously without any reason or requirement device manufacture won't 
-come-up these kind of feature.
-I will change the driver as you don't accept at least for initial version.
-
-
-Thanks,
-Saravanan
-
+Applied the 3 fixes from Saturday to net-next, thanks.
