@@ -2,324 +2,144 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B99C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0323EC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A441520801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63FF20801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:04:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csJifi0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgEJTDG convert rfc822-to-8bit (ORCPT
+        id S1729204AbgEJTEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 15:03:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:30988 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728763AbgEJTDF (ORCPT
+        Sun, 10 May 2020 15:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbgEJTEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 15:03:05 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-133-7jIaSIUuNyWgyf7ofW108g-1; Sun, 10 May 2020 20:03:01 +0100
-X-MC-Unique: 7jIaSIUuNyWgyf7ofW108g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 20:03:00 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 10 May 2020 20:03:00 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'linux-kernel' <linux-kernel@vger.kernel.org>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        'Thomas Gleixner' <tglx@linutronix.de>
-CC:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: [PATCH v2] x86: Optimise x86 IP checksum code
-Thread-Topic: [PATCH v2] x86: Optimise x86 IP checksum code
-Thread-Index: AdYm/VZGETJD/lnbRaKYogOSYrBH0w==
-Date:   Sun, 10 May 2020 19:03:00 +0000
-Message-ID: <d7d167a576934b149a90e46e2247b91b@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 10 May 2020 15:04:33 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA29C061A0C;
+        Sun, 10 May 2020 12:04:33 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a4so5608501lfh.12;
+        Sun, 10 May 2020 12:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ijGXEOZY+ZRz/1wBDTheYxIT3v0Pzz8SXgM5BlTLsrc=;
+        b=csJifi0LdMfFNSb1sgjJHS6qZyTW70hsJpmUIURzkGVrLHq6/071JzsU5VaS7vNx4s
+         gn4DfFQedWuLt+a0ohcop8fmcu4i4vq3ygHCXZqXANsWqhXL+l8BNcu73wSEW1EYuP85
+         SLPavTmoHXD4j8N9bSXrxdt8e1DbUFnD6fHX9Rj9C8zs1k6Mwbppdb2TU5ilmWXYwGEt
+         26Rfil7ElI+BqbZSNMHK2osSHrNyd0YHl8WEPKr12ok/Y7Jx5l/IwxpNp2zBnb3abPzO
+         0YwUJaXVM9G0oxXT/yRXh7zvAxQx64afyONvD0vwhdZqZ0VTYZdV3vWxv3LAX2tyFOTC
+         vO9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ijGXEOZY+ZRz/1wBDTheYxIT3v0Pzz8SXgM5BlTLsrc=;
+        b=kW8YDVt1BnrC6ivdhLvy0dkbn4prYyd9Vcw1m1FfOKSiLxY0Ohd5rbVyyAqMe05f1e
+         IXUsYieF4pFAXiEY/VRwlxS610VJUin/4em2kH78lmQlHV3JBUqtEvxGHlQqQG/F47QM
+         sJ0SZutECmPpnk4JolAKV2PGIBqdIeYX0No/taP++5RqBt8Qp5P5MD6T/yDNzzuCQ6Ic
+         b14g2lArn1gcZ15rV3GorbeFcbWVAElcUqQLx2GoH0iptHHWKMkxz/JAI9pSozPlKlwo
+         X8AtJ908F2589ITaA6G7ToxDptlBrJh1BBKIUlKs0y3T3ouMvugmh/ksEAhGcZd2MxlT
+         OfXA==
+X-Gm-Message-State: AOAM530tBgqji+w0j0XIG4CYw8HyRYNuexjVjBYCL0TcXDcyRP03CVnU
+        lU6mLim+dBXMVmCoI5VPXwTNJPUxfcg8Tli2HErLhlMrm9fe
+X-Google-Smtp-Source: ABdhPJyyLwCUnley0y5bA59ITeseyZW4vNVjU/wzoAGg1g5s47KNBkR2ZUyuVIisLW7TZjPM5wuvUPjlPSIJ8zHCPhc=
+X-Received: by 2002:a19:6a02:: with SMTP id u2mr4742224lfu.144.1589137471547;
+ Sun, 10 May 2020 12:04:31 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
+ <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org> <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
+ <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
+In-Reply-To: <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
+From:   Mahmood Naderan <mahmood.nt@gmail.com>
+Date:   Sun, 10 May 2020 23:34:20 +0430
+Message-ID: <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
+Subject: Re: Using a custom LDFLAG for all objects and binaries
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Performance improvements to the amd64 IP checksum code.
-Summing to alternate registers almost doubles the performace
-(probably from 4 to 6.2 bytes/clock) on Ivy Bridge cpu.
-Loop carrying the carry flag improves Haswell from 7 to 8 bytes/clock.
-Older cpu will still approach 4 bytes/clock.
-All achieved with a less loop unrolling - improving the performance
-for small buffers that are not a multiple of the loop span.
+> > or
+> > 2- Editing arch/x86/Makefile with
+> >    KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
+>
+> That should work.
 
-Signed-off-by: David Laight <david.laight@aculab.com>
---
 
-Changes since v1:
-- Added cast to result.
+Seems not... I ran the following commands:
 
-I spent far too long looking at this for some code that has to calculate the
-UDP checksum before sending packets through a raw IPv4 socket.
+$ cp -v /boot/config-$(uname -r) .config
+$ make menuconfig  -> Exit -> Save
+$ vim arch/x86/Makefile
+     KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
+$ make V=1
 
-Prior to Ivy (maybe Sandy) bridge adc always took two clocks, so the adc chain
-can only run at 4 bytes/clock (the same as 32bit adds to a 64 bit register).
-In Ivy bridge the 'carry' flag is available a clock earlier so 8 bytes/clock
-is technically possible.
+This is the error that I get
 
-In order to 'loop carry' the carry flag some ingenuity is needed.
-Although 'dec reg' doesn't change carry, it has a partial dependency against
-the flags register - which makes the loop very slow.
-The loop instruction (dec %cx, jump non-zero) is far too slow on Intel cpu.
-But jcxz (jump if %cx zero) is about the same as a normal conditional jump.
+make -f ./scripts/Makefile.build obj=usr need-builtin=1
+/bin/bash ./usr/gen_initramfs_list.sh -l -d > usr/.initramfs_data.cpio.d
+(cat /dev/null; ) > usr/modules.order
+make -f ./scripts/Makefile.build obj=arch/x86 need-builtin=1
+make -f ./scripts/Makefile.build obj=arch/x86/crypto need-builtin=1
+make -f ./scripts/Makefile.build obj=arch/x86/crypto/sha1-mb need-builtin=
+(cat /dev/null;   echo kernel/arch/x86/crypto/sha1-mb/sha1-mb.ko;) >
+arch/x86/crypto/sha1-mb/modules.order
+  ld -m --emit-relocs elf_x86_64     -r -o
+arch/x86/crypto/sha1-mb/sha1-mb.o arch/x86/crypto/sha1-mb/sha1_mb.o
+arch/x86/crypto/sha1-mb/sha1_mb_mgr_flush_avx2.o
+arch/x86/crypto/sha1-mb/sha1_mb_mgr_init_avx2.o
+arch/x86/crypto/sha1-mb/sha1_mb_mgr_submit_avx2.o
+arch/x86/crypto/sha1-mb/sha1_x8_avx2.o
+ld: unrecognised emulation mode: --emit-relocs
+Supported emulations: elf_x86_64 elf32_x86_64 elf_i386 elf_iamcu
+i386linux elf_l1om elf_k1om i386pep i386pe
+scripts/Makefile.build:516: recipe for target
+'arch/x86/crypto/sha1-mb/sha1-mb.o' failed
+make[3]: *** [arch/x86/crypto/sha1-mb/sha1-mb.o] Error 1
+scripts/Makefile.build:544: recipe for target 'arch/x86/crypto/sha1-mb' failed
+make[2]: *** [arch/x86/crypto/sha1-mb] Error 2
+scripts/Makefile.build:544: recipe for target 'arch/x86/crypto' failed
+make[1]: *** [arch/x86/crypto] Error 2
+Makefile:1053: recipe for target 'arch/x86' failed
+make: *** [arch/x86] Error 2
 
-I did get about 12 bytes/clock using adox/adcx but that would need run-time
-patching and some cpu that support the instructions may run them very slowly.
 
-arch/x86/lib/csum-partial_64.c | 192 +++++++++++++++++++++--------------------
- 1 file changed, 98 insertions(+), 94 deletions(-)
 
-diff --git a/arch/x86/lib/csum-partial_64.c b/arch/x86/lib/csum-partial_64.c
-index e7925d6..7f25ab2 100644
---- a/arch/x86/lib/csum-partial_64.c
-+++ b/arch/x86/lib/csum-partial_64.c
-@@ -10,113 +10,118 @@
- #include <linux/export.h>
- #include <asm/checksum.h>
- 
--static inline unsigned short from32to16(unsigned a) 
--{
--	unsigned short b = a >> 16; 
--	asm("addw %w2,%w0\n\t"
--	    "adcw $0,%w0\n" 
--	    : "=r" (b)
--	    : "0" (b), "r" (a));
--	return b;
--}
--
- /*
-  * Do a 64-bit checksum on an arbitrary memory area.
-  * Returns a 32bit checksum.
-  *
-  * This isn't as time critical as it used to be because many NICs
-  * do hardware checksumming these days.
-+ *
-+ * All Intel cpus prior to Ivy Bridge (mayby Sandy Bridge) have a 2 clock
-+ * latency on the result of adc.
-+ * This limits any adc loop to 4 bytes/clock - the same as a C loop
-+ * that adds 32 bit values to a 64 bit register.
-+ * On Ivy bridge the adc result latency is still 2 clocks, but the carry
-+ * latency is reduced to 1 clock.
-+ * So summing to alternate registers increases the throughput to approaching
-+ * 8 bytes/clock.
-+ * Older cpu (eg core 2) have a 6+ clock delay accessing any of the flags
-+ * after a partial update (eg adc after inc).
-+ * The stange 'jecxz' loop avoids this.
-+ * The Ivy bridge then needs the loop unrolling once more to approach
-+ * 8 bytes per clock.
-  * 
-- * Things tried and found to not make it faster:
-- * Manual Prefetching
-- * Unrolling to an 128 bytes inner loop.
-- * Using interleaving with more registers to break the carry chains.
-+ * On 7th gen cpu using adox/adoc can get 12 bytes/clock (maybe 16?)
-+ * provided the loop is unrolled further than the one below.
-+ * But some other cpu that support the adx take 6 clocks for each.
-+ *
-+ * The 'sum' value on entry is added in, it can exceed 32 bits but
-+ * must not get to 56 bits.
-  */
--static unsigned do_csum(const unsigned char *buff, unsigned len)
-+static unsigned do_csum(const unsigned char *buff, long len, u64 sum)
- {
--	unsigned odd, count;
--	unsigned long result = 0;
-+	unsigned int src_align;
-+	u64 sum_0 = 0, sum_1;
-+	long len_tmp;
-+	bool odd = false;
- 
--	if (unlikely(len == 0))
--		return result; 
--	odd = 1 & (unsigned long) buff;
--	if (unlikely(odd)) {
--		result = *buff << 8;
--		len--;
--		buff++;
--	}
--	count = len >> 1;		/* nr of 16-bit words.. */
--	if (count) {
--		if (2 & (unsigned long) buff) {
--			result += *(unsigned short *)buff;
--			count--;
--			len -= 2;
--			buff += 2;
-+	/* 64bit align the base address */
-+	src_align = (unsigned long)buff & 7;
-+	if (src_align) {
-+		if (unlikely(src_align & 1)) {
-+			sum <<= 8;
-+			/* The extra flag generates better code! */
-+			odd = true;
- 		}
--		count >>= 1;		/* nr of 32-bit words.. */
--		if (count) {
--			unsigned long zero;
--			unsigned count64;
--			if (4 & (unsigned long) buff) {
--				result += *(unsigned int *) buff;
--				count--;
--				len -= 4;
--				buff += 4;
--			}
--			count >>= 1;	/* nr of 64-bit words.. */
-+		buff -= src_align;
-+		len += src_align;
-+		if (likely(src_align == 4))
-+			sum_0 = *(u32 *)(buff + 4);
-+		else
-+			/* Mask off unwanted low bytes from full 64bit word */
-+			sum_0 = *(u64 *)buff & (~0ull << (src_align * 8));
-+		if (unlikely(len < 8)) {
-+			/* Mask off the unwanted high bytes */
-+			sum += sum_0 & ~(~0ull << (len * 8));
-+			goto reduce_32;
-+		}
-+		len -= 8;
-+		buff += 8;
-+	}
- 
--			/* main loop using 64byte blocks */
--			zero = 0;
--			count64 = count >> 3;
--			while (count64) { 
--				asm("addq 0*8(%[src]),%[res]\n\t"
--				    "adcq 1*8(%[src]),%[res]\n\t"
--				    "adcq 2*8(%[src]),%[res]\n\t"
--				    "adcq 3*8(%[src]),%[res]\n\t"
--				    "adcq 4*8(%[src]),%[res]\n\t"
--				    "adcq 5*8(%[src]),%[res]\n\t"
--				    "adcq 6*8(%[src]),%[res]\n\t"
--				    "adcq 7*8(%[src]),%[res]\n\t"
--				    "adcq %[zero],%[res]"
--				    : [res] "=r" (result)
--				    : [src] "r" (buff), [zero] "r" (zero),
--				    "[res]" (result));
--				buff += 64;
--				count64--;
--			}
-+	/* Read first 8 bytes to 16 byte align the loop below */
-+	sum_1 = len & 8 ? *(u64 *)buff : 0;
- 
--			/* last up to 7 8byte blocks */
--			count %= 8; 
--			while (count) { 
--				asm("addq %1,%0\n\t"
--				    "adcq %2,%0\n" 
--					    : "=r" (result)
--				    : "m" (*(unsigned long *)buff), 
--				    "r" (zero),  "0" (result));
--				--count; 
--				buff += 8;
--			}
--			result = add32_with_carry(result>>32,
--						  result&0xffffffff); 
-+	/* The main loop uses negative offsets from the end of the buffer */
-+	buff += len;
- 
--			if (len & 4) {
--				result += *(unsigned int *) buff;
--				buff += 4;
--			}
--		}
--		if (len & 2) {
--			result += *(unsigned short *) buff;
--			buff += 2;
--		}
-+	/* Add in trailing bytes to 64bit align the length */
-+	if (len & 7) {
-+		unsigned int tail_len = len & 7;
-+		buff -= tail_len;
-+		if (likely(tail_len == 4))
-+			sum += *(u32 *)buff;
-+		else
-+			/* Mask off the unwanted high bytes */
-+			sum += *(u64 *)buff & ~(~0ull << (tail_len * 8));
- 	}
--	if (len & 1)
--		result += *buff;
--	result = add32_with_carry(result>>32, result & 0xffffffff); 
--	if (unlikely(odd)) { 
--		result = from32to16(result);
--		result = ((result >> 8) & 0xff) | ((result & 0xff) << 8);
--	}
--	return result;
-+
-+	/* Align and negate len so that we need to sum [buff[len]..buf[0]) */
-+	len = -(len & ~15);
-+
-+	/*
-+	 * Align the byte count to a multiple of 16 then
-+	 * add 64 bit words to alternating registers.
-+	 * Finally reduce to 64 bits.
-+	 */
-+	asm(	"	bt    $4, %[len]\n"
-+		"	jnc   10f\n"
-+		"	add   (%[buff], %[len]), %[sum_0]\n"
-+		"	adc   8(%[buff], %[len]), %[sum_1]\n"
-+		"	lea   16(%[len]), %[len]\n"
-+		"10:	jecxz 20f\n"
-+		"	adc   (%[buff], %[len]), %[sum_0]\n"
-+		"	adc   8(%[buff], %[len]), %[sum_1]\n"
-+		"	lea   32(%[len]), %[len_tmp]\n"
-+		"	adc   16(%[buff], %[len]), %[sum_0]\n"
-+		"	adc   24(%[buff], %[len]), %[sum_1]\n"
-+		"	mov   %[len_tmp], %[len]\n"
-+		"	jmp   10b\n"
-+		"20:	adc   %[sum_0], %[sum]\n"
-+		"	adc   %[sum_1], %[sum]\n"
-+		"	adc   $0, %[sum]\n"
-+	    : [sum] "+&r" (sum), [sum_0] "+&r" (sum_0), [sum_1] "+&r" (sum_1),
-+	    	[len] "+&c" (len), [len_tmp] "=&r" (len_tmp)
-+	    : [buff] "r" (buff)
-+	    : "memory" );
-+
-+reduce_32:
-+	sum = add32_with_carry(sum>>32, sum & 0xffffffff); 
-+
-+	if (unlikely(odd))
-+		return __builtin_bswap32(sum);
-+
-+	return sum;
- }
- 
- /*
-@@ -133,8 +138,7 @@ static unsigned do_csum(const unsigned char *buff, unsigned len)
-  */
- __wsum csum_partial(const void *buff, int len, __wsum sum)
- {
--	return (__force __wsum)add32_with_carry(do_csum(buff, len),
--						(__force u32)sum);
-+	return (__force __wsum)do_csum(buff, len, (__force u32)sum);
- }
- EXPORT_SYMBOL(csum_partial);
- 
--- 
-1.8.1.2
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
 
+ORIGINAL QUESTION:
+
+>Hi
+>I would like to modify the kernel makefile in a way to include
+>--emit-relocs for every file that is linked during the process of
+>kernel make.
+>I see
+>
+>KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+>LDFLAGS_MODULE  =
+>LDFLAGS_vmlinux =
+>...
+>
+>But I don't know which one is the main. Should I put that option in
+>front of every LD* variable? Or it is possible to apply one variable
+>for every file that is linked?
+>Appreciate your help.
+>
+
+
+Regards,
+Mahmood
