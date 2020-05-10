@@ -2,394 +2,211 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC418C54E8D
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B233AC54E8C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987A42082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2EA2082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Z5cvX9GD"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="a57mKTuI";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KcvOQJUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgEJSot (ORCPT
+        id S1729250AbgEJSox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:44:49 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:46370 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728866AbgEJSoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:44:44 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 8F077412C5;
-        Sun, 10 May 2020 18:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1589136278; x=1590950679; bh=vRWoKECDvuRxHDhlREWmVHIm/SvPk8MDC7M
-        zSPznVwU=; b=Z5cvX9GDK7JtWmn+bA+69ylSWhwplRCed6rbx5QnasMX6sNvyp7
-        6alwYreF7ERDwglBaFe8jAMnVtVimWVwUqAU1wNeAmpZ05jLwEedAjG3ZBifhJiu
-        FTowNstcJa4RT+XPeiWNQwfhJYL/zsI52C2PyY27hkZ/6lxtStwY6etI=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aMe9ARGE8xUP; Sun, 10 May 2020 21:44:38 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        Sun, 10 May 2020 14:44:53 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:40820 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728866AbgEJSou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 14:44:50 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8638240507;
+        Sun, 10 May 2020 18:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1589136290; bh=q4yMUYxy7IbxuEFWHFtTBwZR3EjIUP/s0d1is1lGyms=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=a57mKTuIQCudNKwKUUnA1BQHdbPACj/JCsofoHCw2AmtEtSvM+zwB68P3UkD2gH+y
+         Lvoo3sv4yzAgAJryEpaygrU6BDKty4AtfWrQ0voVBC5lAaXCbSGz8Zf6FaxjM0TLqw
+         Rseao577qCmFrhBjY8o+GX0QpAUY6dFma0ZVpVEGirz7KOSIgrQVtKvy4Tq7Y7S4HS
+         yGIo8sbm5iYqmwg0dYdT5rLVqUInnj+YDRmfETjn+u0gGic/VSLK4UkJbUrynCSooF
+         qfDFvNeAqPZ0LDYUURpMfYX19XXnD2UGIn0GlL5UhYIv90gk09186AstcqZkWPbSM0
+         kZCF6OOMhPe9A==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 355B7412C7;
-        Sun, 10 May 2020 21:44:38 +0300 (MSK)
-Received: from localhost.dev.yadro.com (10.199.3.114) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Sun, 10 May 2020 21:44:39 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v14 2/2] iio: proximity: Add driver support for vcnl3020 proximity sensor
-Date:   Sun, 10 May 2020 21:45:37 +0300
-Message-ID: <20200510184537.10335-3-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 569D2A006E;
+        Sun, 10 May 2020 18:44:47 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Sun, 10 May 2020 11:44:47 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Sun, 10 May 2020 11:44:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jj9XAsBZPmyjZacF1lN1QsAxM5WQkS/648+TgBzlhHiN0ecvBt+vbtZgpVthpcA3dGFHrM3QVm6U6yrRYJTQj88M3utnPl7AIDMh2wQaxIgNEFoJaeK/jwm/cK+myuXTKsc2kJrMvIYbeevr4H5eBaf8/sXuslI6YdhYQznaTE2e70tLjx2RECXj1fQS/8Z2Lathup9gyyYGtMKMwluLa0LSFeS2GZs+E1qK5RFCt0Nw6L60MXFnrWAu4IlgwvcjeH7mpAr+ImHQmYp3xL+52UjesC5yQOYpPPuT+yUUyFBMPi0G9YzfWnlA5vF3YgEoE1ANCjMI2CM4+40ZRa3g8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tz7SZcvwsMIgiaTRAmc25u5K7X9zEzGssPuGBFFu+PA=;
+ b=FrMWfj8pG6KNiNSdt9fMRtqP1kKpmzUPClRa5QGB3HL9qAbbYXwCsgWRT0Wy0isBpUiOHcXazBxK0ClsTR0njG3aTwVwXg1VmQZsVXz2dB7ZtbPRdcwqPEZ6yrIts60m3fun+jhRfgG9pn5Rj5SPaz0QLL5b/kYHGErzC58O5CUQt8T067LSGKb0aE9CVre9m8gRDNxkbha4K8JR7Znu5W4D5d15c8E8iwQD2UfPJyNV8IvKLM42YwE9CVqhz1xadiHntVr1wZx6paauT5HpbDH1e0hnJFQnpIAn8xXz/6G6yLpLd9QA2vKol+MqRLHCs+IqHTcsNZFeP50k+mI/bA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tz7SZcvwsMIgiaTRAmc25u5K7X9zEzGssPuGBFFu+PA=;
+ b=KcvOQJUTbylvdpCWEDDlBF6LojqakkS2EhF6V4zMCI7kLnnqN08WW8xyK9GBGrodl8VApzb3AvIK7eaEuYRCEWz2q0O7VRKX/ibWZwHcckxiaZsi92pqoRKJj48PUKgTY38+YMZgMdf/6Pc6vsM95XW+gEt/Pay/qDTjbmd5pvI=
+Received: from DM6PR12MB2684.namprd12.prod.outlook.com (2603:10b6:5:4a::33) by
+ DM6PR12MB3146.namprd12.prod.outlook.com (2603:10b6:5:11b::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.34; Sun, 10 May 2020 18:44:45 +0000
+Received: from DM6PR12MB2684.namprd12.prod.outlook.com
+ ([fe80::f913:a5d2:ee95:5157]) by DM6PR12MB2684.namprd12.prod.outlook.com
+ ([fe80::f913:a5d2:ee95:5157%5]) with mapi id 15.20.2979.033; Sun, 10 May 2020
+ 18:44:45 +0000
+From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>
+CC:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        "Eugeniy Paltsev" <Eugeniy.Paltsev@synopsys.com>
+Subject: RE: [PATCH] selftests/tpm: Fix runtime error
+Thread-Topic: [PATCH] selftests/tpm: Fix runtime error
+Thread-Index: AQHWENRSg161NCxUUEaLItlFtz6YTqihyzSQ
+Date:   Sun, 10 May 2020 18:44:45 +0000
+Message-ID: <DM6PR12MB26848928AB4CE7B1D5BAC4B3D9A00@DM6PR12MB2684.namprd12.prod.outlook.com>
+References: <20200412141118.70688-1-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200412141118.70688-1-jarkko.sakkinen@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none
+ header.from=synopsys.com;
+x-originating-ip: [46.47.223.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5445fdbb-e229-4796-658a-08d7f51235a8
+x-ms-traffictypediagnostic: DM6PR12MB3146:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB31462E4D59623935571957F9D9A00@DM6PR12MB3146.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 039975700A
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UnxGVObGapqUguxIPr87Rtc0LrPdqbmOLJ1wOZ+8Pe3C1RpDRXJ3r1INNKkfawxsmZCre3ub6Wg3siIGNYQ+vthtxztoQUTdJLJupi5yds5yHqi1sKYvUx4UZxAvhptLP1Bdd38F9cf0k+VyRars5+MrspK1Da0zQHrgTZsv/KDJzC1jCy9Bfq3pyWbjmtK5n38tBzi8ihzDXpevPeSLs+qUNv1X0UDo7zF0Mpc4+Fb52RJXdn7mTqFIe+gSrpTeRRrn3+Y1cCYW8k27/4ma34UG+SFIhOTKGZfjFZIk1R4EC9FMnPQGpY0hg/7jCCLDMWHs+gE804jKWCAuTL7EuTtWoNtrI0/SLw9tu+pQWBN9BtP4LasXDAG59hvDfusfAYjqm4wRHmmm7o9zE6dIHz9BqDlq6IlqHpgAg6FVJ1GWnz8pmrCaSNFCBoMURiovognDKZ4qRT+ZvvSbNyn3zVwWLFT2wsaXy+bdfdFLqIFvtqRiLgHmt3ozJLILnle8ucW9TFdx3ZPkyaNLqA6DmA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2684.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(39850400004)(396003)(33430700001)(76116006)(66476007)(66446008)(9686003)(53546011)(66946007)(55016002)(66556008)(64756008)(6506007)(86362001)(71200400001)(52536014)(7696005)(8936002)(316002)(8676002)(186003)(107886003)(54906003)(4326008)(2906002)(33440700001)(110136005)(26005)(19627235002)(33656002)(478600001)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: X52PfnVLfRGI6t7Iv/T5h26HrZUfMJ1toRqQSCm4VlMIW71FCDDmxMTcXBv7cRJFqfNd3y4UFBpbBIvU258m52pNvwVyuvkRfzsXH6TDgSk0oJIXxy+khL8j1S9Qv+0hTpM7yXnMMhc4acTtNFqeLoWUJ3NUi2p2b6jup/mXHF4AGLSUyctubbU0BI0PHXXL02Gs3b6g488PY/C3Wn4tV5/x1uYSJArEFznD5uMytCrBB3Z6IH0dBNA8ya3aci2X/aAo4wcdhODN6zkQNY7jgqMzlkkDI5RBYWVVgyXc/jDPwFq2c1ARTYMqyadGLrlraj26X6s32/1uO241/GfqwzMwFiJMGayatT9Pc78z4UevxA113O2ioFRjjizoF7OANkU2++zJZeMzDO+cSnfZoaeKP9Blo0Gp0+oOef5ycwCg/al6SzMgY5wMmy2InEcZCq7tYAehQGFNL++s8c0o/GjTTSfgl4F/qWf5dmawzWs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.3.114]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5445fdbb-e229-4796-658a-08d7f51235a8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2020 18:44:45.2990
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0ENgsWdbtDUmAv3z3ejI9Iyq5hCCk/BPpHRirZx+dmdicHFKGvu4nJ8ZXPrXbz77012s6nEoCv7QkAkEmqKu3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3146
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Proximity sensor driver based on light/vcnl4000.c code.
-For now supports only the single on-demand measurement.
+Hi, Jarkko Sakkinen, all!
 
-The VCNL3020 is a fully integrated proximity sensor. Fully
-integrated means that the infrared emitter is included in the
-package. It has 16-bit resolution. It includes a signal
-processing IC and features standard I2C communication
-interface. It features an interrupt function.
+Thank you for your notes about commit and sorry for not copying the message=
+ to you!
 
-Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/iio/proximity/Kconfig    |  11 ++
- drivers/iio/proximity/Makefile   |   1 +
- drivers/iio/proximity/vcnl3020.c | 258 +++++++++++++++++++++++++++++++
- 3 files changed, 270 insertions(+)
- create mode 100644 drivers/iio/proximity/vcnl3020.c
+There is definitely unwanted line of code in the commit.
+After deleting that one, introduced changes work fine.
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index d53601447da4..b8d2b17e60ac 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -112,6 +112,17 @@ config SRF08
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
- 
-+config VCNL3020
-+	tristate "VCNL3020 proximity sensor"
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Vishay VCNL3020
-+	  proximity sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vcnl3020.
-+
- config VL53L0X_I2C
- 	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
- 	depends on I2C
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 0bb5f9de13d6..8245978ced30 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
- obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
- 
-diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-new file mode 100644
-index 000000000000..9ff1a164c2e6
---- /dev/null
-+++ b/drivers/iio/proximity/vcnl3020.c
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Support for Vishay VCNL3020 proximity sensor on i2c bus.
-+ * Based on Vishay VCNL4000 driver code.
-+ *
-+ * TODO: interrupts.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define VCNL3020_PROD_ID	0x21
-+
-+#define VCNL_COMMAND		0x80 /* Command register */
-+#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-+#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-+#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-+#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-+#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-+#define VCNL_PS_ICR		0x89 /* Interrupt Control Register */
-+#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-+#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-+#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-+#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-+#define VCNL_ISR		0x8e /* Interrupt Status Register */
-+#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-+
-+/* Bit masks for COMMAND register */
-+#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-+#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-+					* measurement
-+					*/
-+
-+#define VCNL_ON_DEMAND_TIMEOUT_US	100000
-+#define VCNL_POLL_US			20000
-+
-+/**
-+ * struct vcnl3020_data - vcnl3020 specific data.
-+ * @regmap:	device register map.
-+ * @dev:	vcnl3020 device.
-+ * @rev:	revision id.
-+ * @lock:	lock for protecting access to device hardware registers.
-+ */
-+struct vcnl3020_data {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	u8 rev;
-+	struct mutex lock;
-+};
-+
-+/**
-+ * struct vcnl3020_property - vcnl3020 property.
-+ * @name:	property name.
-+ * @reg:	i2c register offset.
-+ * @conversion_func:	conversion function.
-+ */
-+struct vcnl3020_property {
-+	const char *name;
-+	u32 reg;
-+	u32 (*conversion_func)(u32 *val);
-+};
-+
-+static u32 microamp_to_reg(u32 *val)
-+{
-+	/*
-+	 * An example of conversion from uA to reg val:
-+	 * 200000 uA == 200 mA == 20
-+	 */
-+	return *val /= 10000;
-+};
-+
-+static struct vcnl3020_property vcnl3020_led_current_property = {
-+	.name = "vishay,led-current-microamp",
-+	.reg = VCNL_LED_CURRENT,
-+	.conversion_func = microamp_to_reg,
-+};
-+
-+static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
-+					   struct vcnl3020_property prop)
-+{
-+	int rc;
-+	u32 val;
-+
-+	rc = device_property_read_u32(data->dev, prop.name, &val);
-+	if (rc)
-+		return 0;
-+
-+	if (prop.conversion_func)
-+		prop.conversion_func(&val);
-+
-+	rc = regmap_write(data->regmap, prop.reg, val);
-+	if (rc) {
-+		dev_err(data->dev, "Error (%d) setting property (%s)\n",
-+			rc, prop.name);
-+	}
-+
-+	return rc;
-+}
-+
-+static int vcnl3020_init(struct vcnl3020_data *data)
-+{
-+	int rc;
-+	unsigned int reg;
-+
-+	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"Error (%d) reading product revision\n", rc);
-+		return rc;
-+	}
-+
-+	if (reg != VCNL3020_PROD_ID) {
-+		dev_err(data->dev,
-+			"Product id (%x) did not match vcnl3020 (%x)\n", reg,
-+			VCNL3020_PROD_ID);
-+		return -ENODEV;
-+	}
-+
-+	data->rev = reg;
-+	mutex_init(&data->lock);
-+
-+	return vcnl3020_get_and_apply_property(data,
-+					       vcnl3020_led_current_property);
-+};
-+
-+static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
-+{
-+	int rc;
-+	unsigned int reg;
-+	__be16 res;
-+
-+	mutex_lock(&data->lock);
-+
-+	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
-+	if (rc)
-+		goto err_unlock;
-+
-+	/* wait for data to become ready */
-+	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
-+				      reg & VCNL_PS_RDY, VCNL_POLL_US,
-+				      VCNL_ON_DEMAND_TIMEOUT_US);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"Error (%d) reading vcnl3020 command register\n", rc);
-+		goto err_unlock;
-+	}
-+
-+	/* high & low result bytes read */
-+	rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res,
-+			      sizeof(res));
-+	if (rc)
-+		goto err_unlock;
-+
-+	*val = be16_to_cpu(res);
-+
-+err_unlock:
-+	mutex_unlock(&data->lock);
-+
-+	return rc;
-+}
-+
-+static const struct iio_chan_spec vcnl3020_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	},
-+};
-+
-+static int vcnl3020_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val,
-+			     int *val2, long mask)
-+{
-+	int rc;
-+	struct vcnl3020_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		rc = vcnl3020_measure_proximity(data, val);
-+		if (rc)
-+			return rc;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vcnl3020_info = {
-+	.read_raw = vcnl3020_read_raw,
-+};
-+
-+static const struct regmap_config vcnl3020_regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= VCNL_PS_MOD_ADJ,
-+};
-+
-+static int vcnl3020_probe(struct i2c_client *client)
-+{
-+	struct vcnl3020_data *data;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int rc;
-+
-+	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "regmap_init failed\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->regmap = regmap;
-+	data->dev = &client->dev;
-+
-+	rc = vcnl3020_init(data);
-+	if (rc)
-+		return rc;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &vcnl3020_info;
-+	indio_dev->channels = vcnl3020_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-+	indio_dev->name = "vcnl3020";
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct of_device_id vcnl3020_of_match[] = {
-+	{
-+		.compatible = "vishay,vcnl3020",
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-+
-+static struct i2c_driver vcnl3020_driver = {
-+	.driver = {
-+		.name   = "vcnl3020",
-+		.of_match_table = vcnl3020_of_match,
-+	},
-+	.probe_new  = vcnl3020_probe,
-+};
-+module_i2c_driver(vcnl3020_driver);
-+
-+MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-+MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.1
+There is a hardcoded usage of /dev/tpm2 in the kernel selftest. And if ther=
+e is no such device - test fails.
+I believe this is not a behavior, that we expect. Test should be skipped in=
+ such case, should it?
+That is what my commit makes.
+
+So, after deleting unwanted line of code and making cosmetic changes (new d=
+escription + deleting
+excess newline character), can commit be submitted again?
+
+You also mentioned reviewed-by nor tested-by tags in your message. Who shou=
+ld make these tags?
+
+P.S.
+Also there was a question: why do I declare exit code with a constant inste=
+ad of just exit 4.
+I chose this style because it is used in other kernel selftests for such ki=
+nd of checks.
+It is proper to follow common style rules. Should I argument this decision =
+in commit message?=20
+
+-Nikita
+
+> -----Original Message-----
+> From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Sent: Sunday, April 12, 2020 5:11 PM
+> To: Shuah Khan <shuah@kernel.org>
+> Cc: linux-kselftest@vger.kernel.org; linux-integrity@vger.kernel.org; Jar=
+kko
+> Sakkinen <jarkko.sakkinen@linux.intel.com>; Nikita Sobolev
+> <sobolev@synopsys.com>; Tadeusz Struk <tadeusz.struk@intel.com>; open
+> list <linux-kernel@vger.kernel.org>
+> Subject: [PATCH] selftests/tpm: Fix runtime error
+>=20
+> There is some random clutter in test_smoke.sh:
+>=20
+>   ./test_smoke.sh: line 3: self.flags: command not found
+>=20
+> Remove it.
+>=20
+> Fixes: b32694cd0724 ("Kernel selftests: tpm2: check for tpm support")
+> Cc: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+> I rely on these tests and this was not even cc'd to me and obviously was
+> untested. There is neither reviewed-by nor tested-by tags in the commit (=
+not
+> to mention some cosmetic things like short summary formatted wrong and th=
+e
+> extra newline character).
+>=20
+> Please do not do this next time. Thanks.
+>  tools/testing/selftests/tpm2/test_smoke.sh | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/tools/testing/selftests/tpm2/test_smoke.sh
+> b/tools/testing/selftests/tpm2/test_smoke.sh
+> index b630c7b5950a..e55d3e400666 100755
+> --- a/tools/testing/selftests/tpm2/test_smoke.sh
+> +++ b/tools/testing/selftests/tpm2/test_smoke.sh
+> @@ -1,11 +1,9 @@
+>  #!/bin/bash
+>  # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) -self.flags =3D fla=
+gs
+>=20
+>  # Kselftest framework requirement - SKIP code is 4.
+>  ksft_skip=3D4
+>=20
+> -
+>  if [ -f /dev/tpm0 ] ; then
+>  	python -m unittest -v tpm2_tests.SmokeTest
+>  	python -m unittest -v tpm2_tests.AsyncTest
+> --
+> 2.25.1
 
