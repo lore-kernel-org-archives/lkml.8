@@ -2,78 +2,72 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DBEC35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A05DAC35280
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 005CD208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 06:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589093724;
-	bh=i5eGJPVlmK+E4XcF7rr2doxsy/jQO4NBL2xSdPxqnXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tsVXa55vgG9gyJeK6IkQGmWbrrwJwfvYQgo2KLtBOvJBSULn0Ij1QwI31+g+iJZ7F
-	 MgkeULLhInJn4d2QNuGvMf235zAdPFEKvyg2r05Tury6Rkm4qkZjWDeWmD/DZ34cSF
-	 fUWQC7yAVgEGNnpoNk/sTS9/E+xwtc85wtvyHVm8=
+	by mail.kernel.org (Postfix) with ESMTP id 809A02082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ukjv6NFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgEJGzX (ORCPT
+        id S1726955AbgEJHCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 02:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgEJGzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 02:55:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B4120801;
-        Sun, 10 May 2020 06:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589093722;
-        bh=i5eGJPVlmK+E4XcF7rr2doxsy/jQO4NBL2xSdPxqnXY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BdYDUObf0M7RBKkgpJMQOM//qgcTHgD4HLXJMvm/0yg8PHYzmQLbD/HcCwqHXrbxf
-         SgJdjqHun6gQKs6rojSgCGfRyHRsA9pIYljd5bnqC7GyjKHs7GR5Uz/gn86gfTDlbn
-         dt4aKmQVM1hyuL8QYEY8YO3Vq8/4tOJh5hVKpDUo=
-Date:   Sun, 10 May 2020 08:55:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Oldman <john.oldman@polehill.co.uk>
-Cc:     nsaenzjulienne@suse.de, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2] staging: vc04_services: vchiq_connected.c: Block
- comment alignment
-Message-ID: <20200510065519.GB3434442@kroah.com>
-References: <20200510060645.10159-1-john.oldman@polehill.co.uk>
+        Sun, 10 May 2020 03:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725810AbgEJHCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 03:02:47 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BBEC061A0C;
+        Sun, 10 May 2020 00:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bKDpvGvB+JB2+xQj5dN3ItF3LjGTr5pkdv7ViMbK54s=; b=Ukjv6NFsPq1ss+fmk6TqslK1cz
+        LPqqb/pT4zg6D25Gjy+GSErRr/OIts7kkzEP/++rwJv27gQQY+wtR/rF7+ddrFw4k18KRa+5S+9qm
+        2FQkA9yTTQAZByAiYvwZ1hPqPM7usaZHfmSvEXVyNPgBzmNT/nqc6ocfu6FGVRBgWbuvDJAG4vgY/
+        OxhFXC1rancOkxVRGvauy+JKaKNFODyCWhBnuAVQnDewv9H7ysIh25iCBr7JTuNcFw/2GKFO/HpqT
+        NA51MgE083RS53al51fD3Kp811h8jRuVblAnmhLGcXYTofmWzy0TMUmg72xbIUSebG/ufFZQ96MUc
+        Jp6A9Fsw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXfyz-000114-Ty; Sun, 10 May 2020 07:02:41 +0000
+Date:   Sun, 10 May 2020 00:02:41 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 04/20] FIEMAP: don't bother with access_ok()
+Message-ID: <20200510070241.GA23496@infradead.org>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+ <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+ <20200509234557.1124086-4-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200510060645.10159-1-john.oldman@polehill.co.uk>
+In-Reply-To: <20200509234557.1124086-4-viro@ZenIV.linux.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 07:06:45AM +0100, John Oldman wrote:
-> Coding style issue
+On Sun, May 10, 2020 at 12:45:41AM +0100, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
-> ---
-> v1: Initial attempt.
-> V2: Resubmitted with shorter comment line, as suggested by Greg KH.
-> 
-> This patch clears the checkpatch.pl "Block comments should align the * on each line" warning.
+> we use copy_to_user() on that thing anyway (and always had).
 
-Why is this text not in the changelog area?  Don't you think that it is
-better than the 3 words you currently put there?
+I already have this patch in this series:
 
-Please fix up and resend.
+https://lore.kernel.org/linux-fsdevel/20200507145924.GA28854@lst.de/T/#t
 
-thanks,
+which is waiting to be picked up [1], and also has some chance for conflicts
+due to changes next to the access_ok.
 
-greg k-h
+[1] except for the first two patches, which Ted plans to send for 5.7
