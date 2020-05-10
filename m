@@ -2,42 +2,43 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F27C54E8C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57530C54E8C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E14208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3683B21973
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jlK1Xs8X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rAiC/Hd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgEJH4c (ORCPT
+        id S1729208AbgEJH4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 03:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
+        Sun, 10 May 2020 03:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729236AbgEJH42 (ORCPT
+        with ESMTP id S1729181AbgEJH4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 03:56:28 -0400
+        Sun, 10 May 2020 03:56:19 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FE1C061A0C;
-        Sun, 10 May 2020 00:56:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A31C061A0C;
+        Sun, 10 May 2020 00:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=cvHE8T+77q41/s5pbmeeFx20Yc/7Q0qwMuv6xWW3l6I=; b=jlK1Xs8XOiQdJdv7gpNa3REBfJ
-        lKDncop+Y526zHO1c09ue1tsmhy62YQyiSpNNvf9Z4ZiahLKpzU5P3cKQwGa3wRBS21LxCJ+UZPdV
-        TqXx0dDp1ex3qgEPGRMdsmsVQWk8VWUA/XwQ3spbpVkdet+Fx/6LdFegRiK0VvqDFauGCTifl7FIo
-        ozHm9qxAO/E1eaZXqyAiAGu+kIvh89bMRzJO3COACFVaAM1d1qwIzGIAqxzXn4Hejh2FDqf2BbSiy
-        tqbHC1RnB1LqHQnHEE3mNdC+VmnevO9wt6X/Mn0KLLAR8uewyCde2S9ooRg1B4KvRdt8lE46KfQMq
-        +BdApNmA==;
+        bh=0vCVbab8LqnKZMFTDjGS9z17LyCubzzTTEgfa/2l87E=; b=rAiC/Hd8WPxcdGaIK+YBLYo+Go
+        2gdb6jgo+qIX00NX0gZ0E+3b3c5nv/Dy3HV4HYwpBO687h4Jo4Ltc0/42GPCymSSypI+qfueG7jRN
+        EjPY1/bZA2gpsMgGxph2x0ffB30PGYC9WDHVgo5V8UbC6iLbsl8NLNBugNIL6HdA1DXxEBmVLxofZ
+        o6CCGkpWdTkJS/zcOZKpp/pR9nF8jp8S78k9CzBYNa5xIIlcLYmup1VX0Tj4aLywsF3GAmpXO7bXb
+        VDpmIrif9kqxg1zp3WDOuB4HrEZ5UDdkvHo/lV/KxLTQBo3jDoSl1xCgsc9x4txt/7k7TYHvSLC5t
+        KgFSbZ+g==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jXgon-0000fq-HE; Sun, 10 May 2020 07:56:13 +0000
+        id 1jXgoa-0000I5-Dh; Sun, 10 May 2020 07:56:00 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
@@ -53,9 +54,9 @@ Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH 19/31] riscv: use asm-generic/cacheflush.h
-Date:   Sun, 10 May 2020 09:54:58 +0200
-Message-Id: <20200510075510.987823-20-hch@lst.de>
+Subject: [PATCH 15/31] microblaze: use asm-generic/cacheflush.h
+Date:   Sun, 10 May 2020 09:54:54 +0200
+Message-Id: <20200510075510.987823-16-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200510075510.987823-1-hch@lst.de>
 References: <20200510075510.987823-1-hch@lst.de>
@@ -67,99 +68,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RISC-V needs almost no cache flushing routines of its own.  Rely on
+Microblaze needs almost no cache flushing routines of its own.  Rely on
 asm-generic/cacheflush.h for the defaults.
 
-Also remove the pointless __KERNEL__ ifdef while we're at it.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/include/asm/cacheflush.h | 62 ++---------------------------
- 1 file changed, 3 insertions(+), 59 deletions(-)
+ arch/microblaze/include/asm/cacheflush.h | 29 ++----------------------
+ 1 file changed, 2 insertions(+), 27 deletions(-)
 
-diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index c8677c75f82cb..a167b4fbdf007 100644
---- a/arch/riscv/include/asm/cacheflush.h
-+++ b/arch/riscv/include/asm/cacheflush.h
-@@ -8,65 +8,6 @@
+diff --git a/arch/microblaze/include/asm/cacheflush.h b/arch/microblaze/include/asm/cacheflush.h
+index 11f56c85056bb..39f8fb6768d8b 100644
+--- a/arch/microblaze/include/asm/cacheflush.h
++++ b/arch/microblaze/include/asm/cacheflush.h
+@@ -57,9 +57,6 @@ void microblaze_cache_init(void);
+ #define invalidate_icache()				mbc->iin();
+ #define invalidate_icache_range(start, end)		mbc->iinr(start, end);
  
- #include <linux/mm.h>
+-#define flush_icache_user_range(vma, pg, adr, len)	flush_icache();
+-#define flush_icache_page(vma, pg)			do { } while (0)
+-
+ #define enable_dcache()					mbc->de();
+ #define disable_dcache()				mbc->dd();
+ /* FIXME for LL-temac driver */
+@@ -77,27 +74,9 @@ do { \
+ 	flush_dcache_range((unsigned) (addr), (unsigned) (addr) + PAGE_SIZE); \
+ } while (0);
  
--#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+-#define flush_dcache_mmap_lock(mapping)		do { } while (0)
+-#define flush_dcache_mmap_unlock(mapping)	do { } while (0)
 -
--/*
-- * The cache doesn't need to be flushed when TLB entries change when
-- * the cache is mapped to physical memory, not virtual memory
-- */
--static inline void flush_cache_all(void)
--{
+-#define flush_cache_dup_mm(mm)				do { } while (0)
+-#define flush_cache_vmap(start, end)			do { } while (0)
+-#define flush_cache_vunmap(start, end)			do { } while (0)
+-#define flush_cache_mm(mm)			do { } while (0)
+-
+ #define flush_cache_page(vma, vmaddr, pfn) \
+ 	flush_dcache_range(pfn << PAGE_SHIFT, (pfn << PAGE_SHIFT) + PAGE_SIZE);
+ 
+-/* MS: kgdb code use this macro, wrong len with FLASH */
+-#if 0
+-#define flush_cache_range(vma, start, len)	{	\
+-	flush_icache_range((unsigned) (start), (unsigned) (start) + (len)); \
+-	flush_dcache_range((unsigned) (start), (unsigned) (start) + (len)); \
 -}
+-#endif
 -
--static inline void flush_cache_mm(struct mm_struct *mm)
--{
--}
+-#define flush_cache_range(vma, start, len) do { } while (0)
 -
--static inline void flush_cache_dup_mm(struct mm_struct *mm)
--{
--}
--
--static inline void flush_cache_range(struct vm_area_struct *vma,
--				     unsigned long start,
--				     unsigned long end)
--{
--}
--
--static inline void flush_cache_page(struct vm_area_struct *vma,
--				    unsigned long vmaddr,
--				    unsigned long pfn)
--{
--}
--
--static inline void flush_dcache_mmap_lock(struct address_space *mapping)
--{
--}
--
--static inline void flush_dcache_mmap_unlock(struct address_space *mapping)
--{
--}
--
--static inline void flush_icache_page(struct vm_area_struct *vma,
--				     struct page *page)
--{
--}
--
--static inline void flush_cache_vmap(unsigned long start, unsigned long end)
--{
--}
--
--static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
--{
--}
--
--#define copy_to_user_page(vma, page, vaddr, dst, src, len) \
--	do { \
--		memcpy(dst, src, len); \
--		flush_icache_user_range(vma, page, vaddr, len); \
--	} while (0)
--#define copy_from_user_page(vma, page, vaddr, dst, src, len) \
--	memcpy(dst, src, len)
--
- static inline void local_flush_icache_all(void)
- {
- 	asm volatile ("fence.i" ::: "memory");
-@@ -79,6 +20,7 @@ static inline void flush_dcache_page(struct page *page)
- 	if (test_bit(PG_dcache_clean, &page->flags))
- 		clear_bit(PG_dcache_clean, &page->flags);
+ static inline void copy_to_user_page(struct vm_area_struct *vma,
+ 				     struct page *page, unsigned long vaddr,
+ 				     void *dst, void *src, int len)
+@@ -109,12 +88,8 @@ static inline void copy_to_user_page(struct vm_area_struct *vma,
+ 		flush_dcache_range(addr, addr + PAGE_SIZE);
+ 	}
  }
-+#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
++#define copy_to_user_page copy_to_user_page
  
- /*
-  * RISC-V doesn't have an instruction to flush parts of the instruction cache,
-@@ -105,4 +47,6 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
- #define SYS_RISCV_FLUSH_ICACHE_LOCAL 1UL
- #define SYS_RISCV_FLUSH_ICACHE_ALL   (SYS_RISCV_FLUSH_ICACHE_LOCAL)
- 
+-static inline void copy_from_user_page(struct vm_area_struct *vma,
+-				       struct page *page, unsigned long vaddr,
+-				       void *dst, void *src, int len)
+-{
+-	memcpy(dst, src, len);
+-}
 +#include <asm-generic/cacheflush.h>
-+
- #endif /* _ASM_RISCV_CACHEFLUSH_H */
+ 
+ #endif /* _ASM_MICROBLAZE_CACHEFLUSH_H */
 -- 
 2.26.2
 
