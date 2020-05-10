@@ -2,97 +2,110 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCFAC47257
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B900C54E4A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E7820746
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589070921;
-	bh=PwuG6ZEMO22R/K53vfhZWC0b/2lVjNtOZJwj9wy81hk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xsMmlqMz955uVkNBFNEVPWTU/LGah56QAS6OdU8ftPlhIwOJJC9jmgc43os5TD6mD
-	 esfCx7lEK4LixExtUFEJJtjuSBL/1iZMgXagP3hreDdX9WJ+/Ua6ldPw3T6MWcgU5u
-	 srEHn35Wy1s1WYAy6c1vu1b0j7xUkzXxCpFpKdZM=
+	by mail.kernel.org (Postfix) with ESMTP id E6F4420CC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgEJAfT (ORCPT
+        id S1728923AbgEJAgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 20:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726565AbgEJAfS (ORCPT
+        Sat, 9 May 2020 20:36:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46837 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgEJAgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 20:35:18 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24229C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 17:35:17 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 8so1728397lfp.4
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 17:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QIj/ulxXwzU/BqtApM64/L2H6IYW1Xqha2rgujJnuic=;
-        b=Aez2jDWnaE+fKs120oJmZNtlhpcevhENgd0OPCPE0bHJG0TM/MRk9jV+wNWJnjXJA5
-         a09lBbGbqV9CDMms8Dz3aPk7F/35NlYffAlgkn2Lm8eNUR6J4a45CxXKCYWrDB/qoFWi
-         X+n0JsxmOsUR3H+tSwTVkoukFukm9n+4MgXNo=
+        Sat, 9 May 2020 20:36:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id q124so2700033pgq.13;
+        Sat, 09 May 2020 17:36:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QIj/ulxXwzU/BqtApM64/L2H6IYW1Xqha2rgujJnuic=;
-        b=WAkgyWOx7WwlTDvNCUhRlScCZhJj096iFojbTuFEkal1dfVDmg1TDBr1TJBa1I0MUy
-         X8Lj55dW4X36YlOzfs3ez0OK/54qqKtMNusSJPGoWJNKAGvBsJlI6Kk3xPu8dbCKsGP9
-         Ld4X7wG2vcWERE0piXPOJQPMle6XjH4v5zei2RQAk+RqQX0RQsMnPsyxgNzFPOr6zN/a
-         aMolf94ssKCm0kUe12YUKrLfTRDO4ifepltJ8riV54d/cf1oxpr0I7HuhDGTyzO5nVee
-         vjVp/sybanlt7oWAOuc6U+gKCHWWGpIK+LIzFh23PvjpcdHOqogW7wnSMSvE57pR/5wG
-         JYBQ==
-X-Gm-Message-State: AOAM531LIMu9YyEmIZBaqHFv+fOqowYjk6H6YtVLjNeunalvETbwHZoc
-        G81X87jh0BxMS1f++WI66unhLGxhc/M=
-X-Google-Smtp-Source: ABdhPJx4PykXQlD9ifOFScL6knDG4k8pRN69w1bfVrTejfeoBPk5ZzbWmbMb7+6JSdsiTBiSkxqiyQ==
-X-Received: by 2002:ac2:46c1:: with SMTP id p1mr5999306lfo.25.1589070915328;
-        Sat, 09 May 2020 17:35:15 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id r3sm5473529lfm.52.2020.05.09.17.35.14
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SQF8VGNw/LWoe9FfZGxpzTCfdvJXZRTz9yGixScGhPs=;
+        b=qfvcu0K3EvzWUREclK/jjWSv3eUWCHQjL7qjT3vjJqMi4635F4NwrG/3O51IAT1HMF
+         JEKE91L3MA6mKHRHA6flh5vEcJUr8WQNiqJ6RRRgQyr8jespEGnQ23b/r6r/nNPN2Cpq
+         Fp8gyWyF8CmclGQLzKZ0tQGc41wXaXPniBJFwMqRu0/HbtgF44wLbqJ4i6ClfiPas7Xm
+         qO7etrJlOBRs5MTw2B9QOPi8EsDaTq4496iBKTjFE9POjD0U/R9udZ+a+PRig6l6rT1y
+         Z3VhZmDTkX2IBqkOhisbClOemXZIzq/7OGVf+5Csrh/yPjASUF1Be3Lh2O/mjTgaZeDB
+         Uo5w==
+X-Gm-Message-State: AGi0PuYhtSvFybeX4JjaL6E6pzEfm2kow+2aOnK26M9tjO8FgKZ12EqD
+        8zqvGOjJSSwflqB0pURA0V8=
+X-Google-Smtp-Source: APiQypLzWG+D3I3lGRvqUjjthvsCMHM3xjJIhlNwyoTH7tORaG4skYeDsbtO5wgVmwoRSn49F59p9Q==
+X-Received: by 2002:a63:7219:: with SMTP id n25mr8505744pgc.358.1589070972603;
+        Sat, 09 May 2020 17:36:12 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:8ef:746a:4fe7:1df? ([2601:647:4000:d7:8ef:746a:4fe7:1df])
+        by smtp.gmail.com with ESMTPSA id z6sm5386018pfb.87.2020.05.09.17.36.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 17:35:14 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id a21so5594525ljj.11
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 17:35:14 -0700 (PDT)
-X-Received: by 2002:a2e:8512:: with SMTP id j18mr6018733lji.201.1589070913812;
- Sat, 09 May 2020 17:35:13 -0700 (PDT)
+        Sat, 09 May 2020 17:36:11 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] block: revert back to synchronous request_queue
+ removal
+To:     Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200509031058.8239-1-mcgrof@kernel.org>
+ <20200509031058.8239-2-mcgrof@kernel.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <3969cc50-eef7-0b39-58eb-a19535a61d15@acm.org>
+Date:   Sat, 9 May 2020 17:36:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200509234124.GM23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200509234124.GM23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 9 May 2020 17:34:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiC+LzLX0NGQQdD+J0Q2LUMhMyA4kWPghMVq+AmU--w4Q@mail.gmail.com>
-Message-ID: <CAHk-=wiC+LzLX0NGQQdD+J0Q2LUMhMyA4kWPghMVq+AmU--w4Q@mail.gmail.com>
-Subject: Re: [PATCHES] uaccess simple access_ok() removals
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200509031058.8239-2-mcgrof@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 4:41 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
->         Individual patches in followups; if nobody screams - into #for-next
-> it goes...
+On 2020-05-08 20:10, Luis Chamberlain wrote:
+> We revert back to synchronous request_queue removal because asynchronous
+> removal creates a regression with expected userspace interaction with
+> several drivers. An example is when removing the loopback driver, one
+> uses ioctls from userspace to do so, but upon return and if successful,
+> one expects the device to be removed. Likewise if one races to add another
+> device the new one may not be added as it is still being removed. This was
+> expected behavior before and it now fails as the device is still present
+> and busy still. Moving to asynchronous request_queue removal could have
+> broken many scripts which relied on the removal to have been completed if
+> there was no error. Document this expectation as well so that this
+> doesn't regress userspace again.
 
-Looks fine to me, although I only read your commit logs, I didn't
-verify that what you stated was actually true (ie the whole "only used
-for xyz" parts).
-
-But I'll take your word for it. Particularly the double-underscore
-versions are getting rare (and presumably some of the other branches
-you have make it rarer still).
-
-               Linus
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
