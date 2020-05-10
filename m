@@ -2,161 +2,155 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8818FC54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716C4C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635192137B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527122137B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589104094;
+	bh=It5Bs3mGUycZO8AmlCBz6x4Tq/NHxfaoV+60NhmqddI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C76i8f8xhA8Ts3eswCtAhMf5uoABz4iyvaJ0ad4t9AQZX/O2DiGjTf8hTqbunlU2r
+	 ZV8GNa7obrFCB9YLS16JjHbvD5YuM/S2A3pzKf+BVQwRmJnystitUE+9ZZMruIzy7p
+	 xcumwKhTkibuVwZP4izELJr+bwmY/AR3oi75G368=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgEJJ2W (ORCPT
+        id S1728315AbgEJJsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 05:28:22 -0400
-Received: from smtp-8fa9.mail.infomaniak.ch ([83.166.143.169]:44977 "EHLO
-        smtp-8fa9.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgEJJ2W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 05:28:22 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49Kdz73c83zlhlbf;
-        Sun, 10 May 2020 11:28:19 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49Kdz52pvmzmgvLW;
-        Sun, 10 May 2020 11:28:17 +0200 (CEST)
-Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     deven.desai@linux.microsoft.com, agk@redhat.com, axboe@kernel.dk,
-        snitzer@redhat.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
-Date:   Sun, 10 May 2020 11:28:16 +0200
-User-Agent: 
+        Sun, 10 May 2020 05:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgEJJsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 05:48:11 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D42F220820;
+        Sun, 10 May 2020 09:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589104090;
+        bh=It5Bs3mGUycZO8AmlCBz6x4Tq/NHxfaoV+60NhmqddI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ED/ykdB+3XjqF/FI5Jl03ZaQTSBSIvnQzAR9wDxrrSQrPcPiMQVsdTAykgBip/Lpm
+         AOUUUSUt5Ec2rGpZ1Uj6eaTMMrskpTL9ipW2QuLJNwdQGmghfSOkogrtvLQTFbielC
+         zqscIYkmwRzZiKpL4DqKRd863eNVc+uEFjhvbHSI=
+Date:   Sun, 10 May 2020 10:48:06 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] iio: light: cm32181: Switch to new style
+ i2c-driver probe function
+Message-ID: <20200510104806.63ffeae5@archlinux>
+In-Reply-To: <20200504125551.434647-1-hdegoede@redhat.com>
+References: <20200504125551.434647-1-hdegoede@redhat.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon,  4 May 2020 14:55:41 +0200
+Hans de Goede <hdegoede@redhat.com> wrote:
 
-On 15/04/2020 18:25, deven.desai@linux.microsoft.com wrote:
-> From: Deven Bowers <deven.desai@linux.microsoft.com>
+> Switch to the new style i2c-driver probe_new probe function and drop the
+> unnecessary i2c_device_id table (we do not have any old style board files
+> using this).
 > 
-> Overview:
-> ------------------------------------
+> This is a preparation patch for adding ACPI binding support.
 > 
-> IPE is a Linux Security Module which allows for a configurable
-> policy to enforce integrity requirements on the whole system. It
-> attempts to solve the issue of Code Integrity: that any code being
-> executed (or files being read), are identical to the version that
-> was built by a trusted source.
-> 
-> The type of system for which IPE is designed for use is an embedded device
-> with a specific purpose (e.g. network firewall device in a data center),
-> where all software and configuration is built and provisioned by the owner.
-> 
-> Specifically, a system which leverages IPE is not intended for general
-> purpose computing and does not utilize any software or configuration
-> built by a third party. An ideal system to leverage IPE has both mutable
-> and immutable components, however, all binary executable code is immutable.
-> 
-> The scope of IPE is constrained to the OS. It is assumed that platform
-> firmware verifies the the kernel and optionally the root filesystem (e.g.
-> via U-Boot verified boot). IPE then utilizes LSM hooks to enforce a
-> flexible, kernel-resident integrity verification policy.
-> 
-> IPE differs from other LSMs which provide integrity checking (for instance,
-> IMA), as it has no dependency on the filesystem metadata itself. The
-> attributes that IPE checks are deterministic properties that exist solely
-> in the kernel. Additionally, IPE provides no additional mechanisms of
-> verifying these files (e.g. IMA Signatures) - all of the attributes of
-> verifying files are existing features within the kernel, such as dm-verity
-> or fsverity.
-> 
-> IPE provides a policy that allows owners of the system to easily specify
-> integrity requirements and uses dm-verity signatures to simplify the
-> authentication of allowed objects like authorized code and data.
-> 
-> IPE supports two modes, permissive (similar to SELinux's permissive mode)
-> and enforce. Permissive mode performs the same checks, and logs policy
-> violations as enforce mode, but will not enforce the policy. This allows
-> users to test policies before enforcing them.
-> 
-> The default mode is enforce, and can be changed via the kernel commandline
-> parameter `ipe.enforce=(0|1)`, or the sysctl `ipe.enforce=(0|1)`. The
-> ability to switch modes can be compiled out of the LSM via setting the
-> config CONFIG_SECURITY_IPE_PERMISSIVE_SWITCH to N.
-> 
-> IPE additionally supports success auditing. When enabled, all events
-> that pass IPE policy and are not blocked will emit an audit event. This
-> is disabled by default, and can be enabled via the kernel commandline
-> `ipe.success_audit=(0|1)` or the sysctl `ipe.success_audit=(0|1)`.
-> 
-> Policies can be staged at runtime through securityfs and activated through
-> sysfs. Please see the Deploying Policies section of this cover letter for
-> more information.
-> 
-> The IPE LSM is compiled under CONFIG_SECURITY_IPE.
-> 
-> Policy:
-> ------------------------------------
-> 
-> IPE policy is designed to be both forward compatible and backwards
-> compatible. There is one required line, at the top of the policy,
-> indicating the policy name, and the policy version, for instance:
-> 
->   policy_name="Ex Policy" policy_version=0.0.0
-> 
-> The policy version indicates the current version of the policy (NOT the
-> policy syntax version). This is used to prevent roll-back of policy to
-> potentially insecure previous versions of the policy.
-> 
-> The next portion of IPE policy, are rules. Rules are formed by key=value
-> pairs, known as properties. IPE rules require two properties: "action",
-> which determines what IPE does when it encounters a match against the
-> policy, and "op", which determines when that rule should be evaluated.
-> Thus, a minimal rule is:
-> 
->   op=EXECUTE action=ALLOW
-> 
-> This example will allow any execution. Additional properties are used to
-> restrict attributes about the files being evaluated. These properties are
-> intended to be deterministic attributes that are resident in the kernel.
-> Available properties for IPE described in the properties section of this
-> cover-letter, the repository available in Appendix A, and the kernel
-> documentation page.
-> 
-> Order does not matter for the rule's properties - they can be listed in
-> any order, however it is encouraged to have the "op" property be first,
-> and the "action" property be last, for readability.
-> 
-> Additionally, rules are evaluated top-to-bottom. As a result, any
-> revocation rules, or denies should be placed early in the file to ensure
-> that these rules are evaluated before a rule with "action=ALLOW" is hit.
-> 
-> IPE policy is designed to be forward compatible and backwards compatible,
-> thus any failure to parse a rule will result in the line being ignored,
-> and a warning being emitted. If backwards compatibility is not required,
-> the kernel commandline parameter and sysctl, ipe.strict_parse can be
-> enabled, which will cause these warnings to be fatal.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Hans,
 
-Ignoring unknown command may lead to inconsistent beaviors. To achieve
-forward compatibility, I think it would be better to never ignore
-unknown rule but to give a way to userspace to known what is the current
-kernel ABI. This could be done with a securityfs file listing the
-current policy grammar.
+Seems these have all been sent with mime type of quoted-printable.
+As git am really doesn't like that I ended up pulling these down from
+patchwork.
+
+Please try and sort that email issue out for future patch sets until
+we get git am that works with it in standard distro packages (assuming
+it ever does)
+
+Otherwise, a bit of fuzz from the patch that dropped the of_match_ptr
+protections.
+
+Series applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+> Changes in v4:
+> - Set indio_dev->name to "cm32181" instead of setting it to dev_name(dev)
+> 
+> Changes in v3:
+> - This is a new patch in v3 of this patch-set
+> ---
+>  drivers/iio/light/cm32181.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+> index 5f4fb5674fa0..2c139d85ef0c 100644
+> --- a/drivers/iio/light/cm32181.c
+> +++ b/drivers/iio/light/cm32181.c
+> @@ -294,8 +294,7 @@ static const struct iio_info cm32181_info = {
+>  	.attrs			= &cm32181_attribute_group,
+>  };
+>  
+> -static int cm32181_probe(struct i2c_client *client,
+> -			const struct i2c_device_id *id)
+> +static int cm32181_probe(struct i2c_client *client)
+>  {
+>  	struct cm32181_chip *cm32181;
+>  	struct iio_dev *indio_dev;
+> @@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
+>  	indio_dev->channels = cm32181_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
+>  	indio_dev->info = &cm32181_info;
+> -	indio_dev->name = id->name;
+> +	indio_dev->name = "cm32181";
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+>  	ret = cm32181_reg_init(cm32181);
+> @@ -338,13 +337,6 @@ static int cm32181_probe(struct i2c_client *client,
+>  	return 0;
+>  }
+>  
+> -static const struct i2c_device_id cm32181_id[] = {
+> -	{ "cm32181", 0 },
+> -	{ }
+> -};
+> -
+> -MODULE_DEVICE_TABLE(i2c, cm32181_id);
+> -
+>  static const struct of_device_id cm32181_of_match[] = {
+>  	{ .compatible = "capella,cm32181" },
+>  	{ }
+> @@ -356,8 +348,7 @@ static struct i2c_driver cm32181_driver = {
+>  		.name	= "cm32181",
+>  		.of_match_table = of_match_ptr(cm32181_of_match),
+>  	},
+> -	.id_table       = cm32181_id,
+> -	.probe		= cm32181_probe,
+> +	.probe_new	= cm32181_probe,
+>  };
+>  
+>  module_i2c_driver(cm32181_driver);
+
