@@ -2,94 +2,107 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DE1C54E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA57DC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5132C20735
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B122B208E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589105404;
+	bh=XxCh+CGXiUL6qNcbhDup79bdNTtgu/khjj12Nti93p0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wNATmN4QDirIkeS2r0MOCs+KMhZOy7xq2pH664sG5zwwPrFiuuq5LBV2/mCv2p+9y
+	 clqP1J+3dm9xeoSvts1fH7eG+03eK7ImssXQGmJcKjf7NgWgIeQcTKoMKWXr4MR7Nx
+	 2LJVgychQ60NniZ8mcHANtZJlyp1cFXtcdCgFCYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgEJKHr (ORCPT
+        id S1728645AbgEJKKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 06:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbgEJKHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 06:07:47 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9831C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 03:07:46 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 14D8C2A08D3
-Subject: Re: [PATCH] clk / soc: mediatek: fix ptr_ret.cocci warnings
-To:     kbuild test robot <lkp@intel.com>,
-        Matthias Brugger <mbrugger@suse.com>
-Cc:     kbuild-all@lists.01.org, CK Hu <ck.hu@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <202005101033.xLBIJF9V%lkp@intel.com>
- <20200510025338.GA81310@f5ba873997c7>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <5ca9a334-31d7-8878-f586-13d5020c24fc@collabora.com>
-Date:   Sun, 10 May 2020 12:07:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 06:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbgEJKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 06:10:03 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC9F020735;
+        Sun, 10 May 2020 10:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589105403;
+        bh=XxCh+CGXiUL6qNcbhDup79bdNTtgu/khjj12Nti93p0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aTcQLe63y02EQHkxtR4MN3TaUt3u9hAwTjkNrOdAq/B0gkO2b+qNlRMjd7lRw672R
+         IQQbXKX36gvBGb7IiqH4mvJsHET/TQX8cws/evCCWt9NZ+U23thBv8iGzTkOplpZpC
+         EnndfQuFuO9J7u6WcFkbBSur2/coGMLJkYr5BfdE=
+Date:   Sun, 10 May 2020 11:09:58 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
+Message-ID: <20200510110958.29046a18@archlinux>
+In-Reply-To: <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
+References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
+        <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200510025338.GA81310@f5ba873997c7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 9 May 2020 10:52:14 +0200
+Lars-Peter Clausen <lars@metafoo.de> wrote:
 
+> On 5/8/20 3:53 PM, Alexandru Ardelean wrote:
+> > [...]
+> > What I don't like, is that iio:device3 has iio:buffer3:0 (to 3).
+> > This is because the 'buffer->dev.parent = &indio_dev->dev'.
+> > But I do feel this is correct.
+> > So, now I don't know whether to leave it like that or symlink to shorter
+> > versions like 'iio:buffer3:Y' -> 'iio:device3/bufferY'.
+> > The reason for naming the IIO buffer devices to 'iio:bufferX:Y' is
+> > mostly to make the names unique. It would have looked weird to do
+> > '/dev/buffer1' if I would have named the buffer devices 'bufferX'.
+> >
+> > So, now I'm thinking of whether all this is acceptable.
+> > Or what is acceptable?
+> > Should I symlink 'iio:device3/iio:buffer3:0' -> 'iio:device3/buffer0'?
+> > What else should I consider moving forward?
+> > What means forward?
+> > Where did I leave my beer?  
+> 
+> Looking at how the /dev/ devices are named I think we can provide a name 
+> that is different from the dev_name() of the device. Have a look at 
+> device_get_devnode() in drivers/base/core.c. We should be able to 
+> provide the name for the chardev through the devnode() callback.
+> 
+> While we are at this, do we want to move the new devices into an iio 
+> subfolder? So iio/buffer0:0 instead of iio:buffer0:0?
 
-On 10/5/20 4:53, kbuild test robot wrote:
-> From: kbuild test robot <lkp@intel.com>
-> 
-> drivers/soc/mediatek/mtk-mmsys.c:28:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-> 
-> 
->  Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-> 
-> Generated by: scripts/coccinelle/api/ptr_ret.cocci
-> 
-> Fixes: 13032709e232 ("clk / soc: mediatek: Move mt8173 MMSYS to platform driver")
-> CC: Matthias Brugger <mbrugger@suse.com>
-> Signed-off-by: kbuild test robot <lkp@intel.com>
+Possibly on the folder.  I can't for the life of me remember why I decided
+not to do that the first time around - I'll leave it at the
+mysterious "it may turn out to be harder than you'd think..."
+Hopefully not ;)
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Do we want to make the naming a bit more self describing, something like
+iio/device0:buffer0?  Given the legacy interface will be outside
+the directory anyway, could even do
 
-> ---
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> head:   30e2206e11ce27ae910cc0dab21472429e400a87
-> commit: 13032709e2328553970f0002df5edce6aac69425 [1266/7905] clk / soc: mediatek: Move mt8173 MMSYS to platform driver
-> 
->  mtk-mmsys.c |    5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> --- a/drivers/soc/mediatek/mtk-mmsys.c
-> +++ b/drivers/soc/mediatek/mtk-mmsys.c
-> @@ -25,10 +25,7 @@ static int mtk_mmsys_probe(struct platfo
->  
->  	clks = platform_device_register_data(&pdev->dev, data->clk_driver,
->  					     PLATFORM_DEVID_AUTO, NULL, 0);
-> -	if (IS_ERR(clks))
-> -		return PTR_ERR(clks);
-> -
-> -	return 0;
-> +	return PTR_ERR_OR_ZERO(clks);
->  }
->  
->  static const struct of_device_id of_match_mtk_mmsys[] = {
-> 
+iio/device0/buffer0 with link to iio:device0
+iio/device0/buffer1 with no legacy link.
+
+Ah, the bikeshedding fun we have ahead of us!
+
+I think this set is going to take too much thinking for a Sunday
+so may take me a little while to do a proper review...
++ I have a few other side projects I want to hammer on today :)
+
+Jonathan
+
