@@ -2,79 +2,105 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E20DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE82C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7955420736
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08B120736
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 17:50:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YMZySFv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgEJRp2 (ORCPT
+        id S1728926AbgEJRuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 13:45:28 -0400
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:38952 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726744AbgEJRp2 (ORCPT
+        Sun, 10 May 2020 13:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726744AbgEJRuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 13:45:28 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 298BC40FE;
-        Sun, 10 May 2020 17:45:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: talk80_699fde1aeca31
-X-Filterd-Recvd-Size: 1977
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 10 May 2020 17:45:25 +0000 (UTC)
-Message-ID: <c78e00a05d19a6823e48c7bd50144f0563908a1a.camel@perches.com>
-Subject: Re: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-From:   Joe Perches <joe@perches.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Sun, 10 May 2020 10:45:24 -0700
-In-Reply-To: <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
-References: <20200507224530.2993316-1-Jason@zx2c4.com>
-         <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
-         <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
-         <20200508113336.2vdfdnc6tqyx4pu6@butterfly.localdomain>
-         <CAK8P3a0dJ0vNnktcoWFiPKB4NJbeyf7nvwWf0YLyeUyxT5pvQg@mail.gmail.com>
-         <c774d7371a9599526090e63e85f61e69bddf4795.camel@perches.com>
-         <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Sun, 10 May 2020 13:50:10 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4239BC061A0C;
+        Sun, 10 May 2020 10:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=6+0hqBa3ewO7D+7BOeRzGEBHEbr46c1CCbxLxiI0IS4=; b=YMZySFv5qmnzTKkkoA4yzp11MO
+        z9jKcufeqIcTRS/ZTYvJ3GVu0Orfqqe13rkNLdiL9IJYHxYk7EmSavo6mxx4T48z/SmQCLJ0TaLlx
+        y1QM+QJPPDL1XIZ8OqBIo1fttMk+YbWAmlR49O3WvzDllZzrN1+PFQat6Umq/HXbDvTnwcP3ozW0Q
+        tcEFnMuqydtIJSsVUB3/16wmnny29Foe7KwZabNaeLVEIXRf9V3gTiTSmKePS+MhC5ijZ4B2CIRb+
+        PlakRG++V4L0yETOJL1zCXUlI6ZAtD4hS45lD/24aQtkkbEjCjZpCpg5T7ccnWjzKc+9sVxQCxakH
+        n1HWGkHA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXq5X-0004N2-0I; Sun, 10 May 2020 17:50:07 +0000
+Subject: Re: Using a custom LDFLAG for all objects and binaries
+To:     Mahmood Naderan <mahmood.nt@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
+ <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org>
+ <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org>
+Date:   Sun, 10 May 2020 10:50:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-05-10 at 12:47 +0000, David Laight wrote:
-> From: Joe Perches
-> > Sent: 08 May 2020 16:06
-> > On Fri, 2020-05-08 at 13:49 +0200, Arnd Bergmann wrote:
-> > > Personally, I'm more interested in improving compile speed of the kernel
-> > 
-> > Any opinion on precompiled header support?
+On 5/10/20 10:13 AM, Mahmood Naderan wrote:
+>> Have you read Documentation/kbuild/makefiles.rst ?
+>>
+>>     LDFLAGS
+>>         Generic $(LD) options
+>>
+>>         Flags used for all invocations of the linker.
 > 
-> When ever I've been anywhere near it it is always a disaster.
+> 
+> What I see is this in Documentation/kbuild/makefiles.txt
+> 
+>     LDFLAGS             Generic $(LD) options
+> 
+>         Flags used for all invocations of the linker.
+>         Often specifying the emulation is sufficient.
+> 
+>         Example:
+>                 #arch/s390/Makefile
+>                 LDFLAGS         := -m elf_s390
+>         Note: ldflags-y can be used to further customise
+>         the flags used. See chapter 3.7.
+> 
+> 
+> 
+> I have two questions then:
+> 1- Can I use that as a bash variable? Like "LDFLAGS=--emit-relocs make"
 
-A disaster? Why?
+I don't know. You could experiment with it to see.
+(again by using 'make V=1' to see the commands that are being used)
 
-For a large commercial c only project, it worked well
-by reducing a combined multi-include file, similar to
-kernel.h here, to a single file.
+> or
+> 2- Editing arch/x86/Makefile with
+>    KBUILD_LDFLAGS := -m --emit-relocs elf_$(UTS_MACHINE)
 
-That was before SSDs though and the file open times
-might have been rather larger then.
+That should work.
 
+> Thanks for your help.
+
+It would be better to ask these questions on the linux-kbuild mailing list
+(added now).
+
+-- 
+~Randy
 
