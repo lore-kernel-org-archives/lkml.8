@@ -2,78 +2,132 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE36C54E8E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B29C54E8E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F262208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589149966;
-	bh=Yk3T1V9sIfrkBHrMZ2y69yZMO1JRC92XyxBLXdI20gQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p0Akj+0aI5yqtORuSglnjiz2r5TOCLYYTzvlwnx8Ypekb7x/QdLGmKD0Ml66ZLYXz
-	 EM5S0gQwiFomhlQF/hr4NPMO30kiy2kVRTkGApKC820NDfodnNjN+J5UZqBcjriI4d
-	 R2igJ5Euew6BxgO6wwXHg9yUIhSbxSoIrFOfAJUs=
+	by mail.kernel.org (Postfix) with ESMTP id 50DC22192A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SdcvbjcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgEJWcp (ORCPT
+        id S1729478AbgEJWe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 18:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728660AbgEJWco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 18:32:44 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD802071C;
-        Sun, 10 May 2020 22:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589149964;
-        bh=Yk3T1V9sIfrkBHrMZ2y69yZMO1JRC92XyxBLXdI20gQ=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=BL6gBEUShAG17Svt4bBbgvvFlZ/YUDTm/UjcSOuHFSYjizbIoD9FkowVO4rT5Z/7l
-         l5Ne1+AMng8n3ZcvNqvKaNm/ZNoO9+7Iyo3DrApa3kCd+qf13dBgSPvkgDVvVaoMfT
-         AuaysSraaimQxN41JSbavmogSDicShwkTNdP7EBU=
-Date:   Mon, 11 May 2020 00:32:41 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Samuel Zou <zou_wei@huawei.com>
-cc:     jpoimboe@redhat.com, mbenes@suse.cz, pmladek@suse.com,
-        joe.lawrence@redhat.com, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] livepatch: Make klp_apply_object_relocs
- static
-In-Reply-To: <1588987001-27863-1-git-send-email-zou_wei@huawei.com>
-Message-ID: <nycvar.YFH.7.76.2005110032190.25812@cbobk.fhfr.pm>
-References: <1588987001-27863-1-git-send-email-zou_wei@huawei.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Sun, 10 May 2020 18:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729270AbgEJWe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 18:34:56 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A97C061A0C;
+        Sun, 10 May 2020 15:34:55 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g16so6327033eds.1;
+        Sun, 10 May 2020 15:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B3Liuw5jPj3QJFxFHfKfy7ZMc74PTLZnt3p5YASlDKM=;
+        b=SdcvbjcF3JdGMCmXQKjJC4VrtNbyZL7JnFCg8ME3uRhjoiXwEB15CrSZnQME4J2DD2
+         DxO4QSlh81F3TWn9aryJtCbHpShD922IGnJbIUvodcpjRjZLGr+jYf2kaVsme2IXDLbY
+         4rDOHXaVnxiGBT4BqaQ8kI/nbf5iEGKYqTLSMz9cVTfRW+HNuhVcado+L3P1sCjh8SB5
+         rMEASJykb5AlP1LYw0dBugwJWhrgwISrTmI+VLnQC02LFbbzw4WoeRl2c3TUDuWrEqJJ
+         1dRey1jKhuUMz+aWUWNgJbUMfAtTbiJvPvHBorrsnrosXO1eItyzVsBZo99mbhd15P+C
+         pjzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B3Liuw5jPj3QJFxFHfKfy7ZMc74PTLZnt3p5YASlDKM=;
+        b=ljX5q4qh/yih1Cb4Q6sw7LdvWuhRUrxj8l7yc5ofA4EEHe3sav9tnD9nxvCq3SMJbP
+         LzUw8Djs9us96lVlSZFP+asp/oJfMPAdDX0mkhhxXDvOBnwlZ8bDF0S9jN561Xy3kc84
+         cvYBIZFBsNLoP4y8FQKhX8x2DfZnB98A1U/XlbCBRnFc9+HxXI9U7P7MaH9qQD4FQ3sL
+         lcDlb0Y8+vh9uR4VfK7IGwNniQgdFgF/nl7/Vzo9QDtwP/yVg8K+V7ibAj3sstrI3Rl5
+         SkUonmChdIjpZWy8SEM6h6XmOtUO3IqBIyfwIzIbPCgBoQQLIxq/g9mAnsam4m7Ev6si
+         OyFw==
+X-Gm-Message-State: AGi0PuasnAEaJNmkcsehYIBM+lKrwLcS+mqQ5u2QY1sjY2L5UNGUl0fe
+        u+PJcrKVPhvt8hCO4hNG1iYLSj6otlQNddjo6W1DueXD
+X-Google-Smtp-Source: APiQypJ0tOvAq/50pHoDwoV21V2Mrg8Ij7Mm0ejwS/L8ZfwzanfGxs+5RSeqRK/m+QrXGsgES5F7n8SL3G6ccbzOAtg=
+X-Received: by 2002:a50:fc06:: with SMTP id i6mr10603747edr.110.1589150094277;
+ Sun, 10 May 2020 15:34:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-3-martin.blumenstingl@googlemail.com>
+ <20200501210942.GA27082@bogus> <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
+In-Reply-To: <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 11 May 2020 00:34:43 +0200
+Message-ID: <CAFBinCDiQ3_ti60tQd3PMVM89oaMQcSKODMQ1Wr66P1SHWEZ5A@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the
+ "timing-adjustment" clock
+To:     Rob Herring <robh@kernel.org>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, jianxin.pan@amlogic.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020, Samuel Zou wrote:
+Hello Rob,
 
-> Fix the following sparse warning:
-> 
-> kernel/livepatch/core.c:748:5: warning: symbol 'klp_apply_object_relocs' was not declared.
-> 
-> The klp_apply_object_relocs() has only one call site within core.c
-> It should be static
-> 
-> Fixes: 7c8e2bdd5f0d ("livepatch: Apply vmlinux-specific KLP relocations early")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+On Fri, May 1, 2020 at 11:53 PM Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, May 1, 2020 at 11:09 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, 29 Apr 2020 22:16:35 +0200, Martin Blumenstingl wrote:
+> > > The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
+> > > requires an internal re-timing circuit whose input clock is called
+> > > "timing adjustment clock". Document this clock input so the clock can be
+> > > enabled as needed.
+> > >
+> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > > ---
+> > >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
+> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+> I am seeing this on my own build machine as well, but only for the .yaml example
+> The .dts example does not emit this warning
+I found out what's going on here:
+- I built these patches against the net-next tree (including dt_binding_check)
+- and against linux-next (also including dt_binding_check)
 
-Merged in for-5.8/klp-module-fixups branch now. Thanks,
+Your tree contains commit f22531438ff42c ("dt-bindings: net: dwmac:
+increase 'maxItems' for 'clocks', 'clock-names' properties") [0].
+The net-next tree doesn't have that commit but linux-next does.
+So when I run dt_binding_check with this series applied on top of
+linux-next all warnings/errors are gone.
+However when I run dt_binding_check with this series applied on top of
+net-next I get the same errors as you.
+The reason is that the additional patch in your tree increases the
+maximum number of clocks from three to five. With this patch the
+Amlogic DWMAC glue needs (up to) four clock inputs.
 
--- 
-Jiri Kosina
-SUSE Labs
+I have to re-send this series anyways due to a bug in another patch.
+Please let me know how to make your bot happy when when I re-send the patches.
 
+
+Thank you!
+Martin
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=f22531438ff42ce568f81e346428461c71dea9e2
