@@ -2,162 +2,98 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFCEC54E8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E201DC54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3610620820
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE29220731
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 08:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ulu9azEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgEJIhk convert rfc822-to-8bit (ORCPT
+        id S1728284AbgEJIqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 04:37:40 -0400
-Received: from tarvos.retrosnub.co.uk ([93.93.130.7]:48340 "EHLO
-        tarvos.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgEJIhk (ORCPT
+        Sun, 10 May 2020 04:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgEJIqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 04:37:40 -0400
-X-Greylist: delayed 589 seconds by postgrey-1.27 at vger.kernel.org; Sun, 10 May 2020 04:37:38 EDT
-Received: from [192.168.0.10] (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by tarvos.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id DD222C03DA;
-        Sun, 10 May 2020 09:27:47 +0100 (BST)
-Date:   Sat, 09 May 2020 16:44:04 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <61e9c83b910b3df44291a49b5587b772d4145036.camel@yadro.com>
-References: <20200507132600.8801-1-i.mikhaylov@yadro.com> <20200507132600.8801-2-i.mikhaylov@yadro.com> <20200508155050.0000008e@Huawei.com> <61e9c83b910b3df44291a49b5587b772d4145036.camel@yadro.com>
+        Sun, 10 May 2020 04:46:35 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1375EC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 01:46:35 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F286200C518754118B553FE.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:6200:c518:7541:18b5:53fe])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F35A1EC02A1;
+        Sun, 10 May 2020 10:46:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589100392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Jq2xwbGufTibiBAB161r3csXP9B+3Tf4QyudVtZUfEk=;
+        b=Ulu9azEvfxpYU8zObFzx87nWsa8Hv7EZGGsgY5dPm0iq7soB47M724n7gKJfQiPEfzPC7S
+        0hbonqk6tw+y4kp5rIaNw/dDfD9Nk5P24QjU2hkoeivaK/k3900D1CktAddcYlHpf4whSS
+        aM2c2AHrHBlY3dfIM1m4y8m/ERPf5gk=
+Date:   Sun, 10 May 2020 10:46:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 09/10] x86/fpu/xstate: Preserve supervisor states for
+ slow path of __fpu__restore_sig()
+Message-ID: <20200510084625.GA19352@zn.tnic>
+References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
+ <20200328164307.17497-10-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v13 1/2] dt-bindings: proximity: provide vcnl3020 device tree binding document
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Message-ID: <DC81C6F6-5510-4477-B9D2-29CB3DBCA9F3@jic23.retrosnub.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200328164307.17497-10-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Mar 28, 2020 at 09:43:06AM -0700, Yu-cheng Yu wrote:
+> The signal return code is responsible for taking an XSAVE buffer present
+> in user memory and loading it into the hardware registers.  This
+> operation only affects user XSAVE state and never affects supervisor state.
+> 
+> The fast path through this code simply points XRSTOR directly at the
+> user buffer.  However, due to page faults, this XRSTOR can fail.  If it
+			 ^^^^^^^^^^^^^^^^^^
 
+"However, since user memory is not guaranteed to be always mapped, ... "
 
-On 9 May 2020 11:38:46 BST, Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->On Fri, 2020-05-08 at 15:51 +0100, Jonathan Cameron wrote:
->> On Thu, 7 May 2020 16:25:59 +0300
->> Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->> 
->> > Mostly standard i2c driver with some additional led-current option
->> > for vcnl3020.
->> > 
->> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
->> > ---
->> >  .../iio/proximity/vishay,vcnl3020.yaml        | 65
->+++++++++++++++++++
->> >  1 file changed, 65 insertions(+)
->> >  create mode 100644
->> >
->Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > 
->> > diff --git
->> >
->a/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> >
->b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > new file mode 100644
->> > index 000000000000..408dee17cdf5
->> > --- /dev/null
->> > +++
->b/Documentation/devicetree/bindings/iio/proximity/vishay,vcnl3020.yaml
->> > @@ -0,0 +1,65 @@
->> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> > +%YAML 1.2
->> > +---
->> > +$id:
->http://devicetree.org/schemas/iio/proximity/vishay,vcnl3020.yaml#
->> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> > +
->> > +title: Integrated Proximity Sensor With Infrared Emitter
->> > +
->> > +maintainers:
->> > +  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
->> > +
->> > +description: |
->> > +  The VCNL3020 is a fully integrated proximity sensor. Fully
->integrated
->> > means
->> > +  that the infrared emitter is included in the package. It has
->16-bit
->> > +  resolution. It includes a signal processing IC and features
->standard I2C
->> > +  communication interface. It features an interrupt function.
->> > +
->> > +  Specifications about the devices can be found at:
->> > +  https://www.vishay.com/docs/84150/vcnl3020.pdf
->> > +
->> > +properties:
->> > +  compatible:
->> > +    enum:
->> > +      - vishay,vcnl3020
->> > +
->> > +  reg:
->> > +    maxItems: 1
->> > +
->> > +  interrupts:
->> > +    maxItems: 1
->> > +
->> > +  vdd-supply:
->> > +    description: Regulator that provides power to the sensor
->> > +
->> > +  vddio-supply:
->> > +    description: Regulator that provides power to the bus
->> > +
->> > +  vishay,led-current-microamp:
->> > +    description:
->> > +      IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0
->mA,
->> > +      1 = 10 mA, 20 = 200 mA. LED Current is limited to 200 mA for
->values
->> > +      higher than decimal 20. The drive current for the LED used
->in
->> > proximity
->> > +      sensing.
->> 
->> This text is really confusing. Just let the enum speak for itself and
->leave
->> text as
->> something short like
->> 
->> "The driver current for the LED used in proximity sensing. "
->> 
->> Units and values are clear already.
->> 
+> fails, the signal return code falls back to a slow path which can
+> tolerate page faults.
 >
->Jonathan, just to double check, for preventing further problems with
->misunderstanding, is that what you want?
->
->  vishay,led-current-microamp:
->    description:
->        The driver current for the LED used in proximity sensing.
->
->    enum: [0..200000] <- just for shortening
->    default: 20000
->
->Thanks.
+> That slow path copies the xfeatures one by one out of the user buffer
+> into the task's fpu state area.  However, by being in a context where it
+> can handle page faults, the code can also schedule.  That exposes us to
+								    ^^
+Pls use passive voice in your commit message: no "we" or "I", etc, and
+describe your changes in imperative mood.
 
-Yes
-
-J
+Fix this in all your commit messages pls.
 
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
