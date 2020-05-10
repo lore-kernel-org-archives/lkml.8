@@ -2,135 +2,94 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE40BC47255
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 02:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB34CC47255
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 02:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F89D208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 02:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7oClmbu"
+	by mail.kernel.org (Postfix) with ESMTP id B133F208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 02:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgEJCpE (ORCPT
+        id S1728808AbgEJCyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 22:45:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbgEJCpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 22:45:04 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D901EC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 19:45:03 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id c18so5202104ile.5
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 19:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z9b6QdNxrGr1UsENVQ+afssf0s3mZK5j49G+nAroih8=;
-        b=D7oClmbuzlC7T4M3UTeQ9XF+MH8JS41MG0EOL+oGtWzgohDOf59BEeNSdH6AHe31Rp
-         96myKKfJIruAAZN7RVIlQbKplal+dDnhw7y+/yeZ1z6H/n6tvW+d97wD2d2y+TITaUBQ
-         6/SVTC/1J/Ue/zumhLkZXeQYxSqNj3Kei0c3b4Bwdyr9npYhuVpyC4hWbKo7sb3cWWbV
-         04h4l2oI/bunmakN/N9iLJTB1aK7R223UUqJHiX8WalXK4OlSvoTnGzCYr3LkiE/9S96
-         7dc8Yhe7HgWdPyxEcBtHplKv9zXKNcJ3epsNcO3Z0WO2JEBaNgmqmh2yE3YGvBDyzE0n
-         dhSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z9b6QdNxrGr1UsENVQ+afssf0s3mZK5j49G+nAroih8=;
-        b=a+hxQOy5h3Vqu0ExM+J4DsKdt+3V44LJ2+kBx6oxiBaogtG9XeDyV3XnnEpAXXUDl3
-         NqU/ohkUdlv8rOc2e975qY3YtCoyJTEF9OZ3QvJ7UrCtSKPztz7awMxfOo1w9EGmeBKS
-         D5+nBnV/p6pTSzREjypU3juOC9nu9FEAOjQk62EKgGLgIh0r7uJVgwuAhbVxA0w6lzEs
-         q+kHwGq1vk3fx70qubK3+lLZ9/8yV/6xUNvywtKx3LHX9/a1oDU3y9Oaa9O6J+q+5cRH
-         MOmmpB1t35C3S9cSMNP1EuRJlrnfWEjoR6lkDCznzuq5Zas43e/jouvk3+s3UZ8Kh9b0
-         nyYA==
-X-Gm-Message-State: AGi0PuaYGc/eqbahWxQf4drxp2672vte4Xfiup37kF8Bgb75MTyh3Lxo
-        YQMl0JIGFxQQSkPuZ6MGb6xbijhvVoaTe9a0UsA=
-X-Google-Smtp-Source: APiQypLo0o8/X5d8OEqCT9zOruxXbONHdrtRyw9EzoxaUf18ak4rdmeSYllOzlCZ3icNmXjv2Gs6MhWxZcYscu6kFYg=
-X-Received: by 2002:a92:5b05:: with SMTP id p5mr9586880ilb.94.1589078703172;
- Sat, 09 May 2020 19:45:03 -0700 (PDT)
+        Sat, 9 May 2020 22:54:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51246 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbgEJCyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 9 May 2020 22:54:39 -0400
+IronPort-SDR: hcQ/TTrGEOEw+NgC5Vja/eS87KjKxWUAcl9sr9XeVOwAeHVjy29VHFHdCemTqYoNhmxslMZfDj
+ BhMccqwzrrWw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2020 19:54:38 -0700
+IronPort-SDR: gLKSvjqdhbFY4l42K/I6C8Hflg+fYb1UnAK0Ulzu6tNFma4fxWlGHlzxU/T38VqqW4RoPcNiOh
+ GHgKRIPPfxmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,374,1583222400"; 
+   d="scan'208";a="261397162"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 09 May 2020 19:54:36 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXc6u-000E33-2R; Sun, 10 May 2020 10:54:36 +0800
+Date:   Sun, 10 May 2020 10:53:38 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Matthias Brugger <mbrugger@suse.com>
+Cc:     kbuild-all@lists.01.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        CK Hu <ck.hu@mediatek.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk / soc: mediatek: fix ptr_ret.cocci warnings
+Message-ID: <20200510025338.GA81310@f5ba873997c7>
+References: <202005101033.xLBIJF9V%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200505135341.730586321@linutronix.de> <20200505135829.384803459@linutronix.de>
-In-Reply-To: <20200505135829.384803459@linutronix.de>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Sun, 10 May 2020 10:44:52 +0800
-Message-ID: <CAJhGHyCgGxia1hzTWVF+-s5AXnUM9SnvxdfJK5PsZQCDbWfKNw@mail.gmail.com>
-Subject: Re: [patch V4 part 5 13/31] x86/irq: Convey vector as argument and
- not in ptregs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005101033.xLBIJF9V%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:23 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+From: kbuild test robot <lkp@intel.com>
 
-> +/*
-> + * ASM code to emit the common vector entry stubs where each stub is
-> + * packed into 8 bytes.
-> + *
-> + * Note, that the 'pushq imm8' is emitted via '.byte 0x6a, vector' because
-> + * GCC treats the local vector variable as unsigned int and would expand
-> + * all vectors above 0x7F to a 5 byte push. The original code did an
-> + * adjustment of the vector number to be in the signed byte range to avoid
-> + * this. While clever it's mindboggling counterintuitive and requires the
-> + * odd conversion back to a real vector number in the C entry points. Using
-> + * .byte achieves the same thing and the only fixup needed in the C entry
-> + * point is to mask off the bits above bit 7 because the push is sign
-> + * extending.
-> + */
-> +       .align 8
-> +SYM_CODE_START(irq_entries_start)
-> +    vector=FIRST_EXTERNAL_VECTOR
-> +    .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
-> +       UNWIND_HINT_IRET_REGS
-> +       .byte   0x6a, vector
-> +       jmp     common_interrupt
-> +       .align  8
-> +    vector=vector+1
-> +    .endr
-> +SYM_CODE_END(irq_entries_start)
+drivers/soc/mediatek/mtk-mmsys.c:28:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
-Hello, tglx
 
-Using ".byte   0x6a, vector" is somewhat ugly.
+ Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
 
-I hope it should be " pushq $(s8_to_s64(vector))", which can also
-help to reduce bunches of comments about ".byte   0x6a, vector".
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
 
-However, I don't know how to implement s8_to_s64() here. But at
-least the following code works (generates the same two-byte machine
-code as ".byte   0x6a, vector" does):
+Fixes: 13032709e232 ("clk / soc: mediatek: Move mt8173 MMSYS to platform driver")
+CC: Matthias Brugger <mbrugger@suse.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
 
-        .if vector < 128
-        pushq $(vector)
-        .else
-        pushq $(0xffffffffffffff00+vector)
-        .endif
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   30e2206e11ce27ae910cc0dab21472429e400a87
+commit: 13032709e2328553970f0002df5edce6aac69425 [1266/7905] clk / soc: mediatek: Move mt8173 MMSYS to platform driver
 
-Thanks,
-Lai
+ mtk-mmsys.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -25,10 +25,7 @@ static int mtk_mmsys_probe(struct platfo
+ 
+ 	clks = platform_device_register_data(&pdev->dev, data->clk_driver,
+ 					     PLATFORM_DEVID_AUTO, NULL, 0);
+-	if (IS_ERR(clks))
+-		return PTR_ERR(clks);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(clks);
+ }
+ 
+ static const struct of_device_id of_match_mtk_mmsys[] = {
