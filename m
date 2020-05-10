@@ -6,95 +6,115 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69386C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FBC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555BF2082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446562082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgEJSwD (ORCPT
+        id S1729113AbgEJS62 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:52:03 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:43870 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbgEJSwD (ORCPT
+        Sun, 10 May 2020 14:58:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:37822 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728756AbgEJS62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:52:03 -0400
-X-AuditID: c0a8fbf4-473ff70000004419-75-5eb84d51c019
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id D5.36.17433.15D48BE5; Sun, 10 May 2020 20:52:01 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Sun, 10 May 2020 20:51:53 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v12 00/11] Support ROHM BD99954 charger IC
-Thread-Topic: [PATCH v12 00/11] Support ROHM BD99954 charger IC
-Thread-Index: AQHWJU7PJ3Z/Wwfk3U+H3drETuWBPqihXU2AgAAur4A=
-Date:   Sun, 10 May 2020 18:51:53 +0000
-Message-ID: <501265638c16ffa06a77be37e1feeb2c9cb732bb.camel@fi.rohmeurope.com>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200510160445.6fg2v7jug2vlepkv@earth.universe>
-In-Reply-To: <20200510160445.6fg2v7jug2vlepkv@earth.universe>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
+        Sun, 10 May 2020 14:58:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mtapsc-2-ai4aFd-aMnmImmhU2s39WA-1; Sun, 10 May 2020 19:58:24 +0100
+X-MC-Unique: ai4aFd-aMnmImmhU2s39WA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 19:58:24 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 10 May 2020 19:58:24 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Oleksandr Natalenko" <oleksandr@redhat.com>
+CC:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: RE: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
+ gcc >= 10
+Thread-Topic: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
+ gcc >= 10
+Thread-Index: AQHWJUo8bK79Vz6Er0qWTasVui4yHqihRWbAgABE0gCAABxpkA==
+Date:   Sun, 10 May 2020 18:58:24 +0000
+Message-ID: <eeb52e23496f4730bb115d1e8c00743e@AcuMS.aculab.com>
+References: <20200507224530.2993316-1-Jason@zx2c4.com>
+         <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
+         <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
+         <20200508113336.2vdfdnc6tqyx4pu6@butterfly.localdomain>
+         <CAK8P3a0dJ0vNnktcoWFiPKB4NJbeyf7nvwWf0YLyeUyxT5pvQg@mail.gmail.com>
+         <c774d7371a9599526090e63e85f61e69bddf4795.camel@perches.com>
+         <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
+ <c78e00a05d19a6823e48c7bd50144f0563908a1a.camel@perches.com>
+In-Reply-To: <c78e00a05d19a6823e48c7bd50144f0563908a1a.camel@perches.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EBFE37509FB5543A95BEB02E3824F45@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SW0wTQRSGmd1tO6WsDgVkwAvaxBg0gBAiG6LIk9Yb0eiTRnCRtUVKS7at
-        giERDIjUK6kaacAggtcEZFWojQ/agAFjIERFNEVTICA3XySI1qC7rgpP88355z//SeZAUjun
-        iIa5ZhvHm1mTThlMPbsTEOL27HJnrq+4r2F6+50kc8U/rGRm3pwhmNeeGiXz9Xw7YGoaOylm
-        YCIjXaV3DzQA/RPXgEpfJ9j1wr1Kpf6rsGK3Yr9mYzZrO7Y312BOSDukMbY0B5QFHlToHJxW
-        loAy5ABqiFEyFgYuKhwgGGpRH8AztycJ+dIJ8OPBq6QDQKhEG7HjvUrCcLQVV1/WS14SvSRw
-        RZVF4jCUhm+M9gKJw9Fm7Ju9QMmcittP/1BKTKHV2H2ulJSYRhl4usf3h7WoEP+cqv/zRo02
-        YVdpFyExQMtxZckXQs6KxMLIN4U8M8INT3tImSPw2NDc3/oq3PatiZLGJFEsbvYkyJiOPU07
-        5C6r8OWzfpU8QSjuqh6mLoElrgUBrnmza97sWmB2LTDXAcU9gPPZXJOBtXGJ8Txnj+ctxnzx
-        OGzJF4D8n9Nu8Mu7zQsICLwgChK6CDo1xJ2pXZRtySkyslZjFm83cVYvwJDUhdNVhY8ytXQO
-        W3SC4y3/pKWQ0kXSa/xVB7VIysrjuAKO/6cug1CHaXqn2DSU5wxc4ZFck21eJqBaah4cHW7l
-        zDkcz9ptxixpN7Ks4nJIUoiY279DtNPWAjZfrMrWl2AdvDRWW0/C9trGelJLmS1mLjqS7n3e
-        lqlF0lOj3fw/aBxEQqALo/ukOULEpf7fZ1yMIMQI/2irFGFj56XoEuC9e636Zt2+hJyHzp2J
-        Hd3uoOagjxcmPsz4umN8qqSyO2Waxa6SiFflcQ8Nowc8PWpDUcr1pBc4j3wQp69fORKTwidv
-        954r3hCYaj267Pu7FjjZ8dk5G2O5dbKGqXIIn9zOxlfJeUFb9MXHk8pP9S3va2lqbfM40dvA
-        UGesL6pdR1mNbOJakreyvwG7mUcZkQMAAA==
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGEgbG90IFNlYmFzdGlhbiBhbmQgTWFyayENCg0KT24gU3VuLCAyMDIwLTA1LTEwIGF0
-IDE4OjA0ICswMjAwLCBTZWJhc3RpYW4gUmVpY2hlbCB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBG
-cmksIE1heSAwOCwgMjAyMCBhdCAwNjozODoxN1BNICswMzAwLCBNYXR0aSBWYWl0dGluZW4gd3Jv
-dGU6DQo+ID4gUGxlYXNlIG5vdGUgdGhhdCB0aGlzIHNlcmllcyBzaG91bGQgYmUgYXBwbGllZCB0
-byB0d28gdHJlZXMuDQo+ID4gUGF0Y2hlcw0KPiA+IDEtNCAob3IgMS01IGFzIHN1Z2dlc3RlZCBi
-eSBTZWJhc3RpYW4pIHNob3VsZCBnbyB0byByZWd1bGF0b3IgdHJlZS4NCj4gPiBQZXJoYXBzIE1h
-cmsgY2FuIHByb3ZpZGUgYW4gaW1tdXRhYmxlIGJyYW5jaCB0byBTZWJhc3RpYW4/IFJlc3Qgb2YN
-Cj4gPiB0aGUNCj4gPiBwYXRjaGVzIGNhbiB0aGVuIGdvIHRvIHBvd2VyLXN1cHBseSB0cmVlLg0K
-PiANCj4gVGhhbmtzLCBJIG1lcmdlZCB0aGUgcHVsbC1yZXF1ZXN0IGZyb20gTWFyayBhbmQgcXVl
-dWVkIHBhdGNoZXMgNS0xMS4NCj4gDQoNCkkgdGhpbmsgaXQncyBmYWlyIHRvIHBvaW50IG91dCBh
-bHNvIGZvciBTZWJhc3RpYW4gdGhhdCBNYXJrIHNwb3R0ZWQgYQ0KY29tcGlsZSB0aW1lIHdhcm5p
-bmcgZnJvbSBsaW5lYXJfcmFuZ2VzIHdoZW4gaXQgaXMgY29tcGlsZWQgYXMgYQ0KbW9kdWxlLiBU
-aGlzIGlzIG9ubHkgb2NjdXJyaW5nIHdoZW4gbGluZWFyX3JhbmdlcyBpcyBjb21waWxlZCBhcyBh
-DQptb2R1bGUuIEFuZCB0aGF0IHJlcXVpcmVzIENPTkZJR19SRUdVTEFUT1IgdG8gYmUgbiBhbmQg
-bGluZWFyX3Jhbmdlcw0KdGVzdCB0byBiZSBtLiBJIGd1ZXNzIHRoaXMgaXMgdW5saWtlbHkgYXMg
-SSB0aGluayBlbmFibGluZw0KbGluZWFyX3JhbmdlcyB0ZXN0IGNvZGUgaXMgbm90IGNvbW1vbiBm
-b3Igc2V0dXBzIHRoYXQgYXJlIG5vdCB1c2luZw0KbGluZWFyIHJhbmdlcyAtIGJ1dCBmb3Igc3Vy
-ZSBzb21lIHRlc3Qgc2V0dXAgaGl0cyB0aGlzIHNvbWV3aGVyZS4NCg0KUHJvYmxlbSBpcyB0aGF0
-IGxpbmVhcl9yYW5nZXMgY2FuIGJlIGNvbXBpbGVkIGFzIG1vZHVsZSAoaXQncyB0cmlzdGF0ZWQN
-CmluIEtjb25maWcpIGJ1dCBkb2VzIG5vdCBkZWNsYXJlIE1PRFVMRV9MSUNFTkNFIG1hY3JvLg0K
-DQpJIHNlbnQgdGhpcyBpbmNyZW1lbnRhbCBwYXRjaCB3aGljaCBzaG91bGQgZml4IHRoZSBpc3N1
-ZToNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA1MDkxNTE1MTkuR0E3MTAwQGxv
-Y2FsaG9zdC5sb2NhbGRvbWFpbi8NCg0KIC0gYnV0IGRvZXMgYXBwbHlpbmcgaXQgdG8gZWl0aGVy
-IHBvd2VyLXN1cHBseSBvciByZWd1bGF0b3IgY2F1c2UgYQ0KY29uZmxpY3Q/DQoNCkkganVzdCB3
-YW50ZWQgdG8gcG9pbnQgdGhpcyBvdXQgLSBzb3JyeSBmb3IgdGhlIHRyb3VibGUhIEFuZCBwbGVh
-c2UgbGV0DQptZSBrbm93IGlmIHlvdSB3aXNoIG1lIHRvIHNlbmQgc29tZSBvdGhlciBmaXguIEkg
-d2lsbCBnbGFkbHkgZG8gc28gYW5kDQpjb3JyZWN0IG15IGJ1Z3MgOikNCg0KLS1NYXR0aQ0KDQo=
+From: Joe Perches
+> Sent: 10 May 2020 18:45
+> 
+> On Sun, 2020-05-10 at 12:47 +0000, David Laight wrote:
+> > From: Joe Perches
+> > > Sent: 08 May 2020 16:06
+> > > On Fri, 2020-05-08 at 13:49 +0200, Arnd Bergmann wrote:
+> > > > Personally, I'm more interested in improving compile speed of the kernel
+> > >
+> > > Any opinion on precompiled header support?
+> >
+> > When ever I've been anywhere near it it is always a disaster.
+> 
+> A disaster? Why?
+
+The only time I've had systems that used them they always got
+out of step with the headers - probable due to #define changes.
+If auto-generated by the compiler then parallel makes also
+give problems.
+
+> For a large commercial c only project, it worked well
+> by reducing a combined multi-include file, similar to
+> kernel.h here, to a single file.
+
+Certainly reducing the number of directories searched
+can make a big difference.
+
+I've also compiled .so by merging all the sources into a
+single file.
+
+> That was before SSDs though and the file open times
+> might have been rather larger then.
+
+The real killer is lots of directory names in the -I <paths>
+especially over NFS.
+
+I've also looked at system call stats during a kernel compile.
+open() dominated and my 'gut feeling' was that most were
+failing opens.
+
+I also suspect that modern compilers remember that an include
+file contained an include guard - and don't even both looking
+for it a second time.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
