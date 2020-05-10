@@ -2,211 +2,111 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B233AC54E8C
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304C5C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2EA2082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:44:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="a57mKTuI";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KcvOQJUT"
+	by mail.kernel.org (Postfix) with ESMTP id 1A66C2082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 18:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbgEJSox (ORCPT
+        id S1729162AbgEJSrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 14:44:53 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:40820 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728866AbgEJSou (ORCPT
+        Sun, 10 May 2020 14:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgEJSrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 14:44:50 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8638240507;
-        Sun, 10 May 2020 18:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1589136290; bh=q4yMUYxy7IbxuEFWHFtTBwZR3EjIUP/s0d1is1lGyms=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=a57mKTuIQCudNKwKUUnA1BQHdbPACj/JCsofoHCw2AmtEtSvM+zwB68P3UkD2gH+y
-         Lvoo3sv4yzAgAJryEpaygrU6BDKty4AtfWrQ0voVBC5lAaXCbSGz8Zf6FaxjM0TLqw
-         Rseao577qCmFrhBjY8o+GX0QpAUY6dFma0ZVpVEGirz7KOSIgrQVtKvy4Tq7Y7S4HS
-         yGIo8sbm5iYqmwg0dYdT5rLVqUInnj+YDRmfETjn+u0gGic/VSLK4UkJbUrynCSooF
-         qfDFvNeAqPZ0LDYUURpMfYX19XXnD2UGIn0GlL5UhYIv90gk09186AstcqZkWPbSM0
-         kZCF6OOMhPe9A==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 569D2A006E;
-        Sun, 10 May 2020 18:44:47 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Sun, 10 May 2020 11:44:47 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Sun, 10 May 2020 11:44:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jj9XAsBZPmyjZacF1lN1QsAxM5WQkS/648+TgBzlhHiN0ecvBt+vbtZgpVthpcA3dGFHrM3QVm6U6yrRYJTQj88M3utnPl7AIDMh2wQaxIgNEFoJaeK/jwm/cK+myuXTKsc2kJrMvIYbeevr4H5eBaf8/sXuslI6YdhYQznaTE2e70tLjx2RECXj1fQS/8Z2Lathup9gyyYGtMKMwluLa0LSFeS2GZs+E1qK5RFCt0Nw6L60MXFnrWAu4IlgwvcjeH7mpAr+ImHQmYp3xL+52UjesC5yQOYpPPuT+yUUyFBMPi0G9YzfWnlA5vF3YgEoE1ANCjMI2CM4+40ZRa3g8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tz7SZcvwsMIgiaTRAmc25u5K7X9zEzGssPuGBFFu+PA=;
- b=FrMWfj8pG6KNiNSdt9fMRtqP1kKpmzUPClRa5QGB3HL9qAbbYXwCsgWRT0Wy0isBpUiOHcXazBxK0ClsTR0njG3aTwVwXg1VmQZsVXz2dB7ZtbPRdcwqPEZ6yrIts60m3fun+jhRfgG9pn5Rj5SPaz0QLL5b/kYHGErzC58O5CUQt8T067LSGKb0aE9CVre9m8gRDNxkbha4K8JR7Znu5W4D5d15c8E8iwQD2UfPJyNV8IvKLM42YwE9CVqhz1xadiHntVr1wZx6paauT5HpbDH1e0hnJFQnpIAn8xXz/6G6yLpLd9QA2vKol+MqRLHCs+IqHTcsNZFeP50k+mI/bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tz7SZcvwsMIgiaTRAmc25u5K7X9zEzGssPuGBFFu+PA=;
- b=KcvOQJUTbylvdpCWEDDlBF6LojqakkS2EhF6V4zMCI7kLnnqN08WW8xyK9GBGrodl8VApzb3AvIK7eaEuYRCEWz2q0O7VRKX/ibWZwHcckxiaZsi92pqoRKJj48PUKgTY38+YMZgMdf/6Pc6vsM95XW+gEt/Pay/qDTjbmd5pvI=
-Received: from DM6PR12MB2684.namprd12.prod.outlook.com (2603:10b6:5:4a::33) by
- DM6PR12MB3146.namprd12.prod.outlook.com (2603:10b6:5:11b::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.34; Sun, 10 May 2020 18:44:45 +0000
-Received: from DM6PR12MB2684.namprd12.prod.outlook.com
- ([fe80::f913:a5d2:ee95:5157]) by DM6PR12MB2684.namprd12.prod.outlook.com
- ([fe80::f913:a5d2:ee95:5157%5]) with mapi id 15.20.2979.033; Sun, 10 May 2020
- 18:44:45 +0000
-From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>
-CC:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "Eugeniy Paltsev" <Eugeniy.Paltsev@synopsys.com>
-Subject: RE: [PATCH] selftests/tpm: Fix runtime error
-Thread-Topic: [PATCH] selftests/tpm: Fix runtime error
-Thread-Index: AQHWENRSg161NCxUUEaLItlFtz6YTqihyzSQ
-Date:   Sun, 10 May 2020 18:44:45 +0000
-Message-ID: <DM6PR12MB26848928AB4CE7B1D5BAC4B3D9A00@DM6PR12MB2684.namprd12.prod.outlook.com>
-References: <20200412141118.70688-1-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20200412141118.70688-1-jarkko.sakkinen@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none
- header.from=synopsys.com;
-x-originating-ip: [46.47.223.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5445fdbb-e229-4796-658a-08d7f51235a8
-x-ms-traffictypediagnostic: DM6PR12MB3146:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB31462E4D59623935571957F9D9A00@DM6PR12MB3146.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 039975700A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UnxGVObGapqUguxIPr87Rtc0LrPdqbmOLJ1wOZ+8Pe3C1RpDRXJ3r1INNKkfawxsmZCre3ub6Wg3siIGNYQ+vthtxztoQUTdJLJupi5yds5yHqi1sKYvUx4UZxAvhptLP1Bdd38F9cf0k+VyRars5+MrspK1Da0zQHrgTZsv/KDJzC1jCy9Bfq3pyWbjmtK5n38tBzi8ihzDXpevPeSLs+qUNv1X0UDo7zF0Mpc4+Fb52RJXdn7mTqFIe+gSrpTeRRrn3+Y1cCYW8k27/4ma34UG+SFIhOTKGZfjFZIk1R4EC9FMnPQGpY0hg/7jCCLDMWHs+gE804jKWCAuTL7EuTtWoNtrI0/SLw9tu+pQWBN9BtP4LasXDAG59hvDfusfAYjqm4wRHmmm7o9zE6dIHz9BqDlq6IlqHpgAg6FVJ1GWnz8pmrCaSNFCBoMURiovognDKZ4qRT+ZvvSbNyn3zVwWLFT2wsaXy+bdfdFLqIFvtqRiLgHmt3ozJLILnle8ucW9TFdx3ZPkyaNLqA6DmA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2684.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(39850400004)(396003)(33430700001)(76116006)(66476007)(66446008)(9686003)(53546011)(66946007)(55016002)(66556008)(64756008)(6506007)(86362001)(71200400001)(52536014)(7696005)(8936002)(316002)(8676002)(186003)(107886003)(54906003)(4326008)(2906002)(33440700001)(110136005)(26005)(19627235002)(33656002)(478600001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: X52PfnVLfRGI6t7Iv/T5h26HrZUfMJ1toRqQSCm4VlMIW71FCDDmxMTcXBv7cRJFqfNd3y4UFBpbBIvU258m52pNvwVyuvkRfzsXH6TDgSk0oJIXxy+khL8j1S9Qv+0hTpM7yXnMMhc4acTtNFqeLoWUJ3NUi2p2b6jup/mXHF4AGLSUyctubbU0BI0PHXXL02Gs3b6g488PY/C3Wn4tV5/x1uYSJArEFznD5uMytCrBB3Z6IH0dBNA8ya3aci2X/aAo4wcdhODN6zkQNY7jgqMzlkkDI5RBYWVVgyXc/jDPwFq2c1ARTYMqyadGLrlraj26X6s32/1uO241/GfqwzMwFiJMGayatT9Pc78z4UevxA113O2ioFRjjizoF7OANkU2++zJZeMzDO+cSnfZoaeKP9Blo0Gp0+oOef5ycwCg/al6SzMgY5wMmy2InEcZCq7tYAehQGFNL++s8c0o/GjTTSfgl4F/qWf5dmawzWs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 10 May 2020 14:47:46 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2159C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 11:47:45 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jXqyq-00044P-T3; Sun, 10 May 2020 20:47:17 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 13593100D21; Sun, 10 May 2020 20:47:16 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 2 10/18] x86/entry/64: Check IF in __preempt_enable_notrace() thunk
+In-Reply-To: <87k11l4d7l.fsf@nanos.tec.linutronix.de>
+References: <20200505134112.272268764@linutronix.de> <20200505134341.087595319@linutronix.de> <CALCETrVpSj9fVyUHp-Q_tT-xLgTfYR5JFv52AsOuGJsDYeN3-Q@mail.gmail.com> <87k11l4d7l.fsf@nanos.tec.linutronix.de>
+Date:   Sun, 10 May 2020 20:47:16 +0200
+Message-ID: <87k11j4ogb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5445fdbb-e229-4796-658a-08d7f51235a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2020 18:44:45.2990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0ENgsWdbtDUmAv3z3ejI9Iyq5hCCk/BPpHRirZx+dmdicHFKGvu4nJ8ZXPrXbz77012s6nEoCv7QkAkEmqKu3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3146
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jarkko Sakkinen, all!
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Andy Lutomirski <luto@kernel.org> writes:
+>> On Tue, May 5, 2020 at 7:14 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> /**
+>>  * preempt_schedule_notrace - preempt_schedule called by tracing
+>>  *
+>>  * The tracing infrastructure uses preempt_enable_notrace to prevent
+>>  * recursion and tracing preempt enabling caused by the tracing
+>>  * infrastructure itself. But as tracing can happen in areas coming
+>>  * from userspace or just about to enter userspace, a preempt enable
+>>  * can occur before user_exit() is called. This will cause the scheduler
+>>  * to be called when the system is still in usermode.
+>>  *
+>>  * To prevent this, the preempt_enable_notrace will use this function
+>>  * instead of preempt_schedule() to exit user context if needed before
+>>  * calling the scheduler.
+>>  */
+>>
+>> Which is no longer really applicable to x86 -- in the state that this
+>> comment nonsensically refers to as "userspace", x86 *always* has IRQs
+>> off, which means that preempt_enable() will not schedule.
 
-Thank you for your notes about commit and sorry for not copying the message=
- to you!
+Yeah.
 
-There is definitely unwanted line of code in the commit.
-After deleting that one, introduced changes work fine.
+>> So I'm guessing that the issue you're solving is that we have
+>> redundant preempt disable/enable pairs somewhere in the bowels of
+>> tracing code that is called with IRQs off, and objtool is now
+>> complaining.  Could the actual code in question be fixed to assert
+>> that IRQs are off instead of disabling preemption?  If not, can you
+>> fix the $SUBJECT and changelog and perhaps add a comment to the code
+>> as to *why* you're checking IF?  Otherwise some intrepid programmer is
+>> going to notice it down the road, wonder if it's optimizing anything
+>> useful at all, and get rid of it.
+>
+> Let me stare into that again.
 
-There is a hardcoded usage of /dev/tpm2 in the kernel selftest. And if ther=
-e is no such device - test fails.
-I believe this is not a behavior, that we expect. Test should be skipped in=
- such case, should it?
-That is what my commit makes.
+There are a few preempt_disable/enable() pairs in some of the helper
+functions which are called in various places. That means we would have
+to chase all of them and provide 'naked' helpers for these particular
+call chains. I'll fix the changelog and add a comment to make clear what
+this is about.
 
-So, after deleting unwanted line of code and making cosmetic changes (new d=
-escription + deleting
-excess newline character), can commit be submitted again?
+Thanks,
 
-You also mentioned reviewed-by nor tested-by tags in your message. Who shou=
-ld make these tags?
-
-P.S.
-Also there was a question: why do I declare exit code with a constant inste=
-ad of just exit 4.
-I chose this style because it is used in other kernel selftests for such ki=
-nd of checks.
-It is proper to follow common style rules. Should I argument this decision =
-in commit message?=20
-
--Nikita
-
-> -----Original Message-----
-> From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Sent: Sunday, April 12, 2020 5:11 PM
-> To: Shuah Khan <shuah@kernel.org>
-> Cc: linux-kselftest@vger.kernel.org; linux-integrity@vger.kernel.org; Jar=
-kko
-> Sakkinen <jarkko.sakkinen@linux.intel.com>; Nikita Sobolev
-> <sobolev@synopsys.com>; Tadeusz Struk <tadeusz.struk@intel.com>; open
-> list <linux-kernel@vger.kernel.org>
-> Subject: [PATCH] selftests/tpm: Fix runtime error
->=20
-> There is some random clutter in test_smoke.sh:
->=20
->   ./test_smoke.sh: line 3: self.flags: command not found
->=20
-> Remove it.
->=20
-> Fixes: b32694cd0724 ("Kernel selftests: tpm2: check for tpm support")
-> Cc: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
-> I rely on these tests and this was not even cc'd to me and obviously was
-> untested. There is neither reviewed-by nor tested-by tags in the commit (=
-not
-> to mention some cosmetic things like short summary formatted wrong and th=
-e
-> extra newline character).
->=20
-> Please do not do this next time. Thanks.
->  tools/testing/selftests/tpm2/test_smoke.sh | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/tpm2/test_smoke.sh
-> b/tools/testing/selftests/tpm2/test_smoke.sh
-> index b630c7b5950a..e55d3e400666 100755
-> --- a/tools/testing/selftests/tpm2/test_smoke.sh
-> +++ b/tools/testing/selftests/tpm2/test_smoke.sh
-> @@ -1,11 +1,9 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) -self.flags =3D fla=
-gs
->=20
->  # Kselftest framework requirement - SKIP code is 4.
->  ksft_skip=3D4
->=20
-> -
->  if [ -f /dev/tpm0 ] ; then
->  	python -m unittest -v tpm2_tests.SmokeTest
->  	python -m unittest -v tpm2_tests.AsyncTest
-> --
-> 2.25.1
+        tglx
 
