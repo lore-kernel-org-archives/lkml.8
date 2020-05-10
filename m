@@ -2,269 +2,191 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1352C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4314FC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D6720801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9BD20801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0SesddC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgEJQR0 (ORCPT
+        id S1729178AbgEJQSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:17:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40310 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgEJQRZ (ORCPT
+        Sun, 10 May 2020 12:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726446AbgEJQSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:17:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id F2C1A2A04D1
-Received: by earth.universe (Postfix, from userid 1000)
-        id 63E943C08C7; Sun, 10 May 2020 18:17:21 +0200 (CEST)
-Date:   Sun, 10 May 2020 18:17:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-Message-ID: <20200510161721.257vprq6rqp64wu5@earth.universe>
-References: <20200507183013.27261-1-dmurphy@ti.com>
+        Sun, 10 May 2020 12:18:21 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87984C061A0C;
+        Sun, 10 May 2020 09:18:21 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x12so5901074qts.9;
+        Sun, 10 May 2020 09:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=CCDwBmXaa9BIAQ2zuOaJ1GngjhFRFzM8zE9mn4mKapw=;
+        b=N0SesddCH/TSHZU0Arzstfn5pbmtr8zI0DuwZP+16wTEmKDnRweZ/zK8QpEFbnEKsQ
+         9YwAiYPkz0JVUiPMwaO72qCcrLH59HiIlSls6+4HvWPV2C/vShdLjE+zus8PhYm+zmr6
+         IwYimCg6OAhhgNqw5rIs41cbwV9hw9AHoT6kzU9C5l4qo+yJ04UBoxEa2jTFpaBusmPw
+         11pOoCpHqmgaGnZg3mJ/WTVAe1uNdEmAEp1LfeNqQXsxEYZKif2qtvI9MT/znrXzx9vm
+         wLYR8VN6q38xXijuanahV5OnsqRtdENy/mqJG2iwkn1BRUug8TD2w+6O0cy77PW0RO4s
+         l3UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=CCDwBmXaa9BIAQ2zuOaJ1GngjhFRFzM8zE9mn4mKapw=;
+        b=ZcubsPBLdiHwBUiQbaD16hf3lSzlyr8bFILmu0EX2btJ1zfXHbdOA877mweZw5MXe+
+         rbO5XG2CIKK0Z7U82CH2PoIoqPk7HxeBQNh/jFqFMWypjmV0t9ysxJyizTfL/Zn/J/9M
+         zUsIXmkD761K6SwANP21Gc3QGu68TIjTcqMJkTcjFXlKo2r4XO8u4vyT32bvjW8/tgON
+         dEtWfmTCQG9wfwWVx0goDQjwjfzA0pAHq5oB9OEdvkqYR/VNasbnlk0njFLzaJUtZ6tB
+         7XUscuFARzjadcHbMofS8WVR0WEZd3NCHyh6yVL7Tezc2eGHvd/AJxBn5ubQeKWUugbF
+         LAjA==
+X-Gm-Message-State: AGi0PuYYIdHsQpeDP4Mg+bzDF3cInFveIX3QW6eJrJAdic8mDbCvDAVX
+        p2clCNgZKocsWmtmnrfQ16dwsUF9t4w=
+X-Google-Smtp-Source: APiQypIWVHulUPbfG29QekqU8prAAB1vTCUuwZld8aMu1x7lVWdsXWHr5FIAt6vZ2QFMov/q0nmnYQ==
+X-Received: by 2002:ac8:66da:: with SMTP id m26mr12251999qtp.342.1589127500684;
+        Sun, 10 May 2020 09:18:20 -0700 (PDT)
+Received: from [192.168.86.185] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id k138sm2776710qke.55.2020.05.10.09.18.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 May 2020 09:18:20 -0700 (PDT)
+Date:   Sun, 10 May 2020 13:18:12 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200510112336.444906c1@oasis.local.home>
+References: <20200510150628.16610-1-changbin.du@gmail.com> <20200510112336.444906c1@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eleyscz72hdifi3z"
-Content-Disposition: inline
-In-Reply-To: <20200507183013.27261-1-dmurphy@ti.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 00/19] perf: ftrace enhancement
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Changbin Du <changbin.du@gmail.com>
+CC:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "linux-trace-devel@vger.kernel.org" 
+        <linux-trace-devel@vger.kernel.org>
+From:   Arnaldo Melo <arnaldo.melo@gmail.com>
+Message-ID: <3F63D994-4AD6-4EDE-899B-4B5D6B416B6D@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---eleyscz72hdifi3z
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Dan,
+On May 10, 2020 12:23:36 PM GMT-03:00, Steven Rostedt <rostedt@goodmis=2Eo=
+rg> wrote:
+>On Sun, 10 May 2020 23:06:09 +0800
+>Changbin Du <changbin=2Edu@gmail=2Ecom> wrote:
+>
+>> The perf has basic kernel ftrace support but lack support of most
+>tracing
+>> options=2E This serias is target to enhance the perf ftrace
+>functionality so
+>> that we can make full use of kernel ftrace with only perf=2E
+>>=20
+>> In general, this serias be cataloged into two main changes:
+>>   1) Improve usability of existing functions=2E For example, we don't
+>need to type
+>>      extra option to select the tracer=2E
+>>   2) Add new options to support all other ftrace functions=2E
+>>=20
+>> Here is a glance of all ftrace functions with this serias:
+>>   * - improved existing options=2E
+>>   + - new added options=2E
+>>=20
+>> $ sudo perf ftrace -h
+>>=20
+>>  Usage: perf ftrace [<options>] [<command>]
+>>     or: perf ftrace [<options>] -- <command> [<options>]
+>>=20
+>> *   -a, --all-cpus        system-wide collection from all CPUs
+>> +   -b, --buffer-size <n>
+>>                           size of per cpu buffer in kb
+>>     -C, --cpu <cpu>       list of cpus to monitor
+>> +   -d, --delay <n>       Wait <n> ms before tracing
+>>     -D, --graph-depth <n>
+>>                           Max depth for function graph tracer
+>> *   -G, --graph-funcs <func>
+>>                           Set graph filter on given functions (imply
+>to use function_graph tracer)
+>>     -g, --nograph-funcs <func>
+>>                           Set nograph filter on given functions
+>(imply to use function_graph tracer)
+>> +   -L, --list-functions  List available functions to filter
+>> +   -l, --long-info       Show process names, PIDs, timestamps,
+>irq-info if available
+>>     -N, --notrace-funcs <func>
+>>                           do not trace given functions
+>> +   -P, --no-pager        Do not use pager
+>>     -p, --pid <pid>       trace on existing process id
+>> +   -s, --func-stack-trace
+>>                           Show kernel stack trace for function tracer
+>> +   -t, --tid <tid>       trace on existing thread id (exclusive to
+>--pid)
+>>     -T, --trace-funcs <func>
+>>                           trace given functions only
+>> +   -u, --userstacktrace  Show stacktrace of the current user space
+>thread
+>>     -v, --verbose         be more verbose
+>> +       --funcgraph-tail  Show function tails comment (function_graph
+>only)
+>> +       --latency-format  displays additional information about the
+>latency (function_graph only)
+>> +       --nofuncgraph-irqs
+>>                           Ignore functions that happen inside
+>interrupt (function_graph only)
+>> +       --nosleep-time    Measure on-CPU time only (function_graph
+>only)
+>> +       --trace-children  Trace children processes
+>> +       --tracing-thresh <n>
+>>                           Only show functions of which the duration
+>is greater than <n>=C2=B5s
+>>=20
+>
+>Note, we are working on making more of the trace-cmd functionality into
+>libraries=2E See this work here:
+>
+>https://lore=2Ekernel=2Eorg/r/20191219113502=2E28964-2-tz=2Estoyanov@gmai=
+l=2Ecom
+>
+>Which introduces a libtracefs, that is to handle all the work needed to
+>interact with the tracefs directory=2E This will also be useful for perf
+>to read the event directory without having to open code that work=2E
+>
+>I'm all for giving perf the functionality of ftrace, but I would like
+>to have it do so with a more generic solution that other tools could
+>benefit from as well=2E
+>
 
-On Thu, May 07, 2020 at 01:30:13PM -0500, Dan Murphy wrote:
-> Convert the bq27xxx.txt to yaml format
->=20
-> CC: Pali Roh=E1r <pali@kernel.org>
-> CC: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
+I think in time things will fall into place, 'perf ftrace' has potential a=
+s a way for perf users to have a familiar interface to ftrace, and that I t=
+hink it's its raison d'=C3=AAtre, in time well go on finding ways to have c=
+ommon code=2E
 
-This needs is missing the power-supplies property. The N900 DT
-contains a bq27200 referencing the charger, so it should fail the DT
-check without the property being listed here.
+Tomorrow I'll go over this patch set,
 
->  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
->  .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
->  2 files changed, 86 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
-x.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
-x.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b=
-/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> deleted file mode 100644
-> index 4fa8e08df2b6..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -TI BQ27XXX fuel gauge family
-> -
-> -Required properties:
-> -- compatible: contains one of the following:
-> - * "ti,bq27200" - BQ27200
-> - * "ti,bq27210" - BQ27210
-> - * "ti,bq27500" - deprecated, use revision specific property below
-> - * "ti,bq27510" - deprecated, use revision specific property below
-> - * "ti,bq27520" - deprecated, use revision specific property below
-> - * "ti,bq27500-1" - BQ27500/1
-> - * "ti,bq27510g1" - BQ27510-g1
-> - * "ti,bq27510g2" - BQ27510-g2
-> - * "ti,bq27510g3" - BQ27510-g3
-> - * "ti,bq27520g1" - BQ27520-g1
-> - * "ti,bq27520g2" - BQ27520-g2
-> - * "ti,bq27520g3" - BQ27520-g3
-> - * "ti,bq27520g4" - BQ27520-g4
-> - * "ti,bq27521" - BQ27521
-> - * "ti,bq27530" - BQ27530
-> - * "ti,bq27531" - BQ27531
-> - * "ti,bq27541" - BQ27541
-> - * "ti,bq27542" - BQ27542
-> - * "ti,bq27546" - BQ27546
-> - * "ti,bq27742" - BQ27742
-> - * "ti,bq27545" - BQ27545
-> - * "ti,bq27411" - BQ27411
-> - * "ti,bq27421" - BQ27421
-> - * "ti,bq27425" - BQ27425
-> - * "ti,bq27426" - BQ27426
-> - * "ti,bq27441" - BQ27441
-> - * "ti,bq27621" - BQ27621
-> -- reg: integer, I2C address of the fuel gauge.
-> -
-> -Optional properties:
-> -- monitored-battery: phandle of battery characteristics node
-> -    The fuel gauge uses the following battery properties:
-> -    + energy-full-design-microwatt-hours
-> -    + charge-full-design-microamp-hours
-> -    + voltage-min-design-microvolt
-> -  Both or neither of the *-full-design-*-hours properties must be set.
-> -  See Documentation/devicetree/bindings/power/supply/battery.txt
-> -
-> -Example:
-> -
-> -	bat: battery {
-> -		compatible =3D "simple-battery";
-> -		voltage-min-design-microvolt =3D <3200000>;
-> -		energy-full-design-microwatt-hours =3D <5290000>;
-> -		charge-full-design-microamp-hours =3D <1430000>;
-> -	};
-> -
-> -	bq27510g3: fuel-gauge@55 {
-> -		compatible =3D "ti,bq27510g3";
-> -		reg =3D <0x55>;
-> -		monitored-battery =3D <&bat>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml =
-b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> new file mode 100644
-> index 000000000000..54f497c291f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI BQ27XXX fuel gauge family
-> +
-> +maintainers:
-> +  - Pali Roh=E1r <pali@kernel.org>
-> +  - Andrew F. Davis <afd@ti.com>
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description: |
-> +  Support various Texas Instruments fuel gauge devices that share similar
-> +  register maps and power supply properties
+Thanks,
 
-allOf:
-  - $ref: power-supply.yaml#
+- Arnaldo
 
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq27200 - BQ27200
-> +      - ti,bq27210 - BQ27210
-> +      - ti,bq27500 - deprecated, use revision specific property below
-> +      - ti,bq27510 - deprecated, use revision specific property below
-> +      - ti,bq27520 - deprecated, use revision specific property below
+>Thanks!
+>
+>-- Steve
 
-There is a deprecated property ("deprecated: true"), but IDK how to
-apply it to specific compatible values. Maybe Rob can help out here.
-Otherwise it's not a blocker, since the conversion is still an
-improvement without having explicit deprecation marks :)
-
-> +      - ti,bq27500-1 - BQ27500/1
-> +      - ti,bq27510g1 - BQ27510-g1
-> +      - ti,bq27510g2 - BQ27510-g2
-> +      - ti,bq27510g3 - BQ27510-g3
-> +      - ti,bq27520g1 - BQ27520-g1
-> +      - ti,bq27520g2 - BQ27520-g2
-> +      - ti,bq27520g3 - BQ27520-g3
-> +      - ti,bq27520g4 - BQ27520-g4
-> +      - ti,bq27521 - BQ27521
-> +      - ti,bq27530 - BQ27530
-> +      - ti,bq27531 - BQ27531
-> +      - ti,bq27541 - BQ27541
-> +      - ti,bq27542 - BQ27542
-> +      - ti,bq27546 - BQ27546
-> +      - ti,bq27742 - BQ27742
-> +      - ti,bq27545 - BQ27545
-> +      - ti,bq27411 - BQ27411
-> +      - ti,bq27421 - BQ27421
-> +      - ti,bq27425 - BQ27425
-> +      - ti,bq27426 - BQ27426
-> +      - ti,bq27441 - BQ27441
-> +      - ti,bq27621 - BQ27621
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: integer, I2C address of the fuel gauge.
-> +
-> +  monitored-battery:
-> +    description: |
-> +       phandle of battery characteristics node.
-> +       The fuel gauge uses the following battery properties:
-> +       - energy-full-design-microwatt-hours
-> +       - charge-full-design-microamp-hours
-> +       - voltage-min-design-microvolt
-> +       Both or neither of the *-full-design-*-hours properties must be s=
-et.
-> +       See Documentation/devicetree/bindings/power/supply/battery.txt
-
-power-supplies: true
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      bat: battery {
-> +        compatible =3D "simple-battery";
-> +        voltage-min-design-microvolt =3D <3200000>;
-> +        energy-full-design-microwatt-hours =3D <5290000>;
-> +        charge-full-design-microamp-hours =3D <1430000>;
-> +      };
-> +
-> +      bq27510g3: fuel-gauge@55 {
-> +        compatible =3D "ti,bq27510g3";
-> +        reg =3D <0x55>;
-> +        monitored-battery =3D <&bat>;
-> +      };
-> +    };
-
-Otherwise looks good to me.
-
--- Sebastian
-
---eleyscz72hdifi3z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64KQsACgkQ2O7X88g7
-+pqdzA/5AQ8k1elDdtykmTF+LhZ1lSdxfrzg0iZ97kdNdO8zHnXU+3bUXrUAPKUl
-NFL1XFjNQVUvekFOXMb1ZI4wn0gtQN8IHaPG1aexFXHhvmh0pn8fqlQ64nMX1jp0
-vo/UkC5RpyqP9sszO5+VUXTS3TUiTKN/A3JeDAqr0jGIFGUZRI/cE3BPkHO9/r3/
-nUfFmpPFOH7phlj9TOYzOAqdZlqg93Bu8CLBNJnBpykqhAyirSBX2ELaN3ytAUYd
-bYamQmRMzC3MCN554MaeX6et1FGH+3X8XjamV81jlax3sllE/+jVhG9JMZb4IGrw
-BB7fCJCYmF5rYzEK0CG1ttmZSu0JboYYVYKpxem6xBS2MwSNX3n8heXYhfA/sw/T
-mt3VaJyB7rzyu52yhq8fKcaUx83B6hs4sFzzaO4BIIdydqSobMQ2/Iyc+qE1sjj+
-flj4hbXaksv+P7ncBv9Jny5mKQPfIxgoyyVbRcWZvX5NPIuQVpldkC0LxmDiDKWr
-aTZBLIAT34LAtSRMrtI+o+tyErypYngRR4uER2QDGKcPRtuNYyDH/ANRSNg6Efsy
-LSBkAMI8x9KVUaAGXvJ6KMoeIV5VVUg4UuqN36Rd65cnbnoYBBuZF9SBRMHFh20u
-XmmtbTo3rTToAU3JGhxZUMC/npcMgjS5QW+IALr1jH8+c8icTDc=
-=VmQV
------END PGP SIGNATURE-----
-
---eleyscz72hdifi3z--
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
