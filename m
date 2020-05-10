@@ -2,92 +2,86 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F080BC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB888C54E8E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA911206D5
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6BD2080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 21:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589147469;
+	bh=i4ZPjwrBwKNSFaeYz7pCXGUsqvDB4d5elw4u0iWikqo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v1CNyUGfTLr8np4PID9poGdmkV7nljYU74S40YxcvIh/N4B/I8rIHMxquU6MBGDSE
+	 +cPbqXBkQR+W4LzfKV3L3ONVj5IxpmesOCMSxgdQ5sRqnmdTjox/62yxXVBWP5J7BO
+	 bauzZCN9cI48WSHnmrOmP789C0XTPN7EV7PnmVkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgEJVsd (ORCPT
+        id S1729452AbgEJVvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 17:48:33 -0400
-Received: from correo.us.es ([193.147.175.20]:59082 "EHLO mail.us.es"
+        Sun, 10 May 2020 17:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729327AbgEJVsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 17:48:33 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id B9438FB452
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:48:31 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id AA97211540E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:48:31 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 93D994E0C7; Sun, 10 May 2020 23:48:31 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 8FC092040D;
-        Sun, 10 May 2020 23:48:29 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Sun, 10 May 2020 23:48:29 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
+        id S1727771AbgEJVvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 17:51:08 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 5D88842EF4E1;
-        Sun, 10 May 2020 23:48:29 +0200 (CEST)
-Date:   Sun, 10 May 2020 23:48:29 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Li RongQing <lirongqing@baidu.com>,
-        Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jules Irenge <jbi.octave@gmail.com>,
-        Dirk Morris <dmorris@metaloft.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 06/15] netfilter: conntrack: avoid gcc-10
- zero-length-bounds warning
-Message-ID: <20200510214829.GA9032@salvia>
-References: <20200430213101.135134-1-arnd@arndb.de>
- <20200430213101.135134-7-arnd@arndb.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2109E20801;
+        Sun, 10 May 2020 21:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589147467;
+        bh=i4ZPjwrBwKNSFaeYz7pCXGUsqvDB4d5elw4u0iWikqo=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=qitNJdcXLZqpDlIrtjn2N+p/iDXOHEpBMDjVawS+xKO4G0vgNsROFtKDM3gtIOKM3
+         NgEzu68AHqBKTw21Sc47X+ZemTTvI2x3BjyTL/cnsBIy925Ip5eCw4QutpXEk8mgbQ
+         OoFo4mNNfWnnfdele7WPBIgTPdb0sP648yH6JZCc=
+Date:   Sun, 10 May 2020 23:51:04 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: adjust to livepatch .klp.arch removal
+In-Reply-To: <20200509073258.5970-1-lukas.bulwahn@gmail.com>
+Message-ID: <nycvar.YFH.7.76.2005102350050.25812@cbobk.fhfr.pm>
+References: <20200509073258.5970-1-lukas.bulwahn@gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430213101.135134-7-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:30:48PM +0200, Arnd Bergmann wrote:
-> gcc-10 warns around a suspicious access to an empty struct member:
-> 
-> net/netfilter/nf_conntrack_core.c: In function '__nf_conntrack_alloc':
-> net/netfilter/nf_conntrack_core.c:1522:9: warning: array subscript 0 is outside the bounds of an interior zero-length array 'u8[0]' {aka 'unsigned char[0]'} [-Wzero-length-bounds]
->  1522 |  memset(&ct->__nfct_init_offset[0], 0,
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from net/netfilter/nf_conntrack_core.c:37:
-> include/net/netfilter/nf_conntrack.h:90:5: note: while referencing '__nfct_init_offset'
->    90 |  u8 __nfct_init_offset[0];
->       |     ^~~~~~~~~~~~~~~~~~
-> 
-> The code is correct but a bit unusual. Rework it slightly in a way that
-> does not trigger the warning, using an empty struct instead of an empty
-> array. There are probably more elegant ways to do this, but this is the
-> smallest change.
+On Sat, 9 May 2020, Lukas Bulwahn wrote:
 
-Applied, thanks.
+> Commit 1d05334d2899 ("livepatch: Remove .klp.arch") removed
+> arch/x86/kernel/livepatch.c, but missed to adjust the LIVE PATCHING entry
+> in MAINTAINERS.
+> 
+> Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
+> 
+>   warning: no file matches  F:  arch/x86/kernel/livepatch.c
+> 
+> So, drop that obsolete file entry in MAINTAINERS.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+I've added
+
+	Fixes: 1d05334d2899 ("livepatch: Remove .klp.arch")
+
+and applied, thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
