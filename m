@@ -2,115 +2,135 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C43C54E8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E5FC54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78EA720801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:43:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1sun/26"
+	by mail.kernel.org (Postfix) with ESMTP id F125B2137B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgEJHnE (ORCPT
+        id S1728546AbgEJHo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 03:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEJHnE (ORCPT
+        Sun, 10 May 2020 03:44:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34319 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgEJHo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 03:43:04 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B944C061A0C;
-        Sun, 10 May 2020 00:43:04 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k18so6240107ion.0;
-        Sun, 10 May 2020 00:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y4b22vTWVuMeumPN4GfshfpoKLGkiEUcdLNHqYwSvwM=;
-        b=m1sun/26ORJ4HhCRIGZrKhsSerI4cNNDN0unEnjVHpkXqBvQnhWaQUtrg5vBny1qZ/
-         mmliljcDrVcZSU2SRuAb4ff0bP1u057qx4YiGYd+c2q0wtfIGEMiFuo16VU73Te48ISt
-         jkZMuOogr2P1CrmOn3rbbuXhg1/nbtLZnY0/S6VhOmNbl7WTGcqt30J3MbMWzKS6lCzY
-         YQ2+EXeSBwnsTS4vhHEwI+7WNz4cSv5IIN/c9VNB4KZGR//QpBGf1MQjb2U9PaOx0/Iv
-         CYVeZBN0OMgICird5o1QhlJqjcQjvbvhhWQutSNIAFI0ab5iXIN4nZSaQPAXeg1BjjMm
-         1fGw==
+        Sun, 10 May 2020 03:44:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so2621560pfa.1;
+        Sun, 10 May 2020 00:44:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y4b22vTWVuMeumPN4GfshfpoKLGkiEUcdLNHqYwSvwM=;
-        b=aERdEm+mnE6QSqyeVsu8JHJhCBPwssRRwijl217Atf9EHs/HbYYeyZHGbBcU+9d41u
-         RLUajgyVIHf77wW52QrNeLJVxEJ81XmjySSuvTLFviNklxx7azL+P04alBnhBcGB+raB
-         x1l2wzhnmdplD1a7qXr75P+g+sGKfmEIAeNYPuBB8NaST4LSEzRVcn+nsLXdCZmpWdwS
-         Bz1ZYa5oYqa/7D0MGDJf2LxE/2BjmlZYiv2vAmaIASswtKX8Ex03Ck98VXvoNxy6m60Z
-         qzjlXcHa7gO3isyDGxp9KIvdbiIM7yF9hAf7lfjJwqPKeS87/ttOX8UCkdttSVGp1WjY
-         a52w==
-X-Gm-Message-State: AGi0PuaJ873FLc99mCS6fnHLyPpXh/mkFCBhGBvY01vILpV4leiGG9+p
-        4djFO3oe+Vkv5c3iFcDsqYWBU8uqVjGmhNomZ4o=
-X-Google-Smtp-Source: APiQypLvV1pSP3VZtraTk96bREnC9Rgkd6XvEBMOQWXgnjrWhVPiIgKC/oFscsbpQf+marw66l1yF56pwsacdD9GNgM=
-X-Received: by 2002:a05:6602:384:: with SMTP id f4mr9941211iov.207.1589096583604;
- Sun, 10 May 2020 00:43:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N8vEftalko3e/aSL2c6EH2GiC1/kTRGdDwSPX8vzJhg=;
+        b=iixYWzUgYkxtavgLVmsfKuomXANpQLY63kW6qXK5OOIlxEBbZQ18i2yQfc0QTlzfz1
+         53pjSV2cok3NCtpxi14+zhfKIFeFg6hETP9OIcabRNJKap+cl48dBQAQSzvjdfRNLH8p
+         oMaemyakFux7hPMEt+DdYCCi8AdeKxfEdOmGALR/rMGwSTSFeUe5JiNsdCIFiTHzjPRb
+         +CVbEXSnXXjJ9K/dbnc9CzK5LukZ5OIp/woZbezVu+UlUR1PFQZnoDFDJDeVdiUMX1HU
+         Kyz7qt0gmriM0xPidLBVExCmTfTq11ysRX4ciO5+HhlwwiVV8+DzT+CKa4BKhsvOrcqK
+         P04w==
+X-Gm-Message-State: AGi0PubF7yyS5IL0hFHQfRRIShvuuxy/AhZE2cFVF/eqrbsaoXyo+cyk
+        8kKsbRsV7p+BiK3KHnB943dHMK3O
+X-Google-Smtp-Source: APiQypK5Et3TG3oVbt6bqscsJwAt2oZBp9J+aYp03GcjOcqNfEAG0O/5M6TovGK2yKQkUipEQRxbgA==
+X-Received: by 2002:a63:d610:: with SMTP id q16mr9534050pgg.370.1589096696506;
+        Sun, 10 May 2020 00:44:56 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:84d8:c040:9a38:e659? ([2601:647:4802:9070:84d8:c040:9a38:e659])
+        by smtp.gmail.com with ESMTPSA id a33sm2052000pgl.92.2020.05.10.00.44.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 May 2020 00:44:55 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
+ processing
+To:     Ming Lei <ming.lei@redhat.com>,
+        Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1587888520.git.baolin.wang7@gmail.com>
+ <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
+ <20200427154645.GA1201@infradead.org>
+ <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
+ <20200508214639.GA1389136@T590>
+ <fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me>
+ <20200508232222.GA1391368@T590>
+ <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
+ <20200509094306.GA1414369@T590>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <6579459b-aa98-78f2-f805-a6cd46f37b6c@grimberg.me>
+Date:   Sun, 10 May 2020 00:44:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200415181856.GA11037@paulmck-ThinkPad-P72> <20200415181941.11653-5-paulmck@kernel.org>
-In-Reply-To: <20200415181941.11653-5-paulmck@kernel.org>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Sun, 10 May 2020 15:42:52 +0800
-Message-ID: <CAJhGHyArjzU9QeDkSH-L31ytzkWC9TT4uZ-gmA+gdmgvweagCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 tip/core/rcu 05/38] rcu-tasks: Move Tasks RCU to its
- own file
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@fb.com>, Ingo Molnar <mingo@kernel.org>,
-        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200509094306.GA1414369@T590>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 2:19 AM <paulmck@kernel.org> wrote:
->
-> From: "Paul E. McKenney" <paulmck@kernel.org>
->
-> This code-movement-only commit is in preparation for adding an additional
-> flavor of Tasks RCU, which relies on workqueues to detect grace periods.
->
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  kernel/rcu/tasks.h  | 370 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  kernel/rcu/update.c | 366 +--------------------------------------------------
 
-Hello Paul
+>>>> You're mostly correct. This is exactly why an I/O scheduler may be
+>>>> applicable here IMO. Mostly because I/O schedulers tend to optimize for
+>>>> something specific and always present tradeoffs. Users need to
+>>>> understand what they are optimizing for.
+>>>>
+>>>> Hence I'd say this functionality can definitely be available to an I/O
+>>>> scheduler should one exist.
+>>>>
+>>>
+>>> I guess it is just that there can be multiple requests available from
+>>> scheduler queue. Actually it can be so for other non-nvme drivers in
+>>> case of none, such as SCSI.
+>>>
+>>> Another way is to use one per-task list(such as plug list) to hold the
+>>> requests for dispatch, then every drivers may see real .last flag, so they
+>>> may get chance for optimizing batch queuing. I will think about the
+>>> idea further and see if it is really doable.
+>>
+>> How about my RFC v1 patch set[1], which allows dispatching more than
+>> one request from the scheduler to support batch requests?
+>>
+>> [1]
+>> https://lore.kernel.org/patchwork/patch/1210034/
+>> https://lore.kernel.org/patchwork/patch/1210035/
+> 
+> Basically, my idea is to dequeue request one by one, and for each
+> dequeued request:
+> 
+> - we try to get a budget and driver tag, if both succeed, add the
+> request to one per-task list which can be stored in stack variable,
+> then continue to dequeue more request
+> 
+> - if either budget or driver tag can't be allocated for this request,
+> marks the last request in the per-task list as .last, and send the
+> batching requests stored in the list to LLD
+> 
+> - when queueing batching requests to LLD, if one request isn't queued
+> to driver successfully, calling .commit_rqs() like before, meantime
+> adding the remained requests in the per-task list back to scheduler
+> queue or hctx->dispatch.
 
-Makes it kernel/rcu/tasks.c?
+Sounds good to me.
 
-One of my old patch split it into a c-file, and it did work.
-Is there anything new or planed that prevents it to be a c-file?
+> One issue is that this way might degrade sequential IO performance if
+> the LLD just tells queue busy to blk-mq via return value of .queue_rq(),
+> so I guess we still may need one flag, such as BLK_MQ_F_BATCHING_SUBMISSION.
 
-thanks
-Lai
-
->
-> +#include "tasks.h"
-> +
->  #ifndef CONFIG_TINY_RCU
->
->  /*
-> --
-> 2.9.5
->
+Why is that degrading sequential I/O performance? because the specific
+device will do better without batching submissions? If so, the driver
+is not obligated to respect the bd->last/.commit_rqs, so if that is the
+case, it should just ignore it.
