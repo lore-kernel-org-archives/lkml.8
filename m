@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613B2C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF7C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3711620725
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA9D206D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="r5Sz0LeG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5wRF39Vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgEJOc6 (ORCPT
+        id S1729087AbgEJOdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 10:32:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51952 "EHLO vps0.lunn.ch"
+        Sun, 10 May 2020 10:33:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:51966 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgEJOc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 10:32:58 -0400
+        id S1728849AbgEJOds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 10:33:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=eu36s6VDaVxzp6MDRt8lN13k4I4yUb2/yQepOwTi0HY=; b=r5Sz0LeGjeG6rJOVcjJYgHue21
-        WMa1yOjiCrGu+35Xl341t744a4wyHlFhHdIcH8A8VArf2UFH1mpctXoJsizp+bZhR4nQVLivSYlVk
-        uqxugSJIUKIfrHhro24ZbN2BmMVu/0jYhXNfSuy4KpP6Ym3xvbXDxWUqhgXOKpwjOA/Q=;
+        bh=DHKL4VuhUaAt2s9d6dYgP/J17Fuwz8VOM/wgyOYlkH4=; b=5wRF39VxQgpdsDZ6UBx0OIiEAo
+        Z+grIcnDhZ+tIVQ9KChnHL7j07IqnO2jFlhens9LrGd7sNpWX+pBZW0guEyMRNTAeSsyyj8/ujXT4
+        ZNjAn1cN9yS7uoB3lyIc4zP6oXEzUSQXq3hPfenLNacN9e5WO7FJHkllwEBcva8svr/c=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1jXn0i-001i7K-Bp; Sun, 10 May 2020 16:32:56 +0200
-Date:   Sun, 10 May 2020 16:32:56 +0200
+        id 1jXn1X-001i7x-42; Sun, 10 May 2020 16:33:47 +0200
+Date:   Sun, 10 May 2020 16:33:47 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Michael Walle <michael@walle.cc>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -41,29 +41,22 @@ Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 1/4] net: phy: broadcom: add exp register access
- methods without buslock
-Message-ID: <20200510143256.GG362499@lunn.ch>
+Subject: Re: [PATCH net-next 2/4] net: phy: broadcom: add bcm_phy_modify_exp()
+Message-ID: <20200510143347.GH362499@lunn.ch>
 References: <20200509223714.30855-1-michael@walle.cc>
- <20200509223714.30855-2-michael@walle.cc>
+ <20200509223714.30855-3-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509223714.30855-2-michael@walle.cc>
+In-Reply-To: <20200509223714.30855-3-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 12:37:11AM +0200, Michael Walle wrote:
-> Add helper to read and write expansion registers without taking the mdio
-> lock.
-> 
-> Please note, that this changes the semantics of the read and write.
-> Before there was no lock between selecting the expansion register and
-> the actual read/write. This may lead to access failures if there are
-> parallel accesses. Instead take the bus lock during the whole access
-> cycle.
+On Sun, May 10, 2020 at 12:37:12AM +0200, Michael Walle wrote:
+> Add the convenience function to do a read-modify-write. This has the
+> additional benefit of saving one write to the selection register.
 > 
 > Signed-off-by: Michael Walle <michael@walle.cc>
 
