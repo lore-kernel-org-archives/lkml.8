@@ -2,131 +2,269 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4243C54E4B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1352C54E8A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8647120801
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iHK7iF0P"
+	by mail.kernel.org (Postfix) with ESMTP id B4D6720801
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgEJQRI (ORCPT
+        id S1729168AbgEJQR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729022AbgEJQRI (ORCPT
+        Sun, 10 May 2020 12:17:26 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40310 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgEJQRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:17:08 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F77C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:17:07 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z90so5889460qtd.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JpYYcxBZr7TCP2ENX63uBdQLllRDV18FrRXkes3kPkc=;
-        b=iHK7iF0PjUPS4eJxdGh+6gxsf97besUffeTmdryBOgmkZiFoyLXL4CRssiZR8lsPD4
-         E9WhvbtWztWO5TaFNPMf5YkZN32iZcFaw5xzfMbAiy8TGX1d0c1xtl8ABjXU0OUD8f7e
-         Y8SiMUtrim7Zr33uOPGCzgFUTQMK0tH0fcl7BRNDIqMhVYmIsTBRqTaXGtRBdpbXEnTS
-         lnVX5wJYTtEsa28KSBXy9e4RWbWTOYX8DaLCwkqN5mDB9diFfsFCdidCk+7FAW7QBp6m
-         kQ8zlrR9fH5Bst0pk7i7cmSh3nq2EM0nPbSHnRJ2ooQoCvP6ATivGeve+bvv4Mg3cHfJ
-         w3xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JpYYcxBZr7TCP2ENX63uBdQLllRDV18FrRXkes3kPkc=;
-        b=D8vETcgve6HotbyeRfbdIvL9oW8Z4SgN58V5pjc3WTAz57d1/WKBckEqIT3zc9VepW
-         UfZsIuB5oA0Nx5FjtDYCNuTdQ6z6z/sO3ERSLcSODKT/3Aw1kFY+HL/v7s8jEOwRvWnF
-         ESsu9WZHzkvxklASYD0OJyOq2+odHKY+N+eh7BfweGKSbG8j3tk+rue1Gxv4wrYqr+9d
-         g5UFXgHL98v9bBQrLukRlXiShMOlZpfhP32aFaiSpfTi+EaYJiluJkyZFjTE13mMWm67
-         QugwY4ABduyR2hFje1CjIWk6sD+W74jWcdCSYdVngv/ptYqCtQC6YBbEtuqrP7B0zIS3
-         wt8Q==
-X-Gm-Message-State: AGi0PuYdoqZfUOAakPKPvJxxjdgqDsWR+TVTEVG/IsR44tVUnpd2ndOn
-        cF9+UBkQdBDCEGxNnBsWkgE5pw==
-X-Google-Smtp-Source: APiQypIszZjwLtfzKWJkbg6ANv4kgjHqMD9Iqqo/jM+kZ4lEgybs++KRtUkURoZq/TIboSANZ+BeLg==
-X-Received: by 2002:ac8:5208:: with SMTP id r8mr12614851qtn.11.1589127426897;
-        Sun, 10 May 2020 09:17:06 -0700 (PDT)
-Received: from ovpn-112-210.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t67sm6225872qka.17.2020.05.10.09.17.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 09:17:06 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     alex.williamson@redhat.com
-Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Sun, 10 May 2020 12:16:56 -0400
-Message-Id: <20200510161656.1415-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Sun, 10 May 2020 12:17:25 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id F2C1A2A04D1
+Received: by earth.universe (Postfix, from userid 1000)
+        id 63E943C08C7; Sun, 10 May 2020 18:17:21 +0200 (CEST)
+Date:   Sun, 10 May 2020 18:17:21 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+Message-ID: <20200510161721.257vprq6rqp64wu5@earth.universe>
+References: <20200507183013.27261-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eleyscz72hdifi3z"
+Content-Disposition: inline
+In-Reply-To: <20200507183013.27261-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+--eleyscz72hdifi3z
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/vfio/pci/vfio_pci_config.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi Dan,
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 90c0b80f8acf..f9fdc72a5f4e 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1728,6 +1728,7 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
-+	free_perm_bits(vdev->msi_perm);
- 	kfree(vdev->msi_perm);
- 	vdev->msi_perm = NULL;
- }
--- 
-2.21.0 (Apple Git-122.2)
+On Thu, May 07, 2020 at 01:30:13PM -0500, Dan Murphy wrote:
+> Convert the bq27xxx.txt to yaml format
+>=20
+> CC: Pali Roh=E1r <pali@kernel.org>
+> CC: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 
+This needs is missing the power-supplies property. The N900 DT
+contains a bq27200 referencing the charger, so it should fail the DT
+check without the property being listed here.
+
+>  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
+>  .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
+>  2 files changed, 86 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
+x.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xx=
+x.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b=
+/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> deleted file mode 100644
+> index 4fa8e08df2b6..000000000000
+> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -TI BQ27XXX fuel gauge family
+> -
+> -Required properties:
+> -- compatible: contains one of the following:
+> - * "ti,bq27200" - BQ27200
+> - * "ti,bq27210" - BQ27210
+> - * "ti,bq27500" - deprecated, use revision specific property below
+> - * "ti,bq27510" - deprecated, use revision specific property below
+> - * "ti,bq27520" - deprecated, use revision specific property below
+> - * "ti,bq27500-1" - BQ27500/1
+> - * "ti,bq27510g1" - BQ27510-g1
+> - * "ti,bq27510g2" - BQ27510-g2
+> - * "ti,bq27510g3" - BQ27510-g3
+> - * "ti,bq27520g1" - BQ27520-g1
+> - * "ti,bq27520g2" - BQ27520-g2
+> - * "ti,bq27520g3" - BQ27520-g3
+> - * "ti,bq27520g4" - BQ27520-g4
+> - * "ti,bq27521" - BQ27521
+> - * "ti,bq27530" - BQ27530
+> - * "ti,bq27531" - BQ27531
+> - * "ti,bq27541" - BQ27541
+> - * "ti,bq27542" - BQ27542
+> - * "ti,bq27546" - BQ27546
+> - * "ti,bq27742" - BQ27742
+> - * "ti,bq27545" - BQ27545
+> - * "ti,bq27411" - BQ27411
+> - * "ti,bq27421" - BQ27421
+> - * "ti,bq27425" - BQ27425
+> - * "ti,bq27426" - BQ27426
+> - * "ti,bq27441" - BQ27441
+> - * "ti,bq27621" - BQ27621
+> -- reg: integer, I2C address of the fuel gauge.
+> -
+> -Optional properties:
+> -- monitored-battery: phandle of battery characteristics node
+> -    The fuel gauge uses the following battery properties:
+> -    + energy-full-design-microwatt-hours
+> -    + charge-full-design-microamp-hours
+> -    + voltage-min-design-microvolt
+> -  Both or neither of the *-full-design-*-hours properties must be set.
+> -  See Documentation/devicetree/bindings/power/supply/battery.txt
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible =3D "simple-battery";
+> -		voltage-min-design-microvolt =3D <3200000>;
+> -		energy-full-design-microwatt-hours =3D <5290000>;
+> -		charge-full-design-microamp-hours =3D <1430000>;
+> -	};
+> -
+> -	bq27510g3: fuel-gauge@55 {
+> -		compatible =3D "ti,bq27510g3";
+> -		reg =3D <0x55>;
+> -		monitored-battery =3D <&bat>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml =
+b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> new file mode 100644
+> index 000000000000..54f497c291f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI BQ27XXX fuel gauge family
+> +
+> +maintainers:
+> +  - Pali Roh=E1r <pali@kernel.org>
+> +  - Andrew F. Davis <afd@ti.com>
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  Support various Texas Instruments fuel gauge devices that share similar
+> +  register maps and power supply properties
+
+allOf:
+  - $ref: power-supply.yaml#
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq27200 - BQ27200
+> +      - ti,bq27210 - BQ27210
+> +      - ti,bq27500 - deprecated, use revision specific property below
+> +      - ti,bq27510 - deprecated, use revision specific property below
+> +      - ti,bq27520 - deprecated, use revision specific property below
+
+There is a deprecated property ("deprecated: true"), but IDK how to
+apply it to specific compatible values. Maybe Rob can help out here.
+Otherwise it's not a blocker, since the conversion is still an
+improvement without having explicit deprecation marks :)
+
+> +      - ti,bq27500-1 - BQ27500/1
+> +      - ti,bq27510g1 - BQ27510-g1
+> +      - ti,bq27510g2 - BQ27510-g2
+> +      - ti,bq27510g3 - BQ27510-g3
+> +      - ti,bq27520g1 - BQ27520-g1
+> +      - ti,bq27520g2 - BQ27520-g2
+> +      - ti,bq27520g3 - BQ27520-g3
+> +      - ti,bq27520g4 - BQ27520-g4
+> +      - ti,bq27521 - BQ27521
+> +      - ti,bq27530 - BQ27530
+> +      - ti,bq27531 - BQ27531
+> +      - ti,bq27541 - BQ27541
+> +      - ti,bq27542 - BQ27542
+> +      - ti,bq27546 - BQ27546
+> +      - ti,bq27742 - BQ27742
+> +      - ti,bq27545 - BQ27545
+> +      - ti,bq27411 - BQ27411
+> +      - ti,bq27421 - BQ27421
+> +      - ti,bq27425 - BQ27425
+> +      - ti,bq27426 - BQ27426
+> +      - ti,bq27441 - BQ27441
+> +      - ti,bq27621 - BQ27621
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: integer, I2C address of the fuel gauge.
+> +
+> +  monitored-battery:
+> +    description: |
+> +       phandle of battery characteristics node.
+> +       The fuel gauge uses the following battery properties:
+> +       - energy-full-design-microwatt-hours
+> +       - charge-full-design-microamp-hours
+> +       - voltage-min-design-microvolt
+> +       Both or neither of the *-full-design-*-hours properties must be s=
+et.
+> +       See Documentation/devicetree/bindings/power/supply/battery.txt
+
+power-supplies: true
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +      bat: battery {
+> +        compatible =3D "simple-battery";
+> +        voltage-min-design-microvolt =3D <3200000>;
+> +        energy-full-design-microwatt-hours =3D <5290000>;
+> +        charge-full-design-microamp-hours =3D <1430000>;
+> +      };
+> +
+> +      bq27510g3: fuel-gauge@55 {
+> +        compatible =3D "ti,bq27510g3";
+> +        reg =3D <0x55>;
+> +        monitored-battery =3D <&bat>;
+> +      };
+> +    };
+
+Otherwise looks good to me.
+
+-- Sebastian
+
+--eleyscz72hdifi3z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl64KQsACgkQ2O7X88g7
++pqdzA/5AQ8k1elDdtykmTF+LhZ1lSdxfrzg0iZ97kdNdO8zHnXU+3bUXrUAPKUl
+NFL1XFjNQVUvekFOXMb1ZI4wn0gtQN8IHaPG1aexFXHhvmh0pn8fqlQ64nMX1jp0
+vo/UkC5RpyqP9sszO5+VUXTS3TUiTKN/A3JeDAqr0jGIFGUZRI/cE3BPkHO9/r3/
+nUfFmpPFOH7phlj9TOYzOAqdZlqg93Bu8CLBNJnBpykqhAyirSBX2ELaN3ytAUYd
+bYamQmRMzC3MCN554MaeX6et1FGH+3X8XjamV81jlax3sllE/+jVhG9JMZb4IGrw
+BB7fCJCYmF5rYzEK0CG1ttmZSu0JboYYVYKpxem6xBS2MwSNX3n8heXYhfA/sw/T
+mt3VaJyB7rzyu52yhq8fKcaUx83B6hs4sFzzaO4BIIdydqSobMQ2/Iyc+qE1sjj+
+flj4hbXaksv+P7ncBv9Jny5mKQPfIxgoyyVbRcWZvX5NPIuQVpldkC0LxmDiDKWr
+aTZBLIAT34LAtSRMrtI+o+tyErypYngRR4uER2QDGKcPRtuNYyDH/ANRSNg6Efsy
+LSBkAMI8x9KVUaAGXvJ6KMoeIV5VVUg4UuqN36Rd65cnbnoYBBuZF9SBRMHFh20u
+XmmtbTo3rTToAU3JGhxZUMC/npcMgjS5QW+IALr1jH8+c8icTDc=
+=VmQV
+-----END PGP SIGNATURE-----
+
+--eleyscz72hdifi3z--
