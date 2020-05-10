@@ -2,119 +2,164 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE44C35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 04:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5CCC54E7E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C18206B9
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 04:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyySpe7h"
+	by mail.kernel.org (Postfix) with ESMTP id 4C54720737
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589087159;
+	bh=vbN4FCynuJdq8UF08ebL/0cCBsxmV6T9aKAxAXwlaOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GXpy6dtD8uQQz6JuXQwiBk9fZX0eaB+Kciv3cHNfsMZUKUpeHycli4zFg7VKxirr/
+	 6fsEqX7AgrUbBI/e1+IUxkoDGinU6xXjlrhrJeQWSTDrs63YBTYladdPaJ/22wXbRM
+	 aoMjObo0/TRiixt49XPWBi1xUg/H7eqp8b4u67RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgEJEdp (ORCPT
+        id S1726629AbgEJFF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 00:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgEJEdp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 00:33:45 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F37D5C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 21:33:44 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id f3so6009197ioj.1
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 21:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VHU93qiCPeuKDnq7RwKToMUB9ruaa8FUAZfnco9Uuh4=;
-        b=UyySpe7h+t1MmeLX9Ib6eUz6JK/AbVAl/xfHj0D8mS0+UrQbx2AWHWFB8FoEF7Y4Wq
-         VH8nG/hUn9+GUeMxQLOkDCENzlGWIcycyztQJDu7he7SuPHFslCUCdjhrwu6YmlHwv+T
-         xoARenh06jHpvKMTjBS836zW3HDIyFDfGmiwLouEKv2Km4gfe0nkxqH2GwFpmMfSN7sM
-         z0xsKKtlTSbvY2Sil/s5sSruAExQbYEhdx8QBiMBk3ksv0Vae4djSPmBsHAob3JM1n0c
-         Ye3eT+p63+YnH91hK8sVgq9kdVvI/ctMzSywwVPpLZ/56wqLBJF6l2HYYQEKj2Bo3to5
-         EFrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VHU93qiCPeuKDnq7RwKToMUB9ruaa8FUAZfnco9Uuh4=;
-        b=duSoNNQ5ZvvUDvc6bwJHnvqhJHTkrZ3PsoTnw4hiqKAk7t0ENzykrNw2/tTGlCmPYT
-         ef7CWlcdk96wV3oYLZ5eUvwZ7vlVCh18y3mQcq7/Qj2txVRVJXo5NUz+xbWKM9LJyxDW
-         B/lhx1ffdk5tCumBdOTyA9hG9zubiNf8B1iIPUY7JNpmjTdSWKN+Bmfvhmf0PvsDZwuv
-         1ozgqDJf5HODjj9JnSF/Ofpijgp1T4KWXbI0tsQeR7Z342MQiLKNu6sV9zmvYUEkf8Mq
-         Pt/fP5aR96pPM8LNuldSVuzBMYgaLLlCaAccYKKGxbUIWTYFV4o+x/bVEHjHAxMznCZ+
-         ux2w==
-X-Gm-Message-State: AGi0PubmU6qEz1wuDfw810OR6e2W2i6dRFKxX+KYATP99LmE287Y+2ug
-        m+tYtdbCqlbRpBTaOL7p6v4Uf2f9FYU3UB2Qsus=
-X-Google-Smtp-Source: APiQypIftV4hHyi8x96un9huRW28lvR6ChZCyNllKXz8QEM59GyK6yu9dtAa6y3zTjxFTEttPVx+e+8vK+cgyPRTByE=
-X-Received: by 2002:a05:6602:384:: with SMTP id f4mr9538350iov.207.1589085224208;
- Sat, 09 May 2020 21:33:44 -0700 (PDT)
+        Sun, 10 May 2020 01:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbgEJFF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 01:05:57 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6332F24966
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 05:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589087156;
+        bh=vbN4FCynuJdq8UF08ebL/0cCBsxmV6T9aKAxAXwlaOU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kssPEAiiG4pI+0Oi7Le8CCyWcIMpfRLaKap81BYw9kxGm9Ku9oMbuUevux1X7BR9o
+         tlCSEOu9TfNaQnuRx03MOB57HXjGlymCOXZUkAUqVAy8iq+KqshT36JbVqQnHusO0X
+         w2BbzV3kllzzR/5Lhg7BV6vEoU4q0z4RLEw5Jduo=
+Received: by mail-wm1-f41.google.com with SMTP id u16so14945505wmc.5
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 22:05:56 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY8vNoJpasg15oezKqj4mg4GwEiMTLGlwRvewaKko6pufgzfcTG
+        8lRQ1GZWQQxU7451YvhAtZDoa7u+vrGj54RcJ3IEWg==
+X-Google-Smtp-Source: APiQypI0KDg5AXXIYQmGcwfpwrQdJDQg6XvS3yh8r5do94CcWLBfbhtgNr6SJJ1dTLwyb6gEIpg6o9VFUE1OtV27i+Y=
+X-Received: by 2002:a7b:c5d3:: with SMTP id n19mr17292077wmk.21.1589087154678;
+ Sat, 09 May 2020 22:05:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505135341.730586321@linutronix.de> <20200505135828.316937774@linutronix.de>
-In-Reply-To: <20200505135828.316937774@linutronix.de>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Sun, 10 May 2020 12:33:33 +0800
-Message-ID: <CAJhGHyCGOfD6pQQ58CysfjyvqPLc9dc54WpqE2wSuVvyEK-9jw@mail.gmail.com>
-Subject: Re: [patch V4 part 5 02/31] x86/entry: Provide helpers for execute on irqstack
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
+References: <20200508144043.13893-1-joro@8bytes.org> <CALCETrX0ubjc0Gf4hCY9RWH6cVEKF1hv3RzqToKMt9_bEXXBvw@mail.gmail.com>
+ <20200508213609.GU8135@suse.de> <CALCETrVxP87o2+aaf=RLW--DSpMrs=BXSQphN6bG5Y4X+OY8GQ@mail.gmail.com>
+ <20200509175217.GV8135@suse.de> <CALCETrVU-+G3K5ABBRSEMiwnskL4mZsVcoTESZXnu34J7TaOqw@mail.gmail.com>
+ <20200509215713.GE18353@8bytes.org>
+In-Reply-To: <20200509215713.GE18353@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 9 May 2020 22:05:43 -0700
+X-Gmail-Original-Message-ID: <CALCETrWyQA=4y57PsKhhcRWpxfCufBpda5g7gyEVSST6H5FNJQ@mail.gmail.com>
+Message-ID: <CALCETrWyQA=4y57PsKhhcRWpxfCufBpda5g7gyEVSST6H5FNJQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 10:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sat, May 9, 2020 at 2:57 PM Joerg Roedel <joro@8bytes.org> wrote:
 >
-> Device interrupt handlers and system vector handlers are executed on the
-> interrupt stack. The stack switch happens in the low level assembly entry
-> code. This conflicts with the efforts to consolidate the exit code in C to
-> ensure correctness vs. RCU and tracing.
+> Hi Andy,
 >
-> As there is no way to move #DB away from IST due to the MOV SS issue, the
-> requirements vs. #DB and NMI for switching to the interrupt stack do not
-> exist anymore. The only requirement is that interrupts are disabled.
+> On Sat, May 09, 2020 at 12:05:29PM -0700, Andy Lutomirski wrote:
 
-Hi, tglx and Andy Lutomirski,
+> > So, unless I'm missing something here, there is an absolute maximum of
+> > 512 top-level entries that ever need to be synchronized.
+>
+> And here is where your assumption is wrong. On 32-bit PAE systems it is
+> not the top-level entries that need to be synchronized for vmalloc, but
+> the second-level entries. And dependent on the kernel configuration,
+> there are (in total, not only vmalloc) 1536, 1024, or 512 of these
+> second-level entries. How much of them are actually used for vmalloc
+> depends on the size of the system RAM (but is at least 64), because
+> the vmalloc area begins after the kernel direct-mapping (with an 8MB
+> unmapped hole).
 
-Is there any information about "no way to move #DB away from IST
-due to the MOV SS issue"? IST-based #DB results to ist_shift(for
-nested #DB) and debug_idt(for #NMI vs. #DB) which are somewhat
-ugly. If IST-less #DB should work, debug stack should be switched
-in software manner like interrupt stack.
+I spent some time looking at the code, and I'm guessing you're talking
+about the 3-level !SHARED_KERNEL_PMD case.  I can't quite figure out
+what's going on.
 
-There was a "POP/MOV SS" CVE/issue about #BP which lead to
-moving #BP to IST-less by d8ba61ba58c8
-(x86/entry/64: Don't use IST entry for #BP stack)
+Can you explain what is actually going on that causes different
+mms/pgds to have top-level entries in the kernel range that point to
+different tables?  Because I'm not seeing why this makes any sense.
 
-#DB #BP are considered as #NMI due to their super-interrupt
-ability. But the kernel has much more control over #DB and #BP
-which can be disabled by putting the code snip into non-instrument
-sections like __entry noinstr etc.
+>
+> > Now, there's an additional complication.  On x86_64, we have a rule:
+> > those entries that need to be synced start out null and may, during
+> > the lifetime of the system, change *once*.  They are never unmapped or
+> > modified after being allocated.  This means that those entries can
+> > only ever point to a page *table* and not to a ginormous page.  So,
+> > even if the hardware were to support ginormous pages (which, IIRC, it
+> > doesn't), we would be limited to merely immense and not ginormous
+> > pages in the vmalloc range.  On x86_32, I don't think we have this
+> > rule right now.  And this means that it's possible for one of these
+> > pages to be unmapped or modified.
+>
+> The reason for x86-32 being different is that the address space is
+> orders of magnitude smaller than on x86-64. We just have 4 top-level
+> entries with PAE paging and can't afford to partition kernel-adress
+> space on that level like we do on x86-64. That is the reason the address
+> space is partitioned on the second (PMD) level, which is also the reason
+> vmalloc synchronization needs to happen on that level. And because
+> that's not enough yet, its also the page-table level to map huge-pages.
 
-Is it possible to implement IST-less #DB?
+Why does it need to be partitioned at all?  The only thing that comes
+to mind is that the LDT range is per-mm.  So I can imagine that the
+PAE case with a 3G user / 1G kernel split has to have the vmalloc
+range and the LDT range in the same top-level entry.  Yuck.
 
-Thanks,
-Lai
+>
+> > So my suggestion is that just apply the x86_64 rule to x86_32 as well.
+> > The practical effect will be that 2-level-paging systems will not be
+> > able to use huge pages in the vmalloc range, since the rule will be
+> > that the vmalloc-relevant entries in the top-level table must point to
+> > page *tables* instead of huge pages.
+>
+> I could very well live with prohibiting huge-page ioremap mappings for
+> x86-32. But as I wrote before, this doesn't solve the problems I am
+> trying to address with this patch-set, or would only address them if
+> significant amount of total system memory is used.
+>
+> The pre-allocation solution would work for x86-64, it would only need
+> 256kb of preallocated memory for the vmalloc range to never synchronize
+> or fault again. I have thought about that and did the math before
+> writing this patch-set, but doing the math for 32 bit drove me away from
+> it for reasons written above.
+>
+
+If it's *just* the LDT that's a problem, we could plausibly shrink the
+user address range a little bit and put the LDT in the user portion.
+I suppose this could end up creating its own set of problems involving
+tracking which code owns which page tables.
+
+> And since a lot of the vmalloc_sync_(un)mappings problems I debugged
+> were actually related to 32-bit, I want a solution that works for 32 and
+> 64-bit x86 (at least until support for x86-32 is removed). And I think
+> this patch-set provides a solution that works well for both.
+
+I'm not fundamentally objecting to your patch set, but I do want to
+understand what's going on that needs this stuff.
+
+>
+>
+>         Joerg
