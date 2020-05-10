@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB1AC54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F73C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA8E206D6
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20F1206D6
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 10:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="LbDGsvA7"
+	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="C/UpnWch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgEJKNk (ORCPT
+        id S1728943AbgEJKNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 06:13:40 -0400
-Received: from mail.kocurkovo.cz ([185.8.236.170]:47516 "EHLO
+        Sun, 10 May 2020 06:13:42 -0400
+Received: from mail.kocurkovo.cz ([185.8.236.170]:47530 "EHLO
         mail.kocurkovo.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgEJKNj (ORCPT
+        with ESMTP id S1728681AbgEJKNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 06:13:39 -0400
+        Sun, 10 May 2020 06:13:40 -0400
 Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
-        id 9A37F3EDF; Sun, 10 May 2020 12:13:37 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 9A37F3EDF
+        id ED02D3EE0; Sun, 10 May 2020 12:13:37 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz ED02D3EE0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
         s=mail; t=1589105617;
-        bh=/kKTgi/AZqUtwTnjlzl6IcwdkhcY5mkAN5671oRevlM=;
+        bh=QlOGZJaxuXbEjYRzF7O9Rg0ORS1ErUT1AjDPBU3SWyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbDGsvA7Ln/8TzsHMUDnhTnyfrTz2WeCMdkTlF5ytbKvoooS787O079M/WRLyk8j9
-         fFrseiE7I0BbdMWB1PiWiPqmpcdDxadGI77BjawWng+hr9RythrYI32Yu2I7QU6CPB
-         1atR2shAoujD1bgoGT1ZoCW6t2Kz5PnAcQB5SGVg=
+        b=C/UpnWchh96RseMCrkqqvytF34vk2wTA9OkHfl/B/Y3apM8Y7Bm+nv1EGZC1o3zTt
+         tSQJfK67+V3OUTyHFnH8e0ulvNs0JvQFwChvM0PTKvX8qmG/j/bgeS0C494zxE8E/c
+         cV1SWY2zim3ir4ytGrCaqUbhoff2vUGKYSBSAqXA=
 From:   Matej Dujava <mdujava@kocurkovo.cz>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org
 Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
         linux-kernel@vger.kernel.org, Matej Dujava <mdujava@kocurkovo.cz>
-Subject: [PATCH v2 1/2] staging: vt6656: vt6655: clean Makefiles
-Date:   Sun, 10 May 2020 12:13:34 +0200
-Message-Id: <1589105615-22271-2-git-send-email-mdujava@kocurkovo.cz>
+Subject: [PATCH v2 2/2] staging: vt6655: vt6656: change order of makefile variable definitions
+Date:   Sun, 10 May 2020 12:13:35 +0200
+Message-Id: <1589105615-22271-3-git-send-email-mdujava@kocurkovo.cz>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1589105615-22271-1-git-send-email-mdujava@kocurkovo.cz>
 References: <1589105615-22271-1-git-send-email-mdujava@kocurkovo.cz>
@@ -50,51 +50,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is removing CFLAGS that are defining flags that are not used.
+This patch will add indentation to multiline variable and put obj-$(CONFIG_X)
+at the begining of the file.
 
 Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
 ---
- drivers/staging/vt6655/Makefile      | 3 ---
- drivers/staging/vt6655/device_main.c | 1 -
- drivers/staging/vt6656/Makefile      | 3 ---
- 3 files changed, 7 deletions(-)
+ drivers/staging/vt6655/Makefile | 24 ++++++++++++------------
+ drivers/staging/vt6656/Makefile |  4 ++--
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/staging/vt6655/Makefile b/drivers/staging/vt6655/Makefile
-index a151f30fc46f..e70357ec0af8 100644
+index e70357ec0af8..eda08a1516ab 100644
 --- a/drivers/staging/vt6655/Makefile
 +++ b/drivers/staging/vt6655/Makefile
-@@ -1,7 +1,4 @@
+@@ -1,15 +1,15 @@
  # SPDX-License-Identifier: GPL-2.0
--# TODO: all of these should be removed
--ccflags-y := -DLINUX -D__KERNEL__ -D__NO_VERSION__
--ccflags-y += -DHOSTAP
  
- vt6655_stage-y +=	device_main.o \
- 	card.o \
-diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
-index 5889023d19c4..41cbec4134b0 100644
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -32,7 +32,6 @@
-  *
-  * Revision History:
-  */
--#undef __NO_VERSION__
- 
- #include <linux/file.h>
- #include "device.h"
+-vt6655_stage-y +=	device_main.o \
+-	card.o \
+-	channel.o \
+-	mac.o \
+-	baseband.o \
+-	rxtx.o \
+-	dpc.o \
+-	power.o \
+-	srom.o \
+-	key.o \
+-	rf.o
+-
+ obj-$(CONFIG_VT6655) +=	vt6655_stage.o
++
++vt6655_stage-y +=	device_main.o \
++			card.o \
++			channel.o \
++			mac.o \
++			baseband.o \
++			rxtx.o \
++			dpc.o \
++			power.o \
++			srom.o \
++			key.o \
++			rf.o
 diff --git a/drivers/staging/vt6656/Makefile b/drivers/staging/vt6656/Makefile
-index a0f3862dea75..f696a9d7a143 100644
+index f696a9d7a143..aac323d6a684 100644
 --- a/drivers/staging/vt6656/Makefile
 +++ b/drivers/staging/vt6656/Makefile
-@@ -1,7 +1,4 @@
+@@ -1,5 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
--# TODO: all of these should be removed
--ccflags-y := -DLINUX -D__KERNEL__ -DEXPORT_SYMTAB -D__NO_VERSION__
--ccflags-y += -DHOSTAP
  
++obj-$(CONFIG_VT6656) +=	vt6656_stage.o
++
  vt6656_stage-y +=	main_usb.o \
  			card.o  \
+ 			mac.o   \
+@@ -11,5 +13,3 @@ vt6656_stage-y +=	main_usb.o \
+ 			rf.o \
+ 			usbpipe.o \
+ 			channel.o
+-
+-obj-$(CONFIG_VT6656) +=	vt6656_stage.o
 -- 
 2.26.2
 
