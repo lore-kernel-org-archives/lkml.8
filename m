@@ -2,142 +2,135 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24549C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC2BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4A72082E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1A92082E
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 11:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kwOM9dPo"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="Oe4m/MLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgEJLCX (ORCPT
+        id S1728340AbgEJLK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 07:02:23 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:7454 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgEJLCW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 07:02:22 -0400
+        Sun, 10 May 2020 07:10:26 -0400
+Received: from mail-vi1eur05on2122.outbound.protection.outlook.com ([40.107.21.122]:48256
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726043AbgEJLK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 07:10:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G1E9a8dsC7FmlFw8yHh01+WmzP1lEeAqIqHalrP55AE1xpKm+s6c2z+ua0dEee0U1vtcyPEepwwZ21/OtvAtoEZ7UjEqEduChtgYeamvAG7uxjCEdV/0skgBlwfC6e/Tw3D8GN8ktgU4iSLf5dzt2XSbf4pDtTu6UFFWAHk9CDpVm43g2frctLpEiRpwwfOZzt6YLq75jbIt+xuPfwhWo+exmbcPQDqlBH8HcL1mBIX0Q1A+YQK5cpxPlmS4f9tNDGz+b298VkPRpPY6cwuqtRxRRN5c+Zj6+Q7A0tCUgULZ40Z3QUWHb7h0lV5Oa3sWu0QVGCqQ/xh3doXyzfiNkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y6IEWqEgEbeKyOCpnoNevHBRugUFKf0OxCx6LeNFd94=;
+ b=lUMAOeC4wjyf/AtnGJbhEgkhmKZ3wi7K26QFTnkVY4orEqKMwghXprW//YMFckZ0X+Ph2hTi6fX7ClD2jYtZC+QN021MCaLyhTpYiCXM0Qbjxl4/75qbENLaqs31YKngdJ7sBbwYpyfSsO0u9IEJG4qfeWjtNDWqGXg3bTidb67ro9vdOdjMKAKNZnrLxk8YDvF73qxZlU/X8W/BwHy7SCDvhl6ALo9LI11nMk3Qd7A8WIlZ4bWxb4dpQFP2wsKVI3qZYaS3wuCpbDlEFq/YVXZEuBzIlBzY8zHbpD5lrhQqGTZL8Nr1ZvN3plGZBc/zuchGgfDLhpqK8YCxO/rrtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589108542; x=1620644542;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=kRA32J9VjPd5GhXxmUjtK9WR+tdYKtXlyIKqjRjvds4=;
-  b=kwOM9dPoNKU0tdkaz3jMuVkZYLl72dECF7EWw9463waGE+M7ua2Ugl64
-   GlwvCShwz4GvqEuDOBiveed8l+b8/eKHumirFXbr5r+zCFJMWMgmf6S0z
-   TSX7m9TbdH+GXve/TfVXUuOLwrrfRAWpt5BAmkyzAZJV/qS8wEdGkX99t
-   Q=;
-IronPort-SDR: MwGxtAgcSS4nmDlykRZalRVijBBroxmPd+GcNzGvuCZ1UIY6VFnz0hwuRBflNbKCYLzpl6rJ6b
- rbHganDI9qRg==
-X-IronPort-AV: E=Sophos;i="5.73,375,1583193600"; 
-   d="scan'208";a="42326554"
-Subject: Re: [PATCH v1 00/15] Add support for Nitro Enclaves
-Thread-Topic: [PATCH v1 00/15] Add support for Nitro Enclaves
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 May 2020 11:02:20 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 2BE10A1E8B;
-        Sun, 10 May 2020 11:02:18 +0000 (UTC)
-Received: from EX13D10UWA003.ant.amazon.com (10.43.160.248) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 11:02:18 +0000
-Received: from EX13D21UWA003.ant.amazon.com (10.43.160.184) by
- EX13D10UWA003.ant.amazon.com (10.43.160.248) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 11:02:18 +0000
-Received: from EX13D21UWA003.ant.amazon.com ([10.43.160.184]) by
- EX13D21UWA003.ant.amazon.com ([10.43.160.184]) with mapi id 15.00.1497.006;
- Sun, 10 May 2020 11:02:18 +0000
-From:   "Herrenschmidt, Benjamin" <benh@amazon.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>,
-        "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Liguori, Anthony" <aliguori@amazon.com>,
-        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
-        "Graf (AWS), Alexander" <graf@amazon.de>,
-        "ne-devel-upstream@amazon.com" <ne-devel-upstream@amazon.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "van der Linden, Frank" <fllinden@amazon.com>,
-        "Smith, Stewart" <trawets@amazon.com>,
-        "Pohlack, Martin" <mpohlack@amazon.de>,
-        "Wilson, Matt" <msw@amazon.com>, "Dannowski, Uwe" <uwed@amazon.de>,
-        "Doebel, Bjoern" <doebel@amazon.de>
-Thread-Index: AQHWJQZmwcsXbLPvp0aDqkxP7IsAE6igJAKAgAEG3wA=
-Date:   Sun, 10 May 2020 11:02:18 +0000
-Message-ID: <1b00857202884c2a27d0e381d6de312201d17868.camel@amazon.com>
-References: <20200421184150.68011-1-andraprs@amazon.com>
-         <18406322-dc58-9b59-3f94-88e6b638fe65@redhat.com>
-         <ff65b1ed-a980-9ddc-ebae-996869e87308@amazon.com>
-         <2a4a15c5-7adb-c574-d558-7540b95e2139@redhat.com>
-         <20200507174438.GB1216@bug>
-         <620bf5ae-eade-37da-670d-a8704d9b4397@amazon.com>
-         <20200509192125.GA1597@bug>
-In-Reply-To: <20200509192125.GA1597@bug>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.200]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2CEE01186C01554B923E06BDA18EFCCA@amazon.com>
-Content-Transfer-Encoding: base64
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y6IEWqEgEbeKyOCpnoNevHBRugUFKf0OxCx6LeNFd94=;
+ b=Oe4m/MLS0Xjkof5HFK6SYYiLqZGlBHnjD8zIUo4wZ8Yl9keWswMeUOuCGtvqfuFmCYn2lj2TUGEJoIQpy0wUoIXziU+XifNB6taDMdV+gTsMvh8Eo/SryNNPoDp5l8wMb+uDd/vWbN147TfbRsdwlG2FEW3Z03aGqe2gCafYgU8=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+Received: from AM6PR02MB5526.eurprd02.prod.outlook.com (2603:10a6:20b:e5::28)
+ by AM6PR02MB4311.eurprd02.prod.outlook.com (2603:10a6:20b:47::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Sun, 10 May
+ 2020 11:10:23 +0000
+Received: from AM6PR02MB5526.eurprd02.prod.outlook.com
+ ([fe80::9cd9:a468:735b:52f4]) by AM6PR02MB5526.eurprd02.prod.outlook.com
+ ([fe80::9cd9:a468:735b:52f4%6]) with mapi id 15.20.2979.033; Sun, 10 May 2020
+ 11:10:22 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     oded.gabbay@gmail.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] habanalabs: check if CoreSight is supported
+Date:   Sun, 10 May 2020 14:10:15 +0300
+Message-Id: <20200510111015.20134-1-oshpigelman@habana.ai>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR02CA0107.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::48) To AM6PR02MB5526.eurprd02.prod.outlook.com
+ (2603:10a6:20b:e5::28)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from oshpigelman2-vm.habana-labs.com (31.154.190.6) by AM0PR02CA0107.eurprd02.prod.outlook.com (2603:10a6:208:154::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend Transport; Sun, 10 May 2020 11:10:22 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [31.154.190.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2888f2a1-3918-4385-3f2c-08d7f4d2bb8e
+X-MS-TrafficTypeDiagnostic: AM6PR02MB4311:
+X-Microsoft-Antispam-PRVS: <AM6PR02MB4311F733120AC8A8B1D606CBB8A00@AM6PR02MB4311.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 039975700A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lmVjE8Yag4zsf0sCKmEfXoL78/Sp490uP+lxDay7gSOEeo3z4A8rS2bgV0D1XGeOBU52D0BrgUp2qcyxft38E5VnfWo0fGCcgxeq7oiszW12F/vtjHrFWAuAgTiD/9RCDq2k1hshCjqQHe/P6f2EuYv7/nAwlGy7ugx7wW0Hvv+CF812FEYKdgDpMtlmDMTTn9Bqq32LxGir+y3nC9ShzBfGttlawQUjlvUkabBNE47YN9K/elkDekiZ8hOu+g5JqIx4TrjH03hLnR0rbJ3lF3NS7mnmKswUZLPXVd7BVtf3AEQ4xhLwMyMoxLKHE9UgEnWlB3i7gwiO60Q77K/4t2H6rDy0YnNGzBfN++H1IX44UqJxWHjBUwJFlownXzV2DYYUZFP6JPq1BCsFK8nZRkPOLHIY2he6Y8nX1fpUogaMKKyK8+VRR3sV/fYQ84apuRATk6Ntxu2G+BFVev8253CR2jth1OC8Wa6+sRDELq5rxY1hVM8Ai8Qv+CGAyxgeam3UBA9MdsntRuid5fzqKg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR02MB5526.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(136003)(396003)(39850400004)(376002)(33430700001)(66946007)(8676002)(6486002)(478600001)(36756003)(66476007)(6916009)(86362001)(6512007)(6506007)(4326008)(2906002)(26005)(186003)(16526019)(33440700001)(66556008)(6666004)(8936002)(1076003)(52116002)(316002)(956004)(2616005)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: wzL6N4L42B6iQxWMfm66HSVYJ2/ox17i11hDzA1oXNY0KZisKpHVFbgcDTNCk1Gawev01Avf2XLiHOrR6xrtHPoxrsyt3R991WmzSxRc1P549ZlG59+AVaLxPHZvFUb0+NmgAOujZtJCK5VO2N05Fhe46O/Q+0zsoSbRQlC+KPktVu1PDSJ5QSFdQyqZOcrDKu/YL0VTOs3fTFBJGAeB5ZruK60MO4qh4/iGl7LkHtnclXEdsWhO1XA+hgG1RPhDkTrkHdAQJg6krW0PpwNRJlvfkjEX/9ANsTiOKXs5jfujVIE6EGdeYpwsWtgQaI0FbC8bTTQjnsXyY6jovXC09UQGFUqONiPcfVKkEXKDaeBYAZJUXleltSS06Yusq/dwWW802+SEcqphxjoIEO1QHdAg1FncRFN5Z2yBpXaeejig+LcecxTB9QZfkmRFHO3kMkx+APezj17WrI5d80regHlcYBibXnc6QpXetpbTH0s=
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2888f2a1-3918-4385-3f2c-08d7f4d2bb8e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2020 11:10:22.8052
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 98MSUJ0tENyd+5lXovQV7N86nqc2ne8DxvsIrbDm1Z59Qu3LSrAwECEeGU7CmW8l/9pQhjM/aLyCS8q0kRflaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR02MB4311
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA1LTA5IGF0IDIxOjIxICswMjAwLCBQYXZlbCBNYWNoZWsgd3JvdGU6DQo+
-IA0KPiBPbiBGcmkgMjAyMC0wNS0wOCAxMDowMDoyNywgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3
-cm90ZToNCj4gPiANCj4gPiANCj4gPiBPbiAwNy8wNS8yMDIwIDIwOjQ0LCBQYXZlbCBNYWNoZWsg
-d3JvdGU6DQo+ID4gPiANCj4gPiA+IEhpIQ0KPiA+ID4gDQo+ID4gPiA+ID4gaXQgdXNlcyBpdHMg
-b3duIG1lbW9yeSBhbmQgQ1BVcyArIGl0cyB2aXJ0aW8tdnNvY2sgZW11bGF0ZWQgZGV2aWNlIGZv
-cg0KPiA+ID4gPiA+IGNvbW11bmljYXRpb24gd2l0aCB0aGUgcHJpbWFyeSBWTS4NCj4gPiA+ID4g
-PiANCj4gPiA+ID4gPiBUaGUgbWVtb3J5IGFuZCBDUFVzIGFyZSBjYXJ2ZWQgb3V0IG9mIHRoZSBw
-cmltYXJ5IFZNLCB0aGV5IGFyZSBkZWRpY2F0ZWQNCj4gPiA+ID4gPiBmb3IgdGhlIGVuY2xhdmUu
-IFRoZSBOaXRybyBoeXBlcnZpc29yIHJ1bm5pbmcgb24gdGhlIGhvc3QgZW5zdXJlcyBtZW1vcnkN
-Cj4gPiA+ID4gPiBhbmQgQ1BVIGlzb2xhdGlvbiBiZXR3ZWVuIHRoZSBwcmltYXJ5IFZNIGFuZCB0
-aGUgZW5jbGF2ZSBWTS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGVzZSB0d28gY29tcG9uZW50
-cyBuZWVkIHRvIHJlZmxlY3QgdGhlIHNhbWUgc3RhdGUgZS5nLiB3aGVuIHRoZQ0KPiA+ID4gPiA+
-IGVuY2xhdmUgYWJzdHJhY3Rpb24gcHJvY2VzcyAoMSkgaXMgdGVybWluYXRlZCwgdGhlIGVuY2xh
-dmUgVk0gKDIpIGlzDQo+ID4gPiA+ID4gdGVybWluYXRlZCBhcyB3ZWxsLg0KPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+IFdpdGggcmVnYXJkIHRvIHRoZSBjb21tdW5pY2F0aW9uIGNoYW5uZWwsIHRoZSBw
-cmltYXJ5IFZNIGhhcyBpdHMgb3duDQo+ID4gPiA+ID4gZW11bGF0ZWQgdmlydGlvLXZzb2NrIFBD
-SSBkZXZpY2UuIFRoZSBlbmNsYXZlIFZNIGhhcyBpdHMgb3duIGVtdWxhdGVkDQo+ID4gPiA+ID4g
-dmlydGlvLXZzb2NrIGRldmljZSBhcyB3ZWxsLiBUaGlzIGNoYW5uZWwgaXMgdXNlZCwgZm9yIGV4
-YW1wbGUsIHRvIGZldGNoDQo+ID4gPiA+ID4gZGF0YSBpbiB0aGUgZW5jbGF2ZSBhbmQgdGhlbiBw
-cm9jZXNzIGl0LiBBbiBhcHBsaWNhdGlvbiB0aGF0IHNldHMgdXAgdGhlDQo+ID4gPiA+ID4gdnNv
-Y2sgc29ja2V0IGFuZCBjb25uZWN0cyBvciBsaXN0ZW5zLCBkZXBlbmRpbmcgb24gdGhlIHVzZSBj
-YXNlLCBpcyB0aGVuDQo+ID4gPiA+ID4gZGV2ZWxvcGVkIHRvIHVzZSB0aGlzIGNoYW5uZWw7IHRo
-aXMgaGFwcGVucyBvbiBib3RoIGVuZHMgLSBwcmltYXJ5IFZNDQo+ID4gPiA+ID4gYW5kIGVuY2xh
-dmUgVk0uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gTGV0IG1lIGtub3cgaWYgZnVydGhlciBjbGFy
-aWZpY2F0aW9ucyBhcmUgbmVlZGVkLg0KPiA+ID4gPiANCj4gPiA+ID4gVGhhbmtzLCB0aGlzIGlz
-IGFsbCB1c2VmdWwuICBIb3dldmVyIGNhbiB5b3UgcGxlYXNlIGNsYXJpZnkgdGhlDQo+ID4gPiA+
-IGxvdy1sZXZlbCBkZXRhaWxzIGhlcmU/DQo+ID4gPiANCj4gPiA+IElzIHRoZSB2aXJ0dWFsIG1h
-Y2hpbmUgbWFuYWdlciBvcGVuLXNvdXJjZT8gSWYgc28sIEkgZ3Vlc3MgcG9pbnRlciBmb3Igc291
-cmNlcw0KPiA+ID4gd291bGQgYmUgdXNlZnVsLg0KPiA+IA0KPiA+IEhpIFBhdmVsLA0KPiA+IA0K
-PiA+IFRoYW5rcyBmb3IgcmVhY2hpbmcgb3V0Lg0KPiA+IA0KPiA+IFRoZSBWTU0gdGhhdCBpcyB1
-c2VkIGZvciB0aGUgcHJpbWFyeSAvIHBhcmVudCBWTSBpcyBub3Qgb3BlbiBzb3VyY2UuDQo+IA0K
-PiBEbyB3ZSB3YW50IHRvIG1lcmdlIGNvZGUgdGhhdCBvcGVuc291cmNlIGNvbW11bml0eSBjYW4g
-bm90IHRlc3Q/DQoNCkhlaGUuLiB0aGlzIGlzbid0IHF1aXRlIHRoZSBzdG9yeSBQYXZlbCA6KQ0K
-DQpXZSBtZXJnZSBzdXBwb3J0IGZvciBwcm9wcmlldGFyeSBoeXBlcnZpc29ycywgdGhpcyBpcyBu
-byBkaWZmZXJlbnQuIFlvdQ0KY2FuIHRlc3QgaXQsIHdlbGwgYXQgbGVhc3QgeW91J2xsIGJlIGFi
-bGUgdG8gLi4uIHdoZW4gQVdTIGRlcGxveXMgdGhlDQpmdW5jdGlvbmFsaXR5LiBZb3UgZG9uJ3Qg
-bmVlZCB0aGUgaHlwZXJ2aXNvciBpdHNlbGYgdG8gYmUgb3BlbiBzb3VyY2UuDQoNCkluIGZhY3Qs
-IGluIHRoaXMgY2FzZSwgaXQncyBub3QgZXZlbiBsb3cgbGV2ZWwgaW52YXNpdmUgYXJjaCBjb2Rl
-IGxpa2UNCnNvbWUgb2YgdGhlIGFib3ZlIGNhbiBiZS4gSXQncyBhIGRyaXZlciBmb3IgYSBQQ0kg
-ZGV2aWNlIDotKSBHcmFudGVkIGENCnZpcnR1YWwgb25lLiBXZSBtZXJnZSBkcml2ZXJzIGZvciBQ
-Q0kgZGV2aWNlcyByb3V0aW5lbHkgd2l0aG91dCB0aGUgUlRMDQpvciBmaXJtd2FyZSBvZiB0aG9z
-ZSBkZXZpY2VzIGJlaW5nIG9wZW4gc291cmNlLg0KDQpTbyB5ZXMsIHdlIHByb2JhYmx5IHdhbnQg
-dGhpcyBpZiBpdCdzIGdvaW5nIHRvIGJlIGEgdXNlZnVsIGZlYXR1cmVzIHRvDQp1c2VycyB3aGVu
-IHJ1bm5pbmcgb24gQVdTIEVDMi4gKERpc2NsYWltZXI6IEkgd29yayBmb3IgQVdTIHRoZXNlIGRh
-eXMpLg0KDQpDaGVlcnMsDQpCZW4uDQoNCg==
+Coresight is not supported on simulator, therefore add a boolean for
+checking that (currently used by un-upstreamed code).
+
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+---
+ drivers/misc/habanalabs/goya/goya.c  | 1 +
+ drivers/misc/habanalabs/habanalabs.h | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index b3e2354aaca2..fb2ff82e0db5 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -751,6 +751,7 @@ static int goya_sw_init(struct hl_device *hdev)
+ 	}
+ 
+ 	spin_lock_init(&goya->hw_queues_lock);
++	hdev->supports_coresight = true;
+ 
+ 	return 0;
+ 
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index a68df32094f1..cfb306daa8d4 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -1415,6 +1415,7 @@ struct hl_device_idle_busy_ts {
+  * @cdev_sysfs_created: were char devices and sysfs nodes created.
+  * @stop_on_err: true if engines should stop on error.
+  * @supports_sync_stream: is sync stream supported.
++ * @supports_coresight: is CoreSight supported.
+  */
+ struct hl_device {
+ 	struct pci_dev			*pdev;
+@@ -1498,6 +1499,7 @@ struct hl_device {
+ 	u8				cdev_sysfs_created;
+ 	u8				stop_on_err;
+ 	u8				supports_sync_stream;
++	u8				supports_coresight;
+ 
+ 	/* Parameters for bring-up */
+ 	u8				mmu_enable;
+-- 
+2.17.1
+
