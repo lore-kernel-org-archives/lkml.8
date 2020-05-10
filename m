@@ -2,112 +2,115 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB50C54E8E
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D0FC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31CD120746
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9981520708
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 22:15:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="qp2gTY/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgEJWNt (ORCPT
+        id S1729428AbgEJWP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 18:13:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47580 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbgEJWNt (ORCPT
+        Sun, 10 May 2020 18:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729028AbgEJWP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 18:13:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D2DE68030807;
-        Sun, 10 May 2020 22:13:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KXGCpCbzb8BW; Mon, 11 May 2020 01:13:45 +0300 (MSK)
-Date:   Mon, 11 May 2020 01:13:44 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Zhou Yanjie <zhouyanjie@zoho.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 11/20] mips: MAAR: Use more precise address mask
-Message-ID: <20200510221344.kixpbwy2kcxf62ie@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-12-Sergey.Semin@baikalelectronics.ru>
- <20200507110951.GD11616@alpha.franken.de>
- <20200507191337.la6z476myszqethj@mobilestation>
- <20200508092236.GA9085@alpha.franken.de>
+        Sun, 10 May 2020 18:15:28 -0400
+Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523C8C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 15:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+        bh=QKrWCglmHIrEA/5Wh30xZ0GDeAJVKrUmaLXkngIVFqs=; b=qp2gTY/iNJC4C/0ds+1pG5wvqE
+        eA53LGYAFSOmxYJErvvhm17yNKHzYGTzmRyIpn3TwRhzZ+86TAgYB5YTzkG2YsR0EZaZvul8ctnpP
+        dhzsKADwzMi07dghTVKouwrozJ/2CcEjtmNreXA6IXGnM43hV4d9CRVrkVurBHE8eiJL38CO1JFoq
+        sdpJXEt3RkUzy/ZSVTVSGFYgcp6zx+BVddWxECY+fNYZ8gEkkyedv/rPlkih1mG5wXDj98r5QPTdv
+        vvgtHgd9zByjW0hugh5SUjkdFwcpVdbyWY3iRssr0JdSNAkgfWTzOWa+B48bMAsaxVTIL0qbc+sCY
+        35i/lE8w==;
+Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jXuE3-0003Ep-8w; Mon, 11 May 2020 00:15:11 +0200
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.93)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1jXuE2-003yoD-Ej; Mon, 11 May 2020 00:15:10 +0200
+Date:   Mon, 11 May 2020 00:15:10 +0200
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH fixes] powerpc/vdso32: Fallback on getres syscall when
+ clock is unknown
+Message-ID: <20200510221510.GA948665@aurel32.net>
+Mail-Followup-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <7316a9e2c0c2517923eb4b0411c4a08d15e675a4.1589017281.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508092236.GA9085@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <7316a9e2c0c2517923eb4b0411c4a08d15e675a4.1589017281.git.christophe.leroy@csgroup.eu>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 11:22:36AM +0200, Thomas Bogendoerfer wrote:
-> On Thu, May 07, 2020 at 10:13:37PM +0300, Serge Semin wrote:
-> > On Thu, May 07, 2020 at 01:09:51PM +0200, Thomas Bogendoerfer wrote:
-> > > On Wed, May 06, 2020 at 08:42:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > 
-> > > > Indeed according to the P5600/P6000 manual the MAAR pair register
-> > > > address field either takes [12:31] bits for 32-bits non-XPA systems
-> > > > and [12:35] otherwise. In any case the current address mask is just
-> > > > wrong for 64-bit and 32-bits XPA chips. So lets extend it to 39-bits
-> > > > value. This shall cover the 64-bits architecture and systems with XPA
-> > > > enabled, and won't cause any problem for non-XPA 32-bit systems, since
-> > > > the value will be just truncated when written to the 32-bits register.
-> > > 
-> > > according to MIPS32 Priveleged Resoure Architecture Rev. 6.02
-> > > ADDR spans from bit 12 to bit 55. So your patch fits only for P5600.
-> > 
-> > > Does the wider mask cause any problems ?
-> > 
-> > No, it won't. Bits written to the [40:62] range will be just ignored,
-> > while reading from there should return zeros. Setting GENMASK_ULL(55, 12)
-> > would also work. Though this solution is a bit workarounding because
-> > MIPS_MAAR_ADDR wouldn't reflect the real mask of the ADDR field. Something
-> > like the next macro would work better:
-> > 
-> > +#define MIPS_MAAR_ADDR							\
-> > +({									\
-> > +	u64 __mask;							\
-> > +									\
-> > +	if (cpu_has_lpa && read_c0_pagegrain() & PG_ELPA) {		\
-> > +		__mask = GENMASK_ULL(55, 12);				\
-> > +	else								\
-> > +		__mask = GENMASK_ULL(31, 12);				\
-> > +									\
-> > +	__mask;								\
-> > +})
-> 
-> that looks horrible.
-> 
-> > What do you think? What is better: the macro above or setting
-> > GENMASK_ULL(55, 12)?
-> 
-> just that one ;-)
+Hi,
 
-Agreed. I'll fix it in v3.
-
--Sergey
-
+On 2020-05-09 09:42, Christophe Leroy wrote:
+> There are other clocks than the standard ones, for instance
+> per process clocks. Therefore, being above the last standard clock
+> doesn't mean it is a bad clock. So, fallback to syscall instead
+> of returning -EINVAL inconditionaly.
 > 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> Fixes: e33ffc956b08 ("powerpc/vdso32: implement clock_getres entirely")
+> Cc: stable@vger.kernel.org
+> Reported-by: Aurelien Jarno <aurelien@aurel32.net>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/kernel/vdso32/gettimeofday.S | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> index a3951567118a..e7f8f9f1b3f4 100644
+> --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
+> +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> @@ -218,11 +218,11 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+>  	blr
+>  
+>  	/*
+> -	 * invalid clock
+> +	 * syscall fallback
+>  	 */
+>  99:
+> -	li	r3, EINVAL
+> -	crset	so
+> +	li	r0,__NR_clock_getres
+> +	sc
+>  	blr
+>    .cfi_endproc
+>  V_FUNCTION_END(__kernel_clock_getres)
+
+Thanks a lot for the fast answer. I have just tested this patch and I
+confirm it fixes the issue.
+
+Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+
+-- 
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                 http://www.aurel32.net
