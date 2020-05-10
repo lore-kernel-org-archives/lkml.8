@@ -2,64 +2,83 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF7C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6613AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA9D206D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5wRF39Vx"
+	by mail.kernel.org (Postfix) with ESMTP id 45CDD20725
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 14:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgEJOdt (ORCPT
+        id S1729113AbgEJOeI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 10:33:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51966 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbgEJOds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 10:33:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=DHKL4VuhUaAt2s9d6dYgP/J17Fuwz8VOM/wgyOYlkH4=; b=5wRF39VxQgpdsDZ6UBx0OIiEAo
-        Z+grIcnDhZ+tIVQ9KChnHL7j07IqnO2jFlhens9LrGd7sNpWX+pBZW0guEyMRNTAeSsyyj8/ujXT4
-        ZNjAn1cN9yS7uoB3lyIc4zP6oXEzUSQXq3hPfenLNacN9e5WO7FJHkllwEBcva8svr/c=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jXn1X-001i7x-42; Sun, 10 May 2020 16:33:47 +0200
-Date:   Sun, 10 May 2020 16:33:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 2/4] net: phy: broadcom: add bcm_phy_modify_exp()
-Message-ID: <20200510143347.GH362499@lunn.ch>
-References: <20200509223714.30855-1-michael@walle.cc>
- <20200509223714.30855-3-michael@walle.cc>
+        Sun, 10 May 2020 10:34:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27454 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728849AbgEJOeI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 10:34:08 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-46-WIrgiLb1OoGiMrDQB_cpGw-1; Sun, 10 May 2020 15:34:04 +0100
+X-MC-Unique: WIrgiLb1OoGiMrDQB_cpGw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 10 May 2020 15:34:04 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 10 May 2020 15:34:04 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Al Viro' <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCHES] uaccess simple access_ok() removals
+Thread-Topic: [PATCHES] uaccess simple access_ok() removals
+Thread-Index: AQHWJltq6fE30OjG4EOuI+zbUBs5vKihYCkw
+Date:   Sun, 10 May 2020 14:34:04 +0000
+Message-ID: <847a5160e4e64a82962dc1531cd52e11@AcuMS.aculab.com>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200509234124.GM23230@ZenIV.linux.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509223714.30855-3-michael@walle.cc>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 12:37:12AM +0200, Michael Walle wrote:
-> Add the convenience function to do a read-modify-write. This has the
-> additional benefit of saving one write to the selection register.
+From: Al Viro
+> Sent: 10 May 2020 00:41
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> 	One of the uaccess-related branches; this one is just the
+> cases when access_ok() calls are trivially pointless - the address
+> in question gets fed only to primitives that do access_ok() checks
+> themselves.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+There is also the check in rw_copy_check_uvector() that should
+always be replicated by the copy_to/from_user() in _copy_to/from_iter().
 
-    Andrew
+And the strange call to rw_copy_check_uvector() in mm/process_vm_access.c
+which carefully avoids the access_ok() check for the target process.
+I did a quick look, but failed to see an obvious check further
+down the call path.
+The code is doing a read/write from another process, not sure when it
+is used - not by gdb.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
