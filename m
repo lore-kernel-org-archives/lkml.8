@@ -2,64 +2,64 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B98C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2B2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F02320735
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A9920735
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 15:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axYthdpm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zb8f1kDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgEJPJ4 (ORCPT
+        id S1729282AbgEJPKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 11:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48612 "EHLO
+        Sun, 10 May 2020 11:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgEJPJ4 (ORCPT
+        with ESMTP id S1726104AbgEJPKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 11:09:56 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA7BC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:09:56 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k19so2810171pll.9
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:09:56 -0700 (PDT)
+        Sun, 10 May 2020 11:10:04 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F0FC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so3502547pfv.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 08:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7Bjyti1fp4fPGeNODg/HnWos4dXFnDDo/Z9/MiCh8vM=;
-        b=axYthdpmHb7vyeLTp6LQzKnCwhKJqcDaQqy1M2Pf0EQt72iOflV1Iuyc+wtEGZ0W4c
-         oUdfS52kRTjVyTplHnCScUQ3t77GMb/2FAm45fkVJBWBSC43ukdpzh6pLFb41EqVKJG2
-         9OTZaE9+/T3zUiKp7fGpHI1KKhx6KaKb2KB4jFtchQ4arBa0kOwFx3CT2GZUdKLzQuRu
-         hqow8XeHSsH/WjvulSLvDLhZQWgXn8pQ2R7QNUYwioLu3MoWh4cWH4ar9Wc0HQvHFLWM
-         pSn9QIZ9A06DPkHD0tgJ76d9/1LrSo+LmShQpcBTlhDhRYdBGhlMzcaqYg1vVbxHAPdM
-         eQ9w==
+        bh=Mz7kzAVMLVz/EHdToDqGn101jLvr6T6IM36BMJ7mrM4=;
+        b=Zb8f1kDKF7bcBAUYAk+PVAKw97EUwmqnLbmZdNFAWKjkugw/IA8u7A9E8IVBteIuGa
+         iplbkUNDyYvQfeMqH1eNrd9cgM7LRw0cZu+PGQRifc2V0bM9kGjH5JQk+hEMNkHqJPIP
+         0z0p9JEr9MCE1tSxi7+MFWmQ/4O14uMlr9Bv/iwlnRwkLLEd0YAR1aR2VlZWOlUHfmCB
+         V/jXtDUxmC3R9mK/8uZT6nL5jOkMIFqMR2kd8e/p+z1l4BfddNFja/FHdWbKu2IBuwgR
+         Jarbdx+2pl2K8K9JJFcf1fKi7/blicFXML06QwgEg7/B6g4+dxZtAkrXtBrTXZnolVNI
+         k2Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7Bjyti1fp4fPGeNODg/HnWos4dXFnDDo/Z9/MiCh8vM=;
-        b=mRgMm/qpk4JadIgGijfr26tBFAwMvesLoJmCSv6FrfTKKcsr7ELFjIPLmYAFZ2ivLR
-         dBrPFOlBl6F2/IzzKRYmWlXFk98D+yb79RsZR+3IrSonc12fENKB7jFbIupPE0PSpGTy
-         64lzpgyEpz5GlFvBlry0xVivCAENybga7FOtN1DLYcmQyutqreQgfdk2o5NYIBYomaG8
-         Tze0EhQFlvJOfkVDEUW1sN484TFZTGJUomoHCXd6x8EcWzHclQ/rg5ad2PC4xFAbbgVI
-         dW9BdqFIF+FRbbim16JwNrZBQexJGPHsmzHqzPaFYUd/k6VJ1OU2obqTOL9l84YwIhlG
-         jpQw==
-X-Gm-Message-State: AGi0PubBxiqxvtzL4PCeOYTElPxcnHNpk2cyz7bvtyxwi+olpK0fOtn3
-        XQkR2e3BiDyjGemyNOHbbbo=
-X-Google-Smtp-Source: APiQypK+cBHgklWmN4E0DChQA4Cqj26pkVdpONEvZlhgkYiOM5Kdvcq9Sk9ucc9nf1Q8lffwC3pXSQ==
-X-Received: by 2002:a17:90a:d17:: with SMTP id t23mr17574950pja.77.1589123395686;
-        Sun, 10 May 2020 08:09:55 -0700 (PDT)
+        bh=Mz7kzAVMLVz/EHdToDqGn101jLvr6T6IM36BMJ7mrM4=;
+        b=ZvHoHaT7fHB0rPkRa43uP57ckM0P75P11PCyaD6LzuquF69fsIcbFzmSnPNxl3dxOr
+         id37VfkCLOdtmzE3SDNf8XQ16hJ3gidmbQ76SARTNVfqPUbXEZLa8l0wUfr46rvvi5rL
+         g4vJzb2GeamjaFYGvQ6qLALgrhQWjWX4VirOs0UiL8het+HhnRxI3c8oFRmC0PIP8yDp
+         FgCMaGtgy+c5DomrtuLOoqV6ZhPNdjgaukdDSOnbZ9bunFu5vhBc5fpLWPwpze0rNpCZ
+         dEC4HUKK1Vk/Sx2obLjcpRkGscEaQiyfgh3Mzadt6XcVHYe7dYSC5e+wN7nl5FNIoqOP
+         u60A==
+X-Gm-Message-State: AGi0PuabgLEWFzPDB8XSXT8xYwy8kWjI7KavYghs+McomZDUE3cy1KS5
+        D83dYljqgmvGV+pxRl0S008=
+X-Google-Smtp-Source: APiQypI58RWUhFP3hzRKBoDysow/d1xpaaHkks8kSRRAdXeDphD9+AqreICyEuef1eI1VOpwe0oRbQ==
+X-Received: by 2002:a65:5641:: with SMTP id m1mr10371834pgs.18.1589123403495;
+        Sun, 10 May 2020 08:10:03 -0700 (PDT)
 Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id v7sm6870909pfm.146.2020.05.10.08.09.44
+        by smtp.gmail.com with ESMTPSA id v7sm6870909pfm.146.2020.05.10.08.09.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 08:09:54 -0700 (PDT)
+        Sun, 10 May 2020 08:10:02 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -68,9 +68,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 14/19] perf ftrace: add option -P/--no-pager to disable pager
-Date:   Sun, 10 May 2020 23:06:23 +0800
-Message-Id: <20200510150628.16610-15-changbin.du@gmail.com>
+Subject: [PATCH 15/19] perf ftrace: show trace column header
+Date:   Sun, 10 May 2020 23:06:24 +0800
+Message-Id: <20200510150628.16610-16-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200510150628.16610-1-changbin.du@gmail.com>
 References: <20200510150628.16610-1-changbin.du@gmail.com>
@@ -81,84 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes we want perf displays trace immediately. So this adds an option
-'-P/--no-pager' to disable pager if needed.
+This makes perf-ftrace display column header before printing trace.
+
+$ sudo perf ftrace
+\# tracer: function
+\#
+\# entries-in-buffer/entries-written: 0/0   #P:8
+\#
+\#           TASK-PID     CPU#   TIMESTAMP  FUNCTION
+\#              | |         |       |         |
+           <...>-9246  [006]  10726.262760: mutex_unlock <-rb_simple_write
+           <...>-9246  [006]  10726.262764: __fsnotify_parent <-vfs_write
+           <...>-9246  [006]  10726.262765: fsnotify <-vfs_write
+           <...>-9246  [006]  10726.262766: __sb_end_write <-vfs_write
+           <...>-9246  [006]  10726.262767: fpregs_assert_state_consistent <-do_syscall_64
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- tools/perf/builtin-ftrace.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/builtin-ftrace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index a93fbdac6aa4..64c22f367ba2 100644
+index 64c22f367ba2..0b39b6a88026 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -48,6 +48,7 @@ struct perf_ftrace {
- 	unsigned		tracing_thresh;
- 	bool			trace_children;
- 	unsigned		buffer_size_kb;
-+	bool			no_pager;
- };
+@@ -614,6 +614,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+ 	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
+ 	pollfd.fd = trace_fd;
  
- struct filter_entry {
-@@ -56,6 +57,7 @@ struct filter_entry {
- };
- 
- static volatile int workload_exec_errno;
-+static bool interrupted;
- static bool done;
- 
- static void sig_handler(int sig __maybe_unused)
-@@ -63,6 +65,12 @@ static void sig_handler(int sig __maybe_unused)
- 	done = true;
- }
- 
-+static void sig_handler_int(int sig __maybe_unused)
-+{
-+	sig_handler(sig);
-+	interrupted = 1;
-+}
++	/* display column headers */
++	read_tracing_file_to_stdout("trace");
 +
- /*
-  * perf_evlist__prepare_workload will send a SIGUSR1 if the fork fails, since
-  * we asked by setting its exec_error to the function below,
-@@ -492,7 +500,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		return -1;
- 	}
- 
--	signal(SIGINT, sig_handler);
-+	signal(SIGINT, sig_handler_int);
- 	signal(SIGUSR1, sig_handler);
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGPIPE, sig_handler);
-@@ -585,7 +593,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 		goto out_reset;
- 	}
- 
--	setup_pager();
-+	if (!ftrace->no_pager)
-+		setup_pager();
- 
- 	trace_file = get_tracing_file("trace_pipe");
- 	if (!trace_file) {
-@@ -636,7 +645,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 	}
- 
- 	/* read remaining buffer contents */
--	while (true) {
-+	while (true && !interrupted) {
- 		int n = read(trace_fd, buf, sizeof(buf));
- 		if (n <= 0)
- 			break;
-@@ -731,6 +740,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		    "Trace children processes"),
- 	OPT_UINTEGER('b', "buffer-size", &ftrace.buffer_size_kb,
- 		     "size of per cpu buffer in kb"),
-+	OPT_BOOLEAN('P', "no-pager", &ftrace.no_pager,
-+		    "Do not use pager"),
- 	OPT_END()
- 	};
- 
+ 	if (write_tracing_file("tracing_on", "1") < 0) {
+ 		pr_err("can't enable tracing\n");
+ 		goto out_close_fd;
 -- 
 2.25.1
 
