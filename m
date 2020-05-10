@@ -2,170 +2,123 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF3C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4452C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85BC220731
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWpEgB5X"
+	by mail.kernel.org (Postfix) with ESMTP id BBB4521973
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 07:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589095983;
+	bh=OhPzK8XvsgbaPEDXqL+qrrB3wHcSJuyDPUOAY9QGoSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iNChTYsBmkDP9WU1G93VUyiauFOFBTO+lHDuo0kbMEz4t3WTwRC+/S4Z4xmgkXJ9N
+	 rQ5Dbn4Aa0gVe8BCBP1mgp6BHMovP6GKOQmiVF+foJeAgjwjR1pNkypyiYNeYVA5Z6
+	 XQJK13nmY1gc/EXrypZ2adC7wLGY/6k3lzePMHXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEJH26 (ORCPT
+        id S1728464AbgEJHdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 03:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgEJH25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 03:28:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA24C061A0C;
-        Sun, 10 May 2020 00:28:57 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id a4so2996373pgc.0;
-        Sun, 10 May 2020 00:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=thdeKBpE5waOs0Cn1rN+DeVJFAkWJi3N1KGywh2VHl0=;
-        b=JWpEgB5X6znJ6reYx5p61WDTcKSLGCGgC+zhzPhsRixngH9n+2E6FrHLG580PmWpiC
-         0Y6Uvzgo1Ry+Oler/CU7CFdynHiUkuTt5qyKtYKqnWJawu/MgDiNNVTEmxHALjHYQCQW
-         guW9GhiyV/O6b062jL9NeAhG7e0mO5dNU3O/so5KgX8OsLhhKHhy75w03oX0ss/GKRqx
-         7lp19JqX08qWsB2RjH2zqQoXP3l79AmVmS0bMx8C5cxpkcfQRUP/wPGZqCoqe3Qk1Hcj
-         euhkJIRKmE/okxVzJbzSvSMKD6XIZASoEC+sxUXoCAwCTP5mWYkrZIvt6dMnFFJLuGD4
-         TqzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=thdeKBpE5waOs0Cn1rN+DeVJFAkWJi3N1KGywh2VHl0=;
-        b=kRdTj8txEdzxfRBs7Sj0EgOFOBQ0J73zTNG8I+8aw5LAeOi4B46r7yhucayYL+3V7L
-         le8I/vCWeOn7slBcr7DCe2I532w6afjtmltyS4BWrPOeUVl+PDoz0oerBjtbhsGfYHp6
-         Mo2CdNlhH/uSNQ7LHYTYhkGeDU0RNAlzGZGROJgR4XCF90bnZ6bGMoEVm1WL4SQwGf5P
-         +LF+K40KKJ67RLJ0tjNFdPHLTMd5q4GTCTfE5m6AxBKWwbpycL9Sg85hIBEftDWgYXEn
-         1/3Drvpl5rb9I5pn1M7atYWB4wOHmcXvCgmc4RZxnVOLuU/PxGzzPzZFziYITG4PaIDo
-         14hA==
-X-Gm-Message-State: AGi0PuY0JC9LMhiwLwrOelbTnmY3C1RJkfzpYlUPvccyCpCcfcanzoLu
-        8x5opPruvOLRl8eZaWcmckM=
-X-Google-Smtp-Source: APiQypJ3TmYsuUjSVjRzx0ym+tma6Gda8lh1685JEq+r0WAvQyz1dI0V0afS4IiGcUbXBIPdL2Dt/A==
-X-Received: by 2002:a63:c842:: with SMTP id l2mr9647026pgi.221.1589095737328;
-        Sun, 10 May 2020 00:28:57 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id u188sm6227665pfu.33.2020.05.10.00.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 May 2020 00:28:56 -0700 (PDT)
-Subject: [PATCH 3/3] Documentation/litmus-tests: Merge atomic's README into
- top-level one
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org,
-        Akira Yokosawa <akiyks@gmail.com>
-References: <20200323015735.236279-1-joel@joelfernandes.org>
- <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
- <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <ee593aed-018b-7bd9-d841-72b1d038bd27@gmail.com>
-Date:   Sun, 10 May 2020 16:28:52 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 10 May 2020 03:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgEJHdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 03:33:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7DA420801;
+        Sun, 10 May 2020 07:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589095981;
+        bh=OhPzK8XvsgbaPEDXqL+qrrB3wHcSJuyDPUOAY9QGoSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AwPkx+XOlkgPmm1u/VxrKPB2XtBOo7KThsn7W3xTHMSasLGE2cUAQ6R7m2bOvcs+g
+         NpEwM5UT2g7roXeQDMgvv7Zh2rczQqJ3uHX8Yo+Lv+Iy6xoMliTQFRBFlnpBE8t/jM
+         HafNTlreBYEmfjI69z0B7znDajewadxfgt2oDtHw=
+Date:   Sun, 10 May 2020 09:32:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dio Putra <dioput12@gmail.com>
+Cc:     oneukum@suse.com, linux-usb@vger.kernel.org,
+        linux-scsi@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org
+Subject: Re: USB Attached SCSI breakage due no udev involvement
+Message-ID: <20200510073258.GA3474912@kroah.com>
+References: <CAOyCV0zW_20Jq6Rrb9=fhZQAHeqMMs_oHBJdTVt8Nqje0Zoeig@mail.gmail.com>
+ <20200510054717.GA3365021@kroah.com>
+ <1f9c0b30-f440-de43-366f-28ccba6a22e2@gmail.com>
+ <20200510065416.GA3434442@kroah.com>
+ <e409bbfe-c446-2ba3-423d-c6e198abef33@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e409bbfe-c446-2ba3-423d-c6e198abef33@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 1aa2c25f0ad16382a5bc597cdbdcc817645e01cd Mon Sep 17 00:00:00 2001
-From: Akira Yokosawa <akiyks@gmail.com>
-Date: Sun, 10 May 2020 15:12:57 +0900
-Subject: [PATCH 3/3] Documentation/litmus-tests: Merge atomic's README into top-level one
+On Sun, May 10, 2020 at 02:10:04PM +0700, Dio Putra wrote:
+> On 5/10/20 1:54 PM, Greg KH wrote:
+> > On Sun, May 10, 2020 at 01:48:24PM +0700, Dio Putra wrote:
+> >> On 5/10/20 12:47 PM, Greg KH wrote:
+> >>> On Sun, May 10, 2020 at 09:55:57AM +0700, Dio Putra wrote:
+> >>>> Hi, it's first time for me to report user-space breakage in here, so
+> >>>> i'm begging your pardon.
+> >>>>
+> >>>> I want to report that Linux 5.4 breaking my USB mount workflow due
+> >>>> udevadm monitor report here (I'm using vanilla kernel 5.4.39 on
+> >>>> Slackware64 Current and vanilla kernel 4.4.221 on Slackware64 14.2):
+> >>>
+> >>> <snip>
+> >>>
+> >>> Sorry, but what actually changed that you can see in the logs?
+> >> Sorry, what do you mean? The dmesg log or the kernel changelogs?
+> > 
+> > Either, your message made them pretty impossible to compare with all of
+> > the line-wrapping :(
+> > 
+> I'm so sorry for first message mess, because that message has been sent by
+> Gmail Website. Can I send my logs as attachment? I try to convenient everyone
+> here. ( FYI, I just switched to Thunderbird with these settings:
+> https://www.kernel.org/doc/html/v4.12/process/email-clients.html#thunderbird-gui ) 
 
-Where Documentation/litmus-tests/README lists RCU litmus tests,
-Documentation/litmus-tests/atomic/README lists atomic litmus tests.
-For symmetry, merge the latter into former, with some context
-adjustment in the introduction.
+Sure, attachments work, but better yet, if you can show the difference
+in a few lines that is much nicer than having to dig through large
+numbers of log files.
 
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
----
- Documentation/litmus-tests/README        | 19 +++++++++++++++++++
- Documentation/litmus-tests/atomic/README | 16 ----------------
- 2 files changed, 19 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/litmus-tests/atomic/README
+> >>> What functionality broke?  What used to work that no longer does work?
+> >>>
+> >> Yes, it supposed that just work and kernel could talk with udev, not just handled by the kernel.
+> > 
+> > I don't understand, what functionality changed?  What exactly used to
+> > work that no longer does?
+> linux-5.4 has been never called the udev dependencies whereas
+> linux-4.4 will call any udev dependencies if necessary, that's the problem.
 
-diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-index c4307ea9f996..ac0b270b456c 100644
---- a/Documentation/litmus-tests/README
-+++ b/Documentation/litmus-tests/README
-@@ -2,6 +2,25 @@
- LITMUS TESTS
- ============
- 
-+Each subdirectory contains litmus tests that are typical to describe the
-+semantics of respective kernel APIs.
-+For more information about how to "run" a litmus test or how to generate
-+a kernel test module based on a litmus test, please see
-+tools/memory-model/README.
-+
-+
-+atomic (/atomic derectory)
-+--------------------------
-+
-+Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
-+    Test that an atomic RMW followed by a smp_mb__after_atomic() is
-+    stronger than a normal acquire: both the read and write parts of
-+    the RMW are ordered before the subsequential memory accesses.
-+
-+Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-+    Test that atomic_set() cannot break the atomicity of atomic RMWs.
-+
-+
- RCU (/rcu directory)
- --------------------
- 
-diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
-deleted file mode 100644
-index 714cf93816ea..000000000000
---- a/Documentation/litmus-tests/atomic/README
-+++ /dev/null
-@@ -1,16 +0,0 @@
--This directory contains litmus tests that are typical to describe the semantics
--of our atomic APIs. For more information about how to "run" a litmus test or
--how to generate a kernel test module based on a litmus test, please see
--tools/memory-model/README.
--
--============
--LITMUS TESTS
--============
--
--Atomic-RMW+mb__after_atomic-is-stronger-than-acquire
--	Test that an atomic RMW followed by a smp_mb__after_atomic() is
--	stronger than a normal acquire: both the read and write parts of
--	the RMW are ordered before the subsequential memory accesses.
--
--Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
--	Test that atomic_set() cannot break the atomicity of atomic RMWs.
--- 
-2.17.1
+I do not understand what exactly you mean by "call udev dependencies".
 
+udev is used to create symlinks and set user/group permissions on device
+nodes in /dev/ which is created by devtmpfs.  What exactly is not
+happening in your /dev/ with the move to a newer kernel?
 
+> > Did you change anything else other than the kernel on your system?  Did
+> > you change to a newer version of udev/systemd or anything else?
+> > 
+> I'm using eudev-master from their official mirror github:
+> https://github.com/gentoo/eudev
+
+Have you contacted the eudev developers to see if something different
+needs to be set in your kernel when moving 4 years in kernel development
+forward?  Are you sure you have all the correct config options enabled?
+
+Why such a huge leap forward all at once, how about going from 4.4.y to
+4.9.y and then 4.14.y and then 5.4.y?  That might help narrow things
+down a bit easier.
+
+thanks,
+
+greg k-h
