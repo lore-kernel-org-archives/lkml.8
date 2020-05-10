@@ -2,140 +2,99 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7227C38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A449C54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0AC420644
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0ED2495B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 19:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0wpKxNC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AUzjo9sL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgEJTxl (ORCPT
+        id S1729126AbgEJT6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 15:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35980 "EHLO
+        Sun, 10 May 2020 15:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729032AbgEJTxk (ORCPT
+        by vger.kernel.org with ESMTP id S1728071AbgEJT6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 15:53:40 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F50C061A0C;
-        Sun, 10 May 2020 12:53:39 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x73so5694093lfa.2;
-        Sun, 10 May 2020 12:53:39 -0700 (PDT)
+        Sun, 10 May 2020 15:58:30 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056A1C061A0C;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id f23so2862959pgj.4;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q79Xf6eTKvurdgU6V2k+s2PCNIvRJ2YWWmSItDSdnJE=;
-        b=n0wpKxNCEllwuHMANjS2odIfDIwswRNTpip73RE6/Okx79PJZ7t6lHoAq3IrvIjHto
-         2/dXe0Euk3SKrxZ5SQGH8AWhsSdQbtm3E4IJ9o50DlOWrN18TdH7A7lMJ3WNqQa334xE
-         q4H4AqsMgq6+JdUDBsdZKOf3Y4TgwTL6HdqPbL6OHtgKZY7saN3m6WjfO3jbByBPtuYi
-         CIoor349Bv3to/dFnfrA0RXkJ8k48n8wwk/IPDKr6MdhRsA0Oat77Rxv//LdE/S39WSO
-         zFJDKQEfsWwlSsiFYvnvrMJPWlVQPYyw48kzQGnDU36QOwnZNc+79AsdLfjpuCxkU9Bo
-         s7fg==
+        h=from:to:cc:subject:date:message-id;
+        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
+        b=AUzjo9sLPuAvRnXdzPT3Kc8NUOsQm0jfrAF2blkwHrYFPsROHcqXpscXzY8hV4qEMz
+         LpLZXkSZeY/9Owsl0ForKL4OFUhfLlR76RI6fXK1tFpU9j4F6nkvqZ13XRPmNAIEf2my
+         dKhvYfa43cJZQHGmKS5f5n65SwkGFJWgxqA1LKrRFhWGdFDz8zcOVGa0M0/9ZguD8YvL
+         kW6bPJtRgvIyxTzKJD+Xv0H89DXWsPw/HHxrLedaD2VIgmBIME5gIjEsK4pZeSYv0OTK
+         iE38BK0zmG0sZpOym6T4S5W+K+s5lKPmmPf1IWkkjO/AQXUWTaHjAvl9DSd8MCDWbacH
+         sLxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q79Xf6eTKvurdgU6V2k+s2PCNIvRJ2YWWmSItDSdnJE=;
-        b=RNnfb3VaLIJcFdaLKnAHY19wh+uXkdDIvTWOILeO36zZhbRELpPBagYs4vcHyURlAK
-         fweJvzsWXBxQlsSgO3ydf+m6IAi4Yfegtlpzd6hQtTmTrMyTFcM/4fTavv6np8W4nlJP
-         eSOJNKss2eSJxdE40cw2PmTUbLPRnluPZIpVR5X2iOy5FXRA8k5Vg2V0wa4EkYEAKx7i
-         FWFzv7d450fK2hbQuwdFPuFDqmGd/dpYpBhPy4UhiTIXsY7XYsyuv/gJYy6ZSy+6JmEd
-         sKerS+kK2rt3ABslWy6zAXJp0Ohsqvz0ARfHbE2pIXhPnNgbdYBBeSvSDrF+WjXw5XL5
-         Ubxg==
-X-Gm-Message-State: AOAM533Y0T901FM5/ah47YnV8Gpy+y6veQl3uxqMkj8TbKOswGEPZLUK
-        5+dmEgeI7iCauphNoNeXAkDtwTktH9jdXPxLFHabZcxjshAS
-X-Google-Smtp-Source: ABdhPJynTLpEeF9JMTEZzza9vTF0/XFeTXwvXFn+eNjLjoipKVnNd0CzmaStb3l/y0E6poRK7olLeG8lTEyMJobLzuY=
-X-Received: by 2002:ac2:57cd:: with SMTP id k13mr8573594lfo.104.1589140418405;
- Sun, 10 May 2020 12:53:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADa2P2UP1AtEmQYtyqUFKVNz8Rxii+-Zut3ibc5pMYnQB90-zw@mail.gmail.com>
- <32637993-b73f-c2cb-6823-590c1638b5a6@infradead.org> <CADa2P2UTMwwYPFLW+UM5FNBL+_8Pi_Am+saa+Y2ywpi0jPDvWw@mail.gmail.com>
- <ff3401cc-e2c1-f510-c971-2151e9d540fe@infradead.org> <CADa2P2VP6-aLgTqiTDpBjU+gnzT0dPT9SqGu9GY8c+OZ_xhfcw@mail.gmail.com>
- <a8c709ff-67df-09b6-25ff-a4b46a5a2a79@infradead.org>
-In-Reply-To: <a8c709ff-67df-09b6-25ff-a4b46a5a2a79@infradead.org>
-From:   Mahmood Naderan <mahmood.nt@gmail.com>
-Date:   Mon, 11 May 2020 00:23:27 +0430
-Message-ID: <CADa2P2WqYxUjZWMYw5aq_5e8XLf8zRCnTsMaF98sFg8==F+WNw@mail.gmail.com>
-Subject: Re: Using a custom LDFLAG for all objects and binaries
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uZKTxfpf4WQr90XnNhuD3ishpnxGhqgOmhIo+H3Laqk=;
+        b=Y0xFsx4ZmuXyQNhA+n7DT/73hWWpGMMmYY2KYcGr2z9BJDY/y+5a+TRJCidjhWFsQi
+         exinOYgNRM93IlevkAbFBgxGzxg5JI0A2wFbbHhIPNjyQm6Eedo3xjxSWOSm4HfAvpCh
+         OwSg/+YbSeG7zXvYM5394zm+ku7mIvprmDRW8CyQhLqtJ6WYyB5yxB25a2vIsa6wJxzq
+         LuuUGZoZHJzjwZ5W/QURIiuQ1346YuvRRYEeLfES5dYXksEWhg1zv/0sM6f0cZMmXE2q
+         i6W96TEoxjKfsnCUezBRtfKIYhIfCyuE4Us+9gOmhNasKlLQtOfGjzfQzfX7QYIPd07S
+         48UQ==
+X-Gm-Message-State: AOAM532LQXDbv+3eJtXpvcGcmbu7uA7R+IGSO/eBgtd0NopdrCy3cHAy
+        KDfhFGgvYKx2Ae1iqta87XI=
+X-Google-Smtp-Source: ABdhPJw467vS/5Fwn2AHn/9SElCumBSYBKYSMDLeemhy0DbS1zmRMM9peKvlD8YgUaRsNutWVKj56Q==
+X-Received: by 2002:a63:3342:: with SMTP id z63mr1479172pgz.49.1589140709345;
+        Sun, 10 May 2020 12:58:29 -0700 (PDT)
+Received: from pr0gr4m-ubuntu.localdomain ([1.240.193.107])
+        by smtp.googlemail.com with ESMTPSA id u9sm7320289pfn.197.2020.05.10.12.58.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 May 2020 12:58:28 -0700 (PDT)
+From:   l4stpr0gr4m@gmail.com
+To:     trivial@kernel.org
+Cc:     nsaenzjulienne@suse.de, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kangmin Park <l4stpr0gr4m@gmail.com>
+Subject: [PATCH] docs/devicetree/i2c: brcm,bcm2835: fix node id in example
+Date:   Mon, 11 May 2020 04:58:21 +0900
+Message-Id: <1589140701-7516-1-git-send-email-l4stpr0gr4m@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->OK, I suggest that you reorder the options like so:
->
->        KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE) --emit-relocs
+From: Kangmin Park <l4stpr0gr4m@gmail.com>
 
+This is a trivial patch to fix node id to match the reg in example.
 
-I did that. After
+Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
+---
+ Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-$ make V=1
-$ sudo make modules_install V=1
-$ sudo make install
+diff --git a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+index c9a6587..a8a35df 100644
+--- a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+@@ -13,7 +13,7 @@ Recommended properties:
+ 
+ Example:
+ 
+-i2c@20205000 {
++i2c@7e205000 {
+ 	compatible = "brcm,bcm2835-i2c";
+ 	reg = <0x7e205000 0x1000>;
+ 	interrupts = <2 21>;
+-- 
+2.7.4
 
-I grepped for "emit-relocs" in the log and saw many instances such as
-
-  gcc -Wp,-MD,drivers/rtc/.rtc-ds1305.o.d  -nostdinc -isystem
-/usr/lib/gcc/x86_64-linux-gnu/5/include -I./arch/x86/include
--I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi
--I./arch/x86/include/generated/uapi -I./include/uapi
--I./include/generated/uapi -include ./include/linux/kconfig.h -include
-./include/linux/compiler_types.h -D__KERNEL__ -Wall -Wundef
--Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common
--fshort-wchar -Werror-implicit-function-declaration
--Wno-format-security -std=gnu89 -fno-PIE -mno-sse -mno-mmx -mno-sse2
--mno-3dnow -mno-avx -m64 -falign-jumps=1 -falign-loops=1 -mno-80387
--mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup
--mtune=generic -mno-red-zone -mcmodel=kernel -funit-at-a-time
--DCONFIG_X86_X32_ABI -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1
--DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_FXSAVEQ=1 -DCONFIG_AS_SSSE3=1
--DCONFIG_AS_CRC32=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1
--DCONFIG_AS_AVX512=1 -DCONFIG_AS_SHA1_NI=1 -DCONFIG_AS_SHA256_NI=1
--pipe -Wno-sign-compare -fno-asynchronous-unwind-tables
--mindirect-branch=thunk-extern -mindirect-branch-register
--fno-jump-tables -fno-delete-null-pointer-checks -O2
---param=allow-store-data-races=0 -Wframe-larger-than=1024
--fstack-protector-strong -Wno-unused-but-set-variable
--fno-omit-frame-pointer -fno-optimize-sibling-calls
--fno-var-tracking-assignments -g -gdwarf-4 -pg -mrecord-mcount
--mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement
--Wno-pointer-sign -fno-strict-overflow -fno-merge-all-constants
--fmerge-constants -fno-stack-check -fconserve-stack
--Werror=implicit-int -Werror=strict-prototypes -Werror=date-time
--Werror=incompatible-pointer-types -Werror=designated-init  -DMODULE
--DKBUILD_BASENAME='"rtc_ds1305"' -DKBUILD_MODNAME='"rtc_ds1305"' -c -o
-drivers/rtc/rtc-ds1305.o drivers/rtc/rtc-ds1305.c
-   ./tools/objtool/objtool check  --module --retpoline
-"drivers/scsi/aacraid/dpcsup.o";
-
-OR
-
-  ld -r -m elf_x86_64 --emit-relocs  -z max-page-size=0x200000 -T
-./scripts/module-common.lds  --build-id  -o
-sound/usb/line6/snd-usb-line6.ko sound/usb/line6/snd-usb-line6.o
-sound/usb/line6/snd-usb-line6.mod.o ;  true
-
-
-
-I guess that all kernel modules are now use --emit-relocs.
-I would like to be sure that libc and those files related to syscalls
-are also using that.
-
-I grepped for "libc.so" but it seems that there is no such match.
-Did I miss something?
-
-
-Regards,
-Mahmood
