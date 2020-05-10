@@ -2,232 +2,178 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9859C35280
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF0AC35280
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49AA20735
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D05207DD
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 05:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rmYgUAkv"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="M4jS4J3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgEJFSo (ORCPT
+        id S1726630AbgEJFbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 01:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgEJFSo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 01:18:44 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8FDC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 22:18:44 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id l1so1664104qtp.6
-        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 22:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/lcyVkFvW6Q2XtFR89qoX9NO7slQxZQ5eBaDk/SNENo=;
-        b=rmYgUAkvZpyFKZcqeGRIyvvBHeg1jJroQIIofbBodDDku0mcvJo/BQqa8SHRnYFJaI
-         iqRx162shMpOm75JtRUCjAztD6+DXrguzJeHeiY0iDxuUsed8YT2MBAQ/dfri9YyfUp8
-         6bnqunS5v3p+wvBbGonBj8t9Z8x3KvRuUgMi8iC2VSOtO5C6jXY36T5uOUnPdGbG/1ZL
-         1X6XVaJ89ce89/aFmh9J7wCcKb+tPmp5rcuzf/s8MkrvYGJOaHuBeUmI9Q8OCZRdbTy4
-         Xmc6apEkT+68fWOBPlI1a52fi1BLx2dAZ1yz5z5Lo8NpgrnK32By/KQX+EBLeJ1rx1Va
-         RFjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/lcyVkFvW6Q2XtFR89qoX9NO7slQxZQ5eBaDk/SNENo=;
-        b=qle3qy/cFoXnVTYibTF/vZ8I5XyDJg0ltIrxZwY6paDpxh7kpCK9DjpJN4BB8U2Tbb
-         qEP+s3t7F2O/Ju91uewbu0N+hnsxMFezCHdNG6KWjHa64hpcWtgb3LMQECbhDKtUlzyL
-         +yzBxLfqmAYDFv7eq3btdIf46wtRmg6oFDGeg61lwolu0m7fNMvYX2XPMpw/OH9QZZs6
-         oGxFYWnifdUhqNALML920yw1jwYgf8cPLNbKUv652YOQSLYFvUOB/twKLhHuFxZUUT+D
-         2HPMUJ3uPtD7Mmud1Eja5g61VSaWXcrmnkHKLVQFdEL8yLEvfYiTdOTwp25h/QZh1MXC
-         k76Q==
-X-Gm-Message-State: AGi0PuaZmtwwPS10c7/vmW5FX55//0UnM0wm5n4jzUo5R4EMbJDeUdAx
-        MqerxwwkruPWe4B6D5uRwpW3ng==
-X-Google-Smtp-Source: APiQypK5nCri8dvQyy2Srb2XSRl+X2gaOjzChXlYZVh4WI3iYi/fXLwXzIeA9OlCUfW0kVaa22XLVw==
-X-Received: by 2002:ac8:4987:: with SMTP id f7mr10426013qtq.160.1589087923115;
-        Sat, 09 May 2020 22:18:43 -0700 (PDT)
-Received: from ovpn-112-80.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p31sm6067732qtf.11.2020.05.09.22.18.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 09 May 2020 22:18:42 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org, aik@ozlabs.ru,
-        paulmck@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] powerpc/kvm/book3s64/vio: fix some RCU-list locks
-Date:   Sun, 10 May 2020 01:18:34 -0400
-Message-Id: <20200510051834.2011-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Sun, 10 May 2020 01:31:21 -0400
+Received: from mout.web.de ([212.227.17.12]:57663 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbgEJFbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 01:31:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589088661;
+        bh=96GY/UNx9ngCinyDKUn9oPFbRbBN/SEtilAox3on5Q8=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=M4jS4J3Bqpnldz42avDZNvbEvjnoYEgEvx8zCPJihXAmfOcn+wGNwoO4Pd9A+jXrb
+         IsWOGYmlsd3CjfLBGqhLfc0PgvZkonLDH4vJFaVOWTp44oA28v92I+pxtiNsNzdoVh
+         qh1X2I8fM9rVfw3Jnrk8Xlj8qAWy3DOc9V28omlk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.31.72]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Ls8xf-1j7VdK2SMx-013ygD; Sun, 10
+ May 2020 07:31:01 +0200
+Subject: Re: [PATCH] net/sonic: Fix some resource leaks in error handling
+ paths
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
+ <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <9d279f21-6172-5318-4e29-061277e82157@web.de>
+Date:   Sun, 10 May 2020 07:30:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MPKjH7w8P/U0VKpu8aODQF7SvIuL/VjgaA6h/uZv0RjvAXO90Kw
+ kg7DJ7cO1IAaopvm0Msc63mBrTPxEmfKzSUHrGe4ROkIFiG46eDa39SqEHjeHGHpkF7Sx6+
+ ftJObLMCzoWzEU+ukuYNQQ8HiKp70x99L/o+rVMaMO4b1jxt9au9SAeQkiCNUXGU5vpQyXd
+ mCJakdh7PLIlVrIdlY9/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jBoywigv4Nw=:d0izsBG5TbiOco44VZz1yt
+ C6PvU45bkpe9UqckFRsSz5eU4lOXHKcPWtEMQlJ8J7VzxOWEHHnfRXW0Xkv4IB5Kkxjefd94y
+ e6BJvDyzZ4w/xOFqkSD9wJbMwUdCF9ZaN2Nu7T1B1lt1zAJzYxn/bZ3B0IIYotcKjVWYKguTx
+ hIrws8zrrwb055uKkssXRIG7ldH+A3T+mvOKgbNv0cmwnXRcIqvO6rliUK1bdUqsPIaDMilzH
+ FdPlWtbxBBvvZVV3jJRCcvWpt1v4e2G5R/ecN+zOpPbG/flyGcTPwFqBpR0BaeSXltYFGkdFA
+ bKov0cNTvJm3NYT59nsZhyLqb2WI+3/VshSYQHNPlYkns7mRVGY1RxQOBVt/9gDAam+KNYdv/
+ G7vGLd69tumjUVU4WFQViWWtBDiyjXNkeIqz5ptMk4rAk1F9sg9ihevwkx0xbAiHqAnSp5fjA
+ tp2N8zoIxtxgnH0u/JS3840fj+uY/ggzHdSK+GKmeUEZhlyyDVciDoRP8zWvGw/PxFitGEyyK
+ 4llz8mncQtQbDC5oujem+KywSdvZ3FKmtvNPTjeu8PE87ZCg/wiFmhTfFv07el8pfchM51pGA
+ gazCip0oYbAmb3DvGuDYMPo+oT2vkl9o9J2AQL8GRNrCseMMgAViGpwdhRKQ1xGMel26hOjBZ
+ 71+xXorCl+YWKeGWe+swRp95uJR4VE85iahrKivYMG/egGD9C6XNWW1nD+yFkdPlbAY0cSWtN
+ y7QrtQazOHE39xnFd0MtFGK5fpY/+TLHe8dCPj0CP0dquaHQeOf2GwiTbUj7IGRnLzvsw1h8Q
+ y0ZV3vgl4q7oX2TQ+1PIX1Fj021i+w3Ft6hUCQjgWFXbcOyn9a70T+E5Yckvk0EnSjPn4qDgS
+ WIphA4fBmW+jkt12cs61YPCuOv8pC6i1Mz4AsWp6YSCO0qh9wUK56UzFRTE0nQUOZJnnVU4xK
+ weYXK6EuSCE9ugEYN2BFS01anq825jbZlsl0u0XflCC9C+Rwd+e3uPM1y9XEOPIYN5GZEUjiq
+ Zt5wymohvlgvxdsi7IT5Rlyd03iyoTpSDxJFfmEgoZOXiO6LLLbO/t8AVVudu7PLDPR6h04fi
+ 5WTX1J9z8Z83wE5QJFf3IaOK9wfwWVRd3NsiJU0RuE/0ildPL+ql5TE1iwaRep4a8bssFu8/e
+ k4mqMeDo41hdHZPlWe08MC5HjFPbeTWjPdC/PGvVHYi8dzi3kxQjcszoLNjv18CUmWC8VwAyG
+ hVsoW+5rXdShKxe9D
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unsafe to traverse kvm->arch.spapr_tce_tables and
-stt->iommu_tables without the RCU read lock held. Also, add
-cond_resched_rcu() in places with the RCU read lock held that could take
-a while to finish.
+> Is there a way to add a Fixes tag that would not invoke the -stable
+> process? And was that what you had in mind?
 
- arch/powerpc/kvm/book3s_64_vio.c:76 RCU-list traversed in non-reader section!!
+Christophe Jaillet proposed to complete the exception handling also for th=
+is
+function implementation.
+I find that such a software correction is qualified for this tag.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3De99332e7b4cda6e60f5b5916cf=
+9943a79dbef902#n183
 
- other info that might help us debug this:
+Corresponding consequences can vary then according to the change managemen=
+t
+of involved developers.
 
- rcu_scheduler_active = 2, debug_locks = 1
- no locks held by qemu-kvm/4265.
 
- stack backtrace:
- CPU: 96 PID: 4265 Comm: qemu-kvm Not tainted 5.7.0-rc4-next-20200508+ #2
- Call Trace:
- [c000201a8690f720] [c000000000715948] dump_stack+0xfc/0x174 (unreliable)
- [c000201a8690f770] [c0000000001d9470] lockdep_rcu_suspicious+0x140/0x164
- [c000201a8690f7f0] [c008000010b9fb48] kvm_spapr_tce_release_iommu_group+0x1f0/0x220 [kvm]
- [c000201a8690f870] [c008000010b8462c] kvm_spapr_tce_release_vfio_group+0x54/0xb0 [kvm]
- [c000201a8690f8a0] [c008000010b84710] kvm_vfio_destroy+0x88/0x140 [kvm]
- [c000201a8690f8f0] [c008000010b7d488] kvm_put_kvm+0x370/0x600 [kvm]
- [c000201a8690f990] [c008000010b7e3c0] kvm_vm_release+0x38/0x60 [kvm]
- [c000201a8690f9c0] [c0000000005223f4] __fput+0x124/0x330
- [c000201a8690fa20] [c000000000151cd8] task_work_run+0xb8/0x130
- [c000201a8690fa70] [c0000000001197e8] do_exit+0x4e8/0xfa0
- [c000201a8690fb70] [c00000000011a374] do_group_exit+0x64/0xd0
- [c000201a8690fbb0] [c000000000132c90] get_signal+0x1f0/0x1200
- [c000201a8690fcc0] [c000000000020690] do_notify_resume+0x130/0x3c0
- [c000201a8690fda0] [c000000000038d64] syscall_exit_prepare+0x1a4/0x280
- [c000201a8690fe20] [c00000000000c8f8] system_call_common+0xf8/0x278
+> I think 'undo_probe1' is both descriptive and consistent with commit
+> 10e3cc180e64 ("net/sonic: Fix a resource leak in an error handling path =
+in
+> 'jazz_sonic_probe()'").
 
- ====
- arch/powerpc/kvm/book3s_64_vio.c:368 RCU-list traversed in non-reader section!!
+I can agree to this view (in principle).
 
- other info that might help us debug this:
+By the way:
+The referenced commit contains the tag =E2=80=9CFixes=E2=80=9D.
+https://lore.kernel.org/patchwork/patch/1231354/
+https://lore.kernel.org/lkml/20200427061803.53857-1-christophe.jaillet@wan=
+adoo.fr/
 
- rcu_scheduler_active = 2, debug_locks = 1
- 2 locks held by qemu-kvm/4264:
-  #0: c000201ae2d000d8 (&vcpu->mutex){+.+.}-{3:3}, at: kvm_vcpu_ioctl+0xdc/0x950 [kvm]
-  #1: c000200c9ed0c468 (&kvm->srcu){....}-{0:0}, at: kvmppc_h_put_tce+0x88/0x340 [kvm]
 
- ====
- arch/powerpc/kvm/book3s_64_vio.c:108 RCU-list traversed in non-reader section!!
+> Your suggestion, 'free_dma' is also good.
 
- other info that might help us debug this:
+Thanks for your positive feedback.
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by qemu-kvm/4257:
-  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
 
- ====
- arch/powerpc/kvm/book3s_64_vio.c:146 RCU-list traversed in non-reader section!!
+> But coming up with good alternatives is easy.
 
- other info that might help us debug this:
+But the change acceptance can occasionally become harder.
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by qemu-kvm/4257:
-  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/powerpc/kvm/book3s_64_vio.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+> If every good alternative would be considered there would be no obvious =
+way
+> to get a patch merged.
 
-diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
-index 50555ad1db93..4f5016bab723 100644
---- a/arch/powerpc/kvm/book3s_64_vio.c
-+++ b/arch/powerpc/kvm/book3s_64_vio.c
-@@ -73,6 +73,7 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
- 	struct kvmppc_spapr_tce_iommu_table *stit, *tmp;
- 	struct iommu_table_group *table_group = NULL;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
- 
- 		table_group = iommu_group_get_iommudata(grp);
-@@ -87,7 +88,9 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
- 				kref_put(&stit->kref, kvm_spapr_tce_liobn_put);
- 			}
- 		}
-+		cond_resched_rcu();
- 	}
-+	rcu_read_unlock();
- }
- 
- extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
-@@ -105,12 +108,14 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
- 	if (!f.file)
- 		return -EBADF;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
- 		if (stt == f.file->private_data) {
- 			found = true;
- 			break;
- 		}
- 	}
-+	rcu_read_unlock();
- 
- 	fdput(f);
- 
-@@ -143,6 +148,7 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
- 	if (!tbl)
- 		return -EINVAL;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
- 		if (tbl != stit->tbl)
- 			continue;
-@@ -150,14 +156,17 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
- 		if (!kref_get_unless_zero(&stit->kref)) {
- 			/* stit is being destroyed */
- 			iommu_tce_table_put(tbl);
-+			rcu_read_unlock();
- 			return -ENOTTY;
- 		}
- 		/*
- 		 * The table is already known to this KVM, we just increased
- 		 * its KVM reference counter and can return.
- 		 */
-+		rcu_read_unlock();
- 		return 0;
- 	}
-+	rcu_read_unlock();
- 
- 	stit = kzalloc(sizeof(*stit), GFP_KERNEL);
- 	if (!stit) {
-@@ -365,18 +374,20 @@ static long kvmppc_tce_validate(struct kvmppc_spapr_tce_table *stt,
- 	if (kvmppc_tce_to_ua(stt->kvm, tce, &ua))
- 		return H_TOO_HARD;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
- 		unsigned long hpa = 0;
- 		struct mm_iommu_table_group_mem_t *mem;
- 		long shift = stit->tbl->it_page_shift;
- 
- 		mem = mm_iommu_lookup(stt->kvm->mm, ua, 1ULL << shift);
--		if (!mem)
--			return H_TOO_HARD;
--
--		if (mm_iommu_ua_to_hpa(mem, ua, shift, &hpa))
-+		if (!mem || mm_iommu_ua_to_hpa(mem, ua, shift, &hpa)) {
-+			rcu_read_unlock();
- 			return H_TOO_HARD;
-+		}
-+		cond_resched_rcu();
- 	}
-+	rcu_read_unlock();
- 
- 	return H_SUCCESS;
- }
--- 
-2.21.0 (Apple Git-122.2)
+I imagine that some alternatives can result in preferable solutions, can't=
+ they?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/coding-style.rst?id=3De99332e7b4cda6e60f5b5916cf9943a7=
+9dbef902#n460
 
+Regards,
+Markus
