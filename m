@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52098C47257
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C5C47257
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E46F20A8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48111206D3
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 01:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N9t5Vnk7"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RyR27R6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgEJBst (ORCPT
+        id S1729020AbgEJBsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 21:48:49 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:59387 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgEJBsr (ORCPT
+        Sat, 9 May 2020 21:48:46 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:45303 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728988AbgEJBsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 21:48:47 -0400
+        Sat, 9 May 2020 21:48:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589075327; x=1620611327;
+  t=1589075324; x=1620611324;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=f42SAWEpwqudHXonrKA4kH+lQCUO1YP3xrO+LV4WQhs=;
-  b=N9t5Vnk7cta4Vd6w8tDAi3smLvgetsCjbwcvuH3FAs1O1C5M/Oi4SeGk
-   Y4riS+wkM6+lr3RNbqUwaf+qGGBHJ8up6Bpi8hX3kl4gDZvJhqm1N+MR0
-   tzA6uZKTE9zIAN0HML57YlbIGR39eQ56zDmqVYm22noDMSPNkSHWNoVKj
-   w=;
-IronPort-SDR: lA0ZfCYa/1xFI06L8kwsY3tB3770Wc644mw9Fi2afp1+tnsidULe3zGW8MXZjse7OPrQ8oQAvf
- aOAeV0yZmLeA==
+  bh=JgKbzbI+PIq+yMjGX5OcL/YpstrXh4PxUaSMBduOT2o=;
+  b=RyR27R6vAfU1rEVxyhc2o8dY7PjVDNgRQGCQEwzlzQpBQ0xo+v5uCJLA
+   AmBWmA6xTNqg/C/Sk8GrEgPD0rCB8HKqdrXJmZGoDBK1/hh+xd8Dj1Te5
+   y3oyd0IEf3rc/5V5HLUQoOG3nL0QMAtC0djCtYs9ow+PaKZrHncljFvpG
+   s=;
+IronPort-SDR: 8r5hak5Kz1fsznw7yuBgqacSbqZl8udM/jhd9z9ldG/EiyPoDaGa4ShDaGXOQ1PIH4bGsctoxp
+ AdHite84RWJg==
 X-IronPort-AV: E=Sophos;i="5.73,373,1583193600"; 
-   d="scan'208";a="29400617"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 10 May 2020 01:48:44 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id C1544A1E67;
-        Sun, 10 May 2020 01:48:40 +0000 (UTC)
-Received: from EX13D01UWA003.ant.amazon.com (10.43.160.107) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 01:48:24 +0000
-Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
- EX13d01UWA003.ant.amazon.com (10.43.160.107) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Sun, 10 May 2020 01:48:23 +0000
-Received: from localhost (10.85.6.121) by mail-relay.amazon.com (10.43.62.224)
+   d="scan'208";a="43724244"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 10 May 2020 01:48:42 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 1D411A2372;
+        Sun, 10 May 2020 01:48:38 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 01:48:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 10 May 2020 01:48:18 +0000
+Received: from localhost (10.85.6.121) by mail-relay.amazon.com (10.43.61.243)
  with Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Sun, 10 May
- 2020 01:48:22 +0000
+ 2020 01:48:17 +0000
 From:   Balbir Singh <sblbir@amazon.com>
 To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
 CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
         <keescook@chromium.org>, <benh@kernel.crashing.org>,
         <x86@kernel.org>, <dave.hansen@intel.com>,
         <thomas.lendacky@amd.com>, Balbir Singh <sblbir@amazon.com>
-Subject: [PATCH v6 6/6] Documentation: Add L1D flushing Documentation
-Date:   Sun, 10 May 2020 11:48:03 +1000
-Message-ID: <20200510014803.12190-7-sblbir@amazon.com>
+Subject: [PATCH v6 4/6] arch/x86/kvm: Refactor L1D flushing
+Date:   Sun, 10 May 2020 11:48:01 +1000
+Message-ID: <20200510014803.12190-5-sblbir@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200510014803.12190-1-sblbir@amazon.com>
 References: <20200510014803.12190-1-sblbir@amazon.com>
@@ -70,72 +70,221 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation of l1d flushing, explain the need for the
-feature and how it can be used.
+Move out the initialization function to l1d_flush_init_once()
+so that it can be reused for subsequent patches. The side-effect
+of this patch is that the memory allocated for l1d flush pages
+is no longer freed up and the memory allocated once is shared
+amongst callers.
 
+l1d_flush_sw/hw() are now abstracted under arch_l1d_flush().
+vmx_l1d_flush_mutex however continues to exist as it also used
+from other code paths.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Balbir Singh <sblbir@amazon.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/admin-guide/hw-vuln/index.rst   |  1 +
- .../admin-guide/hw-vuln/l1d_flush.rst         | 40 +++++++++++++++++++
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/admin-guide/hw-vuln/l1d_flush.rst
+ arch/x86/include/asm/cacheflush.h | 12 +++---
+ arch/x86/kernel/l1d_flush.c       | 64 +++++++++++++++++++++++--------
+ arch/x86/kvm/vmx/vmx.c            | 20 ++--------
+ 3 files changed, 57 insertions(+), 39 deletions(-)
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index 0795e3c2643f..35633b299d45 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -14,3 +14,4 @@ are configurable at compile, boot or run time.
-    mds
-    tsx_async_abort
-    multihit.rst
-+   l1d_flush
-diff --git a/Documentation/admin-guide/hw-vuln/l1d_flush.rst b/Documentation/admin-guide/hw-vuln/l1d_flush.rst
-new file mode 100644
-index 000000000000..7d515b8c29f1
---- /dev/null
-+++ b/Documentation/admin-guide/hw-vuln/l1d_flush.rst
-@@ -0,0 +1,40 @@
-+L1D Flushing for the paranoid
-+=============================
+diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
+index 21cc3b28fa63..851d8f1ab827 100644
+--- a/arch/x86/include/asm/cacheflush.h
++++ b/arch/x86/include/asm/cacheflush.h
+@@ -7,11 +7,13 @@
+ #include <asm/special_insns.h>
+ 
+ #define L1D_CACHE_ORDER 4
 +
-+With an increasing number of vulnerabilities being reported around data
-+leaks from L1D, a new user space mechanism to flush the L1D cache on
-+context switch is added to the kernel. This should help address
-+CVE-2020-0550 and for paranoid applications, keep them safe from any
-+yet to be discovered vulnerabilities, related to leaks from the L1D
-+cache.
++enum l1d_flush_options {
++	L1D_FLUSH_POPULATE_TLB = 0x1,
++};
 +
-+Tasks can opt in to this mechanism by using a prctl (implemented only
-+for x86 at the moment).
+ void clflush_cache_range(void *addr, unsigned int size);
+-void l1d_flush_populate_tlb(void *l1d_flush_pages);
+-void *l1d_flush_alloc_pages(void);
+-void l1d_flush_cleanup_pages(void *l1d_flush_pages);
+-void l1d_flush_sw(void *l1d_flush_pages);
+-int l1d_flush_hw(void);
++int l1d_flush_init_once(void);
++void arch_l1d_flush(enum l1d_flush_options options);
+ 
+ #endif /* _ASM_X86_CACHEFLUSH_H */
+diff --git a/arch/x86/kernel/l1d_flush.c b/arch/x86/kernel/l1d_flush.c
+index 5871794f890d..ad66e5fe1565 100644
+--- a/arch/x86/kernel/l1d_flush.c
++++ b/arch/x86/kernel/l1d_flush.c
+@@ -1,10 +1,10 @@
+ #include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ 
+-void *l1d_flush_alloc_pages(void)
++static void *l1d_flush_alloc_pages(void)
+ {
+ 	struct page *page;
+-	void *l1d_flush_pages = NULL;
++	void *flush_pages = NULL;
+ 	int i;
+ 
+ 	/*
+@@ -14,7 +14,7 @@ void *l1d_flush_alloc_pages(void)
+ 	page = alloc_pages(GFP_KERNEL, L1D_CACHE_ORDER);
+ 	if (!page)
+ 		return NULL;
+-	l1d_flush_pages = page_address(page);
++	flush_pages = page_address(page);
+ 
+ 	/*
+ 	 * Initialize each page with a different pattern in
+@@ -22,25 +22,19 @@ void *l1d_flush_alloc_pages(void)
+ 	 * virtualization case.
+ 	 */
+ 	for (i = 0; i < 1u << L1D_CACHE_ORDER; ++i) {
+-		memset(l1d_flush_pages + i * PAGE_SIZE, i + 1,
++		memset(flush_pages + i * PAGE_SIZE, i + 1,
+ 				PAGE_SIZE);
+ 	}
+-	return l1d_flush_pages;
++	return flush_pages;
+ }
+-EXPORT_SYMBOL_GPL(l1d_flush_alloc_pages);
+ 
+-void l1d_flush_cleanup_pages(void *l1d_flush_pages)
+-{
+-	free_pages((unsigned long)l1d_flush_pages, L1D_CACHE_ORDER);
+-}
+-EXPORT_SYMBOL_GPL(l1d_flush_cleanup_pages);
+ 
+ /*
+  * Not all users of l1d flush would want to populate the TLB first
+  * split out the function so that callers can optionally flush the L1D
+  * cache via sw without prefetching the TLB.
+  */
+-void l1d_flush_populate_tlb(void *l1d_flush_pages)
++static void l1d_flush_populate_tlb(void *l1d_flush_pages)
+ {
+ 	int size = PAGE_SIZE << L1D_CACHE_ORDER;
+ 
+@@ -58,9 +52,8 @@ void l1d_flush_populate_tlb(void *l1d_flush_pages)
+ 		    [size] "r" (size)
+ 		: "eax", "ebx", "ecx", "edx");
+ }
+-EXPORT_SYMBOL_GPL(l1d_flush_populate_tlb);
+ 
+-int l1d_flush_hw(void)
++static int l1d_flush_hw(void)
+ {
+ 	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
+ 		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
+@@ -68,9 +61,8 @@ int l1d_flush_hw(void)
+ 	}
+ 	return -ENOTSUPP;
+ }
+-EXPORT_SYMBOL_GPL(l1d_flush_hw);
+ 
+-void l1d_flush_sw(void *l1d_flush_pages)
++static void l1d_flush_sw(void *l1d_flush_pages)
+ {
+ 	int size = PAGE_SIZE << L1D_CACHE_ORDER;
+ 
+@@ -87,4 +79,42 @@ void l1d_flush_sw(void *l1d_flush_pages)
+ 			[size] "r" (size)
+ 			: "eax", "ecx");
+ }
+-EXPORT_SYMBOL_GPL(l1d_flush_sw);
 +
-+Related CVES
-+------------
-+At the present moment, the following CVEs can be addressed by this
-+mechanism
++static void *l1d_flush_pages;
++static DEFINE_MUTEX(l1d_flush_mutex);
 +
-+    =============       ========================     ==================
-+    CVE-2020-0550       Improper Data Forwarding     OS related aspects
-+    =============       ========================     ==================
++/*
++ * Initialize and setup L1D flush once, each caller will reuse the
++ * l1d_flush_pages for flushing, no per CPU allocations or NUMA aware
++ * allocations at the moment.
++ */
++int l1d_flush_init_once(void)
++{
++	int ret = 0;
 +
-+Usage Guidelines
-+----------------
-+Applications can call ``prctl(2)`` with one of these two arguments
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++		return -ENOTSUPP;
 +
-+1. PR_SET_L1D_FLUSH - flush the L1D cache on context switch (out)
-+2. PR_GET_L1D_FLUSH - get the current state of the L1D cache flush, returns 1
-+   if set and 0 if not set.
++	if (static_cpu_has(X86_FEATURE_FLUSH_L1D) || l1d_flush_pages)
++		return ret;
 +
-+**NOTE**: The feature is disabled by default, applications to need to specifically
-+opt into the feature to enable it.
++	mutex_lock(&l1d_flush_mutex);
++	if (!l1d_flush_pages)
++		l1d_flush_pages = l1d_flush_alloc_pages();
++	ret = l1d_flush_pages ? 0 : -ENOMEM;
++	mutex_unlock(&l1d_flush_mutex);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(l1d_flush_init_once);
 +
-+Mitigation
-+----------
-+When PR_SET_L1D_FLUSH is enabled for a task, on switching tasks (when
-+the address space changes), a flush of the L1D cache is performed for
-+the task when it leaves the CPU. If the underlying CPU supports L1D
-+flushing in hardware, the hardware mechanism is used, otherwise a software
-+fallback, similar to the mechanism used by L1TF is used.
++void arch_l1d_flush(enum l1d_flush_options options)
++{
++	if (!l1d_flush_hw())
++		return;
++
++	if (options & L1D_FLUSH_POPULATE_TLB)
++		l1d_flush_populate_tlb(l1d_flush_pages);
++
++	l1d_flush_sw(l1d_flush_pages);
++}
++EXPORT_SYMBOL_GPL(arch_l1d_flush);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 4f95927aad4c..d56702578588 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -203,8 +203,6 @@ static const struct {
+ 	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
+ };
+ 
+-static void *vmx_l1d_flush_pages;
+-
+ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
+@@ -247,12 +245,9 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+ 		l1tf = VMENTER_L1D_FLUSH_ALWAYS;
+ 	}
+ 
+-	if (l1tf != VMENTER_L1D_FLUSH_NEVER && !vmx_l1d_flush_pages &&
+-	    !boot_cpu_has(X86_FEATURE_FLUSH_L1D)) {
+-		vmx_l1d_flush_pages = l1d_flush_alloc_pages();
+-		if (!vmx_l1d_flush_pages)
++	if (l1tf != VMENTER_L1D_FLUSH_NEVER)
++		if (l1d_flush_init_once())
+ 			return -ENOMEM;
+-	}
+ 
+ 	l1tf_vmx_mitigation = l1tf;
+ 
+@@ -6058,12 +6053,7 @@ static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	vcpu->stat.l1d_flush++;
+-
+-	if (!l1d_flush_hw())
+-		return;
+-
+-	l1d_flush_populate_tlb(vmx_l1d_flush_pages);
+-	l1d_flush_sw(vmx_l1d_flush_pages);
++	arch_l1d_flush(L1D_FLUSH_POPULATE_TLB);
+ }
+ 
+ static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
+@@ -8056,10 +8046,6 @@ static struct kvm_x86_init_ops vmx_init_ops __initdata = {
+ 
+ static void vmx_cleanup_l1d_flush(void)
+ {
+-	if (vmx_l1d_flush_pages) {
+-		l1d_flush_cleanup_pages(vmx_l1d_flush_pages);
+-		vmx_l1d_flush_pages = NULL;
+-	}
+ 	/* Restore state so sysfs ignores VMX */
+ 	l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+ }
 -- 
 2.17.1
 
