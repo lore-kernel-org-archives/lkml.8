@@ -8,127 +8,110 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D3CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13266C54E4B
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30EF8207DD
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD58C20731
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 16:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WDOd1kaF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khq4y1hN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgEJQox (ORCPT
+        id S1729022AbgEJQnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 12:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        Sun, 10 May 2020 12:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729057AbgEJQnc (ORCPT
+        by vger.kernel.org with ESMTP id S1726446AbgEJQna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 12:43:32 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B2CC061A0E;
-        Sun, 10 May 2020 09:43:31 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so15411882wmb.4;
-        Sun, 10 May 2020 09:43:31 -0700 (PDT)
+        Sun, 10 May 2020 12:43:30 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38BCC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:43:30 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f7so3582596pfa.9
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 09:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=i3xdQfNNhGs9x7KATPUsqJauaICpGQwRxOGD+fuAb3E=;
-        b=WDOd1kaFFfF1lWYkOl5N2PcGLxEpbfz7Esm+tYr4fNIZKYYKI0JOhhjTECCi7QjL4L
-         08Su9U7PR5HLZ4qojIQymZE7k/0yRKQCl7FVJhb9P79x/yueTtR1I808yr8YquSmP1tX
-         wSsZgdns1vTP1pWWEOTyXRIIrUoN5qELGV2t/5enTI+MNU/qznCX4ZLwFfoTbcccnQNu
-         ZcNb+xNnOjW4x3bjMfa9/ksBfxXAoHisxsdADVYZ35nVbTaXT96OVkgdtl6KwjYZPckw
-         NdsOc1u+kqyfgcZab3saHgIXv+5vTA5VLzB1jSsyp4s+YRaRMsnozEMxtjm6Zt7y3N5q
-         tkmQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=aigOg5gQEpwZX6TVcV43BjngoPeN7YUDWqGIdn8mcQ8=;
+        b=khq4y1hNRG8OhmyNn7NvMqv9a7mZw2wukaDANjvDD99BDCNpEudypJkqqNEHUAB8RG
+         tVq0ec1g0LGQzn2y9MS13B/btoXqlmCWXwyjbuvMVOqWDFhejoRRaTx2O7TcN+gq+m9E
+         shjUbvxOdHJ7ug6xffGiwt9LvJ1/CjWtB8NwcrcJhQlrKJoDpmbFOJQTp4AvowSzbaz7
+         8+zjKTNhkA6rlMnF2l16/x1gYXDG46MUuq9TrpTL3XpWk4M1UQCcg8M26vrUZhqLFt3P
+         lWmmPkce1BQmzH3W+hakWpNzdohOA1LKS6rV8Qr1UJ+grmkzU4c6H01MdEEggxv2r+pV
+         2XlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=i3xdQfNNhGs9x7KATPUsqJauaICpGQwRxOGD+fuAb3E=;
-        b=rSTGcxm0+mJHt+4SUwIkDurgcsMCmK9gq0eovf10134etlzapMKX+OaUYS4sbqK5Zr
-         ss9gfmfv/bLuF1k0VTYSgnJXIiZRlvSSEqntTCD6mjYhsRZpqzqqUzIDmSCb9dcebfnd
-         uNd5la3yaDx7RNY854zElQcN8gRyaGOqi687J6w7Y7Wmwk4CY1ZwzCmTgwOaOKjVfggD
-         c+dtIzHXXZqRIES0LrAgRrGrtVwtNonDxbvsb5tdCDRHAVUecKM+b0UkGqJEbY1b48+2
-         JCS4TSP3FJ8z9koly8aclXLUP7bbW/p91DE7J3jKF5u7JbyyEjyhR6dTtVws+OYc6+ed
-         CJpQ==
-X-Gm-Message-State: AGi0PubSK/nHHNPcEGGTbB1wd1N4Bx1iOwPUWdFRkLOzSm3o8zLLIU6N
-        HN0RnRfneFJ8mjY+KQmQo5XjZoUk
-X-Google-Smtp-Source: APiQypIEeFJc0XI3zCN/4DAndO81GyyjKAPeqV2gSbg+qYMYSWvIL/M3C690waMQ+nrRhSZBZl6iLw==
-X-Received: by 2002:a7b:cc83:: with SMTP id p3mr9078882wma.156.1589129010592;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aigOg5gQEpwZX6TVcV43BjngoPeN7YUDWqGIdn8mcQ8=;
+        b=BRO7dseyynuExdZe3MGqpQOpicxeo1a+uzyQakCtfF2D6Xdm1AaNv3qfU2ISFhMfj3
+         ITBdpj2hrU6zMgod7OvgkVD5eDyQn412iF9vYBRQzoCKVe94CI59hIZiv01l4vazr1w2
+         DuFs+6DGGPAEriSNrz6zYo7zDZABCCuI95UEfR13kEkC/PXMeh8XeM5W/Qx9++DYuNuL
+         K6Sn+6O+FEr6JUVBXyHFIanWuJgI11aGXqjlzWjjYpXu2KHQ6+xnNqTMSequuR+7gWOO
+         8bPP3bHZxB1G0qOFD8FGlgLzsI7D6zbSEN8OL7OtKI1pJawnxZ6I2E7tNdLXHNgCMqE/
+         d1ag==
+X-Gm-Message-State: AGi0PuYgp1iFIEud0D5PinAy3ir2Y+v3T/zHLnP8Y5rlO7suuXbAUWa7
+        3HHdz3Q9/upbvpBxHcHOpnIxQk70wIcjwg==
+X-Google-Smtp-Source: APiQypLMiEuEZZF4ah053NY5YQxO2V/O5GK9TcDNDi2axL6JLtXnF6naxJ2CzlC8oMNsa7cdRFgeEg==
+X-Received: by 2002:a62:1bd0:: with SMTP id b199mr12327968pfb.283.1589129010366;
         Sun, 10 May 2020 09:43:30 -0700 (PDT)
-Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id i1sm13390916wrx.22.2020.05.10.09.43.29
+Received: from localhost.localdomain ([150.242.175.127])
+        by smtp.googlemail.com with ESMTPSA id q6sm7047745pfh.193.2020.05.10.09.43.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 09:43:30 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
-Cc:     davem@davemloft.net, kuba@kernel.org, rmk+kernel@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 02/15] net: dsa: tag_8021q: introduce a vid_is_dsa_8021q helper
-Date:   Sun, 10 May 2020 19:42:42 +0300
-Message-Id: <20200510164255.19322-3-olteanv@gmail.com>
+        Sun, 10 May 2020 09:43:29 -0700 (PDT)
+From:   Harshal Chaudhari <harshalchau04@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     derek.kiernan@xilinx.com, dragan.cvetic@xilinx.com, arnd@arndb.de,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, harshalchau04@gmail.com
+Subject: [PATCH] misc: xilinx-sdfec: convert to module_platform_driver()
+Date:   Sun, 10 May 2020 22:13:08 +0530
+Message-Id: <20200510164308.31358-1-harshalchau04@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200510164255.19322-1-olteanv@gmail.com>
-References: <20200510164255.19322-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+The driver init and exit function don't do anything besides registering
+and unregistering the platform driver, so the module_platform_driver()
+macro could just be used instead of having separate functions.
 
-This function returns a boolean denoting whether the VLAN passed as
-argument is part of the 1024-3071 range that the dsa_8021q tagging
-scheme uses.
-
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: Harshal Chaudhari <harshalchau04@gmail.com>
 ---
- include/linux/dsa/8021q.h | 7 +++++++
- net/dsa/tag_8021q.c       | 7 +++++++
- 2 files changed, 14 insertions(+)
+ drivers/misc/xilinx_sdfec.c | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
 
-diff --git a/include/linux/dsa/8021q.h b/include/linux/dsa/8021q.h
-index b8daaec0896e..ebc245ff838a 100644
---- a/include/linux/dsa/8021q.h
-+++ b/include/linux/dsa/8021q.h
-@@ -50,6 +50,8 @@ int dsa_8021q_rx_switch_id(u16 vid);
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 71bbaa56bdb5..db16a42c66f4 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -1484,25 +1484,7 @@ static struct platform_driver xsdfec_driver = {
+ 	.remove =  xsdfec_remove,
+ };
  
- int dsa_8021q_rx_source_port(u16 vid);
+-static int __init xsdfec_init(void)
+-{
+-	int err;
+-
+-	err = platform_driver_register(&xsdfec_driver);
+-	if (err < 0) {
+-		pr_err("%s Unabled to register SDFEC driver", __func__);
+-		return err;
+-	}
+-	return 0;
+-}
+-
+-static void __exit xsdfec_exit(void)
+-{
+-	platform_driver_unregister(&xsdfec_driver);
+-}
+-
+-module_init(xsdfec_init);
+-module_exit(xsdfec_exit);
++module_platform_driver(xsdfec_driver);
  
-+bool vid_is_dsa_8021q(u16 vid);
-+
- #else
- 
- int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
-@@ -107,6 +109,11 @@ int dsa_8021q_rx_source_port(u16 vid)
- 	return 0;
- }
- 
-+bool vid_is_dsa_8021q(u16 vid)
-+{
-+	return false;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
- 
- #endif /* _NET_DSA_8021Q_H */
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index ff9c5bf64bda..4774ecd1f8fc 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -93,6 +93,13 @@ int dsa_8021q_rx_source_port(u16 vid)
- }
- EXPORT_SYMBOL_GPL(dsa_8021q_rx_source_port);
- 
-+bool vid_is_dsa_8021q(u16 vid)
-+{
-+	return ((vid & DSA_8021Q_DIR_MASK) == DSA_8021Q_DIR_RX ||
-+		(vid & DSA_8021Q_DIR_MASK) == DSA_8021Q_DIR_TX);
-+}
-+EXPORT_SYMBOL_GPL(vid_is_dsa_8021q);
-+
- static int dsa_8021q_restore_pvid(struct dsa_switch *ds, int port)
- {
- 	struct bridge_vlan_info vinfo;
+ MODULE_AUTHOR("Xilinx, Inc");
+ MODULE_DESCRIPTION("Xilinx SD-FEC16 Driver");
 -- 
 2.17.1
 
