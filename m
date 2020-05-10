@@ -2,120 +2,87 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E98DC54E8B
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E779CC54E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23908218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589104363;
-	bh=UNTtwhximIfphTFUiJ0t06E4k73XdFCK+rXEofTQgBA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GjaB7oGjJv/rLGKFYJ+NrtI+wCsuUZJR68MCQzk9n4LP3M/JUjjEEIYI5Y+xEnmVa
-	 uqIkv0xj+lb5Sm1luYSnzMB39uARt8T46PkCtBRgbX8tSKIIhzSUbEmE8HRjU2jCnI
-	 OGS/1KyBH5g9LGdjaRvTa9UAKizYUaOYwT5mpzfg=
+	by mail.kernel.org (Postfix) with ESMTP id C8D3620820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 09:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgEJJwm (ORCPT
+        id S1728809AbgEJJxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 05:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgEJJwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 05:52:42 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 132C920820;
-        Sun, 10 May 2020 09:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589104361;
-        bh=UNTtwhximIfphTFUiJ0t06E4k73XdFCK+rXEofTQgBA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=irHWIN9bSKRMi6LY2WR48cdRl7v8B/R/YqTomOck68PCRfDI3/cBEd5sCVHX8CAXS
-         HeZ15K88YRFklayCmjrWy+MparELArnR2mal4gOBI8iuvbBgNfm/PWMpLeRuUNLGe9
-         K8R9vtOUP28no2zb/wtDQJumcT9nkKBSdlTrXFwI=
-Date:   Sun, 10 May 2020 10:52:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iio: bmp280: fix compensation of humidity
-Message-ID: <20200510105236.241eee37@archlinux>
-In-Reply-To: <20200504181033.GA15745@arbad>
-References: <20200504181033.GA15745@arbad>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 10 May 2020 05:53:12 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:50895 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgEJJxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 05:53:12 -0400
+Received: from localhost.localdomain ([92.148.185.155])
+        by mwinf5d81 with ME
+        id cxt42200D3MbWjg03xt55s; Sun, 10 May 2020 11:53:09 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 10 May 2020 11:53:09 +0200
+X-ME-IP: 92.148.185.155
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     myungjoo.ham@samsung.com, cw00.choi@samsung.com,
+        anish198519851985@gmail.com, gregkh@linuxfoundation.org,
+        jic23@kernel.org, lars@metafoo.de
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] extcon: adc-jack: Fix an error handling path in 'adc_jack_probe()'
+Date:   Sun, 10 May 2020 11:53:03 +0200
+Message-Id: <20200510095303.231635-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 20:10:34 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+In some error handling paths, a call to 'iio_channel_get()' is not balanced
+by a corresponding call to 'iio_channel_release()'.
 
-> Limit the output of humidity compensation to the range between 0 and 100
-> percent.
-> 
-> Depending on the calibration parameters of the individual sensor it
-> happens, that a humidity above 100 percent or below 0 percent is
-> calculated, which don't make sense in terms of relative humidity.
-> 
-> Add a clamp to the compensation formula as described in the datasheet of
-> the sensor in chapter 4.2.3.
-> 
-> Although this clamp is documented, it was never in the driver of the
-> kernel.
-> 
-> It depends on the circumstances (calibration parameters, temperature,
-> humidity) if one can see a value above 100 percent without the clamp.
-> The writer of this patch was working with this type of sensor without
-> noting this error. So it seems to be a rare event when this bug occures.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
 
-On basis of description I'm going to take this the slow way (next merge
-window).  If you want it backported to stable I don't mind but I haven't
-marked it as such so you'll have to request it explicitly after the
-patch is in Linus' tree.  It's reasonably likely the scripts will
-pick this one up anyway though...
+This has the extra benefit to simplify the remove function.
 
-Thanks,
+Fixes: 19939860dcae ("extcon: adc_jack: adc-jack driver to support 3.5 pi or simliar devices")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch in a more complete version than commit 5a696d9760fe
+("extcon: adc-jack: Release IIO channel on driver remove") which fixed the
+issue for the remove function only.
+---
+ drivers/extcon/extcon-adc-jack.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Jonathan
-
-> ---
-> 
-> Change to v2:
-> Thanks to the review of Jonathan a more descriptive commit message is
-> added.
-> 
-> Change to v1:
-> Thanks to Tomasz for suggesting the easier to use function clamp_val()
-> which is now used.
-> 
->  drivers/iio/pressure/bmp280-core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-> index 29c209cc1108..297ee2205bf6 100644
-> --- a/drivers/iio/pressure/bmp280-core.c
-> +++ b/drivers/iio/pressure/bmp280-core.c
-> @@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
->  		+ (s32)2097152) * calib->H2 + 8192) >> 14);
->  	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
->  
-> +	var = clamp_val(var, 0, 419430400);
-> +
->  	return var >> 12;
->  };
->  
+diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+index ad02dc6747a4..0317b614b680 100644
+--- a/drivers/extcon/extcon-adc-jack.c
++++ b/drivers/extcon/extcon-adc-jack.c
+@@ -124,7 +124,7 @@ static int adc_jack_probe(struct platform_device *pdev)
+ 	for (i = 0; data->adc_conditions[i].id != EXTCON_NONE; i++);
+ 	data->num_conditions = i;
+ 
+-	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
++	data->chan = devm_iio_channel_get(&pdev->dev, pdata->consumer_channel);
+ 	if (IS_ERR(data->chan))
+ 		return PTR_ERR(data->chan);
+ 
+@@ -164,7 +164,6 @@ static int adc_jack_remove(struct platform_device *pdev)
+ 
+ 	free_irq(data->irq, data);
+ 	cancel_work_sync(&data->handler.work);
+-	iio_channel_release(data->chan);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
