@@ -2,119 +2,108 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2354C54E8A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA73C38A2A
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7607B214DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iH5BKeNO"
+	by mail.kernel.org (Postfix) with ESMTP id 0E14C20820
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 12:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgEJM5W (ORCPT
+        id S1729060AbgEJM57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 08:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726863AbgEJM5V (ORCPT
+        Sun, 10 May 2020 08:57:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726863AbgEJM56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 08:57:21 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319EBC061A0C;
-        Sun, 10 May 2020 05:57:21 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l18so7368647wrn.6;
-        Sun, 10 May 2020 05:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zSSzgZJ2ruA4nJC33X8E8VAN7DAGf5BP0u/CxtrtLx0=;
-        b=iH5BKeNOhFLBEpN+M/P3twrB0aP0uBQYfQsx6orVfhMPAfupkoxj1N9vtRgJC0jixJ
-         mE5Y+zxd1RmH9cCvXLWEilv1cuo2zI8BgW4FfKr05fH7LfqI2U1o14rOEkOg/Med2zSx
-         fUKmL+M+KMtyKl3iscMJzpuSaFYRuY6NXTkyfA8JDRsA6tiIKGUBTwx51px5G0EZWqHB
-         +EE4M0J39uvcJf11bysbd9Ki3TuxFldI5yD5dJSW17up+hfXpIaP9LThvt/miH3foviA
-         iZLJWzYB/gjRqA0cXFjvQfGSALhQ1410H90qVDyxf6RlLdsF/V/S7tD45dexd5JnFktw
-         GD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zSSzgZJ2ruA4nJC33X8E8VAN7DAGf5BP0u/CxtrtLx0=;
-        b=Lf2KeqBMTn1QiSpUqzVSV6yhdzEyiNnKCuRqwaxOFl9ntu7PKIIGP5vzxvGCQaYg5J
-         NuHo3+zO6Q4ne7dMiQCiNl4ohz6YTiu42jqZ6RJFyb9q75KmQnoiRkwXR42sQb38jgGk
-         wDeGTZleBgHw/SJicm81l9kjFVusrjYvDWuQokfQWFkSCp33rOqgdsPjY19qH0quHvzW
-         jxFfu3W2SC0JbfOOFzPkkZZ8G/huokE1YhMAsWjQyqKm1noboH6RFe9IshZwEO4vESiD
-         EvhSIpYdzpD7tDXqRNhpbOVPrpp5zw+VY3r+MYKULxQejnOU19Zi26WfNa5hkW/WOeJC
-         YMOg==
-X-Gm-Message-State: AGi0PuYyVzCF3JuXHrzKX+VdUOs5E63KjmaVBWzB/LFRIa97OdTTTay/
-        w1hVyEofkz8YrAauzwvWjhMzWH5T98pJAFx0
-X-Google-Smtp-Source: APiQypKjx9pY0cnYf+p+xvYTLNTeHRZbik4IOpqbrRJPR1SdBS0VXZ7b+XKZMhkQM9rWrm21tJzwpQ==
-X-Received: by 2002:a5d:514b:: with SMTP id u11mr13257245wrt.53.1589115439458;
-        Sun, 10 May 2020 05:57:19 -0700 (PDT)
-Received: from andrea ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id z11sm12454556wro.48.2020.05.10.05.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 05:57:18 -0700 (PDT)
-Date:   Sun, 10 May 2020 14:57:11 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/3] tools/memory-model, Documentation/litmus-test: Sort
- out location of litmus test and README
-Message-ID: <20200510125711.GA13991@andrea>
-References: <20200323015735.236279-1-joel@joelfernandes.org>
- <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
- <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+        Sun, 10 May 2020 08:57:58 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ACUjtJ061216;
+        Sun, 10 May 2020 08:57:08 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30xe5sbhur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 10 May 2020 08:57:08 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04ACpD9g007705;
+        Sun, 10 May 2020 12:57:06 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30wm55afgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 10 May 2020 12:57:06 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04ACv4sV63242508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 10 May 2020 12:57:04 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58368AE04D;
+        Sun, 10 May 2020 12:57:04 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19C48AE051;
+        Sun, 10 May 2020 12:57:01 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.199.51.177])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Sun, 10 May 2020 12:57:00 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sun, 10 May 2020 18:27:00 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Joe Perches <joe@perches.com>, Borislav Petkov <bp@alien8.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Piotr Maziarz <piotrx.maziarz@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: Re: [PATCH v7 2/5] seq_buf: Export seq_buf_printf() to external modules
+In-Reply-To: <ff1fcc5b32a9ad209660c7cfe7e212c1a16ba10d.camel@perches.com>
+References: <20200508104922.72565-1-vaibhav@linux.ibm.com> <20200508104922.72565-3-vaibhav@linux.ibm.com> <20200508113100.GA19436@zn.tnic> <87blmy8wm8.fsf@linux.ibm.com> <ff1fcc5b32a9ad209660c7cfe7e212c1a16ba10d.camel@perches.com>
+Date:   Sun, 10 May 2020 18:27:00 +0530
+Message-ID: <87y2q06j8j.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-10_04:2020-05-08,2020-05-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ phishscore=0 suspectscore=1 priorityscore=1501 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxlogscore=786
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005100113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Akira Yokosawa (3):
->   tools/memory-model: Fix reference to litmus test in recipes.txt
->   Revert "Documentation: LKMM: Move MP+onceassign+derefonce to new
->     litmus-tests/rcu/"
->   Documentation/litmus-tests: Merge atomic's README into top-level one
+Hi Joe,
 
-For the series:
+Joe Perches <joe@perches.com> writes:
 
-Acked-by: Andrea Parri <parri.andrea@gmail.com>
+> On Fri, 2020-05-08 at 17:30 +0530, Vaibhav Jain wrote:
+>> Hi Boris,
+>> 
+>> Borislav Petkov <bp@alien8.de> writes:
+>> 
+>> > On Fri, May 08, 2020 at 04:19:19PM +0530, Vaibhav Jain wrote:
+>> > > 'seq_buf' provides a very useful abstraction for writing to a string
+>> > > buffer without needing to worry about it over-flowing. However even
+>> > > though the API has been stable for couple of years now its stills not
+>> > > exported to external modules limiting its usage.
+>> > > 
+>> > > Hence this patch proposes update to 'seq_buf.c' to mark
+>> > > seq_buf_printf() which is part of the seq_buf API to be exported to
+>> > > external GPL modules. This symbol will be used in later parts of this
+>> > 
+>> > What is "external GPL modules"?
+>> I am referring to Kernel Loadable Modules with MODULE_LICENSE("GPL")
+>> here.
+>
+> Any reason why these Kernel Loadable Modules with MODULE_LICENSE("GPL")
+> are not in the kernel tree?
 
-Thanks,
-  Andrea
+The Kernel GPL module that this patch reffers to is 'papr_scm' which is already
+in kernel tree at arch/powerpc/platforms/pseries/papr_scm.c . 
 
-
-> 
->  Documentation/litmus-tests/README             | 22 ++++++++++++++++---
->  Documentation/litmus-tests/atomic/README      | 16 --------------
->  tools/memory-model/Documentation/recipes.txt  |  2 +-
->  .../MP+onceassign+derefonce.litmus            |  0
->  tools/memory-model/litmus-tests/README        |  3 +++
->  5 files changed, 23 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/litmus-tests/atomic/README
->  rename {Documentation/litmus-tests/rcu => tools/memory-model/litmus-tests}/MP+onceassign+derefonce.litmus (100%)
-> 
-> -- 
-> 2.17.1
-> 
-> 
+~ Vaibhav
