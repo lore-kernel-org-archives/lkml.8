@@ -2,184 +2,97 @@ Return-Path: <SRS0=j177=6Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D873EC54E4A
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCFAC47257
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67BF20722
-	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E7820746
+	for <linux-kernel@archiver.kernel.org>; Sun, 10 May 2020 00:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589070921;
+	bh=PwuG6ZEMO22R/K53vfhZWC0b/2lVjNtOZJwj9wy81hk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xsMmlqMz955uVkNBFNEVPWTU/LGah56QAS6OdU8ftPlhIwOJJC9jmgc43os5TD6mD
+	 esfCx7lEK4LixExtUFEJJtjuSBL/1iZMgXagP3hreDdX9WJ+/Ua6ldPw3T6MWcgU5u
+	 srEHn35Wy1s1WYAy6c1vu1b0j7xUkzXxCpFpKdZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgEJAcu (ORCPT
+        id S1728867AbgEJAfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 9 May 2020 20:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54714 "EHLO
+        Sat, 9 May 2020 20:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726356AbgEJAct (ORCPT
+        by vger.kernel.org with ESMTP id S1726565AbgEJAfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 9 May 2020 20:32:49 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673B0C061A0C;
-        Sat,  9 May 2020 17:32:49 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 7E8652753CA
-Received: by earth.universe (Postfix, from userid 1000)
-        id BD0943C08C7; Sun, 10 May 2020 02:32:44 +0200 (CEST)
-Date:   Sun, 10 May 2020 02:32:44 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com, lgirdwood@gmail.com,
-        brendanhiggins@google.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 00/11] Support ROHM BD99954 charger IC
-Message-ID: <20200510003244.3ecxkn5r57nudsm2@earth.universe>
-References: <cover.1588944082.git.matti.vaittinen@fi.rohmeurope.com>
- <20200508172024.GN4820@sirena.org.uk>
+        Sat, 9 May 2020 20:35:18 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24229C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  9 May 2020 17:35:17 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 8so1728397lfp.4
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 17:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QIj/ulxXwzU/BqtApM64/L2H6IYW1Xqha2rgujJnuic=;
+        b=Aez2jDWnaE+fKs120oJmZNtlhpcevhENgd0OPCPE0bHJG0TM/MRk9jV+wNWJnjXJA5
+         a09lBbGbqV9CDMms8Dz3aPk7F/35NlYffAlgkn2Lm8eNUR6J4a45CxXKCYWrDB/qoFWi
+         X+n0JsxmOsUR3H+tSwTVkoukFukm9n+4MgXNo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QIj/ulxXwzU/BqtApM64/L2H6IYW1Xqha2rgujJnuic=;
+        b=WAkgyWOx7WwlTDvNCUhRlScCZhJj096iFojbTuFEkal1dfVDmg1TDBr1TJBa1I0MUy
+         X8Lj55dW4X36YlOzfs3ez0OK/54qqKtMNusSJPGoWJNKAGvBsJlI6Kk3xPu8dbCKsGP9
+         Ld4X7wG2vcWERE0piXPOJQPMle6XjH4v5zei2RQAk+RqQX0RQsMnPsyxgNzFPOr6zN/a
+         aMolf94ssKCm0kUe12YUKrLfTRDO4ifepltJ8riV54d/cf1oxpr0I7HuhDGTyzO5nVee
+         vjVp/sybanlt7oWAOuc6U+gKCHWWGpIK+LIzFh23PvjpcdHOqogW7wnSMSvE57pR/5wG
+         JYBQ==
+X-Gm-Message-State: AOAM531LIMu9YyEmIZBaqHFv+fOqowYjk6H6YtVLjNeunalvETbwHZoc
+        G81X87jh0BxMS1f++WI66unhLGxhc/M=
+X-Google-Smtp-Source: ABdhPJx4PykXQlD9ifOFScL6knDG4k8pRN69w1bfVrTejfeoBPk5ZzbWmbMb7+6JSdsiTBiSkxqiyQ==
+X-Received: by 2002:ac2:46c1:: with SMTP id p1mr5999306lfo.25.1589070915328;
+        Sat, 09 May 2020 17:35:15 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id r3sm5473529lfm.52.2020.05.09.17.35.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 May 2020 17:35:14 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id a21so5594525ljj.11
+        for <linux-kernel@vger.kernel.org>; Sat, 09 May 2020 17:35:14 -0700 (PDT)
+X-Received: by 2002:a2e:8512:: with SMTP id j18mr6018733lji.201.1589070913812;
+ Sat, 09 May 2020 17:35:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2vnpaxzv7zffzoea"
-Content-Disposition: inline
-In-Reply-To: <20200508172024.GN4820@sirena.org.uk>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200509234124.GM23230@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 9 May 2020 17:34:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiC+LzLX0NGQQdD+J0Q2LUMhMyA4kWPghMVq+AmU--w4Q@mail.gmail.com>
+Message-ID: <CAHk-=wiC+LzLX0NGQQdD+J0Q2LUMhMyA4kWPghMVq+AmU--w4Q@mail.gmail.com>
+Subject: Re: [PATCHES] uaccess simple access_ok() removals
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 9, 2020 at 4:41 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+>         Individual patches in followups; if nobody screams - into #for-next
+> it goes...
 
---2vnpaxzv7zffzoea
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks fine to me, although I only read your commit logs, I didn't
+verify that what you stated was actually true (ie the whole "only used
+for xyz" parts).
 
-Hi,
+But I'll take your word for it. Particularly the double-underscore
+versions are getting rare (and presumably some of the other branches
+you have make it rarer still).
 
-On Fri, May 08, 2020 at 06:20:24PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 06:38:17PM +0300, Matti Vaittinen wrote:
-> > Please note that this series should be applied to two trees. Patches
-> > 1-4 (or 1-5 as suggested by Sebastian) should go to regulator tree.
-> > Perhaps Mark can provide an immutable branch to Sebastian? Rest of the
-> > patches can then go to power-supply tree.
->=20
-> The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314=
-fd:
->=20
->   Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
->=20
-> are available in the Git repository at:
->=20
->   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git t=
-ags/linear-ranges-lib
->=20
-> for you to fetch changes up to 60ab7f4153b6af461c90d572c31104086b44639f:
->=20
->   regulator: use linear_ranges helper (2020-05-08 18:18:13 +0100)
->=20
-> ----------------------------------------------------------------
-> lib: Add linear ranges helper library and start using it
->=20
-> Series extracts a "linear ranges" helper out of the regulator
-> framework. Linear ranges helper is intended to help converting
-> real-world values to register values when conversion is linear. I
-> suspect this is useful also for power subsystem and possibly for clk.
->=20
-> ----------------------------------------------------------------
-
-Thanks, merged to power-supply's for-next branch.
-
--- Sebastian
-
-> Matti Vaittinen (4):
->       lib: add linear ranges helpers
->       lib/test_linear_ranges: add a test for the 'linear_ranges'
->       power: supply: bd70528: rename linear_range to avoid collision
->       regulator: use linear_ranges helper
->=20
->  drivers/power/supply/bd70528-charger.c  |  10 +-
->  drivers/regulator/88pg86x.c             |   4 +-
->  drivers/regulator/88pm800-regulator.c   |   4 +-
->  drivers/regulator/Kconfig               |   1 +
->  drivers/regulator/act8865-regulator.c   |   4 +-
->  drivers/regulator/act8945a-regulator.c  |   2 +-
->  drivers/regulator/arizona-ldo1.c        |   2 +-
->  drivers/regulator/arizona-micsupp.c     |   4 +-
->  drivers/regulator/as3711-regulator.c    |   6 +-
->  drivers/regulator/as3722-regulator.c    |   4 +-
->  drivers/regulator/axp20x-regulator.c    |  16 +--
->  drivers/regulator/bcm590xx-regulator.c  |   8 +-
->  drivers/regulator/bd70528-regulator.c   |   8 +-
->  drivers/regulator/bd71828-regulator.c   |  10 +-
->  drivers/regulator/bd718x7-regulator.c   |  26 ++--
->  drivers/regulator/da903x.c              |   2 +-
->  drivers/regulator/helpers.c             | 130 ++++++++---------
->  drivers/regulator/hi6421-regulator.c    |   4 +-
->  drivers/regulator/lochnagar-regulator.c |   4 +-
->  drivers/regulator/lp873x-regulator.c    |   4 +-
->  drivers/regulator/lp87565-regulator.c   |   2 +-
->  drivers/regulator/lp8788-buck.c         |   2 +-
->  drivers/regulator/max77650-regulator.c  |   2 +-
->  drivers/regulator/mcp16502.c            |   4 +-
->  drivers/regulator/mp8859.c              |   2 +-
->  drivers/regulator/mt6323-regulator.c    |   6 +-
->  drivers/regulator/mt6358-regulator.c    |   8 +-
->  drivers/regulator/mt6380-regulator.c    |   6 +-
->  drivers/regulator/mt6397-regulator.c    |   6 +-
->  drivers/regulator/palmas-regulator.c    |   4 +-
->  drivers/regulator/qcom-rpmh-regulator.c |   2 +-
->  drivers/regulator/qcom_rpm-regulator.c  |  14 +-
->  drivers/regulator/qcom_smd-regulator.c  |  78 +++++------
->  drivers/regulator/rk808-regulator.c     |  10 +-
->  drivers/regulator/s2mps11.c             |  14 +-
->  drivers/regulator/sky81452-regulator.c  |   2 +-
->  drivers/regulator/stpmic1_regulator.c   |  18 +--
->  drivers/regulator/tps65086-regulator.c  |  10 +-
->  drivers/regulator/tps65217-regulator.c  |   4 +-
->  drivers/regulator/tps65218-regulator.c  |   6 +-
->  drivers/regulator/tps65912-regulator.c  |   4 +-
->  drivers/regulator/twl-regulator.c       |   4 +-
->  drivers/regulator/twl6030-regulator.c   |   2 +-
->  drivers/regulator/wm831x-dcdc.c         |   2 +-
->  drivers/regulator/wm831x-ldo.c          |   4 +-
->  drivers/regulator/wm8350-regulator.c    |   2 +-
->  drivers/regulator/wm8400-regulator.c    |   2 +-
->  include/linux/linear_range.h            |  48 +++++++
->  include/linux/regulator/driver.h        |  27 +---
->  lib/Kconfig                             |   3 +
->  lib/Kconfig.debug                       |  12 ++
->  lib/Makefile                            |   2 +
->  lib/linear_ranges.c                     | 241 ++++++++++++++++++++++++++=
-++++++
->  lib/test_linear_ranges.c                | 228 ++++++++++++++++++++++++++=
-++++
->  54 files changed, 768 insertions(+), 266 deletions(-)
->  create mode 100644 include/linux/linear_range.h
->  create mode 100644 lib/linear_ranges.c
->  create mode 100644 lib/test_linear_ranges.c
-
-
-
---2vnpaxzv7zffzoea
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl63S6cACgkQ2O7X88g7
-+poxMQ//ZqWoqEMXvf3HYr8zHc/3gRNnrZHVI1jhO2aSOs4UIH1gebjIUEaVmSdH
-iK2rLIyGChmiHZbwDW84POb9e3DhV6vSzzo2MB+ZpYszYQWSzfioVbS2mM+kpMWs
-n35kz0CbznrukxOjIZpmCqVwHwu4UOURhasRJdf6HzddUYt8TIRd3B1SKqqgN96W
-hKJt3JYeIs3e1gARYHKA1tI10OpAnfyqJ+2fWejjEBtPFeBqyy2bJAwqe9EJOV8J
-+Ks7+kO8nYYaWtDEamXfJC5gn+fre4eG4tH7Xu7NYIsHJ7duiQ6jwixsy3m78vp9
-oRzDegoHoTtgGTtjBy28jyZWubK6bCZxDY7tlbdvx63cePAHH+KJuhlQKXxxKxUr
-TFmYP4hIL4xp0D5P3v0WRURdgfxK4Tf0YVrM2qsIseLpiXeepPcDxlgmWl6KFJlW
-9DnhbCvxPzP/Prybahox3W2RzTeOAvjCO25zl6J/wozksGQgFtc8REy0+PJcp3cW
-7GZdhlOGQru8848JO0CnuearPDIc41+2q97FfJH2n5OLURwOg1n/fOx05vguhD/c
-IPYVEZs9TLICb6OmJOUlZUD775/Lcp2ceUiwdfDgGo2y+T8Fy/O2Ym7C9IHXuEcN
-aeKqUNpeaKC8vOnsIicKALw6fd193vUQ1wKppLvi+KEXPd6Osck=
-=Xn2+
------END PGP SIGNATURE-----
-
---2vnpaxzv7zffzoea--
+               Linus
