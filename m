@@ -2,178 +2,150 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA06C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E4BC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A0020820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:52:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="QCTj+BVk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gFP7sW5E"
+	by mail.kernel.org (Postfix) with ESMTP id 0EFBC208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589172809;
+	bh=uAtERo6VQF9XSmlySDnOOTtodkoqWWGfP4aqy6ImfPk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dwr/aUCrPh5cC+Zz1YGdhOpD6VNIw9pB9Tynf0M4mJk6IyQrslSm7NydS5i+0/9RS
+	 ya3Bu2i0sRE9SvtGjCw5P+gpbDy4yj8PTlpgHdUHFEema6Jt2eRFz5Q/ZnXMYzs1ax
+	 iJZl2MW8aqfzuXpTjjBFHdO9FYdf1GfdeaZbTFos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgEKEwv (ORCPT
+        id S1727877AbgEKEx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:52:51 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:55687 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbgEKEwu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:52:50 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 5AFCA3FA;
-        Mon, 11 May 2020 00:52:49 -0400 (EDT)
-Received: from imap26 ([10.202.2.76])
-  by compute3.internal (MEProxy); Mon, 11 May 2020 00:52:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=mime-version:message-id:in-reply-to:references:date:from:to
-        :cc:subject:content-type; s=fm1; bh=tHIWHGwD2awLQ7YfvHIbcGG38ivg
-        dphn08I12CZ2Xx4=; b=QCTj+BVkhFwvH/TOjPuWMhgNEpOGamwHoEcavOmIuSIW
-        VPQCGmRBC5zrYOHgXfRxcH7T33qczjumF32ChqB7WqueeG7i86pNit8OspWAhgla
-        lQoTj01/mnZLMkxD2xeJBZMRk3AQPLtcJScVuc9BxWzxyHBooRqSBp1kHE+3MhWl
-        6Gh4y81FVOHt/UfyOC9d/7NZ73zFDiMul2U8AZgceVQXhYEQkVrOKA1sFc96ViZK
-        P/vjcvVmBimEFphNpz8SXx5RwAuOvipiQMZJqU9yM9MNQv0sp84hGO77cAEh2xeP
-        v+3aMOA0fOtHVcSSZfKIm5/bfYjzlHqZjeys4Uld+g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=tHIWHG
-        wD2awLQ7YfvHIbcGG38ivgdphn08I12CZ2Xx4=; b=gFP7sW5ExcrIVbqJ+saGLi
-        i99R+Z3Q5Ik33sL3sQpDH+F5vCwrHfC945pQeaA/E0u6Vsfl4bvfd6PwrK2ntx2H
-        iSTzHu0fHoD9Uhpt+MjRtr7LXjb8lbME/661m2WKkNFGmI1UDW9QucZHAUAiNjOR
-        KScxVJzDTI4eg1F1VqjzyWlkwd2IL1ZPIX62nCS8RyL3XU4LX8E+c3KhxOtxmByX
-        /RTfvGanwj5+XvxtH/D0n5S7f9o4fFpGtgTSXkKFw6DPPD3uPe0bHgOkUe4disWz
-        z7nJdxzGZqOKigGt6/g0JWJTF9a+qHOe2eStSLtafbo9KAUJA35zAZUFEZDl3Tpg
-        ==
-X-ME-Sender: <xms:INq4XhHZYc17U9LVumxao8pYJxhjT3UkutMvDJWgUVUtVMrHtf8puQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrkeelgdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpeetlhhishht
-    rghirhcuoegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgeqnecuggftrfgrth
-    htvghrnhepueffkeevheejledtueevieekleekjefhjeehudfhtdfgtdfgjeejkedvveej
-    veeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgv
-X-ME-Proxy: <xmx:INq4XtOYh1BjK-l9aCyqQ3N8CAmTdf-2sj69GAnnPTBJC5QTNA8TOg>
-    <xmx:INq4Xrc2oJyv7MLmmA5mEaYGv8hEtzSnDLBuMU8h5kzjbPMiJJDHqw>
-    <xmx:INq4XivgtEnnbOfpUcLdjQ-kdG4AX2gtuM9uH7UCQUvvu98hb50nng>
-    <xmx:Idq4Xn-si6AyLlkZU2ihXLcHNdiHyr0DRv_TSgEGL63mmPBIJSbPfA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2766E14200A2; Mon, 11 May 2020 00:52:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-dev0-413-g750b809-fmstable-20200507v1
-Mime-Version: 1.0
-Message-Id: <7d6d1494-31a7-4780-85f3-8bbc2f32bcd6@www.fastmail.com>
-In-Reply-To: <CAMuHMdV7qGSbw44O+ykSz3W6h6oxj-ir+9qRbeazKb+p7Z=2Mg@mail.gmail.com>
-References: <20200506014135.2941967-1-alistair@alistair23.me>
- <CAMuHMdV7qGSbw44O+ykSz3W6h6oxj-ir+9qRbeazKb+p7Z=2Mg@mail.gmail.com>
-Date:   Sun, 10 May 2020 21:52:27 -0700
-From:   Alistair <alistair@alistair23.me>
-To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc:     "Mark Brown" <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Maxime Ripard" <mripard@kernel.org>,
-        "Chen-Yu Tsai" <wens@csie.org>,
-        "Alistair Francis" <alistair23@gmail.com>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] spi: sun6i: Add support for GPIO chip select lines
-Content-Type: text/plain
+        Mon, 11 May 2020 00:53:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgEKEx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:53:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2CD20820;
+        Mon, 11 May 2020 04:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589172807;
+        bh=uAtERo6VQF9XSmlySDnOOTtodkoqWWGfP4aqy6ImfPk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bx6cskL0Iw2UkBCirdICU4JIrRpSkTFMA0CNuRCIxrXXae9H83wJuZRD4Z4qIvJmw
+         zEO8vkZ9u2zC8PIpeIBRV55Xy9B4Hj/VITxnuVIA8tt7/u5cTS+Deuvq6CEWBr/o+/
+         DUIw7gjgrsJ2kYqh/ZxTtA4ETawmE1LAfAhazYpA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        luto@kernel.org
+Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ak@linux.intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v12 00/18] Enable FSGSBASE instructions
+Date:   Mon, 11 May 2020 00:52:53 -0400
+Message-Id: <20200511045311.4785-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 6, 2020, at 1:27 AM, Geert Uytterhoeven wrote:
-> Hi Alistair,
-> 
-> On Wed, May 6, 2020 at 3:41 AM Alistair Francis <alistair@alistair23.me> wrote:
-> > Add a setup function that can be used to support using generic GPIO
-> > lines for the chip select.
-> >
-> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> > ---
-> > drivers/spi/spi-sun6i.c | 27 +++++++++++++++++++++++++++
-> > 1 file changed, 27 insertions(+)
-> >
-> > diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
-> > index ec7967be9e2f..fd4e19434942 100644
-> > --- a/drivers/spi/spi-sun6i.c
-> > +++ b/drivers/spi/spi-sun6i.c
-> > @@ -10,6 +10,7 @@
-> > #include <linux/clk.h>
-> > #include <linux/delay.h>
-> > #include <linux/device.h>
-> > +#include <linux/gpio.h>
-> > #include <linux/interrupt.h>
-> > #include <linux/io.h>
-> > #include <linux/module.h>
-> > @@ -171,6 +172,31 @@ static inline void sun6i_spi_fill_fifo(struct sun6i_spi *sspi, int len)
-> > }
-> > }
-> >
-> > +static int sun6i_spi_setup(struct spi_device *spi)
-> > +{
-> > + int ret;
-> > +
-> > + /* sanity check for native cs */
-> > + if (spi->mode & SPI_NO_CS)
-> > + return 0;
-> > + if (gpio_is_valid(spi->cs_gpio)) {
-> > + /* with gpio-cs set the GPIO to the correct level
-> > + * and as output (in case the dt has the gpio not configured
-> > + * as output but native cs)
-> > + */
-> > + ret = gpio_direction_output(spi->cs_gpio,
-> > + (spi->mode & SPI_CS_HIGH) ? 0 : 1);
-> > + if (ret)
-> > + dev_err(&spi->dev,
-> > + "could not set gpio %i as output: %i\n",
-> > + spi->cs_gpio, ret);
-> > +
-> > + return ret;
-> > + }
-> > +
-> > + return 0;
-> > +}
-> > +
-> > static void sun6i_spi_set_cs(struct spi_device *spi, bool enable)
-> > {
-> > struct sun6i_spi *sspi = spi_master_get_devdata(spi->master);
-> > @@ -470,6 +496,7 @@ static int sun6i_spi_probe(struct platform_device *pdev)
-> >
-> > master->max_speed_hz = 100 * 1000 * 1000;
-> > master->min_speed_hz = 3 * 1000;
-> > + master->setup = sun6i_spi_setup;
-> > master->set_cs = sun6i_spi_set_cs;
-> > master->transfer_one = sun6i_spi_transfer_one;
-> > master->num_chipselect = 4;
-> 
-> Can't you just set
-> 
->  master->use_gpio_descriptors = true;
-> 
-> instead and be done with it?
-> Then drivers/spi/spi.c:spi_get_gpio_descs() will configure the GPIO line
-> as output for you.
+Benefits:
+Currently a user process that wishes to read or write the FS/GS base must
+make a system call. But recent X86 processors have added new instructions
+for use in 64-bit mode that allow direct access to the FS and GS segment
+base addresses.  The operating system controls whether applications can
+use these instructions with a %cr4 control bit.
 
-Yep, it looks like that works. Sending a v2.
+In addition to benefits to applications, performance improvements to the
+OS context switch code are possible by making use of these instructions. A
+third party reported out promising performance numbers out of their
+initial benchmarking of the previous version of this patch series [9].
 
-Alistair
+Enablement check:
+The kernel provides information about the enabled state of FSGSBASE to
+applications using the ELF_AUX vector. If the HWCAP2_FSGSBASE bit is set in
+the AUX vector, the kernel has FSGSBASE instructions enabled and
+applications can use them.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->  Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->  -- Linus Torvalds
-> 
+Kernel changes:
+Major changes made in the kernel are in context switch, paranoid path, and
+ptrace. In a context switch, a task's FS/GS base will be secured regardless
+of its selector. In the paranoid path, GS base is unconditionally
+overwritten to the kernel GS base on entry and the original GS base is
+restored on exit. Ptrace includes divergence of FS/GS index and base
+values.
+
+Security:
+For mitigating the Spectre v1 SWAPGS issue, LFENCE instructions were added
+on most kernel entries. Those patches are dependent on previous behaviors
+that users couldn't load a kernel address into the GS base. These patches
+change that assumption since the user can load any address into GS base.
+The changes to the kernel entry path in this patch series take account of
+the SWAPGS issue.
+
+Changes from v11:
+
+ - Rebase to v5.7-rc5, fix 32bit compilation error.
+
+
+Andi Kleen (2):
+  x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
+  x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
+
+Andy Lutomirski (4):
+  x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+  x86/entry/64: Clean up paranoid exit
+  x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
+  x86/fsgsbase/64: Enable FSGSBASE on 64bit by default and add a chicken
+    bit
+
+Chang S. Bae (9):
+  x86/ptrace: Prevent ptrace from clearing the FS/GS selector
+  selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base
+    write
+  x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+  x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+  x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit
+  x86/entry/64: Document GSBASE handling in the paranoid path
+  x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
+  x86/fsgsbase/64: Use FSGSBASE instructions on thread copy and ptrace
+  selftests/x86/fsgsbase: Test ptracer-induced GS base write with
+    FSGSBASE
+
+Sasha Levin (1):
+  x86/fsgsbase/64: move save_fsgs to header file
+
+Thomas Gleixner (1):
+  Documentation/x86/64: Add documentation for GS/FS addressing mode
+
+Tony Luck (1):
+  x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ Documentation/x86/entry_64.rst                |   9 +
+ Documentation/x86/x86_64/fsgs.rst             | 199 ++++++++++++++++++
+ Documentation/x86/x86_64/index.rst            |   1 +
+ arch/x86/entry/calling.h                      |  40 ++++
+ arch/x86/entry/entry_64.S                     | 131 +++++++++---
+ arch/x86/include/asm/fsgsbase.h               |  45 +++-
+ arch/x86/include/asm/inst.h                   |  15 ++
+ arch/x86/include/uapi/asm/hwcap2.h            |   3 +
+ arch/x86/kernel/cpu/bugs.c                    |   6 +-
+ arch/x86/kernel/cpu/common.c                  |  22 ++
+ arch/x86/kernel/process.c                     |   9 +-
+ arch/x86/kernel/process.h                     |  72 +++++++
+ arch/x86/kernel/process_64.c                  | 142 +++++++------
+ arch/x86/kernel/ptrace.c                      |  17 +-
+ tools/testing/selftests/x86/fsgsbase.c        |  24 ++-
+ 16 files changed, 608 insertions(+), 129 deletions(-)
+ create mode 100644 Documentation/x86/x86_64/fsgs.rst
+
+-- 
+2.20.1
+
