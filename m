@@ -2,202 +2,93 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D13C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F472C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F38206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4C7206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eXruX/xC"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uRLMK9B9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgEKWJN (ORCPT
+        id S1726660AbgEKWJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
+        Mon, 11 May 2020 18:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbgEKWJM (ORCPT
+        by vger.kernel.org with ESMTP id S1725836AbgEKWJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:09:12 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B37C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:09:12 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t9so8549057pjw.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aomPkVehe7TL/kKU0Me66UERAR5lg9DL9drhmGOnVxE=;
-        b=eXruX/xCbQJfFsbqHN2CJokshetL/6PLgXB+QVz+bKAQHCpfXEbAjzkghODaZYT7ca
-         m5uHGvS9M34uv2UOLK5nR38ppj2wJP1ipPrT7Jmh7OPNkwyvQ6/GBDca4TK8s9gZrDyE
-         0WW0D6lDwjdQ29RO6Hfqi8ztL4q7UGcHG3W/U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aomPkVehe7TL/kKU0Me66UERAR5lg9DL9drhmGOnVxE=;
-        b=QRLXL0h1/TQLf1XMSHcuDPvEDv1UFgm6uPoeE8RomcGueQ2djuBuFAOaxfkCI/cXSr
-         KWpolz0Jhdeoj2zMz8jY1HfFyht0V738Bsr5OeAXWOKg5tJvmTK+0EF1XGYG/4RlxPWk
-         Jw/AVyAAHOc9rYjdsCUqMWavb4ac/oj1uC6JFgPOUI10kSd4dyjpaVh70udps6IsriM6
-         wOyj5YRhDOqPYqoPro+JaqCqp/4bTDbSUsIZ0Dkqr/cX6hkyDh46SiuxUho4gG0CHY5b
-         5AdP9z5CHL+3hhKvvQn3fpemLFVf9GPQOa2JVmIPyaJGtvG8CwWMLs75AUGMiAo5x2oa
-         4ikQ==
-X-Gm-Message-State: AGi0Pua6DFky74Mt3WmfcSChobS4ifVEjM9g7u0neX7vK0Ef0br+eR1h
-        vFmm60/TMEwskyr44qMcu+meFA==
-X-Google-Smtp-Source: APiQypKi68we7ermoAWRfQW2qEytOl35kvRZgSR1OMlPxo26w8nY5kkYJw6WqdApCEIF0R4HUGYN7A==
-X-Received: by 2002:a17:90b:614:: with SMTP id gb20mr21080900pjb.211.1589234951533;
-        Mon, 11 May 2020 15:09:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s101sm10918738pjb.57.2020.05.11.15.09.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:09:10 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:09:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 4/5] exec: Allow load_misc_binary to call prepare_binfmt
- unconditionally
-Message-ID: <202005111457.8CC3A4A7@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <878si0zyhs.fsf_-_@x220.int.ebiederm.org>
+        Mon, 11 May 2020 18:09:20 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB956C061A0C;
+        Mon, 11 May 2020 15:09:19 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LZph23WXz9sRf;
+        Tue, 12 May 2020 08:09:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589234956;
+        bh=NLp2iwmJol7crhzKzA9NGQFP2FD7zXoJFHdFYX7gelg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uRLMK9B9PTUhBKTBYUM506OYo+FvhLyFbZ8+VkpAGJOa96lsVbzxz7094rkAkPVTA
+         tdgErcTukJRikinXeyUZTljWu74mNMJWnOO3qIyETGZsY3WJoGaFwjuRrfBGG+of8k
+         aOj41gIpx7YLb2OKReVTHUwLIbZiLW4zwx3IYzxVLONFiOhd4jerHR9JKT1DQQiodV
+         SmIPXAEHCEUXCWuOJ/vIBP9bCHFcV01LMAK76EHStiO/RKrMWAJvYVQsgZcEk1qT70
+         9aLV7atJTgEqXACRe2yCF8gafbcxo9uRvT4uk7Sm6A1euNaxNAiJpnUy5dzEPKn8fn
+         b0jRhuyNWUyOA==
+Date:   Tue, 12 May 2020 08:09:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Zhao <tzhao@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>
+Subject: linux-next: Signed-off-by missing for commit in the net-next tree
+Message-ID: <20200512080914.42dadf0c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878si0zyhs.fsf_-_@x220.int.ebiederm.org>
+Content-Type: multipart/signed; boundary="Sig_/Qhva7hVypyXGbe/DmUkaVMS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 02:42:23PM -0500, Eric W. Biederman wrote:
-> 
-> Add a flag preserve_creds that binfmt_misc can set to prevent
-> credentials from being updated.  This allows binfmrt_misc to always
-> call prepare_binfmt.  Allowing the credential computation logic to be
-> consolidated.
-> 
-> Ref: c407c033de84 ("[PATCH] binfmt_misc: improve calculation of interpreter's credentials")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  fs/binfmt_misc.c        | 15 +++------------
->  fs/exec.c               | 14 +++++++++-----
->  include/linux/binfmts.h |  2 ++
->  3 files changed, 14 insertions(+), 17 deletions(-)
-> 
-> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-> index 127fae9c21ab..16bfafd2671d 100644
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -218,19 +218,10 @@ static int load_misc_binary(struct linux_binprm *bprm)
->  		goto error;
->  
->  	bprm->file = interp_file;
-> -	if (fmt->flags & MISC_FMT_CREDENTIALS) {
-> -		loff_t pos = 0;
-> -
-> -		/*
-> -		 * No need to call prepare_binprm(), it's already been
-> -		 * done.  bprm->buf is stale, update from interp_file.
-> -		 */
-> -		memset(bprm->buf, 0, BINPRM_BUF_SIZE);
-> -		retval = kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE,
-> -				&pos);
-> -	} else
-> -		retval = prepare_binprm(bprm);
-> +	if (fmt->flags & MISC_FMT_CREDENTIALS)
-> +		bprm->preserve_creds = 1;
->  
-> +	retval = prepare_binprm(bprm);
->  	if (retval < 0)
->  		goto error;
->  
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 8bbf5fa785a6..01dbeb025c46 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1630,14 +1630,18 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
->   */
->  int prepare_binprm(struct linux_binprm *bprm)
->  {
-> -	int retval;
->  	loff_t pos = 0;
->  
-> -	bprm_fill_uid(bprm);
-> +	if (!bprm->preserve_creds) {
+--Sig_/Qhva7hVypyXGbe/DmUkaVMS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-nit: hint this to the common execution path:
+Hi all,
 
-	if (likely(!bprm->preserve_creds) {
+Commit
 
-> +		int retval;
->  
-> -	retval = cap_bprm_set_creds(bprm);
-> -	if (retval)
-> -		return retval;
-> +		bprm_fill_uid(bprm);
-> +
-> +		retval = cap_bprm_set_creds(bprm);
-> +		if (retval)
-> +			return retval;
-> +	}
-> +	bprm->preserve_creds = 0;
->  
->  	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
->  	return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index 89f1135dcb75..cb016f001e7a 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -26,6 +26,8 @@ struct linux_binprm {
->  	unsigned long p; /* current top of mem */
->  	unsigned long argmin; /* rlimit marker for copy_strings() */
->  	unsigned int
-> +		/* Don't update the creds for an interpreter (see binfmt_misc) */
+  be904b855200 ("sfc: make capability checking a nic_type function")
 
-I'd like a much more verbose comment here. How about this:
+is missing a Signed-off-by from its author.
 
-		/*
-		 * Skip setting new privileges for an interpreter (see
-		 * binfmt_misc) on the next call to prepare_binprm().
-		 */
+--=20
+Cheers,
+Stephen Rothwell
 
-> +		preserve_creds:1,
+--Sig_/Qhva7hVypyXGbe/DmUkaVMS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Nit pick: we've seen there is a logical difference here between "creds"
-(which mean "the creds struct itself") and "privileges" (which are
-stored in the cred struct). I think we should reinforce this distinction
-here and name this:
+-----BEGIN PGP SIGNATURE-----
 
-		preserve_privileges:1,
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl65zQoACgkQAVBC80lX
+0Gw4xwgAntK+XyGolpni1agR8ixJWVKudqx/onhp/GMpmx4WlL9h6FIeyf1HG8sK
+wHm96937gusVCUEjT0L+FiAiGOn9wUN+wcE5ZmM60WieJCPrOXjq+H7AGW9ylbio
+8N8VQdbRv/+5Z0+sZSQYRKdxeBNwFKKiTtAKeovTcMNe2vDSd7zBQ657+BSR70nX
+NkK0qMhvUxe50+L4G2sad6c23r+WVqtgCWADImWu+gC6HG25Zg9HaeQM586OzuA/
+QNyR+RtFtNP0Vcnvrfr0WhJ/pMgKzO3wFzWzmO/GsPkBuz0BUkoluHv6ybi3sbdn
+qrECP9JC4q4+0v8esN5yq6p4tVk/yg==
+=nYtz
+-----END PGP SIGNATURE-----
 
->  		/*
->  		 * True if most recent call to the commoncaps bprm_set_creds
->  		 * hook (due to multiple prepare_binprm() calls from the
-> -- 
-> 2.25.0
-> 
-
-Otherwise, yeah, this seems okay to me.
-
--- 
-Kees Cook
+--Sig_/Qhva7hVypyXGbe/DmUkaVMS--
