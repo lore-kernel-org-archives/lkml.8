@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDF4C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E01C38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B9B24965
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251AA24967
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEKDAG (ORCPT
+        id S1728458AbgEKDAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:00:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26536 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728355AbgEKDAE (ORCPT
+        Sun, 10 May 2020 23:00:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57730 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728411AbgEKDAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:00:04 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B2VKpN110564;
-        Sun, 10 May 2020 22:59:29 -0400
+        Sun, 10 May 2020 23:00:06 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B2Xfco166375;
+        Sun, 10 May 2020 22:59:46 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws9xw7rc-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws475c20-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 10 May 2020 22:59:29 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B2t3Kw162924;
-        Sun, 10 May 2020 22:59:28 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws9xw7r0-1
+        Sun, 10 May 2020 22:59:45 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B2ZpTR173338;
+        Sun, 10 May 2020 22:59:45 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws475c1c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 10 May 2020 22:59:28 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B2t9gg022464;
-        Mon, 11 May 2020 02:59:27 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30wm55kfnb-1
+        Sun, 10 May 2020 22:59:45 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B2tJvV029931;
+        Mon, 11 May 2020 02:59:43 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 30wm55bfq9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 02:59:26 +0000
+        Mon, 11 May 2020 02:59:42 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B2xOZ747054874
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B2wTGP61014304
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 02:59:24 GMT
+        Mon, 11 May 2020 02:58:29 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29936AE045;
-        Mon, 11 May 2020 02:59:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 232FBAE04D;
+        Mon, 11 May 2020 02:59:40 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E5C3AE04D;
-        Mon, 11 May 2020 02:59:20 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 87D99AE045;
+        Mon, 11 May 2020 02:59:36 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.53.64])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 May 2020 02:59:20 +0000 (GMT)
+        Mon, 11 May 2020 02:59:36 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
@@ -62,9 +62,9 @@ Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
         fweisbec@gmail.com, mingo@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         ravi.bangoria@linux.ibm.com
-Subject: [PATCH v5 01/16] powerpc/watchpoint: Rename current DAWR macros
-Date:   Mon, 11 May 2020 08:28:56 +0530
-Message-Id: <20200511025911.212827-2-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v5 05/16] powerpc/watchpoint: Provide DAWR number to set_dawr
+Date:   Mon, 11 May 2020 08:29:00 +0530
+Message-Id: <20200511025911.212827-6-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511025911.212827-1-ravi.bangoria@linux.ibm.com>
 References: <20200511025911.212827-1-ravi.bangoria@linux.ibm.com>
@@ -73,174 +73,103 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-10_11:2020-05-08,2020-05-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- malwarescore=0 clxscore=1015 priorityscore=1501 adultscore=0
- impostorscore=0 phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110014
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power10 is introducing second DAWR. Use real register names from ISA
-for current macros:
-  s/SPRN_DAWR/SPRN_DAWR0/
-  s/SPRN_DAWRX/SPRN_DAWRX0/
+Introduce new parameter 'nr' to set_dawr() which indicates which DAWR
+should be programed.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Reviewed-by: Michael Neuling <mikey@neuling.org>
 ---
- arch/powerpc/include/asm/reg.h          |  4 ++--
- arch/powerpc/kernel/dawr.c              |  4 ++--
- arch/powerpc/kvm/book3s_hv.c            | 12 ++++++------
- arch/powerpc/kvm/book3s_hv_rmhandlers.S | 18 +++++++++---------
- arch/powerpc/xmon/xmon.c                |  2 +-
- 5 files changed, 20 insertions(+), 20 deletions(-)
+ arch/powerpc/include/asm/hw_breakpoint.h |  4 ++--
+ arch/powerpc/kernel/dawr.c               | 15 ++++++++++-----
+ arch/powerpc/kernel/process.c            |  2 +-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index da5cab038e25..156ee89fa9be 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -283,14 +283,14 @@
- #define   CTRL_CT1	0x40000000	/* thread 1 */
- #define   CTRL_TE	0x00c00000	/* thread enable */
- #define   CTRL_RUNLATCH	0x1
--#define SPRN_DAWR	0xB4
-+#define SPRN_DAWR0	0xB4
- #define SPRN_RPR	0xBA	/* Relative Priority Register */
- #define SPRN_CIABR	0xBB
- #define   CIABR_PRIV		0x3
- #define   CIABR_PRIV_USER	1
- #define   CIABR_PRIV_SUPER	2
- #define   CIABR_PRIV_HYPER	3
--#define SPRN_DAWRX	0xBC
-+#define SPRN_DAWRX0	0xBC
- #define   DAWRX_USER	__MASK(0)
- #define   DAWRX_KERNEL	__MASK(1)
- #define   DAWRX_HYP	__MASK(2)
+diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+index 518b41eef924..5b3b02834e0b 100644
+--- a/arch/powerpc/include/asm/hw_breakpoint.h
++++ b/arch/powerpc/include/asm/hw_breakpoint.h
+@@ -104,10 +104,10 @@ static inline bool dawr_enabled(void)
+ {
+ 	return dawr_force_enable;
+ }
+-int set_dawr(struct arch_hw_breakpoint *brk);
++int set_dawr(int nr, struct arch_hw_breakpoint *brk);
+ #else
+ static inline bool dawr_enabled(void) { return false; }
+-static inline int set_dawr(struct arch_hw_breakpoint *brk) { return -1; }
++static inline int set_dawr(int nr, struct arch_hw_breakpoint *brk) { return -1; }
+ #endif
+ 
+ #endif	/* __KERNEL__ */
 diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
-index cc14aa6c4a1b..e91b613bf137 100644
+index e91b613bf137..8114ad3a8574 100644
 --- a/arch/powerpc/kernel/dawr.c
 +++ b/arch/powerpc/kernel/dawr.c
-@@ -39,8 +39,8 @@ int set_dawr(struct arch_hw_breakpoint *brk)
+@@ -16,7 +16,7 @@
+ bool dawr_force_enable;
+ EXPORT_SYMBOL_GPL(dawr_force_enable);
+ 
+-int set_dawr(struct arch_hw_breakpoint *brk)
++int set_dawr(int nr, struct arch_hw_breakpoint *brk)
+ {
+ 	unsigned long dawr, dawrx, mrd;
+ 
+@@ -39,15 +39,20 @@ int set_dawr(struct arch_hw_breakpoint *brk)
  	if (ppc_md.set_dawr)
  		return ppc_md.set_dawr(dawr, dawrx);
  
--	mtspr(SPRN_DAWR, dawr);
--	mtspr(SPRN_DAWRX, dawrx);
-+	mtspr(SPRN_DAWR0, dawr);
-+	mtspr(SPRN_DAWRX0, dawrx);
+-	mtspr(SPRN_DAWR0, dawr);
+-	mtspr(SPRN_DAWRX0, dawrx);
++	if (nr == 0) {
++		mtspr(SPRN_DAWR0, dawr);
++		mtspr(SPRN_DAWRX0, dawrx);
++	} else {
++		mtspr(SPRN_DAWR1, dawr);
++		mtspr(SPRN_DAWRX1, dawrx);
++	}
  
  	return 0;
  }
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8..db07199f0977 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3392,8 +3392,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	int trap;
- 	unsigned long host_hfscr = mfspr(SPRN_HFSCR);
- 	unsigned long host_ciabr = mfspr(SPRN_CIABR);
--	unsigned long host_dawr = mfspr(SPRN_DAWR);
--	unsigned long host_dawrx = mfspr(SPRN_DAWRX);
-+	unsigned long host_dawr = mfspr(SPRN_DAWR0);
-+	unsigned long host_dawrx = mfspr(SPRN_DAWRX0);
- 	unsigned long host_psscr = mfspr(SPRN_PSSCR);
- 	unsigned long host_pidr = mfspr(SPRN_PID);
  
-@@ -3422,8 +3422,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	mtspr(SPRN_SPURR, vcpu->arch.spurr);
- 
- 	if (dawr_enabled()) {
--		mtspr(SPRN_DAWR, vcpu->arch.dawr);
--		mtspr(SPRN_DAWRX, vcpu->arch.dawrx);
-+		mtspr(SPRN_DAWR0, vcpu->arch.dawr);
-+		mtspr(SPRN_DAWRX0, vcpu->arch.dawrx);
- 	}
- 	mtspr(SPRN_CIABR, vcpu->arch.ciabr);
- 	mtspr(SPRN_IC, vcpu->arch.ic);
-@@ -3475,8 +3475,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
- 	      (local_paca->kvm_hstate.fake_suspend << PSSCR_FAKE_SUSPEND_LG));
- 	mtspr(SPRN_HFSCR, host_hfscr);
- 	mtspr(SPRN_CIABR, host_ciabr);
--	mtspr(SPRN_DAWR, host_dawr);
--	mtspr(SPRN_DAWRX, host_dawrx);
-+	mtspr(SPRN_DAWR0, host_dawr);
-+	mtspr(SPRN_DAWRX0, host_dawrx);
- 	mtspr(SPRN_PID, host_pidr);
- 
- 	/*
-diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-index 780a499c7114..70de3325d0e9 100644
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -707,8 +707,8 @@ BEGIN_FTR_SECTION
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
- BEGIN_FTR_SECTION
- 	mfspr	r5, SPRN_CIABR
--	mfspr	r6, SPRN_DAWR
--	mfspr	r7, SPRN_DAWRX
-+	mfspr	r6, SPRN_DAWR0
-+	mfspr	r7, SPRN_DAWRX0
- 	mfspr	r8, SPRN_IAMR
- 	std	r5, STACK_SLOT_CIABR(r1)
- 	std	r6, STACK_SLOT_DAWR(r1)
-@@ -803,8 +803,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
- 	beq	1f
- 	ld	r5, VCPU_DAWR(r4)
- 	ld	r6, VCPU_DAWRX(r4)
--	mtspr	SPRN_DAWR, r5
--	mtspr	SPRN_DAWRX, r6
-+	mtspr	SPRN_DAWR0, r5
-+	mtspr	SPRN_DAWRX0, r6
- 1:
- 	ld	r7, VCPU_CIABR(r4)
- 	ld	r8, VCPU_TAR(r4)
-@@ -1766,8 +1766,8 @@ BEGIN_FTR_SECTION
- 	 * If the DAWR doesn't work, it's ok to write these here as
- 	 * this value should always be zero
- 	*/
--	mtspr	SPRN_DAWR, r6
--	mtspr	SPRN_DAWRX, r7
-+	mtspr	SPRN_DAWR0, r6
-+	mtspr	SPRN_DAWRX0, r7
- END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- BEGIN_FTR_SECTION
- 	ld	r5, STACK_SLOT_TID(r1)
-@@ -2577,8 +2577,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
- 	mfmsr	r6
- 	andi.	r6, r6, MSR_DR		/* in real mode? */
- 	bne	4f
--	mtspr	SPRN_DAWR, r4
--	mtspr	SPRN_DAWRX, r5
-+	mtspr	SPRN_DAWR0, r4
-+	mtspr	SPRN_DAWRX0, r5
- 4:	li	r3, 0
- 	blr
- 
-@@ -3329,7 +3329,7 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
- 	mtspr	SPRN_AMR, r0
- 	mtspr	SPRN_IAMR, r0
- 	mtspr	SPRN_CIABR, r0
--	mtspr	SPRN_DAWRX, r0
-+	mtspr	SPRN_DAWRX0, r0
- 
- BEGIN_MMU_FTR_SECTION
- 	b	4f
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 7af840c0fc93..d4dba8ea8995 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -1939,7 +1939,7 @@ static void dump_207_sprs(void)
- 	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
- 		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
- 	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
--		mfspr(SPRN_DAWR), mfspr(SPRN_DAWRX), mfspr(SPRN_CIABR));
-+		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
- #endif
+ static void set_dawr_cb(void *info)
+ {
+-	set_dawr(info);
++	set_dawr(0, info);
  }
  
+ static ssize_t dawr_write_file_bool(struct file *file,
+@@ -60,7 +65,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
+ 	/* Send error to user if they hypervisor won't allow us to write DAWR */
+ 	if (!dawr_force_enable &&
+ 	    firmware_has_feature(FW_FEATURE_LPAR) &&
+-	    set_dawr(&null_brk) != H_SUCCESS)
++	    set_dawr(0, &null_brk) != H_SUCCESS)
+ 		return -ENODEV;
+ 
+ 	rc = debugfs_write_file_bool(file, user_buf, count, ppos);
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 8479c762aef2..7488adf4d61c 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -806,7 +806,7 @@ void __set_breakpoint(struct arch_hw_breakpoint *brk)
+ 
+ 	if (dawr_enabled())
+ 		// Power8 or later
+-		set_dawr(brk);
++		set_dawr(0, brk);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		set_breakpoint_8xx(brk);
+ 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
 -- 
 2.21.1
 
