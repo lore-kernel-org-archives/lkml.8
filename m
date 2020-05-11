@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4CCC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD70C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F0E207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410E6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="msnddFvT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJUWfTi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgEKMZn (ORCPT
+        id S1729804AbgEKMZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48266 "EHLO
+        Mon, 11 May 2020 08:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729563AbgEKMZm (ORCPT
+        by vger.kernel.org with ESMTP id S1729728AbgEKMZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:25:42 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60ACC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id f7so4669057pfa.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:40 -0700 (PDT)
+        Mon, 11 May 2020 08:25:45 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B317FC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:44 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k19so3867551pll.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kdgxJAfo8UlOucy5NbULhDRr0uCqBFbRyMqqRo+7u8o=;
-        b=msnddFvTNtREqRm1El3S+W4nTTsmznmrMM8BRZnGmgRRKKCpgTeN+txsF0X/hMWJX/
-         UqTVTj5Pef0yCJ3QfSE1xhvLaHRTrNwVQU6N6VbVqj8shMvwdYqlNGPCCRgZc3IS8oby
-         xpeF7qKWEwPHKMNpFwfPDmuL5H1ylxizE6U8NyipfpXoO8xKcCFAjyqD4iRriULgLxJV
-         uOiJu/bPq34/DiTf6IR34VkDxUGnUovvj7Y8zLKdkkQPlTGJzZEWvJCfRfoGeRIGq+Im
-         PBs4nWgbVC+wspgBwfuxwB6lV5oiftjrnnViI8EbunEnXvsp59JcpOlrbqcCtqGJHCRK
-         6qsg==
+        bh=oLCRFYTzZLs87148l1yniv86hl5UQjMO56irWxi7zno=;
+        b=fJUWfTi+qjf0FA2vuOSnTB0kWzbREj9eSNDAzVs5d927tPPCjePaekBQZBD85KG3F5
+         VED09Zw9mO6pK3PzOrC53yjo0W0be0i+lTottKW2/2Fg9uYNKryVuZNqeIaoNFTXCRG0
+         mT/ztpancw2WtnOgZ3uWRikTIwKOlWXkuSh91mPYIS8GqEsj3wgVImPOKrMXT6F1MB4r
+         hJmh63wUvsY8p1sRYQULAt3IAY5Toywe/F34PL9BilNxjlw2v2K70baqsl9bx+Sr140+
+         7LLC16fOi5LV9JDjFENTNTiv9WCLaYx9KB8KliZ7oK46glMCLvA0+w88QSlaz+ZlD56u
+         d/Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kdgxJAfo8UlOucy5NbULhDRr0uCqBFbRyMqqRo+7u8o=;
-        b=a0B5ODW44cpqKOkaLX5PoBRAg5m8CbNP1+rqOSN50MNBT1hB4u9RpBa4S0IoFb4+ES
-         9F/d0LgHb7VHC29HHGGgwpaQyr5t3XDNDhtAVSXrhM74NDcCefrJKhRzEGi0KiOifc9y
-         I2xQ9YxJLXT4r34WWdCd3fDz3xqS3J662Vv9fL1hfTy/ap1l7X9kiHUz8lKXvR575hZW
-         /8wj7yMbgdoOB3Y3HSkaOk9l2Zx5jaNWLdMtsYcN2JQeIBlOC/1DiC1QgKBzCuEbkiWd
-         z2zylkBt7MZDuYXWF7EeNtBG4X8y66L8m+Tc5gdn4isN7/N2au901UV5J9b5fKDjSops
-         kI0w==
-X-Gm-Message-State: AGi0PuY71TdIveUHyxhNnO6DcY8qhLBpJD0g7/E34gCTBVKt0MBJmT5T
-        wj5UODfinZG+cX3J9h5JdTzENn4gAn0=
-X-Google-Smtp-Source: APiQypIK/SJv2BvkXBQiXCCg/PqqSZRvMjBVTYP8zmpY8DlH8pIJgGgLmuJJ3RVi1ndH5W+cXRRa0g==
-X-Received: by 2002:a63:4c1d:: with SMTP id z29mr14019205pga.243.1589199939763;
-        Mon, 11 May 2020 05:25:39 -0700 (PDT)
+        bh=oLCRFYTzZLs87148l1yniv86hl5UQjMO56irWxi7zno=;
+        b=JjagJDMi7VKy5CtbLr6UK0Jb9eK4Jy80COng45vqWAXt3F5evxZnRKfE6JTgMP7bbv
+         W9yLLFEa6+GAN+m8GLfTqHmtrZoc1cMEUfsrqWPp53N63dJm96CdfbLkjx5ehmMQpYKg
+         Kfzjet4+L4/d5TRTrDp772iUCvnfsPBjZ+RI2mYcJcXVkT2eh4osRWCOitS2wl+THw0H
+         3QK4t3+xA2lDe/kb5Ghn+0qV/TVrTO2M3x0sTjhMkNvsqvTEfOc3p7p9MEP5d8cSbkiY
+         Jai4lSWX6QuRZ1d2LMWP/vKnstLE/ddq9ijPgLFnSHrCd8ZGki0Sxj6ZYXH4gHA7IOBt
+         OrCg==
+X-Gm-Message-State: AGi0Pubb3AA64ATXRrdlt/uYXi4Ll0oBetzhZk4tnQ+5cc5+Dfrow+Ef
+        Gk6UpK8h11I5+CJ73NGs23QHOk6u7Sg=
+X-Google-Smtp-Source: APiQypL4e2jZtE6SohQMnQNdslV/ugdx7IF6yNh08RpdGCBWZWJA/HkPdZcOy2ptOK+0q4I15bUFVQ==
+X-Received: by 2002:a17:902:9049:: with SMTP id w9mr15139757plz.27.1589199943796;
+        Mon, 11 May 2020 05:25:43 -0700 (PDT)
 Received: from localhost ([45.127.45.102])
-        by smtp.gmail.com with ESMTPSA id s136sm9344242pfc.29.2020.05.11.05.25.38
+        by smtp.gmail.com with ESMTPSA id a196sm9240989pfd.184.2020.05.11.05.25.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:25:39 -0700 (PDT)
+        Mon, 11 May 2020 05:25:43 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org,
@@ -68,9 +68,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 02/14] thermal/core: Replace module.h with export.h
-Date:   Mon, 11 May 2020 17:54:50 +0530
-Message-Id: <33af23406dcdb0c62dae1e6401446b997ccb449f.1589199124.git.amit.kucheria@linaro.org>
+Subject: [PATCH 03/14] thermal/drivers/thermal_helpers: Sort headers alphabetically
+Date:   Mon, 11 May 2020 17:54:51 +0530
+Message-Id: <133db154796f354e6c51e6310095f679e1f45441.1589199124.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
 References: <cover.1589199124.git.amit.kucheria@linaro.org>
@@ -81,29 +81,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal core cannot be modular, remove the unnecessary module.h include
-and replace with export.h to handle EXPORT_SYMBOL family of macros.
+Sort headers to make it easier to read and find duplicate headers.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/thermal_core.c | 2 +-
+ drivers/thermal/thermal_helpers.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 286920e06277..bed4a7bea7bb 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -9,9 +9,9 @@
+diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
+index 2ba756af76b7..8ea0a05404f7 100644
+--- a/drivers/thermal/thermal_helpers.c
++++ b/drivers/thermal/thermal_helpers.c
+@@ -12,11 +12,11 @@
  
  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
--#include <linux/module.h>
+-#include <linux/sysfs.h>
  #include <linux/device.h>
  #include <linux/err.h>
-+#include <linux/export.h>
  #include <linux/slab.h>
- #include <linux/kdev_t.h>
- #include <linux/idr.h>
+ #include <linux/string.h>
++#include <linux/sysfs.h>
+ 
+ #include <trace/events/thermal.h>
+ 
 -- 
 2.20.1
 
