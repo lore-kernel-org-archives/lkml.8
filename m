@@ -2,110 +2,206 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B20C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B47C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82EB12075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8872075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="a75yW7ab"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Zg11uLNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgEKGym (ORCPT
+        id S1728458AbgEKGzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 02:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
+        Mon, 11 May 2020 02:55:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726438AbgEKGym (ORCPT
+        by vger.kernel.org with ESMTP id S1726438AbgEKGzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 02:54:42 -0400
+        Mon, 11 May 2020 02:55:11 -0400
 Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2888AC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:54:41 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id m18so6675832otq.9
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:54:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD71C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:55:11 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id t3so6710161otp.3
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6+amfEosJ/bxoBXLb6j1uSeLid6XebkwIxNU/VrJcPg=;
-        b=a75yW7abW6pGtQ5fe3DEi2pjcgbX5xc8WztVZeVFufziZx+d4V/T7QWjUoYYjsQuwb
-         GtNIfRw6PJb58i5XEzZbAaD5M8SFtzAl/aTandUu2B7fnwEgyUudv3FPKJ5ronfxP/FI
-         NIm+Dsy0EOGR9NxCo47VECaQ9mHt4pySNhDk9umEDl2i7/k194FpMlsXW4eKXaEqsFud
-         PHd3Z/NyuUmFRAQ/lXMhK/NhDv8eBPGdi/RcONTBtN1S9taAF5Fgi7zV141t5W4onNBL
-         oJgzgyIvJlbeSgA/HdvDP9k+S5gA38olwYyc3vOKcDZWrZXRYbk2EYVzgQV5BI8sIOHd
-         4fQw==
+         :cc;
+        bh=NqE5Hd6mfokSG+/fYRFQAPgofHTiWpj3lFcNor9u7kc=;
+        b=Zg11uLNU9ywU36wb9YDC/vWtcGTb03E8YdiJ0DCgs4CFFAhhLJ1RIkzQzTryf4jaxq
+         YBJ3t796heGmNrxmFjgB0VQTo7gXh7lKcxbrgk7foaMVMJXw+Q85cSbM5phLukcsZFCs
+         JpbjAyYV1ScyY/FKb29xvy2GrG2b+MgCM+lL69Gad/0filOPGUKUtPBP/8oVwJzjYyIF
+         WnJCLUCIJaRirrMuvApKGEUYBFVgcqxhvopk0NZjyh4bcJHCwHAhKMB6wVz5p77Hbo9k
+         UOUF+8QD3dj1w8UciJreTMX2LRuu1u6lG/TBpwlZ133chk1H3o1BD2irZMo33jbUFdr+
+         LqBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6+amfEosJ/bxoBXLb6j1uSeLid6XebkwIxNU/VrJcPg=;
-        b=XEJ2f7msZTy2r4mL+Wwar9+glWpLDCZNtwueI3Zpf6VGuX3c/Q6WgqdSEf42FVhuHk
-         qoXdPjmQTsBWWM7AJ0uDGh36TJp9fsJY21R7enFgY8hRXSDv5N1VtmUb80qLxsv26dlS
-         HS3jGBya7G8xIZcozOFjPfnj5fu4W6dlyDWFfcsvoWkaxp6+JpiAEbxK2sdo90ySv+ys
-         5Ec/hGH7AmL2vsPhWYEvHbgddDvwwomTIA0HFtZLxuWf3neO3SyYI2isk3z3xNmP6faZ
-         W8jABtgdNcQ6WP3HITG6oJt6bZ9uUwtVgh5F1zaWfZa0PfbEXOxdTj+3zgbIg16tc12x
-         7MaQ==
-X-Gm-Message-State: AGi0Pua+DTe0Dw/6BhenEiW0K8SAisnulwKf+uWSZLh7CXaH+YIGR1xt
-        h1eGJs+/rDtxsjo8MoqXSbnKSB/7VNwl4QFAderoig==
-X-Google-Smtp-Source: APiQypLkNnC4oo0clTiNZcwduav+zSJ51Ke8PRXADTGgd3N/ohCp/OedUzze728dcG1VvvKoKW2dxexVu0OnsACtau0=
-X-Received: by 2002:a9d:7312:: with SMTP id e18mr8580141otk.33.1589180080183;
- Sun, 10 May 2020 23:54:40 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=NqE5Hd6mfokSG+/fYRFQAPgofHTiWpj3lFcNor9u7kc=;
+        b=B+1hemqKpF+bbSa1QYcn41l5Dq0e7bfJ6yZmyrV87NSnS77md5TtpuX1tQlPjo6v1l
+         HG50TUByp+Km1i+RNL5fhclLo1sUEnRkVpeeOqOvi2qwMF0Xf1Qcke30UM6BuJm60smG
+         xhIEmQBaZ5YiHxcGOsrFefz8iUHsnN2LLgAMLzTLMFpuXhOpzIcCC2L+gcEoZu/MN50c
+         +wzxt7VUi5nk+BU34T6PGFjDHkqrAPJDOZKwOVFt9WbUxmJmJzH9OZSt7rfsfZl4NimT
+         3+EInrOthUakzIz1eBtjgAW3FRQQreZn5dU8EycXJ4kodOEnsMtaxl5VCn3o6Ag6GEM7
+         3xAQ==
+X-Gm-Message-State: AGi0PuZQQ2ZqlgLb+evmwFO/Mm+TpXJVCRlRAFU64ffjQp7FZwgz89Ar
+        2CUnok+ghaiCJFOrmRPw9bZFTEz+SkYKwoD6ZGL7cw==
+X-Google-Smtp-Source: APiQypJx8MZQXkFp5WsraQLtG72h4Sny3Lasm6pZs7q/K/VxbPocZXTT3hNxCb9DL3z70CaYxjtiG9/cPAgn1SDWbQY=
+X-Received: by 2002:a05:6830:1212:: with SMTP id r18mr12002639otp.144.1589180110526;
+ Sun, 10 May 2020 23:55:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com>
- <5029155.caIQduTdCh@kreacher> <CAB4CAwfFeJjrxQvpUz3V6VMW4aHWd7iZD6Xpu6rAnaPv=ZpFeg@mail.gmail.com>
- <79452135.44xTU8OeJi@kreacher>
-In-Reply-To: <79452135.44xTU8OeJi@kreacher>
+References: <13031978.1nyG40egBz@kreacher>
+In-Reply-To: <13031978.1nyG40egBz@kreacher>
 From:   Chris Chiu <chiu@endlessm.com>
-Date:   Mon, 11 May 2020 14:54:29 +0800
-Message-ID: <CAB4CAwfSAjZUTf5DwqrJUV5BH5mx6EZMnnDjkCLHb_nA6jjvsA@mail.gmail.com>
-Subject: Re: System fails to exit s2idle by a keystroke on my laptop
+Date:   Mon, 11 May 2020 14:54:59 +0800
+Message-ID: <CAB4CAwfpO6=24tdVBtZ258hAE=sMyww-P9t1PC=BALhy3rHxSQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: EC: s2idle: Avoid premature returns from acpi_s2idle_wake()
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Todd Brandt <todd.e.brandt@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 12:50 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
-:
+On Sat, May 9, 2020 at 4:44 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
 >
-> On Friday, May 8, 2020 10:22:09 AM CEST Chris Chiu wrote:
-> > On Fri, May 8, 2020 at 2:05 AM Rafael J. Wysocki <rjw@rjwysocki.net> wr=
-ote:
-> >
-> > =EF=BC=A8i Rafael,
-> >     Thanks for your patch. I tried it on my laptop and it's also
-> > working fine. Wake up by keystroke/power button/lid open all work as
-> > expected. Thanks.
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >
-> Thanks for the confirmation!
+> If the EC GPE status is not set after checking all of the other GPEs,
+> acpi_s2idle_wake() returns 'false', to indicate that the SCI event
+> that has just triggered is not a system wakeup one, but it does that
+> without canceling the pending wakeup and re-arming the SCI for system
+> wakeup which is a mistake, because it may cause s2idle_loop() to busy
+> spin until the next valid wakeup event.  [If that happens, the first
+> spurious wakeup is still pending after acpi_s2idle_wake() has
+> returned, so s2idle_enter() does nothing, acpi_s2idle_wake()
+> is called again and it sees that the SCI has triggered, but no GPEs
+> are active, so 'false' is returned again, and so on.]
 >
-> Please also verify the final version of the patch available from
+> Fix that by moving all of the GPE checking logic from
+> acpi_s2idle_wake() to acpi_ec_dispatch_gpe() and making the
+> latter return 'true' only if a non-EC GPE has triggered and
+> 'false' otherwise, which will cause acpi_s2idle_wake() to
+> cancel the pending SCI wakeup and re-arm the SCI for system
+> wakeup regardless of the EC GPE status.
 >
-> https://patchwork.kernel.org/patch/11537215/
+> This also addresses a lockup observed on an Elitegroup EF20EA laptop
+> after attempting to wake it up from suspend-to-idle by a key press.
 >
-> Of course, it will only make a difference if the ec_no_wakeup switch is s=
-et
-> on your system (either as a result of blacklisting or via the kernel comm=
-and
-> line).
+> Fixes: d5406284ff80 ("ACPI: PM: s2idle: Refine active GPEs check")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=207603
+> Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> Link: https://lore.kernel.org/linux-acpi/CAB4CAwdqo7=MvyG_PE+PGVfeA17AHF5i5JucgaKqqMX6mjArbQ@mail.gmail.com/
+> Reported-by: Chris Chiu <chiu@endlessm.com>
+> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+Tested-by: Chris Chiu <chiu@endlessm.com>
 >
-> Thanks!
+> -> v2:
+>    * Improve the changelog and add more tags.
+>
+> ---
+>  drivers/acpi/ec.c       |   24 ++++++++++++++++--------
+>  drivers/acpi/internal.h |    1 -
+>  drivers/acpi/sleep.c    |   14 ++------------
+>  3 files changed, 18 insertions(+), 21 deletions(-)
+>
+> Index: linux-pm/drivers/acpi/sleep.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/sleep.c
+> +++ linux-pm/drivers/acpi/sleep.c
+> @@ -1013,21 +1013,11 @@ static bool acpi_s2idle_wake(void)
+>                 if (acpi_check_wakeup_handlers())
+>                         return true;
+>
+> -               /*
+> -                * If the status bit is set for any enabled GPE other than the
+> -                * EC one, the wakeup is regarded as a genuine one.
+> -                */
+> -               if (acpi_ec_other_gpes_active())
+> +               /* Check non-EC GPE wakeups and dispatch the EC GPE. */
+> +               if (acpi_ec_dispatch_gpe())
+>                         return true;
+>
+>                 /*
+> -                * If the EC GPE status bit has not been set, the wakeup is
+> -                * regarded as a spurious one.
+> -                */
+> -               if (!acpi_ec_dispatch_gpe())
+> -                       return false;
+> -
+> -               /*
+>                  * Cancel the wakeup and process all pending events in case
+>                  * there are any wakeup ones in there.
+>                  *
+> Index: linux-pm/drivers/acpi/ec.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/ec.c
+> +++ linux-pm/drivers/acpi/ec.c
+> @@ -1994,23 +1994,31 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+>                 acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+>  }
+>
+> -bool acpi_ec_other_gpes_active(void)
+> -{
+> -       return acpi_any_gpe_status_set(first_ec ? first_ec->gpe : U32_MAX);
+> -}
+> -
+>  bool acpi_ec_dispatch_gpe(void)
+>  {
+>         u32 ret;
+>
+>         if (!first_ec)
+> +               return acpi_any_gpe_status_set(U32_MAX);
+> +
+> +       /*
+> +        * Report wakeup if the status bit is set for any enabled GPE other
+> +        * than the EC one.
+> +        */
+> +       if (acpi_any_gpe_status_set(first_ec->gpe))
+> +               return true;
+> +
+> +       if (ec_no_wakeup)
+>                 return false;
+>
+> +       /*
+> +        * Dispatch the EC GPE in-band, but do not report wakeup in any case
+> +        * to allow the caller to process events properly after that.
+> +        */
+>         ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
+> -       if (ret == ACPI_INTERRUPT_HANDLED) {
+> +       if (ret == ACPI_INTERRUPT_HANDLED)
+>                 pm_pr_dbg("EC GPE dispatched\n");
+> -               return true;
+> -       }
+> +
+>         return false;
+>  }
+>  #endif /* CONFIG_PM_SLEEP */
+> Index: linux-pm/drivers/acpi/internal.h
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/internal.h
+> +++ linux-pm/drivers/acpi/internal.h
+> @@ -202,7 +202,6 @@ void acpi_ec_remove_query_handler(struct
+>
+>  #ifdef CONFIG_PM_SLEEP
+>  void acpi_ec_flush_work(void);
+> -bool acpi_ec_other_gpes_active(void);
+>  bool acpi_ec_dispatch_gpe(void);
+>  #endif
 >
 >
 >
-
-Thanks. Rafael. I've tested it on my laptop and it's still working well.
-
-Chris
+>
