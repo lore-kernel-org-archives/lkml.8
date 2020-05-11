@@ -2,137 +2,155 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2696EC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296DCC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B5520720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W8GsoKBT"
+	by mail.kernel.org (Postfix) with ESMTP id 10FE520720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgEKJSe (ORCPT
+        id S1729339AbgEKJTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgEKJSd (ORCPT
+        Mon, 11 May 2020 05:19:02 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34897 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgEKJTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:18:33 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36113C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:18:32 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id x13so2251182qvr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jbfgjCIJCT731lsX+VnBCmkJyCHAocQc+0O+jnIBrdA=;
-        b=W8GsoKBTh3eU7gK0hFlJ0SlnR4/zsOEdiEu38ZroK0AD/j0RkfeKchZBEqi62uiRc6
-         URDF81n5X0ocDhATQJCsPzqQmANVVyixmbQnVl+EVmPhoxZnMzKIIdJLifoKd6qDSW7R
-         g3/nx11QoXUNQSXk3ZbTaRZs5bDYZlnQKGcgw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jbfgjCIJCT731lsX+VnBCmkJyCHAocQc+0O+jnIBrdA=;
-        b=jQfOZYYhXJ8mnDqW8dLz7dqloXwM0TuN7s8DZX441nQicm7yDUbJJeLyZ/WfAuEM8d
-         wFpJxoSs6/Zc1DSgW2DguWhtT6U+l5x0pFN9XcBeVvnsQFS3B/W+41wOjKBG60wO5tPe
-         iqNqD1rt8diwa4FWb8/p2j1Z9XSPNuQ9GWU49aGx0wGkp1+fS8+Y5HVy6BI4Joas/oDC
-         vvdn5mhpRYW6WX6Ycf2nVlOHswxZfGKNfx81aCBTJwsvhNZKX2lgDNqrwLGFbq55qrQ3
-         Bs4cIiDlgMf6m3bwvxCp67V0eOR2IUEp1JQhAs7BBnPDamYjcElSFPdhX1Ltr1pelZOB
-         TtCw==
-X-Gm-Message-State: AGi0PuaQ82PWyZKonICtOUaPiVWuqg0fVJ7KXKkBTAvvNlPGIj54kqAv
-        Xdjau1cr7OFzjEjm8mwcGKbnnYt1gHPjDueZddT6Kw==
-X-Google-Smtp-Source: APiQypKT98jJ+xFT05/I6LmJQeISERtWb2r4N0celT3NHNTNMdSnrXvpVHkM+TeXsrBCRZ3aCItbNo4jo662cXs8B6E=
-X-Received: by 2002:a0c:90e7:: with SMTP id p94mr14956340qvp.219.1589188710998;
- Mon, 11 May 2020 02:18:30 -0700 (PDT)
+        Mon, 11 May 2020 05:19:02 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D6943FF80B;
+        Mon, 11 May 2020 09:18:57 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:18:55 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
+ parent node
+Message-ID: <20200511111855.48216940@xps13>
+In-Reply-To: <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+        <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200510213934.146631-1-pmalani@chromium.org> <6921cb24-091b-1de3-5348-a1dd8a6803f5@gmail.com>
-In-Reply-To: <6921cb24-091b-1de3-5348-a1dd8a6803f5@gmail.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 11 May 2020 02:18:19 -0700
-Message-ID: <CACeCKaeohcaOt7sfWR0FWaSp8CLEa5_6afAZUdYYTn2S_wXOew@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: typec: mux: intel: Fix DP_HPD_LVL bit field
-To:     Lars Melin <larsm17@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lars,
+Hi Christophe,
 
-Thanks for reviewing the patch.
+Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
+11:11:19 +0200:
 
-On Mon, May 11, 2020 at 1:49 AM Lars Melin <larsm17@gmail.com> wrote:
->
-> On 5/11/2020 04:39, Prashant Malani wrote:
-> > According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
-> > 0.6, the PMC HPD request LVL bit field is bit 4.
-> > Fix the definition here to match the programming guide.
-> >
-> > Since this bit field is changing, explicitly define a field for the
-> > HPD_HIGH mode data bit.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
-> > Reviewed-by: Benson Leung <bleung@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> > - Fixed bit error in commit message.
-> >
-> >   drivers/usb/typec/mux/intel_pmc_mux.c | 6 +++---
-> >   1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-> > index 67c5139cfa0d..15074aec94eb 100644
-> > --- a/drivers/usb/typec/mux/intel_pmc_mux.c
-> > +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-> > @@ -63,6 +63,7 @@ enum {
-> >   #define PMC_USB_ALTMODE_DP_MODE_SHIFT       8
-> >
-> >   /* TBT specific Mode Data bits */
-> > +#define PMC_USB_ALTMODE_HPD_HIGH     BIT(14)
-> >   #define PMC_USB_ALTMODE_TBT_TYPE    BIT(17)
-> >   #define PMC_USB_ALTMODE_CABLE_TYPE  BIT(18)
-> >   #define PMC_USB_ALTMODE_ACTIVE_LINK BIT(20)
-> > @@ -75,7 +76,7 @@ enum {
-> >
-> >   /* Display HPD Request bits */
-> >   #define PMC_USB_DP_HPD_IRQ          BIT(5)
-> > -#define PMC_USB_DP_HPD_LVL           BIT(6)
-> > +#define PMC_USB_DP_HPD_LVL           BIT(4)
-> >
-> Please keep the bits sorted
-Sure. Will send a new version of the patch with this change.
+> FMC2 EBI support has been added. Common resources (registers base
+> and clock) are now shared between the 2 drivers. It means that the
+> common resources should now be found in the parent device when EBI
+> node is available.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
 
-Best regards,
->
-> >   struct pmc_usb;
-> >
-> > @@ -158,8 +159,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
-> >                        PMC_USB_ALTMODE_DP_MODE_SHIFT;
-> >
-> >       if (data->status & DP_STATUS_HPD_STATE)
-> > -             req.mode_data |= PMC_USB_DP_HPD_LVL <<
-> > -                              PMC_USB_ALTMODE_DP_MODE_SHIFT;
-> > +             req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
-> >
-> >       return pmc_usb_command(port, (void *)&req, sizeof(req));
-> >   }
-> >
->
-> Thanks
-> Lars
+[...]
+
+> +
+> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
+> +{
+> +	u32 i;
+> +	int nb_resources = 0;
+> +
+> +	/* Count the number of resources in reg property */
+> +	for (i = 0; i < pdev->num_resources; i++) {
+> +		struct resource *res = &pdev->resource[i];
+> +
+> +		if (resource_type(res) == IORESOURCE_MEM)
+> +			nb_resources++;
+> +	}
+> +
+> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
+> +	if (nb_resources % 3)
+> +		return false;
+> +
+> +	return true;
+> +}
+
+This function looks fragile. Why not just checking the compatible
+string of the parent node?
+
+> +
+>  static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1824,8 +1865,8 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	struct mtd_info *mtd;
+>  	struct nand_chip *chip;
+> -	void __iomem *mmio;
+>  	int chip_cs, mem_region, ret, irq;
+> +	int num_region = 1;
+>  
+>  	nfc = devm_kzalloc(dev, sizeof(*nfc), GFP_KERNEL);
+>  	if (!nfc)
+> @@ -1834,23 +1875,19 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>  	nfc->dev = dev;
+>  	nand_controller_init(&nfc->base);
+>  	nfc->base.ops = &stm32_fmc2_nfc_controller_ops;
+> +	nfc->has_parent = stm32_fmc2_nfc_check_for_parent(pdev);
+> +	if (nfc->has_parent)
+> +		num_region = 0;
+>  
+>  	ret = stm32_fmc2_nfc_parse_dt(nfc);
+>  	if (ret)
+>  		return ret;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	mmio = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(mmio))
+> -		return PTR_ERR(mmio);
+> -
+> -	nfc->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
+> -	if (IS_ERR(nfc->regmap))
+> -		return PTR_ERR(nfc->regmap);
+> -
+> -	nfc->io_phys_addr = res->start;
+> +	ret = stm32_fmc2_nfc_set_regmap_clk(pdev, nfc);
+> +	if (ret)
+> +		return ret;
+
+Are you sure this driver sill works without the EBI block?
+
+This change looks suspect.
+
+>  
+> -	for (chip_cs = 0, mem_region = 1; chip_cs < FMC2_MAX_CE;
+> +	for (chip_cs = 0, mem_region = num_region; chip_cs < FMC2_MAX_CE;
+>  	     chip_cs++, mem_region += 3) {
+>  		if (!(nfc->cs_assigned & BIT(chip_cs)))
+>  			continue;
+> @@ -1888,10 +1925,6 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>  
+>  	init_completion(&nfc->complete);
+>  
+> -	nfc->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(nfc->clk))
+> -		return PTR_ERR(nfc->clk);
+> -
+
+Same here
+
+>  	ret = clk_prepare_enable(nfc->clk);
+>  	if (ret) {
+>  		dev_err(dev, "can not enable the clock\n");
+
