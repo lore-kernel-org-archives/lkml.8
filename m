@@ -2,176 +2,106 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DAAC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E4EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78820207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D6020661
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pXm4pNvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgEKDYr (ORCPT
+        id S1728531AbgEKDZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:24:47 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:52611 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgEKDYq (ORCPT
+        Sun, 10 May 2020 23:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725830AbgEKDZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:24:46 -0400
-Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id 04B3NVVL077104;
-        Mon, 11 May 2020 11:23:31 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 1866BA869F7CCFC0A268;
-        Mon, 11 May 2020 11:23:32 +0800 (CST)
-In-Reply-To: <3e33ffae-3267-015a-8535-6e1667b03e39@ti.com>
-References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw> <20200421092328.129308f6@collabora.com> <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com> <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw> <20200428085401.574wmo6qddmumd7q@yadavpratyush.com> <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw> <3e33ffae-3267-015a-8535-6e1667b03e39@ti.com>
-To:     "Vignesh Raghavendra" <vigneshr@ti.com>
-Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
-        broonie@kernel.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, "Pratyush Yadav" <me@yadavpratyush.com>,
-        miquel.raynal@bootlin.com, "Pratyush Yadav" <p.yadav@ti.com>,
-        richard@nod.at, tudor.ambarus@microchip.com
-Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+        Sun, 10 May 2020 23:25:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0A4C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=3uZrKIybwm011uTDusn5igKUX1onE/0jJKF9PC/HkAg=; b=pXm4pNvxMa3FDvgJE6UUxg3blX
+        brEYpze57lLc/JvxOJljTGkw5Jgoell3Jite475zhAIP7dMj/Gg2HzM0g2zIdJmjpAB048dF7IuKB
+        P5Q3BpqpW18MvBGONt5CqF+5RsjeL9uVsHeAAi2EDsgQr4lMc2uCqexugFV2BXKEFZwU1CtlRGt95
+        9IV1Ka8LMJ5vhfqtVCziWud7Ckfh5g4i66VY6C1rfn8Som6EHVKXAhWzz7R8mUv63BdlQSx0GjWd9
+        mpqPl0VPrvAX+Q5KybFybOogq7066QbT7qpW5G/fBqBJ0aKuQr34Ag0jdfYotUcvHPJP5UzaxSZPl
+        eSAUzafA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXz4U-00012l-Vk; Mon, 11 May 2020 03:25:39 +0000
+Subject: Re: [PATCH v6 5/9] w1_therm: adding resolution sysfs entry
+To:     Akira Shimahara <akira215corp@gmail.com>, greg@kroah.com
+Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
+References: <20200510141707.173273-1-akira215corp@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7eb90dc8-2924-4c24-e305-5424c5953164@infradead.org>
+Date:   Sun, 10 May 2020 20:25:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-KeepSent: 8A6B0341:0CDED2CF-48258565:000F3369;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF8A6B0341.0CDED2CF-ON48258565.000F3369-48258565.0012A22D@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Mon, 11 May 2020 11:23:32 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/05/11 AM 11:23:32,
-        Serialize complete at 2020/05/11 AM 11:23:32
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com 04B3NVVL077104
+In-Reply-To: <20200510141707.173273-1-akira215corp@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Hi Vignesh,
-
-> >>>
-> >>> Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI 
-> > profile 
-> >>> 1.0,
-> >>> and it comply with BFPT DWORD-19, octal mode enable sequences by 
-write 
-> > CFG 
-> >>> Reg2 
-> >>> with instruction 0x72. Therefore, I can't apply your patches.
-> >>
-> >> I didn't mean apply my patches directly. I meant more along the lines 
-of 
-> > 
-> >> edit your patches to work on top of my series. It should be as easy 
-as 
-> >> adding your flash's fixup hooks and its octal DTR enable hook, but if 
-my 
-> > 
-> >> series is missing something you need (like complete Profile 1.0 
-parsing, 
-> > 
-> >> which I left out because I wanted to be conservative and didn't see 
-any 
-> >> immediate use-case for us), let me know, and we can work together to 
-> >> address it.
-> > 
-> > yes,sure!
-> > let's work together to upstream the Octal 8D-8D-8D driver to mainline.
-> > 
-> > The main concern is where and how to enable xSPI octal mode?
-> > 
-> > Vignesh don't agree to enable it in fixup hooks and that's why I 
-patched
-> > it to spi_nor_late_init_params() and confirmed the device support xSPI 
-
-> > Octal mode after BFPT DWORD-19 and xSPI pf 1.0 have been parsed.
-> > 
-> 
-> My suggestion was to use SFDP wherever possible.. E.g: it is possible to
-> get opcode extension type from BFPT...
-> 
-> But using BFPT DWORD-19 is not correct for switching to 8D-8D-8D mode:
-> 
-> Per JESD216D.01 Bits 22:20 of  19th DWORD of BFPT:
-> 
-> Octal Enable Requirements:
-> 
-> This field describes whether the device contains a Octal Enable bit used
-> to enable 1-1-8 and 1-
-> 8-8 octal read or octal program operations.
-> 
-> So, this cannot be used for enabling 8D-8D-8D mode... Flashes that only
-> support 1S-1S-1S and 8D-8D-8D will set this field to 0.
-
-yes, you are right, the bits 22~20 your mentioned are for 1-1-8 and 1-8-8 
-mode enable requirements and they are zero if Flash only supports 
-1S-1S-1S,
-8S-8S-8S and 8D-8D-8D, just like mx25xx series.
-
-There are bits 8~4 for 8S-8S-8S and 8D-8D-8D mode enable sequences and
-I have patched these in this patches. 
-
-By bits 8~4 in 19 th DWORD of BFPT, driver will know enable 8S-8S-8S or
-8D-8D-8D by either issue two instruction (06h and E8h) or 
-by Write CFG Reg 2.
-
-mx25xx series supports enable Octal 8S-8S-8S/8D-8D-8D mode by Write CFG 
-Reg 2.
+The kernel-doc comment changes look good.  Thanks for doing that.
 
 
-> 
-> There is a separate table to enable 8D mode called
-> "Command Sequences to Change to Octal DDR (8D-8D-8D) mode". But if flash
-> does not have the table or has bad data, fixup hook is the only way...
-> 
-> If mx25* supports above table, please build on top of Pratyush's series
-> to add support for parsing this table. Otherwise, macronix would have to
-> use a fixup hook too...
+On 5/10/20 7:17 AM, Akira Shimahara wrote:
 
-mx25xx series also supports "Command Sequences to Change to Octal DDR 
-(8D-8D-8D) mode" for sure. I will patch them in next version.
+> diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
+> index 08579dc..b1734ae 100644
+> --- a/drivers/w1/slaves/w1_therm.c
+> +++ b/drivers/w1/slaves/w1_therm.c
+> @@ -50,12 +50,24 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+>  
+>  /* Helpers Macros */
+>  
+> +/* return a pointer on the slave w1_therm_family_converter struct:
+> + * always test family data existence before
+> + */
 
-For mx25* series, a fixup hook will only setup specific dummy cycles to 
-device for various frequency after xSPI 1.0 table has been parsed.
+/*
+ * Kernel multi-line comment coding style (except for networking source code)
+ * is like this.
+ */
+
+(in multiple places)
+
+> +/**
+> + * write_scratchpad() - write nb_bytes in the device RAM
+> + * @sl: pointer to the slave to write in
+> + * @data: pointer to an array of 3 bytes, as 3 bytes MUST be written
+> + * @nb_bytes: Nb bytes to be written (2 for DS18S20, 3 for other devices)
+
+If Nb means Number, please spell it out.
+
+> + *
+> + * Return: 0 if success, -kernel error code otherwise
+> + */
+> +static int write_scratchpad(struct w1_slave *sl, const u8 *data, u8 nb_bytes);
+> +
+>  /**
+>   * read_powermode() - Query the power mode of the slave
+>   * @sl: slave to retrieve the power mode
 
 
-thanks for your time & comments.
-Mason
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
+thanks.
+-- 
+~Randy
 
