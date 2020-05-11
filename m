@@ -2,123 +2,99 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F3BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A643C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86EC5206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8E020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHuLE2gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgEKW6x (ORCPT
+        id S1728017AbgEKW7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:58:53 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:43547 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgEKW6w (ORCPT
+        Mon, 11 May 2020 18:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgEKW7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:58:52 -0400
-Received: by mail-qv1-f67.google.com with SMTP id di6so5415309qvb.10;
-        Mon, 11 May 2020 15:58:51 -0700 (PDT)
+        Mon, 11 May 2020 18:59:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19729C061A0C;
+        Mon, 11 May 2020 15:59:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e16so13036272wra.7;
+        Mon, 11 May 2020 15:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mjq0pbimoUm4QL423/eKvG2VO6IOscWEFedsVa9GPuM=;
+        b=lHuLE2gzI57QM3q0SUyxnn4C7+YQFvWH0xvYGk53+cEjB3vryfa0z3xzffZBhkYnOC
+         TV114/NZq+nJ4jbf2EaA+t6R1ro3DSUaOMWCGumX1XOozrjlIvONbhWKqcaImpDctpUI
+         cKedDefER9dnGp8xPHyRs0H1Q1nKTW+t3BE3jqI7AbloFfgn6mdOkNu/YKR0hia2liPg
+         xWQ2G4YDojBgyh1AzYFVGTxny4Wdy4oW2crKYzipxVncQE/3a5sNyzP2HJC09gfW92SJ
+         L5cnW/QfEny/4zPCgOyB9LOEfQ56bNO+ncoHrcbv/6IMenVcnwNG/UzMGk9YXtfo5PpY
+         so3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z/AqPGNNCCRNNs6yWlXdcbQgq4XXU3JF7CTXbXn4IQg=;
-        b=TkuINt049NqbOxt/5QvYSGXory14dQoG0dTb4WG7oKlI3QSUrBbPKmXMXmpUfZ2uj0
-         u4Q0C0aVzSgOkNUyySuyqzO5JFjr7o3LcdRaD87Qv4qa0ylA1UHMGt18VPXnJQWCVdZk
-         zSiPHSHqbInk+RxPduJTKLoKv16ym1LV9BK7NGpL6TLJHPXE7McuFjK0wv+XVndlkcMF
-         uQML3uZKPpved7s0hziUgZB6KqoaBGp8P6swMQyp5M5+l4SS6eZLE/qcrCI05Bwa4axI
-         z+nPN4OfFLKC9+N9KxHpL4t67tFTVsGLr7eut5AqacXyeNBDZDz8C7gINrh3uSyn9rjl
-         bSRg==
-X-Gm-Message-State: AGi0PuaAW45jI8JLVvre19Xrx4y814qxNU8lz00g1GjscMbocprj3gFg
-        KCU8EezYRMKANT5YDyLaasA=
-X-Google-Smtp-Source: APiQypJvKugSQTijiNRSvdV/bczPnuCaHCjQfpZ6x30X8mYYazVXIUSTt9mfY8tRbr2XDFdf7TyzkA==
-X-Received: by 2002:a0c:9a4f:: with SMTP id q15mr17329705qvd.132.1589237931117;
-        Mon, 11 May 2020 15:58:51 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m59sm10445345qtd.46.2020.05.11.15.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:58:50 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Mike Lothian <mike@fireburn.co.uk>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Subject: [PATCH] x86/boot: Mark global variables as static
-Date:   Mon, 11 May 2020 18:58:49 -0400
-Message-Id: <20200511225849.1311869-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200511225324.GA1307788@rani.riverdale.lan>
-References: <20200511225324.GA1307788@rani.riverdale.lan>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mjq0pbimoUm4QL423/eKvG2VO6IOscWEFedsVa9GPuM=;
+        b=ELofeJzGyIXNkgx0M6N0UW/bxhkYGdCP/W/n4rmzC2/15fr31mmMWNFOvH8qBrEnpF
+         t7j4AQ3yUG5JpLnqmLEWacf/FSkTGx6QTF7DfohIZJwD1qtr6PmH94eafGKm0tKcwejV
+         8eJvSMUSHYM+Jm8/zMYNyq/hqIcQAj/AkXhloFVBTHqOMRWGmYh1JIntli1wLHnsD3l7
+         1IqrNc4qstU31Yk+Ms0E3VbLXT5rRBWKQIFK3k+mcrZOHKBRJpYDmFBIyreVeIbNm5rT
+         RpIjj+BoM5rF+wCCN5MvifebMN0MwLSZhxYOTc07SKTy1YbqdCbtxb7HLpKLYAPTw9bs
+         WlGg==
+X-Gm-Message-State: AGi0PubYnBfSypVbBGw3kNORqpxpWvVQVVWFvnIRjjXxlk/l8kwU8cqJ
+        qhRai3Xl07lf+gtcLl4nZ9WJ2Djo
+X-Google-Smtp-Source: APiQypL8NbOEQz++69SSmmDvBtk7c0K7HZoDLCMwsz8/w5JFcTKMmdffQytoRTwo1a9y5e42ROO6sg==
+X-Received: by 2002:a5d:5686:: with SMTP id f6mr21882805wrv.168.1589237968634;
+        Mon, 11 May 2020 15:59:28 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b12sm8904375wrq.82.2020.05.11.15.59.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 15:59:28 -0700 (PDT)
+Subject: Re: [PATCH v2 net-next 02/15] net: dsa: tag_8021q: introduce a
+ vid_is_dsa_8021q helper
+To:     Vladimir Oltean <olteanv@gmail.com>, andrew@lunn.ch,
+        vivien.didelot@gmail.com
+Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
+        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200511135338.20263-1-olteanv@gmail.com>
+ <20200511135338.20263-3-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <4905cf9e-b4ef-64d3-e5d9-7fe42e3775c3@gmail.com>
+Date:   Mon, 11 May 2020 15:59:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200511135338.20263-3-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike Lothian reports that after commit
-  964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-gcc 10.1.0 fails with
 
-  HOSTCC  arch/x86/boot/tools/build
-  /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
-  error: linker defined: multiple definition of '_end'
-  /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
-  /tmp/ccEkW0jM.o: previous definition here
-  collect2: error: ld returned 1 exit status
-  make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
-  make: *** [arch/x86/Makefile:303: bzImage] Error 2
 
-The issue is with the _end variable that was added, to hold the end of
-the compressed kernel from zoffsets.h (ZO__end). The name clashes with
-the linker-defined _end symbol that indicates the end of the build
-program itself.
+On 5/11/2020 6:53 AM, Vladimir Oltean wrote:
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+> 
+> This function returns a boolean denoting whether the VLAN passed as
+> argument is part of the 1024-3071 range that the dsa_8021q tagging
+> scheme uses.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Even when there is no compile-time error, this causes build to use
-memory past the end of its .bss section.
-
-To solve this, mark _end as static, and for symmetry, mark the rest of
-the variables that keep track of symbols from the compressed kernel as
-static as well.
-
-Fixes: 964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/boot/tools/build.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-index 8f8c8e386cea..c8b8c1a8d1fc 100644
---- a/arch/x86/boot/tools/build.c
-+++ b/arch/x86/boot/tools/build.c
-@@ -59,14 +59,14 @@ u8 buf[SETUP_SECT_MAX*512];
- #define PECOFF_COMPAT_RESERVE 0x0
- #endif
- 
--unsigned long efi32_stub_entry;
--unsigned long efi64_stub_entry;
--unsigned long efi_pe_entry;
--unsigned long efi32_pe_entry;
--unsigned long kernel_info;
--unsigned long startup_64;
--unsigned long _ehead;
--unsigned long _end;
-+static unsigned long efi32_stub_entry;
-+static unsigned long efi64_stub_entry;
-+static unsigned long efi_pe_entry;
-+static unsigned long efi32_pe_entry;
-+static unsigned long kernel_info;
-+static unsigned long startup_64;
-+static unsigned long _ehead;
-+static unsigned long _end;
- 
- /*----------------------------------------------------------------------*/
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.26.2
-
+Florian
