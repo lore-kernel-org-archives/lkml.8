@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39773C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B31C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 041AD2495A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887AF2495E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589172814;
-	bh=u4mtq4oc2YFCohhLV9L1ke8AzlV9vHB9ppjZwfyugSc=;
+	s=default; t=1589172815;
+	bh=gpPTyRYEHCVUZzxNy70fQ1duYwfPpzkaeocUDOMazW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0tCrx49pCAsWiCOuv5l6TgVQd3OPxHK4ks/vnvqgXzxxQJRW/tC0cCAXsPDYGdQV
-	 OS2R2eVV9WIYB+CcaJ/Ww4xWzu5tOrOHN/Gt/UpLLVq1HFcRLh63p1WcYhiR9eT+EI
-	 1OmrpByB/6HpMUFrMCYClYDulMw6oNKXE9LJ6TCg=
+	b=YiSANmJ/FVJF9W6+pl27df3C+VV+Da8j1znsBLbzH4oDy73+Vhe1qSmQO7HsU32X7
+	 hoAjP9zWzAVjUt8t51NVrPGfBWQB5rw8ocPUQo1aWi7VGKTdaFPRQWHuICJM4Nnbdq
+	 PKCep3ZTMijJlnVlGa5dGwtts8HjwqwPILXfpuMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgEKExc (ORCPT
+        id S1728420AbgEKExe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 00:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKExb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:53:31 -0400
+        id S1728356AbgEKExc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:53:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED2F24955;
-        Mon, 11 May 2020 04:53:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3766B24953;
+        Mon, 11 May 2020 04:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589172811;
-        bh=u4mtq4oc2YFCohhLV9L1ke8AzlV9vHB9ppjZwfyugSc=;
+        s=default; t=1589172812;
+        bh=gpPTyRYEHCVUZzxNy70fQ1duYwfPpzkaeocUDOMazW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4iHGzcnuki8Fmmq8eCPl//ClO9NAzyOcOXMqzDMPj9xVAhMCNWn43Eq1jSgmFK9U
-         uFbSuNOZTH/IC6TQ2jBIk81hoFP9s2jE3n++IhdOgdDHvje5HzjC5/zqllVkDzw5+e
-         2Y2rfihbOmqnnCBPXIRod1vQMUbFUty39tR8XNP4=
+        b=z4of81+qAjATUEZZNxQfMtf6JEGravhTuY0P01z2C4v5sYQYsJF+NVfiSAJkH/5+a
+         3y/SFAIjoASSfQPmB4BB3y0MDO9DqAxAiBFLcO7oAoojbZcrGFp2wajOf+p/hC1DzT
+         lyrhgkYmH9+4ejSmM+FXVzeQE9jAErJhvRp/H+Lc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v12 03/18] x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
-Date:   Mon, 11 May 2020 00:52:56 -0400
-Message-Id: <20200511045311.4785-4-sashal@kernel.org>
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [PATCH v12 04/18] x86/entry/64: Clean up paranoid exit
+Date:   Mon, 11 May 2020 00:52:57 -0400
+Message-Id: <20200511045311.4785-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
 References: <20200511045311.4785-1-sashal@kernel.org>
@@ -60,10 +61,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andy Lutomirski <luto@kernel.org>
 
-This is temporary.  It will allow the next few patches to be tested
-incrementally.
-
-Setting unsafe_fsgsbase is a root hole.  Don't do it.
+All that paranoid exit needs to do is to disable IRQs, handle IRQ tracing,
+then restore CR3, and restore GS base. Simply do those actions in that
+order. Cleaning up the spaghetti code.
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
@@ -76,67 +76,51 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  3 +++
- arch/x86/kernel/cpu/common.c                  | 24 +++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ arch/x86/entry/entry_64.S | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdfe..af3aaade195b8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3033,6 +3033,9 @@
- 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
- 			kernel to use 4-level paging instead.
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 3063aa9090f9a..0da56e6791b73 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1266,19 +1266,25 @@ SYM_CODE_END(paranoid_entry)
+ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	UNWIND_HINT_REGS
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
++
++	/*
++	 * The order of operations is important. IRQ tracing requires
++	 * kernel GS base and CR3. RESTORE_CR3 requires kernel GS base.
++	 *
++	 * NB to anyone to try to optimize this code: this code does
++	 * not execute at all for exceptions from user mode. Those
++	 * exceptions go through error_exit instead.
++	 */
+ 	TRACE_IRQS_OFF_DEBUG
+-	testl	%ebx, %ebx			/* swapgs needed? */
+-	jnz	.Lparanoid_exit_no_swapgs
+-	TRACE_IRQS_IRETQ
+-	/* Always restore stashed CR3 value (see paranoid_entry) */
+-	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
++	RESTORE_CR3	scratch_reg=%rax save_reg=%r14
++
++	/* If EBX is 0, SWAPGS is required */
++	testl	%ebx, %ebx
++	jnz	restore_regs_and_return_to_kernel
++
++	/* We are returning to a context with user GS base */
+ 	SWAPGS_UNSAFE_STACK
+ 	jmp	restore_regs_and_return_to_kernel
+-.Lparanoid_exit_no_swapgs:
+-	TRACE_IRQS_IRETQ_DEBUG
+-	/* Always restore stashed CR3 value (see paranoid_entry) */
+-	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
+-	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(paranoid_exit)
  
-+	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
-+			replaced with a nofsgsbase flag.
-+
- 	no_console_suspend
- 			[HW] Never suspend the console
- 			Disable suspending of consoles during suspend and
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index bed0cb83fe245..4224760c74e27 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -418,6 +418,22 @@ static void __init setup_cr_pinning(void)
- 	static_key_enable(&cr_pinning.key);
- }
- 
-+/*
-+ * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
-+ * updated. This allows us to get the kernel ready incrementally.
-+ *
-+ * Once all the pieces are in place, these will go away and be replaced with
-+ * a nofsgsbase chicken flag.
-+ */
-+static bool unsafe_fsgsbase;
-+
-+static __init int setup_unsafe_fsgsbase(char *arg)
-+{
-+	unsafe_fsgsbase = true;
-+	return 1;
-+}
-+__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
-+
  /*
-  * Protection Keys are not available in 32-bit mode.
-  */
-@@ -1478,6 +1494,14 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	setup_smap(c);
- 	setup_umip(c);
- 
-+	/* Enable FSGSBASE instructions if available. */
-+	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
-+		if (unsafe_fsgsbase)
-+			cr4_set_bits(X86_CR4_FSGSBASE);
-+		else
-+			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
-+	}
-+
- 	/*
- 	 * The vendor-specific functions might have changed features.
- 	 * Now we do "generic changes."
 -- 
 2.20.1
 
