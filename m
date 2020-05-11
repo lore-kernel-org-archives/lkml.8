@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FF4C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D73DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D1A206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210DC206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rO2tJLhY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh3DHTT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbgEKNyN (ORCPT
+        id S1730421AbgEKNyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
+        Mon, 11 May 2020 09:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730383AbgEKNyE (ORCPT
+        by vger.kernel.org with ESMTP id S1730377AbgEKNyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:54:04 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1719C061A0C;
-        Mon, 11 May 2020 06:54:03 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f134so5964444wmf.1;
-        Mon, 11 May 2020 06:54:03 -0700 (PDT)
+        Mon, 11 May 2020 09:54:02 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CD7C061A0C;
+        Mon, 11 May 2020 06:54:01 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f134so5964293wmf.1;
+        Mon, 11 May 2020 06:54:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=srjfuCRQdbfgjEZc1mUEhDYF9mErnn33WtAhRwCFfkU=;
-        b=rO2tJLhYLGR5ZmrNq65rgeYrIt0wTcnPlpRhJjL757Tc1L5GV9abgwmlETYcyQq+6D
-         tCCpHQLsLx9h8VfpewR1i/xGghesMfpe+aKvViRWy2tCKdMwu3g+GT0kKDRYLBmXMhZi
-         gdE00Z0bhQAEhCcWUAFtHPKgtRwXOa+/8tFEI3kGOtLWvTOSoTjbyq+HTzFTFspPtfHV
-         rW6jFFT6MB6PNaFOK6F46x5Eu/iPWqU13piARwDLgHk0DzuYBiDYWh/FS79ixDox7nH4
-         V1VdOdmxoLW9mc6HepH5an6w9opEItYLEVftzEdWQpb/WZ0heABUahGRCYmHmq3NR8gS
-         i7fQ==
+        bh=Rsl3iC4fLp2gfssGP6TPG4i8mcpV3PylFTJ+WVbq9Tg=;
+        b=lh3DHTT/pfPs3o+RaGY8Vgh6I1PwJmVbX2H1JIHs7cVZj6TUu/6SFnf0pK0/3JM14b
+         w5c7szw4P2ZsUyDrvCTtGzXmG7Se21ljXT5gsrteWW34MvatjhjYgPTZfKMxPY7amoDI
+         BOJf+OE9UQOtxkg4CqHi8u1ynFi0VQwMBl+QVp5BeAeBr+tmucaBdB4+IRbJPME/XiSi
+         JWDHsOpSipCLzqPbfTgi+3WkHvmOFzFqkraeZOqU/6QsReMlr1eSjKHmcUf7D+M3lOfi
+         W6YnOaTnSv6f2aj8mi1Bc1IbKiopC+mSvIAZfqbR+yS9++LwMBO58xs+zIGNPz3Vuh0V
+         W4bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=srjfuCRQdbfgjEZc1mUEhDYF9mErnn33WtAhRwCFfkU=;
-        b=cUTpxIWMno40VF7hVmRvMwxSg496GKTPYygk3vaLc29wJNhE/YBEAgDMYCDmv0jH7b
-         nlcse/5RQSSP898Y4rlc8IS04JzSZajDIqCbVpu1fOTDFhfbkAXKFmp8obNGUtruASqW
-         OW/F+S317GqQvD+L4cv2KL+LU/SPkEisVatPRJ1X9MHmelDk7b/DwzSt1WqM5FpuP0so
-         YAbNpN3LEPQx/Lk/nsou7kiT84e09DxEYS9nUxTeqT9B99iPMYpsoBgMElIjWb3vCI9C
-         VPPwoClGbW3b02vP3SQ1Xrfed1D6uES0dTgwKWqno66ZN8lkI+q/d8i53zwqO16nEimr
-         iPiw==
-X-Gm-Message-State: AGi0PuZZeai3ygOADI09tQ1HDYOadeVz+vnW0XqLW77zas0VZ3qK1PgL
-        uIrp9I1ANqRtECl88Vqhalg=
-X-Google-Smtp-Source: APiQypLClTR1WpqGZXvzVNeWY1ZxSi+r8FviC3wb5NLNyJblkM3KYUw8dCO4/6JJbF4LH69um9AzPg==
-X-Received: by 2002:a1c:b4d4:: with SMTP id d203mr22496033wmf.188.1589205242228;
-        Mon, 11 May 2020 06:54:02 -0700 (PDT)
+        bh=Rsl3iC4fLp2gfssGP6TPG4i8mcpV3PylFTJ+WVbq9Tg=;
+        b=kiMWfArp7avLdQJ33XMfVwnGaCrvYoELZj75yalp648LX4ptBsKgiMtgQcv+Bru4hS
+         3xpPdlNA4UEJtV6Y8u7xFAF/HdKr2iT35L67nzco2P55Nkr0+pGJpoUDfo0LpC3JNdJq
+         pN0vD9JjxK6/clwCJN1/E35DUbhVwsO0CEyCA7pxG0qS3CygwifS9yj/cz8tPWvsPOjM
+         8g+qS8DxWFubnRefat15GNhk6iorWSf4T86QY9ZKEOudEN4mYd9OXC0kW6i9hrLv6Zeg
+         08eXUS+tllzJRB828KSF5RjufLOqLmNMXbT1qEL8DWUWJmyExsqfh2EyTs+MUGl8Uk7H
+         9rDg==
+X-Gm-Message-State: AGi0PuZUxb/hfW61Rqk7WX36YetL166RVLNJ0na3N5kmpGjgcBEcuQF7
+        66lrxJ8XGOlhWBm/n1dGa30=
+X-Google-Smtp-Source: APiQypIjXnNxGWwJOP1YMwWj+a/ni6ZpvdGkUEnVWCj96nwmYbs6a/vegwUvE2zmaIQuG6wag30QAg==
+X-Received: by 2002:a7b:c3d2:: with SMTP id t18mr23513419wmj.100.1589205239812;
+        Mon, 11 May 2020 06:53:59 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.54.01
+        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.53.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:54:01 -0700 (PDT)
+        Mon, 11 May 2020 06:53:59 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 14/15] net: dsa: sja1105: implement VLAN retagging for dsa_8021q sub-VLANs
-Date:   Mon, 11 May 2020 16:53:37 +0300
-Message-Id: <20200511135338.20263-15-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 12/15] net: dsa: sja1105: add packing ops for the Retagging Table
+Date:   Mon, 11 May 2020 16:53:35 +0300
+Message-Id: <20200511135338.20263-13-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200511135338.20263-1-olteanv@gmail.com>
 References: <20200511135338.20263-1-olteanv@gmail.com>
@@ -77,522 +77,297 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Expand the delta commit procedure for VLANs with additional logic for
-treating bridge_vlans in the newly introduced operating mode,
-SJA1105_VLAN_BEST_EFFORT.
-
-For every bridge VLAN on every user port, a sub-VLAN index is calculated
-and retagging rules are installed towards a dsa_8021q rx_vid that
-encodes that sub-VLAN index. This way, the tagger can identify the
-original VLANs.
-
-Extra care is taken for VLANs to still work as intended in cross-chip
-scenarios. Retagging may have unintended consequences for these because
-a sub-VLAN encoding that works for the CPU does not make any sense for a
-front-panel port.
+The Retagging Table is an optional feature that allows the switch to
+match frames against a {ingress port, egress port, vid} rule and change
+their VLAN ID. The retagged frames are by default clones of the original
+ones (since the hardware-foreseen use case was to mirror traffic for
+debugging purposes and to tag it with a special VLAN for this purpose),
+but we can force the original frames to be dropped by removing the
+pre-retagging VLAN from the port membership list of the egress port.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
- - Only do anything in sja1105_build_subvlans and in
-   sja1105_build_crosschip_subvlans when operating in
-   SJA1105_VLAN_BEST_EFFORT state. This avoids installing VLAN retagging
-   rules in unaware mode, which would cost us a penalty in terms of
-   usable frame memory.
+None.
 
- drivers/net/dsa/sja1105/sja1105_main.c | 412 ++++++++++++++++++++++++-
- 1 file changed, 409 insertions(+), 3 deletions(-)
+ drivers/net/dsa/sja1105/sja1105.h             |  2 +
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  | 33 ++++++++++
+ .../net/dsa/sja1105/sja1105_static_config.c   | 62 ++++++++++++++++++-
+ .../net/dsa/sja1105/sja1105_static_config.h   | 15 +++++
+ 4 files changed, 110 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 99b453d0d205..b398b1b4ad4e 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1869,6 +1869,57 @@ sja1105_get_tag_protocol(struct dsa_switch *ds, int port,
- 	return DSA_TAG_PROTO_SJA1105;
+diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+index 1dcaecab0912..1ecdfd6be4c2 100644
+--- a/drivers/net/dsa/sja1105/sja1105.h
++++ b/drivers/net/dsa/sja1105/sja1105.h
+@@ -328,6 +328,8 @@ size_t sja1105et_l2_lookup_entry_packing(void *buf, void *entry_ptr,
+ 					 enum packing_op op);
+ size_t sja1105_vlan_lookup_entry_packing(void *buf, void *entry_ptr,
+ 					 enum packing_op op);
++size_t sja1105_retagging_entry_packing(void *buf, void *entry_ptr,
++				       enum packing_op op);
+ size_t sja1105pqrs_mac_config_entry_packing(void *buf, void *entry_ptr,
+ 					    enum packing_op op);
+ size_t sja1105pqrs_avb_params_entry_packing(void *buf, void *entry_ptr,
+diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
+index bdee01811960..2a8fbd7fdedc 100644
+--- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
++++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
+@@ -133,6 +133,9 @@
+ #define SJA1105PQRS_SIZE_AVB_PARAMS_DYN_CMD			\
+ 	(SJA1105_SIZE_DYN_CMD + SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY)
+ 
++#define SJA1105_SIZE_RETAGGING_DYN_CMD				\
++	(SJA1105_SIZE_DYN_CMD + SJA1105_SIZE_RETAGGING_ENTRY)
++
+ #define SJA1105_MAX_DYN_CMD_SIZE				\
+ 	SJA1105PQRS_SIZE_MAC_CONFIG_DYN_CMD
+ 
+@@ -525,6 +528,20 @@ sja1105pqrs_avb_params_cmd_packing(void *buf, struct sja1105_dyn_cmd *cmd,
+ 	sja1105_packing(p, &cmd->rdwrset, 29, 29, size, op);
  }
  
-+static int sja1105_find_free_subvlan(u16 *subvlan_map, bool pvid)
++static void
++sja1105_retagging_cmd_packing(void *buf, struct sja1105_dyn_cmd *cmd,
++			      enum packing_op op)
 +{
-+	int subvlan;
++	u8 *p = buf + SJA1105_SIZE_RETAGGING_ENTRY;
++	const int size = SJA1105_SIZE_DYN_CMD;
 +
-+	if (pvid)
-+		return 0;
-+
-+	for (subvlan = 1; subvlan < DSA_8021Q_N_SUBVLAN; subvlan++)
-+		if (subvlan_map[subvlan] == VLAN_N_VID)
-+			return subvlan;
-+
-+	return -1;
++	sja1105_packing(p, &cmd->valid,    31, 31, size, op);
++	sja1105_packing(p, &cmd->errors,   30, 30, size, op);
++	sja1105_packing(p, &cmd->valident, 29, 29, size, op);
++	sja1105_packing(p, &cmd->rdwrset,  28, 28, size, op);
++	sja1105_packing(p, &cmd->index,     5,  0, size, op);
 +}
 +
-+static int sja1105_find_subvlan(u16 *subvlan_map, u16 vid)
-+{
-+	int subvlan;
-+
-+	for (subvlan = 0; subvlan < DSA_8021Q_N_SUBVLAN; subvlan++)
-+		if (subvlan_map[subvlan] == vid)
-+			return subvlan;
-+
-+	return -1;
-+}
-+
-+static int sja1105_find_committed_subvlan(struct sja1105_private *priv,
-+					  int port, u16 vid)
-+{
-+	struct sja1105_port *sp = &priv->ports[port];
-+
-+	return sja1105_find_subvlan(sp->subvlan_map, vid);
-+}
-+
-+static void sja1105_init_subvlan_map(u16 *subvlan_map)
-+{
-+	int subvlan;
-+
-+	for (subvlan = 0; subvlan < DSA_8021Q_N_SUBVLAN; subvlan++)
-+		subvlan_map[subvlan] = VLAN_N_VID;
-+}
-+
-+static void sja1105_commit_subvlan_map(struct sja1105_private *priv, int port,
-+				       u16 *subvlan_map)
-+{
-+	struct sja1105_port *sp = &priv->ports[port];
-+	int subvlan;
-+
-+	for (subvlan = 0; subvlan < DSA_8021Q_N_SUBVLAN; subvlan++)
-+		sp->subvlan_map[subvlan] = subvlan_map[subvlan];
-+}
-+
- static int sja1105_is_vlan_configured(struct sja1105_private *priv, u16 vid)
- {
- 	struct sja1105_vlan_lookup_entry *vlan;
-@@ -1885,9 +1936,29 @@ static int sja1105_is_vlan_configured(struct sja1105_private *priv, u16 vid)
- 	return -1;
+ #define OP_READ		BIT(0)
+ #define OP_WRITE	BIT(1)
+ #define OP_DEL		BIT(2)
+@@ -606,6 +623,14 @@ struct sja1105_dynamic_table_ops sja1105et_dyn_ops[BLK_IDX_MAX_DYN] = {
+ 		.packed_size = SJA1105ET_SIZE_GENERAL_PARAMS_DYN_CMD,
+ 		.addr = 0x34,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.entry_packing = sja1105_retagging_entry_packing,
++		.cmd_packing = sja1105_retagging_cmd_packing,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++		.access = (OP_WRITE | OP_DEL),
++		.packed_size = SJA1105_SIZE_RETAGGING_DYN_CMD,
++		.addr = 0x31,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {0},
+ };
+ 
+@@ -692,6 +717,14 @@ struct sja1105_dynamic_table_ops sja1105pqrs_dyn_ops[BLK_IDX_MAX_DYN] = {
+ 		.packed_size = SJA1105ET_SIZE_GENERAL_PARAMS_DYN_CMD,
+ 		.addr = 0x34,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.entry_packing = sja1105_retagging_entry_packing,
++		.cmd_packing = sja1105_retagging_cmd_packing,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++		.access = (OP_READ | OP_WRITE | OP_DEL),
++		.packed_size = SJA1105_SIZE_RETAGGING_DYN_CMD,
++		.addr = 0x38,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {0},
+ };
+ 
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.c b/drivers/net/dsa/sja1105/sja1105_static_config.c
+index b68c9c92c248..780aca034cdc 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.c
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.c
+@@ -541,6 +541,22 @@ static size_t sja1105_xmii_params_entry_packing(void *buf, void *entry_ptr,
+ 	return size;
  }
  
-+static int
-+sja1105_find_retagging_entry(struct sja1105_retagging_entry *retagging,
-+			     int count, int from_port, u16 from_vid,
-+			     u16 to_vid)
++size_t sja1105_retagging_entry_packing(void *buf, void *entry_ptr,
++				       enum packing_op op)
 +{
-+	int i;
++	struct sja1105_retagging_entry *entry = entry_ptr;
++	const size_t size = SJA1105_SIZE_RETAGGING_ENTRY;
 +
-+	for (i = 0; i < count; i++)
-+		if (retagging[i].ing_port == BIT(from_port) &&
-+		    retagging[i].vlan_ing == from_vid &&
-+		    retagging[i].vlan_egr == to_vid)
-+			return i;
-+
-+	/* Return an invalid entry index if not found */
-+	return -1;
++	sja1105_packing(buf, &entry->egr_port,       63, 59, size, op);
++	sja1105_packing(buf, &entry->ing_port,       58, 54, size, op);
++	sja1105_packing(buf, &entry->vlan_ing,       53, 42, size, op);
++	sja1105_packing(buf, &entry->vlan_egr,       41, 30, size, op);
++	sja1105_packing(buf, &entry->do_not_learn,   29, 29, size, op);
++	sja1105_packing(buf, &entry->use_dest_ports, 28, 28, size, op);
++	sja1105_packing(buf, &entry->destports,      27, 23, size, op);
++	return size;
 +}
 +
- static int sja1105_commit_vlans(struct sja1105_private *priv,
--				struct sja1105_vlan_lookup_entry *new_vlan)
-+				struct sja1105_vlan_lookup_entry *new_vlan,
-+				struct sja1105_retagging_entry *new_retagging,
-+				int num_retagging)
+ size_t sja1105_table_header_packing(void *buf, void *entry_ptr,
+ 				    enum packing_op op)
  {
-+	struct sja1105_retagging_entry *retagging;
- 	struct sja1105_vlan_lookup_entry *vlan;
- 	struct sja1105_table *table;
- 	int num_vlans = 0;
-@@ -1947,9 +2018,50 @@ static int sja1105_commit_vlans(struct sja1105_private *priv,
- 		vlan[k++] = new_vlan[i];
+@@ -603,6 +619,7 @@ static u64 blk_id_map[BLK_IDX_MAX] = {
+ 	[BLK_IDX_L2_FORWARDING_PARAMS] = BLKID_L2_FORWARDING_PARAMS,
+ 	[BLK_IDX_AVB_PARAMS] = BLKID_AVB_PARAMS,
+ 	[BLK_IDX_GENERAL_PARAMS] = BLKID_GENERAL_PARAMS,
++	[BLK_IDX_RETAGGING] = BLKID_RETAGGING,
+ 	[BLK_IDX_XMII_PARAMS] = BLKID_XMII_PARAMS,
+ };
+ 
+@@ -646,7 +663,7 @@ static_config_check_memory_size(const struct sja1105_table *tables)
+ {
+ 	const struct sja1105_l2_forwarding_params_entry *l2_fwd_params;
+ 	const struct sja1105_vl_forwarding_params_entry *vl_fwd_params;
+-	int i, mem = 0;
++	int i, max_mem, mem = 0;
+ 
+ 	l2_fwd_params = tables[BLK_IDX_L2_FORWARDING_PARAMS].entries;
+ 
+@@ -659,7 +676,12 @@ static_config_check_memory_size(const struct sja1105_table *tables)
+ 			mem += vl_fwd_params->partspc[i];
  	}
  
-+	/* VLAN Retagging Table */
-+	table = &priv->static_config.tables[BLK_IDX_RETAGGING];
-+	retagging = table->entries;
+-	if (mem > SJA1105_MAX_FRAME_MEMORY)
++	if (tables[BLK_IDX_RETAGGING].entry_count)
++		max_mem = SJA1105_MAX_FRAME_MEMORY_RETAGGING;
++	else
++		max_mem = SJA1105_MAX_FRAME_MEMORY;
 +
-+	for (i = 0; i < table->entry_count; i++) {
-+		rc = sja1105_dynamic_config_write(priv, BLK_IDX_RETAGGING,
-+						  i, &retagging[i], false);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	if (table->entry_count)
-+		kfree(table->entries);
-+
-+	table->entries = kcalloc(num_retagging, table->ops->unpacked_entry_size,
-+				 GFP_KERNEL);
-+	if (!table->entries)
-+		return -ENOMEM;
-+
-+	table->entry_count = num_retagging;
-+	retagging = table->entries;
-+
-+	for (i = 0; i < num_retagging; i++) {
-+		retagging[i] = new_retagging[i];
-+
-+		/* Update entry */
-+		rc = sja1105_dynamic_config_write(priv, BLK_IDX_RETAGGING,
-+						  i, &retagging[i], true);
-+		if (rc < 0)
-+			return rc;
-+	}
-+
- 	return 0;
- }
++	if (mem > max_mem)
+ 		return SJA1105_OVERCOMMITTED_FRAME_MEMORY;
  
-+struct sja1105_crosschip_vlan {
-+	struct list_head list;
-+	u16 vid;
-+	bool untagged;
-+	int port;
-+	int other_port;
-+	struct dsa_switch *other_ds;
+ 	return SJA1105_CONFIG_OK;
+@@ -881,6 +903,12 @@ struct sja1105_table_ops sja1105e_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105ET_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+@@ -993,6 +1021,12 @@ struct sja1105_table_ops sja1105t_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105ET_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+@@ -1065,6 +1099,12 @@ struct sja1105_table_ops sja1105p_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+@@ -1177,6 +1217,12 @@ struct sja1105_table_ops sja1105q_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+@@ -1249,6 +1295,12 @@ struct sja1105_table_ops sja1105r_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+@@ -1361,6 +1413,12 @@ struct sja1105_table_ops sja1105s_table_ops[BLK_IDX_MAX] = {
+ 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
+ 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
+ 	},
++	[BLK_IDX_RETAGGING] = {
++		.packing = sja1105_retagging_entry_packing,
++		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
++		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
++		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
++	},
+ 	[BLK_IDX_XMII_PARAMS] = {
+ 		.packing = sja1105_xmii_params_entry_packing,
+ 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
+diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
+index b569e3de3590..d96044d86b11 100644
+--- a/drivers/net/dsa/sja1105/sja1105_static_config.h
++++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
+@@ -20,6 +20,7 @@
+ #define SJA1105_SIZE_VLAN_LOOKUP_ENTRY			8
+ #define SJA1105_SIZE_L2_FORWARDING_ENTRY		8
+ #define SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY		12
++#define SJA1105_SIZE_RETAGGING_ENTRY			8
+ #define SJA1105_SIZE_XMII_PARAMS_ENTRY			4
+ #define SJA1105_SIZE_SCHEDULE_PARAMS_ENTRY		12
+ #define SJA1105_SIZE_SCHEDULE_ENTRY_POINTS_PARAMS_ENTRY	4
+@@ -54,6 +55,7 @@ enum {
+ 	BLKID_L2_FORWARDING_PARAMS			= 0x0E,
+ 	BLKID_AVB_PARAMS				= 0x10,
+ 	BLKID_GENERAL_PARAMS				= 0x11,
++	BLKID_RETAGGING					= 0x12,
+ 	BLKID_XMII_PARAMS				= 0x4E,
+ };
+ 
+@@ -75,6 +77,7 @@ enum sja1105_blk_idx {
+ 	BLK_IDX_L2_FORWARDING_PARAMS,
+ 	BLK_IDX_AVB_PARAMS,
+ 	BLK_IDX_GENERAL_PARAMS,
++	BLK_IDX_RETAGGING,
+ 	BLK_IDX_XMII_PARAMS,
+ 	BLK_IDX_MAX,
+ 	/* Fake block indices that are only valid for dynamic access */
+@@ -99,10 +102,12 @@ enum sja1105_blk_idx {
+ #define SJA1105_MAX_L2_LOOKUP_PARAMS_COUNT		1
+ #define SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT		1
+ #define SJA1105_MAX_GENERAL_PARAMS_COUNT		1
++#define SJA1105_MAX_RETAGGING_COUNT			32
+ #define SJA1105_MAX_XMII_PARAMS_COUNT			1
+ #define SJA1105_MAX_AVB_PARAMS_COUNT			1
+ 
+ #define SJA1105_MAX_FRAME_MEMORY			929
++#define SJA1105_MAX_FRAME_MEMORY_RETAGGING		910
+ 
+ #define SJA1105E_DEVICE_ID				0x9C00000Cull
+ #define SJA1105T_DEVICE_ID				0x9E00030Eull
+@@ -273,6 +278,16 @@ struct sja1105_mac_config_entry {
+ 	u64 ingress;
+ };
+ 
++struct sja1105_retagging_entry {
++	u64 egr_port;
++	u64 ing_port;
++	u64 vlan_ing;
++	u64 vlan_egr;
++	u64 do_not_learn;
++	u64 use_dest_ports;
++	u64 destports;
 +};
 +
- struct sja1105_crosschip_switch {
- 	struct list_head list;
- 	struct dsa_switch *other_ds;
-@@ -2021,6 +2133,265 @@ sja1105_build_dsa_8021q_vlans(struct sja1105_private *priv,
- 	return 0;
- }
- 
-+static int sja1105_build_subvlans(struct sja1105_private *priv,
-+				  u16 subvlan_map[][DSA_8021Q_N_SUBVLAN],
-+				  struct sja1105_vlan_lookup_entry *new_vlan,
-+				  struct sja1105_retagging_entry *new_retagging,
-+				  int *num_retagging)
-+{
-+	struct sja1105_bridge_vlan *v;
-+	int k = *num_retagging;
-+
-+	if (priv->vlan_state != SJA1105_VLAN_BEST_EFFORT)
-+		return 0;
-+
-+	list_for_each_entry(v, &priv->bridge_vlans, list) {
-+		int upstream = dsa_upstream_port(priv->ds, v->port);
-+		int match, subvlan;
-+		u16 rx_vid;
-+
-+		/* Only sub-VLANs on user ports need to be applied.
-+		 * Bridge VLANs also include VLANs added automatically
-+		 * by DSA on the CPU port.
-+		 */
-+		if (!dsa_is_user_port(priv->ds, v->port))
-+			continue;
-+
-+		subvlan = sja1105_find_subvlan(subvlan_map[v->port],
-+					       v->vid);
-+		if (subvlan < 0) {
-+			subvlan = sja1105_find_free_subvlan(subvlan_map[v->port],
-+							    v->pvid);
-+			if (subvlan < 0) {
-+				dev_err(priv->ds->dev, "No more free subvlans\n");
-+				return -ENOSPC;
-+			}
-+		}
-+
-+		rx_vid = dsa_8021q_rx_vid_subvlan(priv->ds, v->port, subvlan);
-+
-+		/* @v->vid on @v->port needs to be retagged to @rx_vid
-+		 * on @upstream. Assume @v->vid on @v->port and on
-+		 * @upstream was already configured by the previous
-+		 * iteration over bridge_vlans.
-+		 */
-+		match = rx_vid;
-+		new_vlan[match].vlanid = rx_vid;
-+		new_vlan[match].vmemb_port |= BIT(v->port);
-+		new_vlan[match].vmemb_port |= BIT(upstream);
-+		new_vlan[match].vlan_bc |= BIT(v->port);
-+		new_vlan[match].vlan_bc |= BIT(upstream);
-+		/* The "untagged" flag is set the same as for the
-+		 * original VLAN
-+		 */
-+		if (!v->untagged)
-+			new_vlan[match].tag_port |= BIT(v->port);
-+		/* But it's always tagged towards the CPU */
-+		new_vlan[match].tag_port |= BIT(upstream);
-+
-+		/* The Retagging Table generates packet *clones* with
-+		 * the new VLAN. This is a very odd hardware quirk
-+		 * which we need to suppress by dropping the original
-+		 * packet.
-+		 * Deny egress of the original VLAN towards the CPU
-+		 * port. This will force the switch to drop it, and
-+		 * we'll see only the retagged packets.
-+		 */
-+		match = v->vid;
-+		new_vlan[match].vlan_bc &= ~BIT(upstream);
-+
-+		/* And the retagging itself */
-+		new_retagging[k].vlan_ing = v->vid;
-+		new_retagging[k].vlan_egr = rx_vid;
-+		new_retagging[k].ing_port = BIT(v->port);
-+		new_retagging[k].egr_port = BIT(upstream);
-+		if (k++ == SJA1105_MAX_RETAGGING_COUNT) {
-+			dev_err(priv->ds->dev, "No more retagging rules\n");
-+			return -ENOSPC;
-+		}
-+
-+		subvlan_map[v->port][subvlan] = v->vid;
-+	}
-+
-+	*num_retagging = k;
-+
-+	return 0;
-+}
-+
-+/* Sadly, in crosschip scenarios where the CPU port is also the link to another
-+ * switch, we should retag backwards (the dsa_8021q vid to the original vid) on
-+ * the CPU port of neighbour switches.
-+ */
-+static int
-+sja1105_build_crosschip_subvlans(struct sja1105_private *priv,
-+				 struct sja1105_vlan_lookup_entry *new_vlan,
-+				 struct sja1105_retagging_entry *new_retagging,
-+				 int *num_retagging)
-+{
-+	struct sja1105_crosschip_vlan *tmp, *pos;
-+	struct dsa_8021q_crosschip_link *c;
-+	struct sja1105_bridge_vlan *v, *w;
-+	struct list_head crosschip_vlans;
-+	int k = *num_retagging;
-+	int rc = 0;
-+
-+	if (priv->vlan_state != SJA1105_VLAN_BEST_EFFORT)
-+		return 0;
-+
-+	INIT_LIST_HEAD(&crosschip_vlans);
-+
-+	list_for_each_entry(c, &priv->crosschip_links, list) {
-+		struct sja1105_private *other_priv = c->other_ds->priv;
-+
-+		if (other_priv->vlan_state == SJA1105_VLAN_FILTERING_FULL)
-+			continue;
-+
-+		/* Crosschip links are also added to the CPU ports.
-+		 * Ignore those.
-+		 */
-+		if (!dsa_is_user_port(priv->ds, c->port))
-+			continue;
-+		if (!dsa_is_user_port(c->other_ds, c->other_port))
-+			continue;
-+
-+		/* Search for VLANs on the remote port */
-+		list_for_each_entry(v, &other_priv->bridge_vlans, list) {
-+			bool already_added = false;
-+			bool we_have_it = false;
-+
-+			if (v->port != c->other_port)
-+				continue;
-+
-+			/* If @v is a pvid on @other_ds, it does not need
-+			 * re-retagging, because its SVL field is 0 and we
-+			 * already allow that, via the dsa_8021q crosschip
-+			 * links.
-+			 */
-+			if (v->pvid)
-+				continue;
-+
-+			/* Search for the VLAN on our local port */
-+			list_for_each_entry(w, &priv->bridge_vlans, list) {
-+				if (w->port == c->port && w->vid == v->vid) {
-+					we_have_it = true;
-+					break;
-+				}
-+			}
-+
-+			if (!we_have_it)
-+				continue;
-+
-+			list_for_each_entry(tmp, &crosschip_vlans, list) {
-+				if (tmp->vid == v->vid &&
-+				    tmp->untagged == v->untagged &&
-+				    tmp->port == c->port &&
-+				    tmp->other_port == v->port &&
-+				    tmp->other_ds == c->other_ds) {
-+					already_added = true;
-+					break;
-+				}
-+			}
-+
-+			if (already_added)
-+				continue;
-+
-+			tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
-+			if (!tmp) {
-+				dev_err(priv->ds->dev, "Failed to allocate memory\n");
-+				rc = -ENOMEM;
-+				goto out;
-+			}
-+			tmp->vid = v->vid;
-+			tmp->port = c->port;
-+			tmp->other_port = v->port;
-+			tmp->other_ds = c->other_ds;
-+			tmp->untagged = v->untagged;
-+			list_add(&tmp->list, &crosschip_vlans);
-+		}
-+	}
-+
-+	list_for_each_entry(tmp, &crosschip_vlans, list) {
-+		struct sja1105_private *other_priv = tmp->other_ds->priv;
-+		int upstream = dsa_upstream_port(priv->ds, tmp->port);
-+		int match, subvlan;
-+		u16 rx_vid;
-+
-+		subvlan = sja1105_find_committed_subvlan(other_priv,
-+							 tmp->other_port,
-+							 tmp->vid);
-+		/* If this happens, it's a bug. The neighbour switch does not
-+		 * have a subvlan for tmp->vid on tmp->other_port, but it
-+		 * should, since we already checked for its vlan_state.
-+		 */
-+		if (WARN_ON(subvlan < 0)) {
-+			rc = -EINVAL;
-+			goto out;
-+		}
-+
-+		rx_vid = dsa_8021q_rx_vid_subvlan(tmp->other_ds,
-+						  tmp->other_port,
-+						  subvlan);
-+
-+		/* The @rx_vid retagged from @tmp->vid on
-+		 * {@tmp->other_ds, @tmp->other_port} needs to be
-+		 * re-retagged to @tmp->vid on the way back to us.
-+		 *
-+		 * Assume the original @tmp->vid is already configured
-+		 * on this local switch, otherwise we wouldn't be
-+		 * retagging its subvlan on the other switch in the
-+		 * first place. We just need to add a reverse retagging
-+		 * rule for @rx_vid and install @rx_vid on our ports.
-+		 */
-+		match = rx_vid;
-+		new_vlan[match].vlanid = rx_vid;
-+		new_vlan[match].vmemb_port |= BIT(tmp->port);
-+		new_vlan[match].vmemb_port |= BIT(upstream);
-+		/* The "untagged" flag is set the same as for the
-+		 * original VLAN. And towards the CPU, it doesn't
-+		 * really matter, because @rx_vid will only receive
-+		 * traffic on that port. For consistency with other dsa_8021q
-+		 * VLANs, we'll keep the CPU port tagged.
-+		 */
-+		if (!tmp->untagged)
-+			new_vlan[match].tag_port |= BIT(tmp->port);
-+		new_vlan[match].tag_port |= BIT(upstream);
-+		/* Deny egress of @rx_vid towards our front-panel port.
-+		 * This will force the switch to drop it, and we'll see
-+		 * only the re-retagged packets (having the original,
-+		 * pre-initial-retagging, VLAN @tmp->vid).
-+		 */
-+		new_vlan[match].vlan_bc &= ~BIT(tmp->port);
-+
-+		/* On reverse retagging, the same ingress VLAN goes to multiple
-+		 * ports. So we have an opportunity to create composite rules
-+		 * to not waste the limited space in the retagging table.
-+		 */
-+		k = sja1105_find_retagging_entry(new_retagging, *num_retagging,
-+						 upstream, rx_vid, tmp->vid);
-+		if (k < 0) {
-+			if (*num_retagging == SJA1105_MAX_RETAGGING_COUNT) {
-+				dev_err(priv->ds->dev, "No more retagging rules\n");
-+				rc = -ENOSPC;
-+				goto out;
-+			}
-+			k = (*num_retagging)++;
-+		}
-+		/* And the retagging itself */
-+		new_retagging[k].vlan_ing = rx_vid;
-+		new_retagging[k].vlan_egr = tmp->vid;
-+		new_retagging[k].ing_port = BIT(upstream);
-+		new_retagging[k].egr_port |= BIT(tmp->port);
-+	}
-+
-+out:
-+	list_for_each_entry_safe(tmp, pos, &crosschip_vlans, list) {
-+		list_del(&tmp->list);
-+		kfree(tmp);
-+	}
-+
-+	return rc;
-+}
-+
- static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify);
- 
- static int sja1105_notify_crosschip_switches(struct sja1105_private *priv)
-@@ -2074,10 +2445,12 @@ static int sja1105_notify_crosschip_switches(struct sja1105_private *priv)
- 
- static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify)
- {
-+	u16 subvlan_map[SJA1105_NUM_PORTS][DSA_8021Q_N_SUBVLAN];
-+	struct sja1105_retagging_entry *new_retagging;
- 	struct sja1105_vlan_lookup_entry *new_vlan;
- 	struct sja1105_table *table;
-+	int i, num_retagging = 0;
- 	int rc;
--	int i;
- 
- 	table = &priv->static_config.tables[BLK_IDX_VLAN_LOOKUP];
- 	new_vlan = kcalloc(VLAN_N_VID,
-@@ -2085,9 +2458,23 @@ static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify)
- 	if (!new_vlan)
- 		return -ENOMEM;
- 
-+	table = &priv->static_config.tables[BLK_IDX_VLAN_LOOKUP];
-+	new_retagging = kcalloc(SJA1105_MAX_RETAGGING_COUNT,
-+				table->ops->unpacked_entry_size, GFP_KERNEL);
-+	if (!new_retagging) {
-+		kfree(new_vlan);
-+		return -ENOMEM;
-+	}
-+
- 	for (i = 0; i < VLAN_N_VID; i++)
- 		new_vlan[i].vlanid = VLAN_N_VID;
- 
-+	for (i = 0; i < SJA1105_MAX_RETAGGING_COUNT; i++)
-+		new_retagging[i].vlan_ing = VLAN_N_VID;
-+
-+	for (i = 0; i < priv->ds->num_ports; i++)
-+		sja1105_init_subvlan_map(subvlan_map[i]);
-+
- 	/* Bridge VLANs */
- 	rc = sja1105_build_bridge_vlans(priv, new_vlan);
- 	if (rc)
-@@ -2102,7 +2489,22 @@ static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify)
- 	if (rc)
- 		goto out;
- 
--	rc = sja1105_commit_vlans(priv, new_vlan);
-+	/* Private VLANs necessary for dsa_8021q operation, which we need to
-+	 * determine on our own:
-+	 * - Sub-VLANs
-+	 * - Sub-VLANs of crosschip switches
-+	 */
-+	rc = sja1105_build_subvlans(priv, subvlan_map, new_vlan, new_retagging,
-+				    &num_retagging);
-+	if (rc)
-+		goto out;
-+
-+	rc = sja1105_build_crosschip_subvlans(priv, new_vlan, new_retagging,
-+					      &num_retagging);
-+	if (rc)
-+		goto out;
-+
-+	rc = sja1105_commit_vlans(priv, new_vlan, new_retagging, num_retagging);
- 	if (rc)
- 		goto out;
- 
-@@ -2110,6 +2512,9 @@ static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify)
- 	if (rc)
- 		goto out;
- 
-+	for (i = 0; i < priv->ds->num_ports; i++)
-+		sja1105_commit_subvlan_map(priv, i, subvlan_map[i]);
-+
- 	if (notify) {
- 		rc = sja1105_notify_crosschip_switches(priv);
- 		if (rc)
-@@ -2118,6 +2523,7 @@ static int sja1105_build_vlan_table(struct sja1105_private *priv, bool notify)
- 
- out:
- 	kfree(new_vlan);
-+	kfree(new_retagging);
- 
- 	return rc;
- }
+ struct sja1105_xmii_params_entry {
+ 	u64 phy_mac[5];
+ 	u64 xmii_mode[5];
 -- 
 2.17.1
 
