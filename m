@@ -2,168 +2,166 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C07EC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9AC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34CAE20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E40C2071C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nw8KjYth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgEKDPX (ORCPT
+        id S1728554AbgEKDPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:15:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:50292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgEKDPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:15:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B3601FB;
-        Sun, 10 May 2020 20:15:20 -0700 (PDT)
-Received: from [10.163.72.179] (unknown [10.163.72.179])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18C63F305;
-        Sun, 10 May 2020 20:15:09 -0700 (PDT)
-Subject: Re: [PATCH V3 2/3] mm/hugetlb: Define a generic fallback for
- is_hugepage_only_range()
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
- <1588907271-11920-3-git-send-email-anshuman.khandual@arm.com>
- <9fc622e1-45ff-b79f-ebe0-35614837456c@oracle.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c21ab871-da06-baf6-ba31-80b13402b8c9@arm.com>
-Date:   Mon, 11 May 2020 08:44:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 10 May 2020 23:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728104AbgEKDPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 23:15:38 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0E4C05BD09
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:15:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so4113840pfv.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=biu5X9JLtv6WRnXKVc8xUOK25p8WSyjfbFSVrSRcQ9E=;
+        b=Nw8KjYthz4ugGIkV7t+7zKTL/p5keRxvml5MguBls6kEJ9EldeSye3ObC588Q8BAk1
+         PBVypmzmrpBdBzfm6v8KgM/kk6TTWzuZb3fU3mex1KLOrZEjkktJhJIoOXb4Sctg6rH3
+         1uiLOHVzfAGh/1qBgXTHEQehQu7xwjJyP815o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=biu5X9JLtv6WRnXKVc8xUOK25p8WSyjfbFSVrSRcQ9E=;
+        b=hmpJsKDIY0tf9ayXJ7a04S1z97fmsg172aI5E8E1NeD8ThjZWKkp2COPE7bFcQ0wXb
+         HmgyAkw1UYvCCt/7y8L3+dXFLPrFG3JBX0PsnJWCq3QdA5fmnFZyWo8nuPB+CpqQD3Ti
+         w9vEyxGsIrKL5LS6ktIRyqjRc85n69h3q8mfTURsv8kIhCtTKBMWnNc0u812O2HoRokl
+         wofVLp/MrCxcvqcU2ikUl/LFNs/tO39Tus9nhFT2mf9ND5MAG2GLSdZfRaXdAPzxRqMe
+         ul4mXJP+EVq1lw+WNTaeMgsYfxYOtGnDyu80av0O/b3yUHST1n7G9KDwuKg+1ObcMcHG
+         0P/g==
+X-Gm-Message-State: AGi0PuYEgOk9lPTBznEZL9GJ51p9bMTJYBzadCYpsJQH3vEcNSK0HMxg
+        C7kkpYvykW/pLOe3LTOTT2Jnpw==
+X-Google-Smtp-Source: APiQypJxhmyeJZSarW6LgvJTnaApg7gY80iM7fHvZ9PNI7Twn0eOw6d19/FzRXiOud1ybxNdArL8xA==
+X-Received: by 2002:aa7:958f:: with SMTP id z15mr13543700pfj.10.1589166936598;
+        Sun, 10 May 2020 20:15:36 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w75sm7834318pfc.156.2020.05.10.20.15.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 May 2020 20:15:35 -0700 (PDT)
+Date:   Sun, 10 May 2020 20:15:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from
+ __do_execve_file
+Message-ID: <202005101929.A4374D0F56@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <9fc622e1-45ff-b79f-ebe0-35614837456c@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/09/2020 03:52 AM, Mike Kravetz wrote:
-> On 5/7/20 8:07 PM, Anshuman Khandual wrote:
->> There are multiple similar definitions for is_hugepage_only_range() on
->> various platforms. Lets just add it's generic fallback definition for
->> platforms that do not override. This help reduce code duplication.
->>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Tony Luck <tony.luck@intel.com>
->> Cc: Fenghua Yu <fenghua.yu@intel.com>
->> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
->> Cc: Helge Deller <deller@gmx.de>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Paul Walmsley <paul.walmsley@sifive.com>
->> Cc: Palmer Dabbelt <palmer@dabbelt.com>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->> Cc: Rich Felker <dalias@libc.org>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: x86@kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-ia64@vger.kernel.org
->> Cc: linux-mips@vger.kernel.org
->> Cc: linux-parisc@vger.kernel.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-riscv@lists.infradead.org
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-sh@vger.kernel.org
->> Cc: sparclinux@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-arch@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm/include/asm/hugetlb.h     | 6 ------
->>  arch/arm64/include/asm/hugetlb.h   | 6 ------
->>  arch/ia64/include/asm/hugetlb.h    | 1 +
->>  arch/mips/include/asm/hugetlb.h    | 7 -------
->>  arch/parisc/include/asm/hugetlb.h  | 6 ------
->>  arch/powerpc/include/asm/hugetlb.h | 1 +
->>  arch/riscv/include/asm/hugetlb.h   | 6 ------
->>  arch/s390/include/asm/hugetlb.h    | 7 -------
->>  arch/sh/include/asm/hugetlb.h      | 6 ------
->>  arch/sparc/include/asm/hugetlb.h   | 6 ------
->>  arch/x86/include/asm/hugetlb.h     | 6 ------
->>  include/linux/hugetlb.h            | 9 +++++++++
->>  12 files changed, 11 insertions(+), 56 deletions(-)
->>
-> <snip>
->> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
->> index 43a1cef8f0f1..c01c0c6f7fd4 100644
->> --- a/include/linux/hugetlb.h
->> +++ b/include/linux/hugetlb.h
->> @@ -591,6 +591,15 @@ static inline unsigned int blocks_per_huge_page(struct hstate *h)
->>  
->>  #include <asm/hugetlb.h>
->>  
->> +#ifndef is_hugepage_only_range
->> +static inline int is_hugepage_only_range(struct mm_struct *mm,
->> +					unsigned long addr, unsigned long len)
->> +{
->> +	return 0;
->> +}
->> +#define is_hugepage_only_range is_hugepage_only_range
->> +#endif
->> +
->>  #ifndef arch_make_huge_pte
->>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
->>  				       struct page *page, int writable)
->>
+On Sat, May 09, 2020 at 02:41:17PM -0500, Eric W. Biederman wrote:
 > 
-> Did you try building without CONFIG_HUGETLB_PAGE defined?  I'm guessing
-
-Yes I did for multiple platforms (s390, arm64, ia64, x86, powerpc etc).
-
-> that you need a stub for is_hugepage_only_range().  Or, perhaps add this
-> to asm-generic/hugetlb.h?
+> Now that security_bprm_set_creds is no longer responsible for calling
+> cap_bprm_set_creds, security_bprm_set_creds only does something for
+> the primary file that is being executed (not any interpreters it may
+> have).  Therefore call security_bprm_set_creds from __do_execve_file,
+> instead of from prepare_binprm so that it is only called once, and
+> remove the now unnecessary called_set_creds field of struct binprm.
 > 
-There is already a stub (include/linux/hugetlb.h) when !CONFIG_HUGETLB_PAGE.
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  fs/exec.c                  | 11 +++++------
+>  include/linux/binfmts.h    |  6 ------
+>  security/apparmor/domain.c |  3 ---
+>  security/selinux/hooks.c   |  2 --
+>  security/smack/smack_lsm.c |  3 ---
+>  security/tomoyo/tomoyo.c   |  6 ------
+>  6 files changed, 5 insertions(+), 26 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 765bfd51a546..635b5085050c 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1635,12 +1635,6 @@ int prepare_binprm(struct linux_binprm *bprm)
+>  
+>  	bprm_fill_uid(bprm);
+>  
+> -	/* fill in binprm security blob */
+> -	retval = security_bprm_set_creds(bprm);
+> -	if (retval)
+> -		return retval;
+> -	bprm->called_set_creds = 1;
+> -
+>  	retval = cap_bprm_set_creds(bprm);
+>  	if (retval)
+>  		return retval;
+> @@ -1858,6 +1852,11 @@ static int __do_execve_file(int fd, struct filename *filename,
+>  	if (retval < 0)
+>  		goto out;
+>  
+> +	/* fill in binprm security blob */
+> +	retval = security_bprm_set_creds(bprm);
+> +	if (retval)
+> +		goto out;
+> +
+>  	retval = prepare_binprm(bprm);
+>  	if (retval < 0)
+>  		goto out;
+> 
+
+Here I go with a Sunday night review, so hopefully I'm thinking better
+than Friday night's review, but I *think* this patch is broken from
+the LSM sense of the world in that security_bprm_set_creds() is getting
+called _before_ the creds actually get fully set (in prepare_binprm()
+by the calls to bprm_fill_uid(), cap_bprm_set_creds(), and
+check_unsafe_exec()).
+
+As a specific example, see the setting of LSM_UNSAFE_NO_NEW_PRIVS in
+bprm->unsafe during check_unsafe_exec(), which must happen after
+bprm_fill_uid(bprm) and cap_bprm_set_creds(bprm), to have a "true" view
+of the execution privileges. Apparmor checks for this flag in its
+security_bprm_set_creds() hook. Similarly do selinux, smack, etc...
+
+The security_bprm_set_creds() boundary for LSM is to see the "final"
+state of the process privileges, and that needs to happen after
+bprm_fill_uid(), cap_bprm_set_creds(), and check_unsafe_exec() have all
+finished.
+
+So, as it stands, I don't think this will work, but perhaps it can still
+be rearranged to avoid the called_set_creds silliness. I'll look more
+this week...
+
+-Kees
+
+-- 
+Kees Cook
