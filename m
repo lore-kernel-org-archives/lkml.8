@@ -2,188 +2,415 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5EAC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CBC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E7620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A1A20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMIYu0At"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNDoh0Xb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgEKNAM (ORCPT
+        id S1729930AbgEKNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        Mon, 11 May 2020 09:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727827AbgEKNAM (ORCPT
+        by vger.kernel.org with ESMTP id S1727827AbgEKNA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:00:12 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF917C061A0C;
-        Mon, 11 May 2020 06:00:11 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id h4so17948170wmb.4;
-        Mon, 11 May 2020 06:00:11 -0700 (PDT)
+        Mon, 11 May 2020 09:00:56 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF824C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:00:56 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id di6so4383527qvb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:references:user-agent:to:cc:subject:in-reply-to
-         :message-id:date:mime-version;
-        bh=GT1dtgToCuf3JZQXWgmn/1+1Vz720HE+8i0ZCjTlo7w=;
-        b=KMIYu0AtbfomOEZKHqvTVcN79xGzhnfhHfc7vhfsX/lwOqA1f19NINZIIxSAUC6QLQ
-         5VsPpzc0E+023+kEaNkndCHKiXjMuzEWlkp6VsqvTWnMhnzY1MTQCODGdxGf9/zTdUsr
-         HbkSTNLDGabEucMdKXdALoz7wQVWpsotJTehLTQRh+jYB06ncAumAb2Am9CGttiGR5Sh
-         aiiikjtkdt/06zyvSctEimqsm8VJNYrnfWXwVvrHb92UNz9uA/ux8QfhDPgCZEihPtvH
-         NwvSlbe6MGUoGWWvSseNcxCfF8QM7aOQuwsYrw4PWWDp/xctTdAJICB2yEgDBdKfIRaC
-         Hzqg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6iIZrDd6XH1XLz+64Z2moZtoJrkxBoPg7cIT5TImjAQ=;
+        b=FNDoh0Xbx+W2llYRnkncA+zVSkcxVv1viBD5Avh1g4/QuvgJ4+EoLmeiFyGtGCP11c
+         jJDUAjNsbRS7cZKD8pUaXJ55VCGoG/rglmG9VlWPPPVHyfDpMm+z1N5vJPE5F5YZQo12
+         ANjad62dX8TLluO0gtTtNUVzOk+MNSYW0uTWwLR2CF1Pm5RC9wnlku8qaPs41gxsoEgc
+         uuPblIIJR0QKs57EpqjfeQkeImwDwk3dlYxFmSVV6XOF4Xi/qO16Tr75qA8F32L2UF6h
+         g8ivF/n1uwBS+IdeN2Ck+QczvZSUOZF6Ne5KTfSnrQpV/SUHLDl3CGDc2SeC0/mQbTCX
+         M6Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:references:user-agent:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=GT1dtgToCuf3JZQXWgmn/1+1Vz720HE+8i0ZCjTlo7w=;
-        b=pMOUrg3QGClVIPQhdVKAscw+O4OgkDvjRLqwl2KlCLqzSiRRlzq6alKJcbUIslsvx3
-         gy32gojR8U09GXuxZhXzqim64bqLRu7/GS+2bedt8I4/baGFmp8hcsCGqBVk2bW6A7ST
-         BPXqJBvEXNDe3aqey35gZwI7vqFa2iXyiJE9JZiHvc8B8alzQMjHzEkv5JoVAgH8t1MV
-         PBByTqROVg7UIj3Yqa2sX+VCjTKSJr1gMdJz7q2EyHYZmoId+Z5Zuz9QYu/IW3yIBBGm
-         lfQQln21GdyPPd3q1CUGcxqYkczzE95B051r3BTxM+zYrIb25BU/P0ZJDGASUQe1v0Yg
-         jD/w==
-X-Gm-Message-State: AGi0Pua0omwPWO/goomQM2967UocxWA+LO1PxlGTUVE+QoPlH7913PNp
-        0sC/NrX1Fg/JTQKpuzB7GkFLXQvd1Is=
-X-Google-Smtp-Source: APiQypIdEhVCj3AfwnDtXHxVYKduAfM7hgi55kuPoCwoSEKk/rppyVs+ayP4HIB75wIQ3XU0hprR4g==
-X-Received: by 2002:a1c:e305:: with SMTP id a5mr14612754wmh.1.1589202009946;
-        Mon, 11 May 2020 06:00:09 -0700 (PDT)
-Received: from darkstar ([51.154.17.58])
-        by smtp.gmail.com with ESMTPSA id 5sm26454868wmz.16.2020.05.11.06.00.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 May 2020 06:00:08 -0700 (PDT)
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-X-Google-Original-From: Patrick Bellasi <patrick.bellasi@matbug.com>
-References: <20200501114927.15248-1-qais.yousef@arm.com> <20200501114927.15248-2-qais.yousef@arm.com> <87d07krjyk.derkling@matbug.com> <20200505145637.5daqhatsm5bjsok7@e107158-lin.cambridge.arm.com>
-User-agent: mu4e 1.4.3; emacs 26.3
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-In-reply-to: <20200505145637.5daqhatsm5bjsok7@e107158-lin.cambridge.arm.com>
-Message-ID: <877dxik4ob.derkling@matbug.com>
-Date:   Mon, 11 May 2020 15:00:04 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6iIZrDd6XH1XLz+64Z2moZtoJrkxBoPg7cIT5TImjAQ=;
+        b=T/Zy+VotDV+Rx5lw0Yt4JTBmzYpKh2Sn+kidqa6rk0i8nHx7w334UDUdRdal9w4mBZ
+         JuAbx9b8BZFFwx+rD4W32k7fWf5Wibx+mUnTtXx1RonND9vfFrmLHCjZIqcMqI/w6UP/
+         3QEZb8SEhANolDtfPC0Pw0XrJXT3Sl/USVV/kuvPX1eWhQdF3M0JK3CnYNEg4Gt+QO43
+         ky9C7Vpftr93z4fJBS9sMhOKY2HmgtZ1l5QHzcergG2r05FQw2HG9hjYEoGf3kKj2b1b
+         vlHZ4wPLtgaMSNY194uIkl3YFpZC74E16rjLUe3rZpB/D/9BvtLXlyV11GyOdBrISRTe
+         gbNg==
+X-Gm-Message-State: AGi0PuaWHUmwNjsgcIUVzZMV/zRc3ZhNtg9RSm8d+eN5rzgj5vshd9YI
+        HWhy+BIVeQb1cfVu5ERO9Bli6TH1i/T4WGxtWfEs7g==
+X-Google-Smtp-Source: APiQypKhDM1WRiILAT6KGCbVC4ZL7KxEMybSiJDW34NhEELPfwDqclEOyNIJj+JfJ5m5T6e4YgUr6sBXYIRmzWH6ctw=
+X-Received: by 2002:a0c:db03:: with SMTP id d3mr5440031qvk.80.1589202055213;
+ Mon, 11 May 2020 06:00:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
+ <CACT4Y+beDTzGrDx9uWSjbr67j0encwBa_1PKpyQCejiddLhOxA@mail.gmail.com> <1589201640.21284.8.camel@mtksdccf07>
+In-Reply-To: <1589201640.21284.8.camel@mtksdccf07>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 May 2020 15:00:43 +0200
+Message-ID: <CACT4Y+Y3sYbN6mbWcNDm=FhQx3XJb-e7EGB82oYG-Tyvg2BXKw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Qais,
-
-On Tue, May 05, 2020 at 16:56:37 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
-
->> > +sched_util_clamp_min_rt_default:
->> > +================================
->> > +
->> > +By default Linux is tuned for performance. Which means that RT tasks always run
->> > +at the highest frequency and most capable (highest capacity) CPU (in
->> > +heterogeneous systems).
->> > +
->> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
->> > +SCHED_CAPACITY_SCALE (1024) by default, which effectively boosts the tasks to
->> > +run at the highest frequency and biases them to run on the biggest CPU.
->> > +
->> > +This knob allows admins to change the default behavior when uclamp is being
->> > +used. In battery powered devices particularly, running at the maximum
->> > +capacity and frequency will increase energy consumption and shorten the battery
->> > +life.
->> > +
->> > +This knob is only effective for RT tasks which the user hasn't modified their
->> > +requested uclamp.min value via sched_setattr() syscall.
->> > +
->> > +This knob will not escape the constraint imposed by sched_util_clamp_min
->> > +defined above.
->> 
->> Perhaps it's worth to specify that this value is going to be clamped by
->> the values above? Otherwise it's a bit ambiguous to know what happen
->> when it's bigger than schedu_util_clamp_min.
+On Mon, May 11, 2020 at 2:54 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >
-> Hmm for me that sentence says exactly what you're asking for.
+> On Mon, 2020-05-11 at 14:20 +0200, 'Dmitry Vyukov' via kasan-dev wrote:
+> > On Mon, May 11, 2020 at 4:31 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > This feature will record first and last call_rcu() call stack and
+> > > print two call_rcu() call stack in KASAN report.
+> > >
+> > > When call_rcu() is called, we store the call_rcu() call stack into
+> > > slub alloc meta-data, so that KASAN report can print rcu stack.
+> > >
+> > > It doesn't increase the cost of memory consumption. Because we don't
+> > > enlarge struct kasan_alloc_meta size.
+> > > - add two call_rcu() call stack into kasan_alloc_meta, size is 8 bytes.
+> > > - remove free track from kasan_alloc_meta, size is 8 bytes.
+> > >
+> > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> > > [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
+> > >
+> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+> > > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> > > Cc: Dmitry Vyukov <dvyukov@google.com>
+> > > Cc: Alexander Potapenko <glider@google.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > > Cc: Josh Triplett <josh@joshtriplett.org>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > ---
+> > >  include/linux/kasan.h |  2 ++
+> > >  kernel/rcu/tree.c     |  3 +++
+> > >  lib/Kconfig.kasan     |  2 ++
+> > >  mm/kasan/common.c     |  4 ++--
+> > >  mm/kasan/generic.c    | 29 +++++++++++++++++++++++++++++
+> > >  mm/kasan/kasan.h      | 19 +++++++++++++++++++
+> > >  mm/kasan/report.c     | 21 +++++++++++++++++----
+> > >  7 files changed, 74 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> > > index 31314ca7c635..23b7ee00572d 100644
+> > > --- a/include/linux/kasan.h
+> > > +++ b/include/linux/kasan.h
+> > > @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+> > >
+> > >  void kasan_cache_shrink(struct kmem_cache *cache);
+> > >  void kasan_cache_shutdown(struct kmem_cache *cache);
+> > > +void kasan_record_aux_stack(void *ptr);
+> > >
+> > >  #else /* CONFIG_KASAN_GENERIC */
+> > >
+> > >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+> > >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> > > +static inline void kasan_record_aux_stack(void *ptr) {}
+> > >
+> > >  #endif /* CONFIG_KASAN_GENERIC */
+> > >
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 06548e2ebb72..de872b6cc261 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -57,6 +57,7 @@
+> > >  #include <linux/slab.h>
+> > >  #include <linux/sched/isolation.h>
+> > >  #include <linux/sched/clock.h>
+> > > +#include <linux/kasan.h>
+> > >  #include "../time/tick-internal.h"
+> > >
+> > >  #include "tree.h"
+> > > @@ -2694,6 +2695,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > >                 trace_rcu_callback(rcu_state.name, head,
+> > >                                    rcu_segcblist_n_cbs(&rdp->cblist));
+> > >
+> > > +       kasan_record_aux_stack(head);
+> > > +
+> > >         /* Go handle any RCU core processing required. */
+> > >         if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
+> > >             unlikely(rcu_segcblist_is_offloaded(&rdp->cblist))) {
+> > > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> > > index 81f5464ea9e1..56a89291f1cc 100644
+> > > --- a/lib/Kconfig.kasan
+> > > +++ b/lib/Kconfig.kasan
+> > > @@ -58,6 +58,8 @@ config KASAN_GENERIC
+> > >           For better error detection enable CONFIG_STACKTRACE.
+> > >           Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
+> > >           (the resulting kernel does not boot).
+> > > +         Currently CONFIG_KASAN_GENERIC will print first and last call_rcu()
+> > > +         call stack. It doesn't increase the cost of memory consumption.
+> > >
+> > >  config KASAN_SW_TAGS
+> > >         bool "Software tag-based mode"
+> > > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> > > index 2906358e42f0..8bc618289bb1 100644
+> > > --- a/mm/kasan/common.c
+> > > +++ b/mm/kasan/common.c
+> > > @@ -41,7 +41,7 @@
+> > >  #include "kasan.h"
+> > >  #include "../slab.h"
+> > >
+> > > -static inline depot_stack_handle_t save_stack(gfp_t flags)
+> > > +depot_stack_handle_t kasan_save_stack(gfp_t flags)
+> > >  {
+> > >         unsigned long entries[KASAN_STACK_DEPTH];
+> > >         unsigned int nr_entries;
+> > > @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
+> > >  static inline void set_track(struct kasan_track *track, gfp_t flags)
+> > >  {
+> > >         track->pid = current->pid;
+> > > -       track->stack = save_stack(flags);
+> > > +       track->stack = kasan_save_stack(flags);
+> > >  }
+> > >
+> > >  void kasan_enable_current(void)
+> > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > index 56ff8885fe2e..b86880c338e2 100644
+> > > --- a/mm/kasan/generic.c
+> > > +++ b/mm/kasan/generic.c
+> > > @@ -325,3 +325,32 @@ DEFINE_ASAN_SET_SHADOW(f2);
+> > >  DEFINE_ASAN_SET_SHADOW(f3);
+> > >  DEFINE_ASAN_SET_SHADOW(f5);
+> > >  DEFINE_ASAN_SET_SHADOW(f8);
+> > > +
+> > > +void kasan_record_aux_stack(void *addr)
+> > > +{
+> > > +       struct page *page = kasan_addr_to_page(addr);
+> > > +       struct kmem_cache *cache;
+> > > +       struct kasan_alloc_meta *alloc_info;
+> > > +       void *object;
+> > > +
+> > > +       if (!(page && PageSlab(page)))
+> > > +               return;
+> > > +
+> > > +       cache = page->slab_cache;
+> > > +       object = nearest_obj(cache, page, addr);
+> > > +       alloc_info = get_alloc_info(cache, object);
+> > > +
+> > > +       if (!alloc_info->rcu_stack[0])
+> > > +               /* record first call_rcu() call stack */
+> > > +               alloc_info->rcu_stack[0] = kasan_save_stack(GFP_NOWAIT);
+> > > +       else
+> > > +               /* record last call_rcu() call stack */
+> > > +               alloc_info->rcu_stack[1] = kasan_save_stack(GFP_NOWAIT);
+> > > +}
+> > > +
+> > > +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
+> > > +                                               u8 idx)
+> > > +{
+> > > +       return container_of(&alloc_info->rcu_stack[idx],
+> > > +                                               struct kasan_track, stack);
+> >
+> > This is not type safe, there is no kasan_track object. And we create a
+> > pointer to kasan_track just to carefully not treat it as valid
+> > kasan_track in print_track.
+> >
 >
-> So what you want is
+> Good catch.
 >
-> 	s/will not escape the constraint imposed by/will be clamped by/
+> > This adds an unnecessary if to print_track. And does not seem to be
+> > useful/nice to print:
+> >
+> > First call_rcu() call stack:
+> > (stack is not available)
+> >
+> > Last call_rcu() call stack:
+> > (stack is not available)
+> >
+> > when no rcu stacks are memorized.
+> > Your intention seems to be to reuse 2 lines of code from print_track.
+> > I would factor them out into a function:
+> >
+> > static void print_stack(depot_stack_handle_t stack)
+> > {
+> >         unsigned long *entries;
+> >         unsigned int nr_entries;
+> >
+> >         nr_entries = stack_depot_fetch(stack, &entries);
+> >         stack_trace_print(entries, nr_entries, 0);
+> > }
+> >
+> > And then this can expressed as:
+> >
+> >         if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
+> >             stack = alloc_info->rcu_stack[0];
+> >             if (stack) {
+> >                 pr_err("First call_rcu() call stack:\n");
+> >                 print_stack(stack);
+> >                 pr_err("\n");
+> >             }
+> >             stack = alloc_info->rcu_stack[1];
+> >             if (stack) {
+> >                 pr_err("Last call_rcu() call stack:\n");
+> >                 print_stack(stack);
+> >                 pr_err("\n");
+> >             }
+> >         }
+> >
 >
-> ?
+> rcu_stack doesn't exist at report.c, it need at generic.c,
+> otherwise it will have build error, unless add the #ifdef GENERIC_KASAN
 >
-> I'm not sure if this will help if the above is already ambiguous. Maybe if
-> I explicitly say
+> Maybe we can make kasan_get_aux_stack() return NULL? then print_stack()
+> determine whether it will print aux stack.
+
+
+I would put all this under #ifdef CONFIG_KASAN_GENERIC now.
+
+
+> > Or with another helper function it becomes:
+> >
+> >         if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
+> >             print_aux_stack(alloc_info->rcu_stack[0], "First");
+> >             print_aux_stack(alloc_info->rcu_stack[1], "Last");
+> >         }
+> >
+> >
+> > > +}
+> > > diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> > > index e8f37199d885..1cc1fb7b0de3 100644
+> > > --- a/mm/kasan/kasan.h
+> > > +++ b/mm/kasan/kasan.h
+> > > @@ -96,15 +96,28 @@ struct kasan_track {
+> > >         depot_stack_handle_t stack;
+> > >  };
+> > >
+> > > +#ifdef CONFIG_KASAN_GENERIC
+> > > +#define SIZEOF_PTR sizeof(void *)
+> > > +#define KASAN_NR_RCU_CALL_STACKS 2
+> > > +#else /* CONFIG_KASAN_GENERIC */
+> > >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> > >  #define KASAN_NR_FREE_STACKS 5
+> > >  #else
+> > >  #define KASAN_NR_FREE_STACKS 1
+> > >  #endif
+> > > +#endif /* CONFIG_KASAN_GENERIC */
+> > >
+> > >  struct kasan_alloc_meta {
+> > >         struct kasan_track alloc_track;
+> > > +#ifdef CONFIG_KASAN_GENERIC
+> > > +       /*
+> > > +        * call_rcu() call stack is stored into struct kasan_alloc_meta.
+> > > +        * The free stack is stored into freed object.
+> > > +        */
+> > > +       depot_stack_handle_t rcu_stack[KASAN_NR_RCU_CALL_STACKS];
+> > > +#else
+> > >         struct kasan_track free_track[KASAN_NR_FREE_STACKS];
+> > > +#endif
+> > >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+> > >         u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
+> > >         u8 free_track_idx;
+> > > @@ -159,16 +172,22 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
+> > >
+> > >  struct page *kasan_addr_to_page(const void *addr);
+> > >
+> > > +depot_stack_handle_t kasan_save_stack(gfp_t flags);
+> > > +
+> > >  #if defined(CONFIG_KASAN_GENERIC) && \
+> > >         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+> > >  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
+> > >  void quarantine_reduce(void);
+> > >  void quarantine_remove_cache(struct kmem_cache *cache);
+> > > +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
+> > > +                       u8 idx);
+> > >  #else
+> > >  static inline void quarantine_put(struct kasan_free_meta *info,
+> > >                                 struct kmem_cache *cache) { }
+> > >  static inline void quarantine_reduce(void) { }
+> > >  static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
+> > > +static inline struct kasan_track *kasan_get_aux_stack(
+> > > +                       struct kasan_alloc_meta *alloc_info, u8 idx) { return NULL; }
+> > >  #endif
+> > >
+> > >  #ifdef CONFIG_KASAN_SW_TAGS
+> > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > > index 80f23c9da6b0..f16a1a210815 100644
+> > > --- a/mm/kasan/report.c
+> > > +++ b/mm/kasan/report.c
+> > > @@ -105,9 +105,13 @@ static void end_report(unsigned long *flags)
+> > >         kasan_enable_current();
+> > >  }
+> > >
+> > > -static void print_track(struct kasan_track *track, const char *prefix)
+> > > +static void print_track(struct kasan_track *track, const char *prefix,
+> > > +                                               bool is_callrcu)
+> > >  {
+> > > -       pr_err("%s by task %u:\n", prefix, track->pid);
+> > > +       if (is_callrcu)
+> > > +               pr_err("%s:\n", prefix);
+> > > +       else
+> > > +               pr_err("%s by task %u:\n", prefix, track->pid);
+> > >         if (track->stack) {
+> > >                 unsigned long *entries;
+> > >                 unsigned int nr_entries;
+> > > @@ -187,11 +191,20 @@ static void describe_object(struct kmem_cache *cache, void *object,
+> > >         if (cache->flags & SLAB_KASAN) {
+> > >                 struct kasan_track *free_track;
+> > >
+> > > -               print_track(&alloc_info->alloc_track, "Allocated");
+> > > +               print_track(&alloc_info->alloc_track, "Allocated", false);
+> > >                 pr_err("\n");
+> > >                 free_track = kasan_get_free_track(cache, object, tag);
+> > > -               print_track(free_track, "Freed");
+> > > +               print_track(free_track, "Freed", false);
+> > >                 pr_err("\n");
+> > > +
+> > > +               if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
+> > > +                       free_track = kasan_get_aux_stack(alloc_info, 0);
+> > > +                       print_track(free_track, "First call_rcu() call stack", true);
+> > > +                       pr_err("\n");
+> > > +                       free_track = kasan_get_aux_stack(alloc_info, 1);
+> > > +                       print_track(free_track, "Last call_rcu() call stack", true);
+> > > +                       pr_err("\n");
+> > > +               }
+> > >         }
+> > >
+> > >         describe_object_addr(cache, object, addr);
+> > > --
+> > > 2.18.0
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200511023111.15310-1-walter-zh.wu%40mediatek.com.
+> >
 >
-> 	..will not escape the *range* constrained imposed by..
->
-> sched_util_clamp_min is already defined as a range constraint, so hopefully it
-> should hit the mark better now?
-
-Right, that also can work.
-
->> 
->> > +Any modification is applied lazily on the next opportunity the scheduler needs
->> > +to calculate the effective value of uclamp.min of the task.
->>                     ^^^^^^^^^
->> 
->> This is also an implementation detail, I would remove it.
->
-> The idea is that this value is not updated 'immediately'/synchronously. So
-> currently RUNNING tasks will not see the effect, which could generate confusion
-> when users trip over it. IMO giving an idea of how it's updated will help with
-> expectation of the users. I doubt any will care, but I think it's an important
-> behavior element that is worth conveying and documenting. I'd be happy to
-> reword it if necessary.
-
-Right, I agree on giving an hint on the lazy update. What I was pointing
-out was mainly the reference to the 'effective' value. Maybe we can just
-drop that word.
-
-> I have this now
->
-> """
->  984 This knob will not escape the range constraint imposed by sched_util_clamp_min
->  985 defined above.
->  986
->  987 For example if
->  988
->  989         sched_util_clamp_min_rt_default = 800
->  990         sched_util_clamp_min = 600
->  991
->  992 Then the boost will be clamped to 600 because 800 is outside of the permissible
->  993 range of [0:600]. This could happen for instance if a powersave mode will
->  994 restrict all boosts temporarily by modifying sched_util_clamp_min. As soon as
->  995 this restriction is lifted, the requested sched_util_clamp_min_rt_default
->  996 will take effect.
->  997
->  998 Any modification is applied lazily to currently running tasks and should be
->  999 visible by the next wakeup.
-> """
-
-That's better IMHO, would just slightly change the last sentence to:
-
-       Any modification is applied lazily to tasks and is effective
-       starting from their next wakeup.
-
-Best,
-Patrick
-
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1589201640.21284.8.camel%40mtksdccf07.
