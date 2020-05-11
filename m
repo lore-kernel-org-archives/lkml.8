@@ -2,89 +2,118 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5DDC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7815C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C3C20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB3520820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgEKEnf (ORCPT
+        id S1728485AbgEKEqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33048 "EHLO
+        Mon, 11 May 2020 00:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKEnf (ORCPT
+        by vger.kernel.org with ESMTP id S1728127AbgEKEp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:43:35 -0400
+        Mon, 11 May 2020 00:45:56 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC6AC061A0C;
-        Sun, 10 May 2020 21:43:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619E1C061A0E;
+        Sun, 10 May 2020 21:45:56 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0Ho-005jBz-CV; Mon, 11 May 2020 04:43:28 +0000
-Date:   Mon, 11 May 2020 05:43:28 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
+        id 1jY0KA-005jID-Rw; Mon, 11 May 2020 04:45:54 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [RFC][PATCHES] uaccess-related stuff in net/*
-Message-ID: <20200511044328.GP23230@ZenIV.linux.org.uk>
+Subject: [PATCH 08/19] ipv6: do compat setsockopt for MCAST_MSFILTER directly
+Date:   Mon, 11 May 2020 05:45:42 +0100
+Message-Id: <20200511044553.1365660-8-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
+References: <20200511044328.GP23230@ZenIV.linux.org.uk>
+ <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Assorted uaccess-related work in net/*.  First, there's
-getting rid of compat_alloc_user_space() mess in MCAST_...
-[gs]etsockopt() - no need to play with copying to/from temporary
-object on userland stack, etc., when ->compat_[sg]etsockopt()
-instances in question can easly do everything without that.
-That's the first 13 patches.  Then there's a trivial bit in
-net/batman-adv (completely unrelated to everything else) and
-finally getting the atm compat ioctls into simpler shape.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-	Please, review and comment.  Individual patches in followups,
-the entire branch (on top of current net/master) is in
-git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #uaccess.net
+similar to the ipv4 counterpart of that patch - the same
+trick used to align the tail array properly.
 
-Shortlog:
-Al Viro (19):
-      lift compat definitions of mcast [sg]etsockopt requests into net/compat.h
-      compat_ip{,v6}_setsockopt(): enumerate MCAST_... options explicitly
-      ip*_mc_gsfget(): lift copyout of struct group_filter into callers
-      get rid of compat_mc_getsockopt()
-      set_mcast_msfilter(): take the guts of setsockopt(MCAST_MSFILTER) into a helper
-      ipv4: do compat setsockopt for MCAST_MSFILTER directly
-      ip6_mc_msfilter(): pass the address list separately
-      ipv6: do compat setsockopt for MCAST_MSFILTER directly
-      ipv[46]: do compat setsockopt for MCAST_{JOIN,LEAVE}_GROUP directly
-      ipv4: take handling of group_source_req options into a helper
-      ipv6: take handling of group_source_req options into a helper
-      handle the group_source_req options directly
-      get rid of compat_mc_setsockopt()
-      batadv_socket_read(): get rid of pointless access_ok()
-      atm: separate ATM_GETNAMES handling from the rest of atm_dev_ioctl()
-      atm: move copyin from atm_getnames() into the caller
-      atm: switch do_atm_iobuf() to direct use of atm_getnames()
-      atm: lift copyin from atm_dev_ioctl()
-      atm: switch do_atmif_sioc() to direct use of atm_dev_ioctl()
-Diffstat:
- include/linux/igmp.h         |   2 +-
- include/net/compat.h         |  29 +++-
- include/net/ipv6.h           |   5 +-
- net/atm/ioctl.c              |  96 +++++++------
- net/atm/resources.c          | 108 +++++---------
- net/atm/resources.h          |   5 +-
- net/batman-adv/icmp_socket.c |   3 -
- net/compat.c                 | 194 -------------------------
- net/ipv4/igmp.c              |  18 +--
- net/ipv4/ip_sockglue.c       | 329 ++++++++++++++++++++++++++++++++-----------
- net/ipv6/ipv6_sockglue.c     | 233 ++++++++++++++++++++++++------
- net/ipv6/mcast.c             |  17 +--
- 12 files changed, 567 insertions(+), 472 deletions(-)
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ net/ipv6/ipv6_sockglue.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index 33efc9112259..220087bfd17c 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -980,9 +980,55 @@ int compat_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 	case MCAST_LEAVE_SOURCE_GROUP:
+ 	case MCAST_BLOCK_SOURCE:
+ 	case MCAST_UNBLOCK_SOURCE:
+-	case MCAST_MSFILTER:
+ 		return compat_mc_setsockopt(sk, level, optname, optval, optlen,
+ 			ipv6_setsockopt);
++	case MCAST_MSFILTER:
++	{
++		const int size0 = offsetof(struct compat_group_filter, gf_slist);
++		struct compat_group_filter *gf32;
++		void *p;
++		int n;
++
++		if (optlen < size0)
++			return -EINVAL;
++		if (optlen > sysctl_optmem_max - 4)
++			return -ENOBUFS;
++
++		p = kmalloc(optlen + 4, GFP_KERNEL);
++		if (!p)
++			return -ENOMEM;
++
++		gf32 = p + 4; /* we want ->gf_group and ->gf_slist aligned */
++		if (copy_from_user(gf32, optval, optlen)) {
++			err = -EFAULT;
++			goto mc_msf_out;
++		}
++
++		n = gf32->gf_numsrc;
++		/* numsrc >= (4G-140)/128 overflow in 32 bits */
++		if (n >= 0x1ffffffU ||
++		    n > sysctl_mld_max_msf) {
++			err = -ENOBUFS;
++			goto mc_msf_out;
++		}
++		if (offsetof(struct compat_group_filter, gf_slist[n]) > optlen) {
++			err = -EINVAL;
++			goto mc_msf_out;
++		}
++
++		rtnl_lock();
++		lock_sock(sk);
++		err = ip6_mc_msfilter(sk, &(struct group_filter){
++				.gf_interface = gf32->gf_interface,
++				.gf_group = gf32->gf_group,
++				.gf_fmode = gf32->gf_fmode,
++				.gf_numsrc = gf32->gf_numsrc}, gf32->gf_slist);
++		release_sock(sk);
++		rtnl_unlock();
++mc_msf_out:
++		kfree(p);
++		return err;
++	}
+ 	}
+ 
+ 	err = do_ipv6_setsockopt(sk, level, optname, optval, optlen);
+-- 
+2.11.0
+
