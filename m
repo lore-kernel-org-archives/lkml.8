@@ -2,102 +2,303 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F00C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93743C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5C32080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C602070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaTfarSx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbeMsNET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgEKRCr (ORCPT
+        id S1730860AbgEKRCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:02:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52832 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730066AbgEKRCp (ORCPT
+        Mon, 11 May 2020 13:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730835AbgEKRCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:02:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589216564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wHGPNIROFnT34Gvs2WU2Vk5cOji6+ep42HfonVjndto=;
-        b=eaTfarSx4ZxOVpqi9tzB40YOU7+NFWrM9t6m96zihYCUSJv89f5GxZnl/dLu9YG9nl/YHF
-        vuXPwOldqrdTzgB8y3y1TrEd7zLQUJyuaiFG8Otu0M5ALuELLRlWvKS1ytHGExvlJ/RK8h
-        4TOtVAsWw1ZbvP7aQjEt5gTeTM81S84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-OommdsRmNVS5rn2GtVOEow-1; Mon, 11 May 2020 13:02:42 -0400
-X-MC-Unique: OommdsRmNVS5rn2GtVOEow-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2922D1899529;
-        Mon, 11 May 2020 17:02:41 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09ADC5C254;
-        Mon, 11 May 2020 17:02:36 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:02:35 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        song@kernel.org, breeves@redhat.com, mpatocka@redhat.com,
-        khazhy@google.com, kernel@collabora.com
-Subject: Re: [PATCH v4 0/2] Historical Service Time Path Selector
-Message-ID: <20200511170235.GA7719@redhat.com>
-References: <20200511163910.3778467-1-krisman@collabora.com>
+        Mon, 11 May 2020 13:02:52 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1FEC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id i19so10543083ioh.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
+        b=tbeMsNETXaEX3eJAcNRFx55zA4c6oWWywXJTG0m9Laj8pgKvsqI7TxoQJ64X4vE4z1
+         KA3IuRAIIjUJrjr3WjqA24MmwomMG4cu4cWAni3plBKjfwhrJxPfbLuO9m1FjoAf6c2V
+         tNwkuMMNnJOXVORPh8uuO8jvnKUOsmiy8jjjP4G8ZvPYf3udSJVnLdWmuCJoz2u0yxMi
+         +oIituEo72EEqvu9+Pa+GXdkvq/PgDg2nH8Gt73tTw2l/vZacrGPtfkJoLRPxzDERdkD
+         BYVqxGGvUD8JSOma+Kr/PXclcfjnUHDrFgS/59PETBSkayfVQEvNfaTrCfIDG18RKAec
+         dwYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
+        b=ARmAp1kCZII95JRjinD6nWku7irBgIH3Js920+oFXg2gpsuvWf5tdDyKnZTEzPhEo8
+         j7sBJFiuq5wKI2sSdwhLVZsNz4Bsd5T3yTsvhwTP2mNAJWma1xM0bNv48Q1Q4KVWfh7K
+         Sc4a9JZl7BYSJDWrWBwtbbthxXibmqFNcsdo1XF6gDZrn3cZS+XcEklL2mA3vWWAfk7s
+         7oGr+oEzT7+rX7PbWHYnVobGhgcWQptElrpPP3M/YGIY/HqjrKAh6OVu2pCdV3morDg3
+         4qD7p75TMCK+IkSBxOPmXbAzKof+WFBzETgcoOqXcv1XaFW+YaVbP4W21gGSoWnXoOr1
+         cHwA==
+X-Gm-Message-State: AGi0PuYrpsaZ2jx3i5Lc1vsQWLI385WxZ5hUkvjqOcbfHGqjR3Q8yE4r
+        ojnYeIENWPwg3/CvGqKglpA0keNQnT3wkkIQXnjZ
+X-Google-Smtp-Source: APiQypIzyhjcdRL5OT7UxMCqUNX1Cf2+MX0zMCcjnimWF5EBRCR6JtPmcD8rSAVKspTwViI94ganHU9wtPVKGKmx8k0=
+X-Received: by 2002:a6b:dd06:: with SMTP id f6mr12960070ioc.90.1589216571449;
+ Mon, 11 May 2020 10:02:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511163910.3778467-1-krisman@collabora.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200504110344.17560-1-eesposit@redhat.com> <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
+ <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+In-Reply-To: <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+From:   Jonathan Adams <jwadams@google.com>
+Date:   Mon, 11 May 2020 10:02:14 -0700
+Message-ID: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11 2020 at 12:39pm -0400,
-Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
+On Fri, May 8, 2020 at 2:44 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> [Answering for Emanuele because he's not available until Monday]
+>
+> On 07/05/20 19:45, Jonathan Adams wrote:
+> > This is good work.  As David Rientjes mentioned, I'm currently investigating
+> > a similar project, based on a google-internal debugfs-based FS we call
+> > "metricfs".  It's
+> > designed in a slightly different fashion than statsfs here is, and the
+> > statistics exported are
+> > mostly fed into our OpenTelemetry-like system.  We're motivated by
+> > wanting an upstreamed solution, so that we can upstream the metrics we
+> > create that are of general interest, and lower the overall rebasing
+> > burden for our tree.
+>
+> Cool.  We included a public reading API exactly so that there could be
+> other "frontends".  I was mostly thinking of BPF as an in-tree user, but
+> your metricfs could definitely use the reading API.
+>
+> >  - the 8/16/32/64 signed/unsigned integers seems like a wart, and the
+> > built-in support to grab any offset from a structure doesn't seem like
+> > much of an advantage. A simpler interface would be to just support an> "integer" (possibly signed/unsigned) type, which is always 64-bit, and
+> > allow the caller to provide a function pointer to retrieve the value,
+> > with one or two void *s cbargs.  Then the framework could provide an
+> > offset-based callback (or callbacks) similar to the existing
+> > functionality, and a similar one for per-CPU based statistics.  A
+> > second "clear" callback could be optionally provided to allow for
+> > statistics to be cleared, as in your current proposal.
+>
+> Ok, so basically splitting get_simple_value into many separate
+> callbacks.  The callbacks would be in a struct like
+>
+> struct stats_fs_type {
+>         uint64_t (*get)(struct stats_fs_value *, void *);
+>         void (*clear)(struct stats_fs_value *, void *);
+>         bool signed;
+> }
+...
+> struct stats_fs_type stats_fs_type_u8 = {
+>         stats_fs_get_u8,
+>         stats_fs_clear_u8,
+>         false
+> };
+>
+> and custom types can be defined using "&(struct stats_fs_type) {...}".
 
-> Hi,
-> 
-> This fourth version of HST applies the suggestion from Mikulas Patocka
-> to do the ktime_get_ns inside the mpath map_bio instead of generic
-> device-mapper code. This means that struct dm_mpath_io gained another
-> 64bit field.  For the request-based case, we continue to use the block
-> layer start time information.
-> 
-> With this modification, I was able obtain similar performance on  BIO
-> to request-based multipath with HST on the benchmarks shared in v1.
-> 
-> v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
-> v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
-> v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
+That makes sense.
 
-I already staged your v3 in linux-next.  Please provide an incremental
-patch that layers on this git branch:
+> >  - Beyond the statistic's type, one *very* useful piece of metadata
+> > for telemetry tools is knowing whether a given statistic is
+> > "cumulative" (an unsigned counter which is only ever increased), as
+> > opposed to a floating value (like "amount of memory used").
+>
+> Good idea.  Also, clearing does not make sense for a floating value, so
+> we can use cumulative/floating to get a default for the mode: KVM
+> statistics for example are mostly cumulative and mode 644, except a few
+> that are floating and those are all mode 444.  Therefore it makes sense
+> to add cumulative/floating even before outputting it as metadata.
+>
+> > I'm more
+> > concerned with getting the statistics model and capabilities right
+> > from the beginning, because those are harder to adjust later.
+>
+> Agreed.
+>
+> > 1. Each metricfs metric can have one or two string or integer "keys".
+> > If these exist, they expand the metric from a single value into a
+> > multi-dimensional table. For example, we use this to report a hash
+> > table we keep of functions calling "WARN()", in a 'warnings'
+> > statistic:
+> >
+> > % cat .../warnings/values
+> > x86_pmu_stop 1
+> > %
+> >
+> > Indicates that the x86_pmu_stop() function has had a WARN() fire once
+> > since the system was booted.  If multiple functions have fired
+> > WARN()s, they are listed in this table with their own counts. [1]  We
+> > also use these to report per-CPU counters on a CPU-by-CPU basis:
+> >
+> > % cat .../irq_x86/NMI/values
+> > 0 42
+> > 1 18
+> > ... one line per cpu
+> > % cat .../rx_bytes/values
+> > lo 501360681
+> > eth0 1457631256
+>
+> These seem like two different things.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.8
+I see your point; I agree that there are two different things here.
 
-I was hopeful for a flag to be set (e.g. in 'struct path_selector') to
-reflect whether the path selector expects highres start_time.  Makes
-little sense to incur that extra cost of providing the time if the path
-selector doesn't even use it.
+> The percpu and per-interface values are best represented as subordinate
+> sources, one per CPU and one per interface.  For interfaces I would just
+> use a separate directory, but it doesn't really make sense for CPUs.  So
+> if we can cater for it in the model, it's better.  For example:
+>
+> - add a new argument to statsfs_create_source and statsfs_create_values
+> that makes it not create directories and files respectively.
+>
+> - add a new "aggregate function" STATS_FS_LIST that directs the parent
+> to build a table of all the simple values below it
+>
+> We can also add a helper statsfs_add_values_percpu that creates a new
+> source for each CPU, I think.
 
-Alternatively, could split out the setting of the time needed by .end_io
-to a new path_selector_type method (e.g. .set_start_time).  And then
-only use ktime_get_ns() for bio-based if .set_start_time is defined.
-Would get a little fiddly needing to make sure a stale start_time isn't
-used... also, makes more sense to conditionally call this
-.set_start_time just after .start_io is.
+I think I'd characterize this slightly differently; we have a set of
+statistics which are essentially "in parallel":
 
-Mike
+  - a variety of statistics, N CPUs they're available for, or
+  - a variety of statistics, N interfaces they're available for.
+  - a variety of statistics, N kvm object they're available for.
 
+Recreating a parallel hierarchy of statistics any time we add/subtract
+a CPU or interface seems like a lot of overhead.  Perhaps a better
+model would
+be some sort of "parameter enumn" (naming is hard; parameter set?), so
+when a CPU/network interface/etc is added you'd add its ID to the
+"CPUs" we know about, and at removal time you'd take it out; it would
+have an associated cbarg for the value getting callback.
+
+Does that make sense as a design?
+
+I'm working on characterizing all of our metricfs usage; I'll see if
+this looks like it mostly covers our usecases.
+
+> The warnings one instead is a real hash table.  It should be possible to
+> implement it as some kind of customized aggregation, that is implemented
+> in the client instead of coming from subordinate sources.  The
+> presentation can then just use STATS_FS_LIST.  I don't see anything in
+> the design that is a blocker.
+
+Yes; though if it's low-enough overhead, you could imagine having a
+dynamically-updated parameter enum based on the hash table.
+
+> > 2.  We also export some metadata about each statistic.  For example,
+> > the metadata for the NMI counter above looks like:
+> >
+> > % cat .../NMI/annotations
+> > DESCRIPTION Non-maskable\ interrupts
+> > CUMULATIVE
+> > % cat .../NMI/fields
+> > cpu value
+> > int int
+> > %
+>
+> Good idea.  I would prefer per-directory dot-named files for this.  For
+> example a hypothetical statsfs version of /proc/interrupts could be like
+> this:
+>
+> $ cat /sys/kernel/stats/interrupts/.schema
+> 0                                          // Name
+> CUMULATIVE                                 // Flags
+> int:int                                    // Type(s)
+> IR-IO-APIC    2-edge      timer            // Description
+> ...
+> LOC
+> CUMULATIVE
+> int:int
+> Local timer interrupts
+> ...
+> $ cat /sys/kernel/stats/interrupts/LOC
+> 0 4286815
+> 1 4151572
+> 2 4199361
+> 3 4229248
+>
+> > 3. We have a (very few) statistics where the value itself is a string,
+> > usually for device statuses.
+>
+> Maybe in addition to CUMULATIVE and FLOATING we can have ENUM
+> properties, and a table to convert those enums to strings.  Aggregation
+> could also be used to make a histogram out of enums in subordinate
+> sources, e.g.
+>
+> $ cat /sys/kernel/stats/kvm/637-1/vcpu_state
+> running 12
+> uninitialized 0
+> halted 4
+
+That's along similar lines to the parameter enums, yeah.
+
+> So in general I'd say the sources/values model holds up.  We certainly
+> want to:
+>
+> - switch immediately to callbacks instead of the type constants (so that
+> core statsfs code only does signed/unsigned)
+>
+> - add a field to distinguish cumulative and floating properties (and use
+> it to determine the default file mode)
+
+Yup, these make sense.
+
+> - add a new argument to statsfs_create_source and statsfs_create_values
+> that makes it not create directories and files respectively
+>
+> - add a new API to look for a statsfs_value recursively in all the
+> subordinate sources, and pass the source/value pair to a callback
+> function; and reimplement recursive aggregation and clear in terms of
+> this function.
+
+This is where I think a little iteration on the "parameter enums"
+should happen before jumping into implementation.
+
+> > For our use cases, we generally don't both output a statistic and it's
+> > aggregation from the kernel; either we sum up things in the kernel
+> > (e.g. over a bunch of per-cpu or per-memcg counters) and only have the
+> > result statistic, or we expect user-space to sum up the data if it's
+> > interested.  The tabular form makes it pretty easy to do so (i.e. you
+> > can use awk(1) to sum all of the per-cpu NMI counters).
+>
+> Yep, the above "not create a dentry" flag would handle the case where
+> you sum things up in the kernel because the more fine grained counters
+> would be overwhelming.
+
+nodnod; or the callback could handle the sum itself.
+
+Thanks,
+- jonathan
