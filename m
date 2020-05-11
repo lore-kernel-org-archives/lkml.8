@@ -2,247 +2,195 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1B6C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED71C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8C2220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54AE320722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oIqYFLJ6"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JYTwqrWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgEKLPI (ORCPT
+        id S1729465AbgEKLPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:15:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725993AbgEKLPH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:15:07 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93835C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:15:06 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g16so7595643eds.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yf6Fgwz0TBfxr37ADXmX4uJ/e/GQxDcvOu2sIk21wIk=;
-        b=oIqYFLJ6taukedc9Yf2iHuympHdWdio0/TIjf0ElH6MKuu5db0Cdi3x1KgqHJFlWDi
-         QNVXqenRluAi/GIJTtbliLn6jeTLsSt5S1LAokRwQYsvySLbZRGW0zD85Tt1mds7XD3N
-         UA5UcK81beu2kYUYDKOC7FdfHCt+jomF6/JaGuwlEc4QEVtdIc+ZL2NF5YJX3yAuhgO4
-         L7WrCLwHB5Nmo+UjbpoMUjsxwO0qgjhnjCpUCzvDEzL9Qhj9Zox1kO2liJqBjdZ5xohL
-         N2ndKDOC9HOoH5GZsv7OEBfX3PHhGLoCbMaORS4lIGOvelIN35PFO+RJDDvtxToTJdDg
-         5fOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yf6Fgwz0TBfxr37ADXmX4uJ/e/GQxDcvOu2sIk21wIk=;
-        b=g+u9/bVP6bDJX3x+c+O1sjfN43trITeF2+MdonzX1Gi7OyahsZFWiOQxOpbJyOvt2m
-         DF8JpPHJ4XaMuEpY5kTU0C5TtYJbuqsLOq4vWdQTBwtZxbKbNtRKYwqTdM1MzxqKp/gn
-         QgzzU0Sa5DMKUKp/Y370iRhIOZLEammjH+3p9q+Ms+eWVaLLtXrkGpDo4cM6CoDrzxPu
-         gqW7VmR9776VxGsg8DxW2NqVwEYLTVaZi9W6VpQzh6sM7dabFOoNHFCU7I+ZMVVO/z42
-         5Vk2OsAgTPSDGvfCzESGEMl8KrNVniGjWyxZVPBYHtYQIHasxoX52vK3YxeElnpLors2
-         azjQ==
-X-Gm-Message-State: AGi0Pub6Nopoj9KDYZSDP0KD8FQoFwebGNYjFzG76JUyKFxgp1Z04Zdg
-        +29V87eD3JzlIwTE/PQNLFTpjT4770dfGFYkgxDWrA==
-X-Google-Smtp-Source: APiQypKZpI0Su/Nan4QydtdBoW2dC+0/pVJModGirvjBu8VI7zpyWVT+A294xWUAF4jIRGyK8v81H9B60bOLdQHD+LI=
-X-Received: by 2002:aa7:cf0e:: with SMTP id a14mr12665125edy.188.1589195705213;
- Mon, 11 May 2020 04:15:05 -0700 (PDT)
+        Mon, 11 May 2020 07:15:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34741 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgEKLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:15:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LJJV56jgz9sPF;
+        Mon, 11 May 2020 21:15:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589195738;
+        bh=6jMBGt6cCuxG5ogHappx3RvOBhGXUdUBt4srA2FzeVQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JYTwqrWTtatawX9E9uCWvSCMdxzbkYKyGUKiRXi2FvNjjN22Zi7b2VYkhjEYqr6Zs
+         gpefe7juiqlnLR23hGKNV4nJBW1KwxcokfhrriOPXi+/0HVXRsuEMvASGwZE4qh/F4
+         o9A//EnFaS+D5iMUhDiakpPbVVdBe407TFKLg344kzdrvzLuTvYonCg8URRl6pxzSi
+         f7yWo60ABiuz6jzxYuUn4tAgt5BvpJUTO8vqUF1ZCCaU63BvSeczs7m+hVSQmopm+g
+         OubQRRbncGIVGb7WxI5SR+UNnXSvI494vS7ocfn/W9ETbahHmKeBbnDp+NlGaoibk5
+         dRIyyp023LHuQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Qian Cai <cai@lca.pw>
+Cc:     paulus@ozlabs.org, benh@kernel.crashing.org,
+        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH] powerpc/kvm: silence kmemleak false positives
+In-Reply-To: <20200509015538.3183-1-cai@lca.pw>
+References: <20200509015538.3183-1-cai@lca.pw>
+Date:   Mon, 11 May 2020 21:15:55 +1000
+Message-ID: <87y2pybu38.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com> <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com> <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org> <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org> <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org> <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org> <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
- <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
-In-Reply-To: <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Mon, 11 May 2020 12:14:54 +0100
-Message-ID: <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI,
-
-On Fri, 8 May 2020 at 09:53, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
+Qian Cai <cai@lca.pw> writes:
+> kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
+> pud_populate() and pmd_populate() will use __pa() to reference the newly
+> allocated memory. The same is in xive_native_provision_pages().
 >
-> Hi Suzuki, Mike,
+> Since kmemleak is unable to track the physical memory resulting in false
+> positives, silence those by using kmemleak_ignore().
+
+There is kmemleak_alloc_phys(), which according to the docs can be used
+for tracking a phys address.
+
+Did you try that?
+
+cheers
+
+
+> unreferenced object 0xc000201c382a1000 (size 4096):
+>   comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
+>   hex dump (first 32 bytes):
+>     c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
+>     c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
+>   backtrace:
+>     [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
+>     kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
+>     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
+>     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
+> unreferenced object 0xc0002001f0c03900 (size 256):
+>   comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
+>   hex dump (first 32 bytes):
+>     c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
+>     c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
+>   backtrace:
+>     [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
+>     kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
+>     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
+>     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
+> unreferenced object 0xc000201b53e90000 (size 65536):
+>   comm "qemu-kvm", pid 124557, jiffies 4295650285 (age 364.370s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000acc2fb77>] xive_native_alloc_vp_block+0x168/0x210
+>     xive_native_provision_pages at arch/powerpc/sysdev/xive/native.c:645
+>     (inlined by) xive_native_alloc_vp_block at arch/powerpc/sysdev/xive/native.c:674
+>     [<000000004d5c7964>] kvmppc_xive_compute_vp_id+0x20c/0x3b0 [kvm]
+>     [<0000000055317cd2>] kvmppc_xive_connect_vcpu+0xa4/0x4a0 [kvm]
+>     [<0000000093dfc014>] kvm_arch_vcpu_ioctl+0x388/0x508 [kvm]
+>     [<00000000d25aea0f>] kvm_vcpu_ioctl+0x15c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
 >
-> On 2020-05-06 13:05, Sai Prakash Ranjan wrote:
-> [...]
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
+>  arch/powerpc/sysdev/xive/native.c      |  4 ++++
+>  2 files changed, 18 insertions(+), 2 deletions(-)
 >
-> >>>>
-> >>> OK - sorry I read your statement saying that replicator1 was 0 after
-> >>> the reset in probe(), rather than look at the logs.
-> >>>
-> >>> From the logs it is working at the time probe() occurs, but by the
-> >>> time we come to enable the replicator later, something has reset
-> >>> these
-> >>> registers / hardware outside the control of the replicator driver.
-> >>>
-> >>
-> >> Yes, I will try to get some more information from the firmware side if
-> >> there is anything messing up.
-> >>
-> >
-> > This turned out to be a clock/pm issue. To confirm, I just marked clk
-> > as critical
-> > so that it won't be gated and I saw the replicator1(swao_replicator)
-> > registers
-> > intact after probe. Also alternatively, I tried to comment out
-> > disabling pclk
-> > to check if there is something wrong in amba pm and this keeps the
-> > registers
-> > intact as well.
-> >
-> > @@ -288,7 +295,7 @@ static int amba_probe(struct device *dev)
-> >                 pm_runtime_set_suspended(dev);
-> >                 pm_runtime_put_noidle(dev);
-> >
-> > -               amba_put_disable_pclk(pcdev);
-> > +               //amba_put_disable_pclk(pcdev);
-> >                 dev_pm_domain_detach(dev, true);
-> >         } while (0);
-> >
->
-> I checked with the debug team and there is a limitation with
-> the replicator(swao_replicator) in the AOSS group where it
-> loses the idfilter register context when the clock is disabled.
-> This is not just in SC7180 SoC but also reported on some latest
-> upcoming QCOM SoCs as well and will need to be taken care in
-> order to enable coresight on these chipsets.
->
-> Here's what's happening -  After the replicator is initialized,
-> the clock is disabled in amba_pm_runtime_suspend() as a part of
-> pm runtime workqueue with the assumption that there will be no
-> loss of context after the replicator is initialized. But it doesn't
-> hold good with the replicators with these unfortunate limitation
-> and the idfilter register context is lost.
->
-> [    5.889406] amba_pm_runtime_suspend devname=3D6b06000.replicator ret=
-=3D0
-> [    5.914516] Workqueue: pm pm_runtime_work
-> [    5.918648] Call trace:
-> [    5.921185]  dump_backtrace+0x0/0x1d0
-> [    5.924958]  show_stack+0x2c/0x38
-> [    5.928382]  dump_stack+0xc0/0x104
-> [    5.931896]  amba_pm_runtime_suspend+0xd8/0xe0
-> [    5.936469]  __rpm_callback+0xe0/0x140
-> [    5.940332]  rpm_callback+0x38/0x98
-> [    5.943926]  rpm_suspend+0xec/0x618
-> [    5.947522]  rpm_idle+0x5c/0x3f8
-> [    5.950851]  pm_runtime_work+0xa8/0xc0
-> [    5.954718]  process_one_work+0x1f8/0x4c0
-> [    5.958848]  worker_thread+0x50/0x468
-> [    5.962623]  kthread+0x12c/0x158
-> [    5.965957]  ret_from_fork+0x10/0x1c
->
-> This is a platform/SoC specific replicator issue, so we can either
-> introduce some DT property for replicators to identify which replicator
-> has this limitation, check in replicator_enable() and reset the
-> registers
-> or have something like below diff to check the idfilter registers in
-> replicator_enable() and then reset with clear comment specifying it=E2=80=
-=99s
-> the
-> hardware limitation on some QCOM SoCs. Please let me know your thoughts
-> on
-> this?
->
-
-1) does this replicator part have a unique ID that differs from the
-standard ARM designed replicators?
-If so perhaps link the modification into this. (even if the part no in
-PIDR0/1 is the same the UCI should be different for a different
-implementation)
-
-2) We have used DT properties in the past - (e.g. scatter gather in
-TMC) where hardware compatibility issues have impacted on the
-operation of a coresight component. This is further complicated by the
-fact that an ACPI property would be needed as well.
-
-3) The sysfs access to FILTERID0/1 on this replicator is going to show
-different values than on a standard replicator (0x00 instead of 0xFF).
-Does this need to be addressed?
-
-4 ) An alternative approach could be to model the driver on the ETM /
-CTI drivers where the register values are held in the driver structure
-and only applied on enable / disable.
-
-Thoughts?
-
-Regards
-
-Mike
-
-
-
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c
-> b/drivers/hwtracing/coresight/coresight-replicator.c
-> index e7dc1c31d20d..a9c039c944eb 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -68,6 +68,17 @@ static int dynamic_replicator_enable(struct
-> replicator_drvdata *drvdata,
->          int rc =3D 0;
->          u32 reg;
->
-> +       /*
-> +        * On some QCOM SoCs with replicators in Always-On domain,
-> disabling
-> +        * clock will result in replicator losing its context. Currently
-> +        * as a part of pm_runtime workqueue, amba_pm_runtime_suspend
-> disables
-> +        * clock assuming the context is not lost which is not true for
-> cases
-> +        * with hardware limitations as the above.
-> +        */
-> +       if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) =3D=3D 0=
-)
-> &&
-> +           (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) =3D=3D 0=
-))
-> +               dynamic_replicator_reset(drvdata);
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> index aa12cd4078b3..bc6c1aa3d0e9 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> @@ -353,7 +353,13 @@ static struct kmem_cache *kvm_pmd_cache;
+>  
+>  static pte_t *kvmppc_pte_alloc(void)
+>  {
+> -	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
+> +	pte_t *pte;
 > +
->          switch (outport) {
->          case 0:
->                  reg =3D REPLICATOR_IDFILTER0;
->
->
->
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
-
-
---=20
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+> +	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
+> +	/* pmd_populate() will only reference _pa(pte). */
+> +	kmemleak_ignore(pte);
+> +
+> +	return pte;
+>  }
+>  
+>  static void kvmppc_pte_free(pte_t *ptep)
+> @@ -363,7 +369,13 @@ static void kvmppc_pte_free(pte_t *ptep)
+>  
+>  static pmd_t *kvmppc_pmd_alloc(void)
+>  {
+> -	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
+> +	pmd_t *pmd;
+> +
+> +	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
+> +	/* pud_populate() will only reference _pa(pmd). */
+> +	kmemleak_ignore(pmd);
+> +
+> +	return pmd;
+>  }
+>  
+>  static void kvmppc_pmd_free(pmd_t *pmdp)
+> diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+> index 5218fdc4b29a..2d19f28967a6 100644
+> --- a/arch/powerpc/sysdev/xive/native.c
+> +++ b/arch/powerpc/sysdev/xive/native.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/mm.h>
+> +#include <linux/kmemleak.h>
+>  
+>  #include <asm/machdep.h>
+>  #include <asm/prom.h>
+> @@ -647,6 +648,9 @@ static bool xive_native_provision_pages(void)
+>  			pr_err("Failed to allocate provisioning page\n");
+>  			return false;
+>  		}
+> +		/* Kmemleak is unable to track the physical address. */
+> +		kmemleak_ignore(p);
+> +
+>  		opal_xive_donate_page(chip, __pa(p));
+>  	}
+>  	return true;
+> -- 
+> 2.21.0 (Apple Git-122.2)
