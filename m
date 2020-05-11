@@ -2,139 +2,133 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE25C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3085DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC47B20752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="fzokSh7W"
+	by mail.kernel.org (Postfix) with ESMTP id 0EAE720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589238779;
+	bh=x8x3DhB8f5kbUfakzncJcuvtoDFk8v6tNoBbHJVN20I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AgWweAS/u+bDZasH/FKs0MrTcyVXbLcva75gyTgkNrEhhsntreXUmfItRADJmn5nc
+	 /jnP6DCkVfvq5gjIt61BEFVpegvje/dP59WYngG3Lyb/KbFqnezFrQnNmM4rnNnvBN
+	 UAyehe5NQKaD3FsKsRxWKAR21RLAjlb+U9BCaBgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgEKXMk (ORCPT
+        id S1728058AbgEKXM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbgEKXMj (ORCPT
+        Mon, 11 May 2020 19:12:58 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:46431 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgEKXM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:12:39 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749E0C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:12:38 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v4so8653335qte.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=csemUG+Ws7y0HqXk83MvG8Thvpme39pvo0VkZNRmLXc=;
-        b=fzokSh7WiZFo8q6L5pePoTIAZFJir6Zga/NG9zxxbybfgcd1CQW2huCb+nrtEfEHxg
-         g4h0JTkB5lBnPRxfdX1rAQeFFkH1m3HdZKDQ/P3iOlL0UYS/mTjyWFpIRwnjDuvw32nP
-         3x2800pskSnAWdX5vy4XvICrArt0MvLzBiSajuMgwfDSVH5xmGDbbfki09K17vSN9g6b
-         tBYGvV20KYJZxrxZvPWl9RmWMBlsksLVWWWsJNZxFmEgUgdg41eTkLsMhs/XTx43jq6O
-         lN9DcWn4eIok/JsJl2bPISU03qjpzxM1QIDoYg2jURr67ErMid6zyPGjuldoQ4SgVQsM
-         l6QA==
+        Mon, 11 May 2020 19:12:58 -0400
+Received: by mail-oo1-f67.google.com with SMTP id x16so2324336oop.13;
+        Mon, 11 May 2020 16:12:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=csemUG+Ws7y0HqXk83MvG8Thvpme39pvo0VkZNRmLXc=;
-        b=MSp7GvUmgj8Y58U+pFNBZl3A+qxgZ/LyNAhn10aEOIcnRiWYx3jGb1BC2EoynbLlkJ
-         CvI1p4SW6pEeQrAUGrKfoM3K1/+HLmcF2Mwfr1SM4TAnyMC81/jL2lRTHu44haaMi2fj
-         Dadfuf735AcY+Iyauu6y2tT6rYqAX4vAPuFZJQYKlqr7Z0PC4Nqb6V+h7EGgJD09tS0z
-         qLeRdpCPduG7sR4eHyebHY63996l/8LOWLPRShP193pLXP3Cehqdl3Kgb9FJJewXVfRH
-         VjxC8kd/C/atF+B8W5b72DOcY7q9Itvd4kzaKsq8n6EUn3On4xawThYHx2tqvnLl72LX
-         8H2A==
-X-Gm-Message-State: AGi0PubghxZVRBb/WnNNwS6jT7BsDjioSwa829bTX/K84tnec/WXEumL
-        T4V33redPXMda+sOcpu3w/coKvGq4in44A9NrQK/CQ==
-X-Google-Smtp-Source: APiQypJYYUE4mplfB1hqUJ5bDjw3xJwOop4c0BYWrp/iwgO+p19OIswihhZiWOKMBZioWG8Dx/CbHTOIqzKMfjBlcrY=
-X-Received: by 2002:ac8:6f75:: with SMTP id u21mr12718239qtv.161.1589238757632;
- Mon, 11 May 2020 16:12:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YDsjgW4MArlBA1SB+uZg3khyj2WK0GRuGD4JKeBynv8=;
+        b=OvD1PtAqLFZSYqeXOJRIw1+jVbfNsbD9Ze/zWqKiTzrL3NYbehegJ5bvNMkKG3vYKp
+         bCJdRr9BQZ5BxgMXV4pd1eM6YuWL+Pz7XrDuYcEe+AkC9+RF9tWHfcDFMCOwy6nUIbAy
+         mo4mSevWP61/sxq89y09eky+53ju2goCLCY3n6Gh1YpVDAIEj9Fftd8fxB8UiGyw4zVq
+         nu0wMqxKDOB0Iwr8MeYx7sHMdl2T+W4coDaH5wtRWPLsWXKAhmulIps/aotWHa65fVg+
+         t4eoqpy8LhHnYGvGXOAO64D93s67s2Z/aBmebicgO8V90jpPoVr422BC36pxrdW3r/Z4
+         6jTA==
+X-Gm-Message-State: AGi0PubbRzk+Tyh4NUYMF7hoKyLxo/MS8szh1CzsV2MMv7L+udSZYICf
+        ZYVGWKy9itWyM5Vf2RSc3g==
+X-Google-Smtp-Source: APiQypJYcIJELa5zMY/ISbRUVZAa+Q7Ic4+PGG1ZB0L0pvzkPLwl0FKURFdszYQ9BrNGvh3O0VOGQw==
+X-Received: by 2002:a4a:af0d:: with SMTP id w13mr3249600oon.77.1589238776873;
+        Mon, 11 May 2020 16:12:56 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m65sm2138476oib.49.2020.05.11.16.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 16:12:56 -0700 (PDT)
+Received: (nullmailer pid 11706 invoked by uid 1000);
+        Mon, 11 May 2020 23:12:55 -0000
+Date:   Mon, 11 May 2020 18:12:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for
+ linux,default-triggers
+Message-ID: <20200511231255.GA24112@bogus>
+References: <20200427073132.29997-1-wens@kernel.org>
+ <20200427073132.29997-2-wens@kernel.org>
 MIME-Version: 1.0
-References: <20200511225324.GA1307788@rani.riverdale.lan> <20200511225849.1311869-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200511225849.1311869-1-nivedita@alum.mit.edu>
-From:   Mike Lothian <mike@fireburn.co.uk>
-Date:   Tue, 12 May 2020 00:12:26 +0100
-Message-ID: <CAHbf0-HLKiq_+erhHfV9XqMhfchN2975nAsuya4-oXEOUNdhiw@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Mark global variables as static
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427073132.29997-2-wens@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Feel free to add my tested by
+On Mon, Apr 27, 2020 at 03:31:30PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> The bindings currently list a very small subset of valid triggers for
+> LEDs. Since many drivers or subsystems in Linux register custom
+> triggers, the list would become very hard to maintain.
 
+The idea was we'll consolidate around standardized names and that new 
+users should use 'function' instead.
 
-On Mon, 11 May 2020 at 23:58, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Mike Lothian reports that after commit
->   964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-> gcc 10.1.0 fails with
->
->   HOSTCC  arch/x86/boot/tools/build
->   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
->   error: linker defined: multiple definition of '_end'
->   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
->   /tmp/ccEkW0jM.o: previous definition here
->   collect2: error: ld returned 1 exit status
->   make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
->   make: *** [arch/x86/Makefile:303: bzImage] Error 2
->
-> The issue is with the _end variable that was added, to hold the end of
-> the compressed kernel from zoffsets.h (ZO__end). The name clashes with
-> the linker-defined _end symbol that indicates the end of the build
-> program itself.
->
-> Even when there is no compile-time error, this causes build to use
-> memory past the end of its .bss section.
->
-> To solve this, mark _end as static, and for symmetry, mark the rest of
-> the variables that keep track of symbols from the compressed kernel as
-> static as well.
->
-> Fixes: 964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+There was discussion around this when adding 'function'.
+
+> 
+> Instead, just drop the list and allow free form strings.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  arch/x86/boot/tools/build.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-> index 8f8c8e386cea..c8b8c1a8d1fc 100644
-> --- a/arch/x86/boot/tools/build.c
-> +++ b/arch/x86/boot/tools/build.c
-> @@ -59,14 +59,14 @@ u8 buf[SETUP_SECT_MAX*512];
->  #define PECOFF_COMPAT_RESERVE 0x0
->  #endif
->
-> -unsigned long efi32_stub_entry;
-> -unsigned long efi64_stub_entry;
-> -unsigned long efi_pe_entry;
-> -unsigned long efi32_pe_entry;
-> -unsigned long kernel_info;
-> -unsigned long startup_64;
-> -unsigned long _ehead;
-> -unsigned long _end;
-> +static unsigned long efi32_stub_entry;
-> +static unsigned long efi64_stub_entry;
-> +static unsigned long efi_pe_entry;
-> +static unsigned long efi32_pe_entry;
-> +static unsigned long kernel_info;
-> +static unsigned long startup_64;
-> +static unsigned long _ehead;
-> +static unsigned long _end;
->
->  /*----------------------------------------------------------------------*/
->
-> --
-> 2.26.2
->
+>  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+> index 4c270fde4567..3b3cdab3fc15 100644
+> --- a/Documentation/devicetree/bindings/leds/common.yaml
+> +++ b/Documentation/devicetree/bindings/leds/common.yaml
+> @@ -79,26 +79,7 @@ properties:
+>      description:
+>        This parameter, if present, is a string defining the trigger assigned to
+>        the LED.
+> -    allOf:
+> -      - $ref: /schemas/types.yaml#definitions/string
+> -    enum:
+> -        # LED will act as a back-light, controlled by the framebuffer system
+> -      - backlight
+> -        # LED will turn on (but for leds-gpio see "default-state" property in
+> -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
+> -      - default-on
+> -        # LED "double" flashes at a load average based rate
+> -      - heartbeat
+> -        # LED indicates disk activity
+> -      - disk-activity
+> -        # LED indicates IDE disk activity (deprecated), in new implementations
+> -        # use "disk-activity"
+> -      - ide-disk
+> -        # LED flashes at a fixed, configurable rate
+> -      - timer
+> -        # LED alters the brightness for the specified duration with one software
+> -        # timer (requires "led-pattern" property)
+> -      - pattern
+> +    $ref: /schemas/types.yaml#definitions/string
+>  
+>    led-pattern:
+>      description: |
+> -- 
+> 2.26.0
+> 
