@@ -2,107 +2,124 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B47AC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55976C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17CEE206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD0220736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="hxsG5anG";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="hxsG5anG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgEKScv (ORCPT
+        id S1731158AbgEKSeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:32:51 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49770 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbgEKScv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:32:51 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3A2FD803088B;
-        Mon, 11 May 2020 18:32:48 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id P1N1qOkT7GET; Mon, 11 May 2020 21:32:47 +0300 (MSK)
-Date:   Mon, 11 May 2020 21:32:47 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511183247.y6cfss22pe67nouf@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <20200511174414.GL8216@sirena.org.uk>
+        Mon, 11 May 2020 14:34:03 -0400
+Received: from node.akkea.ca ([192.155.83.177]:44280 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729727AbgEKSeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:34:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id B56664E2006;
+        Mon, 11 May 2020 18:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1589222042; bh=Da5qJJ8kOejzlzfFl55mNbToDs7NIQyVvZRPEpDqiF8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=hxsG5anG1wA42sngp2H698FK6UEzs3lX5Vw+hgOEhQlPvGzbysPJ7x55dJCqCiuTx
+         ImT+BESYeU0KPFXnEeqdPEGczcJFOFK91Wph/WbOJwPytkR9hAsWpzVVT1QoyXV/pm
+         fT9ZCsgEB0JCUnf3bfq/J5gtDI8T8E7THNkYmbEA=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7UqCcZzt97cR; Mon, 11 May 2020 18:34:02 +0000 (UTC)
+Received: from www.akkea.ca (node.akkea.ca [192.155.83.177])
+        by node.akkea.ca (Postfix) with ESMTPSA id 393E04E2003;
+        Mon, 11 May 2020 18:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1589222042; bh=Da5qJJ8kOejzlzfFl55mNbToDs7NIQyVvZRPEpDqiF8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=hxsG5anG1wA42sngp2H698FK6UEzs3lX5Vw+hgOEhQlPvGzbysPJ7x55dJCqCiuTx
+         ImT+BESYeU0KPFXnEeqdPEGczcJFOFK91Wph/WbOJwPytkR9hAsWpzVVT1QoyXV/pm
+         fT9ZCsgEB0JCUnf3bfq/J5gtDI8T8E7THNkYmbEA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511174414.GL8216@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 May 2020 11:34:02 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: usb: ti,tps6598x: add dt binding doc
+In-Reply-To: <20200511152649.GA23481@bogus>
+References: <20200506191718.2144752-1-angus@akkea.ca>
+ <20200506191718.2144752-3-angus@akkea.ca> <20200511152649.GA23481@bogus>
+Message-ID: <ebad030b623cd8f4e2e400e78d679be4@akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:44:14PM +0100, Mark Brown wrote:
-> On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
-> > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> 
-> > > That sounds like you need to also impose a limit on the maximum message
-> > > size as well then, with that you should be able to handle messages up
-> > > to whatever that limit is.  There's code for that bit already, so long
-> > > as the limit is not too low it should be fine for most devices and
-> > > client drivers can see the limit so they can be updated to work with it
-> > > if needed.
-> 
-> > Hmm, this might work. The problem will be with imposing such limitation through
-> > the DW APB SSI driver. In order to do this I need to know:
-> 
-> > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > 2) Maximum DW DMA transfer block size.
-> 
-> There is a constraint enumeration interface in the DMA API which you
-> should be able to extend for this if it doesn't already support what you
-> need.
+Hi Rob,
 
-Yes, that's max segment size.
-
+On 2020-05-11 08:26, Rob Herring wrote:
+> On Wed,  6 May 2020 12:17:18 -0700, Angus Ainslie wrote:
+>> Document the tps6598x driver
+>> 
+>> Signed-off-by: Angus Ainslie <angus@akkea.ca>
+>> ---
+>>  .../devicetree/bindings/usb/ti,tps6598x.yaml  | 75 
+>> +++++++++++++++++++
+>>  1 file changed, 75 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+>> 
 > 
-> > Then I'll be able to use this information in the can_dma() callback to enable
-> > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > parameter, then setting it won't work, because it just limits the SG items size
-> > not the total length of a single transfer.
 > 
-> You can set max_transfer_size and/or max_message_size in the SPI driver
-> - you should be able to do this on probe.
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
+> maintainers:0: None is not of type 'string'
+> Documentation/devicetree/bindings/Makefile:12: recipe for target
+> 'Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts' failed
+> make[1]: ***
+> [Documentation/devicetree/bindings/usb/ti,tps6598x.example.dts] Error
+> 1
+> make[1]: *** Waiting for unfinished jobs....
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
+> ignoring, error in schema: maintainers: 0
+> warning: no schema found in file:
+> ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/ti,tps6598x.yaml:
+> ignoring, error in schema: maintainers: 0
+> warning: no schema found in file:
+> ./Documentation/devicetree/bindings/usb/ti,tps6598x.yaml
+> Makefile:1300: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1284704
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install
+> git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
 
-Thanks for the explanation. Max segment size being set to the DMA controller generic
-device should work well. There is no need in setting the transfer and messages
-size limitations. Besides I don't really see the
-max_transfer_size/max_message_size callbacks utilized in the SPI core. These
-functions are called in the spi-mem.c driver only. Do I miss something?
+I think the consesus was to use this one instead.
 
--Sergey
+https://lore.kernel.org/lkml/20200507122352.1773661-2-bryan.odonoghue@linaro.org/
+
+Thanks
+Angus
 
