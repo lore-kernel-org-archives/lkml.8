@@ -2,109 +2,73 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55488C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D76C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F59920882
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589233887;
-	bh=mIX8+ZWIlcrWQmNEU8YSmxnQ/kJltPPYq8FzooAxJCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q0IBZURq/5q15IN2VSy9XyxEewWXe6teyGI1Hgf5wN+GRKFt0OS91ZFECaH2kuP9N
-	 W7huszfZGesSM/v8z6w5KNipHKzbRXeUtyme6En3L24vPvi15jrlzlu8UJnbpxc5De
-	 0R79x3n2KSJjbKOu5p702Omfv360DRuggZpDqNBw=
+	by mail.kernel.org (Postfix) with ESMTP id 57C032070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgEKVv0 (ORCPT
+        id S1727928AbgEKVy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:51:26 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43682 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgEKVvZ (ORCPT
+        Mon, 11 May 2020 17:54:28 -0400
+Received: from smtp-190d.mail.infomaniak.ch ([185.125.25.13]:42989 "EHLO
+        smtp-190d.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725860AbgEKVy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:51:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j16so16461043oih.10;
-        Mon, 11 May 2020 14:51:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DfyKKTmDjv9m+OiuNuIy9KTZuQJffzzNH09317cH/0o=;
-        b=FNnTV69nvjC6QlxzJgaEnIj8pEGHR2K8UqsliyTW63qrstL5AKVCP3znU8C0T6o20i
-         Aj69fcL0NEEk1e0MHxwPTyEK7A7FS+W8HRA57AqDh25NzwMJFAXeLy+O1lv5ZdYhse5A
-         nmdP+GRvEhzh6QsjL1lgAZA46tz2IOlrUNaRB0Msh71dsqIthso1r1hBtUvFEwTHlBDA
-         kSuOYmwSnb2cRxjR+08YiPfAuXMIN9LCooXZwj/UBN27XP1oYU3/ROlHd0S1i5Ea17YX
-         a5wPSUz5889kmqnqo4hVtSkASh/99xb1bmJFK5KUvcGKrdFSa73OptCJlknXycL2KUlS
-         imUw==
-X-Gm-Message-State: AGi0PuYNSHseogJyDSE+8rzc8aaSSTCgzFgNt+ePuuJDnAZm//cYdRU+
-        NTs2VKmcUOBo6Jn5UvgVYw==
-X-Google-Smtp-Source: APiQypIGO0kmzMcw63VT/1hO5t2+X0q9f/ugFKCDUdcjKV1R0yK1FpsrF1KOJWEqlHyg4ULtacbphw==
-X-Received: by 2002:aca:dcd4:: with SMTP id t203mr19764116oig.72.1589233884866;
-        Mon, 11 May 2020 14:51:24 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m19sm2498144otj.81.2020.05.11.14.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:51:23 -0700 (PDT)
-Received: (nullmailer pid 10023 invoked by uid 1000);
-        Mon, 11 May 2020 21:51:22 -0000
-Date:   Mon, 11 May 2020 16:51:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, nm@ti.com, saravanak@google.com,
-        rjw@rjwysocki.net, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, vincent.guittot@linaro.org,
-        vireshk@kernel.org, rnayak@codeaurora.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org, sibis@codeaurora.org,
-        robh+dt@kernel.org, jcrouse@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/7] dt-bindings: opp: Introduce opp-peak-kBps and
- opp-avg-kBps bindings
-Message-ID: <20200511215122.GA9964@bogus>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-2-georgi.djakov@linaro.org>
+        Mon, 11 May 2020 17:54:27 -0400
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49LZTY342WzlhGkQ;
+        Mon, 11 May 2020 23:54:25 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49LZTW6g0pzlhpJn;
+        Mon, 11 May 2020 23:54:23 +0200 (CEST)
+Subject: Re: [PATCH v17 00/10] Landlock LSM
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <20200511192156.1618284-1-mic@digikod.net>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <91cab792-5a13-c71f-a8cb-782be21d86f5@digikod.net>
+Date:   Mon, 11 May 2020 23:54:23 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424155404.10746-2-georgi.djakov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511192156.1618284-1-mic@digikod.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Apr 2020 18:53:58 +0300, Georgi Djakov wrote:
-> From: Saravana Kannan <saravanak@google.com>
-> 
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
-> 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-> tables.
-> 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * I have dropped Rob's Reviewed-by, because of the minor change below:
-> * In order to store the bandwidth values for multiple paths, the
-> opp-peak-kBps and opp-avg-kBps are now defined as arrays of integers,
-> instead of just integers.
-> * Improved wording (Viresh)
-> 
-> v6: https://lore.kernel.org/r/20191207002424.201796-2-saravanak@google.com
-> 
->  Documentation/devicetree/bindings/opp/opp.txt | 20 ++++++++++++++++---
->  .../devicetree/bindings/property-units.txt    |  4 ++++
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 11/05/2020 21:21, Mickaël Salaün wrote:
+> Hi,
+> 
+> This new patch series brings some improvements and add new tests:
+> 
+> Use smaller userspace structures (attributes) to save space, and check
+> at built time that every attribute don't contain hole and are 8-bits
+> aligned.
+
+8-bytes aligned, of course.
