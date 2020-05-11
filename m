@@ -2,129 +2,139 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766C2C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE25C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5271D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC47B20752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kds3MjSm"
+	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="fzokSh7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgEKXL0 (ORCPT
+        id S1728043AbgEKXMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36302 "EHLO
+        Mon, 11 May 2020 19:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726079AbgEKXLZ (ORCPT
+        by vger.kernel.org with ESMTP id S1725836AbgEKXMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:11:25 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716D8C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:11:25 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so5435477pfv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:11:25 -0700 (PDT)
+        Mon, 11 May 2020 19:12:39 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749E0C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:12:38 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id v4so8653335qte.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kd/QhpImkX36HF8SlWn26Vq1MT1a121rRIqfkQ3OXgM=;
-        b=kds3MjSmr+27Km3d5Oqby9a5V7U3EwsuhhfZylClXw9zwc4b+sEYlhi4/M9bgYp5oB
-         ang2aRYRWcMFQYbgk5YRBlzv3/fVADiSFz2nwkFRGmc5lPYWVxEHJYfF7rYTeO/sjxc6
-         vdDOl1TTJxTZOoez95WzbMM3Hee11EoiliYSQ=
+        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=csemUG+Ws7y0HqXk83MvG8Thvpme39pvo0VkZNRmLXc=;
+        b=fzokSh7WiZFo8q6L5pePoTIAZFJir6Zga/NG9zxxbybfgcd1CQW2huCb+nrtEfEHxg
+         g4h0JTkB5lBnPRxfdX1rAQeFFkH1m3HdZKDQ/P3iOlL0UYS/mTjyWFpIRwnjDuvw32nP
+         3x2800pskSnAWdX5vy4XvICrArt0MvLzBiSajuMgwfDSVH5xmGDbbfki09K17vSN9g6b
+         tBYGvV20KYJZxrxZvPWl9RmWMBlsksLVWWWsJNZxFmEgUgdg41eTkLsMhs/XTx43jq6O
+         lN9DcWn4eIok/JsJl2bPISU03qjpzxM1QIDoYg2jURr67ErMid6zyPGjuldoQ4SgVQsM
+         l6QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kd/QhpImkX36HF8SlWn26Vq1MT1a121rRIqfkQ3OXgM=;
-        b=oTUMLkUf6aFYCBo38d/tqjgztbnR8UDloZuDSDiQiaZnFu9TJBBWGXSnoYWJ+7bH3Q
-         ckiDBuzwPEfCLOrmzQ6296kjHLc7gmRdnIlSGOHdOJJAK00l1lfayjVRICf4EAMmx5Q3
-         Zst0IeFT55IlsNFxnRHlVoY2ecch473DvC7UzprDyd73Gw4cPKnnhD/aSRftxzpkIlPB
-         X2TKk4E0WEEbv9f3UcvrkvbNBXgyiEMGjvLYurmu5PiSF3rhHh54WQ3odq7APDWQ6/my
-         ixlT71JiyVVK1ZsZuHtcg+3xWgBc2dBGwy3dhWGC/rOnUJOOkiH17oj1RW/0LnkVtgJw
-         xiCw==
-X-Gm-Message-State: AOAM531tCe8NoWD1zGN/fq2lCogMt29FYa/ubZGg6oc94CteuJkdCg5r
-        usw6snbpYq9tiTgEOVqQK8Rq3w==
-X-Google-Smtp-Source: ABdhPJwPSUZYIDM8rwAeY/r+K/5u3nE0s9lk3VUhI8mXzXA0IuzsVQak6fdByiO5BrTqPRTkUdRfcg==
-X-Received: by 2002:a63:387:: with SMTP id 129mr7901119pgd.117.1589238684936;
-        Mon, 11 May 2020 16:11:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 138sm10064164pfz.31.2020.05.11.16.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:11:23 -0700 (PDT)
-Date:   Mon, 11 May 2020 16:11:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v7 09/18] pstore/blk: Introduce backend for block devices
-Message-ID: <202005111609.2CA37E4A3@keescook>
-References: <20200510202436.63222-1-keescook@chromium.org>
- <20200510202436.63222-10-keescook@chromium.org>
- <2b4fec3e-53f7-b8d9-49f8-d24401f83363@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=csemUG+Ws7y0HqXk83MvG8Thvpme39pvo0VkZNRmLXc=;
+        b=MSp7GvUmgj8Y58U+pFNBZl3A+qxgZ/LyNAhn10aEOIcnRiWYx3jGb1BC2EoynbLlkJ
+         CvI1p4SW6pEeQrAUGrKfoM3K1/+HLmcF2Mwfr1SM4TAnyMC81/jL2lRTHu44haaMi2fj
+         Dadfuf735AcY+Iyauu6y2tT6rYqAX4vAPuFZJQYKlqr7Z0PC4Nqb6V+h7EGgJD09tS0z
+         qLeRdpCPduG7sR4eHyebHY63996l/8LOWLPRShP193pLXP3Cehqdl3Kgb9FJJewXVfRH
+         VjxC8kd/C/atF+B8W5b72DOcY7q9Itvd4kzaKsq8n6EUn3On4xawThYHx2tqvnLl72LX
+         8H2A==
+X-Gm-Message-State: AGi0PubghxZVRBb/WnNNwS6jT7BsDjioSwa829bTX/K84tnec/WXEumL
+        T4V33redPXMda+sOcpu3w/coKvGq4in44A9NrQK/CQ==
+X-Google-Smtp-Source: APiQypJYYUE4mplfB1hqUJ5bDjw3xJwOop4c0BYWrp/iwgO+p19OIswihhZiWOKMBZioWG8Dx/CbHTOIqzKMfjBlcrY=
+X-Received: by 2002:ac8:6f75:: with SMTP id u21mr12718239qtv.161.1589238757632;
+ Mon, 11 May 2020 16:12:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b4fec3e-53f7-b8d9-49f8-d24401f83363@infradead.org>
+References: <20200511225324.GA1307788@rani.riverdale.lan> <20200511225849.1311869-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200511225849.1311869-1-nivedita@alum.mit.edu>
+From:   Mike Lothian <mike@fireburn.co.uk>
+Date:   Tue, 12 May 2020 00:12:26 +0100
+Message-ID: <CAHbf0-HLKiq_+erhHfV9XqMhfchN2975nAsuya4-oXEOUNdhiw@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot: Mark global variables as static
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 08:36:49AM -0700, Randy Dunlap wrote:
-> On 5/10/20 1:24 PM, Kees Cook wrote:
-> > diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-> > index 98d2457bdd9f..92ba73bd0b62 100644
-> > --- a/fs/pstore/Kconfig
-> > +++ b/fs/pstore/Kconfig
-> > @@ -160,3 +160,67 @@ config PSTORE_ZONE
-> >  	help
-> >  	  The common layer for pstore/blk (and pstore/ram in the future)
-> >  	  to manage storage in zones.
-> > +
-> > +config PSTORE_BLK
-> > +	tristate "Log panic/oops to a block device"
-> > +	depends on PSTORE
-> > +	depends on BLOCK
-> > +	select PSTORE_ZONE
-> > +	default n
-> > +	help
-> > +	  This enables panic and oops message to be logged to a block dev
-> > +	  where it can be read back at some later point.
-> > +
-> > +	  If unsure, say N.
-> > +
-> > +config PSTORE_BLK_BLKDEV
-> > +	string "block device identifier"
-> > +	depends on PSTORE_BLK
-> > +	default ""
-> > +	help
-> > +	  Which block device should be used for pstore/blk.
-> > +
-> > +	  It accept the following variants:
-> > +	  1) <hex_major><hex_minor> device number in hexadecimal represents
-> > +	     itself no leading 0x, for example b302.
-> 
-> 	     itself with no leading 0x,
+Feel free to add my tested by
 
-Yes, I've reworked the language here. Thanks!
 
--- 
-Kees Cook
+On Mon, 11 May 2020 at 23:58, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Mike Lothian reports that after commit
+>   964124a97b97 ("efi/x86: Remove extra headroom for setup block")
+> gcc 10.1.0 fails with
+>
+>   HOSTCC  arch/x86/boot/tools/build
+>   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
+>   error: linker defined: multiple definition of '_end'
+>   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
+>   /tmp/ccEkW0jM.o: previous definition here
+>   collect2: error: ld returned 1 exit status
+>   make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
+>   make: *** [arch/x86/Makefile:303: bzImage] Error 2
+>
+> The issue is with the _end variable that was added, to hold the end of
+> the compressed kernel from zoffsets.h (ZO__end). The name clashes with
+> the linker-defined _end symbol that indicates the end of the build
+> program itself.
+>
+> Even when there is no compile-time error, this causes build to use
+> memory past the end of its .bss section.
+>
+> To solve this, mark _end as static, and for symmetry, mark the rest of
+> the variables that keep track of symbols from the compressed kernel as
+> static as well.
+>
+> Fixes: 964124a97b97 ("efi/x86: Remove extra headroom for setup block")
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> ---
+>  arch/x86/boot/tools/build.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
+> index 8f8c8e386cea..c8b8c1a8d1fc 100644
+> --- a/arch/x86/boot/tools/build.c
+> +++ b/arch/x86/boot/tools/build.c
+> @@ -59,14 +59,14 @@ u8 buf[SETUP_SECT_MAX*512];
+>  #define PECOFF_COMPAT_RESERVE 0x0
+>  #endif
+>
+> -unsigned long efi32_stub_entry;
+> -unsigned long efi64_stub_entry;
+> -unsigned long efi_pe_entry;
+> -unsigned long efi32_pe_entry;
+> -unsigned long kernel_info;
+> -unsigned long startup_64;
+> -unsigned long _ehead;
+> -unsigned long _end;
+> +static unsigned long efi32_stub_entry;
+> +static unsigned long efi64_stub_entry;
+> +static unsigned long efi_pe_entry;
+> +static unsigned long efi32_pe_entry;
+> +static unsigned long kernel_info;
+> +static unsigned long startup_64;
+> +static unsigned long _ehead;
+> +static unsigned long _end;
+>
+>  /*----------------------------------------------------------------------*/
+>
+> --
+> 2.26.2
+>
