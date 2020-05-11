@@ -2,102 +2,96 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96A9C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54272C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C094F2098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341E1207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:36:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CyE6hWK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgEKJfa (ORCPT
+        id S1729410AbgEKJgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:35:30 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:45545 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgEKJf3 (ORCPT
+        Mon, 11 May 2020 05:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725790AbgEKJgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:35:29 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04B9ZMhcC011823, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04B9ZMhcC011823
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 11 May 2020 17:35:22 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 11 May 2020 17:35:21 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::8001:f5f5:a41e:f8d4]) by
- RTEXMB04.realtek.com.tw ([fe80::8001:f5f5:a41e:f8d4%3]) with mapi id
- 15.01.1779.005; Mon, 11 May 2020 17:35:21 +0800
-From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-To:     =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: RE: [PATCH 0/7] pinctrl: update realtek DHC pinctrl driver
-Thread-Topic: [PATCH 0/7] pinctrl: update realtek DHC pinctrl driver
-Thread-Index: AQHWJ3YO7IoOZEcXFE2FnhobPA94y6iinpyQ
-Date:   Mon, 11 May 2020 09:35:21 +0000
-Message-ID: <0c38518c6989410eb8f2b9445f72978f@realtek.com>
-References: <20200511092505.4799-1-tychang@realtek.com>
-In-Reply-To: <20200511092505.4799-1-tychang@realtek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.181.134]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 11 May 2020 05:36:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0195BC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YNHgbChJZQ7ZhkULZQtUTSd3NIM4J1mM9pYKXez7Uro=; b=CyE6hWK4nJDqzRWnqxpzFEAcIV
+        vv4ZpLl4Vr13+F4Dv14/vr2KLGFXZ1vtSAmAtSkomqWXP3H1z1pE/5C8QNZO9vahTSpx/eBdoyNcK
+        6PbULwPtKEPM2Zw+Hd2eIWT934E/DMjoErfi+0DegFA/HXiqWp3Hg1CFCqv0BUjP9PyFYxarpVkJb
+        mH4pMJEq4Qv3hPMQMbpTzMmE1DGMNtI6QHUghceMPJ8HLIrcrMlubCLnt1np+wjqbqJN24RUiYDbj
+        oSVZxTiMFDbpEXtQktDP2mJwgVjCAkKBoQ/sSCjRSdk1ohclP31oyZkz6mdJj77Mm1hXp0N4q5KaN
+        nnVbhG0Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jY4rB-0008Np-JS; Mon, 11 May 2020 09:36:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9958E301A80;
+        Mon, 11 May 2020 11:36:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 74269200FC689; Mon, 11 May 2020 11:36:15 +0200 (CEST)
+Date:   Mon, 11 May 2020 11:36:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Radoslaw Biernacki <biernacki@google.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Len Brown <len.brown@intel.com>,
+        linux@endlessm.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/tsc: Use hard-coded crystal clock for Skylake mobile
+Message-ID: <20200511093615.GG2957@hirez.programming.kicks-ass.net>
+References: <20200509113717.9084-1-pmenzel@molgen.mpg.de>
+ <87eerr3ppb.fsf@nanos.tec.linutronix.de>
+ <edc5af47-27e6-753f-c095-bd3087942690@molgen.mpg.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <edc5af47-27e6-753f-c095-bd3087942690@molgen.mpg.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVhciBhbGwsDQoNClBsZWFzZSBpZ25vcmUgdGhlc2UgbWFpbHMuIEkgYW0gdGVzdGluZyBnaXQg
-c2VuZC1lbWFpbCBieSBteXNlbGYuIA0KU29ycnkgZm9yIGFueSBpbmNvbnZlbmllbmNlLg0KDQpC
-ZXN0IFJlZ2FyZHMsDQpUWSBDaGFuZw0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJv
-bTogVFkgQ2hhbmcgW21haWx0bzp0eWNoYW5nQHJlYWx0ZWsuY29tXSANClNlbnQ6IE1vbmRheSwg
-TWF5IDExLCAyMDIwIDU6MjUgUE0NClRvOiBUWV9DaGFuZ1vlvLXlrZDpgLhdDQpDYzogbGludXMu
-d2FsbGVpakBsaW5hcm8ub3JnOyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgQW5kcmVhcyBGw6RyYmVyDQpTdWJqZWN0OiBbUEFUQ0ggMC83
-XSBwaW5jdHJsOiB1cGRhdGUgcmVhbHRlayBESEMgcGluY3RybCBkcml2ZXINCg0KSGkgQW5kcmVh
-cywNCg0KVGhpcyBzZXJpZXMgdXBkYXRlIHJlYWx0ZWsgREhDIHBpbmN0cmwgZHJpdmVyIHdpdGgg
-dGhlIGZvbGxvd2luZyBkZXRhaWxzOg0KDQoqIGFkZCBtaXNzZWQgcGlucw0KKiBhZGQgcGluIGNv
-bmZpZ3VyYXRpb24gZmVhdHVyZSANCiogYWRkIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrIGZ1bmN0
-aW9uDQoqIGZpeCB0aGUgd2FybmluZ3MgY2hlY2tlZCBieSBydW5uaW5nIHNjcmlwdHMvY2hlY2tw
-YXRjaA0KKiBhZGQgcmVhbHRlayBwaW5jdHJsIGRvY3VtZW50YXRpb24NCiogbW92ZSByZWFsdGVr
-IHBpbmN0cmwgZHJpdmVyIHRvIHJlYWx0ZWsgZGlyZWN0b3J5DQoNCg0KQ2M6IGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZw0KQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnDQpDYzogbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZw0KQ2M6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3Vz
-ZS5kZT4NCg0KVFkgQ2hhbmcgKDcpOg0KICBwaW5jdHJsOiByZWFsdGVrOiBydGQxMjk1OiBBZGQg
-bWlzc2VkIHBpbnMuDQogIHBpbmN0cmw6IHJlYWx0ZWs6IHJ0ZDEyOTU6IEFkZCBwaW4gY29uZmln
-cy4NCiAgcGluY3RybDogcmVhbHRlazogcnRkMTE5NTogQWRkIG1pc3NlZCBwaW5zIGFuZCBwaW4g
-Y29uZmlncy4NCiAgcGluY3RybDogcmVhbHRlazogQWRkIHBpbmN0cmwgRG9jdW1lbnRhdGlvbi4N
-CiAgcGluY3RybDogcmVhbHRlazogREhDOiBGaXggcGluY3RybCBkcml2ZXIgY29kaW5nIHN0eWxl
-Lg0KICBwaW5jdHJsOiByZWFsdGVrOiBESEM6IE1vdmUgZmlsZXMgdG8gcmVhbHRlayBkaXJlY3Rv
-cnkgYW5kIHJlbmFtZS4NCiAgcGluY3RybDogcmVhbHRlazogREhDOiBBZGQgc3VzcGVuZC9yZXN1
-bWUgY2FsbGJhY2sgZnVuY3Rpb24uDQoNCiAuLi4vYmluZGluZ3MvcGluY3RybC9yZWFrdGVrLHBp
-bmN0cmwudHh0ICAgICAgfCAgIDkgKw0KIGRyaXZlcnMvcGluY3RybC9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAxMCArLQ0KIGRyaXZlcnMvcGluY3RybC9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgMiArLQ0KIGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXJ0ZDExOXgu
-YyAgICAgICAgICAgICB8IDM4MyAtLS0tLS0tLS0NCiBkcml2ZXJzL3BpbmN0cmwvcmVhbHRlay9L
-Y29uZmlnICAgICAgICAgICAgICAgfCAgMTAgKw0KIGRyaXZlcnMvcGluY3RybC9yZWFsdGVrL01h
-a2VmaWxlICAgICAgICAgICAgICB8ICAgMyArDQogZHJpdmVycy9waW5jdHJsL3JlYWx0ZWsvcGlu
-Y3RybC1ydGQuYyAgICAgICAgIHwgNjAwICsrKysrKysrKysrKysNCiAuLi4vcGluY3RybC97ID0+
-IHJlYWx0ZWt9L3BpbmN0cmwtcnRkMTE5NS5oICAgfCA0OTAgKysrKysrKystLS0NCiAuLi4vcGlu
-Y3RybC97ID0+IHJlYWx0ZWt9L3BpbmN0cmwtcnRkMTI5NS5oICAgfCA4MDUgKysrKysrKysrKysr
-KysrLS0tDQogOSBmaWxlcyBjaGFuZ2VkLCAxNjc5IGluc2VydGlvbnMoKyksIDYzMyBkZWxldGlv
-bnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BpbmN0cmwvcmVha3RlayxwaW5jdHJsLnR4dA0KIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL3BpbmN0cmwvcGluY3RybC1ydGQxMTl4LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9waW5jdHJsL3JlYWx0ZWsvS2NvbmZpZw0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Bp
-bmN0cmwvcmVhbHRlay9NYWtlZmlsZQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0
-cmwvcmVhbHRlay9waW5jdHJsLXJ0ZC5jDQogcmVuYW1lIGRyaXZlcnMvcGluY3RybC97ID0+IHJl
-YWx0ZWt9L3BpbmN0cmwtcnRkMTE5NS5oICg2NCUpDQogcmVuYW1lIGRyaXZlcnMvcGluY3RybC97
-ID0+IHJlYWx0ZWt9L3BpbmN0cmwtcnRkMTI5NS5oICg2MiUpDQoNCi0tIA0KMi4yNi4yDQoNCg==
+On Mon, May 11, 2020 at 09:38:34AM +0200, Paul Menzel wrote:
+
+> Sorry about that. From `MAINTAINERS` I thought x86@kernel.org is wanted.
+> Other subsystems list LKML explicitly there.
+
+Not sure what you're reading but:
+
+X86 ARCHITECTURE (32-BIT AND 64-BIT)
+M:      Thomas Gleixner <tglx@linutronix.de>
+M:      Ingo Molnar <mingo@redhat.com>
+M:      Borislav Petkov <bp@alien8.de>
+M:      x86@kernel.org
+R:      "H. Peter Anvin" <hpa@zytor.com>
+L:      linux-kernel@vger.kernel.org
+S:      Maintained
+T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+F:      Documentation/devicetree/bindings/x86/
+F:      Documentation/x86/
+F:      arch/x86/
+
+Explicitly lists LKML, also note how x86@kernel.org is M not L. It is in
+fact a mail alias for just a few people, it is _NOT_ a list.
