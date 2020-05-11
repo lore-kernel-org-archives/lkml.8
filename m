@@ -2,182 +2,153 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C616C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DABC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD50206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqCzMPdN"
+	by mail.kernel.org (Postfix) with ESMTP id E65A8206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589193581;
+	bh=0kBiZ9ajnEJCfDeIgMip/lzW0VTKmfKqszkyrFEudlw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YBvZAT5mq7J2mBFBngPkEoxBree5f3ZLLMguK4z8N478plNetSDsInGrE0IJ8LYEG
+	 whzu7V365+kIHnIA1Z8Eohp3xG+4vgQMYd0+PfA52V3pR8tKlEMKrOzmdto03Fx8Qn
+	 nkziC0X+Hv/bAWEY0YHc14erSvDeDDVmbptIWuA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgEKKiq (ORCPT
+        id S1729522AbgEKKjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728209AbgEKKip (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:38:45 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DAEC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:38:45 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id l1so3949382qtp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uf04Bplo4VLk4LrjpEdz9FsKxhkP+ZdN12Hn8z8gR3k=;
-        b=mqCzMPdN1teGg+bTUJ01IQPzCKWAyY17rXaBqjFXSPbHfTK6eVvfpfhpRGaGtPu+so
-         iv6Jd3DU9G0rPUCR44eqM9VMiVhXQIUY4PSxySOMunDn7pPZiNpTE8QVn0gklug4tYtL
-         HhxyJGVKSCzbVbUBfSexUl29cX/iFDCHXNBoyFYW1CsI18YThM3pKlwl72PNt3AjZolH
-         /avPwS+NyEJL+Kshm6XR1HRSQDQ5ObnJ37DttPS1Bh+ugYOMsAJGHM8M8aUCU/iGQ611
-         B2GlRrMt09krd7851/RYyF3ez8kweAYOugm5MtHHlGE2cFq18qlesvNwgwhgIwZ7MF18
-         notg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uf04Bplo4VLk4LrjpEdz9FsKxhkP+ZdN12Hn8z8gR3k=;
-        b=eoTiq6r3j92XaG1NECfBeVlOXbLbaMZ887HdbgesXLuA2LAoMsIdrHlWTGIQ1V3N1c
-         Wh6X8+Q2TBOUsWaYvSguy9VgjNxAObPF4KEIUJpRVbMiuIoQuCC02As/p/6xDomw96yJ
-         DIjWw40/rTfwdY+zrMyRideXt28UEvoUCK8R3M5Vl7jDKDQkUmW2au70SXPtW3ktlilJ
-         6bAmyuU0n1LSHOOmP21E/1d8eUQeCHlFk+QBhEt/67CJUV/QUMTRmfcqLjmz5E38Hmfc
-         iBRzwsYYg2OzgQhVtq2UgM+I50cDMJBZa4ZAobf7rDRfNUYQ/3d4tTTHqzXmP+q7wBlO
-         g+Ug==
-X-Gm-Message-State: AGi0PubmkqCNp17Rm4ZrQ9zu/PmuryEpjowqFFuw+43TDido/zZj4feQ
-        ARmZAGLzfit79I6ASlxBxyEC3vXrwvaSUrPUK50UfQ==
-X-Google-Smtp-Source: APiQypKA80aT7+91W0G/UAG3ToBMU16CEkrdAIjzMcXXPQQBDIf2vVmju/g34hV4WYzwqrhQjb6qWRfjMFJ+BMKUNlw=
-X-Received: by 2002:ac8:6c24:: with SMTP id k4mr15495561qtu.257.1589193524519;
- Mon, 11 May 2020 03:38:44 -0700 (PDT)
+        Mon, 11 May 2020 06:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgEKKjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:39:41 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E27C5206F5;
+        Mon, 11 May 2020 10:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589193580;
+        bh=0kBiZ9ajnEJCfDeIgMip/lzW0VTKmfKqszkyrFEudlw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VNhXHHWLlZbrbWPRUR8cPnVYu4tq603FHzx2Oo5MQd1ZjmE6mvv8QiXL4bofg5uK4
+         ZXZyqxuSwOikfLlGcQZ5gBDpD2iezdrFiEE4OL08Wsbb+BPe5bByWP29erRg0RAa4A
+         mNdJ0chqp0SfRz2Wy+sGUZkmHgMC8cH+TnV3dRt4=
+Date:   Mon, 11 May 2020 11:39:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
+Message-ID: <20200511103937.GC8216@sirena.org.uk>
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-4-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-References: <20200511022359.15063-1-walter-zh.wu@mediatek.com>
- <CACT4Y+aC4i8cAVFu2-s82RczWCjYMpPVJLwS0OBLELR9qF8SYg@mail.gmail.com> <1589193126.2930.2.camel@mtksdccf07>
-In-Reply-To: <1589193126.2930.2.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 May 2020 12:38:32 +0200
-Message-ID: <CACT4Y+b16+-R=nQs-x1iDBZwBZKgJWf22Q=o1MvqkGP+8ybzmA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] kasan: memorize and print call_rcu stack
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
+Content-Disposition: inline
+In-Reply-To: <20200508204200.13481-4-sumit.semwal@linaro.org>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:32 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> On Mon, 2020-05-11 at 12:01 +0200, 'Dmitry Vyukov' via kasan-dev wrote:
-> > On Mon, May 11, 2020 at 4:24 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > >
-> > > This patchset improves KASAN reports by making them to have
-> > > call_rcu() call stack information. It is useful for programmers
-> > > to solve use-after-free or double-free memory issue.
-> >
-> > Hi Walter,
-> >
-> > I am looking at this now.
-> >
-> > I've upload the change to gerrit [1]
-> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2458
-> >
-> > I am not capable enough to meaningfully review such changes in this format...
-> >
-> > [1] https://linux.googlesource.com/Documentation
-> >
->
-> Hi Dmitry,
->
-> I don't fully understand your meaning, our patchset's format has
-> problem? or?
 
-No, it does not have any problems. Your patch format is standard for kernel.
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It's just complex patches in the standard kernel format that are hard
-to review for me.
+On Sat, May 09, 2020 at 02:11:59AM +0530, Sumit Semwal wrote:
 
+> +	ret = regmap_bulk_read(reg->regmap, reg->base +
+> +			       REG_LABIBB_STATUS1, &val, 1);
+> +	if (ret < 0) {
+> +		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
+> +		return ret;
+> +	}
 
-> > > The KASAN report was as follows(cleaned up slightly):
-> > >
-> > > BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
-> > >
-> > > Freed by task 0:
-> > >  save_stack+0x24/0x50
-> > >  __kasan_slab_free+0x110/0x178
-> > >  kasan_slab_free+0x10/0x18
-> > >  kfree+0x98/0x270
-> > >  kasan_rcu_reclaim+0x1c/0x60
-> > >  rcu_core+0x8b4/0x10f8
-> > >  rcu_core_si+0xc/0x18
-> > >  efi_header_end+0x238/0xa6c
-> > >
-> > > First call_rcu() call stack:
-> > >  save_stack+0x24/0x50
-> > >  kasan_record_callrcu+0xc8/0xd8
-> > >  call_rcu+0x190/0x580
-> > >  kasan_rcu_uaf+0x1d8/0x278
-> > >
-> > > Last call_rcu() call stack:
-> > > (stack is not available)
-> > >
-> > > Generic KASAN will record first and last call_rcu() call stack
-> > > and print two call_rcu() call stack in KASAN report.
-> > >
-> > > This feature doesn't increase the cost of memory consumption. It is
-> > > only suitable for generic KASAN.
-> > >
-> > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> > > [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
-> > >
-> > > Changes since v2:
-> > > - remove new config option, default enable it in generic KASAN
-> > > - test this feature in SLAB/SLUB, it is pass.
-> > > - modify macro to be more clearly
-> > > - modify documentation
-> > >
-> > > Walter Wu (3):
-> > > rcu/kasan: record and print call_rcu() call stack
-> > > kasan: record and print the free track
-> > > kasan: update documentation for generic kasan
-> > >
-> > > Documentation/dev-tools/kasan.rst |  6 ++++++
-> > > include/linux/kasan.h             |  2 ++
-> > > kernel/rcu/tree.c                 |  4 ++++
-> > > lib/Kconfig.kasan                 |  2 ++
-> > > mm/kasan/common.c                 | 26 ++++----------------------
-> > > mm/kasan/generic.c                | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > mm/kasan/kasan.h                  | 23 +++++++++++++++++++++++
-> > > mm/kasan/report.c                 | 47 +++++++++++++++++++++--------------------------
-> > > mm/kasan/tags.c                   | 37 +++++++++++++++++++++++++++++++++++++
-> > > 9 files changed, 149 insertions(+), 48 deletions(-)
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200511022359.15063-1-walter-zh.wu%40mediatek.com.
-> >
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1589193126.2930.2.camel%40mtksdccf07.
+Why a bulk read of a single register?
+
+> +static int _check_enabled_with_retries(struct regulator_dev *rdev,
+> +			int retries, int enabled)
+> +{
+
+This is not retrying, this is polling to see if the regulator actually
+enabled.
+
+> +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+> +{
+
+> +	ret = _check_enabled_with_retries(rdev, retries, 1);
+> +	if (ret < 0) {
+> +		dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
+> +			reg->desc.name);
+> +		return ret;
+> +	}
+
+If this is useful factor it out into a helper or the core, other devices
+also have status bits saying if the regulator is enabled.  It looks like
+this may be mainly trying to open code something like enable_time, with
+possibly some issues where the time taken to enable varies a lot.
+
+> +	if (ret)
+> +		return 0;
+> +
+> +
+> +	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
+> +	return -EINVAL;
+
+Return the actual error code (the logic here is quite convoluted).
+
+> +	ret = regulator_disable_regmap(rdev);
+> +
+> +	if (ret < 0) {
+
+You have lots of blank lines between operations and checking their
+return codes?
+
+> +	ret = _check_enabled_with_retries(rdev, retries, 0);
+> +	if (ret < 0) {
+> +		dev_err(reg->dev, "retries exhausted: disable %s regulator\n",
+> +			reg->desc.name);
+> +		return ret;
+> +	}
+
+Similarly to the enable path, but is this one about off_on_delay rather
+than enable_time?
+
+> +	if (reg_data->type == QCOM_LAB_TYPE) {
+> +		reg = &labibb->lab;
+> +		reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
+> +	} else {
+> +		reg = &labibb->ibb;
+> +		reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
+> +	}
+
+Write a switch statement so this is extensible.
+
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65K2kACgkQJNaLcl1U
+h9BQSAf7BULCV+zM0j5z4zCoc5itj+1AiFF33DehWEq7FUG1g36yL3J9UQVA4fUu
+byEy8fI4m8tkIpj/j6f7HPfu/rOIbpLdAYMgc+IqX8zwQ9zvwTHwB7TkK1zIdZvq
+/3RWqZ25ey+ZASi5/h2ZN75cG8no64xb+BmaRLhQADAo6mmCH5+xXZacknMGzkR+
+b9IjaEsP2+iWhiWbBpetZok2oCi2RXLCdBUJJ+wwmrWVnIuSD7NkAm8lpXOSZVDY
+XooOfd62M8G92WT3WFMripbwOzcJQ4uew034U8B9bbaL1H/3Qo2d4WO6+5kX1URw
+5qNRNFuW09j1PPMSsT76pSJHANHflg==
+=KeE7
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--
