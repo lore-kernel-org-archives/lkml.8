@@ -2,244 +2,135 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063CAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2184C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39A22075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589198198;
-	bh=6hkPqUfE/A52mAHI4n5dRpGiROlJaXK2p0PZhJDcAPo=;
-	h=Subject:To:Cc:From:Date:List-ID:From;
-	b=SLX2av8dZkbSGGaJq3sWhhQnZZJUkdK3993RxCzMJZAWDq1LnVXms/X0/oQ/7u2XN
-	 NulVSysqS3w61KNe5YbTDnbW+ntSIQ+X8klAzwbyE54VA5fROMnDlt7Ay4n8fbi9T9
-	 ZUweqY+RocBlTVfdho3o4oHczEpmfQd26yno6LHw=
+	by mail.kernel.org (Postfix) with ESMTP id CDF1C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TYCFULo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgEKL4i (ORCPT
+        id S1729804AbgEKL53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729909AbgEKL4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:56:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31893206F5;
-        Mon, 11 May 2020 11:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589198193;
-        bh=6hkPqUfE/A52mAHI4n5dRpGiROlJaXK2p0PZhJDcAPo=;
-        h=Subject:To:Cc:From:Date:From;
-        b=zuTfb1hZIeHsL2p+g+//+P3k87j3Yc2PUmudv7+0f2Ldp8bnXfTFdZrbcutczouo0
-         XqYLIgqV2be0ALohS23GJ1Mjg4kRD1n5/LjMiyy0+L0SRSeJbVzt9SanRlaByKpV8g
-         Hstv27jTsKYwo387mmPN2yBpGGR3VVUDxvRTHNGE=
-Subject: Linux 5.6.12
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Mon, 11 May 2020 13:56:23 +0200
-Message-ID: <1589198183975@kroah.com>
+        Mon, 11 May 2020 07:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728531AbgEKL52 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:57:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAD3C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:57:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so18920729wma.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ETEJzrILDWcEXSuqI8CJBLVfITRJvsWlV8DeIS56yUg=;
+        b=TYCFULo2Suie8IQQbYjij0fXBQIVOUeI8xv90SKGhM5ONz2C0tOD+JZgJvXZWV8rj1
+         hVyNLva1zf1dfngbRmXj5nWT2LYLmXJYm7Vc5N0WBGJoZUG4D4sPk5K0DqdkpXUKs68N
+         yNDAJiHCn8A02TXqcQ9lyTuTFNdWzUQNC3me3u/1RYQdyg8ABZSWn/yXuzOWlOc3IBmW
+         kL+9ZFtfe+DRrR5ZQYEZqeLUyuRzdG+R/pYtfjhI/9bYEanyw2jau41e8wJJxf9efG+h
+         7MEwuIBDRDzZqwEk16N8f4DzETeYRYp8/8fZ1m1afV8wanrkOItDXwjd39jiUMqFuWRK
+         U3+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ETEJzrILDWcEXSuqI8CJBLVfITRJvsWlV8DeIS56yUg=;
+        b=oKCydQKfJrmOBHtAbMdsIZxzPSrYPfKbxhjawlgSvUvBneZ+Zcv4AcZOopmxYyAvyl
+         1COwnfe8cedkmP0mAeq4aF+tebUZtPI8Njan1HIUx16lQAiveWdw19NYQePG+YE08k2r
+         DzGEpSWJlPMATCbOu+PhhF8vjbf1ox85/RHZx0K9i3pl3htzPPa7aRqT1JWSX2zey+7v
+         LJKdYy+jz03qxtK8vvHfVf4AHZCFwh67VeQwB9uwi8otfFefbuWfs0pd7MYYHqTb8GY8
+         rMZ1wlP4ssJijjT3RCcC+Sw1eZnLRndCmVfK4dZr1pdZyHfm3IK1OLdqh8+Zhe7isBFh
+         0opA==
+X-Gm-Message-State: AGi0PuYBpNxLPn1Re8btJtLNKgT1skDFnrxIi7/cI1MLuSICDFU5shsk
+        FlLmD1VAQ7/0zbHhbfnOGYxy9g==
+X-Google-Smtp-Source: APiQypIA/BhPOSlxxVRft/M3ndyAAD/wbrIqEL1T+jhl+AK/cIZYzzYwO39nyIGbtRrwMvdTRb8hHw==
+X-Received: by 2002:a7b:c755:: with SMTP id w21mr30469520wmk.120.1589198246663;
+        Mon, 11 May 2020 04:57:26 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id y70sm27811096wmc.36.2020.05.11.04.57.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 04:57:25 -0700 (PDT)
+Date:   Mon, 11 May 2020 12:57:22 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v7 03/15] PM / EM: update callback structure and add
+ device pointer
+Message-ID: <20200511115722.GA13741@google.com>
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-4-lukasz.luba@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511111912.3001-4-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.6.12 kernel.
+On Monday 11 May 2020 at 12:19:00 (+0100), Lukasz Luba wrote:
+> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+> index 61623e2ff149..11ee24e06d12 100644
+> --- a/drivers/cpufreq/scmi-cpufreq.c
+> +++ b/drivers/cpufreq/scmi-cpufreq.c
+> @@ -103,17 +103,12 @@ scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
+>  }
+>  
+>  static int __maybe_unused
+> -scmi_get_cpu_power(unsigned long *power, unsigned long *KHz, int cpu)
+> +scmi_get_cpu_power(unsigned long *power, unsigned long *KHz,
+> +		   struct device *cpu_dev)
+>  {
+> -	struct device *cpu_dev = get_cpu_device(cpu);
+>  	unsigned long Hz;
+>  	int ret, domain;
+>  
+> -	if (!cpu_dev) {
+> -		pr_err("failed to get cpu%d device\n", cpu);
+> -		return -ENODEV;
+> -	}
+> -
+>  	domain = handle->perf_ops->device_domain_id(cpu_dev);
+>  	if (domain < 0)
+>  		return domain;
+> @@ -200,7 +195,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
+>  
+>  	policy->fast_switch_possible = true;
+>  
+> -	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
 
-All users of the 5.6 kernel series must upgrade.
+So this one has no users after this patch right? I suppose you could
+squash patch 05 in this one. But no big deal.
 
-The updated 5.6.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.6.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+Acked-by: Quentin Perret <qperret@google.com>
 
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                              |    2 
- arch/x86/kvm/vmx/ops.h                                |    1 
- drivers/acpi/sleep.c                                  |    5 
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c                |    3 
- drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c |   26 ++++
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c            |    7 -
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c    |    3 
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c    |   33 +++--
- drivers/gpu/drm/exynos/exynos_dp.c                    |   29 ++--
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c       |   36 ++---
- drivers/net/ethernet/broadcom/bcmsysport.c            |    3 
- drivers/net/ethernet/broadcom/genet/bcmgenet.c        |    3 
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c   |    9 -
- drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |   12 +
- drivers/net/phy/bcm84881.c                            |    6 
- drivers/net/wimax/i2400m/usb-fw.c                     |    1 
- drivers/platform/x86/gpd-pocket-fan.c                 |    2 
- drivers/remoteproc/qcom_q6v5_mss.c                    |    2 
- drivers/scsi/sg.c                                     |    4 
- drivers/usb/dwc3/core.h                               |    4 
- drivers/usb/dwc3/gadget.c                             |   52 ++++++--
- drivers/vhost/vsock.c                                 |    5 
- fs/cifs/connect.c                                     |    6 
- include/drm/bridge/analogix_dp.h                      |    5 
- include/linux/ieee80211.h                             |    9 +
- kernel/trace/ftrace.c                                 |    1 
- kernel/trace/trace_events_hist.c                      |    7 +
- lib/mpi/longlong.h                                    |   34 ++---
- mm/mremap.c                                           |   10 +
- net/core/netclassid_cgroup.c                          |    4 
- net/mac80211/mlme.c                                   |    2 
- net/mac80211/rx.c                                     |    8 -
- net/mac80211/sta_info.c                               |    3 
- net/mac80211/status.c                                 |    5 
- net/mac80211/tx.c                                     |    2 
- net/sctp/sm_make_chunk.c                              |    6 
- net/sunrpc/cache.c                                    |    5 
- scripts/config                                        |    5 
- sound/pci/hda/hda_intel.c                             |    9 -
- sound/soc/codecs/hdac_hdmi.c                          |    6 
- sound/soc/codecs/sgtl5000.c                           |   34 +++++
- sound/soc/codecs/sgtl5000.h                           |    1 
- sound/soc/sh/rcar/ssi.c                               |   11 +
- sound/soc/sh/rcar/ssiu.c                              |    2 
- sound/soc/soc-topology.c                              |  115 +++++++++++++-----
- tools/bpf/runqslower/Makefile                         |    2 
- tools/testing/selftests/ipc/msgque.c                  |    2 
- tools/testing/selftests/tpm2/test_smoke.sh            |   13 --
- tools/testing/selftests/tpm2/test_space.sh            |    9 -
- tools/testing/selftests/vm/Makefile                   |    4 
- tools/testing/selftests/vm/run_vmtests                |    2 
- 51 files changed, 401 insertions(+), 169 deletions(-)
-
-Aaron Ma (1):
-      drm/amdgpu: Fix oops when pp_funcs is unset in ACPI event
-
-Alex Elder (1):
-      remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
-
-Amadeusz Sławiński (8):
-      ASoC: topology: Add missing memory checks
-      ASoC: topology: Check return value of soc_tplg_create_tlv
-      ASoC: topology: Check return value of soc_tplg_*_create
-      ASoC: topology: Check soc_tplg_add_route return value
-      ASoC: topology: Check return value of pcm_new_ver
-      ASoC: topology: Check return value of soc_tplg_dai_config
-      ASoC: topology: Fix endianness issue
-      ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
-
-Andrii Nakryiko (1):
-      tools/runqslower: Ensure own vmlinux.h is picked up first
-
-Doug Berger (2):
-      net: bcmgenet: suppress warnings on failed Rx SKB allocations
-      net: systemport: suppress warnings on failed Rx SKB allocations
-
-Greg Kroah-Hartman (1):
-      Linux 5.6.12
-
-Hans de Goede (1):
-      platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
-
-Jarkko Sakkinen (1):
-      Revert "Kernel selftests: tpm2: check for tpm support"
-
-Jere Leppänen (1):
-      sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
-
-Jeremie Francois (on alpha) (1):
-      scripts/config: allow colons in option strings for sed
-
-Jia He (1):
-      vhost: vsock: kick send_pkt worker once device is started
-
-Jiri Slaby (1):
-      cgroup, netclassid: remove double cond_resched
-
-Julien Beraud (2):
-      net: stmmac: fix enabling socfpga's ptp_ref_clock
-      net: stmmac: Fix sub-second increment
-
-Madhuparna Bhowmik (1):
-      mac80211: sta_info: Add lockdep condition for RCU list usage
-
-Marek Szyprowski (1):
-      drm/bridge: analogix_dp: Split bind() into probe() and real bind()
-
-Matthias Blankertz (4):
-      ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
-      ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
-      ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
-      ASoC: rsnd: Fix "status check failed" spam for multi-SSI
-
-Nathan Chancellor (1):
-      lib/mpi: Fix building for powerpc with clang
-
-Paulo Alcantara (1):
-      cifs: do not share tcons with DFS
-
-Prike Liang (1):
-      drm/amd/powerplay: fix resume failed as smu table initialize early exit
-
-Qian Cai (1):
-      x86/kvm: fix a missing-prototypes "vmread_error"
-
-Rafael J. Wysocki (1):
-      ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
-
-Ronnie Sahlberg (1):
-      cifs: protect updating server->dstaddr with a spinlock
-
-Russell King (1):
-      net: phy: bcm84881: clear settings on link down
-
-Sandeep Raghuraman (1):
-      drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
-
-Sandipan Das (2):
-      selftests: vm: Do not override definition of ARCH
-      selftests: vm: Fix 64-bit test builds for powerpc64le
-
-Sebastian Reichel (1):
-      ASoC: sgtl5000: Fix VAG power-on handling
-
-Steven Rostedt (VMware) (1):
-      ftrace: Fix memory leak caused by not freeing entry in unregister_ftrace_direct()
-
-Takashi Iwai (1):
-      ALSA: hda: Match both PCI ID and SSID for driver blacklist
-
-Thinh Nguyen (1):
-      usb: dwc3: gadget: Properly set maxpacket limit
-
-Thomas Pedersen (1):
-      mac80211: add ieee80211_is_any_nullfunc()
-
-Tyler Hicks (1):
-      selftests/ipc: Fix test failure seen after initial test run
-
-Vamshi K Sthambamkadi (1):
-      tracing: Fix memory leaks in trace_events_hist.c
-
-Vasily Khoruzhick (1):
-      drm/bridge: anx6345: set correct BPC for display_info of connector
-
-Will Deacon (1):
-      mm/mremap: Add comment explaining the untagging behaviour of mremap()
-
-Wu Bo (1):
-      scsi: sg: add sg_remove_request in sg_write
-
-Xiyu Yang (1):
-      wimax/i2400m: Fix potential urb refcnt leak
-
-Yihao Wu (1):
-      SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
-
+> +	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, policy->cpus);
+>  
+>  	return 0;
