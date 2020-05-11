@@ -2,62 +2,63 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBDDC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9791C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18DEF207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88841207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bGYeTY6u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="euAP57wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbgEKMZe (ORCPT
+        id S1729642AbgEKMZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48234 "EHLO
+        Mon, 11 May 2020 08:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728367AbgEKMZd (ORCPT
+        by vger.kernel.org with ESMTP id S1729563AbgEKMZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:25:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FDAC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:32 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ms17so7710848pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:32 -0700 (PDT)
+        Mon, 11 May 2020 08:25:36 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BFEC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:36 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u22so3861250plq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mBbC+ezL0KWKqu+8vW0N3H42ESoBL1sfIZ3GqpH00rY=;
-        b=bGYeTY6uUMYmDC8/JS2RcivTZxIUqiyAoYDMsewOLeVVKPx9RukMNkacaRde9KhMm9
-         RF/ZHiwNHykgJedc/Ui4kZK9lJnx2FTBwgxBTppuXAQjaMGETOigUthGyJhxx1+MIY1t
-         uML41c8mcwJiGpJ4Zg2ZQUzLdAv0VPk0N2v9777dfnHtUplRqX3+lyysRoQhD5oGT6GL
-         XiJhMOIU6VSAb8PYfli5OAM0Y0AUPHDM4C9r+wgHxonXO5JGuSnhKslCQya9PSaDnsJm
-         jdRklIPGjGt2w+eH2inBUUVMAykkCJGhL7pRya8JLTtQOjuIUMCAtxbXJzuADVBYEh4B
-         RiZw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+8aLBVF/jCNJkdmjTC/dudzjrY2tWkvRd1FtJjGwyUk=;
+        b=euAP57wveF2y86MHZ6NV58TG0vSv9YKmBb6lQBV0IXubepFm2dNRippIbx93bponZ/
+         5wu/RJRdOf1qM2bbmrGpSz6ojY2+0ae6Qi4gMb85pkSOp3p5T8376FlCZC/M5FXpk4hx
+         T/CG2lZEw/CxOK3WQJXCioactq2A219Yv7f39F7U1X06RdQKm2O0Tcq9G7B+DEFMpvre
+         GOUC/s4gXAOPn04Knsz2blgFHT8mZH61ngqCNUywerOsLd4Dd7ttlBYrsWsIFdMTSZID
+         5AuWs8pFndMg5h1/INazI5Eygmo5OCwm53sWmj7im2uP1zvY/+pyW4Ie2fzgz1l8KdY7
+         s3kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mBbC+ezL0KWKqu+8vW0N3H42ESoBL1sfIZ3GqpH00rY=;
-        b=VVjSGWXr98/SDjZG0DcOfTVGkmz0LrS6K/688fof0v63ibWvNoN0wXNIfoQsw0Ywn4
-         65aPQ89hNCitQucE35TLVuqPRJwh/siJGOaSS073Sj33+AJRRxomNqrR5tM0LpYPhnFt
-         4TfHkbJBFGd4pI4FkJiPLscbzkpyxHnE/xt63xZs1vFqequQVS9IqZBzUBb5ol9sLq1W
-         tLKEsvrqg4JNfhTZ1441sNsZe2A0L5YS/n2/bycavP55783uqEO5v+/KAXFqCXhrokxI
-         cFF4xBrC2krDyQo4CRXoR/KU5OH9V71v7Y1SaVkKYvFSVX/NFpQRpqYRHrbSn3DjLknX
-         zEjw==
-X-Gm-Message-State: AOAM532Ug8iPpHPxzoh/Xr0lmBpj1OfIuJUljsE2WkTWUl4QUe9LiEfV
-        siM0FI041lJhKl8A3TjzDGP7CL7mwb0=
-X-Google-Smtp-Source: ABdhPJwRr4fdTX/Wgq4ithBxo6eAWgiaP0eWLWIqJboRv0uavun/vOVh59bDfEcIMKEZwrNxcnFW+g==
-X-Received: by 2002:a17:902:8c8f:: with SMTP id t15mr1202490plo.183.1589199931586;
-        Mon, 11 May 2020 05:25:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+8aLBVF/jCNJkdmjTC/dudzjrY2tWkvRd1FtJjGwyUk=;
+        b=GaacplfdqOSiiFY35kNbQZgnxWH7YfQN32TUD6/btxOK3Q/GpBV8eRQPojB02xQEzm
+         KHYWwj+7T53l6WytfSJqkhMPSOhuPlcoP/uDUPEsh7y0y+ZPmDYRkCfitD0hUFZaE6xR
+         MRVl8BE+Fdb1xdyG4uR5A/yC0515ne56VlhxIVlRF1f0ffhzPzhNhYmxYZWPEvfx4iST
+         /4wCUaH50eLkfx3u97kotASA0LKWelvLAutJkWZEMUk7H9OreVCTApOlivzajitCqH4i
+         goKLTo9yZciLt9onxOIObgeov37hjppu2prnkvqNYQkpYXv94tJq7GXqG7pUIg4D8/Pu
+         RlMg==
+X-Gm-Message-State: AGi0PuaE00MkGW+HVqWzumtl4x65jerZ6PwDOTZYb2DpVKD0Y4nqVdSN
+        qbEmMr7K/QII74MjhQ+LB9s7Ja2EaK4=
+X-Google-Smtp-Source: APiQypJ4qBRsFtSTkkiLyjxDBfw6clVcHL7/Oi64wn/3ZpAx5AIZwfiiazyOlZANpe6NwClLBYs2lA==
+X-Received: by 2002:a17:90a:1501:: with SMTP id l1mr22882557pja.82.1589199935696;
+        Mon, 11 May 2020 05:25:35 -0700 (PDT)
 Received: from localhost ([45.127.45.102])
-        by smtp.gmail.com with ESMTPSA id e135sm9195880pfh.37.2020.05.11.05.25.28
+        by smtp.gmail.com with ESMTPSA id q6sm9049534pfh.193.2020.05.11.05.25.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:25:30 -0700 (PDT)
+        Mon, 11 May 2020 05:25:34 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org,
@@ -67,10 +68,12 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 00/14] thermal core include cleanups
-Date:   Mon, 11 May 2020 17:54:48 +0530
-Message-Id: <cover.1589199124.git.amit.kucheria@linaro.org>
+Subject: [PATCH 01/14] thermal/core: Get rid of MODULE_* tags
+Date:   Mon, 11 May 2020 17:54:49 +0530
+Message-Id: <74339a09a55f8f3d86c4074fc2bf853a302d6186.1589199124.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
+References: <cover.1589199124.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,50 +81,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed some remnants from when thermal core could be modular. While
-cleaning that up, I fixed up the includes to be sorted alphabetically and
-included export.h in files that were using EXPORT_SYMBOL* or THIS_MODULE
-while at the same time removing inclusion of module.h from core files.
+The thermal framework can no longer be compiled as a module as of
+commit 554b3529fe01 ("thermal/drivers/core: Remove the module Kconfig's
+option"). Remove the MODULE_* tags.
 
-Finally, the names of the source files for the governors and core have some
-inconsistencies and the last couple of patches rename them.
+Rui is mentioned in the copyright line at the top of the file and the
+license is mentioned in the SPDX tags. So no loss of information.
 
-Build and boot tested on some ARM boards.
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/thermal/thermal_core.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Amit Kucheria (14):
-  thermal/core: Get rid of MODULE_* tags
-  thermal/core: Replace module.h with export.h
-  thermal/drivers/thermal_helpers: Sort headers alphabetically
-  thermal/drivers/thermal_helpers: Include export.h
-  thermal/drivers/thermal_hwmon: Sort headers alphabetically
-  thermal/drivers/thermal_hwmon: Include export.h
-  thermal/drivers/clock_cooling: Sort headers alphabetically
-  thermal/drivers/clock_cooling: Include export.h
-  thermal/drivers/cpufreq_cooling: Sort headers alphabetically
-  thermal/drivers/cpufreq_cooling: Replace module.h with export.h
-  thermal/drivers/of-thermal: Sort headers alphabetically
-  thermal/drivers/user_space: Sort headers alphabetically
-  thermal/governors: Prefix all source files with gov_
-  thermal/of: Rename of-thermal.c
-
- drivers/thermal/Makefile                               | 10 +++++-----
- drivers/thermal/clock_cooling.c                        |  3 ++-
- drivers/thermal/cpufreq_cooling.c                      | 10 +++++-----
- drivers/thermal/{fair_share.c => gov_fair_share.c}     |  0
- .../{power_allocator.c => gov_power_allocator.c}       |  0
- drivers/thermal/{step_wise.c => gov_step_wise.c}       |  0
- drivers/thermal/{user_space.c => gov_user_space.c}     |  2 +-
- drivers/thermal/thermal_core.c                         |  6 +-----
- drivers/thermal/thermal_helpers.c                      |  3 ++-
- drivers/thermal/thermal_hwmon.c                        |  6 ++++--
- drivers/thermal/{of-thermal.c => thermal_of.c}         | 10 +++++-----
- 11 files changed, 25 insertions(+), 25 deletions(-)
- rename drivers/thermal/{fair_share.c => gov_fair_share.c} (100%)
- rename drivers/thermal/{power_allocator.c => gov_power_allocator.c} (100%)
- rename drivers/thermal/{step_wise.c => gov_step_wise.c} (100%)
- rename drivers/thermal/{user_space.c => gov_user_space.c} (100%)
- rename drivers/thermal/{of-thermal.c => thermal_of.c} (100%)
-
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 9a321dc548c8..286920e06277 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -27,10 +27,6 @@
+ #include "thermal_core.h"
+ #include "thermal_hwmon.h"
+ 
+-MODULE_AUTHOR("Zhang Rui");
+-MODULE_DESCRIPTION("Generic thermal management sysfs support");
+-MODULE_LICENSE("GPL v2");
+-
+ static DEFINE_IDA(thermal_tz_ida);
+ static DEFINE_IDA(thermal_cdev_ida);
+ 
 -- 
 2.20.1
 
