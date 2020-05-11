@@ -2,95 +2,69 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4AEC54E8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8276C38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C267824974
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qR3LGm5F"
+	by mail.kernel.org (Postfix) with ESMTP id 828F624976
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589166480;
+	bh=abxYgNFlEwXNGsZ6KzRy0a5qyRKkv3JxtvsGEpHaz6g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ppzd6s/YNWKG6LaxkhJI/YItNs/jLIwlZFgzAtYb/iq1ToDzrgPzbn1z2zNhMjeoG
+	 ktawSqee3eGTyZnznPK6gjx5lHnndMB2+8Uwv0MtHXwUsmG4j57NvSiXbl1wqKC5ap
+	 j6KHaf3Pk7XMrFyNwzBl72j2pJHXVToPzQM0ASQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgEKDD3 (ORCPT
+        id S1728355AbgEKDH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:03:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56209 "EHLO ozlabs.org"
+        Sun, 10 May 2020 23:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgEKDD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:03:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726661AbgEKDH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 23:07:59 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (c-67-180-217-166.hsd1.ca.comcast.net [67.180.217.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L5NZ5Brhz9sSF;
-        Mon, 11 May 2020 13:03:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589166206;
-        bh=bYkZqtNYinOGGqD45lX+jcNTScgvzj1AUWkrZ4zaLT8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qR3LGm5Fy4mxpj0/wGLUvi1ICj5WmN1PF/mEc++yjkE3vG37ruFhJfFp4d4ib7obc
-         jtf1+EwwsU8DYlvOFO8CR8CZqzfO7LxLELFYE0kq2tsNw5kSAM5JdPR5ofTGJHgomG
-         wiJDfVO5xCHE0X5C+Biv5+i5LowiT91rWhrPz+2RPIT3Lfq/hqvszIsgv4eFSPBEOS
-         fVb0zpLTErjHqN0CWFwzeJodCDe1BqPbyky5PCUNJuBxgFfEibzQ6CWulsFxV88PCk
-         NFE8ITy8TyK0MfX4fZZkW8htDq7bpMuUXQKSda/f2t4SzR6LziB0hriO2XtPlGObns
-         F9+fNaiZX1XjA==
-Date:   Mon, 11 May 2020 13:03:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-Subject: linux-next: build warning after merge of the ipsec-next tree
-Message-ID: <20200511130325.44e65463@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id D55F624974;
+        Mon, 11 May 2020 03:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589166479;
+        bh=abxYgNFlEwXNGsZ6KzRy0a5qyRKkv3JxtvsGEpHaz6g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tD6ftBHV+/dCUNFdV0XFZbv7+/SeqX//OcrEvRt/xU5KfXvkNxcAOLXZ8mKbXpd6B
+         vXIDtn3CHRfTNksR4vz5GWQfZIcHxNLEQhQ/zqgl1iEcLATxabqmgYoTstZ4MclJx+
+         OLQXU07sPvZ+NxqBQvD/PVXwKA0S3axrX45+/HsU=
+Date:   Sun, 10 May 2020 20:07:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Luo bin <luobin9@huawei.com>
+Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
+        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>
+Subject: Re: [PATCH net v3] hinic: fix a bug of ndo_stop
+Message-ID: <20200510200757.13df2439@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200510190108.22847-1-luobin9@huawei.com>
+References: <20200510190108.22847-1-luobin9@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/H0m2nsbdEmsZqM7RA38vAZu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/H0m2nsbdEmsZqM7RA38vAZu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 10 May 2020 19:01:08 +0000 Luo bin wrote:
+> if some function in ndo_stop interface returns failure because of
+> hardware fault, must go on excuting rest steps rather than return
+> failure directly, otherwise will cause memory leak.And bump the
+> timeout for SET_FUNC_STATE to ensure that cmd won't return failure
+> when hw is busy. Otherwise hw may stomp host memory if we free
+> memory regardless of the return value of SET_FUNC_STATE.
+> 
+> Fixes: 51ba902a16e6 ("net-next/hinic: Initialize hw interface")
+> Signed-off-by: Luo bin <luobin9@huawei.com>
 
-Hi all,
-
-After merging the ipsec-next tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
-
-net/ipv4/xfrm4_output.c: In function '__xfrm4_output':
-net/ipv4/xfrm4_output.c:19:21: warning: unused variable 'x' [-Wunused-varia=
-ble]
-   19 |  struct xfrm_state *x =3D skb_dst(skb)->xfrm;
-      |                     ^
-
-Introduced by commit
-
-  2ab6096db2f1 ("xfrm: remove output_finish indirection from xfrm_state_afi=
-nfo")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/H0m2nsbdEmsZqM7RA38vAZu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64wH0ACgkQAVBC80lX
-0Gxo8wf/aTJIp8KoEMmyZ8M7V9uxU1OUygBSgDStKkMHQjMqDwP/qchnW8uKmSzm
-3tr+7tBaNAdlkoVYiPuC1gxRavueiRzEHff0y3a3twCy09LfdC0uRCh3ch5qLLdL
-7nC7e+eVHGQhFj89mzB/GH4ebLQZI8KKVahlshGKEWUZm9nC6IWfTunkT4B6FGK3
-+5Qf+3m5OqS1QOh0mESd6IhsrLKnTTLZIRuNj4fexo+LNayBl3hC73VyXydmB1Dz
-Y/ZyuSI44orJrpN4tsNCU9E53ge/jLf8Wy3uWbuV/7s2y2OLhgz/OzISLcoBY27s
-RYd/7uShQTCWLdShNdJrsMig7Znujw==
-=sD9A
------END PGP SIGNATURE-----
-
---Sig_/H0m2nsbdEmsZqM7RA38vAZu--
+Applied, thank you.
