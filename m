@@ -2,128 +2,125 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFDDC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04473C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E38206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D625B206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OzVpqUU6"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wykyy4kN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgEKTac (ORCPT
+        id S1731449AbgEKTcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731200AbgEKTac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:30:32 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D54C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:30:31 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id p25so5176952pfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gzyfnO/5LbG2mrH2lA0azbgAQiWtK0agPG/QW/aD0JA=;
-        b=OzVpqUU6k4CDMc0nrbShznwLyn+kmnl+BiPHhPbWnikxGiuco8hPSb3nS1q3qW7Cek
-         TlIdfXMHgEChfZXCfsI3of4zCEHuppr5PoCE3ZmpK0SP1LiofuG1NSTRPyOmD0nbKgGD
-         Bwa03tUplrVt+uaafrpI8WO/Kiw8FLdoImebhEbTRHIm2mxwGlr8SIVV8RSntyAW7IIW
-         m9WJ98M8I/GIgMuti/4gM3KJ4GRCV7VPnkIyNoVSwhRvr8uOQ9XfPJNaLkNucRR21ygo
-         7yLopUX/fMQxLY0w5Z54iE/yRdh2wOKRkc5CN/QWkO77VCCiI1CCgHTzJiuY46Yq4gJI
-         1epw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gzyfnO/5LbG2mrH2lA0azbgAQiWtK0agPG/QW/aD0JA=;
-        b=sh+3gLOwemgYqS6ohScmspFw9hf/FO7xF9KD/osAyTyLXDMIV68sQcCuLZb2LGsNJW
-         VHTxVveo3iaxHn/r8mClCNswYA5TaUe/umgcSysUGfDDl+xQ8jCXXsCgAYqeNhf6Hj2m
-         iMPBmjVg+oMRn4xeKbiYZs6I+FFEwBabF1Jn5mAbB+R5BLGCKnGXcUqBh6X97aupNjnr
-         wQO7a0+lYZeT5cttIc2qwIt/+6Bo/+sz6n9VUtiKywE5C15Y7PJFcANw0+zm7Gvl0HkN
-         y7NyQ+70zdCQWaEsJEbe5Ey5mL+AQvG9UUHo4Aj2v+K7tfojeAsZqwVAWZHXdCZ+eJa1
-         i37A==
-X-Gm-Message-State: AGi0PuaiHCIratG7Fxd/FHAoJ/27rX3N5LYl5Q5RDV41cXCycSDJpd5y
-        /ncoBklxoWSSunz5WIKuxFYNTA==
-X-Google-Smtp-Source: APiQypIOtVLmN26sBLQEPnN3hrhyIv6xvI5WifHGysFUwEmFLrhzINvd3EvqA0ARHr6GkqxEp7LIOw==
-X-Received: by 2002:a63:750b:: with SMTP id q11mr15767211pgc.138.1589225431230;
-        Mon, 11 May 2020 12:30:31 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z185sm8726197pgz.26.2020.05.11.12.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 12:30:30 -0700 (PDT)
-Date:   Mon, 11 May 2020 12:31:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-        swboyd@chromium.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, dianders@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Subject: Re: [PATCH v6] iommu/arm-smmu-qcom: Request direct mapping for modem
- device
-Message-ID: <20200511193124.GG20625@builder.lan>
-References: <20200511175532.25874-1-sibis@codeaurora.org>
+        Mon, 11 May 2020 15:32:11 -0400
+Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:32386
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731199AbgEKTcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 15:32:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PkmsPt6s026EoCOvPFvmBUFyJQujJ8f5HRFxCa3uFbHbgh6ubE/RUZcz4ZBD3VHvwj20vXFMeFppjyjJ/qTpeYRqkz6iaJOCGDw9EON5A1FxrR5DDmlzsQ81g0SXM+dm3iyRcZVPIC82y7QLA4PbABxP/08WPS7PGL9synFmQ9oNQG7+RunLCKaXXWFtsUcBVGSsGm6cu4PsEumng4mqgwEah4H/q8bkUq705oUe6jgdJX9XL2p2y2FmJUuykCdaJD9043d2j5TTRg/yWMTSmBe72YVCvXl34MfMPjRYrnXXCeDDZBo3FICLJ86NYMzpQNqbvfyIh10T6QQ5GJECJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fK+qszBePQZd22vqz068pkGQUQypGtBzdjrE1sBA1TI=;
+ b=jIae/1aS4asdo4RMBnHAtrk4Uc8aMbH/abeGZtLN3RgoHbY6n8fm++chtUPwK0HC+En7EwvL9LwSnZb9V8rFhK8FMl5UNTalco8nDENs7MBZvU6Rq/KlnWSFeY+IaaLyWICxel52fcs0wyQgk6cyvFjBR7cPjrxA6Etwjf1Nvhs2eG16uZuS1dvLRy/HeGU2io798FfX6hLAO7MpAf21YJjs/fWPFXg/Rey39XS0hDO7ImVFPFqqvDWXG41U92yQVVcG42M4Fctp2vKOYIjrvt+ZlkghNdGNs7H5vjtE6ecdLfyJaSYZJMQm2DSuKDlKrDnmEhnSSi8TCIfj50eI+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fK+qszBePQZd22vqz068pkGQUQypGtBzdjrE1sBA1TI=;
+ b=Wykyy4kNlZei1F9RTiQtpP+46xC5j1321h8GkdCyBAHMbGPZi9kbuFIVMblumPBGDCuaJTipYhGUnRBi4OGXez+CMvilK0lgQ/RWwet/D0faEd7+AsA5CoMO4u8gTGeVUJIM6wN9cFEHqc2A5+C43nrlYDr+gPkjLrJ+mmTfcG0=
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com (2603:10a6:208:19a::13)
+ by AM0PR04MB6356.eurprd04.prod.outlook.com (2603:10a6:208:17a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
+ 2020 19:32:05 +0000
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::1cab:2a78:51cb:2a00]) by AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::1cab:2a78:51cb:2a00%9]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 19:32:05 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        Marek Vasut <marex@denx.de>
+Subject: RE: Re: signal quality and cable diagnostic
+Thread-Topic: Re: signal quality and cable diagnostic
+Thread-Index: AdYnygHjlwz8mecvTV6Sgw0PGhSTqA==
+Date:   Mon, 11 May 2020 19:32:05 +0000
+Message-ID: <AM0PR04MB70410EA61C984E45615CCF8B86A10@AM0PR04MB7041.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [88.130.52.30]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 15c89018-82df-4792-9e90-08d7f5e1fd01
+x-ms-traffictypediagnostic: AM0PR04MB6356:
+x-microsoft-antispam-prvs: <AM0PR04MB635616DF7B6229D66743456A86A10@AM0PR04MB6356.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iyUqZLywB896OmabTy21MBiXg4ry8AoQtFtxC5ed9NDrxlLrYiGcyx+kSA+Me2c5XtwkChzPVNKXg9PeACoumABFryR8KFtizZ1yVSsSTh7s/KStsuEi8lJmmKQ2yW9cG1Czep9NK1h29TOzmjAqg1h8Nftk6aoAUHsR6+YjZ19ldCHLoN2yNjdyVu3LoyLauBvyjJbrjv3no155JUi7JHNQ0abUbe3c4NS5D3iWXJXNUCf19wdA06F/nfkvbW8oG86Xf9cmZoPKJ2d7KgxCJlpnn4ZwrUC4+sUlvUbGxSoVNk2wodotozkyadefda0yYPvrj4tvMoMaaKNC4JK2Faqn7ijXXBOkOE/Lyj47akrbV32Bjs7FEQaEgee9mIzUE8E2GUCX+3P/UO0ZkwtJ32CQvM2itBEUtQfJTJcik33JfZNp5+Gr8vL49j7eQ7MdJKEwYuV3CD+ANWMUJEYkXl8Gx5Y23RPDflSFkxEWMpwNPCzqAdj500Snqu5wEWtcqB3I4VOT8J9PkgJmlm2ifTFv17LDtjOiPksVQ97vUO2TMtZC3F9Ut7c2oHFwK5HxaM4KeW+as73l5MtjnjLyICJVwUqRoerfPxBuARPO7yk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7041.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(33430700001)(4326008)(7696005)(9686003)(55016002)(44832011)(66946007)(86362001)(2906002)(66556008)(64756008)(76116006)(66476007)(66446008)(52536014)(33656002)(966005)(6506007)(4744005)(8676002)(8936002)(186003)(478600001)(33440700001)(71200400001)(26005)(7416002)(110136005)(54906003)(5660300002)(53546011)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: RHuqAUQnHJBeZwgku2VB+7u2HgVvn4RqqZ9y11Op4Vf/QFEcQF7wJYRS/nAZhQzgRVqyzIYSmAw8WIK+F01cOyUsghDIpjGIThKzFPqM4YHILB1wcDPopXYr2nN1XnT0PAwiJTjLDrJWTtN0UJDe0lzsPgm5N9Y8T9PiNPty2fgpKX9kUlz/KFzU/+FDX24+fHeHIAU51TZAgUhh7my+y9m/ww9uW6GQfgrsJZRzxaHR1x2gwsNeUJTHjDBNRYgAPPag2sxs/KGKu2OjteeqPeRE3cWDkXAp+TNW70x91KJs3Kh1MeGbwKxvtK2L/DJb01CESicz/qoMjhAc9el4l6ng8LAqUhqYZ2jTc2MEr835y3KWiEyO09PwEMnQ4vDAQZdGroXQH4OUPCm20mST7fJ8iJaEwIln/Zx9YqeJer6pNU9svkT5fgp3+FAhxr3McPCBg9RuaBg6cFWb5AdqKBCXGd37dHI4d99o4yLf44I=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511175532.25874-1-sibis@codeaurora.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15c89018-82df-4792-9e90-08d7f5e1fd01
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 19:32:05.5889
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FVHfoMTt10plXaAlkDO4mfBt25Szp3jvtyax0QxmFBUacRWn+Wqjhu0WfFXcSsj4hxNKFvY1lGUhXEfgByaOcjVzlBsBm2V0Kp5UMLCOGfs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6356
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 11 May 10:55 PDT 2020, Sibi Sankar wrote:
+On May 11, 2020 4:33:53 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> Are the classes part of the Open Alliance specification? Ideally we
+> want to report something standardized, not something proprietary to
+> NXP.
+>
+>        Andrew
 
-> The modem remote processor has two access paths to DDR. One path is
-> directly connected to DDR and another path goes through an SMMU. The
-> SMMU path is configured to be a direct mapping because it's used by
-> various peripherals in the modem subsystem. Typically this direct
-> mapping is configured statically at EL2 by QHEE (Qualcomm's Hypervisor
-> Execution Environment) before the kernel is entered.
-> 
-> In certain firmware configuration, especially when the kernel is already
-> in full control of the SMMU, defer programming the modem SIDs to the
-> kernel. Let's add compatibles here so that we can have the kernel
-> program the SIDs for the modem in these cases.
-> 
+Hi Andrew,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Such mechanisms are standardized and supported by pretty much all devices i=
+n the market. The Open Alliance specification is publicly available here: h=
+ttp://www.opensig.org/download/document/218/Advanced_PHY_features_for_autom=
+otive_Ethernet_V1.0.pdf
 
-Regards,
-Bjorn
+As the specification is newer than the 100BASE-T1 spec, do not expect first=
+ generation devices to follow the register definitions as per Open Alliance=
+. But for future devices, also registers should be same across different ve=
+ndors.
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-> 
-> V6
->  * Rebased on Will's for-joerg/arm-smmu/updates
->  * Reword commit message and add more details [Stephen]
-> 
->  drivers/iommu/arm-smmu-qcom.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> index 5bedf21587a56..cf01d0215a397 100644
-> --- a/drivers/iommu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -17,7 +17,9 @@ static const struct of_device_id qcom_smmu_client_of_match[] = {
->  	{ .compatible = "qcom,mdp4" },
->  	{ .compatible = "qcom,mdss" },
->  	{ .compatible = "qcom,sc7180-mdss" },
-> +	{ .compatible = "qcom,sc7180-mss-pil" },
->  	{ .compatible = "qcom,sdm845-mdss" },
-> +	{ .compatible = "qcom,sdm845-mss-pil" },
->  	{ }
->  };
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Christian
