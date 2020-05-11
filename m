@@ -2,165 +2,112 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF46C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EAC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A94762070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1C12070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JEzt9vSq"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="yU79Z16M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEKVzg (ORCPT
+        id S1727987AbgEKV5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727835AbgEKVzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:55:35 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233E1C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:55:30 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so5343622pfc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:55:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=N2k3VluFVmqb0Md48Vp4lnUitQu5LwJqg2jgZWuBL9c=;
-        b=JEzt9vSq/OK6SQi7DpkzAtwK38cH/0tMbEx2UaeIBcMAouECDmTJVeSPnA0bBKE+Ck
-         F8zI0p1T1rt+EGdoMyVb7LnCDsLEuCQzbdVJXI3sOwN3+ZYFFLYPmtHKe6xkbZVsHgYq
-         hmdaAdjKvcW39mx29cCbIMwsMM/z1+9FimibY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=N2k3VluFVmqb0Md48Vp4lnUitQu5LwJqg2jgZWuBL9c=;
-        b=P/HAikyLlJ1oCKrYq2DTQHn1+yilIW9IMwsneQiyd+56O4By3UclC2yBgZdbq/p6T3
-         tMqbcK+mFoWWMrYygVv/nrgbburTXKHbtmZpE/UB00Jl5FYi75N/c6UsogfSdT+HHOmv
-         IjLewsRkkHS0ODn3NXmkuziTxaW34BHqXVgHPMivIEueRifzlVOew4sgFZP70c3Tp9Nm
-         HfHjuUuVHAsGVXsV7jjkJElo2k7940/omwuJ88GuMqKiuF5D9lCakSSOeqEaUi665qb3
-         OLELKVb/q1s9kQPkFt+r6L0ZTybdlqFthpoZ34TUOZK0rZDO2nqzeBDfPsa2K2mSplFB
-         VQrw==
-X-Gm-Message-State: AGi0PuY2msRY0OuTb3glvmciUXWZQazdA+wQTsv1fZaPN3jSV560/uzb
-        R5gZbLcSh7uwhFh/9Z1KBZtT9g==
-X-Google-Smtp-Source: APiQypKEU8uN11yf9TYnC1AEFHrcRWAEoANjLMpB+C7dngKCeCborR02BBGhCXD93tuGZL6Mn0zQIA==
-X-Received: by 2002:a63:6d86:: with SMTP id i128mr9934914pgc.432.1589234129533;
-        Mon, 11 May 2020 14:55:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j35sm8731698pgl.74.2020.05.11.14.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:55:28 -0700 (PDT)
-Date:   Mon, 11 May 2020 14:55:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Mon, 11 May 2020 17:57:30 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:51045 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgEKV53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:57:29 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 6b5c03cc;
+        Mon, 11 May 2020 21:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:in-reply-to:references:mime-version
+        :content-transfer-encoding; s=mail; bh=zEVrJxzNsiJ9BdLH8+Ar4RftJ
+        Zs=; b=yU79Z16M3/E+1Wj1bofhPZM8EboOcIXbVoCQ3o7eKG6SgO+H82xTm/yT5
+        PX4VmPb4oNA+8yosihaCHj9Bu7Viy5QiPlRpJqMSdakywjl6U+/UIDV28tOzafrF
+        a2q5AvQJBA/M7r2pZC0v+jya/ygGx16o0EKJ4y2vSSHi83ljbFT1ZlOP+xrtSaFN
+        TQISVCQqRDtb4es9+Z8n8EsT4e1XDke4WX7SMMqf+9q7t3smgAZdGYGUPYVImtHh
+        LGuIXGGFOJM2yXFwTGCsl1TTjjnwAGZh5tJZnnh4FFjX1IsTIOvVC1xA8E9oRfEq
+        Rw+htyH57AaD+PlAg1y/W/TQ69elA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e6acb82e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Mon, 11 May 2020 21:44:04 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        stable@vger.kernel.org, hjl.tools@gmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-Message-ID: <202005111428.B094E3B76A@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <87eerszyim.fsf_-_@x220.int.ebiederm.org>
- <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
- <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
- <87sgg6v8we.fsf@x220.int.ebiederm.org>
+        David Laight <David.Laight@aculab.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for gcc >= 10
+Date:   Mon, 11 May 2020 15:57:20 -0600
+Message-Id: <20200511215720.303181-1-Jason@zx2c4.com>
+In-Reply-To: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
+References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgg6v8we.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:33:21AM -0500, Eric W. Biederman wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> 
-> > On Sat, May 9, 2020 at 9:30 PM Tetsuo Handa
-> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> >>
-> >> Wouldn't this change cause
-> >>
-> >>         if (fd_binary > 0)
-> >>                 ksys_close(fd_binary);
-> >>         bprm->interp_flags = 0;
-> >>         bprm->interp_data = 0;
-> >>
-> >> not to be called when "Search for the interpreter" failed?
-> >
-> > Good catch. We seem to have some subtle magic wrt the fd_binary file
-> > descriptor, which depends on the recursive behavior.
-> 
-> Yes.  I Tetsuo I really appreciate you noticing this.  This is exactly
-> the kind of behavior I am trying to flush out and keep from being
-> hidden.
-> 
-> > I'm not seeing how to fix it cleanly with the "turn it into a loop".
-> > Basically, that binfmt_misc use-case isn't really a tail-call.
-> 
-> I have reservations about installing a new file descriptor before
-> we process the close on exec logic and the related security modules
-> closing file descriptors that your new credentials no longer give
-> you access to logic.
+GCC 10 appears to have changed -O2 in order to make compilation time
+faster when using -flto, seemingly at the expense of performance, in
+particular with regards to how the inliner works. Since -O3 these days
+shouldn't have the same set of bugs as 10 years ago, this commit
+defaults new kernel compiles to -O3 when using gcc >= 10.
 
-Hm, this does feel odd. In looking at this, it seems like this file
-never gets close-on-exec set, and doesn't have its flags changed from
-its original open:
-                .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-only the UMH path through exec doesn't explicitly open a file by name
-from what I can see, so we'll only have these flags.
+Cc: linux-kbuild@vger.kernel.org
+Cc: x86@kernel.org
+Cc: stable@vger.kernel.org
+Cc: hjl.tools@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jakub Jelinek <jakub@redhat.com>
+Cc: Oleksandr Natalenko <oleksandr@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Laight <David.Laight@aculab.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+Changes v1->v2:
+ - [Oleksandr] Remove O3 dependency on ARC.
 
-> I haven't yet figured out how opening a file descriptor during exec
-> should fit into all of that.
-> 
-> What I do see is that interp_data is just a parameter that is smuggled
-> into the call of search binary handler.  And the next binary handler
-> needs to be binfmt_elf for it to make much sense, as only binfmt_elf
-> (and binfmt_elf_fdpic) deals with BINPRM_FLAGS_EXECFD.
-> 
-> So I think what needs to happen is to rename bprm->interp_data to
-> bprm->execfd, remove BINPRM_FLAGS_EXECFD and make closing that file
-> descriptor free_bprm's responsiblity.
+ init/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yeah, I would agree. As far as the close handling, I don't think there
-is a difference here: it interp_data was closed on the binfmt_misc.c
-error path, and in the new world it would be the exec error path -- both
-would be under the original credentials.
-
-> I hope such a change will make it easier to see all of the pieces that
-> are intereacting during exec.
-
-Right -- I'm not sure which piece should "consume" bprm->execfd though,
-which I think is what you're asking next...
-
-> I am still asking: is the installation of that file descriptor useful if
-> it is not exported passed to userspace as an AT_EXECFD note?
-> 
-> I will dig in and see what I can come up with.
-
-Should binfmt_misc do the install, or can the consuming binfmt do it?
-i.e. when binfmt_elf sees bprm->execfd, does it perform the install
-instead?
-
+diff --git a/init/Kconfig b/init/Kconfig
+index 9e22ee8fbd75..f76ec3ccc883 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1245,7 +1245,8 @@ config BOOT_CONFIG
+ 
+ choice
+ 	prompt "Compiler optimization level"
+-	default CC_OPTIMIZE_FOR_PERFORMANCE
++	default CC_OPTIMIZE_FOR_PERFORMANCE_O3 if GCC_VERSION >= 100000
++	default CC_OPTIMIZE_FOR_PERFORMANCE if (GCC_VERSION < 100000 || CC_IS_CLANG)
+ 
+ config CC_OPTIMIZE_FOR_PERFORMANCE
+ 	bool "Optimize for performance (-O2)"
+@@ -1256,7 +1257,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+ 
+ config CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ 	bool "Optimize more for performance (-O3)"
+-	depends on ARC
+ 	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ 	help
+ 	  Choosing this option will pass "-O3" to your compiler to optimize
 -- 
-Kees Cook
+2.26.2
+
