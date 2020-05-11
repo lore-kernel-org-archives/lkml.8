@@ -2,94 +2,160 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E860C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D9CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7D32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6887F206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589221701;
-	bh=RzPbl8wQZ8HGAW4/nMOFeOxSR6bDXnLR2sTL+EUMJrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MM7m1X21iwcvGRTvh0EIIHKaFqCzeLoiMmRNi1TOimxZo5bfRAdmm2In1BMquNngi
-	 /1raNAIN5Jl+EcL41qiw4q+JOrsHn+QzKyulZhryoS1fZwGW9jN4s9sRbwqBKOn0jw
-	 CfiqBQmoVACsloLWx6Q6vqjW6ae5qODi8b3i6NJE=
+	s=default; t=1589221833;
+	bh=iH2IIk8RRa3Dfi8YMD2r5/fFz7zTxf47LhjGkonFB+s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=I2dXQ6b45X6IP/uRMVCCTJl5WpgaRi3fooxOY5QsA0B4VlKEKLvBX8erEyg6eIajx
+	 x6u86zUBHAl6lMdVccbEbKiUq850tkGBgUsx4hz/ZOELiITpgPw0s9rRBRh/gjX3AT
+	 J3pqAoFP0WZ3CJHUnS4t2uAf4OemPrB8RL4nTEb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731225AbgEKS2U (ORCPT
+        id S1731125AbgEKSac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:28:20 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35394 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729727AbgEKS2T (ORCPT
+        Mon, 11 May 2020 14:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729905AbgEKSac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:28:19 -0400
-Received: by mail-pj1-f68.google.com with SMTP id ms17so8199808pjb.0;
-        Mon, 11 May 2020 11:28:18 -0700 (PDT)
+        Mon, 11 May 2020 14:30:32 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74EAC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:30:31 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id d16so8846181edq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xryJwG59JLB17PZEyr7DCd9/6LaHNOFAsde4B/bIMlo=;
+        b=g/MBnQ5L6r5hjAiqwK3Lokfo6oOGGuM5QvnhrybDQ8sLEIE9qu0oU9BD1e40bwbjAC
+         M+dhC4n2RQfKhcKsZNLukjmvWdhFWzFs4+nXX9dq4XhIt5ePh2P/IqRFgcbyzxa/All8
+         k52VX6HiUg8D6PfcVMkdAhelN3aqeQxt4UIbs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VlcIlbKUmV2Z0lZsaJ/MguViZcS3naoljRGqlVyUKTk=;
-        b=DIdGTt40rE+KhPVZ8Dj006Gm6BxsQlALxQP5iFnMqad06CnyKBo2TT/hrDOxnYB5eU
-         QKUQxkdIvRMTsnfkPeDVYBPXThC2rz9hEpgGt5w/fVi2WxX6Qqq2AXM68E+l6oGN7wCn
-         q9+wZg9Onca0NWptpEUgwMWc+zFFAf5dE40TwEmdvLJhupTkBKU0x9tUNvr8rHv1zHsU
-         GFygIJmx0rDPptG4wkrcH7Za0eOlpbtkBZ+XkrA6x4ECAa1B5acgfVQCpxJN/7Gpbl2p
-         kQQk+SPkpoyr+AbnQ2bbj/ZeWcOwmp6h52lLFT57KeUHJ4aYld6mKEmf22U90wT8XJfm
-         w/4w==
-X-Gm-Message-State: AGi0PuY/bJrNd4JOdVCn/Aamv80l3zYJy8p85Ewbeh+Qrd/mM+96Q69b
-        EbIG/Np4vsIfZRvBE0zdrlfMQfZEhJ4=
-X-Google-Smtp-Source: APiQypISO15fI9lHsIZIQ9EvEPWgAkglXwXVHMxT7KKCWrrAa1iRQnwjK4EfReJHcdP1wqsU+aIbiQ==
-X-Received: by 2002:a17:902:d689:: with SMTP id v9mr16640720ply.328.1589221697990;
-        Mon, 11 May 2020 11:28:17 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a7sm9951520pfg.157.2020.05.11.11.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:28:15 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E966B40605; Mon, 11 May 2020 18:28:14 +0000 (UTC)
-Date:   Mon, 11 May 2020 18:28:14 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     akpm@linux-foundation.org, jeyu@kernel.org, shuah@kernel.org,
-        Markus.Elfring@web.de, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lixuefeng@loongson.cn
-Subject: Re: [PATCH v4 0/4] Fix some issues about kmod
-Message-ID: <20200511182814.GS11244@42.do-not-panic.com>
-References: <1587452704-1299-1-git-send-email-yangtiezhu@loongson.cn>
- <9b50d2b1-2fb4-10a1-5966-5458507a9b05@loongson.cn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xryJwG59JLB17PZEyr7DCd9/6LaHNOFAsde4B/bIMlo=;
+        b=fYdknLbFWuMMXNj96oCYEvtBJUdIJOOHpJd8pXAkVJFXqhL8Vmt9OC8a3KlfIgB6qc
+         YIVxUz9a3tyGuyYmS2Zq4Ud7xgLNKTvWS9AMk2hSEjtEzeCVjshDoiqbJ5nu0W1Lvukt
+         CotuybGmOKjx4wft2Tp3ZkNwlGIQWBK6MLDyzMkEkxBi3A+5NMpb0nNCx1fl3WrHpjW6
+         gl1jfwAK8LjTyarbI1A2ePH5V9Z+pgqtZTe5YpyDnxTMuM6cm+Oib4M1BAj/u3tYMW/8
+         6x8Pq5ZO+CrJjbJ5wraYkgcbhV9s+dxLXDdaFfCxi9DmFhpXYFjdSuMASDiB1WrPVHIB
+         UOpg==
+X-Gm-Message-State: AGi0PuYxkOPJL6K+pyN38oWB+CXyZUYRGCE5yRo3TgIVQm+E1gS2MZNF
+        3TdlQf74c7uuaNcV/g36zUkyM2U2QWM=
+X-Google-Smtp-Source: APiQypLHUUGpJt9BHkMKa3OqnOfRmxbQIpX6fZ+QRNFwISKUxAvFOSP5yk6PURuT7Ul3APGr1CWe4g==
+X-Received: by 2002:a50:9e6a:: with SMTP id z97mr13974085ede.375.1589221830071;
+        Mon, 11 May 2020 11:30:30 -0700 (PDT)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id k21sm1283608ejr.61.2020.05.11.11.30.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 11:30:29 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id w7so12232043wre.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:30:29 -0700 (PDT)
+X-Received: by 2002:a2e:9a54:: with SMTP id k20mr11787437ljj.265.1589221464037;
+ Mon, 11 May 2020 11:24:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b50d2b1-2fb4-10a1-5966-5458507a9b05@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200504230309.237398-1-ndesaulniers@google.com>
+ <CAKwvOdmspKUknbzDn9kY2jMgkFw=Ktvst0ZtwambDOfybqJGWw@mail.gmail.com> <CAHk-=wif=_ZomkWJAmQRCUAMHQ72V3NEQ-OteiPE56K7KoSjbQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wif=_ZomkWJAmQRCUAMHQ72V3NEQ-OteiPE56K7KoSjbQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 11 May 2020 11:24:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whhCBvjXtRiFM2JEZ4XyBmuPprvdo5tpPVBqUhkRszxiQ@mail.gmail.com>
+Message-ID: <CAHk-=whhCBvjXtRiFM2JEZ4XyBmuPprvdo5tpPVBqUhkRszxiQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: support i386 with Clang
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dmitry Golovin <dima@golovin.in>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: multipart/mixed; boundary="000000000000d91fe305a563741a"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 08:59:37PM +0800, Tiezhu Yang wrote:
-> Hi,
-> 
-> Could you please apply the following three patches?
-> 
-> [v4,1/4] selftests: kmod: Use variable NAME in kmod_test_0001()
-> https://lore.kernel.org/patchwork/patch/1227980/
-> 
-> [v4,2/4] kmod: Remove redundant "be an" in the comment
-> https://lore.kernel.org/patchwork/patch/1227982/
-> 
-> [v4,4/4] test_kmod: Avoid potential double free in trigger_config_run_type()
-> https://lore.kernel.org/patchwork/patch/1227978/
+--000000000000d91fe305a563741a
+Content-Type: text/plain; charset="UTF-8"
 
-Andrew,
+On Mon, May 11, 2020 at 11:12 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Would using "__builtin_choose_expr()" be able to avoid this whole issue?
 
-These 3 patches should be fine.
+We actually have a fair amount of "pick expression based on size", so
+with a few helper macros we could make the code look better than the
+case statements too.
 
-I am re-working a replacement proper fix for patch #3, that requires a
-change to the umh. I'll try to iron this out today.
+Something (ENTIRELY UNTESTED!) like the attached patch, perhaps?
 
-  Luis
+NOTE! I only converted one single use to that "pick_size_xyz()" model.
+If this actually works for clang too, we could do the others.
+
+I guess I should just test it, since I have that clang tree.
+
+                  Linus
+
+--000000000000d91fe305a563741a
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_ka2tez6f0>
+X-Attachment-Id: f_ka2tez6f0
+
+IGFyY2gveDg2L2luY2x1ZGUvYXNtL3BlcmNwdS5oIHwgMzEgKysrKysrKysrKysrKysrKy0tLS0t
+LS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9u
+cygtKQoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3BlcmNwdS5oIGIvYXJjaC94
+ODYvaW5jbHVkZS9hc20vcGVyY3B1LmgKaW5kZXggMjI3ODc5N2M3NjlkLi5iNDc5YTBlNjUwZTUg
+MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3BlcmNwdS5oCisrKyBiL2FyY2gveDg2
+L2luY2x1ZGUvYXNtL3BlcmNwdS5oCkBAIC04Niw2ICs4NiwxNyBAQAogLyogRm9yIGFyY2gtc3Bl
+Y2lmaWMgY29kZSwgd2UgY2FuIHVzZSBkaXJlY3Qgc2luZ2xlLWluc24gb3BzICh0aGV5CiAgKiBk
+b24ndCBnaXZlIGFuIGx2YWx1ZSB0aG91Z2gpLiAqLwogZXh0ZXJuIHZvaWQgX19iYWRfcGVyY3B1
+X3NpemUodm9pZCk7CitleHRlcm4gdm9pZCBfX2JhZF9leHByX3NpemUodm9pZCk7CisKKyNkZWZp
+bmUgcGlja190eXBlX2V4cHJlc3Npb24oeCwgZTgsIGUxNiwgZTMyLCBlNjQpCVwKKwlfX2J1aWx0
+aW5fY2hvb3NlX2V4cHIoc2l6ZW9mKHgpPT0xLCBlOCwJCVwKKwlfX2J1aWx0aW5fY2hvb3NlX2V4
+cHIoc2l6ZW9mKHgpPT0yLCBlMTYsCVwKKwlfX2J1aWx0aW5fY2hvb3NlX2V4cHIoc2l6ZW9mKHgp
+PT00LCBlMzIsCVwKKwlfX2J1aWx0aW5fY2hvb3NlX2V4cHIoc2l6ZW9mKHgpPT04LCBlNjQsCVwK
+KwlfX2JhZF9leHByX3NpemUoKSkpKSkKKworI2RlZmluZSBwaWNrX3R5cGVfc3RhdGVtZW50KHgs
+IHM4LCBzMTYsIHMzMiwgczY0KSBcCisJcGlja190eXBlX2V4cHJlc3Npb24oeCwgKHtzODswO30p
+LCAoe3MxNjswO30pLCh7czMyOzA7fSksKHtzNjQ7MDt9KSkKIAogI2RlZmluZSBwZXJjcHVfdG9f
+b3AocXVhbCwgb3AsIHZhciwgdmFsKQkJXAogZG8gewkJCQkJCQlcCkBAIC05NSwyOSArMTA2LDE5
+IEBAIGRvIHsJCQkJCQkJXAogCQlwdG9fdG1wX18gPSAodmFsKTsJCQlcCiAJCSh2b2lkKXB0b190
+bXBfXzsJCQlcCiAJfQkJCQkJCVwKLQlzd2l0Y2ggKHNpemVvZih2YXIpKSB7CQkJCVwKLQljYXNl
+IDE6CQkJCQkJXAorCXBpY2tfdHlwZV9zdGF0ZW1lbnQodmFyLAkJCVwKIAkJYXNtIHF1YWwgKG9w
+ICJiICUxLCJfX3BlcmNwdV9hcmcoMCkJXAogCQkgICAgOiAiK20iICh2YXIpCQkJXAotCQkgICAg
+OiAicWkiICgocHRvX1RfXykodmFsKSkpOwkJXAotCQlicmVhazsJCQkJCVwKLQljYXNlIDI6CQkJ
+CQkJXAorCQkgICAgOiAicWkiICgocHRvX1RfXykodmFsKSkpLAkJXAogCQlhc20gcXVhbCAob3Ag
+IncgJTEsIl9fcGVyY3B1X2FyZygwKQlcCiAJCSAgICA6ICIrbSIgKHZhcikJCQlcCi0JCSAgICA6
+ICJyaSIgKChwdG9fVF9fKSh2YWwpKSk7CQlcCi0JCWJyZWFrOwkJCQkJXAotCWNhc2UgNDoJCQkJ
+CQlcCisJCSAgICA6ICJyaSIgKChwdG9fVF9fKSh2YWwpKSksCQlcCiAJCWFzbSBxdWFsIChvcCAi
+bCAlMSwiX19wZXJjcHVfYXJnKDApCVwKIAkJICAgIDogIittIiAodmFyKQkJCVwKLQkJICAgIDog
+InJpIiAoKHB0b19UX18pKHZhbCkpKTsJCVwKLQkJYnJlYWs7CQkJCQlcCi0JY2FzZSA4OgkJCQkJ
+CVwKKwkJICAgIDogInJpIiAoKHB0b19UX18pKHZhbCkpKSwJCVwKIAkJYXNtIHF1YWwgKG9wICJx
+ICUxLCJfX3BlcmNwdV9hcmcoMCkJXAogCQkgICAgOiAiK20iICh2YXIpCQkJXAotCQkgICAgOiAi
+cmUiICgocHRvX1RfXykodmFsKSkpOwkJXAotCQlicmVhazsJCQkJCVwKLQlkZWZhdWx0OiBfX2Jh
+ZF9wZXJjcHVfc2l6ZSgpOwkJCVwKLQl9CQkJCQkJXAorCQkgICAgOiAicmUiICgocHRvX1RfXyko
+dmFsKSkpKTsJCVwKIH0gd2hpbGUgKDApCiAKIC8qCg==
+--000000000000d91fe305a563741a--
