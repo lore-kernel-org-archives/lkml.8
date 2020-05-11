@@ -2,87 +2,219 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F1FC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892E7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8FC20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589216096;
-	bh=5jw+X8a/R6vFcGmFXw7JIS0WUsW0JoyIYxX+t4OB5Ag=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=y1pcBLCvRWk98qdGiS6OvVT/4+w6C71XPKosszOtWOUHk6u+PPr+DSk3ISEciv3qi
-	 xkFrh9cthYniwmuZvcCsL3wCw2C2qrvDFb3yk49C/AwY43qzxP2FMqEI5MI/AM6eWW
-	 3i0UlPvNjJzcGoIe46YjSPFRwht/Eb3IsFbr1JYM=
+	by mail.kernel.org (Postfix) with ESMTP id 6E590206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgEKQyz (ORCPT
+        id S1730764AbgEKQ4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730730AbgEKQyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:54:54 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FA2206D7;
-        Mon, 11 May 2020 16:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589216094;
-        bh=5jw+X8a/R6vFcGmFXw7JIS0WUsW0JoyIYxX+t4OB5Ag=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gFXE0Qtoo8LjfV8B+CWnmXDMyguZ2dwzxEH9iagTP1mMTZsy9Qb5Xu3/rH8nZAMWQ
-         l7ZDOv2br2MsgYpwYEFWeZCe2mY/NEcAst+rZZldejkuCBToTCYWdbp4+4mm/zSJVI
-         zozb+LfsiOb6/qgXi7EJq1TN+IL8uJQxGHsq08NU=
-Subject: Re: [PATCH 4.14 00/22] 4.14.180-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200508123033.915895060@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d420c85d-5584-13c7-b3f7-45e58329f9a5@kernel.org>
-Date:   Mon, 11 May 2020 10:54:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 11 May 2020 12:56:20 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:44880 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbgEKQ4U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:56:20 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYBiw-0008Db-Jb; Mon, 11 May 2020 10:56:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYBiv-000239-EN; Mon, 11 May 2020 10:56:14 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
+        <202005101929.A4374D0F56@keescook>
+Date:   Mon, 11 May 2020 11:52:41 -0500
+In-Reply-To: <202005101929.A4374D0F56@keescook> (Kees Cook's message of "Sun,
+        10 May 2020 20:15:34 -0700")
+Message-ID: <87y2pytnvq.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200508123033.915895060@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jYBiv-000239-EN;;;mid=<87y2pytnvq.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+l+6Xh4x5nig+D3mtInQozkhcto8/9LHc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from __do_execve_file
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 6:35 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.180 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.180-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Kees Cook <keescook@chromium.org> writes:
 
-Compiled and booted on my test system. No dmesg regressions.
+> On Sat, May 09, 2020 at 02:41:17PM -0500, Eric W. Biederman wrote:
+>> 
+>> Now that security_bprm_set_creds is no longer responsible for calling
+>> cap_bprm_set_creds, security_bprm_set_creds only does something for
+>> the primary file that is being executed (not any interpreters it may
+>> have).  Therefore call security_bprm_set_creds from __do_execve_file,
+>> instead of from prepare_binprm so that it is only called once, and
+>> remove the now unnecessary called_set_creds field of struct binprm.
+>> 
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  fs/exec.c                  | 11 +++++------
+>>  include/linux/binfmts.h    |  6 ------
+>>  security/apparmor/domain.c |  3 ---
+>>  security/selinux/hooks.c   |  2 --
+>>  security/smack/smack_lsm.c |  3 ---
+>>  security/tomoyo/tomoyo.c   |  6 ------
+>>  6 files changed, 5 insertions(+), 26 deletions(-)
+>> 
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 765bfd51a546..635b5085050c 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1635,12 +1635,6 @@ int prepare_binprm(struct linux_binprm *bprm)
+>>  
+>>  	bprm_fill_uid(bprm);
+>>  
+>> -	/* fill in binprm security blob */
+>> -	retval = security_bprm_set_creds(bprm);
+>> -	if (retval)
+>> -		return retval;
+>> -	bprm->called_set_creds = 1;
+>> -
+>>  	retval = cap_bprm_set_creds(bprm);
+>>  	if (retval)
+>>  		return retval;
+>> @@ -1858,6 +1852,11 @@ static int __do_execve_file(int fd, struct filename *filename,
+>>  	if (retval < 0)
+>>  		goto out;
+>>  
+>> +	/* fill in binprm security blob */
+>> +	retval = security_bprm_set_creds(bprm);
+>> +	if (retval)
+>> +		goto out;
+>> +
+>>  	retval = prepare_binprm(bprm);
+>>  	if (retval < 0)
+>>  		goto out;
+>> 
+>
+> Here I go with a Sunday night review, so hopefully I'm thinking better
+> than Friday night's review, but I *think* this patch is broken from
+> the LSM sense of the world in that security_bprm_set_creds() is getting
+> called _before_ the creds actually get fully set (in prepare_binprm()
+> by the calls to bprm_fill_uid(), cap_bprm_set_creds(), and
+> check_unsafe_exec()).
+>
+> As a specific example, see the setting of LSM_UNSAFE_NO_NEW_PRIVS in
+> bprm->unsafe during check_unsafe_exec(), which must happen after
+> bprm_fill_uid(bprm) and cap_bprm_set_creds(bprm), to have a "true" view
+> of the execution privileges. Apparmor checks for this flag in its
+> security_bprm_set_creds() hook. Similarly do selinux, smack, etc...
 
-thanks,
--- Shuah
+I think you are getting prepare_binprm confused with prepare_bprm_creds.
+Understandable given the similarity of their names.
+
+> The security_bprm_set_creds() boundary for LSM is to see the "final"
+> state of the process privileges, and that needs to happen after
+> bprm_fill_uid(), cap_bprm_set_creds(), and check_unsafe_exec() have all
+> finished.
+>
+> So, as it stands, I don't think this will work, but perhaps it can still
+> be rearranged to avoid the called_set_creds silliness. I'll look more
+> this week...
+
+If you look at the flow of the code in __do_execve_file before this
+change it is:
+
+	prepare_bprm_creds()
+        check_unsafe_exec()
+
+	...
+
+        prepare_binprm()
+        	bprm_file_uid()
+                	bprm->cred->euid = current_euid()
+                        bprm->cred->egid = current_egid()
+		security_bprm_set_creds()
+                	for_each_lsm()
+                        	lsm->bprm_set_creds()
+                                	if (called_set_creds)
+                                        	return;
+                                        ...
+		bprm->called_set_creds = 1;
+	...
+
+	exec_binprm()
+        	search_binary_handler()
+                	security_bprm_check()
+                        	tomoyo_bprm_check_security()
+                                ima_bprm_check()
+   			load_script()
+                        	prepare_binprm()
+                                	/* called_set_creds already == 1 */
+                                	bprm_file_uid()
+                                        security_bprm_set_creds()
+			                	for_each_lsm()
+			                        	lsm->bprm_set_creds()
+		                                	if (called_set_creds)
+                		                        	return;
+                                		        ...
+                                search_binary_handler()
+                                	security_bprm_check_security()
+                                        load_elf_binary()
+                                        	...
+                                                setup_new_exec
+                                                ...
+
+
+Assuming you are executing a shell script.
+
+Now bprm_file_uid is written with the assumption that it will be called
+multiple times and it reinitializes all of it's variables each time.
+
+As you can see in above the implementations of bprm_set_creds() only
+really execute before called_set_creds is set, aka the first time.
+They in no way see the final state.
+
+Further when I looked as those hooks they were not looking at the values
+set by bprm_file_uid at all.  There were busy with the values their
+they needed to set in that hook for their particular lsm.
+
+So while in theory I can see the danger of moving above bprm_file_uid
+I don't see anything in practice that would be a problem.
+
+Further by moving the call of security_bprm_set_creds out of
+prepare_binprm int __do_execve_file just before the call of
+prepare_binprm I am just moving the call above binprm_fill_uid
+and nothing else.
+
+So I think you just confused prepare_bprm_creds with prepare_binprm.
+As most of your criticisms appear valid in that case.  Can you take a
+second look?
+
+Thank you,
+Eric
