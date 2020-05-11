@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EA4C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2880FC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22DDF2137B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1176220735
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgEKFrj (ORCPT
+        id S1728299AbgEKFsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 01:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 01:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgEKFri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 01:47:38 -0400
+        id S1725916AbgEKFsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 01:48:11 -0400
 Received: from sekiro (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 326EF20735;
-        Mon, 11 May 2020 05:47:35 +0000 (UTC)
-Date:   Mon, 11 May 2020 07:47:30 +0200
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CDB120735;
+        Mon, 11 May 2020 05:48:08 +0000 (UTC)
+Date:   Mon, 11 May 2020 07:48:03 +0200
 From:   Ludovic Desroches <ludovic.desroches@microchip.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: at_hdmac: Replace zero-length array with
+Subject: Re: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
  flexible-array
-Message-ID: <20200511054730.pfsavov2onak4nf6@sekiro>
-References: <20200507190038.GA15272@embeddedor>
+Message-ID: <20200511054803.yrz4hc4y4z5vscpl@sekiro>
+References: <20200507190046.GA15298@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507190038.GA15272@embeddedor>
+In-Reply-To: <20200507190046.GA15298@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 02:00:38PM -0500, Gustavo A. R. Silva wrote:
+On Thu, May 07, 2020 at 02:00:46PM -0500, Gustavo A. R. Silva wrote:
 > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > 
 > The current codebase makes use of the zero-length array language
@@ -84,22 +84,22 @@ On Thu, May 07, 2020 at 02:00:38PM -0500, Gustavo A. R. Silva wrote:
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 Acked-by: Ludovic Desroches<ludovic.desroches@microchip.com>
 
-Thanks
+Ludovic Desroches
 > ---
->  drivers/dma/at_hdmac_regs.h |    2 +-
+>  drivers/dma/at_xdmac.c |    2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-> index 397692e937b3..80fc2fe8c77e 100644
-> --- a/drivers/dma/at_hdmac_regs.h
-> +++ b/drivers/dma/at_hdmac_regs.h
-> @@ -331,7 +331,7 @@ struct at_dma {
->         struct dma_pool         *dma_desc_pool;
->         struct dma_pool         *memset_pool;
->         /* AT THE END channels table */
-> -       struct at_dma_chan      chan[0];
-> +       struct at_dma_chan      chan[];
+> diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> index bb0eaf38b594..fd92f048c491 100644
+> --- a/drivers/dma/at_xdmac.c
+> +++ b/drivers/dma/at_xdmac.c
+> @@ -212,7 +212,7 @@ struct at_xdmac {
+>         struct clk              *clk;
+>         u32                     save_gim;
+>         struct dma_pool         *at_xdmac_desc_pool;
+> -       struct at_xdmac_chan    chan[0];
+> +       struct at_xdmac_chan    chan[];
 >  };
 > 
->  #define        dma_readl(atdma, name) \
+> 
 > 
