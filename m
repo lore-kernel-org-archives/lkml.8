@@ -3,154 +3,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A15C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93905C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECB120820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDB220720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589218431;
-	bh=Ld6u2nKxuEazMixoxWTsfhtvmt3aD0PMzwYEqn6CJss=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=bQUVt+mMWdDdU9iF758UN0UR3nO0r2B2AfJCDrfIQT1w8bZB+MI5uJd4k339UfD3v
-	 R8tr9mBSdMBDoe23+YxxCqZb6wKzqof6uEu5DxaUVgmh1UEvsS9TedBJTuFEMQcF5w
-	 ESwBXCwNkCq5kNxq8ZH/kc+QG2wKqAQPsRQhBhfU=
+	s=default; t=1589218459;
+	bh=5Z7Qml4RQ3MPjBIIlhjG06U4sRXkHJ7HmXF/gF2FyYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C2Pmgxs+aHt9YdpyZL5Y2Q3H7RE919DLhRr43owaIkpEU4dh6ULcuGebPkmmHDEvd
+	 B2QKON0efa9DGymxjX2UwfLsqFp4ZXOpH/g7nnidaiZOvRfYWsylfH5kPKrnRZEr87
+	 sQo87e4sAmAG1+sn8j3H4eulthYpR0YiJidZ/Lhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgEKRdu (ORCPT
+        id S1731005AbgEKReS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 13:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730215AbgEKRdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:33:49 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1730215AbgEKReS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:34:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88FF720720;
-        Mon, 11 May 2020 17:33:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD55206D6;
+        Mon, 11 May 2020 17:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589218428;
-        bh=Ld6u2nKxuEazMixoxWTsfhtvmt3aD0PMzwYEqn6CJss=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=mG73zVbtKXMszUw6bgydX3SAhe6duep6quJlk89CI/+Xm4uui6ulk3x0p1k9hh/XK
-         xINIg8UyDwXkmNTjQ/P3XK6FHDXZ2Fm1rPUgDKJem0n7GDRW4o58WQOlTn98smyWe/
-         m7D4uoPSjMcawu4bN0Sih6wI1ebqXc56D6SMHzJE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6AE44352271C; Mon, 11 May 2020 10:33:48 -0700 (PDT)
-Date:   Mon, 11 May 2020 10:33:48 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/3] tools/memory-model, Documentation/litmus-test: Sort
- out location of litmus test and README
-Message-ID: <20200511173348.GX2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200323015735.236279-1-joel@joelfernandes.org>
- <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
- <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+        s=default; t=1589218458;
+        bh=5Z7Qml4RQ3MPjBIIlhjG06U4sRXkHJ7HmXF/gF2FyYA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EdQthZ7eA7y0JgM/tZ+KCl24Ng8Bqo+RH6ZUw0/pUa6bsjFROzPLsAdUyLLKhucWD
+         ooStrur1zZCuMCMttUQJo0AlyECjIT+5s8oKGQgXXQRXbmKMR29POVgfK9F3z50oLo
+         YLpV7pljTGX1/UEr6FwPgktdYJ9dM+PjNekvXls4=
+Date:   Mon, 11 May 2020 18:34:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Elver Marco <elver@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in
+ osq_lock
+Message-ID: <20200511173412.GC23081@willie-the-truck>
+References: <20200509161217.GN2869@paulmck-ThinkPad-P72>
+ <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
+ <20200509213654.GO2869@paulmck-ThinkPad-P72>
+ <20200511155812.GB22270@willie-the-truck>
+ <20200511164319.GV2869@paulmck-ThinkPad-P72>
+ <20200511165216.GA23081@willie-the-truck>
+ <20200511172918.GW2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200511172918.GW2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 04:21:02PM +0900, Akira Yokosawa wrote:
-> On Sat, 9 May 2020 12:43:30 +0900, Akira Yokosawa wrote:
-> > Hi Joel,
+On Mon, May 11, 2020 at 10:29:18AM -0700, Paul E. McKenney wrote:
+> On Mon, May 11, 2020 at 05:52:17PM +0100, Will Deacon wrote:
+> > On Mon, May 11, 2020 at 09:43:19AM -0700, Paul E. McKenney wrote:
+> > > On Mon, May 11, 2020 at 04:58:13PM +0100, Will Deacon wrote:
+> > > > On Sat, May 09, 2020 at 02:36:54PM -0700, Paul E. McKenney wrote:
+> > > > > diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+> > > > > index 1f77349..1de006e 100644
+> > > > > --- a/kernel/locking/osq_lock.c
+> > > > > +++ b/kernel/locking/osq_lock.c
+> > > > > @@ -154,7 +154,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+> > > > >  	 */
+> > > > >  
+> > > > >  	for (;;) {
+> > > > > -		if (prev->next == node &&
+> > > > > +		/*
+> > > > > +		 * cpu_relax() below implies a compiler barrier which would
+> > > > > +		 * prevent this comparison being optimized away.
+> > > > > +		 */
+> > > > > +		if (data_race(prev->next) == node &&
+> > > > >  		    cmpxchg(&prev->next, node, NULL) == node)
+> > > > >  			break;
+> > > > 
+> > > > I'm fine with the data_race() placement, but I don't find the comment
+> > > > very helpful. We assign the result of a READ_ONCE() to 'prev' in the
+> > > > loop, so I don't think that the cpu_relax() is really relevant.
+> > > 
+> > > Suppose that the compiler loaded a value that was not equal to "node".
+> > > In that case, the cmpxchg() won't happen, so something else must force
+> > > the compiler to do the reload in order to avoid an infinite loop, right?
+> > > Or am I missing something here?
 > > 
-> > Sorry for the late response but I've noticed some glitches.
-> >  
-> > On Sun, 22 Mar 2020 21:57:32 -0400, Joel Fernandes (Google) wrote:
-> >> Move MP+onceassign+derefonce to the new Documentation/litmus-tests/rcu/
-> >> directory.
+> > Then we just go round the loop and reload prev:
 > > 
-> > MP+onceassign+derefonce.litmus is called out in
-> > tools/memory-model/Documentation/recipes.txt as a representative example
-> > of RCU related litmus test.
+> > 	prev = READ_ONCE(node->prev);
 > > 
-> > So I think it should be kept under tools/memory-model/litmus-tests.
-> > 
-> > Further RCU-related litmus tests can be added under Documentation/litmus-tests/.
-> > 
-> > IIUC, this change is not picked up by tip tree yet. So we have time to respin
-> > the series targeting v5.9.
-> > 
-> >>
-> >> More RCU-related litmus tests would be added here.
-> >>
-> >> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >>
-> >> ---
-> >> Cc: vpillai@digitalocean.com
-> >>
-> >>  Documentation/litmus-tests/README                        | 9 +++++++++
-> > 
-> > Please note that later patches to add atomic litmus tests under
-> > Documentation/litmus-tests/ by Boqun put README as
-> > Documentation/litums-tests/atomic/README.
-> > 
-> > This patch's location of RCU's README as Documentation/litmus-tests/README
-> > looks asymmetric to me.
-> > 
-> > I'm OK with either merging atomic's README with the top-level one or
-> > moving RCU's README to under Documentation/litmus-tests/rcu.
-> > 
-> > Joel, Boqum, can you sort out the location of README?
+> > which should be enough to stop the compiler, no?
 > 
-> So something like this?
-> 
-> Patch 1/3 is an independent typo fix in recipes.txt.
-> Patch 2/3 reverts the MP+onceassign+derefonce relocation.
-> Patch 3/3 merges atomic's README into the top-level one.
-> 
-> This is relative to -rcu's lkmm branch.
-> 
-> Thoughts?
+> Yes, that would also work.  Either have the cpu_relax() or a barrier()
+> or whatever on the one hand, or, as you say, turn the data_race() into
+> a READ_ONCE().  I personally prefer the READ_ONCE() myself, unless that
+> would undesirably suppress other KCSAN warnings.
 
-Looks plausible to me, and thank you for reviewing this.
+No, I mean here is the code after this patch is applied:
 
-Joel, thoughts?
+	for (;;) {
+		if (data_race(prev->next) == node &&
+		    cmpxchg(&prev->next, node, NULL) == node)
+			break;
 
-							Thanx, Paul
+		/*
+		 * We can only fail the cmpxchg() racing against an unlock(),
+		 * in which case we should observe @node->locked becomming
+		 * true.
+		 */
+		if (smp_load_acquire(&node->locked))
+			return true;
 
->         Thanks, Akira
-> --
-> Akira Yokosawa (3):
->   tools/memory-model: Fix reference to litmus test in recipes.txt
->   Revert "Documentation: LKMM: Move MP+onceassign+derefonce to new
->     litmus-tests/rcu/"
->   Documentation/litmus-tests: Merge atomic's README into top-level one
-> 
->  Documentation/litmus-tests/README             | 22 ++++++++++++++++---
->  Documentation/litmus-tests/atomic/README      | 16 --------------
->  tools/memory-model/Documentation/recipes.txt  |  2 +-
->  .../MP+onceassign+derefonce.litmus            |  0
->  tools/memory-model/litmus-tests/README        |  3 +++
->  5 files changed, 23 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/litmus-tests/atomic/README
->  rename {Documentation/litmus-tests/rcu => tools/memory-model/litmus-tests}/MP+onceassign+derefonce.litmus (100%)
-> 
-> -- 
-> 2.17.1
-> 
-> 
+		cpu_relax();
+
+		/*
+		 * Or we race against a concurrent unqueue()'s step-B, in which
+		 * case its step-C will write us a new @node->prev pointer.
+		 */
+		prev = READ_ONCE(node->prev);
+	}
+
+I'm saying that this READ_ONCE at the end of the loop should be sufficient
+to stop the compiler making value assumptions about prev->next. Do you
+agree?
+
+Will
