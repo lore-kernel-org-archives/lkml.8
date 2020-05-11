@@ -2,93 +2,96 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08318C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AF4C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E204620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9996A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c3U4wuy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbgEKRCC convert rfc822-to-8bit (ORCPT
+        id S1730809AbgEKRCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:02:02 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33853 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730624AbgEKRCA (ORCPT
+        Mon, 11 May 2020 13:02:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730066AbgEKRCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:02:00 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 6C91EC0008;
-        Mon, 11 May 2020 17:01:57 +0000 (UTC)
-Date:   Mon, 11 May 2020 19:01:56 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
-        vigneshr@ti.com, sumit.semwal@linaro.org,
-        linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH 2/3] nand: brcmnand: fix CS0 layout
-Message-ID: <20200511190156.51dcc316@xps13>
-In-Reply-To: <20200510151406.2527856-2-noltari@gmail.com>
-References: <20200510151406.2527856-1-noltari@gmail.com>
-        <20200510151406.2527856-2-noltari@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 11 May 2020 13:02:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A3FC061A0C;
+        Mon, 11 May 2020 10:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Hy07Ws6ek9XvAGJzrptGNVmN+sgjs2KIi/oCXeVqo9E=; b=c3U4wuy0ttwAXhwRpOyq47EcOS
+        R6BOJ5hTKfV9cW8xiSDAIUq0HXFikJF4ynwAq2vypi9olfTDqkb8ufZMT5CdzATb4pwn0Qk9J7SPT
+        7BH7P/aQYee+IokeeKf35kRg9Wmd7JuXGNX9J+h1igQwb86BgPLoijcEkBNddzK2nN5fn85jy8Vyt
+        +SJyixpxAMl+sc5RquVfvSaqZYi5y8y8ukaTlE7TPPhj7mPTbxr6gjm9iNY3oHOE346HsINHrmgF9
+        px9am0ZSFLIKDsibuJ5+DooCPkne6W5heGMWIZYD5BJEurvKKcpF722OXItxoehCgllZpODKHto9m
+        mF7LkNEg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYBol-0002Do-R6; Mon, 11 May 2020 17:02:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DC87C304123;
+        Mon, 11 May 2020 19:02:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CBF5329D8226A; Mon, 11 May 2020 19:02:12 +0200 (CEST)
+Date:   Mon, 11 May 2020 19:02:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
+        x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200511170212.GI2957@hirez.programming.kicks-ass.net>
+References: <20200508144043.13893-1-joro@8bytes.org>
+ <20200508192000.GB2957@hirez.programming.kicks-ass.net>
+ <20200508213407.GT8135@suse.de>
+ <20200509092516.GC2957@hirez.programming.kicks-ass.net>
+ <20200510011157.GU16070@bombadil.infradead.org>
+ <20200511073134.GD2957@hirez.programming.kicks-ass.net>
+ <20200511155204.GW16070@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511155204.GW16070@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
-
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Sun, 10 May 2020
-17:14:05 +0200:
-
-> Only v3.3-v5.0 have a different CS0 layout.
-> v3.3- controllers use the same layout for every CS.
-
-I had a hard time what you meant here, just because of the trailing
-dash. 
-
-    "Controllers before v3.3..."
-
-would be more understandable.
-
-Also please add a Fixes/Cc: stable tag here.
-
+On Mon, May 11, 2020 at 08:52:04AM -0700, Matthew Wilcox wrote:
+> On Mon, May 11, 2020 at 09:31:34AM +0200, Peter Zijlstra wrote:
+> > On Sat, May 09, 2020 at 06:11:57PM -0700, Matthew Wilcox wrote:
+> > > Iterating an XArray (whether the entire thing
+> > > or with marks) is RCU-safe and faster than iterating a linked list,
+> > > so this should solve the problem?
+> > 
+> > It can hardly be faster if you want all elements -- which is I think the
+> > case here. We only call into this if we change an entry, and then we
+> > need to propagate that change to all.
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 6a08dd07b058..72b268d8e3a4 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -606,8 +606,9 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
->  	} else {
->  		ctrl->cs_offsets = brcmnand_cs_offsets;
->  
-> -		/* v5.0 and earlier has a different CS0 offset layout */
-> -		if (ctrl->nand_version <= 0x0500)
-> +		/* v3.3-5.0 have a different CS0 offset layout */
-> +		if (ctrl->nand_version >= 0x0303 &&
-> +		    ctrl->nand_version <= 0x0500)
->  			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
->  	}
->  
+> Of course it can be faster.  Iterating an array is faster than iterating
+> a linked list because caches.  While an XArray is a segmented array
+> (so slower than a plain array), it's plainly going to be faster than
+> iterating a linked list.
 
-
-Thanks,
-Miquèl
+Fair enough, mostly also because the actual work (setting a single PTE)
+doesn't dominate in this case.
