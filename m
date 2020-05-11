@@ -2,58 +2,79 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA5C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FEFC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55BB206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EE6206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbgEKUnN (ORCPT
+        id S1731949AbgEKUn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731932AbgEKUnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:43:11 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20287C061A0C;
-        Mon, 11 May 2020 13:43:11 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A0FD3120ED540;
-        Mon, 11 May 2020 13:43:10 -0700 (PDT)
-Date:   Mon, 11 May 2020 13:43:09 -0700 (PDT)
-Message-Id: <20200511.134309.870356538874716906.davem@davemloft.net>
-To:     joe@perches.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+        Mon, 11 May 2020 16:43:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28138 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729517AbgEKUnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:43:24 -0400
+IronPort-SDR: /dwEkPbKT/nBde8ZLqWuy5ssHs8RU+2/ble1EyAvhYA3t9l0fXHofOZ/zNxg74aWclOc16m/E6
+ COPN5GCfBZ1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 13:43:24 -0700
+IronPort-SDR: UpZl4EjoBBil30FlpvxxjWI6R6yrWJy/OcaM0MjAcBg1fwt+GXXF10SbPBgmfJbuBFTt78+NM5
+ +AgfM8ZVxTjQ==
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="409047494"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.97.196]) ([10.254.97.196])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 13:43:23 -0700
+Subject: Re: [PATCH v2 08/10] x86/resctrl: Merge AMD/Intel parse_bw() calls
+To:     James Morse <james.morse@arm.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] checkpatch: warn about uses of ENOTSUPP
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <c4c6fee41ceb2eb4b583df37ad0d659357cd81d8.camel@perches.com>
-References: <20200511170807.2252749-1-kuba@kernel.org>
-        <c4c6fee41ceb2eb4b583df37ad0d659357cd81d8.camel@perches.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Babu Moger <Babu.Moger@amd.com>
+References: <20200430170400.21501-1-james.morse@arm.com>
+ <20200430170400.21501-9-james.morse@arm.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <3db422b2-48d4-2365-dc8f-aabc11abc5d4@intel.com>
+Date:   Mon, 11 May 2020 13:43:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200430170400.21501-9-james.morse@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 13:43:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Date: Mon, 11 May 2020 10:16:34 -0700
+Hi James,
 
-> No worries here and it's not worth a respin, but
-> typically the patch changelog goes below the --- line.
+On 4/30/2020 10:03 AM, James Morse wrote:
+> Now that we've explained arch_needs_linear to resctrl, the parse_bw()
+> calls are almost the same between AMD and Intel.
+> 
+> The difference is '!is_mba_sc()', which is not checked on AMD. This
+> will always be true on AMD CPUs as mba_sc cannot be enabled as
+> is_mba_linear() is false.
+> 
+> Removing this duplication means user-space visible behaviour and
+> error messages are not validated or generated in different places.
+> 
+> CC: Babu Moger <Babu.Moger@amd.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
 
-I ask people explicitly to keep the changelog in the commit message
-proper, the more information we have in the GIT history the better.
+Thank you very much.
+
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+
+Reinette
