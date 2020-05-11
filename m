@@ -2,360 +2,113 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8937C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F661C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F37D206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:43:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iG294TZ8"
+	by mail.kernel.org (Postfix) with ESMTP id 2880B207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgEKMni (ORCPT
+        id S1729941AbgEKMoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729832AbgEKMnf (ORCPT
+        Mon, 11 May 2020 08:44:07 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:45347 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgEKMoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:43:35 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71816C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:43:35 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id g16so6958365qtp.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o4SNxN2a4GN4w0hp5AlLi4G8AluIsrQ7+PBJOL3vihk=;
-        b=iG294TZ8yidGFHZCDHBq7971UjDJpfr7kQXWgQ3Rtm6AfViavOj+yWm1lJuGVC6eEr
-         8HtOkrDs7xTZp0hIyNToKFmVbRe/81PNY7SWBGCYYXZApQ5C0zdkhswwa02RD8lwoYXl
-         BnfXDGmhC0/rwtsvyCZAsgUgbj1nn6Kzcjg4SttOBIYcSlwZi+hthQeWJRG7hXNS7Fwv
-         753N94QTiyAXrq+hGHah5RxBMBySrs/i7bfuLNaQMisSkGnlSPqdQWgau4Wvwam1m5Hx
-         k1bzG8i1JVNjiHegDf35+2AEhNCwuDPIwkLKZu5TrFsF39/yS/Amu6nveALWpj+eDqrw
-         6ekQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4SNxN2a4GN4w0hp5AlLi4G8AluIsrQ7+PBJOL3vihk=;
-        b=ILh8PXt7ibDp4w1D2Qzty07SK2MfCmRakDLMp6OJE7PWa3diERlV8sWsD3Su4Uibvi
-         y1z2ZBO4velFpnSniyvRhRjFY5fogKcNS85u0OQUTl21YuCcFMiHS/TETcoY8u26l+Yh
-         ERdFGLLSgsIhtzAeaORVDnU32pkBgAlDEEoPOEfKuQhUPDjKl1z6XK8LylfM7w5XoJd4
-         ZLPn2cOnVZ7Y+KKgODNfVG1iHE059N86lfSQhjRwB2j8FxRKr09FiMAo9aKnTMBoJCoO
-         R+NVt4ciN6Bm85cHPiWYzTZyn2JCScl1jT7HK2inZ677yvqdg9vNtHsZKYwYtgUi0wGm
-         gMLg==
-X-Gm-Message-State: AGi0Pua8j6Z1KDmev5qXFzq6J2u7+JPJcZh+xmPSWC7qihq0ooO0zEFT
-        Mx76NijJnLAjSuTkSP+Us52ZBiD3EMXIjkrdpE798g==
-X-Google-Smtp-Source: APiQypLxWnWBejHuxheVClg52Wbnthyvkqx5hvIbyW8Wrlmw5P/bcod8joWA1HXygSNtZPQhEli3Vk7O9DHn3bICv5c=
-X-Received: by 2002:ac8:6642:: with SMTP id j2mr16145758qtp.158.1589201014239;
- Mon, 11 May 2020 05:43:34 -0700 (PDT)
+        Mon, 11 May 2020 08:44:07 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MOzGc-1jkAUS32IG-00PQ2t; Mon, 11 May 2020 14:44:04 +0200
+Received: by mail-qk1-f172.google.com with SMTP id s186so7662073qkd.4;
+        Mon, 11 May 2020 05:44:04 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaIsogpDW4q0xfIfh2nLLDItGl3HD4VDuhTGW08gi+f/xDp5E9p
+        Gx9Ln2nXu7Dp2huGzlFvqP7aEMDXupeYft+tGNc=
+X-Google-Smtp-Source: APiQypJj5dbLl2D8uRc+Ry1heWpkBlw/Bp5L9Wsf0VuOnzzkwLnibuXV3LsJgJmP788MknPtCTQN8rBbz17c2WDRPWk=
+X-Received: by 2002:a37:c96:: with SMTP id 144mr13680641qkm.138.1589201043482;
+ Mon, 11 May 2020 05:44:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511023111.15310-1-walter-zh.wu@mediatek.com> <CACT4Y+YWNwTSoheJhc3nMdQi9m719F3PzpGo3TfRY3zAg9EwuQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+YWNwTSoheJhc3nMdQi9m719F3PzpGo3TfRY3zAg9EwuQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 May 2020 14:43:22 +0200
-Message-ID: <CACT4Y+bO1Zg_jgFHbOWgp7fLAADOQ_-AZmjEHz0WG7=oyOt4Gg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+References: <20200508100100.20740-1-grygorii.strashko@ti.com>
+ <20200508100100.20740-3-grygorii.strashko@ti.com> <CAK8P3a0vewSiFc4rXu43_bs_A85EYx12_YuyBaU3PYJ1HszE=w@mail.gmail.com>
+ <6614f29d-1796-18d9-9b78-214f56964a35@ti.com>
+In-Reply-To: <6614f29d-1796-18d9-9b78-214f56964a35@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 May 2020 14:43:47 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a19RC1hPZkLiGCEHFuHDNxNLiAg34RdbBZ=gxDhRg4RpA@mail.gmail.com>
+Message-ID: <CAK8P3a19RC1hPZkLiGCEHFuHDNxNLiAg34RdbBZ=gxDhRg4RpA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] soc: ti: add k3 platforms chipid module driver
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wPzum95NXpE728ysndebC9ABEw3kiSk6N1VPe2lsUP1a2SHFC8u
+ ZBahnPzRO0bbtflhNvy2BOlFbakk9ShIPDNbm+fXch9yDKlcczcSVhQIX9+daJMVV5568VO
+ o49K2CL0eGD60jjNtPMTPacqZCheBw3NvRpiH3gx73I09VbhJbJJYgH/P2eRVEh/dNNo29D
+ /4xZc5Qvy3UxzvDwdgWDw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8T/FTbHk/CE=:gqjAp2ER7SwEAc2ritTiOQ
+ viTpkGFgZiU+L0k1FSywlqR/TRE4s5mQQm8w/g7XNWobZjRO0XQBn+Zhjt0fnKbLKJTVyaD8w
+ HWiJxqHTiXnK1loAPZr+jeC+VDVaAvbIU00Hxw3/c0bXFWXSgwTStnDitj/mrb6lnvxmcLGm1
+ LrHsuZpnhZstQaN+MjeMuOM+7bAwPnowqM8O1CnnAcB9sVM2UH6wsQE1SCRauzsW7AWqIN8Zu
+ Y7j4tD46h4Aj0L6buBsLPUaZaQjric1wNA4SD7z05wCgNaB8NJFcPQKD3LKbXMST+VTuW4Pq+
+ 0jAXL2VhHE0ddY2Gtf7Ps4ej4vjCFyeRyTXjT7kybA0Ed4WxINBjSnv4lRtMzjzzxu4azHhDi
+ H1am1CFB2+sYeUAl6iZ4yWvxpY8kIImsAi79HL/12K7ZyOvB8kbkwW+44OQ6FA+dU84ipbtin
+ /7Znz/QNFDD3EXAtoVbhpwCtYOlHx59Z8tNsAhJ8Kv7vemgT/32vHdn0mA1zPjbfkDvcwDsyY
+ JXsTttotUiZS4fPSvH2fW6+PDeQdlP6GRjlE5wxsmAd1nVA72RW/Zuseau0tD7n63Cgv6ELyS
+ DJ6GqaXyRvDoWepa90eUunQRa1zaxhQc8hiNA9ioXo8ATOYvmMaFqAXj6/eFTjPOJHOFKG0ML
+ XsMkqIPVJoAyYaYkSVMds3HKbYimesFXzzF40cNfCbXiVl3CVredoQl2iNht6rrJC3mTUBP2E
+ KibVpfGiL3gwP6Xo/RhTxAT8BtZFB1j0esRgfFZpOM8xn0qnWQAIrIiNMKvxJBa14jjcIjNSm
+ igR+s8K+Ua+HTl70X2IrQRtxSuI8thn0DCURg+jBGMCquELTXI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 2:31 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+On Mon, May 11, 2020 at 1:11 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 >
-> On Mon, May 11, 2020 at 4:31 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > This feature will record first and last call_rcu() call stack and
-> > print two call_rcu() call stack in KASAN report.
-> >
-> > When call_rcu() is called, we store the call_rcu() call stack into
-> > slub alloc meta-data, so that KASAN report can print rcu stack.
-> >
-> > It doesn't increase the cost of memory consumption. Because we don't
-> > enlarge struct kasan_alloc_meta size.
-> > - add two call_rcu() call stack into kasan_alloc_meta, size is 8 bytes.
-> > - remove free track from kasan_alloc_meta, size is 8 bytes.
-> >
-> > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> > [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
-> >
-> > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Alexander Potapenko <glider@google.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Josh Triplett <josh@joshtriplett.org>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > ---
-> >  include/linux/kasan.h |  2 ++
-> >  kernel/rcu/tree.c     |  3 +++
-> >  lib/Kconfig.kasan     |  2 ++
-> >  mm/kasan/common.c     |  4 ++--
-> >  mm/kasan/generic.c    | 29 +++++++++++++++++++++++++++++
-> >  mm/kasan/kasan.h      | 19 +++++++++++++++++++
-> >  mm/kasan/report.c     | 21 +++++++++++++++++----
-> >  7 files changed, 74 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> > index 31314ca7c635..23b7ee00572d 100644
-> > --- a/include/linux/kasan.h
-> > +++ b/include/linux/kasan.h
-> > @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
-> >
-> >  void kasan_cache_shrink(struct kmem_cache *cache);
-> >  void kasan_cache_shutdown(struct kmem_cache *cache);
-> > +void kasan_record_aux_stack(void *ptr);
-> >
-> >  #else /* CONFIG_KASAN_GENERIC */
-> >
-> >  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
-> >  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> > +static inline void kasan_record_aux_stack(void *ptr) {}
-> >
-> >  #endif /* CONFIG_KASAN_GENERIC */
-> >
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 06548e2ebb72..de872b6cc261 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -57,6 +57,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/sched/isolation.h>
-> >  #include <linux/sched/clock.h>
-> > +#include <linux/kasan.h>
-> >  #include "../time/tick-internal.h"
-> >
-> >  #include "tree.h"
-> > @@ -2694,6 +2695,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >                 trace_rcu_callback(rcu_state.name, head,
-> >                                    rcu_segcblist_n_cbs(&rdp->cblist));
-> >
-> > +       kasan_record_aux_stack(head);
-> > +
-> >         /* Go handle any RCU core processing required. */
-> >         if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
-> >             unlikely(rcu_segcblist_is_offloaded(&rdp->cblist))) {
-> > diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> > index 81f5464ea9e1..56a89291f1cc 100644
-> > --- a/lib/Kconfig.kasan
-> > +++ b/lib/Kconfig.kasan
-> > @@ -58,6 +58,8 @@ config KASAN_GENERIC
-> >           For better error detection enable CONFIG_STACKTRACE.
-> >           Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
-> >           (the resulting kernel does not boot).
-> > +         Currently CONFIG_KASAN_GENERIC will print first and last call_rcu()
-> > +         call stack. It doesn't increase the cost of memory consumption.
-> >
-> >  config KASAN_SW_TAGS
-> >         bool "Software tag-based mode"
-> > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > index 2906358e42f0..8bc618289bb1 100644
-> > --- a/mm/kasan/common.c
-> > +++ b/mm/kasan/common.c
-> > @@ -41,7 +41,7 @@
-> >  #include "kasan.h"
-> >  #include "../slab.h"
-> >
-> > -static inline depot_stack_handle_t save_stack(gfp_t flags)
-> > +depot_stack_handle_t kasan_save_stack(gfp_t flags)
-> >  {
-> >         unsigned long entries[KASAN_STACK_DEPTH];
-> >         unsigned int nr_entries;
-> > @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
-> >  static inline void set_track(struct kasan_track *track, gfp_t flags)
-> >  {
-> >         track->pid = current->pid;
-> > -       track->stack = save_stack(flags);
-> > +       track->stack = kasan_save_stack(flags);
-> >  }
-> >
-> >  void kasan_enable_current(void)
-> > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > index 56ff8885fe2e..b86880c338e2 100644
-> > --- a/mm/kasan/generic.c
-> > +++ b/mm/kasan/generic.c
-> > @@ -325,3 +325,32 @@ DEFINE_ASAN_SET_SHADOW(f2);
-> >  DEFINE_ASAN_SET_SHADOW(f3);
-> >  DEFINE_ASAN_SET_SHADOW(f5);
-> >  DEFINE_ASAN_SET_SHADOW(f8);
-> > +
-> > +void kasan_record_aux_stack(void *addr)
-> > +{
-> > +       struct page *page = kasan_addr_to_page(addr);
-> > +       struct kmem_cache *cache;
-> > +       struct kasan_alloc_meta *alloc_info;
-> > +       void *object;
-> > +
-> > +       if (!(page && PageSlab(page)))
-> > +               return;
-> > +
-> > +       cache = page->slab_cache;
-> > +       object = nearest_obj(cache, page, addr);
-> > +       alloc_info = get_alloc_info(cache, object);
-> > +
-> > +       if (!alloc_info->rcu_stack[0])
-> > +               /* record first call_rcu() call stack */
-> > +               alloc_info->rcu_stack[0] = kasan_save_stack(GFP_NOWAIT);
-> > +       else
-> > +               /* record last call_rcu() call stack */
-> > +               alloc_info->rcu_stack[1] = kasan_save_stack(GFP_NOWAIT);
-> > +}
-> > +
-> > +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
-> > +                                               u8 idx)
-> > +{
-> > +       return container_of(&alloc_info->rcu_stack[idx],
-> > +                                               struct kasan_track, stack);
-> > +}
-> > diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> > index e8f37199d885..1cc1fb7b0de3 100644
-> > --- a/mm/kasan/kasan.h
-> > +++ b/mm/kasan/kasan.h
-> > @@ -96,15 +96,28 @@ struct kasan_track {
-> >         depot_stack_handle_t stack;
-> >  };
-> >
-> > +#ifdef CONFIG_KASAN_GENERIC
-> > +#define SIZEOF_PTR sizeof(void *)
+> Hi Arnd,
 >
-> Please move this to generic.c closer to kasan_set_free_info.
-> Unnecessary in the header.
+> On 09/05/2020 01:17, Arnd Bergmann wrote:
+> > On Fri, May 8, 2020 at 12:01 PM Grygorii Strashko
+> > <grygorii.strashko@ti.com> wrote:
+> >
+> >> +static int __init k3_chipinfo_init(void)
+> >> +{
+> >> +       struct soc_device_attribute *soc_dev_attr;
+> >> +       struct soc_device *soc_dev;
+> >> +       struct device_node *node;
+> >> +       struct regmap *regmap;
+> >> +       u32 partno_id;
+> >> +       u32 variant;
+> >> +       u32 jtag_id;
+> >> +       u32 mfg;
+> >> +       int ret;
+> >> +
+> >> +       node = of_find_compatible_node(NULL, NULL, "ti,am654-chipid");
+> >> +       if (!node)
+> >> +               return -ENODEV;
+> >
+> > This will fail the initcall and print a warning when the kernel runs on any
+> > other SoC. Would it be possible to just make this a platform_driver?
+> >
+> > If not, I think you should silently return success when the device
+> > node is absent.
 >
-> > +#define KASAN_NR_RCU_CALL_STACKS 2
->
-> Since KASAN_NR_RCU_CALL_STACKS is only used once below, you could as
-> well use 2 instead of it.
-> Reduces level of indirection and cognitive load.
->
-> > +#else /* CONFIG_KASAN_GENERIC */
-> >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> >  #define KASAN_NR_FREE_STACKS 5
-> >  #else
-> >  #define KASAN_NR_FREE_STACKS 1
-> >  #endif
-> > +#endif /* CONFIG_KASAN_GENERIC */
-> >
-> >  struct kasan_alloc_meta {
-> >         struct kasan_track alloc_track;
-> > +#ifdef CONFIG_KASAN_GENERIC
-> > +       /*
-> > +        * call_rcu() call stack is stored into struct kasan_alloc_meta.
-> > +        * The free stack is stored into freed object.
-> > +        */
-> > +       depot_stack_handle_t rcu_stack[KASAN_NR_RCU_CALL_STACKS];
-> > +#else
-> >         struct kasan_track free_track[KASAN_NR_FREE_STACKS];
-> > +#endif
-> >  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> >         u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
-> >         u8 free_track_idx;
-> > @@ -159,16 +172,22 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
-> >
-> >  struct page *kasan_addr_to_page(const void *addr);
-> >
-> > +depot_stack_handle_t kasan_save_stack(gfp_t flags);
-> > +
-> >  #if defined(CONFIG_KASAN_GENERIC) && \
-> >         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
-> >  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
-> >  void quarantine_reduce(void);
-> >  void quarantine_remove_cache(struct kmem_cache *cache);
-> > +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
-> > +                       u8 idx);
-> >  #else
-> >  static inline void quarantine_put(struct kasan_free_meta *info,
-> >                                 struct kmem_cache *cache) { }
-> >  static inline void quarantine_reduce(void) { }
-> >  static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
-> > +static inline struct kasan_track *kasan_get_aux_stack(
-> > +                       struct kasan_alloc_meta *alloc_info, u8 idx) { return NULL; }
-> >  #endif
-> >
-> >  #ifdef CONFIG_KASAN_SW_TAGS
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 80f23c9da6b0..f16a1a210815 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -105,9 +105,13 @@ static void end_report(unsigned long *flags)
-> >         kasan_enable_current();
-> >  }
-> >
-> > -static void print_track(struct kasan_track *track, const char *prefix)
-> > +static void print_track(struct kasan_track *track, const char *prefix,
-> > +                                               bool is_callrcu)
-> >  {
-> > -       pr_err("%s by task %u:\n", prefix, track->pid);
-> > +       if (is_callrcu)
-> > +               pr_err("%s:\n", prefix);
-> > +       else
-> > +               pr_err("%s by task %u:\n", prefix, track->pid);
-> >         if (track->stack) {
-> >                 unsigned long *entries;
-> >                 unsigned int nr_entries;
-> > @@ -187,11 +191,20 @@ static void describe_object(struct kmem_cache *cache, void *object,
-> >         if (cache->flags & SLAB_KASAN) {
-> >                 struct kasan_track *free_track;
-> >
-> > -               print_track(&alloc_info->alloc_track, "Allocated");
-> > +               print_track(&alloc_info->alloc_track, "Allocated", false);
-> >                 pr_err("\n");
-> >                 free_track = kasan_get_free_track(cache, object, tag);
-> > -               print_track(free_track, "Freed");
-> > +               print_track(free_track, "Freed", false);
-> >                 pr_err("\n");
-> > +
-> > +               if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
-> > +                       free_track = kasan_get_aux_stack(alloc_info, 0);
-> > +                       print_track(free_track, "First call_rcu() call stack", true);
-> > +                       pr_err("\n");
-> > +                       free_track = kasan_get_aux_stack(alloc_info, 1);
-> > +                       print_track(free_track, "Last call_rcu() call stack", true);
-> > +                       pr_err("\n");
-> > +               }
-> >         }
-> >
-> >         describe_object_addr(cache, object, addr);
+> Thank you for your report.
+> Can' make it platform drv., as the SoC info need to be accessible by divers early.
 
-Some higher level comments.
+Which drivers in particular? In most cases you should be able to still do this
+right by relying on initcall ordering as long as this one can only be built-in
+(or possibly only a module for compile-testing).
 
-1. I think we need to put the free track into kasan_free_meta as it
-was before. It looks like exactly the place for it. We have logic to
-properly place it and to do the casts.
-
-2. We need to zero aux stacks when we reallocate the object. Otherwise
-we print confusing garbage.
-
-3. __kasan_slab_free now contains a window of inconsistency when it
-marked the object as KASAN_KMALLOC_FREE, but did not store the free
-track yet. If another thread prints a report now, it will print random
-garbage.
-
-4. We need some tests. At least (2) should be visible on tests.
+      Arnd
