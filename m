@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00C3C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EEAC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EB52192A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D6C20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgEKEqt (ORCPT
+        id S1729231AbgEKErH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33428 "EHLO
+        Mon, 11 May 2020 00:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728224AbgEKEp5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728061AbgEKEp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:45:57 -0400
+        Mon, 11 May 2020 00:45:56 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C072FC061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D298C061A0C;
         Sun, 10 May 2020 21:45:56 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0KB-005jIR-8w; Mon, 11 May 2020 04:45:55 +0000
+        id 1jY0KA-005jI5-LQ; Mon, 11 May 2020 04:45:54 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/19] ipv4: take handling of group_source_req options into a helper
-Date:   Mon, 11 May 2020 05:45:44 +0100
-Message-Id: <20200511044553.1365660-10-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 07/19] ip6_mc_msfilter(): pass the address list separately
+Date:   Mon, 11 May 2020 05:45:41 +0100
+Message-Id: <20200511044553.1365660-7-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 References: <20200511044328.GP23230@ZenIV.linux.org.uk>
@@ -45,119 +45,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
+that way we'll be able to reuse it for compat case
+
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- net/ipv4/ip_sockglue.c | 83 ++++++++++++++++++++++++++------------------------
- 1 file changed, 44 insertions(+), 39 deletions(-)
+ include/net/ipv6.h       | 3 ++-
+ net/ipv6/ipv6_sockglue.c | 2 +-
+ net/ipv6/mcast.c         | 7 ++++---
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index 937f39906419..4f412b0bdda4 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -624,6 +624,49 @@ static int set_mcast_msfilter(struct sock *sk, int ifindex,
- 	return -EADDRNOTAVAIL;
- }
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 900cc66311c4..901c78b117a1 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1134,7 +1134,8 @@ struct group_filter;
  
-+static int do_mcast_group_source(struct sock *sk, int optname,
-+				 struct group_source_req *greqs)
-+{
-+	struct ip_mreq_source mreqs;
-+	struct sockaddr_in *psin;
-+	int omode, add, err;
-+
-+	if (greqs->gsr_group.ss_family != AF_INET ||
-+	    greqs->gsr_source.ss_family != AF_INET)
-+		return -EADDRNOTAVAIL;
-+
-+	psin = (struct sockaddr_in *)&greqs->gsr_group;
-+	mreqs.imr_multiaddr = psin->sin_addr.s_addr;
-+	psin = (struct sockaddr_in *)&greqs->gsr_source;
-+	mreqs.imr_sourceaddr = psin->sin_addr.s_addr;
-+	mreqs.imr_interface = 0; /* use index for mc_source */
-+
-+	if (optname == MCAST_BLOCK_SOURCE) {
-+		omode = MCAST_EXCLUDE;
-+		add = 1;
-+	} else if (optname == MCAST_UNBLOCK_SOURCE) {
-+		omode = MCAST_EXCLUDE;
-+		add = 0;
-+	} else if (optname == MCAST_JOIN_SOURCE_GROUP) {
-+		struct ip_mreqn mreq;
-+
-+		psin = (struct sockaddr_in *)&greqs->gsr_group;
-+		mreq.imr_multiaddr = psin->sin_addr;
-+		mreq.imr_address.s_addr = 0;
-+		mreq.imr_ifindex = greqs->gsr_interface;
-+		err = ip_mc_join_group_ssm(sk, &mreq, MCAST_INCLUDE);
-+		if (err && err != -EADDRINUSE)
-+			return err;
-+		greqs->gsr_interface = mreq.imr_ifindex;
-+		omode = MCAST_INCLUDE;
-+		add = 1;
-+	} else /* MCAST_LEAVE_SOURCE_GROUP */ {
-+		omode = MCAST_INCLUDE;
-+		add = 0;
-+	}
-+	return ip_mc_source(add, omode, sk, &mreqs, greqs->gsr_interface);
-+}
-+
- static int do_ip_setsockopt(struct sock *sk, int level,
- 			    int optname, char __user *optval, unsigned int optlen)
- {
-@@ -1066,9 +1109,6 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 	case MCAST_UNBLOCK_SOURCE:
- 	{
- 		struct group_source_req greqs;
--		struct ip_mreq_source mreqs;
--		struct sockaddr_in *psin;
--		int omode, add;
+ int ip6_mc_source(int add, int omode, struct sock *sk,
+ 		  struct group_source_req *pgsr);
+-int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf);
++int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
++		  struct sockaddr_storage *list);
+ int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
+ 		  struct sockaddr_storage __user *p);
  
- 		if (optlen != sizeof(struct group_source_req))
- 			goto e_inval;
-@@ -1076,42 +1116,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 			err = -EFAULT;
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index 3f127c6b3c22..33efc9112259 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -780,7 +780,7 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 			retv = -EINVAL;
  			break;
  		}
--		if (greqs.gsr_group.ss_family != AF_INET ||
--		    greqs.gsr_source.ss_family != AF_INET) {
--			err = -EADDRNOTAVAIL;
--			break;
--		}
--		psin = (struct sockaddr_in *)&greqs.gsr_group;
--		mreqs.imr_multiaddr = psin->sin_addr.s_addr;
--		psin = (struct sockaddr_in *)&greqs.gsr_source;
--		mreqs.imr_sourceaddr = psin->sin_addr.s_addr;
--		mreqs.imr_interface = 0; /* use index for mc_source */
--
--		if (optname == MCAST_BLOCK_SOURCE) {
--			omode = MCAST_EXCLUDE;
--			add = 1;
--		} else if (optname == MCAST_UNBLOCK_SOURCE) {
--			omode = MCAST_EXCLUDE;
--			add = 0;
--		} else if (optname == MCAST_JOIN_SOURCE_GROUP) {
--			struct ip_mreqn mreq;
--
--			psin = (struct sockaddr_in *)&greqs.gsr_group;
--			mreq.imr_multiaddr = psin->sin_addr;
--			mreq.imr_address.s_addr = 0;
--			mreq.imr_ifindex = greqs.gsr_interface;
--			err = ip_mc_join_group_ssm(sk, &mreq, MCAST_INCLUDE);
--			if (err && err != -EADDRINUSE)
--				break;
--			greqs.gsr_interface = mreq.imr_ifindex;
--			omode = MCAST_INCLUDE;
--			add = 1;
--		} else /* MCAST_LEAVE_SOURCE_GROUP */ {
--			omode = MCAST_INCLUDE;
--			add = 0;
--		}
--		err = ip_mc_source(add, omode, sk, &mreqs,
--				   greqs.gsr_interface);
-+		err = do_mcast_group_source(sk, optname, &greqs);
+-		retv = ip6_mc_msfilter(sk, gsf);
++		retv = ip6_mc_msfilter(sk, gsf, gsf->gf_slist);
+ 		kfree(gsf);
+ 
  		break;
- 	}
- 	case MCAST_MSFILTER:
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 97d796c7d6c0..7e12d2114158 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -457,7 +457,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
+ 	return err;
+ }
+ 
+-int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf)
++int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
++		    struct sockaddr_storage *list)
+ {
+ 	const struct in6_addr *group;
+ 	struct ipv6_mc_socklist *pmc;
+@@ -509,10 +510,10 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf)
+ 			goto done;
+ 		}
+ 		newpsl->sl_max = newpsl->sl_count = gsf->gf_numsrc;
+-		for (i = 0; i < newpsl->sl_count; ++i) {
++		for (i = 0; i < newpsl->sl_count; ++i, ++list) {
+ 			struct sockaddr_in6 *psin6;
+ 
+-			psin6 = (struct sockaddr_in6 *)&gsf->gf_slist[i];
++			psin6 = (struct sockaddr_in6 *)list;
+ 			newpsl->sl_addr[i] = psin6->sin6_addr;
+ 		}
+ 		err = ip6_mc_add_src(idev, group, gsf->gf_fmode,
 -- 
 2.11.0
 
