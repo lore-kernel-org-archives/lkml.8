@@ -6,231 +6,170 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74943C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672EFC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E2B20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF6D2098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgEKL0P (ORCPT
+        id S1729908AbgEKL0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:26:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:43614 "EHLO pegase1.c-s.fr"
+        Mon, 11 May 2020 07:26:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:59164 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729864AbgEKL0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:26:09 -0400
+        id S1729882AbgEKL0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:26:12 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJXQ6hWgz9ty3k;
-        Mon, 11 May 2020 13:25:58 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49LJXW0xfZz9ty3j;
+        Mon, 11 May 2020 13:26:03 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zuXUqVgcs4DR; Mon, 11 May 2020 13:25:58 +0200 (CEST)
+        with ESMTP id THLpWOsRJZcE; Mon, 11 May 2020 13:26:03 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXQ5w6Vz9ty3g;
-        Mon, 11 May 2020 13:25:58 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXV75YKz9ty3g;
+        Mon, 11 May 2020 13:26:02 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 86DDA8B7AE;
-        Mon, 11 May 2020 13:26:05 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1EBE8B7AE;
+        Mon, 11 May 2020 13:26:09 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id HATCxJ1YfxT8; Mon, 11 May 2020 13:26:05 +0200 (CEST)
+        with ESMTP id IrJzhLZO-hT1; Mon, 11 May 2020 13:26:09 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3FFC48B7AD;
-        Mon, 11 May 2020 13:26:05 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 61C808B7AD;
+        Mon, 11 May 2020 13:26:09 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 23BC665A09; Mon, 11 May 2020 11:26:05 +0000 (UTC)
-Message-Id: <4cbab2dae39f95c96ebf2c870ecaf9090cb21584.1589196133.git.christophe.leroy@csgroup.eu>
+        id 43B9065A09; Mon, 11 May 2020 11:26:09 +0000 (UTC)
+Message-Id: <1f29f523f8bc27f1d23dbb32649cb478a4cb108f.1589196133.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 38/45] powerpc/8xx: Add a function to early map kernel via
- huge pages
+Subject: [PATCH v3 42/45] powerpc/8xx: Allow large TLBs with DEBUG_PAGEALLOC
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:26:05 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:26:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a function to early map kernel memory using huge pages.
+DEBUG_PAGEALLOC only manages RW data.
 
-For 512k pages, just use standard page table and map in using 512k
-pages.
+Text and RO data can still be mapped with hugepages and pinned TLB.
 
-For 8M pages, create a hugepd table and populate the two PGD
-entries with it.
+In order to map with hugepages, also enforce a 512kB data alignment
+minimum. That's a trade-off between size of speed, taking into
+account that DEBUG_PAGEALLOC is a debug option. Anyway the alignment
+is still tunable.
 
-This function can only be used to create page tables at startup. Once
-the regular SLAB allocation functions replace memblock functions,
-this function cannot allocate new pages anymore. However it can still
-update existing mappings with new protections.
-
-hugepd_none() macro is moved into asm/hugetlb.h to be usable outside
-of mm/hugetlbpage.c
-
-early_pte_alloc_kernel() is made visible.
-
-_PAGE_HUGE flag is now displayed by ptdump.
+We also allow tuning of alignment for book3s to limit the complexity
+of the test in Kconfig that will anyway disappear in the following
+patches once DEBUG_PAGEALLOC is handled together with BATs.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-v2: Select CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE which leads to linktime failure
----
- .../include/asm/nohash/32/hugetlb-8xx.h       |  5 ++
- arch/powerpc/include/asm/pgtable.h            |  2 +
- arch/powerpc/mm/nohash/8xx.c                  | 52 +++++++++++++++++++
- arch/powerpc/mm/pgtable_32.c                  |  2 +-
- arch/powerpc/mm/ptdump/8xx.c                  |  5 ++
- arch/powerpc/platforms/Kconfig.cputype        |  1 +
- 6 files changed, 66 insertions(+), 1 deletion(-)
+ arch/powerpc/Kconfig               | 11 +++++++----
+ arch/powerpc/mm/init_32.c          |  5 ++++-
+ arch/powerpc/mm/nohash/8xx.c       | 11 ++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-index 1c7d4693a78e..e752a5807a59 100644
---- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-@@ -35,6 +35,11 @@ static inline void hugepd_populate(hugepd_t *hpdp, pte_t *new, unsigned int pshi
- 	*hpdp = __hugepd(__pa(new) | _PMD_USER | _PMD_PRESENT | _PMD_PAGE_8M);
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index edbe39140da0..9d94e8b178d8 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -780,8 +780,9 @@ config THREAD_SHIFT
+ config DATA_SHIFT_BOOL
+ 	bool "Set custom data alignment"
+ 	depends on ADVANCED_OPTIONS
+-	depends on STRICT_KERNEL_RWX
+-	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && !PIN_TLB_TEXT)
++	depends on STRICT_KERNEL_RWX || DEBUG_PAGEALLOC
++	depends on PPC_BOOK3S_32 || (PPC_8xx && !PIN_TLB_DATA && \
++				     (!PIN_TLB_TEXT || !STRICT_KERNEL_RWX))
+ 	help
+ 	  This option allows you to set the kernel data alignment. When
+ 	  RAM is mapped by blocks, the alignment needs to fit the size and
+@@ -792,10 +793,12 @@ config DATA_SHIFT_BOOL
+ config DATA_SHIFT
+ 	int "Data shift" if DATA_SHIFT_BOOL
+ 	default 24 if STRICT_KERNEL_RWX && PPC64
+-	range 17 28 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
+-	range 19 23 if STRICT_KERNEL_RWX && PPC_8xx
++	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
++	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
+ 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
+ 	default 23 if STRICT_KERNEL_RWX && PPC_8xx
++	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
++	default 19 if DEBUG_PAGEALLOC && PPC_8xx
+ 	default PPC_PAGE_SHIFT
+ 	help
+ 	  On Book3S 32 (603+), DBATs are used to map kernel text and rodata RO.
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index a6991ef8727d..8977a7c2543d 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -96,11 +96,14 @@ static void __init MMU_setup(void)
+ 	if (strstr(boot_command_line, "noltlbs")) {
+ 		__map_without_ltlbs = 1;
+ 	}
++	if (IS_ENABLED(CONFIG_PPC_8xx))
++		return;
++
+ 	if (debug_pagealloc_enabled()) {
+ 		__map_without_bats = 1;
+ 		__map_without_ltlbs = 1;
+ 	}
+-	if (strict_kernel_rwx_enabled() && !IS_ENABLED(CONFIG_PPC_8xx))
++	if (strict_kernel_rwx_enabled())
+ 		__map_without_ltlbs = 1;
  }
  
-+static inline void hugepd_populate_kernel(hugepd_t *hpdp, pte_t *new, unsigned int pshift)
-+{
-+	*hpdp = __hugepd(__pa(new) | _PMD_PRESENT | _PMD_PAGE_8M);
-+}
-+
- static inline int check_and_get_huge_psize(int shift)
- {
- 	return shift_to_mmu_psize(shift);
-diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-index b1f1d5339735..961895be932a 100644
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -107,6 +107,8 @@ unsigned long vmalloc_to_phys(void *vmalloc_addr);
- 
- void pgtable_cache_add(unsigned int shift);
- 
-+pte_t *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va);
-+
- #if defined(CONFIG_STRICT_KERNEL_RWX) || defined(CONFIG_PPC32)
- void mark_initmem_nx(void);
- #else
 diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index d9f205d9a654..570ab2114a73 100644
+index 35796ce81695..e112eb157e48 100644
 --- a/arch/powerpc/mm/nohash/8xx.c
 +++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -9,8 +9,10 @@
- 
- #include <linux/memblock.h>
- #include <linux/mmu_context.h>
-+#include <linux/hugetlb.h>
- #include <asm/fixmap.h>
- #include <asm/code-patching.h>
-+#include <asm/pgalloc.h>
- 
- #include <mm/mmu_decl.h>
- 
-@@ -54,6 +56,56 @@ unsigned long p_block_mapped(phys_addr_t pa)
- 	return 0;
- }
- 
-+static pte_t __init *early_hugepd_alloc_kernel(hugepd_t *pmdp, unsigned long va)
-+{
-+	if (hpd_val(*pmdp) == 0) {
-+		pte_t *ptep = memblock_alloc(sizeof(pte_basic_t), SZ_4K);
-+
-+		if (!ptep)
-+			return NULL;
-+
-+		hugepd_populate_kernel((hugepd_t *)pmdp, ptep, PAGE_SHIFT_8M);
-+		hugepd_populate_kernel((hugepd_t *)pmdp + 1, ptep, PAGE_SHIFT_8M);
-+	}
-+	return hugepte_offset(*(hugepd_t *)pmdp, va, PGDIR_SHIFT);
-+}
-+
-+static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
-+					     pgprot_t prot, int psize, bool new)
-+{
-+	pmd_t *pmdp = pmd_ptr_k(va);
-+	pte_t *ptep;
-+
-+	if (WARN_ON(psize != MMU_PAGE_512K && psize != MMU_PAGE_8M))
-+		return -EINVAL;
-+
-+	if (new) {
-+		if (WARN_ON(slab_is_available()))
-+			return -EINVAL;
-+
-+		if (psize == MMU_PAGE_512K)
-+			ptep = early_pte_alloc_kernel(pmdp, va);
-+		else
-+			ptep = early_hugepd_alloc_kernel((hugepd_t *)pmdp, va);
-+	} else {
-+		if (psize == MMU_PAGE_512K)
-+			ptep = pte_offset_kernel(pmdp, va);
-+		else
-+			ptep = hugepte_offset(*(hugepd_t *)pmdp, va, PGDIR_SHIFT);
-+	}
-+
-+	if (WARN_ON(!ptep))
-+		return -ENOMEM;
-+
-+	/* The PTE should never be already present */
-+	if (new && WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
-+		return -EINVAL;
-+
-+	set_huge_pte_at(&init_mm, va, ptep, pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)));
-+
-+	return 0;
-+}
-+
- /*
-  * MMU_init_hw does the chip-specific initialization of the MMU hardware.
-  */
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index bd0cb6e3573e..05902bbff8d6 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -61,7 +61,7 @@ static void __init *early_alloc_pgtable(unsigned long size)
- 	return ptr;
- }
- 
--static pte_t __init *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va)
-+pte_t __init *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va)
+@@ -149,7 +149,8 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
  {
- 	if (pmd_none(*pmdp)) {
- 		pte_t *ptep = early_alloc_pgtable(PTE_FRAG_SIZE);
-diff --git a/arch/powerpc/mm/ptdump/8xx.c b/arch/powerpc/mm/ptdump/8xx.c
-index a3169677dced..b3185b32793d 100644
---- a/arch/powerpc/mm/ptdump/8xx.c
-+++ b/arch/powerpc/mm/ptdump/8xx.c
-@@ -11,6 +11,11 @@
+ 	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
+ 	unsigned long sinittext = __pa(_sinittext);
+-	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
++	bool strict_boundary = strict_kernel_rwx_enabled() || debug_pagealloc_enabled();
++	unsigned long boundary = strict_boundary ? sinittext : etext8;
+ 	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
  
- static const struct flag_info flag_array[] = {
- 	{
-+		.mask	= _PAGE_HUGE,
-+		.val	= _PAGE_HUGE,
-+		.set	= "h",
-+		.clear	= " ",
-+	}, {
- 		.mask	= _PAGE_RO | _PAGE_NA,
- 		.val	= 0,
- 		.set	= "rw",
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 5774a55a9c58..e3fb0ef5129f 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -56,6 +56,7 @@ config PPC_8xx
- 	select PPC_HAVE_KUEP
- 	select PPC_HAVE_KUAP
- 	select HAVE_ARCH_VMAP_STACK
-+	select HUGETLBFS
+ 	WARN_ON(top < einittext8);
+@@ -160,8 +161,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		return 0;
  
- config 40x
- 	bool "AMCC 40x"
+ 	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
+-	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	if (debug_pagealloc_enabled()) {
++		top = boundary;
++	} else {
++		mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
++		mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
++	}
+ 
+ 	if (top > SZ_32M)
+ 		memblock_set_current_limit(top);
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index 05669f2fadce..abb2b45b2789 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -167,7 +167,7 @@ menu "8xx advanced setup"
+ 
+ config PIN_TLB
+ 	bool "Pinned Kernel TLBs"
+-	depends on ADVANCED_OPTIONS && !DEBUG_PAGEALLOC
++	depends on ADVANCED_OPTIONS
+ 	help
+ 	  On the 8xx, we have 32 instruction TLBs and 32 data TLBs. In each
+ 	  table 4 TLBs can be pinned.
 -- 
 2.25.0
 
