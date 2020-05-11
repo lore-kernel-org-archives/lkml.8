@@ -2,171 +2,95 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8423C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCF5C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBEA2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzmoexfe"
+	by mail.kernel.org (Postfix) with ESMTP id 066592075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgEKKSe (ORCPT
+        id S1729348AbgEKKSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56670 "EHLO
+        Mon, 11 May 2020 06:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725983AbgEKKSd (ORCPT
+        by vger.kernel.org with ESMTP id S1725983AbgEKKSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:18:33 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E622C061A0C;
-        Mon, 11 May 2020 03:18:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so10212315wra.7;
-        Mon, 11 May 2020 03:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=t71zh83koaUlMEdc7vfVoBfDMjb5NGvXpFftlY+VFEU=;
-        b=GzmoexfentuFiJhpxa0AY3I29IYA4NPCLrltTQHXNc773O58YyH10MAd7DpCgHRha/
-         m5OoZXIqKWYswiwlCKjxP3BMEnE09rnweSZZ3GHbQCuV1W48QfP7mmNinlnmBmFApsGF
-         J3a/jZ3n0ldXcD2CWNo/LI0YKVDH0qHDDuCnc19hE13R/bdyBNF5A8koDDZltnKAJWxy
-         uBq5yQtt58gn/XOHOzx9OXxB12cXxocyAmHVHynvHBjqv0RaATgLyMZOYEf4JgkSywHL
-         te/llctpmZBlgMten/xYkhH8KOBRsj5t172THUo4UiG+RiK+UPjTFZFIHmtBb8jYMyTj
-         czdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t71zh83koaUlMEdc7vfVoBfDMjb5NGvXpFftlY+VFEU=;
-        b=aa9c4cu6Jr6z3fAJ9406mGX/v5eozdLiaJFG0lW9/Cwcol2HS6xyqJPinKA/4kebFm
-         mXLipP6XGJKrxRNx6Y9buBgTys0lCm4i8b+JrPLk5BTnzCyAsI9IG9gZaibM28XUdD2W
-         tsPVFto+MevkWrWyBNFB9FEDFNch0F92rfqX+bJYlNY8118ENu6eUxlerYGoeFFjGoGS
-         iY7mqWudN/W4PtQ7p1mJELYNFCWcrAu6J7wpHt+6bPeZ6zyRBhx3TXhYwzENxx+NB3S0
-         NJRZ71SDvl03N+TbR8RfPOKXsVKeHdJzpGPeZC6QH8GyoktlUNKQMRU1j3bUtUI38S8Q
-         VMYA==
-X-Gm-Message-State: AGi0PuaX1nNMTzMfYxkaaS4pxJ3IQL3q7R3sHiOnUR6bGMiVqJ1Jaj2W
-        cCtHTuGe+L8Zgny+ytrDd9FisCTtKfM=
-X-Google-Smtp-Source: APiQypIboAu9feHJkwkFIZ2bcGWSedLd1dnr/EpITbayJXobdaCRSvrm4FPmdCITJOCvVweGNUu/5Q==
-X-Received: by 2002:adf:fd46:: with SMTP id h6mr18866359wrs.90.1589192311855;
-        Mon, 11 May 2020 03:18:31 -0700 (PDT)
-Received: from [192.168.1.94] (93-41-244-45.ip84.fastwebnet.it. [93.41.244.45])
-        by smtp.gmail.com with ESMTPSA id d126sm6449472wmd.32.2020.05.11.03.18.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 03:18:31 -0700 (PDT)
-Subject: Re: [PATCH] ifcvf: move IRQ request/free to status change handlers
-To:     Jason Wang <jasowang@redhat.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
-References: <1589181563-38400-1-git-send-email-lingshan.zhu@intel.com>
- <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
-From:   Francesco Lavra <francescolavra.fl@gmail.com>
-Message-ID: <c1da2054-eb4c-d7dd-ca83-29e85e5cfe90@gmail.com>
-Date:   Mon, 11 May 2020 12:18:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 11 May 2020 06:18:34 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C806C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:18:34 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:702c:fb99:3097:2049])
+        by albert.telenet-ops.be with bizsmtp
+        id dNJW220070GoAb606NJWfT; Mon, 11 May 2020 12:18:30 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY5W2-0002Q8-4k; Mon, 11 May 2020 12:18:30 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY5W2-0007pN-1T; Mon, 11 May 2020 12:18:30 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpiolib: Document that GPIO line names are not globally unique
+Date:   Mon, 11 May 2020 12:18:28 +0200
+Message-Id: <20200511101828.30046-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/20 11:26 AM, Jason Wang wrote:
-> 
-> On 2020/5/11 下午3:19, Zhu Lingshan wrote:
->> This commit move IRQ request and free operations from probe()
->> to VIRTIO status change handler to comply with VIRTIO spec.
->>
->> VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
->> The device MUST NOT consume buffers or send any used buffer
->> notifications to the driver before DRIVER_OK.
-> 
-> 
-> My previous explanation might be wrong here. It depends on how you 
-> implement your hardware, if you hardware guarantee that no interrupt 
-> will be triggered before DRIVER_OK, then it's fine.
-> 
-> And the main goal for this patch is to allocate the interrupt on demand.
-> 
-> 
->>
->> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
->> ---
->>   drivers/vdpa/ifcvf/ifcvf_main.c | 119 
->> ++++++++++++++++++++++++----------------
->>   1 file changed, 73 insertions(+), 46 deletions(-)
->>
->> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c 
->> b/drivers/vdpa/ifcvf/ifcvf_main.c
->> index abf6a061..4d58bf2 100644
->> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
->> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
->> @@ -28,6 +28,60 @@ static irqreturn_t ifcvf_intr_handler(int irq, void 
->> *arg)
->>       return IRQ_HANDLED;
->>   }
->> +static void ifcvf_free_irq_vectors(void *data)
->> +{
->> +    pci_free_irq_vectors(data);
->> +}
->> +
->> +static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
->> +{
->> +    struct pci_dev *pdev = adapter->pdev;
->> +    struct ifcvf_hw *vf = &adapter->vf;
->> +    int i;
->> +
->> +
->> +    for (i = 0; i < queues; i++)
->> +        devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
->> +
->> +    ifcvf_free_irq_vectors(pdev);
->> +}
->> +
->> +static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
->> +{
->> +    struct pci_dev *pdev = adapter->pdev;
->> +    struct ifcvf_hw *vf = &adapter->vf;
->> +    int vector, i, ret, irq;
->> +
->> +    ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
->> +                    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
->> +    if (ret < 0) {
->> +        IFCVF_ERR(pdev, "Failed to alloc IRQ vectors\n");
->> +        return ret;
->> +    }
->> +
->> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
->> +        snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
->> +             pci_name(pdev), i);
->> +        vector = i + IFCVF_MSI_QUEUE_OFF;
->> +        irq = pci_irq_vector(pdev, vector);
->> +        ret = devm_request_irq(&pdev->dev, irq,
->> +                       ifcvf_intr_handler, 0,
->> +                       vf->vring[i].msix_name,
->> +                       &vf->vring[i]);
->> +        if (ret) {
->> +            IFCVF_ERR(pdev,
->> +                  "Failed to request irq for vq %d\n", i);
->> +            ifcvf_free_irq(adapter, i);
-> 
-> 
-> I'm not sure this unwind is correct. It looks like we should loop and 
-> call devm_free_irq() for virtqueue [0, i);
+gpiochip_set_desc_names() no longer rejects GPIO line name collisions.
+Hence GPIO line names are not guaranteed to be globally unique.
+In case of multiple GPIO lines with the same name, gpio_name_to_desc()
+will return the first match found.
 
-That's exactly what the code does: ifcvf_free_irq() contains a (i = 0; i 
-< queues; i++) loop, and here the function is called with the `queues` 
-argument set to `i`.
+Update the comments for gpio_name_to_desc() and
+gpiochip_set_desc_names() to match reality.
+
+Fixes: f881bab038c9667d ("gpio: keep the GPIO line names internal")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpiolib.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 99533f4cb5d332a9..98822412f565073a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -296,6 +296,9 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
+ 
+ /*
+  * Convert a GPIO name to its descriptor
++ * Note that there is no guarantee that GPIO names are globally unique!
++ * Hence this function will return, if it exists, a reference to the first GPIO
++ * line found that matches the given name.
+  */
+ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ {
+@@ -329,10 +332,12 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ }
+ 
+ /*
+- * Takes the names from gc->names and checks if they are all unique. If they
+- * are, they are assigned to their gpio descriptors.
++ * Take the names from gc->names and assign them to their GPIO descriptors.
++ * Warn if a name is already used for a GPIO line on a different GPIO chip.
+  *
+- * Warning if one of the names is already used for a different GPIO.
++ * Note that:
++ *   1. Non-unique names are still accepted,
++ *   2. Name collisions within the same GPIO chip are not reported.
+  */
+ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ {
+-- 
+2.17.1
+
