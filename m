@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B09C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED8C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB6024974
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651A9208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732193AbgEKVAd (ORCPT
+        id S1732188AbgEKVAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44172 "EHLO
+        Mon, 11 May 2020 17:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732107AbgEKVAI (ORCPT
+        by vger.kernel.org with ESMTP id S1732066AbgEKVAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:00:08 -0400
+        Mon, 11 May 2020 17:00:01 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A1FC061A0E;
-        Mon, 11 May 2020 14:00:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6403C061A0C;
+        Mon, 11 May 2020 14:00:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWw-00064W-FK; Mon, 11 May 2020 23:00:06 +0200
+        id 1jYFWo-00060D-UV; Mon, 11 May 2020 22:59:59 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0C60F1C07B4;
-        Mon, 11 May 2020 22:59:47 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:46 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5B7B31C074B;
+        Mon, 11 May 2020 22:59:42 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:42 -0000
+From:   "tip-bot2 for Jules Irenge" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Mark rcu_state.ncpus to detect concurrent writes
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu: Replace assigned pointer ret value by
+ corresponding boolean value
+Cc:     Jules Irenge <jbi.octave@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923078695.390.3190940566900241563.tip-bot2@tip-bot2>
+Message-ID: <158923078227.390.16875132364939168186.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,33 +58,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     2f08469563550d15cb08a60898d3549720600eee
-Gitweb:        https://git.kernel.org/tip/2f08469563550d15cb08a60898d3549720600eee
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 10 Feb 2020 05:29:58 -08:00
+Commit-ID:     a66dbda7893f48b97d7406ae42fa29190aa672a0
+Gitweb:        https://git.kernel.org/tip/a66dbda7893f48b97d7406ae42fa29190aa672a0
+Author:        Jules Irenge <jbi.octave@gmail.com>
+AuthorDate:    Fri, 27 Mar 2020 21:23:53 
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 27 Apr 2020 11:01:15 -07:00
+CommitterDate: Mon, 27 Apr 2020 11:01:16 -07:00
 
-rcu: Mark rcu_state.ncpus to detect concurrent writes
+rcu: Replace assigned pointer ret value by corresponding boolean value
 
-The rcu_state structure's ncpus field is only to be modified by the
-CPU-hotplug CPU-online code path, which is single-threaded.  This
-commit therefore enlists KCSAN's help in enforcing this restriction.
+Coccinelle reports warnings at rcu_read_lock_held_common()
 
+WARNING: Assignment of 0/1 to bool variable
+
+To fix this,
+the assigned  pointer ret values are replaced by corresponding boolean value.
+Given that ret is a pointer of bool type
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/rcu/update.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 156ac8d..c88240a 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3612,6 +3612,7 @@ void rcu_cpu_starting(unsigned int cpu)
- 	nbits = bitmap_weight(&oldmask, BITS_PER_LONG);
- 	/* Allow lockless access for expedited grace periods. */
- 	smp_store_release(&rcu_state.ncpus, rcu_state.ncpus + nbits); /* ^^^ */
-+	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
- 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
- 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 72461dd..17f2356 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -98,15 +98,15 @@ module_param(rcu_normal_after_boot, int, 0);
+ static bool rcu_read_lock_held_common(bool *ret)
+ {
+ 	if (!debug_lockdep_rcu_enabled()) {
+-		*ret = 1;
++		*ret = true;
+ 		return true;
+ 	}
+ 	if (!rcu_is_watching()) {
+-		*ret = 0;
++		*ret = false;
+ 		return true;
+ 	}
+ 	if (!rcu_lockdep_current_cpu_online()) {
+-		*ret = 0;
++		*ret = false;
+ 		return true;
+ 	}
+ 	return false;
