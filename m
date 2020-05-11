@@ -2,153 +2,94 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DABC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E76C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E65A8206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589193581;
-	bh=0kBiZ9ajnEJCfDeIgMip/lzW0VTKmfKqszkyrFEudlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YBvZAT5mq7J2mBFBngPkEoxBree5f3ZLLMguK4z8N478plNetSDsInGrE0IJ8LYEG
-	 whzu7V365+kIHnIA1Z8Eohp3xG+4vgQMYd0+PfA52V3pR8tKlEMKrOzmdto03Fx8Qn
-	 nkziC0X+Hv/bAWEY0YHc14erSvDeDDVmbptIWuA8=
+	by mail.kernel.org (Postfix) with ESMTP id 31FE8206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbgEKKjl (ORCPT
+        id S1729541AbgEKKjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:39:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgEKKjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:39:41 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E27C5206F5;
-        Mon, 11 May 2020 10:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589193580;
-        bh=0kBiZ9ajnEJCfDeIgMip/lzW0VTKmfKqszkyrFEudlw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VNhXHHWLlZbrbWPRUR8cPnVYu4tq603FHzx2Oo5MQd1ZjmE6mvv8QiXL4bofg5uK4
-         ZXZyqxuSwOikfLlGcQZ5gBDpD2iezdrFiEE4OL08Wsbb+BPe5bByWP29erRg0RAa4A
-         mNdJ0chqp0SfRz2Wy+sGUZkmHgMC8cH+TnV3dRt4=
-Date:   Mon, 11 May 2020 11:39:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
-Message-ID: <20200511103937.GC8216@sirena.org.uk>
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-4-sumit.semwal@linaro.org>
+        Mon, 11 May 2020 06:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728209AbgEKKjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:39:43 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775CEC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:39:43 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jY5q2-0002z3-Ev; Mon, 11 May 2020 12:39:11 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 76327FFBF8; Mon, 11 May 2020 12:39:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 3 10/29] x86/idtentry: Provide macros to define/declare IDT entry points
+In-Reply-To: <CALCETrXd+-nvDcwupvbtr8-Gj2RQsGfFiUu-wr86dw4-nJ=S5w@mail.gmail.com>
+References: <20200505134354.774943181@linutronix.de> <20200505134904.273363275@linutronix.de> <CALCETrXd+-nvDcwupvbtr8-Gj2RQsGfFiUu-wr86dw4-nJ=S5w@mail.gmail.com>
+Date:   Mon, 11 May 2020 12:39:09 +0200
+Message-ID: <87blmu4uya.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
-Content-Disposition: inline
-In-Reply-To: <20200508204200.13481-4-sumit.semwal@linaro.org>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andy Lutomirski <luto@kernel.org> writes:
+> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Provide DECLARE/DEFINE_IDTENTRY() macros.
+>
+> Acked-by: Andy Lutomirski <luto@kernel.org>
+>
+> except:
+>
+>>
+>> DEFINE_IDTENTRY() provides a wrapper which acts as the function
+>> definition. The exception handler body is just appended to it with curly
+>> brackets. The entry point is marked notrace/noprobe so that irq tracing and
+>> the enter_from_user_mode() can be moved into the C-entry point.
+>
+> "noinstr", perhaps?  I'm guessing you write this text before noinstr
+> happened.
 
---VrqPEDrXMn8OVzN4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes.
 
-On Sat, May 09, 2020 at 02:11:59AM +0530, Sumit Semwal wrote:
+> Also, would it perhaps make sense in the future to include the
+> idtentry macro somehow (via inline asm or gcc options) so that
+> DEFINE_IDTENTRY() could emit the stub instead of leaving it to
+> DECLARE_IDTENTRY()?  It might end up too messy in practice, I suppose.
+> This is obviously not worth changing right now, but maybe down the
+> road.
 
-> +	ret = regmap_bulk_read(reg->regmap, reg->base +
-> +			       REG_LABIBB_STATUS1, &val, 1);
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-> +		return ret;
-> +	}
-
-Why a bulk read of a single register?
-
-> +static int _check_enabled_with_retries(struct regulator_dev *rdev,
-> +			int retries, int enabled)
-> +{
-
-This is not retrying, this is polling to see if the regulator actually
-enabled.
-
-> +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> +{
-
-> +	ret = _check_enabled_with_retries(rdev, retries, 1);
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
-> +			reg->desc.name);
-> +		return ret;
-> +	}
-
-If this is useful factor it out into a helper or the core, other devices
-also have status bits saying if the regulator is enabled.  It looks like
-this may be mainly trying to open code something like enable_time, with
-possibly some issues where the time taken to enable varies a lot.
-
-> +	if (ret)
-> +		return 0;
-> +
-> +
-> +	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
-> +	return -EINVAL;
-
-Return the actual error code (the logic here is quite convoluted).
-
-> +	ret = regulator_disable_regmap(rdev);
-> +
-> +	if (ret < 0) {
-
-You have lots of blank lines between operations and checking their
-return codes?
-
-> +	ret = _check_enabled_with_retries(rdev, retries, 0);
-> +	if (ret < 0) {
-> +		dev_err(reg->dev, "retries exhausted: disable %s regulator\n",
-> +			reg->desc.name);
-> +		return ret;
-> +	}
-
-Similarly to the enable path, but is this one about off_on_delay rather
-than enable_time?
-
-> +	if (reg_data->type == QCOM_LAB_TYPE) {
-> +		reg = &labibb->lab;
-> +		reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-> +	} else {
-> +		reg = &labibb->ibb;
-> +		reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-> +	}
-
-Write a switch statement so this is extensible.
-
---VrqPEDrXMn8OVzN4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65K2kACgkQJNaLcl1U
-h9BQSAf7BULCV+zM0j5z4zCoc5itj+1AiFF33DehWEq7FUG1g36yL3J9UQVA4fUu
-byEy8fI4m8tkIpj/j6f7HPfu/rOIbpLdAYMgc+IqX8zwQ9zvwTHwB7TkK1zIdZvq
-/3RWqZ25ey+ZASi5/h2ZN75cG8no64xb+BmaRLhQADAo6mmCH5+xXZacknMGzkR+
-b9IjaEsP2+iWhiWbBpetZok2oCi2RXLCdBUJJ+wwmrWVnIuSD7NkAm8lpXOSZVDY
-XooOfd62M8G92WT3WFMripbwOzcJQ4uew034U8B9bbaL1H/3Qo2d4WO6+5kX1URw
-5qNRNFuW09j1PPMSsT76pSJHANHflg==
-=KeE7
------END PGP SIGNATURE-----
-
---VrqPEDrXMn8OVzN4--
+Maybe. Right now my entry/rcu/tracing induced brainmelt is far too
+advanced to try thinking about it :)
