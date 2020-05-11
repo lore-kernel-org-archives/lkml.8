@@ -2,474 +2,137 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026B5C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2696EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FA020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B5520720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W8GsoKBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgEKJSB (ORCPT
+        id S1729322AbgEKJSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:18:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36140 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbgEKJSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:18:00 -0400
-IronPort-SDR: mH1otYWj+TqbD10lTeljKcHQVOf9BQKBhVW5c3ORRjCMdc5XWsrig/EZReMcJcw7Kjb8/e0RaQ
- 9s4lT2W8XboA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 02:18:00 -0700
-IronPort-SDR: lFcPFw0rjOLmc9U7pwB597vGZb9TyE+DyfcOYrSLjdyW3DrOAjqXVA1nhcz0l2tCU20FKhtXbg
- 2q/hCGWKojsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
-   d="scan'208";a="306126183"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 May 2020 02:17:56 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jY4ZT-005vIK-61; Mon, 11 May 2020 12:17:59 +0300
-Date:   Mon, 11 May 2020 12:17:59 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
- driver
-Message-ID: <20200511091759.GE185537@smile.fi.intel.com>
-References: <20200510102330.66715-1-tali.perry1@gmail.com>
- <20200510102330.66715-3-tali.perry1@gmail.com>
+        Mon, 11 May 2020 05:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgEKJSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:18:33 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36113C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:18:32 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id x13so2251182qvr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jbfgjCIJCT731lsX+VnBCmkJyCHAocQc+0O+jnIBrdA=;
+        b=W8GsoKBTh3eU7gK0hFlJ0SlnR4/zsOEdiEu38ZroK0AD/j0RkfeKchZBEqi62uiRc6
+         URDF81n5X0ocDhATQJCsPzqQmANVVyixmbQnVl+EVmPhoxZnMzKIIdJLifoKd6qDSW7R
+         g3/nx11QoXUNQSXk3ZbTaRZs5bDYZlnQKGcgw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jbfgjCIJCT731lsX+VnBCmkJyCHAocQc+0O+jnIBrdA=;
+        b=jQfOZYYhXJ8mnDqW8dLz7dqloXwM0TuN7s8DZX441nQicm7yDUbJJeLyZ/WfAuEM8d
+         wFpJxoSs6/Zc1DSgW2DguWhtT6U+l5x0pFN9XcBeVvnsQFS3B/W+41wOjKBG60wO5tPe
+         iqNqD1rt8diwa4FWb8/p2j1Z9XSPNuQ9GWU49aGx0wGkp1+fS8+Y5HVy6BI4Joas/oDC
+         vvdn5mhpRYW6WX6Ycf2nVlOHswxZfGKNfx81aCBTJwsvhNZKX2lgDNqrwLGFbq55qrQ3
+         Bs4cIiDlgMf6m3bwvxCp67V0eOR2IUEp1JQhAs7BBnPDamYjcElSFPdhX1Ltr1pelZOB
+         TtCw==
+X-Gm-Message-State: AGi0PuaQ82PWyZKonICtOUaPiVWuqg0fVJ7KXKkBTAvvNlPGIj54kqAv
+        Xdjau1cr7OFzjEjm8mwcGKbnnYt1gHPjDueZddT6Kw==
+X-Google-Smtp-Source: APiQypKT98jJ+xFT05/I6LmJQeISERtWb2r4N0celT3NHNTNMdSnrXvpVHkM+TeXsrBCRZ3aCItbNo4jo662cXs8B6E=
+X-Received: by 2002:a0c:90e7:: with SMTP id p94mr14956340qvp.219.1589188710998;
+ Mon, 11 May 2020 02:18:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510102330.66715-3-tali.perry1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200510213934.146631-1-pmalani@chromium.org> <6921cb24-091b-1de3-5348-a1dd8a6803f5@gmail.com>
+In-Reply-To: <6921cb24-091b-1de3-5348-a1dd8a6803f5@gmail.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 11 May 2020 02:18:19 -0700
+Message-ID: <CACeCKaeohcaOt7sfWR0FWaSp8CLEa5_6afAZUdYYTn2S_wXOew@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: typec: mux: intel: Fix DP_HPD_LVL bit field
+To:     Lars Melin <larsm17@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
-> Add Nuvoton NPCM BMC I2C controller driver.
-
-Some cosmetic changes needs to be done.
-
-...
-
-> +/*
-> + * Nuvoton NPCM7xx I2C Controller driver
-> + *
-> + * Copyright (C) 2020 Nuvoton Technologies tali.perry@nuvoton.com
-> + */
-
-So, entire file has C99 comment style, but this and few other places.
-Any reason of inconsistency?
-
-...
-
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-
-Why?
-
-> +#include <linux/debugfs.h>
-> +#endif
-
-...
-
-> +//#define _I2C_DEBUG_
-
-Leftover, remove.
-
-...
-
-> +// Common regs
-> +#define NPCM_I2CSDA                       0x00
-> +#define NPCM_I2CST                        0x02
-> +#define NPCM_I2CCST                       0x04
-
-> +#define NPCM_I2CCTL1	                  0x06
-
-Indentation issue. And it's better to use TABs over spaces here and
-in the similar places above and below.
-
-> +#define NPCM_I2CADDR1                     0x08
-> +#define NPCM_I2CCTL2                      0x0A
-> +#define NPCM_I2CADDR2                     0x0C
-> +#define NPCM_I2CCTL3                      0x0E
-> +#define NPCM_I2CCST2                      0x18
-> +#define NPCM_I2CCST3                      0x19
-
-...
-
-> +// supported clk settings. values in KHz.
-> +#define I2C_FREQ_MIN                      10
-> +#define I2C_FREQ_MAX                      1000
-
-_KHZ to both.
-
-...
-
-> +#define I2C_NUM_OF_ADDR 10
-
-Is it 10-bit address support or what?
-
-...
-
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> +static struct dentry *npcm_i2c_debugfs_dir;   /* i2c debugfs directory */
-> +static const char *ber_cnt_name      = "ber_count";
-> +static const char *rec_succ_cnt_name = "rec_succ_count";
-> +static const char *rec_fail_cnt_name = "rec_fail_count";
-> +static const char *nack_cnt_name     = "nack_count";
-> +static const char *timeout_cnt_name  = "timeout_count";
-> +#endif
-
-Why are these global?
-
-...
-
-> +static void npcm_i2c_write_to_fifo_master(struct npcm_i2c *bus,
-> +					  u16 max_bytes_to_send)
-> +{
-> +	// Fill the FIFO, while the FIFO is not full and there are more bytes to
-> +	// write
-
-> +	while ((max_bytes_to_send--) &&
-
-Inner parentheses are redundant.
-
-> +	       (I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus))) {
-> +		if (bus->wr_ind < bus->wr_size)
-> +			npcm_i2c_wr_byte(bus, bus->wr_buf[bus->wr_ind++]);
-> +		else
-> +			npcm_i2c_wr_byte(bus, 0xFF);
-> +	}
-> +}
-
-...
-
-> +		// Clear stall only after setting STOP
-> +		iowrite8(NPCM_I2CST_STASTR, bus->reg + NPCM_I2CST);
-> +
-> +		ret =  IRQ_HANDLED;
-
-Indentation issue.
-
-...
-
-> +				if (bus->wr_size)
-> +					npcm_i2c_set_fifo(bus, -1,
-> +							  bus->wr_size);
-> +				else
-> +					npcm_i2c_set_fifo(bus, bus->rd_size,
-> +							  -1);
-
-These two looks much better on one line.
-
-...
-
-> +				if (npcm_i2c_is_quick(bus) || bus->wr_size)
-> +					npcm_i2c_wr_byte(bus, bus->dest_addr);
-> +				else
-> +					npcm_i2c_wr_byte(bus, bus->dest_addr |
-> +							      0x01);
-
-0x01 has its definition, hasn't it?
-
-...
-
-> +	// Repeat the following sequence until SDA is released
-> +	do {
-> +		// Issue a single SCL toggle
-> +		iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
-> +		udelay(20);
-> +		// If SDA line is inactive (high), stop
-> +		if (npcm_i2c_get_SDA(_adap)) {
-> +			done = true;
-> +			status = 0;
-> +		}
-> +	} while (!done && iter--);
-
-readx_poll_timeout() ?
-
-...
-
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-> +	if (!status) {
-
-Why not positive condition?
-
-	if (status) {
-		...
-	} else {
-		...
-	}
-
-> +	} else {
-
-> +	}
-> +#endif
-
-...
-
-> +static int npcm_i2c_init_clk(struct npcm_i2c *bus, u32 bus_freq)
-> +{
-> +	u32  k1 = 0;
-> +	u32  k2 = 0;
-> +	u8   dbnct = 0;
-> +	u32  sclfrq = 0;
-> +	u8   hldt = 7;
-> +	bool fast_mode = false;
-
-> +	u32  src_clk_freq; // in KHz
-
-src_clk_khz ?
-
-> +
-> +	src_clk_freq = bus->apb_clk / 1000;
-> +	bus->bus_freq = bus_freq;
-> +
-> +	// 100KHz and below:
-
-> +	if (bus_freq <= (I2C_MAX_STANDARD_MODE_FREQ / 1000)) {
-
-Instead of all these / 1000 can't you use bus frequency in Hz and do division
-when it's really needed?
-
-> +		sclfrq = src_clk_freq / (bus_freq * 4);
-> +
-> +		if (sclfrq < SCLFRQ_MIN || sclfrq > SCLFRQ_MAX)
-> +			return -EDOM;
-> +
-> +		if (src_clk_freq >= 40000)
-> +			hldt = 17;
-> +		else if (src_clk_freq >= 12500)
-> +			hldt = 15;
-> +		else
-> +			hldt = 7;
-> +	}
-> +
-> +	// 400KHz:
-> +	else if (bus_freq <= (I2C_MAX_FAST_MODE_FREQ / 1000)) {
-> +		sclfrq = 0;
-> +		fast_mode = true;
-> +
-> +		if (src_clk_freq < 7500)
-> +			// 400KHZ cannot be supported for core clock < 7.5 MHZ
-> +			return -EDOM;
-> +
-> +		else if (src_clk_freq >= 50000) {
-> +			k1 = 80;
-> +			k2 = 48;
-> +			hldt = 12;
-> +			dbnct = 7;
-> +		}
-> +
-> +		// Master or Slave with frequency > 25 MHZ
-> +		else if (src_clk_freq > 25000) {
-
-> +			hldt = (DIV_ROUND_UP(src_clk_freq * 300,
-> +							 1000000) + 7) & 0xFF;
-
-How ' & 0xFF' is not no-op here and in the similar cases?
-
-> +
-> +			k1 = DIV_ROUND_UP(src_clk_freq * 1600,
-> +						   1000000);
-> +			k2 = DIV_ROUND_UP(src_clk_freq * 900,
-> +						   1000000);
-
-Perhaps,
-
-#define clk_coef(freq, mul)	DIV_ROUND_UP((freq) * (mul), 1000000)
-
-?
-
-> +			k1 = round_up(k1, 2);
-> +			k2 = round_up(k2 + 1, 2);
-> +			if (k1 < SCLFRQ_MIN || k1 > SCLFRQ_MAX ||
-> +			    k2 < SCLFRQ_MIN || k2 > SCLFRQ_MAX)
-> +				return -EDOM;
-> +		}
-> +	}
-> +
-> +	else if (bus_freq <= (I2C_MAX_FAST_MODE_PLUS_FREQ / 1000)) {
-> +		sclfrq = 0;
-> +		fast_mode = true;
-> +
-> +		if (src_clk_freq < 24000)
-> +		// 1MHZ cannot be supported for master core clock < 15 MHZ
-> +		// or slave core clock < 24 MHZ
-> +			return -EDOM;
-> +
-> +		k1 = round_up((DIV_ROUND_UP(src_clk_freq * 620,
-> +						     1000000)), 2);
-> +		k2 = round_up((DIV_ROUND_UP(src_clk_freq * 380,
-> +						     1000000) + 1), 2);
-> +		if (k1 < SCLFRQ_MIN || k1 > SCLFRQ_MAX ||
-> +		    k2 < SCLFRQ_MIN || k2 > SCLFRQ_MAX)
-> +			return -EDOM;
-> +
-> +		// Core clk > 40 MHZ
-> +		if (src_clk_freq > 40000) {
-> +			// Set HLDT:
-> +			// SDA hold time:  (HLDT-7) * T(CLK) >= 120
-> +			// HLDT = 120/T(CLK) + 7 = 120 * FREQ(CLK) + 7
-> +			hldt = (DIV_ROUND_UP(src_clk_freq * 120,
-> +							 1000000) + 7) & 0xFF;
-> +		} else {
-> +			hldt = 7;
-> +			dbnct = 2;
-> +		}
-> +	}
-> +
-> +	// Frequency larger than 1 MHZ is not supported
-> +	else
-> +		return false;
-
-> +	return true;
-> +}
-
-...
-
-> +	ret = device_property_read_u32(&pdev->dev, "bus-frequency", &clk_freq);
-> +	if (ret < 0) {
-> +		dev_info(&pdev->dev, "Could not read bus-frequency property\n");
-
-> +		clk_freq = 100000;
-
-We have define for this, don't we?
-
-> +	}
-
-Wolfram, we discussed this simplified timings property parser,
-any news about it?
-
-...
-
-> +static irqreturn_t npcm_i2c_bus_irq(int irq, void *dev_id)
-> +{
-> +	irqreturn_t ret;
-> +	struct npcm_i2c *bus = dev_id;
-> +
-> +	bus->int_cnt++;
-> +
-> +	if (npcm_i2c_is_master(bus))
-> +		bus->master_or_slave = I2C_MASTER;
-> +
-> +	if (bus->master_or_slave == I2C_MASTER)	{
-> +		bus->int_time_stamp = jiffies;
-> +		ret = npcm_i2c_int_master_handler(bus);
-
-> +		if (ret == IRQ_HANDLED)
-> +			return ret;
-
-What's the point?
-
-> +	}
-> +	return IRQ_HANDLED;
-> +}
-
-...
-
-> +	bus->dest_addr = (slave_addr << 1) & 0xFE;
-
-How ' & 0xFE' part is not a no-op?
-
-...
-
-> +	time_left = jiffies +
-> +		    msecs_to_jiffies(DEFAULT_STALL_COUNT) + 1;
-
-It's perfectly one line. Fix here and in any other place with similar issue.
-
-...
-
-> +static int i2c_init_debugfs(struct platform_device *pdev, struct npcm_i2c *bus)
-
-Should be void.
-
-...
-
-> +	bus->irq = platform_get_irq(pdev, 0);
-> +	if (bus->irq < 0) {
-
-> +		dev_err(&pdev->dev, "failed to get IRQ number\n");
-
-Duplicate message.
-
-> +		return bus->irq;
-> +	}
-
-...
-
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-
-Why? Okay, why here instead of making a stub?
-
-> +	ret = i2c_init_debugfs(pdev, bus);
-
-> +	if (ret < 0)
-> +		return ret;
-
-Wrong. Should not fail the probe.
-
-> +#endif
-
-...
-
-> +#if IS_ENABLED(CONFIG_DEBUG_FS)
-
-Why? Just make it always present in the structure.
-
-> +	if (!!bus->debugfs) {
-
-!! ???
-
-> +		debugfs_remove_recursive(bus->debugfs);
-> +		bus->debugfs = NULL;
-> +	}
-> +#endif
-
-...
-
-> +	npcm_i2c_debugfs_dir = debugfs_create_dir("i2c", NULL);
-
-> +	if (IS_ERR_OR_NULL(npcm_i2c_debugfs_dir)) {
-> +		pr_warn("i2c init of debugfs failed\n");
-> +		npcm_i2c_debugfs_dir = NULL;
-> +		return -ENOMEM;
-> +	}
-
-Shouldn't prevent driver to work.
-
-...
-
-> +	if (!!npcm_i2c_debugfs_dir) {
-
-!! ???
-
-> +		debugfs_remove_recursive(npcm_i2c_debugfs_dir);
-
-> +		npcm_i2c_debugfs_dir = NULL;
-
-What's the point?
-
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Hi Lars,
+
+Thanks for reviewing the patch.
+
+On Mon, May 11, 2020 at 1:49 AM Lars Melin <larsm17@gmail.com> wrote:
+>
+> On 5/11/2020 04:39, Prashant Malani wrote:
+> > According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
+> > 0.6, the PMC HPD request LVL bit field is bit 4.
+> > Fix the definition here to match the programming guide.
+> >
+> > Since this bit field is changing, explicitly define a field for the
+> > HPD_HIGH mode data bit.
+> >
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
+> > Reviewed-by: Benson Leung <bleung@chromium.org>
+> > ---
+> >
+> > Changes in v2:
+> > - Fixed bit error in commit message.
+> >
+> >   drivers/usb/typec/mux/intel_pmc_mux.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+> > index 67c5139cfa0d..15074aec94eb 100644
+> > --- a/drivers/usb/typec/mux/intel_pmc_mux.c
+> > +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+> > @@ -63,6 +63,7 @@ enum {
+> >   #define PMC_USB_ALTMODE_DP_MODE_SHIFT       8
+> >
+> >   /* TBT specific Mode Data bits */
+> > +#define PMC_USB_ALTMODE_HPD_HIGH     BIT(14)
+> >   #define PMC_USB_ALTMODE_TBT_TYPE    BIT(17)
+> >   #define PMC_USB_ALTMODE_CABLE_TYPE  BIT(18)
+> >   #define PMC_USB_ALTMODE_ACTIVE_LINK BIT(20)
+> > @@ -75,7 +76,7 @@ enum {
+> >
+> >   /* Display HPD Request bits */
+> >   #define PMC_USB_DP_HPD_IRQ          BIT(5)
+> > -#define PMC_USB_DP_HPD_LVL           BIT(6)
+> > +#define PMC_USB_DP_HPD_LVL           BIT(4)
+> >
+> Please keep the bits sorted
+Sure. Will send a new version of the patch with this change.
+
+Best regards,
+>
+> >   struct pmc_usb;
+> >
+> > @@ -158,8 +159,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+> >                        PMC_USB_ALTMODE_DP_MODE_SHIFT;
+> >
+> >       if (data->status & DP_STATUS_HPD_STATE)
+> > -             req.mode_data |= PMC_USB_DP_HPD_LVL <<
+> > -                              PMC_USB_ALTMODE_DP_MODE_SHIFT;
+> > +             req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
+> >
+> >       return pmc_usb_command(port, (void *)&req, sizeof(req));
+> >   }
+> >
+>
+> Thanks
+> Lars
