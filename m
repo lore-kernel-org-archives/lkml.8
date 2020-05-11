@@ -2,115 +2,138 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9DEC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80F8C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA1220752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D7320736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aq910p+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgEKSRp (ORCPT
+        id S1731080AbgEKSTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:17:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53739 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbgEKSRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:17:45 -0400
-IronPort-SDR: SjcOT8Syf+YMgUMB6EuYVtTFHC0yTl+hxCHpBth3WoRzNP6OeS973hPtOPXr+Yc1sYP1cXqUKF
- pqWyTlPNTRug==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:17:44 -0700
-IronPort-SDR: S4r1fZ5oBzH+5W8qh1aHRie2tfvQereT2aab4/Wgzm9tNyHvCxkt3Xv6ofnbGa2wlWF1R1+Whq
- X9YSTU8ZOJJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="261849896"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 11 May 2020 11:17:44 -0700
-Date:   Mon, 11 May 2020 11:17:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Mon, 11 May 2020 14:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729673AbgEKSTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:19:45 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133F2C061A0C;
+        Mon, 11 May 2020 11:19:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id v63so5099355pfb.10;
+        Mon, 11 May 2020 11:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2yn5GXC9T6aSzTW6H4dYcP7c5PsUvDbh9LGMtXFoYdo=;
+        b=Aq910p+Yyl0NUj51AIGFT5dqADLURjqwfNLwCviq2V2e6IyNRE0Woic2Vu/aZY+Wuw
+         OZBtaHtiA5V1YoWxNwDk9HqxI86LWCOfn5pSOE1ZCPLXL/URY4K3uFsV5l8N42B+MOeV
+         lEYiU0IYUlS7i0ge8nnR96ZL0rmsXPgwquW/ANj8qmPt03b0VJvkdlY4hK81N6qEy85W
+         BagEBgfsaESW+uJS4AQYFYMizc+41KQZcwU8z5TT0M8nV66Gt9nQp7TQDICSOpTAnb6S
+         AJBfioyebEQ85c33zPzvFHr8NJ+nM367a5uejlj58YxFOaJXENVK65Dxw2XlZhv5O0Fe
+         4NiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2yn5GXC9T6aSzTW6H4dYcP7c5PsUvDbh9LGMtXFoYdo=;
+        b=gFNOrHtIYpzHkyrs7XqMpTFgzDrYFnRR+WYiKtRJcpmz6x6K7niXr9lxA+31YoOxHT
+         aHg4mVd/yFqWUxat/W/Ssr6evFUCIRtjdl/3cEK9bBcwY9GhtlZWG8Gpd4G46anQlEhL
+         aKaW/1HekojX0IUshTeafhC70+KEFY0/JxnLzITBgWinP0E0V8dObP9f/qGexiWVwJPo
+         1Nj04ehkFTvTqeWyMOTV0+bzwOtq9AnJ3zV4yQAeLE9IM0CWc/6ZjXT114feSKwx3HvV
+         OB6HeHChhrfPYWxTUg6OVesm4Ju+khQ62+oN4n7YSblZ3654kF80CMGjHI1KJ6dYXOsG
+         XSsw==
+X-Gm-Message-State: AGi0PuZJwHOjOrpnjAFnNSRMk+2XGc2suyV5gZGB/s8VZB45vmrdIx1d
+        4U/GcC5/3J8/Lqf59bjDQR8QDtZY
+X-Google-Smtp-Source: APiQypJ4JovztU5Ka0iRgeBfoFCff5vzLGOGPv8Ai8O2UPhxnrJPg43yND7I/2OLBphSSYvOWmZQYA==
+X-Received: by 2002:a63:5345:: with SMTP id t5mr14380704pgl.401.1589221183268;
+        Mon, 11 May 2020 11:19:43 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g16sm9860744pfq.203.2020.05.11.11.19.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 11:19:42 -0700 (PDT)
+Subject: Re: [PATCH net] net: broadcom: Imply BROADCOM_PHY for BCMGENET
+To:     Marek Szyprowski <m.szyprowski@samsung.com>, netdev@vger.kernel.org
+Cc:     nsaenzjulienne@suse.de, wahrenst@gmx.net,
+        "David S. Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: Re: [PATCH v9 3/8] x86/split_lock: Introduce flag
- X86_FEATURE_SLD_FATAL and drop sld_state
-Message-ID: <20200511181744.GF24052@linux.intel.com>
-References: <20200509110542.8159-1-xiaoyao.li@intel.com>
- <20200509110542.8159-4-xiaoyao.li@intel.com>
- <CALCETrXwtj5rhVM6YYNEDeDqT3eKFNkGFCgSB_hUd7aOYBFXmw@mail.gmail.com>
+        Tal Gilboa <talgi@mellanox.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Gospodarek <gospo@broadcom.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <CGME20200508223228eucas1p252dd643b4bedf08126cf6af4788f9b01@eucas1p2.samsung.com>
+ <20200508223216.6611-1-f.fainelli@gmail.com>
+ <350c88a9-eeaf-7859-d425-0ee4ca355ed3@samsung.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <51710a87-5a99-35ee-5bea-92a5801cec09@gmail.com>
+Date:   Mon, 11 May 2020 11:19:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXwtj5rhVM6YYNEDeDqT3eKFNkGFCgSB_hUd7aOYBFXmw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <350c88a9-eeaf-7859-d425-0ee4ca355ed3@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 10:14:02PM -0700, Andy Lutomirski wrote:
-> On Fri, May 8, 2020 at 8:03 PM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
-> >
-> > Introduce a synthetic feature flag X86_FEATURE_SLD_FATAL, which means
-> > kernel is in sld_fatal mode if set.
-> >
-> > Now sld_state is not needed any more that the state of SLD can be
-> > inferred from X86_FEATURE_SPLIT_LOCK_DETECT and X86_FEATURE_SLD_FATAL.
+
+
+On 5/11/2020 12:21 AM, Marek Szyprowski wrote:
+> Hi Florian,
 > 
-> Is it too much to ask for Intel to actually allocate and define a
-> CPUID bit that means "this CPU *always* sends #AC on a split lock"?
-> This would be a pure documentation change, but it would make this
-> architectural rather than something that each hypervisor needs to hack
-> up.
+> On 09.05.2020 00:32, Florian Fainelli wrote:
+>> The GENET controller on the Raspberry Pi 4 (2711) is typically
+>> interfaced with an external Broadcom PHY via a RGMII electrical
+>> interface. To make sure that delays are properly configured at the PHY
+>> side, ensure that we get a chance to have the dedicated Broadcom PHY
+>> driver (CONFIG_BROADCOM_PHY) enabled for this to happen.
+>>
+>> Fixes: 402482a6a78e ("net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed")
+>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>> David,
+>>
+>> I would like Marek to indicate whether he is okay or not with this
+>> change. Thanks!
+> 
+> It is better. It fixes the default values for ARM 32bit 
+> bcm2835_defconfig and ARM 64bit defconfig, so you can add:
+> 
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> There is still an issue there. In case of ARM 64bit, when Genet driver 
+> is configured as a module, BROADCOM_PHY is also set to module. When I 
+> changed Genet to be built-in, BROADCOM_PHY stayed selected as module. 
 
-The original plan was to request a bit in MSR_TEST_CTRL be documented as
-such.  Then we discovered that defining IA32_CORE_CAPABILITIES enumeration
-as architectural was an SDM bug[*].  At that point, enumerating SLD to a
-KVM guest through a KVM CPUID leaf is the least awful option.  Emulating the
-model specific behavior doesn't provide userspace with a sane way to disable
-SLD for a guest, and emulating IA32_CORE_CAPABILITIES behavior would be
-tantamount to emulating model specific behavior.
+OK.
 
-Once paravirt is required for basic SLD enumeration, tacking on the "fatal"
-indicator is a minor blip.
+> This case doesn't work, as Genet driver is loaded much earlier than the 
+> rootfs/initrd/etc is available, thus broadcom phy driver is not loaded 
+> at all. It looks that some kind of deferred probe is missing there.
 
-I agree that having to reinvent the wheel for every hypervisor is completely
-ridiculous, but it provides well defined and controllable behavior.  We
-could try to get two CPUID bits defined in the SDM, but pushing through all
-the bureaucracy that gates SDM changes means we wouldn't have a resolution
-for at least multiple months, assuming the proposal was even accepted.
+In the absence of a specific PHY driver the Generic PHY driver gets used
+instead. This is a valid situation as I described in my other email
+because the boot loader/firmware could have left the PHY properly
+configured with the expected RGMII delays and configuration such that
+Linux does not need to be aware of anything. I suppose we could change
+the GENET driver when running on the 2711 platform to reject the PHY
+driver being "Generic PHY" on the premise that a specialized driver
+should be used instead, but that seems a bit too restrictive IMHO.
 
-[*] https://lkml.kernel.org/r/20200416205754.21177-3-tony.luck@intel.com
- 
-> Meanwhile, I don't see why adding a cpufeature flag is worthwhile to
-> avoid a less bizarre global variable.  There's no performance issue
-> here, and the old code looked a lot more comprehensible than the new
-> code.
-
-The flag has two main advantages:
-
-  - Automatically available to modules, i.e. KVM.
-  - Visible to userspace in /proc/cpuinfo.
-
-Making the global variable available to KVM is ugly because it either
-requires exporting the variable and the enums (which gets especially nasty
-because kvm_intel can be built with CONFIG_CPU_SUP_INTEL=n), or requires
-adding a dedicated is_sld_fatal() wrapper and thus more exported crud.
-
-And IMO, the feature flag is the less bizarre option once it's "public"
-knowledge, e.g. more in line with features that enumerate both basic support
-and sub-features via CPUID bits.
+Do you prefer a "select BROADCOM_PHY if ARCH_BCM2835" then?
+-- 
+Florian
