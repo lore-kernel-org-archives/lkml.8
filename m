@@ -2,163 +2,195 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F89C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29123C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACC2D206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0490020746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J4zVd3Td"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgEKPXm (ORCPT
+        id S1730279AbgEKPYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:23:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49988 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgEKPXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:23:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 388A4AB76;
-        Mon, 11 May 2020 15:23:42 +0000 (UTC)
-Date:   Mon, 11 May 2020 17:23:30 +0200
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     talho@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, afaerber@suse.de
-Subject: Re: arm64: tegra186: bpmp: kernel crash while decompressing initrd
-Message-ID: <20200511152330.GA1718@suse.de>
-References: <20200508084041.23366-1-ykaukab@suse.de>
- <e01aba39-1f81-de00-2f7e-dd7295baa7ed@arm.com>
+        Mon, 11 May 2020 11:24:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33999 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726410AbgEKPYl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 11:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589210678;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y+EZnNSJnLX9BN2ueYmOXehuaucuqIYsgPW/NwhW9+Q=;
+        b=J4zVd3Tdq2RwDl6JwozY0oDyZzYAE7L+HtoeqheiujitSJFU1mosQBdnCkiAPlRh6JpQpa
+        jlQBtUgObYojKzyU38mFk5mGukcce++TEcgA1y1UPFjygnXwAsVseQnI0D7SZEpxUx0cY4
+        79ZQciuerhMjX2LWpox+Qd0FI3DdXP0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-155-JMDqLkuBP2aD6tVo8BiJeQ-1; Mon, 11 May 2020 11:24:35 -0400
+X-MC-Unique: JMDqLkuBP2aD6tVo8BiJeQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EFB4802EAF;
+        Mon, 11 May 2020 15:24:32 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-114-80.rdu2.redhat.com [10.10.114.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 871205D9DC;
+        Mon, 11 May 2020 15:24:31 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id E86F6220C05; Mon, 11 May 2020 11:24:30 -0400 (EDT)
+Date:   Mon, 11 May 2020 11:24:30 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        pbonzini@redhat.com
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Message-ID: <20200511152430.GA116012@redhat.com>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+ <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+ <CAPcyv4g0a406X9-=NATJZ9QqObim9Phdkb_WmmhsT9zvXsGSpw@mail.gmail.com>
+ <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+ <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e01aba39-1f81-de00-2f7e-dd7295baa7ed@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:25:00PM +0100, Robin Murphy wrote:
-> On 2020-05-08 9:40 am, Mian Yousaf Kaukab wrote:
-> > I am seeing following kernel crash on Jetson TX2. Board is flashed with
-> > firmware bits from L4T R32.4.2 with upstream u-boot. Crash always
-> > happens while decompressing initrd. Initrd is approximately 80 MiB in
-> > size and compressed with xz (xz --check=crc32 --lzma2=dict=32MiB).
-> > Crash is not observed if the same initrd is compressed with gzip.
-> > [1] was a previous attempt to workaround the same issue.
-> > 
-> > [    0.651168] Trying to unpack rootfs image as initramfs...
-> > [    2.890171] SError Interrupt on CPU0, code 0xbf40c000 -- SError
-> > [    2.890174] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G S                5.7.0-rc4-next-20200505 #22
-> > [    2.890175] Hardware name: nvidia p2771-0000/p2771-0000, BIOS 2020.04-rc3 03/25/2020
-> > [    2.890176] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
-> > [    2.890177] pc : lzma_main+0x648/0x908
-> > [    2.890178] lr : lzma_main+0x330/0x908
-> > [    2.890179] sp : ffff80001003bb70
-> > [    2.890180] x29: ffff80001003bb70 x28: 0000000004d794a4
-> > [    2.890183] x27: 0000000004769941 x26: ffff0001eb064000
-> > [    2.890185] x25: ffff0001eb060028 x24: 0000000000000002
-> > [    2.890187] x23: 0000000000000003 x22: 0000000000000007
-> > [    2.890189] x21: 0000000000611f4b x20: ffff0001eb060000
-> > [    2.890192] x19: ffff80001003bcb8 x18: 0000000000000068
-> > [    2.890194] x17: 00000000000000c0 x16: fffffe00076b2108
-> > [    2.890196] x15: 0000000000000800 x14: 0000000000ffffff
-> > [    2.890198] x13: 0000000000000001 x12: ffff0001eb060000
-> > [    2.890200] x11: 0000000000000600 x10: ffff0001eb060028
-> > [    2.890202] x9 : 00000000ffbb2a08 x8 : 0000000000000ed0
-> > [    2.890204] x7 : 00000000011553ec x6 : 0000000000000000
-> > [    2.890206] x5 : 0000000000000000 x4 : 0000000000000006
-> > [    2.890208] x3 : 00000000015a29e4 x2 : ffff0001eb062d0c
-> > [    2.890210] x1 : 000000000000000c x0 : 000000000263de44
-> > 
-> > With some debugging aid ported from Nvidia downstream kernel [2] the
-> > actual cause was found:
-> > 
-> > [    0.761525] Trying to unpack rootfs image as initramfs...
-> > [    2.955499] CPU0: SError: mpidr=0x80000100, esr=0xbf40c000
-> > [    2.955502] CPU1: SError: mpidr=0x80000000, esr=0xbe000000
-> > [    2.955505] CPU2: SError: mpidr=0x80000001, esr=0xbe000000
-> > [    2.955506] CPU3: SError: mpidr=0x80000101, esr=0xbf40c000
-> > [    2.955507] ROC:CCE Machine Check Error:
-> > [    2.955508] ROC:CCE Registers:
-> > [    2.955509]  STAT: 0xb400000000400415
-> > [    2.955510]  ADDR: 0x400c00e7a00c
-> > [    2.955511]  MSC1: 0x80ffc
-> > [    2.955512]  MSC2: 0x3900000000800
-> > [    2.955513] --------------------------------------
-> > [    2.955514] Decoded ROC:CCE Machine Check:
-> > [    2.955515]  Uncorrected (this is fatal)
-> > [    2.955516]  Error reporting enabled when error arrived
-> > [    2.955517]  Error Code = 0x415
-> > [    2.955518]  Poison Error
-> > [    2.955518]  Command = NCRd (0xc)
-> > [    2.955519]  Address Type = Non-Secure DRAM
-> > [    2.955521]  Address = 0x30039e80 -- 30000000.sysram + 0x39e80
-> > [    2.955521]  TLimit = 0x3ff
-> > [    2.955522]  Poison Error Mask = 0x80
-> > [    2.955523]  More Info = 0x800
-> > [    2.955524]  Timeout Info = 0x0
-> > [    2.955525]          Poison Info = 0x800
-> > [    2.955526]          Read Request failed GSC checks
-> > [    2.955527]  Source = L2_1 (A57) (0x1)
-> > [    2.955528]  TID = 0xe
-> > 
-> > IIUC, there was read request for 0x30039e80 from EL1/2 which failed.
-> > This address falls in the sysram security aperture and hence a read
-> > from normal mode failed.
-> > 
-> > sysram is mapped at 0x3000_0000 to 0x3004_ffff and is managed by the
-> > sram driver (drivers/misc/sram.c). There are two reserved pools for
-> > BPMP driver communication at 0x3004_e000 and 0x3004_f000 of 0x1000
-> > bytes each.
-> > 
-> > sram driver maps complete 0x3000_0000 to 0x3004_ffff range as normal
-> > memory.
+On Thu, Apr 30, 2020 at 06:21:45PM -0700, Dan Williams wrote:
+> On Thu, Apr 30, 2020 at 5:10 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Thu, Apr 30, 2020 at 4:52 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > You had me until here. Up to this point I was grokking that Andy's
+> > > "_fallible" suggestion does help explain better than "_safe", because
+> > > the copy is doing extra safety checks. copy_to_user() and
+> > > copy_to_user_fallible() mean *something* where copy_to_user_safe()
+> > > does not.
+> >
+> > It's a horrible word, btw. The word doesn't actually mean what Andy
+> > means it to mean. "fallible" means "can make mistakes", not "can
+> > fault".
+> >
+> > So "fallible" is a horrible name.
+> >
+> > But anyway, I don't hate something like "copy_to_user_fallible()"
+> > conceptually. The naming needs to be fixed, in that "user" can always
+> > take a fault, so it's the _source_ that can fault, not the "user"
+> > part.
+> >
+> > It was the "copy_safe()" model that I find unacceptable, that uses
+> > _one_ name for what is at the very least *four* different operations:
+> >
+> >  - copy from faulting memory to user
+> >
+> >  - copy from faulting memory to kernel
+> >
+> >  - copy from kernel to faulting memory
+> >
+> >  - copy within faulting memory
+> >
+> > No way can you do that with one single function. A kernel address and
+> > a user address may literally have the exact same bit representation.
+> > So the user vs kernel distinction _has_ to be in the name.
+> >
+> > The "kernel vs faulting" doesn't necessarily have to be there from an
+> > implementation standpoint, but it *should* be there, because
+> >
+> >  - it might affect implemmentation
+> >
+> >  - but even if it DOESN'T affect implementation, it should be separate
+> > just from the standpoint of being self-documenting code.
+> >
+> > > However you lose me on this "broken nvdimm semantics" contention.
+> > > There is nothing nvdimm-hardware specific about the copy_safe()
+> > > implementation, zero, nada, nothing new to the error model that DRAM
+> > > did not also inflict on the Linux implementation.
+> >
+> > Ok, so good. Let's kill this all, and just use memcpy(), and copy_to_user().
+> >
+> > Just make sure that the nvdimm code doesn't use invalid kernel
+> > addresses or other broken poisoning.
+> >
+> > Problem solved.
+> >
+> > You can't have it both ways. Either memcpy just works, or it doesn't.
 > 
-> That's your problem. It's not really worth attempting to reason about, the
-> architecture says that anything mapped as Normal memory may be speculatively
-> accessed at any time, so no amount of second-guessing is going to save you
-> in general. Don't make stuff accessible to the kernel that it doesn't need
-> to access, and especially don't make stuff accessible to the kernel if
-> accessing it will kill the system.
+> It doesn't, but copy_to_user() is frustratingly close and you can see
+> in the patch that I went ahead and used copy_user_generic() to
+> implement the backend of the default "fast" implementation.
 > 
-I agree and [1] was an attempt in that direction. What I wonder here is that
-processor is speculating on an address range which kernel has never accessed.
-Is it correct behavior that cpu is speculating in EL1/EL2 on an address
-accessed in EL3?
+> However now I see that copy_user_generic() works for the wrong reason.
+> It works because the exception on the source address due to poison
+> looks no different than a write fault on the user address to the
+> caller, it's still just a short copy. So it makes copy_to_user() work
+> for the wrong reason relative to the name.
+> 
+> How about, following your suggestion, introduce copy_mc_to_user() (can
+> just use copy_user_generic() internally) and copy_mc_to_kernel() for
+> the other the helpers that the copy_to_iter() implementation needs?
+> That makes it clear that no mmu-faults are expected on reads, only
+> exceptions, and no protection-faults are expected at all for
+> copy_mc_to_kernel() even if it happens to accidentally handle it.
+> Following Jann's ex_handler_uaccess() example I could arrange for
+> copy_mc_to_kernel() to use a new _ASM_EXTABLE_MC() to validate that
+> the only type of exception meant to be handled is MC and warn
+> otherwise?
 
-> > However, only the BPMP reserved pools (0x3004_e000 - 0x3004_ffff)
-> > are accessible from the kernel. Address 0x3003_9e80 is inaccessible
-> > from the kernel and a read to it (which I believe is speculative)
-> > causes the SError. Only driver which uses sysram is not initialized at
-> > this point (rootfs_initcall level). As since
-> > commit d70f5e541ab3 ("firmware: tegra: Make BPMP a regular driver")
-> > bpmp driver is initialized at device_initcall level.
-> > 
-> > If none of the drivers on the kernel side using 0x3003_9e80 address
-> > range. Why a read to it occurs even speculatively? Could it be that
-> > some EL3 software didn’t cleanup after itself properly? Any
-> > suggestions on debugging this issue further?
-> > 
-> > Another solution suggested in [1] was to add no-memory-wc in sysram
-> > node in device-tree so that sysram is mapped as device-memory. Thus
-> > preventing any speculative access. However, it causes another set of
-> > issues with the bpmp driver. That's may be a discussion for another
-> > time.
-> 
-> AFAICS the truly correct solution is what Stephen initially suggested there
-> - for the boot process to somehow describe which parts of SRAM have been
-> reserved by Secure software and/or which parts remain Non-Secure, and for
-> the kernel driver to only map and use the latter.
-Yes, let me see what I can do.
-> 
-> Robin.
+While we are discussing this, I wanted to mention another use case
+I am looking at. That is using DAX for virtiofs. virtiofs device
+exports a shared memory region which guest maps using DAX. virtiofs
+driver dax ops ->copy_to_iter() and ->copy_from_iter() needs to now
+copy contents from/to this shared memmory region to user space.
 
-Thanks,
-Yousaf
+So far we are focussed only on nvdimm and expecting only a machine
+check on read side, IIUC. But this virtual device will probably
+need something more.
+
+- A page can go missing on host (because file got truncated). So error
+  can happen both in read and write path.
+
+- It might not be a machine check to report this kind of error. KVM as
+  of now considering using an interrupt to report errors or possibly
+  using #VE to report errors.
+
+IOW, tying these new helpers to only machine check will work well for
+nvdimm use case but not for virtual devices like virtiofs and we will
+end up defining more helpers. Something more generic then machine check
+might be able to address both.
+
+Thanks
+Vivek
+
