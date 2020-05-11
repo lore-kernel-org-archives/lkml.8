@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E78C54E8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3627C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6282496A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82192496A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgEKDAy (ORCPT
+        id S1729084AbgEKDA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:00:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11452 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728777AbgEKDAt (ORCPT
+        Sun, 10 May 2020 23:00:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728857AbgEKDAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:00:49 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B2UvcM105694;
-        Sun, 10 May 2020 23:00:21 -0400
+        Sun, 10 May 2020 23:00:54 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B2Wu1U028041;
+        Sun, 10 May 2020 23:00:30 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw3nkj8-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvrdk9d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 10 May 2020 23:00:21 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B2ZK5d117147;
-        Sun, 10 May 2020 23:00:21 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw3nkh2-1
+        Sun, 10 May 2020 23:00:30 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B2WvxH028151;
+        Sun, 10 May 2020 23:00:29 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvrdk7v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 10 May 2020 23:00:21 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B2tGGL022133;
-        Mon, 11 May 2020 03:00:19 GMT
+        Sun, 10 May 2020 23:00:29 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B2tF9K024126;
+        Mon, 11 May 2020 03:00:27 GMT
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 30wm559d6v-1
+        by ppma01fra.de.ibm.com with ESMTP id 30wm559d90-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 03:00:18 +0000
+        Mon, 11 May 2020 03:00:26 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B30Gop63766776
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B30OHE16842874
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 03:00:16 GMT
+        Mon, 11 May 2020 03:00:24 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7001AE05F;
-        Mon, 11 May 2020 03:00:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DA828AE075;
+        Mon, 11 May 2020 03:00:23 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79C42AE053;
-        Mon, 11 May 2020 03:00:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8FCF5AE058;
+        Mon, 11 May 2020 03:00:20 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.53.64])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 May 2020 03:00:12 +0000 (GMT)
+        Mon, 11 May 2020 03:00:20 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
@@ -62,9 +62,9 @@ Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
         fweisbec@gmail.com, mingo@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         ravi.bangoria@linux.ibm.com
-Subject: [PATCH v5 14/16] powerpc/watchpoint: Don't allow concurrent perf and ptrace events
-Date:   Mon, 11 May 2020 08:29:09 +0530
-Message-Id: <20200511025911.212827-15-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v5 16/16] powerpc/watchpoint/xmon: Support 2nd DAWR
+Date:   Mon, 11 May 2020 08:29:11 +0530
+Message-Id: <20200511025911.212827-17-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511025911.212827-1-ravi.bangoria@linux.ibm.com>
 References: <20200511025911.212827-1-ravi.bangoria@linux.ibm.com>
@@ -73,328 +73,208 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-10_11:2020-05-08,2020-05-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- spamscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110014
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 suspectscore=2 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With Book3s DAWR, ptrace and perf watchpoints on powerpc behaves
-differently. Ptrace watchpoint works in one-shot mode and generates
-signal before executing instruction. It's ptrace user's job to
-single-step the instruction and re-enable the watchpoint. OTOH, in
-case of perf watchpoint, kernel emulates/single-steps the instruction
-and then generates event. If perf and ptrace creates two events with
-same or overlapping address ranges, it's ambiguous to decide who
-should single-step the instruction. Because of this issue, don't
-allow perf and ptrace watchpoint at the same time if their address
-range overlaps.
+Add support for 2nd DAWR in xmon. With this, we can have two
+simultaneous breakpoints from xmon.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Reviewed-by: Michael Neuling <mikey@neuling.org>
 ---
- arch/powerpc/include/asm/hw_breakpoint.h |   2 +
- arch/powerpc/kernel/hw_breakpoint.c      | 221 +++++++++++++++++++++++
- kernel/events/hw_breakpoint.c            |  16 ++
- 3 files changed, 239 insertions(+)
+ arch/powerpc/xmon/xmon.c | 101 ++++++++++++++++++++++++++-------------
+ 1 file changed, 69 insertions(+), 32 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index add5aa076919..f42a55eb77d2 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -70,6 +70,8 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
- 						unsigned long val, void *data);
- int arch_install_hw_breakpoint(struct perf_event *bp);
- void arch_uninstall_hw_breakpoint(struct perf_event *bp);
-+int arch_reserve_bp_slot(struct perf_event *bp);
-+void arch_release_bp_slot(struct perf_event *bp);
- void arch_unregister_hw_breakpoint(struct perf_event *bp);
- void hw_breakpoint_pmu_read(struct perf_event *bp);
- extern void flush_ptrace_hw_breakpoint(struct task_struct *tsk);
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 28d57d841642..c8623708c9c7 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -123,6 +123,227 @@ static bool is_ptrace_bp(struct perf_event *bp)
- 	return bp->overflow_handler == ptrace_triggered;
- }
+diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+index 99e9138661e4..01da49b666db 100644
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -111,7 +111,7 @@ struct bpt {
  
-+struct breakpoint {
-+	struct list_head list;
-+	struct perf_event *bp;
-+	bool ptrace_bp;
-+};
-+
-+static DEFINE_PER_CPU(struct breakpoint *, cpu_bps[HBP_NUM_MAX]);
-+static LIST_HEAD(task_bps);
-+
-+static struct breakpoint *alloc_breakpoint(struct perf_event *bp)
-+{
-+	struct breakpoint *tmp;
-+
-+	tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
-+	if (!tmp)
-+		return ERR_PTR(-ENOMEM);
-+	tmp->bp = bp;
-+	tmp->ptrace_bp = is_ptrace_bp(bp);
-+	return tmp;
-+}
-+
-+static bool bp_addr_range_overlap(struct perf_event *bp1, struct perf_event *bp2)
-+{
-+	__u64 bp1_saddr, bp1_eaddr, bp2_saddr, bp2_eaddr;
-+
-+	bp1_saddr = ALIGN_DOWN(bp1->attr.bp_addr, HW_BREAKPOINT_SIZE);
-+	bp1_eaddr = ALIGN(bp1->attr.bp_addr + bp1->attr.bp_len, HW_BREAKPOINT_SIZE);
-+	bp2_saddr = ALIGN_DOWN(bp2->attr.bp_addr, HW_BREAKPOINT_SIZE);
-+	bp2_eaddr = ALIGN(bp2->attr.bp_addr + bp2->attr.bp_len, HW_BREAKPOINT_SIZE);
-+
-+	return (bp1_saddr < bp2_eaddr && bp1_eaddr > bp2_saddr);
-+}
-+
-+static bool alternate_infra_bp(struct breakpoint *b, struct perf_event *bp)
-+{
-+	return is_ptrace_bp(bp) ? !b->ptrace_bp : b->ptrace_bp;
-+}
-+
-+static bool can_co_exist(struct breakpoint *b, struct perf_event *bp)
-+{
-+	return !(alternate_infra_bp(b, bp) && bp_addr_range_overlap(b->bp, bp));
-+}
-+
-+static int task_bps_add(struct perf_event *bp)
-+{
-+	struct breakpoint *tmp;
-+
-+	tmp = alloc_breakpoint(bp);
-+	if (IS_ERR(tmp))
-+		return PTR_ERR(tmp);
-+
-+	list_add(&tmp->list, &task_bps);
-+	return 0;
-+}
-+
-+static void task_bps_remove(struct perf_event *bp)
-+{
-+	struct list_head *pos, *q;
-+
-+	list_for_each_safe(pos, q, &task_bps) {
-+		struct breakpoint *tmp = list_entry(pos, struct breakpoint, list);
-+
-+		if (tmp->bp == bp) {
-+			list_del(&tmp->list);
-+			kfree(tmp);
-+			break;
-+		}
-+	}
-+}
-+
-+/*
-+ * If any task has breakpoint from alternate infrastructure,
-+ * return true. Otherwise return false.
-+ */
-+static bool all_task_bps_check(struct perf_event *bp)
-+{
-+	struct breakpoint *tmp;
-+
-+	list_for_each_entry(tmp, &task_bps, list) {
-+		if (!can_co_exist(tmp, bp))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * If same task has breakpoint from alternate infrastructure,
-+ * return true. Otherwise return false.
-+ */
-+static bool same_task_bps_check(struct perf_event *bp)
-+{
-+	struct breakpoint *tmp;
-+
-+	list_for_each_entry(tmp, &task_bps, list) {
-+		if (tmp->bp->hw.target == bp->hw.target &&
-+		    !can_co_exist(tmp, bp))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static int cpu_bps_add(struct perf_event *bp)
-+{
-+	struct breakpoint **cpu_bp;
-+	struct breakpoint *tmp;
-+	int i = 0;
-+
-+	tmp = alloc_breakpoint(bp);
-+	if (IS_ERR(tmp))
-+		return PTR_ERR(tmp);
-+
-+	cpu_bp = per_cpu_ptr(cpu_bps, bp->cpu);
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!cpu_bp[i]) {
-+			cpu_bp[i] = tmp;
-+			break;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static void cpu_bps_remove(struct perf_event *bp)
-+{
-+	struct breakpoint **cpu_bp;
-+	int i = 0;
-+
-+	cpu_bp = per_cpu_ptr(cpu_bps, bp->cpu);
-+	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (!cpu_bp[i])
-+			continue;
-+
-+		if (cpu_bp[i]->bp == bp) {
-+			kfree(cpu_bp[i]);
-+			cpu_bp[i] = NULL;
-+			break;
-+		}
-+	}
-+}
-+
-+static bool cpu_bps_check(int cpu, struct perf_event *bp)
-+{
-+	struct breakpoint **cpu_bp;
+ #define NBPTS	256
+ static struct bpt bpts[NBPTS];
+-static struct bpt dabr;
++static struct bpt dabr[HBP_NUM_MAX];
+ static struct bpt *iabr;
+ static unsigned bpinstr = 0x7fe00008;	/* trap */
+ 
+@@ -787,10 +787,17 @@ static int xmon_sstep(struct pt_regs *regs)
+ 
+ static int xmon_break_match(struct pt_regs *regs)
+ {
 +	int i;
 +
-+	cpu_bp = per_cpu_ptr(cpu_bps, cpu);
+ 	if ((regs->msr & (MSR_IR|MSR_PR|MSR_64BIT)) != (MSR_IR|MSR_64BIT))
+ 		return 0;
+-	if (dabr.enabled == 0)
+-		return 0;
 +	for (i = 0; i < nr_wp_slots(); i++) {
-+		if (cpu_bp[i] && !can_co_exist(cpu_bp[i], bp))
-+			return true;
++		if (dabr[i].enabled)
++			goto found;
 +	}
-+	return false;
-+}
++	return 0;
 +
-+static bool all_cpu_bps_check(struct perf_event *bp)
-+{
-+	int cpu;
-+
-+	for_each_online_cpu(cpu) {
-+		if (cpu_bps_check(cpu, bp))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * We don't use any locks to serialize accesses to cpu_bps or task_bps
-+ * because are already inside nr_bp_mutex.
-+ */
-+int arch_reserve_bp_slot(struct perf_event *bp)
-+{
-+	int ret;
-+
-+	/* ptrace breakpoint */
-+	if (is_ptrace_bp(bp)) {
-+		if (all_cpu_bps_check(bp))
-+			return -ENOSPC;
-+
-+		if (same_task_bps_check(bp))
-+			return -ENOSPC;
-+
-+		return task_bps_add(bp);
-+	}
-+
-+	/* perf breakpoint */
-+	if (is_kernel_addr(bp->attr.bp_addr))
-+		return 0;
-+
-+	if (bp->hw.target && bp->cpu == -1) {
-+		if (same_task_bps_check(bp))
-+			return -ENOSPC;
-+
-+		return task_bps_add(bp);
-+	} else if (!bp->hw.target && bp->cpu != -1) {
-+		if (all_task_bps_check(bp))
-+			return -ENOSPC;
-+
-+		return cpu_bps_add(bp);
-+	}
-+
-+	if (same_task_bps_check(bp))
-+		return -ENOSPC;
-+
-+	ret = cpu_bps_add(bp);
-+	if (ret)
-+		return ret;
-+	ret = task_bps_add(bp);
-+	if (ret)
-+		cpu_bps_remove(bp);
-+
-+	return ret;
-+}
-+
-+void arch_release_bp_slot(struct perf_event *bp)
-+{
-+	if (!is_kernel_addr(bp->attr.bp_addr)) {
-+		if (bp->hw.target)
-+			task_bps_remove(bp);
-+		if (bp->cpu != -1)
-+			cpu_bps_remove(bp);
-+	}
-+}
-+
- /*
-  * Perform cleanup of arch-specific counters during unregistration
-  * of the perf-event
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 3cc8416ec844..b48d7039a015 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -213,6 +213,15 @@ toggle_bp_slot(struct perf_event *bp, bool enable, enum bp_type_idx type,
- 		list_del(&bp->hw.bp_list);
++found:
+ 	xmon_core(regs, 0);
+ 	return 1;
+ }
+@@ -929,13 +936,16 @@ static void insert_bpts(void)
+ 
+ static void insert_cpu_bpts(void)
+ {
++	int i;
+ 	struct arch_hw_breakpoint brk;
+ 
+-	if (dabr.enabled) {
+-		brk.address = dabr.address;
+-		brk.type = (dabr.enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
+-		brk.len = DABR_MAX_LEN;
+-		__set_breakpoint(0, &brk);
++	for (i = 0; i < nr_wp_slots(); i++) {
++		if (dabr[i].enabled) {
++			brk.address = dabr[i].address;
++			brk.type = (dabr[i].enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
++			brk.len = 8;
++			__set_breakpoint(i, &brk);
++		}
+ 	}
+ 
+ 	if (iabr)
+@@ -1349,6 +1359,35 @@ static long check_bp_loc(unsigned long addr)
+ 	return 1;
  }
  
-+__weak int arch_reserve_bp_slot(struct perf_event *bp)
++static int find_free_data_bpt(void)
 +{
-+	return 0;
++	int i;
++
++	for (i = 0; i < nr_wp_slots(); i++) {
++		if (!dabr[i].enabled)
++			return i;
++	}
++	printf("Couldn't find free breakpoint register\n");
++	return -1;
 +}
 +
-+__weak void arch_release_bp_slot(struct perf_event *bp)
++static void print_data_bpts(void)
 +{
++	int i;
++
++	for (i = 0; i < nr_wp_slots(); i++) {
++		if (!dabr[i].enabled)
++			continue;
++
++		printf("   data   "REG"  [", dabr[i].address);
++		if (dabr[i].enabled & 1)
++			printf("r");
++		if (dabr[i].enabled & 2)
++			printf("w");
++		printf("]\n");
++	}
 +}
 +
- /*
-  * Function to perform processor-specific cleanup during unregistration
-  */
-@@ -270,6 +279,7 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
- 	struct bp_busy_slots slots = {0};
- 	enum bp_type_idx type;
- 	int weight;
-+	int ret;
+ static char *breakpoint_help_string =
+     "Breakpoint command usage:\n"
+     "b                show breakpoints\n"
+@@ -1382,10 +1421,9 @@ bpt_cmds(void)
+ 			printf("Hardware data breakpoint not supported on this cpu\n");
+ 			break;
+ 		}
+-		if (dabr.enabled) {
+-			printf("Couldn't find free breakpoint register\n");
++		i = find_free_data_bpt();
++		if (i < 0)
+ 			break;
+-		}
+ 		mode = 7;
+ 		cmd = inchar();
+ 		if (cmd == 'r')
+@@ -1394,15 +1432,15 @@ bpt_cmds(void)
+ 			mode = 6;
+ 		else
+ 			termch = cmd;
+-		dabr.address = 0;
+-		dabr.enabled = 0;
+-		if (scanhex(&dabr.address)) {
+-			if (!is_kernel_addr(dabr.address)) {
++		dabr[i].address = 0;
++		dabr[i].enabled = 0;
++		if (scanhex(&dabr[i].address)) {
++			if (!is_kernel_addr(dabr[i].address)) {
+ 				printf(badaddr);
+ 				break;
+ 			}
+-			dabr.address &= ~HW_BRK_TYPE_DABR;
+-			dabr.enabled = mode | BP_DABR;
++			dabr[i].address &= ~HW_BRK_TYPE_DABR;
++			dabr[i].enabled = mode | BP_DABR;
+ 		}
  
- 	/* We couldn't initialize breakpoint constraints on boot */
- 	if (!constraints_initialized)
-@@ -294,6 +304,10 @@ static int __reserve_bp_slot(struct perf_event *bp, u64 bp_type)
- 	if (slots.pinned + (!!slots.flexible) > nr_slots[type])
- 		return -ENOSPC;
- 
-+	ret = arch_reserve_bp_slot(bp);
-+	if (ret)
-+		return ret;
+ 		force_enable_xmon();
+@@ -1441,7 +1479,9 @@ bpt_cmds(void)
+ 			for (i = 0; i < NBPTS; ++i)
+ 				bpts[i].enabled = 0;
+ 			iabr = NULL;
+-			dabr.enabled = 0;
++			for (i = 0; i < nr_wp_slots(); i++)
++				dabr[i].enabled = 0;
 +
- 	toggle_bp_slot(bp, true, type, weight);
+ 			printf("All breakpoints cleared\n");
+ 			break;
+ 		}
+@@ -1475,14 +1515,7 @@ bpt_cmds(void)
+ 		if (xmon_is_ro || !scanhex(&a)) {
+ 			/* print all breakpoints */
+ 			printf("   type            address\n");
+-			if (dabr.enabled) {
+-				printf("   data   "REG"  [", dabr.address);
+-				if (dabr.enabled & 1)
+-					printf("r");
+-				if (dabr.enabled & 2)
+-					printf("w");
+-				printf("]\n");
+-			}
++			print_data_bpts();
+ 			for (bp = bpts; bp < &bpts[NBPTS]; ++bp) {
+ 				if (!bp->enabled)
+ 					continue;
+@@ -1942,8 +1975,13 @@ static void dump_207_sprs(void)
  
- 	return 0;
-@@ -317,6 +331,8 @@ static void __release_bp_slot(struct perf_event *bp, u64 bp_type)
- 	enum bp_type_idx type;
- 	int weight;
+ 	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
+ 		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
+-	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
+-		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
++	printf("dawr0  = %.16lx dawrx0 = %.16lx\n",
++	       mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0));
++	if (nr_wp_slots() > 1) {
++		printf("dawr1  = %.16lx dawrx1 = %.16lx\n",
++		       mfspr(SPRN_DAWR1), mfspr(SPRN_DAWRX1));
++	}
++	printf("ciabr  = %.16lx\n", mfspr(SPRN_CIABR));
+ #endif
+ }
  
-+	arch_release_bp_slot(bp);
-+
- 	type = find_slot_idx(bp_type);
- 	weight = hw_breakpoint_weight(bp);
- 	toggle_bp_slot(bp, false, type, weight);
+@@ -3873,10 +3911,9 @@ static void clear_all_bpt(void)
+ 		bpts[i].enabled = 0;
+ 
+ 	/* Clear any data or iabr breakpoints */
+-	if (iabr || dabr.enabled) {
+-		iabr = NULL;
+-		dabr.enabled = 0;
+-	}
++	iabr = NULL;
++	for (i = 0; i < nr_wp_slots(); i++)
++		dabr[i].enabled = 0;
+ }
+ 
+ #ifdef CONFIG_DEBUG_FS
 -- 
 2.21.1
 
