@@ -2,140 +2,129 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB74C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766C2C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3217520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589238649;
-	bh=StYDiyWOzTz8s4eoDIchmFWX8oOhpDcRyetPtEw6Q0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i/o42sVKkac6/57SNR18pv0ULNSmP/Hyc8SVSEJiEcQymFlBlK8xFMJbG2VAHgqCX
-	 isGWnx6xCskEtt/FVdVknt1CnG3zsmmnaPxgA1H/zJOrg6ovjnpi/aeu+7VGn5DQKB
-	 G9gJvYw4Ul+4h/HQJgPWw8Hs78RfPGa54aaK7CMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5271D20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kds3MjSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgEKXKs (ORCPT
+        id S1728040AbgEKXL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:10:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34092 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgEKXKs (ORCPT
+        Mon, 11 May 2020 19:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726079AbgEKXLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:10:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so5253985pgm.1;
-        Mon, 11 May 2020 16:10:47 -0700 (PDT)
+        Mon, 11 May 2020 19:11:25 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716D8C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:11:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 18so5435477pfv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kd/QhpImkX36HF8SlWn26Vq1MT1a121rRIqfkQ3OXgM=;
+        b=kds3MjSmr+27Km3d5Oqby9a5V7U3EwsuhhfZylClXw9zwc4b+sEYlhi4/M9bgYp5oB
+         ang2aRYRWcMFQYbgk5YRBlzv3/fVADiSFz2nwkFRGmc5lPYWVxEHJYfF7rYTeO/sjxc6
+         vdDOl1TTJxTZOoez95WzbMM3Hee11EoiliYSQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hiDXhOqEaRntgCYoG58/UdjziepUsw/dC1iXbtsscqA=;
-        b=Ci2AFzx7ycftJt3SvKCsMgMptMKcoGYmGnNaG1Wcmd4s5HJVlGulHtKdYzzzqPxeVu
-         3SCQTWYR4XJYx13+V2aSF69lI6yCcx9GQ2Xn1K57/lx+4G6P067tg0RSU/iwSNh4j2ga
-         goiGJiF54v7s5Zk5H64g0EGbsr3AnLtdQZ4slEeOHnlrmgbhFMBsD19/DYrdKOOH7Tqp
-         E0Z5HeyXL8t0F1Q+vhEApc938P1DRfkmawoQHkS+hMyrK+egH0IQdx0M3lcrgBkXkc2v
-         qsCt1/MUw6dhZw+wXR5cCwSyIRc/igGaMarCnvjJNvgZLRNeBj6PKzczwYb9DvH8hZWU
-         v5pQ==
-X-Gm-Message-State: AGi0PubBm1R2TNeRjFe44AEYUasTCTW5OARhzuIwvsSpv9SbGwD3j1g9
-        S0R78t6UUawAZGlohb9WPB0=
-X-Google-Smtp-Source: APiQypLfJ+/qZ8hg4TRPTKCku7E/+jkbFKeR4v9woB8GlnH1VF376jqEN5s7ekcr9g9ByNAjPDI+sw==
-X-Received: by 2002:a62:35c1:: with SMTP id c184mr17106381pfa.120.1589238647214;
-        Mon, 11 May 2020 16:10:47 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 1sm9944534pff.151.2020.05.11.16.10.45
+         :mime-version:content-disposition:in-reply-to;
+        bh=kd/QhpImkX36HF8SlWn26Vq1MT1a121rRIqfkQ3OXgM=;
+        b=oTUMLkUf6aFYCBo38d/tqjgztbnR8UDloZuDSDiQiaZnFu9TJBBWGXSnoYWJ+7bH3Q
+         ckiDBuzwPEfCLOrmzQ6296kjHLc7gmRdnIlSGOHdOJJAK00l1lfayjVRICf4EAMmx5Q3
+         Zst0IeFT55IlsNFxnRHlVoY2ecch473DvC7UzprDyd73Gw4cPKnnhD/aSRftxzpkIlPB
+         X2TKk4E0WEEbv9f3UcvrkvbNBXgyiEMGjvLYurmu5PiSF3rhHh54WQ3odq7APDWQ6/my
+         ixlT71JiyVVK1ZsZuHtcg+3xWgBc2dBGwy3dhWGC/rOnUJOOkiH17oj1RW/0LnkVtgJw
+         xiCw==
+X-Gm-Message-State: AOAM531tCe8NoWD1zGN/fq2lCogMt29FYa/ubZGg6oc94CteuJkdCg5r
+        usw6snbpYq9tiTgEOVqQK8Rq3w==
+X-Google-Smtp-Source: ABdhPJwPSUZYIDM8rwAeY/r+K/5u3nE0s9lk3VUhI8mXzXA0IuzsVQak6fdByiO5BrTqPRTkUdRfcg==
+X-Received: by 2002:a63:387:: with SMTP id 129mr7901119pgd.117.1589238684936;
+        Mon, 11 May 2020 16:11:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 138sm10064164pfz.31.2020.05.11.16.11.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:10:46 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 73D1940605; Mon, 11 May 2020 23:10:45 +0000 (UTC)
-Date:   Mon, 11 May 2020 23:10:45 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>, Tso Ted <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        keescook@chromium.org, yzaikin@google.com
-Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
- kernel.tainted and taint the kernel with TAINT_USER on writes
-Message-ID: <20200511231045.GV11244@42.do-not-panic.com>
-References: <20200511215904.719257-1-aquini@redhat.com>
+        Mon, 11 May 2020 16:11:23 -0700 (PDT)
+Date:   Mon, 11 May 2020 16:11:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v7 09/18] pstore/blk: Introduce backend for block devices
+Message-ID: <202005111609.2CA37E4A3@keescook>
+References: <20200510202436.63222-1-keescook@chromium.org>
+ <20200510202436.63222-10-keescook@chromium.org>
+ <2b4fec3e-53f7-b8d9-49f8-d24401f83363@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511215904.719257-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2b4fec3e-53f7-b8d9-49f8-d24401f83363@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
-> The sysctl knob allows any user with SYS_ADMIN capability to
-> taint the kernel with any arbitrary value, but this might
-> produce an invalid flags bitset being committed to tainted_mask.
+On Mon, May 11, 2020 at 08:36:49AM -0700, Randy Dunlap wrote:
+> On 5/10/20 1:24 PM, Kees Cook wrote:
+> > diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+> > index 98d2457bdd9f..92ba73bd0b62 100644
+> > --- a/fs/pstore/Kconfig
+> > +++ b/fs/pstore/Kconfig
+> > @@ -160,3 +160,67 @@ config PSTORE_ZONE
+> >  	help
+> >  	  The common layer for pstore/blk (and pstore/ram in the future)
+> >  	  to manage storage in zones.
+> > +
+> > +config PSTORE_BLK
+> > +	tristate "Log panic/oops to a block device"
+> > +	depends on PSTORE
+> > +	depends on BLOCK
+> > +	select PSTORE_ZONE
+> > +	default n
+> > +	help
+> > +	  This enables panic and oops message to be logged to a block dev
+> > +	  where it can be read back at some later point.
+> > +
+> > +	  If unsure, say N.
+> > +
+> > +config PSTORE_BLK_BLKDEV
+> > +	string "block device identifier"
+> > +	depends on PSTORE_BLK
+> > +	default ""
+> > +	help
+> > +	  Which block device should be used for pstore/blk.
+> > +
+> > +	  It accept the following variants:
+> > +	  1) <hex_major><hex_minor> device number in hexadecimal represents
+> > +	     itself no leading 0x, for example b302.
 > 
-> This patch introduces a simple way for proc_taint() to ignore
-> any eventual invalid bit coming from the user input before
-> committing those bits to the kernel tainted_mask, as well as
-> it makes clear use of TAINT_USER flag to mark the kernel
-> tainted by user everytime a taint value is written
-> to the kernel.tainted sysctl.
-> 
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
-> ---
->  kernel/sysctl.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8727a3..f0a4fb38ac62 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
->  		return err;
->  
->  	if (write) {
-> +		int i;
-> +
-> +		/*
-> +		 * Ignore user input that would make us committing
-> +		 * arbitrary invalid TAINT flags in the loop below.
-> +		 */
-> +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
+> 	     itself with no leading 0x,
 
-This looks good but we don't pr_warn() of information lost on intention.
+Yes, I've reworked the language here. Thanks!
 
-> +
->  		/*
->  		 * Poor man's atomic or. Not worth adding a primitive
->  		 * to everyone's atomic.h for this
->  		 */
-> -		int i;
->  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
->  			if ((tmptaint >> i) & 1)
->  				add_taint(i, LOCKDEP_STILL_OK);
->  		}
-> +
-> +		/*
-> +		 * Users with SYS_ADMIN capability can include any arbitrary
-> +		 * taint flag by writing to this interface. If that's the case,
-> +		 * we also need to mark the kernel "tainted by user".
-> +		 */
-> +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-
-I'm in favor of this however I'd like to hear from Ted on if it meets
-the original intention. I would think he had a good reason not to add
-it here.
-
-   Luis
-
->  	}
->  
-> +
->  	return err;
->  }
->  
-> -- 
-> 2.25.4
-> 
+-- 
+Kees Cook
