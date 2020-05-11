@@ -2,192 +2,78 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA332C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36697C38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A6D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589157890;
-	bh=PSHaMs3sfDyRTDAP+dSIgTCmTUnUNjkBi5Xx6IGk4oc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0Kv3UzHp1e4mi+DTRkNfKn7JZ3eCxmJYb3/X0fCIWre5K8jR6q6P9BfYZAMHu/ue2
-	 QOM2FDSHTYUtQNVm4n8BbzZ9gsEdwEHTLsRlXNMzoIZzbTbVwJKCxwXT+/5dc5J88v
-	 2YfT/xc22JJurZaMvDHQfAuWg/BYdrvQLCXzdWko=
+	by mail.kernel.org (Postfix) with ESMTP id 13913206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgEKAor (ORCPT
+        id S1729365AbgEKAsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 20:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
+        Sun, 10 May 2020 20:48:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11367 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbgEKAoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 20:44:46 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4366206D6;
-        Mon, 11 May 2020 00:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589157885;
-        bh=PSHaMs3sfDyRTDAP+dSIgTCmTUnUNjkBi5Xx6IGk4oc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KqWM+u5wY2Zuxx8oA8Kq8Z2N3svWc7sJMKsY11E7uT75vT0qyB+t+ZzOXWDMxFkz8
-         F5uq/aPB3OiWey+uzn1LcV6h3f9bmegTCKstgNB/IbutlGTGiCZm2LTgzUkFDRQkV3
-         lHYxvp0O3bnn1tSuNC2f7l+D3SuMBTPqj3FIl04U=
-Date:   Mon, 11 May 2020 09:44:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "kernel-team@fb.com," <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>, dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
- variant
-Message-Id: <20200511094439.5361d4aa59eacad172ada3b5@kernel.org>
-In-Reply-To: <CAJhGHyAaktwgv63XcUaLduKyYSwA+OuTLU_h7XAgyD6CKZp5Mg@mail.gmail.com>
-References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
-        <20200312181702.8443-9-paulmck@kernel.org>
-        <20200316194754.GA172196@google.com>
-        <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
-        <20200316203241.GB3199@paulmck-ThinkPad-P72>
-        <20200316173219.1f8b7443@gandalf.local.home>
-        <CAEXW_YRtGhiaz+86pTL2WTyx5tqrpjB-bgQbnMLXjSQXPCmYfw@mail.gmail.com>
-        <20200316180352.4816cb99@gandalf.local.home>
-        <CAJhGHyAaktwgv63XcUaLduKyYSwA+OuTLU_h7XAgyD6CKZp5Mg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1729095AbgEKAsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 20:48:43 -0400
+IronPort-SDR: X4vsdFenIFJgSKlt2CACB5s9w5A0uWJ3gxXWH4lZukLw1j8Tgm2hJ+UgMsqrDuKIx8Z6He6+uW
+ ajI7T7G+Exiw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 17:48:43 -0700
+IronPort-SDR: 0rT8LofpJeZwr5rA4yJ6dR9cocpWl46vX4m/HcvmOB8psEsKXn7FLzgB5a+u1WPBBB09o3VIYt
+ iriK1U1OLNlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,377,1583222400"; 
+   d="scan'208";a="296746824"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga002.fm.intel.com with ESMTP; 10 May 2020 17:48:42 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A7A1D301C52; Sun, 10 May 2020 17:48:42 -0700 (PDT)
+Date:   Sun, 10 May 2020 17:48:42 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, luto@kernel.org, tony.luck@intel.com,
+        chang.seok.bae@intel.com
+Subject: Re: [PATCH v10 00/18] Enable FSGSBASE instructions
+Message-ID: <20200511004842.GJ3538@tassilo.jf.intel.com>
+References: <20200423232207.5797-1-sashal@kernel.org>
+ <5a6a0ef5-4dfc-d0b1-9181-5df4211cfcd9@oracle.com>
+ <d7111932-6ba5-1484-4347-210d9e80316f@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7111932-6ba5-1484-4347-210d9e80316f@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 17:59:27 +0800
-Lai Jiangshan <jiangshanlai@gmail.com> wrote:
 
-> On Tue, Mar 17, 2020 at 6:03 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Mon, 16 Mar 2020 17:45:40 -0400
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > > >
-> > > > Same for the function side (if not even more so). This would require adding
-> > > > a srcu_read_lock() to all functions that can be traced! That would be a huge
-> > > > kill in performance. Probably to the point no one would bother even using
-> > > > function tracer.
-> > >
-> > > Point well taken! Thanks,
-> >
-> > Actually, it's worse than that. (We talked about this on IRC but I wanted
-> > it documented here too).
-> >
-> > You can't use any type of locking, unless you insert it around all the
-> > callers of the nops (which is unreasonable).
-> >
-> > That is, we have gcc -pg -mfentry that creates at the start of all traced
-> > functions:
-> >
-> >  <some_func>:
-> >     call __fentry__
-> >     [code for function here]
-> >
-> > At boot up (or even by the compiler itself) we convert that to:
-> >
-> >  <some_func>:
-> >     nop
-> >     [code for function here]
-> >
-> >
-> > When we want to trace this function we use text_poke (with current kernels)
-> > and convert it to this:
-> >
-> >  <some_func>:
-> >     call trace_trampoline
-> >     [code for function here]
-> >
-> >
-> > That trace_trampoline can be allocated, which means when its no longer
-> > needed, it must be freed. But when do we know it's safe to free it? Here's
-> > the issue.
-> >
-> >
-> >  <some_func>:
-> >     call trace_trampoline  <- interrupt happens just after the jump
-> >     [code for function here]
-> >
-> > Now the task has just executed the call to the trace_trampoline. Which
-> > means the instruction pointer is set to the start of the trampoline. But it
-> > has yet executed that trampoline.
-> >
-> > Now if the task is preempted, and a real time hog is keeping it from
-> > running for minutes at a time (which is possible!). And in the mean time,
-> > we are done with that trampoline and free it. What happens when that task
-> > is scheduled back? There's no more trampoline to execute even though its
-> > instruction pointer is to execute the first operand on the trampoline!
-> >
-> > I used the analogy of jumping off the cliff expecting a magic carpet to be
-> > there to catch you, and just before you land, it disappears. That would be
-> > a very bad day indeed!
-> >
-> > We have no way to add a grace period between the start of a function (can
-> > be *any* function) and the start of the trampoline.
-> 
-> Hello
-> 
-> I think adding a small number of instructions to preempt_schedule_irq()
-> is sufficient to create the needed protected region between the start
-> of a function and the trampoline body.
-> 
-> preempt_schedule_irq() {
-> +  if (unlikely(is_trampoline_page(page_of(interrupted_ip)))) {
-> +      return; // don't do preempt schedule
-> +
-> +  }
->   preempt_schedule_irq() original body
-> }
-> 
-> // generated on trampoline pages
-> trace_trampoline() {
->    preempt_disable();
->    trace_trampoline body
->    jmp preempt_enable_traced(clobbers)
-> }
-> 
-> asm(kernel text):
-> preempt_enable_traced:
->    preempt_enable_notrace();
->    restore cobblers
->    return(the return ip on the stack is traced_function_start_code)
-> 
-> 
-> If the number of instructions added in preempt_schedule_irq() and
-> the complexity to make trampoline ip detectable(is_trampoline_page(),
-> or is_trampoline_range()) are small, and tasks_rcu is rendered useless,
-> I think it will be win-win.
+> [ 6402.786418] ------------[ cut here ]------------
+> [ 6402.787769] WARNING: CPU: 0 PID: 13802 at arch/x86/kernel/traps.c:811
+> do_debug+0x16c/0x210
+...
 
-Good idea, but the is_trampoline_page() will not be so easy since
-those pages are scattered. !is_kernel_text() works but it doesn't
-cover modules. I think we should make a new subsystem to allocate
-trampoline pages instead of using module_alloc().
+> [ 6402.848299]  ? trace_hardirqs_off_thunk+0x1a/0x33
+> [ 6402.849593]  trace_hardirqs_off_caller+0xa6/0xd0
+> [ 6402.850862]  ? debug+0x4e/0x70
+> [ 6402.851727]  trace_hardirqs_off_thunk+0x1a/0x33
+> [ 6402.852983]  debug+0x53/0x70
+> [ 6402.853785] RIP: 0033:0x400060dd
 
-Thank you,
+So this is a check that checks if you're running in user mode if
+you have a debug trap with single step, but somehow it triggered
+for a user segment.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Probably the regs got corrupted. 
+
+Sasha, I suspect you're missing a mov %rsp,%rdi somewhere in the
+debug entry path that sets up the regs argument for the C code.
+
+-Andi
