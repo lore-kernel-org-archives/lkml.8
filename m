@@ -2,118 +2,170 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160E8C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB4C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4EEE20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:40:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5WgdzfJ"
+	by mail.kernel.org (Postfix) with ESMTP id 409982075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589197276;
+	bh=qVA+9DJ79+6bkSsk8R/e1V4bMq1lEKRjniVj/AiExgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uNScaDXh3nUppErIVZ3uXHMj+IqbzSWO/WgLXKo3F0xhk1MrLkYEz+AHSsE9q7zip
+	 IvcGvscXwHoVsoE7x5ulgShSjDQ0HnAFldS3wXtxEUoe3G60HV9M00SMVg5/jve9Fz
+	 GVgBnx1cw0pZPEobRPZ/swvCzMIy09Bkz0aL5Sn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgEKLkm (ORCPT
+        id S1729634AbgEKLlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726068AbgEKLkl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:40:41 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEE3C061A0C;
-        Mon, 11 May 2020 04:40:41 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d16so7641761edq.7;
-        Mon, 11 May 2020 04:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7rvqhtiTLlj4w2K6mESQ0NuOZ1bKvCaqJT+NBpPz/2E=;
-        b=D5WgdzfJizVSqox0msoDzj7m8OdEmO0/kiBnC2gqWQquhJ83Dwd9dPrLcGsAdKXUwa
-         D+7VQ2KAtE8ACaOLR4DD55ytcAvPISoQc+ejib9hhqKxweAIMMT8h8JexGt5hWL4gESr
-         6ktW8JIZm94gvklYOtVQtXpJH9OBHD7vLXalm6hM6IC564h7lxALH3CVqGTS7RCf2VSc
-         3wWeblWu1I8pKdU1dDZkpCQkhx6eLEYvq37srP0Gi7MPYtLJQRoYEZAODzVmcWDFl7ax
-         9ykFu8ahU9ONiAYHqU9efoz31OM3HUZIVEOgddooqndO5yFf6hHOBoX6UM9+LdtFl+LI
-         GzzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7rvqhtiTLlj4w2K6mESQ0NuOZ1bKvCaqJT+NBpPz/2E=;
-        b=ew26OjFcVV3bYcBryrVJRaBrsPoPCaS3mZFTH7+ZV9C3Tm94BtiZUdEopJ557+aZpN
-         hMs866/dwZOtr3OUzzmLMrz7a4ndG/7zLYULs2uhHbWQUwY5htyIDUdJ7PKbQwsiTNit
-         DrS9dkAMxSfz/EtulqQegcj/YItRD2At4Me6/fHvkXwGrcsVW+Coxqw0iaQEOU1FjBbR
-         WwL5pj9+Rvxska57fjpHUw9MYugpsNJnF61GyZKuSG0JiwcOkbE+2HCLqI/zcgrOhlUN
-         69+QTs2bBoiH7dpfMI8bWxQx7N9KWmi4H1zCXFYgP7mek3BjPTPqT4g/KbA0PnTspe5C
-         fOIg==
-X-Gm-Message-State: AGi0PuZ1X4lUDYA+M0oyXF4xdbz/tMvA0P92SHQZn3wySFGy8CDW+uRV
-        ZL2rlmkioiiSoI/v5vxTW4/FxAABtAdfcscSVQ8=
-X-Google-Smtp-Source: APiQypKwShxGEPDFc1vGG1bR/2hzLWwravJ6XPl0N2apYLrtl0wXKsm6Gfw/sGNUmutdffdPAF47R5C5vClfjqUKHpk=
-X-Received: by 2002:a50:e002:: with SMTP id e2mr13431004edl.179.1589197239963;
- Mon, 11 May 2020 04:40:39 -0700 (PDT)
+        Mon, 11 May 2020 07:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgEKLlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:41:15 -0400
+Received: from localhost (unknown [122.167.117.121])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B16420708;
+        Mon, 11 May 2020 11:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589197274;
+        bh=qVA+9DJ79+6bkSsk8R/e1V4bMq1lEKRjniVj/AiExgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x7dILyMr6XdHySREvLDzpe5C5AhgDfkT6/IMWHn2goMLLn6acGj+pM7k7VtP6x9wZ
+         77xc7BrxSSdZVjRgeXF/VDqfoKD3OJm0qYs8Pk6e7juqTbh3aZLFziSplI0QZ/GYLc
+         ihYC1C3Ls3rqC5Vnqc8S5a+qrhBv1/9gn6Dpo3q8=
+Date:   Mon, 11 May 2020 17:11:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Liao, Bard" <bard.liao@intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Message-ID: <20200511114108.GU1375924@vkoul-mobl>
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+ <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
+ <20200511090003.GT1375924@vkoul-mobl>
+ <DM6PR11MB407432225D0DA6E671DBAF67FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200510164255.19322-1-olteanv@gmail.com> <20200510164255.19322-2-olteanv@gmail.com>
- <20200511113850.GQ1551@shell.armlinux.org.uk>
-In-Reply-To: <20200511113850.GQ1551@shell.armlinux.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 11 May 2020 14:40:29 +0300
-Message-ID: <CA+h21hpsBvjDJpRKwOj8ncN_NyE1Qh+HQfYLFu3eb_wgyS__bg@mail.gmail.com>
-Subject: Re: [PATCH net-next 01/15] net: dsa: provide an option for drivers to
- always receive bridge VLANs
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR11MB407432225D0DA6E671DBAF67FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 at 14:38, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Sun, May 10, 2020 at 07:42:41PM +0300, Vladimir Oltean wrote:
-> > From: Russell King <rmk+kernel@armlinux.org.uk>
-> >
-> > DSA assumes that a bridge which has vlan filtering disabled is not
-> > vlan aware, and ignores all vlan configuration. However, the kernel
-> > software bridge code allows configuration in this state.
-> >
-> > This causes the kernel's idea of the bridge vlan state and the
-> > hardware state to disagree, so "bridge vlan show" indicates a correct
-> > configuration but the hardware lacks all configuration. Even worse,
-> > enabling vlan filtering on a DSA bridge immediately blocks all traffic
-> > which, given the output of "bridge vlan show", is very confusing.
-> >
-> > Provide an option that drivers can set to indicate they want to receive
-> > vlan configuration even when vlan filtering is disabled. At the very
-> > least, this is safe for Marvell DSA bridges, which do not look up
-> > ingress traffic in the VTU if the port is in 8021Q disabled state. It is
-> > also safe for the Ocelot switch family. Whether this change is suitable
-> > for all DSA bridges is not known.
-> >
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> This patch was NAK'd because of objections to the "vlan_bridge_vtu"
-> name.  Unfortunately, this means that the bug for Marvell switches
-> remains unfixed to this day.
->
+On 11-05-20, 11:34, Liao, Bard wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: Monday, May 11, 2020 5:00 PM
+> > To: Liao, Bard <bard.liao@intel.com>
+> > Cc: Bard Liao <yung-chuan.liao@linux.intel.com>; alsa-devel@alsa-project.org;
+> > linux-kernel@vger.kernel.org; tiwai@suse.de; broonie@kernel.org;
+> > gregkh@linuxfoundation.org; jank@cadence.com;
+> > srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
+> > ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
+> > louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
+> > Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
+> > <mengdong.lin@intel.com>
+> > Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+> > 
+> > On 11-05-20, 08:04, Liao, Bard wrote:
+> > > > -----Original Message-----
+> > > > From: Vinod Koul <vkoul@kernel.org>
+> > > > Sent: Monday, May 11, 2020 2:32 PM
+> > > > To: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
+> > > > tiwai@suse.de; broonie@kernel.org; gregkh@linuxfoundation.org;
+> > > > jank@cadence.com; srinivas.kandagatla@linaro.org;
+> > > > rander.wang@linux.intel.com; ranjani.sridharan@linux.intel.com;
+> > > > hui.wang@canonical.com; pierre- louis.bossart@linux.intel.com; Kale,
+> > > > Sanyog R <sanyog.r.kale@intel.com>; Blauciak, Slawomir
+> > > > <slawomir.blauciak@intel.com>; Lin, Mengdong
+> > > > <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
+> > > > Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device
+> > > > support
+> > > >
+> > > > On 30-04-20, 02:51, Bard Liao wrote:
+> > > > > @@ -24,9 +24,14 @@ int sdw_bus_master_add(struct sdw_bus *bus,
+> > > > > struct
+> > > > device *parent,
+> > > > >  	struct sdw_master_prop *prop = NULL;
+> > > > >  	int ret;
+> > > > >
+> > > > > -	if (!bus->dev) {
+> > > > > -		pr_err("SoundWire bus has no device\n");
+> > > > > -		return -ENODEV;
+> > > >
+> > > > This check is removed and not moved into sdw_master_device_add()
+> > > > either, can you add here or in patch 1 and keep checking the parent
+> > > > device please
+> > >
+> > > We will set bus->dev = &md->dev in the end of sdw_master_device_add().
+> > 
+> > We need to test if this is valid or not :)
+> > 
+> > > That's why we remove the test. But now I am wandering does it make
+> > > sense to set bus->dev = &md->dev? Maybe it makes more sense to set
+> > > bus->dev = sdw control device.
+> > > A follow up question is that should slave device a child of bus device
+> > > or master device? I would prefer bus device if it makes sense.
+> > > I will check bus->dev and parent and remove bus->dev = &md->dev in the
+> > > next version.
+> > 
+> > the parent is bus->dev and sdw_master_device created would be child of this
+> > and should be set as such. You can remove it from bus object and keep in
+> > sdw_master_device object, that is fine by me.
+> 
+> Looks like we don't need the parent and fwnode parameter since we can
+> get them from bus->dev 😊
 
-How about "accept_vlan_while_unaware"?
+Quite right
 
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+> > The sdw_slave is child of sdw_master_device now and looks to be set correct.
+> 
+> So, it will be
+> bus device
+>     -> master device
+>          -> slave device
+> right?
 
-Thanks,
--Vladimir
+yes
+
+> 
+> I have a question here. We have pm supported on bus and slave devices,
+> but not master device. Will pm work with this architecture?
+> Can it be
+> bus device
+>     -> master device & slave device?
+
+yes it would and you should check it out. The pm (runtime_pm) works well
+with child devices and parents, so we need to ensure that parents are
+set properly.
+
+Thanks
+-- 
+~Vinod
