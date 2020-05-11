@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EDBC38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA13AC54E8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA3DD208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B093B2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgEKCRN (ORCPT
+        id S1729457AbgEKCRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 22:17:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49826 "EHLO huawei.com"
+        Sun, 10 May 2020 22:17:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49796 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729246AbgEKCRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 22:17:12 -0400
+        id S1729272AbgEKCRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 22:17:13 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 02B05291D18D29504945;
-        Mon, 11 May 2020 10:17:09 +0800 (CST)
+        by Forcepoint Email with ESMTP id ED6323CDCC8305343239;
+        Mon, 11 May 2020 10:17:08 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 10:17:02 +0800
+ 14.3.487.0; Mon, 11 May 2020 10:17:03 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -32,9 +32,9 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
 CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
         Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 02/10] riscv: stacktrace: Fix undefined reference to `walk_stackframe'
-Date:   Mon, 11 May 2020 10:19:53 +0800
-Message-ID: <20200511022001.179767-3-wangkefeng.wang@huawei.com>
+Subject: [PATCH 03/10] riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if NOMMU
+Date:   Mon, 11 May 2020 10:19:54 +0800
+Message-ID: <20200511022001.179767-4-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
 References: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
@@ -48,29 +48,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop static declaration to fix following build error if FRAME_POINTER disabled,
-  riscv64-linux-ld: arch/riscv/kernel/perf_callchain.o: in function `.L0':
-  perf_callchain.c:(.text+0x2b8): undefined reference to `walk_stackframe'
+Some drivers use PAGE_SHARED, pgprot_writecombine()/pgprot_device(),
+add the defination to fix build error if NOMMU.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/riscv/kernel/stacktrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/include/asm/mmio.h    | 2 ++
+ arch/riscv/include/asm/pgtable.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index 38141a3c70f7..595342910c3f 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -65,7 +65,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+diff --git a/arch/riscv/include/asm/mmio.h b/arch/riscv/include/asm/mmio.h
+index a2c809df2733..56053c9838b2 100644
+--- a/arch/riscv/include/asm/mmio.h
++++ b/arch/riscv/include/asm/mmio.h
+@@ -16,6 +16,8 @@
  
- #else /* !CONFIG_FRAME_POINTER */
+ #ifndef CONFIG_MMU
+ #define pgprot_noncached(x)	(x)
++#define pgprot_writecombine(x)	(x)
++#define pgprot_device(x)	(x)
+ #endif /* CONFIG_MMU */
  
--static void notrace walk_stackframe(struct task_struct *task,
-+void notrace walk_stackframe(struct task_struct *task,
- 	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
- {
- 	unsigned long sp, pc;
+ /* Generic IO read/write.  These perform native-endian accesses. */
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 780dd1d4f720..a12d343e080a 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -470,6 +470,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ 
+ #else /* CONFIG_MMU */
+ 
++#define PAGE_SHARED		__pgprot(0)
+ #define PAGE_KERNEL		__pgprot(0)
+ #define swapper_pg_dir		NULL
+ #define TASK_SIZE		0xffffffffUL
 -- 
 2.26.2
 
