@@ -2,117 +2,113 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4271EC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D4EC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8F4206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A361620720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589219285;
-	bh=wMEMJYTv7QV0ECsZmoOg8Kr2JK7/KvfUPQh00brbquI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OAlL+Q/x8YWfR+jAkbbSE3bPMRgZ1rGe0lMUXm4GXX2BeOervOWcevEMkWfLGkhhu
-	 1hAS8NgGlKDR7NWuCSanzo/4Rks+Z1Xd9/cobsNE6mEsz1tJFVQeqJy7xNV6kQ/xCm
-	 jYuh6s7wdgxCnKvBy6nYkZ2ioBLQBz2j1uiaS1B4=
+	s=default; t=1589219348;
+	bh=hAMVqWBjyLV3nWm3Je7DHAFzlAVeVx9EPwxdRkkE0Oc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=kY9xE4O0QgeWFUP9fHtWPkV+kaIJqfcEr582BxqmcW5gok7P8adOjZU74CkQBKCq9
+	 BuwVZlkKiVTMFDqXGnKgSMnjlZYlFI7h2w+cjWfyL9Bk16iBOfzTFJ9G+DAb993QbW
+	 +m67zZUsk0OsAG5B/izj+hvdbS8uG+pwNob0v7tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgEKRsE (ORCPT
+        id S1730888AbgEKRtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:48:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47228 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 13:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgEKRsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:48:03 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726310AbgEKRtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:49:07 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0F2F206D6;
-        Mon, 11 May 2020 17:48:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7586206D7;
+        Mon, 11 May 2020 17:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589219283;
-        bh=wMEMJYTv7QV0ECsZmoOg8Kr2JK7/KvfUPQh00brbquI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHW97AiwEUgFPiC2JXkXrlrBnms7ixFyLSl/kfMXK3WJWFNSOMDf8lEPJKfCVQLS/
-         OBkZcgbGx5PgH4HODCmGlO6+3EHYA3AAe3Zwyc1fRUn0X9MfIi1w/PmP+qQV8dU06h
-         k+i6kgGtq6xyeDdbEM0jlxTYkob9FnLUT3fwYu2Q=
-Date:   Mon, 11 May 2020 18:48:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511174800.GM8216@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+        s=default; t=1589219347;
+        bh=hAMVqWBjyLV3nWm3Je7DHAFzlAVeVx9EPwxdRkkE0Oc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PJlwgjW4o15eOpGfmwAHGURNVdLup0NdgDSgCP5x1mY8rm3VPLRqwTJsfMtaqo803
+         jPYRe51e5tP3Zcj4vayfSbHRbTBLYRs62KpfpR0YdC09hqHG/i1umhsV1zgA7DinMA
+         5aH5euLMv6+BqbYjq1LFyQPIHRMaXvdpAi0hw5zc=
+Subject: Re: [PATCH 5.4 00/50] 5.4.40-rc1 review
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200508123043.085296641@linuxfoundation.org>
+ <e090d5ed-3e18-333e-221b-197a30c102e8@kernel.org>
+ <6a43d9b82e321aef0324d10a5e2f3dc4961a7fe9.camel@codethink.co.uk>
+From:   shuah <shuah@kernel.org>
+Message-ID: <136f7e48-08ec-bb3f-8642-cba71cca9b96@kernel.org>
+Date:   Mon, 11 May 2020 11:49:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iAzLNm1y1mIRgolD"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6a43d9b82e321aef0324d10a5e2f3dc4961a7fe9.camel@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/11/20 11:21 AM, Ben Hutchings wrote:
+> On Mon, 2020-05-11 at 10:35 -0600, shuah wrote:
+>> On 5/8/20 6:35 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 5.4.40 release.
+>>> There are 50 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.40-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>
+>> Compiled and booted on my test system. I am seeing the following
+>> regression in dmesg and with a new emergency message.
+>>
+>> Initramfs unpacking failed: Decoding failed
+>>
+>> I don't know why yet. I will debug and let you know.
+> 
+> At a guess: you upgraded to Ubuntu 20.04, and the default initramfs
+> compression changed to lz4.  Or something like that.
+> 
 
---iAzLNm1y1mIRgolD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Right, I remembered I ran into a similar problem after upgrading to
+19.10 and went looking for info. instead of doing bisect.
 
-On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 4:48 PM Serge Semin
+That is what I found in the following thread:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1835660
 
-> > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > driver. Andy?
+Oddly it started showing up before I upgraded on Ubuntu 19.10.
 
-> I'm not sure I understand why do you need this being exported. Just
-> always supply SG list out of single entry and define the length
-> according to the maximum segment size (it's done IIRC in SPI core).
+thanks,
+-- Shuah
 
-If there's a limit from the dmaengine it'd be a bit cleaner to export
-the limit from the DMA engine (and it'd help with code reuse for clients
-that might work with other DMA controllers without needing to add custom
-compatibles for those instantiations).
+thanks,
+-- Shuah
 
---iAzLNm1y1mIRgolD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65j9AACgkQJNaLcl1U
-h9CW7Qf/WGO8TNWVzyUGl/3wXiPWSDeKL6mPAy3EcUtkcXRuUnK07U+BAtkYT7c/
-R+5/XKdntnpIGjzQAZRmYkJEh6Jxjjh+AIep/mWOMTF/DsyI1SD5wqKiFbTtm3oS
-TtVssPbTrfMQBa4TygfXjr5eTTLaShLK4Jn9S2sWSwk+Exhsu2BJfCBPYJkZO1Vr
-dA0mvt6Yka80WEMDnSa5iVsScFre0+x/9aMRLEFnHfbZz1QLj9XrjMXJo3zB21zn
-t3ZvfPlgjq0bCGCwpxS87A8Iti565Ot9EK3z6TzFW4t+jxm9EVsSMFrbw1/0JU94
-HWu8ra8zI8sxBaQXhFl2HPANU0bAPg==
-=hNqm
------END PGP SIGNATURE-----
-
---iAzLNm1y1mIRgolD--
