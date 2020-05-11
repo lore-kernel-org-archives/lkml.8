@@ -2,355 +2,247 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAF2C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1B6C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E81C20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C2220722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mXiDmvSv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oIqYFLJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgEKLOp (ORCPT
+        id S1729553AbgEKLPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37116 "EHLO
+        Mon, 11 May 2020 07:15:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725993AbgEKLOo (ORCPT
+        by vger.kernel.org with ESMTP id S1725993AbgEKLPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:14:44 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D27BC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:14:44 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id c4so3842046qvi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:14:44 -0700 (PDT)
+        Mon, 11 May 2020 07:15:07 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93835C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:15:06 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g16so7595643eds.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Yiq17KeeoPAL2ALedPiCre2LYd91TsHJmWVoUnhISo=;
-        b=mXiDmvSvTFmjTNGHJW5HppQE/j79m3K1ScMXBDhJDly96MT5S03eU40+S3/A3euASl
-         iUwCx5a83xlJZIJgIUhV2mvAHSkzYre2HwzxM0mg8uwK9WEQvmCtoIa9tOi6EDAxMb9o
-         QbyRE2xHy+xtV6+QjkeW8Xz8Eou2O0qIKxe7UGxNTjJgwk5IaihN1cRpr8pFebgAcn3E
-         5EYDFlGGnXiKKz96JuYb+cNzxEbgly2ShCZQo0WS13CeIRLWD4CFlrVuOMAKIy0mEE/Q
-         znzuLMzo+UKM7HMfTYr7W2Dg6UEZDranxbv0LL/nkxmuhnjAlelj/evOxXPqTaFw9SBJ
-         9W0Q==
+         :cc:content-transfer-encoding;
+        bh=yf6Fgwz0TBfxr37ADXmX4uJ/e/GQxDcvOu2sIk21wIk=;
+        b=oIqYFLJ6taukedc9Yf2iHuympHdWdio0/TIjf0ElH6MKuu5db0Cdi3x1KgqHJFlWDi
+         QNVXqenRluAi/GIJTtbliLn6jeTLsSt5S1LAokRwQYsvySLbZRGW0zD85Tt1mds7XD3N
+         UA5UcK81beu2kYUYDKOC7FdfHCt+jomF6/JaGuwlEc4QEVtdIc+ZL2NF5YJX3yAuhgO4
+         L7WrCLwHB5Nmo+UjbpoMUjsxwO0qgjhnjCpUCzvDEzL9Qhj9Zox1kO2liJqBjdZ5xohL
+         N2ndKDOC9HOoH5GZsv7OEBfX3PHhGLoCbMaORS4lIGOvelIN35PFO+RJDDvtxToTJdDg
+         5fOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Yiq17KeeoPAL2ALedPiCre2LYd91TsHJmWVoUnhISo=;
-        b=rJuy1BIWORHYyTYHY1O3RiEXPE0qiT5ZWo/+OjtjCtHfVG2OcoJnzoRmV+4z5X85Vf
-         VRBULU4zBt88bUYuagwd6Xcm9pA3+YMphRRxjh0o2XBX6Jh6qV0zfhD+V/j31+2eYP8+
-         0eG0fHy5VFO29DILMiTW/qmQexmUNRs0NMDD00hbJ5bF1ghAjyDlQZxgpkxgmYR/kyNY
-         Y1YzimraCK29FEbhJz2wxP5EahD4TUiuXRmJ6/HPTKke4i536ZABuVZ93fQ+V+gOeYpz
-         8c1lG8eYFqPtO42gN88ZhTVPE5zsgIkchiG4jgXpZfWB2kOUFRueV8O8tzNICb4hLXFi
-         VCgQ==
-X-Gm-Message-State: AGi0Puab/ixRTXUemTC5s/+DX0XnZCWxOXF4bJcVKIoyfjPBKFRiMC9S
-        zKNI0iKRpHxVcQlXiNnLj8cGRB4gpZZSTbgjrm0lxA==
-X-Google-Smtp-Source: APiQypIYqtmt1bPrIhz3JB1mSMaP5a44LvgTZA7lTJtmjS4bFaIxSks43ptcJPXAdQeIq9m7aJHKbwDNu7IJb+RstTo=
-X-Received: by 2002:a0c:db03:: with SMTP id d3mr5012984qvk.80.1589195683252;
- Mon, 11 May 2020 04:14:43 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yf6Fgwz0TBfxr37ADXmX4uJ/e/GQxDcvOu2sIk21wIk=;
+        b=g+u9/bVP6bDJX3x+c+O1sjfN43trITeF2+MdonzX1Gi7OyahsZFWiOQxOpbJyOvt2m
+         DF8JpPHJ4XaMuEpY5kTU0C5TtYJbuqsLOq4vWdQTBwtZxbKbNtRKYwqTdM1MzxqKp/gn
+         QgzzU0Sa5DMKUKp/Y370iRhIOZLEammjH+3p9q+Ms+eWVaLLtXrkGpDo4cM6CoDrzxPu
+         gqW7VmR9776VxGsg8DxW2NqVwEYLTVaZi9W6VpQzh6sM7dabFOoNHFCU7I+ZMVVO/z42
+         5Vk2OsAgTPSDGvfCzESGEMl8KrNVniGjWyxZVPBYHtYQIHasxoX52vK3YxeElnpLors2
+         azjQ==
+X-Gm-Message-State: AGi0Pub6Nopoj9KDYZSDP0KD8FQoFwebGNYjFzG76JUyKFxgp1Z04Zdg
+        +29V87eD3JzlIwTE/PQNLFTpjT4770dfGFYkgxDWrA==
+X-Google-Smtp-Source: APiQypKZpI0Su/Nan4QydtdBoW2dC+0/pVJModGirvjBu8VI7zpyWVT+A294xWUAF4jIRGyK8v81H9B60bOLdQHD+LI=
+X-Received: by 2002:aa7:cf0e:: with SMTP id a14mr12665125edy.188.1589195705213;
+ Mon, 11 May 2020 04:15:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
-In-Reply-To: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 May 2020 13:14:32 +0200
-Message-ID: <CACT4Y+YN7cmx71UKiREV7UhMdTfuxQEOGUrtDVXDvK9PW7qNPw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com> <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com> <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org> <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org> <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org> <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org> <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+In-Reply-To: <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 11 May 2020 12:14:54 +0100
+Message-ID: <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 4:31 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
->
-> This feature will record first and last call_rcu() call stack and
-> print two call_rcu() call stack in KASAN report.
->
-> When call_rcu() is called, we store the call_rcu() call stack into
-> slub alloc meta-data, so that KASAN report can print rcu stack.
->
-> It doesn't increase the cost of memory consumption. Because we don't
-> enlarge struct kasan_alloc_meta size.
-> - add two call_rcu() call stack into kasan_alloc_meta, size is 8 bytes.
-> - remove free track from kasan_alloc_meta, size is 8 bytes.
->
-> [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
->
-> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> ---
->  include/linux/kasan.h |  2 ++
->  kernel/rcu/tree.c     |  3 +++
->  lib/Kconfig.kasan     |  2 ++
->  mm/kasan/common.c     |  4 ++--
->  mm/kasan/generic.c    | 29 +++++++++++++++++++++++++++++
->  mm/kasan/kasan.h      | 19 +++++++++++++++++++
->  mm/kasan/report.c     | 21 +++++++++++++++++----
->  7 files changed, 74 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 31314ca7c635..23b7ee00572d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
->
->  void kasan_cache_shrink(struct kmem_cache *cache);
->  void kasan_cache_shutdown(struct kmem_cache *cache);
-> +void kasan_record_aux_stack(void *ptr);
->
->  #else /* CONFIG_KASAN_GENERIC */
->
->  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
->  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
-> +static inline void kasan_record_aux_stack(void *ptr) {}
->
->  #endif /* CONFIG_KASAN_GENERIC */
->
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 06548e2ebb72..de872b6cc261 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -57,6 +57,7 @@
->  #include <linux/slab.h>
->  #include <linux/sched/isolation.h>
->  #include <linux/sched/clock.h>
-> +#include <linux/kasan.h>
->  #include "../time/tick-internal.h"
->
->  #include "tree.h"
-> @@ -2694,6 +2695,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
->                 trace_rcu_callback(rcu_state.name, head,
->                                    rcu_segcblist_n_cbs(&rdp->cblist));
->
-> +       kasan_record_aux_stack(head);
-> +
->         /* Go handle any RCU core processing required. */
->         if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
->             unlikely(rcu_segcblist_is_offloaded(&rdp->cblist))) {
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 81f5464ea9e1..56a89291f1cc 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -58,6 +58,8 @@ config KASAN_GENERIC
->           For better error detection enable CONFIG_STACKTRACE.
->           Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
->           (the resulting kernel does not boot).
-> +         Currently CONFIG_KASAN_GENERIC will print first and last call_rcu()
-> +         call stack. It doesn't increase the cost of memory consumption.
+HI,
 
-We don't plan to change this and this is not a bug, right? So I think
-using "Currently" is confusing. What's changing in future?
-
-s/will print/prints/
-Simple present tense is the default for documentation, we are just
-stating facts.
-
-The remark about not increasing memory consumption is both false and
-not useful (we don't give an option to change this).
-
-I would just say:
-
-"In generic mode KASAN prints first and last call_rcu() call stacks in reports."
-
-
->  config KASAN_SW_TAGS
->         bool "Software tag-based mode"
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 2906358e42f0..8bc618289bb1 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -41,7 +41,7 @@
->  #include "kasan.h"
->  #include "../slab.h"
+On Fri, 8 May 2020 at 09:53, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
-> -static inline depot_stack_handle_t save_stack(gfp_t flags)
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags)
->  {
->         unsigned long entries[KASAN_STACK_DEPTH];
->         unsigned int nr_entries;
-> @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
->  static inline void set_track(struct kasan_track *track, gfp_t flags)
->  {
->         track->pid = current->pid;
-> -       track->stack = save_stack(flags);
-> +       track->stack = kasan_save_stack(flags);
->  }
+> Hi Suzuki, Mike,
 >
->  void kasan_enable_current(void)
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index 56ff8885fe2e..b86880c338e2 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -325,3 +325,32 @@ DEFINE_ASAN_SET_SHADOW(f2);
->  DEFINE_ASAN_SET_SHADOW(f3);
->  DEFINE_ASAN_SET_SHADOW(f5);
->  DEFINE_ASAN_SET_SHADOW(f8);
-> +
-> +void kasan_record_aux_stack(void *addr)
-> +{
-> +       struct page *page = kasan_addr_to_page(addr);
-> +       struct kmem_cache *cache;
-> +       struct kasan_alloc_meta *alloc_info;
-> +       void *object;
-> +
-> +       if (!(page && PageSlab(page)))
-> +               return;
-> +
-> +       cache = page->slab_cache;
-> +       object = nearest_obj(cache, page, addr);
-> +       alloc_info = get_alloc_info(cache, object);
-> +
-> +       if (!alloc_info->rcu_stack[0])
-> +               /* record first call_rcu() call stack */
-> +               alloc_info->rcu_stack[0] = kasan_save_stack(GFP_NOWAIT);
-> +       else
-> +               /* record last call_rcu() call stack */
-> +               alloc_info->rcu_stack[1] = kasan_save_stack(GFP_NOWAIT);
-> +}
-> +
-> +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
-> +                                               u8 idx)
-> +{
-> +       return container_of(&alloc_info->rcu_stack[idx],
-> +                                               struct kasan_track, stack);
-> +}
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index e8f37199d885..1cc1fb7b0de3 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -96,15 +96,28 @@ struct kasan_track {
->         depot_stack_handle_t stack;
->  };
+> On 2020-05-06 13:05, Sai Prakash Ranjan wrote:
+> [...]
 >
-> +#ifdef CONFIG_KASAN_GENERIC
-> +#define SIZEOF_PTR sizeof(void *)
-> +#define KASAN_NR_RCU_CALL_STACKS 2
-> +#else /* CONFIG_KASAN_GENERIC */
->  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
->  #define KASAN_NR_FREE_STACKS 5
->  #else
->  #define KASAN_NR_FREE_STACKS 1
->  #endif
-> +#endif /* CONFIG_KASAN_GENERIC */
+> >>>>
+> >>> OK - sorry I read your statement saying that replicator1 was 0 after
+> >>> the reset in probe(), rather than look at the logs.
+> >>>
+> >>> From the logs it is working at the time probe() occurs, but by the
+> >>> time we come to enable the replicator later, something has reset
+> >>> these
+> >>> registers / hardware outside the control of the replicator driver.
+> >>>
+> >>
+> >> Yes, I will try to get some more information from the firmware side if
+> >> there is anything messing up.
+> >>
+> >
+> > This turned out to be a clock/pm issue. To confirm, I just marked clk
+> > as critical
+> > so that it won't be gated and I saw the replicator1(swao_replicator)
+> > registers
+> > intact after probe. Also alternatively, I tried to comment out
+> > disabling pclk
+> > to check if there is something wrong in amba pm and this keeps the
+> > registers
+> > intact as well.
+> >
+> > @@ -288,7 +295,7 @@ static int amba_probe(struct device *dev)
+> >                 pm_runtime_set_suspended(dev);
+> >                 pm_runtime_put_noidle(dev);
+> >
+> > -               amba_put_disable_pclk(pcdev);
+> > +               //amba_put_disable_pclk(pcdev);
+> >                 dev_pm_domain_detach(dev, true);
+> >         } while (0);
+> >
 >
->  struct kasan_alloc_meta {
->         struct kasan_track alloc_track;
-> +#ifdef CONFIG_KASAN_GENERIC
+> I checked with the debug team and there is a limitation with
+> the replicator(swao_replicator) in the AOSS group where it
+> loses the idfilter register context when the clock is disabled.
+> This is not just in SC7180 SoC but also reported on some latest
+> upcoming QCOM SoCs as well and will need to be taken care in
+> order to enable coresight on these chipsets.
+>
+> Here's what's happening -  After the replicator is initialized,
+> the clock is disabled in amba_pm_runtime_suspend() as a part of
+> pm runtime workqueue with the assumption that there will be no
+> loss of context after the replicator is initialized. But it doesn't
+> hold good with the replicators with these unfortunate limitation
+> and the idfilter register context is lost.
+>
+> [    5.889406] amba_pm_runtime_suspend devname=3D6b06000.replicator ret=
+=3D0
+> [    5.914516] Workqueue: pm pm_runtime_work
+> [    5.918648] Call trace:
+> [    5.921185]  dump_backtrace+0x0/0x1d0
+> [    5.924958]  show_stack+0x2c/0x38
+> [    5.928382]  dump_stack+0xc0/0x104
+> [    5.931896]  amba_pm_runtime_suspend+0xd8/0xe0
+> [    5.936469]  __rpm_callback+0xe0/0x140
+> [    5.940332]  rpm_callback+0x38/0x98
+> [    5.943926]  rpm_suspend+0xec/0x618
+> [    5.947522]  rpm_idle+0x5c/0x3f8
+> [    5.950851]  pm_runtime_work+0xa8/0xc0
+> [    5.954718]  process_one_work+0x1f8/0x4c0
+> [    5.958848]  worker_thread+0x50/0x468
+> [    5.962623]  kthread+0x12c/0x158
+> [    5.965957]  ret_from_fork+0x10/0x1c
+>
+> This is a platform/SoC specific replicator issue, so we can either
+> introduce some DT property for replicators to identify which replicator
+> has this limitation, check in replicator_enable() and reset the
+> registers
+> or have something like below diff to check the idfilter registers in
+> replicator_enable() and then reset with clear comment specifying it=E2=80=
+=99s
+> the
+> hardware limitation on some QCOM SoCs. Please let me know your thoughts
+> on
+> this?
+>
+
+1) does this replicator part have a unique ID that differs from the
+standard ARM designed replicators?
+If so perhaps link the modification into this. (even if the part no in
+PIDR0/1 is the same the UCI should be different for a different
+implementation)
+
+2) We have used DT properties in the past - (e.g. scatter gather in
+TMC) where hardware compatibility issues have impacted on the
+operation of a coresight component. This is further complicated by the
+fact that an ACPI property would be needed as well.
+
+3) The sysfs access to FILTERID0/1 on this replicator is going to show
+different values than on a standard replicator (0x00 instead of 0xFF).
+Does this need to be addressed?
+
+4 ) An alternative approach could be to model the driver on the ETM /
+CTI drivers where the register values are held in the driver structure
+and only applied on enable / disable.
+
+Thoughts?
+
+Regards
+
+Mike
+
+
+
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c
+> b/drivers/hwtracing/coresight/coresight-replicator.c
+> index e7dc1c31d20d..a9c039c944eb 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -68,6 +68,17 @@ static int dynamic_replicator_enable(struct
+> replicator_drvdata *drvdata,
+>          int rc =3D 0;
+>          u32 reg;
+>
 > +       /*
-> +        * call_rcu() call stack is stored into struct kasan_alloc_meta.
-> +        * The free stack is stored into freed object.
+> +        * On some QCOM SoCs with replicators in Always-On domain,
+> disabling
+> +        * clock will result in replicator losing its context. Currently
+> +        * as a part of pm_runtime workqueue, amba_pm_runtime_suspend
+> disables
+> +        * clock assuming the context is not lost which is not true for
+> cases
+> +        * with hardware limitations as the above.
 > +        */
-> +       depot_stack_handle_t rcu_stack[KASAN_NR_RCU_CALL_STACKS];
-> +#else
->         struct kasan_track free_track[KASAN_NR_FREE_STACKS];
-> +#endif
->  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
->         u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
->         u8 free_track_idx;
-> @@ -159,16 +172,22 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
->
->  struct page *kasan_addr_to_page(const void *addr);
->
-> +depot_stack_handle_t kasan_save_stack(gfp_t flags);
+> +       if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) =3D=3D 0=
+)
+> &&
+> +           (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) =3D=3D 0=
+))
+> +               dynamic_replicator_reset(drvdata);
 > +
->  #if defined(CONFIG_KASAN_GENERIC) && \
->         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
->  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
->  void quarantine_reduce(void);
->  void quarantine_remove_cache(struct kmem_cache *cache);
-> +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
-> +                       u8 idx);
->  #else
->  static inline void quarantine_put(struct kasan_free_meta *info,
->                                 struct kmem_cache *cache) { }
->  static inline void quarantine_reduce(void) { }
->  static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
-> +static inline struct kasan_track *kasan_get_aux_stack(
-> +                       struct kasan_alloc_meta *alloc_info, u8 idx) { return NULL; }
->  #endif
+>          switch (outport) {
+>          case 0:
+>                  reg =3D REPLICATOR_IDFILTER0;
 >
->  #ifdef CONFIG_KASAN_SW_TAGS
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 80f23c9da6b0..f16a1a210815 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -105,9 +105,13 @@ static void end_report(unsigned long *flags)
->         kasan_enable_current();
->  }
 >
-> -static void print_track(struct kasan_track *track, const char *prefix)
-> +static void print_track(struct kasan_track *track, const char *prefix,
-> +                                               bool is_callrcu)
->  {
-> -       pr_err("%s by task %u:\n", prefix, track->pid);
-> +       if (is_callrcu)
-> +               pr_err("%s:\n", prefix);
-> +       else
-> +               pr_err("%s by task %u:\n", prefix, track->pid);
->         if (track->stack) {
->                 unsigned long *entries;
->                 unsigned int nr_entries;
-> @@ -187,11 +191,20 @@ static void describe_object(struct kmem_cache *cache, void *object,
->         if (cache->flags & SLAB_KASAN) {
->                 struct kasan_track *free_track;
 >
-> -               print_track(&alloc_info->alloc_track, "Allocated");
-> +               print_track(&alloc_info->alloc_track, "Allocated", false);
->                 pr_err("\n");
->                 free_track = kasan_get_free_track(cache, object, tag);
-> -               print_track(free_track, "Freed");
-> +               print_track(free_track, "Freed", false);
->                 pr_err("\n");
-> +
-> +               if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
-> +                       free_track = kasan_get_aux_stack(alloc_info, 0);
-> +                       print_track(free_track, "First call_rcu() call stack", true);
-> +                       pr_err("\n");
-> +                       free_track = kasan_get_aux_stack(alloc_info, 1);
-> +                       print_track(free_track, "Last call_rcu() call stack", true);
-> +                       pr_err("\n");
-> +               }
->         }
->
->         describe_object_addr(cache, object, addr);
-> --
-> 2.18.0
+> Thanks,
+> Sai
 >
 > --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200511023111.15310-1-walter-zh.wu%40mediatek.com.
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
+
+
+
+--=20
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
