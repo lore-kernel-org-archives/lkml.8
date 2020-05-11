@@ -2,289 +2,474 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57042C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026B5C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3109F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="VCYiUpiA"
+	by mail.kernel.org (Postfix) with ESMTP id D9FA020720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgEKJQ6 (ORCPT
+        id S1729287AbgEKJSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:16:58 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:41710 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgEKJQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:16:57 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B99wa4010088;
-        Mon, 11 May 2020 05:16:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-00128a01.pphosted.com with ESMTP id 30ws5748dv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 05:16:34 -0400
-Received: from m0167090.ppops.net (m0167090.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B9A6fv010266;
-        Mon, 11 May 2020 05:16:33 -0400
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2171.outbound.protection.outlook.com [104.47.59.171])
-        by mx0b-00128a01.pphosted.com with ESMTP id 30ws5748du-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 05:16:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BNnMwAqtWCUz0rBgiFE/4kokveWuC+u5SUARD8HqRgGWl6JzV9g66UEzTa3QaWO/2Iyq3UoVoBBHLVfChhoZP7WoEB7r+zn3YRMeJoN1FmYLGUDBuOKbmaCUjhUUGVH/zzoiNPw2yxpSg+gqBdgRFzru1nWqejompJrxVeNmge0oxhVouXqPwzho1tb8Gp83R69XQv9KF4eT2td06l0kjYk4rPp5dGPFqIL8EJLO/SHErYHn6/jkWHtes91VHT/YZuc/R+G75bUe/SCLyQnszWL3y8o0sEkPDQNhLpK+AS2nfrau10iBwosiCU37xNCOuOCx1kt9NoNoa/ufF5WOoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=plzlNbERSYrpY+aAEU0bq2ywvsxmo7i5ZJDlB1eTWw8=;
- b=LIzpkV9/pOG1F54USpAh5rgA3W3rX9vwAOYKCDKK4Y22ihp3iwI3yCBXH9fkFU6o5XjcLO3XyQzM0ydT8CPEYbztrncnCg9s9vPoPS99gf6CLch8pzWzfCU3+poc9fhNbuz7G/Xy+KB0aOQz6n63CA+sAnK77gUJl9S9qm83T5H+IrAwbKin2wY7HbYoN3satIBykkgOY5wpc8TNOWElJNOOzCN2tycqlpDbob6+z1EYBAjX1YRdx8ORylHRVjw14gOr1mbyq0ajInTekQRFqQxzdHoLLnbjvRffFBlHggWymsk9LjgLYOilIguw+IwsV868donMFac6mQx1zLhg5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=plzlNbERSYrpY+aAEU0bq2ywvsxmo7i5ZJDlB1eTWw8=;
- b=VCYiUpiA35wbWIqN9uc2SHHfSpg6Rn16vkVmNx6PAjd5KaD8XaKwWVpwnMmtGr0EgFLNSl9G/V102uLzAodnVx1GXxYt5w469ukbGn8JSFeGHKMZzIINNXUoQUFucH+rAHTar9DuF02m7nmYRu6GcpngIFSlxeCLG5WHBWDTWMI=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4090.namprd03.prod.outlook.com (2603:10b6:5:5d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
- 2020 09:16:32 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf%3]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 09:16:32 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv object
-Thread-Topic: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
- object
-Thread-Index: AQHWJULNMHmpwZ2oJUyruOe5YwUEGaieU2qAgAABMACABEqWAA==
-Date:   Mon, 11 May 2020 09:16:32 +0000
-Message-ID: <b667b10489c65b541aacadd7975b0a6352672153.camel@analog.com>
-References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-         <20200508164015.0000223f@Huawei.com> <20200508164430.00001741@Huawei.com>
-In-Reply-To: <20200508164430.00001741@Huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: Huawei.com; dkim=none (message not signed)
- header.d=none;Huawei.com; dmarc=none action=none header.from=analog.com;
-x-originating-ip: [188.27.130.47]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 14a48a3b-6bc9-44f0-36b1-08d7f58bfee5
-x-ms-traffictypediagnostic: DM6PR03MB4090:
-x-microsoft-antispam-prvs: <DM6PR03MB4090AEE9995B26FFA85C0F07F9A10@DM6PR03MB4090.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 04004D94E2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Z0+L8qSw9Ek4LSO1Va4oHidTVIiA1ZS9SbHWxsGoIkSHXcBDBO6MfO4sPGEWkaDXESXU3k54xtYmxQogpwpzLSGCTkQMb6UcnmIcl8m+exPL7uvYqSLGUP16Z0g5b1T+W5gD8lID28Y1arJGFtnu6a9ajDxIE5QbkkqF4LpkH9BcUb7O6+sf1GUccjApguAksH6CgvujX8NkT6b2YKwgycwA7ZDbbBZ3l6n9eoH2EWhUw/G2j2qXc6k3KuIA8TZG7h/wAIDuWExm+zM8KaX5dmaFdq4SF5qwsQM3sOViw558QzIcITMgy8fjEZ4EJtRbJgaU3PQ6ORapbsQXOihquATQDYiEyXUkbFcwRBcQjo4MjukneabhkjxuY1yNouelHL6buPCOjujtzZniu0TtPdo4Lvn4DHHyrYaraAZ8azs02AZJtcPrNfV5TTjFVPCpL3OFEOHxuBVnvadiCdpL1ICdPzbkLjM9+fVh3nJjLQSpvjzlVRxOFPFuGbgXPFPoF1yc9eU4FmI7PGtdzl1TPg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(136003)(366004)(39860400002)(33430700001)(8676002)(4326008)(71200400001)(8936002)(33440700001)(2906002)(6916009)(6506007)(66946007)(54906003)(36756003)(316002)(6486002)(6512007)(91956017)(76116006)(86362001)(26005)(186003)(5660300002)(66476007)(64756008)(66446008)(66556008)(2616005)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: pwqvsbncduTKjGWg76q2TsdcxKo8YdutCkboVcps9upg1SzX407+6Qh0aKn/RM+8og3lgB59UaHc5Th6Z3Wn/btO1tle+dGF0T0yxLwvUUWz16R9+0zrWYp8NemrIT83M2XcKrdz83w/eK3JMFC+NMgM15WKhmp+1JZcN1Gn3pfeYcQere8XtxRmrzIxMtkpfa+HDiE6ozX0IWxWIgxEkQYM/MVLIhq87VCZG9OSBhlfRSsztM1ZJeiAxd9RnagmQ3Q5AjLoSklDY82MBuu2qN5+HVyV2p85hyj8HXkMy1rJ03utuhIw3RbH57ic89zoK+Lhj/BxVc3jHHjI4AFHhXuR3UUAjWeDzbq9p4m5lpne1gbCvWadBVGG5ovPRCTvT27qkvN4DhR1I56bOVj/p1o+G2CYorEFRmIY8NxaqNvzBaD367Qx3eT6jbZya3mxY+m0rM4vj0qdtlpjGlw49O1lZrHdsvqSA4Cfp/gD4LI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CACEF2900F0B114786EDD27DFC572834@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 May 2020 05:18:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:36140 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgEKJSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:18:00 -0400
+IronPort-SDR: mH1otYWj+TqbD10lTeljKcHQVOf9BQKBhVW5c3ORRjCMdc5XWsrig/EZReMcJcw7Kjb8/e0RaQ
+ 9s4lT2W8XboA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 02:18:00 -0700
+IronPort-SDR: lFcPFw0rjOLmc9U7pwB597vGZb9TyE+DyfcOYrSLjdyW3DrOAjqXVA1nhcz0l2tCU20FKhtXbg
+ 2q/hCGWKojsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
+   d="scan'208";a="306126183"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 May 2020 02:17:56 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jY4ZT-005vIK-61; Mon, 11 May 2020 12:17:59 +0300
+Date:   Mon, 11 May 2020 12:17:59 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200511091759.GE185537@smile.fi.intel.com>
+References: <20200510102330.66715-1-tali.perry1@gmail.com>
+ <20200510102330.66715-3-tali.perry1@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14a48a3b-6bc9-44f0-36b1-08d7f58bfee5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 09:16:32.0419
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0DOGjoUhpY4ImaAzGhTA6NpKQjQOf1jIu5THtoOCEVW11Tok3t/BvIJ8o1HZyLg/coOzCjY3Y26ER0TTNmKAW/QTLd+JhFDaiWI9Nv6Vo04=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4090
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 mlxscore=0
- malwarescore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110077
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510102330.66715-3-tali.perry1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA1LTA4IGF0IDE2OjQ0ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBGcmksIDggTWF5IDIwMjAgMTY6NDA6MTUgKzAxMDAN
-Cj4gSm9uYXRoYW4gQ2FtZXJvbiA8Sm9uYXRoYW4uQ2FtZXJvbkBIdWF3ZWkuY29tPiB3cm90ZToN
-Cj4gDQo+ID4gT24gRnJpLCA4IE1heSAyMDIwIDE3OjEzOjA0ICswMzAwDQo+ID4gQWxleGFuZHJ1
-IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4gDQo+
-ID4gPiBUaGVyZSBhcmUgcGxlbnR5IG9mIGJhZCBkZXNpZ25zIHdlIHdhbnQgdG8gZGlzY291cmFn
-ZSBvciBub3QgaGF2ZSB0bw0KPiA+ID4gcmV2aWV3DQo+ID4gPiBtYW51YWxseSB1c3VhbGx5IGFi
-b3V0IGFjY2Vzc2luZyBwcml2YXRlIChtYXJrZWQgYXMgW0lOVEVSTl0pIGZpZWxkcyBvZg0KPiA+
-ID4gJ3N0cnVjdCBpaW9fZGV2Jy4gIA0KPiA+IA0KPiA+IFRoaXMgaGFzIGJlZW4gb24gdGhlIHRv
-ZG8gbGlzdCBmb3IgbWFueSB5ZWFycyBzbyBncmVhdCB5b3UgYXJlIGhhdmluZyBhIGdvLg0KPiA+
-ICANCj4gPiA+IFRoaXMgaXMgZGlmZmljdWx0LCBhcyBhIGxvdCBvZiB1c2VycyBjb3B5IGRyaXZl
-cnMsIGFuZCBub3QgYWx3YXlzIHRoZSBiZXN0DQo+ID4gPiBleGFtcGxlcy4NCj4gPiA+IA0KPiA+
-ID4gQSBiZXR0ZXIgaWRlYSBpcyB0byBoaWRlIHRob3NlIGZpZWxkcyBpbnRvIHRoZSBmcmFtZXdv
-cmsuDQo+ID4gPiBGb3IgJ3N0cnVjdCBpaW9fZGV2JyB0aGlzIGlzIGEgJ3N0cnVjdCBpaW9fZGV2
-X3ByaXYnIHdoaWNoIHdyYXBzIGEgcHVibGljDQo+ID4gPiAnc3RydWN0IGlpb19kZXYnIG9iamVj
-dC4NCj4gPiA+IA0KPiA+ID4gSW4gdGhlIG5leHQgcGF0Y2hlcywgc29tZSBmaWVsZHMgd2lsbCBi
-ZSBtb3ZlZCB0byB0aGlzIG5ldyBzdHJ1Y3QsIGVhY2gNCj4gPiA+IHdpdGggaXQncyBvd24gcmV3
-b3JrLg0KPiA+ID4gDQo+ID4gPiBUaGlzIHJld29yayB3aWxsIG5vdCBiZSBjb21wbGV0ZVstYWJs
-ZV0gZm9yIGEgd2hpbGUsIGFzIG1hbnkgZmllbGRzIG5lZWQNCj4gPiA+IHNvbWUgZHJpdmVycyB0
-byBiZSByZXdvcmtlZCBpbiBvcmRlciB0byBmaW5hbGl6ZSB0aGVtDQo+ID4gPiAoZS5nLiAnaW5k
-aW9fZGV2LT5tbG9jaycpLg0KPiA+ID4gDQo+ID4gPiBCdXQgc29tZSBmaWVsZHMgY2FuIGFscmVh
-ZHkgYmUgbW92ZWQsIGFuZCBpbiB0aW1lLCBhbGwgb2YgdGhlbSBtYXkgZ2V0DQo+ID4gPiB0aGVy
-ZSAoaW4gdGhlICdzdHJ1Y3QgaWlvX2Rldl9wcml2JyBvYmplY3QpLg0KPiA+ID4gDQo+ID4gPiBX
-ZSBhbHNvIG5lZWQgdG8gaGlkZSB0aGUgaW1wbGVtZW50YXRpb25zIGZvciAnaWlvX3ByaXYoKScg
-Jg0KPiA+ID4gJ2lpb19wcml2X3RvX2RldigpJywgYXMgdGhlIHBvaW50ZXIgYXJpdGhtZXRpYyB3
-aWxsIG5vdCBtYXRjaCBvbmNlIHRoaW5ncw0KPiA+ID4gYXJlIG1vdmVkLiAgDQo+ID4gDQo+ID4g
-VGhpcyBsYXN0IGJpdCBoYXMgdGhlIGRpc2FkdmFudGFnZSBvZiBwb3RlbnRpYWxseSBwdXR0aW5n
-IGEgZnVuY3Rpb24NCj4gPiBjYWxsIGluIHNvbWUgZmFzdCBwYXRocyB3aGVyZSB0aGVyZSB3YXNu
-J3Qgb25lIGJlZm9yZS4NCg0KSG1tLg0KSSB0aGluayB3ZSBjYW4gY2hhbmdlIHRoaXMgdG8gaGF2
-ZSBhIHZvaWQgKnB0ciBpbiB0aGUgcHVibGljIGlpby5oIGhlYWRlciBhbmQNCnRoYXQgcG9pbnRz
-IHRvIHRoZSBwcml2YXRlIGRhdGEgaW4gdGhlIHByaXZhdGUgc3RydWN0LCBhbmQgd2UgY29tcHV0
-ZSBpdCBvbmNlLA0KYW5kIGp1c3QgcmV0dXJuIGl0Lg0KDQpzbzoNCg0Kc3RydWN0IGlpb19kZXZf
-b3BhcXVlOw0KDQpzdHJ1Y3QgaWlvX2RldiB7DQogICAgc3RydWN0IGlpb19kZXZfb3BhcXVlICpv
-cGFxdWU7ICAvLyBjb21wdXRlIHRoaXMgZHVyaW5nIGlpb19kZXZpY2VfYWxsb2MoKQ0KICAgIHZv
-aWQgKnByaXY7ICAgICAgICAgICAgICAgICAgICAgLy8gY29tcHV0ZSB0aGlzIGR1cmluZyBpaW9f
-ZGV2aWNlX2FsbG9jKCkNCn07DQoNCnN0YXRpYyBpbmxpbmUgdm9pZCAqaWlvX3ByaXYoY29uc3Qg
-c3RydWN0IGlpb19kZXYgKmluZGlvX2RldikNCnsNCiAgICAgICAgcmV0dXJuIGluZGlvX2Rldi0+
-cHJpdjsNCn0NCg0KWyBvciBldmVuIGp1c3QgY29udmVydCBpdCB0byBhIG1hY3JvIDsgbm8gcHJl
-ZmVyZW5jZSBdDQoNCj4gPiANCj4gPiBXZSBtYXkgbm90IG5lZWQgdG8gJ2ZvcmNlZnVsbHknIGhp
-ZGUgdGhlIGludGVybmFsIHBhcnRzLiAgTWF5IGJlDQo+ID4gZW5vdWdoIHRvIGp1c3QgbWFrZSB0
-aGVpciB1c2UgcmVhbGx5IG9idmlvdXMuICBJZiB5b3UgaGF2ZSB0byBjYXN0DQo+ID4gdG8gYW4g
-aWlvX2Rldl9wcml2IHRoZW4geW91IGFyZSBkb2luZyBzb21ldGhpbmcgdmVyeSB3cm9uZy4NCj4g
-DQo+IE5vdGUsIGRlZmluaXRlbHkga2VlcCB0aGUgdG9fKiBtYWNybyBvbmx5IGluIHRoZSBwcml2
-YXRlIGNvcmUgaGVhZGVyLg0KPiANCj4gPiBUaGUgb2xkIHN0aWNrIF9fIGluIGZyb250IG9mIGl0
-IG1heSBtYWtlIHRoYXQgZXZlbiBtb3JlIG9idmlvdXMuDQo+ID4gDQo+ID4gTmFtaW5nIGlzIGEg
-Yml0IGNvbmZ1c2luZyB0aG91Z2guICBpaW9fZGV2X3ByaXYgc291bmRzIGxpa2UgcHJpdmF0ZQ0K
-PiA+IHRvIHRoZSBkZXZpY2UuLi4gaWlvX2Rldl9vcGFxdWUgbWF5YmU/DQoNCnJlZ2FyZGluZyB0
-aGUgJ29wYXF1ZScgcGFydCwgdGhhdCB3b3VsZCBiZSBhICdzdHJ1Y3QgaWlvX2Rldl9vcGFxdWUg
-eycgdGhhdA0KbGl2ZXMgc29tZXdoZXJlIGxpa2UNCg0Kc3RydWN0IGlpb19kZXZfb3BhcXVlIHsN
-CiAgICBzdHJ1Y3QgaWlvX2RldiAgIGluZGlvX2RldjsgIC8vIHB1YmxpYyBJSU8gZGV2aWNlIHBh
-cnQNCiAgICAuLi4gLy8gb3BhcXVlIElJTyBkZXZpY2UgcGFydHMNCiAgICAuLi4gLy8gaWlvX3By
-aXYgZGF0YQ0KfQ0KDQpUaGUgc3RpY2sgX18gaW4gZnJvbnQsIG1heSB3b3JrIGp1c3QgZmluZSBh
-cyB3ZWxsLg0KDQpQZXJzb25hbGx5LCBJIHdvdWxkIHByZWZlciB0byBmb3JjZWZ1bGx5IGhpZGUg
-c3R1ZmYsIGJlY2F1c2UgdGhlbiB0aGUgY29tcGlsZXINCmNvdWxkIGFsc28gYmUgdXNlZnVsIGlu
-IHRlbGxpbmcgcGVvcGxlIG5vdCB0byB1c2Ugc29tZSBwcml2YXRlIGZpZWxkcy4NClBlb3BsZSBb
-anVuaW9ycyB1c3VhbGx5XSBsaXN0ZW4gdG8gY29tcGlsZXJzIG1vcmUgdGhhbiB0aGV5IGxpc3Rl
-biB0byByZXZpZXctDQpjb21tZW50cy4gDQpXZSBjb3VsZCBtb3ZlIHRoZSAnc3RydWN0IGlpb19k
-ZXZfb3BhcXVlJyBpbiAnaW5jbHVkZS9saW51eC9paW8vaWlvLW9wYXF1ZS5oJywNCnNvIHRoYXQg
-aWYgdGhleSBuZWVkIHRvIGFjY2VzcyBzb21lIGZpZWxkcyBmb3Igc29tZSBhZHZhbmNlZC9oYWNr
-eSBkZWJ1Z2dpbmcsIGl0DQpzaG91bGQgd29yayBhcyB3ZWxsLg0KDQpTdGlsbCwgaWYgaXQncyBt
-b3JlIHByZWZlcnJlZCB0byBwcmVmaXggdGhlbSwgSSBjYW4gZG8gdGhhdCBhcyB3ZWxsLg0KQnV0
-IHdlIHNob3VsZCBwcmVmaXggdGhlbSBhcyB3ZSBtYW5hZ2UgdG8gc29tZWhvdyBtYWtlIHRoZSBt
-b3JlIG9wYXF1ZSwgb3INCnJlbW92ZSB0aGUgZmllbGRzIGZyb20gcGxhY2VzIHRoZXkgc2hvdWxk
-IGJlIHVzZWQuDQpPdGhlcndpc2UgaXQgaXMgcG9pbnRsZXNzLCBhcyBwZW9wbGUgd291bGQgY29w
-eSAnaW5kaW9fZGV2LT5fX21sb2NrJyBhbnl3YXkuDQoNCg0KPiA+IA0KPiA+IA0KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9n
-LmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gDQo+ID4gPiBKdXN0IGFzIGEgbm90ZSBoZXJlLCBJJ3Zl
-IGJlZW4gcnVubmluZyB0aGlzIHBhdGNoc2V0IHdpdGhvdXQgYSBwcm9ibGVtDQo+ID4gPiBmb3Ig
-MiB3ZWVrcyBub3cgaW4gYSB3b3JrIGJyYW5jaC4NCj4gPiA+IEJ1dCBpdCdzIG9ubHkgYmVlbiBh
-IHNldHVwLCBzbyBubyBpZGVhIGlmIHNvbWUgb3RoZXIgdGhpbmcgbWF5IGNhdXNlDQo+ID4gPiBi
-aWdnZXIgaXNzdWVzLg0KPiA+ID4gDQo+ID4gPiBUaGlzIHNtYWxsIHBhdGNoc2V0IGlzIG1lYW50
-IHRvIGtpY2tzdGFydCB0aGlzLCBmb3IgR1NvQyBwZW9wbGUgb3IgZm9yDQo+ID4gPiBwZW9wbGUg
-d2FudGluZyB0byBzdGFydCBjb250cmlidXRpbmcgdG8gSUlPLg0KPiA+ID4gDQo+ID4gPiAgZHJp
-dmVycy9paW8vaWlvX2NvcmUuaCAgICAgICAgICB8IDExICsrKysrKysrKysrDQo+ID4gPiAgZHJp
-dmVycy9paW8vaW5kdXN0cmlhbGlvLWNvcmUuYyB8IDMyICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKy0tLS0tDQo+ID4gPiAgaW5jbHVkZS9saW51eC9paW8vaWlvLmggICAgICAgICB8IDEyICsr
-LS0tLS0tLS0tLQ0KPiA+ID4gIDMgZmlsZXMgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKSwgMTUg
-ZGVsZXRpb25zKC0pDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9paW9f
-Y29yZS5oIGIvZHJpdmVycy9paW8vaWlvX2NvcmUuaA0KPiA+ID4gaW5kZXggZmQ5YTVmMWQ1ZTUx
-Li44NGYzYjQ1OTBjMDUgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL2lpby9paW9fY29yZS5o
-DQo+ID4gPiArKysgYi9kcml2ZXJzL2lpby9paW9fY29yZS5oDQo+ID4gPiBAQCAtMTcsNiArMTcs
-MTcgQEAgc3RydWN0IGlpb19kZXY7DQo+ID4gPiAgDQo+ID4gPiAgZXh0ZXJuIHN0cnVjdCBkZXZp
-Y2VfdHlwZSBpaW9fZGV2aWNlX3R5cGU7DQo+ID4gPiAgDQo+ID4gPiArLyoqDQo+ID4gPiArICog
-c3RydWN0IGlpb19kZXZfcHJpdiAtIGluZHVzdHJpYWwgSS9PIGRldmljZSBwcml2YXRlIGluZm9y
-bWF0aW9uDQo+ID4gPiArICogQGluZGlvX2RldjoJCQlwdWJsaWMgSUlPIGRldmljZSBvYmplY3QN
-Cj4gPiA+ICsgKi8NCj4gPiA+ICtzdHJ1Y3QgaWlvX2Rldl9wcml2IHsNCj4gPiA+ICsJc3RydWN0
-IGlpb19kZXYJCQlpbmRpb19kZXY7DQo+ID4gPiArfTsNCj4gPiA+ICsNCj4gPiA+ICsjZGVmaW5l
-IHRvX2lpb19kZXZfcHJpdihpbmRpb19kZXYpCVwNCj4gPiA+ICsJY29udGFpbmVyX29mKGluZGlv
-X2Rldiwgc3RydWN0IGlpb19kZXZfcHJpdiwgaW5kaW9fZGV2KQ0KPiA+ID4gKw0KPiA+ID4gIGlu
-dCBfX2lpb19hZGRfY2hhbl9kZXZhdHRyKGNvbnN0IGNoYXIgKnBvc3RmaXgsDQo+ID4gPiAgCQkJ
-ICAgc3RydWN0IGlpb19jaGFuX3NwZWMgY29uc3QgKmNoYW4sDQo+ID4gPiAgCQkJICAgc3NpemVf
-dCAoKmZ1bmMpKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2lpby9pbmR1c3RyaWFsaW8tY29yZS5jIGIvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLQ0KPiA+
-ID4gY29yZS5jDQo+ID4gPiBpbmRleCA0NjJkM2U4MTAwMTMuLmYwODg4ZGQ4NGQzZCAxMDA2NDQN
-Cj4gPiA+IC0tLSBhL2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby1jb3JlLmMNCj4gPiA+ICsrKyBi
-L2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby1jb3JlLmMNCj4gPiA+IEBAIC0xNjQsNiArMTY0LDIz
-IEBAIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgaWlvX2NoYW5faW5mb19wb3N0Zml4W10gPSB7
-DQo+ID4gPiAgCVtJSU9fQ0hBTl9JTkZPX1RIRVJNT0NPVVBMRV9UWVBFXSA9ICJ0aGVybW9jb3Vw
-bGVfdHlwZSIsDQo+ID4gPiAgfTsNCj4gPiA+ICANCj4gPiA+ICsNCj4gPiA+ICt2b2lkICppaW9f
-cHJpdihjb25zdCBzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KQ0KPiA+ID4gK3sNCj4gPiA+ICsJ
-c3RydWN0IGlpb19kZXZfcHJpdiAqaWlvX2Rldl9wcml2ID0gdG9faWlvX2Rldl9wcml2KGluZGlv
-X2Rldik7DQo+ID4gPiArCXJldHVybiAoY2hhciAqKWlpb19kZXZfcHJpdiArIEFMSUdOKHNpemVv
-ZihzdHJ1Y3QgaWlvX2Rldl9wcml2KSwNCj4gPiA+IElJT19BTElHTik7DQo+ID4gPiArfQ0KPiA+
-ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGlpb19wcml2KTsNCj4gPiA+ICsNCj4gPiA+ICtzdHJ1Y3Qg
-aWlvX2RldiAqaWlvX3ByaXZfdG9fZGV2KHZvaWQgKnByaXYpDQo+ID4gPiArew0KPiA+ID4gKwlz
-dHJ1Y3QgaWlvX2Rldl9wcml2ICppaW9fZGV2X3ByaXYgPQ0KPiA+ID4gKwkJKHN0cnVjdCBpaW9f
-ZGV2X3ByaXYgKikoKGNoYXIgKilwcml2IC0NCj4gPiA+ICsJCQkJICBBTElHTihzaXplb2Yoc3Ry
-dWN0IGlpb19kZXZfcHJpdiksDQo+ID4gPiBJSU9fQUxJR04pKTsNCj4gPiA+ICsJcmV0dXJuICZp
-aW9fZGV2X3ByaXYtPmluZGlvX2RldjsNCj4gPiA+ICt9DQo+ID4gPiArRVhQT1JUX1NZTUJPTF9H
-UEwoaWlvX3ByaXZfdG9fZGV2KTsNCj4gPiA+ICsNCj4gPiA+ICAvKioNCj4gPiA+ICAgKiBpaW9f
-ZmluZF9jaGFubmVsX2Zyb21fc2koKSAtIGdldCBjaGFubmVsIGZyb20gaXRzIHNjYW4gaW5kZXgN
-Cj4gPiA+ICAgKiBAaW5kaW9fZGV2OgkJZGV2aWNlDQo+ID4gPiBAQCAtMTQ3Niw2ICsxNDkzLDgg
-QEAgc3RhdGljIHZvaWQgaWlvX2RldmljZV91bnJlZ2lzdGVyX3N5c2ZzKHN0cnVjdA0KPiA+ID4g
-aWlvX2RldiAqaW5kaW9fZGV2KQ0KPiA+ID4gIHN0YXRpYyB2b2lkIGlpb19kZXZfcmVsZWFzZShz
-dHJ1Y3QgZGV2aWNlICpkZXZpY2UpDQo+ID4gPiAgew0KPiA+ID4gIAlzdHJ1Y3QgaWlvX2RldiAq
-aW5kaW9fZGV2ID0gZGV2X3RvX2lpb19kZXYoZGV2aWNlKTsNCj4gPiA+ICsJc3RydWN0IGlpb19k
-ZXZfcHJpdiAqaWlvX2Rldl9wcml2ID0gdG9faWlvX2Rldl9wcml2KGluZGlvX2Rldik7DQo+ID4g
-PiArDQo+ID4gPiAgCWlmIChpbmRpb19kZXYtPm1vZGVzICYgSU5ESU9fQUxMX1RSSUdHRVJFRF9N
-T0RFUykNCj4gPiA+ICAJCWlpb19kZXZpY2VfdW5yZWdpc3Rlcl90cmlnZ2VyX2NvbnN1bWVyKGlu
-ZGlvX2Rldik7DQo+ID4gPiAgCWlpb19kZXZpY2VfdW5yZWdpc3Rlcl9ldmVudHNldChpbmRpb19k
-ZXYpOw0KPiA+ID4gQEAgLTE0ODQsNyArMTUwMyw3IEBAIHN0YXRpYyB2b2lkIGlpb19kZXZfcmVs
-ZWFzZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UpDQo+ID4gPiAgCWlpb19idWZmZXJfcHV0KGluZGlv
-X2Rldi0+YnVmZmVyKTsNCj4gPiA+ICANCj4gPiA+ICAJaWRhX3NpbXBsZV9yZW1vdmUoJmlpb19p
-ZGEsIGluZGlvX2Rldi0+aWQpOw0KPiA+ID4gLQlrZnJlZShpbmRpb19kZXYpOw0KPiA+ID4gKwlr
-ZnJlZShpaW9fZGV2X3ByaXYpOw0KPiA+ID4gIH0NCj4gPiA+ICANCj4gPiA+ICBzdHJ1Y3QgZGV2
-aWNlX3R5cGUgaWlvX2RldmljZV90eXBlID0gew0KPiA+ID4gQEAgLTE0OTgsMTAgKzE1MTcsMTEg
-QEAgc3RydWN0IGRldmljZV90eXBlIGlpb19kZXZpY2VfdHlwZSA9IHsNCj4gPiA+ICAgKiovDQo+
-ID4gPiAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNpemVvZl9wcml2KQ0K
-PiA+ID4gIHsNCj4gPiA+ICsJc3RydWN0IGlpb19kZXZfcHJpdiAqaWlvX2Rldl9wcml2Ow0KPiA+
-ID4gIAlzdHJ1Y3QgaWlvX2RldiAqZGV2Ow0KPiA+ID4gIAlzaXplX3QgYWxsb2Nfc2l6ZTsNCj4g
-PiA+ICANCj4gPiA+IC0JYWxsb2Nfc2l6ZSA9IHNpemVvZihzdHJ1Y3QgaWlvX2Rldik7DQo+ID4g
-PiArCWFsbG9jX3NpemUgPSBzaXplb2Yoc3RydWN0IGlpb19kZXZfcHJpdik7DQo+ID4gPiAgCWlm
-IChzaXplb2ZfcHJpdikgew0KPiA+ID4gIAkJYWxsb2Nfc2l6ZSA9IEFMSUdOKGFsbG9jX3NpemUs
-IElJT19BTElHTik7DQo+ID4gPiAgCQlhbGxvY19zaXplICs9IHNpemVvZl9wcml2Ow0KPiA+ID4g
-QEAgLTE1MDksMTAgKzE1MjksMTIgQEAgc3RydWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2Mo
-aW50IHNpemVvZl9wcml2KQ0KPiA+ID4gIAkvKiBlbnN1cmUgMzItYnl0ZSBhbGlnbm1lbnQgb2Yg
-d2hvbGUgY29uc3RydWN0ID8gKi8NCj4gPiA+ICAJYWxsb2Nfc2l6ZSArPSBJSU9fQUxJR04gLSAx
-Ow0KPiA+ID4gIA0KPiA+ID4gLQlkZXYgPSBremFsbG9jKGFsbG9jX3NpemUsIEdGUF9LRVJORUwp
-Ow0KPiA+ID4gLQlpZiAoIWRldikNCj4gPiA+ICsJaWlvX2Rldl9wcml2ID0ga3phbGxvYyhhbGxv
-Y19zaXplLCBHRlBfS0VSTkVMKTsNCj4gPiA+ICsJaWYgKCFpaW9fZGV2X3ByaXYpDQo+ID4gPiAg
-CQlyZXR1cm4gTlVMTDsNCj4gPiA+ICANCj4gPiA+ICsJZGV2ID0gJmlpb19kZXZfcHJpdi0+aW5k
-aW9fZGV2Ow0KPiA+ID4gKw0KPiA+ID4gIAlkZXYtPmRldi5ncm91cHMgPSBkZXYtPmdyb3VwczsN
-Cj4gPiA+ICAJZGV2LT5kZXYudHlwZSA9ICZpaW9fZGV2aWNlX3R5cGU7DQo+ID4gPiAgCWRldi0+
-ZGV2LmJ1cyA9ICZpaW9fYnVzX3R5cGU7DQo+ID4gPiBAQCAtMTUyNiw3ICsxNTQ4LDcgQEAgc3Ry
-dWN0IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNpemVvZl9wcml2KQ0KPiA+ID4gIAlp
-ZiAoZGV2LT5pZCA8IDApIHsNCj4gPiA+ICAJCS8qIGNhbm5vdCB1c2UgYSBkZXZfZXJyIGFzIHRo
-ZSBuYW1lIGlzbid0IGF2YWlsYWJsZSAqLw0KPiA+ID4gIAkJcHJfZXJyKCJmYWlsZWQgdG8gZ2V0
-IGRldmljZSBpZFxuIik7DQo+ID4gPiAtCQlrZnJlZShkZXYpOw0KPiA+ID4gKwkJa2ZyZWUoaWlv
-X2Rldl9wcml2KTsNCj4gPiA+ICAJCXJldHVybiBOVUxMOw0KPiA+ID4gIAl9DQo+ID4gPiAgCWRl
-dl9zZXRfbmFtZSgmZGV2LT5kZXYsICJpaW86ZGV2aWNlJWQiLCBkZXYtPmlkKTsNCj4gPiA+IGRp
-ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2lpby9paW8uaCBiL2luY2x1ZGUvbGludXgvaWlvL2lp
-by5oDQo+ID4gPiBpbmRleCA1ZjlmNDM5YTRmMDEuLjM4YzRlYTUwNTM5NCAxMDA2NDQNCj4gPiA+
-IC0tLSBhL2luY2x1ZGUvbGludXgvaWlvL2lpby5oDQo+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4
-L2lpby9paW8uaA0KPiA+ID4gQEAgLTY3OCwxNiArNjc4LDggQEAgc3RhdGljIGlubGluZSB2b2lk
-ICppaW9fZGV2aWNlX2dldF9kcnZkYXRhKHN0cnVjdA0KPiA+ID4gaWlvX2RldiAqaW5kaW9fZGV2
-KQ0KPiA+ID4gICNkZWZpbmUgSUlPX0FMSUdOIEwxX0NBQ0hFX0JZVEVTDQo+ID4gPiAgc3RydWN0
-IGlpb19kZXYgKmlpb19kZXZpY2VfYWxsb2MoaW50IHNpemVvZl9wcml2KTsNCj4gPiA+ICANCj4g
-PiA+IC1zdGF0aWMgaW5saW5lIHZvaWQgKmlpb19wcml2KGNvbnN0IHN0cnVjdCBpaW9fZGV2ICpp
-bmRpb19kZXYpDQo+ID4gPiAtew0KPiA+ID4gLQlyZXR1cm4gKGNoYXIgKilpbmRpb19kZXYgKyBB
-TElHTihzaXplb2Yoc3RydWN0IGlpb19kZXYpLCBJSU9fQUxJR04pOw0KPiA+ID4gLX0NCj4gPiA+
-IC0NCj4gPiA+IC1zdGF0aWMgaW5saW5lIHN0cnVjdCBpaW9fZGV2ICppaW9fcHJpdl90b19kZXYo
-dm9pZCAqcHJpdikNCj4gPiA+IC17DQo+ID4gPiAtCXJldHVybiAoc3RydWN0IGlpb19kZXYgKiko
-KGNoYXIgKilwcml2IC0NCj4gPiA+IC0JCQkJICBBTElHTihzaXplb2Yoc3RydWN0IGlpb19kZXYp
-LCBJSU9fQUxJR04pKTsNCj4gPiA+IC19DQo+ID4gPiArdm9pZCAqaWlvX3ByaXYoY29uc3Qgc3Ry
-dWN0IGlpb19kZXYgKmluZGlvX2Rldik7DQo+ID4gPiArc3RydWN0IGlpb19kZXYgKmlpb19wcml2
-X3RvX2Rldih2b2lkICpwcml2KTsNCj4gPiA+ICANCj4gPiA+ICB2b2lkIGlpb19kZXZpY2VfZnJl
-ZShzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KTsNCj4gPiA+ICBzdHJ1Y3QgaWlvX2RldiAqZGV2
-bV9paW9fZGV2aWNlX2FsbG9jKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50DQo+ID4gPiBzaXplb2Zf
-cHJpdik7ICANCj4gDQo+IA0K
+On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
+> Add Nuvoton NPCM BMC I2C controller driver.
+
+Some cosmetic changes needs to be done.
+
+...
+
+> +/*
+> + * Nuvoton NPCM7xx I2C Controller driver
+> + *
+> + * Copyright (C) 2020 Nuvoton Technologies tali.perry@nuvoton.com
+> + */
+
+So, entire file has C99 comment style, but this and few other places.
+Any reason of inconsistency?
+
+...
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+
+Why?
+
+> +#include <linux/debugfs.h>
+> +#endif
+
+...
+
+> +//#define _I2C_DEBUG_
+
+Leftover, remove.
+
+...
+
+> +// Common regs
+> +#define NPCM_I2CSDA                       0x00
+> +#define NPCM_I2CST                        0x02
+> +#define NPCM_I2CCST                       0x04
+
+> +#define NPCM_I2CCTL1	                  0x06
+
+Indentation issue. And it's better to use TABs over spaces here and
+in the similar places above and below.
+
+> +#define NPCM_I2CADDR1                     0x08
+> +#define NPCM_I2CCTL2                      0x0A
+> +#define NPCM_I2CADDR2                     0x0C
+> +#define NPCM_I2CCTL3                      0x0E
+> +#define NPCM_I2CCST2                      0x18
+> +#define NPCM_I2CCST3                      0x19
+
+...
+
+> +// supported clk settings. values in KHz.
+> +#define I2C_FREQ_MIN                      10
+> +#define I2C_FREQ_MAX                      1000
+
+_KHZ to both.
+
+...
+
+> +#define I2C_NUM_OF_ADDR 10
+
+Is it 10-bit address support or what?
+
+...
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +static struct dentry *npcm_i2c_debugfs_dir;   /* i2c debugfs directory */
+> +static const char *ber_cnt_name      = "ber_count";
+> +static const char *rec_succ_cnt_name = "rec_succ_count";
+> +static const char *rec_fail_cnt_name = "rec_fail_count";
+> +static const char *nack_cnt_name     = "nack_count";
+> +static const char *timeout_cnt_name  = "timeout_count";
+> +#endif
+
+Why are these global?
+
+...
+
+> +static void npcm_i2c_write_to_fifo_master(struct npcm_i2c *bus,
+> +					  u16 max_bytes_to_send)
+> +{
+> +	// Fill the FIFO, while the FIFO is not full and there are more bytes to
+> +	// write
+
+> +	while ((max_bytes_to_send--) &&
+
+Inner parentheses are redundant.
+
+> +	       (I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus))) {
+> +		if (bus->wr_ind < bus->wr_size)
+> +			npcm_i2c_wr_byte(bus, bus->wr_buf[bus->wr_ind++]);
+> +		else
+> +			npcm_i2c_wr_byte(bus, 0xFF);
+> +	}
+> +}
+
+...
+
+> +		// Clear stall only after setting STOP
+> +		iowrite8(NPCM_I2CST_STASTR, bus->reg + NPCM_I2CST);
+> +
+> +		ret =  IRQ_HANDLED;
+
+Indentation issue.
+
+...
+
+> +				if (bus->wr_size)
+> +					npcm_i2c_set_fifo(bus, -1,
+> +							  bus->wr_size);
+> +				else
+> +					npcm_i2c_set_fifo(bus, bus->rd_size,
+> +							  -1);
+
+These two looks much better on one line.
+
+...
+
+> +				if (npcm_i2c_is_quick(bus) || bus->wr_size)
+> +					npcm_i2c_wr_byte(bus, bus->dest_addr);
+> +				else
+> +					npcm_i2c_wr_byte(bus, bus->dest_addr |
+> +							      0x01);
+
+0x01 has its definition, hasn't it?
+
+...
+
+> +	// Repeat the following sequence until SDA is released
+> +	do {
+> +		// Issue a single SCL toggle
+> +		iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
+> +		udelay(20);
+> +		// If SDA line is inactive (high), stop
+> +		if (npcm_i2c_get_SDA(_adap)) {
+> +			done = true;
+> +			status = 0;
+> +		}
+> +	} while (!done && iter--);
+
+readx_poll_timeout() ?
+
+...
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	if (!status) {
+
+Why not positive condition?
+
+	if (status) {
+		...
+	} else {
+		...
+	}
+
+> +	} else {
+
+> +	}
+> +#endif
+
+...
+
+> +static int npcm_i2c_init_clk(struct npcm_i2c *bus, u32 bus_freq)
+> +{
+> +	u32  k1 = 0;
+> +	u32  k2 = 0;
+> +	u8   dbnct = 0;
+> +	u32  sclfrq = 0;
+> +	u8   hldt = 7;
+> +	bool fast_mode = false;
+
+> +	u32  src_clk_freq; // in KHz
+
+src_clk_khz ?
+
+> +
+> +	src_clk_freq = bus->apb_clk / 1000;
+> +	bus->bus_freq = bus_freq;
+> +
+> +	// 100KHz and below:
+
+> +	if (bus_freq <= (I2C_MAX_STANDARD_MODE_FREQ / 1000)) {
+
+Instead of all these / 1000 can't you use bus frequency in Hz and do division
+when it's really needed?
+
+> +		sclfrq = src_clk_freq / (bus_freq * 4);
+> +
+> +		if (sclfrq < SCLFRQ_MIN || sclfrq > SCLFRQ_MAX)
+> +			return -EDOM;
+> +
+> +		if (src_clk_freq >= 40000)
+> +			hldt = 17;
+> +		else if (src_clk_freq >= 12500)
+> +			hldt = 15;
+> +		else
+> +			hldt = 7;
+> +	}
+> +
+> +	// 400KHz:
+> +	else if (bus_freq <= (I2C_MAX_FAST_MODE_FREQ / 1000)) {
+> +		sclfrq = 0;
+> +		fast_mode = true;
+> +
+> +		if (src_clk_freq < 7500)
+> +			// 400KHZ cannot be supported for core clock < 7.5 MHZ
+> +			return -EDOM;
+> +
+> +		else if (src_clk_freq >= 50000) {
+> +			k1 = 80;
+> +			k2 = 48;
+> +			hldt = 12;
+> +			dbnct = 7;
+> +		}
+> +
+> +		// Master or Slave with frequency > 25 MHZ
+> +		else if (src_clk_freq > 25000) {
+
+> +			hldt = (DIV_ROUND_UP(src_clk_freq * 300,
+> +							 1000000) + 7) & 0xFF;
+
+How ' & 0xFF' is not no-op here and in the similar cases?
+
+> +
+> +			k1 = DIV_ROUND_UP(src_clk_freq * 1600,
+> +						   1000000);
+> +			k2 = DIV_ROUND_UP(src_clk_freq * 900,
+> +						   1000000);
+
+Perhaps,
+
+#define clk_coef(freq, mul)	DIV_ROUND_UP((freq) * (mul), 1000000)
+
+?
+
+> +			k1 = round_up(k1, 2);
+> +			k2 = round_up(k2 + 1, 2);
+> +			if (k1 < SCLFRQ_MIN || k1 > SCLFRQ_MAX ||
+> +			    k2 < SCLFRQ_MIN || k2 > SCLFRQ_MAX)
+> +				return -EDOM;
+> +		}
+> +	}
+> +
+> +	else if (bus_freq <= (I2C_MAX_FAST_MODE_PLUS_FREQ / 1000)) {
+> +		sclfrq = 0;
+> +		fast_mode = true;
+> +
+> +		if (src_clk_freq < 24000)
+> +		// 1MHZ cannot be supported for master core clock < 15 MHZ
+> +		// or slave core clock < 24 MHZ
+> +			return -EDOM;
+> +
+> +		k1 = round_up((DIV_ROUND_UP(src_clk_freq * 620,
+> +						     1000000)), 2);
+> +		k2 = round_up((DIV_ROUND_UP(src_clk_freq * 380,
+> +						     1000000) + 1), 2);
+> +		if (k1 < SCLFRQ_MIN || k1 > SCLFRQ_MAX ||
+> +		    k2 < SCLFRQ_MIN || k2 > SCLFRQ_MAX)
+> +			return -EDOM;
+> +
+> +		// Core clk > 40 MHZ
+> +		if (src_clk_freq > 40000) {
+> +			// Set HLDT:
+> +			// SDA hold time:  (HLDT-7) * T(CLK) >= 120
+> +			// HLDT = 120/T(CLK) + 7 = 120 * FREQ(CLK) + 7
+> +			hldt = (DIV_ROUND_UP(src_clk_freq * 120,
+> +							 1000000) + 7) & 0xFF;
+> +		} else {
+> +			hldt = 7;
+> +			dbnct = 2;
+> +		}
+> +	}
+> +
+> +	// Frequency larger than 1 MHZ is not supported
+> +	else
+> +		return false;
+
+> +	return true;
+> +}
+
+...
+
+> +	ret = device_property_read_u32(&pdev->dev, "bus-frequency", &clk_freq);
+> +	if (ret < 0) {
+> +		dev_info(&pdev->dev, "Could not read bus-frequency property\n");
+
+> +		clk_freq = 100000;
+
+We have define for this, don't we?
+
+> +	}
+
+Wolfram, we discussed this simplified timings property parser,
+any news about it?
+
+...
+
+> +static irqreturn_t npcm_i2c_bus_irq(int irq, void *dev_id)
+> +{
+> +	irqreturn_t ret;
+> +	struct npcm_i2c *bus = dev_id;
+> +
+> +	bus->int_cnt++;
+> +
+> +	if (npcm_i2c_is_master(bus))
+> +		bus->master_or_slave = I2C_MASTER;
+> +
+> +	if (bus->master_or_slave == I2C_MASTER)	{
+> +		bus->int_time_stamp = jiffies;
+> +		ret = npcm_i2c_int_master_handler(bus);
+
+> +		if (ret == IRQ_HANDLED)
+> +			return ret;
+
+What's the point?
+
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+
+...
+
+> +	bus->dest_addr = (slave_addr << 1) & 0xFE;
+
+How ' & 0xFE' part is not a no-op?
+
+...
+
+> +	time_left = jiffies +
+> +		    msecs_to_jiffies(DEFAULT_STALL_COUNT) + 1;
+
+It's perfectly one line. Fix here and in any other place with similar issue.
+
+...
+
+> +static int i2c_init_debugfs(struct platform_device *pdev, struct npcm_i2c *bus)
+
+Should be void.
+
+...
+
+> +	bus->irq = platform_get_irq(pdev, 0);
+> +	if (bus->irq < 0) {
+
+> +		dev_err(&pdev->dev, "failed to get IRQ number\n");
+
+Duplicate message.
+
+> +		return bus->irq;
+> +	}
+
+...
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+
+Why? Okay, why here instead of making a stub?
+
+> +	ret = i2c_init_debugfs(pdev, bus);
+
+> +	if (ret < 0)
+> +		return ret;
+
+Wrong. Should not fail the probe.
+
+> +#endif
+
+...
+
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+
+Why? Just make it always present in the structure.
+
+> +	if (!!bus->debugfs) {
+
+!! ???
+
+> +		debugfs_remove_recursive(bus->debugfs);
+> +		bus->debugfs = NULL;
+> +	}
+> +#endif
+
+...
+
+> +	npcm_i2c_debugfs_dir = debugfs_create_dir("i2c", NULL);
+
+> +	if (IS_ERR_OR_NULL(npcm_i2c_debugfs_dir)) {
+> +		pr_warn("i2c init of debugfs failed\n");
+> +		npcm_i2c_debugfs_dir = NULL;
+> +		return -ENOMEM;
+> +	}
+
+Shouldn't prevent driver to work.
+
+...
+
+> +	if (!!npcm_i2c_debugfs_dir) {
+
+!! ???
+
+> +		debugfs_remove_recursive(npcm_i2c_debugfs_dir);
+
+> +		npcm_i2c_debugfs_dir = NULL;
+
+What's the point?
+
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
