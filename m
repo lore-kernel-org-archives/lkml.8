@@ -2,197 +2,326 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98750C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0070C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E73620661
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EB620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EwKfi3+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbgEKVQ2 (ORCPT
+        id S1726528AbgEKVS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:16:28 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50200 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEKVQ1 (ORCPT
+        Mon, 11 May 2020 17:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgEKVSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:16:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4D1C7803080A;
-        Mon, 11 May 2020 21:16:24 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JINjVi3KOE_z; Tue, 12 May 2020 00:16:23 +0300 (MSK)
-Date:   Tue, 12 May 2020 00:16:22 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
+        Mon, 11 May 2020 17:18:25 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BDEC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:18:25 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id m7so4452603plt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GxSruKmA2bVgy2K4+WkymzUTkS1gnJsJUC47X7HGuw8=;
+        b=EwKfi3+hJDWZ8/AeaZnpGHoqH6Kcbn3pIZMuRsFGvZIL80r6CJy070DkChxmmGK2fG
+         7WoORQoH5aNIKpqth43z3WE328yeHngrUwOvfgV2ZpW75R++NnIiTV22MYbsZMa9B1HV
+         lwxydVAz8ZkQ6j1CP3zxv4sMDONCi9iK7naYE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GxSruKmA2bVgy2K4+WkymzUTkS1gnJsJUC47X7HGuw8=;
+        b=QU8ChLQGS0CxQ0lByq5rPEaGqOXTJbU7M3h0fGYoAaLJN4N2fz8RvsTWorDLd4ScLx
+         BcHZy5SZ01GyiB4pKH5A9vMaqfMdur7BaHoyPuGwvrwNkgXCwB4kuMoYp/Rz3WAKIKsH
+         XzJ5k20gA2Cmj3FTSN74+tkpPue4DcjpnS1kVrIWeNmAuQbQ+7SRve7PnneuRMH9qNBk
+         n/cUK41nocY2xWeA8jWSzuf4uezFqN1AduPFZWOyAlljlxmoe8WveoBQaVUr2Ap0jXWq
+         RZL7ATKnCciaA2h3kjTRY2wcI4d/ptYubcQxoAG9/nRQWJXVB+3q7640lFhLIEDObwV3
+         7A1w==
+X-Gm-Message-State: AGi0PuagiRyiyeo4rFKlhkOr6jwOkLR+JjaOL2gBbYhWwCzO3SKLYxSt
+        jWaJgyEIsDeQM20QQiZ7ZX1d+Q==
+X-Google-Smtp-Source: APiQypIQTSd9p1Hcvj1g6YAF7Rt7WW61eGi49zkjg5ig+hvMKX8MGOBSXbVNH7xwhe+a038HXAfJ3w==
+X-Received: by 2002:a17:902:8496:: with SMTP id c22mr17155337plo.182.1589231904878;
+        Mon, 11 May 2020 14:18:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a23sm9923384pfo.145.2020.05.11.14.18.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:18:23 -0700 (PDT)
+Date:   Mon, 11 May 2020 14:18:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from
+ __do_execve_file
+Message-ID: <202005111245.6E390B46@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
+ <202005101929.A4374D0F56@keescook>
+ <87y2pytnvq.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508112152.GI185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <87y2pytnvq.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> +Cc (Vineet, for information you probably know)
+On Mon, May 11, 2020 at 11:52:41AM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
 > 
-> On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > Maximum block size DW DMAC configuration corresponds to the max segment
-> > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > value specific to the probed DW DMA controller. It shall help the DMA
-> > clients to create size-optimized SG-list items for the controller. This in
-> > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > better DMA device performance.
+> > On Sat, May 09, 2020 at 02:41:17PM -0500, Eric W. Biederman wrote:
+> >> 
+> >> Now that security_bprm_set_creds is no longer responsible for calling
+> >> cap_bprm_set_creds, security_bprm_set_creds only does something for
+> >> the primary file that is being executed (not any interpreters it may
+> >> have).  Therefore call security_bprm_set_creds from __do_execve_file,
+> >> instead of from prepare_binprm so that it is only called once, and
+> >> remove the now unnecessary called_set_creds field of struct binprm.
+> >> 
+> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> >> ---
+> >>  fs/exec.c                  | 11 +++++------
+> >>  include/linux/binfmts.h    |  6 ------
+> >>  security/apparmor/domain.c |  3 ---
+> >>  security/selinux/hooks.c   |  2 --
+> >>  security/smack/smack_lsm.c |  3 ---
+> >>  security/tomoyo/tomoyo.c   |  6 ------
+> >>  6 files changed, 5 insertions(+), 26 deletions(-)
+> >> 
+> >> diff --git a/fs/exec.c b/fs/exec.c
+> >> index 765bfd51a546..635b5085050c 100644
+> >> --- a/fs/exec.c
+> >> +++ b/fs/exec.c
+> >> @@ -1635,12 +1635,6 @@ int prepare_binprm(struct linux_binprm *bprm)
+> >>  
+> >>  	bprm_fill_uid(bprm);
+> >>  
+> >> -	/* fill in binprm security blob */
+> >> -	retval = security_bprm_set_creds(bprm);
+> >> -	if (retval)
+> >> -		return retval;
+> >> -	bprm->called_set_creds = 1;
+> >> -
+> >>  	retval = cap_bprm_set_creds(bprm);
+> >>  	if (retval)
+> >>  		return retval;
+> >> @@ -1858,6 +1852,11 @@ static int __do_execve_file(int fd, struct filename *filename,
+> >>  	if (retval < 0)
+> >>  		goto out;
+> >>  
+> >> +	/* fill in binprm security blob */
+> >> +	retval = security_bprm_set_creds(bprm);
+> >> +	if (retval)
+> >> +		goto out;
+> >> +
+> >>  	retval = prepare_binprm(bprm);
+> >>  	if (retval < 0)
+> >>  		goto out;
+> >> 
+> >
+> > Here I go with a Sunday night review, so hopefully I'm thinking better
+> > than Friday night's review, but I *think* this patch is broken from
+> > the LSM sense of the world in that security_bprm_set_creds() is getting
+> > called _before_ the creds actually get fully set (in prepare_binprm()
+> > by the calls to bprm_fill_uid(), cap_bprm_set_creds(), and
+> > check_unsafe_exec()).
+> >
+> > As a specific example, see the setting of LSM_UNSAFE_NO_NEW_PRIVS in
+> > bprm->unsafe during check_unsafe_exec(), which must happen after
+> > bprm_fill_uid(bprm) and cap_bprm_set_creds(bprm), to have a "true" view
+> > of the execution privileges. Apparmor checks for this flag in its
+> > security_bprm_set_creds() hook. Similarly do selinux, smack, etc...
 > 
-> Thank you for the patch.
-> My comments below.
-> 
-> ...
-> 
-> > +		/*
-> > +		 * Find maximum block size to be set as the DMA device maximum
-> > +		 * segment size. By doing so we'll have size optimized SG-list
-> > +		 * items for the channels with biggest block size. This won't
-> > +		 * be a problem for the rest of the channels, since they will
-> > +		 * still be able to split the requests up by allocating
-> > +		 * multiple DW DMA LLP descriptors, which they would have done
-> > +		 * anyway.
-> > +		 */
-> > +		if (dwc->block_size > block_size)
-> > +			block_size = dwc->block_size;
-> >  	}
-> >  
-> >  	/* Clear all interrupts on all channels. */
-> > @@ -1220,6 +1233,10 @@ int do_dma_probe(struct dw_dma_chip *chip)
-> >  			     BIT(DMA_MEM_TO_MEM);
-> >  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> >  
-> > +	/* Block size corresponds to the maximum sg size */
-> > +	dw->dma.dev->dma_parms = &dw->dma_parms;
-> > +	dma_set_max_seg_size(dw->dma.dev, block_size);
-> > +
-> >  	err = dma_async_device_register(&dw->dma);
-> >  	if (err)
-> >  		goto err_dma_register;
-> 
-> Yeah, I have locally something like this and I didn't dare to upstream because
-> there is an issue. We have this information per DMA controller, while we
-> actually need this on per DMA channel basis.
-> 
-> Above will work only for synthesized DMA with all channels having same block
-> size. That's why above conditional is not needed anyway.
+> I think you are getting prepare_binprm confused with prepare_bprm_creds.
+> Understandable given the similarity of their names.
 
-Hm, I don't really see why the conditional isn't needed and this won't work. As
-you can see in the loop above Initially I find a maximum of all channels maximum
-block sizes and use it then as a max segment size parameter for the whole device.
-If the DW DMA controller has the same max block size of all channels, then it
-will be found. If the channels've been synthesized with different block sizes,
-then the optimization will work for the one with greatest block size. The SG
-list entries of the channels with lesser max block size will be split up
-by the DW DMAC driver, which would have been done anyway without
-max_segment_size being set. Here we at least provide the optimization for the
-channels with greatest max block size.
+I fixated on a bad example, having confused myself about when
+check_unsafe_exec() happens. My original concern (with the bad example)
+was that the LSM is having security_bprm_set_creds() called before the
+new cred in bprm->cred has been initialized with all the correct uid/gid,
+caps, and associated flags.
 
-I do understand that it would be good to have this parameter setup on per generic
-DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-such facility, so setting at least some justified value is a good idea.
+But anything associated with capabilities should be confined to the
+commoncap LSM, though there is "leakage" into the uid/gid states and some
+bprm state (more on this later). That said, as you also found, I can't
+find any LSM that examines those fields of the cred (I had stopped this
+research last night when I saw check_unsafe_exec() and confused myself);
+they're all looking at other bprm state not associated with caps and uid
+changes (file, unsafe_exec, security field of new cred, etc). So that's
+very good! That means we've actually kept a bright line between things
+here -- whew.
 
+> > The security_bprm_set_creds() boundary for LSM is to see the "final"
+> > state of the process privileges, and that needs to happen after
+> > bprm_fill_uid(), cap_bprm_set_creds(), and check_unsafe_exec() have all
+> > finished.
+> >
+> > So, as it stands, I don't think this will work, but perhaps it can still
+> > be rearranged to avoid the called_set_creds silliness. I'll look more
+> > this week...
 > 
-> OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> that Intel Medfield has interesting settings, but I don't remember if DMA
-> channels are different inside the same controller).
+> If you look at the flow of the code in __do_execve_file before this
+> change it is:
 > 
-> Vineet, do you have any information that Synopsys customers synthesized DMA
-> controllers with different channel characteristics inside one DMA IP?
+> 	prepare_bprm_creds()
+>         check_unsafe_exec()
+> 
+> 	...
+> 
+>         prepare_binprm()
+>         	bprm_file_uid()
 
-AFAICS the DW DMAC channels can be synthesized with different max block size.
-The IP core supports such configuration. So we can't assume that such DMAC
-release can't be found in a real hardware just because we've never seen one.
-No matter what Vineet will have to say in response to your question.
+(bprm_fill_uid(), but yes)
 
+>                 	bprm->cred->euid = current_euid()
+>                         bprm->cred->egid = current_egid()
+> 		security_bprm_set_creds()
+>                 	for_each_lsm()
+>                         	lsm->bprm_set_creds()
+>                                 	if (called_set_creds)
+>                                         	return;
+>                                         ...
+> 		bprm->called_set_creds = 1;
+> 	...
 > 
-> ...
+> 	exec_binprm()
+>         	search_binary_handler()
+>                 	security_bprm_check()
+>                         	tomoyo_bprm_check_security()
+>                                 ima_bprm_check()
+>    			load_script()
+>                         	prepare_binprm()
+>                                 	/* called_set_creds already == 1 */
+>                                 	bprm_file_uid()
+>                                         security_bprm_set_creds()
+> 			                	for_each_lsm()
+> 			                        	lsm->bprm_set_creds()
+> 		                                	if (called_set_creds)
+>                 		                        	return;
+>                                 		        ...
+>                                 search_binary_handler()
+>                                 	security_bprm_check_security()
+>                                         load_elf_binary()
+>                                         	...
+>                                                 setup_new_exec
+>                                                 ...
 > 
-> >  #include <linux/bitops.h>
 > 
-> > +#include <linux/device.h>
+> Assuming you are executing a shell script.
 > 
-> Isn't enough to supply
-> 
-> struct device;
-> 
-> ?
+> Now bprm_file_uid is written with the assumption that it will be called
+> multiple times and it reinitializes all of it's variables each time.
 
-It's "struct device_dma_parameters" and I'd prefer to include the header file.
+Right -- and the same is true for cap_bprm_set_creds() (in that
+it needs to be run multiple times and depends on the work done in
+bprm_fill_uid()). If we encounter a future use-case for having other
+LSMs call out here multiple time, we can introduce a new LSM hook.
 
+> As you can see in above the implementations of bprm_set_creds() only
+> really execute before called_set_creds is set, aka the first time.
+> They in no way see the final state.
 > 
-> >  #include <linux/interrupt.h>
-> >  #include <linux/dmaengine.h>
-> 
-> Also this change needs a separate patch I suppose.
+> Further when I looked as those hooks they were not looking at the values
+> set by bprm_file_uid at all.  There were busy with the values their
+> they needed to set in that hook for their particular lsm.
 
-Ah, just discovered there is no need in adding the dma_parms here because since
-commit 7c8978c0837d ("driver core: platform: Initialize dma_parms for platform
-devices") the dma_params pointer is already initialized. The same thing is done
-for the PCI device too.
+Agreed (though I'd love some other LSM eyes on this conclusion).
 
--Sergey
+> So while in theory I can see the danger of moving above bprm_file_uid
+> I don't see anything in practice that would be a problem.
+> 
+> Further by moving the call of security_bprm_set_creds out of
+> prepare_binprm int __do_execve_file just before the call of
+> prepare_binprm I am just moving the call above binprm_fill_uid
+> and nothing else.
+> 
+> So I think you just confused prepare_bprm_creds with prepare_binprm.
+> As most of your criticisms appear valid in that case.  Can you take a
+> second look?
 
-> 
-> ...
-> 
-> > -	struct dma_device	dma;
-> > -	char			name[20];
-> > -	void __iomem		*regs;
-> > -	struct dma_pool		*desc_pool;
-> > -	struct tasklet_struct	tasklet;
-> > +	struct dma_device		dma;
-> > +	struct device_dma_parameters	dma_parms;
-> > +	char				name[20];
-> > +	void __iomem			*regs;
-> > +	struct dma_pool			*desc_pool;
-> > +	struct tasklet_struct		tasklet;
-> >  
-> >  	/* channels */
-> > -	struct dw_dma_chan	*chan;
-> > -	u8			all_chan_mask;
-> > -	u8			in_use;
-> > +	struct dw_dma_chan		*chan;
-> > +	u8				all_chan_mask;
-> > +	u8				in_use;
-> 
-> Please split formatting fixes into a separate patch.
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+So, in earlier attempts to clean up code near all this, I removed the
+LSM's bprm_secureexec hook, which only commoncap was using to impart
+details about privilege elevation. I switched the semantics to having LSMs
+set bprm->secureexec to true (but never to zero). Since commoncap's idea
+of "was I elevated?" might repeatedly change, I had to store its results
+"privately" in the bprm, which got us cap_elevated (in 46d98eb4e1d2):
+
+c425e189ffd7 ("binfmt: Introduce secureexec flag")
+993b3ab0642e ("apparmor: Refactor to remove bprm_secureexec hook")
+62874c3adf70 ("selinux: Refactor to remove bprm_secureexec hook")
+46d98eb4e1d2 ("commoncap: Refactor to remove bprm_secureexec hook")
+ee67ae7ef6ff ("commoncap: Move cap_elevated calculation into bprm_set_creds")
+2af622802696 ("LSM: drop bprm_secureexec hook")
+
+So, given the special-case nature of capabilities here, this does seem
+to be the right choice (assuming we're not missing something in the
+other LSMs). As such, I think the comment for cap_elevated needs to be
+updated to reflect the change to function call flow, and to specify it
+cannot be used by the other LSMs. Maybe something like:
+
+               /*
+                * True if most recent call to cap_bprm_set_creds()
+                * (due to multiple prepare_binprm() calls from the
+                * binfmt_script/misc handlers) resulted in elevated
+                * privileges. This is used internally by fs/exec.c
+		* to set bprm->secureexec.
+                */
+               cap_elevated:1,
+
+And that brings us to naming. Whee. I think we should make the following
+name changes:
+
+bprm_fill_uid      ->	bprm_establish_privileges
+cap_bprm_set_creds ->	cap_establish_privileges
+
+Finally, I think we should update the comment on bprm_set_creds (which,
+actually, I think is the correct name now) to something like:
+
+ * @bprm_set_creds:
+ *	Save security information in the @bprm->cred->security field,
+ *	typically based on information about the bprm->file, for later
+ *	use during the @bprm_committing_creds hook. Specifically
+ *	the credentials themselves (uid, gid, etc), are not finalized
+ *	yet and must not be examined until the @bprm_committing_creds
+ *	hook.
+ *      This hook is called once, after the creds structure has been
+ *	allocated.
+ *      The hook must set @bprm->secureexec to 1 if a "secure exec"
+ *	has happened as a result of this hook call. The flag is used to
+ *      indicate the need for a sanitized execution environment, and is
+ *      also passed in the ELF auxiliary table on the initial stack to
+ *      indicate whether libc should enable secure mode.
+ *	This hook may also optionally check LSM-specific permissions
+ *	(e.g. for transitions between security domains).
+ *      @bprm contains the linux_binprm structure.
+ *      Return 0 if the hook is successful and permission is granted.
+
+-Kees
+
+-- 
+Kees Cook
