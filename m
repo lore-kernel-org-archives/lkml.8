@@ -2,129 +2,339 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871F1C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B93C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 628AB206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uftKWEI+"
+	by mail.kernel.org (Postfix) with ESMTP id D910F20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589237681;
+	bh=3AxgFNR3S9ZxYJWyxAj0+Wmud9QQaJnYR9wDCmPR1t8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cfgrG3KX1RQtYKxy4lZDN2z7/xSLrSEIUBIWkm3ar44xZZicCkrcbHHczB3aljvXO
+	 qxG1jb/+LzbxkukdcLsowm0yGpWllNRqNMKWO8WzWoeQOjfuGI/KQcKhMk9zXfznVC
+	 N+M2clqVuvyu8BVk4b4K+uYCcc073dH8LGA9sax8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgEKWyM (ORCPT
+        id S1727933AbgEKWyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725828AbgEKWyL (ORCPT
+        Mon, 11 May 2020 18:54:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37181 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgEKWyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:54:11 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC6AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:54:11 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c18so10403084ile.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GPqPt+LvpyhigCOhSWJiaFTaWdPgFw1mAm/F4h69auc=;
-        b=uftKWEI+n9GZB7RWezlifiB8sDtRPtbEmmq8HWPjeWwJ/cRYg2pl5241xRCuo4BSo8
-         YIt7mTpu+MNAxKxfMKwf0r6TzoEGEEnbPoaBNwHaqdxlo5SJT8ToQPemoR0rJKzVBak9
-         EYGunad7teqx3hUoYD2jU8JiGxklWqYQyidGtANjKQGDeQH4tuTrjI1RHN0rN85y52tZ
-         7/qRpGbRDFCotBApI6/NmVBtyvlKxAkIVbboat/cdWxDZk4URHiTOvmLYPtC2BE79xzq
-         xxeinuSye7EkIV2qSaFvgnxdAg+wgP1/WufaWIeRM1foOzSfUHWd+I9AAjAsBESWOhHt
-         Jbuw==
+        Mon, 11 May 2020 18:54:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z17so8997517oto.4;
+        Mon, 11 May 2020 15:54:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GPqPt+LvpyhigCOhSWJiaFTaWdPgFw1mAm/F4h69auc=;
-        b=Z/agDtt3XTVzz77J3fVuU4bv/SWRGoy0P6gdmfS0KAe0pLgK32ShbApJy27ro4znOP
-         QkXaC7eVf8bmu+IrDFwpx+E79FqthTd0H5RHCcFe/4Oe5CeBR46gxytlVgHTI+uJ/fy1
-         fC+p0hWR3dfxEN+3L78/rbqtCn3AYehs3kEeKC7w1IwdKq/p4Lu8Evw+1OBTXR4orHL2
-         Yytgpas2993ZyYjbqbvOhlwhM4+13b937DLQu13f0qL4OhbQiqqmi+9rFFHuV3RFgWxR
-         hDFreUMr0td4TmwIHHSEKpgcm+c7iKGvb2q1Y9i1sDSTizhoWrWq5mGQWGIPk995aVmb
-         iEgQ==
-X-Gm-Message-State: AGi0PuarTGSSWvvTd6zhRb6pA/gdBRwxv3TRbImz9KnrsnOnba+FC/Nm
-        /Tbr3sKfuSHJTL0z2jhHiJon0fCEoYW9YbTMXw==
-X-Google-Smtp-Source: APiQypLLW4kSraX2xLdb7NEi1dpDxPOGfEEYBhEvfQrmvqmgM2Iz6CPpGFFnvqB7VN7uslkJKhSqvkvjyD9jGJb51NE=
-X-Received: by 2002:a92:bf06:: with SMTP id z6mr17283577ilh.191.1589237651050;
- Mon, 11 May 2020 15:54:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VizB9d53gOC/+qH9umA+7PsvczjrwT1z7CX57CjiKQc=;
+        b=VsOLlDYlXN8nEjJmvIDWTA5+m9u2BGvjtTwJqHLYvjELUDOW2anwG5EnxilMyRC2VL
+         KtLnNQUoVmAOa7sPmf1sva1ZsEBkY2SqHrh4DYVlf9h3XNzuor8RcIWL959iUP4zgdf1
+         4/VdYr4czdBIm+3TJMDwTsrH+havSVNeelKB52Ca84ugQc8OHGFnBVoFEahJC7cmM1Dc
+         nFZumGGCnVImivsmsXSWZmnyWG56JCjZ8jzD1ur+mFZVZxmpYg1uSqh5Xz+Ihi2tWUxC
+         CdmHVJDZX3G27WFML8EqIt6n98SKTyo69bYoX1TJD8FwMNRdI7Qb1ARQXrjqegZrOxuh
+         Cfww==
+X-Gm-Message-State: AGi0Pub5Lz8RulPvj35saFb/hyjXch74GG7HbyJLDNnRO9P0NTmEf9aq
+        ENcIzEJ4gUh+40ufyCCdgw==
+X-Google-Smtp-Source: APiQypKKLnsY+mi3s4XrlLCTUB04SAu7Bg8dIg/BXtQfuHvj8J8ILkc+35vvNiJCe8R8pqScwHrcDw==
+X-Received: by 2002:a9d:6d15:: with SMTP id o21mr14268200otp.184.1589237678420;
+        Mon, 11 May 2020 15:54:38 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l89sm2479578otc.32.2020.05.11.15.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 15:54:37 -0700 (PDT)
+Received: (nullmailer pid 2250 invoked by uid 1000);
+        Mon, 11 May 2020 22:54:36 -0000
+Date:   Mon, 11 May 2020 17:54:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me, =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 4/8] dt-bindings: memory: Convert ingenic,jz4780-nemc.txt
+ to YAML
+Message-ID: <20200511225436.GB19685@bogus>
+References: <20200426185856.38826-1-paul@crapouillou.net>
+ <20200426185856.38826-4-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20200504230309.237398-1-ndesaulniers@google.com>
- <CAKwvOdmspKUknbzDn9kY2jMgkFw=Ktvst0ZtwambDOfybqJGWw@mail.gmail.com>
- <CAMzpN2iDottAY3p=GS0A_7XX7bpmWsmSOEcztMXNEEvcwHirjg@mail.gmail.com>
- <CAKwvOdnxV_KwC-q73e3basJvo4-9FCGeMUOrZLj5xyt6Yyeh2A@mail.gmail.com> <CAMzpN2gTEwGh0U+L3_R6pC8Qmv1iY7bRTiTEXD86mF3u9Nnkqg@mail.gmail.com>
-In-Reply-To: <CAMzpN2gTEwGh0U+L3_R6pC8Qmv1iY7bRTiTEXD86mF3u9Nnkqg@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Mon, 11 May 2020 18:54:00 -0400
-Message-ID: <CAMzpN2jcCM4m_HnJPc6kpVhnf588w6bPxYM_bCEd3OgbnvBvTg@mail.gmail.com>
-Subject: Re: [PATCH] x86: support i386 with Clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Golovin <dima@golovin.in>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426185856.38826-4-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 3:34 PM Brian Gerst <brgerst@gmail.com> wrote:
->
-> On Mon, May 11, 2020 at 2:46 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Mon, May 11, 2020 at 11:09 AM Brian Gerst <brgerst@gmail.com> wrote:
-> > > This looks like the same issue that we just discussed for bitops.h.
-> > > Add the "b" operand size modifier to force it to use the 8-bit
-> > > register names (and probably also needs the "w" modifier in the 16-bit
-> > > case).
-> >
-> > While it does feel familiar, it is slightly different.
-> > https://godbolt.org/z/Rme4Zg
-> > That case was both compilers validating the inline asm, yet generating
-> > assembly that the assembler would choke on.  This case is validation
-> > in the front end failing.
->
-> > long long ret;
-> > switch (sizeof(ret)) {
-> > case 1:
-> >         asm ("movb $5, %0" : "=q" (ret));
-> >         break;
-> > case 8:;
-> > }
->
-> So if the issue here is that the output variable type is long long,
-> what code is using a 64-bit percpu variable on a 32-bit kernel?  Can
-> you give a specific file that fails to build with Clang?  If Clang is
-> choking on it it may be silently miscompiling on GCC.
+On Sun, Apr 26, 2020 at 08:58:52PM +0200, Paul Cercueil wrote:
+> Convert the ingenic,jz4780-nemc.txt doc file to ingenic,nemc.yaml.
+> 
+> The ingenic,jz4725b-nemc compatible string was added in the process,
+> with a fallback to ingenic,jz4740-nemc.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../ingenic,jz4780-nemc.txt                   | 76 ---------------
+>  .../ingenic,nemc-client.yaml                  | 45 +++++++++
+>  .../memory-controllers/ingenic,nemc.yaml      | 95 +++++++++++++++++++
+>  3 files changed, 140 insertions(+), 76 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,nemc-client.yaml
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+> deleted file mode 100644
+> index 59b8dcc118ee..000000000000
+> --- a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+> +++ /dev/null
+> @@ -1,76 +0,0 @@
+> -* Ingenic JZ4780 NAND/external memory controller (NEMC)
+> -
+> -This file documents the device tree bindings for the NEMC external memory
+> -controller in Ingenic JZ4780
+> -
+> -Required properties:
+> -- compatible: Should be set to one of:
+> -    "ingenic,jz4740-nemc" (JZ4740)
+> -    "ingenic,jz4780-nemc" (JZ4780)
+> -- reg: Should specify the NEMC controller registers location and length.
+> -- clocks: Clock for the NEMC controller.
+> -- #address-cells: Must be set to 2.
+> -- #size-cells: Must be set to 1.
+> -- ranges: A set of ranges for each bank describing the physical memory layout.
+> -  Each should specify the following 4 integer values:
+> -
+> -    <cs number> 0 <physical address of mapping> <size of mapping>
+> -
+> -Each child of the NEMC node describes a device connected to the NEMC.
+> -
+> -Required child node properties:
+> -- reg: Should contain at least one register specifier, given in the following
+> -  format:
+> -
+> -    <cs number> <offset> <size>
+> -
+> -  Multiple registers can be specified across multiple banks. This is needed,
+> -  for example, for packaged NAND devices with multiple dies. Such devices
+> -  should be grouped into a single node.
+> -
+> -Optional child node properties:
+> -- ingenic,nemc-bus-width: Specifies the bus width in bits. Defaults to 8 bits.
+> -- ingenic,nemc-tAS: Address setup time in nanoseconds.
+> -- ingenic,nemc-tAH: Address hold time in nanoseconds.
+> -- ingenic,nemc-tBP: Burst pitch time in nanoseconds.
+> -- ingenic,nemc-tAW: Access wait time in nanoseconds.
+> -- ingenic,nemc-tSTRV: Static memory recovery time in nanoseconds.
+> -
+> -If a child node references multiple banks in its "reg" property, the same value
+> -for all optional parameters will be configured for all banks. If any optional
+> -parameters are omitted, they will be left unchanged from whatever they are
+> -configured to when the NEMC device is probed (which may be the reset value as
+> -given in the hardware reference manual, or a value configured by the boot
+> -loader).
+> -
+> -Example (NEMC node with a NAND child device attached at CS1):
+> -
+> -nemc: nemc@13410000 {
+> -	compatible = "ingenic,jz4780-nemc";
+> -	reg = <0x13410000 0x10000>;
+> -
+> -	#address-cells = <2>;
+> -	#size-cells = <1>;
+> -
+> -	ranges = <1 0 0x1b000000 0x1000000
+> -		  2 0 0x1a000000 0x1000000
+> -		  3 0 0x19000000 0x1000000
+> -		  4 0 0x18000000 0x1000000
+> -		  5 0 0x17000000 0x1000000
+> -		  6 0 0x16000000 0x1000000>;
+> -
+> -	clocks = <&cgu JZ4780_CLK_NEMC>;
+> -
+> -	nand: nand@1 {
+> -		compatible = "ingenic,jz4780-nand";
+> -		reg = <1 0 0x1000000>;
+> -
+> -		ingenic,nemc-tAS = <10>;
+> -		ingenic,nemc-tAH = <5>;
+> -		ingenic,nemc-tBP = <10>;
+> -		ingenic,nemc-tAW = <15>;
+> -		ingenic,nemc-tSTRV = <100>;
+> -
+> -		...
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc-client.yaml b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc-client.yaml
+> new file mode 100644
+> index 000000000000..682e6f7e74fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc-client.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/memory-controllers/ingenic,nemc-client.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title:
+> +  Ingenic SoCs NAND / External Memory Controller (NEMC)
+> +  client-specific properties
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +description:
+> +  This document lists the various properties that child nodes of the NEMC node
+> +  can use.
+> +
+> +properties:
 
-On further investigation, 64-bit percpu operations fall back to the
-generic code on x86-32, so there is no problem with miscompiling here.
+What about 'reg'? That should be required.
 
-On a side note from looking at the preprocessed output of the percpu
-macros: they generate a ton of extra dead code because the core macros
-also have a switch on data size.  I will take a stab at cleaning that
-up.
+> +  ingenic,nemc-bus-width:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [8, 16]
+> +    description: Specifies the bus width in bits.
+> +
+> +  ingenic,nemc-tAS:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Address setup time in nanoseconds.
+> +
+> +  ingenic,nemc-tAH:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Address hold time in nanoseconds.
+> +
+> +  ingenic,nemc-tBP:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Burst pitch time in nanoseconds.
+> +
+> +  ingenic,nemc-tAW:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Address wait time in nanoseconds.
+> +
+> +  ingenic,nemc-tSTRV:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Static memory recovery time in nanoseconds.
 
---
-Brian Gerst
+I think I'd just combine this into 1 file.
+
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
+> new file mode 100644
+> index 000000000000..c7fd28462fd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/memory-controllers/ingenic,nemc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs NAND / External Memory Controller (NEMC) devicetree bindings
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^memory-controller@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4740-nemc
+> +        - ingenic,jz4780-nemc
+> +      - items:
+> +        - const: ingenic,jz4725b-nemc
+> +        - const: ingenic,jz4740-nemc
+> +
+> +  "#address-cells":
+> +    const: 2
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  ranges: true
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^(nand-controller|ethernet)@[0-9]+$":
+
+Presumably you could have other types of child nodes?
+
+> +    type: object
+> +    allOf:
+> +      - $ref: ingenic,nemc-client.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - ranges
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    nemc: memory-controller@13410000 {
+> +      compatible = "ingenic,jz4780-nemc";
+> +      reg = <0x13410000 0x10000>;
+> +      #address-cells = <2>;
+> +      #size-cells = <1>;
+> +      ranges = <1 0 0x1b000000 0x1000000>,
+> +         <2 0 0x1a000000 0x1000000>,
+> +         <3 0 0x19000000 0x1000000>,
+> +         <4 0 0x18000000 0x1000000>,
+> +         <5 0 0x17000000 0x1000000>,
+> +         <6 0 0x16000000 0x1000000>;
+> +
+> +      clocks = <&cgu JZ4780_CLK_NEMC>;
+> +
+> +      ethernet@6 {
+> +        compatible = "davicom,dm9000";
+> +        davicom,no-eeprom;
+> +
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pins_nemc_cs6>;
+> +
+> +        reg = <6 0 1>, /* addr */
+> +              <6 2 1>; /* data */
+> +
+> +        ingenic,nemc-tAS = <15>;
+> +        ingenic,nemc-tAH = <10>;
+> +        ingenic,nemc-tBP = <20>;
+> +        ingenic,nemc-tAW = <50>;
+> +        ingenic,nemc-tSTRV = <100>;
+> +
+> +        reset-gpios = <&gpf 12 GPIO_ACTIVE_HIGH>;
+> +        vcc-supply = <&eth0_power>;
+> +
+> +        interrupt-parent = <&gpe>;
+> +        interrupts = <19 4>;
+> +      };
+> +    };
+> -- 
+> 2.26.2
+> 
