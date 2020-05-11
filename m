@@ -2,128 +2,609 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E18C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E352C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9ED620720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589219059;
-	bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zX09EwvOib7vzzElYLi/it4fOgqhIFH2hLb60XlaO061vrG3gi9Bc755QV9c9R2RB
-	 l4LpBJARqMfcg7xi7kDVy/H8hwCIkv79o6hF3Atf2WozOVFhvpVzh+pco+7Xq8CIXa
-	 oQAoimZkNCN3RKme9g94FKgNvoZ4LbRxWGKJr99w=
+	by mail.kernel.org (Postfix) with ESMTP id 60BFB206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgEKRoS (ORCPT
+        id S1730928AbgEKRoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 13:44:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:36920 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgEKRoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:44:18 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A81E206D6;
-        Mon, 11 May 2020 17:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589219057;
-        bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M5M0yr01sJrjR4NQQHjYco8Zm2A79QvQoS+JgFLzt3UtWZozf/K5RaXdDLDwpsV4n
-         wQ4Llyx/KGkvcaEaZuIe/aT5WnmIVgxYInVSxRkj1xyI6x7VQqYBwTQcCt1+Wq38K2
-         eFbuTzTTMJ7pHQiH04ug7PF5ar1YT8bmqKYk6agc=
-Date:   Mon, 11 May 2020 18:44:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511174414.GL8216@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
+        id S1729049AbgEKRoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:44:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AAD631B;
+        Mon, 11 May 2020 10:44:18 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51A33F305;
+        Mon, 11 May 2020 10:44:16 -0700 (PDT)
+Subject: Re: [PATCH v4 2/2] EDAC/Cadence:Add EDAC driver for cadence memory
+ controller
+To:     Dhananjay Kangude <dkangude@cadence.com>
+Cc:     linux-edac@vger.kernel.org, bp@alien8.de, mchehab@kernel.org,
+        tony.luck@intel.com, linux-kernel@vger.kernel.org,
+        mparab@cadence.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+References: <20200424083155.30918-1-dkangude@cadence.com>
+ <20200424083155.30918-3-dkangude@cadence.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <19035f9e-442b-68d0-cc19-d8185f09cd3b@arm.com>
+Date:   Mon, 11 May 2020 18:44:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
-Content-Disposition: inline
-In-Reply-To: <20200511134502.hjbu5evkiuh75chr@mobilestation>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200424083155.30918-3-dkangude@cadence.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dhananjay,
 
---W/+CTqSGWdiRg+8j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 24/04/2020 09:31, Dhananjay Kangude wrote:
+> Added edac platform driver for Cadence DDR controller which
+> notify the ecc events based on the single or double bit errors
+> during memory operations.
 
-On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
-> On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+Is there any public documentation for this device?
 
-> > That sounds like you need to also impose a limit on the maximum message
-> > size as well then, with that you should be able to handle messages up
-> > to whatever that limit is.  There's code for that bit already, so long
-> > as the limit is not too low it should be fine for most devices and
-> > client drivers can see the limit so they can be updated to work with it
-> > if needed.
 
-> Hmm, this might work. The problem will be with imposing such limitation through
-> the DW APB SSI driver. In order to do this I need to know:
+The way you're using syfs here is a problem. Surely this compile time debug option for
+error injection is only going to get used by Soc integrators?, not by people with
+platforms that have this device...
+Its going to be much simpler to remove it.
 
-> 1) Whether multi-block LLP is supported by the DW DMA controller.
-> 2) Maximum DW DMA transfer block size.
 
-There is a constraint enumeration interface in the DMA API which you
-should be able to extend for this if it doesn't already support what you
-need.
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index fe2eb89..d5bb399 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -530,4 +530,12 @@ config EDAC_DMC520
+>  	  Support for error detection and correction on the
+>  	  SoCs with ARM DMC-520 DRAM controller.
+>  
+> +config EDAC_CADENCE
 
-> Then I'll be able to use this information in the can_dma() callback to enable
-> the DMA xfers only for the safe transfers. Did you mean something like this when
-> you said "There's code for that bit already" ? If you meant the max_dma_len
-> parameter, then setting it won't work, because it just limits the SG items size
-> not the total length of a single transfer.
+> +	tristate "Candence DDR Memory Controller ECC"
+Typo:               ^^
 
-You can set max_transfer_size and/or max_message_size in the SPI driver
-- you should be able to do this on probe.
 
---W/+CTqSGWdiRg+8j
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	depends on ARM
+> +	help
+> +	  Support for error detection and correction on the Cadence DDR
+> +	  memory controller. The driver reports correctable and uncorrectable
+> +	  memory errors.
+> +
+>  endif # EDAC
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/drivers/edac/cadence_edac.c b/drivers/edac/cadence_edac.c
+> new file mode 100644
+> index 0000000..3aecc9a
+> --- /dev/null
+> +++ b/drivers/edac/cadence_edac.c
+> @@ -0,0 +1,641 @@
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65ju0ACgkQJNaLcl1U
-h9BWuwf9GYDZfT9SEAR6UO5jhJk6RWwFsHU3BhxdAnvDK/l2K93uI+11WQq2An8H
-yiMiIaTllJPZmNs7mg1+lxpT1gRmKbmoXqb3DFml9K4gKxVJMXoIAPyhTL6wLqaV
-wiCzkwszsZsVvzFiQyPNAau0qzkaOC+wHPr8PUiEFxZIRUxEsThin07HXK7X0APj
-7LoKnOaB28MWVN/ezndCECaxoOgexp8LZ6jhVMMg/Kpd8UMCaJwB8yEz80uBFL+q
-mglQQesF6cb/dQZcynpOyCWm2dZhnCdd5yvyHWH1d2rVbcfi3xoTq+tWfPMLbW12
-45bciv1TxBU7iqLX1sF/YYO33YIO1Q==
-=HGPI
------END PGP SIGNATURE-----
+> +#include <linux/init.h>
+> +#include <linux/edac.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/module.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/delay.h>
+> +#include "edac_module.h"
+> +
+> +#define CDNS_EDAC_MOD_NAME "cadence-edac"
+> +#define FORCED_ECC_ERR_EVENT_SUPPORT	BIT(1)
+> +
+> +/* Granularity of reported error in bytes */
+> +#define CDNS_EDAC_ERR_GRAIN		1
+> +
+> +#define MEM_TYPE_DDR4			0xA
+> +/* CDNS DDR4 Controller Registers */
+> +#define DDR_CTL_MEM_TYPE_REG		0x000
+> +#define DDR_CTL_MEM_WIDTH_REG		0x00c
+> +#define DDR_CTL_CONTROLLER_BUSY		0x2f0
+> +
+> +/* ECC Controller Registers */
+> +#define ECC_CTL_CONTROL_0_REG		0x254
+> +#define ECC_CTL_CONTROL_1_REG		0x258
+> +
+> +#define ECC_CTL_SCRUB_CONTROL_0		0x280
+> +#define ECC_CTL_SCRUB_CONTROL_1		0x284
+> +#define ECC_CTL_SCRUB_CONTROL_2		0x288
+> +#define ECC_CTL_SCRUB_START_ADDR_L	0x28c
+> +#define ECC_CTL_SCRUB_START_ADDR_H	0x290
+> +#define ECC_CTL_SCRUB_END_ADDR_L	0x294
+> +#define ECC_CTL_SCRUB_END_ADDR_H	0x298
+> +
+> +#define ECC_SIG_ECC_C_ADDR_L		0x26c
+> +#define ECC_SIG_ECC_C_ADDR_H		0x270
+> +#define ECC_SIG_ECC_C_DATA_L		0x274
+> +#define ECC_SIG_ECC_C_DATA_H		0x278
+> +#define ECC_SIG_ECC_C_ID		0x27c
+> +#define ECC_SIG_ECC_C_SYND		0x270
+> +#define ECC_SIG_ECC_U_ADDR_L		0x25c
+> +#define ECC_SIG_ECC_U_ADDR_H		0x25c
+> +#define ECC_SIG_ECC_U_DATA_L		0x264
+> +#define ECC_SIG_ECC_U_DATA_H		0x268
+> +#define ECC_SIG_ECC_U_ID		0x27c
+> +#define ECC_SIG_ECC_U_SYND		0x260
+> +
+> +#define ECC_CTL_INT_STATUS		0x310
+> +#define ECC_CTL_INT_ACK			0x330
+> +#define ECC_CTL_INT_MASK		0x350
+> +
+> +/* ECC Scrub Macros */
+> +#define ECC_SCRUB_IN_PROGRESS		BIT(8)
+> +#define ECC_SCRUB_MODE			BIT(0)
+> +#define ECC_SCRUB_START			BIT(0)
+> +#define ECC_SCRUB_LEN_SHIFT		(16)
+> +#define ECC_SCRUB_IDLE_CNT		GENMASK(15, 0)
+> +#define ECC_SCRUB_LEN			GENMASK(27, 16)
+> +#define ECC_CTL_SCRUB_ADDR_L_MASK	GENMASK(31, 0)
+> +#define ECC_CTL_SCRUB_ADDR_H_MASK	GENMASK(1, 0)
+> +
+> +/* Control register width definitions */
+> +#define WDTH_16				(2)
+> +#define WDTH_32				(1)
+> +#define WDTH_64				(0)
+> +#define CTL_REG_WIDTH_SHIFT		(32)
+> +#define USER_WORD_SPLIT_WIDTH		(8)
+> +#define CTL_CONTROLLER_BUSY_FLAG	BIT(16)
+> +#define CTL_MEM_MAX_WIDTH_MASK		GENMASK(4, 0)
+> +
+> +/* ECC Control Macros */
+> +#define ECC_CTL_FORCE_WC		BIT(16)
+> +#define ECC_CTL_AUTO_CURRUPT_DISABLE	BIT(16)
+> +#define ECC_CTL_AUTO_WRITEBACK_EN	BIT(24)
+> +#define ECC_CTL_ECC_ENABLE		GENMASK(9, 8)
+> +#define ECC_CTL_MTYPE_MASK		GENMASK(11, 8)
+> +#define ECC_CTL_XOR_BITS_MASK		GENMASK(15, 0)
+> +
+> +/* ECC Status Macros */
+> +
+> +/* ECC IRQ Macros */
+> +#define ECC_INT_CE_EVENT		BIT(0)
+> +#define ECC_INT_SECOND_CE_EVENT		BIT(1)
+> +#define ECC_INT_UE_EVENT		BIT(2)
+> +#define ECC_INT_SECOND_UE_EVENT		BIT(3)
+> +#define ECC_INT_WRITEBACK_UNHANDLED	BIT(6)
+> +#define ECC_INT_SCRUB_DONE		BIT(7)
+> +#define ECC_INT_SCRUB_CE_EVENT		BIT(8)
+> +#define ECC_INT_MASK_ALL_H		BIT(8)
+> +#define ECC_INT_CE_UE_MASK		GENMASK(3, 0)
+> +#define ECC_CE_INTR_MASK		GENMASK(1, 0)
+> +#define ECC_UE_INTR_MASK		GENMASK(3, 2)
+> +#define ECC_CTL_INT_ENABLE_MASK		GENMASK(15, 0)
 
---W/+CTqSGWdiRg+8j--
+> +/* ECC Signature Macros */
+> +#define ECC_SIG_ECC_C_ID_SHIFT		8
+
+Sure?
+
+> +#define ECC_SIG_ECC_C_SYND_SHIFT	8
+> +#define ECC_SIG_ECC_C_ADDR_H_MASK	GENMASK(1, 0)
+> +#define ECC_SIG_ECC_C_ID_MASK		GENMASK(31, 16)
+> +#define ECC_SIG_ECC_C_SYND_MASK		GENMASK(15, 8)
+> +
+> +#define ECC_SIG_ECC_U_ID_SHIFT		0
+> +#define ECC_SIG_ECC_U_SYND_SHIFT	8
+> +#define ECC_SIG_ECC_U_ADDR_H_MASK	GENMASK(1, 0)
+> +#define ECC_SIG_ECC_U_ID_MASK		GENMASK(15, 0)
+> +#define ECC_SIG_ECC_U_SYND_MASK		GENMASK(15, 8)
+> +
+> +/* Syndrome values */
+> +#define ECC_DOUBLE_MULTI_ERR_SYND	0x03
+> +
+> +static char data_synd[] = {
+> +			0xf4, 0xf1, 0xec, 0xea, 0xe9, 0xe6, 0xe5, 0xe3,
+> +			0xdc, 0xda, 0xd9, 0xd6, 0xd5, 0xd3, 0xce, 0xcb,
+> +			0xb5, 0xb0, 0xad, 0xab, 0xa8, 0xa7, 0xa4, 0xa2,
+> +			0x9d, 0x9b, 0x98, 0x97, 0x94, 0x92, 0x8f, 0x8a,
+> +			0x75, 0x70, 0x6d, 0x6b, 0x68, 0x67, 0x64, 0x62,
+> +			0x5e, 0x5b, 0x58, 0x57, 0x54, 0x52, 0x4f, 0x4a,
+> +			0x34, 0x31, 0x2c, 0x2a, 0x29, 0x26, 0x25, 0x23,
+> +			0x1c, 0x1a, 0x19, 0x16, 0x15, 0x13, 0x0e, 0x0b
+> +		  };
+> +
+> +static char check_synd[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+
+(you use these with a user controlled value and no bounds checking.
+
+But I'm not convinced this error injection is going to get used upstream, and I don't
+think you can use sysfs to move argv[] around!).
+
+
+> +/**
+> + * struct cdns_platform_data -  cadence platform data structure.
+> + * @ip_features:	To differentiate IP features.
+
+> + */
+> +struct cdns_platform_data {
+> +	int ip_features;
+> +};
+
+You only read/write a constant value if CONFIG_EDAC_DEBUG is defined.
+
+Isn't this struct redundant?
+
+
+> +
+> +/**
+> + * struct priv_data - edac device private instance data.
+> + * @reg:	        Base address of the DDR controller.
+> + * @ce_cnt:             Correctable Error count.
+> + * @ue_cnt:             Uncorrectable Error count.
+> + */
+> +struct priv_data {
+> +	void __iomem *reg;
+
+
+> +	u32 ce_cnt;
+> +	u32 ue_cnt;
+
+edac exists to provide these counters. Please don't duplicate them for a debug message
+no-one will ever see.
+
+
+> +#ifdef CONFIG_EDAC_DEBUG
+> +	struct cdns_platform_data *p;
+> +#endif
+
+Isn't this struct redundant?
+
+
+> +};
+> +
+> +/**
+> + * init_mem_layout -  Set address Map as per the mc design.
+> + * @mci:   memory controller information.
+> + *
+> + * Set Address Map as per mc instance .
+> + *
+> + * Return: none.
+> + */
+> +static void init_mem_layout(struct mem_ctl_info *mci)
+> +{
+> +	struct priv_data *priv = mci->pvt_info;
+> +	struct csrow_info *csi;
+> +	struct dimm_info *dimm;
+> +	struct sysinfo inf;
+> +	enum mem_type mtype;
+> +	u32 val, width;
+> +	u32 size, row;
+> +	u8 j;
+> +
+> +	dimm = edac_get_dimm(mci, 0, 0, 0);
+> +	if (!dimm) {
+
+Returning 'if (dimm)' would avoid some indenting here.
+
+But can this actually happen?
+
+From the one caller we know this will return the dimm allocated by edac_mc_alloc_dimms().
+You have one layer, of size 1. My reading of edac_mc_alloc() gives tot_dimms = 1, and
+tot_csrows = 1... in what circumstances does this code run?
+
+
+> +		si_meminfo(&inf);
+> +		for (row = 0; row < mci->nr_csrows; row++) {
+> +			csi = mci->csrows[row];
+> +			size = inf.totalram * inf.mem_unit;
+> +
+> +			for (j = 0; j < csi->nr_channels; j++) {
+> +				dimm            = csi->channels[j]->dimm;
+> +				dimm->edac_mode = EDAC_FLAG_SECDED;
+> +				/* Get memory type by reading hw registers*/
+> +				val = readl(priv->reg + DDR_CTL_MEM_TYPE_REG);
+> +				mtype = val & ECC_CTL_MTYPE_MASK;
+> +
+> +				if (mtype == MEM_TYPE_DDR4)
+> +					dimm->mtype = MEM_DDR4;
+> +				else
+> +					dimm->mtype = MEM_EMPTY;
+> +
+> +				/*Get EDAC devtype width for the current mc*/
+> +				width = readl(priv->reg + DDR_CTL_MEM_WIDTH_REG)
+> +					      & CTL_MEM_MAX_WIDTH_MASK;
+> +				switch (width) {
+> +				case WDTH_16:
+> +					dimm->dtype  = DEV_X2;
+> +					break;
+> +				case WDTH_32:
+> +					dimm->dtype  = DEV_X4;
+> +					break;
+> +				case WDTH_64:
+> +					dimm->dtype  = DEV_X8;
+> +					break;
+> +				default:
+> +					dimm->dtype = DEV_UNKNOWN;
+> +				}
+> +				dimm->nr_pages  = (size >> PAGE_SHIFT) /
+> +					csi->nr_channels;
+> +				dimm->grain     = CDNS_EDAC_ERR_GRAIN;
+> +			}
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * handle_ce - Handle corrected errors and notify to
+> + *             edac layer by reading appropriate hw registers
+> + * @mci:   memory controller information.
+> + * Return: void.
+> + */
+> +static void handle_ce(struct mem_ctl_info *mci)
+> +{
+> +	struct priv_data *priv;
+> +	u64 err_c_addr = 0x0;
+> +	u64 err_c_data = 0x0;
+> +	u32 err_c_synd, err_c_id;
+> +	u32 sig_val_l, sig_val_h;
+> +
+> +	priv = mci->pvt_info;
+> +
+> +	sig_val_l = readl(priv->reg + ECC_SIG_ECC_C_ADDR_L);
+> +	sig_val_h = (readl(priv->reg + ECC_SIG_ECC_C_ADDR_H) &
+> +			ECC_SIG_ECC_C_ADDR_H_MASK);
+
+
+> +	err_c_addr = (((err_c_addr | sig_val_h) <<
+> +				CTL_REG_WIDTH_SHIFT) | sig_val_l);
+
+err_c_addr was initialised to 0,... isn't this the same as:
+| err_c_addr = (sig_val_h << CTL_REG_WIDTH_SHIFT) | sig_val_l;
+
+
+
+> +	sig_val_l = readl(priv->reg + ECC_SIG_ECC_C_DATA_L);
+> +	sig_val_h = readl(priv->reg + ECC_SIG_ECC_C_DATA_H);
+
+> +	err_c_data = (((err_c_data | sig_val_h) <<
+> +				CTL_REG_WIDTH_SHIFT) | sig_val_l);
+
+err_c_data was initialised to 0....
+
+
+> +	err_c_id = ((readl(priv->reg + ECC_SIG_ECC_C_ID) &
+> +				ECC_SIG_ECC_C_ID_MASK) >>
+> +			ECC_SIG_ECC_C_ID_SHIFT);
+
+Would the FIELD_GET() macros make this clearer?
+| FIELD_GET(ECC_SIG_ECC_C_ID_MASK, readl(priv->reg + ECC_SIG_ECC_C_ID));
+
+
+> +	err_c_synd = ((readl(priv->reg + ECC_SIG_ECC_C_SYND) &
+> +				ECC_SIG_ECC_C_SYND_MASK) >>
+> +			ECC_SIG_ECC_C_SYND_SHIFT);
+
+FIELD_GET()?
+
+> +
+> +	priv->ce_cnt = priv->ce_cnt + 1;
+
+Please don't duplicate edac for debug messages.
+
+
+> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
+> +			     1,
+> +			     err_c_addr >> PAGE_SHIFT,
+> +			     err_c_addr & ~PAGE_MASK,
+> +			     err_c_synd, 0, 0, -1,
+> +			     mci->ctl_name, "");
+> +}
+> +
+> +/**
+> + * handle_ue -	Handle uncorrected errors and notify to
+> + *		edac layer by reading appropriate hw registers
+> + * @mci:   memory controller information.
+> + * Return: void.
+> + */
+> +static void handle_ue(struct mem_ctl_info *mci)
+> +{
+
+[as above]
+
+> +}
+> +
+> +/**
+> + * edac_ecc_isr - Interrupt Handler for ECC interrupts.
+> + * @irq:        IRQ number.
+> + * @dev_id:     Device ID.
+> + *
+> + * Return: IRQ_NONE, if interrupt not set or IRQ_HANDLED otherwise.
+> + */
+> +static irqreturn_t edac_ecc_isr(int irq, void *dev_id)
+> +{
+> +	struct mem_ctl_info *mci = dev_id;
+> +	struct priv_data *priv;
+> +	u32 intr_status;
+> +	u32 val;
+> +
+> +	priv = mci->pvt_info;
+> +
+> +	/* Check the intr status and confirm ECC error intr */
+> +	intr_status = readl(priv->reg + ECC_CTL_INT_STATUS);
+> +
+> +	edac_dbg(3, "InterruptStatus : 0x%x\n", intr_status);
+> +	val = intr_status & (ECC_INT_CE_UE_MASK);
+
+> +	if (!((val & ECC_CE_INTR_MASK) || (val & ECC_UE_INTR_MASK)))
+
+|	if (!val)
+?
+
+> +		return IRQ_NONE;
+
+
+> +	if (val & ECC_CE_INTR_MASK) {
+> +		handle_ce(mci);
+> +
+> +		/* Clear the interrupt source */
+> +		if (val & ECC_INT_CE_EVENT)
+> +			writel(ECC_INT_CE_EVENT, priv->reg + ECC_CTL_INT_ACK);
+> +		else if (val & ECC_INT_SECOND_CE_EVENT)
+> +			writel(ECC_INT_SECOND_CE_EVENT,
+> +			       priv->reg + ECC_CTL_INT_ACK);
+> +		else
+
+
+> +			edac_printk(KERN_ERR, EDAC_MC, "Failed to clear IRQ\n");
+
+Please ensure this is rate limited!
+
+
+> +	}
+> +
+> +	if (val & ECC_UE_INTR_MASK) {
+> +		handle_ue(mci);
+> +
+> +		/* Clear the interrupt source */
+> +		if (val & ECC_INT_UE_EVENT)
+> +			writel(ECC_INT_UE_EVENT, priv->reg + ECC_CTL_INT_ACK);
+> +		else if (val & ECC_INT_SECOND_UE_EVENT)
+> +			writel(ECC_INT_SECOND_UE_EVENT,
+> +			       priv->reg + ECC_CTL_INT_ACK);
+> +		else
+
+> +			edac_printk(KERN_ERR, EDAC_MC, "Failed to clear IRQ\n");
+
+Please ensure this is rate limited!
+
+
+> +	}
+> +
+> +	edac_dbg(3, "Total error count CE %d UE %d\n",
+> +		 priv->ce_cnt, priv->ue_cnt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +#ifdef CONFIG_EDAC_DEBUG
+> +/**
+> + * forced_ecc_error_show/store - Sysfs atrribute functions.
+> + * @dev: Pointer to device structure.
+> + * @mattr: Pointer to device attributes.
+> + * @data : Data send by User space and stored in file.
+> + * Return: as SUCCESS,Total number of characters written otherwise
+> + *         negative value.
+> + */
+> +static ssize_t forced_ecc_error_show(struct device *dev,
+> +				     struct device_attribute *mattr,
+> +				     char *data)
+> +{
+> +	return sprintf(data, "CDNS-DDR4 Force Injection Help:\n"
+> +		       "CE/UE: Corrected/Uncorrected\n"
+> +		       "checkcode/data:source\n"
+> +		       "user_word [0-1]:subpart of data\n"
+> +		       "bit [0-31]:bit number\n");
+
+Multiple values, and multiple lines in sysfs are, frowned on. There is a
+"one value per sysfs file" rule:
+https://lore.kernel.org/linux-pci/20190621072911.GA21600@kroah.com/
+
+(the attributes section in 'Documentation/filesystems/sysfs.rst' also has some stuff on this)
+
+
+Its not clear to me from this help text what I'd have to write in here to inject an error.
+This is for debug? Who is expected to use it? Is it really needed upstream?
+
+Can we remove this #ifdeffery and heavily-frowned-on use of sysfs? You are abusing it to
+move an argv[] into the kernel.
+
+
+> +static const struct of_device_id cdns_edac_of_match[] = {
+> +	{ .compatible = "cdns,ddr4-mc-edac", .data = &cdns_edac },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, cdns_edac_of_match);
+
+> +/**
+> + * cdns_edac_mc_probe - bind cdns mc controller driver to framework.
+> + * @pdev:  platform device.
+> + *
+> + * Probe a memory controller for binding with the driver.
+> + *
+> + * Return: 0 if binding of the controller instance is successful;
+> + * otherwise, < 0 on error.
+> + */
+> +static int cdns_edac_mc_probe(struct platform_device *pdev)
+> +{
+
+[...]
+
+> +	/* Enable & set CE/UE Interrupts for DDR4 Controller */
+> +	writel((unsigned int)(~(ECC_CTL_INT_ENABLE_MASK)),
+> +	       priv_data->reg + ECC_CTL_INT_MASK);
+> +
+> +	/* Start capturing the correctable and uncorrectable errors.
+> +	 * Write 1 to enable.
+> +	 */
+> +	writel(ECC_CTL_ECC_ENABLE, priv_data->reg + ECC_CTL_CONTROL_0_REG);
+> +	return 0;
+> +
+> +err1:
+
+(giving these names will make the code more readable)
+
+
+> +	edac_mc_del_mc(&pdev->dev);
+> +
+> +err:
+> +	edac_mc_free(mci);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * cdns_edac_mc_remove - Unbind driver from controller.
+> + * @pdev:  Platform device.
+> + *
+> + * Return: 0
+> + */
+> +static int cdns_edac_mc_remove(struct platform_device *pdev)
+> +{
+> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +	struct priv_data *priv = mci->pvt_info;
+
+Could another CPU be running in edac_ecc_isr() when this is called....
+
+> +	/* Disable All ECC Interrupts for DDR4 Controller */
+> +	writel(ECC_CTL_INT_ENABLE_MASK, priv->reg + ECC_CTL_INT_MASK);
+> +
+> +	/* Disable ecc feature before removing driver by writing 0 */
+> +	writel((unsigned int)(~(ECC_CTL_ECC_ENABLE)),
+> +	       priv->reg + ECC_CTL_CONTROL_0_REG);
+> +
+> +#ifdef CONFIG_EDAC_DEBUG
+> +	remove_sysfs_attributes(mci);
+> +#endif
+> +	edac_mc_del_mc(&pdev->dev);
+> +	edac_mc_free(mci);
+
+... and now you've free()d the private data from underneath it.
+
+
+I think you need an irqsave spinlock and a call to platform_set_drvdata(pdev, NULL).
+edac_ecc_isr() would need to take the lock when using the private data, (nd return if its
+NULL).
+
+
+> +	return 0;
+> +}
+
+
+Thanks,
+
+James
