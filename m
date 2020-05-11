@@ -2,120 +2,106 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36910C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E10C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7C120735
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71BC20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvCTwObS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IZ1GX1h8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgEKLv0 (ORCPT
+        id S1729674AbgEKLv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42844 "EHLO
+        Mon, 11 May 2020 07:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727019AbgEKLvZ (ORCPT
+        by vger.kernel.org with ESMTP id S1727019AbgEKLvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:51:25 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04A4C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:51:25 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id m13so7270502otf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:51:25 -0700 (PDT)
+        Mon, 11 May 2020 07:51:55 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B90C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:51:54 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z72so9258226wmc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:51:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NeHRpybSf1hZUCecDPTXMsxHP/0MCclV9yk5G+Y9ElM=;
-        b=FvCTwObSUK/MSdWWjp6LdXPWvXftuK25+1iJJPGIDFcuzADJ1lqKsneCun9PQlUILM
-         IbHxRU/2/UxYvP86NguZ6KvjiOasgPyzGxY+Wl/0kttIzOpE0s/lCVm7xk0H20W/xuwR
-         5fMs/5LZRiZ7F53MqB3Eyakhbw3Xe/Xc2eOSVenLMLbvMUdE8sa2B8SB4geRaRjMMvPW
-         BT9ihGf+3XwjsG/o62/6vsF8MyqF60zAy93GRzu/pQAH/SbZeInVVMY1gqk6oZAgbUmF
-         36d0FVFknNDNXbJ3LwO76AZHx5FpSR7essMlz83xi3MGSyEPQZPavQ7E6NvJsheFFrIS
-         eSQA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oiiy7yzaDZrfNFpAYBwGY7qa9RdD+rUsUN7jZCiG/Nk=;
+        b=IZ1GX1h8kyIJjla0cM+4zc64f4XSRKtANiqnwZRYC6TXvTREkBTOmgF97cWJX4JMN/
+         D/hplVMrCmD687Q5l5bjArc0/bJ6CNx5Rcq/W1h6i0myjroW0TzhSMtwawnkpMDfsTHq
+         lqQ294S9l97u/OG5FE2Wiy23OxON2aIG+TE1iUsbgrx1gS1LXORQ2ETyZ5FHCdJBoH9+
+         1oUqEX2YHtu+WMiP/UojhLfG28tPH0V7OaTzaqSC6sElvY86pIbB1PbMl0FJ4CzfJ0M4
+         13iRj1wn0M7XLyqegXuuzYmIzCfr36AWq3H0s+vdE7dKO/T9b+qT2mX+yhE6fUk6dCLp
+         DPrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NeHRpybSf1hZUCecDPTXMsxHP/0MCclV9yk5G+Y9ElM=;
-        b=LkRK/mX3ZEORU2pLb0GG8wyoKqHjVWeId24ZhdjuRQyXD+/pJ8yNFSTJRoOToetEsd
-         goerErbj4KV8vd3Coi0sQTd6Y7omcIM24UrSEQUs/4SKC+Ls/LX5ZSo6OKhazzqxofm+
-         N9Oh+mzVwR2HSJaGSO8CS50/GQtTdBwDymwysDnNLWZLesy/kCwsEoMGVjpnqY0YmScF
-         nwk0t4y1tVOFPyxrp5EOKtEG+vGiGEBg7CZzRVEtlKw5br0x7zjSR2hRAphXTKZeS++u
-         SeysXn85wmhyT+Ijb9emnokhcS0yTzBpZ0Ys+IR8W8X9ua9iJn6Y3bSreVfaQf3oBPYO
-         F6cA==
-X-Gm-Message-State: AGi0PuZLSAbYWCzFzpimdMYHR/D5yK3YdKUORtKw7+Il2ypkmHWaZUk+
-        /DNXBgQmjCoqB6EmVfz7jVbc+mXOlm4OLMFwcHM=
-X-Google-Smtp-Source: APiQypKe8DbCslhOawkFJNWKH2byflMD0hHrGXS+wW3bBQQ2xV7wcWU40RYmF45OSY/L3pWRXRLWwJ7rkCiyCwlq2sA=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr11948575otm.145.1589197884912;
- Mon, 11 May 2020 04:51:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oiiy7yzaDZrfNFpAYBwGY7qa9RdD+rUsUN7jZCiG/Nk=;
+        b=DIv7bS/odT+/vVEn3GCdk6Du6BaAtSuHDSduOx8g6wecZnJxb+UTuIIlN5M8byVNNb
+         IM3FZp2fCd7W8BtFvo0dHASatP1DYZA/9vAkbP6J445Ly0WqNvaWpzcCnWIjKtkTrNyv
+         O1OylOdjU+gTYl7/oY6TIaVLlTXw5EdI1jean7YGMN2fJbeshUsGYxGMKiVxhuPmPyVc
+         4fA3VhMISdHkk2XukDNPpwLZxoGaZCn2GSrNfPPw5sxv6TXrgvSN8XGfiFlLRCXZ48qG
+         AjIsrXmALM2eKzerQLcQvuTUaqcgI/9wNpJZlWhTZjxSUfrTgj9r7MFfk2QzD516rcZq
+         SXqA==
+X-Gm-Message-State: AGi0PuYmZCNus98xdBa4t5PuiouOyRys/ijtk5wkNoK98y2fFhHqIYjZ
+        Z7TsN0Cg+zHkjTURSSy4wlCVPg==
+X-Google-Smtp-Source: APiQypIvoIlZRhIOKzLOkS565PA6K4LY8QgOBxFSsIjfZbiD6pG33iH6F5Up0icIdMnR0Z6CC5DX/Q==
+X-Received: by 2002:a1c:b604:: with SMTP id g4mr7883523wmf.103.1589197913440;
+        Mon, 11 May 2020 04:51:53 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id f26sm26316916wmj.11.2020.05.11.04.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 04:51:52 -0700 (PDT)
+Date:   Mon, 11 May 2020 12:51:49 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v7 02/15] PM / EM: introduce em_dev_register_perf_domain
+ function
+Message-ID: <20200511115149.GB11091@google.com>
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-3-lukasz.luba@arm.com>
 MIME-Version: 1.0
-References: <20200510111015.20134-1-oshpigelman@habana.ai>
-In-Reply-To: <20200510111015.20134-1-oshpigelman@habana.ai>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 11 May 2020 14:50:40 +0300
-Message-ID: <CAFCwf10ufEaTEDuyKJ+m4tdvk3n4g3dxW94LWsRqoO-zcDw0Tg@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: check if CoreSight is supported
-To:     Omer Shpigelman <oshpigelman@habana.ai>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511111912.3001-3-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 2:10 PM Omer Shpigelman <oshpigelman@habana.ai> wrote:
->
-> Coresight is not supported on simulator, therefore add a boolean for
-> checking that (currently used by un-upstreamed code).
->
-> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-> ---
->  drivers/misc/habanalabs/goya/goya.c  | 1 +
->  drivers/misc/habanalabs/habanalabs.h | 2 ++
->  2 files changed, 3 insertions(+)
->
-> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-> index b3e2354aaca2..fb2ff82e0db5 100644
-> --- a/drivers/misc/habanalabs/goya/goya.c
-> +++ b/drivers/misc/habanalabs/goya/goya.c
-> @@ -751,6 +751,7 @@ static int goya_sw_init(struct hl_device *hdev)
->         }
->
->         spin_lock_init(&goya->hw_queues_lock);
-> +       hdev->supports_coresight = true;
->
->         return 0;
->
-> diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-> index a68df32094f1..cfb306daa8d4 100644
-> --- a/drivers/misc/habanalabs/habanalabs.h
-> +++ b/drivers/misc/habanalabs/habanalabs.h
-> @@ -1415,6 +1415,7 @@ struct hl_device_idle_busy_ts {
->   * @cdev_sysfs_created: were char devices and sysfs nodes created.
->   * @stop_on_err: true if engines should stop on error.
->   * @supports_sync_stream: is sync stream supported.
-> + * @supports_coresight: is CoreSight supported.
->   */
->  struct hl_device {
->         struct pci_dev                  *pdev;
-> @@ -1498,6 +1499,7 @@ struct hl_device {
->         u8                              cdev_sysfs_created;
->         u8                              stop_on_err;
->         u8                              supports_sync_stream;
-> +       u8                              supports_coresight;
->
->         /* Parameters for bring-up */
->         u8                              mmu_enable;
-> --
-> 2.17.1
->
+On Monday 11 May 2020 at 12:18:59 (+0100), Lukasz Luba wrote:
+> Add now function in the Energy Model framework which is going to support
+> new devices. This function will help in transition and make it smoother.
+> For now it still checks if the cpumask is a valid pointer, which will be
+> removed later when the new structures and infrastructure will be ready.
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Acked-by: Quentin Perret <qperret@google.com>
