@@ -2,132 +2,188 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E74EC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5EAC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82DA120575
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E7620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMIYu0At"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgEKM7C (ORCPT
+        id S1729763AbgEKNAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:59:02 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58093 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgEKM7B (ORCPT
+        Mon, 11 May 2020 09:00:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727827AbgEKNAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:59:01 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BBCCF24001A;
-        Mon, 11 May 2020 12:58:56 +0000 (UTC)
-Date:   Mon, 11 May 2020 14:58:55 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>
-Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
- parent node
-Message-ID: <20200511145855.35c6abfb@xps13>
-In-Reply-To: <0c704fea-f2a6-2cec-8741-d322acf6afd5@st.com>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
-        <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
-        <20200511111855.48216940@xps13>
-        <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
-        <20200511135926.3e5c622d@xps13>
-        <0c704fea-f2a6-2cec-8741-d322acf6afd5@st.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 11 May 2020 09:00:12 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF917C061A0C;
+        Mon, 11 May 2020 06:00:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id h4so17948170wmb.4;
+        Mon, 11 May 2020 06:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:references:user-agent:to:cc:subject:in-reply-to
+         :message-id:date:mime-version;
+        bh=GT1dtgToCuf3JZQXWgmn/1+1Vz720HE+8i0ZCjTlo7w=;
+        b=KMIYu0AtbfomOEZKHqvTVcN79xGzhnfhHfc7vhfsX/lwOqA1f19NINZIIxSAUC6QLQ
+         5VsPpzc0E+023+kEaNkndCHKiXjMuzEWlkp6VsqvTWnMhnzY1MTQCODGdxGf9/zTdUsr
+         HbkSTNLDGabEucMdKXdALoz7wQVWpsotJTehLTQRh+jYB06ncAumAb2Am9CGttiGR5Sh
+         aiiikjtkdt/06zyvSctEimqsm8VJNYrnfWXwVvrHb92UNz9uA/ux8QfhDPgCZEihPtvH
+         NwvSlbe6MGUoGWWvSseNcxCfF8QM7aOQuwsYrw4PWWDp/xctTdAJICB2yEgDBdKfIRaC
+         Hzqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:references:user-agent:to:cc:subject
+         :in-reply-to:message-id:date:mime-version;
+        bh=GT1dtgToCuf3JZQXWgmn/1+1Vz720HE+8i0ZCjTlo7w=;
+        b=pMOUrg3QGClVIPQhdVKAscw+O4OgkDvjRLqwl2KlCLqzSiRRlzq6alKJcbUIslsvx3
+         gy32gojR8U09GXuxZhXzqim64bqLRu7/GS+2bedt8I4/baGFmp8hcsCGqBVk2bW6A7ST
+         BPXqJBvEXNDe3aqey35gZwI7vqFa2iXyiJE9JZiHvc8B8alzQMjHzEkv5JoVAgH8t1MV
+         PBByTqROVg7UIj3Yqa2sX+VCjTKSJr1gMdJz7q2EyHYZmoId+Z5Zuz9QYu/IW3yIBBGm
+         lfQQln21GdyPPd3q1CUGcxqYkczzE95B051r3BTxM+zYrIb25BU/P0ZJDGASUQe1v0Yg
+         jD/w==
+X-Gm-Message-State: AGi0Pua0omwPWO/goomQM2967UocxWA+LO1PxlGTUVE+QoPlH7913PNp
+        0sC/NrX1Fg/JTQKpuzB7GkFLXQvd1Is=
+X-Google-Smtp-Source: APiQypIdEhVCj3AfwnDtXHxVYKduAfM7hgi55kuPoCwoSEKk/rppyVs+ayP4HIB75wIQ3XU0hprR4g==
+X-Received: by 2002:a1c:e305:: with SMTP id a5mr14612754wmh.1.1589202009946;
+        Mon, 11 May 2020 06:00:09 -0700 (PDT)
+Received: from darkstar ([51.154.17.58])
+        by smtp.gmail.com with ESMTPSA id 5sm26454868wmz.16.2020.05.11.06.00.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 06:00:08 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+X-Google-Original-From: Patrick Bellasi <patrick.bellasi@matbug.com>
+References: <20200501114927.15248-1-qais.yousef@arm.com> <20200501114927.15248-2-qais.yousef@arm.com> <87d07krjyk.derkling@matbug.com> <20200505145637.5daqhatsm5bjsok7@e107158-lin.cambridge.arm.com>
+User-agent: mu4e 1.4.3; emacs 26.3
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] Documentation/sysctl: Document uclamp sysctl knobs
+In-reply-to: <20200505145637.5daqhatsm5bjsok7@e107158-lin.cambridge.arm.com>
+Message-ID: <877dxik4ob.derkling@matbug.com>
+Date:   Mon, 11 May 2020 15:00:04 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
 
-Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
-2020 14:47:09 +0200:
+Hi Qais,
 
-> Hi Miquel,
-> 
-> On 5/11/20 1:59 PM, Miquel Raynal wrote:
-> > Hi Christophe,
-> > 
-> > Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
-> > 2020 12:21:03 +0200:
-> >   
-> >> Hi Miquel,
-> >>
-> >> On 5/11/20 11:18 AM, Miquel Raynal wrote:  
-> >>> Hi Christophe,
-> >>>
-> >>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-> >>> 11:11:19 +0200:  
-> >>>    >>>> FMC2 EBI support has been added. Common resources (registers base  
-> >>>> and clock) are now shared between the 2 drivers. It means that the
-> >>>> common resources should now be found in the parent device when EBI
-> >>>> node is available.
-> >>>>
-> >>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> >>>> ---  
-> >>>
-> >>> [...]  
-> >>>    >>>> +  
-> >>>> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
-> >>>> +{
-> >>>> +	u32 i;
-> >>>> +	int nb_resources = 0;
-> >>>> +
-> >>>> +	/* Count the number of resources in reg property */
-> >>>> +	for (i = 0; i < pdev->num_resources; i++) {
-> >>>> +		struct resource *res = &pdev->resource[i];
-> >>>> +
-> >>>> +		if (resource_type(res) == IORESOURCE_MEM)
-> >>>> +			nb_resources++;
-> >>>> +	}
-> >>>> +
-> >>>> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
-> >>>> +	if (nb_resources % 3)
-> >>>> +		return false;
-> >>>> +
-> >>>> +	return true;
-> >>>> +}  
-> >>>
-> >>> This function looks fragile. Why not just checking the compatible
-> >>> string of the parent node?  
-> >>>    >>  
-> >> Yes, it is another way to check that we have an EBI parent node.
-> >>
-> >> In this implementation, I was checking the number of reg tuples.
-> >> In case we have 6, it means that the register base address is defined in the parent node (EBI node).
-> >> In case we have 7, it means that the register base address is defined in the current node (NFC node).  
-> > 
-> > Yes, I understand what you are doing, but I kind of dislike the logic.
-> > Relying on the number of reg tuples is something that can be done (I
-> > used it myself one time), but I think this is more a hack that you do
-> > when you have no other way to differentiate. I guess the proper way
-> > would be to look at the parent's compatible. If it matches what you
-> > expect, then you can store the dev->of_node->parent->dev somewhere in
-> > your controller's structure and then use it to initialize the clock and
-> > regmap. This way you don't have to move anything else in the probe path.
-> >   
-> 
-> OK, I will check the compatible string of the parent device using of_device_is_compatible API in v5.
-> In case of the parent is found, I will add it in the structure of the controller (dev_parent).
-> I will rely on this field only to get the common resources (the register base address and the clock) in the NFC node or in the EBI node.
+On Tue, May 05, 2020 at 16:56:37 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
 
-I had something slightly different in mind: what about setting a
-default value to this field as being the controller's device itself.
-This way, once it is set to either the parent device or the device
-itself, you can use it "blindly" in your devm_clk_get/regmap_init calls?
+>> > +sched_util_clamp_min_rt_default:
+>> > +================================
+>> > +
+>> > +By default Linux is tuned for performance. Which means that RT tasks always run
+>> > +at the highest frequency and most capable (highest capacity) CPU (in
+>> > +heterogeneous systems).
+>> > +
+>> > +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
+>> > +SCHED_CAPACITY_SCALE (1024) by default, which effectively boosts the tasks to
+>> > +run at the highest frequency and biases them to run on the biggest CPU.
+>> > +
+>> > +This knob allows admins to change the default behavior when uclamp is being
+>> > +used. In battery powered devices particularly, running at the maximum
+>> > +capacity and frequency will increase energy consumption and shorten the battery
+>> > +life.
+>> > +
+>> > +This knob is only effective for RT tasks which the user hasn't modified their
+>> > +requested uclamp.min value via sched_setattr() syscall.
+>> > +
+>> > +This knob will not escape the constraint imposed by sched_util_clamp_min
+>> > +defined above.
+>> 
+>> Perhaps it's worth to specify that this value is going to be clamped by
+>> the values above? Otherwise it's a bit ambiguous to know what happen
+>> when it's bigger than schedu_util_clamp_min.
+>
+> Hmm for me that sentence says exactly what you're asking for.
+>
+> So what you want is
+>
+> 	s/will not escape the constraint imposed by/will be clamped by/
+>
+> ?
+>
+> I'm not sure if this will help if the above is already ambiguous. Maybe if
+> I explicitly say
+>
+> 	..will not escape the *range* constrained imposed by..
+>
+> sched_util_clamp_min is already defined as a range constraint, so hopefully it
+> should hit the mark better now?
+
+Right, that also can work.
+
+>> 
+>> > +Any modification is applied lazily on the next opportunity the scheduler needs
+>> > +to calculate the effective value of uclamp.min of the task.
+>>                     ^^^^^^^^^
+>> 
+>> This is also an implementation detail, I would remove it.
+>
+> The idea is that this value is not updated 'immediately'/synchronously. So
+> currently RUNNING tasks will not see the effect, which could generate confusion
+> when users trip over it. IMO giving an idea of how it's updated will help with
+> expectation of the users. I doubt any will care, but I think it's an important
+> behavior element that is worth conveying and documenting. I'd be happy to
+> reword it if necessary.
+
+Right, I agree on giving an hint on the lazy update. What I was pointing
+out was mainly the reference to the 'effective' value. Maybe we can just
+drop that word.
+
+> I have this now
+>
+> """
+>  984 This knob will not escape the range constraint imposed by sched_util_clamp_min
+>  985 defined above.
+>  986
+>  987 For example if
+>  988
+>  989         sched_util_clamp_min_rt_default = 800
+>  990         sched_util_clamp_min = 600
+>  991
+>  992 Then the boost will be clamped to 600 because 800 is outside of the permissible
+>  993 range of [0:600]. This could happen for instance if a powersave mode will
+>  994 restrict all boosts temporarily by modifying sched_util_clamp_min. As soon as
+>  995 this restriction is lifted, the requested sched_util_clamp_min_rt_default
+>  996 will take effect.
+>  997
+>  998 Any modification is applied lazily to currently running tasks and should be
+>  999 visible by the next wakeup.
+> """
+
+That's better IMHO, would just slightly change the last sentence to:
+
+       Any modification is applied lazily to tasks and is effective
+       starting from their next wakeup.
+
+Best,
+Patrick
+
