@@ -2,193 +2,195 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCA5C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CEBC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6DEB2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3389207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ypirCHRs";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="iali1JoD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YsLTnXaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgEKJAk (ORCPT
+        id S1729160AbgEKJA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:00:40 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:63347 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbgEKJAk (ORCPT
+        Mon, 11 May 2020 05:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgEKJAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:00:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589187640; x=1620723640;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=Ps9HwEIgGRmWlYbSzXCQ2wypQT0gHrWrHPwwkkx9emk=;
-  b=ypirCHRsyOL3hVKZPJ+uIwNVoFMzuCcJJMXuutIJ+qBrSIdUMuhbejq+
-   WtLHuWmkvEoGBMuM6nTo6C4zwYND3SPU4I1Q+qCW7f3r2y0Yyh9LCNssS
-   R24vDpQAlQtU928iB9vP4q7WyKQVyv0ExA0jG6fkUvaFhRNXulM8i0NqT
-   6bIXdBGUNuRvmTGf0my0cUVUJKiLQOFeOYCJVSkyskIrM3dhSc39Edpn+
-   nupAt8MEIWXBDfGJhuS9mT5Q8zmOr1eQWHwdLtsJOjE3A9O7fKIlxoD/M
-   wkuQaQcMi+6R48jutrJv+gJZnjnfTEXYdaPpwAc5VmBWZpdHbRglJ+mDG
-   Q==;
-IronPort-SDR: W7v7F3fePcC79mASEJuRUi2aeRbMisK56hJ5pb8/Z0MEMXddV04zkxIM/DS0KkHCB8cwJbfKtZ
- sOV1zFJ489f6rwxwBzRwXeU5BEf0c1MWhHj0M9HlXlZEbMgYq4KWEftTSfe7VvHAb9ZocR7E5A
- vQK/iHjprASF+UGEF62XEegOINB0ZlYuJK5FXWActVloXTDt9vD8WVD6RbqSnRjOR2UPZ+wfYq
- 0ohMZzy9hrKO+rWdOvx2zVfvj+6QA9kyAhupxS7/mCAz3p1ZGbQ8rDID9o3F6TF63jdg07D4lv
- vM8=
-X-IronPort-AV: E=Sophos;i="5.73,379,1583218800"; 
-   d="scan'208";a="75456419"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 May 2020 02:00:39 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 11 May 2020 02:00:37 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Mon, 11 May 2020 02:00:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hA0pEtvfQ1VBJDX983Fg3TU3zWHhrVJIjdAW+aBeU4LdZcU3LhWA5VCY8F0apAB7ekGJc8tNnQorDwGeXJx2hIBoGHH4uujvDbku6hMp7mG9ECz6w+Tgo7x0/vT/97lv7XQvMmiBGHb2RUb0vlYsN1+Td457R/unU8/YcNj1n/mYzGfG9DWxYAVweWITqxtF36vrqh0OB5ALG1ibvpXu98Qc/LYWIampkwSSew/Me4JpNkYKcOHo2SSz/l8Wa0aZ5HPpnaNbvVyt0zB7ddTNg6D03pbIZVcvVgNdmjehhAuVIwgEh2KOw7os0dFmQnPn9mqzrEHzXqLmt6LweftRcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ps9HwEIgGRmWlYbSzXCQ2wypQT0gHrWrHPwwkkx9emk=;
- b=SyuPPHvXklve8pqkEjYn6X/RL81mnQw08rVA6Ug+lomm/NnSqzrVosQi8WTXptN8UKyjFpPS387eF4mNPJDJOHmduDtAIgpgjpaDJUtu3iGtf1kDklG227ehk75E7TY4bhDlzf6fcMAikfFaA26QkTzZ7kVc0jG9BMvrWVYntU6+rxyfK2zz+NYx6RC19NfjxqO6LiTkb2QQXUtns3LX13vV/Bid7+NYkH3UtbG7zZein8XeAQ652Mz+BCEqPpeWPdhRl/ctVJeavPvqeGD4Z2aMmz75pobZpkE7KSQlGx63MyRXm494cxrTohp+oKku6mcEJ3wB5DlqH5OHJ7QAHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Mon, 11 May 2020 05:00:55 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A4EC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:00:55 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so17129002wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ps9HwEIgGRmWlYbSzXCQ2wypQT0gHrWrHPwwkkx9emk=;
- b=iali1JoD7uZ/E722LD6/UB2g1aV8If9sAwbPbjidTw8ou2tI70eXhzmjcXKg4rbeNkX1BBik6Xee11Ret2v4DvKwgQ/BFRKVRt6b9IpsWUflPsPJ1wi1fXPZNUOlmMirQZz6rXfduQ1L/SSK+cm4aFGZK4tcRFgCsB2AhaiguRM=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB3975.namprd11.prod.outlook.com (2603:10b6:a03:184::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Mon, 11 May
- 2020 09:00:35 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 09:00:35 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <p.yadav@ti.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <broonie@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>
-Subject: Re: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
-Thread-Topic: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
-Thread-Index: AQHWJ3Khn/aolf/mv0usqjltSIxTLg==
-Date:   Mon, 11 May 2020 09:00:35 +0000
-Message-ID: <3649933.zuh8VGJVCz@192.168.0.120>
-References: <20200424184410.8578-1-p.yadav@ti.com>
-In-Reply-To: <20200424184410.8578-1-p.yadav@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 92a278c0-aece-4143-0505-08d7f589c47d
-x-ms-traffictypediagnostic: BY5PR11MB3975:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB397506D5434693BD7B9B9E4FF0A10@BY5PR11MB3975.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 04004D94E2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PUszZyRx7LcE2BjzcR/GjCjj/eYzbWgHZuuwW7HPlMLgV93zX9ntVFj1+k+rCSx6FzwPZGMSMMgcCArZmixOrwE0kPrIVf6wF+xrCgeO2C7aLnob6P0IHJ77bfk2G4xq9/Lqs2ju9V0p6PRyoxKit5auds9ABbIzLESL/0etR+9W6MY2ZwZE5sVMvnE+sVbuCBZYMGI1MoczUIlwj6ruO4loWmSkfsYW+g89AxWvVmmd6+cm8sGc5sX0WItZQJ3q6SkhOyVvs/x7MvYrpa/IeysVRX0GU8+HnfwdVKe6rvi0MzI6yD69zCv+iTgsOKgRnxQMkBLytVLaGQrs9gHja6fKweEKh4aDRnpxboVr1JQNoD31lIem2TBGsNm19SxNjmLkdl3hxFOm4TfU2kqS1aNZkN2Pwj+GoTZZi9Kr+VKPiscBr41RTOZ1HlTgjFCe7tEsATA3e/R/7J7PxJkBojrrYoHqvMk9ZAc58dgv/8DnhAcpnwedYamzX3fnDFE1jBfo+Ow22H0sxbtnuTOIFqp/RoyoDgSucMq7d3VJdjc7M3wU4IclaYHBf7YgA2v2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(39860400002)(376002)(136003)(346002)(33430700001)(71200400001)(33440700001)(2906002)(86362001)(14286002)(6486002)(7416002)(64756008)(66556008)(66476007)(66446008)(9686003)(6512007)(8676002)(8936002)(54906003)(5660300002)(316002)(91956017)(76116006)(66946007)(6506007)(53546011)(4326008)(478600001)(26005)(110136005)(186003)(39026012);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: oAUyy0pW1NzoftWqj90QzDowXKm6CDEK02CRVS12jeO6mRV8ZRlSaK9nfWq3aMyADRV14oithkK6woSW4GFIJ+ZJza85l9T9wwCb1ZLNv7jUGF2rm/AwA2ImrAWy0DmPFQqBRxWSHzFZY7a4SrnsPON0x5WC/RauFd9Wh2TgAkywn+UPA5Yv23HIEXtYq/Au6p4JU0kFNNjOelhtlXRZ7zjRmOAO6YTe3hgBQiiNowfnpPSgS5npGuHKLz1ELBZntvMEYub1iDXTKz4DnuYpbl9Q3zvteZa2CyN0GDyPfiyoQHLgWFJH3PGX9pTUMlKD7Ku13mPtcjkqzcL1z2brHu/4/g5R2a4TYG0Lj433u0PUMrqtjptNTRR9E9R/xzXtzc9jokhG9DwFQLnc0NcJoM730ttzKnM4AbFBstVT0pKw9keADyN4j1p0gt3sOF7Pu2ikYoPjmn1MnF6exVbkSzpIFoIW0kYsbj7KMU8A0U0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FC1D03ED70AB18478EDAF0B070DEC3BA@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wa/Y2/bNwa7PXMvT6DW64UeJSTspYD/LSAH6iEazKOc=;
+        b=YsLTnXaTfSkk+gitFPtm2o6ATLjnO7icsxuhJnZpaehw1rj0nfmZQ6UOlrXRq4cVqj
+         QusXJ2zuMye43VqG66KOJJUG+kpo7nyfe+CPAbv+PUzG9UzG07/IWNxxMkxLOWw9Zx8Z
+         UfuQ5vd2cj+ZaHPKp6S9ArYDMlxY6nsO/NwrehHYYxyQfqd8AuOIK5Q5EhZs8K6KQmM4
+         /GH8zG1zU79H+6yPAGTWOuvUiVRCViKlMFQQFi24xBBtIIaBswRIwxrQUaW2Vdk0cBwV
+         ID+NrFbzROL7rZSan6HdldhuLVmHPaAlmGCyvXQBxKjBvWrGGiRn6hrDzgYjnY2Os69K
+         kaUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wa/Y2/bNwa7PXMvT6DW64UeJSTspYD/LSAH6iEazKOc=;
+        b=IdGxc2uY0TGs6D8yU1ShBYuaoGdrhR7h++Wn+MCYsZzDwmkmz4FQVIKF442jykSrjh
+         IWj+03gtexCAffR27C7S28HbxNmOagdYdtJPoxtGqhu7H6jppct0oM+89r8M8mFZnGmK
+         UHyWyuHY+lG2A6UDq9cv9hmmBC6RBaoA33qK6eLHz3r11tLJ+iM4UpOdofgCvul1f3sj
+         bZRO1J/n1oeN2L2kSpEfn7Fp5qMz64kl2q5Me56lDeLNCY+FCHiFQLhgJ4cPSWuVLYfp
+         V5R9ShasuBLKicQcIOO0SYqoFGCUaIbG8j2PeEP/EepOJe0Il3FKfn8E9cVUjXu9VriN
+         IY7Q==
+X-Gm-Message-State: AGi0Pub/CajI5J9e29/yPOlZUJ7tq2qZvF5sbUwhN8m/bck0ymd4RFc2
+        nXaUF4Gub0ebkj0frCykliT8tA==
+X-Google-Smtp-Source: APiQypKB+Txh2Fatl+gQF7BtCPr6FGIyK3loGqkAPWInNYppvSCyOhLpTqx9lgsS930LO3mO8bDQYQ==
+X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr8753076wmf.26.1589187653646;
+        Mon, 11 May 2020 02:00:53 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id q17sm8884940wmk.36.2020.05.11.02.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 02:00:52 -0700 (PDT)
+Date:   Mon, 11 May 2020 10:00:49 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, bsegall@google.com,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>, yzaikin@google.com,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200511090049.GA229633@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200508081128.GM5298@hirez.programming.kicks-ass.net>
+ <20200508103721.GA3860390@kroah.com>
+ <20200508111612.GA252673@google.com>
+ <20200508113141.GB5298@hirez.programming.kicks-ass.net>
+ <20200508130507.GA10541@google.com>
+ <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92a278c0-aece-4143-0505-08d7f589c47d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 09:00:35.0417
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sPFMgUsS60Ng6GTw35EFXYBzZNSRfKeHnUj6l6W59l0y1Yc9YdPYG0V0t3vH6gWN6QgSz44LRUraa1s0LYN3xvqpqDOfFBuMCrWJlKLW15Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3975
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Pratyush, Boris,
+Hi Rafael,
 
-On Friday, April 24, 2020 9:43:54 PM EEST Pratyush Yadav wrote:
-> This series adds support for octal DTR flashes in the spi-nor framework,
+On Friday 08 May 2020 at 15:40:34 (+0200), Rafael J. Wysocki wrote:
+> On Fri, May 8, 2020 at 3:05 PM Quentin Perret <qperret@google.com> wrote:
+> >
+> > On Friday 08 May 2020 at 13:31:41 (+0200), Peter Zijlstra wrote:
+> > > On Fri, May 08, 2020 at 12:16:12PM +0100, Quentin Perret wrote:
+> > > > However, the point I tried to make here is orthogonal to that. As of
+> > > > today using another governor than schedutil is fully supported upstream,
+> > > > and in fact it isn't even enabled by default for most archs. If vendors
+> > > > feel like using something else makes their product better, then I don't
+> > > > see why I need to argue with them about that. And frankly I don't see
+> > > > that support being removed from upstream any time soon.
+> > >
+> > > Right, it'll take a while to get there. But that doesn't mean we
+> > > shouldn't encourage schedutil usage wherever and whenever possible. That
+> > > includes not making it easier to not use it.
+> > >
+> > > In that respect making it modular goes against our ultimate goal (world
+> > > domination, <mad giggles here>).
+> >
+> > Right, I definitely understand the sentiment. OTOH, things like that
+> > give vendors weapons against GKI ('you-force-us-to-build-in-things-we-dont't-want'
+> > etc etc). That _is_ true to some extent, but it's important we make sure
+> > to keep this to an absolute minimum, otherwise GKI just won't happen
+> > (and I really think that'd be a shame, GKI _is_ a good thing for
+> > upstream).
+> >
+> > And sure, schedutil isn't that big, and we can make an exception. But
+> > I'm sure you know what happens when you starting making exceptions ;)
+> 
+> This is a very weak argument, if it can be regarded as an argument at all.
 
-I'm still learning about this, but I can give you my 2 cents as of now, to=
-=20
-open the discussion. Enabling 2-2-2, 4-4-4, and 8-8-8 modes is dangerous=20
-because the flash may not recover from unexpected resets. Entering one of=20
-these modes can be:
-1/ volatile selectable, the device return to the 1-1-1 protocol after the n=
-ext=20
-power-on. I guess this is conditioned by the optional RESET pin, but I'll h=
-ave=20
-to check. Also the flash can return to the 1-1-1 mode using the software re=
-set=20
-or through writing to its Configuration Register, without power-on or power=
--
-off.
-2/ non-volatile selectable in which RESET# and software reset are useless, =
-the=20
-flash defaults to the mode selected in the non volatile Configuration Regis=
-ter=20
-bits. The only way to get back to 1-1-1 is to write to the Configuration=20
-Register.
+Well, fair enough :)
 
-Not recovering from unexpected resets is unacceptable. One should always=20
-prefer option 1/ and condition the entering in 2-2-2, 4-4-4 and 8-8-8 with =
-the=20
-presence of the optional RESET pin.
+> You will have to make exceptions, the question is how many and on what
+> criteria and you really need to figure that out for the GKI plan.
 
-For the unfortunate flashes that support just option 2/, we should not ente=
-r=20
-these modes on our own, just by discovering the capabilities from the SFDP=
-=20
-tables or by the flags in the flash_info struct. The best we can do for the=
-m=20
-is to move the responsibility to the user. Maybe to add a Kconfig option th=
-at=20
-is disabled by default with which we condition the entering in 2-2-2, 4-4-4=
- or=20
-8-8-8 modes. Once entered in one of these modes, if an unexpected reset com=
-es,=20
-you most likely are doomed, because early stage bootloaders may not work in=
-=20
-these modes and you'll not be able to boot the board. Assuming that one use=
-s=20
-other environment to boot the board, we should at least make sure that the=
-=20
-flash works in linux after an unexpected reset. We should try to determine =
-in=20
-which mode we are at init, so maybe an extension of the default_init hook i=
-s=20
-needed. But all this looks like a BIG compromise, I'm not yet sure if we=20
-should adress 2/. Thoughts?
+The base idea is, anything that we know from experience is used by
+everybody can be built in, anything else will need investigation. And as
+you've understood, schedutil falls in that second category.
 
-I'm still looking into this.
+> > So, all in all, I don't think the series actively makes schedutil worse
+> > by adding out-of-line calls in the hot path or anything like that, and
+> > having it as a module helps with GKI which I'm arguing is a good thing
+> > in the grand scheme of things.
+> 
+> Frankly, I'm not sure if it really helps.
 
-Cheers,
-ta
+Oh, why not?
 
+> The idea of making schedutil modular seems to be based on the
+> observation that it is not part of the core kernel, which I don't
+> agree with.
+
+Right, so that I think is the core of the discussion.
+
+> Arguably, things like util clamps need it to work as
+> expected.
+
+Sure, but loading sugov dynamically as a module doesn't change much does
+it?
+
+If you are referring to the Kconfig dependency of uclamp on schedutil,
+then that is a good point and I will argue that it should be removed.
+In fact I'll add a patch to v2 that does just that, with the following
+rationale:
+ - it is obsolete: the reason that dependency was added originally was
+   because sugov was the only place where util clamps where taken into
+   accounts. But that is no longer true -- we check them in the capacity
+   aware wake-up path as well, which is entirely independent from the
+   currently running governor;
+ - because of the above, it is (now) largely useless: a compile time
+   dependency doesn't guarantee we are actually running with schedutil
+   at all;
+ - it is artificial: there are no actual compilation dependencies
+   between sugov and uclamp, everything will compile just fine without
+   that 'depends on';
+
+Or maybe you were thinking of something else?
+
+> > That of course is only true if we can
+> > agree on a reasonable set of exported symbols, so I'll give others some
+> > time to complain and see if I can post a v2 addressing these issues!
+> 
+> This isn't just about exported symbols, it is about what is regarded
+> as essential and what isn't.
+
+Right, the exported symbols are, IMO, quite interesting because they
+show how 'core' the governor is. But what exactly do you mean by
+'essential' here? Essential in what sense?
+
+Thanks,
+Quentin
