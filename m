@@ -6,99 +6,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C569EC54E8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0145BC38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C6124955
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65842184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgEKCRN (ORCPT
+        id S1729520AbgEKCSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 22:17:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49804 "EHLO huawei.com"
+        Sun, 10 May 2020 22:18:05 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50748 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729195AbgEKCRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 22:17:12 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F1F80AF17779EC663B44;
-        Mon, 11 May 2020 10:17:08 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 10:17:02 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 01/10] riscv: Fix unmet direct dependencies built based on SOC_VIRT
-Date:   Mon, 11 May 2020 10:19:52 +0800
-Message-ID: <20200511022001.179767-2-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
-References: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
+        id S1729272AbgEKCSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 22:18:04 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BD2768CF532A022CC47C;
+        Mon, 11 May 2020 10:18:02 +0800 (CST)
+Received: from euler.huawei.com (10.175.101.6) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 10:17:59 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     <kgdb-bugreport@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] kdb: Make the internal env 'KDBFLAGS' undefinable
+Date:   Mon, 11 May 2020 10:16:37 +0800
+Message-ID: <20200511021637.37029-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix unmet direct dependencies Warning and fix Kconfig indent.
+'KDBFLAGS' is an internal variable of kdb, it is combined by 'KDBDEBUG'
+and state flags. But the user can define an environment variable named
+'KDBFLAGS' too, so let's make it undefinable to avoid confusion.
 
-WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON
-  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - SOC_VIRT [=y]
-
-WARNING: unmet direct dependencies detected for POWER_RESET_SYSCON_POWEROFF
-  Depends on [n]: POWER_RESET [=n] && OF [=y] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - SOC_VIRT [=y]
-
-WARNING: unmet direct dependencies detected for RTC_DRV_GOLDFISH
-  Depends on [n]: RTC_CLASS [=n] && OF [=y] && HAS_IOMEM [=y] && (GOLDFISH [=y] || COMPILE_TEST [=n])
-  Selected by [y]:
-  - SOC_VIRT [=y]
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- arch/riscv/Kconfig.socs | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/debug/kdb/kdb_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 4b2303ca20b9..6c88148f1b9b 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -11,14 +11,15 @@ config SOC_SIFIVE
- 	  This enables support for SiFive SoC platform hardware.
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 4fc43fb17127..d3d060136821 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -423,7 +423,8 @@ int kdb_set(int argc, const char **argv)
+ 			| (debugflags << KDB_DEBUG_FLAG_SHIFT);
  
- config SOC_VIRT
--       bool "QEMU Virt Machine"
--       select POWER_RESET_SYSCON
--       select POWER_RESET_SYSCON_POWEROFF
--       select GOLDFISH
--       select RTC_DRV_GOLDFISH
--       select SIFIVE_PLIC
--       help
--         This enables support for QEMU Virt Machine.
-+	bool "QEMU Virt Machine"
-+	select POWER_RESET
-+	select POWER_RESET_SYSCON
-+	select POWER_RESET_SYSCON_POWEROFF
-+	select GOLDFISH
-+	select RTC_DRV_GOLDFISH if RTC_CLASS
-+	select SIFIVE_PLIC
-+	help
-+	  This enables support for QEMU Virt Machine.
+ 		return 0;
+-	}
++	} else if (strcmp(argv[1], "KDBFLAGS") == 0)
++		return KDB_NOPERM;
  
- config SOC_KENDRYTE
- 	bool "Kendryte K210 SoC"
+ 	/*
+ 	 * Tokenizer squashed the '=' sign.  argv[1] is variable
 -- 
-2.26.2
+2.17.1
 
