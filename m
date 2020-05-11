@@ -2,163 +2,140 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D1DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE37C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 180E420752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAFA2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:32:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gTh04MXV"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WQzNszmn";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Vcg2xovu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbgEKU3z (ORCPT
+        id S1731671AbgEKUcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKU3y (ORCPT
+        Mon, 11 May 2020 16:32:35 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51810 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729517AbgEKUce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:29:54 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B92FC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:29:54 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id m10so3403417ybf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lqp0tT919521XWu/FUN0YyklAmxZCcc7Pfzs6YFFyZU=;
-        b=gTh04MXVd2ji8esde/XdgwiKEYioXZQWX+fFBKH6JEiBecEkSRsRqrAQ3fbQ0sVtvs
-         rUW0WAjPDRTZfKzHm2w+goxZHdU9MwNYPHxD8NFvd89tVRHUUr54/rUXkb1/e1qNvXEa
-         NLg7+4Qr2jNp29uCoiVxNHDvO++q+AKSa/cPOgnUjd8Cmi9oBSrBDI6bemuMbek96bDy
-         YFxHqK+/1Xceey7uIheOkCWJBTEVS5v8Ja3mxG5EETXXoAcF1X61fH42PWxvxRV24c+6
-         282FwYVApaAyum+trJtEader9KEXHCtim+JjkX1lBNH826zy32LZPf+WcgN+T85CuNAs
-         ETFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lqp0tT919521XWu/FUN0YyklAmxZCcc7Pfzs6YFFyZU=;
-        b=W4JoI2iYe+gR4HXjs5J/bRyOUBy3b4MlZSY5tJQlF8M7WtTMu9QVoU/eKA7Krfxv11
-         4jVLx/TkOL7LJf5YUE11TMBalgI1n/U1ZNsHM9g3DjntnvpQplwhy4L6SUdMyQRpavmf
-         DbVH+D8dKPLn79VOmrfKt+xDcNZ6zLjgoCCuFEc9++WGxlVl0206kRhx1rgu1AlYOBG2
-         SgqL9ScVCjeX2kfGh0ZsfSdP10xUOXjS3NHAa3ZgDLkQNxMQDK4l25ReEUxroAh6y+zN
-         msYngQhTsCCEPs61Mvt8yVeH0WSIE26CrIRptsuK7IAELPBjBT9E2XtfLoyqiCpxshkb
-         IUuw==
-X-Gm-Message-State: AOAM530Khq7qZfghZOyHdpbbfZUVyopV3cwO4qXWdBoAaqSQFVbujNYF
-        R8HIRwf6YytFUCTIcqFId5AmFAQ9bd79h/gShooE8Q==
-X-Google-Smtp-Source: ABdhPJwLFCL10MARvUZLxQAGbzISzHL5pRVyScdEK4Opo1IIG/HghTobshcJkT2f7jzyV+l6qJv7u0U/WiDrd1Cg6U4=
-X-Received: by 2002:a25:d450:: with SMTP id m77mr7993937ybf.177.1589228993297;
- Mon, 11 May 2020 13:29:53 -0700 (PDT)
+        Mon, 11 May 2020 16:32:34 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BKVEkt007501;
+        Mon, 11 May 2020 13:32:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=bx4LY6G6nJlkmqstEEk1mLsJHjOTD1FXyyrTYaxmjq0=;
+ b=WQzNszmncK7X86QMNqe5V/8WZ4GTEdXFSfL1vZYI4fLVifJ9RwRHps8IjofaYExiRECK
+ 6fl7pPo9sKgofzu44DuOXTieGzYha+f5CMIm4zlFCPamxaFthBmx0oEyJ3DLgul0Nnap
+ LEi/verU/Bkf0nn2zbm4XmYMyB7K8kWGK60= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 30xc7e08x6-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 11 May 2020 13:32:22 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 11 May 2020 13:32:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nPZYHIKC0yP0t4EAKohAfYhNOxIl6pNSZsticwgLZfzLevtkZwHYQcObtmPWXmBDAm9SapCCnVPB7PxEHWphpnUcohEerURoV2c3jWclO5QTMnL4YlbBnDU+KQEWhL+2VQ3+uZuNgcJJ9THfzOzVc/WOcu9a6onYr0OXYjB3Sy/Usk9AAc9fN3bvNK6bdwI6jH5POE181lWHK/62N2o5gjPKdkUB0uH5ZNK26r8JQjNJ5o/HY/K7S9hQzx0nCGwIYqfczs32QDT/Luv7/VMpW1omPsvLyxGEMoYkVripeMhDayQHsD4und5hvRoHv/HQyUGPRYMyeBNXnJHkB9aR8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bx4LY6G6nJlkmqstEEk1mLsJHjOTD1FXyyrTYaxmjq0=;
+ b=GNJcOI1i4wwownTWG41mhk0TnOHFJB1iyX+3MdcmOU5L5F1MazZBdYQ1uS5dJQO2s0TAblVafj09e1NvadCY/updA31h4CO/Vq7Qw0v6DrTHxdh8aaYDby4lLkIbXYQE2iIHU/Y/UbpIXeNJLDq+KiDUoZtArafDUUQ4d4aWM4aRqaoTf1Se9VJh1EdTTDJtxUzCsd4E2/8R6UcX7tAgC/vldnV/SJHN5owrsOiIxSAXLwrw4LR1hPaxe2eBgV1QHZfj6jm+TyrA0HWEY/sWAM2okly/weOrXSi+oTelzjWXX9mRpceWSeeMdGi+sA6Xdlg+tKrAIaFyixWAOxo3ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bx4LY6G6nJlkmqstEEk1mLsJHjOTD1FXyyrTYaxmjq0=;
+ b=Vcg2xovu47aPM88RvrSywGjFxbuEIiA7MqaBZUo8YkCXbec24N5A339y5PGpVq9ZwcxbF32EgrcmMgRfZvLs5idinrTXPqiNZsR4GjEQSVIYXrpJ4d7x9HaYLGD29Z/pJcow82hUog0tfYhxZ42n8NbWTI+sk8YI+EPA2lhIBVY=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB2760.namprd15.prod.outlook.com (2603:10b6:a03:159::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
+ 2020 20:32:20 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 20:32:20 +0000
+Subject: Re: [PATCH bpf] samples: bpf: fix build error
+To:     Matteo Croce <mcroce@redhat.com>, <bpf@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Joe Stringer <joe@ovn.org>, Jakub Kicinski <kuba@kernel.org>
+References: <20200511113234.80722-1-mcroce@redhat.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <0dd7c40b-c80b-9149-f022-d8113b77558a@fb.com>
+Date:   Mon, 11 May 2020 13:32:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
+In-Reply-To: <20200511113234.80722-1-mcroce@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR10CA0024.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::29) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-References: <20200507220604.3391-1-irogers@google.com> <20200511193604.GF2986380@krava>
-In-Reply-To: <20200511193604.GF2986380@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 11 May 2020 13:29:42 -0700
-Message-ID: <CAP-5=fWQ_bx0g3dGDQcmW7MhUAadA0rwahGPvGFTfGo6qoeLww@mail.gmail.com>
-Subject: Re: [PATCH v3] perf c2c: fix '-e list'
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:400::5:3585) by BY3PR10CA0024.namprd10.prod.outlook.com (2603:10b6:a03:255::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 20:32:19 +0000
+X-Originating-IP: [2620:10d:c090:400::5:3585]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: af8a0372-f898-4b95-ec5b-08d7f5ea6713
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2760:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2760E1BF200D5830E77540A3D3A10@BYAPR15MB2760.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:293;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fOGwj1I+ISGl9P+PtWPlYZtlm+UX0P8NtFpqEfywZLUiV2LatwPJIl9Evhhh0bTj2uH5APz7CqQlaljeyJLNs2KVnoqN3lYGW9Ry76RB11/gF861eyn4ZtLrnl8WMBvIlupzPTm0Injz5vws8RtNM6EMpGIpLv43YwTCOvlVgr/FD6NwrQfDPtxiJyBr25Y8/JURkTfjfdwEFk+i1qe1M3BzYP+HdTnJ6jeWN09+1Wl75UO2rBY95RfujztvvTlxOqHS7yT22+Un5ytHsva8cU3D2OCM6lew6u9QfGEM9Zun+2udJCchddLSISNoMPj1BZZe7dfCyuAFFWalJvBAkKE1/SNWEkNQGyjYN+LFMpR/F9/LVGGFWkkHo+u+/yparikn2WPWHjFekpecbDKkR6uX52oE2WEFwIMikChyX1ePChi8s4ob87S5upBU6qz0Cju3DZl01ybgSey7It6D9MPoQAY+ZrARukiKnHsHoBpVsiBuPHIo+V1DuXjB4i1oI7Us1q5AAcAyeTupjnm+3sM+tcL9iFBhehiIf5Z1utl/VK4BBn10W2SWOZe3hfiX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(396003)(366004)(136003)(33430700001)(4326008)(31686004)(2616005)(4744005)(66946007)(86362001)(66556008)(2906002)(6666004)(31696002)(478600001)(6486002)(66476007)(8676002)(6512007)(8936002)(186003)(316002)(5660300002)(53546011)(54906003)(33440700001)(6506007)(52116002)(36756003)(16526019)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: FoPrCzB6PtDLfBAjWj68f9+ODydIqzms9/AcPPr+TMtu07TXtujU1BZHFTHj6sAPE0sqEUufbPvHwVVLk9ny3jvfNrfuOwtQnt4FwtP4l8dWxsW9NK8n39JODoKYLxD6gECCqBOHiO12B7Oyi/Kx8N0DIa2I31eBR+2p0usv3eBogi/h646aSxJ7+EdPY1T2hHgVXynDXww42MtoU6u4S/3K2gAv0K7ko8R9QC3vqS+dY5qB7IKtapKuTTPYnB8G31Knzli7FuccuaGz78zvrTGOivwzLb5GH8KPtlAceJwHB07ZouhTos7IM/GnvzxDGxs9m2UPFjXS6Gu2QNJe3j8UckVnsO5qBiDD88KJHjNsrPM8oM5pN41CFxWE0MYb6jx2Ii9xDYS9tpFc8Mz0sZel9nCi3X9SmafniMDDxpC9p7XnP43+7KQN0UTVO9XVfk24TIGL3fUJgvnZS0t3m1kQcZmiNRhDGEBflVuNxBmCsAzuGZLZnu3gTOUYVqNa0ai89yWCQJ99gTaCBpRqjg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: af8a0372-f898-4b95-ec5b-08d7f5ea6713
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 20:32:19.9154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QQOvorZmp8HlDlG9ag3Ho3GGZuQ/UPIZOIZT5Nx//gmbooVottPGT08h0tHZnNvy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2760
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_10:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011
+ mlxlogscore=825 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110156
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:36 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, May 07, 2020 at 03:06:04PM -0700, Ian Rogers wrote:
-> > When the event is passed as list, the default events should be listed as
-> > per 'perf mem record -e list'. Previous behavior is:
-> >
-> > $ perf c2c record -e list
-> > failed: event 'list' not found, use '-e list' to get list of available events
-> >
-> >  Usage: perf c2c record [<options>] [<command>]
-> >     or: perf c2c record [<options>] -- <command> [<options>]
-> >
-> >     -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
-> >
-> > New behavior:
-> >
-> > $ perf c2c record -e list
-> > ldlat-loads  : available
-> > ldlat-stores : available
-> >
-> > v3: is a rebase.
-> > v2: addresses review comments by Jiri Olsa.
-> > https://lore.kernel.org/lkml/20191127081844.GH32367@krava/
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/Documentation/perf-c2c.txt |  2 +-
-> >  tools/perf/builtin-c2c.c              |  9 ++++++++-
-> >  tools/perf/builtin-mem.c              | 24 +++++++-----------------
-> >  tools/perf/util/mem-events.c          | 15 +++++++++++++++
-> >  tools/perf/util/mem-events.h          |  2 ++
-> >  5 files changed, 33 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-> > index 2133eb320cb0..98efdab5fbd4 100644
-> > --- a/tools/perf/Documentation/perf-c2c.txt
-> > +++ b/tools/perf/Documentation/perf-c2c.txt
-> > @@ -40,7 +40,7 @@ RECORD OPTIONS
-> >  --------------
-> >  -e::
-> >  --event=::
-> > -     Select the PMU event. Use 'perf mem record -e list'
-> > +     Select the PMU event. Use 'perf c2c record -e list'
-> >       to list available events.
-> >
-> >  -v::
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index 1baf4cae086f..d617d5682c68 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -2887,8 +2887,15 @@ static int parse_record_events(const struct option *opt,
-> >  {
-> >       bool *event_set = (bool *) opt->value;
-> >
-> > +     if (!strcmp(str, "list")) {
-> > +             perf_mem_events__list();
-> > +             exit(0);
-> > +     }
-> > +     if (perf_mem_events__parse(str))
-> > +             exit(-1);
->
-> won't this exit(-1) callsbreak the parsing stuff?
-> like displaying the option values on error or such?
 
-The previous code was:
--       if (strcmp(str, "list")) {
-This is handled explicitly in the code above this.
 
--               if (!perf_mem_events__parse(str)) {
--                       mem->operation = 0;
--                       return 0;
--               }
--               exit(-1);
-This is the code where the exit -1 happens, I inverted the comparison
-so that exit was more the exceptional code path. The behavior should
-be identical.
+On 5/11/20 4:32 AM, Matteo Croce wrote:
+> GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
+> a symbol which clashes with libbpf:
+> 
+> /usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
+> collect2: error: ld returned 1 exit status
+> 
+> bpf_log_buf here seems to be a leftover, so removing it.
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-Thanks,
-Ian
-
-> other than that it looks ok to me
->
-> jirka
->
+Acked-by: Yonghong Song <yhs@fb.com>
