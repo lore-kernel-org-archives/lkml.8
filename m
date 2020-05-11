@@ -2,97 +2,132 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2FAC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB2FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA4A20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589206411;
-	bh=Rbj8XlWK76B0liJErNbu2w/UZMm56uz0sBbtyXLGy5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=avCYhKn4pHVwFqGJwaXW/GI4JIbzp3WJuisvA7IzOpyAV/Pu7dio8Rbqz1g+N8WQz
-	 Ovu1HnIdAUvC45SAiWTiYB54zfqx8JykXpyuI8LwZZoEgYycO/C9LXkB7xZfTWS4Sf
-	 Pdjw3RfYeotxI12e0Zvkix0LhElwM3i0Rtly+IfM=
+	by mail.kernel.org (Postfix) with ESMTP id 44ED320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgEKONa (ORCPT
+        id S1730487AbgEKONz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:13:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37778 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbgEKONa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:13:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id x10so3992299plr.4;
-        Mon, 11 May 2020 07:13:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OZEIorHaxAgVk8tXwMYpPYJTnU15riroFxTlZzxMGoY=;
-        b=NFwnbaRdKb/MG0EhIoKzcerRLvdISY08pDODi09BCWepHTec4ARyeTzmgH5mKEzLep
-         khF5Ho0acAdDLc1JzSxJFTZPF4RNkV+ZNRUzcyPQMi8y4GCzr0JK4bZr9fLSSMlx5eNH
-         quY80wmvM43Sp2ZErumQ1sudYWckLUKPbjciHZ2OGDKqHCeuq4PsidBQbXbY1lCFsnS8
-         RbrPAaPm5FFa7OO6XzjmFRrJ3p0xML64tT6/p2af71b5JuOoU0h89i4fFOJqOyCKGz1k
-         V6RegZTrdIQU91zM6ggJ6XOUbxzziFOYdECMtiAVX0ohcAkFJfT65X642AcOTCxE+SIh
-         6UhA==
-X-Gm-Message-State: AGi0PuakkDQJbuVeisQ6nZwGkQUO2Mn83Po0h1mXRI632R9eSOvGZqM+
-        NFgNUXMUrqhjgtyDaJ1ukpU=
-X-Google-Smtp-Source: APiQypKUuFyt94VWg5zbOUc0tpZSyVaLJaz5nZz5HPWNK22nq+c7IWmoodIm6WEFGB2pMV3qQbTqlg==
-X-Received: by 2002:a17:90a:ead6:: with SMTP id ev22mr22563757pjb.94.1589206409284;
-        Mon, 11 May 2020 07:13:29 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q62sm4723143pfc.132.2020.05.11.07.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 07:13:27 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0DB6940605; Mon, 11 May 2020 14:13:27 +0000 (UTC)
-Date:   Mon, 11 May 2020 14:13:27 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Shannon Nelson <snelson@pensando.io>
-Cc:     Andrew Lunn <andrew@lunn.ch>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] net: taint when the device driver firmware crashes
-Message-ID: <20200511141326.GQ11244@42.do-not-panic.com>
-References: <20200509043552.8745-1-mcgrof@kernel.org>
- <1e097eb0-6132-f549-8069-d13b678183f5@pensando.io>
- <20200510015814.GE362499@lunn.ch>
- <01831b19-5890-e7e0-3801-068dfab5c92a@pensando.io>
+        Mon, 11 May 2020 10:13:55 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2185 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730227AbgEKONz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:13:55 -0400
+Received: from lhreml719-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 71607F49943FEEF7C06D;
+        Mon, 11 May 2020 15:13:53 +0100 (IST)
+Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
+ lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Mon, 11 May 2020 15:13:53 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Mon, 11 May 2020 16:13:52 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Mon, 11 May 2020 16:13:52 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "John Johansen" <john.johansen@canonical.com>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IIAAb0AAgAApg3CAADIngIAAzgGAgACHqACABHSroA==
+Date:   Mon, 11 May 2020 14:13:52 +0000
+Message-ID: <414644a0be9e4af880452f4b5079aba1@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+         <1588864628.5685.78.camel@linux.ibm.com>
+         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+         <1588884313.5685.110.camel@linux.ibm.com>
+         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
+ <1588957684.5146.70.camel@linux.ibm.com>
+In-Reply-To: <1588957684.5146.70.camel@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.12.51]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01831b19-5890-e7e0-3801-068dfab5c92a@pensando.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 07:15:23PM -0700, Shannon Nelson wrote:
-> On 5/9/20 6:58 PM, Andrew Lunn wrote:
-> > On Sat, May 09, 2020 at 06:01:51PM -0700, Shannon Nelson wrote:
-> > As for firmware, how much damage can the firmware do as it crashed? If
-> > it is a DMA master, it could of splattered stuff through
-> > memory. Restarting the firmware is not going to reverse the damage it
-> > has done.
-> > 
-> True, and tho' the driver might get the thing restarted, it wouldn't
-> necessarily know what kind of damage had ensued.
-
-Indeed, it is those uknowns which we currently assume is just fine, but
-in reality can be damaging. Today we just move on with life, but such
-information is useful for analysis.
-
-  Luis
+PiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDog
+RnJpZGF5LCBNYXkgOCwgMjAyMCA3OjA4IFBNDQo+IE9uIEZyaSwgMjAyMC0wNS0wOCBhdCAxMDoy
+MCArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiA+IEZyb206IE1pbWkgWm9oYXIgW21h
+aWx0bzp6b2hhckBsaW51eC5pYm0uY29tXQ0KPiA+ID4gT24gVGh1LCAyMDIwLTA1LTA3IGF0IDE2
+OjQ3ICswMDAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiANCj4gPHNuaXA+DQo+IA0KPiA+ID4g
+PiA+IHRoZSBmaWxlIG1ldGFkYXRhIHRvIHRoZSBmaWxlIGRhdGEuIMKgVGhlIElNQSBhbmQgRVZN
+IHBvbGljaWVzIHJlYWxseQ0KPiA+ID4gPiA+IG5lZWQgdG8gYmUgaW4gc3luYy4NCj4gPiA+ID4N
+Cj4gPiA+ID4gSXQgd291bGQgYmUgbmljZSwgYnV0IGF0IHRoZSBtb21lbnQgRVZNIGNvbnNpZGVy
+cyBhbHNvIGZpbGVzIHRoYXQgYXJlDQo+ID4gPiA+IG5vdCBzZWxlY3RlZCBieSB0aGUgSU1BIHBv
+bGljeS4gQW4gZXhhbXBsZSBvZiB3aHkgdGhpcyBpcyBhIHByb2JsZW0gaXMNCj4gPiA+ID4gdGhl
+IGF1ZGl0IHNlcnZpY2UgdGhhdCBmYWlscyB0byBzdGFydCB3aGVuIGl0IHRyaWVzIHRvIGFkanVz
+dCB0aGUNCj4gcGVybWlzc2lvbnMNCj4gPiA+ID4gb2YgdGhlIGxvZyBmaWxlcy4gVGhvc2UgZmls
+ZXMgZG9uJ3QgaGF2ZSBzZWN1cml0eS5ldm0gYmVjYXVzZSB0aGV5IGFyZQ0KPiA+ID4gPiBub3Qg
+YXBwcmFpc2VkIGJ5IElNQSwgYnV0IEVWTSBkZW5pZXMgdGhlIG9wZXJhdGlvbi4NCj4gPiA+DQo+
+ID4gPiBObywgdGhpcyBpcyBhIHRpbWluZyBpc3N1ZSBhcyB0byB3aGV0aGVyIG9yIG5vdCB0aGUg
+YnVpbHRpbiBwb2xpY3kgb3INCj4gPiA+IGEgY3VzdG9tIHBvbGljeSBoYXMgYmVlbiBsb2FkZWQu
+IMKgQSBjdXN0b20gcG9saWN5IGNvdWxkIGV4Y2x1ZGUgdGhlDQo+ID4gPiBsb2cgZmlsZXMgYmFz
+ZWQgb24gTFNNIGxhYmVscywgYnV0IHRoZXkgYXJlIGluY2x1ZGVkIGluIHRoZSBidWlsdGluDQo+
+ID4gPiBwb2xpY3kuDQo+ID4NCj4gPiBZZXMsIEkgd2FzIHJlZmVycmluZyB0byBhIGN1c3RvbSBw
+b2xpY3kuIEluIHRoaXMgY2FzZSwgRVZNIHdpbGwgbm90IGFkYXB0DQo+ID4gdG8gdGhlIGN1c3Rv
+bSBwb2xpY3kgYnV0IHN0aWxsIHZlcmlmaWVzIGFsbCBmaWxlcy4gSWYgYWNjZXNzIGNvbnRyb2wg
+aXMgZG9uZQ0KPiA+IGV4Y2x1c2l2ZWx5IGJ5IElNQSBhdCB0aGUgdGltZSBldm1fdmVyaWZ5eGF0
+dHIoKSBpcyBjYWxsZWQsIHdlIHdvdWxkbid0DQo+ID4gbmVlZCB0byBhZGQgc2VjdXJpdHkuZXZt
+IHRvIGFsbCBmaWxlcy4NCj4gDQo+IFJvYmVydG8sIEVWTSBpcyBvbmx5IHRyaWdnZXJlZCBieSBJ
+TUEsIHVubGVzcyB5b3UndmUgbW9kaWZpZWQgdGhlDQo+IGtlcm5lbCB0byBkbyBvdGhlcndpc2Uu
+DQoNCkVWTSB3b3VsZCBkZW55IHhhdHRyL2F0dHIgb3BlcmF0aW9ucyBldmVuIGlmIElNQSBpcyBk
+aXNhYmxlZCBpbiB0aGUNCmtlcm5lbCBjb25maWd1cmF0aW9uLiBGb3IgZXhhbXBsZSwgZXZtX3Nl
+dHhhdHRyKCkgcmV0dXJucyB0aGUgdmFsdWUNCmZyb20gZXZtX3Byb3RlY3RfeGF0dHIoKS4gSU1B
+IGlzIG5vdCBpbnZvbHZlZCB0aGVyZS4NCg0KPiBJJ20gbm90IGludGVyZXN0ZWQgaW4gYSBjb21w
+bGljYXRlZCBzb2x1dGlvbiwganVzdCBvbmUgdGhhdCBhZGRyZXNzZXMNCj4gdGhlIG5ldyBFVk0g
+aW1tdXRhYmxlIGFuZCBwb3J0YWJsZSBzaWduYXR1cmUuIMKgSXQgbWlnaHQgcmVxdWlyZSBFVk0N
+Cj4gSE1BQywgSU1BIGRpZmZlcmVudGlhdGluZyBiZXR3ZWVuIGEgbmV3IGZpbGUgYW5kIGFuIGV4
+aXN0aW5nIGZpbGUsIG9yDQo+IGl0IG1pZ2h0IHJlcXVpcmUgd3JpdGluZyB0aGUgbmV3IEVWTSBz
+aWduYXR1cmUgbGFzdCwgYWZ0ZXIgYWxsIHRoZQ0KPiBvdGhlciB4YXR0cnMgb3IgbWV0YWRhdGEg
+YXJlIHVwZGF0ZWQuIMKgUGxlYXNlIG5vdGhpbmcgdGhhdCBjaGFuZ2VzDQo+IGV4aXN0aW5nIGV4
+cGVjdGF0aW9ucy4NCg0KT2suIEludHJvZHVjaW5nIHRoZSBuZXcgc3RhdHVzIElOVEVHUklUWV9G
+QUlMX0lNTVVUQUJMRSwgYXMgSQ0KbWVudGlvbmVkIGluICdbUEFUQ0hdIGltYTogQWxsb3cgaW1h
+c2lnIHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieQ0KRVZNIHBvcnRhYmxlIHNpZ25hdHVy
+ZXMnIHNlZW1zIHRvIGhhdmUgYW4gYWRkaXRpb25hbCBiZW5lZml0LiBXZQ0KY291bGQgaW50cm9k
+dWNlIGFuIGFkZGl0aW9uYWwgZXhjZXB0aW9uIGluIGV2bV9wcm90ZWN0X3hhdHRyKCksIG90aGVy
+DQp0aGFuIElOVEVHUklUWV9OT1hBVFRSUywgYXMgd2Uga25vdyB0aGF0IHhhdHRyL2F0dHIgdXBk
+YXRlIHdvbid0DQpjYXVzZSBITUFDIHVwZGF0ZS4NCg0KSG93ZXZlciwgaXQgd29uJ3Qgd29yayB1
+bmxlc3MgdGhlIElNQSBwb2xpY3kgc2F5cyB0aGF0IHRoZSBmaWxlIHNob3VsZA0KYmUgYXBwcmFp
+c2VkIHdoZW4gdGhlIG1rbm9kKCkgc3lzdGVtIGNhbGwgaXMgZXhlY3V0ZWQuIE90aGVyd2lzZSwN
+CmludGVncml0eV9paW50X2NhY2hlIGlzIG5vdCBjcmVhdGVkIGZvciB0aGUgZmlsZSBhbmQgdGhl
+IElNQV9ORVdfRklMRQ0KZmxhZyBpcyBub3Qgc2V0Lg0KDQpHcmFudGluZyBhbiBleGNlcHRpb24g
+Zm9yIElOVEVHUklUWV9GQUlMX0lNTVVUQUJMRSBzb2x2ZXMgdGhlIGNhc2UNCndoZXJlIHNlY3Vy
+aXR5LmV2bSBpcyB0aGUgZmlyc3QgeGF0dHIgc2V0LiBJZiBhIHByb3RlY3RlZCB4YXR0ciBpcyB0
+aGUgZmlyc3QgdG8NCmJlIGFkZGVkLCB0aGVuIHdlIGFsc28gaGF2ZSB0byBoYW5kbGUgdGhlIElO
+VEVHUklUWV9OT0xBQkVMIGVycm9yLg0KSXQgc2hvdWxkIGJlIGZpbmUgdG8gYWRkIGFuIGV4Y2Vw
+dGlvbiBmb3IgdGhpcyBlcnJvciBpZiB0aGUgSE1BQyBrZXkgaXMgbm90DQpsb2FkZWQuDQoNClRo
+aXMgc3RpbGwgZG9lcyBub3Qgc29sdmUgYWxsIHByb2JsZW1zLiBJTlRFR1JJVFlfTk9MQUJFTCBj
+YW5ub3QgYmUNCmlnbm9yZWQgaWYgdGhlIEhNQUMga2V5IGlzIGxvYWRlZCwgd2hpY2ggbWVhbnMg
+dGhhdCBhbGwgZmlsZXMgbmVlZCB0byBiZQ0KcHJvdGVjdGVkIGJ5IEVWTSB0byBhdm9pZCBpc3N1
+ZXMgbGlrZSB0aGUgb25lIEkgZGVzY3JpYmVkIChhdWRpdGQpLg0KDQpSb2JlcnRvDQoNCkhVQVdF
+SSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2luZyBEaXJl
+Y3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQo=
