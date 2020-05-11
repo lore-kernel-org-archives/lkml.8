@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05370C38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43808C54E8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48F8206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A33D20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgEKCXi (ORCPT
+        id S1729365AbgEKCXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 22:23:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34226 "EHLO huawei.com"
+        Sun, 10 May 2020 22:23:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34916 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729102AbgEKCXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 22:23:38 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 19131B6D5A615D7DDB22;
-        Mon, 11 May 2020 10:17:19 +0800 (CST)
+        id S1729313AbgEKCXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 22:23:41 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 166FEF849FB0B92C39B5;
+        Mon, 11 May 2020 10:17:14 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 10:17:08 +0800
+ 14.3.487.0; Mon, 11 May 2020 10:17:03 +0800
 From:   Kefeng Wang <wangkefeng.wang@huawei.com>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -32,9 +32,9 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
 CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
         Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 10/10] riscv: mmiowb: Fix implicit declaration of function 'smp_processor_id'
-Date:   Mon, 11 May 2020 10:20:01 +0800
-Message-ID: <20200511022001.179767-11-wangkefeng.wang@huawei.com>
+Subject: [PATCH 04/10] riscv: Fix print_vm_layout build error if NOMMU
+Date:   Mon, 11 May 2020 10:19:55 +0800
+Message-ID: <20200511022001.179767-5-wangkefeng.wang@huawei.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
 References: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
@@ -48,49 +48,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In file included from ./../include/linux/compiler_types.h:68,
-                 from <command-line>:
-../include/asm-generic/mmiowb.h: In function ‘mmiowb_set_pending’:
-../include/asm-generic/percpu.h:34:38: error: implicit declaration of function ‘smp_processor_id’; did you mean ‘raw_smp_processor_id’? [-Werror=implicit-function-declaration]
- #define my_cpu_offset per_cpu_offset(smp_processor_id())
-                                      ^~~~~~~~~~~~~~~~
-../include/linux/compiler-gcc.h:58:26: note: in definition of macro ‘RELOC_HIDE’
-  (typeof(ptr)) (__ptr + (off));     \
-                          ^~~
-../include/linux/percpu-defs.h:249:2: note: in expansion of macro ‘SHIFT_PERCPU_PTR’
-  SHIFT_PERCPU_PTR(ptr, my_cpu_offset);    \
-  ^~~~~~~~~~~~~~~~
-../include/asm-generic/percpu.h:34:23: note: in expansion of macro ‘per_cpu_offset’
- #define my_cpu_offset per_cpu_offset(smp_processor_id())
-                       ^~~~~~~~~~~~~~
-../include/linux/percpu-defs.h:249:24: note: in expansion of macro ‘my_cpu_offset’
-  SHIFT_PERCPU_PTR(ptr, my_cpu_offset);    \
-                        ^~~~~~~~~~~~~
-../include/asm-generic/mmiowb.h:30:26: note: in expansion of macro ‘this_cpu_ptr’
- #define __mmiowb_state() this_cpu_ptr(&__mmiowb_state)
-                          ^~~~~~~~~~~~
-../include/asm-generic/mmiowb.h:37:28: note: in expansion of macro ‘__mmiowb_state’
-  struct mmiowb_state *ms = __mmiowb_state();
-                            ^~~~~~~~~~~~~~
+arch/riscv/mm/init.c: In function ‘print_vm_layout’:
+arch/riscv/mm/init.c:68:37: error: ‘FIXADDR_START’ undeclared (first use in this function);
+arch/riscv/mm/init.c:69:20: error: ‘FIXADDR_TOP’ undeclared
+arch/riscv/mm/init.c:70:37: error: ‘PCI_IO_START’ undeclared
+arch/riscv/mm/init.c:71:20: error: ‘PCI_IO_END’ undeclared
+arch/riscv/mm/init.c:72:38: error: ‘VMEMMAP_START’ undeclared
+arch/riscv/mm/init.c:73:20: error: ‘VMEMMAP_END’ undeclared (first use in this function);
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
- arch/riscv/include/asm/mmiowb.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/riscv/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/mmiowb.h b/arch/riscv/include/asm/mmiowb.h
-index bb4091ff4a21..0b2333e71fdc 100644
---- a/arch/riscv/include/asm/mmiowb.h
-+++ b/arch/riscv/include/asm/mmiowb.h
-@@ -9,6 +9,7 @@
-  */
- #define mmiowb()	__asm__ __volatile__ ("fence o,w" : : : "memory");
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index dfcaebc3928f..58c39c44b9c9 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -49,7 +49,7 @@ static void setup_zero_page(void)
+ 	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+ }
  
-+#include <linux/smp.h>
- #include <asm-generic/mmiowb.h>
- 
- #endif	/* _ASM_RISCV_MMIOWB_H */
+-#ifdef CONFIG_DEBUG_VM
++#if defined(CONFIG_MMU) && defined(DEBUG_VM)
+ static inline void print_mlk(char *name, unsigned long b, unsigned long t)
+ {
+ 	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
 -- 
 2.26.2
 
