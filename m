@@ -2,112 +2,128 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45089C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD45C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AEDD206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:39:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="YuBYywPB"
+	by mail.kernel.org (Postfix) with ESMTP id 8EB4B218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589186350;
+	bh=DPa4+jSG4F+z1uPT4NSMp3+GL6SSYIaOuTYpRJvp9Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LxQwivvejCCBRvCaa4l8PS5uSrfhstPbLeR1mAxXSHYmWVWe69XKn4rl8sEVQEgS2
+	 AYk9ilaaxF2SqgNkkssV5PgwfsphpeUNZOP2Mq8P1Lf2iLfIQoUdBMDS0qDjoFpLF3
+	 u0ptZycvI39UN/yiuoqYTiAXTfXizfH9E8cnxuhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgEKIjH (ORCPT
+        id S1729319AbgEKIjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:39:07 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:37663 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgEKIjG (ORCPT
+        Mon, 11 May 2020 04:39:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43099 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728562AbgEKIjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:39:06 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Y3xmj9T6WhEkrY3xojFapo; Mon, 11 May 2020 10:39:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589186344; bh=1oD/S26Y7OXgLhAWD2Bkdgg6JPDaSAVldyb/7mlmz4M=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=YuBYywPBbZRkE4xBaDKhaaINJHbzdu8eaSzrhSxD4MNdE4LOnW3RP4lrC2Vo/WPzo
-         spog22RAGV2b3nFSBb5exiVG4PZDpL0zE7i1eRla89FgX50CisnyiDISHcpdvi90b0
-         Nhe5w7magmXN9O/xx5emB8zO8SYUkKvMNoruULOk+oCA/O4pncmbh2sB5g0yQtcR64
-         Xol5Nqxp5UtXDn3eYoPr6Wv6VmmSZoKZX3JH1bvx8QQ9PfYaXxKu0LYnkswiFjSXUq
-         bBtk7XS6CkCLcSNZuIx8IO/6J0Qvcu36X8FWNgsrD4rxFHyaexKD7i3wbLAr4hHbao
-         y5OUQ9MJ0gK0A==
-Subject: Re: [PATCH v8 04/14] media: platform: Change the fixed device node
- number to unfixed value
-To:     Xia Jiang <xia.jiang@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
-        senozhatsky@chromium.org, mojahsu@chromium.org,
-        drinkcat@chromium.org, maoguang.meng@mediatek.com,
-        sj.huang@mediatek.com
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-5-xia.jiang@mediatek.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <c4b04c02-b04c-5e83-d3bc-4d9a78df013b@xs4all.nl>
-Date:   Mon, 11 May 2020 10:39:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 04:39:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i15so9768459wrx.10;
+        Mon, 11 May 2020 01:39:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FvpNgO4al8rrIK8WSxp3SMkvIJuIwqja3bw4ZHXrWYo=;
+        b=DZ7y9GD/uWfDBMGXE54tn34B/hWDIVuipJNK9NJre0yPYXM4VxCWvsTCq7KoJX3a8d
+         JXwnmVvxwT7/STOua+9BGbIa6qOr8nHUzNrClpwYsCEaV6Cm1w5wT02DA1jiAAh0+i/i
+         6G3Eex7M2wO5vQID7DmSpdT9tGXY47D+ypFubOXywwYRqr7w5vwjWwEQetmuN7gObqmH
+         xI4vqL/30HeyL8VdMAPIt8fp7Wap4ItXdN1Uqcz9CtSguAS9ms8uGTdI0LbVxwbc3SzI
+         EZBbBa0NkX4DU8RuxB+jBL9AB0fscUkZzVvdruG22K9x8iT87oRCM+TXXn3BruxTon/X
+         b9Ug==
+X-Gm-Message-State: AGi0PuZqQDIhZphRrtxWArbKYYjTGCuS0idd1GTqCh0e0SmuGMCEQfyj
+        E20qeP326qpP7Xfp+q/1fvciDj9+
+X-Google-Smtp-Source: APiQypIQpwTFkabbZL1uF+YtruIWqkdDkGAaVl3JWB4S4P9pWHgVyfF5FMY7zlh26GTwUoVsZH0JPQ==
+X-Received: by 2002:a5d:61c3:: with SMTP id q3mr15869696wrv.405.1589186346279;
+        Mon, 11 May 2020 01:39:06 -0700 (PDT)
+Received: from localhost (ip-37-188-228-19.eurotel.cz. [37.188.228.19])
+        by smtp.gmail.com with ESMTPSA id n7sm7415677wro.94.2020.05.11.01.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 01:39:05 -0700 (PDT)
+Date:   Mon, 11 May 2020 10:39:04 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH] doc: cgroup: update note about conditions when oom
+ killer is invoked
+Message-ID: <20200511083904.GB29153@dhcp22.suse.cz>
+References: <158894738928.208854.5244393925922074518.stgit@buzz>
 MIME-Version: 1.0
-In-Reply-To: <20200403094033.8288-5-xia.jiang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfH3Qxi/EC6zVl/WXW9BpI6AzF5LZ4rFX17rfNLXwjO0wfJJWojH0ewBQwkwBQGV3iHisPiL60beWzwAQICYYTGjCevh33ExwJUofq3+4YROIaaM7Gxgc
- IACOzYYxlAaX7HCNdfeM2DVbjLHaEvAAUhyatopAA18m7CZ6x0WO8hmkHN+eMMnQv7QCYzP1Net7m6dy/4inp2YPgEbhvfsTxl2xfgerk5o1eOAqo1PEI3QK
- /N2Z5mOL8kxzOOzeXoUqKKnwyKHG7VhicAWfjwTAXFqET/cZM206AczjHRQzBKfI0j0uX9tG7/RQ+Xs9lQLqlpHAyKO8LsHMs48wLD9qHvSLP8K2yWtLVjvH
- LlgddFr+fYeLEeFSHRgcEUgxNiiXKa1kWwQie3+51Eb1tO1b1JK8SswBquYqN5o4u4ca5cCJBXu2hhEJYfBQKHSjNDd97nVnlsAPKOG10YUw0oCgYNjiE80E
- lh0ejgHggWrnkBbNzdGoc5b5KU2/vExh2iLGmSqMDxFHTcPO3Of8JjLGOvrOgiI0a4S0JsMx6H7LIedZYjwDj3fBUA47gikkTdx05zGLH3vqMApyYVBY7USP
- Q3vEzEgdiQsAvmSxM2ZIVUyJ35hx/3GiJbgIrbzx380Ce9znLfwqbjXApaMxs09beQexXm2W1h1946UWNjh5uWpoBC5NTLU6a0WEi7W/EhxQo7haIsBK7gvo
- nyl13bDJjqbcoKE1rgAA/C7kqPFucBre/Pk10hs/uTS1QTEkttb7iVT9zfG99/yaU7riPisVnSd9BKUvnTwgiiuZ1evboV2MKtCrUz+UZYhK9t7fLb1/O0Z/
- DnvofI7Glw5uaS67YZaV8F/rOP2N+XejHlJwU/L482Yr2EydNiKNi/DNGn4lpjlDboQl4fKX3dvL+2Y26Z6dX2fCBEUaGGmmRnTUxLoX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158894738928.208854.5244393925922074518.stgit@buzz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2020 11:40, Xia Jiang wrote:
-> Change device node number from 3 to -1 because that the driver will
-> also support jpeg encoder.
+On Fri 08-05-20 17:16:29, Konstantin Khlebnikov wrote:
+> Starting from v4.19 commit 29ef680ae7c2 ("memcg, oom: move out_of_memory
+> back to the charge path") cgroup oom killer is no longer invoked only from
+> page faults. Now it implements the same semantics as global OOM killer:
+> allocation context invokes OOM killer and keeps retrying until success.
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/admin-guide/cgroup-v2.rst |   17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index e2a1d850813b..a536fa95b3d6 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -1154,7 +1154,7 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
->  	jpeg->dec_vdev->device_caps = V4L2_CAP_STREAMING |
->  				      V4L2_CAP_VIDEO_M2M_MPLANE;
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index bcc80269bb6a..1bb9a8f6ebe1 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1172,6 +1172,13 @@ PAGE_SIZE multiple when read back.
+>  	Under certain circumstances, the usage may go over the limit
+>  	temporarily.
 >  
-> -	ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, 3);
-> +	ret = video_register_device(jpeg->dec_vdev, VFL_TYPE_GRABBER, -1);
+> +	In default configuration regular 0-order allocation always
+> +	succeed unless OOM killer choose current task as a victim.
+> +
+> +	Some kinds of allocations don't invoke the OOM killer.
+> +	Caller could retry them differently, return into userspace
+> +	as -ENOMEM or silently ignore in cases like disk readahead.
 
-VFL_TYPE_GRABBER was renamed to VFL_TYPE_VIDEO.
+I would probably add -EFAULT but the less error codes we document the
+better.
 
-It looks like this patch series is not on top of the media_tree repo master branch.
+> +
+>  	This is the ultimate protection mechanism.  As long as the
+>  	high limit is used and monitored properly, this limit's
+>  	utility is limited to providing the final safety net.
+> @@ -1228,17 +1235,9 @@ PAGE_SIZE multiple when read back.
+>  		The number of time the cgroup's memory usage was
+>  		reached the limit and allocation was about to fail.
+>  
+> -		Depending on context result could be invocation of OOM
+> -		killer and retrying allocation or failing allocation.
+> -
+> -		Failed allocation in its turn could be returned into
+> -		userspace as -ENOMEM or silently ignored in cases like
+> -		disk readahead.  For now OOM in memory cgroup kills
+> -		tasks iff shortage has happened inside page fault.
+> -
+>  		This event is not raised if the OOM killer is not
+>  		considered as an option, e.g. for failed high-order
+> -		allocations.
+> +		allocations or if caller asked to not retry attempts.
+>  
+>  	  oom_kill
+>  		The number of processes belonging to this cgroup
 
-Please make sure your patch series is on top of that.
-
-Regards,
-
-	Hans
-
->  	if (ret) {
->  		v4l2_err(&jpeg->v4l2_dev, "Failed to register video device\n");
->  		goto err_dec_vdev_register;
-> 
-
+-- 
+Michal Hocko
+SUSE Labs
