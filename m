@@ -2,142 +2,185 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE0EC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AFDC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6123C206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF03206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgEKURD (ORCPT
+        id S1731517AbgEKURT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKURD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:17:03 -0400
-Received: from antares.kleine-koenig.org (antares.kleine-koenig.org [IPv6:2a01:4f8:c0c:3a97::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB29AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:17:02 -0700 (PDT)
-Received: by antares.kleine-koenig.org (Postfix, from userid 1000)
-        id 56683981F75; Mon, 11 May 2020 22:17:01 +0200 (CEST)
-Date:   Mon, 11 May 2020 22:16:56 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <jroedel@suse.de>
-Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: Failure to shutdown/reboot with intel_iommu=on
-Message-ID: <20200511201656.GA2725@taurus.defre.kleine-koenig.org>
-References: <20200506144558.GA4019@taurus.defre.kleine-koenig.org>
- <20200508150734.GP8135@suse.de>
- <bd9fb298-1ad3-fd4c-19f7-aae4c2b62daa@linux.intel.com>
- <11a3945a-f743-ac32-135c-1de026da66c9@kleine-koenig.org>
+        Mon, 11 May 2020 16:17:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:2611 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgEKURT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:17:19 -0400
+IronPort-SDR: eXat4scDVLfyfDewiyrW4JOdyq4/1Eu0ZOFb5tSIkeZJdSHEHJzfCuTgqlfbsPwwqbpduQ+cNM
+ 1yqiQA0DgCHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 13:17:19 -0700
+IronPort-SDR: hAvStKBPWzf9pEk2Ik0rNrB17Yj5J8RCRK1452FIyBh0HNwC87QsLOcWUrmwTCxhAmDNhDB5H7
+ YGxr3YAKa3BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="250659260"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga007.jf.intel.com with ESMTP; 11 May 2020 13:17:18 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v3 09/10] x86/fpu/xstate: Preserve supervisor states for slow path of __fpu__restore_sig()
+Date:   Mon, 11 May 2020 13:16:59 -0700
+Message-Id: <20200511201659.10192-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200328164307.17497-10-yu-cheng.yu@intel.com>
+References: <20200328164307.17497-10-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
-Content-Disposition: inline
-In-Reply-To: <11a3945a-f743-ac32-135c-1de026da66c9@kleine-koenig.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The signal return code is responsible for taking an XSAVE buffer present
+in user memory and loading it into the hardware registers.  This
+operation only affects user XSAVE state and never affects supervisor state.
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The fast path through this code simply points XRSTOR directly at the
+user buffer.  However, since user memory is not guaranteed to be always
+mapped, this XRSTOR can fail.  If it fails, the signal return code falls
+back to a slow path which can tolerate page faults.
 
-Hello again,
+That slow path copies the xfeatures one by one out of the user buffer
+into the task's fpu state area.  However, by being in a context where it
+can handle page faults, the code can also schedule.  The lazy-fpu-load code
+would think it has an up-to-date fpstate and would fail to save the
+supervisor state when scheduling the task out.  When scheduling back in, it
+would likely restore stale supervisor state.
 
-On Mon, May 11, 2020 at 09:59:31PM +0200, Uwe Kleine-K=F6nig wrote:
-> On 5/9/20 3:58 AM, Lu Baolu wrote:
-> > Hi Uwe,
-> >=20
-> > Have you tried commenting out intel_disable_iommus() in
-> > intel_iommu_shutdowan()?
-> >=20
-> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> > index 0182cff2c7ac..532e62600f95 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -4928,8 +4928,10 @@ void intel_iommu_shutdown(void)
-> > =A0=A0=A0=A0=A0=A0=A0 for_each_iommu(iommu, drhd)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 iommu_disable_protect_mem=
-_regions(iommu);
-> >=20
-> > +#if 0
-> > =A0=A0=A0=A0=A0=A0=A0 /* Make sure the IOMMUs are switched off */
-> > =A0=A0=A0=A0=A0=A0=A0 intel_disable_iommus();
-> > +#endif
-> >=20
-> > =A0=A0=A0=A0=A0=A0=A0 up_write(&dmar_global_lock);
-> > =A0}
->=20
-> I just tested that and it didn't help. The machine still hangs with the
-> same symptoms as reported before.
+To fix that, preserve supervisor state before the slow path.  Modify
+copy_user_to_fpregs_zeroing() so that if it fails, fpregs are not zeroed,
+and there is no need for fpregs_deactivate() and supervisor states are
+preserved.
 
-I patched the file a bit differently:
+Move set_thread_flag(TIF_NEED_FPU_LOAD) to the slow path.  Without doing
+this, the fast path also needs supervisor states to be saved first.
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index ef0a5246700e..b76acae6a6ac 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4922,16 +4922,24 @@ void intel_iommu_shutdown(void)
- 	if (no_iommu || dmar_disabled)
- 		return;
-=20
-+	pr_warn("%s:%d\n", __func__, __LINE__);
- 	down_write(&dmar_global_lock);
-=20
-+	pr_warn("%s:%d\n", __func__, __LINE__);
- 	/* Disable PMRs explicitly here. */
--	for_each_iommu(iommu, drhd)
-+	for_each_iommu(iommu, drhd) {
-+		pr_warn("%s:%d\n", __func__, __LINE__);
- 		iommu_disable_protect_mem_regions(iommu);
-+		pr_warn("%s:%d\n", __func__, __LINE__);
-+	}
-=20
-+	pr_warn("%s:%d\n", __func__, __LINE__);
- 	/* Make sure the IOMMUs are switched off */
- 	intel_disable_iommus();
-=20
-+	pr_warn("%s:%d\n", __func__, __LINE__);
- 	up_write(&dmar_global_lock);
-+	pr_warn("%s:%d\n", __func__, __LINE__);
- }
-=20
- static inline struct intel_iommu *dev_to_intel_iommu(struct device *dev)
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+---
+ arch/x86/kernel/fpu/signal.c | 53 +++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 25 deletions(-)
 
-and the output shows that the for_each_iommu loop runs twice and the
-last pr_warn is reached, too. So the hang doesn't occur in
-intel_iommu_shutdown() but later.
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index d09d72334a12..545ca4314096 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -262,19 +262,23 @@ sanitize_restored_user_xstate(union fpregs_state *state,
+ static int copy_user_to_fpregs_zeroing(void __user *buf, u64 xbv, int fx_only)
+ {
+ 	u64 init_bv;
++	int r;
+ 
+ 	if (use_xsave()) {
+ 		if (fx_only) {
+ 			init_bv = xfeatures_mask_user() & ~XFEATURE_MASK_FPSSE;
+ 
+-			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			return copy_user_to_fxregs(buf);
++			r = copy_user_to_fxregs(buf);
++			if (!r)
++				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
++			return r;
+ 		} else {
+ 			init_bv = xfeatures_mask_user() & ~xbv;
+ 
+-			if (unlikely(init_bv))
++			r = copy_user_to_xregs(buf, xbv);
++			if (!r && unlikely(init_bv))
+ 				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-			return copy_user_to_xregs(buf, xbv);
++			return r;
+ 		}
+ 	} else if (use_fxsr()) {
+ 		return copy_user_to_fxregs(buf);
+@@ -327,28 +331,10 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		}
+ 	}
+ 
+-	/*
+-	 * The current state of the FPU registers does not matter. By setting
+-	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
+-	 * is not modified on context switch and that the xstate is considered
+-	 * to be loaded again on return to userland (overriding last_cpu avoids
+-	 * the optimisation).
+-	 */
+-	set_thread_flag(TIF_NEED_FPU_LOAD);
+-	__fpu_invalidate_fpregs_state(fpu);
+-
+ 	if ((unsigned long)buf_fx % 64)
+ 		fx_only = 1;
+-	/*
+-	 * For 32-bit frames with fxstate, copy the fxstate so it can be
+-	 * reconstructed later.
+-	 */
+-	if (ia32_fxstate) {
+-		ret = __copy_from_user(&env, buf, sizeof(env));
+-		if (ret)
+-			goto err_out;
+-		envp = &env;
+-	} else {
++
++	if (!ia32_fxstate) {
+ 		/*
+ 		 * Attempt to restore the FPU registers directly from user
+ 		 * memory. For that to succeed, the user access cannot cause
+@@ -365,10 +351,27 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 			fpregs_unlock();
+ 			return 0;
+ 		}
+-		fpregs_deactivate(fpu);
+ 		fpregs_unlock();
++	} else {
++		/*
++		 * For 32-bit frames with fxstate, copy the fxstate so it can
++		 * be reconstructed later.
++		 */
++		ret = __copy_from_user(&env, buf, sizeof(env));
++		if (ret)
++			goto err_out;
++		envp = &env;
+ 	}
+ 
++	/*
++	 * The current state of the FPU registers does not matter. By setting
++	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
++	 * is not modified on context switch and that the xstate is considered
++	 * to be loaded again on return to userland (overriding last_cpu avoids
++	 * the optimisation).
++	 */
++	set_thread_flag(TIF_NEED_FPU_LOAD);
++	__fpu_invalidate_fpregs_state(fpu);
+ 
+ 	if (use_xsave() && !fx_only) {
+ 		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
+-- 
+2.21.0
 
-I don't know enough about x86 and iommus to judge what that means or
-even if this was a useful test.
-
-Best regards
-Uwe
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl65srQACgkQwfwUeK3K
-7AnJTgf+O5xIGA9I6hKnJ72zZZW7bZS07Yrt30PfSkzYcCNOeYU9gjF2/Dis/JX1
-P/VPEE3+yENFD8fW8ZP1/Y2ml7eeCO1/zCdeLjuE/AVj282V+8fHgwjLfJUd/QR3
-rypvOfsmBuJFyv+WuXqQloTYB6oSiSRn5xKtyfshRQH/B0IAqjC9kGWma7dkqDve
-NakrmX5fkgZ4flsv+4zdVLFD9tYeLRq2AM/j+B9okgZyM521V5NniwubdMn53tfm
-XVNjYn0sgUsq5lgQyOQaT7UW6MIuOOCFYFh5gWUL+KObY6YaleLBVtI6GLyL55A4
-X8MBHcWYlv3iaen4++grZsZOci6PRQ==
-=6lsu
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
