@@ -2,101 +2,178 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E018DC38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB212C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B672D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589158708;
-	bh=EexeP/ilwIZIsF6lCaIb4mzp2+v0kWIN11dxzvZYatU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0omif+z54WHpUiRQ638GfQ41TbDFx49u2E0k8whkUc9wvlE/hjI33fkYoWrXnxnEz
-	 aABvpzdDrDNRG/j2wEU10a0bSOY3gnUh+YZn25BVKqtMHQM0gmd4iUFgNKubtu2Mpw
-	 3d4dcxOwPUutzsvb7sBJbWWjtARcMsQg3CWZFilo=
+	by mail.kernel.org (Postfix) with ESMTP id B8E0620820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:05:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mzmx0A+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbgEKA61 (ORCPT
+        id S1729410AbgEKBFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 20:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgEKA61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 20:58:27 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A341A24954
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589158706;
-        bh=EexeP/ilwIZIsF6lCaIb4mzp2+v0kWIN11dxzvZYatU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=O/3TcNgVcp3io/qY+F35V6gKwN9vVwERE1h2SfqO7vUUTVzZ8bU8kXhLgZ7yxoLF2
-         7iOn/PaIgdS8ilbWQeUc81v7ddhJxGVMcXI8Mng+pDNFDPIUZbdkqekvEu0EUGBwIr
-         Qja12BvW2RseNdTHvXUbOLgZ2KaR4LAUqllzzz8w=
-Received: by mail-wr1-f48.google.com with SMTP id w7so8819388wre.13
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 17:58:26 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua3kfNHADf08NdLhxhHOWsyt6HrzbX03LLbmDi/Aq59gpZSsYhz
-        +AYgnne+8q4fEW/CyqE5wkO2+3ZNY4SIb48H5tc/iQ==
-X-Google-Smtp-Source: APiQypKQx34W5bTiJF1j8ItGCE+ziX9ZT/qr+fACzfs4qZF6q1/RHJSRLQQRtnSlqdQcApFgan5R32tlDjB+XdDBE1o=
-X-Received: by 2002:adf:eccf:: with SMTP id s15mr14992853wro.70.1589158705155;
- Sun, 10 May 2020 17:58:25 -0700 (PDT)
+        Sun, 10 May 2020 21:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729327AbgEKBFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 21:05:04 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3039DC061A0C;
+        Sun, 10 May 2020 18:05:04 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g4so7643749ljl.2;
+        Sun, 10 May 2020 18:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KQ6nJUjgUftXoec4KqhDYa6fkD2DtlzfVc9EbzQBgBk=;
+        b=Mzmx0A+jyL2syg9pn2GVJAakHENXDbZvrPs9JyP3DUajP6DOk3JzTCDTEkm0ygT4dp
+         2KL2DgN7cty//fadoyVWgZh938Hm6EfLAn2M7zgFkosa+xTAsq+BauTyfObXcQ48dla4
+         m1VeMwNhUnRmtc5BmcYtr95N0QrE53qCWnzP3I4b4zqqr5vqTWO1ZtsJ0rjMkvoONbJ9
+         VbXVI7QInrrNSSXUCB+f72UvwaUAJrUlyHSHqreG6sLoW2ix1y5YX9EHPk8yjvBVS+WY
+         SwpHt3PEE1KeSqKVM8ifOjeBz6HjnL/6XxNSOFWdo5vCEmwh9n/MlXNWl8N35bv0GbjJ
+         pYRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KQ6nJUjgUftXoec4KqhDYa6fkD2DtlzfVc9EbzQBgBk=;
+        b=eiacBKJPN0K6UyoKH76srXKyIUxLUZ+SIuElb+2Fytt1JSWJziAY+rRGfAI3yBDZxl
+         JAPmanE6W19FCASL35UnLMiep6pMal9GeBpxzDeUMputRXTIJxjMcGAa+SNyTVtF/nEz
+         sjJ0LlTRkNW2XS5hRXb0ztML+hYP3oZ4iAazd0aC2cX88EE47yfQHXgW6yQzgRdUGNzS
+         2zsK0aKUFZmM5BcSU3cryP4OWpU7il+lhfoyKVtOjQzjDXmLrUx2SkNsC/ahDOJpEm1u
+         SQHGauTEZD9lbF508DnEvR+XXu4qbMh5tXWdpmKmT8+DWQijEeDgU7FwleAqiQK4VRUF
+         /ofg==
+X-Gm-Message-State: AOAM532RLB9Nb3IQqYud3svivi0f0mxKc3Ki9KMcYWUGSJY79MnJfR6e
+        gCP7g3aMIiTqI/C2lNEAocs=
+X-Google-Smtp-Source: ABdhPJyvQnYMXmwcgL2lts9SnDk5cC6BsrkviZ3q/XCM3xpa8WrWnqrQBFinvTwoTZ9ca+8IV6anyg==
+X-Received: by 2002:a2e:b53b:: with SMTP id z27mr8518056ljm.114.1589159102415;
+        Sun, 10 May 2020 18:05:02 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id c2sm8216835ljk.97.2020.05.10.18.05.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 10 May 2020 18:05:01 -0700 (PDT)
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+Date:   Mon, 11 May 2020 04:05:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134904.273363275@linutronix.de>
-In-Reply-To: <20200505134904.273363275@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 May 2020 17:58:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrXd+-nvDcwupvbtr8-Gj2RQsGfFiUu-wr86dw4-nJ=S5w@mail.gmail.com>
-Message-ID: <CALCETrXd+-nvDcwupvbtr8-Gj2RQsGfFiUu-wr86dw4-nJ=S5w@mail.gmail.com>
-Subject: Re: [patch V4 part 3 10/29] x86/idtentry: Provide macros to
- define/declare IDT entry points
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200508055656.96389-34-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Provide DECLARE/DEFINE_IDTENTRY() macros.
+08.05.2020 08:56, Jiada Wang пишет:
+> The path of enabling the IRQ in the probe function is not safe in level
+> triggered operation, if it was already powered up and there is a message
+> waiting on the device (eg finger down) because the object table has not yet
+> been read. This forces the ISR into a hard loop.
+> 
+> Delay enabling the interrupt until it is first needed, by set flag
+> IRQ_NOAUTOEN.
+> 
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> CC: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 7c9a738e633a..ab4eceac8fe7 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -3822,6 +3822,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  		return error;
+>  	}
+>  
+> +	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
+>  	error = devm_request_threaded_irq(&client->dev, client->irq,
+>  					  NULL, mxt_interrupt, IRQF_ONESHOT,
+>  					  client->name, data);
+> @@ -3831,17 +3832,19 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  	}
+>  
+>  	if (data->suspend_mode == MXT_SUSPEND_REGULATOR) {
+> +		enable_irq(data->irq);
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Hello Jiada,
 
-except:
+This change contradicts to the commit's message since enabling IRQ until
+hardware has been fully powered-on and reset is not allowed.
 
->
-> DEFINE_IDTENTRY() provides a wrapper which acts as the function
-> definition. The exception handler body is just appended to it with curly
-> brackets. The entry point is marked notrace/noprobe so that irq tracing and
-> the enter_from_user_mode() can be moved into the C-entry point.
+>  		error = mxt_probe_regulators(data);
+>  		if (error)
+>  			return error;
+> +
+> +		disable_irq(data->irq);
+>  	} else if (data->reset_gpio) {
+>  		msleep(MXT_RESET_GPIO_TIME);
+>  		gpiod_set_value(data->reset_gpio, 1);
+>  		msleep(MXT_RESET_INVALID_CHG);
+>  	}
+>  
+> -	disable_irq(data->irq);
+> -
+>  	error = mxt_initialize(data);
+>  	if (error)
+>  		return error;
+> 
 
-"noinstr", perhaps?  I'm guessing you write this text before noinstr happened.
+Secondly, I gave a try to this version of the series and unfortunately
+it doesn't work at all:
 
-Also, would it perhaps make sense in the future to include the
-idtentry macro somehow (via inline asm or gcc options) so that
-DEFINE_IDTENTRY() could emit the stub instead of leaving it to
-DECLARE_IDTENTRY()?  It might end up too messy in practice, I suppose.
-This is obviously not worth changing right now, but maybe down the
-road.
+[  125.928709] INFO: task systemd-udevd:184 blocked for more than 61
+seconds.
+[  125.929130]       Not tainted
+5.7.0-rc4-next-20200508-00189-g0fe7f91d4a66-dirty #2206
+[  125.929474] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[  125.929900] systemd-udevd   D    0   184    173 0x00000080
+[  125.929921] [<c098b995>] (__schedule) from [<c098bdc1>]
+(schedule+0x65/0xc0)
+[  125.929965] [<c098bdc1>] (schedule) from [<c0166ce3>]
+(synchronize_irq+0x5b/0x7c)
+[  125.930001] [<c0166ce3>] (synchronize_irq) from [<c067e0f9>]
+(mxt_stop+0x51/0xe0)
+[  125.930016] [<c067e0f9>] (mxt_stop) from [<c067e1d3>]
+(mxt_input_close+0x13/0x34)
+[  125.930042] [<c067e1d3>] (mxt_input_close) from [<c0664b19>]
+(input_close_device+0x3d/0x5c)
+[  125.930063] [<c0664b19>] (input_close_device) from [<c066b9df>]
+(evdev_release+0xa7/0xbc)
+[  125.930088] [<c066b9df>] (evdev_release) from [<c025a871>]
+(__fput+0x91/0x198)
+[  125.930121] [<c025a871>] (__fput) from [<c0136efb>]
+(task_work_run+0x73/0x90)
+[  125.930138] [<c0136efb>] (task_work_run) from [<c0108fa9>]
+(do_work_pending+0x381/0x430)
+[  125.930149] [<c0108fa9>] (do_work_pending) from [<c01000d1>]
+(slow_work_pending+0x9/0x18)
+[  125.930153] Exception stack(0xedd0ffb0 to 0xedd0fff8)
+
+Please test everything properly and fix it in the next version.
+
+BTW, it won't hurt to apply a spell-checker to the commit messages to
+fix small typos.
