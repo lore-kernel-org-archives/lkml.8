@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69192C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B8C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9B820643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A084520643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yAQ17n5n"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TS/jxxw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgEKPJL (ORCPT
+        id S1730604AbgEKPJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        Mon, 11 May 2020 11:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730336AbgEKPId (ORCPT
+        by vger.kernel.org with ESMTP id S1730295AbgEKPIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:08:33 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A0BC05BD0B
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:32 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g12so19702603wmh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:32 -0700 (PDT)
+        Mon, 11 May 2020 11:08:32 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A14C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m12so13492037wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JWd28US49vQEgzroCkPuJ7+0dlvqHFnp/0U0KdCKzj4=;
-        b=yAQ17n5n0Nlko9kUD5JQSnw1SO35zKfJ9pXExg53viUdxqF46z7vVVUbrm9CWq90zL
-         +HofwZUQ8AbrUTRLoP8u6HuvjPcGWT1dWbdMdcEI78zuOFvRNeUhJIX4AVRT7hVXwaHk
-         XWusk6ttYjMboQZLrX8kOFDqUbovXiFSXfu65aAk2VN4fPdxjQc0gOha7ctZgiP0eOGx
-         dF3x26U8pZeznqL5/e98wKIPJGv1G8lqk4flKSM8JrivLFxREQL3SIRzc9H2gzU6YiwM
-         I3OTfRJjC6rxKB4a9taLddxcX1g6NaMR3yg3mW3DPp2Wdo1cxWQOBlb6ABfVCkV2cl/0
-         57Yg==
+        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
+        b=TS/jxxw2AM8c/MW/14NfrNB+SUbDqKCeR6Tz9KN+jE/qC/yYIXQFmcqxM1np2Xwhd1
+         6HzzHOawVFx9Avhhy9m+y8TIrHmrRiIGgsdRGMba4aTqK1P3Std1fQ15kyhU37lGQ4Gd
+         /blU29VDw8JrGSg8cn8jWRHVrLGz1I02RRR881foQUGlY83hYx6HEVM8++7zYk9AB2gK
+         kCA8E+nT8RvG/vdg9BjOvynD4T+aWghR+0uibegwQAvlB7FNBaDmFNw22bU9G5Dh38Sa
+         blrzdx+xnrmAR8BnZBhhos2friW6xXn07zxAXVWX+4YWhBxExBXWL9JMoRRwyxerZJMn
+         S1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JWd28US49vQEgzroCkPuJ7+0dlvqHFnp/0U0KdCKzj4=;
-        b=F/66MRAX2qSjhduqvj633RKOposEqWG4mNQvHAIo3dGkhwJVbaoJZDzxvzp5xmwM/S
-         RtA03OCWhZvsuONWU8YraMbdS3veg6oCgWADp6AO59jPu+MH1e7wtpIvdq8UbLYbJk/0
-         kiNezC3BPElryIQOxgVWxlw5P4ZSCmnE4EMsGRboVKO9yLLrAY9byDhlWM+3jwRd50Gd
-         jijKCeeoA/7rQHYMDP573QV+z4jzEHXQWXb8j69BlfLwGoEAMFj37vsR4uwRgdWa1+ek
-         CcYpsKB3x/8jZ9DU4gKe26Xppk4OKIh9QDb7XL3W+I8GetoOzURhWUgFxzSixWqBIkCD
-         v7qA==
-X-Gm-Message-State: AGi0PuY7Wqy0oYkdryS2vDJtgECiK49DWW3WIicLFNGqSZoJMVLnCrvw
-        tJ6WlUz8pQzxlsUPp1R+OusOXw==
-X-Google-Smtp-Source: APiQypJeAulXahA6ibdKhNLx3DmiIqJmPwxXGG8leQ4jK/xVuJNuMwJOUsf0YZ2hS4FiT/g7qkEqmg==
-X-Received: by 2002:a1c:790e:: with SMTP id l14mr31328411wme.174.1589209711412;
-        Mon, 11 May 2020 08:08:31 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
+        b=DPdaUWRFoAbt7o+U/vBE5bakyIHrQgr+n/s0akTeO0a4S55kWyFym04bQZpsHaP0mC
+         kmCPMaDVe+dSLS1dNptZw9Pml7LGzkeM53dUglCWn91fk1YDn3OSFZWNC2RcL30VZJPt
+         40GHJLLDWBYns5KeDoUQL3vWAfZkA0ji+21MRRcegbLs1hfCue1+YREafJBQHKKQT2hj
+         4h/wQhk4enpueQeQ2lb3cjC6AKRHAE1iLHSVWbC5WiG8UwJEsW6QZvT1lk7jU09lKqrx
+         SC362Yf+tpqQYq3ml1e6X0/2DHFy9eIOKc5B8+iEsZq0v9VXQh19WTzvGD+3TEeAybId
+         tT1w==
+X-Gm-Message-State: AGi0PubWNxace28Tr+g0u7+l/HSAdTgqk3U0T+e06ucjCWn90JckRDol
+        pzT7iXsg7XwnFMRsiIjSAI9s6g==
+X-Google-Smtp-Source: APiQypIUoY5y9pMCyWMprTL71A7BiL4tQc7BbrlTT1FoaZIkxIS6pMCmPRg9IsmwTOLUcwtTuQxL3g==
+X-Received: by 2002:a1c:abc3:: with SMTP id u186mr31368123wme.42.1589209710040;
         Mon, 11 May 2020 08:08:30 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 08:08:29 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 08/14] net: devres: provide devm_register_netdev()
-Date:   Mon, 11 May 2020 17:07:53 +0200
-Message-Id: <20200511150759.18766-9-brgl@bgdev.pl>
+Subject: [PATCH v2 07/14] net: devres: define a separate devres structure for devm_alloc_etherdev()
+Date:   Mon, 11 May 2020 17:07:52 +0200
+Message-Id: <20200511150759.18766-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
 References: <20200511150759.18766-1-brgl@bgdev.pl>
@@ -93,92 +93,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Provide devm_register_netdev() - a device resource managed variant
-of register_netdev(). This new helper will only work for net_device
-structs that are also already managed by devres.
+Not using a proxy structure to store struct net_device doesn't save
+anything in terms of compiled code size or memory usage but significantly
+decreases the readability of the code with all the pointer casting.
+
+Define struct net_device_devres and use it in devm_alloc_etherdev_mqs().
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- include/linux/netdevice.h |  2 ++
- net/devres.c              | 55 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ net/devres.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 933c6808a87f..d3d1b9251ae5 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4220,6 +4220,8 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- int register_netdev(struct net_device *dev);
- void unregister_netdev(struct net_device *dev);
- 
-+int devm_register_netdev(struct device *dev, struct net_device *ndev);
-+
- /* General hardware address lists handling functions */
- int __hw_addr_sync(struct netdev_hw_addr_list *to_list,
- 		   struct netdev_hw_addr_list *from_list, int addr_len);
 diff --git a/net/devres.c b/net/devres.c
-index b97b0c5a8216..57a6a88d11f6 100644
+index c1465d9f9019..b97b0c5a8216 100644
 --- a/net/devres.c
 +++ b/net/devres.c
-@@ -38,3 +38,58 @@ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
- 	return dr->ndev;
+@@ -7,30 +7,34 @@
+ #include <linux/etherdevice.h>
+ #include <linux/netdevice.h>
+ 
+-static void devm_free_netdev(struct device *dev, void *res)
++struct net_device_devres {
++	struct net_device *ndev;
++};
++
++static void devm_free_netdev(struct device *dev, void *this)
+ {
+-	free_netdev(*(struct net_device **)res);
++	struct net_device_devres *res = this;
++
++	free_netdev(res->ndev);
+ }
+ 
+ struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
+ 					   unsigned int txqs, unsigned int rxqs)
+ {
+-	struct net_device **dr;
+-	struct net_device *netdev;
++	struct net_device_devres *dr;
+ 
+ 	dr = devres_alloc(devm_free_netdev, sizeof(*dr), GFP_KERNEL);
+ 	if (!dr)
+ 		return NULL;
+ 
+-	netdev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
+-	if (!netdev) {
++	dr->ndev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
++	if (!dr->ndev) {
+ 		devres_free(dr);
+ 		return NULL;
+ 	}
+ 
+-	*dr = netdev;
+ 	devres_add(dev, dr);
+ 
+-	return netdev;
++	return dr->ndev;
  }
  EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
-+
-+static void devm_netdev_release(struct device *dev, void *this)
-+{
-+	struct net_device_devres *res = this;
-+
-+	unregister_netdev(res->ndev);
-+}
-+
-+static int netdev_devres_match(struct device *dev, void *this, void *match_data)
-+{
-+	struct net_device_devres *res = this;
-+	struct net_device *ndev = match_data;
-+
-+	return ndev == res->ndev;
-+}
-+
-+/**
-+ *	devm_register_netdev - resource managed variant of register_netdev()
-+ *	@dev: managing device for this netdev - usually the parent device
-+ *	@ndev: device to register
-+ *
-+ *	This is a devres variant of register_netdev() for which the unregister
-+ *	function will be call automatically when the managing device is
-+ *	detached. Note: the net_device used must also be resource managed by
-+ *	the same struct device.
-+ */
-+int devm_register_netdev(struct device *dev, struct net_device *ndev)
-+{
-+	struct net_device_devres *dr;
-+	int ret;
-+
-+	/* struct net_device must itself be managed. For now a managed netdev
-+	 * can only be allocated by devm_alloc_etherdev_mqs() so the check is
-+	 * straightforward.
-+	 */
-+	if (WARN_ON(!devres_find(dev, devm_free_netdev,
-+				 netdev_devres_match, ndev)))
-+		return -EINVAL;
-+
-+	dr = devres_alloc(devm_netdev_release, sizeof(*dr), GFP_KERNEL);
-+	if (!dr)
-+		return -ENOMEM;
-+
-+	ret = register_netdev(ndev);
-+	if (ret) {
-+		devres_free(dr);
-+		return ret;
-+	}
-+
-+	dr->ndev = ndev;
-+	devres_add(ndev->dev.parent, dr);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(devm_register_netdev);
 -- 
 2.25.0
 
