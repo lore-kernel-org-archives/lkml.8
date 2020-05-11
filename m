@@ -2,140 +2,164 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E8BC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABAEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFE52075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="YkqJNsob"
+	by mail.kernel.org (Postfix) with ESMTP id B9E15208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589197757;
+	bh=G+wgiTDTWIi7ajc/ou5pxD/+OW5419RPkT5HXf5jP1E=;
+	h=Subject:To:Cc:From:Date:List-ID:From;
+	b=gjM6o0BuJ+TkRnIBBGYKwcYZY+vXnl0vEny+QjDublCaom0FjfsuHmBwso06HLH4R
+	 EDPBDbsvd2aMmTtNv7yt6HVKCg7ciwk8DBKY10NO4SBkYrKuM6EXVwoOu+UzPd6d7t
+	 h1Zg/hbAOGIF5V/HuSVEcczxi28j+u/njEMIqlhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgEKLsK (ORCPT
+        id S1729728AbgEKLtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:48:10 -0400
-Received: from smtp2.axis.com ([195.60.68.18]:31161 "EHLO smtp2.axis.com"
+        Mon, 11 May 2020 07:49:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbgEKLsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:48:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=2683; q=dns/txt; s=axis-central1;
-  t=1589197687; x=1620733687;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nJ1qTOy5LEl+3ghrdE6ayVo+QTlImTiM42UK10R/CO0=;
-  b=YkqJNsobfGQ2J8y3QSAWjnq2d8D1eHYGoZhuunPo/gdtHmxQtBr21s2h
-   xtL9ZdeKUfW8qAAshPCApSMQAK/B1z+eSlUENdDZoWIKf4ilR9FFT5Aqh
-   nvWY4MpY1VPB4kAfV8Snq/bakWmrWrBLUCH8BAowJ7HVNSW5g6zYzn/3B
-   o0b2qNYyvgtQlryzKIFnT2r7TRLYZB5ZekCi2Q8SENGoBzg0f2V8kygyM
-   lNzi+sOcEa6Op0prqbhvGwooZAov/nbhHruIf4/+Sb2Xn9ZRKB9mc3BZG
-   UlGbkRtPBe0EW0vZq8rVTHR659wSGOO1ELk/P8NwgxcFi+DyGDBH12IUu
-   A==;
-IronPort-SDR: eWZuRw32j5JYJgOi5OmGwaaj8bk7KszfEuOPpxP4bH8Wi8itNv+fizjpxYs2CA1SNITyHvwDyy
- qF5XgZsbtYDgaXmRoOUZPIQjDvnmgDdVFNOj+YUImbRBZMNyhpfwCzvty6IclSGzLL0wn4Ylkg
- NMSpihDcfR3G7ROq4TYzqOCAX+eMijiP9tOhd2iSgF4dLKYOfzCfwuCXkzHJvihLExksYRL8+y
- icIrmdn+FfpXtULH6nfG6NJs0t6kxPaR7E/bKSLsZ87dQvssdR9LdF0N5Ld/GlMxn9zZsK4lbm
- 7jI=
-X-IronPort-AV: E=Sophos;i="5.73,379,1583190000"; 
-   d="scan'208";a="8358766"
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     <linux@armlinux.org.uk>, <jeyu@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@axis.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH v2 1/2] module: allow arch overrides for .init section names
-Date:   Mon, 11 May 2020 13:48:02 +0200
-Message-ID: <20200511114803.4475-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        id S1727873AbgEKLtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:49:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6607220735;
+        Mon, 11 May 2020 11:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589197755;
+        bh=G+wgiTDTWIi7ajc/ou5pxD/+OW5419RPkT5HXf5jP1E=;
+        h=Subject:To:Cc:From:Date:From;
+        b=uIgnkHK7QEfRpRUp9N6JU3d9kzkiDu4R2cYoblec3iz6Xi2UFs44rq8CtXdnX84qy
+         FAksoPJlvOcT500ydCuhrFFvT3QJH5EtL921aKBMHKZlmPcMp2rdtIkxVYM4mldJQD
+         Ud6YfbKpjbu7vYsZ0LFA0peAX3E313w++xHcuNbE=
+Subject: Linux 4.14.180
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Mon, 11 May 2020 13:49:09 +0200
+Message-ID: <1589197749146101@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM stores unwind information for .init.text in sections named
-.ARM.extab.init.text and .ARM.exidx.init.text.  Since those aren't
-currently recognized as init sections, they're allocated along with the
-core section, and relocation fails if the core and the init section are
-allocated from different regions and can't reach other.
+I'm announcing the release of the 4.14.180 kernel.
 
-  final section addresses:
-        ...
-        0x7f800000 .init.text
-        ..
-        0xcbb54078 .ARM.exidx.init.text
-        ..
+All users of the 4.14 kernel series must upgrade.
 
- section 16 reloc 0 sym '': relocation 42 out of range (0xcbb54078 ->
- 0x7f800000)
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Allow architectures to override the section name so that ARM can fix
-this.
+thanks,
 
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
----
-v2: Add comment and move module_init_section() next to module_exit_section().
+greg k-h
 
- include/linux/moduleloader.h | 5 +++++
- kernel/module.c              | 9 +++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+------------
 
-diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
-index ca92aea8a6bd..4fa67a8b2265 100644
---- a/include/linux/moduleloader.h
-+++ b/include/linux/moduleloader.h
-@@ -29,6 +29,11 @@ void *module_alloc(unsigned long size);
- /* Free memory returned from module_alloc. */
- void module_memfree(void *module_region);
- 
-+/* Determines if the section name is an init section (that is only used during
-+ * module loading).
-+ */
-+bool module_init_section(const char *name);
-+
- /* Determines if the section name is an exit section (that is only used during
-  * module unloading)
-  */
-diff --git a/kernel/module.c b/kernel/module.c
-index 33569a01d6e1..84d0c455fb44 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2400,7 +2400,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
- 			if ((s->sh_flags & masks[m][0]) != masks[m][0]
- 			    || (s->sh_flags & masks[m][1])
- 			    || s->sh_entsize != ~0UL
--			    || strstarts(sname, ".init"))
-+			    || module_init_section(sname))
- 				continue;
- 			s->sh_entsize = get_offset(mod, &mod->core_layout.size, s, i);
- 			pr_debug("\t%s\n", sname);
-@@ -2433,7 +2433,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
- 			if ((s->sh_flags & masks[m][0]) != masks[m][0]
- 			    || (s->sh_flags & masks[m][1])
- 			    || s->sh_entsize != ~0UL
--			    || !strstarts(sname, ".init"))
-+			    || !module_init_section(sname))
- 				continue;
- 			s->sh_entsize = (get_offset(mod, &mod->init_layout.size, s, i)
- 					 | INIT_OFFSET_MASK);
-@@ -2768,6 +2768,11 @@ void * __weak module_alloc(unsigned long size)
- 	return vmalloc_exec(size);
- }
- 
-+bool __weak module_init_section(const char *name)
-+{
-+	return strstarts(name, ".init");
-+}
-+
- bool __weak module_exit_section(const char *name)
- {
- 	return strstarts(name, ".exit");
--- 
-2.25.1
+ Makefile                                              |    2 -
+ arch/powerpc/kernel/pci_of_scan.c                     |   12 +++++-
+ arch/s390/kernel/diag.c                               |    2 -
+ arch/s390/kernel/smp.c                                |    4 +-
+ arch/s390/kernel/trace.c                              |    2 -
+ drivers/net/dsa/b53/b53_common.c                      |   30 +++++++++++++--
+ drivers/net/dsa/b53/b53_regs.h                        |    3 +
+ drivers/net/ethernet/broadcom/bcmsysport.c            |    3 +
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c        |    3 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c   |    9 +++-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |   12 ++++--
+ drivers/net/wimax/i2400m/usb-fw.c                     |    1 
+ drivers/vhost/vsock.c                                 |    5 ++
+ fs/cifs/connect.c                                     |    2 +
+ include/linux/ieee80211.h                             |    9 ++++
+ kernel/trace/trace.c                                  |    5 ++
+ kernel/trace/trace_events.c                           |   31 +++++++---------
+ lib/mpi/longlong.h                                    |   34 +++++++++---------
+ net/core/netclassid_cgroup.c                          |    4 --
+ net/mac80211/mlme.c                                   |    2 -
+ net/mac80211/rx.c                                     |    8 +---
+ net/mac80211/status.c                                 |    5 +-
+ net/mac80211/tx.c                                     |    2 -
+ net/sctp/sm_make_chunk.c                              |    6 ++-
+ scripts/config                                        |    5 ++
+ sound/pci/hda/hda_intel.c                             |    9 ++--
+ sound/soc/codecs/hdac_hdmi.c                          |    6 +--
+ sound/soc/codecs/sgtl5000.c                           |   34 ++++++++++++++++++
+ sound/soc/codecs/sgtl5000.h                           |    1 
+ sound/soc/sh/rcar/ssiu.c                              |    2 -
+ sound/soc/soc-topology.c                              |    4 +-
+ tools/testing/selftests/ipc/msgque.c                  |    2 -
+ 32 files changed, 181 insertions(+), 78 deletions(-)
+
+Alexey Kardashevskiy (1):
+      powerpc/pci/of: Parse unassigned resources
+
+Amadeusz Sławiński (2):
+      ASoC: topology: Check return value of pcm_new_ver
+      ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
+
+Doug Berger (2):
+      net: bcmgenet: suppress warnings on failed Rx SKB allocations
+      net: systemport: suppress warnings on failed Rx SKB allocations
+
+Florian Fainelli (1):
+      net: dsa: b53: Rework ARL bin logic
+
+Greg Kroah-Hartman (1):
+      Linux 4.14.180
+
+Jere Leppänen (1):
+      sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+
+Jeremie Francois (on alpha) (1):
+      scripts/config: allow colons in option strings for sed
+
+Jia He (1):
+      vhost: vsock: kick send_pkt worker once device is started
+
+Jiri Slaby (1):
+      cgroup, netclassid: remove double cond_resched
+
+Julien Beraud (2):
+      net: stmmac: fix enabling socfpga's ptp_ref_clock
+      net: stmmac: Fix sub-second increment
+
+Matthias Blankertz (1):
+      ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
+
+Nathan Chancellor (1):
+      lib/mpi: Fix building for powerpc with clang
+
+Philipp Rudo (1):
+      s390/ftrace: fix potential crashes when switching tracers
+
+Ronnie Sahlberg (1):
+      cifs: protect updating server->dstaddr with a spinlock
+
+Sebastian Reichel (1):
+      ASoC: sgtl5000: Fix VAG power-on handling
+
+Steven Rostedt (VMware) (1):
+      tracing: Reverse the order of trace_types_lock and event_mutex
+
+Takashi Iwai (1):
+      ALSA: hda: Match both PCI ID and SSID for driver blacklist
+
+Thomas Pedersen (1):
+      mac80211: add ieee80211_is_any_nullfunc()
+
+Tyler Hicks (1):
+      selftests/ipc: Fix test failure seen after initial test run
+
+Xiyu Yang (1):
+      wimax/i2400m: Fix potential urb refcnt leak
 
