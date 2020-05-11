@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E393DC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593D0C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD8CC20752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4154E20752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgEKTZd (ORCPT
+        id S1731511AbgEKTZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:25:33 -0400
-Received: from v6.sk ([167.172.42.174]:52328 "EHLO v6.sk"
+        Mon, 11 May 2020 15:25:35 -0400
+Received: from v6.sk ([167.172.42.174]:52348 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbgEKTZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:25:30 -0400
+        id S1731439AbgEKTZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 15:25:33 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 484A4610CF;
-        Mon, 11 May 2020 19:25:29 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 3D917610D1;
+        Mon, 11 May 2020 19:25:32 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Michael Turquette <mturquette@baylibre.com>
 Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 01/10] clk: mmp: frac: Do not lose last 4 digits of precision
-Date:   Mon, 11 May 2020 21:25:08 +0200
-Message-Id: <20200511192517.1206442-2-lkundrak@v3.sk>
+        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 03/10] dt-bindings: marvell,mmp2: Add clock id for the I2S clocks
+Date:   Mon, 11 May 2020 21:25:10 +0200
+Message-Id: <20200511192517.1206442-4-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511192517.1206442-1-lkundrak@v3.sk>
 References: <20200511192517.1206442-1-lkundrak@v3.sk>
@@ -40,84 +41,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While calculating the output rate of a fractional divider clock, the
-value is divided and multipled by 10000, discarding the least
-significant digits -- presumably to fit the intermediate value within 32
-bits.
-
-The precision we're losing is, however, not insignificant for things like
-I2S clock. Maybe also elsewhere, now that since commit ea56ad60260e ("clk:
-mmp2: Stop pretending PLL outputs are constant") the parent rates are more
-precise and no longer rounded to 10000s.
+There are two of these on a MMP2.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/mmp/clk-frac.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
-index fabc09aca6c4..ed9928f5bdc7 100644
---- a/drivers/clk/mmp/clk-frac.c
-+++ b/drivers/clk/mmp/clk-frac.c
-@@ -28,13 +28,15 @@ static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
- 		unsigned long *prate)
- {
- 	struct mmp_clk_factor *factor = to_clk_factor(hw);
--	unsigned long rate = 0, prev_rate;
-+	u64 rate = 0, prev_rate;
- 	int i;
+---
+Changes since v1:
+- Rob's ack
+
+ include/dt-bindings/clock/marvell,mmp2.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/dt-bindings/clock/marvell,mmp2.h b/include/dt-bindings/clock/marvell,mmp2.h
+index 06bb7fe4c62f..5b083f42811e 100644
+--- a/include/dt-bindings/clock/marvell,mmp2.h
++++ b/include/dt-bindings/clock/marvell,mmp2.h
+@@ -29,6 +29,8 @@
+ #define MMP3_CLK_PLL1_P			28
+ #define MMP3_CLK_PLL2_P			29
+ #define MMP3_CLK_PLL3			30
++#define MMP2_CLK_I2S0			31
++#define MMP2_CLK_I2S1			32
  
- 	for (i = 0; i < factor->ftbl_cnt; i++) {
- 		prev_rate = rate;
--		rate = (((*prate / 10000) * factor->ftbl[i].den) /
--			(factor->ftbl[i].num * factor->masks->factor)) * 10000;
-+		rate = *prate;
-+		rate *= factor->ftbl[i].den;
-+		do_div(rate, factor->ftbl[i].num * factor->masks->factor);
-+
- 		if (rate > drate)
- 			break;
- 	}
-@@ -54,6 +56,7 @@ static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
- 	struct mmp_clk_factor *factor = to_clk_factor(hw);
- 	struct mmp_clk_factor_masks *masks = factor->masks;
- 	unsigned int val, num, den;
-+	u64 rate;
- 
- 	val = readl_relaxed(factor->base);
- 
-@@ -66,8 +69,11 @@ static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
- 	if (!den)
- 		return 0;
- 
--	return (((parent_rate / 10000)  * den) /
--			(num * factor->masks->factor)) * 10000;
-+	rate = parent_rate;
-+	rate *= den;
-+	do_div(rate, num * factor->masks->factor);
-+
-+	return rate;
- }
- 
- /* Configures new clock rate*/
-@@ -78,12 +84,14 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
- 	struct mmp_clk_factor_masks *masks = factor->masks;
- 	int i;
- 	unsigned long val;
--	unsigned long rate = 0;
- 	unsigned long flags = 0;
-+	u64 rate = 0;
- 
- 	for (i = 0; i < factor->ftbl_cnt; i++) {
--		rate = (((prate / 10000) * factor->ftbl[i].den) /
--			(factor->ftbl[i].num * factor->masks->factor)) * 10000;
-+		rate = prate;
-+		rate *= factor->ftbl[i].den;
-+		do_div(rate, factor->ftbl[i].num * factor->masks->factor);
-+
- 		if (rate > drate)
- 			break;
- 	}
+ /* apb periphrals */
+ #define MMP2_CLK_TWSI0			60
 -- 
 2.26.2
 
