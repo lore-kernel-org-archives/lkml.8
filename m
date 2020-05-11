@@ -2,109 +2,194 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51206C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711B3C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3627C20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF1720736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgEKSRM (ORCPT
+        id S1731098AbgEKSRf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:17:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53698 "EHLO mga03.intel.com"
+        Mon, 11 May 2020 14:17:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53725 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729678AbgEKSRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:17:11 -0400
-IronPort-SDR: 9L4snjHpDpN67h0KhUNqufKvZo8GCBVf31NpAAW0RvOXEEXiVHoKkswqHNKCXFnQ9Fs20DuFfM
- +USTCitSbs/A==
+        id S1729643AbgEKSRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:17:35 -0400
+IronPort-SDR: FCVbFbGT6W7Q29V7wEpA1jRYNeUZ5NC9xYJKLSh7XRKqgU6oZ0+6nagDE81qn4iWgRurF6bbeJ
+ t8LVXxozKa9Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:17:11 -0700
-IronPort-SDR: 38zTCriKg5Yq9VmhZtWaXyixpm+lKVTUX16kvRsUQbv+OUmVYmqVh259nwt+H8KjuKpm2g0qk4
- x3XR6ktGUvag==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:17:34 -0700
+IronPort-SDR: Y1DsXc4/UPTn8R3+5co8epPfgEtRYbtqfhLJy4DfqHLdQVkZtaZtEw2ypysEvY0wmqywkDhrIJ
+ wyPNuQWdaOlg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="306251281"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.213.1.152]) ([10.213.1.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 May 2020 11:17:09 -0700
-Subject: Re: [PATCH RESEND] ASoC: Intel: Skylake: Replace zero-length array
- with flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20200511174647.GA17318@embeddedor>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <d973f704-539e-eac8-122f-52f6b5d0e123@intel.com>
-Date:   Mon, 11 May 2020 20:17:08 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200511174647.GA17318@embeddedor>
-Content-Type: text/plain; charset=utf-8; format=flowed
+   d="scan'208";a="286361037"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga004.fm.intel.com with ESMTP; 11 May 2020 11:17:34 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 11:17:34 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
+ FMSMSX154.amr.corp.intel.com ([169.254.6.202]) with mapi id 14.03.0439.000;
+ Mon, 11 May 2020 11:17:33 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "DRI Development" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "Vetter, Daniel" <daniel.vetter@intel.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
+ for mock fences
+Thread-Topic: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
+ for mock fences
+Thread-Index: AQHWJ3Q9b7FvqdjeFkWZgt98eLHlv6ijMJewgAABOlA=
+Date:   Mon, 11 May 2020 18:17:33 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E20F87B@FMSMSX108.amr.corp.intel.com>
+References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
+ <20200511091142.208787-2-daniel.vetter@ffwll.ch>
+ <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-11 7:46 PM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   sound/soc/intel/atom/sst-atom-controls.h |    2 +-
->   sound/soc/intel/skylake/skl-i2s.h        |    2 +-
->   sound/soc/intel/skylake/skl-topology.h   |    4 ++--
->   sound/soc/intel/skylake/skl.h            |    2 +-
->   4 files changed, 5 insertions(+), 5 deletions(-)
-> 
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>Ruhl, Michael J
+>Sent: Monday, May 11, 2020 2:13 PM
+>To: Daniel Vetter <daniel.vetter@ffwll.ch>; LKML <linux-
+>kernel@vger.kernel.org>
+>Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>; DRI
+>Development <dri-devel@lists.freedesktop.org>; linaro-mm-
+>sig@lists.linaro.org; Vetter, Daniel <daniel.vetter@intel.com>; linux-
+>media@vger.kernel.org
+>Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
+>mock fences
+>
+>>-----Original Message-----
+>>From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of
+>>Daniel Vetter
+>>Sent: Monday, May 11, 2020 5:12 AM
+>>To: LKML <linux-kernel@vger.kernel.org>
+>>Cc: Daniel Vetter <daniel.vetter@ffwll.ch>; Intel Graphics Development
+>><intel-gfx@lists.freedesktop.org>; DRI Development <dri-
+>>devel@lists.freedesktop.org>; linaro-mm-sig@lists.linaro.org; Vetter, Daniel
+>><daniel.vetter@intel.com>; Sumit Semwal <sumit.semwal@linaro.org>;
+>linux-
+>>media@vger.kernel.org
+>>Subject: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
+>>mock fences
+>>
+>>No need to micro-optmize when we're waiting in a mocked object ...
+>
+>Makes sense to me.
 
-Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
+/sigh.
 
-Thanks,
-Czarek
+Reading Chris comment, I am no longer sure it make sense... 
+
+Un-ack?
+
+m
+
+>Acked-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>
+>M
+>
+>>Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+>>Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>>Cc: linux-media@vger.kernel.org
+>>Cc: linaro-mm-sig@lists.linaro.org
+>>---
+>> drivers/dma-buf/st-dma-fence.c | 41 ----------------------------------
+>> 1 file changed, 41 deletions(-)
+>>
+>>diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-
+>>fence.c
+>>index e593064341c8..8166d2984702 100644
+>>--- a/drivers/dma-buf/st-dma-fence.c
+>>+++ b/drivers/dma-buf/st-dma-fence.c
+>>@@ -33,50 +33,9 @@ static void mock_fence_release(struct dma_fence *f)
+>> 	kmem_cache_free(slab_fences, to_mock_fence(f));
+>> }
+>>
+>>-struct wait_cb {
+>>-	struct dma_fence_cb cb;
+>>-	struct task_struct *task;
+>>-};
+>>-
+>>-static void mock_wakeup(struct dma_fence *f, struct dma_fence_cb *cb)
+>>-{
+>>-	wake_up_process(container_of(cb, struct wait_cb, cb)->task);
+>>-}
+>>-
+>>-static long mock_wait(struct dma_fence *f, bool intr, long timeout)
+>>-{
+>>-	const int state = intr ? TASK_INTERRUPTIBLE :
+>>TASK_UNINTERRUPTIBLE;
+>>-	struct wait_cb cb = { .task = current };
+>>-
+>>-	if (dma_fence_add_callback(f, &cb.cb, mock_wakeup))
+>>-		return timeout;
+>>-
+>>-	while (timeout) {
+>>-		set_current_state(state);
+>>-
+>>-		if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &f->flags))
+>>-			break;
+>>-
+>>-		if (signal_pending_state(state, current))
+>>-			break;
+>>-
+>>-		timeout = schedule_timeout(timeout);
+>>-	}
+>>-	__set_current_state(TASK_RUNNING);
+>>-
+>>-	if (!dma_fence_remove_callback(f, &cb.cb))
+>>-		return timeout;
+>>-
+>>-	if (signal_pending_state(state, current))
+>>-		return -ERESTARTSYS;
+>>-
+>>-	return -ETIME;
+>>-}
+>>-
+>> static const struct dma_fence_ops mock_ops = {
+>> 	.get_driver_name = mock_name,
+>> 	.get_timeline_name = mock_name,
+>>-	.wait = mock_wait,
+>> 	.release = mock_fence_release,
+>> };
+>>
+>>--
+>>2.26.2
+>>
+>>_______________________________________________
+>>Intel-gfx mailing list
+>>Intel-gfx@lists.freedesktop.org
+>>https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
