@@ -2,72 +2,92 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCA8C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997AFC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C1F20752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D99D20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589236447;
-	bh=xqABZkD71yLUrEiGvEZOMQlMo99AB7+4sfIbsPXURyI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fwgQqCY85OJy+Pv7gAWxRvZtiLvr9iUE1rdOkdvQQ5ZmHCHXit6eVvzHQd1UiP6M4
-	 XExXSCHfhl6cPDZzCopuX7Av8PIc+9gP7zM7UkTMQBYD+RvG0I+XprhFgwg+DUSgTv
-	 jmhtImGNdpJ0LkvRZ4Dx3JRBqmeRy3sPnUk+l86A=
+	s=default; t=1589236489;
+	bh=1s4j0zgH57nT4fJug6LgaX6Hgcbsk7yW6uipXqXWtVg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2PXX54cw7iWFQcCu9l8IyVB+dVkImmjF7zmEsuqDEHKGjWOM3f1Yxx4LGWn/mq6xp
+	 EFE/xYkKuzKmCu+T+VjfvOx7d6HF3V+G6EnhPD3GwTN9C/oOmlZAooiOI0a7czQmEa
+	 KTgK2fD7p8nfTNJfR830/iXWN5CF2cHpqTBijBsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgEKWeG (ORCPT
+        id S1727823AbgEKWet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgEKWeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:34:06 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9FF2070B;
-        Mon, 11 May 2020 22:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589236445;
-        bh=xqABZkD71yLUrEiGvEZOMQlMo99AB7+4sfIbsPXURyI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o/47o67y8/TEpiFuiovEvSiJ34a1YNDXJE2qWhAT3TOAxaIfJ8jqO2odIzQaB8nCy
-         QYR5mUz8rFqEcTbkxTPOkcH6ijRJ5Zz/JAcGqVk02sLTbAK8ilDWr1qX8xKz+l24Qk
-         LJ2mhKKSAwnmCXAj5xVUJeSELvBU3B9rOv6jwIPU=
-Date:   Mon, 11 May 2020 15:34:03 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-Cc:     po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, joergen.andreasen@microchip.com,
-        UNGLinuxDriver@microchip.com, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        linux-devel@linux.nxdi.nxp.com
-Subject: Re: [PATCH v1 net-next 3/3] net: dsa: felix: add support Credit
- Based Shaper(CBS) for hardware offload
-Message-ID: <20200511153403.7b402433@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200511054332.37690-4-xiaoliang.yang_1@nxp.com>
-References: <20200511054332.37690-1-xiaoliang.yang_1@nxp.com>
-        <20200511054332.37690-4-xiaoliang.yang_1@nxp.com>
+        Mon, 11 May 2020 18:34:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34622 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgEKWes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 18:34:48 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 72so8988250otu.1;
+        Mon, 11 May 2020 15:34:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eEYJO787L4hFdfVmppGJoURsIfu4v30oXYj733amcm8=;
+        b=JcEGgm8HYb/M1fWJB7i9Q4Bg3+k6SAsMZjtDQqLHD9KWjvKt3o5jISrOtwbfRwV5WC
+         1TLlMaGq/3s9ub54txzZWt5Pa0ALRn7w0TtcKRHL4hHTAQP7cU+OsYmPgVwNY8tUrO58
+         Y+ZCiiV/rNw3X7cM9j0ZxEtfxfePzsGF8gMF9VwxpOLmLH+NChdW3RVpDhP5vsUIaz4l
+         HoTBSIBPKorjCjXSp2do0hPKawKD8P7tq0V+oCqbpKKQBoQJFx0lO/hGaRkXHVIYeHD6
+         3S2KovU7FVKSnNALN+mR/5IQO4dafoapDf87oEUEUZRyA/vU9lyJ0VVjyrE/ZwushA3S
+         np1A==
+X-Gm-Message-State: AGi0PuZRYm3ZNDYEKiwmry6WhOCJUl6YQlryULornBgA3K1PIjCYRNVm
+        ZLM0wuZpIgKr9xLdPOFSJg==
+X-Google-Smtp-Source: APiQypLtT/X05M8l7zBdEA0gsanAJHzjfh1Fbw4ZKIwZebB4QlF353Lej8+d2MpNzUXHB7tUhCMpfA==
+X-Received: by 2002:a9d:6ad0:: with SMTP id m16mr13613165otq.122.1589236487268;
+        Mon, 11 May 2020 15:34:47 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n23sm1231572ota.37.2020.05.11.15.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 15:34:46 -0700 (PDT)
+Received: (nullmailer pid 7417 invoked by uid 1000);
+        Mon, 11 May 2020 22:34:45 -0000
+Date:   Mon, 11 May 2020 17:34:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-clk@vger.kernel.org, linux-mips@vger.kernel.org, od@zcrc.me,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/8] dt-bindings: intc: Convert ingenic,intc.txt to YAML
+Message-ID: <20200511223445.GA7357@bogus>
+References: <20200426185856.38826-1-paul@crapouillou.net>
+ <20200426185856.38826-2-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200426185856.38826-2-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 13:43:32 +0800 Xiaoliang Yang wrote:
-> +int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
-> +			     struct tc_cbs_qopt_offload *cbs_qopt)
+On Sun, 26 Apr 2020 20:58:50 +0200, Paul Cercueil wrote:
+> Convert the ingenic,intc.txt doc file to ingenic,intc.yaml.
+> 
+> Some compatible strings now require a fallback, as the controller
+> generally works the same across the SoCs families.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../interrupt-controller/ingenic,intc.txt     | 28 ---------
+>  .../interrupt-controller/ingenic,intc.yaml    | 63 +++++++++++++++++++
+>  2 files changed, 63 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.yaml
+> 
 
-static
+Applied, thanks!
