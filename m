@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F3C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE848C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA84206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB348206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUys3Iwp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCrxx2bJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbgEKNyC (ORCPT
+        id S1730362AbgEKNx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:54:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
+        Mon, 11 May 2020 09:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730343AbgEKNxz (ORCPT
+        by vger.kernel.org with ESMTP id S1730304AbgEKNxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:53:55 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F200C061A0E;
-        Mon, 11 May 2020 06:53:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y3so11088677wrt.1;
-        Mon, 11 May 2020 06:53:53 -0700 (PDT)
+        Mon, 11 May 2020 09:53:47 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C8FC061A0C;
+        Mon, 11 May 2020 06:53:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id h4so18130092wmb.4;
+        Mon, 11 May 2020 06:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cd5koMG9eldRdjbJB7fjr40b3dz8LafdTW7A67SELwA=;
-        b=pUys3Iwp9JFHH2gNyNiEXx8WTnnwX2mCSqT24DesXjTc4IVoGNGX9m76YAnqP9rU1c
-         JBd32O8RN2p4+GRi5YXnEo0RaOmvKwo/dm09uYL/lwFy6Y8etLe4bhvJLpSN4vv2pAZY
-         4UkuGDMVtU4QDiXt2slBbbiKXMWyk9mMlf+6dOjMz87Gdif4Bu3fkEwV65BRmtrDXxm3
-         WIkFwb3dfc8k6f9wzUbNVSi8g0I8V0knuiTWY+EGvBDDqhe1LXj8rAtWuLzYpuP9j0A8
-         zAn1Zd0cqCbOBF0io4BETYWJljMM+15xtApMSWxtoku/8mtnQOt2Wo3UOFrh3FEUyCqQ
-         ZLuQ==
+        bh=w7sHFzJhr2tK8ydSlUjLjM+S66Oe6IzTGv2PezfyhBo=;
+        b=FCrxx2bJZzMes6ueRtHeYV1yQaeeqfaUrCy7wT1/kLp9kVfhqcl85HZcdOCoJO0lXR
+         G5SzhF+0kWqvkw0nEySZiQetW6ReXevxs3k7Dwm1zOfwhkRO4DJhCuUP2FDVSE2Xb/Iv
+         CrkCZShxAzM21YPZafbP281MBodyNKm4pliclRMb3TP16Tdy183nOFh8eQ0nRBGiyHIl
+         U/clu5QGSJd8QEp/Kv9J64hky87X3qqOI1zJZGuNYOI8dFL4MYMyCiawPxZHCeFYUAma
+         RGbfSS22RdiSGkioEKhLsnKwD6ZfyHJCb5NnjL46wOk65oBU9FFImMU1Xh7xoZV2bPHh
+         QycA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Cd5koMG9eldRdjbJB7fjr40b3dz8LafdTW7A67SELwA=;
-        b=HXYcdwSxNwaTswvDeQR5wdt9nNTaHJWhyWMur2MD597gYhqS7CtfWsBA3Uq/5YrTvV
-         1Z2DbvUVmQrz27xWwOSYUHXuWviNHF9jVYW3G7a//fqrEw488/Ukvrbk1HlZyZPAAI9l
-         onzn4wtpxYHLoSXjhILIpeBbKopCX8gqchUSQaYxNW4ZkNhsgZgKqpQ6gCHVdRasVhKs
-         UJy6faz46rCys32+rVQqYloeMfdx9XVi3vaWvwJkN6ZIShR+jRDR+VjDAAsZY9aQy08Q
-         w1tndjSfP8bbpXCwa4T1mUe6T9aZq1utF4Vj+miLlE59ZJSgjO9bt0wetFsPm+4dCuLA
-         NIzw==
-X-Gm-Message-State: AGi0PuZP5usuL7w5Ll83/ez0XES2AjfHPkkLPP4lwkcQiEM38zzFCQ5X
-        lgfRhhcZxmGHuHpneOlVlJw=
-X-Google-Smtp-Source: APiQypLe/9BL2rBR/PKF+Kej64J53N6v15GX0xnav1aT3N4TjoRFtRwK3N9QZ3qtHouIbu2kHZILgA==
-X-Received: by 2002:adf:dc81:: with SMTP id r1mr20828523wrj.0.1589205232259;
-        Mon, 11 May 2020 06:53:52 -0700 (PDT)
+        bh=w7sHFzJhr2tK8ydSlUjLjM+S66Oe6IzTGv2PezfyhBo=;
+        b=Ixw4GPKVjVUexkEk19RyJ/tch6+0HG7O0TA2Vp/h5+Ajd45cl0Z9JBjxH5EuoWiVzf
+         VGACrqN3g86N1lRo29wwV5SJ1lQehcBu5mKK1+ycMwNO43ECeE1BfHH0C2oIcuqL8udH
+         64fjejkpVb03FeNWBpHIrSAKShONIzvLWSfWvhXn968lRoBc9NYTrOW/z3BfPbDDzfWx
+         UzRLmKVUAS41NaCOV76GmYVnLWVETydO9iFrEe8FXHSZPCs6c2fmZNLgCVZwNAFHXieo
+         70BIItKuHCHT1k/mop3QAYQUuHOndUTyyQFzntG+lNLvlGz6ioLfNZ7Lz1KWfVFoWsQf
+         M0mw==
+X-Gm-Message-State: AGi0Publ9ntH+AF8aLcd9uhC8bXCaS1AnYiWkrDDvgT7C+b/KouGK8/Z
+        Sd7Me41QUYl0L5mnXM1bk/4=
+X-Google-Smtp-Source: APiQypISezmnWzUAR/l6E9PnGoeC4DoSA89UZOIyUsFxY7iZJW6aSeqciqE5WTvr+Bl7L7aL55gG3A==
+X-Received: by 2002:a1c:f012:: with SMTP id a18mr30127503wmb.116.1589205226004;
+        Mon, 11 May 2020 06:53:46 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.53.51
+        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.53.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:53:51 -0700 (PDT)
+        Mon, 11 May 2020 06:53:45 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 06/15] net: dsa: sja1105: allow VLAN configuration from the bridge in all states
-Date:   Mon, 11 May 2020 16:53:29 +0300
-Message-Id: <20200511135338.20263-7-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 01/15] net: dsa: provide an option for drivers to always receive bridge VLANs
+Date:   Mon, 11 May 2020 16:53:24 +0300
+Message-Id: <20200511135338.20263-2-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200511135338.20263-1-olteanv@gmail.com>
 References: <20200511135338.20263-1-olteanv@gmail.com>
@@ -75,33 +75,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Let the DSA core call our .port_vlan_add methods every time the bridge
-layer requests so. We will deal internally with saving/restoring VLANs
-depending on our VLAN awareness state.
+DSA assumes that a bridge which has vlan filtering disabled is not
+vlan aware, and ignores all vlan configuration. However, the kernel
+software bridge code allows configuration in this state.
 
+This causes the kernel's idea of the bridge vlan state and the
+hardware state to disagree, so "bridge vlan show" indicates a correct
+configuration but the hardware lacks all configuration. Even worse,
+enabling vlan filtering on a DSA bridge immediately blocks all traffic
+which, given the output of "bridge vlan show", is very confusing.
+
+Provide an option that drivers can set to indicate they want to receive
+vlan configuration even when vlan filtering is disabled. At the very
+least, this is safe for Marvell DSA bridges, which do not look up
+ingress traffic in the VTU if the port is in 8021Q disabled state. It is
+also safe for the Ocelot switch family. Whether this change is suitable
+for all DSA bridges is not known.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-Adapt to variable name change.
+Rename variable from vlan_bridge_vtu to configure_vlans_while_disabled.
 
- drivers/net/dsa/sja1105/sja1105_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/dsa.h |  7 +++++++
+ net/dsa/slave.c   | 12 ++++++++----
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index c0f11a185f31..d2755ab2853d 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -2358,6 +2358,8 @@ static int sja1105_setup(struct dsa_switch *ds)
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 312c2f067e65..e794c15d27de 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -282,6 +282,13 @@ struct dsa_switch {
+ 	 */
+ 	bool			vlan_filtering_is_global;
  
- 	ds->mtu_enforcement_ingress = true;
- 
-+	ds->configure_vlans_while_disabled = true;
++	/* Pass .port_vlan_add and .port_vlan_del to drivers even for bridges
++	 * that have vlan_filtering=0. All drivers should ideally set this (and
++	 * then the option would get removed), but it is unknown whether this
++	 * would break things or not.
++	 */
++	bool			configure_vlans_while_disabled;
 +
- 	/* The DSA/switchdev model brings up switch ports in standalone mode by
- 	 * default, and that means vlan_filtering is 0 since they're not under
- 	 * a bridge, so it's safe to set up switch tagging at this time.
+ 	/* In case vlan_filtering_is_global is set, the VLAN awareness state
+ 	 * should be retrieved from here and not from the per-port settings.
+ 	 */
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 61b0de52040a..06ac7641438e 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -314,7 +314,8 @@ static int dsa_slave_vlan_add(struct net_device *dev,
+ 	if (obj->orig_dev != dev)
+ 		return -EOPNOTSUPP;
+ 
+-	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev))
++	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev) &&
++	    !dp->ds->configure_vlans_while_disabled)
+ 		return 0;
+ 
+ 	vlan = *SWITCHDEV_OBJ_PORT_VLAN(obj);
+@@ -381,7 +382,8 @@ static int dsa_slave_vlan_del(struct net_device *dev,
+ 	if (obj->orig_dev != dev)
+ 		return -EOPNOTSUPP;
+ 
+-	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev))
++	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev) &&
++	    !dp->ds->configure_vlans_while_disabled)
+ 		return 0;
+ 
+ 	/* Do not deprogram the CPU port as it may be shared with other user
+@@ -1240,7 +1242,8 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ 	 * need to emulate the switchdev prepare + commit phase.
+ 	 */
+ 	if (dp->bridge_dev) {
+-		if (!br_vlan_enabled(dp->bridge_dev))
++		if (!dp->ds->configure_vlans_while_disabled &&
++		    !br_vlan_enabled(dp->bridge_dev))
+ 			return 0;
+ 
+ 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
+@@ -1274,7 +1277,8 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
+ 	 * need to emulate the switchdev prepare + commit phase.
+ 	 */
+ 	if (dp->bridge_dev) {
+-		if (!br_vlan_enabled(dp->bridge_dev))
++		if (!dp->ds->configure_vlans_while_disabled &&
++		    !br_vlan_enabled(dp->bridge_dev))
+ 			return 0;
+ 
+ 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
 -- 
 2.17.1
 
