@@ -2,201 +2,135 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B4AC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B19C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C0620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5984B2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589221499;
+	bh=n8z6zdT0rN5SyD8JJU1EwIIfA21xKom77rlOoFytujo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IKW4Jcj5XDPpRDyn25SgcXP39BE+GoVzfLnFk6O5AFDfbLsYnhsfyWJt0nIT58Gi1
+	 cstcNIfccbjiERWy/TacDcyVU2A2Vc66ClawjTqau+FcsmwZdYarPnZwV+9znfFj1X
+	 CgvQaN9bHRLLLa/lvr4f6DLjcwNgz52fblFYROv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbgEKSVe (ORCPT
+        id S1731070AbgEKSY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:21:34 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:48964 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729830AbgEKSVW (ORCPT
+        Mon, 11 May 2020 14:24:59 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37113 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729713AbgEKSY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:21:22 -0400
-Received: by mail-il1-f200.google.com with SMTP id i2so10162738ile.15
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:21:21 -0700 (PDT)
+        Mon, 11 May 2020 14:24:58 -0400
+Received: by mail-pj1-f65.google.com with SMTP id a7so8199362pju.2;
+        Mon, 11 May 2020 11:24:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SgahX+xxxn/F7kqBauPLeHjVaGE2RHw7Ce+/vWGFtFE=;
-        b=ShSG3D/iglrqFFt/8Ba0kc4fqrHUKpM+Q4tkjopEil5Y4DTE9LCLAv7WdB8oNyCcrX
-         Fn6myLtEysAL3LlRBfxajpmsxibzDBmr4bQju/o2Q+LbO9+ty1NxBd0hSbZPfIF3Zjkp
-         GZZhn56fLkG76bTFUKfIP/1KAeOnr7mP8VMHbNB1po+g254V2CrqJ9pcol1tRXuwY8u8
-         8d4cMyeoCOeFrYChQodOXh87bD+hYHxXef3ajpTVvrhKStcwN7eK9tKKGTeaIR+8N1Vg
-         gCOWkYYFaxk8dZiC/JOzxWoOPJGC3VO+TK1Ig/59zwmRW91CHoprXipmVVAlzv40mSW5
-         FgkA==
-X-Gm-Message-State: AGi0PuZyQ1Y7SB4My1IIanN7qhNPYKeT+CSbGgKx6u3D5QJ9JHVD9ck0
-        +RzI7RF2EJe609qKNFeyGekdwZEOz0edsD5Tb8sCYqzwAkHs
-X-Google-Smtp-Source: APiQypKf7bSUzReoBubrJJvUiUvyovPF/1cgFZo3lRblXXTsfhO31Itpcb+CmqOsJ11ccV5fWsYnw7Iq4kf2WwOppWFc3QVc1Rth
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gzjYF0ep8XMaeJksKcr1mwS/Ul5KRJgBfVKTrx7XdJ8=;
+        b=YDHwCHen8nAIlXkNjGyytBp4l/3THc/CLlDSTpZ2ov/9MEQ9lgcGqlURz9eWD6UY49
+         Ht+7MCXeLI4re36/2CCRhVtRAz59KEmu1sZ+TgiPFxhMNu7lJr9cYWEKvA40lcd+dhi8
+         qkRg97EWRcR8h3DdOA6gQMW/3obhX9IcJxhXyiFEqC2hO9t2GwThObeG6skwYIlx8sp3
+         0zY/VMtBmda9nvA7gUkcTaLaxTDKB4s03ctagWfEms0bF0vWacZ5eUWbRmpXDPGBBJFV
+         rkTLmHOUQuyw6s7yTeHsEFzZvW3IgdEtgld/kh7ONUN99NarRzrJCrk3w2p73DYXxSg4
+         yvmw==
+X-Gm-Message-State: AGi0PubnsxvtM0K7F8T+3Rp5ASSZyrscyWV9K/tJiAZ9AfB91aoC7qHH
+        o/NqBnO51FBLWtJQBWzGq38RwVF1Mo0=
+X-Google-Smtp-Source: APiQypKPXNbqjUaKuNkDw/NfTC1wA3JKFcVH3i5a3y/+Dd5/xFN9T+yDEPZ7DD1beXNuM8j6Z44Wqw==
+X-Received: by 2002:a17:902:8e87:: with SMTP id bg7mr16102782plb.91.1589221497577;
+        Mon, 11 May 2020 11:24:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id k6sm10585413pju.44.2020.05.11.11.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 11:24:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 62A1240605; Mon, 11 May 2020 18:24:55 +0000 (UTC)
+Date:   Mon, 11 May 2020 18:24:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Rafael Aquini <aquini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
+        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
+        rdunlap@infradead.org, tytso@mit.edu, bunk@kernel.org,
+        torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
+        labbott@redhat.com, jeffm@suse.com, jikos@kernel.org, jeyu@suse.de,
+        tiwai@suse.de, AnDavis@suse.com, rpalethorpe@suse.de
+Subject: Re: [PATCH v3] kernel: add panic_on_taint
+Message-ID: <20200511182455.GR11244@42.do-not-panic.com>
+References: <20200509135737.622299-1-aquini@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:c9d0:: with SMTP id c16mr16961066jap.80.1589221280642;
- Mon, 11 May 2020 11:21:20 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:21:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e723d205a56369c2@google.com>
-Subject: KMSAN: uninit-value in hash_net6_del
-From:   syzbot <syzbot+3fba3936436897a34c8a@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        glider@google.com, gregkh@linuxfoundation.org, info@metux.net,
-        jeremy@azazel.net, kadlec@netfilter.org,
-        kstewart@linuxfoundation.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200509135737.622299-1-aquini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, May 09, 2020 at 09:57:37AM -0400, Rafael Aquini wrote:
+> +Trigger Kdump on add_taint()
+> +============================
+> +
+> +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
+> +whenever the value set in this bitmask matches with the bit flag being set
+> +by add_taint(). This will cause a kdump to occur at the panic() call.
+> +In cases where a user wants to specify this during runtime,
+> +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
+> +to achieve the same behaviour.
+> +
+>  Contact
+>  =======
+>  
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7bc83f3d9bdf..4a69fe49a70d 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3404,6 +3404,21 @@
+>  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
+>  			on a WARN().
+>  
+> +	panic_on_taint=	[KNL] conditionally panic() in add_taint()
+> +			Format: <str>
+> +			Specifies, as a string, the TAINT flag set that will
+> +			compose a bitmask for calling panic() when the kernel
+> +			gets tainted.
+> +			See Documentation/admin-guide/tainted-kernels.rst for
+> +			details on the taint flags that users can pick to
+> +			compose the bitmask to assign to panic_on_taint.
+> +			When the string is prefixed with a '-' the bitmask
+> +			set in panic_on_taint will be mutually exclusive
+> +			with the sysctl knob kernel.tainted, and any attempt
+> +			to write to that sysctl will fail with -EINVAL for
+> +			any taint value that masks with the flags set for
+> +			this option.
 
-syzbot found the following crash on:
+This talks about using a string, but that it sets a bitmask. Its not
+very clear that one must use the string representation from each taint
+flag. Also, I don't think to use the character representation as we
+limit ourselves to the alphabet and quirky what-should-be-arbitrary
+characters that represent the taint flags. The taint flag character
+representation is juse useful for human reading of a panic, but I think
+because of the limitation of the mask with the alphabet this was not
+such a great idea long term.
 
-HEAD commit:    21c44613 kmsan: page_alloc: more assuring comment
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=12f13632100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
-dashboard link: https://syzkaller.appspot.com/bug?extid=3fba3936436897a34c8a
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+So, I don't think we should keep on extending the alphabet use case, a
+simple digit representation would suffice. I think this means we'd need
+two params one for exclusive and one for the value of the taint.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Using a hex value or number also lets us make the input value shorter.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3fba3936436897a34c8a@syzkaller.appspotmail.com
+If a kernel boots with panic-on-taint flag not yet supported, we don't
+complain, therefore getting a false sense of security that we will panic
+with a not yet supported taint flag. I think we should pr_warn() or
+fail to boot when that happens.
 
-=====================================================
-BUG: KMSAN: uninit-value in __read_once_size include/linux/compiler.h:206 [inline]
-BUG: KMSAN: uninit-value in hash_net6_del+0xa54/0x23e0 net/netfilter/ipset/ip_set_hash_gen.h:1069
-CPU: 0 PID: 32550 Comm: syz-executor.3 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- __read_once_size include/linux/compiler.h:206 [inline]
- hash_net6_del+0xa54/0x23e0 net/netfilter/ipset/ip_set_hash_gen.h:1069
- hash_net6_uadt+0xab6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:343
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
- ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
- ___sys_sendmsg net/socket.c:2399 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
- __do_sys_sendmsg net/socket.c:2441 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c829
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f20cf9cbc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004fd660 RCX: 000000000045c829
-RDX: 0000000000000000 RSI: 0000000020001080 RDI: 0000000000000003
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000092a R14: 00000000004cbc77 R15: 00007f20cf9cc6d4
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
- ip6_netmask include/linux/netfilter/ipset/pfxlen.h:51 [inline]
- hash_net6_uadt+0xa07/0xd80 net/netfilter/ipset/ip_set_hash_net.c:334
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
- ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
- ___sys_sendmsg net/socket.c:2399 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
- __do_sys_sendmsg net/socket.c:2441 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- ip_set_get_ipaddr6+0x26a/0x300 net/netfilter/ipset/ip_set_core.c:324
- hash_net6_uadt+0x4a6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:320
- call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
- ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
- ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
- nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
- netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
- nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
- ___sys_sendmsg net/socket.c:2399 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
- __do_sys_sendmsg net/socket.c:2441 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2801 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1081 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
- ___sys_sendmsg net/socket.c:2399 [inline]
- __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
- __do_sys_sendmsg net/socket.c:2441 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+  Luis
