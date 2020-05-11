@@ -2,204 +2,171 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62727C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8423C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B310207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBEA2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzmoexfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgEKKPQ (ORCPT
+        id S1729285AbgEKKSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:15:16 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:41358 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgEKKPP (ORCPT
+        Mon, 11 May 2020 06:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725983AbgEKKSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:15:15 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 5D1762001E;
-        Mon, 11 May 2020 12:15:09 +0200 (CEST)
-Date:   Mon, 11 May 2020 12:15:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, Marek Vasut <marex@denx.de>,
-        devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Cross <xobs@kosagi.com>
-Subject: Re: [PATCH 1/2] dt-bindings: it6251: add bindings for IT6251
- LVDS-to-eDP bridge
-Message-ID: <20200511101508.GA7971@ravnborg.org>
-References: <20200509111732.26102-1-srk@48.io>
- <20200509111732.26102-2-srk@48.io>
+        Mon, 11 May 2020 06:18:33 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E622C061A0C;
+        Mon, 11 May 2020 03:18:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so10212315wra.7;
+        Mon, 11 May 2020 03:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=t71zh83koaUlMEdc7vfVoBfDMjb5NGvXpFftlY+VFEU=;
+        b=GzmoexfentuFiJhpxa0AY3I29IYA4NPCLrltTQHXNc773O58YyH10MAd7DpCgHRha/
+         m5OoZXIqKWYswiwlCKjxP3BMEnE09rnweSZZ3GHbQCuV1W48QfP7mmNinlnmBmFApsGF
+         J3a/jZ3n0ldXcD2CWNo/LI0YKVDH0qHDDuCnc19hE13R/bdyBNF5A8koDDZltnKAJWxy
+         uBq5yQtt58gn/XOHOzx9OXxB12cXxocyAmHVHynvHBjqv0RaATgLyMZOYEf4JgkSywHL
+         te/llctpmZBlgMten/xYkhH8KOBRsj5t172THUo4UiG+RiK+UPjTFZFIHmtBb8jYMyTj
+         czdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t71zh83koaUlMEdc7vfVoBfDMjb5NGvXpFftlY+VFEU=;
+        b=aa9c4cu6Jr6z3fAJ9406mGX/v5eozdLiaJFG0lW9/Cwcol2HS6xyqJPinKA/4kebFm
+         mXLipP6XGJKrxRNx6Y9buBgTys0lCm4i8b+JrPLk5BTnzCyAsI9IG9gZaibM28XUdD2W
+         tsPVFto+MevkWrWyBNFB9FEDFNch0F92rfqX+bJYlNY8118ENu6eUxlerYGoeFFjGoGS
+         iY7mqWudN/W4PtQ7p1mJELYNFCWcrAu6J7wpHt+6bPeZ6zyRBhx3TXhYwzENxx+NB3S0
+         NJRZ71SDvl03N+TbR8RfPOKXsVKeHdJzpGPeZC6QH8GyoktlUNKQMRU1j3bUtUI38S8Q
+         VMYA==
+X-Gm-Message-State: AGi0PuaX1nNMTzMfYxkaaS4pxJ3IQL3q7R3sHiOnUR6bGMiVqJ1Jaj2W
+        cCtHTuGe+L8Zgny+ytrDd9FisCTtKfM=
+X-Google-Smtp-Source: APiQypIboAu9feHJkwkFIZ2bcGWSedLd1dnr/EpITbayJXobdaCRSvrm4FPmdCITJOCvVweGNUu/5Q==
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr18866359wrs.90.1589192311855;
+        Mon, 11 May 2020 03:18:31 -0700 (PDT)
+Received: from [192.168.1.94] (93-41-244-45.ip84.fastwebnet.it. [93.41.244.45])
+        by smtp.gmail.com with ESMTPSA id d126sm6449472wmd.32.2020.05.11.03.18.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 03:18:31 -0700 (PDT)
+Subject: Re: [PATCH] ifcvf: move IRQ request/free to status change handlers
+To:     Jason Wang <jasowang@redhat.com>,
+        Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1589181563-38400-1-git-send-email-lingshan.zhu@intel.com>
+ <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
+From:   Francesco Lavra <francescolavra.fl@gmail.com>
+Message-ID: <c1da2054-eb4c-d7dd-ca83-29e85e5cfe90@gmail.com>
+Date:   Mon, 11 May 2020 12:18:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509111732.26102-2-srk@48.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=YpGV6msqAAAA:8 a=e5mUnYsNAAAA:8
-        a=gEfo2CItAAAA:8 a=_yH9q9Z6AjBviL3TOqQA:9 a=rbfOVJjzkGrPOjLs:21
-        a=2oGGWDTR31z2Z5qq:21 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=7Sa5D-Tva0wx0rmpRu8Y:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard/Marek.
-
-On Sat, May 09, 2020 at 01:17:31PM +0200, srk@48.io wrote:
-> From: Marek Vasut <marex@denx.de>
+On 5/11/20 11:26 AM, Jason Wang wrote:
 > 
-> Add DT bindings for ITE IT6251 LVDS-to-eDP bridge.
-
-Looks good, just a few comments in the following.
-
-	Sam
+> On 2020/5/11 下午3:19, Zhu Lingshan wrote:
+>> This commit move IRQ request and free operations from probe()
+>> to VIRTIO status change handler to comply with VIRTIO spec.
+>>
+>> VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
+>> The device MUST NOT consume buffers or send any used buffer
+>> notifications to the driver before DRIVER_OK.
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Sean Cross <xobs@kosagi.com>
-> Cc: devicetree@vger.kernel.org
-> To: dri-devel@lists.freedesktop.org
-> ---
->  .../bindings/display/bridge/ite,it6251.yaml   | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> new file mode 100644
-> index 000000000000..8daa44a30fa1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6251.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it6251.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE IT6251 LVDS-to-eDP bridge bindings
-> +
-> +maintainers:
-> +  - Marek Vasut <marex@denx.de>
-> +  - Richard Marko <srk@48.io>
-> +
-> +description: |
-> +  The IT6251 is a high-performance single-chip
-> +  De-SSC LVDS to DisplayPort converter.
-> +  Combined with LVDS receiver and DisplayPort Transmitter,
-> +  the IT6251 supports LVDS input and DisplayPort 1.1a
-> +  output by conversion function.
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it6251
-> +
-> +  reg:
-> +    items:
-> +      - description: I2C address of the bridge
-> +      - description: I2C address of the LVDS part
-> +
-> +  reg-names:
-> +    items:
-> +      - const: bridge
-> +      - const: lvds
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description: |
-> +         Video port for eDP output (typically panel).
-port@0 is in most (all?) cases input today.
-Take for example a look at: toshiba,tc358768.yaml
-Could we do the same here?
+> My previous explanation might be wrong here. It depends on how you 
+> implement your hardware, if you hardware guarantee that no interrupt 
+> will be triggered before DRIVER_OK, then it's fine.
+> 
+> And the main goal for this patch is to allocate the interrupt on demand.
+> 
+> 
+>>
+>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>> ---
+>>   drivers/vdpa/ifcvf/ifcvf_main.c | 119 
+>> ++++++++++++++++++++++++----------------
+>>   1 file changed, 73 insertions(+), 46 deletions(-)
+>>
+>> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c 
+>> b/drivers/vdpa/ifcvf/ifcvf_main.c
+>> index abf6a061..4d58bf2 100644
+>> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
+>> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
+>> @@ -28,6 +28,60 @@ static irqreturn_t ifcvf_intr_handler(int irq, void 
+>> *arg)
+>>       return IRQ_HANDLED;
+>>   }
+>> +static void ifcvf_free_irq_vectors(void *data)
+>> +{
+>> +    pci_free_irq_vectors(data);
+>> +}
+>> +
+>> +static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
+>> +{
+>> +    struct pci_dev *pdev = adapter->pdev;
+>> +    struct ifcvf_hw *vf = &adapter->vf;
+>> +    int i;
+>> +
+>> +
+>> +    for (i = 0; i < queues; i++)
+>> +        devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
+>> +
+>> +    ifcvf_free_irq_vectors(pdev);
+>> +}
+>> +
+>> +static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
+>> +{
+>> +    struct pci_dev *pdev = adapter->pdev;
+>> +    struct ifcvf_hw *vf = &adapter->vf;
+>> +    int vector, i, ret, irq;
+>> +
+>> +    ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
+>> +                    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
+>> +    if (ret < 0) {
+>> +        IFCVF_ERR(pdev, "Failed to alloc IRQ vectors\n");
+>> +        return ret;
+>> +    }
+>> +
+>> +    for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+>> +        snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
+>> +             pci_name(pdev), i);
+>> +        vector = i + IFCVF_MSI_QUEUE_OFF;
+>> +        irq = pci_irq_vector(pdev, vector);
+>> +        ret = devm_request_irq(&pdev->dev, irq,
+>> +                       ifcvf_intr_handler, 0,
+>> +                       vf->vring[i].msix_name,
+>> +                       &vf->vring[i]);
+>> +        if (ret) {
+>> +            IFCVF_ERR(pdev,
+>> +                  "Failed to request irq for vq %d\n", i);
+>> +            ifcvf_free_irq(adapter, i);
+> 
+> 
+> I'm not sure this unwind is correct. It looks like we should loop and 
+> call devm_free_irq() for virtqueue [0, i);
 
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS input.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +  power-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - power-supply
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-Add an extra level named "i2c" like we do in other bridge examples.
-> +    it6251@5c {
-My personal preference is 4 spaces for indent.
-But 2 spaces is also fine.
-
-> +      compatible = "ite,it6251";
-> +      reg = <0x5c>, <0x5e>;
-> +      reg-names = "bridge", "lvds";
-> +      power-supply = <&reg_display>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +          bridge_out_edp0: endpoint {
-> +            remote-endpoint = <&panel_in_edp0>;
-> +          };
-> +        };
-> +
-> +        port@1 {
-> +          reg = <1>;
-> +          bridge_in_lvds0: endpoint {
-> +            remote-endpoint = <&lvds0_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-
-End with a line containing only "..."
-
-This is an optional end-marker.
-See lvds-codec.yaml for an example.
-
-	Sam
+That's exactly what the code does: ifcvf_free_irq() contains a (i = 0; i 
+< queues; i++) loop, and here the function is called with the `queues` 
+argument set to `i`.
