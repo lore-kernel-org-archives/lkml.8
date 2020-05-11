@@ -2,188 +2,95 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4286DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD50DC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19E0520720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QLKGLOlb"
+	by mail.kernel.org (Postfix) with ESMTP id A6927207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgEKHYB (ORCPT
+        id S1728402AbgEKH17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:24:01 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46027 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728554AbgEKHYA (ORCPT
+        Mon, 11 May 2020 03:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgEKH16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:24:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589181839; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=opEe6VhtUet0pRSIKtH8L9rJzKOnftJQipiXpDz646A=;
- b=QLKGLOlbKNM78GLSsbf6fac5SLEPM5UqiScXY6KZ6u4FrZYrzCJ29/k/tzjzu4ChHtIhJQkf
- z0qbfp5lduYt8hffwKQ+NweiCLDoYND4drijOfgEYFl5CxHyFC5BAEsoQ9JD9dSrHUniuVl3
- bzTxfa13ZCiclowcp9U7MQm26Wk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb8fd8e.7f19c8556538-smtp-out-n04;
- Mon, 11 May 2020 07:23:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B8AFDC433F2; Mon, 11 May 2020 07:23:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rananta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43C8CC433CB;
-        Mon, 11 May 2020 07:23:58 +0000 (UTC)
+        Mon, 11 May 2020 03:27:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 432CDC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:27:58 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jY2qt-00029y-0t; Mon, 11 May 2020 09:27:51 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jY2qp-00065h-6l; Mon, 11 May 2020 09:27:47 +0200
+Date:   Mon, 11 May 2020 09:27:47 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] tty: serial: imx: Add return value check for
+ platform_get_irq()
+Message-ID: <20200511072747.2vyavydpfa47kbuy@pengutronix.de>
+References: <1589180996-618-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 May 2020 00:23:58 -0700
-From:   rananta@codeaurora.org
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-In-Reply-To: <20200510064819.GB3400311@kroah.com>
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
-Message-ID: <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
-X-Sender: rananta@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589180996-618-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-09 23:48, Greg KH wrote:
-> On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
->> On 2020-05-06 02:48, Greg KH wrote:
->> > On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
->> > > Potentially, hvc_open() can be called in parallel when two tasks calls
->> > > open() on /dev/hvcX. In such a scenario, if the
->> > > hp->ops->notifier_add()
->> > > callback in the function fails, where it sets the tty->driver_data to
->> > > NULL, the parallel hvc_open() can see this NULL and cause a memory
->> > > abort.
->> > > Hence, serialize hvc_open and check if tty->private_data is NULL
->> > > before
->> > > proceeding ahead.
->> > >
->> > > The issue can be easily reproduced by launching two tasks
->> > > simultaneously
->> > > that does nothing but open() and close() on /dev/hvcX.
->> > > For example:
->> > > $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
->> > >
->> > > Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
->> > > ---
->> > >  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
->> > >  1 file changed, 14 insertions(+), 2 deletions(-)
->> > >
->> > > diff --git a/drivers/tty/hvc/hvc_console.c
->> > > b/drivers/tty/hvc/hvc_console.c
->> > > index 436cc51c92c3..ebe26fe5ac09 100644
->> > > --- a/drivers/tty/hvc/hvc_console.c
->> > > +++ b/drivers/tty/hvc/hvc_console.c
->> > > @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
->> > >   */
->> > >  static DEFINE_MUTEX(hvc_structs_mutex);
->> > >
->> > > +/* Mutex to serialize hvc_open */
->> > > +static DEFINE_MUTEX(hvc_open_mutex);
->> > >  /*
->> > >   * This value is used to assign a tty->index value to a hvc_struct
->> > > based
->> > >   * upon order of exposure via hvc_probe(), when we can not match it
->> > > to
->> > > @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
->> > > *driver, struct tty_struct *tty)
->> > >   */
->> > >  static int hvc_open(struct tty_struct *tty, struct file * filp)
->> > >  {
->> > > -	struct hvc_struct *hp = tty->driver_data;
->> > > +	struct hvc_struct *hp;
->> > >  	unsigned long flags;
->> > >  	int rc = 0;
->> > >
->> > > +	mutex_lock(&hvc_open_mutex);
->> > > +
->> > > +	hp = tty->driver_data;
->> > > +	if (!hp) {
->> > > +		rc = -EIO;
->> > > +		goto out;
->> > > +	}
->> > > +
->> > >  	spin_lock_irqsave(&hp->port.lock, flags);
->> > >  	/* Check and then increment for fast path open. */
->> > >  	if (hp->port.count++ > 0) {
->> > >  		spin_unlock_irqrestore(&hp->port.lock, flags);
->> > >  		hvc_kick();
->> > > -		return 0;
->> > > +		goto out;
->> > >  	} /* else count == 0 */
->> > >  	spin_unlock_irqrestore(&hp->port.lock, flags);
->> >
->> > Wait, why isn't this driver just calling tty_port_open() instead of
->> > trying to open-code all of this?
->> >
->> > Keeping a single mutext for open will not protect it from close, it will
->> > just slow things down a bit.  There should already be a tty lock held by
->> > the tty core for open() to keep it from racing things, right?
->> The tty lock should have been held, but not likely across ->install() 
->> and
->> ->open() callbacks, thus resulting in a race between hvc_install() and
->> hvc_open(),
-> 
-> How?  The tty lock is held in install, and should not conflict with
-> open(), otherwise, we would be seeing this happen in all tty drivers,
-> right?
-> 
-Well, I was expecting the same, but IIRC, I see that the open() was 
-being
-called in parallel for the same device node.
+Hello Anson,
 
-Is it expected that the tty core would allow only one thread to
-access the dev-node, while blocking the other, or is it the client
-driver's responsibility to handle the exclusiveness?
->> where hvc_install() sets a data and the hvc_open() clears it. 
->> hvc_open()
->> doesn't
->> check if the data was set to NULL and proceeds.
+On Mon, May 11, 2020 at 03:09:56PM +0800, Anson Huang wrote:
+> RX irq is required, so add return value check for platform_get_irq().
 > 
-> What data is being set that hvc_open is checking?
-hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL 
-(in one of the paths).
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/tty/serial/imx.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> And you are not grabbing a lock in your install callback, you are only
-> serializing your open call here, I don't see how this is fixing 
-> anything
-> other than perhaps slowing down your codepaths.
-Basically, my intention was to add a NULL check before accessing *hp in 
-open().
-The intention of the lock was to protect against this check.
-If the tty layer would have taken care of this, then perhaps there won't 
-be a
-need to check for NULL.
-> 
-> As an arument why this isn't correct, can you answer why this same type
-> of change wouldn't be required for all tty drivers in the tree?
-> 
-I agree, that if it's already taken care by the tty-core, we don't need 
-it here.
-Correct me if I'm wrong, but looks like the tty layer is allowing 
-parallel accesses
-to open(),
-> thanks,
-> 
-> greg k-h
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> index f4d6810..f4023d9 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -2252,6 +2252,8 @@ static int imx_uart_probe(struct platform_device *pdev)
+>  		return PTR_ERR(base);
+>  
+>  	rxirq = platform_get_irq(pdev, 0);
+> +	if (rxirq < 0)
+> +		return rxirq;
+>  	txirq = platform_get_irq_optional(pdev, 1);
+>  	rtsirq = platform_get_irq_optional(pdev, 2);
+
+I'm not sure we need such a check as devm_request_irq fails if the
+return value of platform_get_irq() is bogus.
+
+But if we decide this construct is good enough, the error reporting
+needs some love as currently it emits two error messages which is
+confusing.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
