@@ -2,184 +2,125 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F11C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B94EC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B9C20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E027A206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="cXzlBtFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731613AbgEKUUy (ORCPT
+        id S1731477AbgEKUYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:20:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:19258 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbgEKUUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:20:53 -0400
-IronPort-SDR: T5ubHYuCdz/0lOb8uC9yTdY66mDZonsdGY325hTFKDetQ6d8xpnkyBKn89L3DxhF2RnlxpSEZK
- aznVAdiutX2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 13:20:52 -0700
-IronPort-SDR: nypXNphGh+lKqXHZpB+uuiJybEv0x3zwxO/6ScPS0+9khIxC7PjKTQkIJBZGZX5Nl5de3epUzc
- o4RwJiefW7WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="463292524"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 11 May 2020 13:20:52 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v3 10/10] x86/fpu/xstate: Restore supervisor states for signal return
-Date:   Mon, 11 May 2020 13:20:06 -0700
-Message-Id: <20200511202006.10295-1-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200328164307.17497-11-yu-cheng.yu@intel.com>
-References: <20200328164307.17497-11-yu-cheng.yu@intel.com>
+        Mon, 11 May 2020 16:24:24 -0400
+Received: from mail-dm6nam12on2115.outbound.protection.outlook.com ([40.107.243.115]:27792
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728283AbgEKUYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:24:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YNhmWni5PMIHhu2NkCc1Fj/KVPQ5VjsIHkQTb5K0gAlz7urm5g4eGE3JUsgR0n0wRHYGnZQolTbVrNlb7IjXVezfBQvzIHmjYCBne6az+mE2eOOfj9g+n4AsOOf5ad2tQYENQ5QQAUW+glNsnYAixhG7syqoHAnHgqxYfHAYBc0Dr6ZTP2RfJVtHVs8eLZA0EiBQDDCRFX2ww4v6nIjHuQQ6nlJB1qYo0kykgIc/I/BrZN3twSqGhG5Hwr9vd0TX7cIYslAsHKZi3Buq/DaTqjSoiDw4lxKSsLEYCK3ogDfAFqhw+XEvIf0d8ynXsKSZ2Em5cxis9Flxw4GqsYteJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hq3fJ3RM6kU4R3Uq0Vu4j00iy+yvtu7EhPrqpt6JAj8=;
+ b=mMt3h+5hVWaqB6U+fgJS9FO0kTTvDwm8M23/LoIP3YM0kqd3SDpC9Gpm8nS5RigUPC0SjNN8Mg9Z1fGVxrmJk9cJBy/7p0XRqTuczr+Gu/uIfrr6DCSIHesnB6jjidkD9zDZMZ/Cgyy+PYDwBeExtzARZ4FuQ8dB5dYYJF75Dvi2FN0xrhXh0ts/eGtRw9LrtRLUQpWERI3N2WgcpcanMIqr+SmilmqBNvome3BzhZqkbsXOvaaqdJquNy7qLJih3TnKHqJJcDhUtY2gw5OkPBtU1wrgXptjA2goCi0eUe311QDWzVZdg/Z/DOyaWhsgqsAPRWlZkkNL2vPD7yzGPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hq3fJ3RM6kU4R3Uq0Vu4j00iy+yvtu7EhPrqpt6JAj8=;
+ b=cXzlBtFJfpDmmXtMxMti3TNVKaBp14FO6oQ6wguruM0E+xh5R7/9sYURdLIGRWAAygT3xqpKXJTdSn4vQZWQBIGb32AhNglU47NVequiEbfma2YoeYgZ9dyU7AAjGS2DnMUA0L9PudNgX/si9rwK43SviOWVEoMUjhmE1ASfE8U=
+Authentication-Results: amperecomputing.com; dkim=none (message not signed)
+ header.d=none;amperecomputing.com; dmarc=none action=none
+ header.from=os.amperecomputing.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB5382.prod.exchangelabs.com (2603:10b6:a03:121::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.34; Mon, 11 May 2020 20:24:18 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 20:24:14 +0000
+From:   Tuan Phan <tuanphan@os.amperecomputing.com>
+To:     patches@amperecomputing.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI/IORT: Fix PMCG node always look for a single ID mapping.
+Date:   Mon, 11 May 2020 13:22:56 -0700
+Message-Id: <1589228576-18053-1-git-send-email-tuanphan@os.amperecomputing.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR16CA0019.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::32) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BY5PR16CA0019.namprd16.prod.outlook.com (2603:10b6:a03:1a0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 20:24:13 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [4.28.12.214]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 73cb5893-38a8-4b5b-23f4-08d7f5e94564
+X-MS-TrafficTypeDiagnostic: BYAPR01MB5382:|BYAPR01MB5382:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB53827A6057E7517332372E8FE0A10@BYAPR01MB5382.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1201;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w9z1aKXnMNe+z2M+1z1DLtlhHSQtZJwK/jbCPf1w4XRBep8D8LtKSQvNqvSsHQ6duQv9PvYjTZDE3YkDET62RW7DvbRRJtM9K2EReuYJuT+lvwwXRNsnOk9ggyV54zgHNMqbZnhYqf+loZiTTKdP++ebvmfHQQLdOxnlArvJfbmI39K2N+3xpu0U6CfVqBeSCvYtRmVWcHp8abcr0nz3D9jaXFggFxZ0JvOWTAnlb3PRQ6gomdK/u9Nqg8FJr8IuyERSeinw5UjkNIL94Smo8IVLxJ70bYE9UTCYHcQ8qCwjKJZr4Mw8e0Pcx4uHlcvnMAR0J7pNjowYV1qu80prn5Tp9vzksPTl8WBh3ReQSoCHC/KeyAJeu9OtP7tnoZalvd5EzHM25qS8Q//eR/nP7WQ1DyqZAlcVXO455wNRyftXrjSl5NU1tXf7uKsY0tf4JYwWDLfckRHoeXhG9/5hW5lKRt3qJqvhO34AYoKCAb3Dp6+Fko4EvzomH4ULzvxpRXjwJ5ariSjqzl6vOqNEqw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39840400004)(136003)(366004)(346002)(33430700001)(8676002)(6666004)(316002)(186003)(16526019)(2616005)(86362001)(33440700001)(956004)(34206002)(54906003)(2906002)(478600001)(66946007)(66556008)(6506007)(26005)(52116002)(4326008)(66476007)(6512007)(4744005)(5660300002)(6486002)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 7TCl7MPWD3xeFxGg7BUtgHyj0nQxyIr83Oq+UuXxsPqNSsPHN2W5i5UzbVCDIDnJtz4akjFFim93P5YjqpC4viyjq8jORlkN0CaMdM6x6WznIDDxkwAo3gCi+PZVtz+ZsKjGRHiUR1W+qLP5z6hv2Fr+lKmz9gZlLZpl5pN9ftAKxssOHIavgcwRXTZyxye9J/fAlol7DyAaoIPTqIsrtVjhyWOn7jMpbBqH9BRxAjYZmodHHRHyU8RedzCfRzXQGgo8bd7xbh8bVrec/6VCGb/N+QVvRaRKQfhYBrNeLZryNuTI1ej58pIgmVrYgohbJTwVroKvW4hCNVmb9MctTOFaFxzCgz9N+PMLhsM5laRhYgU4Z/IK0OnxKKqSAYxS/NCWeDfpKLbrm0PgINFQJoNENW/JXgxHT4/moSFzSR2nEkMS6WdaO1GFUFPUlr7LBEUubOZ/rVNwcNFg1sdhWi2Ib/o/RoY/VBHynTQbOMA=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73cb5893-38a8-4b5b-23f4-08d7f5e94564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 20:24:14.2654
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NOZgATAa8OxObk1HDB4eOhLxvtrKOeLmfUXmiGdE6015AbFJiVKvWms7/T1ketATQUs7/lGO8Btj71g6rdXf4e5oDdscVfolhVOwXgZqOR5gb+xEyHskGeNsp4ctg6Rc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5382
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As described in the previous patch, the signal return fast path directly
-restores user states from the user buffer.  Once that succeeds, restore
-supervisor states (but only when they are not yet restored).
+PMCG node can have zero ID mapping if its overflow interrupt
+is wire based. The code to parse PMCG node can not assume it will
+have a single ID mapping.
 
-For the slow path, save supervisor states to preserve them across context
-switches, and restore after the user states are restored.
-
-The previous version has the overhead of an XSAVES in both the fast and the
-slow paths.  It is addressed as the following:
-
-- In the fast path, only do an XRSTORS.
-- In the slow path, do a supervisor-state-only XSAVES, and relocate the
-  buffer contents.
-
-Some thoughts in the implementation:
-
-- In the slow path, can any supervisor state become stale between
-  save/restore?
-
-  Answer: set_thread_flag(TIF_NEED_FPU_LOAD) protects the xstate buffer.
-
-- In the slow path, can any code reference a stale supervisor state
-  register between save/restore?
-
-  Answer: In the current lazy-restore scheme, any reference to xstate
-  registers needs fpregs_lock()/fpregs_unlock() and __fpregs_load_activate().
-
-- Are there other options?
-
-  One other option is eagerly restoring all supervisor states.
-
-  Currently, CET user-mode states and ENQCMD's PASID do not need to be
-  eagerly restored.  The upcoming CET kernel-mode states (24 bytes) need
-  to be eagerly restored.  To me, eagerly restoring all supervisor states
-  adds more overhead then benefit at this point.
-
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
 ---
-v3:
-- Change copy_xregs_to_kernel() to copy_supervisor_to_kernel(), which is
-  introduced in a previous patch.
-- Update commit log.
+ drivers/acpi/arm64/iort.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- arch/x86/kernel/fpu/signal.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index 545ca4314096..4dad5afc938d 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -347,6 +347,23 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		ret = copy_user_to_fpregs_zeroing(buf_fx, user_xfeatures, fx_only);
- 		pagefault_enable();
- 		if (!ret) {
-+
-+			/*
-+			 * Restore supervisor states: previous context switch
-+			 * etc has done XSAVES and saved the supervisor states
-+			 * in the kernel buffer from which they can be restored
-+			 * now.
-+			 *
-+			 * We cannot do a single XRSTORS here - which would
-+			 * be nice - because the rest of the FPU registers are
-+			 * being restored from a user buffer directly. The
-+			 * single XRSTORS happens below, when the user buffer
-+			 * has been copied to the kernel one.
-+			 */
-+			if (test_thread_flag(TIF_NEED_FPU_LOAD) &&
-+			    xfeatures_mask_supervisor())
-+				copy_kernel_to_xregs(&fpu->state.xsave,
-+						     xfeatures_mask_supervisor());
- 			fpregs_mark_activate();
- 			fpregs_unlock();
- 			return 0;
-@@ -364,14 +381,25 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index ed3d2d1..72444e1 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -441,7 +441,9 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ 
+ 		return smmu->id_mapping_index;
+ 	case ACPI_IORT_NODE_PMCG:
+-		return 0;
++		if (node->mapping_count)
++			return 0;
++		return -EINVAL;
+ 	default:
+ 		return -EINVAL;
  	}
- 
- 	/*
--	 * The current state of the FPU registers does not matter. By setting
--	 * TIF_NEED_FPU_LOAD unconditionally it is ensured that the our xstate
--	 * is not modified on context switch and that the xstate is considered
-+	 * By setting TIF_NEED_FPU_LOAD it is ensured that our xstate is
-+	 * not modified on context switch and that the xstate is considered
- 	 * to be loaded again on return to userland (overriding last_cpu avoids
- 	 * the optimisation).
- 	 */
--	set_thread_flag(TIF_NEED_FPU_LOAD);
-+	fpregs_lock();
-+
-+	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
-+
-+		/*
-+		 * Supervisor states are not modified by user space input.  Save
-+		 * current supervisor states first and invalidate the FPU regs.
-+		 */
-+		if (xfeatures_mask_supervisor())
-+			copy_supervisor_to_kernel(&fpu->state.xsave);
-+		set_thread_flag(TIF_NEED_FPU_LOAD);
-+	}
- 	__fpu_invalidate_fpregs_state(fpu);
-+	fpregs_unlock();
- 
- 	if (use_xsave() && !fx_only) {
- 		u64 init_bv = xfeatures_mask_user() & ~user_xfeatures;
-@@ -393,7 +421,13 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		fpregs_lock();
- 		if (unlikely(init_bv))
- 			copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
--		ret = copy_kernel_to_xregs_err(&fpu->state.xsave, user_xfeatures);
-+
-+		/*
-+		 * Restore previously saved supervisor xstates along with
-+		 * copied-in user xstates.
-+		 */
-+		ret = copy_kernel_to_xregs_err(&fpu->state.xsave,
-+					       user_xfeatures | xfeatures_mask_supervisor());
- 
- 	} else if (use_fxsr()) {
- 		ret = __copy_from_user(&fpu->state.fxsave, buf_fx, state_size);
 -- 
-2.21.0
+2.7.4
 
