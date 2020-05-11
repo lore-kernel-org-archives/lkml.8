@@ -2,360 +2,166 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659E1C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2132C54E90
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3919320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57972078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HPR5Cl2N"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qzPNmOkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgEKXcx (ORCPT
+        id S1728260AbgEKXc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 11 May 2020 19:32:56 -0400
+Received: from mail-eopbgr760084.outbound.protection.outlook.com ([40.107.76.84]:11396
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728227AbgEKXcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 19:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728145AbgEKXck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:32:40 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46454C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:39 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a5so8603885pjh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JwbFDuvhIr71DrUViwJGHMFfobfRjxzkOt8iA94FObayCMpoWQQwMFeRitznJbc8KHhh2A1Bn1NZILZYBOfNJ6dzudIaoc31TKQoFwTBerjdJE9j4XhdKdc4hDSpfnQ3peKbwvw+NvJH5ws5W3n0omvi5s18Jrdj8TXbHr4xg6cnaBnP1ylWP/Y+A4kHLQ1V0SZgMfC7tK5CLFjTkQyqCOgThFypdgtReqpbz+2LDOB26A6mLG9yAeeAlqYm9jDVNUlLAXYolvXtub0v1SKg6jnjBQhqFHTGOPKXwcHsa8UzThKoOv88tojJ0t17DtQhPuosH73PHsjYdQ0xGf5wxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D060MiVhROfRkaF8exhWBz9jtjcrF3IFw87Lvr+3HXw=;
+ b=H89v5ytcNAl/1fG6o15zeIV7qfIkR7/TFYNfl7Y8Q6qxSuJ6cCeohGdjqkT9gf6nCJVN6aEjs6Lqm9xOBAgXtuqt52DL1yn0K/HmeQgQQnUBc3b/WbBip7SJ83oVxPKYcxdneLV8KU+WwMkJWlO+3Ra9HhoJsNSE50aOXmei0u1oTy1JnLt0IE5yZ28ZdvRYE1T/87zA3j/805ki0ehucj+SD0J43yHm6myGOJmTInWJ4YbwR3nt7dIRLQgmu/Tnhj686NL8eSmJsk7MtZj+4Nrs1r91wd34oNQ6qmuJ6Fikp9RBx0RgTpBnlylxUCvZdOzcYx249ezQ+CQV721RUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EonzMrSQ5xoIpulNRIFPEIW9ivTufOr3sl2TimdVQ8s=;
-        b=HPR5Cl2Nzighy+CnMw4A5dYNsJBqZGDixXiGX6W0cT0lxYLFmcS5w1sqyIjPcory0w
-         1VElw14qIgoJFzWuNzfU33huJZzVW0yP9bKEWhBIMdjp9LnFG5u6P+fAjS24IVqeFums
-         y9s0bYgNDAu1l3Fp85Bga6SIRLs2JRA+ufGBU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EonzMrSQ5xoIpulNRIFPEIW9ivTufOr3sl2TimdVQ8s=;
-        b=DRqBIjgArtDhJP91g5YeqRoXz+vsCFzxmtfiwK7ytBOYwErAMnMUSXw9rJQJ22SxrE
-         OiGx2IuvvJqvKh/4NU3DIjk9+dSAqLBzgPTsj5+5CNC2UAyNrN7+jzrHk6SdDQRJEk2i
-         7JOFbITJCJtgwB0TG0SMUm/MiyQlQgzea445YadH2ZyctukOXID0odUW9X430lfmyEKh
-         B/E0SNFx7UFha6Fv8PFxRSiD75D5rnLUKQozcbIfiHscJy2c+PrJgyRd7sC50VNmwpbX
-         sZkyV2Ys2r3XOMQZMk8UdlqsQjiT2ZzX1xlvWlqWwOJxFL/tN4ugC31NsS5XKhqZy+sA
-         Ithw==
-X-Gm-Message-State: AGi0PuYWAtSI2V3N4oPebL7W9HeLQulHlPTK1q9oNZWW7caR3HtMz8Fw
-        +Bd2ybwApMH2MsB3otemuoNYLQ==
-X-Google-Smtp-Source: APiQypJf8xd6VCLDMUk5dgSV3427oa7JtIVQY8aWUEOJWjWx27qX3neLxq+4fhV6VLLM85eRr5s0yQ==
-X-Received: by 2002:a17:90a:5287:: with SMTP id w7mr25852185pjh.66.1589239958666;
-        Mon, 11 May 2020 16:32:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l6sm10098779pfl.128.2020.05.11.16.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:32:35 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v8 06/11] Documentation: Add details for pstore/blk
-Date:   Mon, 11 May 2020 16:32:24 -0700
-Message-Id: <20200511233229.27745-7-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200511233229.27745-1-keescook@chromium.org>
-References: <20200511233229.27745-1-keescook@chromium.org>
-MIME-Version: 1.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D060MiVhROfRkaF8exhWBz9jtjcrF3IFw87Lvr+3HXw=;
+ b=qzPNmOkwN0y0uOjXq7/edMbgsXvz7W5uDwo9nRilihOXfBpLzmTSCFlDH97WhBw03403Sld0eszmjSdPJbtUl7z+8Mr40aFHXy0n7Rpl9gtANy1R+422hZcrXfMBCNXDmhYEx7UATN6Js9sKnLDKj5pj0qrw5AIEZI8v90IGlAk=
+Authentication-Results: tencent.com; dkim=none (message not signed)
+ header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2478.namprd12.prod.outlook.com (2603:10b6:802:23::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
+ 2020 23:32:49 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 23:32:49 +0000
+Subject: [PATCH v3 0/3] arch/x86: Enable MPK feature on AMD
+From:   Babu Moger <babu.moger@amd.com>
+To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
+        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
+        asteinhauser@google.com, anshuman.khandual@arm.com,
+        jan.kiszka@siemens.com, akpm@linux-foundation.org,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date:   Mon, 11 May 2020 18:32:45 -0500
+Message-ID: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
+User-Agent: StGit/unknown-version
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM6PR07CA0047.namprd07.prod.outlook.com
+ (2603:10b6:5:74::24) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from naples-babu.amd.com (165.204.78.2) by DM6PR07CA0047.namprd07.prod.outlook.com (2603:10b6:5:74::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 23:32:45 +0000
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f31ddab0-c2e5-4abd-5271-08d7f6039dc3
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2478:|SN1PR12MB2478:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB24786E8B59EBCBB2EE11B43D95A10@SN1PR12MB2478.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PjwJkVSa7A6aBEReocla0l5tm0Y06FMSxM7CTrRSA9NA8cQf1uFmAqu0OOTUSxNlfKmtE2NqBuYeusqsmHqqIRE7+XNZbXsmd13aBAt6uNV3r8Z92zIRqmxlBEUf68mE7Idfqrc/dvQDO7H7e8dS4Zg8uZd3XpKraawVKJvfHOmpc6Q3fWX4r/73Bur0F7WIMDSIDSKAo5kkP6JDXo9miVmn65XBazC59xUOHJEH71cl/J+xHx+TMa9XoBLxKF/M4WcIDLwwD/krpjmZcfcuqGZLMK5/51lbV3xqvVQ5PNukJ6GX+5klX5z2KPJtks3hC+OyCa6+en97mvvRwYKI0DDlSPGHQYI9b9KFd2D9jZf3nv0JHYasxo6EeLCUS06cZqcpsKLqahBchJD13awlaAz4WW/3SeAvo6dE7fPx6Ufm7+7K0qjLtXMu3WF8mYxGllIQH8A6mBbz+bzWD/oEkZvORBKOy1fYh0Wj9msOiYHZ5ogMEYt2LwLW3VPJGWjPfVrMwp+BKVNl7im61PcP4u7tzvvlp1IsNGy2wkb00cQcgLE6+j97phcm/9LoUfgfd8c14ym92nJG3VJtOe+Czxzq5V6F8ZyD8bQDMhInLF4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(33430700001)(8676002)(2906002)(478600001)(4326008)(8936002)(186003)(26005)(7406005)(16526019)(5660300002)(7416002)(44832011)(86362001)(316002)(103116003)(956004)(33440700001)(55016002)(66946007)(52116002)(7696005)(66476007)(66556008)(966005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hkwwX1JcmwZFCXNbQx7xJq/FFvBraB9QYtff4m3uQsohr1+NCMu/auh7og1RFhe5jJ1uoASJ7PTOY801IrCqeSEFQzVib81S9B78vtDBi09ILaBClxQszw886yeiw8dVD1Y/SZTO0+FPdg5Zsx61MQmuLF3XJHhgfcHZta8QOCxhoImh8bHJmwTcpGuLmoqNCU3gIlYOD+g4l3SUF2QOx3I5RsawB0IEiJ1WuSXtsgZhTAE9gZUP+xVpMEmHZ79wp9H0Qm6U8NsOTT6jXnvW14sYGHaGqBvuW95fVGRxyOyp+zsgfDeeLaB9PoLDfVOv0uWwEUkQBOG2H10LmLC01AE3x6+4R2rlLabAZQMc4MrWNkrWgxMydcrVxGe0kzKrO5ARneh7CvHYyTPFfKGoGrJec0IhasOHE2slPCy1dUfy4bmTpU4ATl+SIj4oaAigP4vLAxhw/MeK+gQKXN0pYLroUyiyFh1hdUHXe82BqTE=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f31ddab0-c2e5-4abd-5271-08d7f6039dc3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 23:32:49.1740
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WeeEj17MgnzOKGnIbNsKcQ9zGC4EJvjkbTf30QIHkxEM9MmkvdzNvNWWOi9RFyOD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+AMD's next generation of EPYC processors support the MPK (Memory
+Protection Keys) feature.
 
-Add details on using pstore/blk, the new backend of pstore to record
-dumps to block devices, in Documentation/admin-guide/pstore-blk.rst
+AMD documentation for MPK feature is available at "AMD64 Architecture
+Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
+Section 5.6.6 Memory Protection Keys (MPK) Bit".
 
-Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Link: https://lore.kernel.org/r/1585126506-18635-8-git-send-email-liaoweixiong@allwinnertech.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+The documentation can be obtained at the link below:
+https://bugzilla.kernel.org/show_bug.cgi?id=206537
+
+This series enables the feature on AMD and updates config parameters
+to reflect the MPK support on generic x86 platforms.
+
 ---
- Documentation/admin-guide/pstore-blk.rst | 229 +++++++++++++++++++++++
- MAINTAINERS                              |   1 +
- fs/pstore/Kconfig                        |   2 +
- 3 files changed, 232 insertions(+)
- create mode 100644 Documentation/admin-guide/pstore-blk.rst
+v3:
+  - Fixed the problem Jim Mattson pointed out which can cause pkru
+    resources to get corrupted during host and guest switches. 
+  - Moved the PKU feature detection code from VMX.c to common code.
+  
+v2:
+  https://lore.kernel.org/lkml/158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com/
+  - Introduced intermediate config option X86_MEMORY_PROTECTION_KEYS to
+    avoid user propmpts. Kept X86_INTEL_MEMORY_PROTECTION_KEYS as is.
+    Eventually, we will be moving to X86_MEMORY_PROTECTION_KEYS after
+    couple of kernel revisions. 
+  - Moved pkru data structures to kvm_vcpu_arch. Moved save/restore pkru
+    to kvm_load_host_xsave_state/kvm_load_guest_xsave_state.
 
-diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin-guide/pstore-blk.rst
-new file mode 100644
-index 000000000000..bef8c7436721
---- /dev/null
-+++ b/Documentation/admin-guide/pstore-blk.rst
-@@ -0,0 +1,229 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+pstore block oops/panic logger
-+==============================
-+
-+Introduction
-+------------
-+
-+pstore block (pstore/blk) is an oops/panic logger that writes its logs to a
-+block device before the system crashes. You can get these log files by
-+mounting pstore filesystem like::
-+
-+    mount -t pstore pstore /sys/fs/pstore
-+
-+
-+pstore block concepts
-+---------------------
-+
-+pstore/blk provides efficient configuration method for pstore/blk, which
-+divides all configurations into two parts, configurations for user and
-+configurations for driver.
-+
-+Configurations for user determine how pstore/blk works, such as pmsg_size,
-+kmsg_size and so on. All of them support both Kconfig and module parameters,
-+but module parameters have priority over Kconfig.
-+
-+Configurations for driver are all about block device, such as total_size
-+of block device and read/write operations.
-+
-+Configurations for user
-+-----------------------
-+
-+All of these configurations support both Kconfig and module parameters, but
-+module parameters have priority over Kconfig.
-+
-+Here is an example for module parameters::
-+
-+        pstore_blk.blkdev=179:7 pstore_blk.kmsg_size=64
-+
-+The detail of each configurations may be of interest to you.
-+
-+blkdev
-+~~~~~~
-+
-+The block device to use. Most of the time, it is a partition of block device.
-+It's required for pstore/blk.
-+
-+It accepts the following variants:
-+
-+1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
-+   leading 0x, for example b302.
-+#. /dev/<disk_name> represents the device number of disk
-+#. /dev/<disk_name><decimal> represents the device number of partition - device
-+   number of disk plus the partition number
-+#. /dev/<disk_name>p<decimal> - same as the above; this form is used when disk
-+   name of partitioned disk ends with a digit.
-+#. PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF represents the unique id of
-+   a partition if the partition table provides it. The UUID may be either an
-+   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
-+   where SSSSSSSS is a zero-filled hex representation of the 32-bit
-+   "NT disk signature", and PP is a zero-filled hex representation of the
-+   1-based partition number.
-+#. PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to a
-+   partition with a known unique id.
-+#. <major>:<minor> major and minor number of the device separated by a colon.
-+
-+kmsg_size
-+~~~~~~~~~
-+
-+The chunk size in KB for oops/panic front-end. It **MUST** be a multiple of 4.
-+It's optional if you do not care oops/panic log.
-+
-+There are multiple chunks for oops/panic front-end depending on the remaining
-+space except other pstore front-ends.
-+
-+pstore/blk will log to oops/panic chunks one by one, and always overwrite the
-+oldest chunk if there is no more free chunk.
-+
-+pmsg_size
-+~~~~~~~~~
-+
-+The chunk size in KB for pmsg front-end. It **MUST** be a multiple of 4.
-+It's optional if you do not care pmsg log.
-+
-+Unlike oops/panic front-end, there is only one chunk for pmsg front-end.
-+
-+Pmsg is a user space accessible pstore object. Writes to */dev/pmsg0* are
-+appended to the chunk. On reboot the contents are available in
-+*/sys/fs/pstore/pmsg-pstore-blk-0*.
-+
-+console_size
-+~~~~~~~~~~~~
-+
-+The chunk size in KB for console front-end.  It **MUST** be a multiple of 4.
-+It's optional if you do not care console log.
-+
-+Similar to pmsg front-end, there is only one chunk for console front-end.
-+
-+All log of console will be appended to the chunk. On reboot the contents are
-+available in */sys/fs/pstore/console-pstore-blk-0*.
-+
-+ftrace_size
-+~~~~~~~~~~~
-+
-+The chunk size in KB for ftrace front-end. It **MUST** be a multiple of 4.
-+It's optional if you do not care console log.
-+
-+Similar to oops front-end, there are multiple chunks for ftrace front-end
-+depending on the count of cpu processors. Each chunk size is equal to
-+ftrace_size / processors_count.
-+
-+All log of ftrace will be appended to the chunk. On reboot the contents are
-+combined and available in */sys/fs/pstore/ftrace-pstore-blk-0*.
-+
-+Persistent function tracing might be useful for debugging software or hardware
-+related hangs. Here is an example of usage::
-+
-+ # mount -t pstore pstore /sys/fs/pstore
-+ # mount -t debugfs debugfs /sys/kernel/debug/
-+ # echo 1 > /sys/kernel/debug/pstore/record_ftrace
-+ # reboot -f
-+ [...]
-+ # mount -t pstore pstore /sys/fs/pstore
-+ # tail /sys/fs/pstore/ftrace-pstore-blk-0
-+ CPU:0 ts:5914676 c0063828  c0063b94  call_cpuidle <- cpu_startup_entry+0x1b8/0x1e0
-+ CPU:0 ts:5914678 c039ecdc  c006385c  cpuidle_enter_state <- call_cpuidle+0x44/0x48
-+ CPU:0 ts:5914680 c039e9a0  c039ecf0  cpuidle_enter_freeze <- cpuidle_enter_state+0x304/0x314
-+ CPU:0 ts:5914681 c0063870  c039ea30  sched_idle_set_state <- cpuidle_enter_state+0x44/0x314
-+ CPU:1 ts:5916720 c0160f59  c015ee04  kernfs_unmap_bin_file <- __kernfs_remove+0x140/0x204
-+ CPU:1 ts:5916721 c05ca625  c015ee0c  __mutex_lock_slowpath <- __kernfs_remove+0x148/0x204
-+ CPU:1 ts:5916723 c05c813d  c05ca630  yield_to <- __mutex_lock_slowpath+0x314/0x358
-+ CPU:1 ts:5916724 c05ca2d1  c05ca638  __ww_mutex_lock <- __mutex_lock_slowpath+0x31c/0x358
-+
-+max_reason
-+~~~~~~~~~~
-+
-+Limiting which kinds of kmsg dumps are stored can be controlled via
-+the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
-+``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
-+``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
-+``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
-+(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
-+``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
-+otherwise KMSG_DUMP_MAX.
-+
-+Configurations for driver
-+-------------------------
-+
-+Only a block device driver cares about these configurations. A block device
-+driver uses ``register_pstore_blk`` to register to pstore/blk.
-+
-+.. kernel-doc:: fs/pstore/blk.c
-+   :identifiers: register_pstore_blk
-+
-+Compression and header
-+----------------------
-+
-+Block device is large enough for uncompressed oops data. Actually we do not
-+recommend data compression because pstore/blk will insert some information into
-+the first line of oops/panic data. For example::
-+
-+        Panic: Total 16 times
-+
-+It means that it's OOPS|Panic for the 16th time since the first booting.
-+Sometimes the number of occurrences of oops|panic since the first booting is
-+important to judge whether the system is stable.
-+
-+The following line is inserted by pstore filesystem. For example::
-+
-+        Oops#2 Part1
-+
-+It means that it's OOPS for the 2nd time on the last boot.
-+
-+Reading the data
-+----------------
-+
-+The dump data can be read from the pstore filesystem. The format for these
-+files is ``dmesg-pstore-blk-[N]`` for oops/panic front-end,
-+``pmsg-pstore-blk-0`` for pmsg front-end and so on.  The timestamp of the
-+dump file records the trigger time. To delete a stored record from block
-+device, simply unlink the respective pstore file.
-+
-+Attentions in panic read/write APIs
-+-----------------------------------
-+
-+If on panic, the kernel is not going to run for much longer, the tasks will not
-+be scheduled and most kernel resources will be out of service. It
-+looks like a single-threaded program running on a single-core computer.
-+
-+The following points require special attention for panic read/write APIs:
-+
-+1. Can **NOT** allocate any memory.
-+   If you need memory, just allocate while the block driver is initializing
-+   rather than waiting until the panic.
-+#. Must be polled, **NOT** interrupt driven.
-+   No task schedule any more. The block driver should delay to ensure the write
-+   succeeds, but NOT sleep.
-+#. Can **NOT** take any lock.
-+   There is no other task, nor any shared resource; you are safe to break all
-+   locks.
-+#. Just use CPU to transfer.
-+   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
-+#. Control registers directly.
-+   Please control registers directly rather than use Linux kernel resources.
-+   Do I/O map while initializing rather than wait until a panic occurs.
-+#. Reset your block device and controller if necessary.
-+   If you are not sure of the state of your block device and controller when
-+   a panic occurs, you are safe to stop and reset them.
-+
-+pstore/blk supports psblk_blkdev_info(), which is defined in
-+*linux/pstore_blk.h*, to get information of using block device, such as the
-+device number, sector count and start sector of the whole disk.
-+
-+pstore block internals
-+----------------------
-+
-+For developer reference, here are all the important structures and APIs:
-+
-+.. kernel-doc:: fs/pstore/zone.c
-+   :internal:
-+
-+.. kernel-doc:: include/linux/pstore_zone.h
-+   :internal:
-+
-+.. kernel-doc:: fs/pstore/blk.c
-+   :export:
-+
-+.. kernel-doc:: include/linux/pstore_blk.h
-+   :internal:
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64e5db31497..9c1f4feff418 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13660,6 +13660,7 @@ M:	Tony Luck <tony.luck@intel.com>
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
- F:	Documentation/admin-guide/ramoops.rst
-+F:	Documentation/admin-guide/pstore-blk.rst
- F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
- F:	drivers/acpi/apei/erst.c
- F:	drivers/firmware/efi/efi-pstore.c
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index c2237984b407..e16a49ebfe54 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -171,6 +171,8 @@ config PSTORE_BLK
- 	  This enables panic and oops message to be logged to a block dev
- 	  where it can be read back at some later point.
- 
-+	  For more information, see Documentation/admin-guide/pstore-blk.rst
-+
- 	  If unsure, say N.
- 
- config PSTORE_BLK_BLKDEV
--- 
-2.20.1
+v1:
+  https://lore.kernel.org/lkml/158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com/
 
+Babu Moger (3):
+      arch/x86: Rename config X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
+      KVM: x86: Move pkru save/restore to x86.c
+      KVM: x86: Move MPK feature detection to common code
+
+
+ Documentation/core-api/protection-keys.rst     |    3 ++-
+ arch/x86/Kconfig                               |   11 +++++++++--
+ arch/x86/include/asm/disabled-features.h       |    4 ++--
+ arch/x86/include/asm/kvm_host.h                |    1 +
+ arch/x86/include/asm/mmu.h                     |    2 +-
+ arch/x86/include/asm/mmu_context.h             |    4 ++--
+ arch/x86/include/asm/pgtable.h                 |    4 ++--
+ arch/x86/include/asm/pgtable_types.h           |    2 +-
+ arch/x86/include/asm/special_insns.h           |    2 +-
+ arch/x86/include/uapi/asm/mman.h               |    2 +-
+ arch/x86/kernel/cpu/common.c                   |    2 +-
+ arch/x86/kvm/cpuid.c                           |    4 +++-
+ arch/x86/kvm/vmx/vmx.c                         |   22 ----------------------
+ arch/x86/kvm/x86.c                             |   17 +++++++++++++++++
+ arch/x86/mm/Makefile                           |    2 +-
+ arch/x86/mm/pkeys.c                            |    2 +-
+ scripts/headers_install.sh                     |    2 +-
+ tools/arch/x86/include/asm/disabled-features.h |    4 ++--
+ 18 files changed, 48 insertions(+), 42 deletions(-)
+
+--
