@@ -2,115 +2,71 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417DCC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34FDC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9DE20836
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWH6xgff"
+	by mail.kernel.org (Postfix) with ESMTP id 8A447208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589231485;
+	bh=UTbTm++8n1i5+8gpoyrj8bjLx9n97J0BhZSZ+eXg4SM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sxiHRJSlwx+qgIF5G03A26xsrRVuFnD3xJVFqzLXKqahzZ5pxCNIixTbNm/XdiNkv
+	 sVnfmnFHGnYR+PtPhKSQssvou1Dw25WNjwyCnJgnU0aAKRp+gLPm9Byehr7a5Mb9mB
+	 ePE591E9NINv2Mh1cD6Yq6+4Dkd0dfy4dgyby/i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgEKVJX (ORCPT
+        id S1728219AbgEKVLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:09:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48048 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725888AbgEKVJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:09:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589231361;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NzxwDFhFnKquU9wvdTnO5T31dALjfyUDr2p+5t8c/2c=;
-        b=IWH6xgffxRCXUC9mIsLZSRAGSrFLSKywKvAhAd9szjpxbm0f72FdrOuVq+cxN6z8QZklQX
-        BNP08KUaigb+EHLfkhc2TN6QZa/+J+GKb1u5rDJrnyxo+TP/OmuJRELYF8FQlJAdmExZ9R
-        jVs0uNrLnlKOjiEMOneA5dSW+C9UZfY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-eettOW_FO4SjGIdos7NmJw-1; Mon, 11 May 2020 17:09:19 -0400
-X-MC-Unique: eettOW_FO4SjGIdos7NmJw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 11 May 2020 17:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbgEKVLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:11:24 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C41757A561;
-        Mon, 11 May 2020 21:08:47 +0000 (UTC)
-Received: from krava (unknown [10.40.194.31])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C2EAE7D8CF;
-        Mon, 11 May 2020 21:08:44 +0000 (UTC)
-Date:   Mon, 11 May 2020 23:08:43 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3] perf c2c: fix '-e list'
-Message-ID: <20200511210843.GG2986380@krava>
-References: <20200507220604.3391-1-irogers@google.com>
- <20200511193604.GF2986380@krava>
- <CAP-5=fWQ_bx0g3dGDQcmW7MhUAadA0rwahGPvGFTfGo6qoeLww@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWQ_bx0g3dGDQcmW7MhUAadA0rwahGPvGFTfGo6qoeLww@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        by mail.kernel.org (Postfix) with ESMTPSA id 90A0720836;
+        Mon, 11 May 2020 21:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589231483;
+        bh=UTbTm++8n1i5+8gpoyrj8bjLx9n97J0BhZSZ+eXg4SM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IiLcHFYcraLjJV+Jzc7qEmx+NomfJ1/WNEHXIAbI+dvzxN9fKuHJW9K5G/xidO805
+         yRDXie7P68uvY0/eLWqwriQp0s5iaWqj2m2xgqggx63FqK1UZegLOkEgSqG/6+rwCu
+         WCMU4TRu46XTINcJTUDHls7QegV9BBOQTMzEzugQ=
+Date:   Mon, 11 May 2020 14:11:22 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix LRU balancing effect of new transparent huge
+ pages
+Message-Id: <20200511141122.9b03e2f0852b57b224eab066@linux-foundation.org>
+In-Reply-To: <20200509141946.158892-1-shakeelb@google.com>
+References: <20200509141946.158892-1-shakeelb@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 01:29:42PM -0700, Ian Rogers wrote:
+On Sat,  9 May 2020 07:19:46 -0700 Shakeel Butt <shakeelb@google.com> wrote:
 
-SNIP
-
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index 1baf4cae086f..d617d5682c68 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -2887,8 +2887,15 @@ static int parse_record_events(const struct option *opt,
-> > >  {
-> > >       bool *event_set = (bool *) opt->value;
-> > >
-> > > +     if (!strcmp(str, "list")) {
-> > > +             perf_mem_events__list();
-> > > +             exit(0);
-> > > +     }
-> > > +     if (perf_mem_events__parse(str))
-> > > +             exit(-1);
-> >
-> > won't this exit(-1) callsbreak the parsing stuff?
-> > like displaying the option values on error or such?
+> Currently, THP are counted as single pages until they are split right
+> before being swapped out. However, at that point the VM is already in
+> the middle of reclaim, and adjusting the LRU balance then is useless.
 > 
-> The previous code was:
-> -       if (strcmp(str, "list")) {
-> This is handled explicitly in the code above this.
-> 
-> -               if (!perf_mem_events__parse(str)) {
-> -                       mem->operation = 0;
-> -                       return 0;
-> -               }
-> -               exit(-1);
-> This is the code where the exit -1 happens, I inverted the comparison
-> so that exit was more the exceptional code path. The behavior should
-> be identical.
+> Always account THP by the number of basepages, and remove the fixup
+> from the splitting path.
 
-ok
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
+Confused.  What kernel is this applicable to?
