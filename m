@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23E2C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0401C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA9C32078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA7320836
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbgEKVBO (ORCPT
+        id S1732268AbgEKVBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44160 "EHLO
+        Mon, 11 May 2020 17:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732095AbgEKVAG (ORCPT
+        by vger.kernel.org with ESMTP id S1732093AbgEKVAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 17:00:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D82EC061A0E;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C39DC061A0C;
         Mon, 11 May 2020 14:00:06 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWo-0005wo-8H; Mon, 11 May 2020 22:59:58 +0200
+        id 1jYFWu-00063e-Kw; Mon, 11 May 2020 23:00:04 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1890B1C0868;
-        Mon, 11 May 2020 22:59:39 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:39 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C51291C07EB;
+        Mon, 11 May 2020 22:59:45 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:45 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Add rcu_gp_might_be_stalled()
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] srcu: Add data_race() to ->srcu_lock_count and
+ ->srcu_unlock_count arrays
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923077902.390.658670894294893905.tip-bot2@tip-bot2>
+Message-ID: <158923078565.390.9530533982000142424.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,128 +57,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     6be7436d2245d3dd8b9a8f949367c13841c23308
-Gitweb:        https://git.kernel.org/tip/6be7436d2245d3dd8b9a8f949367c13841c23308
+Commit-ID:     b68c6146512d92f6d570d26e1873497ade2cc4cb
+Gitweb:        https://git.kernel.org/tip/b68c6146512d92f6d570d26e1873497ade2cc4cb
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Fri, 10 Apr 2020 13:47:41 -07:00
+AuthorDate:    Fri, 03 Jan 2020 16:36:59 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 27 Apr 2020 11:02:50 -07:00
+CommitterDate: Mon, 27 Apr 2020 11:01:16 -07:00
 
-rcu: Add rcu_gp_might_be_stalled()
+srcu: Add data_race() to ->srcu_lock_count and ->srcu_unlock_count arrays
 
-This commit adds rcu_gp_might_be_stalled(), which returns true if there
-is some reason to believe that the RCU grace period is stalled.  The use
-case is where an RCU free-memory path needs to allocate memory in order
-to free it, a situation that should be avoided where possible.
+The srcu_data structure's ->srcu_lock_count and ->srcu_unlock_count arrays
+are read and written locklessly, so this commit adds the data_race()
+to the diagnostic-print loads from these arrays in order mark them as
+known and approved data-racy accesses.
 
-But where it is necessary, there is always the alternative of using
-synchronize_rcu() to wait for a grace period in order to avoid the
-allocation.  And if the grace period is stalled, allocating memory to
-asynchronously wait for it is a bad idea of epic proportions: Far better
-to let others use the memory, because these others might actually be
-able to free that memory before the grace period ends.
+This data race was reported by KCSAN. Not appropriate for backporting due
+to failure being unlikely and due to this being used only by rcutorture.
 
-Thus, rcu_gp_might_be_stalled() can be used to help decide whether
-allocating memory on an RCU free path is a semi-reasonable course
-of action.
-
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Uladzislau Rezki <urezki@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcutiny.h |  1 +-
- include/linux/rcutree.h |  1 +-
- kernel/rcu/tree_stall.h | 40 ++++++++++++++++++++++++++++++++++++----
- 3 files changed, 38 insertions(+), 4 deletions(-)
+ kernel/rcu/srcutree.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-index 045c28b..dbf5ac4 100644
---- a/include/linux/rcutiny.h
-+++ b/include/linux/rcutiny.h
-@@ -87,6 +87,7 @@ static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
- static inline bool rcu_is_watching(void) { return true; }
- static inline void rcu_momentary_dyntick_idle(void) { }
- static inline void kfree_rcu_scheduler_running(void) { }
-+static inline bool rcu_gp_might_be_stalled(void) { return false; }
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index ba2b751..6d3ef70 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -1281,8 +1281,8 @@ void srcu_torture_stats_print(struct srcu_struct *ssp, char *tt, char *tf)
+ 		struct srcu_data *sdp;
  
- /* Avoid RCU read-side critical sections leaking across. */
- static inline void rcu_all_qs(void) { barrier(); }
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 45f3f66..fbc2627 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -39,6 +39,7 @@ void rcu_barrier(void);
- bool rcu_eqs_special_set(int cpu);
- void rcu_momentary_dyntick_idle(void);
- void kfree_rcu_scheduler_running(void);
-+bool rcu_gp_might_be_stalled(void);
- unsigned long get_state_synchronize_rcu(void);
- void cond_synchronize_rcu(unsigned long oldstate);
+ 		sdp = per_cpu_ptr(ssp->sda, cpu);
+-		u0 = sdp->srcu_unlock_count[!idx];
+-		u1 = sdp->srcu_unlock_count[idx];
++		u0 = data_race(sdp->srcu_unlock_count[!idx]);
++		u1 = data_race(sdp->srcu_unlock_count[idx]);
  
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 119ed6a..4dede00 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -15,10 +15,12 @@
- int sysctl_panic_on_rcu_stall __read_mostly;
+ 		/*
+ 		 * Make sure that a lock is always counted if the corresponding
+@@ -1290,8 +1290,8 @@ void srcu_torture_stats_print(struct srcu_struct *ssp, char *tt, char *tf)
+ 		 */
+ 		smp_rmb();
  
- #ifdef CONFIG_PROVE_RCU
--#define RCU_STALL_DELAY_DELTA	       (5 * HZ)
-+#define RCU_STALL_DELAY_DELTA		(5 * HZ)
- #else
--#define RCU_STALL_DELAY_DELTA	       0
-+#define RCU_STALL_DELAY_DELTA		0
- #endif
-+#define RCU_STALL_MIGHT_DIV		8
-+#define RCU_STALL_MIGHT_MIN		(2 * HZ)
+-		l0 = sdp->srcu_lock_count[!idx];
+-		l1 = sdp->srcu_lock_count[idx];
++		l0 = data_race(sdp->srcu_lock_count[!idx]);
++		l1 = data_race(sdp->srcu_lock_count[idx]);
  
- /* Limit-check stall timeouts specified at boottime and runtime. */
- int rcu_jiffies_till_stall_check(void)
-@@ -40,6 +42,36 @@ int rcu_jiffies_till_stall_check(void)
- }
- EXPORT_SYMBOL_GPL(rcu_jiffies_till_stall_check);
- 
-+/**
-+ * rcu_gp_might_be_stalled - Is it likely that the grace period is stalled?
-+ *
-+ * Returns @true if the current grace period is sufficiently old that
-+ * it is reasonable to assume that it might be stalled.  This can be
-+ * useful when deciding whether to allocate memory to enable RCU-mediated
-+ * freeing on the one hand or just invoking synchronize_rcu() on the other.
-+ * The latter is preferable when the grace period is stalled.
-+ *
-+ * Note that sampling of the .gp_start and .gp_seq fields must be done
-+ * carefully to avoid false positives at the beginnings and ends of
-+ * grace periods.
-+ */
-+bool rcu_gp_might_be_stalled(void)
-+{
-+	unsigned long d = rcu_jiffies_till_stall_check() / RCU_STALL_MIGHT_DIV;
-+	unsigned long j = jiffies;
-+
-+	if (d < RCU_STALL_MIGHT_MIN)
-+		d = RCU_STALL_MIGHT_MIN;
-+	smp_mb(); // jiffies before .gp_seq to avoid false positives.
-+	if (!rcu_gp_in_progress())
-+		return false;
-+	// Long delays at this point avoids false positive, but a delay
-+	// of ULONG_MAX/4 jiffies voids your no-false-positive warranty.
-+	smp_mb(); // .gp_seq before second .gp_start
-+	// And ditto here.
-+	return !time_before(j, READ_ONCE(rcu_state.gp_start) + d);
-+}
-+
- /* Don't do RCU CPU stall warnings during long sysrq printouts. */
- void rcu_sysrq_start(void)
- {
-@@ -104,8 +136,8 @@ static void record_gp_stall_check_time(void)
- 
- 	WRITE_ONCE(rcu_state.gp_start, j);
- 	j1 = rcu_jiffies_till_stall_check();
--	/* Record ->gp_start before ->jiffies_stall. */
--	smp_store_release(&rcu_state.jiffies_stall, j + j1); /* ^^^ */
-+	smp_mb(); // ->gp_start before ->jiffies_stall and caller's ->gp_seq.
-+	WRITE_ONCE(rcu_state.jiffies_stall, j + j1);
- 	rcu_state.jiffies_resched = j + j1 / 2;
- 	rcu_state.n_force_qs_gpstart = READ_ONCE(rcu_state.n_force_qs);
- }
+ 		c0 = l0 - u0;
+ 		c1 = l1 - u1;
