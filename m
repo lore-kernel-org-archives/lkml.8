@@ -2,128 +2,179 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAD0C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9451CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C807F2495A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GNPCe7UQ"
+	by mail.kernel.org (Postfix) with ESMTP id 55A032137B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589171668;
+	bh=8cxkOBY+9EGYNdm5+60pMObgZTrCL4Ui1+VzaqkIpZ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RysKIW3sZKz0jaFEydlCBlNCjntNrtt/c8EZ/zuGrJQz6PK7htYNd9g4JHhp4IBDn
+	 Io1Or8XJkkxn+MEyKNmOCh7vZaaYt6CJevl/8vxq4wUceZmXgb1feXrbidQQR783kp
+	 f9KJBQRtSsxt+k0JOu7B3c2IgXus0hRK6+7e7oLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgEKE2J (ORCPT
+        id S1726168AbgEKEe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725840AbgEKE2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:28:08 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B059C061A0C;
-        Sun, 10 May 2020 21:28:08 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 11 May 2020 00:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgEKEe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:34:27 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L7GC31HRz9sRf;
-        Mon, 11 May 2020 14:28:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589171285;
-        bh=yBNPGPJvyInqkgXgt21qKXVWdj+gpMXL9nih+47URB0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GNPCe7UQlUM5gX6gOKIeWIGxZOjs3jiRQ2UKNgwTKgexZBSbcVDyPX5AgbrbUjuFH
-         ND8iyjDf9/2aMvuvVsXidgPL2gTYM5S8Q8rwJNFEa35wjl85zDq9t7EnklShUx7x8y
-         WmyQdNdArOV3BjbVD5sIgX2zVh99GaF8W9XeY/K7G3Gk+5P+4QWW0v79p2dJSPS6oz
-         i9eneL0RBPWaW/nl2ZjsdYGPPbPaERo+FG27F8OFx+44DsjrLK3ta2+g3evf7OVupT
-         GP9574bc4B2Yixt9zJ+O7Sb6ZfZHw8laU2dAVkl5EkU88XHA++dHmrjhbHEH+akEDk
-         6el7KQjD8LE6w==
-Date:   Mon, 11 May 2020 14:27:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200511142756.1b7ef706@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 60FEF2184D
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589171666;
+        bh=8cxkOBY+9EGYNdm5+60pMObgZTrCL4Ui1+VzaqkIpZ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=icHPgs+m3HthZ5wt9gM3yK9UF6VIeTCPc/3n+R/liPRL9TH15bTwljCaz9WVGa7Sj
+         n5vXV4iFfNa7F1nFipQnqQqo3xAeBC8PGE3Wxwj+YzWH4ujfXeU4UbRrMahYqAf+xx
+         xgBe9wgam+nTQ6RgO+y/0DJXjydPuiL5g8vZq4JI=
+Received: by mail-wr1-f46.google.com with SMTP id i15so9095794wrx.10
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:34:26 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYjLv5LYdRU8P7aG+xzw6fGOIG9QrI3TgJHHxrB7E1W156jRDh+
+        7zjDT53xvi2kJI8ZaRf1uO6KhIuBOkpWAf+/1ydjzQ==
+X-Google-Smtp-Source: APiQypLOI0V0OjmUYoU5+bXZs9UBJ7YTup8v3BS8zzZtKeow7wSPauRIgVPZNzMKVpyNW6DRZKQzRLnLSBWR5JD5NBI=
+X-Received: by 2002:adf:fe45:: with SMTP id m5mr16355884wrs.257.1589171664822;
+ Sun, 10 May 2020 21:34:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R_hSrhV=U6k=lMgYIz9KNWa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200505134354.774943181@linutronix.de> <20200505134904.457578656@linutronix.de>
+In-Reply-To: <20200505134904.457578656@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 10 May 2020 21:34:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrXwuxtZgniJxKZOy5ryqXSbbGMHMBwgEb400Pn9XpynzQ@mail.gmail.com>
+Message-ID: <CALCETrXwuxtZgniJxKZOy5ryqXSbbGMHMBwgEb400Pn9XpynzQ@mail.gmail.com>
+Subject: Re: [patch V4 part 3 12/29] x86/entry/common: Provide idtentry_enter/exit()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/R_hSrhV=U6k=lMgYIz9KNWa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Provide functions which handle the low level entry and exit similiar to
+> enter/exit from user mode.
+>
 
-Hi all,
+> +
+> +/**
+> + * idtentry_exit - Common code to handle return from exceptions
+> + * @regs:      Pointer to pt_regs (exception entry regs)
+> + *
+> + * Depending on the return target (kernel/user) this runs the necessary
+> + * preemption and work checks if possible and reguired and returns to
+> + * the caller with interrupts disabled and no further work pending.
+> + *
+> + * This is the last action before returning to the low level ASM code which
+> + * just needs to return to the appropriate context.
+> + *
+> + * Invoked by all exception/interrupt IDTENTRY handlers which are not
+> + * returning through the paranoid exit path (all except NMI, #DF and the IST
+> + * variants of #MC and #DB).
 
-After merging the block tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+The paranoid-exit bit is not really relevant.  The important part is
+which stack we're on.  See below.
 
-drivers/block/aoe/aoeblk.c: In function 'aoeblk_gdalloc':
-drivers/block/aoe/aoeblk.c:410:21: error: 'struct backing_dev_info' has no =
-member named 'name'
-  410 |  q->backing_dev_info->name =3D "aoe";
-      |                     ^~
+> + */
+> +void noinstr idtentry_exit(struct pt_regs *regs)
+> +{
+> +       lockdep_assert_irqs_disabled();
 
-Caused by commit
+How about:
 
-  1cd925d58385 ("bdi: remove the name field in struct backing_dev_info")
+#ifdef CONFIG_DEBUG_ENTRY
+WARN_ON_ONCE(!on_thread_stack());
+#endif
 
-I applied the following patch for today.
+> +
+> +       /* Check whether this returns to user mode */
+> +       if (user_mode(regs)) {
+> +               prepare_exit_to_usermode(regs);
+> +       } else if (regs->flags & X86_EFLAGS_IF) {
+> +               /* Check kernel preemption, if enabled */
+> +               if (IS_ENABLED(CONFIG_PREEMPTION)) {
+> +                       /*
+> +                        * This needs to be done very carefully.
+> +                        * idtentry_enter() invoked rcu_irq_enter(). This
+> +                        * needs to undone before scheduling.
+> +                        *
+> +                        * Preemption is disabled inside of RCU idle
+> +                        * sections. When the task returns from
+> +                        * preempt_schedule_irq(), RCU is still watching.
+> +                        *
+> +                        * rcu_irq_exit_preempt() has additional state
+> +                        * checking if CONFIG_PROVE_RCU=y
+> +                        */
+> +                       if (!preempt_count()) {
+> +                               instr_begin();
+> +                               rcu_irq_exit_preempt();
+> +                               if (need_resched())
+> +                                       preempt_schedule_irq();
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 11 May 2020 14:19:30 +1000
-Subject: [PATCH] bdi: fix up for "remove the name field in struct
- backing_dev_info"
+This is an excellent improvement.  Thanks!
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/block/aoe/aoeblk.c | 1 -
- 1 file changed, 1 deletion(-)
+> +                               /* Covers both tracing and lockdep */
+> +                               trace_hardirqs_on();
+> +                               instr_end();
+> +                               return;
+> +                       }
+> +               }
+> +               instr_begin();
+> +               /* Tell the tracer that IRET will enable interrupts */
+> +               trace_hardirqs_on_prepare();
 
-diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
-index a27804d71e12..5ca7216e9e01 100644
---- a/drivers/block/aoe/aoeblk.c
-+++ b/drivers/block/aoe/aoeblk.c
-@@ -407,7 +407,6 @@ aoeblk_gdalloc(void *vp)
- 	WARN_ON(d->gd);
- 	WARN_ON(d->flags & DEVFL_UP);
- 	blk_queue_max_hw_sectors(q, BLK_DEF_MAX_SECTORS);
--	q->backing_dev_info->name =3D "aoe";
- 	q->backing_dev_info->ra_pages =3D READ_AHEAD / PAGE_SIZE;
- 	d->bufpool =3D mp;
- 	d->blkq =3D gd->queue =3D q;
---=20
-2.26.2
+Why is trace_hardirqs_on() okay above but not here?  Is it that we
+know we weren't RCU-quiescent if we had preemption and IF on?  But
+even this code path came from an IF-on context.  I'm confused.  Maybe
+some comments as to why this case seems to be ordered so differently
+from the !preempt_count() case would be helpful.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/R_hSrhV=U6k=lMgYIz9KNWa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl641EwACgkQAVBC80lX
-0GyHDgf+KGWDOig/y4JfUGEQy6Zav4bXJrhAUxeBXnjvUVVfavUSE7TMimRQVeB2
-23dP+BNMaM7acCqPuXgbkw2wPArY40/96sw+mA11p3ekvY0YXTKhaz8PRW6YobDY
-QfAX/bz92cx1vH3+wmoCqi4shoY6iUzxf0gSYKQTW0a5EGFC+6msHk33jg5+zWOd
-WygWr0amXgopn5ETKi/xV4CsFEgROPaILSJtgd4Yx90lI+5JVMj/MtzTSwlv3NPm
-ZFKNZh+Dxlq3X6Z+ObMUTD7bCc/Ys/1IaWck43j7+iaLhiLGypniGB4zGw+uGj59
-RZBDVxO/o2N65pUPIumVdZ1z9O9jeA==
-=8OUk
------END PGP SIGNATURE-----
-
---Sig_/R_hSrhV=U6k=lMgYIz9KNWa--
+> +               lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+> +               instr_end();
+> +               rcu_irq_exit();
+> +               lockdep_hardirqs_on(CALLER_ADDR0);
+> +       } else {
+> +               /* IRQ flags state is correct already. Just tell RCU */
+> +               rcu_irq_exit();
+> +       }
+> +}
+> --- a/arch/x86/include/asm/idtentry.h
+> +++ b/arch/x86/include/asm/idtentry.h
+> @@ -7,6 +7,9 @@
+>
+>  #ifndef __ASSEMBLY__
+>
+> +void idtentry_enter(struct pt_regs *regs);
+> +void idtentry_exit(struct pt_regs *regs);
+> +
+>  /**
+>   * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+>   *                   No error code pushed by hardware
+>
