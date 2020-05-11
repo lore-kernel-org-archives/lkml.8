@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C01C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8F2C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C0420820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7D020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgEKEp6 (ORCPT
+        id S1728625AbgEKEqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33420 "EHLO
+        Mon, 11 May 2020 00:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728017AbgEKEp4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728396AbgEKEp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:45:56 -0400
+        Mon, 11 May 2020 00:45:58 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFF9C061A0C;
-        Sun, 10 May 2020 21:45:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90410C061A0E;
+        Sun, 10 May 2020 21:45:58 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0KA-005jHr-AP; Mon, 11 May 2020 04:45:54 +0000
+        id 1jY0KD-005jJW-5C; Mon, 11 May 2020 04:45:57 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/19] set_mcast_msfilter(): take the guts of setsockopt(MCAST_MSFILTER) into a helper
-Date:   Mon, 11 May 2020 05:45:39 +0100
-Message-Id: <20200511044553.1365660-5-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 19/19] atm: switch do_atmif_sioc() to direct use of atm_dev_ioctl()
+Date:   Mon, 11 May 2020 05:45:53 +0100
+Message-Id: <20200511044553.1365660-19-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 References: <20200511044328.GP23230@ZenIV.linux.org.uk>
@@ -47,116 +48,48 @@ From: Al Viro <viro@zeniv.linux.org.uk>
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- net/ipv4/ip_sockglue.c | 73 +++++++++++++++++++++++++++-----------------------
- 1 file changed, 40 insertions(+), 33 deletions(-)
+ net/atm/ioctl.c | 25 ++++---------------------
+ 1 file changed, 4 insertions(+), 21 deletions(-)
 
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index 6bdaf43236ea..8c14a474870d 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -587,6 +587,43 @@ static bool setsockopt_needs_rtnl(int optname)
- 	return false;
+diff --git a/net/atm/ioctl.c b/net/atm/ioctl.c
+index 52f2c77e656f..838ebf0cabbf 100644
+--- a/net/atm/ioctl.c
++++ b/net/atm/ioctl.c
+@@ -286,30 +286,13 @@ static int do_atm_iobuf(struct socket *sock, unsigned int cmd,
+ static int do_atmif_sioc(struct socket *sock, unsigned int cmd,
+ 			 unsigned long arg)
+ {
+-	struct atmif_sioc __user *sioc;
+-	struct compat_atmif_sioc __user *sioc32;
++	struct compat_atmif_sioc __user *sioc32 = compat_ptr(arg);
++	int number;
+ 	u32 data;
+-	void __user *datap;
+-	int err;
+ 
+-	sioc = compat_alloc_user_space(sizeof(*sioc));
+-	sioc32 = compat_ptr(arg);
+-
+-	if (copy_in_user(&sioc->number, &sioc32->number, 2 * sizeof(int)) ||
+-	    get_user(data, &sioc32->arg))
+-		return -EFAULT;
+-	datap = compat_ptr(data);
+-	if (put_user(datap, &sioc->arg))
++	if (get_user(data, &sioc32->arg) || get_user(number, &sioc32->number))
+ 		return -EFAULT;
+-
+-	err = do_vcc_ioctl(sock, cmd, (unsigned long) sioc, 0);
+-
+-	if (!err) {
+-		if (copy_in_user(&sioc32->length, &sioc->length,
+-				 sizeof(int)))
+-			err = -EFAULT;
+-	}
+-	return err;
++	return atm_dev_ioctl(cmd, compat_ptr(data), &sioc32->length, number, 0);
  }
  
-+static int set_mcast_msfilter(struct sock *sk, int ifindex,
-+			      int numsrc, int fmode,
-+			      struct sockaddr_storage *group,
-+			      struct sockaddr_storage *list)
-+{
-+	int msize = IP_MSFILTER_SIZE(numsrc);
-+	struct ip_msfilter *msf;
-+	struct sockaddr_in *psin;
-+	int err, i;
-+
-+	msf = kmalloc(msize, GFP_KERNEL);
-+	if (!msf)
-+		return -ENOBUFS;
-+
-+	psin = (struct sockaddr_in *)group;
-+	if (psin->sin_family != AF_INET)
-+		goto Eaddrnotavail;
-+	msf->imsf_multiaddr = psin->sin_addr.s_addr;
-+	msf->imsf_interface = 0;
-+	msf->imsf_fmode = fmode;
-+	msf->imsf_numsrc = numsrc;
-+	for (i = 0; i < numsrc; ++i) {
-+		psin = (struct sockaddr_in *)&list[i];
-+
-+		if (psin->sin_family != AF_INET)
-+			goto Eaddrnotavail;
-+		msf->imsf_slist[i] = psin->sin_addr.s_addr;
-+	}
-+	err = ip_mc_msfilter(sk, msf, ifindex);
-+	kfree(msf);
-+	return err;
-+
-+Eaddrnotavail:
-+	kfree(msf);
-+	return -EADDRNOTAVAIL;
-+}
-+
- static int do_ip_setsockopt(struct sock *sk, int level,
- 			    int optname, char __user *optval, unsigned int optlen)
- {
-@@ -1079,10 +1116,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 	}
- 	case MCAST_MSFILTER:
- 	{
--		struct sockaddr_in *psin;
--		struct ip_msfilter *msf = NULL;
- 		struct group_filter *gsf = NULL;
--		int msize, i, ifindex;
- 
- 		if (optlen < GROUP_FILTER_SIZE(0))
- 			goto e_inval;
-@@ -1095,7 +1129,6 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 			err = PTR_ERR(gsf);
- 			break;
- 		}
--
- 		/* numsrc >= (4G-140)/128 overflow in 32 bits */
- 		if (gsf->gf_numsrc >= 0x1ffffff ||
- 		    gsf->gf_numsrc > net->ipv4.sysctl_igmp_max_msf) {
-@@ -1106,36 +1139,10 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 			err = -EINVAL;
- 			goto mc_msf_out;
- 		}
--		msize = IP_MSFILTER_SIZE(gsf->gf_numsrc);
--		msf = kmalloc(msize, GFP_KERNEL);
--		if (!msf) {
--			err = -ENOBUFS;
--			goto mc_msf_out;
--		}
--		ifindex = gsf->gf_interface;
--		psin = (struct sockaddr_in *)&gsf->gf_group;
--		if (psin->sin_family != AF_INET) {
--			err = -EADDRNOTAVAIL;
--			goto mc_msf_out;
--		}
--		msf->imsf_multiaddr = psin->sin_addr.s_addr;
--		msf->imsf_interface = 0;
--		msf->imsf_fmode = gsf->gf_fmode;
--		msf->imsf_numsrc = gsf->gf_numsrc;
--		err = -EADDRNOTAVAIL;
--		for (i = 0; i < gsf->gf_numsrc; ++i) {
--			psin = (struct sockaddr_in *)&gsf->gf_slist[i];
--
--			if (psin->sin_family != AF_INET)
--				goto mc_msf_out;
--			msf->imsf_slist[i] = psin->sin_addr.s_addr;
--		}
--		kfree(gsf);
--		gsf = NULL;
--
--		err = ip_mc_msfilter(sk, msf, ifindex);
-+		err = set_mcast_msfilter(sk, gsf->gf_interface,
-+					 gsf->gf_numsrc, gsf->gf_fmode,
-+					 &gsf->gf_group, gsf->gf_slist);
- mc_msf_out:
--		kfree(msf);
- 		kfree(gsf);
- 		break;
- 	}
+ static int do_atm_ioctl(struct socket *sock, unsigned int cmd32,
 -- 
 2.11.0
 
