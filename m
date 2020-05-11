@@ -2,94 +2,104 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C58CC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30312C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 323D2206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C82207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbgEKKeU (ORCPT
+        id S1729534AbgEKKfA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:34:20 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46397 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKKeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:34:19 -0400
-IronPort-SDR: FjlBUJCkDBelvWDxTgEPz78g1ZzG/lDjA4f1rKt8DbkbdwjmFRUzQaPLCFJdn7LSOfKxERoS0T
- FhsK9735Lv3w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 03:34:19 -0700
-IronPort-SDR: x+ad6tvXSpdDpbPcKvlKZqJi1Jnm32xut9gHaFLSbnWdP79XULQDlZ/6WaED+adLvadvcgNhBt
- 613cFVUvLNyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
-   d="scan'208";a="371182023"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 11 May 2020 03:34:16 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 11 May 2020 13:34:15 +0300
-Date:   Mon, 11 May 2020 13:34:15 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thunderbolt: Replace zero-length array with
- flexible-array
-Message-ID: <20200511103415.GG487496@lahna.fi.intel.com>
-References: <20200507192524.GA16580@embeddedor>
+        Mon, 11 May 2020 06:35:00 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:33448 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728613AbgEKKe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:34:59 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-165-Y6aTlilXPbm7gmL1oEH7BQ-1; Mon, 11 May 2020 11:34:55 +0100
+X-MC-Unique: Y6aTlilXPbm7gmL1oEH7BQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 11 May 2020 11:34:55 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 11 May 2020 11:34:55 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Masami Hiramatsu' <mhiramat@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: RE: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+Thread-Topic: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+Thread-Index: AQHWJ3Z3OA5bC6hjSEW0AS/lPBzMtKiisGaQ
+Date:   Mon, 11 May 2020 10:34:55 +0000
+Message-ID: <a53a35607015496986678713cd1899e8@AcuMS.aculab.com>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834028054.28357.398159034694277189.stgit@devnote2>
+        <5EB3AE7C.5@cn.fujitsu.com>
+        <20200507181505.3e8369ee39f14d9c74ec986b@kernel.org>
+        <5EB8FD31.9020906@cn.fujitsu.com>
+ <20200511182752.c83f3454bcb3e205cf2bda4a@kernel.org>
+In-Reply-To: <20200511182752.c83f3454bcb3e205cf2bda4a@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507192524.GA16580@embeddedor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 02:25:24PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+From: Masami Hiramatsu
+> Sent: 11 May 2020 10:28
+...
+> > We may not avoid fixing related failures after your change:
+> > 1) We have to reuse built-in echo (do alias echo=echo) if we want to
+> > test common_pid for histogram.
+> > 2) We have to reuse built-in echo if some new tests want to interpret
+> > backslash escapes in future.
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> 1) yes, that's what I need to do for avoiding "pid" key histogram
+>   (but I think we should have better way to test it)
+> 2) No, in that case you should use "/bin/echo -e" explicitly.
+>    dash's built-in echo doesn't support it.
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
+> > Is it simple to provide two implementations of echo?(built-in echo and
+> > echo command?) and then just apply echo command for kprobe_syntax_errors.tc?
 > 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
+> Hmm, OK, there might be another reason we reconsider this patch.
 > 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
+> - Alisasing echo (this patch) can avoid dash related issues but
+>   this also makes "echo" running in another process implicitly.
 > 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> - Using /bin/echo for backslash explicitly will be missed unless
+>   user runs it on dash, but it will keep "echo" in same process.
 
-Applied, thanks!
+Why not change to use printf - probably a builtin in both shells?
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
