@@ -2,116 +2,769 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8477C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5D9C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B812C2137B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B2A206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MWp1GNpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbgEKMli (ORCPT
+        id S1729894AbgEKMmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:41:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4330 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729478AbgEKMlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:41:37 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D7C869F86BFA885B62CA;
-        Mon, 11 May 2020 20:41:35 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 11 May 2020
- 20:41:27 +0800
-Subject: Re: [PATCH v2 0/6] arm64: tlb: add support for TTL feature
-To:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
-        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-References: <20200423135656.2712-1-yezhenyu2@huawei.com>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <6c59eae9-3a77-ef18-fac4-aa21e97fd1f0@huawei.com>
-Date:   Mon, 11 May 2020 20:41:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 11 May 2020 08:42:10 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:35218 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgEKMmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:42:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589200926; x=1620736926;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=h4PQ/Gelf/iQuLrS5dNRZg0BlmE47UNNgzE29Bpj2xo=;
+  b=MWp1GNpvDI7ZTnnjYSVBbeS3LQv20iUM3JynINrJOd45gtK+R0H/eHfL
+   vx1xWDv91rqDtS8xcWNbNa14emvaCsbQN2Wglywt6TGn7CIVJvltGDpE7
+   CKMJ9kx88BArzdXOSwrXXgVNvbwQdhhyRNeAfgNf+yBYx3ZlqHLybVPeb
+   k=;
+IronPort-SDR: 1tmkUuC3XlxQQct05PXGoUemmt7R4Hf9YxL/tnJmBwm2gWd+ahUTWrJr3dOs1mHNmE0VACNWbq
+ bsg78vpBMEjQ==
+X-IronPort-AV: E=Sophos;i="5.73,379,1583193600"; 
+   d="scan'208";a="29804010"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 May 2020 12:42:05 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id B615CA1BD1;
+        Mon, 11 May 2020 12:41:53 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:41:52 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:41:36 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 14/16] mm/damon: Add kunit tests
+Date:   Mon, 11 May 2020 14:33:00 +0200
+Message-ID: <20200511123302.12520-15-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
+References: <20200511123302.12520-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200423135656.2712-1-yezhenyu2@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.253]
+X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+From: SeongJae Park <sjpark@amazon.de>
 
-How is this going about this patch series? Does anyone have any
-suggestions?
+This commit adds kunit based unit tests for DAMON.
 
-Thanks,
-Zhenyu
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ mm/Kconfig      |  11 +
+ mm/damon-test.h | 622 ++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/damon.c      |   6 +
+ 3 files changed, 639 insertions(+)
+ create mode 100644 mm/damon-test.h
 
-On 2020/4/23 21:56, Zhenyu Ye wrote:
-> In order to reduce the cost of TLB invalidation, ARMv8.4 provides
-> the TTL field in TLBI instruction.  The TTL field indicates the
-> level of page table walk holding the leaf entry for the address
-> being invalidated.  This series provide support for this feature.
-> 
-> When ARMv8.4-TTL is implemented, the operand for TLBIs looks like
-> below:
-> 
-> * +----------+-------+----------------------+
-> * |   ASID   |  TTL  |        BADDR         |
-> * +----------+-------+----------------------+
-> * |63      48|47   44|43                   0|
-> 
-> 
-> This version updates some codes implementation according to Peter's
-> suggestion, and adds some commit msg.
-> 
-> See patches for details, Thanks.
-> 
-> 
-> --
-> ChangeList:
-> v2:
-> rebase series on Linux 5.7-rc1 and simplify the code implementation.
-> 
-> v1:
-> add support for TTL feature in arm64.
-> 
-> Marc Zyngier (2):
->   arm64: Detect the ARMv8.4 TTL feature
->   arm64: Add level-hinted TLB invalidation helper
-> 
-> Peter Zijlstra (Intel) (1):
->   tlb: mmu_gather: add tlb_flush_*_range APIs
-> 
-> Zhenyu Ye (3):
->   arm64: Add tlbi_user_level TLB invalidation helper
->   mm: tlb: Provide flush_*_tlb_range wrappers
->   arm64: tlb: Set the TTL field in flush_tlb_range
-> 
->  arch/arm64/include/asm/cpucaps.h  |  3 +-
->  arch/arm64/include/asm/sysreg.h   |  1 +
->  arch/arm64/include/asm/tlb.h      | 29 +++++++++++++++-
->  arch/arm64/include/asm/tlbflush.h | 54 +++++++++++++++++++++++++-----
->  arch/arm64/kernel/cpufeature.c    | 11 +++++++
->  include/asm-generic/pgtable.h     | 12 +++++--
->  include/asm-generic/tlb.h         | 55 ++++++++++++++++++++++---------
->  mm/pgtable-generic.c              | 22 +++++++++++++
->  8 files changed, 160 insertions(+), 27 deletions(-)
-> 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 9ea49633a6df..81ace52f1c23 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -751,4 +751,15 @@ config DAMON
+ 	  and 2) sufficiently light-weight so that it can be applied online.
+ 	  If unsure, say N.
+ 
++config DAMON_KUNIT_TEST
++	bool "Test for damon"
++	depends on DAMON=y && KUNIT
++	help
++	  This builds the DAMON Kunit test suite.
++
++	  For more information on KUnit and unit tests in general, please refer
++	  to the KUnit documentation.
++
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/damon-test.h b/mm/damon-test.h
+new file mode 100644
+index 000000000000..851c2062a480
+--- /dev/null
++++ b/mm/damon-test.h
+@@ -0,0 +1,622 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Data Access Monitor Unit Tests
++ *
++ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifdef CONFIG_DAMON_KUNIT_TEST
++
++#ifndef _DAMON_TEST_H
++#define _DAMON_TEST_H
++
++#include <kunit/test.h>
++
++static void damon_test_str_to_pids(struct kunit *test)
++{
++	char *question;
++	int *answers;
++	int expected[] = {12, 35, 46};
++	ssize_t nr_integers = 0, i;
++
++	question = "123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "123abc";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)1, nr_integers);
++	KUNIT_EXPECT_EQ(test, 123, answers[0]);
++	kfree(answers);
++
++	question = "a123";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, answers, (int *)NULL);
++
++	question = "12 35";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)3, nr_integers);
++	for (i = 0; i < nr_integers; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "12 35 abc 46";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)2, nr_integers);
++	for (i = 0; i < 2; i++)
++		KUNIT_EXPECT_EQ(test, expected[i], answers[i]);
++	kfree(answers);
++
++	question = "";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++
++	question = "\n";
++	answers = str_to_pids(question, strnlen(question, 128), &nr_integers);
++	KUNIT_EXPECT_EQ(test, (ssize_t)0, nr_integers);
++	KUNIT_EXPECT_PTR_EQ(test, (int *)NULL, answers);
++	kfree(answers);
++}
++
++static void damon_test_regions(struct kunit *test)
++{
++	struct damon_region *r;
++	struct damon_task *t;
++
++	r = damon_new_region(&damon_user_ctx, 1, 2);
++	KUNIT_EXPECT_EQ(test, 1ul, r->vm_start);
++	KUNIT_EXPECT_EQ(test, 2ul, r->vm_end);
++	KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_regions(t));
++
++	damon_del_region(r);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_regions(t));
++
++	damon_free_task(t);
++}
++
++static void damon_test_tasks(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++
++	t = damon_new_task(42);
++	KUNIT_EXPECT_EQ(test, 42, t->pid);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++
++	damon_add_task(&damon_user_ctx, t);
++	KUNIT_EXPECT_EQ(test, 1u, nr_damon_tasks(c));
++
++	damon_destroy_task(t);
++	KUNIT_EXPECT_EQ(test, 0u, nr_damon_tasks(c));
++}
++
++static void damon_test_set_pids(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	char buf[64];
++
++	damon_set_pids(ctx, pids, 3);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2 3\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++
++	damon_set_pids(ctx, (int []){1, 2}, 2);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "1 2\n");
++
++	damon_set_pids(ctx, (int []){2}, 1);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "2\n");
++
++	damon_set_pids(ctx, NULL, 0);
++	damon_sprint_pids(ctx, buf, 64);
++	KUNIT_EXPECT_STREQ(test, (char *)buf, "\n");
++}
++
++/*
++ * Test damon_three_regions_in_vmas() function
++ *
++ * DAMON converts the complex and dynamic memory mappings of each target task
++ * to three discontiguous regions which cover every mapped areas.  However, the
++ * three regions should not include the two biggest unmapped areas in the
++ * original mapping, because the two biggest areas are normally the areas
++ * between 1) heap and the mmap()-ed regions, and 2) the mmap()-ed regions and
++ * stack.  Because these two unmapped areas are very huge but obviously never
++ * accessed, covering the region is just a waste.
++ *
++ * 'damon_three_regions_in_vmas() receives an address space of a process.  It
++ * first identifies the start of mappings, end of mappings, and the two biggest
++ * unmapped areas.  After that, based on the information, it constructs the
++ * three regions and returns.  For more detail, refer to the comment of
++ * 'damon_init_regions_of()' function definition in 'mm/damon.c' file.
++ *
++ * For example, suppose virtual address ranges of 10-20, 20-25, 200-210,
++ * 210-220, 300-305, and 307-330 (Other comments represent this mappings in
++ * more short form: 10-20-25, 200-210-220, 300-305, 307-330) of a process are
++ * mapped.  To cover every mappings, the three regions should start with 10,
++ * and end with 305.  The process also has three unmapped areas, 25-200,
++ * 220-300, and 305-307.  Among those, 25-200 and 220-300 are the biggest two
++ * unmapped areas, and thus it should be converted to three regions of 10-25,
++ * 200-220, and 300-330.
++ */
++static void damon_test_three_regions_in_vmas(struct kunit *test)
++{
++	struct region regions[3] = {0,};
++	/* 10-20-25, 200-210-220, 300-305, 307-330 */
++	struct vm_area_struct vmas[] = {
++		(struct vm_area_struct) {.vm_start = 10, .vm_end = 20},
++		(struct vm_area_struct) {.vm_start = 20, .vm_end = 25},
++		(struct vm_area_struct) {.vm_start = 200, .vm_end = 210},
++		(struct vm_area_struct) {.vm_start = 210, .vm_end = 220},
++		(struct vm_area_struct) {.vm_start = 300, .vm_end = 305},
++		(struct vm_area_struct) {.vm_start = 307, .vm_end = 330},
++	};
++	vmas[0].vm_next = &vmas[1];
++	vmas[1].vm_next = &vmas[2];
++	vmas[2].vm_next = &vmas[3];
++	vmas[3].vm_next = &vmas[4];
++	vmas[4].vm_next = &vmas[5];
++	vmas[5].vm_next = NULL;
++
++	damon_three_regions_in_vmas(&vmas[0], regions);
++
++	KUNIT_EXPECT_EQ(test, 10ul, regions[0].start);
++	KUNIT_EXPECT_EQ(test, 25ul, regions[0].end);
++	KUNIT_EXPECT_EQ(test, 200ul, regions[1].start);
++	KUNIT_EXPECT_EQ(test, 220ul, regions[1].end);
++	KUNIT_EXPECT_EQ(test, 300ul, regions[2].start);
++	KUNIT_EXPECT_EQ(test, 330ul, regions[2].end);
++}
++
++/* Clean up global state of damon */
++static void damon_cleanup_global_state(void)
++{
++	struct damon_task *t, *next;
++
++	damon_for_each_task_safe(&damon_user_ctx, t, next)
++		damon_destroy_task(t);
++
++	damon_user_ctx.rbuf_offset = 0;
++}
++
++/*
++ * Test kdamond_reset_aggregated()
++ *
++ * DAMON checks access to each region and aggregates this information as the
++ * access frequency of each region.  In detail, it increases '->nr_accesses' of
++ * regions that an access has confirmed.  'kdamond_reset_aggregated()' flushes
++ * the aggregated information ('->nr_accesses' of each regions) to the result
++ * buffer.  As a result of the flushing, the '->nr_accesses' of regions are
++ * initialized to zero.
++ */
++static void damon_test_aggregate(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	int pids[] = {1, 2, 3};
++	unsigned long saddr[][3] = {{10, 20, 30}, {5, 42, 49}, {13, 33, 55} };
++	unsigned long eaddr[][3] = {{15, 27, 40}, {31, 45, 55}, {23, 44, 66} };
++	unsigned long accesses[][3] = {{42, 95, 84}, {10, 20, 30}, {0, 1, 2} };
++	struct damon_task *t;
++	struct damon_region *r;
++	int it, ir;
++	ssize_t sz, sr, sp;
++
++	damon_set_recording(ctx, 256, "damon.data");
++	damon_set_pids(ctx, pids, 3);
++
++	it = 0;
++	damon_for_each_task(ctx, t) {
++		for (ir = 0; ir < 3; ir++) {
++			r = damon_new_region(ctx,
++					saddr[it][ir], eaddr[it][ir]);
++			r->nr_accesses = accesses[it][ir];
++			damon_add_region(r, t);
++		}
++		it++;
++	}
++	kdamond_reset_aggregated(ctx);
++	it = 0;
++	damon_for_each_task(ctx, t) {
++		ir = 0;
++		/* '->nr_accesses' should be zeroed */
++		damon_for_each_region(r, t) {
++			KUNIT_EXPECT_EQ(test, 0u, r->nr_accesses);
++			ir++;
++		}
++		/* regions should be preserved */
++		KUNIT_EXPECT_EQ(test, 3, ir);
++		it++;
++	}
++	/* tasks also should be preserved */
++	KUNIT_EXPECT_EQ(test, 3, it);
++
++	/* The aggregated information should be written in the buffer */
++	sr = sizeof(r->vm_start) + sizeof(r->vm_end) + sizeof(r->nr_accesses);
++	sp = sizeof(t->pid) + sizeof(unsigned int) + 3 * sr;
++	sz = sizeof(struct timespec64) + sizeof(unsigned int) + 3 * sp;
++	KUNIT_EXPECT_EQ(test, (unsigned int)sz, ctx->rbuf_offset);
++
++	damon_set_recording(ctx, 0, "damon.data");
++	damon_cleanup_global_state();
++}
++
++static void damon_test_write_rbuf(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *data;
++
++	damon_set_recording(&damon_user_ctx, 256, "damon.data");
++
++	data = "hello";
++	damon_write_rbuf(ctx, data, strnlen(data, 256));
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	damon_write_rbuf(ctx, data, 0);
++	KUNIT_EXPECT_EQ(test, ctx->rbuf_offset, 5u);
++
++	KUNIT_EXPECT_STREQ(test, (char *)ctx->rbuf, data);
++	damon_set_recording(&damon_user_ctx, 0, "damon.data");
++}
++
++static struct damon_region *__nth_region_of(struct damon_task *t, int idx)
++{
++	struct damon_region *r;
++	unsigned int i = 0;
++
++	damon_for_each_region(r, t) {
++		if (i++ == idx)
++			return r;
++	}
++
++	return NULL;
++}
++
++/*
++ * Test 'damon_apply_three_regions()'
++ *
++ * test			kunit object
++ * regions		an array containing start/end addresses of current
++ *			monitoring target regions
++ * nr_regions		the number of the addresses in 'regions'
++ * three_regions	The three regions that need to be applied now
++ * expected		start/end addresses of monitoring target regions that
++ *			'three_regions' are applied
++ * nr_expected		the number of addresses in 'expected'
++ *
++ * The memory mapping of the target processes changes dynamically.  To follow
++ * the change, DAMON periodically reads the mappings, simplifies it to the
++ * three regions, and updates the monitoring target regions to fit in the three
++ * regions.  The update of current target regions is the role of
++ * 'damon_apply_three_regions()'.
++ *
++ * This test passes the given target regions and the new three regions that
++ * need to be applied to the function and check whether it updates the regions
++ * as expected.
++ */
++static void damon_do_test_apply_three_regions(struct kunit *test,
++				unsigned long *regions, int nr_regions,
++				struct region *three_regions,
++				unsigned long *expected, int nr_expected)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < nr_regions / 2; i++) {
++		r = damon_new_region(&damon_user_ctx,
++				regions[i * 2], regions[i * 2 + 1]);
++		damon_add_region(r, t);
++	}
++	damon_add_task(&damon_user_ctx, t);
++
++	damon_apply_three_regions(&damon_user_ctx, t, three_regions);
++
++	for (i = 0; i < nr_expected / 2; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, expected[i * 2]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, expected[i * 2 + 1]);
++	}
++
++	damon_cleanup_global_state();
++}
++
++/*
++ * This function test most common case where the three big regions are only
++ * slightly changed.  Target regions should adjust their boundary (10-20-30,
++ * 50-55, 70-80, 90-100) to fit with the new big regions or remove target
++ * regions (57-79) that now out of the three regions.
++ */
++static void damon_test_apply_three_regions1(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 45-55, 73-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 45, .end = 55},
++		(struct region){.start = 73, .end = 104} };
++	/* 5-20-27, 45-55, 73-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 45, 55,
++				73, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test slightly bigger change.  Similar to above, but the second big region
++ * now require two target regions (50-55, 57-59) to be removed.
++ */
++static void damon_test_apply_three_regions2(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 56-57, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 56, .end = 57},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 56-57, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 56, 57,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test a big change.  The second big region has totally freed and mapped to
++ * different area (50-59 -> 61-63).  The target regions which were in the old
++ * second big region (50-55-57-59) should be removed and new target region
++ * covering the second big region (61-63) should be created.
++ */
++static void damon_test_apply_three_regions3(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-27, 61-63, 65-104 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 27},
++		(struct region){.start = 61, .end = 63},
++		(struct region){.start = 65, .end = 104} };
++	/* 5-20-27, 61-63, 65-80-90-104 */
++	unsigned long expected[] = {5, 20, 20, 27, 61, 63,
++				65, 80, 80, 90, 90, 104};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++/*
++ * Test another big change.  Both of the second and third big regions (50-59
++ * and 70-100) has totally freed and mapped to different area (30-32 and
++ * 65-68).  The target regions which were in the old second and third big
++ * regions should now be removed and new target regions covering the new second
++ * and third big regions should be crated.
++ */
++static void damon_test_apply_three_regions4(struct kunit *test)
++{
++	/* 10-20-30, 50-55-57-59, 70-80-90-100 */
++	unsigned long regions[] = {10, 20, 20, 30, 50, 55, 55, 57, 57, 59,
++				70, 80, 80, 90, 90, 100};
++	/* 5-7, 30-32, 65-68 */
++	struct region new_three_regions[3] = {
++		(struct region){.start = 5, .end = 7},
++		(struct region){.start = 30, .end = 32},
++		(struct region){.start = 65, .end = 68} };
++	/* expect 5-7, 30-32, 65-68 */
++	unsigned long expected[] = {5, 7, 30, 32, 65, 68};
++
++	damon_do_test_apply_three_regions(test, regions, ARRAY_SIZE(regions),
++			new_three_regions, expected, ARRAY_SIZE(expected));
++}
++
++static void damon_test_split_evenly(struct kunit *test)
++{
++	struct damon_ctx *c = &damon_user_ctx;
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long i;
++
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, NULL, 5), -EINVAL);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 0), -EINVAL);
++
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 10), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 10u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, i++ * 10);
++		KUNIT_EXPECT_EQ(test, r->vm_end, i * 10);
++	}
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 59);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 5), 0);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++
++	i = 0;
++	damon_for_each_region(r, t) {
++		if (i == 4)
++			break;
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i++);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 5 + 10 * i);
++	}
++	KUNIT_EXPECT_EQ(test, r->vm_start, 5 + 10 * i);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 59ul);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 5, 6);
++	damon_add_region(r, t);
++	KUNIT_EXPECT_EQ(test, damon_split_region_evenly(c, r, 2), -EINVAL);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 1u);
++
++	damon_for_each_region(r, t) {
++		KUNIT_EXPECT_EQ(test, r->vm_start, 5ul);
++		KUNIT_EXPECT_EQ(test, r->vm_end, 6ul);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_at(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	damon_add_region(r, t);
++	damon_split_region_at(&damon_user_ctx, r, 25);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 25ul);
++
++	r = damon_next_region(r);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 25ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 100ul);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_two(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r, *r2, *r3;
++	int i;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 100);
++	r->nr_accesses = 10;
++	damon_add_region(r, t);
++	r2 = damon_new_region(&damon_user_ctx, 100, 300);
++	r2->nr_accesses = 20;
++	damon_add_region(r2, t);
++
++	damon_merge_two_regions(r, r2);
++	KUNIT_EXPECT_EQ(test, r->vm_start, 0ul);
++	KUNIT_EXPECT_EQ(test, r->vm_end, 300ul);
++	KUNIT_EXPECT_EQ(test, r->nr_accesses, 16u);
++
++	i = 0;
++	damon_for_each_region(r3, t) {
++		KUNIT_EXPECT_PTR_EQ(test, r, r3);
++		i++;
++	}
++	KUNIT_EXPECT_EQ(test, i, 1);
++
++	damon_free_task(t);
++}
++
++static void damon_test_merge_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++	unsigned long sa[] = {0, 100, 114, 122, 130, 156, 170, 184};
++	unsigned long ea[] = {100, 112, 122, 130, 156, 170, 184, 230};
++	unsigned int nrs[] = {0, 0, 10, 10, 20, 30, 1, 2};
++
++	unsigned long saddrs[] = {0, 114, 130, 156, 170};
++	unsigned long eaddrs[] = {112, 130, 156, 170, 230};
++	int i;
++
++	t = damon_new_task(42);
++	for (i = 0; i < ARRAY_SIZE(sa); i++) {
++		r = damon_new_region(&damon_user_ctx, sa[i], ea[i]);
++		r->nr_accesses = nrs[i];
++		damon_add_region(r, t);
++	}
++
++	damon_merge_regions_of(t, 9);
++	/* 0-112, 114-130, 130-156, 156-170 */
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 5u);
++	for (i = 0; i < 5; i++) {
++		r = __nth_region_of(t, i);
++		KUNIT_EXPECT_EQ(test, r->vm_start, saddrs[i]);
++		KUNIT_EXPECT_EQ(test, r->vm_end, eaddrs[i]);
++	}
++	damon_free_task(t);
++}
++
++static void damon_test_split_regions_of(struct kunit *test)
++{
++	struct damon_task *t;
++	struct damon_region *r;
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 22);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 2);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 2u);
++	damon_free_task(t);
++
++	t = damon_new_task(42);
++	r = damon_new_region(&damon_user_ctx, 0, 220);
++	damon_add_region(r, t);
++	damon_split_regions_of(&damon_user_ctx, t, 4);
++	KUNIT_EXPECT_EQ(test, nr_damon_regions(t), 4u);
++	damon_free_task(t);
++}
++
++static struct kunit_case damon_test_cases[] = {
++	KUNIT_CASE(damon_test_str_to_pids),
++	KUNIT_CASE(damon_test_tasks),
++	KUNIT_CASE(damon_test_regions),
++	KUNIT_CASE(damon_test_set_pids),
++	KUNIT_CASE(damon_test_three_regions_in_vmas),
++	KUNIT_CASE(damon_test_aggregate),
++	KUNIT_CASE(damon_test_write_rbuf),
++	KUNIT_CASE(damon_test_apply_three_regions1),
++	KUNIT_CASE(damon_test_apply_three_regions2),
++	KUNIT_CASE(damon_test_apply_three_regions3),
++	KUNIT_CASE(damon_test_apply_three_regions4),
++	KUNIT_CASE(damon_test_split_evenly),
++	KUNIT_CASE(damon_test_split_at),
++	KUNIT_CASE(damon_test_merge_two),
++	KUNIT_CASE(damon_test_merge_regions_of),
++	KUNIT_CASE(damon_test_split_regions_of),
++	{},
++};
++
++static struct kunit_suite damon_test_suite = {
++	.name = "damon",
++	.test_cases = damon_test_cases,
++};
++kunit_test_suite(damon_test_suite);
++
++#endif /* _DAMON_TEST_H */
++
++#endif	/* CONFIG_DAMON_KUNIT_TEST */
+diff --git a/mm/damon.c b/mm/damon.c
+index ee117e920b39..6fb847312a5d 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -25,7 +25,11 @@
+ #include <trace/events/damon.h>
+ 
+ /* Minimal region size.  Every damon_region is aligned by this. */
++#ifndef CONFIG_DAMON_KUNIT_TEST
+ #define MIN_REGION PAGE_SIZE
++#else
++#define MIN_REGION 1
++#endif
+ 
+ #define damon_get_task_struct(t) \
+ 	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
+@@ -1503,3 +1507,5 @@ module_exit(damon_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
+ MODULE_DESCRIPTION("DAMON: Data Access MONitor");
++
++#include "damon-test.h"
+-- 
+2.17.1
 
