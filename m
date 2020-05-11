@@ -2,84 +2,185 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3555FC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04D6C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10172206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4814206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KJnTxBod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbgEKR0J (ORCPT
+        id S1730924AbgEKR0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:26:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:36646 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgEKR0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:26:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 658B930E;
-        Mon, 11 May 2020 10:26:08 -0700 (PDT)
-Received: from [10.37.12.116] (unknown [10.37.12.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C3493F305;
-        Mon, 11 May 2020 10:26:00 -0700 (PDT)
-Subject: Re: [PATCH] coresight: platform: use dev_warn instead of
- dev_warn_once
-To:     mathieu.poirier@linaro.org, kathirav@codeaurora.org
-Cc:     mike.leach@linaro.org, alexander.shishkin@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1588933721-18700-1-git-send-email-kathirav@codeaurora.org>
- <20200511165851.GB13202@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <2d59194a-2785-8762-81cd-bef34c6a51ec@arm.com>
-Date:   Mon, 11 May 2020 18:31:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 11 May 2020 13:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730730AbgEKR0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:26:47 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F72C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:26:46 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w20so10434375ljj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2syOPhIUuk5+IIGwPWtaFvYhD+RO13CJnl5VVYLO2dc=;
+        b=KJnTxBodECfNSWC+eXV6D9gkJ/P9LWcTJrXC4Ghx2Vn9hyQwnoY7rP9e/Qnv64vGu+
+         ShEE2LP25xfnfLorU/NMyCqQarLGS419o5kBE3SwFxQs98FNZzckVPVqSSnApRO5k/YO
+         F7kuYSn8gjSSEiC7F9lvthwHeRQoIqLWSslcr9J1OVKxajVJmhOYy0MgcdAyIxT96kFY
+         O00pFB6HFyU8tmRMpmL7HTwei/rqW0eocZTDHnXeyZwi/ifgD1HA7UQCk7hJr8yrZ+d7
+         kQvhk7wrn6lfmCpUvmtB1JJsBA6vb9O0R+mz/B2OpP8dHg8rLhiWx2YfvdG1CaBBsptw
+         cFZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2syOPhIUuk5+IIGwPWtaFvYhD+RO13CJnl5VVYLO2dc=;
+        b=hTQZCacjvk8dW4emmPeMxcp3badFSuFZzVtUJJBWj2/N4sBzOipm2mMLM7tGfybjQ9
+         ey/1O9RiROxVVULhWPRuqnoVhLv2s3fbdEIG7SiuB/q1tmUh7Ach7OnM4Zhjc7qrCqFR
+         xDeQudKsmVoBgYypQ/OlcsOeiFvNeiQ4D3CQDRLOvLOZ7jQy5u0JIv0JDacoU/N5ZqhJ
+         h7Wlxw4TyGVFakljeOTdUWUvoei+ivdbLYjtHNRWEdiDB9eN7SzuB16IpxTipd/OIqdN
+         XW0jdjhnVWVSZTps8dx8J/L69BGABJJa5Nlu8KGXWsZu2MDCxn2uVgad0wVyR8Wx18h1
+         c5bQ==
+X-Gm-Message-State: AOAM532R36IqlwqsRz1LxwXzZoy6mj+7FNOsoxpTEev2Mv+b92rZiSab
+        R2q3KwBFZvgKpeLMAGYw9YjA5p4n4qfpGQWLbzQdVA==
+X-Google-Smtp-Source: ABdhPJzLWh2c6HKanzjF35gvufPT/AenACZyvySv0aUIe5AQ4TxUG2/GcC/bY0xcWzmTE/GXX51eHW/7Q84P+RgSIZY=
+X-Received: by 2002:a2e:b52a:: with SMTP id z10mr237472ljm.200.1589218005149;
+ Mon, 11 May 2020 10:26:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200511165851.GB13202@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1588350008-8143-1-git-send-email-alan.mikhak@sifive.com> <20200507214234.GA5449@bogus>
+In-Reply-To: <20200507214234.GA5449@bogus>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Mon, 11 May 2020 10:26:33 -0700
+Message-ID: <CABEDWGygtfK0-dd7VUKH2K1FWy8KweG8o7bRjNFQAXfWHkT8fA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: functions/pci-epf-test: Enable picking DMA
+ channel by name
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, sebott@linux.ibm.com,
+        efremov@linux.com, vidyas@nvidia.com,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/2020 05:58 PM, Mathieu Poirier wrote:
-> Hi Kathiravan,
-> 
-> On Fri, May 08, 2020 at 03:58:41PM +0530, Kathiravan T wrote:
->> When more than one coresight components uses the obsolete DT bindings,
->> warning is displayed for only one component and not for the others.
->> Lets warn it for all components by replacing dev_warn_once with dev_warn.
->>
->> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
->> ---
->>   drivers/hwtracing/coresight/coresight-platform.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
->> index 43418a2..b7d9a02 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -284,7 +284,7 @@ static int of_get_coresight_platform_data(struct device *dev,
->>   	if (!parent) {
->>   		legacy_binding = true;
->>   		parent = node;
->> -		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
->> +		dev_warn(dev, "Uses obsolete Coresight DT bindings\n");
-> 
-> We made a concious decision to use dev_warn_once() rather than dev_warn().
-> There can be a lot of coresight devices on a platform and warning for every
-> device doesn't do anything more than adding noise.
-> 
-> If one device is using obsolete bindings the others very likely to do so as
-> well.  While fixing one device, checking the remaining devices should be
-> intuitive.
+On Thu, May 7, 2020 at 2:42 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, May 01, 2020 at 09:20:08AM -0700, Alan Mikhak wrote:
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
+> >
+> > Modify pci_epf_test_init_dma_chan() to call dma_request_channel() with a
+> > filter function to pick DMA channel by name, if desired.
+> >
+> > Add a new filter function pci_epf_test_pick_dma_chan() which takes a name
+> > string as an optional parameter. If desired name is specified, the filter
+> > function checks the name of each DMA channel candidate against the desired
+> > name. If no match, the filter function rejects the candidate channel.
+> > Otherwise, the candidate channel is accepted. If optional name parameter
+> > is null or an empty string, filter function picks the first DMA channel
+> > candidate, thereby preserving the existing behavior of pci-epf-test.
+> >
+> > Currently, pci-epf-test picks the first suitable DMA channel. Adding a
+> > filter function enables a developer to modify the optional parameter
+> > during debugging by providing the name of a desired DMA channel. This is
+> > useful during debugging because it allows different DMA channels to be
+> > exercised.
+> >
+> > Adding a filter function also takes one step toward modifying pcitest to
+> > allow the user to choose a DMA channel by providing a name string at the
+> > command line when issuing the -d parameter for DMA transfers.
+>
+> This mostly looks fine, but needs to be part of a series giving it a
+> user.
 
-Exactly ! Or someone could repeat the process until all are fixed ;-)
+Thanks Rob for your comments.
 
-Cheers
-Suzuki
+I do have other changes in mind that build on this patch to give this
+filter function a user other than its current caller that is passing a
+NULL pointer as the filter parameter. I can hold it back until then.
+However, those changes are more involved and may take longer to implement
+and review. In the meantime, maybe this can be accepted independently as
+an interim measure to aid debugging during development. If this patch were
+to be applied to the codebase, it becomes much simpler to manually edit
+the code during development and replace the NULL with a string such as
+"dma0chan1" until a command line option becomes available.
+
+This patch is also not necessarily related to my other patch about
+supporting slave dma transfers. Even when working on machines that just
+have platform dma channels and no slave dma channels, I experience the
+same limitation where I cannot exercise any channel other than the one
+picked by default.
+
+>
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 24 ++++++++++++++++++++----
+> >  1 file changed, 20 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index 60330f3e3751..043916d3ab5f 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -149,10 +149,26 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> >  }
+> >
+> >  /**
+> > - * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
+> > - * @epf_test: the EPF test device that performs data transfer operation
+> > + * pci_epf_test_pick_dma_chan() - Filter DMA channel based on desired criteria
+> > + * @chan: the DMA channel to examine
+> >   *
+> > - * Function to initialize EPF test DMA channel.
+> > + * Filter DMA channel candidates by matching against an optional desired name.
+> > + * Pick first candidate channel if desired name is not specified.
+> > + * Reject candidate channel if its name does not match the desired name.
+> > + */
+> > +static bool pci_epf_test_pick_dma_chan(struct dma_chan *chan, void *name)
+> > +{
+> > +     if (name && strlen(name) && strcmp(dma_chan_name(chan), name))
+>
+> Doesn't this cause warning with 'name' being void*?
+
+I compiled this patch for riscv and x86_64 but didn't see any warning. I will
+address your concern by posting a v2 patch.
+
+>
+>
+> > +             return false;
+> > +
+> > +     return true;
+> > +}
+> > +
+> > +/**
+> > + * pci_epf_test_init_dma_chan() - Helper to initialize EPF DMA channel
+> > + * @epf: the EPF device that has to perform the data transfer operation
+> > + *
+> > + * Helper to initialize EPF DMA channel.
+> >   */
+> >  static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+> >  {
+> > @@ -165,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+> >       dma_cap_zero(mask);
+> >       dma_cap_set(DMA_MEMCPY, mask);
+> >
+> > -     dma_chan = dma_request_chan_by_mask(&mask);
+> > +     dma_chan = dma_request_channel(mask, pci_epf_test_pick_dma_chan, NULL);
+> >       if (IS_ERR(dma_chan)) {
+> >               ret = PTR_ERR(dma_chan);
+> >               if (ret != -EPROBE_DEFER)
+> > --
+> > 2.7.4
+> >
