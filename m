@@ -2,115 +2,112 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF4AC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ABCC38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E27A5208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589161171;
-	bh=am+eWUmxcP2bsJRpLx1IxtNAzjyf4uJ9CE9NU9+VV4g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14gEv/2MhxUOkX0MdjUXd0IQPyuws4cOGHrqEj+dDguDFrVqUtn+u4Y4q3NOaPkbv
-	 1dbyF1YTHCs7qOdzlKDLxsBdet0RKRsjG5dKtrf4SwAHSoLcX/N5mbd7kXD13MH4P/
-	 y5pXRIk0saOaaT5VButCmLIq1mHUMhqw2aBIdQvE=
+	by mail.kernel.org (Postfix) with ESMTP id CBAC820746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgEKBja (ORCPT
+        id S1729217AbgEKBpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgEKBja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:39:30 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471B7207FF;
-        Mon, 11 May 2020 01:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589161169;
-        bh=am+eWUmxcP2bsJRpLx1IxtNAzjyf4uJ9CE9NU9+VV4g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZmV1Z+9JgrDcuGQn+nqAAmFqyrfQeO6QedzQFdRWaCJKzBK4qEHXvKpwR8JZ840Uy
-         QHuXZ1Hsu2RUFvcRooYjpDKPLaj/wEFL8JH9uiecxsgrijQnxnLKWpeZl19GrJ91dL
-         e8QksDoJXwyTGoSge+Joitn+dCbwjBlLUu/3qKn0=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] bootconfig: Fix to prevent warning message if no bootconfig option
-Date:   Mon, 11 May 2020 10:39:24 +0900
-Message-Id: <158916116468.21787.14558782332170588206.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200511095728.8490ad9e3d5a25e7400a4910@kernel.org>
-References: <20200511095728.8490ad9e3d5a25e7400a4910@kernel.org>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Sun, 10 May 2020 21:45:03 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49853 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbgEKBpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 21:45:02 -0400
+Received: from mail-pj1-f69.google.com ([209.85.216.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <koba.ko@canonical.com>)
+        id 1jXxV6-00073X-C2
+        for linux-kernel@vger.kernel.org; Mon, 11 May 2020 01:45:00 +0000
+Received: by mail-pj1-f69.google.com with SMTP id l3so16052269pjk.8
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 18:45:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=hEHAUhWa+zZj3u4Ik7sq9BKzxxux9cy1aGraeqlf/6Q=;
+        b=OjxOkysyUlpENzMZ0b64odCQ4r02yFQ75GraG2dJycKtGrMz4sHir5T0sIB0r+ftqj
+         WRJP2/pWYBeZfkvTxciwrjneryfIYu3POVfALM3vPWuD7YtQqhwtA9HJU/iK+Czvt9sY
+         0EKwXf8nFXD01tsDI+dvHdVE3via9d3qoCLCaaBpH70T3HpeP8R4mIfz76AZSFP140Ic
+         3pRdE2Gs6vnHpzj7Re+BXWCVt2WRZci36f1uzVUDyfvC1K8LBM46/4HFWWnSh+wei2ey
+         ljgVh7FdgH6HeDEL25uagAmCFeityoLW5VNwB7Y4ZujOQyUWqcbsJE5tYRGyIAWC6XNZ
+         DbdA==
+X-Gm-Message-State: AGi0PuZHw8CZJxi41rqg5fXGUkGjYSY8AYVJ2gajFYZrEUUiHmoIizwT
+        WqI4E4Np+ZpBIgO9K04MlZ5Synl8nv7IzpaDIV+tZfVfAgtylal/q2GfCO8UYT+YwFpLEFggpM4
+        gCfQfsC2eCbNCrcRB9ERwb8/pcgURXanUHuW5v8Od1Q==
+X-Received: by 2002:a62:1452:: with SMTP id 79mr13934744pfu.108.1589161498834;
+        Sun, 10 May 2020 18:44:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLnRZWXUIcETS71SVZqgeMWnDICgaW1k3Zf4pzobw8um3R4E7c/N4NS1crSSlU64QzgIRe6vA==
+X-Received: by 2002:a62:1452:: with SMTP id 79mr13934731pfu.108.1589161498586;
+        Sun, 10 May 2020 18:44:58 -0700 (PDT)
+Received: from canonical.com (111-249-68-192.dynamic-ip.hinet.net. [111.249.68.192])
+        by smtp.gmail.com with ESMTPSA id 78sm3272197pgd.33.2020.05.10.18.44.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 May 2020 18:44:58 -0700 (PDT)
+From:   koba.ko@canonical.com
+To:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario.Limonciello@dell.com
+Subject: [PATCH] V2: platform/x86: dell-laptop: don't register platform::micmute if the related tokens don't exist.
+Date:   Mon, 11 May 2020 09:44:56 +0800
+Message-Id: <20200511014456.5149-1-koba.ko@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit de462e5f1071 ("bootconfig: Fix to remove bootconfig
-data from initrd while boot") causes a cosmetic regression
-on dmesg, which warns "no bootconfig data" message without
-bootconfig cmdline option.
+From: Koba Ko <koba.ko@canonical.com>
 
-Fix setup_boot_config() by moving no bootconfig check after
-commandline option check.
+On dell G3-3590, error message is issued during boot up,
+"platform::micmute: Setting an LED's brightness failed (-19)",
+but there's no micmute led on the machine.
 
-Fixes: de462e5f1071 ("bootconfig: Fix to remove bootconfig data from initrd while boot")
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+If one of two tokens doesn't exist,
+don't call led_classdev_register() for platform::micmute.
+After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+and the error message wouldn't see in dmesg.
+
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
 ---
- init/main.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Changelog:
+1. Refine the typo of comment.
+---
+ drivers/platform/x86/dell-laptop.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index 1a5da2c2660c..5803ecb411ab 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -400,9 +400,8 @@ static void __init setup_boot_config(const char *cmdline)
- 	char *data, *copy;
- 	int ret;
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 1e46022fb2c5..afc1ded83e56 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -2208,10 +2208,13 @@ static int __init dell_init(void)
  
-+	/* Cut out the bootconfig data even if we have no bootconfig option */
- 	data = get_boot_config_from_initrd(&size, &csum);
--	if (!data)
--		goto not_found;
+ 	dell_laptop_register_notifier(&dell_laptop_notifier);
  
- 	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
- 	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-@@ -411,6 +410,11 @@ static void __init setup_boot_config(const char *cmdline)
- 	if (!bootconfig_found)
- 		return;
- 
-+	if (!data) {
-+		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
-+		return;
+-	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+-	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+-	if (ret < 0)
+-		goto fail_led;
++	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
++	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
++		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
++		if (ret < 0)
++			goto fail_led;
 +	}
-+
- 	if (size >= XBC_DATA_MAX) {
- 		pr_err("bootconfig size %d greater than max size %d\n",
- 			size, XBC_DATA_MAX);
-@@ -446,8 +450,6 @@ static void __init setup_boot_config(const char *cmdline)
- 		extra_init_args = xbc_make_cmdline("init");
- 	}
- 	return;
--not_found:
--	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
- }
  
- #else
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
+-- 
+2.17.1
 
