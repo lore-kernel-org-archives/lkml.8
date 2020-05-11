@@ -2,130 +2,109 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDDBC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12012C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9D420736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C55206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589204291;
-	bh=WwDE+Fb8z57q8OKzPF9RACs94iZxWF3u3IPperUFdGA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rAaxNwfPD4YGjB764DbXjBRta4S9F7vLRlWMTxO7roW3kjmuPp6+WZ6TvlNI7XFqT
-	 7AhzFN/IcUl5HZf3ynw4hD9vwXLdAyCIQI94PWtG4itwpCrHvhOde3IrKB65+p5VyY
-	 R/qmUuc4oquPUwcR9Ij7Yp4LdW9yoelAlRcdAIy0=
+	s=default; t=1589204344;
+	bh=kKEeipjthD8YXEfwx7zR7xcpx7Qr0DvKx7aI3GMd+68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=neQvFdjkycvUSpvhzTkG+NLzR/zb7OBNMSZdWoBYyOT1lf0wSOlI3zwbCoQX/uJhm
+	 0M5MF7RVsIbm2KWQSXWb4aEt4pFejYISTnyIkkYt4oz/S7lfMta1NSXtA2KcXKjNRq
+	 Fzg0K3hX4RFJHqNQAhMTxJ837qveNbt1SHsyc+qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgEKNiL (ORCPT
+        id S1730024AbgEKNjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgEKNiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:38:10 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 498A0206F9;
-        Mon, 11 May 2020 13:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589204289;
-        bh=WwDE+Fb8z57q8OKzPF9RACs94iZxWF3u3IPperUFdGA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z5rmd7KSgTp2/xdiux62bJoMVYAgSuMtc8CTcMJLP9uc7ZMzaJhz4YArkSNYtcmux
-         704q5CAPni+6iRE5LE0Wpbu2t8n4Fv5ZPLQqVaftO52tBd6SSsjjqJxEKUzRIEW/7O
-         6CnknnK2DX5mlxMjnFpEobk3BV883/MgwyUtxCn8=
-Date:   Mon, 11 May 2020 22:38:04 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [PATCH v2] selftests/ftrace: Use printf for backslash included
- command
-Message-Id: <20200511223804.9483cab03c9221818ff4fc5b@kernel.org>
-In-Reply-To: <158920418730.16156.8299185499520876735.stgit@devnote2>
-References: <87imh21x6f.fsf@igel.home>
-        <158920418730.16156.8299185499520876735.stgit@devnote2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 11 May 2020 09:39:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36642 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgEKNjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 09:39:03 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f15so3954819plr.3;
+        Mon, 11 May 2020 06:39:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a77Oq5OXHF7el+BrAxI3YkOcCnUkeWqP0J5f4YEVkXM=;
+        b=YQs25M+jwEExvjUyvU+Ezm/hkPO1YVNHZrH0kjTbgn6gYpmPkufFzN9GKUTKYXIeHK
+         K1sshT+U1LP0nRJ3nHccr+atUmWQwJGcPnNkQNJZU6O7UJudGrmRKs9FGgw1JCd5CE7L
+         UVOPGTna4jQJQRNbVHuIlaZP+pmpsClZHcQQ2KEBAElfAoTp2oAI3iuwbEwia6lxLJAd
+         uBJV/c4zNqfWvsD7b1LcL8LAh+HiGnJCZxbKdXc01dxj+1NLOLYbOuo/w4UumGo9zEyF
+         kUELN0mtUyh3K1ikqC2bEEMCV9ZOe5qWMPH9q85zmAm9zF83ajU1qS97CZL/VO6gOOfV
+         Piug==
+X-Gm-Message-State: AGi0Pubo6PBDSnrXkqCNKSXcQs52IvYAkhNEojqwPiZUbTZCsGmUXNx7
+        6tBC0M8RoWo3UH/8Yiu0ifk=
+X-Google-Smtp-Source: APiQypKqHlxgJmo3bwvHjknzSYEsG4x2Ee1DWrk4HLFXH26haXIT+z521EOT/qAn2yUInaHP1vs5wQ==
+X-Received: by 2002:a17:90a:c702:: with SMTP id o2mr22379928pjt.196.1589204342837;
+        Mon, 11 May 2020 06:39:02 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id t8sm8122734pgn.81.2020.05.11.06.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 06:39:01 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 8354D40605; Mon, 11 May 2020 13:39:00 +0000 (UTC)
+Date:   Mon, 11 May 2020 13:39:00 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/5] blktrace: break out of blktrace setup on
+ concurrent calls
+Message-ID: <20200511133900.GL11244@42.do-not-panic.com>
+References: <20200509031058.8239-1-mcgrof@kernel.org>
+ <20200509031058.8239-5-mcgrof@kernel.org>
+ <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas and David,
-
-OK, what about this fix?
-
-On Mon, 11 May 2020 22:36:27 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Since the built-in echo has different behavior in POSIX shell
-> (dash) and bash, kprobe_syntax_errors.tc can fail on dash which
-> interpret backslash escape automatically.
+On Sat, May 09, 2020 at 06:09:38PM -0700, Bart Van Assche wrote:
+> On 2020-05-08 20:10, Luis Chamberlain wrote:
+> > @@ -493,6 +496,12 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+> >  	 */
+> >  	strreplace(buts->name, '/', '_');
+> >  
+> > +	if (q->blk_trace) {
+> > +		pr_warn("Concurrent blktraces are not allowed on %s\n",
+> > +			buts->name);
+> > +		return -EBUSY;
+> > +	}
+> > +
+> >  	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+> >  	if (!bt)
+> >  		return -ENOMEM;
 > 
-> To fix this issue, we explicitly use printf "%s" (not interpret
-> backslash escapes) if the command string can include backslash.
-> 
-> Reported-by: Liu Yiding <yidingx.liu@intel.com>
-> Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
->  2 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 61a3c7e2634d..697c77ef2e2b 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -119,12 +119,14 @@ yield() {
->      ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
->  }
->  
-> +# Since probe event command may include backslash, explicitly use printf "%s"
-> +# to NOT interpret it.
->  ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
-> -    pos=$(echo -n "${2%^*}" | wc -c) # error position
-> -    command=$(echo "$2" | tr -d ^)
-> +    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
-> +    command=$(printf "%s" "$2" | tr -d ^)
->      echo "Test command: $command"
->      echo > error_log
-> -    (! echo "$command" >> "$3" ) 2> /dev/null
-> +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
->      grep "$1: error:" -A 3 error_log
->      N=$(tail -n 1 error_log | wc -c)
->      # "  Command: " and "^\n" => 13
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> index ef1e9bafb098..eb0f4ab4e070 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -91,7 +91,9 @@ esac
->  if grep -q "Create/append/" README && grep -q "imm-value" README; then
->  echo 'p:kprobes/testevent _do_fork' > kprobe_events
->  check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
-> -echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
-> +
-> +# Explicitly use printf "%s" to not interpret \1
-> +printf "%s" 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
->  check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
->  check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
->  check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
-> 
+> Is this really sufficient? Shouldn't concurrent do_blk_trace_setup()
+> calls that refer to the same request queue be serialized to really
+> prevent that debugfs attribute creation fails?
 
+We'd have to add something like a linked list. Right now I'm just
+clarifying things which were not clear before. What you describe is
+a functional feature change. I'm just trying to fix a bug and clarify
+limitations.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> How about using the block device name instead of the partition name in
+> the error message since the concurrency context is the block device and
+> not the partition?
+
+blk device argument can be NULL here. sg-generic is one case.
+
+ Luis
