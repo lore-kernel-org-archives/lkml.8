@@ -2,190 +2,122 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55751C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C635C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A822495B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="L2oWkVDr"
+	by mail.kernel.org (Postfix) with ESMTP id DE3932098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589187611;
+	bh=BDYB2489D6y/f/ZLmWPRkC7M2YYCV1n5uByAKeQ1lak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OaSefw3n+OEMDGyzPG9nypPbaQ2SjQ8zJbLXteAaY0EK7zo0fhrxuGvQgUIjuNOBf
+	 e+YI3f5Tw/BK1xZ4d1pkNHYJNn3/qUz6FKVo5t9cSSxbQCF3jJMLdiR50HIfD2au7b
+	 TkrrnLjVXHwSZrs3O7XPcIUNLVUBnvj3LQ9oQ0EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgEKI7D (ORCPT
+        id S1728711AbgEKJAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgEKI7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:59:02 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B809C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:59:02 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w7so9873953wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:59:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4594gfI4UDDb5BHmkZ1Vrt7zRtwvI2AafBdXlVzokpE=;
-        b=L2oWkVDrMt7rC8usziISopoeQywYM13P71sCRLx6RBxxnU86/yId4ghA7YBeY/O9H5
-         GBODbPhF+WzbSqOl75+W4rtO/K7UIRDYO0mULqPhepXqx7jxrcXjHe6G1KcENpNSFq15
-         TvjUOgfDoP3MvUp7YckbCaIRZyCjCKUvqkgkwe1Wgg05q06mA9kURltlQ+oZTsIm9T4L
-         JM+hGCZVBGuVdnDQiO3YSoge1nnTwLgmVPuQ4Otv/tm4bn0DIiZCbJ5aFsJ2weSeY0Ox
-         D7X6iOb7X77kF3vWNH2hXmt4E0m3HsmAAk7dg+ldT7goS4FgQn5teh4q5UUVopEYbw+y
-         wOZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4594gfI4UDDb5BHmkZ1Vrt7zRtwvI2AafBdXlVzokpE=;
-        b=r0aSC5bBe1p3WRJ/9dK9meMZA9gaoqRVsKXgp5oQkLpOhouDpmx/pHx/1b9IeAM0F7
-         VRSr9f35zvaGGhJDiIJUi2cfdSea/rTIX7LflPFGDKg+rtVqy8CaT8PMfQlTsee3a2ih
-         mSrMrZN6Y1keZ1HqfaUE9kpL0FIejZsSzviW+2tiXWO+Ujmv9OcpBkH5b2onJQvD1YxZ
-         ZNmVQazlFI/ocfxT+Ph4SbFkQUD+HFYzk7+5wen2z8xoZoRqqfGb4/iv3FAA6nbg5fHz
-         Vg4XQrA9fSDC6VDYfr92UgVP2jRAQLvs9/bHA51HbAoAlJO1iqLvaPUeqwZ6poiOgWDE
-         ev8w==
-X-Gm-Message-State: AGi0PuYKCMGRcYuUop5W7c7oVvHBppDqya8ruSwtDfqhB64fLaGSpHm1
-        bSEKqzEe9f0sSXAUSeHgB6nbxg==
-X-Google-Smtp-Source: APiQypKL22mEB7w5xWfFhhD4mc35jDTt+J1mNIuLFLl9oZlb878iIn3z1XWKnQh7gYznR9Vvq8zv/g==
-X-Received: by 2002:a05:6000:1150:: with SMTP id d16mr9947563wrx.197.1589187541097;
-        Mon, 11 May 2020 01:59:01 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:4460:3fd3:382:4a71? ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id u16sm16660514wrq.17.2020.05.11.01.58.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 01:59:00 -0700 (PDT)
-Subject: Re: [PATCH] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up
- link
-To:     Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@Amlogic.com>
-References: <20200429164230.309922-1-maz@kernel.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <02c1ce97-109a-90da-46ce-f8394f00de74@baylibre.com>
-Date:   Mon, 11 May 2020 10:58:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 11 May 2020 05:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgEKJAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:00:10 -0400
+Received: from localhost (unknown [122.167.117.121])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE4F2075E;
+        Mon, 11 May 2020 09:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589187609;
+        bh=BDYB2489D6y/f/ZLmWPRkC7M2YYCV1n5uByAKeQ1lak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jLBdAK19I74250GJZYTRbU0zbhZgyxAOQ42dCYU6JbS+EY5737tpc3LSyKYc5YPRJ
+         wSAEVi0RqbQcr2o4XhzD9yy/RbG5SJ/Wz17QKiqal+TW3FYZ9c4QPPUmNr+Yp5Q+iu
+         GGklh++PYduMuCsxriXuFrOXAcbsiBKRsY4+GpTY=
+Date:   Mon, 11 May 2020 14:30:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Liao, Bard" <bard.liao@intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Message-ID: <20200511090003.GT1375924@vkoul-mobl>
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+ <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429164230.309922-1-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 18:42, Marc Zyngier wrote:
-> My vim3l board stubbornly refuses to play ball with a bog
-> standard PCIe switch (ASM1184e), spitting all kind of errors
-> ranging from link never coming up to crazy things like downstream
-> ports falling off the face of the planet.
+On 11-05-20, 08:04, Liao, Bard wrote:
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: Monday, May 11, 2020 2:32 PM
+> > To: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse.de;
+> > broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
+> > srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
+> > ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
+> > louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
+> > Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
+> > <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
+> > Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+> > 
+> > On 30-04-20, 02:51, Bard Liao wrote:
+> > > @@ -24,9 +24,14 @@ int sdw_bus_master_add(struct sdw_bus *bus, struct
+> > device *parent,
+> > >  	struct sdw_master_prop *prop = NULL;
+> > >  	int ret;
+> > >
+> > > -	if (!bus->dev) {
+> > > -		pr_err("SoundWire bus has no device\n");
+> > > -		return -ENODEV;
+> > 
+> > This check is removed and not moved into sdw_master_device_add() either, can
+> > you add here or in patch 1 and keep checking the parent device please
 > 
-> Upon investigating how the PCIe RC is configured, I found the
-> following nugget: the Sysnopsys DWC PCIe Reference Manual, in the
-> section dedicated to the PLCR register, describes bit 7 (FAST_LINK_MODE)
-> as:
-> 
-> "Sets all internal timers to fast mode for simulation purposes."
-> 
-> I completely understand the need for setting this bit from a simulation
-> perspective, but what I have on my desk is actual silicon, which
-> expects timers to have a nominal value (and I expect this is the
-> case for most people).
-> 
-> Making sure the FAST_LINK_MODE bit is cleared when configuring the RC
-> solves this problem.
-> 
-> Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pci-meson.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-> index 3715dceca1bf..ca59ba9e0ecd 100644
-> --- a/drivers/pci/controller/dwc/pci-meson.c
-> +++ b/drivers/pci/controller/dwc/pci-meson.c
-> @@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
->  	meson_cfg_writel(mp, val, PCIE_CFG0);
->  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val &= ~LINK_CAPABLE_MASK;
-> +	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
-> -	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-> +	val |= LINK_CAPABLE_X1;
->  	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
->  
->  	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
-> 
+> We will set bus->dev = &md->dev in the end of sdw_master_device_add().
 
-I don't have HW to test on non NVMe, but I'm reading the same as you in the
-DWC PCIe Reference Manual, and it seems coherent.
+We need to test if this is valid or not :)
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> That's why we remove the test. But now I am wandering does it make sense
+> to set bus->dev = &md->dev? Maybe it makes more sense to set bus->dev =
+> sdw control device. 
+> A follow up question is that should slave device a child of bus device or
+> master device? I would prefer bus device if it makes sense. 
+> I will check bus->dev and parent and remove bus->dev = &md->dev in the
+> next version.
 
-Neil
+the parent is bus->dev and sdw_master_device created would be child of
+this and should be set as such. You can remove it from bus object and
+keep in sdw_master_device object, that is fine by me.
+
+The sdw_slave is child of sdw_master_device now and looks to be set
+correct.
+
+-- 
+~Vinod
