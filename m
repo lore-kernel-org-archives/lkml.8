@@ -2,310 +2,129 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C54C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC82C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A6D2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFAF2206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O1yYfprs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtJPvnSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgEKMiJ (ORCPT
+        id S1730063AbgEKMiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:38:09 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:1264 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729563AbgEKMiJ (ORCPT
+        Mon, 11 May 2020 08:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729343AbgEKMiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:38:09 -0400
+        Mon, 11 May 2020 08:38:51 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208DC061A0C;
+        Mon, 11 May 2020 05:38:51 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j5so10772072wrq.2;
+        Mon, 11 May 2020 05:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589200688; x=1620736688;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=W3k9486TiUCXIiW/oNgYHBamjnpyXjK4jEu9bY7t9VA=;
-  b=O1yYfprsITcicAtyu33UHHgmuZIOY7SaBoR6TwHskJhwPupxqRZtiWjk
-   XFFiOivyGYyLih62aEMsbv0FCBRYQTKi7qeHaV6BE1jjka7GKiRi2vhMg
-   wH/igvXPKjBLee5NOa3KzAN2wDxxPl56DAezgHXRSmaIhktZAIqhYY68S
-   4=;
-IronPort-SDR: 4Db7iDOJUcTamZ/BaSNIZdEn4u+dcGHJw/glBhf52nJ0svpAi4IJsBOH4yF8/NAw56gfmBKR6h
- 0V0BTcHZuBjA==
-X-IronPort-AV: E=Sophos;i="5.73,380,1583193600"; 
-   d="scan'208";a="34195384"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 May 2020 12:38:05 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id E30E5A20DC;
-        Mon, 11 May 2020 12:37:53 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:37:53 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:37:37 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v11 09/16] mm/damon: Implement access pattern recording
-Date:   Mon, 11 May 2020 14:32:55 +0200
-Message-ID: <20200511123302.12520-10-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
-References: <20200511123302.12520-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e/7g+Dk3ulGJzA1ZqqgcvZurwlfTuEzqTNp6ZYliVW4=;
+        b=rtJPvnSDjKuOSMfGnG/B2uMl5ngrAGDoVHkoFM4MO24RwTb42n3UNtiOk15NtGYfw6
+         8uw/mobincTc+Y1Dkrvw/+WuIIuPaIq4L3JrxEXscFXkOmgnK3a0EGRruaG/y7P5pTGN
+         UJTYd5NQPGskTdo/EGmEmU8Bd8ohjtqoxp5vsyER/31I7feNHy0o6/WafUuZ8Zfr4w5o
+         2FjhCHhqKubUuAaxtQTRSLsgQdFULhaTkFhV3SU1nncjaR2nRuZmYNLQOlQHxW3Z1rT6
+         0M4+3kC4kP54w1YR9rdllPZaWEy/BqE3uPY18dCH5TKgpeFk9hJpb/UyeX9ZNIk+TWsx
+         jpDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e/7g+Dk3ulGJzA1ZqqgcvZurwlfTuEzqTNp6ZYliVW4=;
+        b=Fh9xnkTiFBeCjUErL4O+cB0RS1AyKUdTENAjua+XEB7JXY1BJqroEte9euCdjbV6M8
+         7wSfCZHoSCGUgu7SXb8Kgejlq4Y4jU5roOE7ZW2bCMKd4sOPLU0LBRSkhO4JaUFLJfkn
+         rsGEOksXE/nHJIq/9zW5MIdGifYtJm2faP8qYKsRGS+3aUIs60fo1P7T0MBiS9pKw9iV
+         KW+0MIQ/I7WSEwu5P5HdxTIdGr0bJ8AO7fFNeM/6LZqNheeGXshyccZ3nDrWr+Jd2L8p
+         QJ5aarrWt8/lwzNUl5757ezrgMr0B6tFu6MhEv58sC5gyFoziaRszeg8P/10yWZ0pQiA
+         b3SQ==
+X-Gm-Message-State: AGi0Pub2CwP5iZHcfA8INMGCAYsPdFAdayQQwSLQWtVR9XraZI5G+qBa
+        j7r9UVS4SMMDYevs9h7iAjZsAnaJsTwkBQ==
+X-Google-Smtp-Source: APiQypIEWKDu44A+npU7MmH4oc2np5qOouKCs0oVitxMIUb0GK3Z+Ab/RzdBhjYvMZAXgblwnKWCFQ==
+X-Received: by 2002:a5d:4801:: with SMTP id l1mr18074398wrq.235.1589200729281;
+        Mon, 11 May 2020 05:38:49 -0700 (PDT)
+Received: from localhost.localdomain.at (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id y3sm16965388wrt.87.2020.05.11.05.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 05:38:48 -0700 (PDT)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/etnaviv: fix perfmon domain interation
+Date:   Mon, 11 May 2020 14:38:41 +0200
+Message-Id: <20200511123846.96594-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+The GC860 has one GPU device which has a 2d and 3d core. In this case
+we want to expose perfmon information for both cores.
 
-This commit implements the recording feature of DAMON. If this feature
-is enabled, DAMON writes the monitored access patterns in its binary
-format into a file which specified by the user. This is already able to
-be implemented by each user using the callbacks.  However, as the
-recording is expected to be used widely, this commit implements the
-feature in the DAMON, for more convenience and efficiency.
+The driver has one array which contains all possible perfmon domains
+with some meta data - doms_meta. Here we can see that for the GC860
+two elements of that array are relevant:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
+  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
+
+The userspace driver wants to get a list of all perfmon domains and
+their perfmon signals. This is done by iterating over all domains and
+their signals. If the userspace driver wants to access the domain with
+id 8 the kernel driver fails and returns invalid data from doms_3d with
+and invalid offset.
+
+This results in:
+  Unable to handle kernel paging request at virtual address 00000000
+
+On such a device it is not possible to use the userspace driver at all.
+
+The fix for this off-by-one error is quite simple.
+
+Reported-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 ---
- include/linux/damon.h |   7 +++
- mm/damon.c            | 131 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 135 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 264569b21502..bc46ea00e9a1 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -50,6 +50,11 @@ struct damon_ctx {
- 	struct timespec64 last_aggregation;
- 	struct timespec64 last_regions_update;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index e6795bafcbb9..35f7171e779a 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
+ 		if (!(gpu->identity.features & meta->feature))
+ 			continue;
  
-+	unsigned char *rbuf;
-+	unsigned int rbuf_len;
-+	unsigned int rbuf_offset;
-+	char *rfile_path;
-+
- 	struct task_struct *kdamond;
- 	bool kdamond_stop;
- 	struct mutex kdamond_lock;
-@@ -65,6 +70,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
- 
-diff --git a/mm/damon.c b/mm/damon.c
-index 6b01aa641503..306640c72b7d 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -44,6 +44,9 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
-+#define MAX_RFILE_PATH_LEN	256
-+
- /* Get a random number in [l, r) */
- #define damon_rand(l, r) (l + prandom_u32() % (r - l))
- 
-@@ -565,16 +568,80 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
- }
- 
- /*
-- * Reset the aggregated monitoring results
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(struct damon_ctx *ctx)
-+{
-+	ssize_t sz;
-+	loff_t pos = 0;
-+	struct file *rfile;
-+
-+	rfile = filp_open(ctx->rfile_path, O_CREAT | O_RDWR | O_APPEND, 0644);
-+	if (IS_ERR(rfile)) {
-+		pr_err("Cannot open the result file %s\n",
-+				ctx->rfile_path);
-+		return;
-+	}
-+
-+	while (ctx->rbuf_offset) {
-+		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
-+		if (sz < 0)
-+			break;
-+		ctx->rbuf_offset -= sz;
-+	}
-+	filp_close(rfile, NULL);
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
-+{
-+	if (!ctx->rbuf_len || !ctx->rbuf)
-+		return;
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len)
-+		damon_flush_rbuffer(ctx);
-+
-+	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
-+	ctx->rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each region.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of tasks> <array of task infos>
-+ *
-+ *   task info: <pid> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-  */
- static void kdamond_reset_aggregated(struct damon_ctx *c)
- {
- 	struct damon_task *t;
--	struct damon_region *r;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(c, &now, sizeof(struct timespec64));
-+	nr = nr_damon_tasks(c);
-+	damon_write_rbuf(c, &nr, sizeof(nr));
- 
- 	damon_for_each_task(c, t) {
--		damon_for_each_region(r, t)
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(c, &t->pid, sizeof(t->pid));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(c, &nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(c, &r->vm_start, sizeof(r->vm_start));
-+			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
-+			damon_write_rbuf(c, &r->nr_accesses,
-+					sizeof(r->nr_accesses));
- 			r->nr_accesses = 0;
-+		}
- 	}
- }
- 
-@@ -837,6 +904,14 @@ static bool kdamond_need_stop(struct damon_ctx *ctx)
- 	return true;
- }
- 
-+static void kdamond_write_record_header(struct damon_ctx *ctx)
-+{
-+	int recfmt_ver = 1;
-+
-+	damon_write_rbuf(ctx, "damon_recfmt_ver", 16);
-+	damon_write_rbuf(ctx, &recfmt_ver, sizeof(recfmt_ver));
-+}
-+
- /*
-  * The monitoring daemon that runs as a kernel thread
-  */
-@@ -849,6 +924,9 @@ static int kdamond_fn(void *data)
- 
- 	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
- 	kdamond_init_regions(ctx);
-+
-+	kdamond_write_record_header(ctx);
-+
- 	while (!kdamond_need_stop(ctx)) {
- 		kdamond_prepare_access_checks(ctx);
- 		if (ctx->sample_cb)
-@@ -869,6 +947,7 @@ static int kdamond_fn(void *data)
- 		if (kdamond_need_update_regions(ctx))
- 			kdamond_update_regions(ctx);
- 	}
-+	damon_flush_rbuffer(ctx);
- 	damon_for_each_task(ctx, t) {
- 		damon_for_each_region_safe(r, next, t)
- 			damon_destroy_region(r);
-@@ -971,6 +1050,52 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids)
- 	return 0;
- }
- 
-+/**
-+ * damon_set_recording() - Set attributes for the recording.
-+ * @ctx:	target kdamond context
-+ * @rbuf_len:	length of the result buffer
-+ * @rfile_path:	path to the monitor result files
-+ *
-+ * Setting 'rbuf_len' 0 disables recording.
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_recording(struct damon_ctx *ctx,
-+			unsigned int rbuf_len, char *rfile_path)
-+{
-+	size_t rfile_path_len;
-+
-+	if (rbuf_len > MAX_RECORD_BUFFER_LEN) {
-+		pr_err("too long (>%d) result buffer length\n",
-+				MAX_RECORD_BUFFER_LEN);
-+		return -EINVAL;
-+	}
-+	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
-+	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				MAX_RFILE_PATH_LEN, rfile_path);
-+		return -EINVAL;
-+	}
-+	ctx->rbuf_len = rbuf_len;
-+	kfree(ctx->rbuf);
-+	kfree(ctx->rfile_path);
-+	ctx->rfile_path = NULL;
-+	if (!rbuf_len) {
-+		ctx->rbuf = NULL;
-+	} else {
-+		ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
-+		if (!ctx->rbuf)
-+			return -ENOMEM;
-+	}
-+	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
-+	if (!ctx->rfile_path)
-+		return -ENOMEM;
-+	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
-+	return 0;
-+}
-+
- /**
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
+-		if (meta->nr_domains < (index - offset)) {
++		if ((meta->nr_domains - 1) < (index - offset)) {
+ 			offset += meta->nr_domains;
+ 			continue;
+ 		}
 -- 
-2.17.1
+2.26.2
 
