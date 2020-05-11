@@ -2,102 +2,122 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801CFC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB3EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49DEE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3985A20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6vfjCtm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SoEMt2VX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbgEKRbl (ORCPT
+        id S1731002AbgEKRcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:31:41 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27597 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729698AbgEKRbl (ORCPT
+        Mon, 11 May 2020 13:32:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57591 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728556AbgEKRcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:31:41 -0400
+        Mon, 11 May 2020 13:32:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589218300;
+        s=mimecast20190719; t=1589218322;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=M7lM8hUA0SbdYYpVAj09UaKq4AT4gRnDmZQFc7p0Moo=;
-        b=i6vfjCtmOKlCvNoUHW62kMCslfaxoUwW4f7kWNkcUaGGZUI5th/6Xow5j5a26ggxKZ/kyw
-        C4bOwF7rbSIYU9qp4b4vf2jfCiACEHAJfMqtEBsRR56Q33frfj9CoQTfR+1qVg1AdO0ZWG
-        98jNM9D8dpcVU0Wj+ZIb/i+7xu0fTeo=
+        bh=Qy83UmAGOjbze61BxDQ8wVOsVZu3BaGioUxMSAl0SsQ=;
+        b=SoEMt2VXVwsXiVANvxiAJ/+7Zb2LkAflDEzHFs+xkbtJadKZoB7j+d1RmxNR/4pAs0t2dl
+        qtX8Jggv2Ute8nFdDcO4ufVJZw5KRd+FGUveZHqTShMhPix/W9GojpkXevG0W/20Rc3cPq
+        NoZA5A0t7kgmfsKsFchkPzx6Tmy41U0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-gL6XFok0Oly971BA8NDF1Q-1; Mon, 11 May 2020 13:31:24 -0400
-X-MC-Unique: gL6XFok0Oly971BA8NDF1Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-509-rlj_CWElNYGeviLiWdhSaw-1; Mon, 11 May 2020 13:32:00 -0400
+X-MC-Unique: rlj_CWElNYGeviLiWdhSaw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 851C819057A0;
-        Mon, 11 May 2020 17:31:22 +0000 (UTC)
-Received: from [10.10.116.128] (ovpn-116-128.rdu2.redhat.com [10.10.116.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC9E66606E;
-        Mon, 11 May 2020 17:31:20 +0000 (UTC)
-Subject: Re: INFO: task hung in do_read_cache_page (3)
-To:     syzbot <syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, amir73il@gmail.com, axboe@kernel.dk,
-        darrick.wong@oracle.com, jack@suse.cz, josef@toxicpanda.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, william.kucharski@oracle.com,
-        willy@infradead.org
-References: <000000000000dc82ac05a55f3005@google.com>
-From:   Mike Christie <mchristi@redhat.com>
-Message-ID: <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
-Date:   Mon, 11 May 2020 12:31:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45567100CCC1;
+        Mon, 11 May 2020 17:31:59 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AD9C5EE0C;
+        Mon, 11 May 2020 17:31:56 +0000 (UTC)
+Date:   Mon, 11 May 2020 13:31:55 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        song@kernel.org, breeves@redhat.com, mpatocka@redhat.com,
+        khazhy@google.com, kernel@collabora.com
+Subject: Re: [PATCH v4 0/2] Historical Service Time Path Selector
+Message-ID: <20200511173155.GA7892@redhat.com>
+References: <20200511163910.3778467-1-krisman@collabora.com>
+ <20200511170235.GA7719@redhat.com>
+ <85ftc6l7lb.fsf@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <000000000000dc82ac05a55f3005@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85ftc6l7lb.fsf@collabora.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/20 8:19 AM, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 2da22da573481cc4837e246d0eee4d518b3f715e
-> Author: Mike Christie <mchristi@redhat.com>
-> Date:   Tue Aug 13 16:39:52 2019 +0000
-> 
->     nbd: fix zero cmd timeout handling v2
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d6ab14100000
-> start commit:   e99332e7 gcc-10: mark more functions __init to avoid secti..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d6ab14100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15d6ab14100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
-> dashboard link: https://syzkaller.appspot.com/bug?extid=518c54e255b5031adde4
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e45ec100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164444a4100000
-> 
-> Reported-by: syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com
-> Fixes: 2da22da57348 ("nbd: fix zero cmd timeout handling v2")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> 
+On Mon, May 11 2020 at  1:11pm -0400,
+Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
 
-How do you adjust/modify what is expected from the test or what is
-reported as an error?
+> Mike Snitzer <snitzer@redhat.com> writes:
+> 
+> > On Mon, May 11 2020 at 12:39pm -0400,
+> > Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
+> >
+> >> Hi,
+> >> 
+> >> This fourth version of HST applies the suggestion from Mikulas Patocka
+> >> to do the ktime_get_ns inside the mpath map_bio instead of generic
+> >> device-mapper code. This means that struct dm_mpath_io gained another
+> >> 64bit field.  For the request-based case, we continue to use the block
+> >> layer start time information.
+> >> 
+> >> With this modification, I was able obtain similar performance on  BIO
+> >> to request-based multipath with HST on the benchmarks shared in v1.
+> >> 
+> >> v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
+> >> v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
+> >> v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
+> >
+> > I already staged your v3 in linux-next.  Please provide an incremental
+> > patch that layers on this git branch:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.8
+> >
+> > I was hopeful for a flag to be set (e.g. in 'struct path_selector') to
+> > reflect whether the path selector expects highres start_time.  Makes
+> > little sense to incur that extra cost of providing the time if the path
+> > selector doesn't even use it.
+> >
+> > Alternatively, could split out the setting of the time needed by .end_io
+> > to a new path_selector_type method (e.g. .set_start_time).  And then
+> > only use ktime_get_ns() for bio-based if .set_start_time is defined.
+> > Would get a little fiddly needing to make sure a stale start_time isn't
+> > used... also, makes more sense to conditionally call this
+> > .set_start_time just after .start_io is.
+> 
+> Oh, my apologies, I hadn't noticed it was merged.  I will make the time fetch
+> conditional and submit a new patch based on that branch.
 
-The patch added back behavior that got removed. With the patch we expect
-the hung task warnings, because we specifically want to hold onto
-running commands for longer than 120/hung_task_timeout seconds
+I don't want to waste your time so please don't run with that idea just yet.
+
+There is a possibility we really _do_ need higher resolution time.
+
+I'm about to have a concall to discuss some disk IO stat issues with DM
+disk stats vs NVMe disk stats (provided by block core).
+
+I'll let you know the outcome and we can discuss further.
+
+Thanks,
+Mike
 
