@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE29C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F60C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862ED20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B3C20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qq74y2cm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pwhHoSUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgEKM0d (ORCPT
+        id S1730078AbgEKM0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
+        Mon, 11 May 2020 08:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730057AbgEKM0b (ORCPT
+        by vger.kernel.org with ESMTP id S1729978AbgEKM0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:26:31 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46C4C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:31 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id q24so7707069pjd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:31 -0700 (PDT)
+        Mon, 11 May 2020 08:26:09 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AF3C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:09 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b12so1957121plz.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XND7Ft1QHmviKkz6VujX9JUe2hE4nNkjYKIH9ZGOL2c=;
-        b=qq74y2cmWrgyNBuVo+ZVQ82V6vuYaeXy47j9lpqUOsM5LvjXdIpScs5Cyl8Woe2rKJ
-         wbeZGdChqEHWYorM2c8iT+ZzGdPgYODIHY0yc8UfNgRbe0kedUDdsTlRpZUuCgD+Xp06
-         zCmV1VYQx6p5E3PmCTciMt2nmg4AMB00wgMERiE9GJHgkg5iWu1ODLrXpFTISIHCssK0
-         Pq7e++v0MLeOZBPcwVdvcZ+dp5s+yTCRB8Q25/8dNmXYCEhlsDAa0qoWua15uG9Nhon3
-         /0cdL5w8rP3i10tpxI7R4WSEKga8awqQ34bJYAIrheJXcM277MC79Wcnzw06DSWv0+5a
-         Kc9A==
+        bh=yOzb3IhTI9yPWNl3XI2lYK3qvd7pN2r4jllGR7pHWUQ=;
+        b=pwhHoSUCVHs+05wGk4aMRqL1g9yeGAnLqwAgGUoSMQJ0rc7mu49oBcm9LjSVrbFYZQ
+         t8Xvu3w3mIEtvn8POrFFF4fBtnl5XqCOZTO6CZ0tE57miFK5qYk64oC4SpZzNnQ5hlhK
+         JNMsaI4WqG0kAe0ql2N3FSfvRtcBG3byYgGV1o/GR6F3gwnDSJdsX3GOrgU8z3S0R2U2
+         x8hTwg9E6VxijuJydfTP+Nt8OK03Qk9t6cMuu9hSEAj8J0iZ+WJ3UYmUZ5elnhJHN9UJ
+         Md6pZGWSMG/GjmxQOFdcq4oGCcQXmBlDLKggHQ02Vo2gx3VHutK/phHRuGIiPP9/26pX
+         pzOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XND7Ft1QHmviKkz6VujX9JUe2hE4nNkjYKIH9ZGOL2c=;
-        b=qfURNqoc0A9WNsQSdQD40vm2tndelXKlveVASLwcWPaTrsL99IioQrJYfPOW/BRAKn
-         e3397O8APT9AMFZ4Y0jI2pTdR2pwqVsQxU12BHklaGH8yrjPE1kiM7k780a+R02R+FjQ
-         cM/w4qKY3Ivy862z/CHjwf/O8ZI8Clz4DaWq5Gwc7pMO5VhTkBJCq+iBpCEqx2QFbMK8
-         Fbd546fu7O6T+Sgp/WGs/mEwRdSR/fZsPbCihhMFCci3zujtbFhNIFe3qGAWGADhs+VP
-         d0LK/QcJ8LwBjG85E01v5T3EanDr234NAsB+nkoXuXk+b3W7sJhBPh7XnDCJdU/B7yJQ
-         TV9w==
-X-Gm-Message-State: AGi0PubZnOpQ61cpFq27oI9PB1pn+k3apcShN1wfwJHuRRJdPjhstLvt
-        Qr7asUmVRq0xnH4q3vRq3fs58NkzpMU=
-X-Google-Smtp-Source: APiQypI5fvYsRF8XnQe9EPoaeEun1n645HV0jOql6fL0RQEqTubw4z2wfOtKrErX3Fbm2RhA6mQO2w==
-X-Received: by 2002:a17:90a:fa3:: with SMTP id 32mr22841991pjz.224.1589199990623;
-        Mon, 11 May 2020 05:26:30 -0700 (PDT)
+        bh=yOzb3IhTI9yPWNl3XI2lYK3qvd7pN2r4jllGR7pHWUQ=;
+        b=VSBoXF4gXzd67KxvhAyhBAJwj2DkunDaDRBDZ4SgbcnxhV6igINwDL+E1KVaa6d1AX
+         njnKfhCY/iP8/dc4SWZ2r+OpKVCVOzamuY/MXAGGuoh3X9rp+qfmHZ1GHpbIwwY6C8Al
+         M9qIlhbb13EEhciCyYLv4d5OKIZgXa3+gW5qvZtUzItWEuI+MF4Hr/UuylGbELFIK7Mx
+         vlIgygO5KMro1FsPHRhs/G0veQZ0VzPUrdUiFzlCVz7Ik//OkrcIpAuPDJvZ7BMmGtTa
+         zwYosucfa6pCvLcBP0agm1gyuuyBbtpU84z2Mpg3zNQzUNQAxJs70WbmJ8qKLFEUNFWq
+         SPLA==
+X-Gm-Message-State: AGi0PuaxWhdwQXB0cz51Taxdn42c1Edmps3cyfpH+q0avfi1EnhNbLKu
+        jGl1oTam+Ax7TKKSYVMf7hYFg1LeHBc=
+X-Google-Smtp-Source: APiQypII8GF6w8vhEPnDEzE0HX6p4o0aWnNJi62GTULFdKWxm4PZwjkfcd95O3F+qhRPvFrwVWV1pw==
+X-Received: by 2002:a17:90a:748:: with SMTP id s8mr21384120pje.221.1589199968762;
+        Mon, 11 May 2020 05:26:08 -0700 (PDT)
 Received: from localhost ([45.127.45.102])
-        by smtp.gmail.com with ESMTPSA id y2sm9235710pfq.16.2020.05.11.05.26.29
+        by smtp.gmail.com with ESMTPSA id 1sm9253822pff.180.2020.05.11.05.26.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:26:29 -0700 (PDT)
+        Mon, 11 May 2020 05:26:08 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org,
@@ -68,9 +68,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 14/14] thermal/of: Rename of-thermal.c
-Date:   Mon, 11 May 2020 17:55:02 +0530
-Message-Id: <f5e233d5c5dcc7c7cb56b3448da255cb2c9ef0d1.1589199124.git.amit.kucheria@linaro.org>
+Subject: [PATCH 09/14] thermal/drivers/cpufreq_cooling: Sort headers alphabetically
+Date:   Mon, 11 May 2020 17:54:57 +0530
+Message-Id: <4231f5dfe758b9bf716981be71cadf9642c83528.1589199124.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
 References: <cover.1589199124.git.amit.kucheria@linaro.org>
@@ -81,36 +81,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Core thermal framework code files should start with thermal_*.
-of-thermal.c does not follow this pattern and can easily be confused
-with platform driver.
-
-Fix this by renaming it to thermal_of.c
+Sort headers to make it easier to read and find duplicate headers.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/Makefile                       | 2 +-
- drivers/thermal/{of-thermal.c => thermal_of.c} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename drivers/thermal/{of-thermal.c => thermal_of.c} (100%)
+ drivers/thermal/cpufreq_cooling.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 09ff0e259d46..d7969dd553cb 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -9,7 +9,7 @@ thermal_sys-y			+= thermal_core.o thermal_sysfs.o \
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index e297e135c031..1b5a63b4763d 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -11,16 +11,16 @@
+  *
+  */
+ #include <linux/module.h>
+-#include <linux/thermal.h>
++#include <linux/cpu.h>
+ #include <linux/cpufreq.h>
++#include <linux/cpu_cooling.h>
++#include <linux/energy_model.h>
+ #include <linux/err.h>
+ #include <linux/idr.h>
+ #include <linux/pm_opp.h>
+ #include <linux/pm_qos.h>
+ #include <linux/slab.h>
+-#include <linux/cpu.h>
+-#include <linux/cpu_cooling.h>
+-#include <linux/energy_model.h>
++#include <linux/thermal.h>
  
- # interface to/from other layers providing sensors
- thermal_sys-$(CONFIG_THERMAL_HWMON)		+= thermal_hwmon.o
--thermal_sys-$(CONFIG_THERMAL_OF)		+= of-thermal.o
-+thermal_sys-$(CONFIG_THERMAL_OF)		+= thermal_of.o
+ #include <trace/events/thermal.h>
  
- # governors
- thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= gov_fair_share.o
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/thermal_of.c
-similarity index 100%
-rename from drivers/thermal/of-thermal.c
-rename to drivers/thermal/thermal_of.c
 -- 
 2.20.1
 
