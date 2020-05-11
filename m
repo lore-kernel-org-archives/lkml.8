@@ -2,148 +2,278 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AADC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6AFC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77F2420720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30774206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bw9pWzuc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bAq1Ws61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgEKJZj (ORCPT
+        id S1729386AbgEKJ1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgEKJZj (ORCPT
+        Mon, 11 May 2020 05:27:05 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46664 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726071AbgEKJ1F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:25:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E67AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7OpLvp7YfGNXUn/7bmt46LHF/81ym1CQ5UJOWVJ8sXM=; b=bw9pWzucX7lwVrw5hdscf/FaH3
-        tVKEZ8XHj2OCsaTCWh7e+7Y3yBDs0dRTGLQBI4gAQydkCRQAeYpWx2HvFPDQDPiAnB7L9u1IU0S/K
-        AbjjFg9MyrX9VUqCvAN83HdPgtjd0yFI60AM3gJqqlgfxgHx+kmuANHXbzk9bhiZoqmO53b3J5C7B
-        DIVfWBVfYOMAnhPcylvrPbpHD2BjEWan7A6XAkFcdPYTTzd8YAzGKTC3LFkwRcIa7rHM+ZBUgEf0o
-        sd73WiufpDAztuzRahM4g98l1bBzE4Ne9qq7anWf6340IvqOTshcMdKH/W7Iw4TBprd+16tnUWUUq
-        iU/zByWQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY4gb-0006eF-BY; Mon, 11 May 2020 09:25:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59922301A80;
-        Mon, 11 May 2020 11:25:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 450F2203C0863; Mon, 11 May 2020 11:25:19 +0200 (CEST)
-Date:   Mon, 11 May 2020 11:25:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] arm64: perf_event: Fix time offset prior to epoch
-Message-ID: <20200511092519.GA3001@hirez.programming.kicks-ass.net>
-References: <20200505135544.6003-1-leo.yan@linaro.org>
- <20200511092200.GF2957@hirez.programming.kicks-ass.net>
+        Mon, 11 May 2020 05:27:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589189222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=13BAfE/1sRi/J98yTfEpMD1AFwnvSYNGHAmPHqQf/Xs=;
+        b=bAq1Ws61NhzVkyb0RcrYAxrhfqPtdsI7iAKXrbkB1lnfx73drcBWNI5VjchcAlZRpXCXE4
+        M6hZrxTpgHmHIWYyzbJ06b9QzVBkjSranz3OKOUmcJconl13L50yPM3zINe2HlS8uL40aW
+        bNG1fQZRsL1JUheJDc2bIu1hREZjD6Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-054MV0GAOBWYzkGne0pEFA-1; Mon, 11 May 2020 05:27:01 -0400
+X-MC-Unique: 054MV0GAOBWYzkGne0pEFA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C06AA18CA274;
+        Mon, 11 May 2020 09:26:59 +0000 (UTC)
+Received: from [10.72.12.137] (ovpn-12-137.pek2.redhat.com [10.72.12.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2670C165F6;
+        Mon, 11 May 2020 09:26:50 +0000 (UTC)
+Subject: Re: [PATCH] ifcvf: move IRQ request/free to status change handlers
+To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1589181563-38400-1-git-send-email-lingshan.zhu@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
+Date:   Mon, 11 May 2020 17:26:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511092200.GF2957@hirez.programming.kicks-ass.net>
+In-Reply-To: <1589181563-38400-1-git-send-email-lingshan.zhu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:22:00AM +0200, Peter Zijlstra wrote:
 
-> (_completely_ untested)
-> 
+On 2020/5/11 下午3:19, Zhu Lingshan wrote:
+> This commit move IRQ request and free operations from probe()
+> to VIRTIO status change handler to comply with VIRTIO spec.
+>
+> VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
+> The device MUST NOT consume buffers or send any used buffer
+> notifications to the driver before DRIVER_OK.
+
+
+My previous explanation might be wrong here. It depends on how you 
+implement your hardware, if you hardware guarantee that no interrupt 
+will be triggered before DRIVER_OK, then it's fine.
+
+And the main goal for this patch is to allocate the interrupt on demand.
+
+
+>
+> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
 > ---
->  arch/arm64/kernel/perf_event.c | 27 ++++++++++++++++++---------
->  include/linux/sched_clock.h    | 28 ++++++++++++++++++++++++++++
->  kernel/time/sched_clock.c      | 41 +++++++++++++----------------------------
->  3 files changed, 59 insertions(+), 37 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index 4d7879484cec..81a49a916660 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -1165,28 +1165,37 @@ device_initcall(armv8_pmu_driver_init)
->  void arch_perf_update_userpage(struct perf_event *event,
->  			       struct perf_event_mmap_page *userpg, u64 now)
->  {
-> -	u32 freq;
-> -	u32 shift;
-> +	struct clock_read_data *rd;
-> +	unsigned int seq;
->  
->  	/*
->  	 * Internal timekeeping for enabled/running/stopped times
->  	 * is always computed with the sched_clock.
->  	 */
-> -	freq = arch_timer_get_rate();
->  	userpg->cap_user_time = 1;
-> +	userpg->cap_user_time_zero = 1;
+>   drivers/vdpa/ifcvf/ifcvf_main.c | 119 ++++++++++++++++++++++++----------------
+>   1 file changed, 73 insertions(+), 46 deletions(-)
+>
+> diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
+> index abf6a061..4d58bf2 100644
+> --- a/drivers/vdpa/ifcvf/ifcvf_main.c
+> +++ b/drivers/vdpa/ifcvf/ifcvf_main.c
+> @@ -28,6 +28,60 @@ static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +static void ifcvf_free_irq_vectors(void *data)
+> +{
+> +	pci_free_irq_vectors(data);
+> +}
 > +
-> +	do {
-> +		rd = sched_clock_read_begin(&seq);
+> +static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
+> +{
+> +	struct pci_dev *pdev = adapter->pdev;
+> +	struct ifcvf_hw *vf = &adapter->vf;
+> +	int i;
 > +
-> +		userpg->time_mult = rd->mult;
-> +		userpg->time_shift = rd->shift;
-> +		userpg->time_offset = rd->epoch_ns;
+> +
+> +	for (i = 0; i < queues; i++)
+> +		devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
+> +
+> +	ifcvf_free_irq_vectors(pdev);
+> +}
+> +
+> +static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
+> +{
+> +	struct pci_dev *pdev = adapter->pdev;
+> +	struct ifcvf_hw *vf = &adapter->vf;
+> +	int vector, i, ret, irq;
+> +
+> +	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
+> +				    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
+> +	if (ret < 0) {
+> +		IFCVF_ERR(pdev, "Failed to alloc IRQ vectors\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+> +		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
+> +			 pci_name(pdev), i);
+> +		vector = i + IFCVF_MSI_QUEUE_OFF;
+> +		irq = pci_irq_vector(pdev, vector);
+> +		ret = devm_request_irq(&pdev->dev, irq,
+> +				       ifcvf_intr_handler, 0,
+> +				       vf->vring[i].msix_name,
+> +				       &vf->vring[i]);
+> +		if (ret) {
+> +			IFCVF_ERR(pdev,
+> +				  "Failed to request irq for vq %d\n", i);
+> +			ifcvf_free_irq(adapter, i);
 
-			^^^^^^^ wants to be time_zero
+
+I'm not sure this unwind is correct. It looks like we should loop and 
+call devm_free_irq() for virtqueue [0, i);
+
+
 
 > +
-> +		userpg->time_zero -= (rd->epoch_cyc * rd->shift) >> rd->shift;
+> +			return ret;
+> +		}
 > +
-> +	} while (sched_clock_read_retry(seq));
+> +		vf->vring[i].irq = irq;
+> +	}
 > +
-> +	userpg->time_offset = userpf->time_zero - now;
->  
-> -	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
-> -			NSEC_PER_SEC, 0);
+> +	return 0;
+> +}
+> +
+>   static int ifcvf_start_datapath(void *private)
+>   {
+>   	struct ifcvf_hw *vf = ifcvf_private_to_vf(private);
+> @@ -118,9 +172,12 @@ static void ifcvf_vdpa_set_status(struct vdpa_device *vdpa_dev, u8 status)
+>   {
+>   	struct ifcvf_adapter *adapter;
+>   	struct ifcvf_hw *vf;
+> +	u8 status_old;
+> +	int ret;
+>   
+>   	vf  = vdpa_to_vf(vdpa_dev);
+>   	adapter = dev_get_drvdata(vdpa_dev->dev.parent);
+> +	status_old = ifcvf_get_status(vf);
+>   
+>   	if (status == 0) {
+>   		ifcvf_stop_datapath(adapter);
+> @@ -128,7 +185,22 @@ static void ifcvf_vdpa_set_status(struct vdpa_device *vdpa_dev, u8 status)
+>   		return;
+>   	}
+>   
+> -	if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
+> +	if ((status_old & VIRTIO_CONFIG_S_DRIVER_OK) &&
+> +	    !(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
+> +		ifcvf_stop_datapath(adapter);
+> +		ifcvf_free_irq(adapter, IFCVF_MAX_QUEUE_PAIRS * 2);
+> +	}
+> +
+> +	if ((status & VIRTIO_CONFIG_S_DRIVER_OK) &&
+> +	    !(status_old & VIRTIO_CONFIG_S_DRIVER_OK)) {
+> +		ret = ifcvf_request_irq(adapter);
+> +		if (ret) {
+> +			status = ifcvf_get_status(vf);
+> +			status |= VIRTIO_CONFIG_S_FAILED;
+> +			ifcvf_set_status(vf, status);
+> +			return;
+> +		}
+> +
 
-And that ^^^ was complete crap.
 
->  	/*
->  	 * time_shift is not expected to be greater than 31 due to
->  	 * the original published conversion algorithm shifting a
->  	 * 32-bit value (now specifies a 64-bit value) - refer
->  	 * perf_event_mmap_page documentation in perf_event.h.
->  	 */
-> -	if (shift == 32) {
-> -		shift = 31;
-> +	if (userpg->time_shift == 32) {
-> +		userpg->time_shift = 31;
->  		userpg->time_mult >>= 1;
->  	}
-> -	userpg->time_shift = (u16)shift;
-> -	userpg->time_offset = -now;
->  }
+Have a hard though on the logic here.
+
+This depends on the status setting from guest or userspace. Which means 
+it can not deal with e.g when qemu or userspace is crashed? Do we need 
+to care this or it's a over engineering?
+
+Thanks
+
+
+>   		if (ifcvf_start_datapath(adapter) < 0)
+>   			IFCVF_ERR(adapter->pdev,
+>   				  "Failed to set ifcvf vdpa  status %u\n",
+> @@ -284,38 +356,6 @@ static void ifcvf_vdpa_set_config_cb(struct vdpa_device *vdpa_dev,
+>   	.set_config_cb  = ifcvf_vdpa_set_config_cb,
+>   };
+>   
+> -static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
+> -{
+> -	struct pci_dev *pdev = adapter->pdev;
+> -	struct ifcvf_hw *vf = &adapter->vf;
+> -	int vector, i, ret, irq;
+> -
+> -
+> -	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
+> -		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
+> -			 pci_name(pdev), i);
+> -		vector = i + IFCVF_MSI_QUEUE_OFF;
+> -		irq = pci_irq_vector(pdev, vector);
+> -		ret = devm_request_irq(&pdev->dev, irq,
+> -				       ifcvf_intr_handler, 0,
+> -				       vf->vring[i].msix_name,
+> -				       &vf->vring[i]);
+> -		if (ret) {
+> -			IFCVF_ERR(pdev,
+> -				  "Failed to request irq for vq %d\n", i);
+> -			return ret;
+> -		}
+> -		vf->vring[i].irq = irq;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static void ifcvf_free_irq_vectors(void *data)
+> -{
+> -	pci_free_irq_vectors(data);
+> -}
+> -
+>   static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -349,13 +389,6 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   		return ret;
+>   	}
+>   
+> -	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
+> -				    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
+> -	if (ret < 0) {
+> -		IFCVF_ERR(pdev, "Failed to alloc irq vectors\n");
+> -		return ret;
+> -	}
+> -
+>   	ret = devm_add_action_or_reset(dev, ifcvf_free_irq_vectors, pdev);
+>   	if (ret) {
+>   		IFCVF_ERR(pdev,
+> @@ -379,12 +412,6 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>   	adapter->pdev = pdev;
+>   	adapter->vdpa.dma_dev = &pdev->dev;
+>   
+> -	ret = ifcvf_request_irq(adapter);
+> -	if (ret) {
+> -		IFCVF_ERR(pdev, "Failed to request MSI-X irq\n");
+> -		goto err;
+> -	}
+> -
+>   	ret = ifcvf_init_hw(vf, pdev);
+>   	if (ret) {
+>   		IFCVF_ERR(pdev, "Failed to init IFCVF hw\n");
+
