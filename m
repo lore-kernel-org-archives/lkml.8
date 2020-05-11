@@ -2,376 +2,268 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39E7C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE3DC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF1020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC852075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eWizQaZ8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oJtRpaou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEKXdF (ORCPT
+        id S1728293AbgEKXdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:33:05 -0400
-Received: from mail-eopbgr760051.outbound.protection.outlook.com ([40.107.76.51]:30656
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728261AbgEKXdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:33:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WYq+iXa5mEHXRubhytNfn4K7Bvk1GET4SVxZJ5RsFChBFUtwSbV6PZMSPyBbP0oHgXjSfjStld0/QUbzva5wKD53m6WpGrlVvAcAOmyQY8eANWBiq9UY+4CAmVXmNvmL6q8QycAPeKlHHyE8g79dXkdLsNnBWMCng74uINGhMQImFeoCjeVfMr8a18YqOGqOkJRZhh3TSgbs+bJhN8MS9o7sWgBoyg0hggj+ROCIrcFhYXHo4dcoxPsro6c4w8Sp6rbKLR78+shHmnSW/7dmRwWjNLJpg2XFEia0p3EqWVzgWU8RghQAzRAJ0A+jWsxfb0saRGOVVjd0tHg/O8QdZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gScTWSgrt1I6ZIxUAKuYL/KVKxVWx3f1QsKpSo9Vrwk=;
- b=SG8dpqKmxbmCEkfV/Nnw3iBgaNOt95/505tWq9xXS+JBfmK+7fnOOKTlxnxb7XYxIOrYaKDNal7BrFvd7kzgos39qIeeWyFfDZHbNTVRC87jjB2PPi2iZRJjtA37LlimXqnOtEQxSZ+aUhd8usx4eqQX+vynprHSb3hU5x5Fsh8TpQ6KRhKhHt7SQbr7DVutmMP4IyFuARbtzvdRrTKrywZiIW3NJXOdYDyI9pvjcaevTLE0g0uaKF17WqpoXLvxav5QzkLSc5vrejuGxQXd49b165YrEU2CFOQ47RTOo9G0ngAXamrbDmOiLK3WQFPmy3ZTr9+nuwuq2X8QRRwMKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 11 May 2020 19:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728126AbgEKXci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 19:32:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9269FC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s11so1782930pgv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gScTWSgrt1I6ZIxUAKuYL/KVKxVWx3f1QsKpSo9Vrwk=;
- b=eWizQaZ83w4G8G9XzYo5ktjCl/4wQ0IJQJjqpguQ8+anvlJLbMQkM6OVRZy52nmeBUAWWOQkMTM9QPbQ7Z5JmfX+cemLpNTTd4ttaRrz5oiYPXgfVLVEZ18Gy2l2sOiRtbT65/beUiwEeH1Saz5sWbSns3Ac67t+n0ksmKPkeLg=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2478.namprd12.prod.outlook.com (2603:10b6:802:23::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 23:32:59 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 23:32:59 +0000
-Subject: [PATCH v3 1/3] arch/x86: Rename config
- X86_INTEL_MEMORY_PROTECTION_KEYS to generic x86
-From:   Babu Moger <babu.moger@amd.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
-        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
-        asteinhauser@google.com, anshuman.khandual@arm.com,
-        jan.kiszka@siemens.com, akpm@linux-foundation.org,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date:   Mon, 11 May 2020 18:32:54 -0500
-Message-ID: <158923997443.20128.16545619590919566266.stgit@naples-babu.amd.com>
-In-Reply-To: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
-References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
-User-Agent: StGit/unknown-version
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM3PR12CA0080.namprd12.prod.outlook.com
- (2603:10b6:0:57::24) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f57mkmMeRTJCb8idtqQpGeSZRnG7x3GSllIy/j0B6ps=;
+        b=oJtRpaouFh2xn/BoHj9my+gKng1zvIAso0350ay6tgxJO0+q1s8oy5DdHFY++0HiM/
+         ivJd9c/Ul0UqH6avGf2y3YzIYmHAZ64P34jVKAe4J8jBVxp90U5/cFLom0IpYd5+sKLF
+         cW5HbuxigR2XNORwYuQXr8hsVIyO8y8O6O5G8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f57mkmMeRTJCb8idtqQpGeSZRnG7x3GSllIy/j0B6ps=;
+        b=R/k2eAGEoCD0sYO2KEHq6cXn8EWchq47uyXcjIlt8samvJ7XmAaatzPl+lNrSRfvc6
+         BiYMmIOYVnL2l6P7KDzGN3/Pc+yNqD7Tb4mdrE6Kp/YGnipkWeLCOzEYqPXR4MSe9r6l
+         fLOvV+lTgKbLrSqtaEVlL5sCKJDiDh17UhvjoPdRgbdXVMhcgzmwOikRZS5SCcnoMVro
+         9R6vgliPxdyemajc+cx1OQBx9ecydXni8lGI1m1wGlSJ4eUXrc/Se2Gyd1AeveQdbNU8
+         2gUQLOW+J38kePylDQV/PR4oz553OE2x6j3fIrSuboyO9s4VMtopFzTp6Ti573nFkcIB
+         V/pA==
+X-Gm-Message-State: AGi0PualWCVd7jjuqLY9njXbNOqQitedGhfw4p11+7BR0KsH9oVVZpxk
+        7Utmzx2VHgHkTBHOHudmJdA+4A==
+X-Google-Smtp-Source: APiQypKFYj6kjh3yVfGdOaUuvQtzDiI9MAfZIVYNvL1SGyAtiMuKXOoZS59PFfe8qrOZO9tn2n7Vhg==
+X-Received: by 2002:a63:fb4b:: with SMTP id w11mr17189987pgj.123.1589239958065;
+        Mon, 11 May 2020 16:32:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ce21sm11013229pjb.51.2020.05.11.16.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 16:32:35 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH v8 07/11] pstore/zone: Provide way to skip "broken" zone for MTD devices
+Date:   Mon, 11 May 2020 16:32:25 -0700
+Message-Id: <20200511233229.27745-8-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200511233229.27745-1-keescook@chromium.org>
+References: <20200511233229.27745-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from naples-babu.amd.com (165.204.78.2) by DM3PR12CA0080.namprd12.prod.outlook.com (2603:10b6:0:57::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 23:32:55 +0000
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 725ed9e2-4bb7-4411-2678-08d7f603a398
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2478:|SN1PR12MB2478:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB247827226DD4FC676CB56F9295A10@SN1PR12MB2478.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r6ztO40qsouHztYTiCJta4lmNZnQCycM4BEFi0RE9OzMkCd8AJzU1/Hi4Ud5+V3+o0UU55Z6YLKmJ2niiz3O0H4CeixVUC/JaDL7tws3XE8NJVSZlmekf4cPPo9ZUp3FhV+uEPQOIGoeanPS42cgWclUYmgjXDRTno+ZKpo2aVDlud+UuLGliNZfPhAofF1IU1XqGFTgG3H4/DTLxDqGB8C7tMpzi+xz053kEEJVAowxlvQF94Urrrk53Fz+bLqhKB1TSKMklmKkQ47f944XzBbvZ61c6RN/3yYXRFM0PeYI8fPQErndYTlXZg7/XsRPaFOT0+3Hz3An+3suqKGaHXPI2NdgAsW+CtYII8+0u4cJ7M6fcCDqIiZ6tKOhofTLbvAADA+BbpxSFACyFWGVucg6r1uad6RfaJ8SIXT4cxmbZj5WPPD3fTUkxkst/2g4wEGn1aGjE3NPXlTqj5PWGNMQCgMei34wxOYBW0qmv4adoagzH8RERKgnnx3D1TnasV1g26vKDK9roK7PDEjjEP7jZxhkFj1QaMPeOPlELRJewksm5AQNzi+AbeY90xLPhs6HhWQjx5jAMck6E04bD44zwV1g94wTFZnxvFlvHKR47wpsv6fFi4hQXgmFOHky
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(33430700001)(8676002)(2906002)(478600001)(4326008)(8936002)(186003)(26005)(7406005)(16526019)(5660300002)(7416002)(44832011)(86362001)(316002)(103116003)(956004)(33440700001)(55016002)(30864003)(66946007)(52116002)(7696005)(66476007)(66556008)(966005)(41533002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: OJunIoJtjM4zRSkpuia7eW4+FoM8IRqSoGWYCnN4QzVb8nnOMBsaoWkgSw5X30TEHC27kwkCm6pzh1oxUUYmlSB4W0NstXbOlstzgP17+0CSpPfIoPTxk9NkPDA5gvPNC0i0/737vXUw4CW4XZfuaXU1jkbxeZfAb4Y0nca8KlhxTDrTbFvfH7zso/BFgElc9DzWO9l0/EHZFu5/rvtkO4D7g/ASVd4H3waJ+1GRitCbPtjAdY6/F7KAngjvkAv6g4fNn7dJIlUiyy99QfsoX3aok+7Ou0yMMK0SZsWLOGFo+fBKlEVncBu98+QMBy0K5581OuFDnFCcASr4cHLsErg/cAb81HFfy+/Ge5FWQP9JU3vb42CfBBKkKMSEwhgUy1EN2RKh9b5wSM9Yi7U4PHdv07isirjw7f5pst6vnOjHDbBdPKJC3vFWrWdM+M+WjHHr9IKYpw9pCZlKIn/Q3YRzDtu8t49gaUmLfynpf5s=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 725ed9e2-4bb7-4411-2678-08d7f603a398
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 23:32:58.9774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7ityY3thtRC5t/ZNQQUd+9w0HCB/DUfcQ4vXlpdLy9xq29scB8aLtnW085KgiVMZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2478
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AMD's next generation of EPYC processors support the MPK (Memory
-Protection Keys) feature.
+From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 
-So, rename X86_INTEL_MEMORY_PROTECTION_KEYS to X86_MEMORY_PROTECTION_KEYS.
+One requirement to support MTD devices in pstore/zone is having a
+way to declare certain regions as broken. Add this support to
+pstore/zone.
 
-No functional changes.
+The MTD driver should return -ENOMSG when encountering a bad region,
+which tells pstore/zone to skip and try the next one.
 
-AMD documentation for MPK feature is available at "AMD64 Architecture
-Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
-Section 5.6.6 Memory Protection Keys (MPK) Bit". Documentation can be
-obtained at the link below.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Link: https://lore.kernel.org/r/1585126506-18635-9-git-send-email-liaoweixiong@allwinnertech.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/core-api/protection-keys.rst     |    3 ++-
- arch/x86/Kconfig                               |   11 +++++++++--
- arch/x86/include/asm/disabled-features.h       |    4 ++--
- arch/x86/include/asm/mmu.h                     |    2 +-
- arch/x86/include/asm/mmu_context.h             |    4 ++--
- arch/x86/include/asm/pgtable.h                 |    4 ++--
- arch/x86/include/asm/pgtable_types.h           |    2 +-
- arch/x86/include/asm/special_insns.h           |    2 +-
- arch/x86/include/uapi/asm/mman.h               |    2 +-
- arch/x86/kernel/cpu/common.c                   |    2 +-
- arch/x86/mm/Makefile                           |    2 +-
- arch/x86/mm/pkeys.c                            |    2 +-
- scripts/headers_install.sh                     |    2 +-
- tools/arch/x86/include/asm/disabled-features.h |    4 ++--
- 14 files changed, 27 insertions(+), 19 deletions(-)
+ fs/pstore/blk.c             | 10 ++++--
+ fs/pstore/zone.c            | 65 ++++++++++++++++++++++++++++++-------
+ include/linux/pstore_blk.h  |  3 +-
+ include/linux/pstore_zone.h | 12 ++++---
+ 4 files changed, 71 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/core-api/protection-keys.rst b/Documentation/core-api/protection-keys.rst
-index 49d9833af871..d25e89e53c59 100644
---- a/Documentation/core-api/protection-keys.rst
-+++ b/Documentation/core-api/protection-keys.rst
-@@ -6,7 +6,8 @@ Memory Protection Keys
- 
- Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
- which is found on Intel's Skylake "Scalable Processor" Server CPUs.
--It will be avalable in future non-server parts.
-+It will be available in future non-server parts. Also, AMD64
-+Architecture Programmer’s Manual defines PKU feature in AMD processors.
- 
- For anyone wishing to test or use this feature, it is available in
- Amazon's EC2 C5 instances and is known to work there using an Ubuntu
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1197b5596d5a..b6f1686526eb 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1887,10 +1887,10 @@ config X86_UMIP
- 	  results are dummy.
- 
- config X86_INTEL_MEMORY_PROTECTION_KEYS
--	prompt "Intel Memory Protection Keys"
-+	prompt "Memory Protection Keys"
- 	def_bool y
- 	# Note: only available in 64-bit mode
--	depends on CPU_SUP_INTEL && X86_64
-+	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
- 	select ARCH_USES_HIGH_VMA_FLAGS
- 	select ARCH_HAS_PKEYS
- 	---help---
-@@ -1902,6 +1902,13 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
- 
- 	  If unsure, say y.
- 
-+config X86_MEMORY_PROTECTION_KEYS
-+	# Note: This is an intermediate change to avoid config prompt to
-+	# the users. Eventually, the option X86_INTEL_MEMORY_PROTECTION_KEYS
-+	# should be changed to X86_MEMORY_PROTECTION_KEYS permanently after
-+	# few kernel revisions.
-+	def_bool X86_INTEL_MEMORY_PROTECTION_KEYS
-+
- choice
- 	prompt "TSX enable mode"
- 	depends on CPU_SUP_INTEL
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-index 4ea8584682f9..52dbdfed8043 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -36,13 +36,13 @@
- # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
- #endif /* CONFIG_X86_64 */
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- # define DISABLE_PKU		0
- # define DISABLE_OSPKE		0
- #else
- # define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
- # define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
-+#endif /* CONFIG_X86_MEMORY_PROTECTION_KEYS */
- 
- #ifdef CONFIG_X86_5LEVEL
- # define DISABLE_LA57	0
-diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
-index bdeae9291e5c..351d22152709 100644
---- a/arch/x86/include/asm/mmu.h
-+++ b/arch/x86/include/asm/mmu.h
-@@ -42,7 +42,7 @@ typedef struct {
- 	const struct vdso_image *vdso_image;	/* vdso image in use */
- 
- 	atomic_t perf_rdpmc_allowed;	/* nonzero if rdpmc is allowed */
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- 	/*
- 	 * One bit per protection key says whether userspace can
- 	 * use it or not.  protected by mmap_sem.
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 4e55370e48e8..33f4a7ccac5e 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -118,7 +118,7 @@ static inline int init_new_context(struct task_struct *tsk,
- 	mm->context.ctx_id = atomic64_inc_return(&last_mm_ctx_id);
- 	atomic64_set(&mm->context.tlb_gen, 0);
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- 	if (cpu_feature_enabled(X86_FEATURE_OSPKE)) {
- 		/* pkey 0 is the default and allocated implicitly */
- 		mm->context.pkey_allocation_map = 0x1;
-@@ -163,7 +163,7 @@ do {						\
- static inline void arch_dup_pkeys(struct mm_struct *oldmm,
- 				  struct mm_struct *mm)
- {
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- 	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
- 		return;
- 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 4d02e64af1b3..4265720d62c2 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1451,7 +1451,7 @@ static inline pmd_t pmd_swp_clear_uffd_wp(pmd_t pmd)
- #define PKRU_WD_BIT 0x2
- #define PKRU_BITS_PER_PKEY 2
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- extern u32 init_pkru_value;
- #else
- #define init_pkru_value	0
-@@ -1475,7 +1475,7 @@ static inline bool __pkru_allows_write(u32 pkru, u16 pkey)
- 
- static inline u16 pte_flags_pkey(unsigned long pte_flags)
- {
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- 	/* ifdef to avoid doing 59-bit shift on 32-bit values */
- 	return (pte_flags & _PAGE_PKEY_MASK) >> _PAGE_BIT_PKEY_BIT0;
- #else
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index b6606fe6cfdf..c61a1ff71d53 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -56,7 +56,7 @@
- #define _PAGE_PAT_LARGE (_AT(pteval_t, 1) << _PAGE_BIT_PAT_LARGE)
- #define _PAGE_SPECIAL	(_AT(pteval_t, 1) << _PAGE_BIT_SPECIAL)
- #define _PAGE_CPA_TEST	(_AT(pteval_t, 1) << _PAGE_BIT_CPA_TEST)
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- #define _PAGE_PKEY_BIT0	(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT0)
- #define _PAGE_PKEY_BIT1	(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT1)
- #define _PAGE_PKEY_BIT2	(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT2)
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 6d37b8fcfc77..70eaae7e8f04 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -73,7 +73,7 @@ static inline unsigned long native_read_cr4(void)
- 
- void native_write_cr4(unsigned long val);
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- static inline u32 rdpkru(void)
- {
- 	u32 ecx = 0;
-diff --git a/arch/x86/include/uapi/asm/mman.h b/arch/x86/include/uapi/asm/mman.h
-index d4a8d0424bfb..d4da414a9de2 100644
---- a/arch/x86/include/uapi/asm/mman.h
-+++ b/arch/x86/include/uapi/asm/mman.h
-@@ -4,7 +4,7 @@
- 
- #define MAP_32BIT	0x40		/* only give out 32bit addresses */
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- /*
-  * Take the 4 protection key bits out of the vma->vm_flags
-  * value and turn them in to the bits that we can put in
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index bed0cb83fe24..e5fb9955214c 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -448,7 +448,7 @@ static __always_inline void setup_pku(struct cpuinfo_x86 *c)
- 	set_cpu_cap(c, X86_FEATURE_OSPKE);
+diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
+index 9f1f0d5b3795..8c78eb9906fb 100644
+--- a/fs/pstore/blk.c
++++ b/fs/pstore/blk.c
+@@ -109,9 +109,12 @@ struct bdev_info {
+  *		means error.
+  * @write:	The same as @read, but the following error number:
+  *		-EBUSY means try to write again later.
++ *		-ENOMSG means to try next zone.
+  * @panic_write:The write operation only used for panic case. It's optional
+- *		if you do not care panic log. The parameters and return value
+- *		are the same as @read.
++ *		if you do not care panic log. The parameters are relative
++ *		value to storage.
++ *		On success, the number of bytes should be returned, others
++ *		excluding -ENOMSG mean error. -ENOMSG means to try next zone.
+  */
+ struct pstore_device_info {
+ 	unsigned long total_size;
+@@ -339,6 +342,9 @@ static ssize_t psblk_blk_panic_write(const char *buf, size_t size,
+ 	/* size and off must align to SECTOR_SIZE for block device */
+ 	ret = blkdev_panic_write(buf, off >> SECTOR_SHIFT,
+ 			size >> SECTOR_SHIFT);
++	/* try next zone */
++	if (ret == -ENOMSG)
++		return ret;
+ 	return ret ? -EIO : size;
  }
  
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- static __init int setup_disable_pku(char *arg)
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index d83b24f3cdd9..110a38242f74 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -249,6 +249,9 @@ static int psz_zone_write(struct pstore_zone *zone,
+ 
+ 	return 0;
+ dirty:
++	/* no need to mark dirty if going to try next zone */
++	if (wcnt == -ENOMSG)
++		return -ENOMSG;
+ 	atomic_set(&zone->dirty, true);
+ 	/* flush dirty zones nicely */
+ 	if (wcnt == -EBUSY && !is_on_panic())
+@@ -391,7 +394,11 @@ static int psz_kmsg_recover_meta(struct psz_context *cxt)
+ 			return -EINVAL;
+ 
+ 		rcnt = info->read((char *)buf, len, zone->off);
+-		if (rcnt != len) {
++		if (rcnt == -ENOMSG) {
++			pr_debug("%s with id %lu may be broken, skip\n",
++					zone->name, i);
++			continue;
++		} else if (rcnt != len) {
+ 			pr_err("read %s with id %lu failed\n", zone->name, i);
+ 			return (int)rcnt < 0 ? (int)rcnt : -EIO;
+ 		}
+@@ -726,24 +733,58 @@ static void psz_write_kmsg_hdr(struct pstore_zone *zone,
+ 		hdr->counter = 0;
+ }
+ 
++/*
++ * In case zone is broken, which may occur to MTD device, we try each zones,
++ * start at cxt->kmsg_write_cnt.
++ */
+ static inline int notrace psz_kmsg_write_record(struct psz_context *cxt,
+ 		struct pstore_record *record)
  {
- 	/*
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 98f7c6fa2eaa..17ebf12ba8ff 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -45,7 +45,7 @@ obj-$(CONFIG_AMD_NUMA)		+= amdtopology.o
- obj-$(CONFIG_ACPI_NUMA)		+= srat.o
- obj-$(CONFIG_NUMA_EMU)		+= numa_emulation.o
++	int ret = -EBUSY;
+ 	size_t size, hlen;
+ 	struct pstore_zone *zone;
+-	unsigned int zonenum;
++	unsigned int i;
  
--obj-$(CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS)	+= pkeys.o
-+obj-$(CONFIG_X86_MEMORY_PROTECTION_KEYS)	+= pkeys.o
- obj-$(CONFIG_RANDOMIZE_MEMORY)			+= kaslr.o
- obj-$(CONFIG_PAGE_TABLE_ISOLATION)		+= pti.o
+-	zonenum = cxt->kmsg_write_cnt;
+-	zone = cxt->kpszs[zonenum];
+-	if (unlikely(!zone))
+-		return -ENOSPC;
+-	cxt->kmsg_write_cnt = (zonenum + 1) % cxt->kmsg_max_cnt;
++	for (i = 0; i < cxt->kmsg_max_cnt; i++) {
++		unsigned int zonenum, len;
++
++		zonenum = (cxt->kmsg_write_cnt + i) % cxt->kmsg_max_cnt;
++		zone = cxt->kpszs[zonenum];
++		if (unlikely(!zone))
++			return -ENOSPC;
++
++		/* avoid destroying old data, allocate a new one */
++		len = zone->buffer_size + sizeof(*zone->buffer);
++		zone->oldbuf = zone->buffer;
++		zone->buffer = kzalloc(len, GFP_KERNEL);
++		if (!zone->buffer) {
++			zone->buffer = zone->oldbuf;
++			return -ENOMEM;
++		}
++		zone->buffer->sig = zone->oldbuf->sig;
++
++		pr_debug("write %s to zone id %d\n", zone->name, zonenum);
++		psz_write_kmsg_hdr(zone, record);
++		hlen = sizeof(struct psz_kmsg_header);
++		size = min_t(size_t, record->size, zone->buffer_size - hlen);
++		ret = psz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
++		if (likely(!ret || ret != -ENOMSG)) {
++			cxt->kmsg_write_cnt = zonenum + 1;
++			cxt->kmsg_write_cnt %= cxt->kmsg_max_cnt;
++			/* no need to try next zone, free last zone buffer */
++			kfree(zone->oldbuf);
++			zone->oldbuf = NULL;
++			return ret;
++		}
  
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 8873ed1438a9..a77497e8d58c 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Intel Memory Protection Keys management
-+ * Memory Protection Keys management
-  * Copyright (c) 2015, Intel Corporation.
+-	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
+-	psz_write_kmsg_hdr(zone, record);
+-	hlen = sizeof(struct psz_kmsg_header);
+-	size = min_t(size_t, record->size, zone->buffer_size - hlen);
+-	return psz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
++		pr_debug("zone %u may be broken, try next dmesg zone\n",
++				zonenum);
++		kfree(zone->buffer);
++		zone->buffer = zone->oldbuf;
++		zone->oldbuf = NULL;
++	}
++
++	return -EBUSY;
+ }
+ 
+ static int notrace psz_kmsg_write(struct psz_context *cxt,
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index 4501977b1336..ccba8c068752 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -14,7 +14,8 @@
+  * @start_sect: start sector to block device
+  * @sects: sectors count on buf
+  *
+- * Return: On success, zero should be returned. Others mean error.
++ * Return: On success, zero should be returned. Others excluding -ENOMSG
++ * mean error. -ENOMSG means to try next zone.
+  *
+  * Panic write to block device must be aligned to SECTOR_SIZE.
   */
- #include <linux/debugfs.h>		/* debugfs_create_u32()		*/
-diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-index a07668a5c36b..6e60e5362d3e 100755
---- a/scripts/headers_install.sh
-+++ b/scripts/headers_install.sh
-@@ -86,7 +86,7 @@ arch/sh/include/uapi/asm/sigcontext.h:CONFIG_CPU_SH5
- arch/sh/include/uapi/asm/stat.h:CONFIG_CPU_SH5
- arch/x86/include/uapi/asm/auxvec.h:CONFIG_IA32_EMULATION
- arch/x86/include/uapi/asm/auxvec.h:CONFIG_X86_64
--arch/x86/include/uapi/asm/mman.h:CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+arch/x86/include/uapi/asm/mman.h:CONFIG_X86_MEMORY_PROTECTION_KEYS
- include/uapi/asm-generic/fcntl.h:CONFIG_64BIT
- include/uapi/linux/atmdev.h:CONFIG_COMPAT
- include/uapi/linux/elfcore.h:CONFIG_BINFMT_ELF_FDPIC
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-index 4ea8584682f9..52dbdfed8043 100644
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ b/tools/arch/x86/include/asm/disabled-features.h
-@@ -36,13 +36,13 @@
- # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
- #endif /* CONFIG_X86_64 */
- 
--#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+#ifdef CONFIG_X86_MEMORY_PROTECTION_KEYS
- # define DISABLE_PKU		0
- # define DISABLE_OSPKE		0
- #else
- # define DISABLE_PKU		(1<<(X86_FEATURE_PKU & 31))
- # define DISABLE_OSPKE		(1<<(X86_FEATURE_OSPKE & 31))
--#endif /* CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS */
-+#endif /* CONFIG_X86_MEMORY_PROTECTION_KEYS */
- 
- #ifdef CONFIG_X86_5LEVEL
- # define DISABLE_LA57	0
+diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
+index 6f16b0dd834a..e79a18e41064 100644
+--- a/include/linux/pstore_zone.h
++++ b/include/linux/pstore_zone.h
+@@ -23,11 +23,15 @@ typedef ssize_t (*pstore_zone_write_op)(const char *, size_t, loff_t);
+  * @read:	The general read operation. Both of the function parameters
+  *		@size and @offset are relative value to storage.
+  *		On success, the number of bytes should be returned, others
+- *		means error.
+- * @write:	The same as @read, but -EBUSY means try to write again later.
++ *		mean error.
++ * @write:	The same as @read, but the following error number:
++ *		-EBUSY means try to write again later.
++ *		-ENOMSG means to try next zone.
+  * @panic_write:The write operation only used for panic case. It's optional
+- *		if you do not care panic log. The parameters and return value
+- *		are the same as @read.
++ *		if you do not care panic log. The parameters are relative
++ *		value to storage.
++ *		On success, the number of bytes should be returned, others
++ *		excluding -ENOMSG mean error. -ENOMSG means to try next zone.
+  */
+ struct pstore_zone_info {
+ 	struct module *owner;
+-- 
+2.20.1
 
