@@ -2,79 +2,106 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D560C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73813C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7414E206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3891C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="AYQWm2ps"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DWV1hSl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbgEKRTp (ORCPT
+        id S1730932AbgEKRUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730887AbgEKRTn (ORCPT
+        Mon, 11 May 2020 13:20:19 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16849 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730215AbgEKRUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:19:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C84C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:19:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u6so10383133ljl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:19:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KjilQVaMW5bj1pstvVNrQfVUnVke7cHNmi4yKLCUZ6w=;
-        b=AYQWm2psEssn6RcwA/1ys2dBNI/JI+tBpIv11JuKCaOXFMe7jgQKAqs4DPisAZBYJp
-         1Vqe/i0BZRyNzYYunmt6K6lRXeC+XC4qcq9nUI7y4OdEIIOZSF9cb+Y3kA4SsQAIkYqt
-         MOdoqylx00o2aJcTgTdDR413rNIAwZ//EhPeILleb0aDCK6eCDUIqjQPDNc6B0oEZuXN
-         n7m9FCtOrS3Xlrz6h6IZ5dBjvXA9D7RZg7w/Zs0grINq40y2rXdw9n9MNOFVb8l8rdLP
-         US1dtfiH+bAxICJnCCmIQaCjUVmS5HLU1V6h68YVlKPkbw77j1fpKe4PpTfvo1z3It3a
-         nkGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KjilQVaMW5bj1pstvVNrQfVUnVke7cHNmi4yKLCUZ6w=;
-        b=uPs5Cy+VWkBNKBXFpmvjD/uFnNOfs+4Vrog+5tP6cjR77WIYA0BHSpyKWZvaoKBAsP
-         BIpjCShV5OUkKMiW+kV5kupKly/a6FHZ+d+txm7tUcM8hOpvfuC03y/UMMNqKTpuRfTs
-         3vonB138hzPY/CRwde+z1UmfFtHjkpWR6wwOw5iQcG6P2in3lfYrPS99EDygV9/SQG0m
-         /rscSp06TTTVcGXKIeqoIF8vEncemK0M7L2z60B8d7yztQbTyhw0tGgtycdGniJI10NP
-         2v6+jlJdhwGDkc7NMVACaNbA+NsBkC6BBE9LXMjtexifyzwsI7JgWKreoam3rKgHA53T
-         NZew==
-X-Gm-Message-State: AOAM531sMvOqIesy16U8IWe3szmLj0RqxU4/r0khOIJbwubq6wGMON+n
-        rgPMq69Q6lJN28vJnXvLoYHTRhSD8d212h3oJ9BUeQ==
-X-Google-Smtp-Source: ABdhPJw+Gpn0+EhlnD4SdYB5UdkdBPhPbGkg64H3e47IhbM3cIzbaAAhJ8fU69wfv5sEfZh1PMjcJtj/fZkQ55I7EEc=
-X-Received: by 2002:a2e:3012:: with SMTP id w18mr11187530ljw.55.1589217581389;
- Mon, 11 May 2020 10:19:41 -0700 (PDT)
+        Mon, 11 May 2020 13:20:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb988cc0000>; Mon, 11 May 2020 10:18:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 11 May 2020 10:20:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 11 May 2020 10:20:18 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
+ 2020 17:20:18 +0000
+Subject: Re: [PATCH -next] mm/hmm/test: fix error return code in
+ hmm_dmirror_init()
+To:     Wei Yongjun <weiyongjun1@huawei.com>, <jglisse@redhat.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+References: <20200509030234.14747-1-weiyongjun1@huawei.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <b8da4751-ea8a-7e4d-9a6c-ee6bd7038eb7@nvidia.com>
+Date:   Mon, 11 May 2020 10:20:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200511110250.23869-1-nsaenzjulienne@suse.de>
-In-Reply-To: <20200511110250.23869-1-nsaenzjulienne@suse.de>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Mon, 11 May 2020 10:19:30 -0700
-Message-ID: <CADaigPV7JAPtXqkVf8ooPFFn8hxZYcV_iabzO5mGZO18+ZB4dA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Update Raspberry Pi development repository
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200509030234.14747-1-weiyongjun1@huawei.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589217484; bh=wNAbLk5sDgndY9hDmHmxMZeBtoQPrcvtrpgtPuwit0M=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DWV1hSl5q9MhAU6xNAFYiGni49rK3N2gDogEE1sB6S7uYJY1E8bnF9MzNFAG2+top
+         RRx3eL/aLmjj+CsPT99PNpomuBpFpdBzYqvNm2kwLA2ToodCT48Kktx2D9VNEp49J1
+         4gUkiE+cBOEeb2qg2GXeCvyDHXghhVh+9mqZHgfzfm8+Hc5eMHpB5PehQL09uBl/aF
+         PCUFkj/L7mwwo+s0+oLd+HOjCUS+XUJBeyVFoh0RKzJwOZaFr/qWJ9Yst8fKJiJhoR
+         asRSsplrtjNa+v/C6sSv+C7WzpxFANnXhBHvKHMfB8/5XZlWi1Vtqz7vWE+iUkuRvW
+         aG9ngH4914iog==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 4:02 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Eric Anholt's repo isn't used anymore. List current one.
 
-Acked-by: Eric Anholt <eric@anholt.net>
+On 5/8/20 8:02 PM, Wei Yongjun wrote:
+> Fix to return negative error code -ENOMEM from the alloc_page() error
+> handling case instead of 0, as done elsewhere in this function.
+> 
+> Fixes: 5d5e54be8a1e ("mm/hmm/test: add selftest driver for HMM")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+
+Looks good, thanks!
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+
+> ---
+>   lib/test_hmm.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+> index 00bca6116f93..b4d9434e49e7 100644
+> --- a/lib/test_hmm.c
+> +++ b/lib/test_hmm.c
+> @@ -1119,8 +1119,10 @@ static int __init hmm_dmirror_init(void)
+>   	 * make the code here simpler (i.e., we need a struct page for it).
+>   	 */
+>   	dmirror_zero_page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+> -	if (!dmirror_zero_page)
+> +	if (!dmirror_zero_page) {
+> +		ret = -ENOMEM;
+>   		goto err_chrdev;
+> +	}
+>   
+>   	pr_info("HMM test module loaded. This is only for testing HMM.\n");
+>   	return 0;
+> 
+> 
+> 
