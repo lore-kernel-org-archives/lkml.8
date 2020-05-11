@@ -2,93 +2,250 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C45C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D47C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B22220720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589208808;
-	bh=AYhDvod9nbCHA/bULmju1oTd3bMlLvpXFTEjrTYtibM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IkAsxzQpEgDqQ+w6MVywFNvvv5v6TS4hj2uee+MB6epie1fc3oMU/mxO2qXsF+y47
-	 TD+BDtKl69lJ/aOtncrEx4xHUjtRNNY/yaL0izwgKOJtZfNklzzo5vEJPbg9488i11
-	 nHj9UtIQhkZGVI4MU1nUU4jXYfPKD/tfBS3jIE6M=
+	by mail.kernel.org (Postfix) with ESMTP id 8C95F20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgEKOx1 (ORCPT
+        id S1730179AbgEKOxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730240AbgEKOxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:53:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357E020736;
-        Mon, 11 May 2020 14:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589208804;
-        bh=AYhDvod9nbCHA/bULmju1oTd3bMlLvpXFTEjrTYtibM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BQXPdOqRsCKFPkcM8uaWvpoPeWFeD16/uCo96bJsLuWVqFcVoC3Lvd/YKAajzEKpH
-         7L14ijj8OlDNIuJXcIfuVyzQ8zOvMbHeJ4r0AaGTJYu5cPF4l6DLdEVAaJO7VRlhTT
-         zGz5p3udlLnloZkIsN3n71pCtGKjoWOnydSQzGvI=
-Date:   Mon, 11 May 2020 15:53:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-spi@vger.kernel.org,
-        Alistair Francis <alistair@alistair23.me>,
-        linux-kernel@vger.kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, alistair23@gmail.com
-Subject: Re: [PATCH v2] spi: sun6i: Add support for GPIO chip select lines
-Message-ID: <20200511145321.GH8216@sirena.org.uk>
-References: <20200511045330.690507-1-alistair@alistair23.me>
- <158919630591.8372.404655401498379497.b4-ty@kernel.org>
- <20200511124245.j5pdnpsuhixzvs32@gilmour.lan>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f5QefDQHtn8hx44O"
-Content-Disposition: inline
-In-Reply-To: <20200511124245.j5pdnpsuhixzvs32@gilmour.lan>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 May 2020 10:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730496AbgEKOxL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:53:11 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B840AC05BD13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 07:53:10 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:702c:fb99:3097:2049])
+        by baptiste.telenet-ops.be with bizsmtp
+        id dSsy2200G0GoAb601SsyU6; Mon, 11 May 2020 16:53:08 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY9ne-00082j-3k; Mon, 11 May 2020 16:52:58 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY9ne-0005zX-2C; Mon, 11 May 2020 16:52:58 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v7 3/6] gpiolib: Add support for GPIO lookup by line name
+Date:   Mon, 11 May 2020 16:52:54 +0200
+Message-Id: <20200511145257.22970-4-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511145257.22970-1-geert+renesas@glider.be>
+References: <20200511145257.22970-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently a GPIO lookup table can only refer to a specific GPIO by a
+tuple, consisting of a GPIO controller label and a GPIO offset inside
+the controller.
 
---f5QefDQHtn8hx44O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+However, a GPIO may also carry a line name, defined by DT or ACPI.
+If present, the line name is the most use-centric way to refer to a
+GPIO.  Hence add support for looking up GPIOs by line name.
+Note that there is no guarantee that GPIO line names are globally
+unique, so this will use the first match found.
 
-On Mon, May 11, 2020 at 02:42:45PM +0200, Maxime Ripard wrote:
-> On Mon, May 11, 2020 at 12:25:35PM +0100, Mark Brown wrote:
+Implement this by reusing the existing gpiod_lookup infrastructure.
+Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
+that this field can have two meanings, and update the kerneldoc and
+GPIO_LOOKUP*() macros.
 
-> >    local tree asoc/for-5.7
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+v7:
+  - Document non-uniqueness of line names,
+  - Rebase on top of commit a0b66a73785ccc8f ("gpio: Rename variable in
+    core APIs"),
 
-> Are you sure this is the proper tree?
+v6:
+  - Update Documentation/driver-api/gpio/board.rst,
+  - Reword rationale,
 
-b4 seems to have grown a bug :/
+v5:
+  - Add Reviewed-by, Tested-by,
 
---f5QefDQHtn8hx44O
-Content-Type: application/pgp-signature; name="signature.asc"
+v4:
+  - Add Reviewed-by,
+  - Rename gpiod_lookup.chip_label.
+  - Use U16_MAX instead of (u16)-1,
 
------BEGIN PGP SIGNATURE-----
+v3:
+  - New.
+---
+ Documentation/driver-api/gpio/board.rst | 15 ++++++++++-----
+ drivers/gpio/gpiolib.c                  | 22 +++++++++++++++++-----
+ include/linux/gpio/machine.h            | 17 ++++++++++-------
+ 3 files changed, 37 insertions(+), 17 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65ZuEACgkQJNaLcl1U
-h9DG2Af/d3GLvqRVx3OU87X/ee8QKnzpdk92r1kOKIfbzpKT2ig5TTitLAuzMqu/
-Bt3yc9nVe97aZaCDrK18VjO2zhwhKsC6ztew3GExiDmD5tVaqEmrO3kQE38znATY
-NBNjvhRRU0bQNQn+eVL/Zd0sm53wP3Zh4x/wNSaes0grabov7f5AyaRB27zCz57y
-1/TCKj8WkUiO5Pjmr121NJOSjwtCA/RwIMZt+l7IGkMFR76ytYtuPNFTjI9Wdgp9
-3DGFhF4lE2cIJJt44YPU0rnWCD9vReZw13awY1jmdIqUMkZPBHi9Jw2bWWOSQ02a
-tofRzH/OWkFf2/2+TQ0mUWTVlPUWUw==
-=+1Zk
------END PGP SIGNATURE-----
+diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+index ce91518bf9f48ded..191fa867826a45c3 100644
+--- a/Documentation/driver-api/gpio/board.rst
++++ b/Documentation/driver-api/gpio/board.rst
+@@ -113,13 +113,15 @@ files that desire to do so need to include the following header::
+ GPIOs are mapped by the means of tables of lookups, containing instances of the
+ gpiod_lookup structure. Two macros are defined to help declaring such mappings::
+ 
+-	GPIO_LOOKUP(chip_label, chip_hwnum, con_id, flags)
+-	GPIO_LOOKUP_IDX(chip_label, chip_hwnum, con_id, idx, flags)
++	GPIO_LOOKUP(key, chip_hwnum, con_id, flags)
++	GPIO_LOOKUP_IDX(key, chip_hwnum, con_id, idx, flags)
+ 
+ where
+ 
+-  - chip_label is the label of the gpiod_chip instance providing the GPIO
+-  - chip_hwnum is the hardware number of the GPIO within the chip
++  - key is either the label of the gpiod_chip instance providing the GPIO, or
++    the GPIO line name
++  - chip_hwnum is the hardware number of the GPIO within the chip, or U16_MAX
++    to indicate that key is a GPIO line name
+   - con_id is the name of the GPIO function from the device point of view. It
+ 	can be NULL, in which case it will match any function.
+   - idx is the index of the GPIO within the function.
+@@ -135,7 +137,10 @@ where
+ 
+ In the future, these flags might be extended to support more properties.
+ 
+-Note that GPIO_LOOKUP() is just a shortcut to GPIO_LOOKUP_IDX() where idx = 0.
++Note that:
++  1. GPIO line names are not guaranteed to be globally unique, so the first
++     match found will be used.
++  2. GPIO_LOOKUP() is just a shortcut to GPIO_LOOKUP_IDX() where idx = 0.
+ 
+ A lookup table can then be defined as follows, with an empty entry defining its
+ end. The 'dev_id' field of the table is the identifier of the device that will
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 98822412f565073a..2e4aacbad8fe586b 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4645,7 +4645,7 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
+ 	if (!table)
+ 		return desc;
+ 
+-	for (p = &table->table[0]; p->chip_label; p++) {
++	for (p = &table->table[0]; p->key; p++) {
+ 		struct gpio_chip *gc;
+ 
+ 		/* idx must always match exactly */
+@@ -4656,18 +4656,30 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
+ 		if (p->con_id && (!con_id || strcmp(p->con_id, con_id)))
+ 			continue;
+ 
+-		gc = find_chip_by_name(p->chip_label);
++		if (p->chip_hwnum == U16_MAX) {
++			desc = gpio_name_to_desc(p->key);
++			if (desc) {
++				*flags = p->flags;
++				return desc;
++			}
++
++			dev_warn(dev, "cannot find GPIO line %s, deferring\n",
++				 p->key);
++			return ERR_PTR(-EPROBE_DEFER);
++		}
++
++		gc = find_chip_by_name(p->key);
+ 
+ 		if (!gc) {
+ 			/*
+ 			 * As the lookup table indicates a chip with
+-			 * p->chip_label should exist, assume it may
++			 * p->key should exist, assume it may
+ 			 * still appear later and let the interested
+ 			 * consumer be probed again or let the Deferred
+ 			 * Probe infrastructure handle the error.
+ 			 */
+ 			dev_warn(dev, "cannot find GPIO chip %s, deferring\n",
+-				 p->chip_label);
++				 p->key);
+ 			return ERR_PTR(-EPROBE_DEFER);
+ 		}
+ 
+@@ -4698,7 +4710,7 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
+ 	if (!table)
+ 		return -ENOENT;
+ 
+-	for (p = &table->table[0]; p->chip_label; p++) {
++	for (p = &table->table[0]; p->key; p++) {
+ 		if ((con_id && p->con_id && !strcmp(con_id, p->con_id)) ||
+ 		    (!con_id && !p->con_id))
+ 			count++;
+diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
+index 1ebe5be05d5f81fa..781a053abbb99a1d 100644
+--- a/include/linux/gpio/machine.h
++++ b/include/linux/gpio/machine.h
+@@ -20,8 +20,11 @@ enum gpio_lookup_flags {
+ 
+ /**
+  * struct gpiod_lookup - lookup table
+- * @chip_label: name of the chip the GPIO belongs to
+- * @chip_hwnum: hardware number (i.e. relative to the chip) of the GPIO
++ * @key: either the name of the chip the GPIO belongs to, or the GPIO line name
++ *       Note that GPIO line names are not guaranteed to be globally unique,
++ *       so this will use the first match found!
++ * @chip_hwnum: hardware number (i.e. relative to the chip) of the GPIO, or
++ *              U16_MAX to indicate that @key is a GPIO line name
+  * @con_id: name of the GPIO from the device's point of view
+  * @idx: index of the GPIO in case several GPIOs share the same name
+  * @flags: bitmask of gpio_lookup_flags GPIO_* values
+@@ -30,7 +33,7 @@ enum gpio_lookup_flags {
+  * functions using platform data.
+  */
+ struct gpiod_lookup {
+-	const char *chip_label;
++	const char *key;
+ 	u16 chip_hwnum;
+ 	const char *con_id;
+ 	unsigned int idx;
+@@ -63,17 +66,17 @@ struct gpiod_hog {
+ /*
+  * Simple definition of a single GPIO under a con_id
+  */
+-#define GPIO_LOOKUP(_chip_label, _chip_hwnum, _con_id, _flags) \
+-	GPIO_LOOKUP_IDX(_chip_label, _chip_hwnum, _con_id, 0, _flags)
++#define GPIO_LOOKUP(_key, _chip_hwnum, _con_id, _flags) \
++	GPIO_LOOKUP_IDX(_key, _chip_hwnum, _con_id, 0, _flags)
+ 
+ /*
+  * Use this macro if you need to have several GPIOs under the same con_id.
+  * Each GPIO needs to use a different index and can be accessed using
+  * gpiod_get_index()
+  */
+-#define GPIO_LOOKUP_IDX(_chip_label, _chip_hwnum, _con_id, _idx, _flags)  \
++#define GPIO_LOOKUP_IDX(_key, _chip_hwnum, _con_id, _idx, _flags)         \
+ {                                                                         \
+-	.chip_label = _chip_label,                                        \
++	.key = _key,                                                      \
+ 	.chip_hwnum = _chip_hwnum,                                        \
+ 	.con_id = _con_id,                                                \
+ 	.idx = _idx,                                                      \
+-- 
+2.17.1
 
---f5QefDQHtn8hx44O--
