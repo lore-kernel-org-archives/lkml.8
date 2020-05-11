@@ -2,125 +2,167 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2CFC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCC0C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38C720A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589220775;
-	bh=t+uT6tIhXvNXjcnhdKb17/zQMfwtoOPb5RBd7NCH7jU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UPlStjIY7yHF4UJuG3/7G9ILrAx1YKsWL4qPrbCX+ATbF30SPqWmKNxogFiHQnhSb
-	 FbVa00Oa3bKnUASx9kOjbnZUKjDVwzUCYxfiF1mRmP62YHuf26mHRXLpO7Q3ZcRsUn
-	 B8kdqEfaIcPc2Ct0kv1RiOW6mTARiT3SM7oYPp20=
+	by mail.kernel.org (Postfix) with ESMTP id 6092720720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgEKSMy (ORCPT
+        id S1731076AbgEKSNY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgEKSMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:12:54 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6436C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:12:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id o14so9526159ljp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wr1ycv+siaolsKCvcq8pIOR365B5ZJOgX6Pl3lWLVLc=;
-        b=bDQ3m7zIuQxezVOH9ZwaR/IFoNv1Ph7lBUT4KC1tOQ29Sv7/FfbpX1jR5I6MiVD1H3
-         a6h6kbSLdtdqMnCnTY9J9fT1T3Y12NmwK/y/yA9X355RI68xbl+N5jZAFV9W8R7IIbJ0
-         mV7WNsTiUF4PgcffhE6LD2y3c416dUv6ks6E0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wr1ycv+siaolsKCvcq8pIOR365B5ZJOgX6Pl3lWLVLc=;
-        b=cLnvenB3ALSI6l/iTuA4Uj8mdw0UdFLimDCGas++aD7Wkd4WUl1Ge7qfS3KpEKQiba
-         F6G1zA/IAHAyluX7IX2eKqLyYDPfhQ4o4SOnYTAO3OV9EHiFWVeF6Z/Ub1SnSDR3KQH7
-         tSNICibEgGmqo89RmYS/AsMh2NpinCL98AL7fy4siGqJYF1bfk8C/GCU9vK2wq34WI4c
-         v9J/6NVXmR90WoC4WbspZGHSzmH1XyxSxYkvwJVybljDRX2Wx9vQzj4mvGH433UbQg+Y
-         c4dud7pPMok1/sbhMUiFhki7wCxAp25tN5IrjphTlZnfUHoOnVQLO9J8beQzNnRW9WqL
-         cocQ==
-X-Gm-Message-State: AOAM5313iLJRMSIF03ffR6gXTZr6ZCSnp/hJL/bQUqj20i//FZQwh/1a
-        Xz0jKssEeVTPsgmTNF9GprZ1iUb8ZJw=
-X-Google-Smtp-Source: ABdhPJzMZU/urFCv2BxIulERXeHLyISR5VF8zmcq/vAZnlC+nwrz9QKFxWkqXKGOl0dcImbm4wVxWw==
-X-Received: by 2002:a2e:b605:: with SMTP id r5mr10963005ljn.40.1589220770894;
-        Mon, 11 May 2020 11:12:50 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id s27sm10532965ljo.80.2020.05.11.11.12.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 11:12:49 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id z22so8351522lfd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:12:49 -0700 (PDT)
-X-Received: by 2002:ac2:47fb:: with SMTP id b27mr12159503lfp.10.1589220768686;
- Mon, 11 May 2020 11:12:48 -0700 (PDT)
+        Mon, 11 May 2020 14:13:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:46999 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgEKSNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:13:24 -0400
+IronPort-SDR: zaMNC/w3azGH/oNgjNzF1nny4uSFEu+e+0Chp0q5enZ6VOKDSDmtVVeNFrmroAkNleCGaf6phN
+ w9y+HNtx9ppA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:13:23 -0700
+IronPort-SDR: 4yn5bQ6SzOqq6GhdNt4t87npsuluYQWvNQB8Ku44Q6axiNqEfWtTVx9UXsJapXpIHTxZyo2p5R
+ cEOwBqNcJsRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
+   d="scan'208";a="265240180"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga006.jf.intel.com with ESMTP; 11 May 2020 11:13:23 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 11:13:22 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
+ FMSMSX110.amr.corp.intel.com ([169.254.14.169]) with mapi id 14.03.0439.000;
+ Mon, 11 May 2020 11:13:22 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        "DRI Development" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "Vetter, Daniel" <daniel.vetter@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
+ for mock fences
+Thread-Topic: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
+ for mock fences
+Thread-Index: AQHWJ3Q9b7FvqdjeFkWZgt98eLHlv6ijMJew
+Date:   Mon, 11 May 2020 18:13:21 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
+References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
+ <20200511091142.208787-2-daniel.vetter@ffwll.ch>
+In-Reply-To: <20200511091142.208787-2-daniel.vetter@ffwll.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200504230309.237398-1-ndesaulniers@google.com> <CAKwvOdmspKUknbzDn9kY2jMgkFw=Ktvst0ZtwambDOfybqJGWw@mail.gmail.com>
-In-Reply-To: <CAKwvOdmspKUknbzDn9kY2jMgkFw=Ktvst0ZtwambDOfybqJGWw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 May 2020 11:12:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wif=_ZomkWJAmQRCUAMHQ72V3NEQ-OteiPE56K7KoSjbQ@mail.gmail.com>
-Message-ID: <CAHk-=wif=_ZomkWJAmQRCUAMHQ72V3NEQ-OteiPE56K7KoSjbQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: support i386 with Clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Golovin <dima@golovin.in>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:24 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+>-----Original Message-----
+>From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of
+>Daniel Vetter
+>Sent: Monday, May 11, 2020 5:12 AM
+>To: LKML <linux-kernel@vger.kernel.org>
+>Cc: Daniel Vetter <daniel.vetter@ffwll.ch>; Intel Graphics Development
+><intel-gfx@lists.freedesktop.org>; DRI Development <dri-
+>devel@lists.freedesktop.org>; linaro-mm-sig@lists.linaro.org; Vetter, Daniel
+><daniel.vetter@intel.com>; Sumit Semwal <sumit.semwal@linaro.org>; linux-
+>media@vger.kernel.org
+>Subject: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
+>mock fences
 >
-> Bumping for comment+review.
+>No need to micro-optmize when we're waiting in a mocked object ...
+
+Makes sense to me.
+
+Acked-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+
+M
+
+>Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+>Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>Cc: linux-media@vger.kernel.org
+>Cc: linaro-mm-sig@lists.linaro.org
+>---
+> drivers/dma-buf/st-dma-fence.c | 41 ----------------------------------
+> 1 file changed, 41 deletions(-)
 >
-> On Mon, May 4, 2020 at 4:03 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > -                   : "qi" ((pto_T__)(val)));           \
-> > +                   : "qi" ((unsigned char)(unsigned long)(val))); \
-
-I find the extra casts really annoying and illogical.
-
-I kind of see why they happen: just casting to 'unsigned char' can
-cause warnings, when this case isn't even taken, and the sizeof(var)
-is something else (and you cast a pointer to a char without going
-through the 'unsigned long' first.
-
-But that doesn't make this change any more sensible or readable.
-
-Would using "__builtin_choose_expr()" be able to avoid this whole issue?
-
-Because I'd rather re-write the whole thing with a different model
-that doesn't have this issue, than make the code look insane.
-
-And it does look insane, because that whole thing makes for a very
-natural question: "why do we cast to unsigned long and then to char,
-when we just checked that the size of the type is 1"?
-
-                 Linus
+>diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-
+>fence.c
+>index e593064341c8..8166d2984702 100644
+>--- a/drivers/dma-buf/st-dma-fence.c
+>+++ b/drivers/dma-buf/st-dma-fence.c
+>@@ -33,50 +33,9 @@ static void mock_fence_release(struct dma_fence *f)
+> 	kmem_cache_free(slab_fences, to_mock_fence(f));
+> }
+>
+>-struct wait_cb {
+>-	struct dma_fence_cb cb;
+>-	struct task_struct *task;
+>-};
+>-
+>-static void mock_wakeup(struct dma_fence *f, struct dma_fence_cb *cb)
+>-{
+>-	wake_up_process(container_of(cb, struct wait_cb, cb)->task);
+>-}
+>-
+>-static long mock_wait(struct dma_fence *f, bool intr, long timeout)
+>-{
+>-	const int state = intr ? TASK_INTERRUPTIBLE :
+>TASK_UNINTERRUPTIBLE;
+>-	struct wait_cb cb = { .task = current };
+>-
+>-	if (dma_fence_add_callback(f, &cb.cb, mock_wakeup))
+>-		return timeout;
+>-
+>-	while (timeout) {
+>-		set_current_state(state);
+>-
+>-		if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &f->flags))
+>-			break;
+>-
+>-		if (signal_pending_state(state, current))
+>-			break;
+>-
+>-		timeout = schedule_timeout(timeout);
+>-	}
+>-	__set_current_state(TASK_RUNNING);
+>-
+>-	if (!dma_fence_remove_callback(f, &cb.cb))
+>-		return timeout;
+>-
+>-	if (signal_pending_state(state, current))
+>-		return -ERESTARTSYS;
+>-
+>-	return -ETIME;
+>-}
+>-
+> static const struct dma_fence_ops mock_ops = {
+> 	.get_driver_name = mock_name,
+> 	.get_timeline_name = mock_name,
+>-	.wait = mock_wait,
+> 	.release = mock_fence_release,
+> };
+>
+>--
+>2.26.2
+>
+>_______________________________________________
+>Intel-gfx mailing list
+>Intel-gfx@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/intel-gfx
