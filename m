@@ -2,109 +2,110 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16601C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEE7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE334214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589198298;
-	bh=I7c/5QR0NUZxXyJ3bfQU4K67hU6vugawyRi1MoWi3Ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TITcDTYYPkM7dfoYTT8vszQ+ZvcIMmFsW60UJ35SGvjh8YRegebACB+oH38Gp27wr
-	 tcNVuCv29YwojhbsQEUzJcz/7EqaQLqx+qipNeTxZyoR34EvC43VXsPPc3QfqBfu5k
-	 bdUg/EqMaMLZuYEVdv/ty3D/188nx5pKQwBzh8tQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4270A20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D0bz4+3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgEKL6R (ORCPT
+        id S1729833AbgEKL7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgEKL6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:58:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDFD22075E;
-        Mon, 11 May 2020 11:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589198296;
-        bh=I7c/5QR0NUZxXyJ3bfQU4K67hU6vugawyRi1MoWi3Ag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hMYxExIkbBzpZ8xg1+7zwz1nUpF1p694bpxCsfJ0x+6ZYVxyIZSYhNLWVUmx5cS2U
-         U6vX1F9U22Pn8tffCzSxGDxl96iWaXHHGgGFEDuRfBzRuZP/QWtkoajrB+4xZRf+F8
-         yoXXlU4MuhX59fX9LOFqETt7nYbJLAk8zxsUReio=
-Date:   Mon, 11 May 2020 12:58:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511115813.GG8216@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+        Mon, 11 May 2020 07:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729645AbgEKL7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:59:21 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DF9C05BD09;
+        Mon, 11 May 2020 04:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=3KzJfnIrMOX10B1smfo4qeEM4MM1jluWGd/OiMkNXVc=; b=D0bz4+3nUcmIBLGugGcmJZOw/i
+        2ybM76T3XhoNAhvDG2Vu84QStYUI0Fyf4f98sjlPJp0tj57gvNlkAWGPpFbFlubDHXcf5bJy8nxHU
+        JhWRbvQLZivDClQdADk3KG06vfGJrH3O8535gbUD+Cg9zpQ6py5oJ8iSi2of6tNnhwE4JN3yyYJ0A
+        fp4L99A+npTq6vLDe42/fTjH7MC7ncJcsPa7dW/arNKGVtiuN6ohC+zGqIpa+rRePvMBDMg9tTspu
+        yMZPxgS7WtEo4xw78y1JZd9XxehEg70DIjUQuBxSRFwLgmgIxEDLVBeQiU39DoyR5n/n06aItYQ3b
+        ht20r09w==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jY75a-0007TM-Jf; Mon, 11 May 2020 11:59:19 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] net: add a CMSG_USER_DATA macro
+Date:   Mon, 11 May 2020 13:59:11 +0200
+Message-Id: <20200511115913.1420836-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200511115913.1420836-1-hch@lst.de>
+References: <20200511115913.1420836-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
-Content-Disposition: inline
-In-Reply-To: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
-X-Cookie: TANSTAAFL
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a variant of CMSG_DATA that operates on user pointer to avoid
+sparse warnings about casting to/from user pointers.  Also fix up
+CMSG_DATA to rely on the gcc extension that allows void pointer
+arithmetics to cut down on the amount of casts.
 
---fwqqG+mf3f7vyBCB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/socket.h | 5 ++++-
+ net/core/scm.c         | 4 ++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index 54338fac45cb7..4cc64d611cf49 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -94,7 +94,10 @@ struct cmsghdr {
+ 
+ #define CMSG_ALIGN(len) ( ((len)+sizeof(long)-1) & ~(sizeof(long)-1) )
+ 
+-#define CMSG_DATA(cmsg)	((void *)((char *)(cmsg) + sizeof(struct cmsghdr)))
++#define CMSG_DATA(cmsg) \
++	((void *)(cmsg) + sizeof(struct cmsghdr))
++#define CMSG_USER_DATA(cmsg) \
++	((void __user *)(cmsg) + sizeof(struct cmsghdr))
+ #define CMSG_SPACE(len) (sizeof(struct cmsghdr) + CMSG_ALIGN(len))
+ #define CMSG_LEN(len) (sizeof(struct cmsghdr) + (len))
+ 
+diff --git a/net/core/scm.c b/net/core/scm.c
+index dc6fed1f221c4..abfdc85a64c1b 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -236,7 +236,7 @@ int put_cmsg(struct msghdr * msg, int level, int type, int len, void *data)
+ 	err = -EFAULT;
+ 	if (copy_to_user(cm, &cmhdr, sizeof cmhdr))
+ 		goto out;
+-	if (copy_to_user(CMSG_DATA(cm), data, cmlen - sizeof(struct cmsghdr)))
++	if (copy_to_user(CMSG_USER_DATA(cm), data, cmlen - sizeof(*cm)))
+ 		goto out;
+ 	cmlen = CMSG_SPACE(len);
+ 	if (msg->msg_controllen < cmlen)
+@@ -300,7 +300,7 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+ 	if (fdnum < fdmax)
+ 		fdmax = fdnum;
+ 
+-	for (i=0, cmfptr=(__force int __user *)CMSG_DATA(cm); i<fdmax;
++	for (i=0, cmfptr =(int __user *)CMSG_USER_DATA(cm); i<fdmax;
+ 	     i++, cmfptr++)
+ 	{
+ 		struct socket *sock;
+-- 
+2.26.2
 
-> Alas linearizing the SPI messages won't help in this case because the DW DMA
-> driver will split it into the max transaction chunks anyway.
-
-That sounds like you need to also impose a limit on the maximum message
-size as well then, with that you should be able to handle messages up
-to whatever that limit is.  There's code for that bit already, so long
-as the limit is not too low it should be fine for most devices and
-client drivers can see the limit so they can be updated to work with it
-if needed.
-
---fwqqG+mf3f7vyBCB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65PdUACgkQJNaLcl1U
-h9CBqgf+PZERckWsOqLfM9GL+SqMyC0673X9Gu0EsD3d7Ew+bDzZXCP8IFVs0dXB
-kmzF1l+0PHatJ27mV6GPxEAZby+fbbxYZo7/YiDxgE5ortZH58vhYgjFf3gG6XtD
-SAsfGyowPpK+/2sIGN7pAzXyFMueva4wfHcz3Q74DiSbwc+XugWuS6yHOYsJVrdx
-8xhvwaO2S3Wq9G5yJbETpknlzXhGJgTIYF6H86fPOCkqW06c+RiWubK5c2SLj4d6
-6CQ/C0vlsL5GOgC8XcOh8EIgZ/XUfPShqn4/U/f3XotpHVmifCJzvsYB77aB7PFx
-jegHvOJtAGGNPdjuGA5MTUIkYefFYQ==
-=ko68
------END PGP SIGNATURE-----
-
---fwqqG+mf3f7vyBCB--
