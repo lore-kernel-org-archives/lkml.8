@@ -2,243 +2,126 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B821C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7F7C54E91
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0321920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7A120708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YB5hOE9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgEKN6o (ORCPT
+        id S1730401AbgEKN7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:58:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6984 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730153AbgEKN6o (ORCPT
+        Mon, 11 May 2020 09:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730153AbgEKN7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:58:44 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BDZnJP187294;
-        Mon, 11 May 2020 09:57:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvye4ev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 09:57:40 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04BDZvDJ188154;
-        Mon, 11 May 2020 09:57:39 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvye4dg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 09:57:39 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BDQIJl026532;
-        Mon, 11 May 2020 13:57:36 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 30wm55cgv4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 13:57:36 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BDvXGV47579358
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 13:57:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0CD8A4055;
-        Mon, 11 May 2020 13:57:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA810A4053;
-        Mon, 11 May 2020 13:57:29 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.203.187])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 11 May 2020 13:57:29 +0000 (GMT)
-Date:   Mon, 11 May 2020 16:57:27 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com,
-        masahiroy@kernel.org, ardb@kernel.org, ndesaulniers@google.com,
-        dima@golovin.in, daniel.kiper@oracle.com, nivedita@alum.mit.edu,
-        rafael.j.wysocki@intel.com, dan.j.williams@intel.com,
-        zhenzhong.duan@oracle.com, jroedel@suse.de, bhe@redhat.com,
-        guro@fb.com, Thomas.Lendacky@amd.com,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        hannes@cmpxchg.org, minchan@kernel.org, mhocko@kernel.org,
-        ying.huang@intel.com, yang.shi@linux.alibaba.com,
-        gustavo@embeddedor.com, ziqian.lzq@antfin.com,
-        vdavydov.dev@gmail.com, jason.zeng@intel.com, kevin.tian@intel.com,
-        zhiyuan.lv@intel.com, lei.l.li@intel.com, paul.c.lai@intel.com,
-        ashok.raj@intel.com, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [RFC 14/43] mm: memblock: PKRAM: prevent memblock resize from
- clobbering preserved pages
-Message-ID: <20200511135727.GA983798@linux.ibm.com>
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
- <1588812129-8596-15-git-send-email-anthony.yznaga@oracle.com>
+        Mon, 11 May 2020 09:59:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B063AC061A0C;
+        Mon, 11 May 2020 06:59:00 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id s20so3977592plp.6;
+        Mon, 11 May 2020 06:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uEIvh3jZJq+GIyJboY8LqqnCPNcN8dIguJBZTjRlCk4=;
+        b=YB5hOE9l2jYX/jRF0LNvB/eltbhtnNpVB1Svk2f+VbWyezfJhmemBjI1KpIcc4PKKb
+         wExB22WUJkkJyStwHTNvLrojk72AmUto+5/xJUAlNiGWUBkfyS14oAfJ5JXO+cyh8mmX
+         Mp3bOsUX1sV3efRSUf72d54OhpnphPPhycEvdZfT+l4tn5fuYzQ2qx/fN/6FM3IrxtFb
+         dovMbmTfkDBFA+xMg/u8HZTeJwM5XgP7SwDm2ZhxA2BJ84JBeYqqWRTzr8zMyoNGvRCl
+         qi3Q3eq71YyO1eN1pzT88DxoLTzCWvTGthuSAGQT1ze6PMvKhjA4RgVrWWjCyFuXLr+q
+         LYVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uEIvh3jZJq+GIyJboY8LqqnCPNcN8dIguJBZTjRlCk4=;
+        b=fx7RTe/j7HxM8ShozVVjm2iNAF1NJtPCfKAvqzYVjUXzkFHOY3TAF99TRtu6z4CXl7
+         wYDqnuX3jZgKRLiPNu10FRYvWbZE1qzf5hzp7r9Fkqk9AU9h96g4C7AxkiaxJ8jET387
+         7vJYFkB+HaEETXeDpXZ2Cd+XZxivN2qvqqPbI8Geh7EkUrgi43XFMKSw9ncuVhq+q1NK
+         pgH72mnhTAnFzoKZyPGYeLcudUGWmiBoEHak2QFyu2JR9ztMnKtv7yoo0lr0+b0dYwBP
+         q6E+Axk1E1Bm0G2GX4XyKPfgZ0Ir3jcpwkNS+ebKNU8XPoWSmqI0rhRrHgztuvHqYxad
+         Y0mg==
+X-Gm-Message-State: AGi0PuZvTmuRg6snqh3LfEJLrI/dOtZYO6Ojd5Oy2i7+ClYG4SOLm+Ih
+        r3GwLtqSe9AYRJe2QhMkc1++0hjEWPvjJdq4eNNX56PK
+X-Google-Smtp-Source: APiQypIB31uuk+a3fTSz6ya4QV/kV9bztOcHX1UG5aCskc1fav+TQguLBT2Cbm/aZiOYqODRvcuIgtcdPL2/TjRWFs8=
+X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr23250451pjb.228.1589205540218;
+ Mon, 11 May 2020 06:59:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588812129-8596-15-git-send-email-anthony.yznaga@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_06:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 clxscore=1011 mlxscore=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 suspectscore=5
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110112
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com> <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation> <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+In-Reply-To: <20200511134502.hjbu5evkiuh75chr@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 11 May 2020 16:58:53 +0300
+Message-ID: <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is unsupported
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 05:41:40PM -0700, Anthony Yznaga wrote:
-> The size of the memblock reserved array may be increased while preserved
-> pages are being reserved. When this happens, preserved pages that have
-> not yet been reserved are at risk for being clobbered when space for a
-> larger array is allocated.
-> When called from memblock_double_array(), a wrapper around
-> memblock_find_in_range() walks the preserved pages pagetable to find
-> sufficiently sized ranges without preserved pages and passes them to
-> memblock_find_in_range().
+On Mon, May 11, 2020 at 4:48 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+> >
+> > > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > > driver will split it into the max transaction chunks anyway.
+> >
+> > That sounds like you need to also impose a limit on the maximum message
+> > size as well then, with that you should be able to handle messages up
+> > to whatever that limit is.  There's code for that bit already, so long
+> > as the limit is not too low it should be fine for most devices and
+> > client drivers can see the limit so they can be updated to work with it
+> > if needed.
+>
+> Hmm, this might work. The problem will be with imposing such limitation through
+> the DW APB SSI driver. In order to do this I need to know:
+> 1) Whether multi-block LLP is supported by the DW DMA controller.
+> 2) Maximum DW DMA transfer block size.
+> Then I'll be able to use this information in the can_dma() callback to enable
+> the DMA xfers only for the safe transfers. Did you mean something like this when
+> you said "There's code for that bit already" ? If you meant the max_dma_len
+> parameter, then setting it won't work, because it just limits the SG items size
+> not the total length of a single transfer.
+>
+> So the question is of how to export the multi-block LLP flag from DW DMAc
+> driver. Andy?
 
-I'd suggest to create an array of memblock_region's that will contain
-the PKRAM ranges before kexec and pass this array to the new kernel.
-Then, somewhere in start_kerenel() replace replace
-memblock.reserved->regions with that array. 
-
-> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
-> ---
->  include/linux/pkram.h |  3 +++
->  mm/memblock.c         | 15 +++++++++++++--
->  mm/pkram.c            | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 67 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-> index edc5d8bef9d3..409022e1472f 100644
-> --- a/include/linux/pkram.h
-> +++ b/include/linux/pkram.h
-> @@ -62,6 +62,9 @@ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index,
->  ssize_t pkram_write(struct pkram_stream *ps, const void *buf, size_t count);
->  size_t pkram_read(struct pkram_stream *ps, void *buf, size_t count);
->  
-> +phys_addr_t pkram_memblock_find_in_range(phys_addr_t start, phys_addr_t end,
-> +					 phys_addr_t size, phys_addr_t align);
-> +
->  #ifdef CONFIG_PKRAM
->  extern unsigned long pkram_reserved_pages;
->  void pkram_reserve(void);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index c79ba6f9920c..69ae883b8d21 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kmemleak.h>
->  #include <linux/seq_file.h>
->  #include <linux/memblock.h>
-> +#include <linux/pkram.h>
->  
->  #include <asm/sections.h>
->  #include <linux/io.h>
-> @@ -349,6 +350,16 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
->  	return ret;
->  }
->  
-> +phys_addr_t __init_memblock __memblock_find_in_range(phys_addr_t start,
-> +					phys_addr_t end, phys_addr_t size,
-> +					phys_addr_t align)
-> +{
-> +	if (IS_ENABLED(CONFIG_PKRAM))
-> +		return pkram_memblock_find_in_range(start, end, size, align);
-> +	else
-> +		return memblock_find_in_range(start, end, size, align);
-> +}
-> +
->  static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
->  {
->  	type->total_size -= type->regions[r].size;
-> @@ -447,11 +458,11 @@ static int __init_memblock memblock_double_array(struct memblock_type *type,
->  		if (type != &memblock.reserved)
->  			new_area_start = new_area_size = 0;
->  
-> -		addr = memblock_find_in_range(new_area_start + new_area_size,
-> +		addr = __memblock_find_in_range(new_area_start + new_area_size,
->  						memblock.current_limit,
->  						new_alloc_size, PAGE_SIZE);
->  		if (!addr && new_area_size)
-> -			addr = memblock_find_in_range(0,
-> +			addr = __memblock_find_in_range(0,
->  				min(new_area_start, memblock.current_limit),
->  				new_alloc_size, PAGE_SIZE);
->  
-> diff --git a/mm/pkram.c b/mm/pkram.c
-> index dd3c89614010..e49c9bcd3854 100644
-> --- a/mm/pkram.c
-> +++ b/mm/pkram.c
-> @@ -1238,3 +1238,54 @@ void pkram_free_pgt(void)
->  	__free_pages_core(virt_to_page(pkram_pgd), 0);
->  	pkram_pgd = NULL;
->  }
-> +
-> +static int __init_memblock pkram_memblock_find_cb(struct pkram_pg_state *st, unsigned long base, unsigned long size)
-> +{
-> +	unsigned long end = base + size;
-> +	unsigned long addr;
-> +
-> +	if (size < st->min_size)
-> +		return 0;
-> +
-> +	addr =  memblock_find_in_range(base, end, st->min_size, PAGE_SIZE);
-> +	if (!addr)
-> +		return 0;
-> +
-> +	st->retval = addr;
-> +	return 1;
-> +}
-> +
-> +/*
-> + * It may be necessary to allocate a larger reserved memblock array
-> + * while populating it with ranges of preserved pages.  To avoid
-> + * trampling preserved pages that have not yet been added to the
-> + * memblock reserved list this function implements a wrapper around
-> + * memblock_find_in_range() that restricts searches to subranges
-> + * that do not contain preserved pages.
-> + */
-> +phys_addr_t __init_memblock pkram_memblock_find_in_range(phys_addr_t start,
-> +					phys_addr_t end, phys_addr_t size,
-> +					phys_addr_t align)
-> +{
-> +	struct pkram_pg_state st = {
-> +		.range_cb = pkram_memblock_find_cb,
-> +		.min_addr = start,
-> +		.max_addr = end,
-> +		.min_size = PAGE_ALIGN(size),
-> +		.find_holes = true,
-> +	};
-> +
-> +	if (!pkram_reservation_in_progress)
-> +		return memblock_find_in_range(start, end, size, align);
-> +
-> +	if (!pkram_pgd) {
-> +		WARN_ONCE(1, "No preserved pages pagetable\n");
-> +		return memblock_find_in_range(start, end, size, align);
-> +	}
-> +
-> +	WARN_ONCE(memblock_bottom_up(), "PKRAM: bottom up memblock allocation not yet supported\n");
-> +
-> +	pkram_walk_pgt_rev(&st, pkram_pgd);
-> +
-> +	return st.retval;
-> +}
-> -- 
-> 2.13.3
-> 
+I'm not sure I understand why do you need this being exported. Just
+always supply SG list out of single entry and define the length
+according to the maximum segment size (it's done IIRC in SPI core).
 
 -- 
-Sincerely yours,
-Mike.
+With Best Regards,
+Andy Shevchenko
