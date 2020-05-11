@@ -2,99 +2,103 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991D4C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97424C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804D6214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4BF20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZEwp7zsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgEKHlC (ORCPT
+        id S1729177AbgEKHlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:41:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43469 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgEKHlB (ORCPT
+        Mon, 11 May 2020 03:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgEKHlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:41:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g14so6759418otg.10;
-        Mon, 11 May 2020 00:41:00 -0700 (PDT)
+        Mon, 11 May 2020 03:41:25 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3761C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:41:23 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g14so6135656wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=hseT4o3e+iJvKvlfPpNLzXEPteR4GO6bBd3Kzf2HHZM=;
+        b=ZEwp7zsvc6V/NaIZ350pitGQRs0EMYP8K6a8+IIsELLZ5AAzsHB965S9ZDCWNaBym7
+         5XimvrLLj3O6IYOPThMbNl+vsJeoxSHtkg9a7L7brMoaPPIE+obGgZRFUILa5sHqPCaj
+         /jQ7/bLYVucXsb/mw/GQMCjzy0T/LtXC2C4n6QYiKkAz2Cdk7nEYEX3O/u9fqwMKRz/t
+         3Kxr/WZw5aFxC+9CmrXKhv9AguMA/PVIGdSWh8lG7dOZ4fHttZW9BdpR2NjP6bP1Wlij
+         TcZENsfPqxRIXZ0PsT5O3xTRsqA4+zpH2SRfzop9QS8dU00cSN8SS7ts7PHaWglWD9wu
+         BMhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VS2fk1JcC03oZxkfqvBGknuVzDopGVbMhfQjjlcRALA=;
-        b=ILqja3Dq36MXQ8lFuQq2JCpcnw3RBo+OG1PPqGmjzQqwrJWz1ZXK2qT0cxUMtoJC91
-         X6X7vUxSTgRgV1fDhFNkS3lQgkpFbLLG8XKg4GdWqHo6NKdcRtoD7NKOvd6ytxr4Gwvt
-         xDvYgeOn5sDI7fxr7d04Ih1WY7KlV09GCMr32bq3BDXVnvM0Xsg0U2VWimRwhzwVQYYv
-         8B++jdIxL2HCcU07HBqbT1lUnzsJPevL7Ti/Zm7QGwXwrPQsWGFIJIwE0UKpavqSlYWL
-         vi1m8GdeH4BV/3iQ2IgyePBgE/7pRq5AhiAWIebpM52dcRFxafDvvKOHu14EDveSprlF
-         1gSA==
-X-Gm-Message-State: AGi0PuZOGd7H10ajd/Ev2EsNTwCy3z4oDCBinFm2LMfLrRAlX2JaZQ4w
-        zbMs0vHS7Xjk9wo7Zldy2ZYxULrJRjmFjdKpwog=
-X-Google-Smtp-Source: APiQypLrnA3x0TQgcu4GbQXkWDUyTXgEK7R9Byl6mAxrtqxgZZGXhJd6czCyilOQXM5O9JA2CdYzbDyIV5/QIHKRb9A=
-X-Received: by 2002:a9d:63da:: with SMTP id e26mr10878643otl.107.1589182859874;
- Mon, 11 May 2020 00:40:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hseT4o3e+iJvKvlfPpNLzXEPteR4GO6bBd3Kzf2HHZM=;
+        b=H30rz91TQN0/MhI881U6HDZ7e+6hrqgMQYy/p271zzXwyxgWk84o2EeZOFKLeULCLS
+         UqsRcZexBdqFWy3dMlxUK9TMjdFVODtH8rJI9WI2bJGDi/1yr2GMlfMHRLMwt0hXQiIw
+         f+US85nwBLSFmIQ3xVkVTWeNzwg0T/pRKen7ED0TB/k8qI2hk/39nqZfsJ5FkYJacP30
+         ybl7fwbD6SqkYda3WKxhfK64ERxec7LPTbVwHViQ8NZQDvVYqi9RLIkqEYBUBnRY/mf3
+         rE3SK77sTeQ8fZCBhvxyR9+bipSD+VHqrkQjN2k2wrjO+/HiR4ozaYyZSIEeUraBqURy
+         Immw==
+X-Gm-Message-State: AGi0PuYLxqRIgzfnBkSgB6u2c4AblNxrRmxScB/yW6pDzaQwV/EvdQl4
+        GP4P2DSDGsXuAw/++HZkav2yLA==
+X-Google-Smtp-Source: APiQypKV+Y/OjUeg8G20v03d/FoUTGa1xDhXfJWs1qQga0pjoK9gYLJRg52leg1oMHXQf3UY3BC8EQ==
+X-Received: by 2002:a7b:cc0e:: with SMTP id f14mr30057659wmh.39.1589182882327;
+        Mon, 11 May 2020 00:41:22 -0700 (PDT)
+Received: from dell ([2.31.163.63])
+        by smtp.gmail.com with ESMTPSA id y70sm26799304wmc.36.2020.05.11.00.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 00:41:21 -0700 (PDT)
+Date:   Mon, 11 May 2020 08:41:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: max77620: Use single-byte writes on MAX77620
+Message-ID: <20200511074120.GB3548@dell>
+References: <20200417170913.2552327-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-References: <20200510075510.987823-1-hch@lst.de> <20200510075510.987823-32-hch@lst.de>
-In-Reply-To: <20200510075510.987823-32-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 May 2020 09:40:39 +0200
-Message-ID: <CAMuHMdU_OxNoKfO=i903kx0mgk0-i2h4u2ase3m9_dn6oFh_5g@mail.gmail.com>
-Subject: Re: [PATCH 31/31] module: move the set_fs hack for flush_icache_range
- to m68k
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Roman Zippel <zippel@linux-m68k.org>,
-        Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-c6x-dev@linux-c6x.org,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv@lists.infradead.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200417170913.2552327-1-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 9:57 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> flush_icache_range generally operates on kernel addresses, but for some
-> reason m68k needed a set_fs override.  Move that into the m68k code
-> insted of keeping it in the module loader.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Fri, 17 Apr 2020, Thierry Reding wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The MAX77620 doesn't support bulk writes, so make sure the regmap code
+> breaks bulk writes into multiple single-byte writes.
+> 
+> Note that this is mostly cosmetic because currently only the RTC sub-
+> driver uses bulk writes and the RTC driver ends up using a different
+> regmap on the MAX77620 anyway. However, it seems like a good idea to
+> make this change now in order to avoid running into issues if bulk
+> writes are ever used by other sub-drivers sometime down the road.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/mfd/max77620.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Applied, thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
