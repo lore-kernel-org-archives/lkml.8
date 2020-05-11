@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FAAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C19C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF94B2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DC720752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="toFrMiQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7QddB7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731724AbgEKUgX (ORCPT
+        id S1731736AbgEKUgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40320 "EHLO
+        Mon, 11 May 2020 16:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKUgW (ORCPT
+        with ESMTP id S1727873AbgEKUgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:36:22 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF2FC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:36:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so12680830wra.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:36:22 -0700 (PDT)
+        Mon, 11 May 2020 16:36:42 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9950C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:36:41 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d207so4806734wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MsNU84hetyfF6zdPC3wGUgOPgBm/7koQkMk3+n24ylg=;
-        b=toFrMiQUW4O81dYzsRAVH6dllzHi7YW6EgcePzguVQQm7Fnlee/S7EtT7lqU4DvBu4
-         D8o/A/uE5cq8uAcCw2firsd0YjdjdNswErpaEZmtNx134QrXHv3SfqDLXBkZ/QbDRBXc
-         3Ql4WiUghSv3DUK2hzFxCdOVyoEfQucicdJbbcxIidp2TBG7mGQCVzEElhsd+MKJ4vR7
-         KbRZJLd0csWdK7ezpL47ijMzl1lv5I3mxLAtgIDPOOcjMf7tIY3KK6efiGfREUMG5QPc
-         6T/mURLWK4G3GPETWFn08StqigR3L8AAwDhY4XDUp2msoOsEGQYD8pCOkuV8CyHonPO5
-         QNtg==
+        bh=9Vemf8DfGFVhJ4jbqvRLe6zQd8MyyJEc24yCrsnSaX4=;
+        b=p7QddB7RB5e2Xr5qT7qZJ7/B63MiNPFsHC+nzEKXy7gbBpPlxjhGdpJLhGDjR2O+6T
+         I+MTpIDiyTs+sB011zv4sM5W3UM8sbACRUr2z6zJyDN3keAQuILS8zlcf5xMFvKh18VP
+         nCrJdsNE0z96Ibigi1D74HJEBu4sNSKBAzTMgu3A+7kNYXLpdvBJgF405IGy28U0gU6n
+         3wisrdnrcHg06zIcPQ0CwS+1/lT9R71bXIGBA5iNYjRIwuz0WUad2utNI0LuF/z09uxw
+         yp2ZB9zGaKEqE3xc8+hEpAryEdT1MaW/nPxIPTt3lwId6e7CNHoHRY3VzhctD5z2zqfR
+         DTyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=MsNU84hetyfF6zdPC3wGUgOPgBm/7koQkMk3+n24ylg=;
-        b=cyCkDfwEeVHbG+aP2xgtTHu+YjbkgYLevdJcEkKnBl7rgBP7/o4rwOgkKt7cIhmu9v
-         AYtN+PFQmowQQGIXmN1mQNECm8xd+lwdO4bIA1Ge0l0eMSvD+ineEaHP7QjSfR1RoiT2
-         vyaxrOPd6QvhNpy+Z1wkUvDlVq+iBsRUelZD26+QPKYqqffTNbSydAjqX0DrzeLVe8lN
-         y2nBAM9eAir3VQx0335ujfIyvE+7aMPriLeIbn5g4t4AsqdmC3dKsUZ3f98gJ9KDlunu
-         6ZRhyxsBMDwU7ryxhu6tcPntNJDA9UjmTMiy9vUKYC+9nj0D4lsoKQmYgW3eu0mX9JEN
-         IAoA==
-X-Gm-Message-State: AGi0PuaGupNNtFx5zifAoxNc5OUFS4iqBPq4NyTVHUsEyvqeQkQF72Bw
-        Lbu8d5HImytXE9FmjcAm97g=
-X-Google-Smtp-Source: APiQypIG95OMIDrOYKvIa+WiIHiiBIaDNYrOJAWNYnd449fNs1mxEVyi9kl3s14kf8FnwJM2/Kw4zw==
-X-Received: by 2002:a5d:4041:: with SMTP id w1mr2483025wrp.245.1589229381188;
-        Mon, 11 May 2020 13:36:21 -0700 (PDT)
+        bh=9Vemf8DfGFVhJ4jbqvRLe6zQd8MyyJEc24yCrsnSaX4=;
+        b=lznNiIOriqjef2SybF5qYsADVZVHWcPqB02jWx4Cy2az02XZ8cUyAEvnBD6/p77AxP
+         VMqr1QMDf7Tg1hmM2a+N/3sbD19h/iyU1naXXhrC38bpFn0lf5PO0/LHSNOU97LmBWL0
+         FRnXhTOSTdO43bh+z+NmNbp3NWprEdl3tnfwVg0jOBjcCpr44K50+vw6ieuI1bNVJV1M
+         PD0O1wU698yL8Hc1IFvWE9uATfvdDQLpZ+LR4kITDjRGPMr7BgiwLVCUHK9BZjpX5p6H
+         G5PLcYtRSEpgL1KLLyvgYuxVOELVcRAib0swo1gghobabjGV3ULvbFKZ314BBc4hmN25
+         rQSA==
+X-Gm-Message-State: AGi0PuatJ7GXphw35gqVUKdTAlkh+5rZp1PBZneheS+DsA8ekUFePO30
+        FSn4/22B161KHgptQ7L4/LlnV0eb
+X-Google-Smtp-Source: APiQypKUmEjimMNoX77VCKVlJwzNwJ+ORui0Lu2v9DG0CQPN4cQAUvef5xkBzRcULW5t0rDY25CLMQ==
+X-Received: by 2002:a05:600c:280b:: with SMTP id m11mr5864159wmb.115.1589229400721;
+        Mon, 11 May 2020 13:36:40 -0700 (PDT)
 Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.googlemail.com with ESMTPSA id u9sm7464114wmb.19.2020.05.11.13.36.19
+        by smtp.googlemail.com with ESMTPSA id c83sm29604157wmd.23.2020.05.11.13.36.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 13:36:20 -0700 (PDT)
+        Mon, 11 May 2020 13:36:39 -0700 (PDT)
 From:   Akira Shimahara <akira215corp@gmail.com>
 To:     greg@kroah.com, rdunlap@infradead.org
 Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org,
         Akira Shimahara <akira215corp@gmail.com>
-Subject: [PATCH v7 2/9] w1_therm: fix reset_select_slave during discovery
-Date:   Mon, 11 May 2020 22:36:10 +0200
-Message-Id: <20200511203610.409975-1-akira215corp@gmail.com>
+Subject: [PATCH v7 3/9] w1_therm: adding sysfs-driver-w1_therm doc
+Date:   Mon, 11 May 2020 22:36:31 +0200
+Message-Id: <20200511203631.410227-1-akira215corp@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,20 +75,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix reset_select_slave issue during devices discovery by the master on
-bus. The w1_reset_select_slave() from w1_io.c, which was previously used,
-assume that if the slave count is 1 there is only one slave attached on
-the bus. This is not always true. For example when discovering devices,
-when the first device is discover by the bus master, its slave count is
-1, but some other slaves may be on the bus.
-
-In that case instead of adressing command to the attached slave the 
-master throw a SKIP ROM command so that all slaves attached on the bus
-will answer simultenaously causing data collision.
-
-A dedicated reset_select_slave() function is implemented here,
-it always perform an adressing to each slave using the MATCH ROM
-command.
+Adding a sysfs-driver-w1_therm documentation file in
+Documentation/ABI/testing. It describe the onlys sysfs entry of w1_therm
+module, based on Documentation/w1/slaves/w1_therm.rst
 
 Signed-off-by: Akira Shimahara <akira215corp@gmail.com>
 ---
@@ -101,131 +90,34 @@ Changes in v6:
 Changes in v7:
 - Formatting code comments and correcting comments mistakes
 
- drivers/w1/slaves/w1_therm.c | 48 ++++++++++++++++++++++++++++++------
- 1 file changed, 41 insertions(+), 7 deletions(-)
+ Documentation/ABI/testing/sysfs-driver-w1_therm | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-w1_therm
 
-diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
-index 67204b3..6a54fc4 100644
---- a/drivers/w1/slaves/w1_therm.c
-+++ b/drivers/w1/slaves/w1_therm.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/hwmon.h>
-+#include <linux/string.h>
- 
- #include <linux/w1.h>
- 
-@@ -90,6 +91,24 @@ struct therm_info {
- 	u8 verdict;
- };
- 
-+/* Hardware Functions declaration */
-+
-+/**
-+ * reset_select_slave() - reset and select a slave
-+ * @sl: the slave to select
-+ *
-+ * Resets the bus and select the slave by sending a ROM MATCH cmd
-+ * w1_reset_select_slave() from w1_io.c could not be used here because
-+ * it sent a SKIP ROM command if only one device is on the line.
-+ * At the beginning of the such process, sl->master->slave_count is 1 even if
-+ * more devices are on the line, causing collision on the line.
-+ *
-+ * Context: The w1 master lock must be held.
-+ *
-+ * Return: 0 if success, negative kernel error code otherwise.
-+ */
-+static int reset_select_slave(struct w1_slave *sl);
-+
- /* Sysfs interface declaration */
- 
- static ssize_t w1_slave_show(struct device *device,
-@@ -301,7 +320,7 @@ static inline int w1_DS18B20_precision(struct device *device, int val)
- 	while (max_trying--) {
- 		crc = 0;
- 
--		if (!w1_reset_select_slave(sl)) {
-+		if (!reset_select_slave(sl)) {
- 			int count = 0;
- 
- 			/* read values to only alter precision bits */
-@@ -314,7 +333,7 @@ static inline int w1_DS18B20_precision(struct device *device, int val)
- 			if (rom[8] == crc) {
- 				rom[4] = (rom[4] & ~mask) | (precision_bits & mask);
- 
--				if (!w1_reset_select_slave(sl)) {
-+				if (!reset_select_slave(sl)) {
- 					w1_write_8(dev, W1_WRITE_SCRATCHPAD);
- 					w1_write_8(dev, rom[2]);
- 					w1_write_8(dev, rom[3]);
-@@ -460,6 +479,21 @@ static void w1_therm_remove_slave(struct w1_slave *sl)
- 
- /* Hardware Functions */
- 
-+/* Safe version of reset_select_slave - avoid using the one in w_io.c */
-+static int reset_select_slave(struct w1_slave *sl)
-+{
-+	u8 match[9] = { W1_MATCH_ROM, };
-+	u64 rn = le64_to_cpu(*((u64 *)&sl->reg_num));
-+
-+	if (w1_reset_bus(sl->master))
-+		return -ENODEV;
-+
-+	memcpy(&match[1], &rn, 8);
-+	w1_write_block(sl->master, match, 9);
-+
-+	return 0;
-+}
-+
- static ssize_t read_therm(struct device *device,
- 			  struct w1_slave *sl, struct therm_info *info)
- {
-@@ -487,7 +521,7 @@ static ssize_t read_therm(struct device *device,
- 		info->verdict = 0;
- 		info->crc = 0;
- 
--		if (!w1_reset_select_slave(sl)) {
-+		if (!reset_select_slave(sl)) {
- 			int count = 0;
- 			unsigned int tm = 750;
- 			unsigned long sleep_rem;
-@@ -495,7 +529,7 @@ static ssize_t read_therm(struct device *device,
- 			w1_write_8(dev, W1_READ_PSUPPLY);
- 			external_power = w1_read_8(dev);
- 
--			if (w1_reset_select_slave(sl))
-+			if (reset_select_slave(sl))
- 				continue;
- 
- 			/* 750ms strong pullup (or delay) after the convert */
-@@ -525,7 +559,7 @@ static ssize_t read_therm(struct device *device,
- 				}
- 			}
- 
--			if (!w1_reset_select_slave(sl)) {
-+			if (!reset_select_slave(sl)) {
- 
- 				w1_write_8(dev, W1_READ_SCRATCHPAD);
- 				count = w1_read_block(dev, info->rom, 9);
-@@ -577,7 +611,7 @@ static inline int w1_therm_eeprom(struct device *device)
- 	memset(rom, 0, sizeof(rom));
- 
- 	while (max_trying--) {
--		if (!w1_reset_select_slave(sl)) {
-+		if (!reset_select_slave(sl)) {
- 			unsigned int tm = 10;
- 			unsigned long sleep_rem;
- 
-@@ -585,7 +619,7 @@ static inline int w1_therm_eeprom(struct device *device)
- 			w1_write_8(dev, W1_READ_PSUPPLY);
- 			external_power = w1_read_8(dev);
- 
--			if (w1_reset_select_slave(sl))
-+			if (reset_select_slave(sl))
- 				continue;
- 
- 			/* 10ms strong pullup/delay after the copy command */
+diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
+new file mode 100644
+index 0000000..4a85663
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
+@@ -0,0 +1,17 @@
++What:		/sys/bus/w1/devices/.../w1_slave
++Date:		May 2020
++Contact:	Akira Shimahara <akira215corp@gmail.com>
++Description:
++		(RW) return the temperature in 1/1000 degC.
++		*read*: return 2 lines with the hexa output data sent on the
++		bus, return the CRC check and temperature in 1/1000 degC
++		*write* :
++			* '0' : save the 2 or 3 bytes to the device EEPROM
++			(i.e. TH, TL and config register)
++			* '9..12' : set the device resolution in RAM
++			(if supported)
++			* Anything else: do nothing
++		refer to Documentation/w1/slaves/w1_therm.rst for detailed
++		information.
++Users:		any user space application which wants to communicate with
++		w1_term device
+\ No newline at end of file
 -- 
 2.26.2
 
