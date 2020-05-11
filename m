@@ -2,134 +2,188 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7276C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D243C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75E82075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589229934;
-	bh=W/eBcc72ZFFxVDPIxtsiK4NEYht1c5e9oR3ITvdxHIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KDO3U7FKl61qw62IBh3FBImVdqLEGmTancbaXpIx1vSPIO08dGluLiUa3PCEMnCoH
-	 sTo/TctYNinkXNB3y8jXqaReEI8mKnET6Ar8WHIsjAbWhnUgDXj5Iq0BcxTBwokgK2
-	 epDmhJuMbNYESRnTB/lpBPAPX6GJK+ic5iquq8Zs=
+	by mail.kernel.org (Postfix) with ESMTP id 4C99F20752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:46:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hkEdszHi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgEKUpd (ORCPT
+        id S1731802AbgEKUqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:45:33 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41203 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731636AbgEKUpc (ORCPT
+        Mon, 11 May 2020 16:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729857AbgEKUqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:45:32 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 63so1339932oto.8;
-        Mon, 11 May 2020 13:45:31 -0700 (PDT)
+        Mon, 11 May 2020 16:46:39 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20CDC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:46:38 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id f7so5274491pfa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:46:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uYusnhSC7Z6RV3AtOgOdxj3jC+YLs9nBvqEDynGfEO4=;
+        b=hkEdszHivpyBZj6Je7n1VlEhojSGSt2t11cqUYXONgDCnJ3B4+XrxCdoiktys9EEOC
+         BAUx9V1FUz8O5C/7N8IPPFEytTC+hjumCYHKCniwoC1fFUlk6/kxAMEx5Cc4CIbEMILA
+         Y+xfoa9PZ+PAxKIEEbiFrXdJbhVedDFKoYKAM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8HYjnhh8Bu8XYDVDKIXasgsrQoeCjoEU/+GLZVp6VL4=;
-        b=uXcM4p4xBbOwgs+INZ2/puw0lKenm4NLcwzj0XpH1V6Z2gLm87nl7V7ROaI7/zCg5L
-         lQqvbe46Qr20HiPLrkrEt4+lDtkB+COd+1BZ27JPepw+e2POEXGxgA7dwcd7ZFfvJtB5
-         8Mzg5TXhLNFNuU+E7rq1HCRrYWniPTnrQU3SeVodUfmO/qvp+RUDFwj/UNtNINXGbrE5
-         S0s2bc2ec0OyLe04sWorBgVRXOm+viVoPj2YiJvWynfSdD3WuXhJGiDON+gVUHYW8FvL
-         G4RTaPyLx/88r+CG/D6PJTlWMHysbk0us/T/zhYKT0hn1XzOtfr33w1kO03BPzzDSq0d
-         uJfQ==
-X-Gm-Message-State: AGi0Pualo8+1VHIsPCUPHX4SHJlUe/8Fv2PRkkiC5GHRCcneN/4Ii5i1
-        OSy8EfNO9ZftsExpT9zdZg==
-X-Google-Smtp-Source: APiQypKrHjG2YQsNuUzJ0MXv21zFdiAFCnjL4QWURbbEGJWV5Y68QNrIXfpv8r9brDsrOsEu41aYVA==
-X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr14284404otq.262.1589229931484;
-        Mon, 11 May 2020 13:45:31 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n24sm263926otr.35.2020.05.11.13.45.29
+         :mime-version:content-disposition:in-reply-to;
+        bh=uYusnhSC7Z6RV3AtOgOdxj3jC+YLs9nBvqEDynGfEO4=;
+        b=FOJuz7L1No5BVLW/IgEPnmCtkf+SGR+5tsRKho48CZ9B9yhieLvjuAIa8eF1g/EU+B
+         O3djV3lbwysJmjRY4Dx185+8os5Tzb8jJVS5/baYc+FIqKiJzHR/L4men0unTjkkfk+j
+         qzfmrSsDriv3nyRz9bfg5Q+O1EOGbs2jxnWIXrNwvTFcVM1kNQFShoh1EgzLlaWBD2t/
+         HvLpyMe5HKqI0N4kOwujIWHpE3yH6qQtKLTrO0hbkJrnVKQQ+r6JCc/oSOudbBxI0nSc
+         1piWw67KLuXSWdPx+ZqLd1bQ7btHY7t1ZNZ3bmeZJaKz1b3eMASYt7ie1dFaJ4IN8hn+
+         E8GQ==
+X-Gm-Message-State: AOAM530CQLW5z4RUTOB87/0nl/FQXQ2TwsVjFUJQnMtxcPtq66JNMCWQ
+        +t6qx+XvRhmqtlPTT/KbqH1MHw==
+X-Google-Smtp-Source: ABdhPJywgNWD2Wh9WUBNZ0aLExdgulIwqc76Ief5yXPN1y1Bsh6hSt7WMz8Z2cbjXe2REjbFsLFV5A==
+X-Received: by 2002:a63:4cc:: with SMTP id 195mr3874382pge.294.1589229997580;
+        Mon, 11 May 2020 13:46:37 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id 67sm10209091pfx.108.2020.05.11.13.46.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 13:45:30 -0700 (PDT)
-Received: (nullmailer pid 14771 invoked by uid 1000);
-        Mon, 11 May 2020 20:45:29 -0000
-Date:   Mon, 11 May 2020 15:45:29 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 08/16] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200511204529.GA3518@bogus>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-9-michael@walle.cc>
+        Mon, 11 May 2020 13:46:36 -0700 (PDT)
+Date:   Mon, 11 May 2020 13:46:35 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, heikki.krogerus@linux.intel.com,
+        twawrzynczak@chromium.org, Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
+Message-ID: <20200511204635.GC136540@google.com>
+References: <20200422222242.241699-1-pmalani@chromium.org>
+ <20200511192800.GA28762@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423174543.17161-9-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511192800.GA28762@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 07:45:35PM +0200, Michael Walle wrote:
-> This adds support for the PWM controller of the sl28cpld board
-> management controller. This is part of a multi-function device driver.
+Hi Rob,
+
+Thank you for reviewing the patch. Kindly see my comments inline:
+
+On Mon, May 11, 2020 at 02:28:00PM -0500, Rob Herring wrote:
+> On Wed, Apr 22, 2020 at 03:22:39PM -0700, Prashant Malani wrote:
+> > Add properties for mode, orientation and USB data role switches for
+> > Type C connectors. When available, these will allow the Type C connector
+> > class port driver to configure the various switches according to USB PD
+> > information (like orientation, alt mode etc.) provided by the Chrome OS
+> > EC controller.
+> > 
+> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > ---
+> >  .../bindings/chrome/google,cros-ec-typec.yaml | 27 ++++++++++++++++++-
+> >  1 file changed, 26 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > index 6d7396ab8bee..b5814640aa32 100644
+> > --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> > @@ -21,7 +21,21 @@ properties:
+> >      const: google,cros-ec-typec
+> >  
+> >    connector:
+> > -    $ref: /schemas/connector/usb-connector.yaml#
+> > +    allOf:
+> > +      - $ref: /schemas/connector/usb-connector.yaml#
+> > +      - type: object
+> > +        properties:
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/pwm/Kconfig        |  10 ++
->  drivers/pwm/Makefile       |   1 +
->  drivers/pwm/pwm-sl28cpld.c | 203 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 214 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sl28cpld.c
+> These don't seem CrOS EC specific, so why document them as such. 
 
+Are you referring to the "mode-switch", "orientation-switch" and
+"usb-role-switch" properties? If so, then yes, they aren't Cros EC
+specific. The Type C connector class framework requires the nodes to be
+named like this, and the cros-ec-typec driver uses this framework, hence
+the description here (the Type C connector class framework doesn't have
+any bindings).
 
-> +static const struct of_device_id sl28cpld_pwm_of_match[] = {
-> +	{ .compatible = "kontron,sl28cpld-pwm" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
-> +
-> +static const struct platform_device_id sl28cpld_pwm_id_table[] = {
-> +	{"sl28cpld-gpio"},
+Would it be better to add in the description string that Type Connector
+class expects these switches to be named this way? :
 
-copy-n-paste error?
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(platform, sl28cpld_pwm_id_table);
-> +
-> +static struct platform_driver sl28cpld_pwm_driver = {
-> +	.probe = sl28cpld_pwm_probe,
-> +	.remove	= sl28cpld_pwm_remove,
-> +	.id_table = sl28cpld_pwm_id_table,
-> +	.driver = {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = sl28cpld_pwm_of_match,
-> +	},
-> +};
-> +module_platform_driver(sl28cpld_pwm_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.20.1
+" Reference to a DT node for the USB Type C Multiplexer controlling the
+data lines routing for this connector. This switch is assumed registered
+with the Type C connector class framework, which requires it to be named
+this way."
 > 
+> > +          mode-switch:
+> > +            description: Reference to a DT node for the USB Type C Multiplexer
+> > +              controlling the data lines routing for this connector.
+> 
+> This is for alternate mode muxing I presume.
+
+Yes, that's right.
+> 
+> We already have a mux-control binding. Why not use that here?
+
+Heikki might be able to offer more insight into why this is the case,
+since the connector class framework seems to expect a phandle and for
+the device driver to implement a "set" command. Heikki, would you happen to know?
+
+> 
+> > +
+> > +          orientation-switch:
+> > +            description: Reference to a DT node for the USB Type C orientation
+> > +              switch for this connector.
+> 
+> What's in this node?
+
+Similar to the other "-switch", this will contain a phandle to a device
+which can control orientation settings for the Type C Mux. The connector
+class API assumes the switches are named this way. For example:
+
+orientation-switch:
+https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/usb/typec/mux.c#L64
+
+mode-switch:
+https://elixir.bootlin.com/linux/v5.7-rc2/source/drivers/usb/typec/mux.c#L258
+
+> 
+> > +
+> > +          usb-role-switch:
+> > +            description: Reference to a DT node for the USB Data role switch
+> > +              for this connector.
+> >  
+> >  required:
+> >    - compatible
+> > @@ -49,6 +63,17 @@ examples:
+> >              data-role = "dual";
+> >              try-power-role = "source";
+> >            };
+> > +
+> > +          connector@1 {
+> > +            compatible = "usb-c-connector";
+> > +            reg = <1>;
+> > +            power-role = "dual";
+> > +            data-role = "host";
+> > +            try-power-role = "source";
+> > +            mode-switch = <&typec_mux>;
+> > +            orientation-switch = <&typec_orientation_switch>;
+> > +            usb-role-switch = <&typec_mux>;
+> > +          };
+> >          };
+> >        };
+> >      };
+> > -- 
+> > 2.26.1.301.g55bc3eb7cb9-goog
+> > 
