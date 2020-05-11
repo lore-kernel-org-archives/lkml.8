@@ -2,163 +2,201 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D70CC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6472CC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F75206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E206206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HL6R7NQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgEKOQh (ORCPT
+        id S1730519AbgEKORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:16:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6610 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730158AbgEKOQg (ORCPT
+        Mon, 11 May 2020 10:17:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48066 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730384AbgEKORC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:16:36 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BDXD0a161500;
-        Mon, 11 May 2020 10:15:47 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvrxy12-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 10:15:47 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BEB2Gc003182;
-        Mon, 11 May 2020 14:15:44 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 30wm55mhcy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 14:15:44 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BEFg6J62193780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 14:15:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E49024204B;
-        Mon, 11 May 2020 14:15:41 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C160C42045;
-        Mon, 11 May 2020 14:15:38 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.203.187])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 11 May 2020 14:15:38 +0000 (GMT)
-Date:   Mon, 11 May 2020 17:15:36 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mike Rapoport <rppt@kernel.org>, Rich Felker <dalias@libc.org>,
-        linux-ia64@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-sh@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
-        linux-hexagon@vger.kernel.org, Will Deacon <will@kernel.org>,
-        kvmarm@lists.cs.columbia.edu, Jonas Bonn <jonas@southpole.se>,
-        linux-arch@vger.kernel.org, Brian Cain <bcain@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org, Stafford Horne <shorne@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        linux-arm-kernel@lists.infradead.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Tony Luck <tony.luck@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
-        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v4 02/14] arm: add support for folded p4d page tables
-Message-ID: <20200511141536.GB983798@linux.ibm.com>
-References: <20200414153455.21744-1-rppt@kernel.org>
- <20200414153455.21744-3-rppt@kernel.org>
- <CGME20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f@eucas1p2.samsung.com>
- <39ba8a04-d6b5-649d-c289-0c8b27cb66c5@samsung.com>
- <20200507161155.GE683243@linux.ibm.com>
- <98229ab1-fbf8-0a89-c5d6-270c828799e7@samsung.com>
- <20200508174232.GA759899@linux.ibm.com>
- <665dade8-727a-3318-6779-3998080da18f@samsung.com>
+        Mon, 11 May 2020 10:17:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589206621; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=FVAth4pYBtTXQqicR7pFM3iw/uwUViT59NQhEjjdoQ8=;
+ b=HL6R7NQXSZZfYrBaDfvC0q5OepW/O4dnM7Z5abjzS3/kY9xRbagbiOCqj3YRkLH0OYAUl0t7
+ jvg+998edNnXR2fdTajqDKvMvsechR59InUxutFJ8JV7/Ai9Z92ZD3m6uxkcTKVFdawHLE0p
+ JJ31vdmqy0HWLZBM7Xe/o+Er288=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb95e55.7f1bc9fd45a8-smtp-out-n05;
+ Mon, 11 May 2020 14:16:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9C9C3C432C2; Mon, 11 May 2020 14:16:52 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D992BC433F2;
+        Mon, 11 May 2020 14:16:51 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <665dade8-727a-3318-6779-3998080da18f@samsung.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_05:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 mlxscore=0 priorityscore=1501 phishscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 suspectscore=1 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110112
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 11 May 2020 19:46:51 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
+ <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
+ <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
+ <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
+ <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
+ <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
+ <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+ <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+Message-ID: <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+Hi Mike,
 
-On Mon, May 11, 2020 at 08:36:41AM +0200, Marek Szyprowski wrote:
-> Hi Mike,
-> 
-> On 08.05.2020 19:42, Mike Rapoport wrote:
-> > On Fri, May 08, 2020 at 08:53:27AM +0200, Marek Szyprowski wrote:
-> >> On 07.05.2020 18:11, Mike Rapoport wrote:
-> >>> On Thu, May 07, 2020 at 02:16:56PM +0200, Marek Szyprowski wrote:
-> >>>> On 14.04.2020 17:34, Mike Rapoport wrote:
-> >>>>> From: Mike Rapoport <rppt@linux.ibm.com>
-> >>>>>
-> >>>>> Implement primitives necessary for the 4th level folding, add walks of p4d
-> >>>>> level where appropriate, and remove __ARCH_USE_5LEVEL_HACK.
-> >>>>>
-> >>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > Can you please try the patch below:
-> >
-> > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> > index 963b5284d284..f86b3d17928e 100644
-> > --- a/arch/arm/mm/init.c
-> > +++ b/arch/arm/mm/init.c
-> > @@ -571,7 +571,7 @@ static inline void section_update(unsigned long addr, pmdval_t mask,
-> >   {
-> >   	pmd_t *pmd;
-> >   
-> > -	pmd = pmd_off_k(addr);
-> > +	pmd = pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), addr), addr), addr);
-> >   
-> >   #ifdef CONFIG_ARM_LPAE
-> >   	pmd[0] = __pmd((pmd_val(pmd[0]) & mask) | prot);
-> This fixes kexec issue! Thanks!
-> 
-> 
-> Feel free to add:
-> 
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Fixes: 218f1c390557 ("arm: add support for folded p4d page tables")
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On 2020-05-11 16:44, Mike Leach wrote:
+[...]
 
-Thanks for testing!
+>> 
+>> I checked with the debug team and there is a limitation with
+>> the replicator(swao_replicator) in the AOSS group where it
+>> loses the idfilter register context when the clock is disabled.
+>> This is not just in SC7180 SoC but also reported on some latest
+>> upcoming QCOM SoCs as well and will need to be taken care in
+>> order to enable coresight on these chipsets.
+>> 
+>> Here's what's happening -  After the replicator is initialized,
+>> the clock is disabled in amba_pm_runtime_suspend() as a part of
+>> pm runtime workqueue with the assumption that there will be no
+>> loss of context after the replicator is initialized. But it doesn't
+>> hold good with the replicators with these unfortunate limitation
+>> and the idfilter register context is lost.
+>> 
+>> [    5.889406] amba_pm_runtime_suspend devname=6b06000.replicator 
+>> ret=0
+>> [    5.914516] Workqueue: pm pm_runtime_work
+>> [    5.918648] Call trace:
+>> [    5.921185]  dump_backtrace+0x0/0x1d0
+>> [    5.924958]  show_stack+0x2c/0x38
+>> [    5.928382]  dump_stack+0xc0/0x104
+>> [    5.931896]  amba_pm_runtime_suspend+0xd8/0xe0
+>> [    5.936469]  __rpm_callback+0xe0/0x140
+>> [    5.940332]  rpm_callback+0x38/0x98
+>> [    5.943926]  rpm_suspend+0xec/0x618
+>> [    5.947522]  rpm_idle+0x5c/0x3f8
+>> [    5.950851]  pm_runtime_work+0xa8/0xc0
+>> [    5.954718]  process_one_work+0x1f8/0x4c0
+>> [    5.958848]  worker_thread+0x50/0x468
+>> [    5.962623]  kthread+0x12c/0x158
+>> [    5.965957]  ret_from_fork+0x10/0x1c
+>> 
+>> This is a platform/SoC specific replicator issue, so we can either
+>> introduce some DT property for replicators to identify which 
+>> replicator
+>> has this limitation, check in replicator_enable() and reset the
+>> registers
+>> or have something like below diff to check the idfilter registers in
+>> replicator_enable() and then reset with clear comment specifying it’s
+>> the
+>> hardware limitation on some QCOM SoCs. Please let me know your 
+>> thoughts
+>> on
+>> this?
+>> 
 
-The patch is still in mmotm tree, so I don't think "Fixes" apply.
+Sorry for hurrying up and sending the patch - 
+https://lore.kernel.org/patchwork/patch/1239923/.
+I will send v2 based on further feedbacks here or there.
 
-Andrew, would you like me to send the fix as a formal patch or will pick
-it up as a fixup?
-
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
 > 
+> 1) does this replicator part have a unique ID that differs from the
+> standard ARM designed replicators?
+> If so perhaps link the modification into this. (even if the part no in
+> PIDR0/1 is the same the UCI should be different for a different
+> implementation)
+> 
+
+pid=0x2bb909 for both replicators. So part number is same.
+UCI will be different for different implementation(QCOM maybe different 
+from ARM),
+but will it be different for different replicators under the same 
+impl(i.e., on QCOM).
+
+> 2) We have used DT properties in the past - (e.g. scatter gather in
+> TMC) where hardware compatibility issues have impacted on the
+> operation of a coresight component. This is further complicated by the
+> fact that an ACPI property would be needed as well.
+> 
+
+Yes, this was also one option which I had mentioned. But as you said we 
+need
+to have an ACPI property as well and these systems with limitations are 
+DT based.
+
+> 3) The sysfs access to FILTERID0/1 on this replicator is going to show
+> different values than on a standard replicator (0x00 instead of 0xFF).
+> Does this need to be addressed?
+> 
+
+I don't think we need to change this because its actually showing the 
+right
+values for the replicator.
+
+> 4 ) An alternative approach could be to model the driver on the ETM /
+> CTI drivers where the register values are held in the driver structure
+> and only applied on enable / disable.
+> 
+
+This looks good to me since we really don't need to reset replicator in 
+probe,
+we need to reset it only in replicator_enable() and that ensures clocks 
+are enabled
+without having to assume things(from amba) about context being lost or 
+not when
+clocks are disabled since that is implementation defined anyways.
+
+But, why can't we just move replicator_reset() from probe to 
+replicator_enable()?
+Anything wrong with it? Seems like right thing to do because we will be 
+having
+clocks enabled when we touch the replicator registers and only in the 
+enable
+path.
+
+Thanks,
+Sai
 
 -- 
-Sincerely yours,
-Mike.
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
