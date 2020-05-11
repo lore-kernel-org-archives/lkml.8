@@ -4,130 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0379FC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D85C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E299A20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504CF20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgEKLVN (ORCPT
+        id S1729693AbgEKLVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:21:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:57428 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729305AbgEKLVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:21:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86A441045;
-        Mon, 11 May 2020 04:21:11 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DC05D3F305;
-        Mon, 11 May 2020 04:21:01 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v7 09/15] thermal: devfreq_cooling: change tracing function and arguments
-Date:   Mon, 11 May 2020 12:19:06 +0100
-Message-Id: <20200511111912.3001-10-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511111912.3001-1-lukasz.luba@arm.com>
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
+        Mon, 11 May 2020 07:21:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46448 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgEKLVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:21:14 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CF5F05D704CED6D715BE;
+        Mon, 11 May 2020 19:21:11 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 19:21:05 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <rostedt@goodmis.org>, <mingo@redhat.com>, <tj@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <nixiaoming@huawei.com>,
+        <wangle6@huawei.com>
+Subject: [PATCH] trace: Remove duplicate semicolons at the end of line
+Date:   Mon, 11 May 2020 19:21:02 +0800
+Message-ID: <1589196062-84310-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for deleting the static and dynamic power calculation and clean
-the trace function. These two fields are going to be removed in the next
-changes.
+Remove duplicate semicolons at the end of line in
+include/trace/events/iocost.h
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
 ---
- drivers/thermal/devfreq_cooling.c |  3 +--
- include/trace/events/thermal.h    | 19 +++++++++----------
- 2 files changed, 10 insertions(+), 12 deletions(-)
+ include/trace/events/iocost.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index f7f32e98331b..52694d4bd819 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -286,8 +286,7 @@ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cd
- 		*power = dyn_power + static_power;
- 	}
- 
--	trace_thermal_power_devfreq_get_power(cdev, status, freq, dyn_power,
--					      static_power, *power);
-+	trace_thermal_power_devfreq_get_power(cdev, status, freq, *power);
- 
- 	return 0;
- fail:
-diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
-index 135e5421f003..8a5f04888abd 100644
---- a/include/trace/events/thermal.h
-+++ b/include/trace/events/thermal.h
-@@ -153,31 +153,30 @@ TRACE_EVENT(thermal_power_cpu_limit,
- TRACE_EVENT(thermal_power_devfreq_get_power,
- 	TP_PROTO(struct thermal_cooling_device *cdev,
- 		 struct devfreq_dev_status *status, unsigned long freq,
--		u32 dynamic_power, u32 static_power, u32 power),
-+		u32 power),
- 
--	TP_ARGS(cdev, status,  freq, dynamic_power, static_power, power),
-+	TP_ARGS(cdev, status,  freq, power),
- 
- 	TP_STRUCT__entry(
- 		__string(type,         cdev->type    )
- 		__field(unsigned long, freq          )
--		__field(u32,           load          )
--		__field(u32,           dynamic_power )
--		__field(u32,           static_power  )
-+		__field(u32,           busy_time)
-+		__field(u32,           total_time)
- 		__field(u32,           power)
- 	),
+diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
+index 7ecaa65b..91297eb 100644
+--- a/include/trace/events/iocost.h
++++ b/include/trace/events/iocost.h
+@@ -152,7 +152,7 @@
  
  	TP_fast_assign(
- 		__assign_str(type, cdev->type);
- 		__entry->freq = freq;
--		__entry->load = (100 * status->busy_time) / status->total_time;
--		__entry->dynamic_power = dynamic_power;
--		__entry->static_power = static_power;
-+		__entry->busy_time = status->busy_time;
-+		__entry->total_time = status->total_time;
- 		__entry->power = power;
- 	),
- 
--	TP_printk("type=%s freq=%lu load=%u dynamic_power=%u static_power=%u power=%u",
-+	TP_printk("type=%s freq=%lu load=%u power=%u",
- 		__get_str(type), __entry->freq,
--		__entry->load, __entry->dynamic_power, __entry->static_power,
-+		__entry->total_time == 0 ? 0 :
-+			(100 * __entry->busy_time) / __entry->total_time,
- 		__entry->power)
- );
- 
+ 		__assign_str(devname, ioc_name(ioc));
+-		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
++		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);
+ 		__entry->new_vrate = new_vrate;
+ 		__entry->busy_level = ioc->busy_level;
+ 		__entry->read_missed_ppm = (*missed_ppm)[READ];
 -- 
-2.17.1
+1.8.5.6
 
