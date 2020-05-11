@@ -2,273 +2,109 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797E3C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED2C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53571206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE66206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:15:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcM2L5DB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgEKQOh (ORCPT
+        id S1730612AbgEKQPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbgEKQOg (ORCPT
+        Mon, 11 May 2020 12:15:13 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59686 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730561AbgEKQPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:14:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9281DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:14:36 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2494F2A0E1A;
-        Mon, 11 May 2020 17:14:35 +0100 (BST)
-Date:   Mon, 11 May 2020 18:14:31 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
-        <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
-        <praneeth@ti.com>
-Subject: Re: [PATCH v7 3/7] i3c: master: add i3c_secondary_master_register
-Message-ID: <20200511181431.442cdf0b@collabora.com>
-In-Reply-To: <1589202833-6908-1-git-send-email-pthombar@cadence.com>
-References: <1589202702-4879-1-git-send-email-pthombar@cadence.com>
-        <1589202833-6908-1-git-send-email-pthombar@cadence.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 11 May 2020 12:15:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589213710;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hMmg8VXRFHP3NtN5OvlSRCC/9CYursiCkwl7Hbg93g0=;
+        b=UcM2L5DBBTShsOTMIDTriHKkzKFhg7Zkbn6FgbSVseu2LVGP6GIcLK2CnjKodb4qjEaE78
+        r+gRISeeAT8/p/noO4IGBqZ4pCz9mJuQ3xNor4kcRwz2LQogWmRi2eVoefS1pwA1tcCJhd
+        9C1BKRURx3eMR/xozqE4iN0Zx3O3rmI=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-naT-iPugP1yz7U8BFmQypw-1; Mon, 11 May 2020 12:15:08 -0400
+X-MC-Unique: naT-iPugP1yz7U8BFmQypw-1
+Received: by mail-qk1-f198.google.com with SMTP id a18so10607010qkl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:15:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hMmg8VXRFHP3NtN5OvlSRCC/9CYursiCkwl7Hbg93g0=;
+        b=gyP1DCsPjX6jYSAc7PaiQLhwH7B29OrgVQgNUcJ1akwX2MpB9+9APzR1NJgaoU9nA3
+         ekD/AF/Y1SP57LDBou9u1j4nh8IGHlVgJ5a2SrRP9ZVhk/6/3nwCl+M0TG+YzFsLqdZ7
+         L45sjzNvYOu4RSeGqbcHXmu4VQXazfYORcT3YXMrLCJaGRKcD1zUAGMBQ3Io8AjyO9EK
+         6WI+Js3bmEOlrQwx68y7VxyWKfiYTc9u7nP+J/+h9RzQdXPibUWl3/6zZQuJCkQnMylY
+         5HSyk6jntLoruH/76+wHk+V84LoLyR08FvPk9Zh/z6jlb94NTdFR7sjvyi7ZC0ofhkfd
+         QekA==
+X-Gm-Message-State: AGi0PuYbsX7wPakJIFYoOSdQk5nKuZZ2tzqZdXKcfsSewFtKrt4dzzLY
+        SjBJezH53tQn/uNmbs5+9k1JSy1eZG5G2Grrs5aQXbLHSE5BYo0DXrHI6jP9k8/Ol/PxbvrAbWz
+        O1bOBVkthHlJoWt9RDARCOKmz
+X-Received: by 2002:a05:620a:13a7:: with SMTP id m7mr14264304qki.498.1589213708408;
+        Mon, 11 May 2020 09:15:08 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLFlqG5vF/e7y0pD5EcKe9ThQIhRa2tEFR+EpAWfKOuQOPTdjVG8EmWZz7lFamA9ZguN16SpQ==
+X-Received: by 2002:a05:620a:13a7:: with SMTP id m7mr14264282qki.498.1589213708136;
+        Mon, 11 May 2020 09:15:08 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id c24sm6645942qtd.26.2020.05.11.09.15.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 09:15:06 -0700 (PDT)
+Date:   Mon, 11 May 2020 12:15:05 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] KVM: x86, SVM: isolate vcpu->arch.dr6 from
+ vmcb->save.dr6
+Message-ID: <20200511161505.GI228260@xz-x1>
+References: <20200507115011.494562-1-pbonzini@redhat.com>
+ <20200507115011.494562-9-pbonzini@redhat.com>
+ <20200507192808.GK228260@xz-x1>
+ <dd8eb45b-4556-6aaa-0061-11b9124020b1@redhat.com>
+ <20200508153210.GZ228260@xz-x1>
+ <a0dd65bc-bfea-75b8-60d7-5060b9ee6c51@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a0dd65bc-bfea-75b8-60d7-5060b9ee6c51@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 15:13:53 +0200
-Parshuram Thombare <pthombar@cadence.com> wrote:
-
-> add i3c_secondary_master_register which is used
-> to register secondary masters.
+On Sat, May 09, 2020 at 03:28:44PM +0200, Paolo Bonzini wrote:
+> On 08/05/20 17:32, Peter Xu wrote:
+> > On Fri, May 08, 2020 at 12:33:57AM +0200, Paolo Bonzini wrote:
+> >> On 07/05/20 21:28, Peter Xu wrote:
+> >>>> -	svm->vcpu.arch.dr6 = dr6;
+> >>>> +	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+> >>>> +	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+> >>>> +	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+> >>> I failed to figure out what the above calculation is going to do... 
+> >>
+> >> The calculation is merging the cause of the #DB with the guest DR6.
+> >> It's basically the same effect as kvm_deliver_exception_payload.
+> > 
+> > Shall we introduce a helper for both kvm_deliver_exception_payload and here
+> > (e.g. kvm_merge_dr6)?  Also, wondering whether this could be a bit easier to
+> > follow by defining:
 > 
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
-> ---
->  drivers/i3c/master.c       | 154 ++++++++++++++++++++++++++++++++++++-
->  include/linux/i3c/master.h |   3 +
->  2 files changed, 156 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index ba07a7d49633..669bd7e45810 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -1768,6 +1768,90 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
->  	return ret;
->  }
->  
-> +/**
-> + * i3c_secondary_master_bus_init() - initialize an I3C bus for secondary
-> + * master
-> + * @master: secondary master initializing the bus
-> + *
-> + * This function does
-> + *
-> + * 1. Attach I2C devs to the master
-> + *
-> + * 2. Call &i3c_master_controller_ops->bus_init() method to initialize
-> + *    the master controller. That's usually where the bus mode is selected
-> + *    (pure bus or mixed fast/slow bus)
+> It would make sense indeed but I plan to get rid of this in 5.9 (so in
+> about a month), as explained in the comment.
 
-Can you really select the bus mode without knowing the I3C devices you
-have on the bus? Or maybe that's a preliminary initialization which is
-then updated when you receive DEFSLVS events.
+OK. I thought it would be easy to change and verify when with the selftests,
+however it's definitely ok to work upon it too.  Thanks,
 
-> + *
-> + * Once this is done, I2C devices should be usable.
-
-I suspect you'll have to request bus ownership first, which means
-they're not really usable, just registered to the I2C subsystem. This
-might lead to a whole bunch of problems when drivers will try to send
-messages to the I2C devices and receive ETIMEDOUT/EBUSY errors. We'll
-probably need some updates to the I2C framework if we want I2C to play
-nicely with bus handover, but I think we can keep that for later. I'd
-suggest to forget about I2C for now and mark that as a limitation (no
-I2C devs on secondary masters).
-
-> + *
-> + * Return: a 0 in case of success, an negative error code otherwise.
-> + */
-> +static int i3c_secondary_master_bus_init(struct i3c_master_controller *master)
-> +{
-> +	enum i3c_addr_slot_status status;
-> +	struct i2c_dev_boardinfo *i2cboardinfo;
-> +	struct i2c_dev_desc *i2cdev;
-> +	int ret;
-> +
-> +	/*
-> +	 * First attach all devices with static definitions provided by the
-> +	 * FW.
-> +	 */
-> +	list_for_each_entry(i2cboardinfo, &master->boardinfo.i2c, node) {
-> +		status = i3c_bus_get_addr_slot_status(&master->bus,
-> +						      i2cboardinfo->base.addr);
-> +		if (status != I3C_ADDR_SLOT_FREE) {
-> +			ret = -EBUSY;
-> +			goto err_detach_devs;
-> +		}
-> +
-> +		i3c_bus_set_addr_slot_status(&master->bus,
-> +					     i2cboardinfo->base.addr,
-> +					     I3C_ADDR_SLOT_I2C_DEV);
-> +
-> +		i2cdev = i3c_master_alloc_i2c_dev(master, i2cboardinfo);
-> +		if (IS_ERR(i2cdev)) {
-> +			ret = PTR_ERR(i2cdev);
-> +			goto err_detach_devs;
-> +		}
-> +
-> +		ret = i3c_master_attach_i2c_dev(master, i2cdev);
-> +		if (ret) {
-> +			i3c_master_free_i2c_dev(i2cdev);
-> +			goto err_detach_devs;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * Now execute the controller specific ->bus_init() routine, which
-> +	 * might configure its internal logic to match the bus limitations.
-> +	 */
-> +	ret = master->ops->bus_init(master);
-> +	if (ret)
-> +		goto err_detach_devs;
-> +
-> +	/*
-> +	 * The master device should have been instantiated in ->bus_init(),
-> +	 * complain if this was not the case.
-> +	 */
-> +	if (!master->this) {
-> +		dev_err(&master->dev,
-> +			"master_set_info() was not called in ->bus_init()\n");
-> +		ret = -EINVAL;
-> +		goto err_bus_cleanup;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_bus_cleanup:
-> +	if (master->ops->bus_cleanup)
-> +		master->ops->bus_cleanup(master);
-> +
-> +err_detach_devs:
-> +	i3c_master_detach_free_devs(master);
-> +
-> +	return ret;
-> +}
-> +
->  static void i3c_master_bus_cleanup(struct i3c_master_controller *master)
->  {
->  	if (master->ops->bus_cleanup)
-> @@ -2457,7 +2541,10 @@ static int i3c_master_init(struct i3c_master_controller *master,
->  		goto err_put_dev;
->  	}
->  
-> -	ret = i3c_master_bus_init(master);
-> +	if (secondary)
-> +		ret = i3c_secondary_master_bus_init(master);
-> +	else
-> +		ret = i3c_master_bus_init(master);
->  	if (ret)
->  		goto err_put_dev;
->  
-> @@ -2535,6 +2622,71 @@ int i3c_master_register(struct i3c_master_controller *master,
->  }
->  EXPORT_SYMBOL_GPL(i3c_master_register);
->  
-> +/**
-> + * i3c_secondary_master_register() - register an I3C secondary master
-> + * @master: master used to send frames on the bus
-> + * @parent: the parent device (the one that provides this I3C master
-> + *	    controller)
-> + * @ops: the master controller operations
-> + *
-> + * This function does minimal required initialization for secondary
-> + * master, rest functionality like creating and registering I2C
-> + * and I3C devices is done in defslvs processing.
-> + *
-> + *  i3c_secondary_master_register() does following things -
-> + * - creates and initializes the I3C bus
-> + * - populates the bus with static I2C devs if @parent->of_node is not
-> + *   NULL
-> + *   initialization
-> + * - allocate memory for defslvs_data.devs, which is used to receive
-> + *   defslvs list
-> + * - create I3C device representing this master
-> + * - registers the I2C adapter and all I2C devices
-> + *
-> + * Return: 0 in case of success, a negative error code otherwise.
-> + */
-> +int i3c_secondary_master_register(struct i3c_master_controller *master,
-> +				  struct device *parent,
-> +				  const struct i3c_master_controller_ops *ops)
-> +{
-> +	int ret;
-> +
-> +	ret = i3c_master_init(master, parent, ops, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = device_add(&master->dev);
-> +	if (ret)
-> +		goto err_cleanup_bus;
-> +
-> +	/*
-> +	 * Expose our I3C bus as an I2C adapter so that I2C devices are exposed
-> +	 * through the I2C subsystem.
-> +	 */
-> +	ret = i3c_master_i2c_adapter_init(master);
-> +	if (ret)
-> +		goto err_del_dev;
-> +
-> +	/*
-> +	 * We're done initializing the bus and the controller, we can now
-> +	 * register I3C devices from defslvs list.
-> +	 */
-> +	master->init_done = true;
-> +
-> +	return 0;
-> +
-> +err_del_dev:
-> +	device_del(&master->dev);
-> +
-> +err_cleanup_bus:
-> +	i3c_master_bus_cleanup(master);
-> +
-> +	put_device(&master->dev);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(i3c_secondary_master_register);
-> +
->  /**
->   * i3c_master_unregister() - unregister an I3C master
->   * @master: master used to send frames on the bus
-> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-> index f5ba82c390bc..5124ff4831eb 100644
-> --- a/include/linux/i3c/master.h
-> +++ b/include/linux/i3c/master.h
-> @@ -534,6 +534,9 @@ int i3c_master_set_info(struct i3c_master_controller *master,
->  int i3c_master_register(struct i3c_master_controller *master,
->  			struct device *parent,
->  			const struct i3c_master_controller_ops *ops);
-> +int i3c_secondary_master_register(struct i3c_master_controller *master,
-> +				  struct device *parent,
-> +				  const struct i3c_master_controller_ops *ops);
->  int i3c_master_unregister(struct i3c_master_controller *master);
->  
->  /**
+-- 
+Peter Xu
 
