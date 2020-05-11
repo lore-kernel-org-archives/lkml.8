@@ -2,227 +2,75 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70608C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE557C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D4620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HN6B2vki"
+	by mail.kernel.org (Postfix) with ESMTP id C774B20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgEKLOT (ORCPT
+        id S1729544AbgEKLOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:14:19 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57732 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725993AbgEKLOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:14:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589195658; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=9u8N99k1vcfk6hizX5mCjz6icu5JY2q9ybf2Dfz1tcs=; b=HN6B2vki6p06dSYFSYf+wSAhPOama4rh2sWbLPkZH43p6UCq2Na6aE6xnSJlUlj4Iyv77Xxe
- gk68UM2o+44/sOHVVgZaRhS+Vk2vr6XWlHeLU5/EI6qCW1Ghj+H0KmFTvfHz7iLBBIg5qbRa
- 3UCEtg3CCUnVRE6IXASNX9+E9zc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb93385.7f619ce53e68-smtp-out-n04;
- Mon, 11 May 2020 11:14:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9A777C433BA; Mon, 11 May 2020 11:14:13 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [103.248.210.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vjitta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 982BAC433F2;
-        Mon, 11 May 2020 11:14:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 982BAC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
-Subject: Re: [PATCH] iommu/iova: Retry from last rb tree node if iova search
- fails
-From:   Vijayanand Jitta <vjitta@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     vinmenon@codeaurora.org, kernel-team@android.com
-References: <1588795317-20879-1-git-send-email-vjitta@codeaurora.org>
- <d9bfde9f-8f16-bf1b-311b-ea6c2b8ab93d@arm.com>
- <b80fdf37-e635-2d65-c523-8e1d0bd8085b@codeaurora.org>
-Message-ID: <821c666b-ddf8-8b5c-1e8c-69a06ae1c727@codeaurora.org>
-Date:   Mon, 11 May 2020 16:44:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 07:14:24 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4328 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725993AbgEKLOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:14:23 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B94A1FEFA1A624C5B161;
+        Mon, 11 May 2020 19:14:18 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 19:14:09 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <mchehab@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <skomatineni@nvidia.com>, <linux-media@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] media: tegra: Make tegra210_video_formats static
+Date:   Mon, 11 May 2020 19:20:15 +0800
+Message-ID: <1589196015-8945-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-In-Reply-To: <b80fdf37-e635-2d65-c523-8e1d0bd8085b@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix the following sparse warning:
 
+drivers/staging/media/tegra-video/tegra210.c:589:33: warning: symbol 'tegra210_video_formats' was not declared.
 
-On 5/9/2020 12:25 AM, Vijayanand Jitta wrote:
-> 
-> 
-> On 5/7/2020 6:54 PM, Robin Murphy wrote:
->> On 2020-05-06 9:01 pm, vjitta@codeaurora.org wrote:
->>> From: Vijayanand Jitta <vjitta@codeaurora.org>
->>>
->>> When ever a new iova alloc request comes iova is always searched
->>> from the cached node and the nodes which are previous to cached
->>> node. So, even if there is free iova space available in the nodes
->>> which are next to the cached node iova allocation can still fail
->>> because of this approach.
->>>
->>> Consider the following sequence of iova alloc and frees on
->>> 1GB of iova space
->>>
->>> 1) alloc - 500MB
->>> 2) alloc - 12MB
->>> 3) alloc - 499MB
->>> 4) free -  12MB which was allocated in step 2
->>> 5) alloc - 13MB
->>>
->>> After the above sequence we will have 12MB of free iova space and
->>> cached node will be pointing to the iova pfn of last alloc of 13MB
->>> which will be the lowest iova pfn of that iova space. Now if we get an
->>> alloc request of 2MB we just search from cached node and then look
->>> for lower iova pfn's for free iova and as they aren't any, iova alloc
->>> fails though there is 12MB of free iova space.
->>
->> Yup, this could definitely do with improving. Unfortunately I think this
->> particular implementation is slightly flawed...
->>
->>> To avoid such iova search failures do a retry from the last rb tree node
->>> when iova search fails, this will search the entire tree and get an iova
->>> if its available
->>>
->>> Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
->>> ---
->>>   drivers/iommu/iova.c | 11 +++++++++++
->>>   1 file changed, 11 insertions(+)
->>>
->>> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
->>> index 0e6a953..2985222 100644
->>> --- a/drivers/iommu/iova.c
->>> +++ b/drivers/iommu/iova.c
->>> @@ -186,6 +186,7 @@ static int __alloc_and_insert_iova_range(struct
->>> iova_domain *iovad,
->>>       unsigned long flags;
->>>       unsigned long new_pfn;
->>>       unsigned long align_mask = ~0UL;
->>> +    bool retry = false;
->>>         if (size_aligned)
->>>           align_mask <<= fls_long(size - 1);
->>> @@ -198,6 +199,8 @@ static int __alloc_and_insert_iova_range(struct
->>> iova_domain *iovad,
->>>         curr = __get_cached_rbnode(iovad, limit_pfn);
->>>       curr_iova = rb_entry(curr, struct iova, node);
->>> +
->>> +retry_search:
->>>       do {
->>>           limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
->>>           new_pfn = (limit_pfn - size) & align_mask;
->>> @@ -207,6 +210,14 @@ static int __alloc_and_insert_iova_range(struct
->>> iova_domain *iovad,
->>>       } while (curr && new_pfn <= curr_iova->pfn_hi);
->>>         if (limit_pfn < size || new_pfn < iovad->start_pfn) {
->>> +        if (!retry) {
->>> +            curr = rb_last(&iovad->rbroot);
->>
->> Why walk when there's an anchor node there already? However...
->>
->>> +            curr_iova = rb_entry(curr, struct iova, node);
->>> +            limit_pfn = curr_iova->pfn_lo;
->>
->> ...this doesn't look right, as by now we've lost the original limit_pfn
->> supplied by the caller, so are highly likely to allocate beyond the
->> range our caller asked for. In fact AFAICS we'd start allocating from
->> directly directly below the anchor node, beyond the end of the entire
->> address space.
->>
->> The logic I was imagining we want here was something like the rapidly
->> hacked up (and untested) diff below.
->>
->> Thanks,
->> Robin.
->>
-> 
-> Thanks for your comments ,I have gone through below logic and I see some
-> issue with retry check as there could be case where alloc_lo is set to
-> some pfn other than start_pfn in that case we don't retry and there can
-> still be iova available. I understand its a hacked up version, I can
-> work on this.
-> 
-> But how about we just store limit_pfn and get the node using that and
-> retry for once from that node, it would be similar to my patch just
-> correcting the curr node and limit_pfn update in retry check. do you see
-> any issue with this approach ?
-> 
-> 
-> Thanks,
-> Vijay.
+The tegra210_video_formats has only call site within tegra210.c
+It should be static
 
-I found one issue with my earlier approach, where we search twice from
-cached node to the start_pfn, this can be avoided if we store the pfn_hi
-of the cached node make this as alloc_lo when we retry. I see the below
-diff also does the same, I have posted v2 version of the patch after
-going through the comments and the below diff. can you please review that.
+Fixes: 423d10a99b30 ("media: tegra: Add Tegra210 Video input driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+---
+ drivers/staging/media/tegra-video/tegra210.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Vijay
->> ----->8-----
->> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
->> index 0e6a9536eca6..3574c19272d6 100644
->> --- a/drivers/iommu/iova.c
->> +++ b/drivers/iommu/iova.c
->> @@ -186,6 +186,7 @@ static int __alloc_and_insert_iova_range(struct
->> iova_domain *iovad,
->>         unsigned long flags;
->>         unsigned long new_pfn;
->>         unsigned long align_mask = ~0UL;
->> +       unsigned long alloc_hi, alloc_lo;
->>
->>         if (size_aligned)
->>                 align_mask <<= fls_long(size - 1);
->> @@ -196,17 +197,27 @@ static int __alloc_and_insert_iova_range(struct
->> iova_domain *iovad,
->>                         size >= iovad->max32_alloc_size)
->>                 goto iova32_full;
->>
->> +       alloc_hi = IOVA_ANCHOR;
->> +       alloc_lo = iovad->start_pfn;
->> +retry:
->>         curr = __get_cached_rbnode(iovad, limit_pfn);
->>         curr_iova = rb_entry(curr, struct iova, node);
->> +       if (alloc_hi < curr_iova->pfn_hi) {
->> +               alloc_lo = curr_iova->pfn_hi;
->> +               alloc_hi = limit_pfn;
->> +       }
->> +
->>         do {
->> -               limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
->> -               new_pfn = (limit_pfn - size) & align_mask;
->> +               alloc_hi = min(alloc_hi, curr_iova->pfn_lo);
->> +               new_pfn = (alloc_hi - size) & align_mask;
->>                 prev = curr;
->>                 curr = rb_prev(curr);
->>                 curr_iova = rb_entry(curr, struct iova, node);
->>         } while (curr && new_pfn <= curr_iova->pfn_hi);
->>
->> -       if (limit_pfn < size || new_pfn < iovad->start_pfn) {
->> +       if (limit_pfn < size || new_pfn < alloc_lo) {
->> +               if (alloc_lo == iovad->start_pfn)
->> +                       goto retry;
->>                 iovad->max32_alloc_size = size;
->>                 goto iova32_full;
->>         }
+diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
+index 2045609..3baa4e3 100644
+--- a/drivers/staging/media/tegra-video/tegra210.c
++++ b/drivers/staging/media/tegra-video/tegra210.c
+@@ -586,7 +586,7 @@ enum tegra210_image_format {
+ }
+ 
+ /* Tegra210 supported video formats */
+-const struct tegra_video_format tegra210_video_formats[] = {
++static const struct tegra_video_format tegra210_video_formats[] = {
+ 	/* RAW 8 */
+ 	TEGRA210_VIDEO_FMT(RAW8, 8, SRGGB8_1X8, 1, T_L8, SRGGB8),
+ 	TEGRA210_VIDEO_FMT(RAW8, 8, SGRBG8_1X8, 1, T_L8, SGRBG8),
+-- 
+2.6.2
+
