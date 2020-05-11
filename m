@@ -7,40 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49301C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE0C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADCF2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40AB2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732028AbgEKU74 (ORCPT
+        id S1732443AbgEKVDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44006 "EHLO
+        Mon, 11 May 2020 17:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731921AbgEKU7i (ORCPT
+        by vger.kernel.org with ESMTP id S1732022AbgEKU7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:59:38 -0400
+        Mon, 11 May 2020 16:59:54 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF68BC061A0E;
-        Mon, 11 May 2020 13:59:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B371FC061A0C;
+        Mon, 11 May 2020 13:59:54 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWT-0005mm-8p; Mon, 11 May 2020 22:59:37 +0200
+        id 1jYFWg-0005vi-N1; Mon, 11 May 2020 22:59:50 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3D4E61C04CC;
-        Mon, 11 May 2020 22:59:26 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:26 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8FCEA1C04CC;
+        Mon, 11 May 2020 22:59:37 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:37 -0000
+From:   "tip-bot2 for Lai Jiangshan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu-tasks: Add Kconfig option to mediate smp_mb() vs. IPI
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu: Remove unused
+ ->rcu_read_unlock_special.b.deferred_qs field
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923076608.390.17677066133129942133.tip-bot2@tip-bot2>
+Message-ID: <158923077748.390.684697093024048383.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,80 +58,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     9ae58d7bd11f1fc4c96389df11751f8593d8bd33
-Gitweb:        https://git.kernel.org/tip/9ae58d7bd11f1fc4c96389df11751f8593d8bd33
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 18 Mar 2020 17:16:37 -07:00
+Commit-ID:     f0bdf6d473cf12a488a78422e15aafdfe77cf853
+Gitweb:        https://git.kernel.org/tip/f0bdf6d473cf12a488a78422e15aafdfe77cf853
+Author:        Lai Jiangshan <laijs@linux.alibaba.com>
+AuthorDate:    Sat, 15 Feb 2020 14:52:32 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 27 Apr 2020 11:03:52 -07:00
+CommitterDate: Mon, 27 Apr 2020 11:03:50 -07:00
 
-rcu-tasks: Add Kconfig option to mediate smp_mb() vs. IPI
+rcu: Remove unused ->rcu_read_unlock_special.b.deferred_qs field
 
-This commit provides a new TASKS_TRACE_RCU_READ_MB Kconfig option that
-enables use of read-side memory barriers by both rcu_read_lock_trace()
-and rcu_read_unlock_trace() when the are executed with the
-current->trc_reader_special.b.need_mb flag set.  This flag is currently
-never set.  Doing that is the subject of a later commit.
+The ->rcu_read_unlock_special.b.deferred_qs field is set to true in
+rcu_read_unlock_special() but never set to false.  This is not
+particularly useful, so this commit removes this field.
 
+The only possible justification for this field is to ease debugging
+of RCU deferred quiscent states, but the combination of the other
+->rcu_read_unlock_special fields plus ->rcu_blocked_node and of course
+->rcu_read_lock_nesting should cover debugging needs.  And if this last
+proves incorrect, this patch can always be reverted, along with the
+required setting of ->rcu_read_unlock_special.b.deferred_qs to false
+in rcu_preempt_deferred_qs_irqrestore().
+
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcupdate_trace.h |  3 ++-
- kernel/rcu/Kconfig             | 18 ++++++++++++++++++
- kernel/rcu/tasks.h             |  3 ++-
- 3 files changed, 22 insertions(+), 2 deletions(-)
+ include/linux/sched.h    | 2 +-
+ kernel/rcu/tree_plugin.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
-index c42b365..4c25a41 100644
---- a/include/linux/rcupdate_trace.h
-+++ b/include/linux/rcupdate_trace.h
-@@ -50,7 +50,8 @@ static inline void rcu_read_lock_trace(void)
- 	struct task_struct *t = current;
- 
- 	WRITE_ONCE(t->trc_reader_nesting, READ_ONCE(t->trc_reader_nesting) + 1);
--	if (t->trc_reader_special.b.need_mb)
-+	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB) &&
-+	    t->trc_reader_special.b.need_mb)
- 		smp_mb(); // Pairs with update-side barriers
- 	rcu_lock_acquire(&rcu_trace_lock_map);
- }
-diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-index cb1d18e..0ebe15a 100644
---- a/kernel/rcu/Kconfig
-+++ b/kernel/rcu/Kconfig
-@@ -234,4 +234,22 @@ config RCU_NOCB_CPU
- 	  Say Y here if you want to help to debug reduced OS jitter.
- 	  Say N here if you are unsure.
- 
-+config TASKS_TRACE_RCU_READ_MB
-+	bool "Tasks Trace RCU readers use memory barriers in user and idle"
-+	depends on RCU_EXPERT
-+	default PREEMPT_RT || NR_CPUS < 8
-+	help
-+	  Use this option to further reduce the number of IPIs sent
-+	  to CPUs executing in userspace or idle during tasks trace
-+	  RCU grace periods.  Given that a reasonable setting of
-+	  the rcupdate.rcu_task_ipi_delay kernel boot parameter
-+	  eliminates such IPIs for many workloads, proper setting
-+	  of this Kconfig option is important mostly for aggressive
-+	  real-time installations and for battery-powered devices,
-+	  hence the default chosen above.
-+
-+	  Say Y here if you hate IPIs.
-+	  Say N here if you hate read-side memory barriers.
-+	  Take the default if you are unsure.
-+
- endmenu # "RCU Subsystem"
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 4857450..4147857 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -734,7 +734,8 @@ void rcu_read_unlock_trace_special(struct task_struct *t, int nesting)
- {
- 	int nq = t->trc_reader_special.b.need_qs;
- 
--	if (t->trc_reader_special.b.need_mb)
-+	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB) &&
-+	    t->trc_reader_special.b.need_mb)
- 		smp_mb(); // Pairs with update-side barriers.
- 	// Update .need_qs before ->trc_reader_nesting for irq/NMI handlers.
- 	if (nq)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4418f5c..a4b727f 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -613,7 +613,7 @@ union rcu_special {
+ 		u8			blocked;
+ 		u8			need_qs;
+ 		u8			exp_hint; /* Hint for performance. */
+-		u8			deferred_qs;
++		u8			pad; /* No garbage from compiler! */
+ 	} b; /* Bits. */
+ 	u32 s; /* Set of bits. */
+ };
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 263c766..f31c599 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -634,7 +634,6 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+ 			}
+ 		}
+-		t->rcu_read_unlock_special.b.deferred_qs = true;
+ 		local_irq_restore(flags);
+ 		return;
+ 	}
