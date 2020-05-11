@@ -2,120 +2,120 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB14C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DF3C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC4A2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7598C207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AUyhwVrM"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="a9kB4Tqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgEKIXK (ORCPT
+        id S1729123AbgEKIZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:23:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60167 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbgEKIXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:23:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LDTR5RnBz9sRY;
-        Mon, 11 May 2020 18:23:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589185388;
-        bh=rYX0zvouVsESSpJo2+ujy2QOVvrkO7whe2vLWd5IIDM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=AUyhwVrMjpBsVHbYqjLMZ4m2XBvZEZbkL+q7aa6BEC8MkY0JCf7tRI7z6a3wZ1G5x
-         k6yB9hmmkgmvLYEsFm58f+pNx3lWiX2iTdK7gKA46jNYAOY6WBuLCdBAG08r/894BO
-         v5hQ6N6Usux81hTdCioYkGaJPW3HlsTxvh9kpnFXcst9gAR6D3s3/lZAO+34NKiOW2
-         Z85XHiymG6rtPPlgp+QOepWduwB/wxMoS/xSKzkQumwMh2sLNDHVimVSizciVLiVxh
-         OmG8w+jmllYyUxZgVz85y4RtSqB9vU6RktSedpCrvGh0ho9AsOi2mrZA/JlZtrGKus
-         LHE3dlljlCCDA==
-Date:   Mon, 11 May 2020 18:23:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xujialu <xujialu@vimux.org>
-Subject: linux-next: manual merge of the akpm-current tree with the kbuild
- tree
-Message-ID: <20200511182305.6001b046@canb.auug.org.au>
+        Mon, 11 May 2020 04:25:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729033AbgEKIZi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 04:25:38 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC95DC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:25:37 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id r17so3679957lff.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WDxg1DeZ8sJ0XodxOs3Lm7xIglVAG2LNLkzOH+NSeUw=;
+        b=a9kB4Tqs2dCfJPVXLW7rIUKcpadFGS95KUujA0Gg0bh3yvN04Iz5hXJvAqcYo0Fo0S
+         e2r7UnavF1g1b/yQKVtxwTj7QwPbAZ4neNiZ+DiFmEf1XD98zE76t0mSXo8oAcg+X3xe
+         l+jRZpz/1I1nC+f0b95Q4F33TiK5C7hQ9tkUIklIWnGk6+TMkp4h1ffCL9jUxWSQEeok
+         /l5ckU8tbMHVzxKLO7uOVNcKFbKJS/tFAODjz+tXLPwLtLlAvjsEsKOjCOyYnJ5jZ41z
+         yWY4QOs6wuj7Z5j0d/7twGR1B7bJocqwEe4xr1rhP/AdovuJq9xM0J1y/TbQuZnAcZOS
+         WtMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WDxg1DeZ8sJ0XodxOs3Lm7xIglVAG2LNLkzOH+NSeUw=;
+        b=V0gD9Urqz85jUUsUpIeo8Y5+qUNJjcxf1tMZokoygFcsBaRKgsxo+hEGGgSgJK11JI
+         f3IBoPFokaTbhcGZ1DFp9fEkUoolWp7CGoVaTq7QxDYyDxroaF420/qEJPn8rMZ13ydK
+         6hARqHEZCmkB77of0JY0BHqaoi9NH4DQLloY/3mil+3o5TxM/tbv1mEC4sAppTsFgl2s
+         UROQDti40HDuG6CFMp85X2d962k8qwGbtdwF+N3UVVSPMGHrlrGnzmMwr3/qnG8iEQ6x
+         HlXYebndeDKSE6IFAVgENTeJKCzQbrf5lAVeN+4XtWFlWRd2bk0bJT1LUc3fxZDFagc3
+         EYCg==
+X-Gm-Message-State: AOAM530LmMxyHEky8iAfZyvkgrznc/0iqE1iju8nc/6eoTyR1OBSId/h
+        9mPQ+LqnbzTkLmuT6YYCX2TZ0wEnCEhIBQ==
+X-Google-Smtp-Source: ABdhPJwG0Z0oAyGtpSM5Xhb1unFN6lqX0CQnA/utE93CSThdYjV3Swfvkr8C4tDKnBb/YXkFbUWqSA==
+X-Received: by 2002:a19:e013:: with SMTP id x19mr1639311lfg.49.1589185536031;
+        Mon, 11 May 2020 01:25:36 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:482:2677:ba:b682:3c24:214e? ([2a00:1fa0:482:2677:ba:b682:3c24:214e])
+        by smtp.gmail.com with ESMTPSA id s27sm9101690ljo.80.2020.05.11.01.25.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 01:25:35 -0700 (PDT)
+Subject: Re: [PATCH v2 2/7] dt-bindings: watchdog: dw-wdt: Support devices
+ with asynch clocks
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
+ <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <f065ff5f-af86-4293-b208-766e41699436@cogentembedded.com>
+Date:   Mon, 11 May 2020 11:25:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hN=BRP2r8XB2+YTIp0UGRV_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hN=BRP2r8XB2+YTIp0UGRV_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello!
 
-Hi all,
+On 10.05.2020 13:58, Serge Semin wrote:
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> DW Watchdog IP core can be synthesised with asynchronous timer/APB
+> clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
+> a separate clock signal is supposed to be used to feed watchdog timer
+> and APB interface of the device. Lets along with the watchdog timer
+                                        ^ verb missing? or comma?
 
-  Makefile
+> reference clock expect to have the optional APB3 bu interface clock
+> sepcified in a DW WDT dt node.
 
-between commit:
+    Specified.
 
-  0e92fd54b7c1 ("kbuild: remove {CLEAN,MRPROPER,DISTCLEAN}_DIRS")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-mips@vger.kernel.org
+[...]
 
-from the kbuild tree and commit:
-
-  51b26a64f220 ("scripts/tags.sh: add a intermediate file for 'make gtags'")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Makefile
-index 4334bcffa886,995020716343..000000000000
---- a/Makefile
-+++ b/Makefile
-@@@ -1413,7 -1397,8 +1413,7 @@@ MRPROPER_FILES +=3D include/config includ
-  		  *.spec
- =20
-  # Directories & files removed with 'make distclean'
-- DISTCLEAN_FILES +=3D tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
- -DISTCLEAN_DIRS  +=3D
-+ DISTCLEAN_FILES +=3D tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS gtags.fil=
-es
- =20
-  # clean - Delete most, but leave enough to build external modules
-  #
-
---Sig_/hN=BRP2r8XB2+YTIp0UGRV_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl65C2kACgkQAVBC80lX
-0GwZAgf9GwhR7slYqegVbEUR0opTkMG0LxS/zOyB5h5qFWACsjzJP/WUdc4WnAEz
-Ke0EXGrj9t0DF2sz4puNd1LHLFtrz7eCCBtjvPEKEYZ81ykjPm0GgQVdMYOEIRwa
-HL6ZJ51CowwK/Ww8jl9Wng/us6GeKMdgkVYL4uFopXiUeabZM7sfVTmOaizXuHFy
-LbHMYO2f906NKC26PR0ob1fDr+s6EogqeCE7Z9N8bC9vQh7mGnMKXHWh2atbh8mn
-xpEvGW7HtbwSdvkJ7lM9YnM+gYiS44z3X86rA0hnpvj1eV1CBcxITDgpNuBoX9ft
-sX9LrO+5fqDICfDHvknNlRXLst1Ryg==
-=CwnC
------END PGP SIGNATURE-----
-
---Sig_/hN=BRP2r8XB2+YTIp0UGRV_--
+MBR, Sergei
