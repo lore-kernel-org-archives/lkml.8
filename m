@@ -2,70 +2,78 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B72C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67286C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 497E320736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A083207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgEKHnZ (ORCPT
+        id S1728627AbgEKHng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:43:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4325 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725790AbgEKHnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:43:25 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7F48F77A0B0A7225CAC2;
-        Mon, 11 May 2020 15:43:18 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 15:43:11 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <bvanassche@acm.org>, <dledford@redhat.com>, <jgg@ziepe.ca>
-CC:     <linux-rdma@vger.kernel.org>, <target-devel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wangxiongfeng2@huawei.com>
-Subject: [PATCH] RDMA/srpt: Add a newline when printing parameter 'srpt_service_guid' by sysfs
-Date:   Mon, 11 May 2020 15:37:09 +0800
-Message-ID: <1589182629-27743-1-git-send-email-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Mon, 11 May 2020 03:43:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55306 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725790AbgEKHng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 03:43:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-209-P9C41s_OM427cyZHLO5SQQ-1; Mon, 11 May 2020 08:43:32 +0100
+X-MC-Unique: P9C41s_OM427cyZHLO5SQQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 11 May 2020 08:43:32 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 11 May 2020 08:43:32 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: I disabled more compiler warnings..
+Thread-Topic: I disabled more compiler warnings..
+Thread-Index: AQHWJwHjj7O/Wk29GEyLgXD8YJ1BI6iigEwg
+Date:   Mon, 11 May 2020 07:43:32 +0000
+Message-ID: <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+In-Reply-To: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When I cat module parameter 'srpt_service_guid', it displays as follows.
-It is better to add a newline for easy reading.
-
-[root@hulk-202 ~]# cat /sys/module/ib_srpt/parameters/srpt_service_guid
-0x0205cdfffe8346b9[root@hulk-202 ~]#
-
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/infiniband/ulp/srpt/ib_srpt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-index 9855274..79b6341 100644
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -81,7 +81,7 @@
- 
- static int srpt_get_u64_x(char *buffer, const struct kernel_param *kp)
- {
--	return sprintf(buffer, "0x%016llx", *(u64 *)kp->arg);
-+	return sprintf(buffer, "0x%016llx\n", *(u64 *)kp->arg);
- }
- module_param_call(srpt_service_guid, NULL, srpt_get_u64_x, &srpt_service_guid,
- 		  0444);
--- 
-1.7.12.4
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTAgTWF5IDIwMjAgMjA6MzMNCi4uLg0KPiBB
+bmQgYXMgcGFydCBvZiB0aGF0LCB0aGVyZSB3ZXJlIGEgbG90IG9mIG5ldyB3YXJuaW5ncyBpbiB0
+aGUga2VybmVsIGJ1aWxkLg0KPiANCj4gSSBsZXQgdGhlbSBnbyBmb3IgYSB3aGlsZSwgaW4gdGhl
+IGJlbGllZiB0aGF0IEkgY291bGQgZGVhbCB3aXRoIGl0LA0KPiBidXQgdGhlbiB5ZXN0ZXJkYXkg
+SSBkaWQgYSBwdWxsIGFuZCBkaWRuJ3QgaW5pdGlhbGx5IGV2ZW4gbm90aWNlIHRoYXQNCj4gdGhl
+IGVuZCByZXN1bHQgZGlkbid0IGNvbXBpbGUgZm9yIG1lLCBiZWNhdXNlIHRoZSBidWlsZCBlcnJv
+ciB3YXMNCj4gaGlkZGVuIGJ5IHRoZSBodW5kcmVkcyBvZiBsaW5lcyBvZiB3YXJuaW5ncyAuLi4N
+Cg0KT25lIHByb2JsZW0gaXMgdGhhdCBnbWFrZSBpcyB2ZXJ5IGJhZCBhdCBzdG9wcGluZyBwYXJh
+bGxlbA0KbWFrZXMgd2hlbiBvbmUgY29tbWFuZCBmYWlscy4NClNvIHRoZSBrZXJuZWwgYnVpbGQg
+Y2FycmllcyBvbiBmaXJpbmcgb2ZmIG5ldyBjb21waWxhdGlvbnMNCmV2ZW4gYWZ0ZXIgb25lIGhh
+cyBmYWlsZWQuDQoNCkkndmUgbm90IGxvb2tlZCBpbnNpZGUgZ21ha2UsIGJ1dCBJIGZpeGVkIG5t
+YWtlIHNvIHRoYXQgaXQNCnByb3Blcmx5IHVzZWQgYSBzaW5nbGUgam9iIHRva2VuIHBpcGUgZm9y
+IHRoZSBlbnRpcmUgKE5ldEJTRCkNCmJ1aWxkIGFuZCB0aGVuIGZsdXNoZWQgYW5kIHJlZmlsbGVk
+IGl0IHdpdGggJ2Fib3J0JyB0b2tlbnMNCndoZW4gYW55IGNvbW1hbmQgZmFpbGVkLg0KVGhhdCBt
+YWRlIHRoZSBidWlsZCBzdG9wIGFsbW9zdCBpbW1lZGlhdGVseS4NCg0KCURhdmlkDQoNCi0NClJl
+Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
+b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
+Cg==
 
