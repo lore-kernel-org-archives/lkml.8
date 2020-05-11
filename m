@@ -2,142 +2,117 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7FFC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571CEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5544B20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF6420722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589207126;
+	bh=Mog0uHKNGC4M58mR6XZNypAnj4EbLBN8Kksnmu+paY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p0zCHUvabpRIpN/sE8N6N2tYJX1cWYNr+26la4XDM1sPq0VFaGjGC4fZWcS8J0Zl5
+	 YFTXqAUVMBKvLeBuhZcF9Om5pmnTWmTbGYXcjgBCb7MGD+MJ0qK2Z0OhTRIap+ajji
+	 aaESGAB54zYYkIOYm3wFjgH8dNEKHQn0YgjM3RhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgEKOZU (ORCPT
+        id S1729922AbgEKOZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:25:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:33334 "EHLO foss.arm.com"
+        Mon, 11 May 2020 10:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbgEKOZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:25:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E051F1045;
-        Mon, 11 May 2020 07:25:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F4643F68F;
-        Mon, 11 May 2020 07:25:17 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:25:14 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200511142514.GB27249@e121166-lin.cambridge.arm.com>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-5-nsaenzjulienne@suse.de>
+        id S1725993AbgEKOZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:25:24 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2128A20720;
+        Mon, 11 May 2020 14:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589207124;
+        bh=Mog0uHKNGC4M58mR6XZNypAnj4EbLBN8Kksnmu+paY4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hvmpmyVrRNbi0A3YvOn3ZCPJYU+VTX5gO2746dD3N6Hv4Hlu5VcceNIHCjx3N4t9g
+         /rQxL3rh/3DQqjaTbAq/aivalGVLtQEIfXKEPWc7OeJxiMmPAj/45hkdx/0y7E8uHj
+         BL29kx1UHt5XgWMjZcffDrSgz3SjeObAqGDbUyDw=
+Date:   Mon, 11 May 2020 22:25:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Subject: Re: [PATCH V4 0/4] ARM: imx7ulp: support HSRUN mode
+Message-ID: <20200511142509.GA26997@dragon>
+References: <1586954449-17463-1-git-send-email-peng.fan@nxp.com>
+ <DB6PR0402MB27607B567D3FD7731A41E75688A50@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-5-nsaenzjulienne@suse.de>
+In-Reply-To: <DB6PR0402MB27607B567D3FD7731A41E75688A50@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:13:17PM +0200, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideoCore. Inform VideoCore that VL805 was just reset.
+On Thu, May 07, 2020 at 06:27:52AM +0000, Peng Fan wrote:
+> > Subject: [PATCH V4 0/4] ARM: imx7ulp: support HSRUN mode
 > 
-> Also, as this creates a dependency between USB_PCI and VideoCore's
-> firmware interface, and since USB_PCI can't be set as a module neither
-> this can. Reflect that on the firmware interface Kconfg.
+> Ping..
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+> Thanks,
+> Peng.
 > 
-> Changes since v5:
->  - Fix Kconfig issue with allmodconfig
-> 
-> Changes since v4:
->  - Do not split up error message
-> 
-> Changes since v3:
->  - Add more complete error message
-> 
-> Changes since v1:
->  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->    gets compiled when needed.
-> 
->  drivers/firmware/Kconfig      |  3 ++-
->  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
->  2 files changed, 18 insertions(+), 1 deletion(-)
+> > 
+> > From: Peng Fan <peng.fan@nxp.com>
+> > 
+> > V4:
+> >   Fix dt_bindings check
+> >   The same patchset was wrongly posted as V2,
+> >   https://patchwork.kernel.org/cover/11485107/
+> > 
+> > This is a splited part from V2:
+> > ARM: imx7ulp: add cpufreq using cpufreq-dt
+> > https://patchwork.kernel.org/cover/11390589/
+> > Nothing changed
+> > 
+> > The original V2 patchset is to support i.MX7ULP cpufreq, still waiting the
+> > virtual clk being accepted. so to decouple, this patchset only takes the run
+> > mode part.
+> > 
+> > Peng Fan (4):
+> >   dt-bindings: fsl: add i.MX7ULP PMC binding doc
 
-Hi Mathias,
+Need an ACK from Rob on this new binding.
 
-I would need your ACK to merge this series, thanks.
+Shawn
 
-Lorenzo
-
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 8007d4aa76dc..b42140cff8ac 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -178,8 +178,9 @@ config ISCSI_IBFT
->  	  Otherwise, say N.
->  
->  config RASPBERRYPI_FIRMWARE
-> -	tristate "Raspberry Pi Firmware Driver"
-> +	bool "Raspberry Pi Firmware Driver"
->  	depends on BCM2835_MBOX
-> +	default USB_PCI
->  	help
->  	  This option enables support for communicating with the firmware on the
->  	  Raspberry Pi.
-> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-> index 92150ecdb036..0b949acfa258 100644
-> --- a/drivers/usb/host/pci-quirks.c
-> +++ b/drivers/usb/host/pci-quirks.c
-> @@ -16,6 +16,9 @@
->  #include <linux/export.h>
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
-> +
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +
->  #include "pci-quirks.h"
->  #include "xhci-ext-caps.h"
->  
-> @@ -1243,11 +1246,24 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
->  
->  static void quirk_usb_early_handoff(struct pci_dev *pdev)
->  {
-> +	int ret;
-> +
->  	/* Skip Netlogic mips SoC's internal PCI USB controller.
->  	 * This device does not need/support EHCI/OHCI handoff
->  	 */
->  	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
->  		return;
-> +
-> +	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-> +		ret = rpi_firmware_init_vl805(pdev);
-> +		if (ret) {
-> +			/* Firmware might be outdated, or something failed */
-> +			dev_warn(&pdev->dev,
-> +				 "Failed to load VL805's firmware: %d. Will continue to attempt to work, but bad things might happen. You should fix this...\n",
-> +				 ret);
-> +		}
-> +	}
-> +
->  	if (pdev->class != PCI_CLASS_SERIAL_USB_UHCI &&
->  			pdev->class != PCI_CLASS_SERIAL_USB_OHCI &&
->  			pdev->class != PCI_CLASS_SERIAL_USB_EHCI &&
-> -- 
-> 2.26.2
+> >   ARM: dts: imx7ulp: add pmc node
+> >   ARM: imx: imx7ulp: support HSRUN mode
+> >   ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
+> > 
+> >  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32
+> > ++++++++++++++++++++++
+> >  arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
+> >  arch/arm/mach-imx/common.h                         |  1 +
+> >  arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14 ++++++++--
+> >  arch/arm/mach-imx/pm-imx7ulp.c                     | 25
+> > +++++++++++++++++
+> >  5 files changed, 79 insertions(+), 3 deletions(-)  create mode 100644
+> > Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+> > 
+> > --
+> > 2.16.4
 > 
