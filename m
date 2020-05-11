@@ -2,318 +2,128 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1732FC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E18C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0219D20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9ED620720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589219059;
+	bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zX09EwvOib7vzzElYLi/it4fOgqhIFH2hLb60XlaO061vrG3gi9Bc755QV9c9R2RB
+	 l4LpBJARqMfcg7xi7kDVy/H8hwCIkv79o6hF3Atf2WozOVFhvpVzh+pco+7Xq8CIXa
+	 oQAoimZkNCN3RKme9g94FKgNvoZ4LbRxWGKJr99w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgEKRmi (ORCPT
+        id S1730868AbgEKRoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:42:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2189 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726310AbgEKRmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:42:38 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 357B61B5DFF4298CFAE2;
-        Mon, 11 May 2020 18:42:36 +0100 (IST)
-Received: from localhost (10.47.24.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 11 May
- 2020 18:42:35 +0100
-Date:   Mon, 11 May 2020 18:42:13 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
- object
-Message-ID: <20200511184213.0000003c@Huawei.com>
-In-Reply-To: <b667b10489c65b541aacadd7975b0a6352672153.camel@analog.com>
-References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-        <20200508164015.0000223f@Huawei.com>
-        <20200508164430.00001741@Huawei.com>
-        <b667b10489c65b541aacadd7975b0a6352672153.camel@analog.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 May 2020 13:44:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgEKRoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:44:18 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A81E206D6;
+        Mon, 11 May 2020 17:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589219057;
+        bh=TyqQgXbRU7CHTNnWXo92tDp4bkKKH+QHCcrcrAeZ0Xg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M5M0yr01sJrjR4NQQHjYco8Zm2A79QvQoS+JgFLzt3UtWZozf/K5RaXdDLDwpsV4n
+         wQ4Llyx/KGkvcaEaZuIe/aT5WnmIVgxYInVSxRkj1xyI6x7VQqYBwTQcCt1+Wq38K2
+         eFbuTzTTMJ7pHQiH04ug7PF5ar1YT8bmqKYk6agc=
+Date:   Mon, 11 May 2020 18:44:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511174414.GL8216@sirena.org.uk>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.24.74]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
+Content-Disposition: inline
+In-Reply-To: <20200511134502.hjbu5evkiuh75chr@mobilestation>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 09:16:32 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-> On Fri, 2020-05-08 at 16:44 +0100, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Fri, 8 May 2020 16:40:15 +0100
-> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> >   
-> > > On Fri, 8 May 2020 17:13:04 +0300
-> > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> > >   
-> > > > There are plenty of bad designs we want to discourage or not have to
-> > > > review
-> > > > manually usually about accessing private (marked as [INTERN]) fields of
-> > > > 'struct iio_dev'.    
-> > > 
-> > > This has been on the todo list for many years so great you are having a go.
-> > >    
-> > > > This is difficult, as a lot of users copy drivers, and not always the best
-> > > > examples.
-> > > > 
-> > > > A better idea is to hide those fields into the framework.
-> > > > For 'struct iio_dev' this is a 'struct iio_dev_priv' which wraps a public
-> > > > 'struct iio_dev' object.
-> > > > 
-> > > > In the next patches, some fields will be moved to this new struct, each
-> > > > with it's own rework.
-> > > > 
-> > > > This rework will not be complete[-able] for a while, as many fields need
-> > > > some drivers to be reworked in order to finalize them
-> > > > (e.g. 'indio_dev->mlock').
-> > > > 
-> > > > But some fields can already be moved, and in time, all of them may get
-> > > > there (in the 'struct iio_dev_priv' object).
-> > > > 
-> > > > We also need to hide the implementations for 'iio_priv()' &
-> > > > 'iio_priv_to_dev()', as the pointer arithmetic will not match once things
-> > > > are moved.    
-> > > 
-> > > This last bit has the disadvantage of potentially putting a function
-> > > call in some fast paths where there wasn't one before.  
-> 
-> Hmm.
-> I think we can change this to have a void *ptr in the public iio.h header and
-> that points to the private data in the private struct, and we compute it once,
-> and just return it.
-> 
-> so:
-> 
-> struct iio_dev_opaque;
-> 
-> struct iio_dev {
->     struct iio_dev_opaque *opaque;  // compute this during iio_device_alloc()
->     void *priv;                     // compute this during iio_device_alloc()
-> };
-> 
-> static inline void *iio_priv(const struct iio_dev *indio_dev)
-> {
->         return indio_dev->priv;
-> }
-> 
-> [ or even just convert it to a macro ; no preference ]
+--W/+CTqSGWdiRg+8j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That works for me and avoids any of the messy stuff below.
+On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
+> On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
 
-Make sure to add a comment that the region that points to is guaranteed
-to maintain cacheline alignment as thats hidden now.
+> > That sounds like you need to also impose a limit on the maximum message
+> > size as well then, with that you should be able to handle messages up
+> > to whatever that limit is.  There's code for that bit already, so long
+> > as the limit is not too low it should be fine for most devices and
+> > client drivers can see the limit so they can be updated to work with it
+> > if needed.
 
-> 
-> > > 
-> > > We may not need to 'forcefully' hide the internal parts.  May be
-> > > enough to just make their use really obvious.  If you have to cast
-> > > to an iio_dev_priv then you are doing something very wrong.  
-> > 
-> > Note, definitely keep the to_* macro only in the private core header.
-> >   
-> > > The old stick __ in front of it may make that even more obvious.
-> > > 
-> > > Naming is a bit confusing though.  iio_dev_priv sounds like private
-> > > to the device... iio_dev_opaque maybe?  
-> 
-> regarding the 'opaque' part, that would be a 'struct iio_dev_opaque {' that
-> lives somewhere like
-> 
-> struct iio_dev_opaque {
->     struct iio_dev   indio_dev;  // public IIO device part
->     ... // opaque IIO device parts
->     ... // iio_priv data
-> }
-> 
-> The stick __ in front, may work just fine as well.
-> 
-> Personally, I would prefer to forcefully hide stuff, because then the compiler
-> could also be useful in telling people not to use some private fields.
-> People [juniors usually] listen to compilers more than they listen to review-
-> comments. 
-> We could move the 'struct iio_dev_opaque' in 'include/linux/iio/iio-opaque.h',
-> so that if they need to access some fields for some advanced/hacky debugging, it
-> should work as well.
-> 
-> Still, if it's more preferred to prefix them, I can do that as well.
-> But we should prefix them as we manage to somehow make the more opaque, or
-> remove the fields from places they should be used.
-> Otherwise it is pointless, as people would copy 'indio_dev->__mlock' anyway.
-> 
-> 
-> > > 
-> > >   
-> > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > > ---
-> > > > 
-> > > > Just as a note here, I've been running this patchset without a problem
-> > > > for 2 weeks now in a work branch.
-> > > > But it's only been a setup, so no idea if some other thing may cause
-> > > > bigger issues.
-> > > > 
-> > > > This small patchset is meant to kickstart this, for GSoC people or for
-> > > > people wanting to start contributing to IIO.
-> > > > 
-> > > >  drivers/iio/iio_core.h          | 11 +++++++++++
-> > > >  drivers/iio/industrialio-core.c | 32 +++++++++++++++++++++++++++-----
-> > > >  include/linux/iio/iio.h         | 12 ++----------
-> > > >  3 files changed, 40 insertions(+), 15 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-> > > > index fd9a5f1d5e51..84f3b4590c05 100644
-> > > > --- a/drivers/iio/iio_core.h
-> > > > +++ b/drivers/iio/iio_core.h
-> > > > @@ -17,6 +17,17 @@ struct iio_dev;
-> > > >  
-> > > >  extern struct device_type iio_device_type;
-> > > >  
-> > > > +/**
-> > > > + * struct iio_dev_priv - industrial I/O device private information
-> > > > + * @indio_dev:			public IIO device object
-> > > > + */
-> > > > +struct iio_dev_priv {
-> > > > +	struct iio_dev			indio_dev;
-> > > > +};
-> > > > +
-> > > > +#define to_iio_dev_priv(indio_dev)	\
-> > > > +	container_of(indio_dev, struct iio_dev_priv, indio_dev)
-> > > > +
-> > > >  int __iio_add_chan_devattr(const char *postfix,
-> > > >  			   struct iio_chan_spec const *chan,
-> > > >  			   ssize_t (*func)(struct device *dev,
-> > > > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-
-> > > > core.c
-> > > > index 462d3e810013..f0888dd84d3d 100644
-> > > > --- a/drivers/iio/industrialio-core.c
-> > > > +++ b/drivers/iio/industrialio-core.c
-> > > > @@ -164,6 +164,23 @@ static const char * const iio_chan_info_postfix[] = {
-> > > >  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
-> > > >  };
-> > > >  
-> > > > +
-> > > > +void *iio_priv(const struct iio_dev *indio_dev)
-> > > > +{
-> > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> > > > +	return (char *)iio_dev_priv + ALIGN(sizeof(struct iio_dev_priv),
-> > > > IIO_ALIGN);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(iio_priv);
-> > > > +
-> > > > +struct iio_dev *iio_priv_to_dev(void *priv)
-> > > > +{
-> > > > +	struct iio_dev_priv *iio_dev_priv =
-> > > > +		(struct iio_dev_priv *)((char *)priv -
-> > > > +				  ALIGN(sizeof(struct iio_dev_priv),
-> > > > IIO_ALIGN));
-> > > > +	return &iio_dev_priv->indio_dev;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(iio_priv_to_dev);
-> > > > +
-> > > >  /**
-> > > >   * iio_find_channel_from_si() - get channel from its scan index
-> > > >   * @indio_dev:		device
-> > > > @@ -1476,6 +1493,8 @@ static void iio_device_unregister_sysfs(struct
-> > > > iio_dev *indio_dev)
-> > > >  static void iio_dev_release(struct device *device)
-> > > >  {
-> > > >  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
-> > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> > > > +
-> > > >  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
-> > > >  		iio_device_unregister_trigger_consumer(indio_dev);
-> > > >  	iio_device_unregister_eventset(indio_dev);
-> > > > @@ -1484,7 +1503,7 @@ static void iio_dev_release(struct device *device)
-> > > >  	iio_buffer_put(indio_dev->buffer);
-> > > >  
-> > > >  	ida_simple_remove(&iio_ida, indio_dev->id);
-> > > > -	kfree(indio_dev);
-> > > > +	kfree(iio_dev_priv);
-> > > >  }
-> > > >  
-> > > >  struct device_type iio_device_type = {
-> > > > @@ -1498,10 +1517,11 @@ struct device_type iio_device_type = {
-> > > >   **/
-> > > >  struct iio_dev *iio_device_alloc(int sizeof_priv)
-> > > >  {
-> > > > +	struct iio_dev_priv *iio_dev_priv;
-> > > >  	struct iio_dev *dev;
-> > > >  	size_t alloc_size;
-> > > >  
-> > > > -	alloc_size = sizeof(struct iio_dev);
-> > > > +	alloc_size = sizeof(struct iio_dev_priv);
-> > > >  	if (sizeof_priv) {
-> > > >  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
-> > > >  		alloc_size += sizeof_priv;
-> > > > @@ -1509,10 +1529,12 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
-> > > >  	/* ensure 32-byte alignment of whole construct ? */
-> > > >  	alloc_size += IIO_ALIGN - 1;
-> > > >  
-> > > > -	dev = kzalloc(alloc_size, GFP_KERNEL);
-> > > > -	if (!dev)
-> > > > +	iio_dev_priv = kzalloc(alloc_size, GFP_KERNEL);
-> > > > +	if (!iio_dev_priv)
-> > > >  		return NULL;
-> > > >  
-> > > > +	dev = &iio_dev_priv->indio_dev;
-> > > > +
-> > > >  	dev->dev.groups = dev->groups;
-> > > >  	dev->dev.type = &iio_device_type;
-> > > >  	dev->dev.bus = &iio_bus_type;
-> > > > @@ -1526,7 +1548,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
-> > > >  	if (dev->id < 0) {
-> > > >  		/* cannot use a dev_err as the name isn't available */
-> > > >  		pr_err("failed to get device id\n");
-> > > > -		kfree(dev);
-> > > > +		kfree(iio_dev_priv);
-> > > >  		return NULL;
-> > > >  	}
-> > > >  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
-> > > > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > > > index 5f9f439a4f01..38c4ea505394 100644
-> > > > --- a/include/linux/iio/iio.h
-> > > > +++ b/include/linux/iio/iio.h
-> > > > @@ -678,16 +678,8 @@ static inline void *iio_device_get_drvdata(struct
-> > > > iio_dev *indio_dev)
-> > > >  #define IIO_ALIGN L1_CACHE_BYTES
-> > > >  struct iio_dev *iio_device_alloc(int sizeof_priv);
-> > > >  
-> > > > -static inline void *iio_priv(const struct iio_dev *indio_dev)
-> > > > -{
-> > > > -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
-> > > > -}
-> > > > -
-> > > > -static inline struct iio_dev *iio_priv_to_dev(void *priv)
-> > > > -{
-> > > > -	return (struct iio_dev *)((char *)priv -
-> > > > -				  ALIGN(sizeof(struct iio_dev), IIO_ALIGN));
-> > > > -}
-> > > > +void *iio_priv(const struct iio_dev *indio_dev);
-> > > > +struct iio_dev *iio_priv_to_dev(void *priv);
-> > > >  
-> > > >  void iio_device_free(struct iio_dev *indio_dev);
-> > > >  struct iio_dev *devm_iio_device_alloc(struct device *dev, int
-> > > > sizeof_priv);    
-> > 
-> >   
+> Hmm, this might work. The problem will be with imposing such limitation through
+> the DW APB SSI driver. In order to do this I need to know:
 
+> 1) Whether multi-block LLP is supported by the DW DMA controller.
+> 2) Maximum DW DMA transfer block size.
 
+There is a constraint enumeration interface in the DMA API which you
+should be able to extend for this if it doesn't already support what you
+need.
+
+> Then I'll be able to use this information in the can_dma() callback to enable
+> the DMA xfers only for the safe transfers. Did you mean something like this when
+> you said "There's code for that bit already" ? If you meant the max_dma_len
+> parameter, then setting it won't work, because it just limits the SG items size
+> not the total length of a single transfer.
+
+You can set max_transfer_size and/or max_message_size in the SPI driver
+- you should be able to do this on probe.
+
+--W/+CTqSGWdiRg+8j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65ju0ACgkQJNaLcl1U
+h9BWuwf9GYDZfT9SEAR6UO5jhJk6RWwFsHU3BhxdAnvDK/l2K93uI+11WQq2An8H
+yiMiIaTllJPZmNs7mg1+lxpT1gRmKbmoXqb3DFml9K4gKxVJMXoIAPyhTL6wLqaV
+wiCzkwszsZsVvzFiQyPNAau0qzkaOC+wHPr8PUiEFxZIRUxEsThin07HXK7X0APj
+7LoKnOaB28MWVN/ezndCECaxoOgexp8LZ6jhVMMg/Kpd8UMCaJwB8yEz80uBFL+q
+mglQQesF6cb/dQZcynpOyCWm2dZhnCdd5yvyHWH1d2rVbcfi3xoTq+tWfPMLbW12
+45bciv1TxBU7iqLX1sF/YYO33YIO1Q==
+=HGPI
+-----END PGP SIGNATURE-----
+
+--W/+CTqSGWdiRg+8j--
