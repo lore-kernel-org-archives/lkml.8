@@ -2,170 +2,101 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB4C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BD6C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409982075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589197276;
-	bh=qVA+9DJ79+6bkSsk8R/e1V4bMq1lEKRjniVj/AiExgc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uNScaDXh3nUppErIVZ3uXHMj+IqbzSWO/WgLXKo3F0xhk1MrLkYEz+AHSsE9q7zip
-	 IvcGvscXwHoVsoE7x5ulgShSjDQ0HnAFldS3wXtxEUoe3G60HV9M00SMVg5/jve9Fz
-	 GVgBnx1cw0pZPEobRPZ/swvCzMIy09Bkz0aL5Sn8=
+	by mail.kernel.org (Postfix) with ESMTP id 91EDF20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kuJu9lu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgEKLlP (ORCPT
+        id S1729508AbgEKLne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgEKLlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:41:15 -0400
-Received: from localhost (unknown [122.167.117.121])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B16420708;
-        Mon, 11 May 2020 11:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589197274;
-        bh=qVA+9DJ79+6bkSsk8R/e1V4bMq1lEKRjniVj/AiExgc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x7dILyMr6XdHySREvLDzpe5C5AhgDfkT6/IMWHn2goMLLn6acGj+pM7k7VtP6x9wZ
-         77xc7BrxSSdZVjRgeXF/VDqfoKD3OJm0qYs8Pk6e7juqTbh3aZLFziSplI0QZ/GYLc
-         ihYC1C3Ls3rqC5Vnqc8S5a+qrhBv1/9gn6Dpo3q8=
-Date:   Mon, 11 May 2020 17:11:08 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Liao, Bard" <bard.liao@intel.com>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jank@cadence.com" <jank@cadence.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
-        "ranjani.sridharan@linux.intel.com" 
-        <ranjani.sridharan@linux.intel.com>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
-        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
-        "Lin, Mengdong" <mengdong.lin@intel.com>
-Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200511114108.GU1375924@vkoul-mobl>
-References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
- <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
- <20200511063227.GS1375924@vkoul-mobl>
- <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
- <20200511090003.GT1375924@vkoul-mobl>
- <DM6PR11MB407432225D0DA6E671DBAF67FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
-MIME-Version: 1.0
+        Mon, 11 May 2020 07:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727873AbgEKLne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:43:34 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F073EC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:43:32 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id g185so9321786qke.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=HrZSofo3iZFTh2jWDrYHo1noV2+xdcUG6DMvzbqh4qg=;
+        b=kuJu9lu9imJ02yqGcj2fHwbhmZM1veTUhrSCepuKecNYH/uPA37AoMyqX/yCHUn5VA
+         FZSSXzKY5C3OW5DnkUF3nRZIj5kkoClPt5aobsr+m9VnLbcK7JewiiXWVn8cqNiVj445
+         CQ702HdJvr2MxDcU9cYWWzpZT+74rc/pN7N/uKAQz1s7b7p3ra5kdn74AUboxnpB9s27
+         n6YkYe2I0N/dIF06LHbxtvrTxZD4Bmkn9XS+qpa02lpiDSubXN09Hnz5hVSG4D7dBsyv
+         BXiY51kFI9ww0APazvLGzvsArPoumnWAldY7G/isso99zPnBy0QTgw9HXGXXkbaQ5VFl
+         QHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=HrZSofo3iZFTh2jWDrYHo1noV2+xdcUG6DMvzbqh4qg=;
+        b=gS7078uDQJULpsJheJ2PCOVF5Pa6vPFCYHiPXM4QpRAvJshmgp1HQIieYOCC+TXolM
+         qn4UhTL8I3U5ZX37oy4CTCltXOxIK7Ftio2fZZVJRlYtqnymHnAev6Xy8M7hvf4Z2hbw
+         oyDA/2GfISVTojUxmrPtudwueJg0DRzpJMV36hvMNqbuR2njN1GBJTo6A36V3cSYlgPZ
+         YmQs88GOfxQqQOUcYUnr6BuRjZ+i4ShoZ5Vph1ddH/EoIWKb325XNflDUvHWTXM1TKeW
+         lUpAEPRJZfG/4EwYjbzPVQccgHTZ65CzIoPjpPeKJkOOq4CjH83HTmzJilx2OeGnfL7x
+         R4eA==
+X-Gm-Message-State: AGi0PubIuMtrkJWrXRE+atOVKuyy7pA77R/Dc9Pt6+LeYIANyDFwfngY
+        Zflz0KPKLsyT3PVJSRNx5HpfzUkJBq4HdA==
+X-Google-Smtp-Source: APiQypLZGdZcXwPLwTgije5MzeISj5JWm75i71YFaAFtuioZHStvxhs3C3pSF0EnksEQ6BzGWvKnRw==
+X-Received: by 2002:a37:668b:: with SMTP id a133mr14285835qkc.488.1589197412193;
+        Mon, 11 May 2020 04:43:32 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e23sm7670945qkm.63.2020.05.11.04.43.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 04:43:31 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR11MB407432225D0DA6E671DBAF67FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] powerpc/kvm: silence kmemleak false positives
+Date:   Mon, 11 May 2020 07:43:30 -0400
+Message-Id: <44807D44-98D9-431C-9266-08014C4B47F6@lca.pw>
+References: <87y2pybu38.fsf@mpe.ellerman.id.au>
+Cc:     paulus@ozlabs.org, benh@kernel.crashing.org,
+        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <87y2pybu38.fsf@mpe.ellerman.id.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-05-20, 11:34, Liao, Bard wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: Monday, May 11, 2020 5:00 PM
-> > To: Liao, Bard <bard.liao@intel.com>
-> > Cc: Bard Liao <yung-chuan.liao@linux.intel.com>; alsa-devel@alsa-project.org;
-> > linux-kernel@vger.kernel.org; tiwai@suse.de; broonie@kernel.org;
-> > gregkh@linuxfoundation.org; jank@cadence.com;
-> > srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
-> > ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
-> > louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
-> > Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
-> > <mengdong.lin@intel.com>
-> > Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
-> > 
-> > On 11-05-20, 08:04, Liao, Bard wrote:
-> > > > -----Original Message-----
-> > > > From: Vinod Koul <vkoul@kernel.org>
-> > > > Sent: Monday, May 11, 2020 2:32 PM
-> > > > To: Bard Liao <yung-chuan.liao@linux.intel.com>
-> > > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
-> > > > tiwai@suse.de; broonie@kernel.org; gregkh@linuxfoundation.org;
-> > > > jank@cadence.com; srinivas.kandagatla@linaro.org;
-> > > > rander.wang@linux.intel.com; ranjani.sridharan@linux.intel.com;
-> > > > hui.wang@canonical.com; pierre- louis.bossart@linux.intel.com; Kale,
-> > > > Sanyog R <sanyog.r.kale@intel.com>; Blauciak, Slawomir
-> > > > <slawomir.blauciak@intel.com>; Lin, Mengdong
-> > > > <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
-> > > > Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device
-> > > > support
-> > > >
-> > > > On 30-04-20, 02:51, Bard Liao wrote:
-> > > > > @@ -24,9 +24,14 @@ int sdw_bus_master_add(struct sdw_bus *bus,
-> > > > > struct
-> > > > device *parent,
-> > > > >  	struct sdw_master_prop *prop = NULL;
-> > > > >  	int ret;
-> > > > >
-> > > > > -	if (!bus->dev) {
-> > > > > -		pr_err("SoundWire bus has no device\n");
-> > > > > -		return -ENODEV;
-> > > >
-> > > > This check is removed and not moved into sdw_master_device_add()
-> > > > either, can you add here or in patch 1 and keep checking the parent
-> > > > device please
-> > >
-> > > We will set bus->dev = &md->dev in the end of sdw_master_device_add().
-> > 
-> > We need to test if this is valid or not :)
-> > 
-> > > That's why we remove the test. But now I am wandering does it make
-> > > sense to set bus->dev = &md->dev? Maybe it makes more sense to set
-> > > bus->dev = sdw control device.
-> > > A follow up question is that should slave device a child of bus device
-> > > or master device? I would prefer bus device if it makes sense.
-> > > I will check bus->dev and parent and remove bus->dev = &md->dev in the
-> > > next version.
-> > 
-> > the parent is bus->dev and sdw_master_device created would be child of this
-> > and should be set as such. You can remove it from bus object and keep in
-> > sdw_master_device object, that is fine by me.
-> 
-> Looks like we don't need the parent and fwnode parameter since we can
-> get them from bus->dev 😊
 
-Quite right
 
-> > The sdw_slave is child of sdw_master_device now and looks to be set correct.
-> 
-> So, it will be
-> bus device
->     -> master device
->          -> slave device
-> right?
+> On May 11, 2020, at 7:15 AM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>=20
+> There is kmemleak_alloc_phys(), which according to the docs can be used
+> for tracking a phys address.
+>=20
+> Did you try that?
 
-yes
+Caitlin, feel free to give your thoughts here.
 
-> 
-> I have a question here. We have pm supported on bus and slave devices,
-> but not master device. Will pm work with this architecture?
-> Can it be
-> bus device
->     -> master device & slave device?
+My understanding is that it seems the doc is a bit misleading. kmemleak_allo=
+c_phys() is to allocate kmemleak objects for a physical address range, so  k=
+memleak could scan those memory pointers within for possible referencing oth=
+er memory. It was only used in memblock so far, but those new memory allocat=
+ions here contain no reference to other memory.
 
-yes it would and you should check it out. The pm (runtime_pm) works well
-with child devices and parents, so we need to ensure that parents are
-set properly.
-
-Thanks
--- 
-~Vinod
+In this case, we have already had kmemleak objects for those memory allocati=
+on. It is just that other pointers reference those memory by their physical a=
+ddress which is a known kmemleak limitation won=E2=80=99t be able to track t=
+he the connection. Thus, we always use kmemleak_ignore() to not reporting th=
+ose as leaks and don=E2=80=99t scan those because they do not contain other m=
+emory reference.=
