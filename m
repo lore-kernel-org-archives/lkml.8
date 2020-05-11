@@ -2,154 +2,136 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6C0C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0629C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A7A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="E9VmoY9d"
+	by mail.kernel.org (Postfix) with ESMTP id CA8A5206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589209376;
+	bh=wJAEzc/02JfHasTrBHvx5cDsjieGTWLTFqMSE7O7nfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AW2koLw1Ne1O2outu/C6T+/VOl/3VtqFIjtRAEbBhS+9oBlymIy4yYHcqxAHg0Cg1
+	 KnKLkzrgYA6ZDa0uCt3YCkOrGohlSAkj5hvcLuEU1gReZm35idSEmo6socv0xkexu0
+	 CF1Iu4jMGGkrUZpdXynthUX1D8oRlZYPB93Ey+dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgEKPAT (ORCPT
+        id S1729641AbgEKPC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:00:19 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:14023
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726068AbgEKPAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:00:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AeCImlC4chJMb3f5/Lfv7PlcFfdE/JY2gCx7Ruyztl1XbdKcl6vtjTbYn07fV8GewUneFqPV68aZzgDhxwqnEFeFl0JtJedTn7FOuCBhU44dGkflfVl/5loB021qzFUpMyq3BTolTkUz+Begiy5byXur5Gl1niPe4PfIr122WTtPqH9FLg/RifbYBwZ0w1Am0h+bdXJL+gKhKngkc9UEcTttzX0doeE3rdPNDbwxQPgjTWS+yrR2t2mZB6XgeR9ZHNEnAKsAzPd6mWN14Tx5odyn64rt++YQ7piPmgXQJb96ki1kZeG12/Lv4IfmMUXxm+a7+7WifXAi9y/+9uN1Kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=70kWKPa/VI0yZxSWLk1C9yAVONUDQb8EL+l77CagnBA=;
- b=iKD0G0tL8Xu5PknNLNRgeZ9PYmN4w6V3oTJcDDNkQe6MRCFoAwXL/SUeGIlhLrzovkmQSTy4p+KxJWx75BG3f4dcd/Owg1+KEJVFq2j/7VuM7GSMgqk4zfLzo7KoN617cxtF75qztyQ8tu3RW0PPKGZbwH1FJsbsKodyvwro7jwRYAM7tqammhiXLp6T6KoOrIXV/MCp/tqf8RLdkv+HfDQxIz8d8/yzWu9Qe0RuydjHXBF0YHJrnobeVDja/1nth2vZuScFTN2pnPU/VdWsFU9U1rTkcYTKica+WzYYKh/ztkQRh+6U0fGWewml8Wez8tUbOGd3akuWNRw3v16H1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=70kWKPa/VI0yZxSWLk1C9yAVONUDQb8EL+l77CagnBA=;
- b=E9VmoY9dfWpdo2yy7Bu5JxSh99jwsFyR1i8liUvZ+/6IwPVesV0oEuKkjgCKLrXOnU3YpYZl3BKYBzFiYAJYL9s0HjbuYDqC8Zykl1smjzXfsQ9KlU1o3Y4ClmCGuwOroZiZSEt1y87d7ftzv2E7CnHzwUZ6vxP4VLrZOu22xaQ=
-Authentication-Results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=oss.nxp.com;
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (2603:10a6:208:130::22)
- by AM0PR04MB6147.eurprd04.prod.outlook.com (2603:10a6:208:13f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Mon, 11 May
- 2020 15:00:12 +0000
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b]) by AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::c4fe:d4a4:f0e1:a75b%4]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 15:00:12 +0000
-Date:   Mon, 11 May 2020 20:29:59 +0530
-From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Mon, 11 May 2020 11:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726438AbgEKPCz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 11:02:55 -0400
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D0EC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:02:55 -0700 (PDT)
+Received: by mail-qv1-xf2d.google.com with SMTP id di6so4610523qvb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=J4uyWElSmmKaxd8Y7Hrt+yky6sisNiPUP3S3AyJYIE0=;
+        b=TZ+MqzO4CQm/iAe5QqQybTl13BatZPT3cFASk8rIjwM92U6gr98iCpw6vh07s1Ogfj
+         fnGdSk4VjTlUrMQgIhe0+aeZ5fHt0z4IdiAisI3XRA7gz+eaSYKtbpAZy4CayagjESqN
+         iQSgzY3AOwyofH+xAZtSEGG0GYdWCVDnPU7705kMQN54DY1a/BhXVZUiPSFYSXJOJ1Og
+         2f4ULbIBLnkP30TE6MBuUgrPNG0bBTy2hUgym3U3S3IvysQcdx4iH73NDwO9dG4QhDWx
+         3B2lwLZDBboZR9drD783OFzUpIocAckq+bE/0TBXbbbYGbrO1Ikp+gMwXv/ERTRcCN+b
+         NEEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=J4uyWElSmmKaxd8Y7Hrt+yky6sisNiPUP3S3AyJYIE0=;
+        b=befBFFtv3KnSiAbrSG9Xh4POcRCOmb7BDpsDzHahMWaEB8FeFh+LuiUaTAjn3TkQd2
+         /MPab8anZMsFZX3VrEKUnV3N5mA9KbReP2/SJtNqyV6sHMqb1hWXDNaZC3wpXx4Q0BYI
+         fDVfNQ2h0sRkhDQ5g3uFohuZavt5j8PKeXfP4QgvjA0zMdlHSffmB/X0AZRw/DHZtjq3
+         R8clF4nRfmbyRQZVtpA7JRFdotMIPT1pz0WLhjxmzsq/jcXeyu7dGk63U0DzqIcRD+Qu
+         EgmefP0weQMZoS6+zRseJ5J0rN7+P2zUNg9lxONHC6TqrdR/gRR5x/ncuJHvSdSqs/Wx
+         1tNw==
+X-Gm-Message-State: AGi0PuYWtGNw8dLrPHi1kXB5woFfP+3LK/BRCQBTMrAJ2r8rPBL/0BRU
+        YXUFh5d1K43gfpDxtW70wqw=
+X-Google-Smtp-Source: APiQypLnPvgBUeyGBOEkrNHpMwu92fvMkq0NiRki3v6tGAI0dxnyEUhKlNYCkFNryl2NQrnC8dSGGg==
+X-Received: by 2002:ad4:45a7:: with SMTP id y7mr6051944qvu.184.1589209374213;
+        Mon, 11 May 2020 08:02:54 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id m6sm1054576qkc.4.2020.05.11.08.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 08:02:53 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:02:51 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-Message-ID: <20200511145959.GA20671@lsv03152.swis.in-blr01.nxp.com>
-References: <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
- <20200508202722.GI298574@lunn.ch>
- <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
- <20200508234257.GA338317@lunn.ch>
- <20200511080040.GC12725@lsv03152.swis.in-blr01.nxp.com>
- <20200511130457.GC409897@lunn.ch>
+        Liang Chen <cl@rock-chips.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC v4 02/12] kthread: Add kthread_(un)block_work_queuing() and
+ kthread_work_queuable()
+Message-ID: <20200511150251.GE16815@mtj.duckdns.org>
+References: <20200508204751.155488-1-lyude@redhat.com>
+ <20200508204751.155488-3-lyude@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511130457.GC409897@lunn.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SG2PR02CA0107.apcprd02.prod.outlook.com
- (2603:1096:4:92::23) To AM0PR04MB5636.eurprd04.prod.outlook.com
- (2603:10a6:208:130::22)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0107.apcprd02.prod.outlook.com (2603:1096:4:92::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend Transport; Mon, 11 May 2020 15:00:06 +0000
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f99488bf-b96b-4f1b-dfd5-08d7f5bc015e
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6147:|AM0PR04MB6147:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB614796BB9D9D6F18379BF94CD2A10@AM0PR04MB6147.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WPnk+ZAFs1/pxg0oRAIA9ZfT5uPDX7Y2pCUn0X9NQi3kndtcpTgxOpJBzT9wEXCJg56ltSbePrPHvXR6kEbq63RCwH1mSYHSx4X4rULI1glAOj64Ma2M2jAOqmgk2YTwrzdZXdoMweDZFO+1bcvwZgVCbug9EE7CdTPxmqebiqdiDq+kbJABZYDHSoZlwKTgiv830WLCrM9QRXC5sbXAxRAtm8vNfQ7FihITiOTwULnJ2NAAPs5CPAAfXnViiikSnztyUBf4k5BPBeRpaPrX92KNP/kdAyYV+AFHruvLRVkOoQGmoMsbqcZN/d3gBOHMwdcIgoLIJA+cMnX/1YFuRGtozZ7svR57k0VyEEh8WGM8yAeq4P/thNiNPW+arqaTozde4Az6l5g5iVloRCQkRNqp9e1CRJ8MDxy6AMcR0gLsxWMXaCNp2uc4K5I5TPWPnBNMvh3EpT1lCKCuFSjCyL/2FdyPTMLgnf12R/gQKWoASJ9qWiU4NspszUfCFYVMP/VPlOJnsGm05pFjESAjBw3g4ubQ/t9nQDB/YDSBP5eqbK1MSjkGQ+QVo5j7JvZL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5636.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(33430700001)(956004)(66556008)(55016002)(316002)(55236004)(478600001)(54906003)(5660300002)(9686003)(2906002)(8936002)(7416002)(66476007)(26005)(66946007)(7696005)(1076003)(44832011)(86362001)(52116002)(33440700001)(33656002)(6506007)(6916009)(8676002)(186003)(1006002)(16526019)(4326008)(6666004)(110426005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: AxnNMDqn4TewmZcF9GaVqx1FUUanpeHZxNLG1kn3WGijGKzjcAqpUi9oygieQEObnQEZa5XmrRYMG9hXq3VZHrM19hA5WFCuTp03lDuwZT45tAi2YBloTkUwaBFiy45jqwVG9/ByuamU4u3SLfjpZ16KXVIu0kRO5ip8vXNQfTqqi99NITYEGd/bWUdmfvd5W/YfcXKjdnofmp3jsyD99/onlj74rOx6MufolbOCKRHyyhJsnlMyGjrYeXpGFLvPdB088alsdxAtiKFzLJ5Sd5wqVGVmcTzSMZKozz8cLNotZskTi46lYhZhRX6PVH4MIScl8dWjo81tF1ZjdodNLR/GSI/l12zse6S5OCa3g058lbjUAKA3mrS/OxUOZIYdNMqUUpF6XLlxejaGEW+OyQcAQQQrrI5YquKOjEn+4RWQyr1kp2SVxlDsQVIm6VYgb2tBcvd3S9Zj0FyIgV5exYvljeVgaTRSf48Nxw2l020=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f99488bf-b96b-4f1b-dfd5-08d7f5bc015e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 15:00:12.6483
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ojXa9cEsx+751jZY5Jg7MoiwH4uwqoQHjQSModpw1up5bSwcsCwYwQP4cLHUFe95jAiyTSRWUhiNoT7Kc02l5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6147
+In-Reply-To: <20200508204751.155488-3-lyude@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 03:04:57PM +0200, Andrew Lunn wrote:
-> > NXP's LX2160ARDB platform currently has the following MDIO-PHY connection.
-> > 
-> > MDIO-1 ==> one 40G PHY, two 1G PHYs(C45), two 10G PHYs(C22)
-> > MDIO-2 ==> one 25G PHY
-> 
-> It has been suggested that ACPI only support a one to one
-> mapping. Each MAC has one MDIO bus, with one PHY on it. KISS.
-> 
-> This clearly does not work for your hardware. So not only do we need
-> to solve how PHY properties are described, we also need an equivalent
-> of phy-handle, so a MAC can indicate which PHY it is connected to.
-> 
+On Fri, May 08, 2020 at 04:46:52PM -0400, Lyude Paul wrote:
+> Add some simple wrappers around incrementing/decrementing
+> kthread_work.cancelling under lock, along with checking whether queuing
+> is currently allowed on a given kthread_work, which we'll use want to
+> implement work cancelling with DRM's vblank work helpers.
 
-Right. I had introduced fwnode_get_phy_node() to take care of phy-handle.
+Am I correct in assuming that what you want is "cancel this and block
+further queueing until the state is cleared"? I agree that'd be something
+really useful to have. That said, There are a few areas that I think can be
+improved upon:
 
-> So in effect, you seem to be heading towards a pretty full
-> reproduction of the DT binding. Before you go too much further and
-> waste too much of your time, you might want confirmation from the ACPI
-> people this is not too advanced for what ACPI can do and they tell you
-> to forget ACPI for this hardware and stick with DT.
+* It'd be better if we separate this state into its own thing rather than
+  mixing with canceling state which has potential to make things really
+  confusing. It doesn't have to be a separate field unless you want disable
+  depth for work item disable (and I don't think you do). It can just be a
+  high bit in the same field but I think the two states should be separate
+  one way or the other.
 
-I've copied the patchset to Rafael and acpi ML.
-Waiting for their response.
+* I'm always a bit skeptical about state querying interfaces which aren't
+  synchronized to anything. They're useful in many cases but also prone to
+  being misused. If you absoultely have to have them, can you please add
+  explicit comment explaining the lack of synchronization around it - ie.
+  unless you're the one setting and clearing the flag and queueing the task,
+  it isn't synchronized against anything.
 
-Thanks
-Calvin
+* In the same vein, I'm not too sure about stand-alone block interface.
+  Unless I'm the sole queuer or there are further locking around queueing,
+  what good does setting blocking do? There's no way to guarantee that the
+  flag is seen by someone else trying to queue it and trying to flush the
+  work item after queueing doesn't help either. The only way to make that
+  interface meaningful is doing it together with cancel - so, you say "block
+  further queueing and cancel / flush whatever is in flight or queued",
+  which actually gives you a useful invariant.
+
+* A simliar argument can be made about unblock too although that's an a lot
+  more relaxed situation in that unblocking and queueing oneself always
+  works and that the user might not care which future instance of queueing
+  will start succeeding.
+
+Thanks.
+
+-- 
+tejun
