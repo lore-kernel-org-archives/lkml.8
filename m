@@ -2,92 +2,208 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C479C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7444C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19548214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589214941;
-	bh=8TFQb1GM4g3bo5bqMC8d7iejuG4LFgF8oh8M3+ixynU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=i19qTHDCO8rpTjvygT4eeqdeHD04P/vzc8Lk53yhAsxVD9ZzuefxVYZkE2DQvm4f6
-	 2GlFgEU9SMu1f3lS2v/PZAMkdmKWr8fUgPzoQ/CJ4BP1bTssNO/hT8kZ6uMKoxGbJQ
-	 gcMP6dX3HqeXM7sNHHT2l09m2gSKzBYgDMourjXw=
+	by mail.kernel.org (Postfix) with ESMTP id 89FBB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbgEKQfk (ORCPT
+        id S1730481AbgEKQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 12:37:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:36994 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbgEKQfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:35:40 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565092075E;
-        Mon, 11 May 2020 16:35:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589214939;
-        bh=8TFQb1GM4g3bo5bqMC8d7iejuG4LFgF8oh8M3+ixynU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xIQ4UlcpTLAEYtdkn2VyVddK0ErnEM/0K1pGj3X3b9PNzir9/CHLG0o74cO5bDbWH
-         +u6PPYb7JBOfPN1jhkHEoCwSglcRBjqEVeDbAMYxVsdMkjDGUA1NwXCfByXYsdejKR
-         +y8Q1Kss4JriSxencPVJJ1j0dTfHyGB7DH1F9pUQ=
-Subject: Re: [PATCH 5.4 00/50] 5.4.40-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200508123043.085296641@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <e090d5ed-3e18-333e-221b-197a30c102e8@kernel.org>
-Date:   Mon, 11 May 2020 10:35:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730048AbgEKQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:37:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C9A7568CEE; Mon, 11 May 2020 18:37:45 +0200 (CEST)
+Date:   Mon, 11 May 2020 18:37:44 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv@lists.infradead.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 31/31] module: move the set_fs hack for
+ flush_icache_range to m68k
+Message-ID: <20200511163744.GB32228@lst.de>
+References: <20200510075510.987823-1-hch@lst.de> <20200510075510.987823-32-hch@lst.de> <CAMuHMdU_OxNoKfO=i903kx0mgk0-i2h4u2ase3m9_dn6oFh_5g@mail.gmail.com> <20200511151120.GA28634@lst.de> <CAMuHMdW1S91i3x0unNcJnypHse7ifynGb4dZcVhJaemR3GH1Pg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508123043.085296641@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW1S91i3x0unNcJnypHse7ifynGb4dZcVhJaemR3GH1Pg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 6:35 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.40 release.
-> There are 50 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, May 11, 2020 at 05:24:30PM +0200, Geert Uytterhoeven wrote:
+> > Btw, do you know what part of flush_icache_range relied on set_fs?
+> > Do any of the m68k maintainers have an idea how to handle that in
+> > a nicer way when we can split the implementations?
 > 
-> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
-> Anything received after that time might be too late.
+> arch/m68k/mm/cache.c:virt_to_phys_slow()
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.40-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> All instructions that look up addresses in the page tables look at the
+> source/destination function codes (SFC/DFC) to know if they have to use
+> the supervisor or user page tables.
+> So the actual implementation is the same: set_fs() merely configures
+> SFC/DFC, to select the address space to use.
 
-Compiled and booted on my test system. I am seeing the following
-regression in dmesg and with a new emergency message.
+So instead of the magic instructions could we use the normal kernel
+virt to phys helpers instead of switching the addresses space?  Something
+like this patch on top of the series:
 
-Initramfs unpacking failed: Decoding failed
-
-I don't know why yet. I will debug and let you know.
-
-thanks,
--- Shuah
+diff --git a/arch/m68k/mm/cache.c b/arch/m68k/mm/cache.c
+index 5ecb3310e8745..5a861a14c1e69 100644
+--- a/arch/m68k/mm/cache.c
++++ b/arch/m68k/mm/cache.c
+@@ -71,47 +71,87 @@ static unsigned long virt_to_phys_slow(unsigned long vaddr)
+ 	return 0;
+ }
+ 
+-/* Push n pages at kernel virtual address and clear the icache */
+-/* RZ: use cpush %bc instead of cpush %dc, cinv %ic */
+-void flush_icache_user_range(unsigned long address, unsigned long endaddr)
++static inline void coldfire_flush_icache_range(unsigned long start,
++		unsigned long end)
+ {
+-	if (CPU_IS_COLDFIRE) {
+-		unsigned long start, end;
+-		start = address & ICACHE_SET_MASK;
+-		end = endaddr & ICACHE_SET_MASK;
+-		if (start > end) {
+-			flush_cf_icache(0, end);
+-			end = ICACHE_MAX_ADDR;
+-		}
+-		flush_cf_icache(start, end);
+-	} else if (CPU_IS_040_OR_060) {
+-		address &= PAGE_MASK;
+-
+-		do {
+-			asm volatile ("nop\n\t"
+-				      ".chip 68040\n\t"
+-				      "cpushp %%bc,(%0)\n\t"
+-				      ".chip 68k"
+-				      : : "a" (virt_to_phys_slow(address)));
+-			address += PAGE_SIZE;
+-		} while (address < endaddr);
+-	} else {
+-		unsigned long tmp;
+-		asm volatile ("movec %%cacr,%0\n\t"
+-			      "orw %1,%0\n\t"
+-			      "movec %0,%%cacr"
+-			      : "=&d" (tmp)
+-			      : "di" (FLUSH_I));
++	start &= ICACHE_SET_MASK;
++	end &= ICACHE_SET_MASK;
++
++	if (start > end) {
++		flush_cf_icache(0, end);
++		end = ICACHE_MAX_ADDR;
+ 	}
++	flush_cf_icache(start, end);
++}
++
++static inline void mc68040_flush_icache_user_range(unsigned long start,
++		unsigned long end)
++{
++	start &= PAGE_MASK;
++
++	do {
++		asm volatile ("nop\n\t"
++			      ".chip 68040\n\t"
++			      "cpushp %%bc,(%0)\n\t"
++			      ".chip 68k"
++			      : : "a" (virt_to_phys_slow(start)));
++		start += PAGE_SIZE;
++	} while (start < end);
++}
++
++static inline void mc68020_flush_icache_range(unsigned long start,
++		unsigned long end)
++{
++	unsigned long tmp;
++
++	asm volatile ("movec %%cacr,%0\n\t"
++		      "orw %1,%0\n\t"
++		      "movec %0,%%cacr"
++		      : "=&d" (tmp)
++		      : "di" (FLUSH_I));
++}
++
++void flush_icache_user_range(unsigned long start, unsigned long end)
++{
++	if (CPU_IS_COLDFIRE)
++		coldfire_flush_icache_range(start, end);
++	else if (CPU_IS_040_OR_060)
++		mc68040_flush_icache_user_range(start, end);
++	else
++		mc68020_flush_icache_range(start, end);
+ }
+ 
+-void flush_icache_range(unsigned long address, unsigned long endaddr)
++static inline void mc68040_flush_icache_range(unsigned long start,
++		unsigned long end)
+ {
+-	mm_segment_t old_fs = get_fs();
++	start &= PAGE_MASK;
++
++	do {
++		void *vaddr = (void *)start;
++		phys_addr_t paddr;
++
++		if (is_vmalloc_addr(vaddr))
++			paddr = page_to_phys(vmalloc_to_page(vaddr));
++		else
++			paddr = virt_to_phys(vaddr);
++
++		asm volatile ("nop\n\t"
++			      ".chip 68040\n\t"
++			      "cpushp %%bc,(%0)\n\t"
++			      ".chip 68k"
++			      : : "a" (paddr));
++		start += PAGE_SIZE;
++	} while (start < end);
++}
+ 
+-	set_fs(KERNEL_DS);
+-	flush_icache_user_range(address, endaddr);
+-	set_fs(old_fs);
++void flush_icache_range(unsigned long start, unsigned long end)
++{
++	if (CPU_IS_COLDFIRE)
++		coldfire_flush_icache_range(start, end);
++	else if (CPU_IS_040_OR_060)
++		mc68040_flush_icache_range(start, end);
++	else
++		mc68020_flush_icache_range(start, end);
+ }
+ EXPORT_SYMBOL(flush_icache_range);
+ 
