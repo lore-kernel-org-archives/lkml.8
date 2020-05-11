@@ -2,139 +2,114 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408FFC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B28EC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8AF20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:53:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lYPYuNsq"
+	by mail.kernel.org (Postfix) with ESMTP id 4491220746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgEKMxZ (ORCPT
+        id S1729470AbgEKMx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:53:25 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53402 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgEKMxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:53:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UCjERt+maORMJwlHX05z+ypjOJgAfE49qXX7mxNSNHc=; b=lYPYuNsqZF2PI5lTSomAC3i5Eq
-        GaTSHIVKs+8UyVTVrO+sgqPtlyglYPKA7Zc6xhtKlQfsFxEMbHHzt0kq/Sb542KSkL9GxetKcUR61
-        z+RdHrnObgpc3s2OYXcus3QY1TGfX/h7TvLPK+0c25p9Bq8ifqnnEgtUuJMGlzBXX4T0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jY7vn-001qt8-R0; Mon, 11 May 2020 14:53:15 +0200
-Date:   Mon, 11 May 2020 14:53:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux.cj@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
-        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Diana Madalina Craciun <diana.craciun@nxp.com>,
-        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
-Message-ID: <20200511125315.GB409897@lunn.ch>
-References: <20200505132905.10276-1-calvin.johnson@oss.nxp.com>
- <20200505132905.10276-5-calvin.johnson@oss.nxp.com>
- <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
- <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
- <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
- <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
- <20200508181301.GF298574@lunn.ch>
- <20200511055231.GA12725@lsv03152.swis.in-blr01.nxp.com>
+        Mon, 11 May 2020 08:53:57 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37794 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726021AbgEKMx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:53:57 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BCjEKM003361;
+        Mon, 11 May 2020 08:53:56 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30wpc7wesp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 08:53:55 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04BCrsEo038053
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 11 May 2020 08:53:54 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 11 May 2020 05:53:53 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 11 May 2020 05:53:52 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04BCro45017213;
+        Mon, 11 May 2020 08:53:51 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: buffer: remove attrcount_orig var from sysfs creation
+Date:   Mon, 11 May 2020 15:53:22 +0300
+Message-ID: <20200511125322.17147-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511055231.GA12725@lsv03152.swis.in-blr01.nxp.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_05:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=2 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:22:31AM +0530, Calvin Johnson wrote:
-> Thanks Andrew and Jeremy for the detailed discussion!
-> 
-> On Fri, May 08, 2020 at 08:13:01PM +0200, Andrew Lunn wrote:
-> > > > It does have a numeric version defined for EISA types. OTOH I suspect that
-> > > > your right. If there were a "PHY\VEN_IDvvvv&ID_DDDD" definition, it may not
-> > > > be ideal to parse it. Instead the normal ACPI model of exactly matching the
-> > > > complete string in the phy driver might be more appropriate.
-> > > 
-> > > IMO, it should be fine to parse the string to extract the phy_id. Is there any
-> > > reason why we cannot do this?
-> > 
-> > Some background here, about what the PHY core does.
-> > 
-> > PHYs have two ID registers. This contains vendor, device, and often
-> > revision of the PHY. Only the vendor part is standardised, vendors can
-> > decide how to use the device part, but it is common for the lowest
-> > nibble to be revision. The core will read these ID registers, and then
-> > go through all the PHY drivers registered and ask them if they support
-> > this ID. The drivers provide a table of IDs and masks. The mask is
-> > applied, and then if the ID matches, the driver is used. The mask
-> > allows the revision to be ignored, etc.
-> > 
-> > There is a very small number of devices where the vendor messed up,
-> > and did not put valid contents in the ID registers. In such cases, we
-> > can read the IDs from device tree. These are then used in exactly the
-> > same way as if they were read from the device.
-> > 
-> > If you want the ACPI model to be used, an exact match on the string,
-> > you are going to have to modify the core and the drivers. They
-> > currently don't have any string, and have no idea about different
-> > revisions which are out in the wild.
-> 
-> I don't think ACPI mandates that OS driver use exact string match and not parse
-> the string.
-> 
-> First of all, I would suggest that we use "compatible" property instead of _CID.
-> Not sure of a reason why we cannot. This will simplify implementation of fwnode
-> APIs.
-> 
-> Already I've pointed out couple of ASL files in tianocore where they are already
-> used.
-> one eg:https://github.com/tianocore/edk2-platforms/blob/master/Silicon/Marvell/Armada7k8k/AcpiTables/Armada80x0McBin/Dsdt.asl#L280
-> 
-> Even if we use _CID, I'm not sure we are prohibited from extracting characters
-> (phy_id) from it.
-> If we decide to use _CID, then we need to define somewhere and standardize
-> exactly how we are going to use it. I'm not sure where we can do this.
+The variable no longer does anything.
+It should have been removed with commit 2e036804d773e ("iio: buffer: remove
+'scan_el_attrs' attribute group from buffer struct").
+That was about the last time this was needed.
 
-Hi Calvin
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-Whatever is decided needs to be documented as it becomes a defacto
-standard. Once this is in the Linux PHY core, that is how it is done
-for all boards using ACPI.
+If desired (and still possible) this can be squashed in
+commit 2e036804d773e ("iio: buffer: remove 'scan_el_attrs' attribute group
+from buffer struct").
 
-Maybe sometime in the future when the ACPI standards committee
-definitively defines how this should be done, we can add a second
-implementation which is standards conformant.
+ drivers/iio/industrialio-buffer.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-       Andrew
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index eae39eaf49af..386c9231c2ee 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -1244,7 +1244,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 	struct iio_dev_attr *p;
+ 	struct attribute **attr;
+ 	struct iio_buffer *buffer = indio_dev->buffer;
+-	int ret, i, attrn, attrcount, attrcount_orig = 0;
++	int ret, i, attrn, attrcount;
+ 	const struct iio_chan_spec *channels;
+ 
+ 	channels = indio_dev->channels;
+@@ -1288,7 +1288,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 
+ 	indio_dev->groups[indio_dev->groupcounter++] = &buffer->buffer_group;
+ 
+-	attrcount = attrcount_orig;
++	attrcount = 0;
+ 	INIT_LIST_HEAD(&buffer->scan_el_dev_attr_list);
+ 	channels = indio_dev->channels;
+ 	if (channels) {
+@@ -1325,7 +1325,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
+ 		ret = -ENOMEM;
+ 		goto error_free_scan_mask;
+ 	}
+-	attrn = attrcount_orig;
++	attrn = 0;
+ 
+ 	list_for_each_entry(p, &buffer->scan_el_dev_attr_list, l)
+ 		buffer->scan_el_group.attrs[attrn++] = &p->dev_attr.attr;
+-- 
+2.17.1
+
