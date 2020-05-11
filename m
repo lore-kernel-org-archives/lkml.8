@@ -2,112 +2,123 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EAC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E49C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1C12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:57:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="yU79Z16M"
+	by mail.kernel.org (Postfix) with ESMTP id B41512070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589234301;
+	bh=tXYiBL6lhcDBOgVrVzxBviFHcr3U2rw6/zqjTPOU8TU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JoFLej0yUA92tfhuJOZUIrQy359DGB++avLqyjR4z4OryykKheB5JKciOq/KIMTOh
+	 4akR/J7UEJUgMIUPfr8jn3vhLYa+K8aWOTvAeAcK7hsiZiQ/X+u1Tc34mEqioiUQa5
+	 holTjRn/pgmXbdgKZBzGNK/wJv1YWl4UonQXt1As=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgEKV5a (ORCPT
+        id S1728004AbgEKV6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:57:30 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:51045 "EHLO mail.zx2c4.com"
+        Mon, 11 May 2020 17:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgEKV53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:57:29 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 6b5c03cc;
-        Mon, 11 May 2020 21:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=zEVrJxzNsiJ9BdLH8+Ar4RftJ
-        Zs=; b=yU79Z16M3/E+1Wj1bofhPZM8EboOcIXbVoCQ3o7eKG6SgO+H82xTm/yT5
-        PX4VmPb4oNA+8yosihaCHj9Bu7Viy5QiPlRpJqMSdakywjl6U+/UIDV28tOzafrF
-        a2q5AvQJBA/M7r2pZC0v+jya/ygGx16o0EKJ4y2vSSHi83ljbFT1ZlOP+xrtSaFN
-        TQISVCQqRDtb4es9+Z8n8EsT4e1XDke4WX7SMMqf+9q7t3smgAZdGYGUPYVImtHh
-        LGuIXGGFOJM2yXFwTGCsl1TTjjnwAGZh5tJZnnh4FFjX1IsTIOvVC1xA8E9oRfEq
-        Rw+htyH57AaD+PlAg1y/W/TQ69elA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e6acb82e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Mon, 11 May 2020 21:44:04 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        stable@vger.kernel.org, hjl.tools@gmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for gcc >= 10
-Date:   Mon, 11 May 2020 15:57:20 -0600
-Message-Id: <20200511215720.303181-1-Jason@zx2c4.com>
-In-Reply-To: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
-References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727860AbgEKV6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:58:20 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE0B2070B;
+        Mon, 11 May 2020 21:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589234298;
+        bh=tXYiBL6lhcDBOgVrVzxBviFHcr3U2rw6/zqjTPOU8TU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sjnyo8wqX93srFtzj5MP4ju3f3Wtp95Z+K+KSj7HazuHN20Tj7yLVkftqG9hBG5pc
+         Axod5Eghd8FqjYA6qjlCGMHXYjzGAETWnmRLy799ViXfYSO92sArbLrNAhnqTBdl6H
+         2CyOT9kpwpLrRF03R+uFYBWQGiLxKfcdNP3NOLgc=
+Date:   Mon, 11 May 2020 14:58:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: fix LRU balancing effect of new transparent huge
+ pages
+Message-Id: <20200511145817.a1379d6117b43c3f6474e199@linux-foundation.org>
+In-Reply-To: <CALvZod7848_BETonZJFxXN1n1E7KtZ4DzT1-BeaN6hvBysN8WQ@mail.gmail.com>
+References: <20200509141946.158892-1-shakeelb@google.com>
+        <20200511141122.9b03e2f0852b57b224eab066@linux-foundation.org>
+        <CALvZod7848_BETonZJFxXN1n1E7KtZ4DzT1-BeaN6hvBysN8WQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC 10 appears to have changed -O2 in order to make compilation time
-faster when using -flto, seemingly at the expense of performance, in
-particular with regards to how the inliner works. Since -O3 these days
-shouldn't have the same set of bugs as 10 years ago, this commit
-defaults new kernel compiles to -O3 when using gcc >= 10.
+On Mon, 11 May 2020 14:38:23 -0700 Shakeel Butt <shakeelb@google.com> wrote:
 
-Cc: linux-kbuild@vger.kernel.org
-Cc: x86@kernel.org
-Cc: stable@vger.kernel.org
-Cc: hjl.tools@gmail.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jakub Jelinek <jakub@redhat.com>
-Cc: Oleksandr Natalenko <oleksandr@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Laight <David.Laight@aculab.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
-Changes v1->v2:
- - [Oleksandr] Remove O3 dependency on ARC.
+> On Mon, May 11, 2020 at 2:11 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Sat,  9 May 2020 07:19:46 -0700 Shakeel Butt <shakeelb@google.com> wrote:
+> >
+> > > Currently, THP are counted as single pages until they are split right
+> > > before being swapped out. However, at that point the VM is already in
+> > > the middle of reclaim, and adjusting the LRU balance then is useless.
+> > >
+> > > Always account THP by the number of basepages, and remove the fixup
+> > > from the splitting path.
+> >
+> > Confused.  What kernel is this applicable to?
+> 
+> It is still applicable to the latest Linux kernel.
 
- init/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The patch has
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 9e22ee8fbd75..f76ec3ccc883 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1245,7 +1245,8 @@ config BOOT_CONFIG
- 
- choice
- 	prompt "Compiler optimization level"
--	default CC_OPTIMIZE_FOR_PERFORMANCE
-+	default CC_OPTIMIZE_FOR_PERFORMANCE_O3 if GCC_VERSION >= 100000
-+	default CC_OPTIMIZE_FOR_PERFORMANCE if (GCC_VERSION < 100000 || CC_IS_CLANG)
- 
- config CC_OPTIMIZE_FOR_PERFORMANCE
- 	bool "Optimize for performance (-O2)"
-@@ -1256,7 +1257,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- 
- config CC_OPTIMIZE_FOR_PERFORMANCE_O3
- 	bool "Optimize more for performance (-O3)"
--	depends on ARC
- 	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-O3" to your compiler to optimize
--- 
-2.26.2
+> @@ -288,7 +288,7 @@ static void __activate_page(struct page *page, struct lruvec *lruvec,
+>  
+>  		__count_vm_events(PGACTIVATE, nr_pages);
+>  		__count_memcg_events(lruvec_memcg(lruvec), PGACTIVATE, nr_pages);
+> -		update_page_reclaim_stat(lruvec, file, 1);
+> +		update_page_reclaim_stat(lruvec, file, 1, nr_pages);
+>  	}
+>  }
+
+but current mainline is quite different:
+
+static void __activate_page(struct page *page, struct lruvec *lruvec,
+			    void *arg)
+{
+	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+		int file = page_is_file_lru(page);
+		int lru = page_lru_base_type(page);
+
+		del_page_from_lru_list(page, lruvec, lru);
+		SetPageActive(page);
+		lru += LRU_ACTIVE;
+		add_page_to_lru_list(page, lruvec, lru);
+		trace_mm_lru_activate(page);
+
+		__count_vm_event(PGACTIVATE);
+		update_page_reclaim_stat(lruvec, file, 1);
+	}
+}
+
+q:/usr/src/linux-5.7-rc5> patch -p1 --dry-run < ~/x.txt
+checking file mm/swap.c
+Hunk #2 FAILED at 288.
+Hunk #3 FAILED at 546.
+Hunk #4 FAILED at 564.
+Hunk #5 FAILED at 590.
+Hunk #6 succeeded at 890 (offset -9 lines).
+Hunk #7 succeeded at 915 (offset -9 lines).
+Hunk #8 succeeded at 958 with fuzz 2 (offset -10 lines).
+4 out of 8 hunks FAILED
 
