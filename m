@@ -2,60 +2,114 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0662C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD9FC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4F5206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6565206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:38:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="esoCKmKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgEKOho (ORCPT
+        id S1730446AbgEKOi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:37:44 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:33197 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgEKOhn (ORCPT
+        Mon, 11 May 2020 10:38:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47320 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgEKOi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:37:43 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8AFFD240016;
-        Mon, 11 May 2020 14:37:40 +0000 (UTC)
-Date:   Mon, 11 May 2020 16:37:40 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, od@zcrc.me,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/7] rtc: ingenic: Only support probing from devicetree
-Message-ID: <20200511143740.GU34497@piout.net>
-References: <20200505221336.222313-1-paul@crapouillou.net>
+        Mon, 11 May 2020 10:38:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BEcqdn020841;
+        Mon, 11 May 2020 09:38:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589207933;
+        bh=LLcnPcpO+fMJxDnHgxDEXH+kv7LMIDVvPCuMDORaRes=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=esoCKmKZltbLxkyFb5JQYrktm+YvCneNknumS0BkBsu8GUTMRGCrgwULYZV9tcTtQ
+         abJyC9Cec+K68148V7ihvT+zv1m2YaPQx70XA0jeNBl2cVTPiUNIbOTGWP0ViLjpAn
+         q6bNN/rrFM05S1hxrUAg94ntkP9bwitLjHdCeLBc=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BEcqOi079483
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 09:38:52 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ May 2020 09:38:52 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 May 2020 09:38:52 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BEcpBq066742;
+        Mon, 11 May 2020 09:38:52 -0500
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+References: <20200507183013.27261-1-dmurphy@ti.com>
+ <20200510161721.257vprq6rqp64wu5@earth.universe>
+ <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
+ <20200511143241.nmkti7meahvj2swt@earth.universe>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8674289c-038d-d811-4786-322d66072527@ti.com>
+Date:   Mon, 11 May 2020 09:29:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505221336.222313-1-paul@crapouillou.net>
+In-Reply-To: <20200511143241.nmkti7meahvj2swt@earth.universe>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/2020 00:13:30+0200, Paul Cercueil wrote:
-> With the recent work on supporting Device Tree on Ingenic SoCs, no
-> driver ever probes from platform code anymore, so we can clean a bit
-> this driver by removing the non-devicetree paths.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/rtc/Kconfig      |  1 +
->  drivers/rtc/rtc-jz4740.c | 20 +++-----------------
->  2 files changed, 4 insertions(+), 17 deletions(-)
-> 
+Sebastian
 
-All applied, thanks.
+On 5/11/20 9:32 AM, Sebastian Reichel wrote:
+> Hi,
+>
+> On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
+>> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
+>>> This needs is missing the power-supplies property. The N900 DT
+>>> contains a bq27200 referencing the charger, so it should fail the DT
+>>> check without the property being listed here.
+>> Hmm.  I ran the dt checker specifically on the binding and it did not fail.
+>> Unless I need to build some other DTs as well.
+>> Either I will have the power-supplies property
+> I just tried it myself. The problem is the way you are specifying
+> the compatible strings. This is the parsing result:
+>
+> enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprecated,
+>        use revision specific property below', ...
+>
+> You can see this in Documentation/devicetree/bindings/processed-schema.yaml, which
+> is generated by running the check. The compatible comments need a # as separation
+> character like this to generate proper bindings:
+>
+> properties:
+>    compatible:
+>      enum:
+>        - ti,bq27200 # BQ27200
+>        - ti,bq27210 # BQ27210
+>        - ti,bq27500 # deprecated, use revision specific property below
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Well honestly not sure why we need the comment either.   These are 
+pretty self explanatory maybe we should just remove the additional comments
+
+Any consideration on just removing the deprecated values?
+
+Dan
+
+>
+> -- Sebastian
