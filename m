@@ -2,147 +2,123 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA99C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FD9C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94ED0206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIc53VR2"
+	by mail.kernel.org (Postfix) with ESMTP id 53853206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbgEKRem (ORCPT
+        id S1731021AbgEKRff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:34:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23536 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730960AbgEKRel (ORCPT
+        Mon, 11 May 2020 13:35:35 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:26394 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729698AbgEKRff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:34:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589218480;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
-        b=dIc53VR2sD98xVcGm7/NzRUMxKrOmsaiadtecNUEztPcSObavKmSWGUtST7hrU93ifCLyP
-        He+4xXgfGDpotx3IoKiT91bXSWxzzB4lT57ywtX7OnSQt7AXwOamAcslSscbiK5XffmY5u
-        bZ/5HW5MHVgeL8zKf4OnGZUzc0w+gSw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-fy9GUWn9P3qCWDKHFG1cFg-1; Mon, 11 May 2020 13:34:32 -0400
-X-MC-Unique: fy9GUWn9P3qCWDKHFG1cFg-1
-Received: by mail-wm1-f72.google.com with SMTP id w189so4970251wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:34:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
-        b=O25PyhuUQTKrQuzcFAIp0eJm//ji2Yv2PyrEhVJfZ6G3hP/wsiJssS5XfOPGUZDe8S
-         uVk8udNlOHekkwnMO+tk9a6gC22Mz55RPV9NHL+jWG86yHFGH7m5psrGo9lyJ3EsEWMu
-         yooOsHsrESS1DuIX3ucwH7m0yhn8s6S9EsGc5g3S53TuJXupVQDabBIrU7iMHryKEbur
-         Yh/X7sRaf0v/RCclX+gBS9KMLoTncQIzpPci2dlfYfPYlVKVe2fWl1Q7xabaDuYQFxFu
-         oLSxRSKwhjc2/JeTyIua0JPHor1SliWCoMtcYtCZEg5Un+vgaB5WbeGX+Q8Sum9hwdSe
-         JBLA==
-X-Gm-Message-State: AGi0Pua/vAJbwdB7UN/XqBUxVAjKpjK0OTbZrVqi4/eipEQ4qdGoVcIr
-        YEPX+anldPVBNv+rSGssQSHp9e3+q6GcBCtYNgZJN2fvaWifRK7iEJE17AxgMvKfbbg2z80kPCs
-        cercuEDw9Ur6hMCjopQ2S5WaG
-X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469225wrs.285.1589218471440;
-        Mon, 11 May 2020 10:34:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJNe6I7z0SbQYOHpqyl28aME7TxGvpzSGiIlzFVueJrlC+GRcVDtQgQEgjyS86Oa3oOuu0xgw==
-X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469194wrs.285.1589218471191;
-        Mon, 11 May 2020 10:34:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4c95:a679:8cf7:9fb6? ([2001:b07:6468:f312:4c95:a679:8cf7:9fb6])
-        by smtp.gmail.com with ESMTPSA id 89sm18102311wrj.37.2020.05.11.10.34.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 10:34:30 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Jonathan Adams <jwadams@google.com>
-Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
- <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
- <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <fe21094c-bdb0-b802-482e-72bc17e5232a@redhat.com>
-Date:   Mon, 11 May 2020 19:34:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 11 May 2020 13:35:35 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 11 May 2020 10:35:33 -0700
+Received: from sc9-mailhost2.vmware.com (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 1CF1540193;
+        Mon, 11 May 2020 10:35:34 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [RFC][PATCH 0/5] Enable objtool multiarch build
+Date:   Mon, 11 May 2020 10:35:08 -0700
+Message-ID: <cover.1588888003.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan, I think the remaining sticky point is this one:
+My previous RFC[1] tried to add recordmcount as the mcount subcommand
+of objtool. As a necessary first step that required enabling building
+of objtool for more than the x86 architecture.
 
-On 11/05/20 19:02, Jonathan Adams wrote:
-> I think I'd characterize this slightly differently; we have a set of
-> statistics which are essentially "in parallel":
-> 
->   - a variety of statistics, N CPUs they're available for, or
->   - a variety of statistics, N interfaces they're available for.
->   - a variety of statistics, N kvm object they're available for.
-> 
-> Recreating a parallel hierarchy of statistics any time we add/subtract
-> a CPU or interface seems like a lot of overhead.  Perhaps a better 
-> model would be some sort of "parameter enumn" (naming is hard;
-> parameter set?), so when a CPU/network interface/etc is added you'd
-> add its ID to the "CPUs" we know about, and at removal time you'd
-> take it out; it would have an associated cbarg for the value getting
-> callback.
-> 
->> Yep, the above "not create a dentry" flag would handle the case where
->> you sum things up in the kernel because the more fine grained counters
->> would be overwhelming.
->
-> nodnod; or the callback could handle the sum itself.
+Some folks have been working on enabling objtool checking functionality
+for arm64. Rather than repeat that work here I aim to show a minimal
+set which ensures that objtool builds for any architecture. This
+will allow for not only building the check and ORC subcommands
+but also incorporating more subcommands -- such as recordmcount.
 
-In general for statsfs we took a more explicit approach where each
-addend in a sum is a separate stats_fs_source.  In this version of the
-patches it's also a directory, but we'll take your feedback and add both
-the ability to hide directories (first) and to list values (second).
+I changed the Makefile to use the SRCARCH to determine which subcommands
+should be available and set the appropriate SUBCMD_ variables. Those
+variables then get used in the Build file to conditionally build them into
+objtool. When the files are missing suitable empty definitions are located
+in arch/missing so that the compilation will succeed while also allowing
+objtool to report that the command is unavailable on the architecture.
 
-So, in the cases of interfaces and KVM objects I would prefer to keep
-each addend separate.
+Since the series does not add support for stack validation or checking
+to any new architectures there's no reason to make KConfig or Makefile
+changes which would normally be used to test this. So I've been forcing
+builds of objtool with:
 
-For CPUs that however would be pretty bad.  Many subsystems might
-accumulate stats percpu for performance reason, which would then be
-exposed as the sum (usually).  So yeah, native handling of percpu values
-makes sense.  I think it should fit naturally into the same custom
-aggregation framework as hash table keys, we'll see if there's any devil
-in the details.
+make O=build-ARCH ARCH=foo CROSS_COMPILE=foo-linux-gnu- defconfig
+make O=build-ARCH ARCH=foo CROSS_COMPILE=foo-linux-gnu- tools/objtool
 
-Core kernel stats such as /proc/interrupts or /proc/stat are the
-exception here, since individual per-CPU values can be vital for
-debugging.  For those, creating a source per stat, possibly on-the-fly
-at hotplug/hot-unplug time because NR_CPUS can be huge, would still be
-my preferred way to do it.
+And running the resulting binary in qemu-static to verify that it
+shows all objtool subcommands are supported on x86 and unsupported on
+another arch.
 
-Thanks,
+[1] https://lore.kernel.org/lkml/cover.1586468801.git.mhelsley@vmware.com/
 
-Paolo
+Matt Helsley (5):
+  objtool: Exit successfully when requesting help
+  objtool: Move struct objtool_file into arch-independent header
+  objtool: Add support for relocations without addends
+  objtool: Enable compilation of objtool for all architectures
+  objtool: Report missing support for subcommands
+
+ tools/objtool/Build                    | 10 +++--
+ tools/objtool/Makefile                 | 11 +++++-
+ tools/objtool/arch.h                   | 40 +++++++++++++++++++
+ tools/objtool/arch/missing/Build       |  3 ++
+ tools/objtool/arch/missing/check.c     | 16 ++++++++
+ tools/objtool/arch/missing/orc_dump.c  | 13 ++++++
+ tools/objtool/arch/missing/orc_gen.c   | 16 ++++++++
+ tools/objtool/arch/x86/Build           |  1 +
+ tools/objtool/{ => arch/x86}/special.c |  4 +-
+ tools/objtool/{ => arch/x86}/special.h |  2 +-
+ tools/objtool/builtin-check.c          |  5 +++
+ tools/objtool/builtin-orc.c            |  9 ++++-
+ tools/objtool/builtin.h                |  2 +
+ tools/objtool/check.c                  |  5 ++-
+ tools/objtool/check.h                  | 48 +---------------------
+ tools/objtool/elf.c                    | 55 +++++++++++++++++++++-----
+ tools/objtool/elf.h                    |  5 ++-
+ tools/objtool/objtool.c                | 39 +++++++++++++++---
+ tools/objtool/objtool.h                | 20 ++++++++++
+ tools/objtool/orc.h                    |  3 +-
+ tools/objtool/orc_dump.c               |  1 +
+ tools/objtool/orc_gen.c                |  3 ++
+ 22 files changed, 235 insertions(+), 76 deletions(-)
+ create mode 100644 tools/objtool/arch/missing/Build
+ create mode 100644 tools/objtool/arch/missing/check.c
+ create mode 100644 tools/objtool/arch/missing/orc_dump.c
+ create mode 100644 tools/objtool/arch/missing/orc_gen.c
+ rename tools/objtool/{ => arch/x86}/special.c (98%)
+ rename tools/objtool/{ => arch/x86}/special.h (95%)
+ create mode 100644 tools/objtool/objtool.h
+
+
+base-commit: 6e7f2eacf09811d092c1b41263108ac7fe0d089d
+-- 
+2.20.1
 
