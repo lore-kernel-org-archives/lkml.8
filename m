@@ -2,169 +2,225 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D5C38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1877AC38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960D7207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B04208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 02:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oL147B9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgEKB5l (ORCPT
+        id S1729272AbgEKCFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:57:41 -0400
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:47034 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbgEKB5l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:57:41 -0400
-Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
-        by 156.147.23.51 with ESMTP; 11 May 2020 10:57:38 +0900
-X-Original-SENDERIP: 156.147.1.125
-X-Original-MAILFROM: iamjoonsoo.kim@lge.com
-Received: from unknown (HELO localhost) (10.177.220.187)
-        by 156.147.1.125 with ESMTP; 11 May 2020 10:57:38 +0900
-X-Original-SENDERIP: 10.177.220.187
-X-Original-MAILFROM: iamjoonsoo.kim@lge.com
-Date:   Mon, 11 May 2020 10:57:32 +0900
-From:   Joonsoo Kim <iamjoonsoo.kim@lge.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 05/18] mm: memcontrol: convert page cache to a new
- mem_cgroup_charge() API
-Message-ID: <20200511015732.GA7749@js1304-desktop>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-6-hannes@cmpxchg.org>
- <20200422064041.GE6780@js1304-desktop>
- <20200422120946.GA358439@cmpxchg.org>
- <20200423052450.GA12538@js1304-desktop>
- <20200508160122.GB181181@cmpxchg.org>
+        Sun, 10 May 2020 22:05:12 -0400
+Received: from mail-eopbgr40087.outbound.protection.outlook.com ([40.107.4.87]:49063
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729075AbgEKCFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 22:05:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ETEEmy30sc5sfwxA0lb+VGZJImigbtgsF9Ut43eX4Darft/niudW/aZvCQDfmMUlxxZMKOAWFAM/5npUbIHmU0XD4XiiJHlCXbyW0wDcQdX6miIeE9bqhOnHhlnPhXQCB7AU471gzlP+KXxyMi3Ea2LuxM9y3OrSvPppp0jA18vQvRj3nYuNCLBdgohIFvpUULFLtoIlFdAZX0KmyBBaoqoMY7zkLJ1AZt+PHhYWpHYIqIQoqle/1rX4dC65GKmBIVZ0AGiRwpQC+dauLDl3SciXL4jGdKnSUpycyDkUoo0OmlrWv3jCon7mXg9ff6ZAqFfpdzDMHiqSvnFcv1of5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VGsPn/dXjZ3QYx+CbTp4fT2lIlVX9QMvj5kBe6KYv1Y=;
+ b=mFRZ0nZdh+0Rl/Hi5ny+3v1FXdbdBBzZIhyRvF3ubQP9Xyl3a+9r8hIyGspTa2Kpzc+EjTssFJJy2gardfFo/l9ZADknc7j4Ht46aPra8OPvsD/rbQbJtJ57LL5c94itMWupt50igBiiCQNFIwh59hQZT0I/iq73mQSieHOvsntn4O53D+65VdU5/RImaN4z77RyUoSZzz1vNsg6k1Qdbml1vBoHqW8Y7VHzxld6zvRrQiMZW62sXhRqm4u6btgp1V2s6fwk8HA4oDkTfeXT0TA98Sc5zpJ6zYkBOB7fikClcm8uaBJym+5FXWvFjMjeQf1tOtMqITusc2S02oqYCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VGsPn/dXjZ3QYx+CbTp4fT2lIlVX9QMvj5kBe6KYv1Y=;
+ b=oL147B9KYRNcLV8qcOKdBhGgYFX7AHNMea0stfSUZdlHUpQCaqIKxV6rK50C3RJ4WNrkH+i5ZWFHjlzsLg3Z81GEYlD5S0qJVFc0/iVKzIC0InIqp2I5bVdBHISFGOYUpARYFTqomRxDZpeh81nxNsHRrrlv0zFC0bJdnGZ26SQ=
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
+ by DB8PR04MB5594.eurprd04.prod.outlook.com (2603:10a6:10:a3::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
+ 2020 02:05:05 +0000
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::2924:94ba:2206:216e%6]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 02:05:05 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     "Jin, Yao" <yao.jin@linux.intel.com>,
+        kajoljain <kjain@linux.ibm.com>,
+        "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: RE: [RFC] Issue in final aggregate value, in case of multiple events
+ present in metric expression
+Thread-Topic: [RFC] Issue in final aggregate value, in case of multiple events
+ present in metric expression
+Thread-Index: AQHWAbJbtRWIkG/hhkmWamdCZG7N8qiiXw6AgAAOYSA=
+Date:   Mon, 11 May 2020 02:05:05 +0000
+Message-ID: <DB8PR04MB67956086BCB54B59E8CD2B43E6A10@DB8PR04MB6795.eurprd04.prod.outlook.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+ <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+ <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+ <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <6f98d281-f3de-b547-70d4-8fc95515b12f@linux.ibm.com>
+ <ea7e21e3-b324-3286-bcaa-cd37a4036c95@linux.intel.com>
+In-Reply-To: <ea7e21e3-b324-3286-bcaa-cd37a4036c95@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 23a47819-3d32-470a-b1a8-08d7f54fb950
+x-ms-traffictypediagnostic: DB8PR04MB5594:
+x-microsoft-antispam-prvs: <DB8PR04MB5594E6688B56361B75C6BB8EE6A10@DB8PR04MB5594.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NH9gjqzXlOcU2IOvJ8ysSEm44tfWRRsU3OAVz9cyBQPxd4AxkcefWgpin9nxuELqc/9si9lsLbcp9bJLeoU10RHUIImdtt7HxSqJYE4P2NbbBj55URSu8kiOQ+GOBWfIhkDSiVXXHnnCb+v7MDB/n30L8DI2m5cDnCRwzhcwoAhsrr/zeli+msMsf4dN8P17Y5SiY/BiAdYZAaHZ+kO+KNm9CPDITPz+LidG7hGDG677nCS6nUidGnq4vCVS50IOK6bbkswQNncrBd402nnOyozw2MUnB/tANKt0Z9rZAFwKHPjj+RHzbluk14E75Ggx1v2GmxMJIN2T5KW6jHcRW61hStZCnKDfd/w3zc4jsBCmmvWUCZV5KRdRkKS5xzTPbu1eWjYmNv1QPKBL5bh6Nfp4PcZ0HrmVIJpzLihniV30NtAvIwfnRWR7huGV21HboPSg9AEWGgoMwhi1EkeJiyVlsvY6RTMWcbCEzVRK1YojlUIugALpJ2xL+pN6uoxzG0BcDOviZ6jjrpjCLQ8OAJZIacpSJI7sZ30yM3wAndZmms8cCtNnqWCxRAnNe2UD7UZpNjvJ19+CcvCfsaT6uEMU5MPOIdNHb8TAMZsrek0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(33430700001)(5660300002)(66556008)(45080400002)(54906003)(4326008)(7416002)(7696005)(478600001)(33656002)(110136005)(8936002)(86362001)(966005)(8676002)(76116006)(52536014)(26005)(33440700001)(66946007)(66446008)(64756008)(53546011)(55016002)(71200400001)(66476007)(6506007)(2906002)(316002)(83080400001)(186003)(9686003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: lc/dHyoiRxIJBQ0alIEOgSSzJLqlpfV8zjFk+cSEQcaTouxnhl+FtSxQsi2LQ1l+/CqMRmnhb0TAkRbyd2C2QvbSRFFUqTpVVAAcoYbgJLT+FNjATEV9szvFKt7gCZkLUakfvYQamiNnVz+RijEGKtvSnaHUwRalkRK04u2ydr5F7U30XmpqfGLKKaWBrFsxA0kAiq/ryjS9aGhOYSlOqNMJ0taz8sdwEyHSqY6rMSE3EowJJgAGt1VuKo03uCgB5o37ZnOQjRHXstJcOWvqZG45IidQe1rdJveRCXx90r3l8dq0PxhLL3SCd60DL1wIs5P0DNbhHqdsov/Mk+LQKRPDYjI+2VJbc+w+EJ/QT3F7euq/7nsz/JUWKMAJblp2sy1R4zc/fwhZZFnLZrHzwaOsbBxeiNLhPY7hsfLb4vqs/I5QkglDU3BGYJnQ2f2GqWzD5ce5nk6uKYYK644VAeKrgHzcjn8VpZR7lGK0eZo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508160122.GB181181@cmpxchg.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23a47819-3d32-470a-b1a8-08d7f54fb950
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 02:05:05.5344
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hs0E8sJERbDbzR/gBLsG9BsNrq684N608FglnMKle79nZG+UbByNZwk4sqUPrl1WKTGVsS+PcofuW+Oy0SUgxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5594
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:01:22PM -0400, Johannes Weiner wrote:
-> On Thu, Apr 23, 2020 at 02:25:06PM +0900, Joonsoo Kim wrote:
-> > On Wed, Apr 22, 2020 at 08:09:46AM -0400, Johannes Weiner wrote:
-> > > On Wed, Apr 22, 2020 at 03:40:41PM +0900, Joonsoo Kim wrote:
-> > > > On Mon, Apr 20, 2020 at 06:11:13PM -0400, Johannes Weiner wrote:
-> > > > > @@ -1664,29 +1678,22 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
-> > > > >  			goto failed;
-> > > > >  	}
-> > > > >  
-> > > > > -	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg);
-> > > > > -	if (!error) {
-> > > > > -		error = shmem_add_to_page_cache(page, mapping, index,
-> > > > > -						swp_to_radix_entry(swap), gfp);
-> > > > > -		/*
-> > > > > -		 * We already confirmed swap under page lock, and make
-> > > > > -		 * no memory allocation here, so usually no possibility
-> > > > > -		 * of error; but free_swap_and_cache() only trylocks a
-> > > > > -		 * page, so it is just possible that the entry has been
-> > > > > -		 * truncated or holepunched since swap was confirmed.
-> > > > > -		 * shmem_undo_range() will have done some of the
-> > > > > -		 * unaccounting, now delete_from_swap_cache() will do
-> > > > > -		 * the rest.
-> > > > > -		 */
-> > > > > -		if (error) {
-> > > > > -			mem_cgroup_cancel_charge(page, memcg);
-> > > > > -			delete_from_swap_cache(page);
-> > > > > -		}
-> > > > > -	}
-> > > > > -	if (error)
-> > > > > +	error = shmem_add_to_page_cache(page, mapping, index,
-> > > > > +					swp_to_radix_entry(swap), gfp,
-> > > > > +					charge_mm);
-> > > > > +	/*
-> > > > > +	 * We already confirmed swap under page lock, and make no
-> > > > > +	 * memory allocation here, so usually no possibility of error;
-> > > > > +	 * but free_swap_and_cache() only trylocks a page, so it is
-> > > > > +	 * just possible that the entry has been truncated or
-> > > > > +	 * holepunched since swap was confirmed.  shmem_undo_range()
-> > > > > +	 * will have done some of the unaccounting, now
-> > > > > +	 * delete_from_swap_cache() will do the rest.
-> > > > > +	 */
-> > > > > +	if (error) {
-> > > > > +		delete_from_swap_cache(page);
-> > > > >  		goto failed;
-> > > > 
-> > > > -EEXIST (from swap cache) and -ENOMEM (from memcg) should be handled
-> > > > differently. delete_from_swap_cache() is for -EEXIST case.
-> > > 
-> > > Good catch, I accidentally changed things here.
-> > > 
-> > > I was just going to change it back, but now I'm trying to understand
-> > > how it actually works.
-> > > 
-> > > Who is removing the page from swap cache if shmem_undo_range() races
-> > > but we fail to charge the page?
-> > > 
-> > > Here is how this race is supposed to be handled: The page is in the
-> > > swapcache, we have it locked and confirmed that the entry in i_pages
-> > > is indeed a swap entry. We charge the page, then we try to replace the
-> > > swap entry in i_pages with the actual page. If we determine, under
-> > > tree lock now, that shmem_undo_range has raced with us, unaccounted
-> > > the swap space, but must have failed to get the page lock, we remove
-> > > the page from swap cache on our side, to free up swap slot and page.
-> > > 
-> > > But what if shmem_undo_range() raced with us, deleted the swap entry
-> > > from i_pages while we had the page locked, but then we simply failed
-> > > to charge? We unlock the page and return -EEXIST (shmem_confirm_swap
-> > > at the exit). The page with its userdata is now in swapcache, but no
-> > > corresponding swap entry in i_pages. shmem_getpage_gfp() sees the
-> > > -EEXIST, retries, finds nothing in i_pages and allocates a new, empty
-> > > page.
-> > > 
-> > > Aren't we leaking the swap slot and the page?
-> > 
-> > Yes, you're right! It seems that it's possible to leak the swap slot
-> > and the page. Race could happen for all the places after lock_page()
-> > and shmem_confirm_swap() are done. And, I think that it's not possible
-> > to fix the problem in shmem_swapin_page() side since we can't know the
-> > timing that trylock_page() is called. Maybe, solution would be,
-> > instead of using free_swap_and_cache() in shmem_undo_range() that
-> > calls trylock_page(), to use another function that calls lock_page().
-> 
-> I looked at this some more, as well as compared it to non-shmem
-> swapping. My conclusion is - and Hugh may correct me on this - that
-> the deletion looks mandatory but is actually an optimization. Page
-> reclaim will ultimately pick these pages up.
-> 
-> When non-shmem pages are swapped in by readahead (locked until IO
-> completes) and their page tables are simultaneously unmapped, the
-> zap_pte_range() code calls free_swap_and_cache() and the locked pages
-> are stranded in the swap cache with no page table references. We rely
-> on page reclaim to pick them up later on.
-> 
-> The same appears to be true for shmem. If the references to the swap
-> page are zapped while we're trying to swap in, we can strand the page
-> in the swap cache. But it's not up to swapin to detect this reliably,
-> it just frees the page more quickly than having to wait for reclaim.
-> 
-> That being said, my patch introduces potentially undesirable behavior
-> (although AFAICS no correctness problem): We should only delete the
-> page from swapcache when we actually raced with undo_range - which we
-> see from the swap entry having been purged from the page cache
-> tree. If we delete the page from swapcache just because we failed to
-> charge it, the next fault has to read the still-valid page again from
-> the swap device.
-
-I got it! Thanks for explanation.
-
-Thanks.
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEppbiwgWWFvIDx5YW8uamlu
+QGxpbnV4LmludGVsLmNvbT4NCj4gU2VudDogMjAyMOW5tDXmnIgxMeaXpSA5OjEyDQo+IFRvOiBr
+YWpvbGphaW4gPGtqYWluQGxpbnV4LmlibS5jb20+OyBKb2FraW0gWmhhbmcNCj4gPHFpYW5ncWlu
+Zy56aGFuZ0BueHAuY29tPjsgYWNtZUBrZXJuZWwub3JnOyBKaXJpIE9sc2EgPGpvbHNhQGtlcm5l
+bC5vcmc+Ow0KPiBBbmRpIEtsZWVuIDxha0BsaW51eC5pbnRlbC5jb20+DQo+IENjOiBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsg
+S2FuIExpYW5nDQo+IDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPjsgTWFkaGF2YW4gU3Jpbml2
+YXNhbg0KPiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPjsgQW5qdSBUIFN1ZGhha2FyIDxhbmp1
+QGxpbnV4LnZuZXQuaWJtLmNvbT47DQo+IFJhdmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGlu
+dXguaWJtLmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkNdIElzc3VlIGluIGZpbmFsIGFnZ3JlZ2F0
+ZSB2YWx1ZSwgaW4gY2FzZSBvZiBtdWx0aXBsZSBldmVudHMNCj4gcHJlc2VudCBpbiBtZXRyaWMg
+ZXhwcmVzc2lvbg0KPiANCj4gSGkgS2Fqb2wsDQo+IA0KPiBPbiAzLzI0LzIwMjAgNDowMCBQTSwg
+a2Fqb2xqYWluIHdyb3RlOg0KPiA+IEhlbGxvIEFsbCwNCj4gPiAJSSB3YW50IHRvIGRpc2N1c3Mg
+b25lIGlzc3VlIHJhaXNlZCBieSBKb2FraW0gWmhhbmcgd2hlcmUgaGUgbWVudGlvbmVkDQo+ID4g
+dGhhdCwgd2UgYXJlIG5vdCBnZXR0aW5nIGNvcnJlY3QgcmVzdWx0IGluLWNhc2Ugb2YgbXVsdGlw
+bGUgZXZlbnRzDQo+ID4gcHJlc2VudCBpbiBtZXRyaWMgZXhwcmVzc2lvbi4NCj4gPg0KPiA+IFRo
+aXMgaXMgb25lIGV4YW1wbGUgcG9pbnRlZCBieSBoaW0gOg0KPiA+DQo+ID4gYmVsb3cgaXMgdGhl
+IEpTT04gZmlsZSBhbmQgcmVzdWx0Lg0KPiA+IFsNCj4gPiAgICAgICAgICB7DQo+ID4gICAgICAg
+ICAgICAgICAiUHVibGljRGVzY3JpcHRpb24iOiAiQ2FsY3VsYXRlIEREUjAgYnVzIGFjdHVhbCB1
+dGlsaXphdGlvbg0KPiB3aGljaCB2YXJ5IGZyb20gRERSMCBjb250cm9sbGVyIGNsb2NrIGZyZXF1
+ZW5jeSIsDQo+ID4gICAgICAgICAgICAgICAiQnJpZWZEZXNjcmlwdGlvbiI6ICJpbXg4cW06IGRk
+cjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbiIsDQo+ID4gICAgICAgICAgICAgICAiTWV0cmljTmFt
+ZSI6ICJpbXg4cW0tZGRyMC1idXMtdXRpbCIsDQo+ID4gICAgICAgICAgICAgICAiTWV0cmljRXhw
+ciI6ICIoIGlteDhfZGRyMFxcL3JlYWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBcXC93cml0
+ZVxcLWN5Y2xlc1xcLyApIiwNCj4gPiAgICAgICAgICAgICAgICJNZXRyaWNHcm91cCI6ICJpLk1Y
+OFFNX0REUjBfQlVTX1VUSUwiDQo+ID4gICAgICAgICAgfQ0KPiA+IF0NCj4gPiAuL3BlcmYgc3Rh
+dCAtSSAxMDAwIC1NIGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gIyAgICAgICAgICAgdGltZSAg
+ICAgICAgICAgICBjb3VudHMgdW5pdCBldmVudHMNCj4gPiAgICAgICAxLjAwMDEwNDI1MCAgICAg
+ICAgICAgICAgMTY3MjAgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDIyOTIxLjAg
+aW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAg
+IDYyMDEgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAgICAgIDIuMDAwNTI1NjI1
+ICAgICAgICAgICAgICAgODMxNiAgICAgIGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4gIyAgMTI3
+ODUuNSBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAg
+ICAgICAgMjczOCAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICAgMy4wMDA4
+MTkxMjUgICAgICAgICAgICAgICAxMDU2ICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVzLw0KPiAj
+ICAgNDEzNi43IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgMy4wMDA4MTkxMjUgICAg
+ICAgICAgICAgICAgMzAzICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAgICAgICA0
+LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDYyNjAgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMv
+DQo+ICMgICA5MTQ5LjggaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICA0LjAwMTEwMzc1
+MCAgICAgICAgICAgICAgIDIzMTcgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAg
+ICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgMjA4NCAgICAgIGlteDhfZGRyMC9yZWFkLWN5
+Y2xlcy8NCj4gIyAgIDQ1MTYuMCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDUuMDAx
+MzkyNzUwICAgICAgICAgICAgICAgIDYwMSAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+
+ID4NCj4gPiBCYXNlZCBvbiBnaXZlbiBtZXRyaWMgZXhwcmVzc2lvbiwgdGhlIHN1bSBjb21pbmcg
+Y29ycmVjdCBmb3IgZmlyc3QNCj4gPiBpdGVyYXRpb24gd2hpbGUgZm9yIHJlc3QsIHdlIHdvbid0
+IHNlZSBzYW1lIGFkZGl0aW9uIHJlc3VsdC4gQnV0DQo+ID4gaW4tY2FzZSB3ZSBoYXZlIHNpbmds
+ZSBldmVudCBpbiBtZXRyaWMgZXhwcmVzc2lvbiwgd2UgYXJlIGdldHRpbmcgY29ycmVjdA0KPiBy
+ZXN1bHQgYXMgZXhwZWN0ZWQuDQo+ID4NCj4gPg0KPiA+IFNvLCBJIHRyeSB0byBsb29rIGludG8g
+dGhpcyBpc3N1ZSBhbmQgdW5kZXJzdGFuZCB0aGUgZmxvdy4gRnJvbSBteQ0KPiA+IHVuZGVyc3Rh
+bmRpbmcsIHdoZW5ldmVyIHdlIGRvIGNhbGN1bGF0aW9uIG9mIG1ldHJpYyBleHByZXNzaW9uIHdl
+IGRvbid0IHVzZQ0KPiBleGFjdCBjb3VudCB3ZSBhcmUgZ2V0dGluZy4NCj4gPiBCYXNpY2FsbHkg
+d2UgdXNlIG1lYW4gdmFsdWUgb2YgZWFjaCBtZXRyaWMgZXZlbnQgaW4gdGhlIGNhbGN1bGF0aW9u
+IG9mIG1ldHJpYw0KPiBleHByZXNzaW9uLg0KPiA+DQo+ID4gU28sIEkgdGFrZSBzYW1lIGV4YW1w
+bGU6DQo+ID4NCj4gPiBNZXRyaWMgRXZlbnQ6IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gTWV0
+cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3JlYWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBc
+XC93cml0ZVxcLWN5Y2xlc1xcLyApIg0KPiA+DQo+ID4gY29tbWFuZCM6IC4vcGVyZiBzdGF0IC1J
+IDEwMDAgLU0gaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPg0KPiA+ICMgICAgICAgICAgIHRpbWUg
+ICAgICAgICAgICAgY291bnRzIHVuaXQgZXZlbnRzDQo+ID4gICAgICAgMS4wMDAxMDQyNTAgICAg
+ICAgICAgICAgIDE2NzIwICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVzLw0KPiAjICAyMjkyMS4w
+IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgMS4wMDAxMDQyNTAgICAgICAgICAgICAg
+ICA2MjAxICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAgICAgICAyLjAwMDUyNTYy
+NSAgICAgICAgICAgICAgIDgzMTYgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDEy
+Nzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICAyLjAwMDUyNTYyNSAgICAgICAg
+ICAgICAgIDI3MzggICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAgICAgIDMuMDAw
+ODE5MTI1ICAgICAgICAgICAgICAgMTA1NiAgICAgIGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4g
+IyAgIDQxMzYuNyBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDMuMDAwODE5MTI1ICAg
+ICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICAg
+NC4wMDExMDM3NTAgICAgICAgICAgICAgICA2MjYwICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVz
+Lw0KPiAjICAgOTE0OS44IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgNC4wMDExMDM3
+NTAgICAgICAgICAgICAgICAyMzE3ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAg
+ICAgICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIwODQgICAgICBpbXg4X2RkcjAvcmVhZC1j
+eWNsZXMvDQo+ICMgICA0NTE2LjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICA1LjAw
+MTM5Mjc1MCAgICAgICAgICAgICAgICA2MDEgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0K
+PiA+DQo+ID4gU28sIHRoZXJlIGlzIG9uZSBmdW5jdGlvbiBjYWxsZWQgJ3VwZGF0ZV9zdGF0cycg
+aW4gZmlsZSB1dGlsL3N0YXQuYw0KPiA+IHdoZXJlIHdlIGRvIHRoaXMgY2FsY3VsYXRpb24gYW5k
+IHVwZGF0aW5nIHN0YXRzLT5tZWFuIHZhbHVlLiBBbmQgdGhpcw0KPiA+IG1lYW4gdmFsdWUgaXMg
+d2hhdCB3ZSBhcmUgYWN0dWFsbHkgdXNpbmcgaW4gb3VyIG1ldHJpYyBleHByZXNzaW9uIGNhbGN1
+bGF0aW9uLg0KPiA+DQo+ID4gV2UgY2FsbCB0aGlzIGZ1bmN0aW9uIGluIGVhY2ggaXRlcmF0aW9u
+IHdoZXJlIHdlIHVwZGF0ZSBzdGF0cy0+bWVhbiBhbmQNCj4gc3RhdHMtPm4gZm9yIGVhY2ggZXZl
+bnQuDQo+ID4gQnV0IG9uZSB3ZWlyZCBpc3N1ZSBpcywgZm9yIHZlcnkgZmlyc3QgZXZlbnQsIHN0
+YXQtPm4gaXMgYWx3YXlzIDEgdGhhdA0KPiA+IGlzIHdoeSB3ZSBhcmUgZ2V0dGluZyBtZWFuIHNh
+bWUgYXMgY291bnQuDQo+ID4NCj4gPiBTbyB0aGlzIHRoZSByZWFzb24gd2h5IGZvciBzaW5nbGUg
+ZXZlbnQgd2UgZ2V0IGV4YWN0IGFnZ3JlZ2F0ZSBvZiBtZXRyaWMNCj4gZXhwcmVzc2lvbi4NCj4g
+PiBTbyBkb2Vzbid0IG1hdHRlciBob3cgbWFueSBldmVudHMgeW91IGhhdmUgaW4geW91ciBtZXRy
+aWMgZXhwcmVzc2lvbiwNCj4gPiBldmVyeSB0aW1lIHlvdSB0YWtlIGV4YWN0IGNvdW50IGZvciBm
+aXJzdCBvbmUgYW5kIG5vcm1hbGl6ZWQgdmFsdWUgZm9yIHJlc3QNCj4gd2hpY2ggaXMgd2VpcmQu
+DQo+ID4NCj4gPiBBY2NvcmRpbmcgdG8gdXBkYXRlX3N0YXRzIGZ1bmN0aW9uOiAgV2UgYXJlIHVw
+ZGF0aW5nIG1lYW4gYXM6DQo+ID4NCj4gPiBzdGF0cy0+bWVhbiArPSBkZWx0YSAvIHN0YXRzLT5u
+IHdoZXJlLCAgZGVsdGEgPSB2YWwgLSBzdGF0cy0+bWVhbi4NCj4gPg0KPiA+IElmIHdlIHRha2Ug
+d3JpdGUtY3ljbGVzIGhlcmUuIEluaXRpYWxseSBtZWFuID0gMCBhbmQgbiA9IDEuDQo+ID4NCj4g
+PiAxc3QgaXRlcmF0aW9uOiBuPTEsIHdyaXRlIGN5Y2xlIDogNjIwMSBhbmQgbWVhbiA9IDYyMDEg
+IChGaW5hbCBhZ2cNCj4gPiB2YWx1ZTogMTY3MjAgKyA2MjAxID0gMjI5MjEpIDJuZCBpdGVyYXRp
+b246IG49Miwgd3JpdGUgY3ljbGVzOiAgNjIwMSArDQo+ID4gKDI3MzggLSA2MjAxKS8yID0gIDQ0
+NjkuNSAgKEZpbmFsIGFnZ3IgdmFsdWU6IDgzMTYgKyA0NDY5LjUgPSAxMjc4NS41KQ0KPiA+IDNy
+ZCBpdGVyYXRpb246IG49Mywgd3JpdGUgY3ljbGVzOiA0NDY5LjUgKyAoMzAzIC0gNDQ2OS41KS8z
+ID0NCj4gPiAzMDgwLjY2NjcgKEZpbmFsIGFnZ3IgdmFsdWU6IDEwNTYgKyAzMDgwLjY2NjcgPSA0
+MTM2LjcpDQo+ID4NCj4gPiBJIGFtIG5vdCBzdXJlIGlmIGl0cyBleHBlY3RlZCBiZWhhdmlvci4g
+SSBtZWFuIHNob3VsZG4ndCB3ZSBlaXRoZXINCj4gPiB0YWtlIG1lYW4gdmFsdWUgb2YgZWFjaCBl
+dmVudCBvciB0YWtlIG4gYXMgMSBmb3IgZWFjaCBldmVudC4NCj4gPg0KPiA+DQo+ID4gSSBhbSB0
+aGlua2luZywgU2hvdWxkIHdlIGFkZCBhbiBvcHRpb24gdG8gc2F5IHdoZXRoZXIgdXNlciB3YW50
+IGV4YWN0DQo+ID4gYWdncmVnYXRlIG9yIHRoaXMgbm9ybWFsaXplIGFnZ3JlZ2F0ZSB0byByZW1v
+dmUgdGhlIGNvbmZ1c2lvbj8gSSB0cnkgdG8gZmluZA0KPiBpdCBvdXQgaWYgd2UgYWxyZWFkeSBo
+YXZlIG9uZSBidXQgZGlkbid0IGdldC4NCj4gPiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgbXkgdW5k
+ZXJzdGFuZGluZyBpcyBmaW5lLiBPciBzb21ldGhpbmcgSSBjYW4gYWRkIHRvDQo+IHJlc29sdmUg
+dGhpcyBpc3N1ZS4NCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBLYWpvbA0KPiA+DQo+IA0KPiBTaW5j
+ZSB5b3UgdXNlIHRoZSBpbnRlcnZhbCBtb2RlLCBjYW4gdGhpcyBjb21taXQgZml4IHRoZSBpc3N1
+ZT8NCj4gDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
+P3VybD1odHRwJTNBJTJGJTJGbG9yZS5rZXJuDQo+IGVsLm9yZyUyRmxrbWwlMkYyMDIwMDQyMDE0
+NTQxNy42ODY0LTEteWFvLmppbiU0MGxpbnV4LmludGVsLmNvbSZhbXA7ZGF0DQo+IGE9MDIlN0Mw
+MSU3Q3FpYW5ncWluZy56aGFuZyU0MG54cC5jb20lN0NiMjQ5YmE5Y2FjNTk0YzU3MjA4YzA4ZDcN
+Cj4gZjU0ODVmZWIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdD
+NjM3MjQ3NTYzDQo+IDUwNDkwMDIxMSZhbXA7c2RhdGE9NmV5V0k5MTVzZm9ac09nOVhzZGFhQkhh
+RVYxd2R3STI2aWtLeEhGVDRhOA0KPiAlM0QmYW1wO3Jlc2VydmVkPTANCg0KSGkgQW5kaSwgSmlu
+IFlhbw0KDQpQYXRjaCBjYW4gZml4IHRoaXMgaXNzdWUsIHRoYW5rcy4NCg0KQmVzdCBSZWdhcmRz
+LA0KSm9ha2ltIFpoYW5nDQo+IFRoYW5rcw0KPiBKaW4gWWFvDQo=
