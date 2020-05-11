@@ -2,122 +2,73 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5480EC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1493FC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329D02075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="h4rIFRGn"
+	by mail.kernel.org (Postfix) with ESMTP id DE73F2495B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgEKJMC (ORCPT
+        id S1729364AbgEKJMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729298AbgEKJL5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:11:57 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C14DC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:11:57 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h17so1042572wrc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:11:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0CinOkbYS8oPgPVLI49BKt2JzQLqGPZqhctItxxwelA=;
-        b=h4rIFRGn0yKy4FgF2CPDHTuSqgim5fjp6Ly9Ueas+XY00rIljDAeF2fRgJ3GyRmMva
-         juSun8H2JFb0tKhLNykj5s7WbdhQtMrb6yKjQ3/EG1CrxrYWGuMXykVRWcToDMvHyZWd
-         kwRsJAkax1d6Xmna3tnM/71z6J0ExhjpOI7pA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0CinOkbYS8oPgPVLI49BKt2JzQLqGPZqhctItxxwelA=;
-        b=GJw26BVatspKL/eEFhKDETty1xwfqRpT9LRqxM9FrwzH4OkTgxb8RISWJu3KmYsAKf
-         KoyL3xEhzpxm9zqpAGh2eJ3GcnnYtFP5f+VAN/TLdythF5CfWz0tiRcQTcAHaY1o5VQl
-         mCQoHsl/JjA7zVf2pge160xBCyJC1RzcNpQren4sB7Cc2kgXGRGm5gVf8+9OlG7MEgjA
-         q/kXkU4GOBQERsLuAipW9csLrasMusl54MQXUYfBiMx6fBWAk/nlBQxbIC00BmrGJCHP
-         7gs43SSBrP9agn5ElEvKtHJ73BPFU60qQP6H6UFeF+If/s2ZQ93IGEmvg+8UV4YGVn2Y
-         9nBw==
-X-Gm-Message-State: AGi0PuYCRWd7As5JQAUmh059OBw+ICNCTY/g5G8ooRDGnDHsdzZAxjxh
-        jca10cXzEQlkVcPCL96jli3ZXd+RBsc=
-X-Google-Smtp-Source: APiQypIe/NcTRB7OjwoRrwiqdLysAONSgQ8XmUpqQiiFNg4nNfp3xqmACL1LU9lULCHwhJ4moMYGIg==
-X-Received: by 2002:adf:e582:: with SMTP id l2mr18950634wrm.392.1589188315492;
-        Mon, 11 May 2020 02:11:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t4sm17506299wri.54.2020.05.11.02.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 02:11:54 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
-Date:   Mon, 11 May 2020 11:11:42 +0200
-Message-Id: <20200511091142.208787-3-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
+        Mon, 11 May 2020 05:12:23 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4388 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727873AbgEKJMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:12:22 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0D9E13C41AA2920C32B9;
+        Mon, 11 May 2020 17:12:19 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 17:12:11 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <laurent.pinchart@ideasonboard.com>, <mchehab@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH] media: uvcvideo: add a missing newline when printing parameter 'clock'
+Date:   Mon, 11 May 2020 17:06:10 +0800
+Message-ID: <1589187970-39851-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's the default.
+When I cat module parameter 'clock' by sysfs, it displays as follows. It
+is better to add a newline for easy reading.
 
-Also so much for "we're not going to tell the graphics people how to
-review their code", dma_fence is a pretty core piece of gpu driver
-infrastructure. And it's very much uapi relevant, including piles of
-corresponding userspace protocols and libraries for how to pass these
-around.
+[root@hulk-202 ~]# cat /sys/module/uvcvideo/parameters/clock
+CLOCK_MONOTONIC[root@hulk-202 ~]#
 
-Would be great if habanalabs would not use this (from a quick look
-it's not needed at all), since open source the userspace and playing
-by the usual rules isn't on the table. If that's not possible (because
-it's actually using the uapi part of dma_fence to interact with gpu
-drivers) then we have exactly what everyone promised we'd want to
-avoid.
-
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: 	Olof Johansson <olof@lixom.net>
-Cc: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: linux-media@vger.kernel.org
-Cc: linaro-mm-sig@lists.linaro.org
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 ---
- drivers/misc/habanalabs/command_submission.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/usb/uvc/uvc_driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index 409276b6374d..cc3ce759b6c3 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -46,7 +46,6 @@ static const struct dma_fence_ops hl_fence_ops = {
- 	.get_driver_name = hl_fence_get_driver_name,
- 	.get_timeline_name = hl_fence_get_timeline_name,
- 	.enable_signaling = hl_fence_enable_signaling,
--	.wait = dma_fence_default_wait,
- 	.release = hl_fence_release
- };
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 431d86e..e4d2334 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -2356,9 +2356,9 @@ static int uvc_reset_resume(struct usb_interface *intf)
+ static int uvc_clock_param_get(char *buffer, const struct kernel_param *kp)
+ {
+ 	if (uvc_clock_param == CLOCK_MONOTONIC)
+-		return sprintf(buffer, "CLOCK_MONOTONIC");
++		return sprintf(buffer, "CLOCK_MONOTONIC\n");
+ 	else
+-		return sprintf(buffer, "CLOCK_REALTIME");
++		return sprintf(buffer, "CLOCK_REALTIME\n");
+ }
  
+ static int uvc_clock_param_set(const char *val, const struct kernel_param *kp)
 -- 
-2.26.2
+1.7.12.4
 
