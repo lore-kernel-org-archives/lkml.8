@@ -2,167 +2,91 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCC0C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3CDC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6092720720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88F0208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgEKSNY convert rfc822-to-8bit (ORCPT
+        id S1729783AbgEKSPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:13:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46999 "EHLO mga07.intel.com"
+        Mon, 11 May 2020 14:15:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48472 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgEKSNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:13:24 -0400
-IronPort-SDR: zaMNC/w3azGH/oNgjNzF1nny4uSFEu+e+0Chp0q5enZ6VOKDSDmtVVeNFrmroAkNleCGaf6phN
- w9y+HNtx9ppA==
+        id S1729673AbgEKSO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:14:59 -0400
+IronPort-SDR: sUAk0p1aeW/MFSEKzEXBwTFjcaBUwvxKeJUhwM6K6/LP3ZjrYL8LbLDCr1uXJg3hits8GyIaQW
+ wobFUbridamg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:13:23 -0700
-IronPort-SDR: 4yn5bQ6SzOqq6GhdNt4t87npsuluYQWvNQB8Ku44Q6axiNqEfWtTVx9UXsJapXpIHTxZyo2p5R
- cEOwBqNcJsRA==
-X-ExtLoop1: 1
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:14:58 -0700
+IronPort-SDR: BpkxzblzM2I1siBJKtycZz+TxOlbj8w5qCdZbj8vzlbHy6R/TrVYfwAIndohx7bWNz5Jz4keiU
+ hfre976NkXeA==
 X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="265240180"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga006.jf.intel.com with ESMTP; 11 May 2020 11:13:23 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 May 2020 11:13:22 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
- FMSMSX110.amr.corp.intel.com ([169.254.14.169]) with mapi id 14.03.0439.000;
- Mon, 11 May 2020 11:13:22 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "DRI Development" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "Vetter, Daniel" <daniel.vetter@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
- for mock fences
-Thread-Topic: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
- for mock fences
-Thread-Index: AQHWJ3Q9b7FvqdjeFkWZgt98eLHlv6ijMJew
-Date:   Mon, 11 May 2020 18:13:21 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-2-daniel.vetter@ffwll.ch>
-In-Reply-To: <20200511091142.208787-2-daniel.vetter@ffwll.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="scan'208";a="409004530"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.97.196]) ([10.254.97.196])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:14:58 -0700
+Subject: Re: [PATCH v2 09/10] x86/resctrl: Add arch_has_sparse_bitmaps to
+ explain AMD/Intel CAT difference
+To:     James Morse <james.morse@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Babu Moger <Babu.Moger@amd.com>
+References: <20200430170400.21501-1-james.morse@arm.com>
+ <20200430170400.21501-10-james.morse@arm.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <8383ddd9-5849-d948-c391-aeb0cc927423@intel.com>
+Date:   Mon, 11 May 2020 11:14:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200430170400.21501-10-james.morse@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of
->Daniel Vetter
->Sent: Monday, May 11, 2020 5:12 AM
->To: LKML <linux-kernel@vger.kernel.org>
->Cc: Daniel Vetter <daniel.vetter@ffwll.ch>; Intel Graphics Development
-><intel-gfx@lists.freedesktop.org>; DRI Development <dri-
->devel@lists.freedesktop.org>; linaro-mm-sig@lists.linaro.org; Vetter, Daniel
-><daniel.vetter@intel.com>; Sumit Semwal <sumit.semwal@linaro.org>; linux-
->media@vger.kernel.org
->Subject: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
->mock fences
->
->No need to micro-optmize when we're waiting in a mocked object ...
+Hi James,
 
-Makes sense to me.
+On 4/30/2020 10:03 AM, James Morse wrote:
+> Intel expects the cache bitmap provided by user-space to have on a
+> single span of 1s, whereas AMD can support bitmaps like 0xf00f.
+> Arm's MPAM support also allows sparse bitmaps.
+> 
+> To move resctrl out to /fs/ we need to explain platform differences
+> like this. Add a resource property arch_has_sparse_bitmaps. Test this
+> around the 'non-consecutive' test in cbm_validate().
+> 
+> Merging the validate calls causes AMD top gain the min_cbm_bits test
+> needed for Haswell, but as it always sets this value to 1, it will
+> never match.
+> 
+> CC: Babu Moger <Babu.Moger@amd.com>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 
-Acked-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+The Intel bits do indeed look good to me but we should check the AMD
+portion ... I peeked at the AMD spec [1] and found "If an L3_MASK_n
+register is programmed with all 0’s, that COS will be prevented from
+allocating any lines in the L3 cache" ... so AMD does allow bitmasks of
+all 0's (Intel does not).
 
-M
+Does MPAM also allow all 0's? Perhaps "arch_has_sparse_bitmaps" can be
+used to indicate that also?
 
->Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->Cc: Sumit Semwal <sumit.semwal@linaro.org>
->Cc: linux-media@vger.kernel.org
->Cc: linaro-mm-sig@lists.linaro.org
->---
-> drivers/dma-buf/st-dma-fence.c | 41 ----------------------------------
-> 1 file changed, 41 deletions(-)
->
->diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-
->fence.c
->index e593064341c8..8166d2984702 100644
->--- a/drivers/dma-buf/st-dma-fence.c
->+++ b/drivers/dma-buf/st-dma-fence.c
->@@ -33,50 +33,9 @@ static void mock_fence_release(struct dma_fence *f)
-> 	kmem_cache_free(slab_fences, to_mock_fence(f));
-> }
->
->-struct wait_cb {
->-	struct dma_fence_cb cb;
->-	struct task_struct *task;
->-};
->-
->-static void mock_wakeup(struct dma_fence *f, struct dma_fence_cb *cb)
->-{
->-	wake_up_process(container_of(cb, struct wait_cb, cb)->task);
->-}
->-
->-static long mock_wait(struct dma_fence *f, bool intr, long timeout)
->-{
->-	const int state = intr ? TASK_INTERRUPTIBLE :
->TASK_UNINTERRUPTIBLE;
->-	struct wait_cb cb = { .task = current };
->-
->-	if (dma_fence_add_callback(f, &cb.cb, mock_wakeup))
->-		return timeout;
->-
->-	while (timeout) {
->-		set_current_state(state);
->-
->-		if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &f->flags))
->-			break;
->-
->-		if (signal_pending_state(state, current))
->-			break;
->-
->-		timeout = schedule_timeout(timeout);
->-	}
->-	__set_current_state(TASK_RUNNING);
->-
->-	if (!dma_fence_remove_callback(f, &cb.cb))
->-		return timeout;
->-
->-	if (signal_pending_state(state, current))
->-		return -ERESTARTSYS;
->-
->-	return -ETIME;
->-}
->-
-> static const struct dma_fence_ops mock_ops = {
-> 	.get_driver_name = mock_name,
-> 	.get_timeline_name = mock_name,
->-	.wait = mock_wait,
-> 	.release = mock_fence_release,
-> };
->
->--
->2.26.2
->
->_______________________________________________
->Intel-gfx mailing list
->Intel-gfx@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+Reinette
+ [1] https://developer.amd.com/wp-content/resources/56375.pdf
+
+
+
