@@ -6,96 +6,87 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA854C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64618C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A388A20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9A9206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgEKQFJ (ORCPT
+        id S1730589AbgEKQFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:05:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:35334 "EHLO foss.arm.com"
+        Mon, 11 May 2020 12:05:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4979 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729550AbgEKQFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:05:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D66A30E;
-        Mon, 11 May 2020 09:05:07 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [10.57.42.196])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4638F3F305;
-        Mon, 11 May 2020 09:05:06 -0700 (PDT)
-Date:   Mon, 11 May 2020 17:05:04 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "james.quinlan@broadcom.com" <james.quinlan@broadcom.com>,
-        Lukasz Luba <Lukasz.Luba@arm.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>
-Subject: Re: [RFC PATCH 0/3] SCMI System Power Support
-Message-ID: <20200511160504.GA17648@e119603-lin.cambridge.arm.com>
-References: <20200427210806.37422-1-cristian.marussi@arm.com>
- <CAL_JsqKV8j8Jm_7B7no6SsZ9AAv=WjqOx9EmCp3fomUXRO-FzQ@mail.gmail.com>
- <DB7PR08MB3657577B2251084FF2B4A0EF9EAA0@DB7PR08MB3657.eurprd08.prod.outlook.com>
- <CAL_JsqK6+2c9jXfsipqH0qakTGrszSGN4+kZqGstOmkWj40JGQ@mail.gmail.com>
+        id S1729556AbgEKQFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:05:49 -0400
+IronPort-SDR: WyOoBFdLgQZkD3SGqrwvEQD9YVgA35ycz63XCKo4Jb4HX2FJ4JfeGyKLXOy1D0MHtyiwlgdXgf
+ NFdiZ4LTt7og==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 09:05:37 -0700
+IronPort-SDR: CuMDmvp+guQCKnW5QRpcjkWNuNQFRokn/Nj3L8qOqtPmgy06fw4MKiTsfMC/lEktCXYOblITrY
+ UgO4wK6iXg2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
+   d="scan'208";a="463220514"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 11 May 2020 09:05:37 -0700
+Date:   Mon, 11 May 2020 09:05:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Oliver Upton <oupton@google.com>,
+        Tony Cook <tony-cook@bigpond.com>, zoran.davidovac@gmail.com,
+        euloanty@live.com
+Subject: Re: [PATCH] KVM: Fix a warning in __kvm_gfn_to_hva_cache_init()
+Message-ID: <20200511160537.GC24052@linux.intel.com>
+References: <20200504190526.84456-1-peterx@redhat.com>
+ <20200505013929.GA17225@linux.intel.com>
+ <20200505141245.GH6299@xz-x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqK6+2c9jXfsipqH0qakTGrszSGN4+kZqGstOmkWj40JGQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505141245.GH6299@xz-x1>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:11:45PM -0500, Rob Herring wrote:
-> On Thu, Apr 30, 2020 at 12:23 PM Cristian Marussi
-> <Cristian.Marussi@arm.com> wrote:
-> >
-> > Hi Rob
-> >
-> > thanks for the feedback.
-> 
-> Plain text for maillists please.
-> 
-Yes I know, sorry, used wrong client by mistake.
++cc a few other people that have reported this at one time or another.
 
-> >
-> > > On top of this a new SCMI driver has been developed which registers for
-> > > ----
-> > > such System Power notification and acts accordingly to satisfy such
-> > > plaform system-state transition requests that can be of forceful or
-> > > graceful kind.
-> >
-> > > I needed this 7 years ago. :) (hb_keys_notifier in
-> > > arch/arm/mach-highbank/highbank.c)
-> >
-> > ...better later than never
-> >
-> > > Such alternative, if deemed worth, should clearly be configurable via DT
-> > > (also in terms of which signals to use), BUT all of this work is not done
-> > > in this series: and that's the reason for the RFC tag: does it make sense
-> > > to add such a configurable additional option ?
-> >
-> > >Which process signal to use in DT? I don't think so.
-> >
-> > ... beside the awkward bad idea of mine of configuring it via DT
-> > (which I'll drop possibly using modparams for this config), my question
-> > was more about if it makes sense at all to have another alternative mechanism
-> > (other than orderly_poweroof/reboot)) based on signals to gracefully ask userspace
-> > to shutdown
+On Tue, May 05, 2020 at 10:12:45AM -0400, Peter Xu wrote:
+> On Mon, May 04, 2020 at 06:39:29PM -0700, Sean Christopherson wrote:
+> > On Mon, May 04, 2020 at 03:05:26PM -0400, Peter Xu wrote:
+> > > GCC 10.0.1 gives me this warning when building KVM:
+> > > 
+> > >   warning: ‘nr_pages_avail’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > >   2442 |  for ( ; start_gfn <= end_gfn; start_gfn += nr_pages_avail) {
+> > > 
+> > > It should not happen, but silent it.
+> > 
+> > Heh, third times a charm?  This has been reported and proposed twice
+> > before[1][2].  Are you using any custom compiler flags?  E.g. -O3 is known
+> > to cause false positives with -Wmaybe-uninitialized.
 > 
-> gregkh will tell you no to module params.
+> No, what I did was only upgrading to Fedora 32 (which will auto-upgrade GCC),
+> so it should be using the default params of whatever provided.
 > 
-> If the signal is not standard, then we probably shouldn't go that route.
+> > 
+> > If we do end up killing this warning, I'd still prefer to use
+> > uninitialized_var() over zero-initializing the variable.
+> > 
+> > [1] https://lkml.kernel.org/r/20200218184756.242904-1-oupton@google.com
+> > [2] https://bugzilla.kernel.org/show_bug.cgi?id=207173
 > 
+> OK, I didn't know this is a known problem and discussions going on.  But I
+> guess it would be good to address this sooner because it could become a common
+> warning very soon after people upgrades gcc.
 
-Before this reply, I posted a v2 with alternative signal-method configurable by modparam;
-it's anyway a small addition which I can easily remove in a v3.
+Ya, others are hitting this as well.  It's especially painful with the
+existence of KVM_WERROR.
 
-Thanks
-
-Cristian
+Paolo, any preference on how to resolve this?  It would appear GCC 10 got
+"smarter".
