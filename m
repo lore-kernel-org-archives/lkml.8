@@ -2,201 +2,164 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C21C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F14C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95CE224969
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9F820722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B11Pm6i3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbgEKL1j (ORCPT
+        id S1730006AbgEKL1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 11 May 2020 07:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729493AbgEKL1j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 07:27:39 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7512 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbgEKLZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJX75cLcz9ty3h;
-        Mon, 11 May 2020 13:25:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id nwpTRSSa_mqY; Mon, 11 May 2020 13:25:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJX74hcbz9ty3g;
-        Mon, 11 May 2020 13:25:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 565FC8B7AE;
-        Mon, 11 May 2020 13:25:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Nv1588jxO_qo; Mon, 11 May 2020 13:25:50 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0197A8B7AD;
-        Mon, 11 May 2020 13:25:50 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id B004765A09; Mon, 11 May 2020 11:25:49 +0000 (UTC)
-Message-Id: <af3ec2ee64e136cb6bffa4e657c4fa5e3202936d.1589196133.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
-References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 23/45] powerpc/mm: Reduce hugepd size for 8M hugepages on
- 8xx
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:25:49 +0000 (UTC)
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76313C061A0C;
+        Mon, 11 May 2020 04:27:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w20so9056886ljj.0;
+        Mon, 11 May 2020 04:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vaB9hU9OmyfFXTQp3Ro8TCS0oJ1JBGJMlLHsQD/icQs=;
+        b=B11Pm6i378UfISHZsNk0nzMTp1ytpuFElTXChP5p5rfSBHgFXSvuIWdO9AuSII/v4L
+         JoXj8tmU64Sov4ttXUk+utPGxHIq+UsAHzKdC+xfO2pyjaQgU0B8FNCNM1tEE5a6a+Bb
+         lVLbbKB5+Drtgyu+Cx6j2yuv4R6xL3Vx83M/2VTvQGYK5L9CGr8jRyKNLN/TGYcESVrg
+         fPnZvzpHrNC2Ub7OaStzqBPbwrPL5nuRFb5OH615K8cpdmSNBoRfCYqnn1LNnamAJLVa
+         ymOntHstg1G1B2aaxiJSR7DHWzSbohQ93hZO8PTB8Ync9/qLg3Qkf7TZJn0VuMhti5DF
+         Dd4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vaB9hU9OmyfFXTQp3Ro8TCS0oJ1JBGJMlLHsQD/icQs=;
+        b=bZM+bRI+7C56Qk/3OEBJDXT1zdT5k4hXmGVEBEKW+V9gmrBFO5/983DT74rBf1otrz
+         cEGENfIqXj4jLT6z5k0Lr3En3oIAwN398ctLP1sGSJ+u27lYnwiiCoUe0DGGnjimTDKI
+         pYnKTk6UOC2ws3d2kL0wjcPxW1cWaX78cq795Uxt4FD1wyUE5BiRH06/ZPSkG09DNjEC
+         msk4hz0ffuiCkabO39oKDOioPu+tk8HneyhaO785bu3yZP5L4z39OM4fRsffTLk80cAa
+         ngMKL6TYjJ5rxNSgI2c8C55x/SSoVNSDdNXIBinLphQZCCcRcYKsiLdPM4/4rhLmR8qd
+         hLwA==
+X-Gm-Message-State: AOAM5311qEGiTP2WhYGiptTeoOcN8pwvkj/Me6Iroufp8PL/ATD6pjSk
+        pFBd7cYrhVoYKJFrm5BlKH0n/FLzvtuEuZYqmIk=
+X-Google-Smtp-Source: ABdhPJxjS7B69iERkJXybN1FRa7Oxd7PZfUVSfeSeQJxEpGjVNnxZ1aHys/mj0Ck3Q4insH6zi+f+AQGU7gf0xFawuI=
+X-Received: by 2002:a2e:b6d3:: with SMTP id m19mr6903929ljo.43.1589196457920;
+ Mon, 11 May 2020 04:27:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200510102330.66715-1-tali.perry1@gmail.com> <20200510102330.66715-3-tali.perry1@gmail.com>
+ <20200511091759.GE185537@smile.fi.intel.com>
+In-Reply-To: <20200511091759.GE185537@smile.fi.intel.com>
+From:   Tali Perry <tali.perry1@gmail.com>
+Date:   Mon, 11 May 2020 14:28:50 +0300
+Message-ID: <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
+Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     ofery@google.com, Brendan Higgins <brendanhiggins@google.com>,
+        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
+        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 55c8fc3f4930 ("powerpc/8xx: reintroduce 16K pages with HW
-assistance") redefined pte_t as a struct of 4 pte_basic_t, because
-in 16K pages mode there are four identical entries in the page table.
-But hugepd entries for 8M pages require only one entry of size
-pte_basic_t. So there is no point in creating a cache for 4 entries
-page tables.
+On Mon, May 11, 2020 at 12:18 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
+> > Add Nuvoton NPCM BMC I2C controller driver.
+>
+> Some cosmetic changes needs to be done.
+>
 
-Calculate PTE_T_ORDER using the size of pte_basic_t instead of pte_t.
+Thanks for the review and the comments.
+Will fix all, have a few questions (below)
 
-Define specific huge_pte helpers (set_huge_pte_at(), huge_pte_clear(),
-huge_ptep_set_wrprotect()) to write the pte in a single entry instead
-of using set_pte_at() which writes 4 identical entries in 16k pages
-mode. Also make sure that __ptep_set_access_flags() properly handle
-the huge_pte case.
+> ...
+>
+> > +/*
+> > + * Nuvoton NPCM7xx I2C Controller driver
+> > + *
+> > + * Copyright (C) 2020 Nuvoton Technologies tali.perry@nuvoton.com
+> > + */
+>
+> So, entire file has C99 comment style, but this and few other places.
+> Any reason of inconsistency?
+>
+> ...
+>
+> > +#if IS_ENABLED(CONFIG_DEBUG_FS)
+>
+> Why?
 
-Define set_pte_filter() inline otherwise GCC doesn't inline it anymore
-because it is now used twice, and that gives a pretty suboptimal code
-because of pte_t being a struct of 4 entries.
+We wanted to add an optional feature to track i2c slave status.
+the NPCM has 16 channels handling multiple devices each. Some of the devices
+are polled periodically, and might power down.
+The user wanted to implement a health monitoring option
+to occasionally check the status of the buses (how many timeouts, recovery etc.)
+This feature is optional and depends on CONFIG_DEBUG_FS The counters are exposed
+to user through the file system.
 
-Those functions are also used for 512k pages which only require one
-entry as well allthough replicating it four times was harmless as 512k
-pages entries are spread every 128 bytes in the table.
+....
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- .../include/asm/nohash/32/hugetlb-8xx.h       | 20 ++++++++++++++
- arch/powerpc/include/asm/nohash/32/pgtable.h  |  3 ++-
- arch/powerpc/mm/hugetlbpage.c                 |  3 ++-
- arch/powerpc/mm/pgtable.c                     | 26 ++++++++++++++++---
- 4 files changed, 46 insertions(+), 6 deletions(-)
+> ...
+>
+> > +#define I2C_NUM_OF_ADDR 10
+>
+> Is it 10-bit address support or what?
+>
 
-diff --git a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-index a46616937d20..785437323576 100644
---- a/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/hugetlb-8xx.h
-@@ -41,4 +41,24 @@ static inline int check_and_get_huge_psize(int shift)
- 	return shift_to_mmu_psize(shift);
- }
- 
-+#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte);
-+
-+#define __HAVE_ARCH_HUGE_PTE_CLEAR
-+static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
-+				  pte_t *ptep, unsigned long sz)
-+{
-+	pte_update(mm, addr, ptep, ~0UL, 0, 1);
-+}
-+
-+#define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
-+static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
-+					   unsigned long addr, pte_t *ptep)
-+{
-+	unsigned long clr = ~pte_val(pte_wrprotect(__pte(~0)));
-+	unsigned long set = pte_val(pte_wrprotect(__pte(0)));
-+
-+	pte_update(mm, addr, ptep, clr, set, 1);
-+}
-+
- #endif /* _ASM_POWERPC_NOHASH_32_HUGETLB_8XX_H */
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index 272963a05ab2..dd5835354e33 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -314,8 +314,9 @@ static inline void __ptep_set_access_flags(struct vm_area_struct *vma,
- 	pte_t pte_clr = pte_mkyoung(pte_mkdirty(pte_mkwrite(pte_mkexec(__pte(~0)))));
- 	unsigned long set = pte_val(entry) & pte_val(pte_set);
- 	unsigned long clr = ~pte_val(entry) & ~pte_val(pte_clr);
-+	int huge = psize > mmu_virtual_psize ? 1 : 0;
- 
--	pte_update(vma->vm_mm, address, ptep, clr, set, 0);
-+	pte_update(vma->vm_mm, address, ptep, clr, set, huge);
- 
- 	flush_tlb_page(vma, address);
- }
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 33b3461d91e8..edf511c2a30a 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -30,7 +30,8 @@ bool hugetlb_disabled = false;
- 
- #define hugepd_none(hpd)	(hpd_val(hpd) == 0)
- 
--#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_t)) - __builtin_ffs(sizeof(void *)))
-+#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_basic_t)) - \
-+			 __builtin_ffs(sizeof(void *)))
- 
- pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr, unsigned long sz)
- {
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index e3759b69f81b..214a5f4beb6c 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -100,7 +100,7 @@ static pte_t set_pte_filter_hash(pte_t pte) { return pte; }
-  * as we don't have two bits to spare for _PAGE_EXEC and _PAGE_HWEXEC so
-  * instead we "filter out" the exec permission for non clean pages.
-  */
--static pte_t set_pte_filter(pte_t pte)
-+static inline pte_t set_pte_filter(pte_t pte)
- {
- 	struct page *pg;
- 
-@@ -249,16 +249,34 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 
- #else
- 		/*
--		 * Not used on non book3s64 platforms. But 8xx
--		 * can possibly use tsize derived from hstate.
-+		 * Not used on non book3s64 platforms.
-+		 * 8xx compares it with mmu_virtual_psize to
-+		 * know if it is a huge page or not.
- 		 */
--		psize = 0;
-+		psize = MMU_PAGE_COUNT;
- #endif
- 		__ptep_set_access_flags(vma, ptep, pte, addr, psize);
- 	}
- 	return changed;
- #endif
- }
-+
-+#if defined(CONFIG_PPC_8xx)
-+void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
-+{
-+	/*
-+	 * Make sure hardware valid bit is not set. We don't do
-+	 * tlb flush for this update.
-+	 */
-+	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-+
-+	pte = pte_mkpte(pte);
-+
-+	pte = set_pte_filter(pte);
-+
-+	ptep->pte = pte_val(pte);
-+}
-+#endif
- #endif /* CONFIG_HUGETLB_PAGE */
- 
- #ifdef CONFIG_DEBUG_VM
--- 
-2.25.0
+No, the NPCM has an option to respond to multiple slave addresses
+(10 own slave addresses)
 
+
+
+...
+
+> > +     // Repeat the following sequence until SDA is released
+> > +     do {
+> > +             // Issue a single SCL toggle
+> > +             iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
+> > +             udelay(20);
+> > +             // If SDA line is inactive (high), stop
+> > +             if (npcm_i2c_get_SDA(_adap)) {
+> > +                     done = true;
+> > +                     status = 0;
+> > +             }
+> > +     } while (!done && iter--);
+>
+> readx_poll_timeout() ?
+
+Not exactly, readx_poll_timeout includes only a read operation, here there is a
+write in the middle. (iowrite8)
+
+
+>
+> ...
+>
+
+
+...
+
+
+Thanks!
+Tali Perry
+Nuvoton Technologies
