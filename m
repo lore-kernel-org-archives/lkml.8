@@ -2,174 +2,124 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA03C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539CEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C497820675
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5BC20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="erhbKAv7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UCck4fLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgEKXOV (ORCPT
+        id S1728010AbgEKXO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:14:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:38630 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgEKXOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:14:20 -0400
-IronPort-SDR: abUck11/6pQj+xk+7MnJ84tlFlTkJPO47UGAPeSQOXuc5dx+jPZhKkvO+uivaHcAoJGZAa1Yux
- 3QynEL/+Jglg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 16:14:17 -0700
-IronPort-SDR: 81qYP/AFmgS8cIV66ueeWVvmsHEvjnp+rR13xva3miR2n3QccCmQFeFrXQwuJ3JZMhOf+fj1dr
- SO18gRnaUUbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="463337688"
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by fmsmga005.fm.intel.com with ESMTP; 11 May 2020 16:14:17 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 May 2020 16:14:16 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 11 May 2020 16:14:16 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 11 May 2020 16:14:16 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 May 2020 16:14:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UO2iMQcLntBlNxHR6sf/tMh8X9EczEX8ewnbowZbyjWisHegN2OpT6Q4bHFDLzB1ATH6BlSIbMdZvh8XssKIzwC5AslLRxbiGLJhF+81p2/2yIug5J9ZuYnLN0JLh0+x1aE+zJRsZUUx9tzZTEHGFnu5vgIEnsx1wghcQfKa4p1GMi1W40UPKMIpPcf5x0HV6GtQT+/PHoss1Pe07YEoF1e7v6QtVlrdeGrQ2n9Isf3JG37u9/QhfM0KyEdM1nTSrSBTo0cGq1wDBaZ6WKUTlLYtIFjbhDu5je/eWvfedhp4iItC9nGiehSwxYuIX3D3xrMUrN899Y9FfkbUn4m8XQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCX2yH63bA/8/oIS2hjtWmve5l15/9/or5XyqyqqKvw=;
- b=j0aWTrWrbNMoOQTEpnsBjrC1UFEGCUlNycSFTVBoVJTVZd0bSAmOS9l1Joo3DIwLfeovONyHRrWUOfTmUXLbU5juxaMIozFR5pTkC2A7yjwNYSDnLMigtfmI77ubtr7dX2AK03VokWIrcaA0B/JSNN0E/IScZiP17XNkCA2s2HoyXQiIXFxufNyR/aJZuoGdo7gfyInFRG8iM44AViIr9e72zlb4uMoz3UhYw208aJ5IdnLQ+DqK9XKVPZMNvECZoerLpGnVjyFlbGKZw0Rc+HjDS2TcZGJBtcKrOCzY+BIA83HUeCEQz2TA8ja5u8TFQ/nXJeVTho38IhwXE/cFmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCX2yH63bA/8/oIS2hjtWmve5l15/9/or5XyqyqqKvw=;
- b=erhbKAv7Uq304GKjKXgDwni7VQtfjBcfvteeYkXTetbH4GfK6vI6X3H4X4HF/Y82DpFF597UmJ7P6Vj21E+4URV2yM91CncSN0dcBBddUdSdJ43t6xQ/l5C+ySbRVRJkBB6yVsuAV5tEB06bxum8YTHb8733QUclLrXKyA2RkVA=
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
- DM6PR11MB3228.namprd11.prod.outlook.com (2603:10b6:5:5a::29) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.28; Mon, 11 May 2020 23:14:11 +0000
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::40b:5b49:b17d:d875]) by DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::40b:5b49:b17d:d875%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 23:14:11 +0000
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] igb: Report speed and duplex as unknown when device is
- runtime suspended
-Thread-Topic: [PATCH v2] igb: Report speed and duplex as unknown when device
- is runtime suspended
-Thread-Index: AQHWIpIDJj+i8q8yvE2ZGA3JsYZy76ijjmYA
-Date:   Mon, 11 May 2020 23:14:11 +0000
-Message-ID: <DM6PR11MB2890802168856F147839914FBCA10@DM6PR11MB2890.namprd11.prod.outlook.com>
-References: <20200505040154.24080-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20200505040154.24080-1-kai.heng.feng@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54fe4544-8ef2-4291-e0ab-08d7f60103dc
-x-ms-traffictypediagnostic: DM6PR11MB3228:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3228AA7D36CA0BE898425ED0BCA10@DM6PR11MB3228.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 04004D94E2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HK/s2hZVn0f3O8IUP6WN8bspwGGhs0IQwTyJVeFTbCBscOh9jGsxIRnP9iu5We7/92e4KLXyAFz0LtjJB0Kar9gD2d4gDxHan2wgJOXg1Eq4Q/jOqUhm8l5qBrnnQPk1kpQBe6hRMV6b95oSMATehMA9aXaJzYnWdkJ1+Z43bJtpFbICwMY3tAWeQMT4Ga/Y1EsZMKewiNnxjyU+pO6UGBYHbGBoi9gV/PkiwtjN++S6M/Cs2Nfsj3wYNSi4n1JZyRy0xLBK4FugBQU9fwgFKbKkUhytMLi+MjQTMNwUIjl+UajpKPOlH92xMsbJ/jJEt5VzjHCut5iVOGYCg/sz6Y4QYgNIWhlY9cS0AomZl0kQAzy30kF2MUQph+Ysyv7Jg/bphyku1qbi1edKH0tejchu3Y/k6ywWvPtDA65QSluw1MW6Rpz+Q7oh/cPVwdC2FrQGz64E8gcAwbqt/IpSdMPPf+DDCMIdX8XM5DzMWr3wfhrsEfQHPVqaAZqkvk7GzgxdlyoB6Mjhs05d5jC5Fg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(396003)(366004)(136003)(346002)(376002)(33430700001)(86362001)(5660300002)(15650500001)(186003)(7696005)(9686003)(6636002)(76116006)(54906003)(316002)(110136005)(55016002)(33656002)(52536014)(33440700001)(64756008)(26005)(66446008)(6506007)(8676002)(2906002)(53546011)(4326008)(66946007)(478600001)(8936002)(71200400001)(66476007)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OB2lFbnxpXj31moft4Vz2hlS6iCxdEvyT3YoCL2GszJow1zEZ/vqa76XR192zmi1aBVOpLmBNP4PjT6LiG39UMJRcXPUFqYGCf/LllsKB80OJJoDSIaaWDbcGReRV/SYmV6gO+sjb4nJhSiQGTyRzxznawZCM69GQf8fjzJsEmT/eDIr8l9ZmR+9yIEBypeL3K04lt/SIFEjGvSTxCThj+xIpofIsWxPpdv7YlrWmGRNCqRJoibcpQ+MzfxxforkeXoaAdOIcj5K7BMJRXVEmK1UfmuT8M0hyodyZ6wgUrfgm9uDcRpskt7Oai4bLwjoPA92fQI8Dcso4BM71610Hr1Lb93ZhYXfJXFbKht0cfGYjsP50IVZVy0kV97qX+pWnjlb0IdAOW2o6MM5RmXjdMJYkBX6BHlEs7h2YDxonS5LMrv9DT8v1KpQfSphBo1shjI0BQEW7Rj1aM46d1HgEGmK1uCP0DM2EuvpVWMaj34=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 May 2020 19:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgEKXO1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 19:14:27 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A53C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:14:26 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s69so295626pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oLYGiY1VcoUuZyQjSRt0EjsR/VIIkqkknogJiDpiRhY=;
+        b=UCck4fLisgj6UcVB/cAH9mNu4GpO5hH8d5mbh/bG3fku7/1Jrx6/4TOECxiimjIWOx
+         7KbuxG0YYV8aG1EP1qn6CCmTJTbfozI0IKKBOMEO+dzE/i1mJI7jd0nF0e2NlDlDhyZS
+         ni3FdgM+hLwUi9CdX6nncPPcyj+72dW+ERF24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oLYGiY1VcoUuZyQjSRt0EjsR/VIIkqkknogJiDpiRhY=;
+        b=OsrNdMiGCGN213baa6gkPmnC940mKi1mrz/XbiI3W+y9ciSR/iVQMVSmjFpXGUmuSN
+         +M9SYXmaElznx1NFy2B9t7TpWTJZ3S6nDb9G9+rFM0pOtItqCXSCjk11L0Jne3O6A8iL
+         5DqSpLksWjZ+2PtzNC4YZpoS9GFmpKFLvGIbkkbsa97oSMjPiV7Ag8Beti36oApLqYsx
+         dVLD9ELFmnZ1j7jZ4aX64dWbhFqcFueLa5b5Gcu6gcAYX60HJ/NV0AAk/GZLDLDDAKoD
+         IoqYOukN70V4yatoisAIFcY478Q426oqwQl3qRJxVenBYvkbHTifDimsu01+9Xge31l+
+         WEqw==
+X-Gm-Message-State: AGi0PubdWr1y5PXhpJJicsco85ghBuS5DJKXR3rhGVXj8xODI87ni3o7
+        ax14ILwzdsziekGVlLrDa9uGG2uR9Zw=
+X-Google-Smtp-Source: APiQypIMHggqUeWrrrUBc+49/UkRkp4H6it9wkIlmlUqDgYBAzEEiw7GofYyl0Ye461eA6ivRZ/xng==
+X-Received: by 2002:a17:90a:1941:: with SMTP id 1mr25376738pjh.65.1589238865966;
+        Mon, 11 May 2020 16:14:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s9sm10217183pfc.179.2020.05.11.16.14.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 16:14:24 -0700 (PDT)
+Date:   Mon, 11 May 2020 16:14:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v7 11/18] pstore/zone,blk: Add console frontend support
+Message-ID: <202005111613.8C332ABC@keescook>
+References: <20200510202436.63222-1-keescook@chromium.org>
+ <20200510202436.63222-12-keescook@chromium.org>
+ <db0ae27c-8e96-9b85-9526-920800da4755@infradead.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54fe4544-8ef2-4291-e0ab-08d7f60103dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 23:14:11.5392
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 78RHrRS3PaG6xXO8xRJVLEmcPDWJQ0LRV+KyT3CNbVuK2uq28Ii8fhGEIV/0AzRQ2H9I/W4wwtYinUL3eoZ4qA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3228
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db0ae27c-8e96-9b85-9526-920800da4755@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Monday, May 4, 2020 9:02 PM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>
-> Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>; Brown, Aaron F
-> <aaron.f.brown@intel.com>; David S. Miller <davem@davemloft.net>;
-> moderated list:INTEL ETHERNET DRIVERS <intel-wired-lan@lists.osuosl.org>;
-> open list:NETWORKING DRIVERS <netdev@vger.kernel.org>; open list <linux-
-> kernel@vger.kernel.org>
-> Subject: [PATCH v2] igb: Report speed and duplex as unknown when device i=
-s
-> runtime suspended
->=20
-> igb device gets runtime suspended when there's no link partner. We can't
-> get correct speed under that state:
-> $ cat /sys/class/net/enp3s0/speed
-> 1000
->=20
-> In addition to that, an error can also be spotted in dmesg:
-> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
->=20
-> Since device can only be runtime suspended when there's no link partner,
-> we can skip reading register and let the following logic set speed and
-> duplex with correct status.
->=20
-> The more generic approach will be wrap get_link_ksettings() with begin()
-> and complete() callbacks. However, for this particular issue, begin()
-> calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
-> is already hold by upper ethtool layer.
->=20
-> So let's take this approach until the igb_runtime_resume() no longer
-> needs to hold rtnl_lock.
->=20
-> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Cc: Aaron Brown <aaron.f.brown@intel.com>
-> Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
->  - Don't early return the routine so other info can be set.
->=20
->  drivers/net/ethernet/intel/igb/igb_ethtool.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+On Mon, May 11, 2020 at 08:38:32AM -0700, Randy Dunlap wrote:
+> On 5/10/20 1:24 PM, Kees Cook wrote:
+> > diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+> > index f18cd126d83f..f1484f751c5e 100644
+> > --- a/fs/pstore/Kconfig
+> > +++ b/fs/pstore/Kconfig
+> > @@ -236,3 +236,15 @@ config PSTORE_BLK_PMSG_SIZE
+> >  
+> >  	  NOTE that, both Kconfig and module parameters can configure
+> >  	  pstore/blk, but module parameters have priority over Kconfig.
+> > +
+> > +config PSTORE_BLK_CONSOLE_SIZE
+> > +	int "Size in Kbytes of console to store"
+> 
+> maybe	                    of console log to store"
+> 
+> since my console size is not measured in Kbytes.
+> 
+> > +	depends on PSTORE_BLK
+> > +	depends on PSTORE_CONSOLE
+> > +	default 64
+> > +	help
+> > +	  This just sets size of console (console_size) for pstore/blk. The
+> 
+> 	                         console log
+> 
+> > +	  size is in KB and must be a multiple of 4.
+> > +
+> > +	  NOTE that, both Kconfig and module parameters can configure
+> > +	  pstore/blk, but module parameters have priority over Kconfig.
 
+Good points! I've fixed this and a typo in the ftrace Kconfig help.
+
+-- 
+Kees Cook
