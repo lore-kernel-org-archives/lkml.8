@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E202C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852AAC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 189E52082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6340120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589172858;
-	bh=lCmbhHyFSvR8ipmtonVqDpN7IU+xGXfjR90A+02sw4I=;
+	s=default; t=1589172860;
+	bh=rebr4oJHqsxfoTg+DmxLtFUh8gQKAx9aHBZRwmZGkKQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfZdLXXqH/9SQe6rKQAuY5vezaOkBbeaj1jiKXo7T2BaytsB0anklzPB1ZPiFj+G2
-	 e/hiTxVzX26PPMpIXfzfQGl9dRhsg+LcetvsjmSExfB8aEOu5COYgJn1bmbBWKFMkz
-	 355AHnkNf44L3DvySLp6xZLNZ9jK9Yja8rj6CSRU=
+	b=JRyydZsqHHsnLUSahJP7EVIEDPe1tNkGeLvHNHqbebj1UbLArlVH6+zYFvW101eNQ
+	 fPc4H5zpstc0VWlp3Gw/1er8pJ8Qg3cuKZzAGHNo5XmZhKH8VkT+jCSRIj+9Xmvqhz
+	 pDzM29m1NqLpL1sAZJRqv8bv4y1ePvDaDQqY/DIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgEKEyR (ORCPT
+        id S1729328AbgEKEyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 00:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728491AbgEKExi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:53:38 -0400
+        id S1728425AbgEKExg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:53:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D982724960;
-        Mon, 11 May 2020 04:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C932137B;
+        Mon, 11 May 2020 04:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589172817;
-        bh=lCmbhHyFSvR8ipmtonVqDpN7IU+xGXfjR90A+02sw4I=;
+        s=default; t=1589172815;
+        bh=rebr4oJHqsxfoTg+DmxLtFUh8gQKAx9aHBZRwmZGkKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcnkvbbvmimP90k20AkfM6+WQoifYcdWP7ymtu+SwY5iNWkL/AVpv/qx/J/nOiaIs
-         YHI2yJeKfijew/c3BxGwRoS6i/ULw2sjATqquKgNqF9kEjkei0yNxyUrxG3s8FRkk6
-         JUiMS7L8bdLQ1/DYxc4CrQkS+TCWviCTydUt6M+c=
+        b=N1Uy9h5NaBaUzQXXknoEdOT8zV1nTTApivFjb7l1RIyLQsW1kCfzhqVhkS5XWCOo6
+         CiFkUQFTwdnQBGhxtdTwWZrhM4HZHNp44oW7eucV6OZos6zb3XIDu9rFivSKIZly3U
+         a1tPqOEaTCWdy5U/G15Zbq3/ojK9gprJ6t51+4qY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v12 08/18] x86/entry/64: Document GSBASE handling in the paranoid path
-Date:   Mon, 11 May 2020 00:53:01 -0400
-Message-Id: <20200511045311.4785-9-sashal@kernel.org>
+        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [PATCH v12 06/18] x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+Date:   Mon, 11 May 2020 00:52:59 -0400
+Message-Id: <20200511045311.4785-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
 References: <20200511045311.4785-1-sashal@kernel.org>
@@ -60,10 +61,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Chang S. Bae" <chang.seok.bae@intel.com>
 
-On FSGSBASE systems, the way to handle GS base in the paranoid path is
-different from the existing SWAPGS-based entry/exit path handling. Document
-the reason and what has to be done for FSGSBASE enabled systems.
+GS base is used to find per-CPU data in the kernel. But when GS base is
+unknown, the per-CPU base can be found from the per_cpu_offset table with a
+CPU NR.  The CPU NR is extracted from the limit field of the CPUNODE entry
+in GDT, or by the RDPID instruction. This is a prerequisite for using
+FSGSBASE in the low level entry code.
 
+Also, add the GAS-compatible RDPID macro as binutils 2.21 does not support
+it. Support is added in version 2.27.
+
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
@@ -74,27 +81,90 @@ Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>
 ---
- Documentation/x86/entry_64.rst | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/entry/calling.h    | 34 ++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/inst.h | 15 +++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/Documentation/x86/entry_64.rst b/Documentation/x86/entry_64.rst
-index a48b3f6ebbe87..0499a40723af3 100644
---- a/Documentation/x86/entry_64.rst
-+++ b/Documentation/x86/entry_64.rst
-@@ -108,3 +108,12 @@ We try to only use IST entries and the paranoid entry code for vectors
- that absolutely need the more expensive check for the GS base - and we
- generate all 'normal' entry points with the regular (faster) paranoid=0
- variant.
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 1c7f13bb67286..29982fe140541 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -6,6 +6,7 @@
+ #include <asm/percpu.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/processor-flags.h>
++#include <asm/inst.h>
+ 
+ /*
+ 
+@@ -349,6 +350,39 @@ For 32-bit we have the following conventions - kernel is built with
+ #endif
+ .endm
+ 
++#ifdef CONFIG_SMP
 +
-+On FSGSBASE systems, however, user space can set GS without kernel
-+interaction. It means the value of GS base itself does not imply anything,
-+whether a kernel value or a user space value. So, there is no longer a safe
-+way to check whether the exception is entering from user mode or kernel
-+mode in the paranoid entry code path. So the GS base value needs to be read
-+out, saved and the kernel GS base value written. On exit, the saved GS base
-+value needs to be restored unconditionally. The non-paranoid entry/exit
-+code still uses SWAPGS unconditionally as the state is known.
++/*
++ * CPU/node NR is loaded from the limit (size) field of a special segment
++ * descriptor entry in GDT.
++ */
++.macro LOAD_CPU_AND_NODE_SEG_LIMIT reg:req
++	movq	$__CPUNODE_SEG, \reg
++	lsl	\reg, \reg
++.endm
++
++/*
++ * Fetch the per-CPU GS base value for this processor and put it in @reg.
++ * We normally use %gs for accessing per-CPU data, but we are setting up
++ * %gs here and obviously can not use %gs itself to access per-CPU data.
++ */
++.macro GET_PERCPU_BASE reg:req
++	ALTERNATIVE \
++		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
++		"RDPID	\reg", \
++		X86_FEATURE_RDPID
++	andq	$VDSO_CPUNODE_MASK, \reg
++	movq	__per_cpu_offset(, \reg, 8), \reg
++.endm
++
++#else
++
++.macro GET_PERCPU_BASE reg:req
++	movq	pcpu_unit_offsets(%rip), \reg
++.endm
++
++#endif /* CONFIG_SMP */
++
+ /*
+  * This does 'call enter_from_user_mode' unless we can avoid it based on
+  * kernel config or using the static jump infrastructure.
+diff --git a/arch/x86/include/asm/inst.h b/arch/x86/include/asm/inst.h
+index f5a796da07f88..d063841a17e39 100644
+--- a/arch/x86/include/asm/inst.h
++++ b/arch/x86/include/asm/inst.h
+@@ -306,6 +306,21 @@
+ 	.endif
+ 	MODRM 0xc0 movq_r64_xmm_opd1 movq_r64_xmm_opd2
+ 	.endm
++
++.macro RDPID opd
++	REG_TYPE rdpid_opd_type \opd
++	.if rdpid_opd_type == REG_TYPE_R64
++	R64_NUM rdpid_opd \opd
++	.else
++	R32_NUM rdpid_opd \opd
++	.endif
++	.byte 0xf3
++	.if rdpid_opd > 7
++	PFX_REX rdpid_opd 0
++	.endif
++	.byte 0x0f, 0xc7
++	MODRM 0xc0 rdpid_opd 0x7
++.endm
+ #endif
+ 
+ #endif
 -- 
 2.20.1
 
