@@ -2,91 +2,90 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5F2C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1B6C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A7020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A2A2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589186045;
+	bh=HK8Ij0xiNrB/Gl8FM5rFEArqdCz320rGYDH4m1F1yqo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gFp2X01b+7Gce14WK1jXoXdu4K2CyR+2mLVB6BXUyzt+ktfm+T3K1ASD/XC2VIDhW
+	 T2xPgQ9TqFkre0IV69U8o41Mqgvru7VPlZYLsizTtRsCjdhjR4ZW3BN7m2vmrhHQzl
+	 LouL0457bejNpSgwTurBCIZU3hUV9vKGvrDty+8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgEKIdk (ORCPT
+        id S1729123AbgEKIeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:33:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4387 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728344AbgEKIdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:33:39 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B3EF34AF09197E774942;
-        Mon, 11 May 2020 16:33:36 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 11 May 2020
- 16:33:35 +0800
-Subject: Re: [PATCH] scsi: libsas: Replace zero-length array with
- flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200507192147.GA16206@embeddedor>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <56d7568f-ac24-fef0-e51f-4523cc75f26f@huawei.com>
-Date:   Mon, 11 May 2020 16:33:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200507192147.GA16206@embeddedor>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
+        Mon, 11 May 2020 04:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728344AbgEKIeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 04:34:04 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62D2120720;
+        Mon, 11 May 2020 08:34:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589186043;
+        bh=HK8Ij0xiNrB/Gl8FM5rFEArqdCz320rGYDH4m1F1yqo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VaCZI3/hNdtc35fu2VhsYjcpUUQrspf1hVeygY0z3HbMsD0jF7bNNgLEbKdMOXshM
+         p0r/wmmO4EZRVgfAV6HDb9GVBnLgtYb3O8Z9hbnDSCSrGmzPd6gSF3P9wsqYIO7Olb
+         xdC0yU09Tsp0pZ4YNvsOR42tbAdYaqmlI0ePseOQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH] iio: adc: exynos: Simplify Exynos7-specific init
+Date:   Mon, 11 May 2020 10:33:48 +0200
+Message-Id: <20200511083348.7577-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Exynos7-specific code bits in ADC driver do not play with PHY:
+the field exynos_adc_data.needs_adc_phy is not set in exynos7_adc_data
+instance.  Therefore the initialization code does not have to check if
+it is true.
 
-ÔÚ 2020/5/8 3:21, Gustavo A. R. Silva Ð´µÀ:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1]https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2]https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva<gustavoars@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
+---
+
+Only build tested.
+---
+ drivers/iio/adc/exynos_adc.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index 22131a677445..219c8eb32d16 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -449,9 +449,6 @@ static void exynos_adc_exynos7_init_hw(struct exynos_adc *info)
+ {
+ 	u32 con1, con2;
+ 
+-	if (info->data->needs_adc_phy)
+-		regmap_write(info->pmu_map, info->data->phy_offset, 1);
+-
+ 	con1 = ADC_V2_CON1_SOFT_RESET;
+ 	writel(con1, ADC_V2_CON1(info->regs));
+ 
+-- 
+2.17.1
 
