@@ -2,198 +2,192 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_RED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2E3C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB53C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B76C12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O3vmjNjZ"
+	by mail.kernel.org (Postfix) with ESMTP id 62B5F2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbgEKRak (ORCPT
+        id S1730989AbgEKRbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:30:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57289 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729698AbgEKRaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:30:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589218238; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=iPpTo3jNPE0V2FCWqXWCysaJe2BOVw+onhpjhSu1HVU=; b=O3vmjNjZKGQ7tOgMRHhEk8wIDX/q+vr16VFzVJT+zX1mMQLrqDjiOxEqsHhNoBcKYMPZWQ5b
- 3EHmZ3Q0nEVfyXFn+x+eDepHmsrn/VI9XNzLGG3buVRlV8/dD0UVJZlQN3Z9VgN+QxO89Qax
- lYWvCbMV80HTaRQbgIeDIfKVYLQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb98ba5.7f318b958f80-smtp-out-n04;
- Mon, 11 May 2020 17:30:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1B419C433CB; Mon, 11 May 2020 17:30:12 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33E07C433F2;
-        Mon, 11 May 2020 17:30:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33E07C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 11 May 2020 11:30:08 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-Message-ID: <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
- <20200507125357.GA31783@willie-the-truck>
- <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
- <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
+        Mon, 11 May 2020 13:31:06 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2188 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729698AbgEKRbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:31:06 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 1BBEFD5F880730EEF03C;
+        Mon, 11 May 2020 18:31:04 +0100 (IST)
+Received: from localhost (10.47.24.74) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 11 May
+ 2020 18:31:03 +0100
+Date:   Mon, 11 May 2020 18:30:38 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Saravanan Sekar <saravanan@linumiz.com>
+CC:     Jonathan Cameron <jic23@kernel.org>, <robh+dt@kernel.org>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
+Message-ID: <20200511183038.000031cf@Huawei.com>
+In-Reply-To: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
+References: <20200429133943.18298-1-saravanan@linumiz.com>
+        <20200429133943.18298-4-saravanan@linumiz.com>
+        <20200503130103.16a92131@archlinux>
+        <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.24.74]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 08:40:40AM -0700, Rob Clark wrote:
-> On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
-> > > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
-> > > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
-> > > > > > Add stall implementation hook to enable stalling
-> > > > > > faults on QCOM platforms which supports it without
-> > > > > > causing any kind of hardware mishaps. Without this
-> > > > > > on QCOM platforms, GPU faults can cause unrelated
-> > > > > > GPU memory accesses to return zeroes. This has the
-> > > > > > unfortunate result of command-stream reads from CP
-> > > > > > getting invalid data, causing a cascade of fail.
-> > > >
-> > > > I think this came up before, but something about this rationale doesn't add
-> > > > up - we're not *using* stalls at all, we're still terminating faulting
-> > > > transactions unconditionally; we're just using CFCFG to terminate them with
-> > > > a slight delay, rather than immediately. It's really not clear how or why
-> > > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
-> > > > (or even a documented workaround for something), or might things start
-> > > > blowing up again if any other behaviour subtly changes? I'm not dead set
-> > > > against adding this, but I'd *really* like to have a lot more confidence in
-> > > > it.
-> > >
-> > > Rob mentioned something about the "bus returning zeroes" before, but I agree
-> > > that we need more information so that we can reason about this and maintain
-> > > the code as the driver continues to change. That needs to be a comment in
-> > > the driver, and I don't think "but android seems to work" is a good enough
-> > > justification. There was some interaction with HUPCF as well.
-> >
-> > The issue is that there are multiple parallel memory accesses
-> > happening at the same time, for example CP (the cmdstream processor)
-> > will be reading ahead and setting things up for the next draw or
-> > compute grid, in parallel with some memory accesses from the shader
-> > which could trigger a fault.  (And with faults triggered by something
-> > in the shader, there are *many* shader threads running in parallel so
-> > those tend to generate a big number of faults at the same time.)
-> >
-> > We need either CFCFG or HUPCF, otherwise what I have observed is that
-> > while the fault happens, CP's memory access will start returning
-> > zero's instead of valid cmdstream data, which triggers a GPU hang.  I
-> > can't say whether this is something unique to qcom's implementation of
-> > the smmu spec or not.
-> >
-> > *Often* a fault is the result of the usermode gl/vk/cl driver bug,
-> > although I don't think that is an argument against fixing this in the
-> > smmu driver.. I've been carrying around a local patch to set HUPCF for
-> > *years* because debugging usermode driver issues is so much harder
-> > without.  But there are some APIs where faults can be caused by the
-> > user's app on top of the usermode driver.
-> >
+On Sun, 10 May 2020 20:11:55 +0200
+Saravanan Sekar <saravanan@linumiz.com> wrote:
+
+> Hi Jonathan,
 > 
-> Also, I'll add to that, a big wish of mine is to have stall with the
-> ability to resume later from a wq context.  That would enable me to
-> hook in the gpu crash dump handling for faults, which would make
-> debugging these sorts of issues much easier.  I think I posted a
-> prototype of this quite some time back, which would schedule a worker
-> on the first fault (since there are cases where you see 1000's of
-> faults at once), which grabbed some information about the currently
-> executing submit and some gpu registers to indicate *where* in the
-> submit (a single submit could have 100's or 1000's of draws), and then
-> resumed the iommu cb.
+> On 03/05/20 2:01 pm, Jonathan Cameron wrote:
+> > On Wed, 29 Apr 2020 15:39:42 +0200
+> > Saravanan Sekar<saravanan@linumiz.com>  wrote:
+> >  
+> >> Add documentation about device operating mode and output data range
+> >> supported according to operating mode
+> >>
+> >> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
+> >> ---
+> >>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
+> >>   1 file changed, 23 insertions(+)
+> >>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> >> new file mode 100644
+> >> index 000000000000..5979f2b8aa1a
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> >> @@ -0,0 +1,23 @@
+> >> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
+> >> +KernelVersion:	5.7
+> >> +Contact:	linux-iio@vger.kernel.org
+> >> +Description:
+> >> +		Reading gives range of sample frequencies available for current operating mode
+> >> +		after one data has generated.  
+> > This is standard ABI so should be the main docs, not here.
+> > It also takes absolute precedence over the power modes (as mentioned below, no
+> > standard userspace will be able to use those).  So if the frequency is
+> > only available in high perf mode, then we change to high perf mode.
+> >  
+> >> +
+> >> +		Access: Read
+> >> +		Valid values: represented in Hz
+> >> +		- range [12.5, 1600] for high permormance mode
+> >> +		- range [1.6, 200] for normal/low power mode
+> >> +
+> >> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
+> >> +KernelVersion:	5.7
+> >> +Contact:	linux-iio@vger.kernel.org
+> >> +Description:
+> >> +		Represents the device operating mode. High performance mode gives high output
+> >> +		data rate and low noise compared to normal mode. Normal mode consumes less
+> >> +		current.  In single shot device enters to lowpower after one data has
+> >> +		generated.
+> >> +
+> >> +		Access: Read, Write
+> >> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"  
+> > The issue with these sort of 'mode' interface is almost no userspace will ever use them.
+> > They are too unpredictable across different types of devices.  
+> I don't understand how can we assume or say no one will use this. The 
+> device supports multiple features
+> and my understanding is driver should support according to device, not 
+> reverse.
+
+The aim of a subsystem and an ABI definition for such is to 'unify' and provide standard
+ways of doing things.  It is against that 'standard' that userspace code will generally
+be written.  So every time we define custom ABI for a device, we have basically written
+something that the vast majority of userspace code will never use.  The only exception
+is code written for a particular device.
+
+So we have two options for features like this:
+
+1) Map them to existing ABI wherever possible - ensure the code people have written
+   already for userspace will do what they would expect.  Here it's a case of providing
+   'reasonable' configuration for the full range of sampling frequencies.  That may
+   miss some corners that are optimal but we may have to live with that.
+
+2) Define new ABI that is 'generic' so that future user space code can use it.
+   The problem with power modes is they are extremely device specific, so this second
+   option is one we have never succeeded with.  In theory you could define a set of
+   modes, but they would need to fully describing.  As in you would need a record that
+   tells userspace every characteristic that is affected by each mode.
+   To put it bluntly software doesn't read data sheets.  (nor for that matter to
+   most userspace code developers :)
+
+> This is more or
+> less device specific and no sure idea about bring all the device in one 
+> umbrella.
+
+We have existing userspace code - quite a bit of it.  That code should work for your device.
+It doesn't know about your own magic interface, so it won't use it.
+That's the point of standardization around one interface, we want it to work.
+Note that the only way we make that happen is to review new ABI very carefully
+and often block it entirely.
+
+> > Some of these should also not be exposed to userspace anyway as they are about 'how'
+> > you are using the driver.  For example, if you aren't doing triggered capture then
+> > single_shot is almost always the correct option. Annoyingly I see high performance
+> > mode gives lower noise...
+> >
+> > So no need to expose single_shot to userspace.
+> >
+> > For the others we are just looking at different power vs speed and accuracy trade offs.
+> > Those are better exposed by what they effect.  Here the big control for that is
+> > sampling frequency.
+> >
+> > So if we assume the user is never going to touch this control (if it's even there)
+> > then we probably want to assume they want the best possible accuracy for whatever
+> > frequency they are running at.  So transition across the modes to provide that.
+> >
+> > Should we ever support low power mode?  It sounds nice on paper, but in reality
+> > userspace won't use so I suspect we should just drop it - certainly in an initial
+> > patch submission (as it will hold up acceptance).  Even if we did support
+> > it, as mentioned above ABI controls will take precedence so we are looking
+> > at a 'hint' not a control of mode.
+> >
+> > ABI is a pain, and we will put a lot of effort into not expanding it unless
+> > there is a good usecase plus no way of mapping to existing ABI.  
+> Obviously without any reason or requirement device manufacture won't 
+> come-up these kind of feature.
+
+Agreed, there are clear reasons for doing this, but until we understand the
+target use case it is very hard to have a discussion about how an ABI will
+be expanded.
+
+> I will change the driver as you don't accept at least for initial version.
+
+Great.
+
+Thanks,
+
+Jonathan
+
+
 > 
-> (This would ofc eventually be useful for svm type things.. I expect
-> we'll eventually care about that too.)
+> 
+> Thanks,
+> Saravanan
+> 
 
-Rob is right about HUPCF. Due to the parallel nature of the command processor
-there is always a very good chance that a CP access is somewhere in the bus so
-any pagefault is usually a death sentence. The GPU context bank would always
-want HUPCF set to 1.
 
-Downstream also uses CFCFG for stall-on-fault debug case. You wouldn't want
-this on all the time in production since bringing down the world for every user
-pagefault is less than desirable so it needs to be modified in run-time (or at
-the very least kernel command line selectable).
-
-Jordan
-
-PS: Interestingly, the GMU does not want HUPCF set to 1 because it wants to
-crash immediately on all invalid accesses so ideally these combination of bits
-would be configurable on a per-context basis.
-
-> > >
-> > > As a template, I'd suggest:
-> > >
-> > > > > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > > > > > index 8d1cd54d82a6..d5134e0d5cce 100644
-> > > > > > --- a/drivers/iommu/arm-smmu.h
-> > > > > > +++ b/drivers/iommu/arm-smmu.h
-> > > > > > @@ -386,6 +386,7 @@ struct arm_smmu_impl {
-> > > > > >      int (*init_context)(struct arm_smmu_domain *smmu_domain);
-> > > > > >      void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
-> > > > > >               int status);
-> > >
-> > > /*
-> > >  * Stall transactions on a context fault, where they will be terminated
-> > >  * in response to the resulting IRQ rather than immediately. This should
-> > >  * pretty much always be set to "false" as stalling can introduce the
-> > >  * potential for deadlock in most SoCs, however it is needed on Qualcomm
-> > >  * XXXX because YYYY.
-> > >  */
-> > >
-> > > > > > +    bool stall;
-> > >
-> > > Hmm, the more I think about this, the more I think this is an erratum
-> > > workaround in disguise, in which case this could be better named...
-> > >
-> > > Will
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
