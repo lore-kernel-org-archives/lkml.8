@@ -2,206 +2,121 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A4DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4F4C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D69206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364432070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZpUfTauQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TCOaST54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbgEKQVN (ORCPT
+        id S1730614AbgEKQYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
+        Mon, 11 May 2020 12:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbgEKQVN (ORCPT
+        by vger.kernel.org with ESMTP id S1729463AbgEKQYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:21:13 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43137C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:21:13 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id v5so4912170ybh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:21:13 -0700 (PDT)
+        Mon, 11 May 2020 12:24:13 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DCFC05BD0A
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:24:12 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k19so4137590pll.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:24:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iIvYQf7+HkPJXF+hLzvsrOFOyym3PIWkrBrNtFo1Fws=;
-        b=ZpUfTauQEdSZlM5MU4B1FmbS5bSC5NWKY8XrLbs0L8nNYjucS3yZs6FqZsseAdNky0
-         pzTc/lHXb69MryUouePkiALwHunbGM2/hJPYdfvoJn5Kf0bSlrOIO0VcxmMpdtWIfFot
-         Xhv+drD78LRFgHfloGaGsW8ua41ZldwJsCIZjX/7rsZxmJVGIO7imCVigrotlvNG24pH
-         B+KfmDVf6VwFe+jZDGa2kQFXEmkY7bFDjojGA178OB1r8UHO79p1nI1EcOYle18q8xXO
-         cg0OwquKZaIhnXz4XYH4YctjtI33QgzWG+2kq+bFT1+mFwaGjTUT3dy6rA9/6DBWHzhB
-         JuiA==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=nIHK0pERFEVTVOMQQjzKbYldCgkef0vrbHxpu8mVr5o=;
+        b=TCOaST54SvL3086A7HHjNJTa/H/ch7lt91lpjhI79d01O042oBl3o3vcfVKRm5Bgqr
+         yqPGz//m/aDJWTMYb7QNLl80YovugT4IKGrQtd1r/Zqt1DDke4Ieh/Xlc0YwHABLni2N
+         VVzT8Wn9BpUiNvWsFe41tKvu7vmzWntoMa20w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iIvYQf7+HkPJXF+hLzvsrOFOyym3PIWkrBrNtFo1Fws=;
-        b=po2XbK0ZbrS/y8IoNmRuW2asKZwzPr/JTuM3A8jYH9A/9VYk18Eeacxysv7F+gwhGL
-         GuaoSqJEeKBk3v6oHJ0xnI6RRIIX7s6SMMOuWxmaFYxjJp4C82qFEiCu3HmnOJkoSALy
-         lCeSfs9YvgNI02nxp5IB9S2STUDAVJfT1t5NekJEAzmBZ9FDuJ2P6ekwEYEz4rKmi6s0
-         NesPlYp2NI9G25tOuS5f6GDuXmyZ+658g5LRSSI3AtL/rLCx2mMaw1f23IcQxhgHQFqc
-         UNrTzaG6Q+R+HrF9SIAVQtjRYN74niTCHyE5ka5g+kKJ4/4GGJLdF4tIfR2hfMyHayRW
-         qkzg==
-X-Gm-Message-State: AGi0PuYkoFY5JMdchb4MF5q+y64885sZ4+LfV8Kitf9f12iN12l84Wg6
-        CIiv47X+wlpUVMy4ws5X/gyPwxQ/Dy2l9vuEHdWnaQ==
-X-Google-Smtp-Source: APiQypJDS4Ig3fLtht3np8evh8Ahm25jLEUMg+mChgwDxkFitWkfwAlXSox5L836eKJkVNb3xgmu/iWT+RSDRn2K2j8=
-X-Received: by 2002:a25:5387:: with SMTP id h129mr24914557ybb.47.1589214072246;
- Mon, 11 May 2020 09:21:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=nIHK0pERFEVTVOMQQjzKbYldCgkef0vrbHxpu8mVr5o=;
+        b=Xcvj+NtSky4KUAUQP3LxnbrUV8EKJp+eEr37atkc7M3n0DcQ6CIodzl7ZrqraQ5A1M
+         dwS8UHFKXCer/oRVu1BjM0PALYEwyvL2lq0U+RItV2jviI67Swan0pVmr55G2nLGT8WY
+         gYBbqe6mrLsW+9OT44sbQUXj4u2puln+d6SwE+iRfpcFtPiAOQuhe3aPq/rCvP7v2ecv
+         edqBTsbn9Z6Prgip2VhoC3NkHjTlVusxzWZc/bvjBTrYQR93a/jRhQHHZhhiuLN9XmQp
+         xR4noz6U1xjQsoDL3zvJLYpVfycyoaCSB8BM+6kZaCiNMTDuIjJhK69DMKOHaPPKRZUE
+         BcQg==
+X-Gm-Message-State: AGi0Pub/njTrofFRuKrgGNPi8A9ACJC9+PiE1VAXfF134QW8qs1gEHBc
+        51eUp5v1DmFT84ectPvno4MJ6A==
+X-Google-Smtp-Source: APiQypLIWX8xdd1JBGRzmfOJI4N2dj1AtQSQdOmDg36PNZdcgR9LSF47B8adWOS/qPaOt3Lk6Yv3GA==
+X-Received: by 2002:a17:90a:d245:: with SMTP id o5mr25045160pjw.213.1589214251377;
+        Mon, 11 May 2020 09:24:11 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j5sm9359046pfh.58.2020.05.11.09.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 09:24:10 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
- <1588852671-61996-3-git-send-email-john.garry@huawei.com> <20200511110137.GC2986380@krava>
- <9f4ea413-325f-98b4-eb4c-e47aead4f455@huawei.com>
-In-Reply-To: <9f4ea413-325f-98b4-eb4c-e47aead4f455@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 11 May 2020 09:21:00 -0700
-Message-ID: <CAP-5=fWHipkL6Uq1vMaz-51ETPWajofDXd6RTBMr00pcyooo_g@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 02/12] perf jevents: Add support for system events tables
-To:     John Garry <john.garry@huawei.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
-        Andi Kleen <ak@linux.intel.com>, linuxarm@huawei.com,
-        LKML <linux-kernel@vger.kernel.org>, qiangqing.zhang@nxp.com,
-        robin.murphy@arm.com, zhangshaokun@hisilicon.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200507143354.v5.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+References: <20200507213500.241695-1-dianders@chromium.org> <20200507143354.v5.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
+Subject: Re: [PATCH v5 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
+        linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
+        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
+        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
+        linus.walleij@linaro.org, narmstrong@baylibre.com,
+        robh+dt@kernel.org, spanda@codeaurora.org
+Date:   Mon, 11 May 2020 09:24:09 -0700
+Message-ID: <158921424955.26370.14824525920971881719@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 8:03 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 11/05/2020 12:01, Jiri Olsa wrote:
-> > On Thu, May 07, 2020 at 07:57:41PM +0800, John Garry wrote:
-> >
-> > SNIP
-> >
-> >> +                                  &sys_event_tables);
-> >> +            }
-> >> +
-> >>              print_events_table_prefix(eventsfp, tblname);
-> >>              return 0;
-> >>      }
-> >> @@ -1180,7 +1253,6 @@ int main(int argc, char *argv[])
-> >>      } else if (rc < 0) {
-> >>              /* Make build fail */
-> >>              fclose(eventsfp);
-> >> -            free_arch_std_events();
-> >>              ret = 1;
-> >>              goto out_free_mapfile;
-> >>      } else if (rc) {
-> >> @@ -1206,27 +1278,31 @@ int main(int argc, char *argv[])
-> >>      if (close_table)
-> >>              print_events_table_suffix(eventsfp);
-> >>
-> >> -    if (!mapfile) {
-> >> -            pr_info("%s: No CPU->JSON mapping?\n", prog);
-> >> -            goto empty_map;
-> >> +    if (mapfile) {
-> >> +            if (process_mapfile(eventsfp, mapfile)) {
-> >> +                    pr_err("%s: Error processing mapfile %s\n", prog,
-> >> +                           mapfile);
-> >> +                    /* Make build fail */
-> >> +                    fclose(eventsfp);
-> >> +                    ret = 1;
-> >> +            }
-> >> +    } else {
-> >> +            pr_err("%s: No CPU->JSON mapping?\n", prog);
-> >
-> > shouldn't we jump to empty_map in here? there still needs to be a
-> > mapfile, right?
->
-> In theory we could only support sys events :)
->
-> But I'll now make this a (empty map) failure case. And I think that
-> another error case handling needs fixing in my patch.
->
->
-> As for this:
->
->   +     fprintf(outfp, "struct pmu_sys_events pmu_sys_event_tables[] = {");
->  >> +
->  >> +   list_for_each_entry(sys_event_table, &sys_event_tables, list) {
->  >> +           fprintf(outfp, "\n\t{\n\t\t.table = %s,\n\t},",
->  >> +                   sys_event_table->name);
->  >> +   }
->  >> +   fprintf(outfp, "\n\t{\n\t\t.table = 0\n\t},");
->  >
->  > this will add extra tabs:
->  >
->  >          {
->  >                  .table = 0
->  >          },
->  >
->  > while the rest of the file starts items without any indent
->  >
->
-> I'll ensure the indent is the same.
->
-> BTW, is there anything to be said for removing the empty map feature
-> (and always breaking the perf build instead)? I guess that it was just
-> an early feature for dealing with unstable JSONs.
+Quoting Douglas Anderson (2020-05-07 14:34:55)
+> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
+> be used as GPIOs in a system.  Each pin can be configured as input,
+> output, or a special function for the bridge chip.  These are:
+> - GPIO1: SUSPEND Input
+> - GPIO2: DSIA VSYNC
+> - GPIO3: DSIA HSYNC or VSYNC
+> - GPIO4: PWM
+>=20
+> Let's expose these pins as GPIOs.  A few notes:
+> - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
+> - These pins can't be configured for IRQ.
+> - There are no programmable pulls or other fancy features.
+> - Keeping the bridge chip powered might be expensive.  The driver is
+>   setup such that if all used GPIOs are only inputs we'll power the
+>   bridge chip on just long enough to read the GPIO and then power it
+>   off again.  Setting a GPIO as output will keep the bridge powered.
+> - If someone releases a GPIO we'll implicitly switch it to an input so
+>   we no longer need to keep the bridge powered for it.
+>=20
+> Because of all of the above limitations we just need to implement a
+> bare-bones GPIO driver.  The device tree bindings already account for
+> this device being a GPIO controller so we only need the driver changes
+> for it.
+>=20
+> NOTE: Despite the fact that these pins are nominally muxable I don't
+> believe it makes sense to expose them through the pinctrl interface as
+> well as the GPIO interface.  The special functions are things that the
+> bridge chip driver itself would care about and it can just configure
+> the pins as needed.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
 
-+1
-I'd very much like it if JSON parse errors and the like didn't result
-in an empty map but failed the build. I think ideally we could also
-validate metric expressions using expr.y. If we include expr.y into
-jevents then is there any need to parse the metric expression at
-runtime? Could we just generate C code from jevents with a list of
-events (aka ids) for programming and a dedicated print function for
-each metric. The events would still be symbolic and checked at
-runtime, but the expressions being C code could yield compile time
-errors.
-
-Thanks,
-Ian
-
-> Thanks,
-> john
->
-> >
-> > jirka
-> >
-> >>      }
-> >>
-> >> -    if (process_mapfile(eventsfp, mapfile)) {
-> >> -            pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
-> >> -            /* Make build fail */
-> >> +    if (process_system_event_tables(eventsfp)) {
-> >>              fclose(eventsfp);
-> >> -            free_arch_std_events();
-> >>              ret = 1;
-> >>      }
-> >>
-> >> -
-> >>      goto out_free_mapfile;
-> >>
-> >>   empty_map:
-> >>      fclose(eventsfp);
-> >>      create_empty_mapping(output_file);
-> >> -    free_arch_std_events();
-> >>   out_free_mapfile:
-> >> +    free_arch_std_events();
-> >> +    free_sys_event_tables();
-> >>      free(mapfile);
-> >>      return ret;
-> >>   }
-> >
-> > SNIP
-> >
-> > .
-> >
->
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
