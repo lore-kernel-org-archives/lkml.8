@@ -2,49 +2,51 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E13C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF30C54E90
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D103E208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 531342080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgEKIan (ORCPT
+        id S1729259AbgEKIat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:30:43 -0400
-Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:58604 "EHLO
+        Mon, 11 May 2020 04:30:49 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:58640 "EHLO
         mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1728702AbgEKIan (ORCPT
+        with ESMTP id S1728341AbgEKIao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:30:43 -0400
+        Mon, 11 May 2020 04:30:44 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id C7A462002518;
-        Mon, 11 May 2020 16:30:40 +0800 (HKT)
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 3159D2005E73;
+        Mon, 11 May 2020 16:30:42 +0800 (HKT)
 X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
 Received: from mail.gtsys.com.hk ([127.0.0.1])
         by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AuE0Dfh_okQ8; Mon, 11 May 2020 16:30:40 +0800 (HKT)
+        with ESMTP id li1WDHJHoWxu; Mon, 11 May 2020 16:30:42 +0800 (HKT)
 Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
-        by mail.gtsys.com.hk (Postfix) with ESMTP id A2E5320020CB;
-        Mon, 11 May 2020 16:30:40 +0800 (HKT)
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 161AB20020CB;
+        Mon, 11 May 2020 16:30:42 +0800 (HKT)
 Received: from armhf2.gtsys.com.hk (unknown [10.128.4.15])
-        by s01.gtsys.com.hk (Postfix) with ESMTP id 96943C01F94;
-        Mon, 11 May 2020 16:30:40 +0800 (HKT)
+        by s01.gtsys.com.hk (Postfix) with ESMTP id 12A7CC01F94;
+        Mon, 11 May 2020 16:30:42 +0800 (HKT)
 Received: by armhf2.gtsys.com.hk (Postfix, from userid 1000)
-        id 3F6272001DE; Mon, 11 May 2020 16:30:40 +0800 (HKT)
+        id 0D5D32001DE; Mon, 11 May 2020 16:30:42 +0800 (HKT)
 From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
 To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>,
         Jack Lo <jack.lo@gtsys.com.hk>
 Cc:     Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
         linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/3] spi: spi-rockchip spi slave mode
-Date:   Mon, 11 May 2020 16:30:19 +0800
-Message-Id: <20200511083022.23678-1-chris.ruehl@gtsys.com.hk>
+Subject: [PATCH v1 3/3] spi: spi-rockchip: use num-cs property and ctlr->enable_gpiods
+Date:   Mon, 11 May 2020 16:30:22 +0800
+Message-Id: <20200511083022.23678-4-chris.ruehl@gtsys.com.hk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200511083022.23678-1-chris.ruehl@gtsys.com.hk>
+References: <20200511083022.23678-1-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,37 +54,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spi-rockchip driver does not implement spi slave mode, but the register map
-have a corresponding flag. An example implementation found
-here: https://dev.t-firefly.com/thread-101485-1-1.html
-This patchset clean the compatiblity names and add support slave mode.
-We need the slave mode for our project, but the PCBA is not yet available
-in consequence the code in the patch isn't tested yet but need your review.
-
-Patch 1/3
-Cleanup, move from the compatibily layer struct spi_master over
-to struct spi_controller, and rename the related function calls.
-
-Patch 2/3
-Add support for spi slave mode and support function
-
-Patch 3/3
-Use OF property num-cs and enable support for cs_gpiods
-
-IMHO its wrong, that the num_chipselect is set fixed to the amount of 
-native chip-select lines. SPI0 which has two native lines, while the others
-SPIs one native cs line only.
-Set max_native_cs in the controller struct with ROCKCHIP_SPI_MAX_CS_NUM seems
-the correct way to do and let num-cs the OF / dts config set the CS count for
-the boards.
-
-Patch against next-20200508
-
-Thanks for review!
-
-Happy hacking
-Chris
+The original implementation set num_chipselect to ROCKCHIP_SPI_MAX_CS_NUM (2)
+which seems wrong here. spi0 has 2 native cs, all others just one. With
+enable and use of cs_gpiods / GPIO CS, its correct to set the num_chipselect
+from the num-cs property and set max_native_cs with the define.
+If num-cs is missing the default set to num_chipselect = 1.
 
 Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
 ---
+ drivers/spi/spi-rockchip.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index f57a8faa6f31..9b8a5e1233c0 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -708,8 +708,15 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+ 		ctlr->slave_abort = rockchip_spi_slave_abort;
+ 	} else {
+ 		ctlr->flags = SPI_MASTER_GPIO_SS;
++		ctlr->max_native_cs = ROCKCHIP_SPI_MAX_CS_NUM;
++		/*
++		 * rk spi0 has two native cs, spi1..5 one cs only
++		 * if num-cs is missing in the dts, default to 1
++		 */
++		if (of_property_read_u16(np, "num-cs", &ctlr->num_chipselect))
++			ctlr->num_chipselect = 1;
++		ctlr->use_gpio_descriptors = true;
+ 	}
+-	ctlr->num_chipselect = ROCKCHIP_SPI_MAX_CS_NUM;
+ 	ctlr->dev.of_node = pdev->dev.of_node;
+ 	ctlr->bits_per_word_mask = SPI_BPW_MASK(16) | SPI_BPW_MASK(8) | SPI_BPW_MASK(4);
+ 	ctlr->min_speed_hz = rs->freq / BAUDR_SCKDV_MAX;
+-- 
+2.20.1
 
