@@ -6,87 +6,118 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FF3C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B363BC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD14620722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920D0208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgEKL0N (ORCPT
+        id S1729934AbgEKL0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:26:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39938 "EHLO pegase1.c-s.fr"
+        Mon, 11 May 2020 07:26:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46105 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729869AbgEKL0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:26:07 -0400
+        id S1729884AbgEKL0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:26:14 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJXR6Knmz9ty3l;
-        Mon, 11 May 2020 13:25:59 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49LJXY0XFPz9ty3n;
+        Mon, 11 May 2020 13:26:05 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id s7j_99tBxDhg; Mon, 11 May 2020 13:25:59 +0200 (CEST)
+        with ESMTP id FoRX8LNxD332; Mon, 11 May 2020 13:26:05 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXR5bptz9ty3g;
-        Mon, 11 May 2020 13:25:59 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXX6tqZz9ty3g;
+        Mon, 11 May 2020 13:26:04 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 780D78B7AE;
-        Mon, 11 May 2020 13:26:06 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A3C9B8B7AE;
+        Mon, 11 May 2020 13:26:11 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id XM4qTcqbNDGm; Mon, 11 May 2020 13:26:06 +0200 (CEST)
+        with ESMTP id eOG0N27n0ba7; Mon, 11 May 2020 13:26:11 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4959E8B7AD;
-        Mon, 11 May 2020 13:26:06 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 72ED18B7AD;
+        Mon, 11 May 2020 13:26:11 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2B7EF65A09; Mon, 11 May 2020 11:26:06 +0000 (UTC)
-Message-Id: <5b965960e22434ae2f72418d87a924dcdea26b39.1589196133.git.christophe.leroy@csgroup.eu>
+        id 54B1965A09; Mon, 11 May 2020 11:26:11 +0000 (UTC)
+Message-Id: <7d4c67dd0733b83fe4462627e9097b66d66e94dc.1589196133.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 39/45] powerpc/8xx: Map IMMR with a huge page
+Subject: [PATCH v3 44/45] powerpc/32s: Allow mapping with BATs with
+ DEBUG_PAGEALLOC
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:26:06 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:26:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map the IMMR area with a single 512k huge page.
+DEBUG_PAGEALLOC only manages RW data.
+
+Text and RO data can still be mapped with BATs.
+
+In order to map with BATs, also enforce data alignment. Set
+by default to 256M which is a good compromise for keeping
+enough BATs for also KASAN and IMMR.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/mm/nohash/8xx.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/powerpc/Kconfig           | 1 +
+ arch/powerpc/mm/book3s32/mmu.c | 6 ++++++
+ arch/powerpc/mm/init_32.c      | 5 ++---
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 570ab2114a73..fb31a0c1c2a4 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -117,17 +117,13 @@ static bool immr_is_mapped __initdata;
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 9d94e8b178d8..5c1fcfe9be74 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -796,6 +796,7 @@ config DATA_SHIFT
+ 	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_BOOK3S_32
+ 	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC) && PPC_8xx
+ 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
++	default 18 if DEBUG_PAGEALLOC && PPC_BOOK3S_32
+ 	default 23 if STRICT_KERNEL_RWX && PPC_8xx
+ 	default 23 if DEBUG_PAGEALLOC && PPC_8xx && PIN_TLB_DATA
+ 	default 19 if DEBUG_PAGEALLOC && PPC_8xx
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index a9b2cbc74797..a6dcc708eee3 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -170,6 +170,12 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		pr_debug("RAM mapped without BATs\n");
+ 		return base;
+ 	}
++	if (debug_pagealloc_enabled()) {
++		if (base >= border)
++			return base;
++		if (top >= border)
++			top = border;
++	}
  
- void __init mmu_mapin_immr(void)
- {
--	unsigned long p = PHYS_IMMR_BASE;
--	unsigned long v = VIRT_IMMR_BASE;
--	int offset;
--
- 	if (immr_is_mapped)
+ 	if (!strict_kernel_rwx_enabled() || base >= border || top <= border)
+ 		return __mmu_mapin_ram(base, top);
+diff --git a/arch/powerpc/mm/init_32.c b/arch/powerpc/mm/init_32.c
+index 8977a7c2543d..36c39bd37256 100644
+--- a/arch/powerpc/mm/init_32.c
++++ b/arch/powerpc/mm/init_32.c
+@@ -99,10 +99,9 @@ static void __init MMU_setup(void)
+ 	if (IS_ENABLED(CONFIG_PPC_8xx))
  		return;
  
- 	immr_is_mapped = true;
- 
--	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
--		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
-+	__early_map_kernel_hugepage(VIRT_IMMR_BASE, PHYS_IMMR_BASE,
-+				    PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
+-	if (debug_pagealloc_enabled()) {
+-		__map_without_bats = 1;
++	if (debug_pagealloc_enabled())
+ 		__map_without_ltlbs = 1;
+-	}
++
+ 	if (strict_kernel_rwx_enabled())
+ 		__map_without_ltlbs = 1;
  }
- 
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
 -- 
 2.25.0
 
