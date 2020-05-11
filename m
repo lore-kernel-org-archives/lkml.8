@@ -2,81 +2,76 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8A0C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF2FC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC10206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACAC206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:27:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="P/kLGl2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731681AbgEKUZe (ORCPT
+        id S1731568AbgEKU13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgEKUZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:25:33 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9913DC061A0C;
-        Mon, 11 May 2020 13:25:33 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CF1D612848D5A;
-        Mon, 11 May 2020 13:25:32 -0700 (PDT)
-Date:   Mon, 11 May 2020 13:25:31 -0700 (PDT)
-Message-Id: <20200511.132531.1067573616053698778.davem@davemloft.net>
-To:     bhsharma@redhat.com
-Cc:     netdev@vger.kernel.org, bhupesh.linux@gmail.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        aelior@marvell.com, GR-everest-linux-l2@marvell.com,
-        manishc@marvell.com, irusskikh@marvell.com
-Subject: Re: [PATCH v2 0/2] net: Optimize the qed* allocations inside kdump
- kernel
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1589191902-958-1-git-send-email-bhsharma@redhat.com>
-References: <1589191902-958-1-git-send-email-bhsharma@redhat.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 13:25:33 -0700 (PDT)
+        Mon, 11 May 2020 16:27:29 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33712 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgEKU13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:27:29 -0400
+Received: from zn.tnic (p200300EC2F05F100A8DEEC94B2257A59.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:f100:a8de:ec94:b225:7a59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D738C1EC031B;
+        Mon, 11 May 2020 22:27:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589228847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=h9/RwJ7eB4Au1p/uCzt0TYyrV38Owply5lu7RUuKinw=;
+        b=P/kLGl2RKhuqpNDnymZ4bGERTjsDSi6SZ3C1w7+kHPbitl7MLoH/7hUJzq0T2OMfi3Z7hr
+        Ck/CC1kVRa4gYq6/4UPJer8epo+hVmZ3QI1XwSUZUnmkPpl+lMzGUREYBVElkqGfbSRDp+
+        OcP6wwJiUbtYWcgNjWrh5kjgH/fBEyI=
+Date:   Mon, 11 May 2020 22:27:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 00/10] Support XSAVES supervisor states
+Message-ID: <20200511202719.GF25861@zn.tnic>
+References: <20200328164307.17497-1-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200328164307.17497-1-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Mon, 11 May 2020 15:41:40 +0530
+On Sat, Mar 28, 2020 at 09:42:57AM -0700, Yu-cheng Yu wrote:
+> Changes in v3:
 
- ...
-> Since kdump kernel(s) run under severe memory constraint with the
-> basic idea being to save the crashdump vmcore reliably when the primary
-> kernel panics/hangs, large memory allocations done by a network driver
-> can cause the crashkernel to panic with OOM.
-> 
-> The qed* drivers take up approximately 214MB memory when run in the
-> kdump kernel with the default configuration settings presently used in
-> the driver. With an usual crashkernel size of 512M, this allocation
-> is equal to almost half of the total crashkernel size allocated.
-> 
-> See some logs obtained via memstrack tool (see [1]) below:
->  dracut-pre-pivot[676]: ======== Report format module_summary: ========
->  dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
->  dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
-> 
-> This patchset tries to reduce the overall memory allocation profile of
-> the qed* driver when they run in the kdump kernel. With these
-> optimization we can see a saving of approx 85M in the kdump kernel:
->  dracut-pre-pivot[671]: ======== Report format module_summary: ========
->  dracut-pre-pivot[671]: Module qed using 124.6MB (1993 pages), peak allocation 124.7MB (1995 pages)
->  <..snip..>
->  dracut-pre-pivot[671]: Module qede using 4.6MB (73 pages), peak allocation 4.6MB (74 pages)
- ...
+Please send a clean v4 with all the review comments addressed.
 
-Series applied to net-next, thanks.
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
