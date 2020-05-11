@@ -2,104 +2,175 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA87C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133E5C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A78920746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AA3206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k5UvlXD0"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2wMyGPfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgEKNtB (ORCPT
+        id S1730213AbgEKNtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726438AbgEKNtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:49:01 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E814BC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:49:00 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u16so19327994wmc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:49:00 -0700 (PDT)
+        Mon, 11 May 2020 09:49:13 -0400
+Received: from mail-bn8nam11on2054.outbound.protection.outlook.com ([40.107.236.54]:30209
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729741AbgEKNtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 09:49:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DHuZUG2XqDiAeHEzHG7stEjJ9queoLjmTmJNNsDVzkkW6PzrIkAJBykfQNro4B1CGTwYs44XZEV2QgzNbETin7krautx0qIGn1qElcxNKH87BoIEUkAZJgfJC2t2qq1TEYpNAqBFdpA4/TBKSgHNhmZEuoHMO3IqDCQv/WhPdGejNy8dEVeDQTq/xDObkGHIkM6b1e14dcMrla5olbczX1DJaXhWVZ7+siUq9A5tyjlc0JKLiStrbu1zp78f3bu9+r5H80C5/EzQN0CSkrAAO1psdee0Bb3KIEJIOgGR/pvKQfLrTFQWck3NAKKPkX/7uYVnT0OOq/iS03YSWZvWCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zo/7Jq60TiX1A69TavXWGlbg4Qrw0AlJdWNoNLqVvgQ=;
+ b=UdCfyBl/LhjTU/PaKsA5TtvnyfGhwhpdAs02bM4FxhuSJ3Qmt6DF7YSj1+ZWu7yjLOt4hnAYixZqvBI4+CcXOJWeVxMt8vw8zbcGMrE6uQ1ez125o8Ls46WUUFbA6kMgRh087fQS0DZGu9hcwV/Zb2Wccb7+fThnVSE17WcvIsTNBdiCvx5c+N2yoD5u+pNi9Qwye4S8LqVSNqbNYcS+DSlXsfBlVcFKJAonPmkiHCatIzuzHXUzYy6fK97TT5dGc71s2b9e9EHOlNOES5xY5OkCNgUOE/3Lr19+b4bGkTC0HUpuC3DI9WBzOTRcdxW9mvTvQJJ28LgBwAp0zRSioA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BjHVuVtBWSdENXXYiinZ4uI8mae/pV5Z0nfAWffhAkY=;
-        b=k5UvlXD0wz5vs3V4Z1hLq6biCClQbT+SzjjXqeAWFhwqVN+GA6qeV+oLnHhDuhXDcw
-         MVX0TgpYBV2DjO6YTj2/kloLSz+106Qm/fu9Fbt1wd7Q9aE3k+RpBPuqoe4B/zYzxdUq
-         BWm+yMkxszNTBcpnFcQs0Byn+efwRCTcgItZvKIAw201wqDgUXYW7R4/7Cfdosha29v5
-         hG7krpuspf6IGF5pvCDjIZnLghI9pcVt8KAQQzkY5BjrBvfl67q0XBW22UMkTBRK4S4F
-         DLCrrH5eHw06BLRl64MM4YyqwuAW3hNxzvNkr+tVHeL/B126T/5EI79diNMMOpSg7Ksv
-         7m/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BjHVuVtBWSdENXXYiinZ4uI8mae/pV5Z0nfAWffhAkY=;
-        b=QXTqqVanE7tjl4EPli6p5C38rHW1p6rDQ0RajRRFRHPKmJurCLyryr9zZqT06lxqJl
-         uraka7wtdp9dRLaXxSXlHmIOdgPK3/xFEIjx2yupqO9Vu2rmM2rEKN5FSctTZy7XUSru
-         vzmsP8RTxrTZvAiotu6bXnTk73yty9h1KxKR/Mtf09xZdb/9OVMvzObpZutOOek4d/jp
-         Z1fOr9BketPuHD8xTkY6OL9lYR4LiBNe324uIxybfG3+MctTFG9TceYBy/m+3UVn6zP3
-         9Mrvisk/Ojtrn3mS9d1ttMBSDe+BKjszxnpTt0vhpSyQPAIDlWD2mfV6rv2cBPkJt4b7
-         VTjQ==
-X-Gm-Message-State: AGi0PuaHji5HKqKtuFJl2O24jMhqnAtV9z3lCUNnhEYJZYoGULxKDOgh
-        jLnhtm1cJVhEOUSUVbtFAi+mUg==
-X-Google-Smtp-Source: APiQypLt90h3E4QOKCct7odHvidKqDIEKMSux9lbzqVHNQsX/QafgI6SnH5ciyxpl3mgK+o2GNzOyg==
-X-Received: by 2002:a1c:df83:: with SMTP id w125mr22393555wmg.140.1589204939170;
-        Mon, 11 May 2020 06:48:59 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a24sm26771229wmb.24.2020.05.11.06.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:48:58 -0700 (PDT)
-Date:   Mon, 11 May 2020 14:48:54 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v7 07/15] Documentation: power: update Energy Model
- description
-Message-ID: <20200511134854.GD29112@google.com>
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
- <20200511111912.3001-8-lukasz.luba@arm.com>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zo/7Jq60TiX1A69TavXWGlbg4Qrw0AlJdWNoNLqVvgQ=;
+ b=2wMyGPfa+vSJh8OmEp9jeTC0qKEuaWjqKwx22tyw6DOCvyvmnrXCmkB6BOV2M64MO86em3Va9vhg7zjnOlJCa7e+IhEZZbcQ56KO4IXpe7GittCAtPrl91+aLQLzpM4ipRuh0a6vGVHU6itOj7yJYy6DeUZg9KVfIuYz9fUalL8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2558.namprd12.prod.outlook.com (2603:10b6:802:2b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
+ 2020 13:49:06 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 13:49:06 +0000
+Subject: Re: [PATCH v2 2/3] KVM: x86: Move pkru save/restore to x86.c
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        mchehab+samsung@kernel.org, changbin.du@intel.com,
+        Nadav Amit <namit@vmware.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>, arjunroy@google.com,
+        logang@deltatee.com, Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        pawan.kumar.gupta@linux.intel.com,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
+References: <158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com>
+ <158897219574.22378.9077333868984828038.stgit@naples-babu.amd.com>
+ <CALMp9eQj_aFcqR+v9SvFjKFxVjaHHzU44udcczJVqOR5vLQbWQ@mail.gmail.com>
+ <90657d4b-cb2b-0678-fd9c-a281bb85fadf@redhat.com>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <6bdf365d-f283-d26c-2465-2be28d7b55bf@amd.com>
+Date:   Mon, 11 May 2020 08:49:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <90657d4b-cb2b-0678-fd9c-a281bb85fadf@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0801CA0011.namprd08.prod.outlook.com
+ (2603:10b6:803:29::21) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511111912.3001-8-lukasz.luba@arm.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.30.87] (165.204.77.1) by SN4PR0801CA0011.namprd08.prod.outlook.com (2603:10b6:803:29::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Mon, 11 May 2020 13:49:04 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 26426fb4-81e4-451b-fbf2-08d7f5b21279
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2558:
+X-Microsoft-Antispam-PRVS: <SN1PR12MB25586C6D51AA7B297E0D3E1C95A10@SN1PR12MB2558.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 04004D94E2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0q4Khsa0gyZsctNlSgdFblXEQwSVvw+pEXSCB2HgYZ4jJNzi54y1AL/rz9siNJakoTctxBR13Rq/m5MH1FjcnOWuGfeYRi/XXmxc0Ky8whvl1kMiohZpG5jGDl+C0Bky7v0jezGm+eK4y4r0zexcjAIZc6nu8QBhAW8mG3wkdhTg6ahwKHmBEvTKdqctxmL7SnL5bDgzNJkhysb5A73a53f8QSDrer5B7rsAtrBDj4lo/3vTqpn7bbPdDqVf9pw3uvNs+MuCOSlYG9KkrskzmhXQUecp8fP6VE5FkPFc2Z806CnuyFfqR+SlUgjAjzCt3ALdvc2h7aLh5xuwLtbFZ7A3iQZvKzVxXAO8oBWBRMxI6OJxs1rcW5T15O7Ob02krr0cYQMbD6JsCLEXlhUxdJ/eWfQA9244tiDVQoOw6w1i8MvU0Ui5LyXc4lBk6GpS+JL6khLMGJJ/A5nxOf4d8E0EO4Y2cDeWDrOHCrAkgkXj/DV2LkpJ/l4HxsqVXgRfelsaacZfx59FM+YJLjyLWaE9/MWA9w4DP+M3d/3QRdDVKcNqmPbRnMiugNjC/K+4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(396003)(376002)(366004)(33430700001)(4326008)(478600001)(5660300002)(31686004)(2906002)(956004)(44832011)(2616005)(6486002)(33440700001)(8936002)(7416002)(7406005)(8676002)(66946007)(66476007)(66556008)(86362001)(31696002)(36756003)(52116002)(110136005)(186003)(316002)(16576012)(53546011)(54906003)(26005)(16526019)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 7TRexuNWePNl69CPRTLGZWlWACB/bfW8H9JBg6EZ/+TIZ6aPcJtFf57O7+XheQ8wvyRFaJ0LIG1UCwj4GpWmZ9JCiHA4gvEogzfThUDTqhNMoXpFMWjScCSr70dNixY4rkxL5Jpe5N2d1FSDqUpMNwS/9FzMqgCERT1JzracbJFm85bLThY+Hamz7XzwOBGb8sce78MjsPSl510qUKz5WJ8S7YAraW1Is0aAYPelx2ykiuN7HeuYfvgQArhqoZmApOGcdTq9ga17tnk8oXctr0Mgzbe+YNrzkwxXY3u64sk6Qb9/m3q3ffNjB46FWsTch5fi+KEJWcQ7tEaigqNkm1ykCvYpgjNUaPYgSCkz6h5rs87W/uhluvVEfV0VSP19nr86gVMaPW9PQT8IJqnp+DyUwZvLcXRWCdQIyvP8Bcuo7HcPqPoLy6Ppm1vL0DcwIcUJlqyN/XMWQFWjoqF+92yza1Pk++56DqBcgxjlyk8=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26426fb4-81e4-451b-fbf2-08d7f5b21279
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 13:49:06.3320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X5tsROczz7DxGoVULoFTlsHU7rmiIu5R5sw4k6lI6YQTTHH7AxI7r6AQP1J0HO9K
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2558
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 11 May 2020 at 12:19:04 (+0100), Lukasz Luba wrote:
-> The Energy Model framework supports also other devices than CPUs. Update
-> related information and add description for the new usage.
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Acked-by: Quentin Perret <qperret@google.com>
+
+On 5/9/20 7:59 AM, Paolo Bonzini wrote:
+> On 09/05/20 00:09, Jim Mattson wrote:
+>>> +       if (static_cpu_has(X86_FEATURE_PKU) &&
+>>> +           kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
+>>> +           vcpu->arch.pkru != vcpu->arch.host_pkru)
+>>> +               __write_pkru(vcpu->arch.pkru);
+>> This doesn't seem quite right to me. Though rdpkru and wrpkru are
+>> contingent upon CR4.PKE, the PKRU resource isn't. It can be read with
+>> XSAVE and written with XRSTOR. So, if we don't set the guest PKRU
+>> value here, the guest can read the host value, which seems dodgy at
+>> best.
+>>
+>> Perhaps the second conjunct should be: (kvm_read_cr4_bits(vcpu,
+>> X86_CR4_PKE) || (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU)).
+
+Thanks Jim.
+> 
+> You're right.  The bug was preexistent, but we should fix it in 5.7 and
+> stable as well.
+Paolo, Do you want me to send this fix separately? Or I will send v3 just
+adding this fix. Thanks
+
+> 
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(kvm_load_guest_xsave_state);
+>>>
+>>>  void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu)
+>>>  {
+>>> +       /*
+>>> +        * eager fpu is enabled if PKEY is supported and CR4 is switched
+>>> +        * back on host, so it is safe to read guest PKRU from current
+>>> +        * XSAVE.
+>>> +        */
+>> I don't understand the relevance of this comment to the code below.
+>>
+> 
+> It's probably stale.
+
+Will remove it.
+> 
+> Paolo
+> 
