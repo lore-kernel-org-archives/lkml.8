@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68631C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F76C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43FDC2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8374824955
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbgEKVEw (ORCPT
+        id S1732546AbgEKVE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43950 "EHLO
+        Mon, 11 May 2020 17:04:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731862AbgEKU73 (ORCPT
+        by vger.kernel.org with ESMTP id S1731855AbgEKU72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:59:29 -0400
+        Mon, 11 May 2020 16:59:28 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88476C061A0C;
-        Mon, 11 May 2020 13:59:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8610C061A0C;
+        Mon, 11 May 2020 13:59:28 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWJ-0005ky-RU; Mon, 11 May 2020 22:59:28 +0200
+        id 1jYFWJ-0005hj-6T; Mon, 11 May 2020 22:59:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 565071C04E3;
-        Mon, 11 May 2020 22:59:23 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:23 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 33D661C06DA;
+        Mon, 11 May 2020 22:59:20 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:20 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu-tasks: Add count for idle tasks on offline CPUs
+Subject: [tip: core/rcu] rcutorture: Add KCSAN stubs
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923076328.390.18423169439389986790.tip-bot2@tip-bot2>
+Message-ID: <158923076014.390.18323037136530045995.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,52 +56,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     edf3775f0ad66879796f594983163f672c4bf1a2
-Gitweb:        https://git.kernel.org/tip/edf3775f0ad66879796f594983163f672c4bf1a2
+Commit-ID:     3b2a47398552938d2ae0091f35eb3658a52a0769
+Gitweb:        https://git.kernel.org/tip/3b2a47398552938d2ae0091f35eb3658a52a0769
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Sun, 22 Mar 2020 14:09:45 -07:00
+AuthorDate:    Mon, 13 Apr 2020 16:30:35 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 27 Apr 2020 11:03:53 -07:00
+CommitterDate: Mon, 27 Apr 2020 11:05:13 -07:00
 
-rcu-tasks: Add count for idle tasks on offline CPUs
+rcutorture: Add KCSAN stubs
 
-This commit adds a counter for the number of times the quiescent state
-was an idle task associated with an offline CPU, and prints this count
-at the end of rcutorture runs and at stall time.
+This commit adds stubs for KCSAN's data_race(), ASSERT_EXCLUSIVE_WRITER(),
+and ASSERT_EXCLUSIVE_ACCESS() macros to allow code using these macros to
+move ahead.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/rcu/rcutorture.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index ce65883..0d1b5bf 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -729,6 +729,7 @@ static DEFINE_PER_CPU(bool, trc_ipi_to_cpu);
- // heavyweight readers executing explicit memory barriers.
- unsigned long n_heavy_reader_attempts;
- unsigned long n_heavy_reader_updates;
-+unsigned long n_heavy_reader_ofl_updates;
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 5453bd5..7e2ea0c 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -51,6 +51,18 @@
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com> and Josh Triplett <josh@joshtriplett.org>");
  
- void call_rcu_tasks_trace(struct rcu_head *rhp, rcu_callback_t func);
- DEFINE_RCU_TASKS(rcu_tasks_trace, rcu_tasks_wait_gp, call_rcu_tasks_trace,
-@@ -840,6 +841,8 @@ static bool trc_inspect_reader(struct task_struct *t, void *arg)
- 		    !rcu_dynticks_zero_in_eqs(cpu, &t->trc_reader_nesting))
- 			return false; // No quiescent state, do it the hard way.
- 		n_heavy_reader_updates++;
-+		if (ofl)
-+			n_heavy_reader_ofl_updates++;
- 		in_qs = true;
- 	} else {
- 		in_qs = likely(!t->trc_reader_nesting);
-@@ -1156,7 +1159,8 @@ static void show_rcu_tasks_trace_gp_kthread(void)
- {
- 	char buf[64];
++#ifndef data_race
++#define data_race(expr)							\
++	({								\
++		expr;							\
++	})
++#endif
++#ifndef ASSERT_EXCLUSIVE_WRITER
++#define ASSERT_EXCLUSIVE_WRITER(var) do { } while (0)
++#endif
++#ifndef ASSERT_EXCLUSIVE_ACCESS
++#define ASSERT_EXCLUSIVE_ACCESS(var) do { } while (0)
++#endif
  
--	sprintf(buf, "N%d h:%lu/%lu", atomic_read(&trc_n_readers_need_end),
-+	sprintf(buf, "N%d h:%lu/%lu/%lu", atomic_read(&trc_n_readers_need_end),
-+		data_race(n_heavy_reader_ofl_updates),
- 		data_race(n_heavy_reader_updates),
- 		data_race(n_heavy_reader_attempts));
- 	show_rcu_tasks_generic_gp_kthread(&rcu_tasks_trace, buf);
+ /* Bits for ->extendables field, extendables param, and related definitions. */
+ #define RCUTORTURE_RDR_SHIFT	 8	/* Put SRCU index in upper bits. */
