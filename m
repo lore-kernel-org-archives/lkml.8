@@ -2,163 +2,138 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6BEC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5110AC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C75F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2A3207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARv0i9td"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yxOsCse5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbgEKHNn (ORCPT
+        id S1728458AbgEKHRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKHNn (ORCPT
+        Mon, 11 May 2020 03:17:36 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28800 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725790AbgEKHRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:13:43 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF749C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:13:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so9478241wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Y+m1+88vta6t6T1bNmdonazRxtCTnn6KS1AKX4CzntQ=;
-        b=ARv0i9tdIXTUc/sI7bd/zEPKnRNVNV7vH5x83ejR9lG62qT6YTHudPH4qqBR87HtWd
-         fPTdzJ8zhes261ta3+/GhykOlOcnn3SXZnx5RhR9bxuxNYc0/QEuOKzbKAdMwr6A5dRQ
-         hfRE3c9quaQjZ9yw9GV138xpAt3RAlXERLGKqJhFBywAiTKtgbSGQrR4PJQyZbNTJcaI
-         tQ48EJsRmyDdTDuiTCUYDCtyCyDzj/OGbEZdQTu+myY3NhXATfCu7KcNCnTDmV7TjCBA
-         aC1hdIrZ3R4ig4PEeK56Xrxmp+Azl63tBPNRpHhfSSlb8XgDmz8gfpTLNB1A14nevVgc
-         s2/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Y+m1+88vta6t6T1bNmdonazRxtCTnn6KS1AKX4CzntQ=;
-        b=LrTdJK4n8cdyoXjm6oZc//5mcMovSD4NVf9OOhBfb1+IPagsPEXHQjg4wQUTv4zbMY
-         BZlRJjNapdSULqXPayfmrdqCI0fGHbFzuiIlVvrRQ35JgT3zEwfoKlMnoBdoqg9UYtSR
-         qyxwdf3HiSED+LMBJZiKKccPP1zSFN/anJJ3JvBzgfSeWKhfiPxTDyiLW+uWXw1yU3sA
-         fv7EXkyJ2cHkqA3nLEc2kmZfUKsqmZHubZ8gxq3QqctMl/eGkwQDBR9oeXWgvhzu3e+e
-         1MpcEBXp/QNZ10bFQMlcTOqCd9fArGMzgwxn+U3uUBeJG4e8L9r7T+mrffKYZSWrWEty
-         2FNg==
-X-Gm-Message-State: AGi0Pua2vjfWNT4vE6XLtn4Rf+7/6zCsgroUMYCdvvj+VUYq4lqjsYeZ
-        pcowd6nqh+QhprJV9GdBLnyADmyB
-X-Google-Smtp-Source: APiQypI+mVuTDIlldwCA8VYde10V3aXrvi+qtZPtYn8oZz3vMBHjweMr3wC+fEETG78OPTOp5P/71w==
-X-Received: by 2002:a5d:53c7:: with SMTP id a7mr2066825wrw.334.1589181220319;
-        Mon, 11 May 2020 00:13:40 -0700 (PDT)
-Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.gmail.com with ESMTPSA id c16sm15553540wrv.62.2020.05.11.00.13.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 00:13:39 -0700 (PDT)
-Message-ID: <6ad0616ecc6ec6ecf4622eca878ba7e7c52c475e.camel@gmail.com>
-Subject: Re: [PATCH v6 5/9] w1_therm: adding resolution sysfs entry
-From:   Akira shimahara <akira215corp@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>, greg@kroah.com
-Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org
-Date:   Mon, 11 May 2020 09:13:38 +0200
-In-Reply-To: <7eb90dc8-2924-4c24-e305-5424c5953164@infradead.org>
-References: <20200510141707.173273-1-akira215corp@gmail.com>
-         <7eb90dc8-2924-4c24-e305-5424c5953164@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 11 May 2020 03:17:36 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B78D68004239;
+        Mon, 11 May 2020 09:17:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=7EjOxTddIIOGD46hGzyLSFcZQlrJHNVdlCjYIFYnon4=;
+ b=yxOsCse5c5VAFj9hUoZ/WDw5yoX4uYk9bARejnXCNca0T9dxLT/ZukAlETjjliEtMiRC
+ v9GOvjRa2bZ0KbgBJeswfSRkCZC+yyIVW5WHWyzxEDIda6A+u+qnK0S9X++1VRTJvQ1p
+ wdWuEkRuM9DU0L8SQdLCKnCmqQEL1BOn15XuZduKUAVv5cE9Ew2ddTIt+LvtdcYZa4iU
+ xf8MuUntXrTgGc6YHIe+SJ4YyII+uXs3j16vXJb3NsPFhAD5QY71icyWZfxDdIrHjqkR
+ 7t35lFn/G2nAJI+5iNv7/uuP9/JuqCXFmMYz7EtpTBv7G3rbv1wC1+wMgXehEn/JVxhF qw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30whn98tuc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 09:17:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE992100034;
+        Mon, 11 May 2020 09:17:11 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96B222AC585;
+        Mon, 11 May 2020 09:17:11 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 11 May
+ 2020 09:17:06 +0200
+Subject: Re: [PATCH 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco
+ board
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <broonie@kernel.org>,
+        <p.zabel@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <dillonhua@gmail.com>
+References: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
+ <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
+Date:   Mon, 11 May 2020 09:16:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_02:2020-05-11,2020-05-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi
 
-Le dimanche 10 mai 2020 à 20:25 -0700, Randy Dunlap a écrit :
-> Hi,
+On 5/9/20 8:58 AM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
 > 
-> 
-> 
-> The kernel-doc comment changes look good.  Thanks for doing that.
-> 
-> 
-> 
-> 
-> 
-> On 5/10/20 7:17 AM, Akira Shimahara wrote:
-> 
-> 
-> 
-> > diff --git a/drivers/w1/slaves/w1_therm.c
-> > b/drivers/w1/slaves/w1_therm.c
-> > index 08579dc..b1734ae 100644
-> > --- a/drivers/w1/slaves/w1_therm.c
-> > +++ b/drivers/w1/slaves/w1_therm.c
-> > @@ -50,12 +50,24 @@ module_param_named(strong_pullup,
-> > w1_strong_pullup, int, 0);
-> >   
-> >   /* Helpers Macros */
-> >   
-> > +/* return a pointer on the slave w1_therm_family_converter struct:
-> > + * always test family data existence before
-> > + */
-> 
-> 
-> /*
-> 
->  * Kernel multi-line comment coding style (except for networking
-> source code)
-> 
->  * is like this.
-> 
->  */
-> 
-> 
-> 
-> (in multiple places)
-> 
-> 
-> 
-> > +/**
-> > + * write_scratchpad() - write nb_bytes in the device RAM
-> > + * @sl: pointer to the slave to write in
-> > + * @data: pointer to an array of 3 bytes, as 3 bytes MUST be
-> > written
-> > + * @nb_bytes: Nb bytes to be written (2 for DS18S20, 3 for other
-> > devices)
-> 
-> 
-> If Nb means Number, please spell it out.
-> 
-> 
-> 
-> > + *
-> > + * Return: 0 if success, -kernel error code otherwise
-> > + */
-> > +static int write_scratchpad(struct w1_slave *sl, const u8 *data,
-> > u8 nb_bytes);
-> > +
-> >   /**
-> >    * read_powermode() - Query the power mode of the slave
-> >    * @sl: slave to retrieve the power mode
-> 
-> 
-> 
-> 
-> thanks.
-> 
-> --
-> 
-> ~Randy
+> Enable l3gd20 on stm32429-disco board.
 
-Thanks for your comments and your time,
-well noted, I will do
-accordingly.
+You could add some words about l3gd20
 
-Akira Shimahara
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+>   arch/arm/boot/dts/stm32f429-disco.dts | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+> index 30c0f67..d365358 100644
+> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+> @@ -49,6 +49,8 @@
+>   #include "stm32f429.dtsi"
+>   #include "stm32f429-pinctrl.dtsi"
+>   #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>   
+>   / {
+>   	model = "STMicroelectronics STM32F429i-DISCO board";
+> @@ -127,3 +129,25 @@
+>   	pinctrl-names = "default";
+>   	status = "okay";
+>   };
+> +
+> +&spi5 {
+> +	status = "okay";
+> +	pinctrl-0 = <&spi5_pins>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	cs-gpios = <&gpioc 1 GPIO_ACTIVE_LOW>;
+> +	dmas = <&dma2 3 2 0x400 0x0>,
+> +	       <&dma2 4 2 0x400 0x0>;
+> +	dma-names = "rx", "tx";
 
+Insert blank line here.
+
+> +	l3gd20: l3gd20@0 {
+> +		compatible = "st,l3gd20-gyro";
+> +		spi-max-frequency = <10000000>;
+> +		st,drdy-int-pin = <2>;
+> +		interrupt-parent = <&gpioa>;
+> +		interrupts = <1 IRQ_TYPE_EDGE_RISING>,
+> +				<2 IRQ_TYPE_EDGE_RISING>;
+> +		reg = <0>;
+> +		status = "okay";
+> +	};
+> +};
+> 
