@@ -2,102 +2,104 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A15C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA87C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75022206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A78920746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:49:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k5UvlXD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgEKNrk (ORCPT
+        id S1730146AbgEKNtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:47:40 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:53475 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgEKNrj (ORCPT
+        Mon, 11 May 2020 09:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726438AbgEKNtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:47:39 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MryOx-1imib90FpV-00nwE1; Mon, 11 May 2020 15:47:38 +0200
-Received: by mail-qk1-f173.google.com with SMTP id f83so9698474qke.13;
-        Mon, 11 May 2020 06:47:37 -0700 (PDT)
-X-Gm-Message-State: AGi0PubghKdF/fHMp1Ks/ApJH40MMIaxLu5kLyHsulx9Xkky5F32L+S1
-        LM6qieHI5zdYi1m2qi8nI40vwtFFcnc2ilv8BOY=
-X-Google-Smtp-Source: APiQypKAmn8UHB9s5fZFUEek8MrcF9YGNPQ+XRrD/RRIOUQTXBl4yaQtpyq7H+rrJXTAzdartJwHwlybaBPVbygbULs=
-X-Received: by 2002:a37:4e08:: with SMTP id c8mr15521244qkb.286.1589204856778;
- Mon, 11 May 2020 06:47:36 -0700 (PDT)
+        Mon, 11 May 2020 09:49:01 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E814BC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:49:00 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so19327994wmc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BjHVuVtBWSdENXXYiinZ4uI8mae/pV5Z0nfAWffhAkY=;
+        b=k5UvlXD0wz5vs3V4Z1hLq6biCClQbT+SzjjXqeAWFhwqVN+GA6qeV+oLnHhDuhXDcw
+         MVX0TgpYBV2DjO6YTj2/kloLSz+106Qm/fu9Fbt1wd7Q9aE3k+RpBPuqoe4B/zYzxdUq
+         BWm+yMkxszNTBcpnFcQs0Byn+efwRCTcgItZvKIAw201wqDgUXYW7R4/7Cfdosha29v5
+         hG7krpuspf6IGF5pvCDjIZnLghI9pcVt8KAQQzkY5BjrBvfl67q0XBW22UMkTBRK4S4F
+         DLCrrH5eHw06BLRl64MM4YyqwuAW3hNxzvNkr+tVHeL/B126T/5EI79diNMMOpSg7Ksv
+         7m/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BjHVuVtBWSdENXXYiinZ4uI8mae/pV5Z0nfAWffhAkY=;
+        b=QXTqqVanE7tjl4EPli6p5C38rHW1p6rDQ0RajRRFRHPKmJurCLyryr9zZqT06lxqJl
+         uraka7wtdp9dRLaXxSXlHmIOdgPK3/xFEIjx2yupqO9Vu2rmM2rEKN5FSctTZy7XUSru
+         vzmsP8RTxrTZvAiotu6bXnTk73yty9h1KxKR/Mtf09xZdb/9OVMvzObpZutOOek4d/jp
+         Z1fOr9BketPuHD8xTkY6OL9lYR4LiBNe324uIxybfG3+MctTFG9TceYBy/m+3UVn6zP3
+         9Mrvisk/Ojtrn3mS9d1ttMBSDe+BKjszxnpTt0vhpSyQPAIDlWD2mfV6rv2cBPkJt4b7
+         VTjQ==
+X-Gm-Message-State: AGi0PuaHji5HKqKtuFJl2O24jMhqnAtV9z3lCUNnhEYJZYoGULxKDOgh
+        jLnhtm1cJVhEOUSUVbtFAi+mUg==
+X-Google-Smtp-Source: APiQypLt90h3E4QOKCct7odHvidKqDIEKMSux9lbzqVHNQsX/QafgI6SnH5ciyxpl3mgK+o2GNzOyg==
+X-Received: by 2002:a1c:df83:: with SMTP id w125mr22393555wmg.140.1589204939170;
+        Mon, 11 May 2020 06:48:59 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id a24sm26771229wmb.24.2020.05.11.06.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 06:48:58 -0700 (PDT)
+Date:   Mon, 11 May 2020 14:48:54 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v7 07/15] Documentation: power: update Energy Model
+ description
+Message-ID: <20200511134854.GD29112@google.com>
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-8-lukasz.luba@arm.com>
 MIME-Version: 1.0
-References: <20200509120707.188595-1-arnd@arndb.de> <20200509154818.GB27779@embeddedor>
- <87zhae4r35.fsf@kamboji.qca.qualcomm.com> <CAK8P3a2i-jqY8FnY_Tu41VDxQGqHHKRCyJ5U-GQbNmrqa=n0GQ@mail.gmail.com>
- <87mu6e4nyy.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87mu6e4nyy.fsf@kamboji.qca.qualcomm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 May 2020 15:47:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2Qu6Byo5bddd1ECwRB1qiTXpYuV55_i_2CUw+J5zqtfQ@mail.gmail.com>
-Message-ID: <CAK8P3a2Qu6Byo5bddd1ECwRB1qiTXpYuV55_i_2CUw+J5zqtfQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/2] ath10k: fix gcc-10 zero-length-bounds warnings
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wen Gong <wgong@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>,
-        ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:MKjPNguouTEMyLxjBKPiXJxXBXcv5XmWF2wWncSdO+Ls+e4MC/q
- sVv7tRKRKVPsdHdIYWu+wJviSYN47FNRK9ZLH3zL/vC99sn/+wj3kE47Rn17PObekmNhyP0
- CrkhfME1SfeohBr43HYTC1L4qpwpVzXH6UiA4pji/Rfi/XkdwfR6coBSoYElIz1VRZC9Vaq
- tEhWWZz+3O3B/m9ZvAAmw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YLdioIYStU8=:KZPxhPlE+ofsSyL7xUutOw
- T0S5YN/ziwK1R/tYL0z7K3DDY6fcsZcku8dxH0mRJn8sA3YVe8tB9wAjTB1kbMhG5nhPY2yw4
- 4LqsP9/3C8uoWS7xl6PhMItU0hRCMa2TXSQdmJVy8dYSq/j142RfVdQHQ+aOFlcC39EPj9fhy
- Xwh1pe4bxyIL0u9eyHUE9w67YNwOjOUujnDUvXLcIf3K2legvPLGeKr142prNArGcg7qjK9tF
- PbxSzcQ7HFX1NB9SfbVsmE9BjMURlUp/srH6d9deditwXV6pb2K6IMV1XAuJIKTCIhzohdxmu
- PLhNZG/GOYUeG/vZqklsyITCWW+S23W4xCOxOrUxl8pbBJhhlfU01l+hrXG4ZYnZL8mjn92LB
- sNz7Cy4pz4aIrMtxIcl89DmFqjzqAl71Ry9S8OYseNB1ByDHI/poCLPkH7W/X9E3WhnkJkx3y
- LV23DyC+OmV7SYTor7s+VvsL6MAjzY3XSJ010JhFFPXgBwzfhdubIsJs77sjxeC6W0C9NZo4k
- SKCKoD6lCpQ1bpfHPkNUQoSOfNMokc0wPoizY+tlToTNM/oDRzacAmutWDIgpBBBQjkH3M2GI
- VJ1sWwt0dm2lMsv9vgkS4fPZauYjEhVlrsXcid+AoZvSm4pzEV+lR5833bYdq8GH2QQn932Rf
- O6+idd2Vw4K0CN+vJmw3GR3NhwAqZhrA96MUuqtUR/r7HVaUzOjzpWnMBScdLokZebiVFUULR
- x1E/ceT3lyRck12qEQ3CT3A4Kvu91ehrBBHYJiZcCVoc/DJUZT329OVRALfqkKi70Ff/3UvSR
- 1aWm1AehRRBwtLiYOSpNoZYfu/e25f/aEEWu45ON6hnyCU7Pts=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511111912.3001-8-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 3:10 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->
-> Arnd Bergmann <arnd@arndb.de> writes:
->
-> > On Mon, May 11, 2020 at 2:03 PM Kalle Valo <kvalo@codeaurora.org> wrote:
-> >> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
-> >
-> >> >
-> >> > This treewide patch no longer contains changes for ath10k. I removed them
-> >> > since Monday (05/04/2020). So, this "Fixes" tag does not apply.
-> >
-> > Oops, I forgot to update the changelog trext when rebasing.
-> >
-> >> Ok, I'll remove it. Also I'll take these to my ath.git tree, not to
-> >> net-next.
-> >
-> > Thanks a lot!
->
-> Weird, I had a conflict with this patch but couldn't figure out why.
-> Anyway, I fixed it in my pending branch and please double check:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=c3e5221f3c3ddabc76a33ff08440ff1dc664998d
+On Monday 11 May 2020 at 12:19:04 (+0100), Lukasz Luba wrote:
+> The Energy Model framework supports also other devices than CPUs. Update
+> related information and add description for the new usage.
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Looks good to me. It may have been an artifact on my side, as I
-have applied and later reverted Gustavo's patch on the same branch.
-
-     Arnd
+Acked-by: Quentin Perret <qperret@google.com>
