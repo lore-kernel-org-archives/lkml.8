@@ -2,228 +2,428 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08299C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D3DC54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAFFF206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFEC2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="uywgBhIk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lULMh5wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgEKXdQ (ORCPT
+        id S1728114AbgEKXci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:33:16 -0400
-Received: from mail-eopbgr760047.outbound.protection.outlook.com ([40.107.76.47]:6090
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728267AbgEKXdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:33:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RnvHdXSBs/2fay9xnaROdRH5qnQ0xnqsSV65tAyM1lzpth37IVe+KcH5u2oPENA+OHTHbdy48ubIjM02gmNe8vCjEE+B9grtwDJZ9uz/ObgYd4tu+4gsjx8bUcChOwBAdCLWXbSCjWl0KVJEMRwn12mKRijvbmXbCJ1dBBTHFwg/rBcRm1DMNciOEOMfjuE1gL77BsdYEWdec/5eZM+BIImXokD+D10IwX4FzSjSQ3IbgUA80YootZ2gEoSL4X+ecCgm4HJ+yoykW6LWp2DpbZLGhEGjJlvhFM5vOnTHMwWdvcshF8z1OxV2BRWk1E6PP8OuGJoHep3UINrzO7ToKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znldyMC6F1kTbKS1KKqAHBggcCg8jmIa+CEice6T2E0=;
- b=ClHNUqwZJ0TsnV9pn+TcSzD3H9E+jQ88zc9vBOwmJAhEALeu/LLwa4CLKpWtHW3ChrXrb4EnYeLpQPyOXyan3ZnD4KVEf6+BIdiSSkMMKET1li6gGnljCA64oqXAkByM2a+dUTSL54Sc7mNwHDa9vymfqGjMg/VjjyHhNtET0DkdcCrqobxCOxZu8+6YscsNtgJ+9T0mHanGDlvllChh2UnL3vZwmgSxx/MhvmCcd4C8n4INjg4zCIYqU0vZHhIqDMchNYX9aqDW010ml+Sgq2VuxPyl9UBURB0IkYtP5nw6455KO2172kcQx5lXWdNtve/g/RRcrK437keSOtDyyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 11 May 2020 19:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725854AbgEKXcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 19:32:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159C5C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:35 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id f23so4602302pgj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=znldyMC6F1kTbKS1KKqAHBggcCg8jmIa+CEice6T2E0=;
- b=uywgBhIkia3beR/rYCbc8v5Vmd2WcoJg7SZCeqdi2oN0VtOEXulDZ8m7mck9n66zzjaZhrnPbHBY27R6ldTtqjwX648JgUfNbXF3zzpfmr9tuIX7+npdYEceQqcBJA2OOTozenWC6lue3UvOHqCuLwbLhZSd01mFLNQOSP+gBmg=
-Authentication-Results: tencent.com; dkim=none (message not signed)
- header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2478.namprd12.prod.outlook.com (2603:10b6:802:23::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 23:33:09 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 23:33:08 +0000
-Subject: [PATCH v3 2/3] KVM: x86: Move pkru save/restore to x86.c
-From:   Babu Moger <babu.moger@amd.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
-        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
-        asteinhauser@google.com, anshuman.khandual@arm.com,
-        jan.kiszka@siemens.com, akpm@linux-foundation.org,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date:   Mon, 11 May 2020 18:33:04 -0500
-Message-ID: <158923998430.20128.2992701977443921714.stgit@naples-babu.amd.com>
-In-Reply-To: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
-References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
-User-Agent: StGit/unknown-version
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR15CA0064.namprd15.prod.outlook.com
- (2603:10b6:3:ae::26) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3OIJKyVWwmfriKQYywcAnHlWtxZW1UFIlObKgtyysrE=;
+        b=lULMh5wQoc8iSvqz3OgPYZnBLv+EkNYzkXb7NRz2c0k3VfPVqkvFj9BdVlfKEj/cNx
+         ET0GB0hfBzFeTp8nLhn+T0rApc+81zE6P3rIRFwmjzpFW+98t67KZCCao4kjCilMyxXP
+         GFs6oinz8HVbMhN69Lbh7BUBOiPJeKtySWdJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3OIJKyVWwmfriKQYywcAnHlWtxZW1UFIlObKgtyysrE=;
+        b=EFVyV/vqGEHQpUKzDMVUf6dx6GhjdpwsT/MoncBOvPOfU06bxrxfOM23nlevxKcQyq
+         6i79eOzw4c9i/rNLWfMEzXfdVVtDi9uUeos3ArFAa4UWiYsGatsqpaUmYJpydGuq5S5N
+         t7HJKD+/qj4bp66kZNYb495bXkAcJSL2rPBHLsvWGN8/1VKhkw272kbxUNv92O6csLZ0
+         U26dtJa1GbKt3hyCtIfgODdffLj4AYUrfAyIMhe1nszsHwIxp8uNjKa3PRFavxygiH97
+         ZMGslBfqYaIh2TNxTkyO1mxY4pFaj+U9YKsxXBE/gq8+4PeCAxujtNyFcXt21Hic3vBA
+         SAmA==
+X-Gm-Message-State: AOAM530t0JWe3yZ6VY9/KNOB02OcyBHs7RXSq+ZuvQXe3ISPtHEjYAf5
+        fG/Olsz49IwAs/LDZuu+fiIMVQ==
+X-Google-Smtp-Source: ABdhPJwriOIkYHxCh36bdmLk+KtaHhNEVNkUYl0qKcdUI6IFuZVgQ1iC7ODcket/qCGCafCY5KGIOA==
+X-Received: by 2002:a63:3c0a:: with SMTP id j10mr6534733pga.35.1589239954438;
+        Mon, 11 May 2020 16:32:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v9sm10932719pju.3.2020.05.11.16.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 16:32:31 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH v8 04/11] pstore/zone,blk: Add console frontend support
+Date:   Mon, 11 May 2020 16:32:22 -0700
+Message-Id: <20200511233229.27745-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200511233229.27745-1-keescook@chromium.org>
+References: <20200511233229.27745-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from naples-babu.amd.com (165.204.78.2) by DM5PR15CA0064.namprd15.prod.outlook.com (2603:10b6:3:ae::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 23:33:05 +0000
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 45225a86-f351-45bc-7698-08d7f603a947
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2478:|SN1PR12MB2478:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB24784803F6534E7C4D39B07795A10@SN1PR12MB2478.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jh5Sc/mlN5vHsM5SkosuD8/ihHhgrFCIPElU1ptPtMUkCcudglh5sUWEsQ043VMU6cWujUwjmo2ivi2CPDVrcUyJ7l51clqLiknqDOwHY2gGTJPoXuXWva/5ew/yfH441gz6ztkHQyyYk71F9TZ/AueYznMJQ4uK05p3wmzgfx4SSM5rZzNj7DVTn8B3cK939fsvFX5NoKrNkPibDvz19DBrS9e+FQTDf8+wfZtickP4mx/toX5n8NL+MU/6RrGN0hMMHJGYq1OS5PZPOLHR++Ogmu/iI1Dx1lUCglVr5gx6LvHcfYg/ztToUT5yMIAaub6lFJ2cFu6xRzXqjDWLSmrmqIlxdWsMeezaqKQpc9w+2A31jjx6uyXiXjRO4JhSkq3+gX9s65aO+DdUC+X+YrwYSdWGcR3Sy8A5vRxuFY6MtQtU3oyy+89ZJoCOMNbDm/JCenJagwF8SdPN1Afs/mirKUTBFZtHMqlzxbA1+nvFf5HpL9TNkXn87pu7vfVqi1Yful7PDz13mQNg4DmJVA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(33430700001)(8676002)(2906002)(478600001)(4326008)(8936002)(186003)(26005)(7406005)(16526019)(5660300002)(7416002)(44832011)(86362001)(316002)(103116003)(956004)(33440700001)(55016002)(66946007)(52116002)(7696005)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 33g4s4KUlCQIRCcxfu/As5VONlBUKQQUY2CD6bciH8DiH3CO3an0lWEgE5Kp2+bYY+nhiRJw0shHrwRrHdVMU5SPcgrrNlo3QJkvLyH2KFCON76cgzEcQuAuHJUZs2RdZQOFt4z55vjO6sX3Z55b0F2oca861VkrBjilGTGq23pgWfjwPoEb7/KAno/377rR9fML3HvQBdLgXXYET9+fy+i4lh3xMh4FdSMX+CCnXV7rphjml+l46QW+vhpbUwkDVmom6UmkmXni4GP1DcEcm/XViPBbaNQY+gma+GOUGaRtfnvkX7F2zbhMfgTziyTptFkoAr79HH3vGRiOEFcCw6RfoyXK8aMibwkNB+Y8GLcHQlOt7Qs+uosl59q9YjjUNA6PHn5tVZz12PoufjaiRE2Wt62mTDmIUTQhEdP5pZ05JnLqSiAL68T1N5J/ngUZcR2jUumo89rMFoz/VWxA60FdrUl8il8uj2ANTreUQVc=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45225a86-f351-45bc-7698-08d7f603a947
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 23:33:08.5979
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TMSqZQTJ+fsRuIrStgm4e/SulLzLcRhSh2svgdypAqYr7OssZsUT45g2Uts2RQ78
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2478
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MPK feature is supported by both VMX and SVM. So we can
-safely move pkru state save/restore to common code. Also
-move all the pkru data structure to kvm_vcpu_arch.
+From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 
-Also fixes the problem Jim Mattson pointed and suggested below.
+Support backend for console. To enable console backend, just make
+console_size be greater than 0 and a multiple of 4096.
 
-"Though rdpkru and wrpkru are contingent upon CR4.PKE, the PKRU
-resource isn't. It can be read with XSAVE and written with XRSTOR.
-So, if we don't set the guest PKRU value here(kvm_load_guest_xsave_state),
-the guest can read the host value.
-
-In case of kvm_load_host_xsave_state, guest with CR4.PKE clear could
-potentially use XRSTOR to change the host PKRU value"
-
-Signed-off-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Link: https://lore.kernel.org/r/1585126506-18635-6-git-send-email-liaoweixiong@allwinnertech.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/vmx/vmx.c          |   18 ------------------
- arch/x86/kvm/x86.c              |   17 +++++++++++++++++
- 3 files changed, 18 insertions(+), 18 deletions(-)
+ fs/pstore/Kconfig           | 18 +++++++--
+ fs/pstore/blk.c             | 12 +++++-
+ fs/pstore/zone.c            | 81 ++++++++++++++++++++++++++++++++++---
+ include/linux/pstore_zone.h |  4 +-
+ 4 files changed, 105 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 42a2d0d3984a..afd8f3780ae0 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -578,6 +578,7 @@ struct kvm_vcpu_arch {
- 	unsigned long cr4;
- 	unsigned long cr4_guest_owned_bits;
- 	unsigned long cr8;
-+	u32 host_pkru;
- 	u32 pkru;
- 	u32 hflags;
- 	u64 efer;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c2c6335a998c..46898a476ba7 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1372,7 +1372,6 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index ef01c48f0ff7..126aa6c3ecf2 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -180,11 +180,11 @@ config PSTORE_BLK_BLKDEV
+ 	help
+ 	  Which block device should be used for pstore/blk.
  
- 	vmx_vcpu_pi_load(vcpu, cpu);
+-	  It accept the following variants:
++	  It accepts the following variants:
+ 	  1) <hex_major><hex_minor> device number in hexadecimal representation,
+ 	     with no leading 0x, for example b302.
+-	  2) /dev/<disk_name> represents the device number of disk
+-	  3) /dev/<disk_name><decimal> represents the device number
++	  2) /dev/<disk_name> represents the device name of disk
++	  3) /dev/<disk_name><decimal> represents the device name and number
+ 	     of partition - device number of disk plus the partition number
+ 	  4) /dev/<disk_name>p<decimal> - same as the above, this form is
+ 	     used when disk name of partitioned disk ends with a digit.
+@@ -236,3 +236,15 @@ config PSTORE_BLK_PMSG_SIZE
  
--	vmx->host_pkru = read_pkru();
- 	vmx->host_debugctlmsr = get_debugctlmsr();
- }
- 
-@@ -6577,11 +6576,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	kvm_load_guest_xsave_state(vcpu);
- 
--	if (static_cpu_has(X86_FEATURE_PKU) &&
--	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
--	    vcpu->arch.pkru != vmx->host_pkru)
--		__write_pkru(vcpu->arch.pkru);
--
- 	pt_guest_enter(vmx);
- 
- 	if (vcpu_to_pmu(vcpu)->version)
-@@ -6671,18 +6665,6 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	pt_guest_exit(vmx);
- 
--	/*
--	 * eager fpu is enabled if PKEY is supported and CR4 is switched
--	 * back on host, so it is safe to read guest PKRU from current
--	 * XSAVE.
--	 */
--	if (static_cpu_has(X86_FEATURE_PKU) &&
--	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
--		vcpu->arch.pkru = rdpkru();
--		if (vcpu->arch.pkru != vmx->host_pkru)
--			__write_pkru(vmx->host_pkru);
--	}
--
- 	kvm_load_host_xsave_state(vcpu);
- 
- 	vmx->nested.nested_run_pending = 0;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c5835f9cb9ad..98baeb74452c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -836,11 +836,25 @@ void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu)
- 		    vcpu->arch.ia32_xss != host_xss)
- 			wrmsrl(MSR_IA32_XSS, vcpu->arch.ia32_xss);
- 	}
+ 	  NOTE that, both Kconfig and module parameters can configure
+ 	  pstore/blk, but module parameters have priority over Kconfig.
 +
-+	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
-+	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU)) &&
-+	    vcpu->arch.pkru != vcpu->arch.host_pkru)
-+		__write_pkru(vcpu->arch.pkru);
- }
- EXPORT_SYMBOL_GPL(kvm_load_guest_xsave_state);
++config PSTORE_BLK_CONSOLE_SIZE
++	int "Size in Kbytes of console log to store"
++	depends on PSTORE_BLK
++	depends on PSTORE_CONSOLE
++	default 64
++	help
++	  This just sets size of console log (console_size) to store via
++	  pstore/blk. The size is in KB and must be a multiple of 4.
++
++	  NOTE that, both Kconfig and module parameters can configure
++	  pstore/blk, but module parameters have priority over Kconfig.
+diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
+index e3fa29988b0f..0b88c0bcd36c 100644
+--- a/fs/pstore/blk.c
++++ b/fs/pstore/blk.c
+@@ -35,6 +35,14 @@ static long pmsg_size = -1;
+ module_param(pmsg_size, long, 0400);
+ MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
  
- void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu)
++#if IS_ENABLED(CONFIG_PSTORE_CONSOLE)
++static long console_size = CONFIG_PSTORE_BLK_CONSOLE_SIZE;
++#else
++static long console_size = -1;
++#endif
++module_param(console_size, long, 0400);
++MODULE_PARM_DESC(console_size, "console size in kbytes");
++
+ /*
+  * blkdev - the block device to use for pstore storage
+  *
+@@ -91,7 +99,8 @@ struct bdev_info {
+  *		whole disk).
+  *		On success, the number of bytes should be returned, others
+  *		means error.
+- * @write:	The same as @read.
++ * @write:	The same as @read, but the following error number:
++ *		-EBUSY means try to write again later.
+  * @panic_write:The write operation only used for panic case. It's optional
+  *		if you do not care panic log. The parameters and return value
+  *		are the same as @read.
+@@ -142,6 +151,7 @@ static int psblk_register_do(struct pstore_device_info *dev)
+ 
+ 	verify_size(kmsg_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
+ 	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
++	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
+ #undef verify_size
+ 
+ 	pstore_zone_info->total_size = dev->total_size;
+diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
+index fe6fde96d722..33c99dc5f980 100644
+--- a/fs/pstore/zone.c
++++ b/fs/pstore/zone.c
+@@ -91,10 +91,12 @@ struct pstore_zone {
+  *
+  * @kpszs: kmsg dump storage zones
+  * @ppsz: pmsg storage zone
++ * @cpsz: console storage zone
+  * @kmsg_max_cnt: max count of @kpszs
+  * @kmsg_read_cnt: counter of total read kmsg dumps
+  * @kmsg_write_cnt: counter of total kmsg dump writes
+  * @pmsg_read_cnt: counter of total read pmsg zone
++ * @console_read_cnt: counter of total read console zone
+  * @oops_counter: counter of oops dumps
+  * @panic_counter: counter of panic dumps
+  * @recovered: whether finished recovering data from storage
+@@ -106,10 +108,12 @@ struct pstore_zone {
+ struct psz_context {
+ 	struct pstore_zone **kpszs;
+ 	struct pstore_zone *ppsz;
++	struct pstore_zone *cpsz;
+ 	unsigned int kmsg_max_cnt;
+ 	unsigned int kmsg_read_cnt;
+ 	unsigned int kmsg_write_cnt;
+ 	unsigned int pmsg_read_cnt;
++	unsigned int console_read_cnt;
+ 	/*
+ 	 * These counters should be calculated during recovery.
+ 	 * It records the oops/panic times after crashes rather than boots.
+@@ -129,6 +133,9 @@ struct psz_context {
+ };
+ static struct psz_context pstore_zone_cxt;
+ 
++static void psz_flush_all_dirty_zones(struct work_struct *);
++static DECLARE_DELAYED_WORK(psz_cleaner, psz_flush_all_dirty_zones);
++
+ /**
+  * enum psz_flush_mode - flush mode for psz_zone_write()
+  *
+@@ -237,6 +244,9 @@ static int psz_zone_write(struct pstore_zone *zone,
+ 	return 0;
+ dirty:
+ 	atomic_set(&zone->dirty, true);
++	/* flush dirty zones nicely */
++	if (wcnt == -EBUSY && !is_on_panic())
++		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(500));
+ 	return -EBUSY;
+ }
+ 
+@@ -293,6 +303,21 @@ static int psz_move_zone(struct pstore_zone *old, struct pstore_zone *new)
+ 	return 0;
+ }
+ 
++static void psz_flush_all_dirty_zones(struct work_struct *work)
++{
++	struct psz_context *cxt = &pstore_zone_cxt;
++	int ret = 0;
++
++	if (cxt->ppsz)
++		ret |= psz_flush_dirty_zone(cxt->ppsz);
++	if (cxt->cpsz)
++		ret |= psz_flush_dirty_zone(cxt->cpsz);
++	if (cxt->kpszs)
++		ret |= psz_flush_dirty_zones(cxt->kpszs, cxt->kmsg_max_cnt);
++	if (ret && cxt->pstore_zone_info)
++		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(1000));
++}
++
+ static int psz_kmsg_recover_data(struct psz_context *cxt)
  {
-+	if (static_cpu_has(X86_FEATURE_PKU) &&
-+	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
-+	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU))) {
-+		vcpu->arch.pkru = rdpkru();
-+		if (vcpu->arch.pkru != vcpu->arch.host_pkru)
-+			__write_pkru(vcpu->arch.host_pkru);
+ 	struct pstore_zone_info *info = cxt->pstore_zone_info;
+@@ -548,6 +573,10 @@ static inline int psz_recovery(struct psz_context *cxt)
+ 	if (ret)
+ 		goto recover_fail;
+ 
++	ret = psz_recover_zone(cxt, cxt->cpsz);
++	if (ret)
++		goto recover_fail;
++
+ 	pr_debug("recover end!\n");
+ 	atomic_set(&cxt->recovered, 1);
+ 	return 0;
+@@ -563,6 +592,7 @@ static int psz_pstore_open(struct pstore_info *psi)
+ 
+ 	cxt->kmsg_read_cnt = 0;
+ 	cxt->pmsg_read_cnt = 0;
++	cxt->console_read_cnt = 0;
+ 	return 0;
+ }
+ 
+@@ -627,8 +657,9 @@ static int psz_pstore_erase(struct pstore_record *record)
+ 		return psz_kmsg_erase(cxt, cxt->kpszs[record->id], record);
+ 	case PSTORE_TYPE_PMSG:
+ 		return psz_record_erase(cxt, cxt->ppsz);
+-	default:
+-		return -EINVAL;
++	case PSTORE_TYPE_CONSOLE:
++		return psz_record_erase(cxt, cxt->cpsz);
++	default: return -EINVAL;
+ 	}
+ }
+ 
+@@ -691,9 +722,10 @@ static int notrace psz_kmsg_write(struct psz_context *cxt,
+ 		return -ENOSPC;
+ 
+ 	ret = psz_kmsg_write_record(cxt, record);
+-	if (!ret) {
++	if (!ret && is_on_panic()) {
++		/* ensure all data are flushed to storage when panic */
+ 		pr_debug("try to flush other dirty zones\n");
+-		psz_flush_dirty_zones(cxt->kpszs, cxt->kmsg_max_cnt);
++		psz_flush_all_dirty_zones(NULL);
+ 	}
+ 
+ 	/* always return 0 as we had handled it on buffer */
+@@ -755,9 +787,18 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+ 			record->reason == KMSG_DUMP_PANIC)
+ 		atomic_set(&cxt->on_panic, 1);
+ 
++	/*
++	 * if on panic, do not write except panic records
++	 * Fix case that panic_write prints log which wakes up console backend.
++	 */
++	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
++		return -EBUSY;
++
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return psz_kmsg_write(cxt, record);
++	case PSTORE_TYPE_CONSOLE:
++		return psz_record_write(cxt->cpsz, record);
+ 	case PSTORE_TYPE_PMSG:
+ 		return psz_record_write(cxt->ppsz, record);
+ 	default:
+@@ -782,6 +823,13 @@ static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
+ 			return zone;
+ 	}
+ 
++	if (cxt->console_read_cnt == 0) {
++		cxt->console_read_cnt++;
++		zone = cxt->cpsz;
++		if (psz_old_ok(zone))
++			return zone;
 +	}
 +
- 	if (kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE)) {
+ 	return NULL;
+ }
  
- 		if (vcpu->arch.xcr0 != host_xcr0)
-@@ -3570,6 +3584,9 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+@@ -892,6 +940,8 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
+ 		readop = psz_kmsg_read;
+ 		record->id = cxt->kmsg_read_cnt - 1;
+ 		break;
++	case PSTORE_TYPE_CONSOLE:
++		fallthrough;
+ 	case PSTORE_TYPE_PMSG:
+ 		readop = psz_record_read;
+ 		break;
+@@ -952,6 +1002,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
+ 		psz_free_zones(&cxt->kpszs, &cxt->kmsg_max_cnt);
+ 	if (cxt->ppsz)
+ 		psz_free_zone(&cxt->ppsz);
++	if (cxt->cpsz)
++		psz_free_zone(&cxt->cpsz);
+ }
  
- 	kvm_x86_ops.vcpu_load(vcpu, cpu);
+ static struct pstore_zone *psz_init_zone(enum pstore_type_id type,
+@@ -1053,6 +1105,15 @@ static int psz_alloc_zones(struct psz_context *cxt)
+ 		goto free_out;
+ 	}
  
-+	/* Save host pkru register if supported */
-+	vcpu->arch.host_pkru = read_pkru();
++	off_size += info->console_size;
++	cxt->cpsz = psz_init_zone(PSTORE_TYPE_CONSOLE, &off,
++			info->console_size);
++	if (IS_ERR(cxt->cpsz)) {
++		err = PTR_ERR(cxt->cpsz);
++		cxt->cpsz = NULL;
++		goto free_out;
++	}
 +
- 	/* Apply any externally detected TSC adjustments (due to suspend) */
- 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
- 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
+ 	cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
+ 			info->total_size - off_size,
+ 			info->kmsg_size, &cxt->kmsg_max_cnt);
+@@ -1087,7 +1148,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!info->kmsg_size && !info->pmsg_size) {
++	if (!info->kmsg_size && !info->pmsg_size && !info->console_size) {
+ 		pr_warn("at least one record size must be non-zero\n");
+ 		return -EINVAL;
+ 	}
+@@ -1110,6 +1171,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
+ 	check_size(total_size, 4096);
+ 	check_size(kmsg_size, SECTOR_SIZE);
+ 	check_size(pmsg_size, SECTOR_SIZE);
++	check_size(console_size, SECTOR_SIZE);
+ 
+ #undef check_size
+ 
+@@ -1136,6 +1198,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
+ 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
+ 	pr_debug("\tkmsg size : %ld Bytes\n", info->kmsg_size);
+ 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
++	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
+ 
+ 	err = psz_alloc_zones(cxt);
+ 	if (err) {
+@@ -1169,6 +1232,10 @@ int register_pstore_zone(struct pstore_zone_info *info)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
+ 		pr_cont(" pmsg");
+ 	}
++	if (info->console_size) {
++		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
++		pr_cont(" console");
++	}
+ 	pr_cont("\n");
+ 
+ 	err = pstore_register(&cxt->pstore);
+@@ -1210,6 +1277,10 @@ void unregister_pstore_zone(struct pstore_zone_info *info)
+ 	/* Stop incoming writes from pstore. */
+ 	pstore_unregister(&cxt->pstore);
+ 
++	/* Flush any pending writes. */
++	psz_flush_all_dirty_zones(NULL);
++	flush_delayed_work(&psz_cleaner);
++
+ 	/* Clean up allocations. */
+ 	kfree(cxt->pstore.buf);
+ 	cxt->pstore.buf = NULL;
+diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
+index 29c367a3bd80..904ee67f4ba2 100644
+--- a/include/linux/pstore_zone.h
++++ b/include/linux/pstore_zone.h
+@@ -18,11 +18,12 @@ typedef ssize_t (*pstore_zone_write_op)(const char *, size_t, loff_t);
+  *		it must be multiple of SECTOR_SIZE(512 Bytes).
+  * @max_reason: Maximum kmsg dump reason to store.
+  * @pmsg_size:	The size of pmsg zone which is the same as @kmsg_size.
++ * @console_size:The size of console zone which is the same as @kmsg_size.
+  * @read:	The general read operation. Both of the function parameters
+  *		@size and @offset are relative value to storage.
+  *		On success, the number of bytes should be returned, others
+  *		means error.
+- * @write:	The same as @read.
++ * @write:	The same as @read, but -EBUSY means try to write again later.
+  * @panic_write:The write operation only used for panic case. It's optional
+  *		if you do not care panic log. The parameters and return value
+  *		are the same as @read.
+@@ -35,6 +36,7 @@ struct pstore_zone_info {
+ 	unsigned long kmsg_size;
+ 	int max_reason;
+ 	unsigned long pmsg_size;
++	unsigned long console_size;
+ 	pstore_zone_read_op read;
+ 	pstore_zone_write_op write;
+ 	pstore_zone_write_op panic_write;
+-- 
+2.20.1
 
