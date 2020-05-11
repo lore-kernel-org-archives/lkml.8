@@ -2,130 +2,273 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361DBC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E719CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10CF920720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E6C2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KooBIrBr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M8H02oxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgEKJTI (ORCPT
+        id S1728574AbgEKJW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47502 "EHLO
+        Mon, 11 May 2020 05:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgEKJTI (ORCPT
+        with ESMTP id S1726287AbgEKJWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:19:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E44C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:19:07 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b12so1773819plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ppxdbt3wg6MpIF6v81oAC87+g3QZ9WcD03ZvmbvZ7jo=;
-        b=KooBIrBrKy2TJB19MW7e2qsWNTWX0dA100ZlIF0uciPLcyEUIJSs5f8ZptI3u3/f4X
-         Q24IjVNjCwceInSJapWSqkGySEbcZXtbXccRUT+2/9jpb+1slxRqqDOOVGKMHMfHYmcy
-         /G61tkg2Bf5s+qSA3A9YBqj2O49eh9L2nmDow=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ppxdbt3wg6MpIF6v81oAC87+g3QZ9WcD03ZvmbvZ7jo=;
-        b=eBgyMSw/CHWLOgLvN9pJ0ts11d9hN6y3vfZhOwlf5T7FP8zQBKarhAVp+PCu6g3s/F
-         R6WkimPe5UMNC3KjDGJF6GeQo04lLRmM+8c2NBhMcSNhcCBNv0xn6Wi4hsKg5UQhCr5t
-         M5MGddCY5j5V2cO2VlKpb3efEQ2g0JTUGnpbvybTF1o0G1A2SLvJBeSlXQ++YWJtE7gt
-         LnhcWV9oJiyCAteooupjd+jALPLhFW1fCjR/VCc2aqvB7Xv1lk7cLNNpdypsOyN7qYw2
-         Oq1ZlD9+w0eyst1t+Ke6m2yrQNKRBe9PTCmyHp6te0RtCDuhpwuX1FEGq256JXszifyw
-         hr0Q==
-X-Gm-Message-State: AGi0Pubf7yrUcIUQRlRsSKZYNdti/cbAZm+7dgVAXEIC2E/g8DAj30v8
-        Q0cIH8DGEHMkvL1bOCi5rZgEc/tFEvI=
-X-Google-Smtp-Source: APiQypIKCKIALdTDo0hz8f0hTlj7IJPYcUvpahUaYzvMCI2N6KnD5vj3bMeXrtdgvZfoKMXX13Wf4g==
-X-Received: by 2002:a17:902:9b8f:: with SMTP id y15mr14078504plp.148.1589188746465;
-        Mon, 11 May 2020 02:19:06 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id x19sm8678535pfq.137.2020.05.11.02.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 02:19:06 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Mon, 11 May 2020 05:22:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D739C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rKzfrZPpJA1DJFRHcWafqulnttP8M0DdbunYLC4g23o=; b=M8H02oxp1YN5m9oPjQQBE/bEhA
+        JcNaMKejpE4mwC39qOcDUZbbq6QLdGeeXVqCFuNBAMwYjG5uyftpMNKqoh5gA+1ELiS7PtOdfX+Sz
+        pgCWWIzUDEZOgcJ4XXGBeRBtvLJPHQ/KgPcqr2IaFxT4kOHpr7gU5vsSx8ZhSqopziw3ZhcNbwPJA
+        5oiCxcn1emL+esxo0pCoaFDSFDD6wkIjcPixTA09h5nkKfEnljb38J3dce/4legI0sv4PlgHGdFqK
+        2jinCZe42a0DGHHgCelRqhOs6kluC39tsrdeGdfoLdI2VgN5a/EF44ujSgbxYp9MKn/T9gRla5rSi
+        /nxJn0eg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jY4dP-0003WK-9b; Mon, 11 May 2020 09:22:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2C4DF300261;
+        Mon, 11 May 2020 11:22:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0FC6B20961017; Mon, 11 May 2020 11:22:00 +0200 (CEST)
+Date:   Mon, 11 May 2020 11:22:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-usb@vger.kernel.org (open list:USB TYPEC CLASS)
-Subject: [PATCH v3] usb: typec: mux: intel: Fix DP_HPD_LVL bit field
-Date:   Mon, 11 May 2020 02:18:34 -0700
-Message-Id: <20200511091837.102508-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] arm64: perf_event: Fix time offset prior to epoch
+Message-ID: <20200511092200.GF2957@hirez.programming.kicks-ass.net>
+References: <20200505135544.6003-1-leo.yan@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200505135544.6003-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
-0.6, the PMC HPD request LVL bit field is bit 4.
-Fix the definition here to match the programming guide.
+On Tue, May 05, 2020 at 09:55:41PM +0800, Leo Yan wrote:
+> This patch set is to fix time offset prior to epoch for Arm arch timer.
+> This series is mainly following on suggestions on LKML [1].
+> 
+> To acheive the accurate time offset for a clock source prior to epoch,
+> patch 01 adds a new variant sched_clock_register_epoch() which allows to
+> output an extra argument for time offset prior to sched clock's
+> registration.
+> 
+> Patch 02 is to add handling for time offset in Arm arch timer driver, As
+> Will Deacon suggested to "disable the perf userpage if sched_clock
+> changes clocksource too" [2], after thinking about this suggestion, the
+> race condition doesn't exist between sched_clock's registration and perf
+> userpage.  The reason is sched_clock's registration is finished in
+> system's initialisation phase and at this point it has no chance to use
+> any userpage by Perf tool.  For this reason let's keep the code simple
+> and don't acquire all Perf events' seqlock during sched_clock's
+> registration.
+> 
 
-Since this bit field is changing, explicitly define a field for the
-HPD_HIGH mode data bit.
+AFAICT that's still completely buggered. The fact that the clock starts
+late is completely irrelevant, and might just be confusing you.
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
-Reviewed-by: Benson Leung <bleung@chromium.org>
+How this?
+
+(_completely_ untested)
+
 ---
+ arch/arm64/kernel/perf_event.c | 27 ++++++++++++++++++---------
+ include/linux/sched_clock.h    | 28 ++++++++++++++++++++++++++++
+ kernel/time/sched_clock.c      | 41 +++++++++++++----------------------------
+ 3 files changed, 59 insertions(+), 37 deletions(-)
 
-Changes in v3:
-- Fixed sorting of the bit field after modification.
-
-Changes in v2:
-- Fixed bit error in commit message.
-
- drivers/usb/typec/mux/intel_pmc_mux.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-index 67c5139cfa0d..c22e5c4bbf1a 100644
---- a/drivers/usb/typec/mux/intel_pmc_mux.c
-+++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-@@ -63,6 +63,7 @@ enum {
- #define PMC_USB_ALTMODE_DP_MODE_SHIFT	8
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index 4d7879484cec..81a49a916660 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -1165,28 +1165,37 @@ device_initcall(armv8_pmu_driver_init)
+ void arch_perf_update_userpage(struct perf_event *event,
+ 			       struct perf_event_mmap_page *userpg, u64 now)
+ {
+-	u32 freq;
+-	u32 shift;
++	struct clock_read_data *rd;
++	unsigned int seq;
  
- /* TBT specific Mode Data bits */
-+#define PMC_USB_ALTMODE_HPD_HIGH	BIT(14)
- #define PMC_USB_ALTMODE_TBT_TYPE	BIT(17)
- #define PMC_USB_ALTMODE_CABLE_TYPE	BIT(18)
- #define PMC_USB_ALTMODE_ACTIVE_LINK	BIT(20)
-@@ -74,8 +75,8 @@ enum {
- #define PMC_USB_ALTMODE_TBT_GEN(_g_)	(((_g_) & GENMASK(1, 0)) << 28)
+ 	/*
+ 	 * Internal timekeeping for enabled/running/stopped times
+ 	 * is always computed with the sched_clock.
+ 	 */
+-	freq = arch_timer_get_rate();
+ 	userpg->cap_user_time = 1;
++	userpg->cap_user_time_zero = 1;
++
++	do {
++		rd = sched_clock_read_begin(&seq);
++
++		userpg->time_mult = rd->mult;
++		userpg->time_shift = rd->shift;
++		userpg->time_offset = rd->epoch_ns;
++
++		userpg->time_zero -= (rd->epoch_cyc * rd->shift) >> rd->shift;
++
++	} while (sched_clock_read_retry(seq));
++
++	userpg->time_offset = userpf->time_zero - now;
  
- /* Display HPD Request bits */
-+#define PMC_USB_DP_HPD_LVL		BIT(4)
- #define PMC_USB_DP_HPD_IRQ		BIT(5)
--#define PMC_USB_DP_HPD_LVL		BIT(6)
- 
- struct pmc_usb;
- 
-@@ -158,8 +159,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
- 			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
- 
- 	if (data->status & DP_STATUS_HPD_STATE)
--		req.mode_data |= PMC_USB_DP_HPD_LVL <<
--				 PMC_USB_ALTMODE_DP_MODE_SHIFT;
-+		req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
- 
- 	return pmc_usb_command(port, (void *)&req, sizeof(req));
+-	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
+-			NSEC_PER_SEC, 0);
+ 	/*
+ 	 * time_shift is not expected to be greater than 31 due to
+ 	 * the original published conversion algorithm shifting a
+ 	 * 32-bit value (now specifies a 64-bit value) - refer
+ 	 * perf_event_mmap_page documentation in perf_event.h.
+ 	 */
+-	if (shift == 32) {
+-		shift = 31;
++	if (userpg->time_shift == 32) {
++		userpg->time_shift = 31;
+ 		userpg->time_mult >>= 1;
+ 	}
+-	userpg->time_shift = (u16)shift;
+-	userpg->time_offset = -now;
  }
--- 
-2.26.2.645.ge9eca65c58-goog
-
+diff --git a/include/linux/sched_clock.h b/include/linux/sched_clock.h
+index 0bb04a96a6d4..939dfbcd3289 100644
+--- a/include/linux/sched_clock.h
++++ b/include/linux/sched_clock.h
+@@ -6,6 +6,34 @@
+ #define LINUX_SCHED_CLOCK
+ 
+ #ifdef CONFIG_GENERIC_SCHED_CLOCK
++/**
++ * struct clock_read_data - data required to read from sched_clock()
++ *
++ * @epoch_ns:		sched_clock() value at last update
++ * @epoch_cyc:		Clock cycle value at last update.
++ * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
++ *			clocks.
++ * @read_sched_clock:	Current clock source (or dummy source when suspended).
++ * @mult:		Multipler for scaled math conversion.
++ * @shift:		Shift value for scaled math conversion.
++ *
++ * Care must be taken when updating this structure; it is read by
++ * some very hot code paths. It occupies <=40 bytes and, when combined
++ * with the seqcount used to synchronize access, comfortably fits into
++ * a 64 byte cache line.
++ */
++struct clock_read_data {
++	u64 epoch_ns;
++	u64 epoch_cyc;
++	u64 sched_clock_mask;
++	u64 (*read_sched_clock)(void);
++	u32 mult;
++	u32 shift;
++};
++
++extern struct clock_read_data *sched_clock_read_begin(unsigned int *seq);
++extern bool sched_clock_read_retry(unsigned int seq);
++
+ extern void generic_sched_clock_init(void);
+ 
+ extern void sched_clock_register(u64 (*read)(void), int bits,
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index fa3f800d7d76..c6d63b0d2999 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -19,31 +19,6 @@
+ 
+ #include "timekeeping.h"
+ 
+-/**
+- * struct clock_read_data - data required to read from sched_clock()
+- *
+- * @epoch_ns:		sched_clock() value at last update
+- * @epoch_cyc:		Clock cycle value at last update.
+- * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
+- *			clocks.
+- * @read_sched_clock:	Current clock source (or dummy source when suspended).
+- * @mult:		Multipler for scaled math conversion.
+- * @shift:		Shift value for scaled math conversion.
+- *
+- * Care must be taken when updating this structure; it is read by
+- * some very hot code paths. It occupies <=40 bytes and, when combined
+- * with the seqcount used to synchronize access, comfortably fits into
+- * a 64 byte cache line.
+- */
+-struct clock_read_data {
+-	u64 epoch_ns;
+-	u64 epoch_cyc;
+-	u64 sched_clock_mask;
+-	u64 (*read_sched_clock)(void);
+-	u32 mult;
+-	u32 shift;
+-};
+-
+ /**
+  * struct clock_data - all data needed for sched_clock() (including
+  *                     registration of a new clock source)
+@@ -93,6 +68,17 @@ static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
+ 	return (cyc * mult) >> shift;
+ }
+ 
++struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
++{
++	*seq = raw_read_seqcount(&cs.seq);
++	return cs.read_data + (seq & 1);
++}
++
++struct bool sched_clock_read_retry(unsigned int seq)
++{
++	return read_seqcount_retry(&cd.seq, seq);
++}
++
+ unsigned long long notrace sched_clock(void)
+ {
+ 	u64 cyc, res;
+@@ -100,13 +86,12 @@ unsigned long long notrace sched_clock(void)
+ 	struct clock_read_data *rd;
+ 
+ 	do {
+-		seq = raw_read_seqcount(&cd.seq);
+-		rd = cd.read_data + (seq & 1);
++		rd = sched_clock_read_begin(&seq);
+ 
+ 		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
+ 		      rd->sched_clock_mask;
+ 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
+-	} while (read_seqcount_retry(&cd.seq, seq));
++	} while (sched_clock_read_retry(seq));
+ 
+ 	return res;
+ }
