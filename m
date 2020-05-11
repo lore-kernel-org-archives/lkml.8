@@ -2,113 +2,114 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F661C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5338BC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2880B207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE4F20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l+HzZvBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgEKMoH (ORCPT
+        id S1729751AbgEKMov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:44:07 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:45347 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgEKMoH (ORCPT
+        Mon, 11 May 2020 08:44:51 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35268 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgEKMou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:44:07 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MOzGc-1jkAUS32IG-00PQ2t; Mon, 11 May 2020 14:44:04 +0200
-Received: by mail-qk1-f172.google.com with SMTP id s186so7662073qkd.4;
-        Mon, 11 May 2020 05:44:04 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaIsogpDW4q0xfIfh2nLLDItGl3HD4VDuhTGW08gi+f/xDp5E9p
-        Gx9Ln2nXu7Dp2huGzlFvqP7aEMDXupeYft+tGNc=
-X-Google-Smtp-Source: APiQypJj5dbLl2D8uRc+Ry1heWpkBlw/Bp5L9Wsf0VuOnzzkwLnibuXV3LsJgJmP788MknPtCTQN8rBbz17c2WDRPWk=
-X-Received: by 2002:a37:c96:: with SMTP id 144mr13680641qkm.138.1589201043482;
- Mon, 11 May 2020 05:44:03 -0700 (PDT)
+        Mon, 11 May 2020 08:44:50 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BCh13x116569;
+        Mon, 11 May 2020 12:43:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=sRhykJRt+02a/ywrImldoXMo6gkw76OTd0/TBwg0Xhc=;
+ b=l+HzZvBCl7Zta+t4P/ch8wb3AcHdJu2jPuK/L0ugyxGHJo0jbl6L9WKGq7q7M+k8l/xT
+ L5+C3WidGWYzKJTvL0KeDIFObWhi0jrfe0sPycY5edRQbFrP1frjdxt507RKU7l2dC++
+ 7Mf6lpuAk1KqXOmrJs/0eoumKumE/ku+B6ECWWeHro6W2KY+vSo+6Yu+yGyx+erW/eoa
+ lv0qdIkja6zEYWQkgk6VgyM2tnNerDpymhD7ZmF62DJI8GzO+NbksGqjL86RxeLTH/wl
+ +RLyAh6rIEkj50eh/rd1hMEbV0wfbaqzxnCJj2KxYmPM+oHWyiAiU9V2s/ayf73yGyUI Hg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 30x3mbmsxx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 12:43:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BCbYKO029882;
+        Mon, 11 May 2020 12:43:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 30x63mmsh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 12:43:52 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04BChmN6002746;
+        Mon, 11 May 2020 12:43:49 GMT
+Received: from linux-1.home (/92.157.36.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 May 2020 05:43:48 -0700
+Subject: Re: [patch V4 part 5 04/31] x86/entry: Split idtentry_enter/exit()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+References: <20200505135341.730586321@linutronix.de>
+ <20200505135828.499985727@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <d1cc2985-dca5-2ea8-ee9f-12086c2abe39@oracle.com>
+Date:   Mon, 11 May 2020 14:42:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200508100100.20740-1-grygorii.strashko@ti.com>
- <20200508100100.20740-3-grygorii.strashko@ti.com> <CAK8P3a0vewSiFc4rXu43_bs_A85EYx12_YuyBaU3PYJ1HszE=w@mail.gmail.com>
- <6614f29d-1796-18d9-9b78-214f56964a35@ti.com>
-In-Reply-To: <6614f29d-1796-18d9-9b78-214f56964a35@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 May 2020 14:43:47 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a19RC1hPZkLiGCEHFuHDNxNLiAg34RdbBZ=gxDhRg4RpA@mail.gmail.com>
-Message-ID: <CAK8P3a19RC1hPZkLiGCEHFuHDNxNLiAg34RdbBZ=gxDhRg4RpA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] soc: ti: add k3 platforms chipid module driver
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Dave Gerlach <d-gerlach@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:wPzum95NXpE728ysndebC9ABEw3kiSk6N1VPe2lsUP1a2SHFC8u
- ZBahnPzRO0bbtflhNvy2BOlFbakk9ShIPDNbm+fXch9yDKlcczcSVhQIX9+daJMVV5568VO
- o49K2CL0eGD60jjNtPMTPacqZCheBw3NvRpiH3gx73I09VbhJbJJYgH/P2eRVEh/dNNo29D
- /4xZc5Qvy3UxzvDwdgWDw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8T/FTbHk/CE=:gqjAp2ER7SwEAc2ritTiOQ
- viTpkGFgZiU+L0k1FSywlqR/TRE4s5mQQm8w/g7XNWobZjRO0XQBn+Zhjt0fnKbLKJTVyaD8w
- HWiJxqHTiXnK1loAPZr+jeC+VDVaAvbIU00Hxw3/c0bXFWXSgwTStnDitj/mrb6lnvxmcLGm1
- LrHsuZpnhZstQaN+MjeMuOM+7bAwPnowqM8O1CnnAcB9sVM2UH6wsQE1SCRauzsW7AWqIN8Zu
- Y7j4tD46h4Aj0L6buBsLPUaZaQjric1wNA4SD7z05wCgNaB8NJFcPQKD3LKbXMST+VTuW4Pq+
- 0jAXL2VhHE0ddY2Gtf7Ps4ej4vjCFyeRyTXjT7kybA0Ed4WxINBjSnv4lRtMzjzzxu4azHhDi
- H1am1CFB2+sYeUAl6iZ4yWvxpY8kIImsAi79HL/12K7ZyOvB8kbkwW+44OQ6FA+dU84ipbtin
- /7Znz/QNFDD3EXAtoVbhpwCtYOlHx59Z8tNsAhJ8Kv7vemgT/32vHdn0mA1zPjbfkDvcwDsyY
- JXsTttotUiZS4fPSvH2fW6+PDeQdlP6GRjlE5wxsmAd1nVA72RW/Zuseau0tD7n63Cgv6ELyS
- DJ6GqaXyRvDoWepa90eUunQRa1zaxhQc8hiNA9ioXo8ATOYvmMaFqAXj6/eFTjPOJHOFKG0ML
- XsMkqIPVJoAyYaYkSVMds3HKbYimesFXzzF40cNfCbXiVl3CVredoQl2iNht6rrJC3mTUBP2E
- KibVpfGiL3gwP6Xo/RhTxAT8BtZFB1j0esRgfFZpOM8xn0qnWQAIrIiNMKvxJBa14jjcIjNSm
- igR+s8K+Ua+HTl70X2IrQRtxSuI8thn0DCURg+jBGMCquELTXI=
+In-Reply-To: <20200505135828.499985727@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9617 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9617 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 1:11 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> Hi Arnd,
->
-> On 09/05/2020 01:17, Arnd Bergmann wrote:
-> > On Fri, May 8, 2020 at 12:01 PM Grygorii Strashko
-> > <grygorii.strashko@ti.com> wrote:
-> >
-> >> +static int __init k3_chipinfo_init(void)
-> >> +{
-> >> +       struct soc_device_attribute *soc_dev_attr;
-> >> +       struct soc_device *soc_dev;
-> >> +       struct device_node *node;
-> >> +       struct regmap *regmap;
-> >> +       u32 partno_id;
-> >> +       u32 variant;
-> >> +       u32 jtag_id;
-> >> +       u32 mfg;
-> >> +       int ret;
-> >> +
-> >> +       node = of_find_compatible_node(NULL, NULL, "ti,am654-chipid");
-> >> +       if (!node)
-> >> +               return -ENODEV;
-> >
-> > This will fail the initcall and print a warning when the kernel runs on any
-> > other SoC. Would it be possible to just make this a platform_driver?
-> >
-> > If not, I think you should silently return success when the device
-> > node is absent.
->
-> Thank you for your report.
-> Can' make it platform drv., as the SoC info need to be accessible by divers early.
 
-Which drivers in particular? In most cases you should be able to still do this
-right by relying on initcall ordering as long as this one can only be built-in
-(or possibly only a module for compile-testing).
+On 5/5/20 3:53 PM, Thomas Gleixner wrote:
+> Split the implementation of idtentry_enter/exit() out into inline functions
+> so that variaants of idtentry_enter/exit() can be implemented without
 
-      Arnd
+typo: "variaants"
+
+alex.
+
+> duplicating code.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/common.c |   37 +++++++++++++++++++++----------------
+>   1 file changed, 21 insertions(+), 16 deletions(-)
