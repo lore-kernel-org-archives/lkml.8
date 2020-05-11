@@ -2,122 +2,158 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F22C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466DDC54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D383D2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DE2207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="NMwUyTJE"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YFyWS89N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgEKI2I (ORCPT
+        id S1729160AbgEKI2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729090AbgEKI2H (ORCPT
+        Mon, 11 May 2020 04:28:23 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:62830 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728344AbgEKI2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:28:07 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E1F1C05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:28:07 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id z22so6765029lfd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xRvOsGODr2gBty44WMLBkyLF05Kazw7eweqK6vwx6G8=;
-        b=NMwUyTJEcbx88njWIumKBmdXEPVUEg0mDKK5uVHZYtRcI2EsMUGm4RKTg3v8t+HImQ
-         Dhe486gV9U3C4ZEk4KudoDojO6BjvFuqPrSrFdE4okuodgo/vKBO7N4q5xWUO/NMudOQ
-         DTuEFJkPsULwl23xN7LXDN9fsCueSRXI+9f+sBdEpJRqHpcQGpC4PLuWVfhfKfb/7sEq
-         uo3QClFkWonGW7vE54sEwFf8dNmqJ2+lehPnKgvPNk46g4jFIuFyFTqgzRFS2tMjLNth
-         /shvpXWyz143uoEV7N4gcySD//s/ZbmhSw9s7vO1MyDWWtv9vcxSQ02NXPMObmMJpMiz
-         BKng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xRvOsGODr2gBty44WMLBkyLF05Kazw7eweqK6vwx6G8=;
-        b=Dg4I7HnmkDq7/jI5SpXEn2DxUUVvEnF8zfIdzdNQra6oz+2CAjDXzfA7X8vwZxzBt+
-         PEoZ6iomT/JTjSEeZAO/DAzAWf9L870NsOdQlcI9AJwiOGUx58ttFAZAzGbCGppY5vin
-         XQ0XdZTh2MbRt63zWBW7usk2Ui4yWCl2dRXtU3WcFcDbGh/6zMicjDcoZfjXpu4Rputk
-         FoJP8BYg68AXmWQ2OAUfFiYqFdAoiIgL3GdBIcuN0G0K15EWP0KHLcx+KVfoUXMOM6+f
-         kxazi8S6P7J0/TCQYaAwJTN9shFzl/iYwMA9iM/s7uSU8ayOjSPMjokSRfbRfbdjh3EN
-         2EeA==
-X-Gm-Message-State: AOAM532JM3Exmybtk6esEzJ4RWmMXcnS6B58zMkq1mwxQeR3J/VGuhng
-        GTwIBBfVJ3Rx4X9Hu66CM9B9qm2muQci3w==
-X-Google-Smtp-Source: ABdhPJy9RJ6KQf/3Kl5eqQg+JUSwUL3ldNqhxlgS3bNEYoMSUpVKEawpvAY6S5rxYHjoPhvrWBixXw==
-X-Received: by 2002:ac2:59ce:: with SMTP id x14mr10087337lfn.183.1589185685335;
-        Mon, 11 May 2020 01:28:05 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:482:2677:ba:b682:3c24:214e? ([2a00:1fa0:482:2677:ba:b682:3c24:214e])
-        by smtp.gmail.com with ESMTPSA id m13sm10297061lfk.12.2020.05.11.01.28.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 01:28:04 -0700 (PDT)
-Subject: Re: [PATCH v2 2/7] dt-bindings: watchdog: dw-wdt: Support devices
- with asynch clocks
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306132758.703FC8030704@mail.baikalelectronics.ru>
- <20200510105807.880-1-Sergey.Semin@baikalelectronics.ru>
- <20200510105807.880-3-Sergey.Semin@baikalelectronics.ru>
- <f065ff5f-af86-4293-b208-766e41699436@cogentembedded.com>
-Message-ID: <477b9f75-485c-3208-b58c-56a5c13e15bb@cogentembedded.com>
-Date:   Mon, 11 May 2020 11:28:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 04:28:23 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B8S0Bg010988;
+        Mon, 11 May 2020 10:28:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=ARKtW82Ju4foRRG5jzp6GKL8UxrRXVO/KxZ4yej17EA=;
+ b=YFyWS89NgLXHX4OBgXe4bdHZ0ZrWu3Se8fTc63Y7Y7DZ1QCCq3Hd6g+I9JYmYYTEmEcY
+ oMDyhNRAzcGcsj4jrNNcl5qEQy/W4P0iBT84tCCw894FoqHhLIHhDIRgoeCOLz/jMwOa
+ xdIXW8pRnV/jgNccj3k6tzeSOlvLjCCn3FDmVpcu6DYota4vSFCdOHMfZVviRLnYONC9
+ uXwtKcj+BW8RSD/0e733l81RcgUU1B4R8EuolGkDqpLbsJZ8yjTXzHcWfGaaoQ0LW2hC
+ mn/9z3mAQ86o5V+xQgSZmyAFm/nNwJXG6aJ7ygfyA3RrRhk7tZNSYmxOcAwFJAC9DWsU jQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30wj01sa7x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 10:28:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D58A10002A;
+        Mon, 11 May 2020 10:28:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5B1482B27B5;
+        Mon, 11 May 2020 10:28:06 +0200 (CEST)
+Received: from [10.131.226.156] (10.75.127.47) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
+ 2020 10:28:04 +0200
+Subject: Re: [PATCH 2/4] i2c: addition of client reg/unreg callbacks
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>,
+        <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
+ <1588657871-14747-3-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <a68f47ca-47e1-a293-f4ad-a5104c9ee620@st.com>
+Date:   Mon, 11 May 2020 10:28:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <f065ff5f-af86-4293-b208-766e41699436@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1588657871-14747-3-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.05.2020 11:25, Sergei Shtylyov wrote:
+Hi all,
 
->> DW Watchdog IP core can be synthesised with asynchronous timer/APB
->> clocks support (WDT_ASYNC_CLK_MODE_ENABLE == 1). In this case
->> a separate clock signal is supposed to be used to feed watchdog timer
->> and APB interface of the device. Lets along with the watchdog timer
->                                         ^ verb missing? or comma?
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-    Oh, and probably "Let's" too. :-)
+Thanks
 
+On 5/5/20 7:51 AM, Alain Volmat wrote:
+> Addition of two callbacks reg_client and unreg_client that can be
+> implemented by adapter drivers in order to take action whenever a
+> client is being registered to it.
 > 
->> reference clock expect to have the optional APB3 bu interface clock
->> sepcified in a DW WDT dt node.
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 11 +++++++++++
+>  include/linux/i2c.h         |  6 ++++++
+>  2 files changed, 17 insertions(+)
 > 
->     Specified.
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 2e4560671183..4c84c6264314 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -319,6 +319,12 @@ static int i2c_device_probe(struct device *dev)
+>  	if (!client)
+>  		return 0;
+>  
+> +	if (client->adapter->algo->reg_client) {
+> +		status = client->adapter->algo->reg_client(client);
+> +		if (status)
+> +			return status;
+> +	}
+> +
+>  	driver = to_i2c_driver(dev->driver);
+>  
+>  	client->irq = client->init_irq;
+> @@ -417,6 +423,8 @@ static int i2c_device_probe(struct device *dev)
+>  put_sync_adapter:
+>  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+>  		pm_runtime_put_sync(&client->adapter->dev);
+> +	if (client->adapter->algo->reg_client)
+> +		client->adapter->algo->unreg_client(client);
+>  
+>  	return status;
+>  }
+> @@ -445,6 +453,9 @@ static int i2c_device_remove(struct device *dev)
+>  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
+>  		pm_runtime_put(&client->adapter->dev);
+>  
+> +	if (client->adapter->algo->unreg_client)
+> +		client->adapter->algo->unreg_client(client);
+> +
+>  	return status;
+>  }
+>  
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index 45d36ba4826b..61b838caf454 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -509,6 +509,8 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+>   *   so e.g. PMICs can be accessed very late before shutdown. Optional.
+>   * @functionality: Return the flags that this algorithm/adapter pair supports
+>   *   from the ``I2C_FUNC_*`` flags.
+> + * @reg_client: Callback informing that a new client is being registered
+> + * @unreg_client: Callback informing that a client is being removed
+>   * @reg_slave: Register given client to I2C slave mode of this adapter
+>   * @unreg_slave: Unregister given client from I2C slave mode of this adapter
+>   *
+> @@ -545,6 +547,10 @@ struct i2c_algorithm {
+>  	/* To determine what the adapter supports */
+>  	u32 (*functionality)(struct i2c_adapter *adap);
+>  
+> +	/* To inform the adapter of the probe/remove of a client */
+> +	int (*reg_client)(struct i2c_client *client);
+> +	void (*unreg_client)(struct i2c_client *client);
+> +
+>  #if IS_ENABLED(CONFIG_I2C_SLAVE)
+>  	int (*reg_slave)(struct i2c_client *client);
+>  	int (*unreg_slave)(struct i2c_client *client);
 > 
->> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
->> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->> Cc: Paul Burton <paulburton@kernel.org>
->> Cc: Ralf Baechle <ralf@linux-mips.org>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Philipp Zabel <p.zabel@pengutronix.de>
->> Cc: linux-mips@vger.kernel.org
-> [...]
-
-MBR, Sergei
