@@ -2,194 +2,115 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711B3C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9DEC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF1720736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA1220752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgEKSRf convert rfc822-to-8bit (ORCPT
+        id S1731108AbgEKSRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:17:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53725 "EHLO mga03.intel.com"
+        Mon, 11 May 2020 14:17:45 -0400
+Received: from mga03.intel.com ([134.134.136.65]:53739 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729643AbgEKSRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:17:35 -0400
-IronPort-SDR: FCVbFbGT6W7Q29V7wEpA1jRYNeUZ5NC9xYJKLSh7XRKqgU6oZ0+6nagDE81qn4iWgRurF6bbeJ
- t8LVXxozKa9Q==
+        id S1729643AbgEKSRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:17:45 -0400
+IronPort-SDR: SjcOT8Syf+YMgUMB6EuYVtTFHC0yTl+hxCHpBth3WoRzNP6OeS973hPtOPXr+Yc1sYP1cXqUKF
+ pqWyTlPNTRug==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:17:34 -0700
-IronPort-SDR: Y1DsXc4/UPTn8R3+5co8epPfgEtRYbtqfhLJy4DfqHLdQVkZtaZtEw2ypysEvY0wmqywkDhrIJ
- wyPNuQWdaOlg==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 11:17:44 -0700
+IronPort-SDR: S4r1fZ5oBzH+5W8qh1aHRie2tfvQereT2aab4/Wgzm9tNyHvCxkt3Xv6ofnbGa2wlWF1R1+Whq
+ X9YSTU8ZOJJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="286361037"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga004.fm.intel.com with ESMTP; 11 May 2020 11:17:34 -0700
-Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 11 May 2020 11:17:34 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
- FMSMSX154.amr.corp.intel.com ([169.254.6.202]) with mapi id 14.03.0439.000;
- Mon, 11 May 2020 11:17:33 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        "DRI Development" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "Vetter, Daniel" <daniel.vetter@intel.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
- for mock fences
-Thread-Topic: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function
- for mock fences
-Thread-Index: AQHWJ3Q9b7FvqdjeFkWZgt98eLHlv6ijMJewgAABOlA=
-Date:   Mon, 11 May 2020 18:17:33 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E20F87B@FMSMSX108.amr.corp.intel.com>
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-2-daniel.vetter@ffwll.ch>
- <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E20F842@FMSMSX108.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+   d="scan'208";a="261849896"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 11 May 2020 11:17:44 -0700
+Date:   Mon, 11 May 2020 11:17:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: Re: [PATCH v9 3/8] x86/split_lock: Introduce flag
+ X86_FEATURE_SLD_FATAL and drop sld_state
+Message-ID: <20200511181744.GF24052@linux.intel.com>
+References: <20200509110542.8159-1-xiaoyao.li@intel.com>
+ <20200509110542.8159-4-xiaoyao.li@intel.com>
+ <CALCETrXwtj5rhVM6YYNEDeDqT3eKFNkGFCgSB_hUd7aOYBFXmw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXwtj5rhVM6YYNEDeDqT3eKFNkGFCgSB_hUd7aOYBFXmw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Ruhl, Michael J
->Sent: Monday, May 11, 2020 2:13 PM
->To: Daniel Vetter <daniel.vetter@ffwll.ch>; LKML <linux-
->kernel@vger.kernel.org>
->Cc: Intel Graphics Development <intel-gfx@lists.freedesktop.org>; DRI
->Development <dri-devel@lists.freedesktop.org>; linaro-mm-
->sig@lists.linaro.org; Vetter, Daniel <daniel.vetter@intel.com>; linux-
->media@vger.kernel.org
->Subject: RE: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
->mock fences
->
->>-----Original Message-----
->>From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of
->>Daniel Vetter
->>Sent: Monday, May 11, 2020 5:12 AM
->>To: LKML <linux-kernel@vger.kernel.org>
->>Cc: Daniel Vetter <daniel.vetter@ffwll.ch>; Intel Graphics Development
->><intel-gfx@lists.freedesktop.org>; DRI Development <dri-
->>devel@lists.freedesktop.org>; linaro-mm-sig@lists.linaro.org; Vetter, Daniel
->><daniel.vetter@intel.com>; Sumit Semwal <sumit.semwal@linaro.org>;
->linux-
->>media@vger.kernel.org
->>Subject: [Intel-gfx] [PATCH 2/3] dma-fence: use default wait function for
->>mock fences
->>
->>No need to micro-optmize when we're waiting in a mocked object ...
->
->Makes sense to me.
+On Sat, May 09, 2020 at 10:14:02PM -0700, Andy Lutomirski wrote:
+> On Fri, May 8, 2020 at 8:03 PM Xiaoyao Li <xiaoyao.li@intel.com> wrote:
+> >
+> > Introduce a synthetic feature flag X86_FEATURE_SLD_FATAL, which means
+> > kernel is in sld_fatal mode if set.
+> >
+> > Now sld_state is not needed any more that the state of SLD can be
+> > inferred from X86_FEATURE_SPLIT_LOCK_DETECT and X86_FEATURE_SLD_FATAL.
+> 
+> Is it too much to ask for Intel to actually allocate and define a
+> CPUID bit that means "this CPU *always* sends #AC on a split lock"?
+> This would be a pure documentation change, but it would make this
+> architectural rather than something that each hypervisor needs to hack
+> up.
 
-/sigh.
+The original plan was to request a bit in MSR_TEST_CTRL be documented as
+such.  Then we discovered that defining IA32_CORE_CAPABILITIES enumeration
+as architectural was an SDM bug[*].  At that point, enumerating SLD to a
+KVM guest through a KVM CPUID leaf is the least awful option.  Emulating the
+model specific behavior doesn't provide userspace with a sane way to disable
+SLD for a guest, and emulating IA32_CORE_CAPABILITIES behavior would be
+tantamount to emulating model specific behavior.
 
-Reading Chris comment, I am no longer sure it make sense... 
+Once paravirt is required for basic SLD enumeration, tacking on the "fatal"
+indicator is a minor blip.
 
-Un-ack?
+I agree that having to reinvent the wheel for every hypervisor is completely
+ridiculous, but it provides well defined and controllable behavior.  We
+could try to get two CPUID bits defined in the SDM, but pushing through all
+the bureaucracy that gates SDM changes means we wouldn't have a resolution
+for at least multiple months, assuming the proposal was even accepted.
 
-m
+[*] https://lkml.kernel.org/r/20200416205754.21177-3-tony.luck@intel.com
+ 
+> Meanwhile, I don't see why adding a cpufeature flag is worthwhile to
+> avoid a less bizarre global variable.  There's no performance issue
+> here, and the old code looked a lot more comprehensible than the new
+> code.
 
->Acked-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
->
->M
->
->>Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->>Cc: Sumit Semwal <sumit.semwal@linaro.org>
->>Cc: linux-media@vger.kernel.org
->>Cc: linaro-mm-sig@lists.linaro.org
->>---
->> drivers/dma-buf/st-dma-fence.c | 41 ----------------------------------
->> 1 file changed, 41 deletions(-)
->>
->>diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-
->>fence.c
->>index e593064341c8..8166d2984702 100644
->>--- a/drivers/dma-buf/st-dma-fence.c
->>+++ b/drivers/dma-buf/st-dma-fence.c
->>@@ -33,50 +33,9 @@ static void mock_fence_release(struct dma_fence *f)
->> 	kmem_cache_free(slab_fences, to_mock_fence(f));
->> }
->>
->>-struct wait_cb {
->>-	struct dma_fence_cb cb;
->>-	struct task_struct *task;
->>-};
->>-
->>-static void mock_wakeup(struct dma_fence *f, struct dma_fence_cb *cb)
->>-{
->>-	wake_up_process(container_of(cb, struct wait_cb, cb)->task);
->>-}
->>-
->>-static long mock_wait(struct dma_fence *f, bool intr, long timeout)
->>-{
->>-	const int state = intr ? TASK_INTERRUPTIBLE :
->>TASK_UNINTERRUPTIBLE;
->>-	struct wait_cb cb = { .task = current };
->>-
->>-	if (dma_fence_add_callback(f, &cb.cb, mock_wakeup))
->>-		return timeout;
->>-
->>-	while (timeout) {
->>-		set_current_state(state);
->>-
->>-		if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &f->flags))
->>-			break;
->>-
->>-		if (signal_pending_state(state, current))
->>-			break;
->>-
->>-		timeout = schedule_timeout(timeout);
->>-	}
->>-	__set_current_state(TASK_RUNNING);
->>-
->>-	if (!dma_fence_remove_callback(f, &cb.cb))
->>-		return timeout;
->>-
->>-	if (signal_pending_state(state, current))
->>-		return -ERESTARTSYS;
->>-
->>-	return -ETIME;
->>-}
->>-
->> static const struct dma_fence_ops mock_ops = {
->> 	.get_driver_name = mock_name,
->> 	.get_timeline_name = mock_name,
->>-	.wait = mock_wait,
->> 	.release = mock_fence_release,
->> };
->>
->>--
->>2.26.2
->>
->>_______________________________________________
->>Intel-gfx mailing list
->>Intel-gfx@lists.freedesktop.org
->>https://lists.freedesktop.org/mailman/listinfo/intel-gfx
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The flag has two main advantages:
+
+  - Automatically available to modules, i.e. KVM.
+  - Visible to userspace in /proc/cpuinfo.
+
+Making the global variable available to KVM is ugly because it either
+requires exporting the variable and the enums (which gets especially nasty
+because kvm_intel can be built with CONFIG_CPU_SUP_INTEL=n), or requires
+adding a dedicated is_sld_fatal() wrapper and thus more exported crud.
+
+And IMO, the feature flag is the less bizarre option once it's "public"
+knowledge, e.g. more in line with features that enumerate both basic support
+and sub-features via CPUID bits.
