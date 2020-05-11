@@ -2,104 +2,241 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C7C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932ACC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA37E20746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688FB20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OhYCfZln"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="vFO25KpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgEKPGq (ORCPT
+        id S1730133AbgEKPHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
+        Mon, 11 May 2020 11:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbgEKPGp (ORCPT
+        by vger.kernel.org with ESMTP id S1728090AbgEKPHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:06:45 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22DC5C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:06:44 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a7so7940086pju.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:06:44 -0700 (PDT)
+        Mon, 11 May 2020 11:07:08 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DF8C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:07:08 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id z80so4518078qka.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:07:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iT+tdYyqRDgvuVMsZ4OGGMIEPSaNDFZn3C4PrbVyaUU=;
-        b=OhYCfZln8xjCNrXA2rqmTU75wVWvESusZ6O14FJhML3HhfyAo7i7ldiGJ31d4HVsNv
-         r87WYM0ILVN5YPujOd+ZKcuR1R8IV9MQPiL/pz0J1GRV8Ph3SUHQQpmF8mo9EZWGPmQV
-         QbP0EE4Wc4FVU/awlsy5wHBbjHR6UJa+NCBtbvE/6RpjHKdYVp/YvhahaEuOFpkXRXNz
-         w8clS7Ftclvee0JAVShDNPtDgelorrDCSng1VrJKlVcveB1ZUWCk7hKpGXkelddoV8Y3
-         ERutYhF4O4Ayp1f5xMqVinb43IrePCtwteTV/2VtvHbFha9CuOjk4Va4iFVSQGMJOGzR
-         8OUA==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ANAit2WX+K9wu4n6he8ngZbFdqawZzoQDVcmzxgA7go=;
+        b=vFO25KpXwg/4vtW8tD+XIfm9LH46+fQ6vvusO0tJeYwSNeBknXcUE5831e2qvIbxNB
+         +vEmtna2uZpKf+W/kuG3dxSgsESJKBqc4IhSu+vI0v1ulFrcCqAfkILo2N91JoiKJ1VS
+         IeKrygvNCP9TwKSM4nZZV+6aUOr9YP4M9uU2NnO214vrmh+gcV3XI6IYat+zBLyslXuz
+         qBTXHi14HEys8m8tByH7DOimgJvM9+KyoJhvhLRU6cUdxDSd9pfqwDB/NC1bpgSTNoHb
+         q4xx6h6LAXEjkdPchQEnaYQXvlQK/oG/0FN9w9FLsVDpbYuXFot5iHbtHU6WrxwDv07O
+         REGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iT+tdYyqRDgvuVMsZ4OGGMIEPSaNDFZn3C4PrbVyaUU=;
-        b=g9pUMJEHWaYveGU6EVRN9votoagSfUN/3aumFy585yH5UrEmOCGGnBp1TO8i7Y0/YC
-         mnk/mULd9TEkQMny04L022yFw/T8ANZWqqFOZTFTCU6UKqpPVM1t8GXGREhnAMeu7Rc/
-         XCt/w/pphMRkcQCWojQ7UQtsLZ3jVxSlX8ifpIbXT500KahmH5MmUuVZzBrwNd0V+tvk
-         ldT7N3nmlBiwbUH2PnWx9PbrQmw2FLOsvbQam94yy/PmUibAtAI1umPBi+Hr61AhZVuO
-         9prZNzrKJWQImYsXxev7+pVyuHak24KnQOaQ3O3qAxiZfuSgVlqrq80pXnUMbZQ95q4x
-         DDDA==
-X-Gm-Message-State: AGi0PuYVp8XoOngjyCnm+cf4/dRWzj7E4C1uw92cBp6t41PvvQl9qf0l
-        JLpIoNoKVvQvKxzcAX5NoFpjIw==
-X-Google-Smtp-Source: APiQypLprHSOYRv+5f5iwrFg5ANEyN/qPI/31A2kr4NNqRxzEAw55I2AEq2Rnk8oRGwlwY3KhEaD9w==
-X-Received: by 2002:a17:90a:f40f:: with SMTP id ch15mr19417129pjb.178.1589209603637;
-        Mon, 11 May 2020 08:06:43 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:2dd6:4c58:486d:263e? ([2605:e000:100e:8c61:2dd6:4c58:486d:263e])
-        by smtp.gmail.com with ESMTPSA id e10sm9395447pfl.195.2020.05.11.08.06.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 08:06:42 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20200511142756.1b7ef706@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <74a0ddc6-8637-c821-7128-4431261b0c12@kernel.dk>
-Date:   Mon, 11 May 2020 09:06:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ANAit2WX+K9wu4n6he8ngZbFdqawZzoQDVcmzxgA7go=;
+        b=SBmDBEvjSWqBUE+587cpeyIq/rkqGJJFEUn5bBCjJ4a8cYt0Ig6yn7WvorlC5A9BvV
+         Z0ldLuiN8qGydsCAXEG4txEnx0FdYD9o3oxIdZVnD/PFSamuHHCgHycJKjfnAcS4WpAF
+         2umNgnxiDGPBu8dBDZIqq20pyXBmngJxEYVE+T7gB1b0CmlFBVKUCnxLzwms+tkOKsIk
+         jZ6vEN7ipW9I41zdzBrwwkCqPcqhdLbhIQCpdvTNjvsjEQCJoIlcgFCqN8BOMfsShlFR
+         ZogFkxcSPgGZsMAvX6Z9TNfBh6L8xLSnCRuF/1lYH1uB85EYs/bI+2QRb6h0iMspQhZq
+         NLoA==
+X-Gm-Message-State: AGi0PuYSJUcOkn3c38fVYtcJVlN24u0Ts9ONXbWfK4p5Aq43GGF+9xsP
+        Ky/Z6x5Xru4dPf6EC7C5LMSbRA==
+X-Google-Smtp-Source: APiQypI3zax9mzs3ycZgpcHPMyHsq5/Hz/R3+ZSCs3htkIuCuIQ6i4eEs5zbW+/YH57wPpBL6Xadpg==
+X-Received: by 2002:a37:9344:: with SMTP id v65mr14585673qkd.366.1589209627242;
+        Mon, 11 May 2020 08:07:07 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id l22sm8360550qki.45.2020.05.11.08.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 08:07:06 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:06:48 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Joonsoo Kim <js1304@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 05/18] mm: memcontrol: convert page cache to a new
+ mem_cgroup_charge() API
+Message-ID: <20200511150648.GA306292@cmpxchg.org>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-6-hannes@cmpxchg.org>
+ <20200422064041.GE6780@js1304-desktop>
+ <20200422120946.GA358439@cmpxchg.org>
+ <20200423052450.GA12538@js1304-desktop>
+ <20200508160122.GB181181@cmpxchg.org>
+ <alpine.LSU.2.11.2005102350360.2769@eggly.anvils>
 MIME-Version: 1.0
-In-Reply-To: <20200511142756.1b7ef706@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005102350360.2769@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/20 10:27 PM, Stephen Rothwell wrote:
-> Hi all,
+On Mon, May 11, 2020 at 12:38:04AM -0700, Hugh Dickins wrote:
+> On Fri, 8 May 2020, Johannes Weiner wrote:
+> > 
+> > I looked at this some more, as well as compared it to non-shmem
+> > swapping. My conclusion is - and Hugh may correct me on this - that
+> > the deletion looks mandatory but is actually an optimization. Page
+> > reclaim will ultimately pick these pages up.
+> > 
+> > When non-shmem pages are swapped in by readahead (locked until IO
+> > completes) and their page tables are simultaneously unmapped, the
+> > zap_pte_range() code calls free_swap_and_cache() and the locked pages
+> > are stranded in the swap cache with no page table references. We rely
+> > on page reclaim to pick them up later on.
+> > 
+> > The same appears to be true for shmem. If the references to the swap
+> > page are zapped while we're trying to swap in, we can strand the page
+> > in the swap cache. But it's not up to swapin to detect this reliably,
+> > it just frees the page more quickly than having to wait for reclaim.
 > 
-> After merging the block tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> drivers/block/aoe/aoeblk.c: In function 'aoeblk_gdalloc':
-> drivers/block/aoe/aoeblk.c:410:21: error: 'struct backing_dev_info' has no member named 'name'
->   410 |  q->backing_dev_info->name = "aoe";
->       |                     ^~
-> 
-> Caused by commit
-> 
->   1cd925d58385 ("bdi: remove the name field in struct backing_dev_info")
+> I think you've got all that exactly right, thanks for working it out.
+> It originates from v3.7's 215c02bc33bb ("tmpfs: fix shmem_getpage_gfp()
+> VM_BUG_ON") - in which I also had to thank you.
 
-Gah, thanks Stephen. This series is looking less and less impressive,
-fallout for both 5.7 and 5.8, in terms of build testing (none).
+I should have looked where it actually came from - I had forgotten
+about that patch!
 
+> I think I chose to do the delete_from_swap_cache() right there, partly
+> because of following shmem_unuse_inode() code which already did that,
+> partly on the basis that while we have to observe the case then it's
+> better to clean it up, and partly out of guilt that our page lock here
+> is what had prevented shmem_undo_range() from completing its job; but
+> I believe you're right that unused swapcache reclaim would sort it out
+> eventually.
+
+That makes sense to me.
+
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > index e80167927dce..236642775f89 100644
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+> > @@ -640,7 +640,7 @@ static int shmem_add_to_page_cache(struct page *page,
+> >  		xas_lock_irq(&xas);
+> >  		entry = xas_find_conflict(&xas);
+> >  		if (entry != expected)
+> > -			xas_set_err(&xas, -EEXIST);
+> > +			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
+> 
+> Two things on this.
+> 
+> Minor matter of taste, I'd prefer that as
+> 			xas_set_err(&xas, entry ? -EEXIST : -ENOENT);
+> which would be more general and more understandable -
+> but what you have written should be fine for the actual callers.
+
+Yes, checking `expected' was to differentiate the behavior depending
+on the callsite. But testing `entry' is more obvious in that location.
+
+> Except... I think returning -ENOENT there will not work correctly,
+> in the case of a punched hole.  Because (unless you've reworked it
+> and I just haven't looked) shmem_getpage_gfp() knows to retry in
+> the case of -EEXIST, but -ENOENT will percolate up to shmem_fault()
+> and result in a SIGBUS, or a read/write error, when the hole should
+> just get refilled instead.
+
+Good catch, I had indeed missed that. I'm going to make it retry on
+-ENOENT as well.
+
+We could have it go directly to allocating a new page, but it seems
+unnecessarily complicated: we've already been retrying in this
+situation until now, so I would stick to "there was a race, retry."
+
+> Not something that needs fixing in a hurry (it took trinity to
+> generate this racy case in the first place), I'll take another look
+> once I've pulled it into a tree (or collected next mmotm) - unless
+> you've already have changed it around by then.
+
+Attaching a delta fix based on your observations.
+
+Andrew, barring any objections to this, could you please fold it into
+the version you have in your tree already?
+
+---
+
+From 33d03ceebce0a6261d472ddc9c5a07940f44714c Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 11 May 2020 10:45:14 -0400
+Subject: [PATCH] mm: memcontrol: convert page cache to a new
+ mem_cgroup_charge() API fix
+
+Incorporate Hugh's feedback:
+
+- shmem_getpage_gfp() needs to handle the new -ENOENT that was
+  previously implied in the -EEXIST when a swap entry changed under us
+  in any way. Otherwise hole punching could cause a racing fault to
+  SIGBUS instead of allocating a new page.
+
+- It is indeed page reclaim that picks up any swapcache we leave
+  stranded when free_swap_and_cache() runs on a page locked by
+  somebody else. Document that our delete_from_swap_cache() is an
+  optimization, not something we rely on for correctness.
+
+- Style cleanup: testing `expected' to decide on -EEXIST vs -ENOENT
+  differentiates the callsites, but is a bit awkward to read. Test
+  `entry' instead.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/shmem.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/mm/shmem.c b/mm/shmem.c
+index afd5a057ebb7..00fb001e8f3e 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -638,7 +638,7 @@ static int shmem_add_to_page_cache(struct page *page,
+ 		xas_lock_irq(&xas);
+ 		entry = xas_find_conflict(&xas);
+ 		if (entry != expected)
+-			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
++			xas_set_err(&xas, entry ? -EEXIST : -ENOENT);
+ 		xas_create_range(&xas);
+ 		if (xas_error(&xas))
+ 			goto unlock;
+@@ -1686,10 +1686,13 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+ 		 * We already confirmed swap under page lock, but
+ 		 * free_swap_and_cache() only trylocks a page, so it
+ 		 * is just possible that the entry has been truncated
+-		 * or holepunched since swap was confirmed.
+-		 * shmem_undo_range() will have done some of the
+-		 * unaccounting, now delete_from_swap_cache() will do
+-		 * the rest.
++		 * or holepunched since swap was confirmed. This could
++		 * occur at any time while the page is locked, and
++		 * usually page reclaim will take care of the stranded
++		 * swapcache page. But when we catch it, we may as
++		 * well clean up after ourselves: shmem_undo_range()
++		 * will have done some of the unaccounting, now
++		 * delete_from_swap_cache() will do the rest.
+ 		 */
+ 		if (error == -ENOENT)
+ 			delete_from_swap_cache(page);
+@@ -1765,7 +1768,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+ 	if (xa_is_value(page)) {
+ 		error = shmem_swapin_page(inode, index, &page,
+ 					  sgp, gfp, vma, fault_type);
+-		if (error == -EEXIST)
++		if (error == -EEXIST || error == -ENOENT)
+ 			goto repeat;
+ 
+ 		*pagep = page;
 -- 
-Jens Axboe
-
+2.26.2
