@@ -6,54 +6,59 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAD8C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C6AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363ED206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299B2206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgEKOX2 (ORCPT
+        id S1729774AbgEKOXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:23:28 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:49545 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgEKOX2 (ORCPT
+        Mon, 11 May 2020 10:23:47 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47991 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgEKOXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:23:28 -0400
+        Mon, 11 May 2020 10:23:47 -0400
+X-Originating-IP: 86.202.105.35
 Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A959B240005;
-        Mon, 11 May 2020 14:23:25 +0000 (UTC)
-Date:   Mon, 11 May 2020 16:23:25 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9C8A620006;
+        Mon, 11 May 2020 14:23:44 +0000 (UTC)
+Date:   Mon, 11 May 2020 16:23:44 +0200
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-rtc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] rtc: stmp3xxx: update contact email
-Message-ID: <20200511142325.GQ34497@piout.net>
-References: <20200502142704.19308-1-wsa@kernel.org>
+To:     wu000273@umn.edu
+Cc:     a.zummo@towertech.it, Markus.Elfring@web.de,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu
+Subject: Re: [PATCH v2] rtc: mc13xxx: fix a double-unlock issue
+Message-ID: <20200511142344.GR34497@piout.net>
+References: <20200503182235.1652-1-wu000273@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200502142704.19308-1-wsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200503182235.1652-1-wu000273@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/2020 16:27:04+0200, Wolfram Sang wrote:
-> The 'pengutronix' address is defunct for years. Use the proper contact
-> address.
+On 03/05/2020 13:22:35-0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+> In function mc13xxx_rtc_probe, the mc13xxx_unlock() is called
+> before rtc_register_device(). But in the error path of
+> rtc_register_device(), the mc13xxx_unlock() is called again,
+> which causes a double-unlock problem. Thus add a call of the
+> function “mc13xxx_lock” in an if branch for the completion
+> of the exception handling.
+> 
+> Fixes: e4ae7023e182a ("rtc: mc13xxx: set range")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 > ---
->  drivers/rtc/rtc-stmp3xxx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/rtc/rtc-mc13xxx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 Applied, thanks.
 
