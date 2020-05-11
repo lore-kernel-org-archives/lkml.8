@@ -2,117 +2,136 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F60C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BEDC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B3C20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pwhHoSUC"
+	by mail.kernel.org (Postfix) with ESMTP id E620120801
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589200104;
+	bh=1NdyNA3J3Yq4GF6v9HalR4dr/LL5h+c+E7CSWgyAJww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YsK47kHwaNupXbQTDEAXV19LrlLrQCN0BVrikGfjvdS2zzGYXAXWq5kw8wNeBWxaw
+	 jXIJoiePh/rrVSmkp8xPUz9Y4KmX+UIKRYtF+8rMtszb0n23ztWacj6feleK7Cv8F4
+	 70nLLeni8zV2TJnYlBtMnOzqI2KHRkUGOOUiiUxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgEKM0h (ORCPT
+        id S1729645AbgEKM2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729978AbgEKM0J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:26:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AF3C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id b12so1957121plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yOzb3IhTI9yPWNl3XI2lYK3qvd7pN2r4jllGR7pHWUQ=;
-        b=pwhHoSUCVHs+05wGk4aMRqL1g9yeGAnLqwAgGUoSMQJ0rc7mu49oBcm9LjSVrbFYZQ
-         t8Xvu3w3mIEtvn8POrFFF4fBtnl5XqCOZTO6CZ0tE57miFK5qYk64oC4SpZzNnQ5hlhK
-         JNMsaI4WqG0kAe0ql2N3FSfvRtcBG3byYgGV1o/GR6F3gwnDSJdsX3GOrgU8z3S0R2U2
-         x8hTwg9E6VxijuJydfTP+Nt8OK03Qk9t6cMuu9hSEAj8J0iZ+WJ3UYmUZ5elnhJHN9UJ
-         Md6pZGWSMG/GjmxQOFdcq4oGCcQXmBlDLKggHQ02Vo2gx3VHutK/phHRuGIiPP9/26pX
-         pzOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yOzb3IhTI9yPWNl3XI2lYK3qvd7pN2r4jllGR7pHWUQ=;
-        b=VSBoXF4gXzd67KxvhAyhBAJwj2DkunDaDRBDZ4SgbcnxhV6igINwDL+E1KVaa6d1AX
-         njnKfhCY/iP8/dc4SWZ2r+OpKVCVOzamuY/MXAGGuoh3X9rp+qfmHZ1GHpbIwwY6C8Al
-         M9qIlhbb13EEhciCyYLv4d5OKIZgXa3+gW5qvZtUzItWEuI+MF4Hr/UuylGbELFIK7Mx
-         vlIgygO5KMro1FsPHRhs/G0veQZ0VzPUrdUiFzlCVz7Ik//OkrcIpAuPDJvZ7BMmGtTa
-         zwYosucfa6pCvLcBP0agm1gyuuyBbtpU84z2Mpg3zNQzUNQAxJs70WbmJ8qKLFEUNFWq
-         SPLA==
-X-Gm-Message-State: AGi0PuaxWhdwQXB0cz51Taxdn42c1Edmps3cyfpH+q0avfi1EnhNbLKu
-        jGl1oTam+Ax7TKKSYVMf7hYFg1LeHBc=
-X-Google-Smtp-Source: APiQypII8GF6w8vhEPnDEzE0HX6p4o0aWnNJi62GTULFdKWxm4PZwjkfcd95O3F+qhRPvFrwVWV1pw==
-X-Received: by 2002:a17:90a:748:: with SMTP id s8mr21384120pje.221.1589199968762;
-        Mon, 11 May 2020 05:26:08 -0700 (PDT)
-Received: from localhost ([45.127.45.102])
-        by smtp.gmail.com with ESMTPSA id 1sm9253822pff.180.2020.05.11.05.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:26:08 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        daniel.lezcano@linaro.org,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 09/14] thermal/drivers/cpufreq_cooling: Sort headers alphabetically
-Date:   Mon, 11 May 2020 17:54:57 +0530
-Message-Id: <4231f5dfe758b9bf716981be71cadf9642c83528.1589199124.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
-References: <cover.1589199124.git.amit.kucheria@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 11 May 2020 08:28:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729343AbgEKM2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:28:23 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF3DD207FF;
+        Mon, 11 May 2020 12:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589200103;
+        bh=1NdyNA3J3Yq4GF6v9HalR4dr/LL5h+c+E7CSWgyAJww=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rfxtQxF6apz0ygIr6KQOAkFJKCNLaGsSrSwuFhYvY/mcLyTLsIjIsg3yWlbR4UDDy
+         M4RYPvXRkt5uQcSJK5qOuSlCu5nTorzwImpjTDJ5Z6Vel/JcnzUknK8/326bRp1V8+
+         iimbdr1FUeE2E7LZsIqXUzz6FeTZD1DCc7EfoDfk=
+Date:   Mon, 11 May 2020 21:28:16 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 3 01/29] x86/traps: Mark fixup_bad_iret()
+ noinstr
+Message-Id: <20200511212816.45516d0e9e72c1ea543b0a36@kernel.org>
+In-Reply-To: <20200505134903.346741553@linutronix.de>
+References: <20200505134354.774943181@linutronix.de>
+        <20200505134903.346741553@linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sort headers to make it easier to read and find duplicate headers.
+On Tue, 05 May 2020 15:43:55 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- drivers/thermal/cpufreq_cooling.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> This is called from deep entry ASM in a situation where instrumentation
+> will cause more harm than providing useful information.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index e297e135c031..1b5a63b4763d 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -11,16 +11,16 @@
-  *
-  */
- #include <linux/module.h>
--#include <linux/thermal.h>
-+#include <linux/cpu.h>
- #include <linux/cpufreq.h>
-+#include <linux/cpu_cooling.h>
-+#include <linux/energy_model.h>
- #include <linux/err.h>
- #include <linux/idr.h>
- #include <linux/pm_opp.h>
- #include <linux/pm_qos.h>
- #include <linux/slab.h>
--#include <linux/cpu.h>
--#include <linux/cpu_cooling.h>
--#include <linux/energy_model.h>
-+#include <linux/thermal.h>
- 
- #include <trace/events/thermal.h>
- 
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you,
+
+> ---
+>  arch/x86/kernel/traps.c |   16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -621,7 +621,7 @@ struct bad_iret_stack {
+>  	struct pt_regs regs;
+>  };
+>  
+> -asmlinkage __visible notrace
+> +asmlinkage __visible noinstr
+>  struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
+>  {
+>  	/*
+> @@ -632,19 +632,21 @@ struct bad_iret_stack *fixup_bad_iret(st
+>  	 * just below the IRET frame) and we want to pretend that the
+>  	 * exception came from the IRET target.
+>  	 */
+> -	struct bad_iret_stack *new_stack =
+> -		(struct bad_iret_stack *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
+> +	struct bad_iret_stack tmp, *new_stack =
+> +		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
+>  
+> -	/* Copy the IRET target to the new stack. */
+> -	memmove(&new_stack->regs.ip, (void *)s->regs.sp, 5*8);
+> +	/* Copy the IRET target to the temporary storage. */
+> +	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
+>  
+>  	/* Copy the remainder of the stack from the current stack. */
+> -	memmove(new_stack, s, offsetof(struct bad_iret_stack, regs.ip));
+> +	memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
+> +
+> +	/* Update the entry stack */
+> +	memcpy(new_stack, &tmp, sizeof(tmp));
+>  
+>  	BUG_ON(!user_mode(&new_stack->regs));
+>  	return new_stack;
+>  }
+> -NOKPROBE_SYMBOL(fixup_bad_iret);
+>  #endif
+>  
+>  static bool is_sysenter_singlestep(struct pt_regs *regs)
+> 
+
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
