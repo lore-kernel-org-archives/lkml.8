@@ -2,144 +2,85 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0F9C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D18DC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E79220722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C6320722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589196513;
+	bh=iM8v+QfgxIMkd/ubDyYGJ/Lo+FpxBTAgrfwxnETDfBA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=sw0VYptC7QiwWZxQ1bipxPfKvBGpCAqBR+B8Y2kjyHq9qrR6S3TsG7dhErQ/CZG6i
+	 V2kUe5cwY0yFSHkbdss6ShttIAvoNAj36gFZxU6hs/3YgOrFCfwm2Zp/51dfV6bTD2
+	 jRa3gals23s653eLdiD9M/3cF55TxgD5YPAAD9oY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgEKLZi (ORCPT
+        id S1729628AbgEKL2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:25:38 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:33368 "EHLO pegase1.c-s.fr"
+        Mon, 11 May 2020 07:28:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgEKLZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:34 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJWp1jpvz9ty3n;
-        Mon, 11 May 2020 13:25:26 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id BV5L05wLSnPI; Mon, 11 May 2020 13:25:26 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJWn6mTBz9ty3g;
-        Mon, 11 May 2020 13:25:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 936068B7AD;
-        Mon, 11 May 2020 13:25:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id OlgTP_zuRNo6; Mon, 11 May 2020 13:25:32 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4AD9F8B7B3;
-        Mon, 11 May 2020 13:25:32 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DC05965A09; Mon, 11 May 2020 11:25:31 +0000 (UTC)
-Message-Id: <385d7403776dca7e9a92445b9fef780268740f2b.1589196133.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
-References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 06/45] powerpc/kasan: Declare kasan_init_region() weak
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:25:31 +0000 (UTC)
+        id S1729650AbgEKLZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813C920736;
+        Mon, 11 May 2020 11:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589196338;
+        bh=iM8v+QfgxIMkd/ubDyYGJ/Lo+FpxBTAgrfwxnETDfBA=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Y5SuKuX/7yPBXeDxkYtcbXQwgIhCYWiK7SRh6xG90AJ0YwUiByurS0ZviupWe1VH2
+         BV2ldz8nERLbCEWDPxHILaNt2Yyxcq5RK0sSyOkmiQMtJ2Zv90tIaP/cc1bCIDxndA
+         tN2uTKGTA+cQO/XhdoTX5+9mXeGxnotA8SJm1Bmo=
+Date:   Mon, 11 May 2020 12:25:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-spi@vger.kernel.org,
+        Alistair Francis <alistair@alistair23.me>
+Cc:     linux-kernel@vger.kernel.org, wens@csie.org, mripard@kernel.org,
+        linux-arm-kernel@lists.infradead.org, alistair23@gmail.com
+In-Reply-To: <20200511045330.690507-1-alistair@alistair23.me>
+References: <20200511045330.690507-1-alistair@alistair23.me>
+Subject: Re: [PATCH v2] spi: sun6i: Add support for GPIO chip select lines
+Message-Id: <158919630591.8372.404655401498379497.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to alloc sub-arches to alloc KASAN regions using optimised
-methods (Huge pages on 8xx, BATs on BOOK3S, ...), declare
-kasan_init_region() weak.
+On Sun, 10 May 2020 21:53:30 -0700, Alistair Francis wrote:
+> Set use_gpio_descriptors as true to support using generic GPIO
+> lines for the chip select.
 
-Also make kasan_init_shadow_page_tables() accessible from outside,
-so that it can be called from the specific kasan_init_region()
-functions if needed.
+Applied to
 
-And populate remaining KASAN address space only once performed
-the region mapping, to allow 8xx to allocate hugepd instead of
-standard page tables for mapping via 8M hugepages.
+   local tree asoc/for-5.7
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/kasan.h      |  3 +++
- arch/powerpc/mm/kasan/kasan_init_32.c | 21 +++++++++++----------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+Thanks!
 
-diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-index 4769bbf7173a..107a24c3f7b3 100644
---- a/arch/powerpc/include/asm/kasan.h
-+++ b/arch/powerpc/include/asm/kasan.h
-@@ -34,5 +34,8 @@ static inline void kasan_init(void) { }
- static inline void kasan_late_init(void) { }
- #endif
- 
-+int kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end);
-+int kasan_init_region(void *start, size_t size);
-+
- #endif /* __ASSEMBLY */
- #endif
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index 10481d904fea..76d418af4ce8 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -28,7 +28,7 @@ static void __init kasan_populate_pte(pte_t *ptep, pgprot_t prot)
- 		__set_pte_at(&init_mm, va, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
- }
- 
--static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
-+int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_end)
- {
- 	pmd_t *pmd;
- 	unsigned long k_cur, k_next;
-@@ -52,7 +52,7 @@ static int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned
- 	return 0;
- }
- 
--static int __init kasan_init_region(void *start, size_t size)
-+int __init __weak kasan_init_region(void *start, size_t size)
- {
- 	unsigned long k_start = (unsigned long)kasan_mem_to_shadow(start);
- 	unsigned long k_end = (unsigned long)kasan_mem_to_shadow(start + size);
-@@ -122,14 +122,6 @@ static void __init kasan_mmu_init(void)
- 	int ret;
- 	struct memblock_region *reg;
- 
--	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
--	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
--		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
--
--		if (ret)
--			panic("kasan: kasan_init_shadow_page_tables() failed");
--	}
--
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t base = reg->base;
- 		phys_addr_t top = min(base + reg->size, total_lowmem);
-@@ -141,6 +133,15 @@ static void __init kasan_mmu_init(void)
- 		if (ret)
- 			panic("kasan: kasan_init_region() failed");
- 	}
-+
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
-+	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
-+		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
-+
-+		if (ret)
-+			panic("kasan: kasan_init_shadow_page_tables() failed");
-+	}
-+
- }
- 
- void __init kasan_init(void)
--- 
-2.25.0
+[1/1] spi: sun6i: Add support for GPIO chip select lines
+      (no commit info)
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
