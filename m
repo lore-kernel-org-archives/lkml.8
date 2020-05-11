@@ -2,101 +2,103 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24638C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76DEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F372E206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:14:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hqEfK482"
+	by mail.kernel.org (Postfix) with ESMTP id A64B9207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgEKOOf (ORCPT
+        id S1730514AbgEKOPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730180AbgEKOOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:14:34 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E712C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 07:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=T9Qnr/2MzlWVnks5PwjcDz5PI6t5JFXZYCHiiiwBn94=; b=hqEfK482wRokrGdrAabZBo4Dn6
-        H0k1Bbwg0Vi08tsmwkQG+EteB+nkAOP2QTEIkjj6zeBYQ0/777WpIlSS9lzfGgDBeQIOmXDYMbbWX
-        YtFu681uKQlUn1xvGn2UYqjl0ZYSg24rALU3Km+xSD0EEaTc4rVNG6uSYu3r55wvhdBzr5Aqq7KfU
-        Io9bWaAxMDtaK0sSULhOtQtCePnYNi7v2CmOD1byl9nyx+qBCVHu6X/DxRIMPiF7UKt+Ow+yhf5Zn
-        BI1R2bVQFU4TkfoTvXgPQggiIVNQ3rWrnB/J3sZS5jreNAM3qK07Ik/TwbApdiTBbq0qSJ4sAomnF
-        aD9u7ziQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY9Bn-0008Hp-90; Mon, 11 May 2020 14:13:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D007301EFB;
-        Mon, 11 May 2020 16:13:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BCA4D2870CB3F; Mon, 11 May 2020 16:13:48 +0200 (CEST)
-Date:   Mon, 11 May 2020 16:13:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 5 07/31] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200511141348.GH2957@hirez.programming.kicks-ass.net>
-References: <20200505135341.730586321@linutronix.de>
- <20200505135828.808686575@linutronix.de>
- <72cb3e24-3f82-7e2a-7630-233749c780c4@oracle.com>
+        Mon, 11 May 2020 10:15:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:33126 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730158AbgEKOPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:15:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0E33D6E;
+        Mon, 11 May 2020 07:15:32 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B8D13F68F;
+        Mon, 11 May 2020 07:15:31 -0700 (PDT)
+Date:   Mon, 11 May 2020 15:15:20 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] MAINTAINERS: correct typo in new NXP
+ LAYERSCAPE GEN4
+Message-ID: <20200511141508.GA27249@e121166-lin.cambridge.arm.com>
+References: <20200506052130.5780-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72cb3e24-3f82-7e2a-7630-233749c780c4@oracle.com>
+In-Reply-To: <20200506052130.5780-1-lukas.bulwahn@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 03:53:17PM +0200, Alexandre Chartre wrote:
+On Wed, May 06, 2020 at 07:21:30AM +0200, Lukas Bulwahn wrote:
+> Commit 3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
+> controller") includes a new entry in MAINTAINERS, but slipped in a typo in
+> one of the file entries.
 > 
-> On 5/5/20 3:53 PM, Thomas Gleixner wrote:
-> > The pagefault handler cannot use the regular idtentry_enter() because on
-> > that invokes rcu_irq_enter() the pagefault was caused in the kernel.
+> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
 > 
-> I am struggling to understand this part of the sentence: "because on
-> that invokes rcu_irq_enter() the pagefault was caused in the kernel."
+>   warning: no file matches F: \
+>     drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
 > 
-> Do you mean: "because that invokes rcu_irq_enter() if the pagefault was
-> caused in the kernel." ?
+> Correct the typo in PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Rob, please pick this patch (it is not urgent, though).
+> 
+> v1: https://lore.kernel.org/lkml/20200314142559.13505-1-lukas.bulwahn@gmail.com/
+>   - already received: Reviewed-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>   - Bjorn Helgaas' suggestion to squash this into commit 3edeb49525bb
+>     ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4 controller") before
+>     merging upstream did not happen.
+> 
+> v1 -> v2:
+>   - v1 does not apply after reordering MAINTAINERS, i.e., commit 4400b7d68f6e
+>     ("MAINTAINERS: sort entries by entry name") and commit 3b50142d8528
+>     ("MAINTAINERS: sort field names for all entries").
+>   - PATCH v2 applies on v5.7-rc1 now. Please pick v2 instead of v1.
+> 
+> v2-resend:
+>   - resend of v2: https://lore.kernel.org/lkml/20200413070649.7014-1-lukas.bulwahn@gmail.com/ 
+>   - still applies to v5.7-rc4 and next-20200505
+> 
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-The problem is that rcu_irq_enter() uses per-cpu state and expect
-rcu_irq_exit() to be called on the very same cpu we did enter on.
+Applied to pci/misc, thanks !
 
-However, #PF likes to schedule and breaks that expectation.
+Lorenzo
 
-While there are more exceptions that schedule when from userspace, #PF
-is the only one that does so when from kernel space, which makes is
-'special'.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e64e5db31497..0fd27329e6f7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12941,7 +12941,7 @@ L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> -F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+>  
+>  PCI DRIVER FOR RENESAS R-CAR
+>  M:	Marek Vasut <marek.vasut+renesas@gmail.com>
+> -- 
+> 2.17.1
+> 
