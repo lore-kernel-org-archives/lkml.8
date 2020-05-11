@@ -2,147 +2,107 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D55C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A88AC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A5F5206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD682051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OpJuRmcM"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QiKdEKor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgEKSDS (ORCPT
+        id S1731059AbgEKSDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgEKSDR (ORCPT
+        Mon, 11 May 2020 14:03:33 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33770 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgEKSDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:03:17 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8529C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:03:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f23so4238144pgj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/jPx7d5YFfc5M+Mr+WNJnLgo3PuhOfEnoDi6uZrGsrM=;
-        b=OpJuRmcMB0DgL3hzu/cuiSn0WW/UQ/LPhbl0q3dFBw0Wuq8LnYg9k/jbgwAFqXT9HK
-         yqgWEVlgJz7R7vvryCgeK4e4Hxz+94F3/S/O3NRbPq1xfNupdGLTEnpan5w7SNZff5Uc
-         dH+ty9Loxy4loUE4WK5QkmQQU9MjOT+e2QTm4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/jPx7d5YFfc5M+Mr+WNJnLgo3PuhOfEnoDi6uZrGsrM=;
-        b=Dl7G5KbjQL5Y+siCZZAuyPm5w5eIeqRDx/hpmYaK2W1ebL7u3Nc8Ot5c8Br/UaUKsr
-         SqQwUgA1ceT+Wo/oEltnRTOCUlqDU/R4j2DUiBo8apZ+qXOfRwU/HGP1MtBc+mIynywm
-         K1VDxq0xbWBcaunx//R+qLGrEOYG8wpIyY4iKyo6HZ3lxZdciU0nD8K7vDdg5qAEphf/
-         qh3yVpvVrebyYcOrpz8+FPnzuT4ffnEnZQKC31E8MJ/R7niwWYwGgei9pSVF27yd5vw+
-         nKLtbmLdBVrrGPmBqarQZB6hJFXvbEhUYXsxmJqv1XPZEKy8usU9vXsAZNRewGGOu6OU
-         ENPw==
-X-Gm-Message-State: AGi0Pub15DN5BEt4mwYrMTKh7wLb/qJs+UrM+W92oyi2f5pezvC2dFaq
-        0xngt5qUpWp/BBpniS/3noqkpgmt4DQ=
-X-Google-Smtp-Source: APiQypJB3+AdtLqNBDqCsWafhHB0i1Y8hjzyptCsRfDfXoYQ1l+FQr/oo1RnZOI92VrJlGqoY4OGXA==
-X-Received: by 2002:a63:dd51:: with SMTP id g17mr14354179pgj.2.1589220195927;
-        Mon, 11 May 2020 11:03:15 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id p62sm9685470pfb.93.2020.05.11.11.03.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:03:14 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:03:13 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com, twawrzynczak@chromium.org,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200511180313.GB136540@google.com>
-References: <20200422222242.241699-1-pmalani@chromium.org>
+        Mon, 11 May 2020 14:03:32 -0400
+Received: from [10.137.106.115] (unknown [131.107.174.243])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A459320B717B;
+        Mon, 11 May 2020 11:03:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A459320B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1589220212;
+        bh=rwCBjFjDRVRa/3cB9IsEzNvfLiKX6lRSr9M18CC7//4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QiKdEKorw3cyT1qWZiMET9W5veSrPG4eNvJe3qaXWcFMXz1t90fAPlv3CSYWjU6is
+         1U+rcd04LKlXY+H4saO7e/yVSmO+N7R04feR23EWhVyWDS+8htuwyPBoJbD80fxF69
+         MRo3aLdTplD7OzjW3HYeo901uWPxV5t777MZqC54=
+Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
+        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, jannh@google.com
+Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
+        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
+        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net
+References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
+ <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
+From:   Deven Bowers <deven.desai@linux.microsoft.com>
+Message-ID: <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
+Date:   Mon, 11 May 2020 11:03:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422222242.241699-1-pmalani@chromium.org>
+In-Reply-To: <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-Apologies in case you've already looked at this, but could you kindly review this patch?
 
-Thanks,
+On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
 
--Prashant
+[...snip]
 
-On Wed, Apr 22, 2020 at 03:22:39PM -0700, Prashant Malani wrote:
-> Add properties for mode, orientation and USB data role switches for
-> Type C connectors. When available, these will allow the Type C connector
-> class port driver to configure the various switches according to USB PD
-> information (like orientation, alt mode etc.) provided by the Chrome OS
-> EC controller.
+>>
+>> Additionally, rules are evaluated top-to-bottom. As a result, any
+>> revocation rules, or denies should be placed early in the file to ensure
+>> that these rules are evaluated before a rule with "action=ALLOW" is hit.
+>>
+>> IPE policy is designed to be forward compatible and backwards compatible,
+>> thus any failure to parse a rule will result in the line being ignored,
+>> and a warning being emitted. If backwards compatibility is not required,
+>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
+>> enabled, which will cause these warnings to be fatal.
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
->  .../bindings/chrome/google,cros-ec-typec.yaml | 27 ++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
+> Ignoring unknown command may lead to inconsistent beaviors. To achieve
+> forward compatibility, I think it would be better to never ignore
+> unknown rule but to give a way to userspace to known what is the current
+> kernel ABI. This could be done with a securityfs file listing the
+> current policy grammar.
 > 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> index 6d7396ab8bee..b5814640aa32 100644
-> --- a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -21,7 +21,21 @@ properties:
->      const: google,cros-ec-typec
->  
->    connector:
-> -    $ref: /schemas/connector/usb-connector.yaml#
-> +    allOf:
-> +      - $ref: /schemas/connector/usb-connector.yaml#
-> +      - type: object
-> +        properties:
-> +          mode-switch:
-> +            description: Reference to a DT node for the USB Type C Multiplexer
-> +              controlling the data lines routing for this connector.
-> +
-> +          orientation-switch:
-> +            description: Reference to a DT node for the USB Type C orientation
-> +              switch for this connector.
-> +
-> +          usb-role-switch:
-> +            description: Reference to a DT node for the USB Data role switch
-> +              for this connector.
->  
->  required:
->    - compatible
-> @@ -49,6 +63,17 @@ examples:
->              data-role = "dual";
->              try-power-role = "source";
->            };
-> +
-> +          connector@1 {
-> +            compatible = "usb-c-connector";
-> +            reg = <1>;
-> +            power-role = "dual";
-> +            data-role = "host";
-> +            try-power-role = "source";
-> +            mode-switch = <&typec_mux>;
-> +            orientation-switch = <&typec_orientation_switch>;
-> +            usb-role-switch = <&typec_mux>;
-> +          };
->          };
->        };
->      };
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
+
+That's a fair point. From a manual perspective, I think this is fine.
+A human-user can interpret a grammar successfully on their own when new
+syntax is introduced.
+
+ From a producing API perspective, I'd have to think about it a bit 
+more. Ideally, the grammar would be structured in such a way that the 
+userland
+interpreter of this grammar would not have to be updated once new syntax
+is introduced, avoiding the need to update the userland binary. To do so
+generically ("op=%s") is easy, but doesn't necessarily convey sufficient
+information (what happens when a new "op" token is introduced?). I think
+this may come down to regular expression representations of valid values
+for these tokens, which worries me as regular expressions are incredibly
+error-prone[1].
+
+I'll see what I can come up with regarding this.
+
+
+[1] 
+https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/
