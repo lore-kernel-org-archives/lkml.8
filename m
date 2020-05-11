@@ -2,137 +2,147 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93905C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA99C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDB220720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589218459;
-	bh=5Z7Qml4RQ3MPjBIIlhjG06U4sRXkHJ7HmXF/gF2FyYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C2Pmgxs+aHt9YdpyZL5Y2Q3H7RE919DLhRr43owaIkpEU4dh6ULcuGebPkmmHDEvd
-	 B2QKON0efa9DGymxjX2UwfLsqFp4ZXOpH/g7nnidaiZOvRfYWsylfH5kPKrnRZEr87
-	 sQo87e4sAmAG1+sn8j3H4eulthYpR0YiJidZ/Lhw=
+	by mail.kernel.org (Postfix) with ESMTP id 94ED0206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIc53VR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbgEKReS (ORCPT
+        id S1731018AbgEKRem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730215AbgEKReS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:34:18 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDD55206D6;
-        Mon, 11 May 2020 17:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589218458;
-        bh=5Z7Qml4RQ3MPjBIIlhjG06U4sRXkHJ7HmXF/gF2FyYA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EdQthZ7eA7y0JgM/tZ+KCl24Ng8Bqo+RH6ZUw0/pUa6bsjFROzPLsAdUyLLKhucWD
-         ooStrur1zZCuMCMttUQJo0AlyECjIT+5s8oKGQgXXQRXbmKMR29POVgfK9F3z50oLo
-         YLpV7pljTGX1/UEr6FwPgktdYJ9dM+PjNekvXls4=
-Date:   Mon, 11 May 2020 18:34:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Elver Marco <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in
- osq_lock
-Message-ID: <20200511173412.GC23081@willie-the-truck>
-References: <20200509161217.GN2869@paulmck-ThinkPad-P72>
- <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
- <20200509213654.GO2869@paulmck-ThinkPad-P72>
- <20200511155812.GB22270@willie-the-truck>
- <20200511164319.GV2869@paulmck-ThinkPad-P72>
- <20200511165216.GA23081@willie-the-truck>
- <20200511172918.GW2869@paulmck-ThinkPad-P72>
+        Mon, 11 May 2020 13:34:42 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23536 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730960AbgEKRel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:34:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589218480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
+        b=dIc53VR2sD98xVcGm7/NzRUMxKrOmsaiadtecNUEztPcSObavKmSWGUtST7hrU93ifCLyP
+        He+4xXgfGDpotx3IoKiT91bXSWxzzB4lT57ywtX7OnSQt7AXwOamAcslSscbiK5XffmY5u
+        bZ/5HW5MHVgeL8zKf4OnGZUzc0w+gSw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-fy9GUWn9P3qCWDKHFG1cFg-1; Mon, 11 May 2020 13:34:32 -0400
+X-MC-Unique: fy9GUWn9P3qCWDKHFG1cFg-1
+Received: by mail-wm1-f72.google.com with SMTP id w189so4970251wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:34:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
+        b=O25PyhuUQTKrQuzcFAIp0eJm//ji2Yv2PyrEhVJfZ6G3hP/wsiJssS5XfOPGUZDe8S
+         uVk8udNlOHekkwnMO+tk9a6gC22Mz55RPV9NHL+jWG86yHFGH7m5psrGo9lyJ3EsEWMu
+         yooOsHsrESS1DuIX3ucwH7m0yhn8s6S9EsGc5g3S53TuJXupVQDabBIrU7iMHryKEbur
+         Yh/X7sRaf0v/RCclX+gBS9KMLoTncQIzpPci2dlfYfPYlVKVe2fWl1Q7xabaDuYQFxFu
+         oLSxRSKwhjc2/JeTyIua0JPHor1SliWCoMtcYtCZEg5Un+vgaB5WbeGX+Q8Sum9hwdSe
+         JBLA==
+X-Gm-Message-State: AGi0Pua/vAJbwdB7UN/XqBUxVAjKpjK0OTbZrVqi4/eipEQ4qdGoVcIr
+        YEPX+anldPVBNv+rSGssQSHp9e3+q6GcBCtYNgZJN2fvaWifRK7iEJE17AxgMvKfbbg2z80kPCs
+        cercuEDw9Ur6hMCjopQ2S5WaG
+X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469225wrs.285.1589218471440;
+        Mon, 11 May 2020 10:34:31 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJNe6I7z0SbQYOHpqyl28aME7TxGvpzSGiIlzFVueJrlC+GRcVDtQgQEgjyS86Oa3oOuu0xgw==
+X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469194wrs.285.1589218471191;
+        Mon, 11 May 2020 10:34:31 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4c95:a679:8cf7:9fb6? ([2001:b07:6468:f312:4c95:a679:8cf7:9fb6])
+        by smtp.gmail.com with ESMTPSA id 89sm18102311wrj.37.2020.05.11.10.34.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 10:34:30 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Jonathan Adams <jwadams@google.com>
+Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200504110344.17560-1-eesposit@redhat.com>
+ <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
+ <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+ <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fe21094c-bdb0-b802-482e-72bc17e5232a@redhat.com>
+Date:   Mon, 11 May 2020 19:34:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511172918.GW2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:29:18AM -0700, Paul E. McKenney wrote:
-> On Mon, May 11, 2020 at 05:52:17PM +0100, Will Deacon wrote:
-> > On Mon, May 11, 2020 at 09:43:19AM -0700, Paul E. McKenney wrote:
-> > > On Mon, May 11, 2020 at 04:58:13PM +0100, Will Deacon wrote:
-> > > > On Sat, May 09, 2020 at 02:36:54PM -0700, Paul E. McKenney wrote:
-> > > > > diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> > > > > index 1f77349..1de006e 100644
-> > > > > --- a/kernel/locking/osq_lock.c
-> > > > > +++ b/kernel/locking/osq_lock.c
-> > > > > @@ -154,7 +154,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
-> > > > >  	 */
-> > > > >  
-> > > > >  	for (;;) {
-> > > > > -		if (prev->next == node &&
-> > > > > +		/*
-> > > > > +		 * cpu_relax() below implies a compiler barrier which would
-> > > > > +		 * prevent this comparison being optimized away.
-> > > > > +		 */
-> > > > > +		if (data_race(prev->next) == node &&
-> > > > >  		    cmpxchg(&prev->next, node, NULL) == node)
-> > > > >  			break;
-> > > > 
-> > > > I'm fine with the data_race() placement, but I don't find the comment
-> > > > very helpful. We assign the result of a READ_ONCE() to 'prev' in the
-> > > > loop, so I don't think that the cpu_relax() is really relevant.
-> > > 
-> > > Suppose that the compiler loaded a value that was not equal to "node".
-> > > In that case, the cmpxchg() won't happen, so something else must force
-> > > the compiler to do the reload in order to avoid an infinite loop, right?
-> > > Or am I missing something here?
-> > 
-> > Then we just go round the loop and reload prev:
-> > 
-> > 	prev = READ_ONCE(node->prev);
-> > 
-> > which should be enough to stop the compiler, no?
+Hi Jonathan, I think the remaining sticky point is this one:
+
+On 11/05/20 19:02, Jonathan Adams wrote:
+> I think I'd characterize this slightly differently; we have a set of
+> statistics which are essentially "in parallel":
 > 
-> Yes, that would also work.  Either have the cpu_relax() or a barrier()
-> or whatever on the one hand, or, as you say, turn the data_race() into
-> a READ_ONCE().  I personally prefer the READ_ONCE() myself, unless that
-> would undesirably suppress other KCSAN warnings.
+>   - a variety of statistics, N CPUs they're available for, or
+>   - a variety of statistics, N interfaces they're available for.
+>   - a variety of statistics, N kvm object they're available for.
+> 
+> Recreating a parallel hierarchy of statistics any time we add/subtract
+> a CPU or interface seems like a lot of overhead.  Perhaps a better 
+> model would be some sort of "parameter enumn" (naming is hard;
+> parameter set?), so when a CPU/network interface/etc is added you'd
+> add its ID to the "CPUs" we know about, and at removal time you'd
+> take it out; it would have an associated cbarg for the value getting
+> callback.
+> 
+>> Yep, the above "not create a dentry" flag would handle the case where
+>> you sum things up in the kernel because the more fine grained counters
+>> would be overwhelming.
+>
+> nodnod; or the callback could handle the sum itself.
 
-No, I mean here is the code after this patch is applied:
+In general for statsfs we took a more explicit approach where each
+addend in a sum is a separate stats_fs_source.  In this version of the
+patches it's also a directory, but we'll take your feedback and add both
+the ability to hide directories (first) and to list values (second).
 
-	for (;;) {
-		if (data_race(prev->next) == node &&
-		    cmpxchg(&prev->next, node, NULL) == node)
-			break;
+So, in the cases of interfaces and KVM objects I would prefer to keep
+each addend separate.
 
-		/*
-		 * We can only fail the cmpxchg() racing against an unlock(),
-		 * in which case we should observe @node->locked becomming
-		 * true.
-		 */
-		if (smp_load_acquire(&node->locked))
-			return true;
+For CPUs that however would be pretty bad.  Many subsystems might
+accumulate stats percpu for performance reason, which would then be
+exposed as the sum (usually).  So yeah, native handling of percpu values
+makes sense.  I think it should fit naturally into the same custom
+aggregation framework as hash table keys, we'll see if there's any devil
+in the details.
 
-		cpu_relax();
+Core kernel stats such as /proc/interrupts or /proc/stat are the
+exception here, since individual per-CPU values can be vital for
+debugging.  For those, creating a source per stat, possibly on-the-fly
+at hotplug/hot-unplug time because NR_CPUS can be huge, would still be
+my preferred way to do it.
 
-		/*
-		 * Or we race against a concurrent unqueue()'s step-B, in which
-		 * case its step-C will write us a new @node->prev pointer.
-		 */
-		prev = READ_ONCE(node->prev);
-	}
+Thanks,
 
-I'm saying that this READ_ONCE at the end of the loop should be sufficient
-to stop the compiler making value assumptions about prev->next. Do you
-agree?
+Paolo
 
-Will
