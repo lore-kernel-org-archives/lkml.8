@@ -2,71 +2,100 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC320C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB1C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5BB020708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A153B20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgEKMPu (ORCPT
+        id S1729591AbgEKMRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:15:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727826AbgEKMPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:15:49 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2E31EEECA77004EA773D;
-        Mon, 11 May 2020 20:15:40 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 20:15:36 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: omap2: make omap5_erratum_workaround_801819 static
-Date:   Mon, 11 May 2020 20:21:44 +0800
-Message-ID: <1589199704-11980-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.6.2
+        Mon, 11 May 2020 08:17:14 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49796 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728531AbgEKMRO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:17:14 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id E08E42A0FD7
+Message-ID: <49a15300a5db8b4c61115c4a89eac1762dc3f31a.camel@collabora.com>
+Subject: Re: [PATCH v3 2/3] media: uapi: Add VP9 stateless decoder controls
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Date:   Mon, 11 May 2020 08:17:06 -0400
+In-Reply-To: <7846cb19-c5e0-4f95-c361-cf78d2c1b16a@xs4all.nl>
+References: <20200505134110.3435-1-ezequiel@collabora.com>
+         <20200505134110.3435-3-ezequiel@collabora.com>
+         <6459bd9f-20f6-9910-8d45-04870a19019d@xs4all.nl>
+         <f885e94250778916c09a29269f9c9f42eb67cb66.camel@collabora.com>
+         <7846cb19-c5e0-4f95-c361-cf78d2c1b16a@xs4all.nl>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-7FJdwtw3aqO6RvgErWDP"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
 
-arch/arm/mach-omap2/omap-smp.c:75:6: warning: symbol
-'omap5_erratum_workaround_801819' was not declared. Should it be static?
+--=-7FJdwtw3aqO6RvgErWDP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
----
- arch/arm/mach-omap2/omap-smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Le vendredi 08 mai 2020 =C3=A0 15:16 +0200, Hans Verkuil a =C3=A9crit :
+> > I think this comes directly from the spec. The Rockchip VDEC doesn't
+> > seem to use it.
+> > Do you think we can drop it from here, and rely on the V4L2 colorspace
+> > passed in the format negotiation?
+>=20
+>=20
+> That would be preferred, yes. Otherwise you would have two places where y=
+ou can
+> define colorspaces, and that's confusing.
 
-diff --git a/arch/arm/mach-omap2/omap-smp.c b/arch/arm/mach-omap2/omap-smp.c
-index 6a82fce..570a987e 100644
---- a/arch/arm/mach-omap2/omap-smp.c
-+++ b/arch/arm/mach-omap2/omap-smp.c
-@@ -72,7 +72,7 @@ void __iomem *omap4_get_scu_base(void)
- }
+This is indeed redundant with the color information in the format. In
+VP8/9 there is only 1 header for everything, so it's harder to figure-
+out what to filter. While in H.264/HEVC this information is usually set
+an an extension header.
 
- #ifdef CONFIG_OMAP5_ERRATA_801819
--void omap5_erratum_workaround_801819(void)
-+static void omap5_erratum_workaround_801819(void)
- {
- 	u32 acr, revidr;
- 	u32 acr_mask;
---
-2.6.2
+Though this do re-open the discussion about SPS in H.264/HEVC. In there
+you will find the coded size and the crop window and the sub-sampling.
+I don't remember exactly what was the conclusion, but I think it was
+kept to allow allow bitstream reconstruction. But it will effectively
+overlap directly (or indirectly) with some V4L2 generic API.
+
+regards,
+Nicolas
+
+--=-7FJdwtw3aqO6RvgErWDP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXrlCQgAKCRBxUwItrAao
+HBt3AJ9qVuHoo7obOay42xsXt2h91zXANwCfTanxrgZ1TNarsZjy64md+ngxdW4=
+=eeld
+-----END PGP SIGNATURE-----
+
+--=-7FJdwtw3aqO6RvgErWDP--
 
