@@ -2,110 +2,124 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7868DC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6CBC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 543C0206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589211141;
-	bh=uyTGfOrf+hTSI5tCzivT3bP4dKGVf6P9K4c82/4I2Zg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PrvxEm/K5ccIbZgzffJ39w5O2dZtXxdY3OeY/TW+L/p3kPoXKcVNUWBJVWRnXYlAu
-	 z6nUOfISZObhCHjjzhvPKQE5AJaUgxypUQgz3SL8H+1y5ltx4UPjgLK/C3D2kKAqDv
-	 Vo5I0BIDC3FU0j6zz8iPVrM6fIy6ITh0BRGdG3jQ=
+	by mail.kernel.org (Postfix) with ESMTP id 782CA20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pJ1ZqtF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgEKPcU (ORCPT
+        id S1730327AbgEKPcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:32:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53978 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgEKPcT (ORCPT
+        Mon, 11 May 2020 11:32:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55100 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728084AbgEKPcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:32:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id k12so18447355wmj.3;
-        Mon, 11 May 2020 08:32:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4/5Nwk9mLhRZScYYCn9683XrSojxRsX8XSuLtfNRp8A=;
-        b=WGJDx612oqrb49MW8+SD+uUXyfJzvaTqDgPbb77Yl7WtLYJphJNU0/ChfaR8Q+LaNY
-         SwmkhK2s/XaJs8HhcguQQHHAwD5dd8XM3HgC48l5bqUzIB/o9yltQbzeru5BKgirMM2j
-         PLPufO8POanZakPa3Yk1HkdNEQM98hu/sT3Bcbc1ewo4QtYaAydHSE/eH4Akr6A7/dF+
-         Y6q28EETeP2m0nTO5CDaSmx2M8Tr6f0lFlbqjPc6jMtexNboYbFvgbwEfVePGe32JrMy
-         Tcet1Ks7dkPNbdOWfexVHYWpKQNSDTFJ0fngbxXcU4wMNnU9jSmlvUQVBWOsw6B7IAzT
-         YT6g==
-X-Gm-Message-State: AGi0PubbTtep7uHHrFqqcN8qbQfa/Z8ClorXAEatRHbZvSV3/tZCSOBX
-        UIB/mLLbQXPxtdnOVLz+YV6dqeC2
-X-Google-Smtp-Source: APiQypK85TB4whX36I8/SG1CyR1R9Kq/5evRMvh5tebUY7NF3E42iOhAs7jNrcK9J3lezxEIt9MiJw==
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr31102935wmi.187.1589211137820;
-        Mon, 11 May 2020 08:32:17 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 7sm20219591wra.50.2020.05.11.08.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:32:17 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:32:15 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>
-Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
-Message-ID: <20200511153215.spcqylnde6p36n6j@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200422195818.35489-1-wei.liu@kernel.org>
- <20200507205831.GA30988@bogus>
+        Mon, 11 May 2020 11:32:45 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BFWh5a037261;
+        Mon, 11 May 2020 10:32:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589211163;
+        bh=b0MUfp5nG5bVQq6N28sCwmBCyU7Qu62G3MroX7jZW1A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pJ1ZqtF/eXM3gSMNqPo+YfoVDW0f8EkRezgtFk9tmCZGwkYeTXa+1wEK2fXzhGOyt
+         PyicbZNQ+Qljn/qcLd68U6MsWLLDThwO9TAx3kC+AcePo1UEeNxu4r9uaWPDwVcIMd
+         MmpjUpynOo2a80CiFTvNrCEzEyWVmTIqbO9FQl5w=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BFWh3M104455
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 10:32:43 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ May 2020 10:32:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 May 2020 10:32:43 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BFWg4V035089;
+        Mon, 11 May 2020 10:32:43 -0500
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+To:     "Andrew F. Davis" <afd@ti.com>, <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <20200507183013.27261-1-dmurphy@ti.com>
+ <a5eae705-672b-acef-8850-0811a6ea13fb@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <38fffe57-bcc2-b87f-6589-09bb97b5c67a@ti.com>
+Date:   Mon, 11 May 2020 10:23:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507205831.GA30988@bogus>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <a5eae705-672b-acef-8850-0811a6ea13fb@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:58:31PM -0500, Rob Herring wrote:
-> On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
-> > There is a functionally identical function in pci-hyperv.c. Drop it and
-> > use pci_msi_get_hwirq instead.
-> > 
-> > This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
-> > ---
-> >  arch/x86/include/asm/msi.h          | 4 ++++
-> >  arch/x86/kernel/apic/msi.c          | 5 +++--
-> >  drivers/pci/controller/pci-hyperv.c | 8 +-------
-> >  3 files changed, 8 insertions(+), 9 deletions(-)
-> 
-> Would be better if done in a way to remove an x86 dependency. 
+Andrew
 
-This is a good point, Rob. I will see what I can do.
+On 5/11/20 10:22 AM, Andrew F. Davis wrote:
+> On 5/7/20 2:30 PM, Dan Murphy wrote:
+>> Convert the bq27xxx.txt to yaml format
+>>
+>> CC: Pali Rohár <pali@kernel.org>
+>> CC: Andrew F. Davis <afd@ti.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../bindings/power/supply/bq27xxx.txt         | 56 ------------
+>>   .../bindings/power/supply/bq27xxx.yaml        | 86 +++++++++++++++++++
+>>   2 files changed, 86 insertions(+), 56 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>> deleted file mode 100644
+>> index 4fa8e08df2b6..000000000000
+>> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>> +++ /dev/null
+>> @@ -1,56 +0,0 @@
+>> -TI BQ27XXX fuel gauge family
+>> -
+>> -Required properties:
+>> -- compatible: contains one of the following:
+>> - * "ti,bq27200" - BQ27200
+>> - * "ti,bq27210" - BQ27210
+>> - * "ti,bq27500" - deprecated, use revision specific property below
+>> - * "ti,bq27510" - deprecated, use revision specific property below
+>> - * "ti,bq27520" - deprecated, use revision specific property below
+>> - * "ti,bq27500-1" - BQ27500/1
+>
+> This doesn't look right, these are two parts, we should be specific in
+> DT, so:
+>
+> ti,bq27500
+> ti,bq27501
+>
+> should be separate like that.
 
-Wei.
+I agree if they are 2 different parts but the code has
 
-> 
-> I guess this would do it:
-> 
-> #define pci_msi_get_hwirq NULL
-> 
-> when GENERIC_MSI_DOMAIN_OPS is enabled.
+     { .compatible = "ti,bq27500-1" },
+
+But it has no consumers.
+
+So the ti,bq27500-1 compatible should be deprecated and ti,bq27501  
+should be added and the ti,bq27500 should be reinstated.
+
+Dan
+
