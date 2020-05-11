@@ -2,267 +2,154 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CF4C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFBEC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F5920722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B40E20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgEKLUw (ORCPT
+        id S1729665AbgEKLU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:20:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:57306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbgEKLUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:20:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D10471045;
-        Mon, 11 May 2020 04:20:50 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 61F8F3F305;
-        Mon, 11 May 2020 04:20:40 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v7 07/15] Documentation: power: update Energy Model description
-Date:   Mon, 11 May 2020 12:19:04 +0100
-Message-Id: <20200511111912.3001-8-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511111912.3001-1-lukasz.luba@arm.com>
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
+        Mon, 11 May 2020 07:20:56 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2183 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729651AbgEKLUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:20:53 -0400
+Received: from lhreml719-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 7CDFC8E0A97ECCF7093;
+        Mon, 11 May 2020 12:20:51 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 11 May 2020 12:20:51 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Mon, 11 May 2020 12:20:51 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgBI/yoCAM/mpcA==
+Date:   Mon, 11 May 2020 11:20:50 +0000
+Message-ID: <26acef2760e843ea92edeba199812d73@huawei.com>
+References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
+ <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
+In-Reply-To: <c73bb18b-02ef-6c35-f4cf-1738c17a96e5@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.83.192]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Energy Model framework supports also other devices than CPUs. Update
-related information and add description for the new usage.
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- Documentation/power/energy-model.rst | 135 +++++++++++++++------------
- 1 file changed, 75 insertions(+), 60 deletions(-)
-
-diff --git a/Documentation/power/energy-model.rst b/Documentation/power/energy-model.rst
-index 90a345d57ae9..a6fb986abe3c 100644
---- a/Documentation/power/energy-model.rst
-+++ b/Documentation/power/energy-model.rst
-@@ -1,15 +1,17 @@
--====================
--Energy Model of CPUs
--====================
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+Energy Model of devices
-+=======================
- 
- 1. Overview
- -----------
- 
- The Energy Model (EM) framework serves as an interface between drivers knowing
--the power consumed by CPUs at various performance levels, and the kernel
-+the power consumed by devices at various performance levels, and the kernel
- subsystems willing to use that information to make energy-aware decisions.
- 
--The source of the information about the power consumed by CPUs can vary greatly
-+The source of the information about the power consumed by devices can vary greatly
- from one platform to another. These power costs can be estimated using
- devicetree data in some cases. In others, the firmware will know better.
- Alternatively, userspace might be best positioned. And so on. In order to avoid
-@@ -25,7 +27,7 @@ framework, and interested clients reading the data from it::
-        +---------------+  +-----------------+  +---------------+
-        | Thermal (IPA) |  | Scheduler (EAS) |  |     Other     |
-        +---------------+  +-----------------+  +---------------+
--               |                   | em_pd_energy()    |
-+               |                   | em_cpu_energy()   |
-                |                   | em_cpu_get()      |
-                +---------+         |         +---------+
-                          |         |         |
-@@ -35,7 +37,7 @@ framework, and interested clients reading the data from it::
-                         |     Framework       |
-                         +---------------------+
-                            ^       ^       ^
--                           |       |       | em_register_perf_domain()
-+                           |       |       | em_dev_register_perf_domain()
-                 +----------+       |       +---------+
-                 |                  |                 |
-         +---------------+  +---------------+  +--------------+
-@@ -47,12 +49,12 @@ framework, and interested clients reading the data from it::
-         | Device Tree  |   |   Firmware    |  |      ?       |
-         +--------------+   +---------------+  +--------------+
- 
--The EM framework manages power cost tables per 'performance domain' in the
--system. A performance domain is a group of CPUs whose performance is scaled
--together. Performance domains generally have a 1-to-1 mapping with CPUFreq
--policies. All CPUs in a performance domain are required to have the same
--micro-architecture. CPUs in different performance domains can have different
--micro-architectures.
-+In case of CPU devices the EM framework manages power cost tables per
-+'performance domain' in the system. A performance domain is a group of CPUs
-+whose performance is scaled together. Performance domains generally have a
-+1-to-1 mapping with CPUFreq policies. All CPUs in a performance domain are
-+required to have the same micro-architecture. CPUs in different performance
-+domains can have different micro-architectures.
- 
- 
- 2. Core APIs
-@@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM framework.
- Drivers are expected to register performance domains into the EM framework by
- calling the following API::
- 
--  int em_register_perf_domain(cpumask_t *span, unsigned int nr_states,
--			      struct em_data_callback *cb);
-+  int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
-+		struct em_data_callback *cb, cpumask_t *cpus);
- 
--Drivers must specify the CPUs of the performance domains using the cpumask
--argument, and provide a callback function returning <frequency, power> tuples
--for each capacity state. The callback function provided by the driver is free
-+Drivers must provide a callback function returning <frequency, power> tuples
-+for each performance state. The callback function provided by the driver is free
- to fetch data from any relevant location (DT, firmware, ...), and by any mean
--deemed necessary. See Section 3. for an example of driver implementing this
-+deemed necessary. Only for CPU devices, drivers must specify the CPUs of the
-+performance domains using cpumask. For other devices than CPUs the last
-+argument must be set to NULL.
-+See Section 3. for an example of driver implementing this
- callback, and kernel/power/energy_model.c for further documentation on this
- API.
- 
-@@ -85,13 +89,20 @@ API.
- 2.3 Accessing performance domains
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-+There are two API functions which provide the access to the energy model:
-+em_cpu_get() which takes CPU id as an argument and em_pd_get() with device
-+pointer as an argument. It depends on the subsystem which interface it is
-+going to use, but in case of CPU devices both functions return the same
-+performance domain.
-+
- Subsystems interested in the energy model of a CPU can retrieve it using the
- em_cpu_get() API. The energy model tables are allocated once upon creation of
- the performance domains, and kept in memory untouched.
- 
- The energy consumed by a performance domain can be estimated using the
--em_pd_energy() API. The estimation is performed assuming that the schedutil
--CPUfreq governor is in use.
-+em_cpu_energy() API. The estimation is performed assuming that the schedutil
-+CPUfreq governor is in use in case of CPU device. Currently this calculation is
-+not provided for other type of devices.
- 
- More details about the above APIs can be found in include/linux/energy_model.h.
- 
-@@ -106,42 +117,46 @@ EM framework::
- 
-   -> drivers/cpufreq/foo_cpufreq.c
- 
--  01	static int est_power(unsigned long *mW, unsigned long *KHz, int cpu)
--  02	{
--  03		long freq, power;
--  04
--  05		/* Use the 'foo' protocol to ceil the frequency */
--  06		freq = foo_get_freq_ceil(cpu, *KHz);
--  07		if (freq < 0);
--  08			return freq;
--  09
--  10		/* Estimate the power cost for the CPU at the relevant freq. */
--  11		power = foo_estimate_power(cpu, freq);
--  12		if (power < 0);
--  13			return power;
--  14
--  15		/* Return the values to the EM framework */
--  16		*mW = power;
--  17		*KHz = freq;
--  18
--  19		return 0;
--  20	}
--  21
--  22	static int foo_cpufreq_init(struct cpufreq_policy *policy)
--  23	{
--  24		struct em_data_callback em_cb = EM_DATA_CB(est_power);
--  25		int nr_opp, ret;
--  26
--  27		/* Do the actual CPUFreq init work ... */
--  28		ret = do_foo_cpufreq_init(policy);
--  29		if (ret)
--  30			return ret;
--  31
--  32		/* Find the number of OPPs for this policy */
--  33		nr_opp = foo_get_nr_opp(policy);
--  34
--  35		/* And register the new performance domain */
--  36		em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
--  37
--  38	        return 0;
--  39	}
-+  01	static int est_power(unsigned long *mW, unsigned long *KHz,
-+  02			struct device *dev)
-+  03	{
-+  04		long freq, power;
-+  05
-+  06		/* Use the 'foo' protocol to ceil the frequency */
-+  07		freq = foo_get_freq_ceil(dev, *KHz);
-+  08		if (freq < 0);
-+  09			return freq;
-+  10
-+  11		/* Estimate the power cost for the dev at the relevant freq. */
-+  12		power = foo_estimate_power(dev, freq);
-+  13		if (power < 0);
-+  14			return power;
-+  15
-+  16		/* Return the values to the EM framework */
-+  17		*mW = power;
-+  18		*KHz = freq;
-+  19
-+  20		return 0;
-+  21	}
-+  22
-+  23	static int foo_cpufreq_init(struct cpufreq_policy *policy)
-+  24	{
-+  25		struct em_data_callback em_cb = EM_DATA_CB(est_power);
-+  26		struct device *cpu_dev;
-+  27		int nr_opp, ret;
-+  28
-+  29		cpu_dev = get_cpu_device(cpumask_first(policy->cpus));
-+  30
-+  31     	/* Do the actual CPUFreq init work ... */
-+  32     	ret = do_foo_cpufreq_init(policy);
-+  33     	if (ret)
-+  34     		return ret;
-+  35
-+  36     	/* Find the number of OPPs for this policy */
-+  37     	nr_opp = foo_get_nr_opp(policy);
-+  38
-+  39     	/* And register the new performance domain */
-+  40     	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, policy->cpus);
-+  41
-+  42	        return 0;
-+  43	}
--- 
-2.17.1
-
+SGkgQm9yaXMsIEhpIEphbWVzLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9t
+OiBsaW51eC1wY2ktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtcGNpLQ0KPm93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEphbWVzIE1vcnNlDQo+U2VudDogMDgg
+QXByaWwgMjAyMCAxMTowMw0KPlRvOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT47IFNo
+aWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNwaUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5vcmc7DQo+bGVu
+YkBrZXJuZWwub3JnOyB0b255Lmx1Y2tAaW50ZWwuY29tOyBncmVna2hAbGludXhmb3VuZGF0aW9u
+Lm9yZzsNCj56aGFuZ2xpZ3VhbmdAbGludXguYWxpYmFiYS5jb207IHRnbHhAbGludXRyb25peC5k
+ZTsgTGludXhhcm0NCj48bGludXhhcm1AaHVhd2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48
+am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3
+ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5neWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDog
+UmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBBUEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhl
+IHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9ycw0KPg0KPkhpIEJvcmlzLCBTaGlqdSwNCj4NCj5T
+b3JyeSBmb3Igbm90IHNwb3R0aW5nIHRoaXMgcmVwbHkgZWFybGllcjogSXRzIGluLXJlcGx5IHRv
+IHYxLCBzbyBnZXRzIGJ1cmllZC4NCj4NCj5PbiAyNy8wMy8yMDIwIDE4OjIyLCBCb3Jpc2xhdiBQ
+ZXRrb3Ygd3JvdGU6DQo+PiBPbiBXZWQsIE1hciAyNSwgMjAyMCBhdCAwNDo0MjoyMlBNICswMDAw
+LCBTaGlqdSBKb3NlIHdyb3RlOg0KPj4+IFByZXNlbnRseSBBUEVJIGRvZXMgbm90IHN1cHBvcnQg
+cmVwb3J0aW5nIHRoZSB2ZW5kb3Igc3BlY2lmaWMgSFcNCj4+PiBlcnJvcnMsIHJlY2VpdmVkIGlu
+IHRoZSB2ZW5kb3IgZGVmaW5lZCB0YWJsZSBlbnRyaWVzLCB0byB0aGUgdmVuZG9yDQo+Pj4gZHJp
+dmVycyBmb3IgYW55IHJlY292ZXJ5Lg0KPj4+DQo+Pj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBzdXBw
+b3J0IHRvIHJlZ2lzdGVyIGFuZCB1bnJlZ2lzdGVyIHRoZQ0KPj4NCj4+IEF2b2lkIGhhdmluZyAi
+VGhpcyBwYXRjaCIgb3IgIlRoaXMgY29tbWl0IiBpbiB0aGUgY29tbWl0IG1lc3NhZ2UuIEl0DQo+
+PiBpcyB0YXV0b2xvZ2ljYWxseSB1c2VsZXNzLg0KPj4NCj4+IEFsc28sIGRvDQo+Pg0KPj4gJCBn
+aXQgZ3JlcCAnVGhpcyBwYXRjaCcgRG9jdW1lbnRhdGlvbi9wcm9jZXNzDQo+Pg0KPj4gZm9yIG1v
+cmUgZGV0YWlscy4NCj4+DQo+Pj4gZXJyb3IgaGFuZGxpbmcgZnVuY3Rpb24gZm9yIHRoZSB2ZW5k
+b3Igc3BlY2lmaWMgSFcgZXJyb3JzIGFuZCBub3RpZnkNCj4+PiB0aGUgcmVnaXN0ZXJlZCBrZXJu
+ZWwgZHJpdmVyLg0KPg0KPj4+IEBAIC01MjYsMTAgKzU1MiwxNyBAQCBzdGF0aWMgdm9pZCBnaGVz
+X2RvX3Byb2Moc3RydWN0IGdoZXMgKmdoZXMsDQo+Pj4gIAkJCWxvZ19hcm1faHdfZXJyb3IoZXJy
+KTsNCj4+PiAgCQl9IGVsc2Ugew0KPj4+ICAJCQl2b2lkICplcnIgPSBhY3BpX2hlc3RfZ2V0X3Bh
+eWxvYWQoZ2RhdGEpOw0KPj4+ICsJCQl1OCBlcnJvcl9oYW5kbGVkID0gZmFsc2U7DQo+Pj4gKwkJ
+CWludCByZXQ7DQo+Pj4gKw0KPj4+ICsJCQlyZXQgPQ0KPmF0b21pY19ub3RpZmllcl9jYWxsX2No
+YWluKCZnaGVzX2V2ZW50X25vdGlmeV9saXN0LCAwLA0KPj4+ICtnZGF0YSk7DQo+Pg0KPj4gV2Vs
+bCwgdGhpcyBpcyBhIG5vdGlmaWVyIHdpdGggc3RhbmRhcmQgbmFtZSBmb3IgYSBub24tc3RhbmRh
+cmQgZXZlbnQuDQo+PiBOb3Qgb3B0aW1hbC4NCj4+DQo+PiBXaHkgZG9lcyBvbmx5IHRoaXMgZXZl
+bnQgbmVlZCBhIG5vdGlmaWVyPyBCZWNhdXNlIHlvdXIgZHJpdmVyIGlzDQo+PiBpbnRlcmVzdGVk
+IGluIG9ubHkgdGhvc2UgZXZlbnRzPw0KPg0KPkl0cyB0aGUgJ2Vsc2UnIGNhdGNoLWFsbCBmb3Ig
+c3R1ZmYgZHJpdmVycy9hY3BpL2FwZWkgIGRvZXNuJ3Qga25vdyB0byBoYW5kbGUuDQo+DQo+SW4g
+dGhpcyBjYXNlIGl0cyBiZWNhdXNlIGl0cyBhIHZlbmRvciBzcGVjaWZpYyBHVUlEIHRoYXQgb25s
+eSB0aGUgdmVuZG9yIGRyaXZlcg0KPmtub3dzIGhvdyB0byBwYXJzZS4NCj4NCj4NCj4+PiArCQkJ
+aWYgKHJldCAmIE5PVElGWV9PSykNCj4+PiArCQkJCWVycm9yX2hhbmRsZWQgPSB0cnVlOw0KPj4+
+DQo+Pj4gIAkJCWxvZ19ub25fc3RhbmRhcmRfZXZlbnQoc2VjX3R5cGUsIGZydV9pZCwgZnJ1X3Rl
+eHQsDQo+Pj4gIAkJCQkJICAgICAgIHNlY19zZXYsIGVyciwNCj4+PiAtCQkJCQkgICAgICAgZ2Rh
+dGEtPmVycm9yX2RhdGFfbGVuZ3RoKTsNCj4+PiArCQkJCQkgICAgICAgZ2RhdGEtPmVycm9yX2Rh
+dGFfbGVuZ3RoLA0KPj4+ICsJCQkJCSAgICAgICBlcnJvcl9oYW5kbGVkKTsNCj4+DQo+PiBXaGF0
+J3MgdGhhdCBlcnJvcl9oYW5kbGVkIHRoaW5nIGZvcj8gVGhhdCdzIGp1c3Qgc2lsbHkuDQo+Pg0K
+Pj4gWW91ciBub3RpZmllciByZXR1cm5zIE5PVElGWV9TVE9QIHdoZW4gaXQgaGFzIHF1ZXVlZCB0
+aGUgZXJyb3IuIElmIHlvdQ0KPj4gZG9uJ3Qgd2FudCB0byBsb2cgaXQsIGp1c3QgdGVzdCA9PSBO
+T1RJRllfU1RPUCBhbmQgZG8gbm90IGxvZyBpdCB0aGVuLg0KPg0KPk15IHRoaW5raW5nIGZvciB0
+aGlzIGJlaW5nIG5lZWRlZCB3YXMgc28gdXNlci1zcGFjZSBjb25zdW1lcnMgb2YgdGhvc2UNCj50
+cmFjZXBvaW50cyBrZWVwIHdvcmtpbmcuIE90aGVyd2lzZSB5b3UgdXBncmFkZSwgZ2V0IHRoaXMg
+ZmVhdHVyZSwgYW5kIHlvdXINCj51c2VyLXNwYWNlIGNvdW50ZXJzIHN0b3Agd29ya2luZy4NCj4N
+Cj5Zb3UnZCBuZWVkIHRvIGtub3cgdGhpcyBlcnJvciBzb3VyY2Ugd2FzIG5vdyBtYW5hZ2VkIGJ5
+IGFuIGluLWtlcm5lbA0KPmRyaXZlciwgd2hpY2ggbWF5IHJlcG9ydCB0aGUgZXJyb3JzIHNvbWV3
+aGVyZSBlbHNlLi4uDQo+DQo+DQo+PiBUaGVuIHlvdXIgbm90aWZpZXIgY2FsbGJhY2sgaXMgcXVl
+dWluZyB0aGUgZXJyb3IgaW50byBhIGtmaWZvIGZvcg0KPj4gd2hhdGV2ZXIgcmVhc29uIGFuZCB0
+aGVuIHNjaGVkdWxpbmcgYSB3b3JrcXVldWUgdG8gaGFuZGxlIGl0IGluIHVzZXINCj4+IGNvbnRl
+eHQuLi4NCj4+DQo+PiBTbyBJJ20gdGhpbmtpbmcgdGhhdCBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYg
+eW91Og0KPj4NCj4+ICogbWFrZSB0aGF0IGtmaWZvIGdlbmVyaWMgYW5kIHBhcnQgb2YgZ2hlcy5j
+IGFuZCBxdWV1ZSBhbGwgdHlwZXMgb2YNCj4+IGVycm9yIHJlY29yZHMgaW50byBpdCBpbiBnaGVz
+X2RvX3Byb2MoKSAtIG5vdCBqdXN0IHRoZSBub24tc3RhbmRhcmQNCj4+IG9uZXMuDQo+DQo+TW92
+ZSB0aGUgZHJvcCB0byBwcm9jZXNzIGNvbnRleHQgaW50byBnaGVzLmM/IFRoaXMgc2hvdWxkIHJl
+c3VsdCBpbiBsZXNzIGNvZGUuDQo+DQo+SSBhc2tlZCBmb3IgdGhpcyBob29raW5nIHRvIG9ubHkg
+YmUgZm9yIHRoZSAnY2F0Y2ggYWxsJyBkb24ndC1rbm93IGNhc2Ugc28gdGhhdA0KPndlIGRvbid0
+IGdldCBkcml2ZXJzIHRyeWluZyB0byBob29rIGFuZCBoYW5kbGUgbWVtb3J5IGVycm9ycy4gKGlm
+IHdlIGV2ZXINCj53YW50ZWQgdGhhdCwgaXQgc2hvdWxkIGJlIGZyb20gcGFydCBvZiBtZW1vcnlf
+ZmFpbHVyZSgpIHNvIGl0IGNhdGNoZXMgYWxsIHRoZQ0KPndheXMgb2YgcmVwb3J0aW5nIG1lbW9y
+eS1mYWlsdXJlKSAzMmJpdCBhcm0gaGFzIHByaW9yIGluIHRoaXMgYXJlYS4NCj4NCj4NCj4+ICog
+dGhlbiwgd2hlbiB5b3UncmUgZG9uZSBxdWV1aW5nLCB5b3Uga2ljayBhIHdvcmtxdWV1ZS4NCj4+
+DQo+PiAqIHRoYXQgd29ya3F1ZXVlIHJ1bnMgYSBub3JtYWwsIGJsb2NraW5nIG5vdGlmaWVyIHRv
+IHdoaWNoIGRyaXZlcnMNCj4+IHJlZ2lzdGVyLg0KPj4NCj4+IFlvdXIgZHJpdmVyIGNhbiByZWdp
+c3RlciB0byB0aGF0IG5vdGlmaWVyIHRvbyBhbmQgZG8gdGhlIG5vcm1hbA0KPj4gaGFuZGxpbmcg
+dGhlbiBhbmQgbm90IGhhdmUgdGhpcyBhZC1ob2MsIHNlbWktZ2VuZXJpYywgc2VtaS12ZW5kb3It
+c3BlY2lmaWMNCj50aGluZy4NCj4NCj5BcyBsb25nIGFzIHdlIGRvbid0IHdhbGsgYSBsaXN0IG9m
+IHRoaW5ncyB0aGF0IG1pZ2h0IGhhbmRsZSBhIG1lbW9yeS1lcnJvciwNCj5hbmQgaGF2ZSBzb21l
+IHJhbmRvbSBkcml2ZXIgdHJ5IGFuZCBOT1RJRllfU1RPUCBpdC4uLi4NCj4NCj5hZXJfcmVjb3Zl
+cl9xdWV1ZSgpIHdvdWxkIGJlIHJlcGxhY2VkIGJ5IHRoaXMuIG1lbW9yeV9mYWlsdXJlX3F1ZXVl
+KCkgaGFzDQo+b25lIGFkZGl0aW9uYWwgY2FsbGVyIGluIGRyaXZlcnMvcmFzL2NlYy5jLg0KDQpD
+YW4geW91IHN1Z2dlc3Qgd2hldGhlciB0aGUgc3RhbmRhcmQgZXJyb3JzIGNhbiByZXBvcnQgdGhy
+b3VnaCB0aGUgDQpub3RpZmllciAoa2ZpZm8gKyBibG9ja2luZyBub3RpZmllciksIFt3aGljaCBp
+bXBsZW1lbnRlZCAgaW4gVjcgcGF0Y2hdLCBvciBub3QgDQpzbyB0aGF0IHdlIGNhbiBwcm9jZWVk
+IHdpdGggdGhlIGNoYW5nZXMgdG8gbm90aWZ5IHRoZSB2ZW5kb3Igc3BlY2lmaWMgZXJyb3JzPw0K
+DQo+DQo+DQo+VGhhbmtzLA0KPg0KPkphbWVzDQoNClRoYW5rcywNClNoaWp1DQo=
