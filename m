@@ -2,51 +2,56 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974DAC54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B4AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835BE20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C0620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbgEKSVW (ORCPT
+        id S1731136AbgEKSVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:21:22 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:48960 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729825AbgEKSVV (ORCPT
+        Mon, 11 May 2020 14:21:34 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:48964 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729830AbgEKSVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:21:21 -0400
-Received: by mail-il1-f198.google.com with SMTP id i2so10162724ile.15
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:21:20 -0700 (PDT)
+        Mon, 11 May 2020 14:21:22 -0400
+Received: by mail-il1-f200.google.com with SMTP id i2so10162738ile.15
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:21:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6IhQVM21jouY7unYnKk8xoX6AewAdvt9Su+siXbvu9Q=;
-        b=qBYYEl8uLCkIkGEkiLXshr1Ioi4mdk+Fi2BFVVScNYbiS+rmxvaFoKxOcHcwoDxjfc
-         CIVIPZbQpZydRbKJ4uWfT1Z33RDDV5yBMPQGfw0lBa1tkrOjReqdEgHHHXxm7yIcMPTa
-         YUyLBqm8D6bs1mwq+3S4o8rr5lLaOt53LcR05mRlZPmz6SvCVpKbJfYkFRsCCWt7T4Kr
-         NvBfXDRBtaEK6Vn9jNhJg2bI/pvM3y2CYWDBlSp38cIwzb0kWZ6lzP95o1oB2OTUz/lS
-         LeSgd0B0oxhs0nfLvfJkaZRfV/FH1OdQxbosY/z0Cm/7ZtXRxj9HfCYtpN0SBRO84cDK
-         at8g==
-X-Gm-Message-State: AGi0PuaSyDOovECJgX6JCpGkVs4PMvTXpMdTD+VC1lnUXV2ty1dqP5+/
-        EBSH7olN7RWZ+7GGOPBacWHRUB5mhnf4QEdTVFh73uld2Zml
-X-Google-Smtp-Source: APiQypKk9BzI5bmAuB7bOiRXIisFnD9ZGVqUW1uDSRyhqz1+fyIfPz5wIODV8zkIdpJDFQ2y/MUCPhy8Or0CVm37ApnS21xXNNS+
+        bh=SgahX+xxxn/F7kqBauPLeHjVaGE2RHw7Ce+/vWGFtFE=;
+        b=ShSG3D/iglrqFFt/8Ba0kc4fqrHUKpM+Q4tkjopEil5Y4DTE9LCLAv7WdB8oNyCcrX
+         Fn6myLtEysAL3LlRBfxajpmsxibzDBmr4bQju/o2Q+LbO9+ty1NxBd0hSbZPfIF3Zjkp
+         GZZhn56fLkG76bTFUKfIP/1KAeOnr7mP8VMHbNB1po+g254V2CrqJ9pcol1tRXuwY8u8
+         8d4cMyeoCOeFrYChQodOXh87bD+hYHxXef3ajpTVvrhKStcwN7eK9tKKGTeaIR+8N1Vg
+         gCOWkYYFaxk8dZiC/JOzxWoOPJGC3VO+TK1Ig/59zwmRW91CHoprXipmVVAlzv40mSW5
+         FgkA==
+X-Gm-Message-State: AGi0PuZyQ1Y7SB4My1IIanN7qhNPYKeT+CSbGgKx6u3D5QJ9JHVD9ck0
+        +RzI7RF2EJe609qKNFeyGekdwZEOz0edsD5Tb8sCYqzwAkHs
+X-Google-Smtp-Source: APiQypKf7bSUzReoBubrJJvUiUvyovPF/1cgFZo3lRblXXTsfhO31Itpcb+CmqOsJ11ccV5fWsYnw7Iq4kf2WwOppWFc3QVc1Rth
 MIME-Version: 1.0
-X-Received: by 2002:a02:3b4b:: with SMTP id i11mr16870119jaf.16.1589221280294;
+X-Received: by 2002:a02:c9d0:: with SMTP id c16mr16961066jap.80.1589221280642;
  Mon, 11 May 2020 11:21:20 -0700 (PDT)
 Date:   Mon, 11 May 2020 11:21:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e1accc05a563699e@google.com>
-Subject: memory leak in erase_aeb (2)
-From:   syzbot <syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
+Message-ID: <000000000000e723d205a56369c2@google.com>
+Subject: KMSAN: uninit-value in hash_net6_del
+From:   syzbot <syzbot+3fba3936436897a34c8a@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        glider@google.com, gregkh@linuxfoundation.org, info@metux.net,
+        jeremy@azazel.net, kadlec@netfilter.org,
+        kstewart@linuxfoundation.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,37 +62,135 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    2ef96a5b Linux 5.7-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1383fd32100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c566cc03357343ce
-dashboard link: https://syzkaller.appspot.com/bug?extid=d9aab50b1154e3d163f5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1166ab14100000
+HEAD commit:    21c44613 kmsan: page_alloc: more assuring comment
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f13632100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5915107b3106aaa
+dashboard link: https://syzkaller.appspot.com/bug?extid=3fba3936436897a34c8a
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
+Reported-by: syzbot+3fba3936436897a34c8a@syzkaller.appspotmail.com
 
-BUG: memory leak
-unreferenced object 0xffff888127f372c0 (size 32):
-  comm "syz-executor.0", pid 6931, jiffies 4294945277 (age 14.410s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
-  backtrace:
-    [<0000000049aad7d8>] erase_aeb+0x25/0x110 drivers/mtd/ubi/wl.c:1690
-    [<000000004a6c95d3>] ubi_wl_init+0x193/0x5c0 drivers/mtd/ubi/wl.c:1757
-    [<00000000a1d58128>] ubi_attach+0x611/0x18ba drivers/mtd/ubi/attach.c:1605
-    [<00000000eb6b9da4>] ubi_attach_mtd_dev+0x665/0xcc0 drivers/mtd/ubi/build.c:967
-    [<000000000a8ebd80>] ctrl_cdev_ioctl+0x144/0x1b0 drivers/mtd/ubi/cdev.c:1043
-    [<000000007ada47ea>] vfs_ioctl fs/ioctl.c:47 [inline]
-    [<000000007ada47ea>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:771
-    [<00000000bd687125>] __do_sys_ioctl fs/ioctl.c:780 [inline]
-    [<00000000bd687125>] __se_sys_ioctl fs/ioctl.c:778 [inline]
-    [<00000000bd687125>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:778
-    [<000000006f0eae66>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<00000000eaee3164>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
+BUG: KMSAN: uninit-value in __read_once_size include/linux/compiler.h:206 [inline]
+BUG: KMSAN: uninit-value in hash_net6_del+0xa54/0x23e0 net/netfilter/ipset/ip_set_hash_gen.h:1069
+CPU: 0 PID: 32550 Comm: syz-executor.3 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ __read_once_size include/linux/compiler.h:206 [inline]
+ hash_net6_del+0xa54/0x23e0 net/netfilter/ipset/ip_set_hash_gen.h:1069
+ hash_net6_uadt+0xab6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:343
+ call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
+ ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
+ ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
+ nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
+ nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
+ ___sys_sendmsg net/socket.c:2399 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
+ __do_sys_sendmsg net/socket.c:2441 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f20cf9cbc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004fd660 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020001080 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000092a R14: 00000000004cbc77 R15: 00007f20cf9cc6d4
 
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+ ip6_netmask include/linux/netfilter/ipset/pfxlen.h:51 [inline]
+ hash_net6_uadt+0xa07/0xd80 net/netfilter/ipset/ip_set_hash_net.c:334
+ call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
+ ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
+ ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
+ nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
+ nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
+ ___sys_sendmsg net/socket.c:2399 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
+ __do_sys_sendmsg net/socket.c:2441 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ ip_set_get_ipaddr6+0x26a/0x300 net/netfilter/ipset/ip_set_core.c:324
+ hash_net6_uadt+0x4a6/0xd80 net/netfilter/ipset/ip_set_hash_net.c:320
+ call_ad+0x2dc/0xbc0 net/netfilter/ipset/ip_set_core.c:1731
+ ip_set_ad+0xad2/0x1110 net/netfilter/ipset/ip_set_core.c:1819
+ ip_set_udel+0xf9/0x110 net/netfilter/ipset/ip_set_core.c:1853
+ nfnetlink_rcv_msg+0xb86/0xcf0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2478
+ nfnetlink_rcv+0x3b5/0x3ab0 net/netfilter/nfnetlink.c:563
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x1246/0x14d0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
+ ___sys_sendmsg net/socket.c:2399 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
+ __do_sys_sendmsg net/socket.c:2441 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2801 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4420
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1081 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+ netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1893
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2345
+ ___sys_sendmsg net/socket.c:2399 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2432
+ __do_sys_sendmsg net/socket.c:2441 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2439
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2439
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+=====================================================
 
 
 ---
@@ -97,5 +200,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
