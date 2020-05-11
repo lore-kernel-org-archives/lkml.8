@@ -2,67 +2,113 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74B4C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB59C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B33CB20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589207380;
-	bh=IiuDF+mmYlvq92MMyscTeA2Brp0Juu3RwrbvqlWvpic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q/rMANYWmZi4nas4GGdAmKMB/4z9eXLLDNUNbT2LzOTcn1lXHqLpP4qidwF4EUjb+
-	 K3YEIUMPSVFzFGXhMbNi+1dx6pm6BdCaA4727NJujam3bGRe7vRnfnpC8HGg0d8r/V
-	 3/3wcK2NMoU/wbKUm3U8vkJWQtGBMwpCxthvD3XQ=
+	by mail.kernel.org (Postfix) with ESMTP id 65606206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbgEKO3k (ORCPT
+        id S1729912AbgEKOcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbgEKO3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:29:39 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06E8C206D6;
-        Mon, 11 May 2020 14:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589207379;
-        bh=IiuDF+mmYlvq92MMyscTeA2Brp0Juu3RwrbvqlWvpic=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nCLpQO603HEwcbPxEVy/6e92zLYF7oQFEemtokhcGJliQ6Rmr61hG/vx2x7TtB6wt
-         8gUrHr4CMEV8Q6JXjxzOvASzGmz9kBv0lVZn7kVbYLtduXWUTLwQN9isEJpzEfVQCN
-         GEpWNxKEK/UP3s0K/6dIGKvcefqMXn3Xfv4qi7Vo=
-Date:   Mon, 11 May 2020 22:29:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: lx2160a: add more thermal zone support
-Message-ID: <20200511142926.GB26997@dragon>
-References: <20200417061618.48032-1-andy.tang@nxp.com>
+        Mon, 11 May 2020 10:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726173AbgEKOcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:32:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD8EC061A0C;
+        Mon, 11 May 2020 07:32:45 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A41E32A17E0
+Received: by earth.universe (Postfix, from userid 1000)
+        id 921DF3C08C6; Mon, 11 May 2020 16:32:41 +0200 (CEST)
+Date:   Mon, 11 May 2020 16:32:41 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
+Message-ID: <20200511143241.nmkti7meahvj2swt@earth.universe>
+References: <20200507183013.27261-1-dmurphy@ti.com>
+ <20200510161721.257vprq6rqp64wu5@earth.universe>
+ <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gonlqgai5ywifdkl"
 Content-Disposition: inline
-In-Reply-To: <20200417061618.48032-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 02:16:18PM +0800, Yuantian Tang wrote:
-> There are 7 thermal zones in lx2160a soc. Add the
-> rest thermal zone node to enable them.
-> Also correct one of the values for tmu-calibration property.
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-Applied, thanks.
+--gonlqgai5ywifdkl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
+> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
+> > This needs is missing the power-supplies property. The N900 DT
+> > contains a bq27200 referencing the charger, so it should fail the DT
+> > check without the property being listed here.
+>=20
+> Hmm.=A0 I ran the dt checker specifically on the binding and it did not f=
+ail.=A0
+> Unless I need to build some other DTs as well.
+> Either I will have the power-supplies property
+
+I just tried it myself. The problem is the way you are specifying
+the compatible strings. This is the parsing result:
+
+enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprec=
+ated,
+      use revision specific property below', ...
+
+You can see this in Documentation/devicetree/bindings/processed-schema.yaml=
+, which
+is generated by running the check. The compatible comments need a # as sepa=
+ration
+character like this to generate proper bindings:
+
+properties:   =20
+  compatible:   =20
+    enum:   =20
+      - ti,bq27200 # BQ27200   =20
+      - ti,bq27210 # BQ27210   =20
+      - ti,bq27500 # deprecated, use revision specific property below
+
+-- Sebastian
+
+--gonlqgai5ywifdkl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl65YgIACgkQ2O7X88g7
++posWhAAoqCX7rzM0wCNRMFqSMsFexYyyWQ7Tb5GYEH2eMIB8vqf6So+9KX5SSky
+sDR4hXP0shO9Q/4EIXj/JyLlOAlulH8zrpuI6F44HHlt/bkPsFx7mV7Fk8LP/VTb
+HrYFcZgza8Oa5bhNCnISS6yZTDi0BhIsqJnvVrTa+FbtcOsJQsUUecqUbYQDOgXL
+cWDzjNtf+NzULVzk5gRDOz3WUMqNVlADb+3wnAOiY7OcLsW4B+1PKii5JeY6oI+D
+Rm0zgttHKL4xagPrHRT29XVnhPs8G4IyevpIWLZodHeYvYo5jBYfQIxi6XFEsYIn
+BOKq0fL4EuR6a/L9IDYZGnb0+lu9QWbHQ8SMVN/B5NOaLPG7tLf6kKPovbfIcEJB
+RI/L+hvPllmQop4/VZ1ye0qXkuYd+2NQNXIYg2mfc+tKsT7IOQs2WF61XjG/xgws
+lROSvCXrU345/LRDS1tldydmalU+aAhiFm0lZXape6gdARoJsGuwOkmTpC4m6SOm
+rFU38S+qukE4weLdZQtL9nzw38ckjY9x/BwJjQGV0J3dnUHEjCnI9jYgEdoguRCG
+iBjqz5mVCqFgtmfefpdk1Jor/wWBUU/XsLexn/IJMCefU29XWA3HHfGIsVlecu8v
+ldXWlJ78Qj7NSyoF+6LjtH7hvWq8wMEApbgcU2L5cNkrFaJDWYE=
+=h6cH
+-----END PGP SIGNATURE-----
+
+--gonlqgai5ywifdkl--
