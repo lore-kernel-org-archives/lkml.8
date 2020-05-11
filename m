@@ -2,135 +2,109 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2184C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16601C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF1C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TYCFULo2"
+	by mail.kernel.org (Postfix) with ESMTP id DE334214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589198298;
+	bh=I7c/5QR0NUZxXyJ3bfQU4K67hU6vugawyRi1MoWi3Ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TITcDTYYPkM7dfoYTT8vszQ+ZvcIMmFsW60UJ35SGvjh8YRegebACB+oH38Gp27wr
+	 tcNVuCv29YwojhbsQEUzJcz/7EqaQLqx+qipNeTxZyoR34EvC43VXsPPc3QfqBfu5k
+	 bdUg/EqMaMLZuYEVdv/ty3D/188nx5pKQwBzh8tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgEKL53 (ORCPT
+        id S1729776AbgEKL6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728531AbgEKL52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:57:28 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAD3C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:57:28 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so18920729wma.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ETEJzrILDWcEXSuqI8CJBLVfITRJvsWlV8DeIS56yUg=;
-        b=TYCFULo2Suie8IQQbYjij0fXBQIVOUeI8xv90SKGhM5ONz2C0tOD+JZgJvXZWV8rj1
-         hVyNLva1zf1dfngbRmXj5nWT2LYLmXJYm7Vc5N0WBGJoZUG4D4sPk5K0DqdkpXUKs68N
-         yNDAJiHCn8A02TXqcQ9lyTuTFNdWzUQNC3me3u/1RYQdyg8ABZSWn/yXuzOWlOc3IBmW
-         kL+9ZFtfe+DRrR5ZQYEZqeLUyuRzdG+R/pYtfjhI/9bYEanyw2jau41e8wJJxf9efG+h
-         7MEwuIBDRDzZqwEk16N8f4DzETeYRYp8/8fZ1m1afV8wanrkOItDXwjd39jiUMqFuWRK
-         U3+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ETEJzrILDWcEXSuqI8CJBLVfITRJvsWlV8DeIS56yUg=;
-        b=oKCydQKfJrmOBHtAbMdsIZxzPSrYPfKbxhjawlgSvUvBneZ+Zcv4AcZOopmxYyAvyl
-         1COwnfe8cedkmP0mAeq4aF+tebUZtPI8Njan1HIUx16lQAiveWdw19NYQePG+YE08k2r
-         DzGEpSWJlPMATCbOu+PhhF8vjbf1ox85/RHZx0K9i3pl3htzPPa7aRqT1JWSX2zey+7v
-         LJKdYy+jz03qxtK8vvHfVf4AHZCFwh67VeQwB9uwi8otfFefbuWfs0pd7MYYHqTb8GY8
-         rMZ1wlP4ssJijjT3RCcC+Sw1eZnLRndCmVfK4dZr1pdZyHfm3IK1OLdqh8+Zhe7isBFh
-         0opA==
-X-Gm-Message-State: AGi0PuYBpNxLPn1Re8btJtLNKgT1skDFnrxIi7/cI1MLuSICDFU5shsk
-        FlLmD1VAQ7/0zbHhbfnOGYxy9g==
-X-Google-Smtp-Source: APiQypIA/BhPOSlxxVRft/M3ndyAAD/wbrIqEL1T+jhl+AK/cIZYzzYwO39nyIGbtRrwMvdTRb8hHw==
-X-Received: by 2002:a7b:c755:: with SMTP id w21mr30469520wmk.120.1589198246663;
-        Mon, 11 May 2020 04:57:26 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id y70sm27811096wmc.36.2020.05.11.04.57.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 04:57:25 -0700 (PDT)
-Date:   Mon, 11 May 2020 12:57:22 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v7 03/15] PM / EM: update callback structure and add
- device pointer
-Message-ID: <20200511115722.GA13741@google.com>
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
- <20200511111912.3001-4-lukasz.luba@arm.com>
+        Mon, 11 May 2020 07:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgEKL6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:58:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDFD22075E;
+        Mon, 11 May 2020 11:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589198296;
+        bh=I7c/5QR0NUZxXyJ3bfQU4K67hU6vugawyRi1MoWi3Ag=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hMYxExIkbBzpZ8xg1+7zwz1nUpF1p694bpxCsfJ0x+6ZYVxyIZSYhNLWVUmx5cS2U
+         U6vX1F9U22Pn8tffCzSxGDxl96iWaXHHGgGFEDuRfBzRuZP/QWtkoajrB+4xZRf+F8
+         yoXXlU4MuhX59fX9LOFqETt7nYbJLAk8zxsUReio=
+Date:   Mon, 11 May 2020 12:58:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511115813.GG8216@sirena.org.uk>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
 Content-Disposition: inline
-In-Reply-To: <20200511111912.3001-4-lukasz.luba@arm.com>
+In-Reply-To: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 11 May 2020 at 12:19:00 (+0100), Lukasz Luba wrote:
-> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-> index 61623e2ff149..11ee24e06d12 100644
-> --- a/drivers/cpufreq/scmi-cpufreq.c
-> +++ b/drivers/cpufreq/scmi-cpufreq.c
-> @@ -103,17 +103,12 @@ scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
->  }
->  
->  static int __maybe_unused
-> -scmi_get_cpu_power(unsigned long *power, unsigned long *KHz, int cpu)
-> +scmi_get_cpu_power(unsigned long *power, unsigned long *KHz,
-> +		   struct device *cpu_dev)
->  {
-> -	struct device *cpu_dev = get_cpu_device(cpu);
->  	unsigned long Hz;
->  	int ret, domain;
->  
-> -	if (!cpu_dev) {
-> -		pr_err("failed to get cpu%d device\n", cpu);
-> -		return -ENODEV;
-> -	}
-> -
->  	domain = handle->perf_ops->device_domain_id(cpu_dev);
->  	if (domain < 0)
->  		return domain;
-> @@ -200,7 +195,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
->  
->  	policy->fast_switch_possible = true;
->  
-> -	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
 
-So this one has no users after this patch right? I suppose you could
-squash patch 05 in this one. But no big deal.
+--fwqqG+mf3f7vyBCB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Quentin Perret <qperret@google.com>
+On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
 
-> +	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, policy->cpus);
->  
->  	return 0;
+> Alas linearizing the SPI messages won't help in this case because the DW DMA
+> driver will split it into the max transaction chunks anyway.
+
+That sounds like you need to also impose a limit on the maximum message
+size as well then, with that you should be able to handle messages up
+to whatever that limit is.  There's code for that bit already, so long
+as the limit is not too low it should be fine for most devices and
+client drivers can see the limit so they can be updated to work with it
+if needed.
+
+--fwqqG+mf3f7vyBCB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65PdUACgkQJNaLcl1U
+h9CBqgf+PZERckWsOqLfM9GL+SqMyC0673X9Gu0EsD3d7Ew+bDzZXCP8IFVs0dXB
+kmzF1l+0PHatJ27mV6GPxEAZby+fbbxYZo7/YiDxgE5ortZH58vhYgjFf3gG6XtD
+SAsfGyowPpK+/2sIGN7pAzXyFMueva4wfHcz3Q74DiSbwc+XugWuS6yHOYsJVrdx
+8xhvwaO2S3Wq9G5yJbETpknlzXhGJgTIYF6H86fPOCkqW06c+RiWubK5c2SLj4d6
+6CQ/C0vlsL5GOgC8XcOh8EIgZ/XUfPShqn4/U/f3XotpHVmifCJzvsYB77aB7PFx
+jegHvOJtAGGNPdjuGA5MTUIkYefFYQ==
+=ko68
+-----END PGP SIGNATURE-----
+
+--fwqqG+mf3f7vyBCB--
