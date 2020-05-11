@@ -2,113 +2,184 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91455C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80EAC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F3D206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFOPBOSg"
+	by mail.kernel.org (Postfix) with ESMTP id C8B95206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589221919;
+	bh=9gkW9n50y0MVDvKS4NPAntc8ugZuhmK6KwO1YUJsW5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LA11ToAnm+hIHOlMQaK4hN/j/VHUSbKYZzD7LAldKxxzKQSTgsrlqXrBsvM3ImCyy
+	 QsocYkHq9o2Uso56vT41ZmsFV9bKqCFBHT+go7p8921+2zBhWTM357XfHWemNCvJ/r
+	 NWcmLoE9p6YwG0UDGSwUXAuJxQTnYlklt1mNw3sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbgEKSbd (ORCPT
+        id S1731175AbgEKSb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:31:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729825AbgEKSbd (ORCPT
+        Mon, 11 May 2020 14:31:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35059 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729962AbgEKSb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:31:33 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E723EC061A0C;
-        Mon, 11 May 2020 11:31:32 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id g16so8075734qtp.11;
-        Mon, 11 May 2020 11:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W9v2pHHx1D7eBpE4o9IR/Rkokec9q6VQtmrv8BGwFy4=;
-        b=lFOPBOSgjwrfiEYsJxmcOzBtU3TsnFrsX0SanpVq7AKWi2aS5+Bo/6BGkHZpI0IMZ7
-         3fAUoCSbaSTRT536jeiyZv/QsHiRJGHOyCi3o1u9AP2ju+gebzBz/3MXLDDmKtwWm8kQ
-         C0I/4Z7fZg8cqqhwNoaVehtMaIqGEMPuiix89bMdfM7iK00GHOt0tPje0IzEsn6LXLmz
-         /f4+qc5JJiZ/xI5HFJ+io+Thzm8ykSFwGfmhdFi/LL+JcFfFRQLnuh3uAd2rkpFpAqEk
-         DZ/IE2VVS/80XerfS4EgEL0cQgsCY+RTrUJSNJwl4TiuJbW35v5/vyd/Y6nooFDCi2Tq
-         0V/g==
+        Mon, 11 May 2020 14:31:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u15so334420plm.2;
+        Mon, 11 May 2020 11:31:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W9v2pHHx1D7eBpE4o9IR/Rkokec9q6VQtmrv8BGwFy4=;
-        b=MgTUPd2PALVYqnJ+uA7F3tKImpPqXgo4+R4r1fsfEUzzZO26Ok2fHSoW+tWSBcXF38
-         8YpXLwp7VClhTig/sqCbZKp4DuNTWRahGgmLoiwG1h6X+MTzsrXEq/B6rLD/z0CnEXVC
-         ZNKuhv1J8KzEbJnjH/iodhnr8YsH5fAIGjFVEwmV60GEg25LxcJEqyiu83eM9QKttvVE
-         KR+BzKlfilwciqR4xVUtNVO5amWM3tiCTdkNLDyix2lnqxOPBG8nGwU9l7S0WzZMQXcO
-         KaeGmYa3Pk4olm38js3XOUmRcOCUYP3YojdSYtVI4cQkAKB1iQgR9+30iCoukLGw9yI0
-         2RMA==
-X-Gm-Message-State: AGi0Pubvi7YdV5hTXDp8rXJ6uMhPl+W0dXJuZAyWVn17ysPm0IdskvFV
-        McPCDTLKxAPc5BA88ZcySPw=
-X-Google-Smtp-Source: APiQypLP6T/eno4QX23rLXt0O50+Eml+eh12wQ9eWizX4D5Zl+JIy3avs3yOTjCuVQQHSSRstqsHqg==
-X-Received: by 2002:aed:3f92:: with SMTP id s18mr17838902qth.145.1589221891984;
-        Mon, 11 May 2020 11:31:31 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.228])
-        by smtp.gmail.com with ESMTPSA id x55sm10035452qtk.3.2020.05.11.11.31.29
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5XI6huZ8/68IV3V+dfcxfIXPMcxaK1o+Eheo7UEu6z4=;
+        b=lbseUWUtIA177l1j/A2RwrX/WqZOw1Ne14yXWO/Nx9FMvnam+qeDQmkvveeVQE2U0C
+         iK72CB+2EqrNVxrAC+3SdAPGS8+k2iHeNoQX3YgvVpeYUpZsRU+WUEMuTPLSaDvisJV+
+         8Ggc4/t5pCZENrOxQtzFxqT27FqAI4s/SxNe8rKEr2KPc208VaLLmppSEOygJmRuFge+
+         osHINdx7ETO/9SM8xtSCgkRT7L2snkEhNiTRzs2R65KeS4buB2Zrgxbbhb7NxoFM1EsN
+         nAzjTwMQQzBsp8Px7mKI6MOKPIbxKUAWVlowImdJ0n1+77anoGRffr9SeHWmLksr+TZv
+         Qdhg==
+X-Gm-Message-State: AGi0PuYu9WXTJFaXJZq1veTWUW9Ilisa/UatWMRJ7S95qgI9Ibr4Pmy+
+        u+Q+/ssUK363Co69hywPmp006Zex13Z/4g==
+X-Google-Smtp-Source: APiQypJBdyCSHrHdNSwPrrMpX+IeBN7BoplK36lldntx1+VO+CkznBZq/KxCG3ByOwg/kdNYOBuwIA==
+X-Received: by 2002:a17:90b:3018:: with SMTP id hg24mr23689052pjb.130.1589221917631;
+        Mon, 11 May 2020 11:31:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id cp22sm10790760pjb.28.2020.05.11.11.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:31:30 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id C9D02C5A09; Mon, 11 May 2020 15:31:27 -0300 (-03)
-Date:   Mon, 11 May 2020 15:31:27 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     syzbot <syzbot+9c08aaa363ca5784c9e9@syzkaller.appspotmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, christian@brauner.io,
-        coreteam@netfilter.org, daniel@iogearbox.net, davem@davemloft.net,
-        hannes@cmpxchg.org, john.fastabend@gmail.com, kaber@trash.net,
-        kadlec@blackhole.kfki.hu, kafai@fb.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        lizefan@huawei.com, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, nhorman@tuxdriver.com,
-        pablo@netfilter.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        vyasevich@gmail.com, yhs@fb.com
-Subject: Re: WARNING in cgroup_finalize_control
-Message-ID: <20200511183127.GI2688@localhost.localdomain>
-References: <000000000000e79ab005a56292f5@google.com>
+        Mon, 11 May 2020 11:31:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id ACD8D40605; Mon, 11 May 2020 18:31:55 +0000 (UTC)
+Date:   Mon, 11 May 2020 18:31:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
+ parameter
+Message-ID: <20200511183155.GT11244@42.do-not-panic.com>
+References: <20200427180433.7029-1-vbabka@suse.cz>
+ <20200427180433.7029-6-vbabka@suse.cz>
+ <20200427183913.GH11244@42.do-not-panic.com>
+ <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000e79ab005a56292f5@google.com>
+In-Reply-To: <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:21:13AM -0700, syzbot wrote:
-> Hello,
+On Mon, May 11, 2020 at 01:05:22PM +0200, Vlastimil Babka wrote:
 > 
-> syzbot found the following crash on:
+> On 4/27/20 8:39 PM, Luis Chamberlain wrote:
+> > On Mon, Apr 27, 2020 at 08:04:33PM +0200, Vlastimil Babka wrote:
+> > Nice, also we could just require
+> > 
+> > diff --git a/tools/testing/selftests/sysctl/config b/tools/testing/selftests/sysctl/config
+> > index 6ca14800d755..34461cc99a2b 100644
+> > --- a/tools/testing/selftests/sysctl/config
+> > +++ b/tools/testing/selftests/sysctl/config
+> > @@ -1 +1,3 @@
+> >  CONFIG_TEST_SYSCTL=y
+> > +CONFIG_IKCONFIG=y
+> > +CONFIG_IKCONFIG_PROC=y
+> > 
+> > tools/testing/selftests/firmware/fw_lib.sh then has a kconfig_has()
+> > which can verify the exact config.
 > 
-> HEAD commit:    a811c1fa Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16ad1d70100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=43badbd0e7e1137e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9c08aaa363ca5784c9e9
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d3c588100000
-> 
-> The bug was bisected to:
-> 
-> commit eab59075d3cd7f3535aa2dbbc19a198dfee58892
-> Author: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Date:   Wed Dec 28 11:26:31 2016 +0000
-> 
->     sctp: reduce indent level at sctp_sf_tabort_8_4_8
+> Hmm but it also has a (firmware area specific) fallback for case where
+> IKCONFIG_PROC doesn't exist. So it's simpler to just keep checking the module
+> dir, IMHO, as that would be the fallback. 
 
-The reproducer is not touching any sctp code and the commit above
-didn't have any functional change. Not sure how the bisect ended up on
-it, but this isn't triggered by sctp.
+As you wish.
+
+> >> +
+> >> +	echo -n "Testing if $TARGET is set to 1 ..."
+> >> +	ORIG=$(cat "${TARGET}")
+> > 
+> > This would fail if someone uses this script to test an older kernel, and
+> > the scripts in selftests are supposed to work with older kernels.
+> 
+> Oh, I didn't know that it's supposed to.
+
+Yeap, that's how they are used.
+
+> > One
+> > way to address this would be to just see if the file exists first and
+> > ignore the test if the $SYSCTL directory exists but the file $TARGET
+> > does not.
+> > 
+> > For now we can just do this:
+> > 
+> > if [ ! -d $TARGET ]; then
+> > 	echo "Skipping test for $TARGET as it is not present ..."
+> > 	return 0
+> > fi
+> 
+> OK, just the -d test needs to be fixed :) Andrew can you please apply:
+> 
+> ----8<----
+> From a999e993a89e521b152bbd4b1466f69e62879c30 Mon Sep 17 00:00:00 2001
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Mon, 11 May 2020 12:59:49 +0200
+> Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
+>  fix
+> 
+> Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
+> "This would fail if someone uses this script to test an older kernel, and
+> the scripts in selftests are supposed to work with older kernels."
+> 
+> Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  tools/testing/selftests/sysctl/sysctl.sh | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+> index ef6417b8067b..148704f465b5 100755
+> --- a/tools/testing/selftests/sysctl/sysctl.sh
+> +++ b/tools/testing/selftests/sysctl/sysctl.sh
+> @@ -756,6 +756,11 @@ sysctl_test_0006()
+
+You want to:
+
+                                                                                
+# Kselftest framework requirement - SKIP code is 4.                             
+ksft_skip=4 
+
+>  sysctl_test_0007()
+>  {
+>  	TARGET="${SYSCTL}/boot_int"
+> +	if [ ! -f $TARGET ]; then
+> +		echo "Skipping test for $TARGET as it is not present ..."
+> +		return 0
+> +	fi
+
+And return 4 instead.
+
+  Luis
+> +
+>  	if [ -d $DIR ]; then
+>  		echo "Boot param test only possible sysctl_test is built-in, not module:"
+>  		cat $TEST_DIR/config >&2
+> -- 
+> 2.26.2
+> 
