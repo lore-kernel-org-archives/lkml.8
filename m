@@ -2,44 +2,37 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DBAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2321DC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16BF520736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A6820736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgEKLC0 (ORCPT
+        id S1729279AbgEKLDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725993AbgEKLCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:02:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94EA9C061A0C;
-        Mon, 11 May 2020 04:02:25 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id A06152A0AF8
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 3FEC34800FF; Mon, 11 May 2020 13:02:21 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Support Opensource <support.opensource@diasemi.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Samu Nuutamo <samu.nuutamo@vincit.fi>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH] hwmon: da9052: Synchronize access with mfd
-Date:   Mon, 11 May 2020 13:02:19 +0200
-Message-Id: <20200511110219.68188-1-sebastian.reichel@collabora.com>
+        Mon, 11 May 2020 07:03:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35316 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbgEKLC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:02:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C2713ACC2;
+        Mon, 11 May 2020 11:03:00 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     f.fainelli@gmail.com, eric@anholt.net,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH] MAINTAINERS: Update Raspberry Pi development repository
+Date:   Mon, 11 May 2020 13:02:50 +0200
+Message-Id: <20200511110250.23869-1-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -48,40 +41,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samu Nuutamo <samu.nuutamo@vincit.fi>
+Eric Anholt's repo isn't used anymore. List current one.
 
-When tsi-as-adc is configured it is possible for in7[0123]_input read to
-return an incorrect value if a concurrent read to in[456]_input is
-performed. This is caused by a concurrent manipulation of the mux
-channel without proper locking as hwmon and mfd use different locks for
-synchronization.
-
-Switch hwmon to use the same lock as mfd when accessing the TSI channel.
-
-Fixes: 4f16cab19a3d5 ("hwmon: da9052: Add support for TSI channel")
-Signed-off-by: Samu Nuutamo <samu.nuutamo@vincit.fi>
-[rebase to current master, reword commit message slightly]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/hwmon/da9052-hwmon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/da9052-hwmon.c b/drivers/hwmon/da9052-hwmon.c
-index 53b517dbe7e6..4af2fc309c28 100644
---- a/drivers/hwmon/da9052-hwmon.c
-+++ b/drivers/hwmon/da9052-hwmon.c
-@@ -244,9 +244,9 @@ static ssize_t da9052_tsi_show(struct device *dev,
- 	int channel = to_sensor_dev_attr(devattr)->index;
- 	int ret;
- 
--	mutex_lock(&hwmon->hwmon_lock);
-+	mutex_lock(&hwmon->da9052->auxadc_lock);
- 	ret = __da9052_read_tsi(dev, channel);
--	mutex_unlock(&hwmon->hwmon_lock);
-+	mutex_unlock(&hwmon->da9052->auxadc_lock);
- 
- 	if (ret < 0)
- 		return ret;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 091ec22c1a23..60908ace8d31 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3320,7 +3320,7 @@ L:	bcm-kernel-feedback-list@broadcom.com
+ L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+-T:	git git://github.com/anholt/linux
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git
+ F:	Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ F:	drivers/pci/controller/pcie-brcmstb.c
+ F:	drivers/staging/vc04_services
 -- 
 2.26.2
 
