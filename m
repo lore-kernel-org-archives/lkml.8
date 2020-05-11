@@ -2,175 +2,141 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A711DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2BBC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4AC20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103FB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tH1xyULT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmn+xkIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgEKIpl (ORCPT
+        id S1729123AbgEKItV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42296 "EHLO
+        Mon, 11 May 2020 04:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728471AbgEKIpl (ORCPT
+        with ESMTP id S1728562AbgEKItU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:45:41 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D76DC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:45:41 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id t3so1765479oou.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:45:41 -0700 (PDT)
+        Mon, 11 May 2020 04:49:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC482C061A0C;
+        Mon, 11 May 2020 01:49:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a7so7468034pju.2;
+        Mon, 11 May 2020 01:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CXyk9pD8GiPYbrmsgGPsMzIe7WnVGxVB8QF/X4cMkHw=;
-        b=tH1xyULTB1Tug2ZFWrkrSlIu0kazzBAmC0d7ASAUam2Nm+KjLPEo3EuDPk1i2zKm4A
-         WhkNqvCi5AqW0Z4iI5dsSslvO2QUzOrYoy9+iG8Q5EVhlUB5uY3BAR/lENni1oevul3G
-         zrsDWISutihyNh1wK9m8dNVFDLyOWMoGsLFtYaJGljfmw8LZ5Ux3vAQHOmXEam4DltZZ
-         7TV8hYObHuPuomfyPbQZY2JobEvOTPVwjMwhPewqAwPPAP85yjJyzE80iSPzvv2UzNZl
-         QDHFJpyUZoTVlE9GqSfDDluaqUfDbK3zp5NNk+Oi1MKLKr6xylZhikr3FEzSBOHtJCav
-         1WGw==
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sq8Mq/OxjyWpcL62/IYV8B3/GJi76SpQCwAh+NrsgKo=;
+        b=Fmn+xkIuoCtLzZ9L5niujL1ia1KizwnLoxdeKcLivh3+US4248sEtcamEd57cYtLP1
+         gUsQc6guW04sLRO/ehfKtLLkHye1haA0ghJdXE5o1vhgr5C4ikudX9MoELY5Z61vs1QI
+         cc/vFFZNY3iYllbOPBnlwGPdraCbxp6ABjfx7s5lZNJ/ivFcOaZJh91S8BR7hwBgE8cN
+         QhK/RbAgiIfOK/lN3gnEThCF5fRaG+bmp65xg4R2UBDF/vQjh7J+TDAYC57+FX+QNKW5
+         iSxl29E6ubfN3d2Xv/9jM25XUpF9pHNGk5Psj1PGcOlL6YclDOEAvG/Rui93O6dPiScW
+         4hTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CXyk9pD8GiPYbrmsgGPsMzIe7WnVGxVB8QF/X4cMkHw=;
-        b=azLL8EZgnroOiyulEpfvjfeNV0+9g1epp1yepuxsHvTL/cdyHmrVF5zVbCnkb3Gq0/
-         MrQ2uE1dzWHpdn6OyrSP2WRoqON3V9V/vEfsG1ejO99Vvgyrh9ktaFNTdx8VvWvtxRLI
-         fV+t2uLVZyvkYqctbc+5GmpD9dUs9AjXJL/8Q3qfkLbgWiYm5SMhDBGfLjsL/9+kRzu1
-         GtjC6qNsSx2MN7TrH1Qs9JXjFmkoEuZm5GdHZuOP4IuaAcldzH63z3aYLkEj0wR1WCya
-         CXz3x/Kqm70w50LOXNsnKo9xmcLyqowXF10Y0tXcNC0FoFlO69pja4kqK9S8Pz8MNmA0
-         giBQ==
-X-Gm-Message-State: AGi0PuYWAGlcbQWUQbX6I6CczCTWGsFp7hzHRNBWuAtBVL74k53kyHbJ
-        yE/g7djd0aS8V3dxwpyX+c5Cat+ilMTbldLHkmN1dw==
-X-Google-Smtp-Source: APiQypKqu7Lh30iHtAG6v1+SjOyDTD5J917W5jtQkJ44UaZafhHFvKcTgZ6MwPG87WptrojEUdTRsTmIkOw7buiASsA=
-X-Received: by 2002:a05:6820:164:: with SMTP id k4mr13069183ood.30.1589186740054;
- Mon, 11 May 2020 01:45:40 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sq8Mq/OxjyWpcL62/IYV8B3/GJi76SpQCwAh+NrsgKo=;
+        b=TzFmryzfQbqMZ8DsSc6G4i3ifG5XZ1qziJb4wg+sn8XY5UkUcVP5HNmkLNoS/iPjPo
+         f5xhnpjLln69O0sSsxQBumwe5Gxx8tc0/LgzCLaAj6j+Z/qYMAWhgb04A4rQvLd2xTAw
+         YCzYNxRWi3vFvBnFgPtR1zdrGsjq4i3Bz2X5meOLQZBqvNtlYuRSY3K+poWznJPMgxzP
+         QSUFyTjmD5rczriXj9J56b0UpAVxs0nIK6qXxjaIcXEnmU3MeWfxsssJtcUbI8Sx9xaJ
+         X7WpQTEbcXwzCUzKjnGG9KM6e30RNvb9iJWyAawvdJjidHLi5ovpjurBlbVgCI/caJsy
+         /Czg==
+X-Gm-Message-State: AGi0Pua2sIncEzASVaom8U29G4a/G/I7KBYR1HGQbi2MioIDPABoNXEu
+        s549PiA91bei0jI4044s/HHFYaAGCa4=
+X-Google-Smtp-Source: APiQypJJODO+DqnvGW6pvwrpID7bxuUbBP7xXA9dC/Py7n0F2eUbS3woXmIuBbA3IzkJTAyrjd5Rzg==
+X-Received: by 2002:a17:90a:f418:: with SMTP id ch24mr20848992pjb.68.1589186959766;
+        Mon, 11 May 2020 01:49:19 -0700 (PDT)
+Received: from [192.168.1.5] ([110.77.154.194])
+        by smtp.googlemail.com with ESMTPSA id y8sm8890315pfg.216.2020.05.11.01.49.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 01:49:19 -0700 (PDT)
+From:   Lars Melin <larsm17@gmail.com>
+Subject: Re: [PATCH v2] usb: typec: mux: intel: Fix DP_HPD_LVL bit field
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     bleung@chromium.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
+References: <20200510213934.146631-1-pmalani@chromium.org>
+Message-ID: <6921cb24-091b-1de3-5348-a1dd8a6803f5@gmail.com>
+Date:   Mon, 11 May 2020 15:49:17 +0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200509113717.9084-1-pmenzel@molgen.mpg.de> <87eerr3ppb.fsf@nanos.tec.linutronix.de>
- <edc5af47-27e6-753f-c095-bd3087942690@molgen.mpg.de>
-In-Reply-To: <edc5af47-27e6-753f-c095-bd3087942690@molgen.mpg.de>
-From:   Radoslaw Biernacki <biernacki@google.com>
-Date:   Mon, 11 May 2020 10:45:28 +0200
-Message-ID: <CAM4=Rn+7RGHEGa7u33zUA0b-cBehadw4NKN75JtjKjOhxm2Fxg@mail.gmail.com>
-Subject: Re: [PATCH] x86/tsc: Use hard-coded crystal clock for Skylake mobile
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Ross Zwisler <zwisler@google.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200510213934.146631-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 9:38 AM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Dear Thomas,
->
->
-> Thank you for the quick reply.
->
-> Am 11.05.20 um 09:17 schrieb Thomas Gleixner:
->
-> > Paul Menzel <pmenzel@molgen.mpg.de> writes:
-> >
-> > please send patches to LKML and not offlist.
->
-> Sorry about that. From `MAINTAINERS` I thought x86@kernel.org is wanted.
-> Other subsystems list LKML explicitly there.
->
-> >> From: Radoslaw Biernacki <biernacki@google.com>
-> >>
-> >> @@ -636,10 +636,24 @@ unsigned long native_calibrate_tsc(void)
-> >>       * Denverton SoCs don't report crystal clock, and also don't supp=
-ort
-> >>       * CPUID.0x16 for the calculation below, so hardcode the 25MHz cr=
-ystal
-> >>       * clock.
-> >> +     * Also estimation code is not reliable and gives 1.5%  differenc=
-e for
-> >> +     * tsc/clock ratio on Skylake mobile. Therefore below is a hardco=
-ded
-> >> +     * crystal frequency for Skylake which was removed by upstream co=
-mmit
-> >> +     * "x86/tsc: Use CPUID.0x16 to calculate missing crystal frequenc=
-y"
-> >> +     * This is temporary workaround for bugs:
-> >> +     * b/148108096, b/154283905, b/146787525, b/153400677, b/14817892=
-9
-> >> +     * chromium/1031054
-> >>       */
-> >> -    if (crystal_khz =3D=3D 0 &&
-> >> -                    boot_cpu_data.x86_model =3D=3D INTEL_FAM6_ATOM_GO=
-LDMONT_D)
-> >> -            crystal_khz =3D 25000;
-> >> +    if (crystal_khz =3D=3D 0) {
-> >> +            switch (boot_cpu_data.x86_model) {
-> >> +            case INTEL_FAM6_SKYLAKE_MOBILE:
-> >> +                    crystal_khz =3D 24000;    /* 24.0 MHz */
-> >> +                    break;
-> >> +            case INTEL_FAM6_ATOM_GOLDMONT_X:
-> >> +                    crystal_khz =3D 25000;    /* 25.0 MHz */
-> >> +                    break;
-> >> +            }
-> >
-> > Aside of being a workaround for Google issues which are probably caused=
- > by broken BIOSes
->
-> Even if it was caused by broken firmware, wouldn=E2=80=99t Linux=E2=80=99=
- no regression
-> policy still consider this a regression as user should be able to the
-> Linux kernel =E2=80=9Cno matter what=E2=80=9D?
->
-> > that patch is broken.
-> >
-> >     INTEL_FAM6_ATOM_GOLDMONT_D !=3D INTEL_FAM6_ATOM_GOLDMONT_X
->
-> Good catch. The commit didn=E2=80=99t apply cleanly to the master branch,=
- and I
-> missed this.
->
-> I=E2=80=99ll wait for Radoslaw to comment before proceeding further with =
-this.
+On 5/11/2020 04:39, Prashant Malani wrote:
+> According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
+> 0.6, the PMC HPD request LVL bit field is bit 4.
+> Fix the definition here to match the programming guide.
+> 
+> Since this bit field is changing, explicitly define a field for the
+> HPD_HIGH mode data bit.
+> 
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
+> Reviewed-by: Benson Leung <bleung@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - Fixed bit error in commit message.
+> 
+>   drivers/usb/typec/mux/intel_pmc_mux.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+> index 67c5139cfa0d..15074aec94eb 100644
+> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
+> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+> @@ -63,6 +63,7 @@ enum {
+>   #define PMC_USB_ALTMODE_DP_MODE_SHIFT	8
+>   
+>   /* TBT specific Mode Data bits */
+> +#define PMC_USB_ALTMODE_HPD_HIGH	BIT(14)
+>   #define PMC_USB_ALTMODE_TBT_TYPE	BIT(17)
+>   #define PMC_USB_ALTMODE_CABLE_TYPE	BIT(18)
+>   #define PMC_USB_ALTMODE_ACTIVE_LINK	BIT(20)
+> @@ -75,7 +76,7 @@ enum {
+>   
+>   /* Display HPD Request bits */
+>   #define PMC_USB_DP_HPD_IRQ		BIT(5)
+> -#define PMC_USB_DP_HPD_LVL		BIT(6)
+> +#define PMC_USB_DP_HPD_LVL		BIT(4)
+>   
+Please keep the bits sorted
 
-We found that regression only on specific SKU which was used in one
-model of ChromeBook.
-What's interesting is that some other SKU is fine.
+>   struct pmc_usb;
+>   
+> @@ -158,8 +159,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+>   			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
+>   
+>   	if (data->status & DP_STATUS_HPD_STATE)
+> -		req.mode_data |= PMC_USB_DP_HPD_LVL <<
+> -				 PMC_USB_ALTMODE_DP_MODE_SHIFT;
+> +		req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
+>   
+>   	return pmc_usb_command(port, (void *)&req, sizeof(req));
+>   }
+> 
 
-The consequences of this are rather not trivial,
-so this was considered a quickfix and temporary till we develop
-something better.
-In contrast to ChromeOs, I know that there is no way of finding if
-there are in fact regressions on generic kernel in the field (this is
-SKU dependent),
-but we also think that this problem should be addressed in a better
-way (if possible).
-
-We plan to work on this.
-Any help is welcome.
-
->
->
-> Kind regards,
->
-> Paul
+Thanks
+Lars
