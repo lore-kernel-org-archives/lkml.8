@@ -2,101 +2,86 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F8BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05ACC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6431220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589213255;
-	bh=Jw4EUPHyRghQxx0znjPMiNopC/3ADmRdiztkcgJmBRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x+47Lwj9nBmvC3pFlZjjzncX+cOPZylX+zU2HRUgs2+O6Xlh1wSwLuG7tAICKS3Ad
-	 R6MhCsge2pcy/Ab2BeQKhL5xgOvyQzHXpPib0TlLJ6avq1Gh7DbyoDCo512VscBxQt
-	 zu/X281sVEmrGU+kzoE9zDSaRuDNTIwND5uAGAOI=
+	by mail.kernel.org (Postfix) with ESMTP id CBEB020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgEKQHe (ORCPT
+        id S1730662AbgEKQH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 12:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbgEKQHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:07:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1729877AbgEKQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:07:56 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67092206E6;
-        Mon, 11 May 2020 16:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589213254;
-        bh=Jw4EUPHyRghQxx0znjPMiNopC/3ADmRdiztkcgJmBRI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u19DzjOEydKdWr79FdACTBtmi9myJlEvJ3UTDk/gm+AK3FSKsJ/1viymQTO+pQyW4
-         Q0DJS7SALk25UIf7udXqN/sYlRjXk4b1dD5sKGg3c2YQrI40Fs7KMv1b7bjz0Lt0CP
-         YcGbw0dtL6qnXw9WVnUZhZ10eq1K1q+Nqkkvasd8=
-Date:   Mon, 11 May 2020 17:07:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Yongbo Zhang <giraffesnn123@gmail.com>
-Cc:     lgirdwood@gmail.com, Chen Li <licheng0822@thundersoft.com>,
-        alsa-devel@alsa-project.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
-Message-ID: <20200511160731.GA3618@sirena.org.uk>
-References: <20200511100415.12502-1-giraffesnn123@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BFD3206E6;
+        Mon, 11 May 2020 16:07:54 +0000 (UTC)
+Date:   Mon, 11 May 2020 12:07:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "kernel-team@fb.com," <kernel-team@fb.com>,
+        Ingo Molnar <mingo@kernel.org>, dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH RFC tip/core/rcu 09/16] rcu-tasks: Add an RCU-tasks rude
+ variant
+Message-ID: <20200511120753.74d0a785@gandalf.local.home>
+In-Reply-To: <CAJhGHyAaktwgv63XcUaLduKyYSwA+OuTLU_h7XAgyD6CKZp5Mg@mail.gmail.com>
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+        <20200312181702.8443-9-paulmck@kernel.org>
+        <20200316194754.GA172196@google.com>
+        <CAEXW_YREzQ8hMP_vGiQFiNAtwxPn_C0TG6mH68QaS8cES-Jr3Q@mail.gmail.com>
+        <20200316203241.GB3199@paulmck-ThinkPad-P72>
+        <20200316173219.1f8b7443@gandalf.local.home>
+        <CAEXW_YRtGhiaz+86pTL2WTyx5tqrpjB-bgQbnMLXjSQXPCmYfw@mail.gmail.com>
+        <20200316180352.4816cb99@gandalf.local.home>
+        <CAJhGHyAaktwgv63XcUaLduKyYSwA+OuTLU_h7XAgyD6CKZp5Mg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
-In-Reply-To: <20200511100415.12502-1-giraffesnn123@gmail.com>
-X-Cookie: Check your local listings.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 10 May 2020 17:59:27 +0800
+Lai Jiangshan <jiangshanlai@gmail.com> wrote:
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I think adding a small number of instructions to preempt_schedule_irq()
+> is sufficient to create the needed protected region between the start
+> of a function and the trampoline body.
+> 
+> preempt_schedule_irq() {
+> +  if (unlikely(is_trampoline_page(page_of(interrupted_ip)))) {
+> +      return; // don't do preempt schedule
+> +
+> +  }
+>   preempt_schedule_irq() original body
+> }
 
-On Mon, May 11, 2020 at 06:04:15PM +0800, Yongbo Zhang wrote:
-> SSI BUSIF buffer is possible to overflow or underflow, especially in a
-> hypervisor environment. If there is no interrupt support, it will eventually
-> lead to errors in pcm data.
-> This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+First, this would never be accepted due to the overhead it would cause,
+next, the interrupt instruction pointer could be the call to the
+trampoline itself. It would be hard to guarantee that we are not on the way
+to the trampoline in question.
 
-This introduces loads of build errors on for-5.8 with an x86
-allmodconfig:
-
-/mnt/kernel/sound/soc/sh/rcar/ssi.c: In function 'rsnd_ssi_quit':
-/mnt/kernel/sound/soc/sh/rcar/ssi.c:596:12: error: invalid storage class for function 'rsnd_ssi_hw_params'
- static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
-            ^~~~~~~~~~~~~~~~~~
-/mnt/kernel/sound/soc/sh/rcar/ssi.c:596:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
- static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
- ^~~~~~
-
-and so on for ages.  Probably just needs a rebase I guess?
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65eEIACgkQJNaLcl1U
-h9D6tgf7BtkZhzn4Ek9W+lN6u/0eBOTZZhpzgCCjwgdfk+L3YM3ZRQxCA8+WLr21
-JZp/URIp4PS2kLFFsD9J3qJyajCCOAsGRHBan0pGUDnfn2bWlqrqmpZXmiI+ttFq
-GvCN/AN4Am9i49rQqWzRMu5M5px5H+7AHz9QpM6icZsDNAM3C3sIIXAq9HY+ujEu
-3XriJGxE+S3/yZlyUArQrAHgIfk0FHwP2k8yyfN671dMTGNgczArgRXkaCKfPDc2
-vKbBSFdEsJ4AoyCLmNaAny5k0qCCmIE/bU/wUGDLRVI88MCULm18qxb15cMJ3vYe
-GBoRg4hDXzX1ybIjK7n5QJ1VyWwVFQ==
-=OG33
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
+-- Steve
