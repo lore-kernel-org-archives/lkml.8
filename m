@@ -2,128 +2,79 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B670C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200A7C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62C32206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589204522;
-	bh=gNyvjaRbmLuayM1zTG6m+b+fffnZGikIm8vGOFwrpek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q3jVGzTeBJiAq4NF6rdsrXuD8NTFcQhC4JvUOsuGn4rlYVNdn1igg+aSI7xuV2kBM
-	 rc+0JGxKdHFMqbJcP4kZ3k62lDcsf4OGvYDkH8JLHBJJDP39qdEYlcWxVMEX6VthYb
-	 3M0QZ8PhBRaV4A3PR7OIqHi5kE+E9ux5N/GDWl0c=
+	by mail.kernel.org (Postfix) with ESMTP id 00E6B206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgEKNmB (ORCPT
+        id S1730090AbgEKNmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:42:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34683 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgEKNmB (ORCPT
+        Mon, 11 May 2020 09:42:17 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:42099 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgEKNmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:42:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f6so4583268pgm.1;
-        Mon, 11 May 2020 06:42:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VIDelSWrVMd4wzslSXY+S/8EPWOMtPyA+78GmbBUxQs=;
-        b=eVzjHAMcNCzzovnEkM9oLssKIHrKfQB9g8fPqRc/y/H76V5BYVQg35CDjulPLNuVgd
-         gVMDftssU/Bsu81woOVa2tdH6CzHLPNPPeBZ9LVpokwKZv8yT7ToSduCNP0PmtE2wGcA
-         hvMKQ4VudXr0KdDUPT7zLmhUGGp3JMlA8jQWJdJ/va+3HpyLL+w33bSlLESY6OJxmAHr
-         VCw4YmK15FddqU9Ut61oMjhOfGr2ZHbOvwiKmfTDJRhkcE22LXnjI0LpaFfq0nt8EqBP
-         5e+u9LvfUBjIq+wXTEGJ8CQACk36SNed+ddPXRLyCc/WHoKLJsapxH2ckFEIJDBgi2/0
-         3W2g==
-X-Gm-Message-State: AGi0PubcibCv8413Yj+28GpMJlUhzu/9TKZgyJVXNgqjq2LGeQCN/RYE
-        tgGzZyhErDCP73otnp5rRdw=
-X-Google-Smtp-Source: APiQypIZPBaiUhTo+Rf4nWN5ZuL6XAd113JqiuXFvjEua9tZjOZI8u/9GM/EHMsS8Y4Ci3SNd/frlg==
-X-Received: by 2002:a63:c109:: with SMTP id w9mr14561069pgf.114.1589204520151;
-        Mon, 11 May 2020 06:42:00 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y13sm9305612pfc.78.2020.05.11.06.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:41:59 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7423C40605; Mon, 11 May 2020 13:41:58 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:41:58 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
-        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v4 1/5] block: revert back to synchronous request_queue
- removal
-Message-ID: <20200511134158.GM11244@42.do-not-panic.com>
-References: <20200509031058.8239-1-mcgrof@kernel.org>
- <20200509031058.8239-2-mcgrof@kernel.org>
- <20200510062058.GA3394360@kroah.com>
+        Mon, 11 May 2020 09:42:16 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49LMYc1bBCz1rt4N;
+        Mon, 11 May 2020 15:42:12 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49LMYc0L6Tz1qsq0;
+        Mon, 11 May 2020 15:42:12 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 37BlDO4TIoAi; Mon, 11 May 2020 15:42:11 +0200 (CEST)
+X-Auth-Info: IS0df1w8Uyem1eXC2HWL/5OefJDOtwX9AlgVkgZb2zMHw7uoEiti81JzSLoFgDpA
+Received: from igel.home (ppp-46-244-172-93.dynamic.mnet-online.de [46.244.172.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 11 May 2020 15:42:11 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 89FFD2C0C52; Mon, 11 May 2020 15:42:10 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: Re: [PATCH v2] selftests/ftrace: Use printf for backslash included
+ command
+References: <87imh21x6f.fsf@igel.home>
+        <158920418730.16156.8299185499520876735.stgit@devnote2>
+X-Yow:  This PORCUPINE knows his ZIPCODE..  And he has ``VISA''!!
+Date:   Mon, 11 May 2020 15:42:10 +0200
+In-Reply-To: <158920418730.16156.8299185499520876735.stgit@devnote2> (Masami
+        Hiramatsu's message of "Mon, 11 May 2020 22:36:27 +0900")
+Message-ID: <87eerq1tcd.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510062058.GA3394360@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 08:20:58AM +0200, Greg KH wrote:
-> On Sat, May 09, 2020 at 03:10:54AM +0000, Luis Chamberlain wrote:
-> > Commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") merged on
-> > v4.12 moved the work behind blk_release_queue() into a workqueue after a
-> > splat floated around which indicated some work on blk_release_queue()
-> > could sleep in blk_exit_rl(). This splat would be possible when a driver
-> > called blk_put_queue() or blk_cleanup_queue() (which calls blk_put_queue()
-> > as its final call) from an atomic context.
-> > 
-> > blk_put_queue() decrements the refcount for the request_queue kobject,
-> > and upon reaching 0 blk_release_queue() is called. Although blk_exit_rl()
-> > is now removed through commit db6d9952356 ("block: remove request_list code")
-> > on v5.0, we reserve the right to be able to sleep within blk_release_queue()
-> > context.
-> > 
-> > The last reference for the request_queue must not be called from atomic
-> > context. *When* the last reference to the request_queue reaches 0 varies,
-> > and so let's take the opportunity to document when that is expected to
-> > happen and also document the context of the related calls as best as possible
-> > so we can avoid future issues, and with the hopes that the synchronous
-> > request_queue removal sticks.
-> > 
-> > We revert back to synchronous request_queue removal because asynchronous
-> > removal creates a regression with expected userspace interaction with
-> > several drivers. An example is when removing the loopback driver, one
-> > uses ioctls from userspace to do so, but upon return and if successful,
-> > one expects the device to be removed. Likewise if one races to add another
-> > device the new one may not be added as it is still being removed. This was
-> > expected behavior before and it now fails as the device is still present
-> > and busy still. Moving to asynchronous request_queue removal could have
-> > broken many scripts which relied on the removal to have been completed if
-> > there was no error. Document this expectation as well so that this
-> > doesn't regress userspace again.
-> > 
-> > Using asynchronous request_queue removal however has helped us find
-> > other bugs. In the future we can test what could break with this
-> > arrangement by enabling CONFIG_DEBUG_KOBJECT_RELEASE.
-> 
-> You are adding documenation and might_sleep() calls all over the place
-> in here, making the "real" change in the patch hard to pick out.
-> 
-> How about you split this up into 3 patches, one for documentation, one
-> for might_sleep() and one for the real change?  Or maybe just 2 patches,
-> but what you have here seems excessive.
+On Mai 11 2020, Masami Hiramatsu wrote:
 
-Sure.
+> -    (! echo "$command" >> "$3" ) 2> /dev/null
+> +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
 
-  Luis
+printf %s does not print a newline, you need printf '%s\n' for that.
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
