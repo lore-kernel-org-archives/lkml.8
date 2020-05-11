@@ -2,98 +2,85 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC9EC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6546C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCAA9206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1CC206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589232970;
+	bh=C5qvE3kgt/mT1IpKt6MxV+u1Rrra7P91vAU/+cbudBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uGalDnB910NY7CtFXR2ThBifB5lgpfSq3MK4Ce8cbRE1QROw9AnuXduIQiBhaw7gM
+	 zrMsfDAoz4aZC/A3KRoqr1sVtZjyFEw0E2qYQ8IVxcwh/4yYsYpgyx+hwQaPp2cRte
+	 jOGdzl6+jHo5xYV3yfyNVlRKy6Enw8+ckZp4WONQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgEKVfk (ORCPT
+        id S1727857AbgEKVgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:35:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60365 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgEKVfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:35:39 -0400
-IronPort-SDR: wriaR/azF9TKgKu3FcwI13hKY7RRv0rUEwMIfxDHFA+joqjRdQQHd3jOB1tmolIbmOrQTEfvs0
- 978PInEqeX6w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:35:38 -0700
-IronPort-SDR: MhjHBKd/Mq3CgJY1K/3o4/wCo4CUifFrparfxvFTKpcSWrrZQYytKnYNbEkAE4uWmptzxlH7oC
- bkVZaCLq3MmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="297817392"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 11 May 2020 14:35:37 -0700
-Date:   Mon, 11 May 2020 14:35:37 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org,
-        xudong.hao@intel.com
-Subject: Re: [KVM] 6b6a864bd7: kernel-selftests.kvm.vmx_tsc_adjust_test.fail
-Message-ID: <20200511213537.GG24052@linux.intel.com>
-References: <20200428173217.5430-1-sean.j.christopherson@intel.com>
- <20200511010926.GV5770@shao2-debian>
+        Mon, 11 May 2020 17:36:10 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39822 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgEKVgJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:36:09 -0400
+Received: by mail-oi1-f194.google.com with SMTP id b18so16449101oic.6;
+        Mon, 11 May 2020 14:36:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FjgEarEiw8gpO2P3GZKZGo+NkDIbuBcwR3XmcT/vJlk=;
+        b=h7JJI4o8NGt17jIa461sTF3Fj4DESPITolNAOjGbs6TjlQ6Qu8eHPfhhaRvxFSiW5I
+         DKe8AfWTcVnKwvh+K0B/mrbgfX0MEpx9MMDhBv8gNCexQc1fp4swHonhWCkGfYgtv9rH
+         jFHvLwwXDgvQ9TSHX624tU/ruQuoFbjlMHV5sLe30sv6rJDA1l1H1F1KYM0nH6PD1uJI
+         bSPtF1PDlpc3Lux8mq+/BryZWBF/0XIXWCcKl/Zg+Xb3DVa07Sl3+elZSRKyQQk16Gdv
+         dXbNI09xlnmjrBvLpRz7pSKiQPFiEo1TU7NrGBJcV8KJJIne33fDRo4Hb7jSzJJIY+yu
+         4IXw==
+X-Gm-Message-State: AGi0PuaNJSHkT6klxYTAWEfgeUhYnNLBSXvk90jfQ5m0Ke3PeTF26nt0
+        J3YGYZ+qivFOGDap6VmUHQ==
+X-Google-Smtp-Source: APiQypJVxHvagye2SWlcA4PbLnWPYs5aNGR2f4pg1Hg11puPuSBuWPVLc2xQed2Ra6zvS+x6U10Cgg==
+X-Received: by 2002:aca:b6c2:: with SMTP id g185mr21124643oif.156.1589232967266;
+        Mon, 11 May 2020 14:36:07 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r21sm2935693otg.67.2020.05.11.14.36.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:36:06 -0700 (PDT)
+Received: (nullmailer pid 20619 invoked by uid 1000);
+        Mon, 11 May 2020 21:36:05 -0000
+Date:   Mon, 11 May 2020 16:36:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] include: dt-bindings: rockchip: mark RK_GPIO defines as
+ deprecated
+Message-ID: <20200511213605.GA14679@bogus>
+References: <20200424151105.18736-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511010926.GV5770@shao2-debian>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200424151105.18736-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:09:26AM +0800, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: 6b6a864bd7d7eb12a82ec6da1c2dd97a43f79449 ("[PATCH v2] KVM: nVMX: Tweak handling of failure code for nested VM-Enter failure")
-> url: https://github.com/0day-ci/linux/commits/Sean-Christopherson/KVM-nVMX-Tweak-handling-of-failure-code-for-nested-VM-Enter-failure/20200429-052911
-> base: https://git.kernel.org/cgit/virt/kvm/kvm.git linux-next
-> 
-> in testcase: kernel-selftests
-> with following parameters:
-> 
-> 	group: kselftests-kvm
-> 	ucode: 0x500002c
-> 
-> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> 
-> 
-> on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> 
-> # selftests: kvm: vmx_tsc_adjust_test
-> # ==== Test Assertion Failure ====
-> #   x86_64/vmx_tsc_adjust_test.c:153: false
-> #   pid=12157 tid=12157 - Interrupted system call
-> #      1	0x000000000040116a: main at vmx_tsc_adjust_test.c:153
-> #      2	0x00007fafd54bce0a: ?? ??:0
-> #      3	0x00000000004011e9: _start at ??:?
-> #   Failed guest assert: (vmreadz(VM_EXIT_REASON) == (0x80000000 | 33))
-> # IA32_TSC_ADJUST is -4294972240 (-1 * TSC_ADJUST_VALUE + -4944).
-> not ok 14 selftests: kvm: vmx_tsc_adjust_test # exit=254
+On Fri, Apr 24, 2020 at 05:11:05PM +0200, Johan Jonker wrote:
+> The defines RK_GPIO0, RK_GPIO1, RK_GPIO2, RK_GPIO3,
+> RK_GPIO4 and RK_GPIO6 are no longer used. Mark them as
+> "deprecated" to prevent that someone start using them again.
 
-Ugh, missed the prepare_vmcs02() path.  v3 incoming.
+What changed exactly? The binding changed, or just using raw 0-6 instead 
+of the defines? 
+
+If there's not anything using these in tree, just delete them.
+
+It is still used in the binding doc.
+
+Rob
