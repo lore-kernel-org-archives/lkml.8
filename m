@@ -2,70 +2,116 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680FEC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D1EC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9A520746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D676720820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589198473;
+	bh=BB6veEoV8nefsa+08kyEFgzfgF9CioJSfxrRXxxpGDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SYNeP31UdpCoTU9S4Bi7qO1f3r91KSKtgPnUI7dKNjXnvN1RAbPXlrhv9gtB50mwF
+	 px1XrL88YTKyNfRsOpQkSFaNvv5+6s9XWB4cZP2uLYY3EdfPXKKCAOcEzr804s9rDg
+	 IOcWYF8MqnW8WREqvpl0GrJDR7fMwBrbRn+zjZF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgEKMBK (ORCPT
+        id S1729714AbgEKMBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 11 May 2020 08:01:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53574 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729416AbgEKMBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729453AbgEKMBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 08:01:09 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5EE5B974246F5E3FBDED;
-        Mon, 11 May 2020 20:01:07 +0800 (CST)
-Received: from linux-lmwb.huawei.com (10.175.103.112) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 20:01:01 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nfsd: Fix old-style function definition
-Date:   Mon, 11 May 2020 20:07:08 +0800
-Message-ID: <1589198828-11226-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.6.2
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 678C320722;
+        Mon, 11 May 2020 12:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589198468;
+        bh=BB6veEoV8nefsa+08kyEFgzfgF9CioJSfxrRXxxpGDc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BrKY4dvm1TbXW8OXgqloAaQhVnhtdE1TgqLTPSgR0C8liM10np9COgFzeUnhsKoXV
+         T/l8vatda0KgEebBEakMtBLrNohd5EWAnnWjH5oVvSDrB/k9VO8hFHzX+M+8/L8VSb
+         iHsWX5W/gYrUW4gwYScxJ1anvV1swkck1wIYWOEQ=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>
+Subject: [PATCH] selftests/ftrace: Use /bin/echo for backslash included command
+Date:   Mon, 11 May 2020 21:01:02 +0900
+Message-Id: <158919846272.12476.10277703957544382089.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200511182752.c83f3454bcb3e205cf2bda4a@kernel.org>
+References: <20200511182752.c83f3454bcb3e205cf2bda4a@kernel.org>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.103.112]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix warning:
+Since the built-in echo has different behavior in POSIX shell
+(dash) and bash, kprobe_syntax_errors.tc can fail on dash which
+interpret backslash escape automatically.
 
-fs/nfsd/nfssvc.c:604:6: warning: old-style function definition [-Wold-style-definition]
- bool i_am_nfsd()
-      ^~~~~~~~~
+To fix this issue, we explicitly use /bin/echo -E (not interpret
+backslash escapes) if the command string can include backslash.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+Reported-by: Liu Yiding <yidingx.liu@intel.com>
+Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- fs/nfsd/nfssvc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 4f588c0..b603dfc 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -601,7 +601,7 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
- 	.svo_module		= THIS_MODULE,
- };
-
--bool i_am_nfsd()
-+bool i_am_nfsd(void)
- {
- 	return kthread_func(current) == nfsd;
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index 61a3c7e2634d..69708830026f 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -119,12 +119,14 @@ yield() {
+     ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
  }
---
-2.6.2
+ 
++# Since probe event command may include backslash, explicitly use /bin/echo -E
++# to NOT interpret it.
+ ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
+-    pos=$(echo -n "${2%^*}" | wc -c) # error position
+-    command=$(echo "$2" | tr -d ^)
++    pos=$(/bin/echo -En "${2%^*}" | wc -c) # error position
++    command=$(/bin/echo -E "$2" | tr -d ^)
+     echo "Test command: $command"
+     echo > error_log
+-    (! echo "$command" >> "$3" ) 2> /dev/null
++    (! /bin/echo -E "$command" >> "$3" ) 2> /dev/null
+     grep "$1: error:" -A 3 error_log
+     N=$(tail -n 1 error_log | wc -c)
+     # "  Command: " and "^\n" => 13
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index ef1e9bafb098..4cfcf9440a1a 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -91,7 +91,9 @@ esac
+ if grep -q "Create/append/" README && grep -q "imm-value" README; then
+ echo 'p:kprobes/testevent _do_fork' > kprobe_events
+ check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
+-echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
++
++# Explicitly use /bin/echo -E to not interpret \1
++/bin/echo -E 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
+ check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
 
