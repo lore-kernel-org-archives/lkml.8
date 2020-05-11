@@ -2,88 +2,86 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490FEC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E4CC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C7020757
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86D020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589217715;
-	bh=tLxkrmhQXyX7b1bTcRDkdDpgPTyxNen6bs9bJnit8HQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l71iByLkuGlZEovRoxcXUSTbu+GAAiVdQHdMjpZMv8SSqgvw+g9be8pWx3WyxfF/g
-	 woTnJHvQHNQrkF9ZV/5cN5/292C3JC3s8JOsshXLytFx27gRvHPC5U6p+Px/Wseiv/
-	 vULx/vNStHroLMLo16i3PAmjJMDz6ysDl45+3gZw=
+	s=default; t=1589217718;
+	bh=hbim+lK4kK4svUzZv9ph3jJIF+6ksgUNjk/EOsFRWqo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=N6bCEwJKhSTXhMC8ErxnclZN1JIKR00w1669rw+EhKlu5HCn5L9VPJDy9s44n3Rh/
+	 er1Pe0syZvNy2XrcbYiB297vZvWeTWrZq/xY23p/sBdzTinE6jPVD9RDisQ+T4lzf2
+	 i6ShsIFz03YL36P7wh5X6lZN6EAdIYMJF7Ygugj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbgEKRVt (ORCPT
+        id S1730857AbgEKRV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 13:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgEKRVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:21:49 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S1730966AbgEKRVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:21:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B4DE206D7;
-        Mon, 11 May 2020 17:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EB3F20746;
+        Mon, 11 May 2020 17:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589217708;
-        bh=tLxkrmhQXyX7b1bTcRDkdDpgPTyxNen6bs9bJnit8HQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0aOsDPuEgkaqp+CwaPIoKUpAQ1Yhgy/YPVryPk98JvkcESzcmL+qtHj2rH9aBLfSd
-         7k4UNacnQ3F+z4Fv9cotIr3i/rQhNYIDOWoow0Eqdo18nH6oGa2OmrH6zJjjqjnnf5
-         pMvp722fZ/aQqdCtti5Y2anKKSYsBHnDBV+eQSyI=
-Date:   Mon, 11 May 2020 12:26:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        s=default; t=1589217714;
+        bh=hbim+lK4kK4svUzZv9ph3jJIF+6ksgUNjk/EOsFRWqo=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=tDNYww2k6hQ4sYbnEEt/tR5lkW++TYhDRiTFmKPKb5MPvdhzdk/yfl7iHJlGyYgGB
+         AcpkbcqGB+aCE6il8WLv5xRKCJfbIzviLk/KjDiukRD+kaNl/nA9snN4hqUFDarks/
+         JtfkPYd5hGuoGgkryUFt0KjHDjO4eHCtBqVF+yEY=
+Date:   Mon, 11 May 2020 18:21:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-spi@vger.kernel.org,
+        Alistair Francis <alistair@alistair23.me>
+Cc:     mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, alistair23@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf script: Replace zero-length array with
- flexible-array
-Message-ID: <20200511172620.GA14618@embeddedor>
-References: <20200507190615.GA15677@embeddedor>
- <20200511154812.GD5377@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511154812.GD5377@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200511045330.690507-1-alistair@alistair23.me>
+References: <20200511045330.690507-1-alistair@alistair23.me>
+Subject: Re: [PATCH v2] spi: sun6i: Add support for GPIO chip select lines
+Message-Id: <158921769452.22432.2126080919845661372.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:48:12PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 07, 2020 at 02:06:15PM -0500, Gustavo A. R. Silva escreveu:
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99:
-> > 
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> 
-> Can you split this into a kernel part and tools/ one? Also this is not
-> really just for "perf script", so please adjust the subject line too :-)
-> 
+On Sun, 10 May 2020 21:53:30 -0700, Alistair Francis wrote:
+> Set use_gpio_descriptors as true to support using generic GPIO
+> lines for the chip select.
 
-Sure thing. :)
+Applied to
 
-Is that OK if I use "perf: " for the tools part and "perf/x86: " for the
-kernel part?
+   local tree spi/for-5.7
 
-Thanks
---
-Gustavo
+Thanks!
+
+[1/1] spi: sun6i: Add support for GPIO chip select lines
+      (no commit info)
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
