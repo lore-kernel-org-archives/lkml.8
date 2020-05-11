@@ -2,111 +2,138 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CC4C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D3FC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040D6206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0D4206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="VJxPV6JO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nriex5rl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbgEKQTW (ORCPT
+        id S1730638AbgEKQTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:19:22 -0400
-Received: from mail-dm6nam10on2080.outbound.protection.outlook.com ([40.107.93.80]:23370
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729956AbgEKQTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:19:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b6bkQ+s2DxMbC0y50tndu6JP7RDYdgDuptxkZzNOigun1zDOldteNPy+LqsbfsHY621JbtIgzY3Rtip+Xa0oNC9n3uJvSfuPoCclANXHe2dDcMoDvpwDt5HwzMmbU7GK4O7LQsrZLHmCEANaZQhaakfIRM+MbohyebOiWG110R4qWH8X9zZTvLoPvIm/cj8nN5C+TnE2kVfgZwz5R2CydBe6HxCLCyGqp4Z4iDBJXHFztsu/v3nfVUh0Gp81lGQBXvhn0v+wLiWqbOXogSkDx7TcKcTPRpNbtRocBwvE0tQayi885TwSvdLJZBdCnTc3n8rEbrnJz06DzlM3Og07oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aCM1XWKiFVxgWMRdC/84cFoAGCyTx5IZNjgOm+WW7jA=;
- b=aRikk+1g1dlo0cnQbEAad18RXDCFN2o7ZyAPI0k7o7tMCWP6vGFSlpfeMsrKkR9K+fxAdzuylhh3dff21L1787qR/V9kmLoB87oLoZKOZsxdDaRdhT0pT88KafEJAiqKJ1Ytu1MVIJi8nh8+BCU6B7btH/vLO4tv9lhbSF1pNgQJOMWWbMCH0MqbZhhm/qiWSNnq1pjtifz2GHjcYpT2XWGxoHeLHI5ASjMRGr/Nlsa42WWrjF+YLfd9YFYvzsdsPfaNSE4UMgEtrtsGMc5VTBT5XJJmYnStsuGYwSf1UHc93CWVSj8vUMtAOio/wg3FwqoNkIhv26R2/S1dtqE8Mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Mon, 11 May 2020 12:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728556AbgEKQTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:19:34 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAF7C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:19:34 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k6so10404549iob.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aCM1XWKiFVxgWMRdC/84cFoAGCyTx5IZNjgOm+WW7jA=;
- b=VJxPV6JOE4I7HX5pOF+bDJvG5Xvb/qNyZqrqdVSFZzFnOrSQw0uAPBq3CAxJuEIPft4XGkVUzjVD3BiAhF8NcKSKKKRXS5ihKvO1zzmofve84selEKt6lw1+4XubmATBeBzBg+9EmtV8W3CiwPIvGQ+H4YgmefQKC0xwnBC1t74=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=silabs.com;
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1471.namprd11.prod.outlook.com (2603:10b6:301:b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 16:19:19 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da%5]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 16:19:19 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     linux-mmc@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH] mmc: fix compilation of user API
-Date:   Mon, 11 May 2020 18:19:02 +0200
-Message-Id: <20200511161902.191405-1-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.26.2
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: SN1PR12CA0113.namprd12.prod.outlook.com
- (2603:10b6:802:21::48) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r5ultGYWM+kfVUYl0Re6KP46o+DUiGBX2CPe2HnhgSc=;
+        b=nriex5rlMS5ZsBeaDpFICXYiiBtfrgAuBtSp+OnnEr07vu/8XPmuGDpGaSjT1+ghA2
+         9rCdJbniSEQlWagTWL5/nm1BjG9Zn/TsfH5kleNw/4v9OZfKbgPCnrCyNankn93I+hKK
+         mOQAAbJ6VFajiDuDTt08lyywtkMW/Clf5KPeqUoZly6UpGEULps5WEJiEIYTcibkeywy
+         6tTPZQtKb4itbJ0zchS4vkCddRFdSrK5EFJCq/nBDhEv2lgiwEBYBWtpPAXjD1xifPZ4
+         Uk2RJ1JZk5fjOfpNJl66v//Gvd2m2abQg4d2HBYFkMRtwJfnS78FaKDbiYj4S3235Rod
+         cCsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r5ultGYWM+kfVUYl0Re6KP46o+DUiGBX2CPe2HnhgSc=;
+        b=uL7yoh3+kOJcQa5ZH1/PBwqyXKfS1jQcViC23bBLHZIHOSsyboRYYlgNT3ayfy8Qv6
+         3cCDXf9N6GcSSapiCx4OG8XbQlXc4yzWvykfY4K6iRKOP03sFeQD3VZoNib78bsaPmRJ
+         fnO+mQ8/W8QO/gm57q3lpr876JBef9302XK3GVLj1q+xEnIJ0vbL5MFMjmlfZ9LK7F0T
+         iixmNxKsG50SQLGSHk9rGu2Y1fexvoS5zTEmihUT5QNvI3rEBlpc8rqOrpnS+t5wWqkE
+         U13n87YzBnn/r9njKZ2FdpBMSV2UFNsiGC4j5nDJXCrDYdNtRlzMshe3J2XFFbQRLYo/
+         X5oA==
+X-Gm-Message-State: AGi0PuYR8nztKAwiDi0q0fOxcO+vKLeyedAmzBDcb23WhmtwzGxCwYis
+        8TAL00Q22ip5xJmtDNNe3A78VGg+llfqcDPkA7nh+Q==
+X-Google-Smtp-Source: APiQypIG522t0DAZMpOjlzhdn49pBkF6ZH6NY71G/guvuD3UeKSFMkvkzdllJUW4hevTFT8SMr9vzW9j3KAqXSdMgas=
+X-Received: by 2002:a5d:8d1a:: with SMTP id p26mr2156549ioj.131.1589213972847;
+ Mon, 11 May 2020 09:19:32 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (82.67.86.106) by SN1PR12CA0113.namprd12.prod.outlook.com (2603:10b6:802:21::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 16:19:17 +0000
-X-Mailer: git-send-email 2.26.2
-X-Originating-IP: [82.67.86.106]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9f2f75c0-99d0-406b-55c4-08d7f5c70ea4
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1471:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR11MB14719A861AD7CA2F1109712493A10@MWHPR11MB1471.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: p5PAQFvMz99xg5498+o+0KGdbLQx8fFbDKrE+WBvckdQf9sJm8ogIbOTu0LFfCcOtTYpHG6rY/wrRq/o6sWLeyfyCnzZVENSTQ6BI71yriO/kwb/dZQ7/rfaz5xHMs0XsXG4NcSSDwHQDJ7pVXUQIDzMrAZyDNfaD8e6MCxl16Mjp0Uf92YNmgFQc5Kb0ld2/iTlO+hufepPICxJ1E9VZ8NR52dN9YjBR5Wsrq+QJ7tR/IGmlNpZUp9ZLNZ6vWvh7MbSVIxyaLhY/phASZEbREAHhhTY+5zypNRnR29vRSjWRTjYAIyla7ZFocHjjBYrz33baPZX4wei8yRGCCddGLPQaquetaZ+qX/bQOxvSRsrZo0RX3v11PpGLpK+DH1cTW66BlbwR9ZQccTUpkPsKaBecllQcEeYQhEMuV/SUSROYQnOh0SxiRV0iv9ClBmf1ohPh3d1b/hcOV9ZJ7TbEqPEz0R+Er456qUoCr1C1+hukI31nuY9ARFDgd1vnVPrP5N5gnqqvvXzo/hdsuklNQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(366004)(396003)(39850400004)(33430700001)(2616005)(33440700001)(6916009)(956004)(6666004)(6486002)(7696005)(8676002)(107886003)(36756003)(316002)(54906003)(66476007)(66556008)(66946007)(52116002)(4326008)(26005)(186003)(2906002)(86362001)(4744005)(16526019)(478600001)(8936002)(1076003)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: rof4FhJqPaf6UZTaQhGto7SZgigieKaKQ0GRXgZZBVuZRHzjVCnoTWOQPAr9gWnxt36vEUZQ2DKD5m4JIS9yB33mKX+9tk9ywcpuXZAGtjEyEdNWjwAmXiLM20cAM+nr+vtdnXFVPeELirzKkJN8PmrZ0QvuSc4+/BWTXGxILGAhpeBf4nLdBUVw64tUw+F5wnH7RolTnQF3RC13i/q8tjSRkJJbD77up873GGWSKvYadOd3yNfw4vPf26/SkT2jyPXKTn9uXXcBWASqFRfJKIGGthIn0a14CM2iWmYdifd1mF+NGKH5DR6ip4710yRZvJ6j5P3RM/SijuTsKyth/X2aKp63Q9keisi5WDm8pIkrQZxqvH2f8Tnn6T8/D3VN8ueUiAgFDIxQtZfOl6zbT2nvPUq649OpxXaLep/TxguZb1LGCpqekngsGP1fO7cvmTPG1Y1IcRRnWCkYiSdLLpQoMysvwxqCWK4RDGR6UsU=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f2f75c0-99d0-406b-55c4-08d7f5c70ea4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 16:19:19.1981
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: epfn2ulYi4XwpwTHw2nJry0Vux+hDSZXKLuNSMLuwy/sITLuiwyGvOHyA9747pHTo87mi1Xf/ChNeJ3FnJ+I+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1471
+References: <20200511083400.26554-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200511083400.26554-1-saiprakash.ranjan@codeaurora.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Mon, 11 May 2020 10:19:22 -0600
+Message-ID: <CANLsYkx640pjt_crfHMUQt25w-xOfoVteYVpocYgPHRw-y-WeQ@mail.gmail.com>
+Subject: Re: [PATCH] coresight: replicator: Reset replicator if context is lost
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKVGhl
-IGRlZmluaXRpb25zIG9mIE1NQ19JT0NfQ01EICBhbmQgb2YgTU1DX0lPQ19NVUxUSV9DTUQgcmVs
-eSBvbgpNTUNfQkxPQ0tfTUFKT1I6CgogICAgI2RlZmluZSBNTUNfSU9DX0NNRCAgICAgICBfSU9X
-UihNTUNfQkxPQ0tfTUFKT1IsIDAsIHN0cnVjdCBtbWNfaW9jX2NtZCkKICAgICNkZWZpbmUgTU1D
-X0lPQ19NVUxUSV9DTUQgX0lPV1IoTU1DX0JMT0NLX01BSk9SLCAxLCBzdHJ1Y3QgbW1jX2lvY19t
-dWx0aV9jbWQpCgpIb3dldmVyLCBNTUNfQkxPQ0tfTUFKT1IgaXMgZGVmaW5lZCBpbiBsaW51eC9t
-YWpvci5oIGFuZApsaW51eC9tbWMvaW9jdGwuaCBkaWQgbm90IGluY2x1ZGUgaXQuCgpTaWduZWQt
-b2ZmLWJ5OiBKw6lyw7RtZSBQb3VpbGxlciA8amVyb21lLnBvdWlsbGVyQHNpbGFicy5jb20+Ci0t
-LQogaW5jbHVkZS91YXBpL2xpbnV4L21tYy9pb2N0bC5oIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgvbW1jL2lvY3Rs
-LmggYi9pbmNsdWRlL3VhcGkvbGludXgvbW1jL2lvY3RsLmgKaW5kZXggMDBjMDgxMjBmM2JhLi4y
-N2EzOTg0N2Q1NWMgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvdWFwaS9saW51eC9tbWMvaW9jdGwuaAor
-KysgYi9pbmNsdWRlL3VhcGkvbGludXgvbW1jL2lvY3RsLmgKQEAgLTMsNiArMyw3IEBACiAjZGVm
-aW5lIExJTlVYX01NQ19JT0NUTF9ICiAKICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgorI2luY2x1
-ZGUgPGxpbnV4L21ham9yLmg+CiAKIHN0cnVjdCBtbWNfaW9jX2NtZCB7CiAJLyoKLS0gCjIuMjYu
-MgoK
+Hi Sai,
+
+On Mon, 11 May 2020 at 02:34, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> On some QCOM SoCs, replicators in Always-On domain loses its
+> context as soon as the clock is disabled. Currently as a part
+> of pm_runtime workqueue, clock is disabled after the replicator
+> is initialized by amba_pm_runtime_suspend assuming that context
+> is not lost which is not true for replicators with such
+> limitations. Hence check the replicator idfilter registers
+> in dynamic_replicator_enable() and reset again.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>
+> More info here - https://lore.kernel.org/patchwork/patch/1231182/
+>
+> ---
+>  drivers/hwtracing/coresight/coresight-replicator.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index e7dc1c31d20d..11df63f51071 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -68,6 +68,17 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
+>         int rc = 0;
+>         u32 reg;
+>
+> +       /*
+> +        * On some QCOM SoCs with replicators in Always-On domain, disabling
+> +        * clock will result in replicator losing its context. Currently
+> +        * as a part of pm_runtime workqueue, amba_pm_runtime_suspend disables
+> +        * clock assuming the context is not lost which is not true for cases
+> +        * with hardware limitations as the above.
+> +        */
+> +       if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) == 0) &&
+> +           (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) == 0))
+> +               dynamic_replicator_reset(drvdata);
+> +
+
+Based on your comment here[1] and the ongoing conversation, I will
+wait for a V2.
+
+Thanks,
+Mathieu
+
+[1]. https://lkml.org/lkml/2020/5/11/650
+
+>         switch (outport) {
+>         case 0:
+>                 reg = REPLICATOR_IDFILTER0;
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
