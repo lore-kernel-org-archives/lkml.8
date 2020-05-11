@@ -2,174 +2,110 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E79C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7868DC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951FF20752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uA5WUM7J"
+	by mail.kernel.org (Postfix) with ESMTP id 543C0206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589211141;
+	bh=uyTGfOrf+hTSI5tCzivT3bP4dKGVf6P9K4c82/4I2Zg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PrvxEm/K5ccIbZgzffJ39w5O2dZtXxdY3OeY/TW+L/p3kPoXKcVNUWBJVWRnXYlAu
+	 z6nUOfISZObhCHjjzhvPKQE5AJaUgxypUQgz3SL8H+1y5ltx4UPjgLK/C3D2kKAqDv
+	 Vo5I0BIDC3FU0j6zz8iPVrM6fIy6ITh0BRGdG3jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbgEKPcM (ORCPT
+        id S1730320AbgEKPcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728089AbgEKPcL (ORCPT
+        Mon, 11 May 2020 11:32:20 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53978 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727994AbgEKPcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:32:11 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DAFC061A0C;
-        Mon, 11 May 2020 08:32:11 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id b1so7482635qtt.1;
-        Mon, 11 May 2020 08:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+gjGF9mp12XhJV3KRSM6BkPs9MzMOMU+7fWS7KbSk6c=;
-        b=uA5WUM7JoakLBUMWtuNg0OEr6VtC2JiLQM5dGwv32Qcy266pLaqj6MKljT8xqidwoI
-         xbBwQZifKF9FDhyA0a+IIpi6u188Vnr/DiWTXwB39kU0rJfQyykKE+aFexdGzSa17186
-         B0pXJMndgJ27tQJVRmFy8fArFa8YSgoAypiiNT6FYE7i498VMYDEPrWoy8G7aROn0X6p
-         tWoWEMqCnf5HmYc/wNK+WcV22LwPV27/H/gdI8KJeVKKImC+ptx8rFM/8AQ0jYApW0QW
-         Ngq/yRDgGdG2DtUifvIrlvk3NcIBXNFOEmM2395fmhu447tANcEomjhAHCy4FfbOoR0V
-         rN/g==
+        Mon, 11 May 2020 11:32:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id k12so18447355wmj.3;
+        Mon, 11 May 2020 08:32:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+gjGF9mp12XhJV3KRSM6BkPs9MzMOMU+7fWS7KbSk6c=;
-        b=L5goYocNipRyiG5CrhO6hSn/RmE7izwFzgsASDSzYVDd5gL/rhFS74yJmg5uHW0/2r
-         v1n+/5/gm1JLNt/GQ6Y8QnX04gr3Bex2ypmo7zsxc8YKFHhWZSTacFiEymwelOU0kglC
-         6FR6eN0W7/pOJ6UNL2wwZRGTV3QnyMVjCcTMekdg9d5TDDgcRYuv/7VpRBfpZsAMPQIg
-         uM+ljSS7WbITNn7izB5Ieh2oR3bEyDCNUogXS35SOU1qqWzRWYlGgBG5jR8dSq3naLdQ
-         fawGokZmcu62yjfYYl2IAiWrA453Vr8qO6UD0zI7KTEquOTXllkPZtg5n4RfLWDBFIr+
-         fgXw==
-X-Gm-Message-State: AGi0Pub94g5TCGbwahWc2noC98gEJTYRhEQXk4AzQlnYHNegrXlGkagS
-        Km9NwL+loaWF0H49a3vyAOM=
-X-Google-Smtp-Source: APiQypLCU0hFC4OIriRQoICiofnBvYbZrP4NaUE4GjJpZWCNj1lltiBIHK4s2DKpbnrsIt9JbIpdyQ==
-X-Received: by 2002:ac8:544e:: with SMTP id d14mr17602768qtq.283.1589211130365;
-        Mon, 11 May 2020 08:32:10 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h12sm2473011qte.31.2020.05.11.08.32.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4/5Nwk9mLhRZScYYCn9683XrSojxRsX8XSuLtfNRp8A=;
+        b=WGJDx612oqrb49MW8+SD+uUXyfJzvaTqDgPbb77Yl7WtLYJphJNU0/ChfaR8Q+LaNY
+         SwmkhK2s/XaJs8HhcguQQHHAwD5dd8XM3HgC48l5bqUzIB/o9yltQbzeru5BKgirMM2j
+         PLPufO8POanZakPa3Yk1HkdNEQM98hu/sT3Bcbc1ewo4QtYaAydHSE/eH4Akr6A7/dF+
+         Y6q28EETeP2m0nTO5CDaSmx2M8Tr6f0lFlbqjPc6jMtexNboYbFvgbwEfVePGe32JrMy
+         Tcet1Ks7dkPNbdOWfexVHYWpKQNSDTFJ0fngbxXcU4wMNnU9jSmlvUQVBWOsw6B7IAzT
+         YT6g==
+X-Gm-Message-State: AGi0PubbTtep7uHHrFqqcN8qbQfa/Z8ClorXAEatRHbZvSV3/tZCSOBX
+        UIB/mLLbQXPxtdnOVLz+YV6dqeC2
+X-Google-Smtp-Source: APiQypK85TB4whX36I8/SG1CyR1R9Kq/5evRMvh5tebUY7NF3E42iOhAs7jNrcK9J3lezxEIt9MiJw==
+X-Received: by 2002:a1c:770e:: with SMTP id t14mr31102935wmi.187.1589211137820;
+        Mon, 11 May 2020 08:32:17 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 7sm20219591wra.50.2020.05.11.08.32.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:32:09 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AF0EB40AFD; Mon, 11 May 2020 12:32:07 -0300 (-03)
-Date:   Mon, 11 May 2020 12:32:07 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org,
-        kajoljain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v4 00/12] perf metric fixes and test
-Message-ID: <20200511153207.GD28888@kernel.org>
-References: <20200501173333.227162-1-irogers@google.com>
- <20200507084445.GA2447905@krava>
+        Mon, 11 May 2020 08:32:17 -0700 (PDT)
+Date:   Mon, 11 May 2020 15:32:15 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+Subject: Re: [PATCH] PCI: export and use pci_msi_get_hwirq in pci-hyperv.c
+Message-ID: <20200511153215.spcqylnde6p36n6j@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200422195818.35489-1-wei.liu@kernel.org>
+ <20200507205831.GA30988@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507084445.GA2447905@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200507205831.GA30988@bogus>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 07, 2020 at 10:44:45AM +0200, Jiri Olsa escreveu:
-> On Fri, May 01, 2020 at 10:33:21AM -0700, Ian Rogers wrote:
-> > Add a test that all perf metrics (for your architecture) are parsable
-> > with the simple expression parser. Attempt to parse all events in
-> > metrics but only fail if the metric is for the current CPU. Fix bugs
-> > in the expr parser, x86 and powerpc metrics. Improve debug messages
-> > around add PMU config term failures.
+On Thu, May 07, 2020 at 03:58:31PM -0500, Rob Herring wrote:
+> On Wed, Apr 22, 2020 at 07:58:15PM +0000, Wei Liu wrote:
+> > There is a functionally identical function in pci-hyperv.c. Drop it and
+> > use pci_msi_get_hwirq instead.
 > > 
-> > v4 rebases after Kajol Jain's patches and fixes an asprintf warning.
-> > v3 adds parse event testing of ids and improves debug messages for add
-> >   PMU. These messages are paticular visible with 'perf test 10
-> >   -vvv'. It moves the testing logic from tests/expr.c to
-> >   tests/pmu-events.c as suggested by John Garry
-> >   <john.garry@huawei.com>.  
-> > v2 adds Fixes tags to commit messages for when broken metrics were
-> >   first added. Adds a debug warning for division by zero in expr, and
-> >   adds a workaround for id values in the expr test necessary for
-> >   powerpc. It also fixes broken power8 and power9 metrics.
+> > This requires exporting pci_msi_get_hwirq and declaring it in msi.h.
 > > 
-> > Ian Rogers (12):
-> >   perf expr: unlimited escaped characters in a symbol
-> >   perf metrics: fix parse errors in cascade lake metrics
-> >   perf metrics: fix parse errors in skylake metrics
-> >   perf expr: allow ',' to be an other token
-> >   perf expr: increase max other
-> >   perf expr: parse numbers as doubles
-> >   perf expr: debug lex if debugging yacc
-> >   perf metrics: fix parse errors in power8 metrics
-> >   perf metrics: fix parse errors in power9 metrics
-> >   perf expr: print a debug message for division by zero
+> > No functional change intended.
+> > 
+> > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > ---
+> >  arch/x86/include/asm/msi.h          | 4 ++++
+> >  arch/x86/kernel/apic/msi.c          | 5 +++--
+> >  drivers/pci/controller/pci-hyperv.c | 8 +-------
+> >  3 files changed, 8 insertions(+), 9 deletions(-)
 > 
-> heya,
-> could we please get the 1st 10 patches in? they are important,
-> and let's not block them with new versions for patches 11/12
+> Would be better if done in a way to remove an x86 dependency. 
+
+This is a good point, Rob. I will see what I can do.
+
+Wei.
+
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-The first ten patches are in, can we go with what Ian suggested for the
-last two patches?
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> I guess this would do it:
 > 
-> >   perf parse-events: expand add PMU error/verbose messages
-> >   perf test: improve pmu event metric testing
-> > 
-> >  tools/perf/arch/x86/util/intel-pt.c           |  32 ++--
-> >  .../arch/powerpc/power8/metrics.json          |   2 +-
-> >  .../arch/powerpc/power9/metrics.json          |   2 +-
-> >  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
-> >  .../arch/x86/skylakex/skx-metrics.json        |   4 +-
-> >  tools/perf/tests/builtin-test.c               |   5 +
-> >  tools/perf/tests/expr.c                       |   1 +
-> >  tools/perf/tests/pmu-events.c                 | 156 +++++++++++++++++-
-> >  tools/perf/tests/pmu.c                        |   4 +-
-> >  tools/perf/tests/tests.h                      |   2 +
-> >  tools/perf/util/expr.c                        |   1 +
-> >  tools/perf/util/expr.h                        |   2 +-
-> >  tools/perf/util/expr.l                        |  16 +-
-> >  tools/perf/util/expr.y                        |  16 +-
-> >  tools/perf/util/parse-events.c                |  29 +++-
-> >  tools/perf/util/pmu.c                         |  33 ++--
-> >  tools/perf/util/pmu.h                         |   2 +-
-> >  17 files changed, 262 insertions(+), 55 deletions(-)
-> > 
-> > -- 
-> > 2.26.2.526.g744177e7f7-goog
-> > 
+> #define pci_msi_get_hwirq NULL
 > 
-
--- 
-
-- Arnaldo
+> when GENERIC_MSI_DOMAIN_OPS is enabled.
