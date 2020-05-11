@@ -2,45 +2,43 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAE7C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57D8D206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA5B206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgEKT6Y (ORCPT
+        id S1731216AbgEKT7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34414 "EHLO
+        Mon, 11 May 2020 15:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKT6X (ORCPT
+        with ESMTP id S1727873AbgEKT7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:58:23 -0400
+        Mon, 11 May 2020 15:59:38 -0400
 Received: from antares.kleine-koenig.org (antares.kleine-koenig.org [IPv6:2a01:4f8:c0c:3a97::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF3BC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:58:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3D9C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:59:38 -0700 (PDT)
 Received: from antares.kleine-koenig.org (localhost [127.0.0.1])
-        by antares.kleine-koenig.org (Postfix) with ESMTP id 54313981F2B;
-        Mon, 11 May 2020 21:58:20 +0200 (CEST)
+        by antares.kleine-koenig.org (Postfix) with ESMTP id 4CE23981F37;
+        Mon, 11 May 2020 21:59:36 +0200 (CEST)
 Received: from antares.kleine-koenig.org ([94.130.110.236])
         by antares.kleine-koenig.org (antares.kleine-koenig.org [94.130.110.236]) (amavisd-new, port 10024)
-        with ESMTP id jBCqFj8TsU1Y; Mon, 11 May 2020 21:58:19 +0200 (CEST)
+        with ESMTP id 3Ip4xBYKo8r1; Mon, 11 May 2020 21:59:35 +0200 (CEST)
 Received: from taurus.defre.kleine-koenig.org (unknown [IPv6:2a02:8071:b5ad:20fc:b16d:97d8:dc6:6810])
         by antares.kleine-koenig.org (Postfix) with ESMTPSA;
-        Mon, 11 May 2020 21:58:19 +0200 (CEST)
+        Mon, 11 May 2020 21:59:35 +0200 (CEST)
 Subject: Re: Failure to shutdown/reboot with intel_iommu=on
-To:     Lenny Szubowicz <lszubowi@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <jroedel@suse.de>
 Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, x86@kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
+        tglx@linutronix.de, x86@kernel.org
 References: <20200506144558.GA4019@taurus.defre.kleine-koenig.org>
  <20200508150734.GP8135@suse.de>
- <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
+ <bd9fb298-1ad3-fd4c-19f7-aae4c2b62daa@linux.intel.com>
 From:   =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
 Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
  mQINBEwXmCYBEACoJSJcKIlkQcTYia0ymmMOBk2veFoy/a0LlqGUEjQ4WECBL19F2BYX1dSp
@@ -102,76 +100,89 @@ Autocrypt: addr=uwe@kleine-koenig.org; prefer-encrypt=mutual; keydata=
  8zbvKvWfouPyeBXhXc4LNWwoopOa/+p+qJ+JBehURYaTu1U0UL9v4KhDIBPpHMI3Ia/yOe8x
  NgaAqD54tC3LAtxbOAq1jQBnBOAMInyioFDCP1bscVqePHILf33qCZG8PUZrFR4h8xIXFp5U
  6uMoO1VgFtcQHWHTtbSYLQ8YHVFZMQ==
-Message-ID: <638e7da2-b61c-6636-a030-b8737bc12347@kleine-koenig.org>
-Date:   Mon, 11 May 2020 21:58:10 +0200
+Message-ID: <11a3945a-f743-ac32-135c-1de026da66c9@kleine-koenig.org>
+Date:   Mon, 11 May 2020 21:59:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
+In-Reply-To: <bd9fb298-1ad3-fd4c-19f7-aae4c2b62daa@linux.intel.com>
 Content-Type: multipart/signed; micalg=pgp-sha512;
  protocol="application/pgp-signature";
- boundary="IUfRZ6Hn8DFY8kRygvnfzoKmZVr2Sxm5g"
+ boundary="c7xWBYgS2Jj9YrH84kW6uZ6LrEiWz3fr9"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---IUfRZ6Hn8DFY8kRygvnfzoKmZVr2Sxm5g
-Content-Type: multipart/mixed; boundary="1wpiMQMPKJLAipprXnp1UG4ZHEGCgU041";
+--c7xWBYgS2Jj9YrH84kW6uZ6LrEiWz3fr9
+Content-Type: multipart/mixed; boundary="HmNwS4eaVciVELKESsxF3anwMslmteeFd";
  protected-headers="v1"
 From: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-To: Lenny Szubowicz <lszubowi@redhat.com>, Joerg Roedel <jroedel@suse.de>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <jroedel@suse.de>
 Cc: linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
- tglx@linutronix.de, x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <638e7da2-b61c-6636-a030-b8737bc12347@kleine-koenig.org>
+ tglx@linutronix.de, x86@kernel.org
+Message-ID: <11a3945a-f743-ac32-135c-1de026da66c9@kleine-koenig.org>
 Subject: Re: Failure to shutdown/reboot with intel_iommu=on
 References: <20200506144558.GA4019@taurus.defre.kleine-koenig.org>
  <20200508150734.GP8135@suse.de>
- <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
-In-Reply-To: <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
+ <bd9fb298-1ad3-fd4c-19f7-aae4c2b62daa@linux.intel.com>
+In-Reply-To: <bd9fb298-1ad3-fd4c-19f7-aae4c2b62daa@linux.intel.com>
 
---1wpiMQMPKJLAipprXnp1UG4ZHEGCgU041
+--HmNwS4eaVciVELKESsxF3anwMslmteeFd
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hello Lenny,
+On 5/9/20 3:58 AM, Lu Baolu wrote:
+> Hi Uwe,
+>=20
+> Have you tried commenting out intel_disable_iommus() in
+> intel_iommu_shutdowan()?
+>=20
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 0182cff2c7ac..532e62600f95 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -4928,8 +4928,10 @@ void intel_iommu_shutdown(void)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for_each_iommu(iommu, drhd)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 iommu_disable_protect_mem_regions(iommu);
+>=20
+> +#if 0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Make sure the IOMMUs are =
+switched off */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 intel_disable_iommus();
+> +#endif
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 up_write(&dmar_global_lock);=
 
-On 5/11/20 3:43 PM, Lenny Szubowicz wrote:
-> I suspect that you have TPM 2.x functionality enabled in the BIOS/firmw=
-are.
+> =C2=A0}
 
-Indeed.
-
-> Unless you are actually using the TPM, try setting it to TPM 1.2 mode.
-> I've seen an incompatiblity on other Lenovo laptops between using the
-> IOMMU, TPM 2.x implementation in firmware, and shutdown/suspend.
-
-When setting it to TPM 1.2 reboot works again. Didn't test poweroff and
-suspend/resume yet.
+I just tested that and it didn't help. The machine still hangs with the
+same symptoms as reported before.
 
 Best regards
 Uwe
 
 
---1wpiMQMPKJLAipprXnp1UG4ZHEGCgU041--
+--HmNwS4eaVciVELKESsxF3anwMslmteeFd--
 
---IUfRZ6Hn8DFY8kRygvnfzoKmZVr2Sxm5g
+--c7xWBYgS2Jj9YrH84kW6uZ6LrEiWz3fr9
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl65rlcACgkQwfwUeK3K
-7AlHnQf/by1Cs7c/Zklk1DVjEXqwNOD1t5k74lMkumbE7zY5sWqSOIRB9nbL/F4g
-LS8RoCe8Pev1PAAsCVFQZqJeQz40F1i6eXXCCC/M9NVW5ae/T5RKffdCs4AP/X9s
-ogdSDhh0heAMsfemD/BLZYldilHE0/cnYimONFloePO8NuBCN60WE6RC9VTcsJh6
-yyzuQS7lmyrdliM+zOSBg9I+psun9zNpL4CREZhXl3WZYrCopKHtFjCaE2yFROpz
-CvUeS8Q+9vtkCMl3UQ5WCZrIEHaVZ1xno03yiPw7Wy7VmehrtvBKA5dEY9oOpDMl
-fMm7bSvpkZADrmjPn/pK9c2odI6tPg==
-=YCoM
+iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl65rqMACgkQwfwUeK3K
+7Al7tgf9EVdAdUDtHHR0SFi2yKFDXJyY34UAQl0706eCgjSTCx8I1t+kmDS4mSqI
+F3Xk/tpo1JPMheIK3w1HmE18u25znOSRDy6AEqmx5VFX5qpE/CWsyCZJLZf3vWtz
+ZPb22WPXSZOj2EMWwGv/2QqeInpTtcGSVt11TLHJEd79qL5R4GhGOehW3Z6oFGZ2
+wzAkdCL3wE3eh4venscTVvv9+DXfdzGohSGTBVlJHV7pT09PHkEHtcM9sM1R7rR9
+kasSNn5gIh6azBMRxYExaSNomPAbOf4ii6B+8MGFleD7yUGaEzwm1zKBn3H/TaAn
+0e1RHmLR/XL4yLAYvdFWZCtzcmwiKg==
+=7Iko
 -----END PGP SIGNATURE-----
 
---IUfRZ6Hn8DFY8kRygvnfzoKmZVr2Sxm5g--
+--c7xWBYgS2Jj9YrH84kW6uZ6LrEiWz3fr9--
