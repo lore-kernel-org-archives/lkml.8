@@ -7,89 +7,92 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A0C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE409C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE8D720752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D05206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589235951;
-	bh=rRbOM1L+fwH0nbxI5H+zl9oJEi4To787Arbt4gDRQ7g=;
+	s=default; t=1589235982;
+	bh=OUNODua/XP+uGHleC63oQoqv7mGwj75LS3PC2du8rMU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fEPFd0aoxqd4vEB6i2oHeIKVeC2mZwiR1oYRzB8AcUwNz/65qj3tVwyvFG7P6Gno7
-	 Plm6yk34g1aMYK3EGMYGaHNELu+UGVgfrJ3lrz2Kvn+taijG1SWrczWvQaVWXA5urN
-	 7dizgXDJMg1PDxXWN2IYyBnXaZf3diQTIPos3vUw=
+	b=rd/d4rIacbl0n0wUa/URPUSP0SqxKS12Yr4ptpfmW0ZMbrSBlUfNHbrDKbnrlPAgB
+	 bGGvYmDB0+9h7+FF9Hr+i61MRTHh/8ozEo97wCk3a+/zwUSjz68YYHxO0Vpb8SLM7M
+	 AT+7jh0SN4nKG2eIs/vzvRWqPHFrSfR7Vg10y85k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgEKWZv (ORCPT
+        id S1727780AbgEKW0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:25:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38460 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgEKWZu (ORCPT
+        Mon, 11 May 2020 18:26:22 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42294 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgEKW0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:25:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r66so16564848oie.5;
-        Mon, 11 May 2020 15:25:50 -0700 (PDT)
+        Mon, 11 May 2020 18:26:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i13so16560937oie.9;
+        Mon, 11 May 2020 15:26:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7+5vSNb8IxUA2MM9e6x9N0FrIu+LoC01HvigV+gZqJo=;
-        b=byuqLZKUXw3pzscmmFEWK5JNroInVneIarpHIwF72iHcgJ5QQsCT/l7hkd/UhyA/Ha
-         de88o51t3qZfkE0u2F66l9anYBix5TIVqX2YRCUkKS68ywy7Nn6sthTXGxyjECxiARS6
-         h58lnNI5WWBnX4pvdOSaicUWkZmG/ADCHy9mt461ZuUoNJBZxudFMjJmnrYRyReAW9A2
-         /RCR6bnOLZ7slOzx7vYJ5k8xwTozw1n68w5/l9QEwhYF0q5qINe+b9iA9uZMEU4avSd3
-         fqtMU63NXSotLLYbYeOzpPCukt5/FeJ1XScSsPRnC3kyQw2Fqa6wlidVjYuPGMgzsEq0
-         2Y4Q==
-X-Gm-Message-State: AGi0PubvvsWtA8NL0TVSicRVjM2eaa9qAsau0JeKIeFNF38S1cSTu6Of
-        ciDYkS9giQoWXgc//O1BZA==
-X-Google-Smtp-Source: APiQypJ9eQAYcH5jaLEtRYYyKWBWFhBc+JEnyD+r1v2xL8VlHzzA3LVNArk2SC8qvGZFebPkJp9VEQ==
-X-Received: by 2002:aca:b2c2:: with SMTP id b185mr16208902oif.169.1589235949735;
-        Mon, 11 May 2020 15:25:49 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GeCkeYpXNX1z0Dt2MixWzuFP/3nex9jVFyoU5cNVRLs=;
+        b=OM6Oh6PGW43GnXmicyCH/b5IqW+zYrnMwnX3pb/ot9gvBy3vAAZG/0PbkqF/0J3Ftb
+         KzjqufM8o4j6yIi4yx1wWv4UiPnl9YLIFkeZqJsLrIjrN1M1sCM/o3VHRQx+xw9/XSKc
+         li1mGItovLmRmFf6CeknYEZt882dpieskD10yWV18GtNCQ7kLTBRGV9Fi4x7PtWhjhr6
+         s3dS11WF0vmv9fo2as+u5Ykkfp+AwhBC9gHfgypi4ArMFjyKPVN5SFiuCNyxDP6Iy4hW
+         j3NtD3TAkd4b22MsgmfvZrAKRZCirYXC/FdVHXrHXL5pIT6CwcpghOi0P5b+2dPNmAx9
+         DL4A==
+X-Gm-Message-State: AGi0PuapcyF/fApqYCFRo1j4WTTfMCprIrB4uEcGFl8IJoiQTMia8GNb
+        hOQqaGZtdZcYQwW0i1ikiwi/rJQ=
+X-Google-Smtp-Source: APiQypI7l3460K6I+pSKo5GqHd8yXHAenw18v+/L3BoW00FvQNghiaUyqF66BrvnvvqyVBwfHGm+bw==
+X-Received: by 2002:aca:4a0c:: with SMTP id x12mr21205361oia.19.1589235980743;
+        Mon, 11 May 2020 15:26:20 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m16sm3137413oop.40.2020.05.11.15.25.48
+        by smtp.gmail.com with ESMTPSA id p17sm3180892oot.17.2020.05.11.15.26.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:25:49 -0700 (PDT)
-Received: (nullmailer pid 26457 invoked by uid 1000);
-        Mon, 11 May 2020 22:25:48 -0000
-Date:   Mon, 11 May 2020 17:25:48 -0500
+        Mon, 11 May 2020 15:26:20 -0700 (PDT)
+Received: (nullmailer pid 27324 invoked by uid 1000);
+        Mon, 11 May 2020 22:26:19 -0000
+Date:   Mon, 11 May 2020 17:26:19 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: usb: dwc2: add power-domains property
-Message-ID: <20200511222548.GA26381@bogus>
-References: <20200425170833.26718-1-jbx6244@gmail.com>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>
+Subject: Re: [PATCH v3 2/7] dt-bindings: ASoC: sun4i-i2s: Add H6 compatible
+Message-ID: <20200511222619.GA27288@bogus>
+References: <20200426104115.22630-1-peron.clem@gmail.com>
+ <20200426104115.22630-3-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200425170833.26718-1-jbx6244@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200426104115.22630-3-peron.clem@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 19:08:33 +0200, Johan Jonker wrote:
-> A test with the command below gives this error:
+On Sun, 26 Apr 2020 12:41:10 +0200, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
-> arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: usb@ff300000:
-> 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+> H6 I2S is very similar to H3, except that it supports up to 16 channels
+> and thus few registers have fields on different position.
 > 
-> With the conversion to yaml it also filters things
-> in a node that are used by other drivers like
-> 'power-domains' for Rockchip px30 usb nodes,
-> so add them to 'dwc2.yaml'.
-> 
-> make ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 > ---
->  Documentation/devicetree/bindings/usb/dwc2.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/sound/allwinner,sun4i-a10-i2s.yaml      | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
