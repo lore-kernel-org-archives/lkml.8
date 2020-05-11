@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD70C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB62C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410E6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D368207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJUWfTi+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YXhiLmSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbgEKMZr (ORCPT
+        id S1729852AbgEKMZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
+        Mon, 11 May 2020 08:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729728AbgEKMZp (ORCPT
+        by vger.kernel.org with ESMTP id S1729809AbgEKMZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:25:45 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B317FC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:44 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k19so3867551pll.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:44 -0700 (PDT)
+        Mon, 11 May 2020 08:25:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC6DC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:48 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id fu13so7699704pjb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oLCRFYTzZLs87148l1yniv86hl5UQjMO56irWxi7zno=;
-        b=fJUWfTi+qjf0FA2vuOSnTB0kWzbREj9eSNDAzVs5d927tPPCjePaekBQZBD85KG3F5
-         VED09Zw9mO6pK3PzOrC53yjo0W0be0i+lTottKW2/2Fg9uYNKryVuZNqeIaoNFTXCRG0
-         mT/ztpancw2WtnOgZ3uWRikTIwKOlWXkuSh91mPYIS8GqEsj3wgVImPOKrMXT6F1MB4r
-         hJmh63wUvsY8p1sRYQULAt3IAY5Toywe/F34PL9BilNxjlw2v2K70baqsl9bx+Sr140+
-         7LLC16fOi5LV9JDjFENTNTiv9WCLaYx9KB8KliZ7oK46glMCLvA0+w88QSlaz+ZlD56u
-         d/Hg==
+        bh=haxNS0r+O/CZv15x/o++MDoCTq7xU6xDTOnaN5esXAw=;
+        b=YXhiLmSx4goD8MUm/DW+rJ3zGpXWB6FJ31sgJ5LlIO1JYcdZkfCt5mSFZIuxiNtm5l
+         UfHYxoICohviLDbSbjQmTo+sOI/dpnqt3cbXlcfW13WQsYTxb8gc/Ei0zObJ5Yh4p0Ba
+         iF3fXBsX6jrgIDBJnZM4Wh/x3tNrHCcUf0MS3jsv6VVJmLC5qOzpwb4tGxZsrxkBbywa
+         YxaL3gXVxEIlRpdW4oMDNSobiYem5inBDHkZxsUTxoA8QqbtdNHXhv5usHlkZeRqNhkO
+         g/rXcAd6Vj+FDAc0jItxg+usDGmwxOWHSD++8EhIzWWfJUFNLJdxrvORZXMDBb5R+6zU
+         8UYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oLCRFYTzZLs87148l1yniv86hl5UQjMO56irWxi7zno=;
-        b=JjagJDMi7VKy5CtbLr6UK0Jb9eK4Jy80COng45vqWAXt3F5evxZnRKfE6JTgMP7bbv
-         W9yLLFEa6+GAN+m8GLfTqHmtrZoc1cMEUfsrqWPp53N63dJm96CdfbLkjx5ehmMQpYKg
-         Kfzjet4+L4/d5TRTrDp772iUCvnfsPBjZ+RI2mYcJcXVkT2eh4osRWCOitS2wl+THw0H
-         3QK4t3+xA2lDe/kb5Ghn+0qV/TVrTO2M3x0sTjhMkNvsqvTEfOc3p7p9MEP5d8cSbkiY
-         Jai4lSWX6QuRZ1d2LMWP/vKnstLE/ddq9ijPgLFnSHrCd8ZGki0Sxj6ZYXH4gHA7IOBt
-         OrCg==
-X-Gm-Message-State: AGi0Pubb3AA64ATXRrdlt/uYXi4Ll0oBetzhZk4tnQ+5cc5+Dfrow+Ef
-        Gk6UpK8h11I5+CJ73NGs23QHOk6u7Sg=
-X-Google-Smtp-Source: APiQypL4e2jZtE6SohQMnQNdslV/ugdx7IF6yNh08RpdGCBWZWJA/HkPdZcOy2ptOK+0q4I15bUFVQ==
-X-Received: by 2002:a17:902:9049:: with SMTP id w9mr15139757plz.27.1589199943796;
-        Mon, 11 May 2020 05:25:43 -0700 (PDT)
+        bh=haxNS0r+O/CZv15x/o++MDoCTq7xU6xDTOnaN5esXAw=;
+        b=SMdfFvKVQjZExIlDsS+0BuALgL4tCQQiDbRY7nRZll7BEx0erOxZGkDVas1wcMRtKS
+         CFdhu6TvYIYmypxb2BDkOCxauOL+LvfBC1uMZmz+2oo3jp3OYSavXtYclQ/eCe+jAhAo
+         aNIGNedlSC7HGzKcVreo8gW53UjgjQ9dOQPR3C1YTc4+jvmYCddowY31NctGhHE3FZ/O
+         fbwQdk/DvKQ7hWrmWThikbrp3aV8cmlEyFC4+LlifaQEP/7jsV++EfNPpLX6HPqWpq9j
+         JYSUDy//CyFY2hZ8GVRd3R1l7KrUbAofKXcFYw7uegLQvME5da8eTgTGnpwPK83/qEdb
+         kFVQ==
+X-Gm-Message-State: AGi0Pub1owAn5DNdNKM0bf4RYT2Rtfp5DLQnD8YGcLOrLeyoI+mUCqQR
+        4p64kovWbl7wZpJu+C4fRE2d11eQKXY=
+X-Google-Smtp-Source: APiQypKuTjY9Gg8mysJb/lkYYkrUVhRtatcvHzJl+3wFXdbvG1f4JVxn/zvTUHIoQRLk+TPOTNmBjg==
+X-Received: by 2002:a17:90a:e013:: with SMTP id u19mr20147358pjy.16.1589199947854;
+        Mon, 11 May 2020 05:25:47 -0700 (PDT)
 Received: from localhost ([45.127.45.102])
-        by smtp.gmail.com with ESMTPSA id a196sm9240989pfd.184.2020.05.11.05.25.42
+        by smtp.gmail.com with ESMTPSA id x193sm9569958pfd.54.2020.05.11.05.25.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:25:43 -0700 (PDT)
+        Mon, 11 May 2020 05:25:47 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org,
@@ -68,9 +68,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 03/14] thermal/drivers/thermal_helpers: Sort headers alphabetically
-Date:   Mon, 11 May 2020 17:54:51 +0530
-Message-Id: <133db154796f354e6c51e6310095f679e1f45441.1589199124.git.amit.kucheria@linaro.org>
+Subject: [PATCH 04/14] thermal/drivers/thermal_helpers: Include export.h
+Date:   Mon, 11 May 2020 17:54:52 +0530
+Message-Id: <fd3443f00dbba6ca90f35726c7451ae52145d2d4.1589199124.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
 References: <cover.1589199124.git.amit.kucheria@linaro.org>
@@ -81,30 +81,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sort headers to make it easier to read and find duplicate headers.
+It is preferable to include export.h when you are using EXPORT_SYMBOL
+family of macros.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/thermal_helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/thermal_helpers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
-index 2ba756af76b7..8ea0a05404f7 100644
+index 8ea0a05404f7..e47da80daf3a 100644
 --- a/drivers/thermal/thermal_helpers.c
 +++ b/drivers/thermal/thermal_helpers.c
-@@ -12,11 +12,11 @@
+@@ -14,6 +14,7 @@
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <linux/sysfs.h>
  #include <linux/device.h>
  #include <linux/err.h>
++#include <linux/export.h>
  #include <linux/slab.h>
  #include <linux/string.h>
-+#include <linux/sysfs.h>
- 
- #include <trace/events/thermal.h>
- 
+ #include <linux/sysfs.h>
 -- 
 2.20.1
 
