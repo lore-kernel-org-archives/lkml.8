@@ -2,183 +2,115 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68B8C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D494C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B551520746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D810206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IXydZQPY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ahoq1zf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgEKMgz (ORCPT
+        id S1730087AbgEKMhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:36:55 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:65330 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgEKMgy (ORCPT
+        Mon, 11 May 2020 08:37:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18832 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729309AbgEKMhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:36:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589200614; x=1620736614;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=gm3RkgBnFlsR0KLH3wADEsc5/8hUuBZNui1ctNCxs+I=;
-  b=IXydZQPY2T8TD0lqihRT0yIYqDx+FFgQMYBThgp1CExFlc0yP4gZ4Gqw
-   GUIslID03Sxxwpi2B7G8UhRvTCMEqbkCTJdkgUVP+tp6lbc73bivlG4SZ
-   8gJ7L9GE1KNbtnWetE8ODn1MDOKJWGaUsaAlJoviQUV3pMfTtQB1Atr7x
-   Y=;
-IronPort-SDR: bD3UbNFmyebn4uwq18PQt0i8oiWF+RXahclxjzXJksOdvJkbbH5fFLifCG5di9rzz3zM8c6HQk
- dpxbU9ZLF78w==
-X-IronPort-AV: E=Sophos;i="5.73,380,1583193600"; 
-   d="scan'208";a="34195023"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 May 2020 12:36:49 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 5E2E3A2340;
-        Mon, 11 May 2020 12:36:38 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:36:37 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:36:22 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v11 06/16] mm/damon: Split regions into 3 subregions if necessary
-Date:   Mon, 11 May 2020 14:32:52 +0200
-Message-ID: <20200511123302.12520-7-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
-References: <20200511123302.12520-1-sjpark@amazon.com>
+        Mon, 11 May 2020 08:37:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589200636; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=RZFBXDcHmQyEqT0beRyDtm0qoWEK9orYsqxQ96o+uwQ=;
+ b=Ahoq1zf+QpqgUqw11Z96ygbinTOcFkSCFE4qLxtD9FI6N9B0UWUC5lmNQbj9NJf6rKCQnoHU
+ AtHdadi9Pqk2L/EYeFS/DNFNNjc72r75Xsb6mBnd4v5Q4am0HFdKQTHRsVb6bL9+eizm8V48
+ jAXeCfqkYwXd8VoyCfbKaK6ssAU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb946ee.7fdbc2f40490-smtp-out-n03;
+ Mon, 11 May 2020 12:37:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 43CC5C433F2; Mon, 11 May 2020 12:37:02 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D225C433BA;
+        Mon, 11 May 2020 12:36:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D225C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] ath10k: Replace zero-length array with flexible-array
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200507041127.GA31587@embeddedor>
+References: <20200507041127.GA31587@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200511123702.43CC5C433F2@smtp.codeaurora.org>
+Date:   Mon, 11 May 2020 12:37:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Suppose that there are a very wide and cold region and a hot region, and
-both regions are identified by DAMON.  And then, the middle small region
-inside the very wide and cold region becomes hot.  DAMON will not be
-able to identify this new region because the adaptive regions adjustment
-mechanism splits each region to only two subregions.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-This commit modifies the logic to split each region to 3 subregions if
-such corner case is detected.
+Patch applied to ath-next branch of ath.git, thanks.
 
-Suggested-by: James Cameron <Jonathan.Cameron@Huawei.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- mm/damon.c | 51 ++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 34 insertions(+), 17 deletions(-)
+d3ed0cf047cf ath10k: Replace zero-length array with flexible-array
 
-diff --git a/mm/damon.c b/mm/damon.c
-index cec946197e13..fbf37df841ce 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -650,26 +650,32 @@ static void damon_split_region_at(struct damon_ctx *ctx,
- 	damon_insert_region(new, r, damon_next_region(r));
- }
- 
--/* Split every region in the given task into two randomly-sized regions */
--static void damon_split_regions_of(struct damon_ctx *ctx, struct damon_task *t)
-+/* Split every region in the given task into 'nr_subs' regions */
-+static void damon_split_regions_of(struct damon_ctx *ctx,
-+				     struct damon_task *t, int nr_subs)
- {
- 	struct damon_region *r, *next;
--	unsigned long sz_orig_region, sz_left_region;
-+	unsigned long sz_region, sz_sub = 0;
-+	int i;
- 
- 	damon_for_each_region_safe(r, next, t) {
--		sz_orig_region = r->vm_end - r->vm_start;
--
--		/*
--		 * Randomly select size of left sub-region to be at least
--		 * 10 percent and at most 90% of original region
--		 */
--		sz_left_region = ALIGN_DOWN(damon_rand(1, 10) * sz_orig_region
--					    / 10, MIN_REGION);
--		/* Do not allow blank region */
--		if (sz_left_region == 0 || sz_left_region >= sz_orig_region)
--			continue;
--
--		damon_split_region_at(ctx, r, sz_left_region);
-+		sz_region = r->vm_end - r->vm_start;
-+
-+		for (i = 0; i < nr_subs - 1 &&
-+				sz_region > 2 * MIN_REGION; i++) {
-+			/*
-+			 * Randomly select size of left sub-region to be at
-+			 * least 10 percent and at most 90% of original region
-+			 */
-+			sz_sub = ALIGN_DOWN(damon_rand(1, 10) *
-+					sz_region / 10, MIN_REGION);
-+			/* Do not allow blank region */
-+			if (sz_sub == 0 || sz_sub >= sz_region)
-+				continue;
-+
-+			damon_split_region_at(ctx, r, sz_sub);
-+			sz_region = sz_sub;
-+		}
- 	}
- }
- 
-@@ -687,14 +693,25 @@ static void kdamond_split_regions(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
- 	unsigned int nr_regions = 0;
-+	static unsigned int last_nr_regions;
-+	int nr_subregions = 2;
- 
- 	damon_for_each_task(ctx, t)
- 		nr_regions += nr_damon_regions(t);
-+
- 	if (nr_regions > ctx->max_nr_regions / 2)
- 		return;
- 
-+	/* If number of regions is not changed, we are maybe in corner case */
-+	if (last_nr_regions == nr_regions &&
-+			nr_regions < ctx->max_nr_regions / 3)
-+		nr_subregions = 3;
-+
- 	damon_for_each_task(ctx, t)
--		damon_split_regions_of(ctx, t);
-+		damon_split_regions_of(ctx, t, nr_subregions);
-+
-+	if (!last_nr_regions)
-+		last_nr_regions = nr_regions;
- }
- 
- /*
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11532369/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
