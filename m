@@ -2,131 +2,89 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A876BC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5DDC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DAF20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:35:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KAW6y7vm"
+	by mail.kernel.org (Postfix) with ESMTP id 75C3C20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgEKEfB (ORCPT
+        id S1726319AbgEKEnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59964 "EHLO
+        Mon, 11 May 2020 00:43:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725840AbgEKEfB (ORCPT
+        by vger.kernel.org with ESMTP id S1725790AbgEKEnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:35:01 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB82C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:35:00 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di6so3887503qvb.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eAd4gbb0pcNnApGm6Og5wCWvp0yRJHJXtLCgR/gxdK4=;
-        b=KAW6y7vm9lCjNEy0YAU6G7q+RuEfJEjJ0WGtTcfF5+EDnb0VUdt+EuDEMmnxAU8uuI
-         6Vg7JkVSpSPv1CCUzufDIZVzUXHtCFf1UHZ45JvPn8T8NOs84T++3dXQkIG0VtvW9mAY
-         2oiemNvUY9qm/uOTIy3Kg7w1rraNMNR8GsEVXJEnFU0g6iK2ov0qr8ILjlfx1jrGXavX
-         PYqT/1iOUrnXjiTtFVU+eziz5YUmPIUOaXDIlyUAy+GxwFrI6rCeuun67mfiqth3ixx8
-         xc1mqCVnn1+SD2CTriYUIJFRsYVJ6fCEp0wdh+uytF8zDHHLgHUv6oJx3qm1JFVJwxCZ
-         v3Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eAd4gbb0pcNnApGm6Og5wCWvp0yRJHJXtLCgR/gxdK4=;
-        b=Km8Jw2u7AcWxMZ0manI7DUayoMgeL+sieJMyq0QVpzMSVEUPnJRbPue3kjGWVB7t44
-         pO06qFrAVtKn0UN6OOyoLCCWUsMUWUmwv2K3/N4bR7z4eEEVh2IRHlAMpmmvHGt8YreA
-         ZZqdfPc41UDPEUdpLGgWL9jXyYe9UeXFtm90pGhcQsEukVl9JsbP5RK3ZpjLjtg9Czc/
-         22dJwoN2FRvCQURRemsjwLL+cDpDFxSIiajP7aTCYPn+XWfurmkTokCO7RiSkxfxbGS9
-         pbsboaskoqF/cg/bkFwf9+zSWx1SBFQb7b0vF0ihG0mR4/FGebS1JXZZjqKAjibM+mRF
-         aeaQ==
-X-Gm-Message-State: AGi0Pub8fUS/A9hXHrihc4rkqM93KUMiwXYvL38aBqCIQuLttLqxYphA
-        QM+ny7jgrf5FMxEAVvuzhbXDrQ==
-X-Google-Smtp-Source: APiQypLFNnKP7c/SRXW2/x9gJo9sMJpGIWsLIMrsDdA2a1mki4zFpL/KN4MNfuGlgTnwSxSkYBzbJA==
-X-Received: by 2002:a0c:f70c:: with SMTP id w12mr13674265qvn.28.1589171699967;
-        Sun, 10 May 2020 21:34:59 -0700 (PDT)
-Received: from ovpn-112-210.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e16sm8384451qtc.92.2020.05.10.21.34.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 21:34:59 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     alex.williamson@redhat.com
-Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] vfio/pci: fix memory leaks of eventfd ctx
-Date:   Mon, 11 May 2020 00:34:50 -0400
-Message-Id: <20200511043450.2718-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Mon, 11 May 2020 00:43:35 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC6AC061A0C;
+        Sun, 10 May 2020 21:43:34 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jY0Ho-005jBz-CV; Mon, 11 May 2020 04:43:28 +0000
+Date:   Mon, 11 May 2020 05:43:28 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
+        linux-kernel@vger.kernel.org
+Subject: [RFC][PATCHES] uaccess-related stuff in net/*
+Message-ID: <20200511044328.GP23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
-memory leaks after a while because vfio_pci_set_ctx_trigger_single()
-calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
-Fix it by calling eventfd_ctx_put() for those memory in
-vfio_pci_release() before vfio_device_release().
+	Assorted uaccess-related work in net/*.  First, there's
+getting rid of compat_alloc_user_space() mess in MCAST_...
+[gs]etsockopt() - no need to play with copying to/from temporary
+object on userland stack, etc., when ->compat_[sg]etsockopt()
+instances in question can easly do everything without that.
+That's the first 13 patches.  Then there's a trivial bit in
+net/batman-adv (completely unrelated to everything else) and
+finally getting the atm compat ioctls into simpler shape.
 
-unreferenced object 0xebff008981cc2b00 (size 128):
-  comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
-  hex dump (first 32 bytes):
-    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
-    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
-  backtrace:
-    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
-    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
-    [<000000005fcec025>] do_eventfd+0x54/0x1ac
-    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
-    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
-    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
-    [<00000000d495ef94>] el0_sync+0x164/0x180
-unreferenced object 0x29ff008981cc4180 (size 128):
-  comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
-  hex dump (first 32 bytes):
-    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
-    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
-  backtrace:
-    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
-    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
-    [<000000005fcec025>] do_eventfd+0x54/0x1ac
-    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
-    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
-    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
-    [<00000000d495ef94>] el0_sync+0x164/0x180
+	Please, review and comment.  Individual patches in followups,
+the entire branch (on top of current net/master) is in
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #uaccess.net
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/vfio/pci/vfio_pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 6c6b37b5c04e..080e6608f297 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -519,6 +519,10 @@ static void vfio_pci_release(void *device_data)
- 		vfio_pci_vf_token_user_add(vdev, -1);
- 		vfio_spapr_pci_eeh_release(vdev->pdev);
- 		vfio_pci_disable(vdev);
-+		if (vdev->err_trigger)
-+			eventfd_ctx_put(vdev->err_trigger);
-+		if (vdev->req_trigger)
-+			eventfd_ctx_put(vdev->req_trigger);
- 	}
- 
- 	mutex_unlock(&vdev->reflck->lock);
--- 
-2.21.0 (Apple Git-122.2)
-
+Shortlog:
+Al Viro (19):
+      lift compat definitions of mcast [sg]etsockopt requests into net/compat.h
+      compat_ip{,v6}_setsockopt(): enumerate MCAST_... options explicitly
+      ip*_mc_gsfget(): lift copyout of struct group_filter into callers
+      get rid of compat_mc_getsockopt()
+      set_mcast_msfilter(): take the guts of setsockopt(MCAST_MSFILTER) into a helper
+      ipv4: do compat setsockopt for MCAST_MSFILTER directly
+      ip6_mc_msfilter(): pass the address list separately
+      ipv6: do compat setsockopt for MCAST_MSFILTER directly
+      ipv[46]: do compat setsockopt for MCAST_{JOIN,LEAVE}_GROUP directly
+      ipv4: take handling of group_source_req options into a helper
+      ipv6: take handling of group_source_req options into a helper
+      handle the group_source_req options directly
+      get rid of compat_mc_setsockopt()
+      batadv_socket_read(): get rid of pointless access_ok()
+      atm: separate ATM_GETNAMES handling from the rest of atm_dev_ioctl()
+      atm: move copyin from atm_getnames() into the caller
+      atm: switch do_atm_iobuf() to direct use of atm_getnames()
+      atm: lift copyin from atm_dev_ioctl()
+      atm: switch do_atmif_sioc() to direct use of atm_dev_ioctl()
+Diffstat:
+ include/linux/igmp.h         |   2 +-
+ include/net/compat.h         |  29 +++-
+ include/net/ipv6.h           |   5 +-
+ net/atm/ioctl.c              |  96 +++++++------
+ net/atm/resources.c          | 108 +++++---------
+ net/atm/resources.h          |   5 +-
+ net/batman-adv/icmp_socket.c |   3 -
+ net/compat.c                 | 194 -------------------------
+ net/ipv4/igmp.c              |  18 +--
+ net/ipv4/ip_sockglue.c       | 329 ++++++++++++++++++++++++++++++++-----------
+ net/ipv6/ipv6_sockglue.c     | 233 ++++++++++++++++++++++++------
+ net/ipv6/mcast.c             |  17 +--
+ 12 files changed, 567 insertions(+), 472 deletions(-)
