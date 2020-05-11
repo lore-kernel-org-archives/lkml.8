@@ -2,104 +2,153 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690BBC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A32C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 468C8206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74134206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Id3tetit"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYsodEli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgEKR4D (ORCPT
+        id S1730893AbgEKR5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:56:03 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18520 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726891AbgEKR4D (ORCPT
+        Mon, 11 May 2020 13:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727051AbgEKR5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:56:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589219762; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=4qUl98VkUMkimx3wUPtLlVj4sP6schRM56csAATyTnI=; b=Id3tetitS3uG30ZkRijpTvFrUKhKKrmuFG95VoVAvqbWwi1wCta/3KcB3AxC29LcEkQnwggT
- zaxJc5h5Mc44TlilStI6+SUinFRweALhWusD3//YxQ+RBy7k8YCPIHOnaf9oZl6DwFP2qUwR
- fmL4CJ8wuvKxkuguLM1KOxgjZGI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb991a4.7f88f5d6cd88-smtp-out-n01;
- Mon, 11 May 2020 17:55:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ED705C433BA; Mon, 11 May 2020 17:55:47 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8C439C433CB;
-        Mon, 11 May 2020 17:55:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8C439C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     will@kernel.org, robin.murphy@arm.com, joro@8bytes.org,
-        swboyd@chromium.org
-Cc:     bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, dianders@chromium.org,
-        evgreen@chromium.org, mka@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6] iommu/arm-smmu-qcom: Request direct mapping for modem device
-Date:   Mon, 11 May 2020 23:25:32 +0530
-Message-Id: <20200511175532.25874-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
+        Mon, 11 May 2020 13:57:23 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94A0C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:57:21 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t16so4242593plo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/4VPW/3YLXwoqcjHvmu+U93vY1XvtT8ILR97l+aBRHM=;
+        b=XYsodElimbqFJLNFnU/6UJl3lwNcwYu/y1MR1mjVNPFY94eInf7JUE6nLmVgUkHowr
+         4zSTdezoG0smW1qmL27QUdfb65KUD5AuCFfMJHnfOwzRVwH5uwUY2BPnP2uILCu+GQY0
+         PICJ13i5ZMC1iPneXD+vBuFAGy2Rk3JBqX/2k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/4VPW/3YLXwoqcjHvmu+U93vY1XvtT8ILR97l+aBRHM=;
+        b=B+6ZFTk+ICzFGCGFYseW05KOb4FRnayaPBGjL5u3jNL34DIj/U4ol+xPOEjRscMXgx
+         /H9Nzo0cTBtIgpOce+U4rCdGl84y7wf52rzcPjRsCXJlEIEzWp0GuktsndMgGGL6/9Zo
+         LsgqtXOBQe+Z9EIvWIpG2Bcl41mefLbFtb2xJ7Z0Hje83AcVmgcwTRgdmMi3dxN6FOSh
+         du1sdkccDDphHgAb1AhL+PGxvdmrLbOFieMtgTc+mXOiU2czJl4p0DKcAF3nod2jWo/m
+         yG2AQB65uZv+YvjOpjvl+yoNnY2wt64ALDsiPZL46+PzPTlzWZC4D1POQqf8uZ/IqsGC
+         cCQA==
+X-Gm-Message-State: AGi0PuYs2Rw1tjzu3713ST1zXAiKlDs1YPcM613MSrPVgUTYioNtc3XZ
+        ibRf4xIVcTMqqdm3TolwWFlycKPCXoQ=
+X-Google-Smtp-Source: APiQypKPWCdtCZVF1JVQ+N/i5CTxy1YZ2uxgAQ2wkunQWyauVm+9tyh+T7jrBtoR7DjFIZl3sskrPw==
+X-Received: by 2002:a17:90a:1b67:: with SMTP id q94mr23611499pjq.84.1589219841106;
+        Mon, 11 May 2020 10:57:21 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id z190sm9750203pfz.84.2020.05.11.10.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 10:57:20 -0700 (PDT)
+Date:   Mon, 11 May 2020 10:57:19 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
+ SBU/HSL orientation
+Message-ID: <20200511175719.GA136540@google.com>
+References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
+ <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+ <20200507224041.GA247416@google.com>
+ <20200508111840.GG645261@kuha.fi.intel.com>
+ <20200511133202.GA2085641@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511133202.GA2085641@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The modem remote processor has two access paths to DDR. One path is
-directly connected to DDR and another path goes through an SMMU. The
-SMMU path is configured to be a direct mapping because it's used by
-various peripherals in the modem subsystem. Typically this direct
-mapping is configured statically at EL2 by QHEE (Qualcomm's Hypervisor
-Execution Environment) before the kernel is entered.
+Hi Heikki,
 
-In certain firmware configuration, especially when the kernel is already
-in full control of the SMMU, defer programming the modem SIDs to the
-kernel. Let's add compatibles here so that we can have the kernel
-program the SIDs for the modem in these cases.
+Thanks a lot for looking into this. Kindly see my response inline:
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+On Mon, May 11, 2020 at 04:32:02PM +0300, Heikki Krogerus wrote:
+> On Fri, May 08, 2020 at 02:18:44PM +0300, Heikki Krogerus wrote:
+> > Hi Prashant,
+> > 
+> > On Thu, May 07, 2020 at 03:40:41PM -0700, Prashant Malani wrote:
+> > > > +static int sbu_orientation(struct pmc_usb_port *port)
+> > > > +{
+> > > > +	if (port->sbu_orientation)
+> > > > +		return port->sbu_orientation - 1;
+> > > > +
+> > > > +	return port->orientation - 1;
+> > > > +}
+> > > > +
+> > > > +static int hsl_orientation(struct pmc_usb_port *port)
+> > > > +{
+> > > > +	if (port->hsl_orientation)
+> > > > +		return port->hsl_orientation - 1;
+> > > > +
+> > > > +	return port->orientation - 1;
+> > > > +}
+> > > > +
+> > > >  static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
+> > > >  {
+> > > >  	u8 response[4];
+> > > > @@ -151,8 +170,9 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+> > > >  
+> > > >  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
+> > > >  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
+> > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
+> > > > +
+> > > > +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > 
+> > > I'm curious to know what would happen when sbu-orientation == "normal".
+> > > That means |port->sbu_orientation| == 1.
+> > > 
+> > > It sounds like what should happen is the AUX_SHIFT orientation
+> > > setting should follow what |port->orientation| is, but here it
+> > > looks like it will always be set to |port->sbu_orientation - 1|, i.e 0,
+> > > even if port->orientation == TYPEC_ORIENTATION_REVERSE, i.e 2, meaning
+> > > it should be set to 1 ?
+> > 
+> > I'll double check this, and get back to you..
+> 
+> This is not exactly an answer to your question, but it seems that
+> those bits are only valid if "Alternate-Direct" message is used.
+> Currently the driver does not support that message.
+Could you kindly provide some detail on when "Alternate-Direct" would be
+preferred to the current method?
+Also, is there anything on the PMC side which is preventing the use of
+"Alternate-Direct" messages? It seems like the state transition diagram
+there would be simpler, although I'm likely missing significant details
+here.
 
-V6
- * Rebased on Will's for-joerg/arm-smmu/updates
- * Reword commit message and add more details [Stephen]
+> 
+> I think the correct thing to do now is to remove the two lines from
+> the driver where those bits (ORI-HSL and ORI-Aux) are set.
+I see. How would orientation then be handled in a retimer configuration
+where AUX/SBU is flipped by the retimer itself?
 
- drivers/iommu/arm-smmu-qcom.c | 2 ++
- 1 file changed, 2 insertions(+)
+Best regards,
 
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-index 5bedf21587a56..cf01d0215a397 100644
---- a/drivers/iommu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -17,7 +17,9 @@ static const struct of_device_id qcom_smmu_client_of_match[] = {
- 	{ .compatible = "qcom,mdp4" },
- 	{ .compatible = "qcom,mdss" },
- 	{ .compatible = "qcom,sc7180-mdss" },
-+	{ .compatible = "qcom,sc7180-mss-pil" },
- 	{ .compatible = "qcom,sdm845-mdss" },
-+	{ .compatible = "qcom,sdm845-mss-pil" },
- 	{ }
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-Prashant
+> 
+> Let me know if that's OK, and I'll update the series.
+> 
+> thanks,
+> 
+> -- 
+> heikki
