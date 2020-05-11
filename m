@@ -2,105 +2,176 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D21C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DAAC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93E5D2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:23:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LOVr45y6"
+	by mail.kernel.org (Postfix) with ESMTP id 78820207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgEKDXY (ORCPT
+        id S1728488AbgEKDYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:23:24 -0400
-Received: from ozlabs.org ([203.11.71.1]:49193 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgEKDXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:23:24 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L5qZ28x0z9sPF;
-        Mon, 11 May 2020 13:23:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589167402;
-        bh=ei+7VrtRtIWjZ6v1Y0Tjx02DowX18VkOoZ08mt7TJzY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LOVr45y6NbvfCyJz4PnG2KQFJDtVzNUYF/ATJGU7kx/U+yOEW1zLsWWub7DyWZGvA
-         4UuticK1bQd07/vc1SD3ud0vQ6kEYtQAqLvM8Nswbb6MAc5bwQWrKW72m+j4tjpshj
-         97uYHPTCRcYPhlu63pggcsy9/GYH0II0y4W3jJacjE5PrgeGROzcWUtCNshwGFU78p
-         cxrQk9ta9gvhtoLllMfek10CtbVbGfoFMVzAJkH55cdNMScs7NXqgPKzYFXUut6Iet
-         sUR6LuN+8G9ToatZ+63G0ACK/hOvuqxuijQsKFEykF0HBIdc7iO9qIgG9vpoB+4Ge/
-         4uptuhQK1zF9w==
-Date:   Mon, 11 May 2020 13:23:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: manual merge of the crypto tree with Linus' tree
-Message-ID: <20200511132319.2d39781b@canb.auug.org.au>
+        Sun, 10 May 2020 23:24:47 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:52611 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgEKDYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 23:24:46 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 04B3NVVL077104;
+        Mon, 11 May 2020 11:23:31 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 1866BA869F7CCFC0A268;
+        Mon, 11 May 2020 11:23:32 +0800 (CST)
+In-Reply-To: <3e33ffae-3267-015a-8535-6e1667b03e39@ti.com>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw> <20200421092328.129308f6@collabora.com> <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com> <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw> <20200428085401.574wmo6qddmumd7q@yadavpratyush.com> <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw> <3e33ffae-3267-015a-8535-6e1667b03e39@ti.com>
+To:     "Vignesh Raghavendra" <vigneshr@ti.com>
+Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
+        broonie@kernel.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, "Pratyush Yadav" <me@yadavpratyush.com>,
+        miquel.raynal@bootlin.com, "Pratyush Yadav" <p.yadav@ti.com>,
+        richard@nod.at, tudor.ambarus@microchip.com
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YU9ipyUeRpaMQcaUOwyWSNw";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-KeepSent: 8A6B0341:0CDED2CF-48258565:000F3369;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF8A6B0341.0CDED2CF-ON48258565.000F3369-48258565.0012A22D@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 11 May 2020 11:23:32 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/11 AM 11:23:32,
+        Serialize complete at 2020/05/11 AM 11:23:32
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 04B3NVVL077104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YU9ipyUeRpaMQcaUOwyWSNw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Vignesh,
 
-Today's linux-next merge of the crypto tree got conflicts in:
+> >>>
+> >>> Our mx25uw51245g supports BFPT DWORD-18,19 and 20 data and xSPI 
+> > profile 
+> >>> 1.0,
+> >>> and it comply with BFPT DWORD-19, octal mode enable sequences by 
+write 
+> > CFG 
+> >>> Reg2 
+> >>> with instruction 0x72. Therefore, I can't apply your patches.
+> >>
+> >> I didn't mean apply my patches directly. I meant more along the lines 
+of 
+> > 
+> >> edit your patches to work on top of my series. It should be as easy 
+as 
+> >> adding your flash's fixup hooks and its octal DTR enable hook, but if 
+my 
+> > 
+> >> series is missing something you need (like complete Profile 1.0 
+parsing, 
+> > 
+> >> which I left out because I wanted to be conservative and didn't see 
+any 
+> >> immediate use-case for us), let me know, and we can work together to 
+> >> address it.
+> > 
+> > yes,sure!
+> > let's work together to upstream the Octal 8D-8D-8D driver to mainline.
+> > 
+> > The main concern is where and how to enable xSPI octal mode?
+> > 
+> > Vignesh don't agree to enable it in fixup hooks and that's why I 
+patched
+> > it to spi_nor_late_init_params() and confirmed the device support xSPI 
 
-  crypto/lrw.c
-  crypto/xts.c
+> > Octal mode after BFPT DWORD-19 and xSPI pf 1.0 have been parsed.
+> > 
+> 
+> My suggestion was to use SFDP wherever possible.. E.g: it is possible to
+> get opcode extension type from BFPT...
+> 
+> But using BFPT DWORD-19 is not correct for switching to 8D-8D-8D mode:
+> 
+> Per JESD216D.01 Bits 22:20 of  19th DWORD of BFPT:
+> 
+> Octal Enable Requirements:
+> 
+> This field describes whether the device contains a Octal Enable bit used
+> to enable 1-1-8 and 1-
+> 8-8 octal read or octal program operations.
+> 
+> So, this cannot be used for enabling 8D-8D-8D mode... Flashes that only
+> support 1S-1S-1S and 8D-8D-8D will set this field to 0.
 
-between commit:
+yes, you are right, the bits 22~20 your mentioned are for 1-1-8 and 1-8-8 
+mode enable requirements and they are zero if Flash only supports 
+1S-1S-1S,
+8S-8S-8S and 8D-8D-8D, just like mx25xx series.
 
-  1a263ae60b04 ("gcc-10: avoid shadowing standard library 'free()' in crypt=
-o")
+There are bits 8~4 for 8S-8S-8S and 8D-8D-8D mode enable sequences and
+I have patched these in this patches. 
 
-from Linus' tree and commit:
+By bits 8~4 in 19 th DWORD of BFPT, driver will know enable 8S-8S-8S or
+8D-8D-8D by either issue two instruction (06h and E8h) or 
+by Write CFG Reg 2.
 
-  d099ea6e6fde ("crypto - Avoid free() namespace collision")
+mx25xx series supports enable Octal 8S-8S-8S/8D-8D-8D mode by Write CFG 
+Reg 2.
 
-from the crypto tree.
 
-I fixed it up (I just used the versions from the crypto tree) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
+> 
+> There is a separate table to enable 8D mode called
+> "Command Sequences to Change to Octal DDR (8D-8D-8D) mode". But if flash
+> does not have the table or has bad data, fixup hook is the only way...
+> 
+> If mx25* supports above table, please build on top of Pratyush's series
+> to add support for parsing this table. Otherwise, macronix would have to
+> use a fixup hook too...
 
---=20
-Cheers,
-Stephen Rothwell
+mx25xx series also supports "Command Sequences to Change to Octal DDR 
+(8D-8D-8D) mode" for sure. I will patch them in next version.
 
---Sig_/YU9ipyUeRpaMQcaUOwyWSNw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+For mx25* series, a fixup hook will only setup specific dummy cycles to 
+device for various frequency after xSPI 1.0 table has been parsed.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64xScACgkQAVBC80lX
-0Gz7Twf/ZGQ5W1CsG3jk612T0kjSvC82Qn6Izn3RE2aW8pMdFqcBf2chnipHdy06
-9oY7qGH7U9mNF6J7kmeFQ0/HeZPlHjYnhxqJ9bSZgzTfz/CChUu//Baz55X9usVC
-R7qvicU/gnTkACBWn0yA2WHbBDaMm9EhupUjgxddpbMhant4xjLz7MZuEfzepbYb
-whYKnuPfOjVQJWaWqmzZlHcDfYS9CFyjYsBflGP81aqg6k66cC+kwIGRitGG6fYd
-8r91mblPlB360aoY7IRKUs0R/QOI3SO4tUZv7ayuXWC9LGpEo3REvoFf1jQQFFqJ
-Y/BfuWUjCKMszXkJS6MUfbrfdxYw3Q==
-=3CX3
------END PGP SIGNATURE-----
+thanks for your time & comments.
+Mason
 
---Sig_/YU9ipyUeRpaMQcaUOwyWSNw--
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
