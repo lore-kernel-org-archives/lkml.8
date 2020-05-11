@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E8C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DF5C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5681C2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72052078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbgEKVFN (ORCPT
+        id S1732558AbgEKVFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
+        Mon, 11 May 2020 17:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731826AbgEKU7Z (ORCPT
+        by vger.kernel.org with ESMTP id S1731785AbgEKU7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:59:25 -0400
+        Mon, 11 May 2020 16:59:23 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43970C061A0E;
-        Mon, 11 May 2020 13:59:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91CBC061A0C;
+        Mon, 11 May 2020 13:59:23 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWF-0005gy-0k; Mon, 11 May 2020 22:59:23 +0200
+        id 1jYFWD-0005gB-11; Mon, 11 May 2020 22:59:21 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 76B8A1C04E3;
-        Mon, 11 May 2020 22:59:19 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:19 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 970C01C0494;
+        Mon, 11 May 2020 22:59:17 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:17 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcutorture: Mark data-race potential for
- rcu_barrier() test statistics
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: core/rcu] torture: Add --kcsan argument to top-level kvm.sh script
+Cc:     Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923075942.390.10031929584805507102.tip-bot2@tip-bot2>
+Message-ID: <158923075754.390.4157511696423680972.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,51 +57,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     c9527bebb017b891d1a2bbb96217bd5225488a0e
-Gitweb:        https://git.kernel.org/tip/c9527bebb017b891d1a2bbb96217bd5225488a0e
+Commit-ID:     7226c5cbaa9ffb47259e34468bd0122238545d62
+Gitweb:        https://git.kernel.org/tip/7226c5cbaa9ffb47259e34468bd0122238545d62
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Tue, 18 Feb 2020 13:41:02 -08:00
+AuthorDate:    Tue, 07 Apr 2020 17:31:35 -07:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Mon, 27 Apr 2020 11:05:13 -07:00
+CommitterDate: Thu, 07 May 2020 10:15:28 -07:00
 
-rcutorture: Mark data-race potential for rcu_barrier() test statistics
+torture: Add --kcsan argument to top-level kvm.sh script
 
-The n_barrier_successes, n_barrier_attempts, and
-n_rcu_torture_barrier_error variables are updated (without access
-markings) by the main rcu_barrier() test kthread, and accessed (also
-without access markings) by the rcu_torture_stats() kthread.  This of
-course can result in KCSAN complaints.
+Although the existing --kconfig argument can be used to run KCSAN for
+an rcutorture test, it is not as straightforward as one might like:
 
-Because the accesses are in diagnostic prints, this commit uses
-data_race() to excuse the diagnostic prints from the data race.  If this
-were to ever cause bogus statistics prints (for example, due to store
-tearing), any misleading information would be disambiguated by the
-presence or absence of an rcutorture splat.
+	--kconfig "CONFIG_DEBUG_INFO=y CONFIG_KCSAN=y \
+		   CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n \
+		   CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n \
+		   CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000 \
+		   CONFIG_KCSAN_VERBOSE=y CONFIG_KCSAN_INTERRUPT_WATCHER=y"
 
-This data race was reported by KCSAN.  Not appropriate for backporting
-due to failure being unlikely and due to the mild consequences of the
-failure, namely a confusing rcutorture console message.
+This commit therefore adds a "--kcsan" argument that emulates the above
+--kconfig command.  Note that if you specify a Kconfig option using
+-kconfig that conflicts with one that --kcsan adds, you get whatever
+the script and the build system decide to give you.
 
+Cc: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/rcutorture.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7e2ea0c..d0345d1 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1456,9 +1456,9 @@ rcu_torture_stats_print(void)
- 		atomic_long_read(&n_rcu_torture_timers));
- 	torture_onoff_stats();
- 	pr_cont("barrier: %ld/%ld:%ld\n",
--		n_barrier_successes,
--		n_barrier_attempts,
--		n_rcu_torture_barrier_error);
-+		data_race(n_barrier_successes),
-+		data_race(n_barrier_attempts),
-+		data_race(n_rcu_torture_barrier_error));
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index 2315e2e..34b368d 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -31,6 +31,7 @@ TORTURE_DEFCONFIG=defconfig
+ TORTURE_BOOT_IMAGE=""
+ TORTURE_INITRD="$KVM/initrd"; export TORTURE_INITRD
+ TORTURE_KCONFIG_ARG=""
++TORTURE_KCONFIG_KCSAN_ARG=""
+ TORTURE_KMAKE_ARG=""
+ TORTURE_QEMU_MEM=512
+ TORTURE_SHUTDOWN_GRACE=180
+@@ -133,6 +134,9 @@ do
+ 		TORTURE_KCONFIG_ARG="$2"
+ 		shift
+ 		;;
++	--kcsan)
++		TORTURE_KCONFIG_KCSAN_ARG="CONFIG_DEBUG_INFO=y CONFIG_KCSAN=y CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000 CONFIG_KCSAN_VERBOSE=y CONFIG_KCSAN_INTERRUPT_WATCHER=y"; export TORTURE_KCONFIG_KCSAN_ARG
++		;;
+ 	--kmake-arg)
+ 		checkarg --kmake-arg "(kernel make arguments)" $# "$2" '.*' '^error$'
+ 		TORTURE_KMAKE_ARG="$2"
+@@ -201,6 +205,9 @@ else
+ 	exit 1
+ fi
  
- 	pr_alert("%s%s ", torture_type, TORTURE_FLAG);
- 	if (atomic_read(&n_rcu_torture_mberror) ||
++TORTURE_KCONFIG_ARG="${TORTURE_KCONFIG_ARG} ${TORTURE_KCONFIG_KCSAN_ARG}"
++TORTURE_KCONFIG_ARG="`echo ${TORTURE_KCONFIG_ARG} | sed -e 's/^ *//' -e 's/ *$//'`"
++
+ CONFIGFRAG=${KVM}/configs/${TORTURE_SUITE}; export CONFIGFRAG
+ 
+ defaultconfigs="`tr '\012' ' ' < $CONFIGFRAG/CFLIST`"
+@@ -310,6 +317,7 @@ TORTURE_BUILDONLY="$TORTURE_BUILDONLY"; export TORTURE_BUILDONLY
+ TORTURE_DEFCONFIG="$TORTURE_DEFCONFIG"; export TORTURE_DEFCONFIG
+ TORTURE_INITRD="$TORTURE_INITRD"; export TORTURE_INITRD
+ TORTURE_KCONFIG_ARG="$TORTURE_KCONFIG_ARG"; export TORTURE_KCONFIG_ARG
++TORTURE_KCONFIG_KCSAN_ARG="$TORTURE_KCONFIG_KCSAN_ARG"; export TORTURE_KCONFIG_KCSAN_ARG
+ TORTURE_KMAKE_ARG="$TORTURE_KMAKE_ARG"; export TORTURE_KMAKE_ARG
+ TORTURE_QEMU_CMD="$TORTURE_QEMU_CMD"; export TORTURE_QEMU_CMD
+ TORTURE_QEMU_INTERACTIVE="$TORTURE_QEMU_INTERACTIVE"; export TORTURE_QEMU_INTERACTIVE
