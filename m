@@ -2,225 +2,144 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05774C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEADCC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D962A20752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZuzW3gEV"
+	by mail.kernel.org (Postfix) with ESMTP id 9D6A320882
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589233652;
+	bh=vkDdbbEy6MDNO8gZtGeK75dnppeu60N3UXzwgEKCMug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HvkfWm2RQebaxMb4Br5Nqv44Ic4Sa7xOw56jsCHhCLXWizcPCQzuCPGkGNB1bawBv
+	 RMoNk1H07CyNvJZ+RauSiJYpobi7iflLfrMNlf6SyuSI4uQ2kTU/HyVDgm9ptbOY/K
+	 JRXUXo+qVWdsSZ3Q24KgjM4MnqHnkXkDtPe5vtY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgEKVpG (ORCPT
+        id S1727833AbgEKVrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbgEKVpF (ORCPT
+        Mon, 11 May 2020 17:47:32 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43812 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgEKVrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:45:05 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D32C061A0C;
-        Mon, 11 May 2020 14:45:02 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 425DF23E4D;
-        Mon, 11 May 2020 23:44:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1589233499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mUeXc7qWDqMsAtbmJANeooU975mp9voikExXUtAFyd4=;
-        b=ZuzW3gEV27FW2OH77G50DUqIKwSr42+SNZXiF4IiL/x/xPKFd7o/8WjGXnjzVnF9r/m+nB
-        ssw9jCD2ST5osYVZ1HaXphfRYwygT2ZucLtvS/LLW9YdkovQ6FaMYje0dUpU07z8LBZFqy
-        bZhJbEpmpgmLqlQGh2PaJrHX77NFMTE=
+        Mon, 11 May 2020 17:47:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a68so363423otb.10;
+        Mon, 11 May 2020 14:47:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kr536AH92tCs886e1ZVZycHlp8zzTbbAYS9sSy9+r90=;
+        b=C7CU+9iklE7uWgSyZqpkn0Mmp9A8eVC2djzpQol9E+yuAj9dR3UuNIAaP2E8vnJcnB
+         DdZKvlU6BWNc+XCRRETXpMbfJv+QGX/2CFiX0diX5/Lbpp0e4TMVUIbYI1OhKlIdqpux
+         I38dprvehVST2WNUviRkyIOx9haLK9CxtLSEnn944tmRKVLvrlpdGU5zeijN40CeIcPF
+         bvposrPlj4YrbURGrcdTId8rNTVrykyZYALsvg5k63KxtICi1Wm3NOLy4XVGyWqvXUFq
+         QfHfW6IZD67l8Tno/MiZs5525IP/au6fMXYoT5wPfcxkz8lOrPAF50sbdbYPGuZHDCHZ
+         181Q==
+X-Gm-Message-State: AGi0PuZNR9oURXF1G6q8BvUdZUSrgWbOWIpCzWBuA1zXw2tswn/aYpiK
+        zFfVtJR5T3bFRZ7N7ML1WA==
+X-Google-Smtp-Source: APiQypL9c25jA4qb587PTmaLEbxVx0mD5FwZCOgGZkDio2qGfy6/FFbMg2/4qBhezaAEnuubpNLpxA==
+X-Received: by 2002:a9d:6c94:: with SMTP id c20mr14832489otr.318.1589233650111;
+        Mon, 11 May 2020 14:47:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l187sm4956929oig.0.2020.05.11.14.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:47:29 -0700 (PDT)
+Received: (nullmailer pid 4611 invoked by uid 1000);
+        Mon, 11 May 2020 21:47:27 -0000
+Date:   Mon, 11 May 2020 16:47:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 03/91] dt-bindings: clock: Add a binding for the RPi
+ Firmware clocks
+Message-ID: <20200511214727.GA20924@bogus>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
+ <69e869b0a79ea17f2cdb79df986409963672495a.1587742492.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 May 2020 23:44:58 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <20200511211359.GB3518@bogus>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc> <20200511211359.GB3518@bogus>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <f0fafa63047f00e912013b137e4db15c@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69e869b0a79ea17f2cdb79df986409963672495a.1587742492.git-series.maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-11 23:13, schrieb Rob Herring:
-> On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
->> This patch adds core support for the board management controller found
->> on the SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
->> 
->> At the moment, this controller is used on the Kontron SMARC-sAL28 
->> board.
->> 
->> Please note that the MFD driver is defined as bool in the Kconfig
->> because the next patch will add interrupt support.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  drivers/mfd/Kconfig    |  19 +++++
->>  drivers/mfd/Makefile   |   2 +
->>  drivers/mfd/sl28cpld.c | 153 
->> +++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 174 insertions(+)
->>  create mode 100644 drivers/mfd/sl28cpld.c
->> 
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 0a59249198d3..be0c8d93c526 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -2060,5 +2060,24 @@ config SGI_MFD_IOC3
->>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
->>  	  then say Y. Otherwise say N.
->> 
->> +config MFD_SL28CPLD
->> +	bool "Kontron sl28 core driver"
->> +	depends on I2C=y
->> +	depends on OF
->> +	select REGMAP_I2C
->> +	select MFD_CORE
->> +	help
->> +	  This option enables support for the board management controller
->> +	  found on the Kontron sl28 CPLD. You have to select individual
->> +	  functions, such as watchdog, GPIO, etc, under the corresponding 
->> menus
->> +	  in order to enable them.
->> +
->> +	  Currently supported boards are:
->> +
->> +		Kontron SMARC-sAL28
->> +
->> +	  To compile this driver as a module, choose M here: the module will 
->> be
->> +	  called sl28cpld.
->> +
->>  endmenu
->>  endif
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index f935d10cbf0f..9bc38863b9c7 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
->>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->> 
->>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
->> +
->> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
->> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
->> new file mode 100644
->> index 000000000000..1e5860cc7ffc
->> --- /dev/null
->> +++ b/drivers/mfd/sl28cpld.c
->> @@ -0,0 +1,153 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * MFD core for the sl28cpld.
->> + *
->> + * Copyright 2019 Kontron Europe GmbH
->> + */
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/regmap.h>
->> +
->> +#define SL28CPLD_VERSION	0x03
->> +#define SL28CPLD_WATCHDOG_BASE	0x04
->> +#define SL28CPLD_HWMON_FAN_BASE	0x0b
->> +#define SL28CPLD_PWM0_BASE	0x0c
->> +#define SL28CPLD_PWM1_BASE	0x0e
->> +#define SL28CPLD_GPIO0_BASE	0x10
->> +#define SL28CPLD_GPIO1_BASE	0x15
->> +#define SL28CPLD_GPO_BASE	0x1a
->> +#define SL28CPLD_GPI_BASE	0x1b
->> +#define SL28CPLD_INTC_BASE	0x1c
+On Fri, Apr 24, 2020 at 05:33:44PM +0200, Maxime Ripard wrote:
+> The firmware running on the RPi VideoCore can be used to discover and
+> change the various clocks running in the BCM2711. Since devices will
+> need to use them through the DT, let's add a pretty simple binding.
 > 
-> If you want to use 'reg' in the binding, these are the numbers you
-> should be using rather than making up numbering!
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> index cec540c052b6..b48ed875eb8e 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+> @@ -22,6 +22,25 @@ properties:
+>        Phandle to the firmware device's Mailbox.
+>        (See: ../mailbox/mailbox.txt for more information)
+>  
+> +  clocks:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: raspberrypi,firmware-clocks
+> +
+> +      "#clock-cells":
+> +        const: 1
+> +        description: >
+> +          The argument is the ID of the clocks contained by the
+> +          firmware messages.
 
-My motivation is that I don't want to hardcode the internal addresses
-of the management controller in the device tree. For example if they
-will move around with a later update of the controller, so a driver can
-be compatible with both the old and the new version. If they are in the
-device tree, only one register layout is possible.
+Not really any reason to make this a child node. The parent can be a 
+clock provider.
 
-> However, I still don't think you need any child nodes. All the data in
-> the DT binding is right here in the driver already. There's no 
-> advantage
-> to putting child nodes in DT, because this driver still has to be
-> updated if you add more nodes.
-
-But then any phandle will reference the mfd device. And for example 
-there
-are two different interrupt controllers, that is the INTC and the 
-GPIO[01],
-which will then be combined into one device tree node, right?
-
-So the mfd node would be
-
-cpld: sl28cpld@4a {
-   interrupt-controller;
-   #interrupt-cells = <2>;
-   gpio-controller;
-   #gpio-cells = <2>;
-   [..]
-};
-
-and then depending on the mapping one could use:
-
-interrupts-extended = <&cpld 0 FLAGS>; /* gpio0 line 0 */
-interrupts-extended = <&cpld 8 FLAGS>; /* gpio1 line 0 */
-interrupts-extended = <&cpld 12 FLAGS>; /* irq0 */
-
-gpios = <&cpld 0> /* gpio0 line 0 */
-
-But there is also offset 12, but then it is the GPI controller:
-
-gpios = <&cpld 12> /* gpi line 0, nothing to do with irq0 */
-
-I don't know if this is good practice, I guess you have to tell me. And
-is it possible to combine any sub device into the mfd node in that way?
-
--michael
+> +
+> +    required:
+> +      - compatible
+> +      - "#clock-cells"
+> +
+> +    additionalProperties: false
+> +
+>  required:
+>    - compatible
+>    - mboxes
+> @@ -31,5 +50,10 @@ examples:
+>      firmware {
+>          compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
+>          mboxes = <&mailbox>;
+> +
+> +        firmware_clocks: clocks {
+> +            compatible = "raspberrypi,firmware-clocks";
+> +            #clock-cells = <1>;
+> +        };
+>      };
+>  ...
+> -- 
+> git-series 0.9.1
