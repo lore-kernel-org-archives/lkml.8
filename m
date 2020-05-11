@@ -3,127 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D1C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D15C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063512075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7A12075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgEKGzg (ORCPT
+        id S1728615AbgEKGzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 02:55:36 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:55700 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbgEKGzg (ORCPT
+        Mon, 11 May 2020 02:55:53 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:45756 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728353AbgEKGzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 02:55:36 -0400
-X-AuditID: c0a8fbf4-473ff70000004419-d6-5eb8f6e6b998
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 72.17.17433.6E6F8BE5; Mon, 11 May 2020 08:55:34 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Mon, 11 May 2020 08:55:23 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>
-CC:     "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Okada, Koki" <Koki.Okada@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Pakanen, Risto" <Risto.Pakanen@fi.rohmeurope.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] lib: linear_ranges: Add missing MODULE_LICENSE()
-Thread-Topic: [PATCH] lib: linear_ranges: Add missing MODULE_LICENSE()
-Thread-Index: AQHWJhS/nV/flBZ5p0W1/MrmhCvg2qihmvaAgAC5rAA=
-Date:   Mon, 11 May 2020 06:55:22 +0000
-Message-ID: <6cc724a6fe5b84f74b381904d16b04b55a7c0a64.camel@fi.rohmeurope.com>
-References: <20200509151519.GA7100@localhost.localdomain>
-         <20200510195059.dijv6ysac42a6nuq@earth.universe>
-In-Reply-To: <20200510195059.dijv6ysac42a6nuq@earth.universe>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FC1CB52593135541B90CAAF6B0D25600@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 May 2020 02:55:53 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 04B6subk017855;
+        Mon, 11 May 2020 14:54:56 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id CB39D9EF3346938A34B5;
+        Mon, 11 May 2020 14:54:56 +0800 (CST)
+In-Reply-To: <20200505120123.24962338@collabora.com>
+References: <1587451187-6889-1-git-send-email-masonccyang@mxic.com.tw>  <20200421092328.129308f6@collabora.com>
+        <20200427175536.2mmei2fy6f7bg6jm@yadavpratyush.com>     <OF18214CA5.6A9B2B30-ON48258558.001D894C-48258558.002249E0@mxic.com.tw>
+        <20200428085401.574wmo6qddmumd7q@yadavpratyush.com>     <OF04289CE2.B346916F-ON48258559.002280BD-48258559.00295800@mxic.com.tw>
+        <20200429181856.kkavelcczylg4yxf@yadavpratyush.com>     <OF28AE0642.4F34D6BB-ON4825855F.002D6E58-4825855F.003458C9@mxic.com.tw>
+        <20200505114443.6ebd5d3c@collabora.com> <20200505120123.24962338@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     broonie@kernel.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        "Pratyush Yadav" <me@yadavpratyush.com>, miquel.raynal@bootlin.com,
+        "Pratyush Yadav" <p.yadav@ti.com>, richard@nod.at,
+        tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v2 0/5] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOtrPp0dc5882l6UC6iJpgMkpFAnVC2O1DEOk66tGJu3G2
-        hUoXIT94SXDMYhuORCeFRMKIWqakQ8ILFKPQkgwk8Rr1weWlUjvHk5dP7+99/s//+b/wPgQm
-        qxPFEJUGC80YKJ1SJMUHn/zxJs+t+opPOb5IVYFPdkz1YGZWpFr92CBQfehrF6lWWoaBqr17
-        BFdNLxfmiNW+aQ9Qv3JNi9UdXqva29MoUq944y4Kr4VkllCWm1cqKwyp2TdCtB7bhsAUjK+2
-        ewPCOtAQ3wQIAsF0NDcd1gSkhAxOAHR/KojxlxGAHnYNCLkmEcxETZ/FHMphPnK2qbkWDD7F
-        0DvHNluXEJEwF/38/kPAsRzmocWBCTHPZ9Bgx4qQYxwmIvebvxjHJCxEk802nGMZ1KPfgV4R
-        xxKYhXxdzp06gLGosY6ficFo5J1b25mDIESe/vcYz1Fo8dvW/3oCern2DOfeicETqLcvlbfm
-        oDHbNs5zAmprnhHzT4hAo85ZvBUcch1IcO27XQfcrgNu1wF3BxD2AKSnKnUVlIVOS2Foawpj
-        1OrZo9So9wL+R4M+sO0v8AMBAfzgMCFQRpH9AV+xLKzEWFajpcxaDWPV0WY/QASmlJPqr6xG
-        llE1tTRj3JUUBK6MJo/N2IpkkMuqomkTzeyqRwhCicjNX6wxgqEr6OrySp1lXxYQEm64NEZu
-        pg1lNENZLVoNtx0aM7senBTK5uZzdtJsovRslbeOgSSiddHdiRHD7u5OTIYbjAY6Jpos8bCt
-        kGvVWg17QUsgmgDKSNIRZNVQdq335iyxEQI2Ymb+BRdhofalmDrQUi+5HB6ekVykS1+/c3at
-        yp9hDAPXa1Xx65ccj52Jzxcu5NvdJru9XizLjlPkGu/Vg1tT8O1Q8mRCXkJByurtq7G6cTDq
-        vfvo9XjPwvx41LnlIW2tskdjW98wC7bK7acV1RnBrOMRHlOrX9EgjK86uqyhNzv702TqpPOl
-        DiVu1lJpJzHGTP0DG62GQJMDAAA=
+X-KeepSent: 38C348F3:6278EE64-48258565:0025C5C2;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF38C348F3.6278EE64-ON48258565.0025C5C2-48258565.0025FD93@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Mon, 11 May 2020 14:54:56 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/11 PM 02:54:56,
+        Serialize complete at 2020/05/11 PM 02:54:56
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 04B6subk017855
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW9ybmluZyBmb2xrcywNCg0KT24gU3VuLCAyMDIwLTA1LTEwIGF0IDIxOjUwICswMjAwLCBTZWJh
-c3RpYW4gUmVpY2hlbCB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBTYXQsIE1heSAwOSwgMjAyMCBh
-dCAwNjoxNToxOVBNICswMzAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gV2hlbiBsaW5l
-YXJfcmFuZ2VzIGlzIGNvbXBpbGVkIGFzIG1vZHVsZSB3ZSBnZXQgd2FybmluZw0KPiA+IGFib3V0
-IG1pc3NpbmcgTU9EVUxFX0xJQ0VOU0UoKS4gRml4IGl0IGJ5IGFkZGluZw0KPiA+IE1PRFVMRV9M
-SUNFTlNFKCJHUEwiKSBhcyBpcyBzdWdnZXN0ZWQgYnkgU1BEWCBhbmQgRVhQT1JUcy4NCj4gPiAN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5y
-b2htZXVyb3BlLmNvbT4NCj4gPiAtLS0NCj4gPiANCj4gPiBJIHNhdyBNYXJrIGFwcGxpZWQgdGhl
-IGxpbmVhci1yYW5nZXMgcGF0Y2guIFNvIEkgc2VudCB0aGlzIGZpeCBhcw0KPiA+IGluY3JlbWVu
-dGFsIHBhdGNoIC0gYnV0IEkgc3RpbGwgdXNlIHRoZSBzYW1lIExpbnVzIHRyZWUgYXMgYSBiYXNl
-DQo+ID4gb2YNCj4gPiB0aGlzIGZpeCAtIHRoZSBsaW5lYXItcmFuZ2VzIGZpbGUgc2hvdWxkIGJl
-IHVuY2hhbmdlZCBpbiByZWd1bGF0b3INCj4gPiB0cmVlLg0KPiA+IElmIHRoaXMgZG9lcyBub3Qg
-YXBwbHkgSSBjYW4gY2xvbmUgcmVndWxhdG9yIHRyZWUgYW5kIGNyZWF0ZSB0aGlzDQo+ID4gZml4
-IG9uDQo+ID4gaXQuDQo+ID4gDQo+ID4gSSBkb24ndCBrbm93IGlmIHRoaXMgaXMgdGhlIGNvcnJl
-Y3Qgd2F5IHRvIGZpeCB0aGlzIGFzIHRoZSBsaW5lYXItDQo+ID4gcmFuZ2VzDQo+ID4gc2hvdWxk
-IGJlIG1lcmdlZCB0byBwb3dlci1zdXBwbHkgdHJlZS4NCj4gPiANCj4gPiBJIGd1ZXNzIHdlIGNh
-biBlaXRoZXI6DQo+ID4gLSBVc2UgdGhpcyBwYXRjaCB0byBmaXggcmVndWxhdG9yIHRyZWUgYW5k
-IGNyZWF0ZSBmaXhlZCB0YWcgZm9yDQo+ID4gICBwb3dlci1zdXBwbHkoPykNCj4gPiAtIEFkZCB0
-aGlzIGZpeCBpbiB0aGUgb3JpZ2luYWwgc2VyaWVzIGFuZCByZXNlbmQgd2hvbGUgc2VyaWVzKD8p
-DQo+ID4gLSByZS1jcmVhdGUgdGhlIHNlcmllcyBhbmQgZHJvcCB0aGUgYWxyZWFkeSBhcHBsaWVk
-IHBhdGNoZXMuIEFkZA0KPiA+IHRoaXMNCj4gPiAgIGZpeCBhcyBhIGZpeHVwIHBhdGNoIGluIG5l
-dyBzZXJpZXMgYW5kIGFwcGx5IGl0IHRvIHBvd2VyLXN1cHBseQ0KPiA+IHRyZWUNCj4gPiAgIGFm
-dGVyIHRoZSBsaW5lYXItcmFuZ2VzIGZyb20gcmVndWxhdG9yIGlzIG1lcmdlZCB0byBwb3dlci1z
-dXBwbHkuDQo+ID4gDQo+ID4gIFBsZWFzZSBhZHZpZWNlIG1lIGlmIHRoaXMgcGF0Y2ggaXMgbm90
-IHRoZSB3YXkgdG8gZ28uDQo+ID4gDQo+ID4gT2gsIGFuZCBJIGFtIHJlYWxseSBzb3JyeSBmb3Ig
-dGhlIHRyb3VibGUuIEkgc2F3IEkgaGFkIHJlZ3VsYXRvcnM9eQ0KPiA+IGluIGFsbCBvZiBteSBj
-b21waWxhdGlvbnMgZHVlIHRvIHNvbWUgcGluY29udHJvbCBkZXBlbmRlbmNpZXMuIFNvDQo+ID4g
-bGluZWFyLXJhbmdlcyB3YXMgbm90IGJ1aWx0IGFzIG1vZHVsZSBpbiBhbnkgb2YgbXkgdGVzdA0K
-PiA+IGNvbXBpbGF0aW9ucyA6KA0KPiA+IA0KPiA+IFRoYW5rcyBmb3IgdGVzdGluZyBNYXJrIQ0K
-PiANCj4gUmV2aWV3ZWQtYnk6IFNlYmFzdGlhbiBSZWljaGVsIDxzZWJhc3RpYW4ucmVpY2hlbEBj
-b2xsYWJvcmEuY29tPg0KPiANCj4gSSB0aGluayBpdCBtYWtlcyBzZW5zZSB0byBqdXN0IHF1ZXVl
-IHRoaXMgdGhyb3VnaCB0aGUgcmVndWxhdG9yIHRyZWUuDQoNClRoYXQncyBhYnNvbHV0ZWx5IGZp
-bmUgd2l0aCBtZS4gSXQganVzdCBtZWFucyB0aGF0IHRoZSBwb3dlci1zdXBwbHkNCnRyZWUgaGFz
-IHRoaXMgY29tcGlsYXRpb24gaXNzdWUgdW50aWwgZml4IGFwcGxpZWQgdG8gcmVndWxhdG9yIHRy
-ZWUNCmdldHMgbWVyZ2VkLiBCdXQgYXMgSSBzYWlkIGluIGFub3RoZXIgbWFpbCwgdGhpcyBpc3N1
-ZSBpcyBleHBlY3RlZCB0bw0KYmUgdHJpZ2dlcmVkIG9ubHkgaW4gbGltaXRlZCBudW1iZXIgb2Yg
-dGVzdCBidWlsZHMuDQoNCj4gQXBhcnQgZnJvbSB0aGF0IHlvdSBzaG91bGQgYWRkIGEgTUFJTlRB
-SU5FUlMgZmlsZSBlbnRyeSBmb3IgdGhlDQo+IGxpbmVhcl9yYW5nZXMgbGliLiBNYWluIHVzZXIg
-aXMgcmVndWxhdG9ycywgc28gZnV0dXJlIHBhdGNoZXMgc2hvdWxkDQo+IHByb2JhYmx5IGJlIHF1
-ZXVlZCB0aHJvdWdoIGl0cyB0cmVlLg0KDQpUaGlzIGlzIHNvbWV0aGluZyBJIGhhdmUgYmVlbiB0
-aGlua2luZyBpbiBnZW5lcmFsLiBJIGZlZWwgYSB0aW55IGJpdA0KYmFkIGFib3V0IGFkZGluZyBh
-bGwgbXkgUk9ITSBjb21wb25lbnQgZHJpdmVycyB0byBiZSBtYWludGFpbmVkIGJ5DQpvdGhlcnMu
-IEkgaGF2ZSByZWNlbnRseSBwb2xsdXRlZCB0aGUga2VybmVsIHdpdGggZmV3IGRyaXZlcnMgYW5k
-IEkgZmVlbA0KSSBzaG91bGQgaGVscCBieSByZXZpZXdpbmcgcGF0Y2hlcyBmb3IgdGhvc2UuDQoN
-CkkgbWlnaHQgYmUgYWJsZSB0byBzZXQtdXAgc29tZSBtYWNoaW5lcnkgdG8gY29tcGlsZSAoYW5k
-IGFsc28gZG8gc29tZQ0KX3JlYWxseV8gbGltaXRlZCB0ZXN0aW5nKSBvZiB0aGUgY2hhbmdlcyB0
-byB0aGVzZSBST0hNIGRyaXZlcnMgLSBhbmQNCnBvc3NpYmx5IHNldC11cCBhIGdpdCB0cmVlIGZv
-ciB0aGVtLiBEbyB5b3UgdGhpbmsgaXQgd291bGQgYmUNCmJlbmVmaWNpYWw/IEkgdGhpbmsgd2Ug
-Y2FuIGF0IHNvbWUgcG9pbnQgY29uc2lkZXIgaGF2aW5nIHNlcGFyYXRlDQptYWludGFpbmVyIGVu
-dHJpZXMgZm9yIEJENzE4eDcsIEJENzA1MjgsIEJENzE4MjggYW5kIEJEOTk5NTQgKCsgc29tZQ0K
-Y29taW5nIGRyaXZlcihzKSBpZiBpdCBoZWxwcy4NCg0KV2hhdCBjb21lcyB0byBsaW5lYXJfcmFu
-Z2VzIC0gTWFyaywgY291bGQgeW91IGJlIGFkZGVkIGFzIGEgbWFpbnRhaW5lcg0KZm9yIGxpbmVh
-cl9yYW5nZXMuYyBhbmQgdGVzdF9saW5lYXJfcmFuZ2VzLmMgKGF0IGxlYXN0IGZvciBub3c/KSBJ
-IGNhbg0KdHJ5IGRvIHNvbWUgcmV2aWV3aW5nIHRvbyBpZiBpdCBoZWxwcy4NCg0KLS1NYXR0aQ0K
+
+Hi Boris,
+
+
+> > > > 
+> > > > To clarify a bit more, the idea is that we transmit the opcode MSB 
+
+> > > > first, just we do for the address. Assume we want to issue the 
+command 
+> > > > 0x05. In 1S mode, we set cmd.opcode to 0x05. Here cmd.nbytes == 1. 
+Treat 
+> > > 
+> > > > is as a 1-byte value, so the MSB is the same as the LSB. We 
+directly 
+> > > > send 0x5 on the bus. 
+> > > 
+> > > There are many SPI controllers driver use "op->cmd.opcode" directly,
+> > > so is spi-mxic.c.
+> > > 
+> > > i.e,.
+> > > ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 
+op->cmd.nbytes); 
+> > 
+> > Just because you do it doesn't mean it's right. And most controllers 
+use
+> > the opcode value, they don't dereference the pointer as you do here.
+> > 
+> > > 
+> > > > 
+> > > > If cmd.nbytes == 2, then the opcode would be 0x05FA (assuming 
+extension 
+> > > > is invert of command). So we send the MSB (0x05) first, and LSB 
+(0xFA) 
+> > > > next. 
+> > > 
+> > > My platform is Xilinx Zynq platform which CPU is ARMv7 processor.
+> > > 
+> > > In 1-1-1 mode, it's OK to send 1 byte command by u16 opcode but
+> > > in 8D-8D-8D mode, I need to patch
+> > > 
+> > > i.e.,
+> > > op->cmd.opcode = op->cmd.opcode | (ext << 8);
+> > > 
+> > > rather than your patch. 
+> > 
+> > Seriously, how hard is it to extract each byte from the u16 if your
+> > controller needs to pass things in a different order? I mean, that's
+> > already how it's done for the address cycle, so why is it a problem
+> > here? This sounds like bikeshedding to me. If the order is properly
+> > documented in the kernel doc, I see no problem having it grouped in 
+one
+> > u16, with the first cmd cycle placed in the MSB and the second one in
+> > the LSB.
+> 
+> So, I gave it a try, and we're talking about something as simple as the
+> below diff. And yes, the mxic controller needs to be patched before
+> extending the cmd.opcode field, but we're talking about one driver here
+> (all other drivers should be fine). Oh, and if you look a few lines 
+below
+> the changed lines, you'll notice that we do exactly the same for the
+> address.
+
+yup,
+thanks again for your time & comments.
+
+> 
+> --->8---
+> diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+> index 69491f3a515d..c3f4136a7c1d 100644
+> --- a/drivers/spi/spi-mxic.c
+> +++ b/drivers/spi/spi-mxic.c
+> @@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+>         int nio = 1, i, ret;
+>         u32 ss_ctrl;
+>         u8 addr[8];
+> +       u8 cmd[2];
+> 
+>         ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+>         if (ret)
+> @@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem 
+*mem,
+>         writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+>                mxic->regs + HC_CFG);
+> 
+> -       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
+> +       for (i = 0; i < op->cmd.nbytes; i++)
+> +               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 
+1));
+> +
+> +       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+>         if (ret)
+>                 goto out;
+> 
+
+best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
