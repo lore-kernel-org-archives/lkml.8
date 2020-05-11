@@ -2,136 +2,132 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7653FC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D5CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5312820735
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDF020735
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuCHmTpL"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="ilMvyZzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgEKLrx (ORCPT
+        id S1729696AbgEKLsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:47:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48773 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726068AbgEKLrx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:47:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589197671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3w35s2VPWNSVC4QQTyJuFQK6xGQBwZTv524lsRRQU4Y=;
-        b=UuCHmTpLYbqr0HtFbWb6kVOgjf2hyzQTZ4Yki1lF6fq2YDXCzawF2y2dNc+JGpMmoHs06V
-        3O/dLnl28VmG73zbSeOmmFSNs1uKM6jxgWdSMX9t1RmcZc0pGZ0Pj7vVtQI/M2T0c8anPh
-        wTRd01KjJIJESr7Bs/y3GmC1u4RusiQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-420-yydiaoxdN2W6BzEXr0MpJA-1; Mon, 11 May 2020 07:47:48 -0400
-X-MC-Unique: yydiaoxdN2W6BzEXr0MpJA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 111578010FA;
-        Mon, 11 May 2020 11:47:46 +0000 (UTC)
-Received: from T590 (ovpn-13-75.pek2.redhat.com [10.72.13.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C0787526B;
-        Mon, 11 May 2020 11:47:35 +0000 (UTC)
-Date:   Mon, 11 May 2020 19:47:31 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Baolin Wang <baolin.wang7@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
- processing
-Message-ID: <20200511114731.GA1525935@T590>
-References: <20200427154645.GA1201@infradead.org>
- <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
- <20200508214639.GA1389136@T590>
- <fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me>
- <20200508232222.GA1391368@T590>
- <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
- <20200509094306.GA1414369@T590>
- <6579459b-aa98-78f2-f805-a6cd46f37b6c@grimberg.me>
- <20200511012942.GA1418834@T590>
- <8f2ddabc-01d0-dae9-f958-1b26a6bdf58c@grimberg.me>
+        Mon, 11 May 2020 07:48:09 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:8795 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726068AbgEKLsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:48:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=2003; q=dns/txt; s=axis-central1;
+  t=1589197687; x=1620733687;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OE/19k10wHaCTdv4vIwiGTk7dV4vSV5kv7LOywkW2XA=;
+  b=ilMvyZzrDAJxT/n6nX9VEfogHqmZys7oJaGHvehUGvfhtdaMg9EaoHM2
+   7arjC7HwSKbAKaq0hXkKMUwwlx57XR+OsXnKWoMaMYJVS5D9f2CYVDqnM
+   K13+gmC6UPKDHPrq2MJVVO5wyA4IDKBgcLrKz/h+fMfUXYYIgDPQYbIH6
+   mc++CW5OBQGGXJTO7J9BJtyYzMvAcDDb/1kTNhNeNi5vRJTYghkL0V2b6
+   gyTB5Nxdm+VykFNNkWvOtFadilRHuM7fY/rPZT2zwf3myJ30wDfsHSYbz
+   ZdgCW4AfFYtuzPeb8+kToDM0vFYL2sSftjutgtgknVl8cJEU15mikKLqc
+   g==;
+IronPort-SDR: 02SQVDjpik5zxGFTX9qHDTx6h+TsrBW/mI8e6OKwbZ2V2pIRyW0gJOUtBPc5udRSKYGCDz2TRP
+ BtyJ0kPw9EMk65iaw5ORSzp9FR2PlAKLwKZVIOb1ibUu6/FNY1nmP7ANumYzAQZ+TRbCCkFWU9
+ fSP209hHNrQC4vtajdNMSwRevwB1q82NqpdGDCvpH0ZfAAt1U83WkYo/oxzlW5BjHJvil8BRcR
+ BW850Lq1eZSWfp2aS/aljyQaVnsrwBMscwaPU3GPeH621K570R9Dc5C2oHI540MLBM5ol0uxE5
+ VYc=
+X-IronPort-AV: E=Sophos;i="5.73,379,1583190000"; 
+   d="scan'208";a="8596078"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     <linux@armlinux.org.uk>, <jeyu@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@axis.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH v2 2/2] ARM: module: fix handling of unwind init sections
+Date:   Mon, 11 May 2020 13:48:03 +0200
+Message-ID: <20200511114803.4475-2-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200511114803.4475-1-vincent.whitchurch@axis.com>
+References: <20200511114803.4475-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f2ddabc-01d0-dae9-f958-1b26a6bdf58c@grimberg.me>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 02:23:14AM -0700, Sagi Grimberg wrote:
-> 
-> > > > Basically, my idea is to dequeue request one by one, and for each
-> > > > dequeued request:
-> > > > 
-> > > > - we try to get a budget and driver tag, if both succeed, add the
-> > > > request to one per-task list which can be stored in stack variable,
-> > > > then continue to dequeue more request
-> > > > 
-> > > > - if either budget or driver tag can't be allocated for this request,
-> > > > marks the last request in the per-task list as .last, and send the
-> > > > batching requests stored in the list to LLD
-> > > > 
-> > > > - when queueing batching requests to LLD, if one request isn't queued
-> > > > to driver successfully, calling .commit_rqs() like before, meantime
-> > > > adding the remained requests in the per-task list back to scheduler
-> > > > queue or hctx->dispatch.
-> > > 
-> > > Sounds good to me.
-> > > 
-> > > > One issue is that this way might degrade sequential IO performance if
-> > > > the LLD just tells queue busy to blk-mq via return value of .queue_rq(),
-> > > > so I guess we still may need one flag, such as BLK_MQ_F_BATCHING_SUBMISSION.
-> > > 
-> > > Why is that degrading sequential I/O performance? because the specific
-> > 
-> > Some devices may only return BLK_STS_RESOURCE from .queue_rq(), then more
-> > requests are dequeued from scheduler queue if we always queue batching IOs
-> > to LLD, and chance of IO merge is reduced, so sequential IO performance will
-> > be effected.
-> > 
-> > Such as some scsi device which doesn't use sdev->queue_depth for
-> > throttling IOs.
-> > 
-> > For virtio-scsi or virtio-blk, we may stop queue for avoiding the
-> > potential affect.
-> 
-> Do we have a way to characterize such devices? I'd assume that most
+Unwind information for init sections is placed in .ARM.exidx.init.text
+and .ARM.extab.init.text.  The module core doesn't know that these are
+init sections so they are allocated along with the core sections, and if
+the core and init sections get allocated in different memory regions
+(which is possible with CONFIG_ARM_MODULE_PLTS=y) and they can't reach
+each other, relocation fails:
 
-It may not be easy.
+  final section addresses:
+  	...
+  	0x7f800000 .init.text
+	..
+  	0xcbb54078 .ARM.exidx.init.text
+	..
 
-> devices will benefit from the batching so maybe the flag needs to be
-> inverted? BLK_MQ_F_DONT_BATCHING_SUBMISSION?
+ section 16 reloc 0 sym '': relocation 42 out of range (0xcbb54078 ->
+ 0x7f800000)
 
-Actually I'd rather to not add any flag, and we may use some algorithm
-(maybe EWMA or other intelligent stuff, or use hctx->dispatch_busy directly)
-to figure out one dynamic batching number which is used to dequeue requests
-from scheduler or sw queue.
+Fix this by informing the module core that these sections are init
+sections, and by removing the init unwind tables before the module core
+frees the init sections.
 
-Then just one single dispatch io code path is enough.
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+v2: No changes.
 
-Thanks, 
-Ming
+ arch/arm/kernel/module.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
+index deef17f34bd2..af0a8500a24e 100644
+--- a/arch/arm/kernel/module.c
++++ b/arch/arm/kernel/module.c
+@@ -55,6 +55,13 @@ void *module_alloc(unsigned long size)
+ }
+ #endif
+ 
++bool module_init_section(const char *name)
++{
++	return strstarts(name, ".init") ||
++		strstarts(name, ".ARM.extab.init") ||
++		strstarts(name, ".ARM.exidx.init");
++}
++
+ bool module_exit_section(const char *name)
+ {
+ 	return strstarts(name, ".exit") ||
+@@ -409,8 +416,17 @@ module_arch_cleanup(struct module *mod)
+ #ifdef CONFIG_ARM_UNWIND
+ 	int i;
+ 
+-	for (i = 0; i < ARM_SEC_MAX; i++)
+-		if (mod->arch.unwind[i])
+-			unwind_table_del(mod->arch.unwind[i]);
++	for (i = 0; i < ARM_SEC_MAX; i++) {
++		unwind_table_del(mod->arch.unwind[i]);
++		mod->arch.unwind[i] = NULL;
++	}
++#endif
++}
++
++void __weak module_arch_freeing_init(struct module *mod)
++{
++#ifdef CONFIG_ARM_UNWIND
++	unwind_table_del(mod->arch.unwind[ARM_SEC_INIT]);
++	mod->arch.unwind[ARM_SEC_INIT] = NULL;
+ #endif
+ }
+-- 
+2.25.1
 
