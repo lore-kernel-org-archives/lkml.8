@@ -2,266 +2,97 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD5AC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DC1C54E8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3FF208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50067206D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="bPTKb6Hz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FWCfXFoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgEKDM6 (ORCPT
+        id S1728425AbgEKDNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
+        Sun, 10 May 2020 23:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727094AbgEKDM5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727094AbgEKDNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:12:57 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50FDC05BD0A
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:12:57 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id e10so4661238vsp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wD8LqIUSTHmx07hI69udebSQ//EWpWh/2EL/wbwVZVM=;
-        b=bPTKb6Hz4T1T3ZIBaNsHbJBY9spZ48z9FK9D5PFgSOZexloi5nfRV+frjMiQMJV9AF
-         6d870yDSK2GjuOrwf+qwOBo55lxBv5CqM/EgvHI2Nkkuu4poM6dcqNuJG7a4/BI8Ceta
-         731NMxceOt18AoWB4W9iMCluvqfH80mLyLOQ4SI1vGxKv1xER+z2AHF/U+0xTvEavBO6
-         2Rd7SbkX3joAt6sAkZAJ2wg2/HEQPim3ELhF5kYPDa/gv7Va2sSNn7JBM9vdZYpj9uCx
-         F0OWjXNRoaDixUUJBw5Joa4twv9Wco/qvZO9IePBkON9Pk1CHX0AIijACMH1NYU+lPAB
-         1kOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wD8LqIUSTHmx07hI69udebSQ//EWpWh/2EL/wbwVZVM=;
-        b=UxkzGRhcUFadm+UgZ2J/4KPVa7uq5LtvOOdHcotLxZlcuozEEDPkstwbE+ZhmHW2uk
-         POoTg4VNeN98nsum1gfnkPOhCDwF7NmHa4nHqmtQPig9YWEK4CzbYySAe1PHNOzRkYUe
-         ru0wJ5bHMpVTI6dGC41aPsFlssHSSjhThlitkWk5dTYuqXUmZLmXgiS7ivpKUwqez9FO
-         W0TxIISTzUMTgPBq4Xnc1sfuGdXVv0PT84axvy0tCmaVAOCX8ONunDTKpWRzBjtPj5Ug
-         PI84yLrpr+JYG7PcnlvF8kXegihdYBF2ghCuFP//PHNU2l7RYobnQxcOUOF3Y6VDtaza
-         5z4g==
-X-Gm-Message-State: AGi0Pub9RAP6BpVxkhLN+KL5qzTvXSSHQRHEK7U+XHW33b5oEDfmR9HF
-        sedUV1RKoWxjacxiESY9dfPcW/LK/BXkxlg8MwjbTw==
-X-Google-Smtp-Source: APiQypJP1/nLwbTc/RZGN8unEAO0lP5H7D7NY0XZUzlVAayGsxKwX4kpz0BpS7Iing2tP0GZhbCubV15JmcaQAzsUDI=
-X-Received: by 2002:a67:407:: with SMTP id 7mr9030175vse.95.1589166776348;
- Sun, 10 May 2020 20:12:56 -0700 (PDT)
+        Sun, 10 May 2020 23:13:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8DFC061A0C;
+        Sun, 10 May 2020 20:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=F8LV7KfEX6gF+p15zdl3JPzohKhz2bL8kbvxawtZGio=; b=FWCfXFoFFMlrl2qXVyz9bKX5qq
+        yfPNsmn9pKW3iOtJsvq1PoluVfyc+J50fKQC6tVMFuUL3wXcb9RPM2T7Nc/mzQ703m4CU8AIwDRxA
+        JWsTaZC6iaQVCDWhxtpdbSVlt+zvEzlpZfA4UF1fVbt5vBhjNIJ6dhpapmbDorSfn8WJAqd/dK2mQ
+        H19SMBref3payLuB5/tvXB+hu9lRA3Utr+GWBbvYEN3YDL2AaNOjL7MQBahNFvp4ZzKdyrJ0USjJq
+        9H/uamPHOujNAgDpHH0zOMBPYySK13DrTWK+cWX1XA1379bFM2e4yDIO9f4PA7LOAO9xihoUN93x2
+        mbxX3ymA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXysN-0000Bd-BT; Mon, 11 May 2020 03:13:07 +0000
+Subject: Re: [PATCH v8 09/10] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+To:     Alim Akhtar <alim.akhtar@samsung.com>, robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200511020031.25730-1-alim.akhtar@samsung.com>
+ <CGME20200511021409epcas5p3b78fe59669f13ffae481b57a944da675@epcas5p3.samsung.com>
+ <20200511020031.25730-10-alim.akhtar@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <80a387eb-2325-caab-6754-6d94daeeabac@infradead.org>
+Date:   Sun, 10 May 2020 20:13:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
-In-Reply-To: <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Mon, 11 May 2020 11:12:05 +0800
-Message-ID: <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200511020031.25730-10-alim.akhtar@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2020=E5=B9=B45=E6=9C=888=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=882:20=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:22=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > On Mon, May 04, 2020 at 02:35:08PM +0800, Jian-Hong Pan wrote:
-> > > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B44=E6=9C=8829=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:21=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Mon, Apr 27, 2020 at 03:23:42PM +0800, Jian-Hong Pan wrote:
-> > > > > Hi Maxime,
-> > > > >
-> > > > > Thanks for your V2 patch series!  I'm testing it.
-> > > > >
-> > > > > This patch series is applied upon mainline kernel 5.7-rc2 cleanly=
- and built.
-> > > > > System can boot into console text mode, but no graphic UI.
-> > > > >
-> > > > > Get the error in vc5_hdmi_phy_init(), and full dmesg is at [1]:
-> > > > >
-> > > > > [    5.587543] vc4_hdmi fef00700.hdmi: Unknown register ID 46
-> > > > > [    5.587700] debugfs: Directory 'fef00700.hdmi' with parent 'vc=
-4-hdmi' already present!
-> > > > > [    5.588070] vc4_hdmi fef00700.hdmi: vc4-hdmi-hifi <-> fef00700=
-.hdmi mapping ok
-> > > > > [    5.588076] vc4_hdmi fef00700.hdmi: ASoC: no DMI vendor name!
-> > > > > [    5.588263] vc4-drm gpu: bound fef00700.hdmi (ops vc4_hdmi_ops=
-)
-> > > > > [    5.588299] vc4_hdmi fef05700.hdmi: Unknown register ID 46
-> > > > > [    5.588373] debugfs: Directory 'vc4-hdmi' with parent 'asoc' a=
-lready present!
-> > > > > [    5.588673] vc4_hdmi fef05700.hdmi: vc4-hdmi-hifi <-> fef05700=
-.hdmi mapping ok
-> > > > > [    5.588677] vc4_hdmi fef05700.hdmi: ASoC: no DMI vendor name!
-> > > > > [    5.588809] vc4-drm gpu: bound fef05700.hdmi (ops vc4_hdmi_ops=
-)
-> > > > > [    5.588854] vc4-drm gpu: bound fe806000.vec (ops vc4_vec_ops)
-> > > > > [    5.588897] vc4-drm gpu: bound fe004000.txp (ops vc4_txp_ops)
-> > > > > [    5.588934] vc4-drm gpu: bound fe400000.hvs (ops vc4_hvs_ops)
-> > > > > [    5.588990] vc4-drm gpu: bound fe206000.pixelvalve (ops vc4_cr=
-tc_ops)
-> > > > > [    5.589030] vc4-drm gpu: bound fe207000.pixelvalve (ops vc4_cr=
-tc_ops)
-> > > > > [    5.589074] vc4-drm gpu: bound fe20a000.pixelvalve (ops vc4_cr=
-tc_ops)
-> > > > > [    5.589106] vc4-drm gpu: bound fe216000.pixelvalve (ops vc4_cr=
-tc_ops)
-> > > > > [    5.589145] vc4-drm gpu: bound fec12000.pixelvalve (ops vc4_cr=
-tc_ops)
-> > > > > [    5.589294] checking generic (3e513000 6d8c00) vs hw (0 ffffff=
-ffffffffff)
-> > > > > [    5.589297] fb0: switching to vc4drmfb from simple
-> > > > > [    5.589433] Console: switching to colour dummy device 80x25
-> > > > > [    5.589481] [drm] Supports vblank timestamp caching Rev 2 (21.=
-10.2013).
-> > > > > [    5.589816] [drm] Initialized vc4 0.0.0 20140616 for gpu on mi=
-nor 0
-> > > > > [    5.601079] ------------[ cut here ]------------
-> > > > > [    5.601095] WARNING: CPU: 2 PID: 127 at drivers/gpu/drm/vc4/vc=
-4_hdmi_phy.c:413 vc5_hdmi_phy_init+0x7ac/0x2078
-> > > > > [    5.601097] Modules linked in:
-> > > > > [    5.601103] CPU: 2 PID: 127 Comm: kworker/2:1 Not tainted 5.7.=
-0-rc2-00091-ga181df59a930 #7
-> > > > > [    5.601105] Hardware name: Raspberry Pi 4 Model B (DT)
-> > > > > [    5.601112] Workqueue: events deferred_probe_work_func
-> > > > > [    5.601116] pstate: 20000005 (nzCv daif -PAN -UAO)
-> > > > > [    5.601119] pc : vc5_hdmi_phy_init+0x7ac/0x2078
-> > > > > [    5.601123] lr : vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > > > > [    5.601124] sp : ffff80001217b410
-> > > > > [    5.601126] x29: ffff80001217b410 x28: ffff0000ec6370f0
-> > > > > [    5.601129] x27: ffff0000f650d400 x26: 000000008a500000
-> > > > > [    5.601132] x25: ffff8000113b4ac0 x24: 0000000000002060
-> > > > > [    5.601135] x23: 000000000a500000 x22: 0000000000000300
-> > > > > [    5.601137] x21: 0000000008d9ee20 x20: ffff0000ec535080
-> > > > > [    5.601140] x19: 000000010989e7c0 x18: 0000000000000000
-> > > > > [    5.601142] x17: 0000000000000001 x16: 0000000000005207
-> > > > > [    5.601145] x15: 00004932ad293c92 x14: 0000000000000137
-> > > > > [    5.601147] x13: ffff800010015000 x12: 0000000000000001
-> > > > > [    5.601150] x11: 0000000000000001 x10: 0000000000000000
-> > > > > [    5.601152] x9 : 0000000000000000 x8 : ffff800010015038
-> > > > > [    5.601154] x7 : 0000000000000001 x6 : ffff80001217b368
-> > > > > [    5.601157] x5 : 0000000000000000 x4 : 000000000000004c
-> > > > > [    5.601159] x3 : 0000000000000000 x2 : ffff8000113b4ac0
-> > > > > [    5.601162] x1 : ffff8000120c5f44 x0 : 00000000dc8984ff
-> > > > > [    5.601164] Call trace:
-> > > > > [    5.601169]  vc5_hdmi_phy_init+0x7ac/0x2078
-> > > > > [    5.601172]  vc4_hdmi_encoder_enable+0x1b8/0x1ac0
-> > > > > [    5.601176]  drm_atomic_helper_commit_modeset_enables+0x224/0x=
-248
-> > > > > [    5.601179]  vc4_atomic_complete_commit+0x400/0x558
-> > > > > [    5.601182]  vc4_atomic_commit+0x1e0/0x200
-> > > > > [    5.601185]  drm_atomic_commit+0x4c/0x60
-> > > > > [    5.601190]  drm_client_modeset_commit_atomic.isra.0+0x17c/0x2=
-38
-> > > > > [    5.601192]  drm_client_modeset_commit_locked+0x5c/0x198
-> > > > > [    5.601195]  drm_client_modeset_commit+0x30/0x58
-> > > > > [    5.601201]  drm_fb_helper_restore_fbdev_mode_unlocked+0x78/0x=
-e0
-> > > > > [    5.601204]  drm_fb_helper_set_par+0x30/0x68
-> > > > > [    5.601208]  fbcon_init+0x3d4/0x598
-> > > > > [    5.601212]  visual_init+0xb0/0x108
-> > > > > [    5.601214]  do_bind_con_driver+0x1d0/0x3a8
-> > > > > [    5.601217]  do_take_over_console+0x144/0x208
-> > > > > [    5.601219]  do_fbcon_takeover+0x68/0xd8
-> > > > > [    5.601222]  fbcon_fb_registered+0x100/0x118
-> > > > > [    5.601226]  register_framebuffer+0x1f4/0x338
-> > > > > [    5.601229]  __drm_fb_helper_initial_config_and_unlock+0x2f8/0=
-x4a0
-> > > > > [    5.601232]  drm_fbdev_client_hotplug+0xd4/0x1b0
-> > > > > [    5.601235]  drm_fbdev_generic_setup+0xb0/0x130
-> > > > > [    5.601238]  vc4_drm_bind+0x184/0x1a0
-> > > > > [    5.601241]  try_to_bring_up_master+0x168/0x1c8
-> > > > > [    5.601244]  __component_add+0xa4/0x170
-> > > > > [    5.601246]  component_add+0x14/0x20
-> > > > > [    5.601248]  vc4_vec_dev_probe+0x20/0x30
-> > > > > [    5.601252]  platform_drv_probe+0x54/0xa8
-> > > > > [    5.601254]  really_probe+0xd8/0x320
-> > > > > [    5.601256]  driver_probe_device+0x58/0xf0
-> > > > > [    5.601258]  __device_attach_driver+0x84/0xc8
-> > > > > [    5.601263]  bus_for_each_drv+0x78/0xc8
-> > > > > [    5.601265]  __device_attach+0xe4/0x140
-> > > > > [    5.601267]  device_initial_probe+0x14/0x20
-> > > > > [    5.601269]  bus_probe_device+0x9c/0xa8
-> > > > > [    5.601271]  deferred_probe_work_func+0x74/0xb0
-> > > > > [    5.601276]  process_one_work+0x1bc/0x338
-> > > > > [    5.601279]  worker_thread+0x1f8/0x428
-> > > > > [    5.601282]  kthread+0x138/0x158
-> > > > > [    5.601286]  ret_from_fork+0x10/0x1c
-> > > > > [    5.601288] ---[ end trace cfba0996218c3f3d ]---
-> > > >
-> > > > Thanks for testing!
-> > > >
-> > > > Do you have a bit more details regarding your setup? Was it connect=
-ed to an
-> > > > external display?
-> > >
-> > > Yes, the HDMI cable is connected to HDMI0 port on RPi 4.
-> > >
-> > > > If so, do you know the resolution it was trying to setup?
-> > >
-> > > According to the log, I think it is 1920x1080:
-> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-> > > HDMI-1 connected
-> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-> > > HDMI-2 disconnected
-> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-> > > Composite-1 disconnected
-> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Using
-> > > exact sizes for initial modes
-> > > Apr 27 15:37:25 endless gdm-Xorg-:0[1960]: (II) modeset(0): Output
-> > > HDMI-1 using initial mode 1920x1080 +0+0
-> > >
-> > > https://gist.github.com/starnight/45e1468bfa0426a54d2fb4a9269cfb94
-> >
-> > It looks to be fairly standard then, and I'm testing on the same resolu=
-tion so
-> > it should be alright.
-> >
-> > Given from your log, it looks like you're running as arm64 though, whil=
-e I stuck
-> > with arm32, so it could be the explanation.
->
-> Yes, I build it as arm64.
->
-> > Can you share your config.txt and .config so that I can try to reproduc=
-e it
-> > here?
->
-> Here is the config
-> https://gist.github.com/starnight/320b757441b6769c36160704b401c98b
+On 5/10/20 7:00 PM, Alim Akhtar wrote:
+> diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
+> index e2005aeddc2d..cc7e29c8c24f 100644
+> --- a/drivers/scsi/ufs/Kconfig
+> +++ b/drivers/scsi/ufs/Kconfig
+> @@ -160,3 +160,15 @@ config SCSI_UFS_BSG
+>  
+>  	  Select this if you need a bsg device node for your UFS controller.
+>  	  If unsure, say N.
+> +
+> +config SCSI_UFS_EXYNOS
+> +	bool "EXYNOS specific hooks to UFS controller platform driver"
+> +	depends on SCSI_UFSHCD_PLATFORM && ARCH_EXYNOS || COMPILE_TEST
 
-Here is the only one line in config.txt:
-enable_uart=3D1
+Since && has higher precedence than ||, I am thinking that this should be
 
-Actually, we make the Raspberry Pi's firmware bring up U-Boot, then
-U-Boot boots kernel.
+	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS || COMPILE_TEST)
 
-Jian-Hong Pan
+> +	select PHY_SAMSUNG_UFS
+> +	help
+> +	  This selects the EXYNOS specific additions to UFSHCD platform driver.
+> +	  UFS host on EXYNOS includes HCI and UNIPRO layer, and associates with
+> +	  UFS-PHY driver.
+> +
+> +	  Select this if you have UFS host controller on EXYNOS chipset.
+> +	  If unsure, say N.
+
+
+-- 
+~Randy
+
