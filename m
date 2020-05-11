@@ -2,116 +2,208 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECB8C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628BDC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329B724960
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7912082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589182758;
+	bh=3lytq8v2NbYj3GmC4uNuIFBx8IWKYkcjo1rsyy6Dtt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hwW4l+EDP3OxyPOXHiFANs8snc478shiHw+9OJHvcigx2x/9umP4iB/gYjQb/Ex9h
+	 yUPikWCGQ3uut6W5o0ftpNV6XHFPF1+8E2rCsZpcXQ+APwoC1AjFt9ayqJ+hfbaeOc
+	 T+fwvEHmDajcfGUcLkrOYMSdmY3VCAldxxyiIKPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgEKHim (ORCPT
+        id S1729110AbgEKHjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:38:42 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:51535 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728638AbgEKHii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:38:38 -0400
-Received: from [192.168.0.3] (ip5f5af07e.dynamic.kabel-deutschland.de [95.90.240.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 11 May 2020 03:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728573AbgEKHjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 03:39:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 350442002EE14;
-        Mon, 11 May 2020 09:38:35 +0200 (CEST)
-Subject: Re: [PATCH] x86/tsc: Use hard-coded crystal clock for Skylake mobile
-To:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Cc:     Radoslaw Biernacki <biernacki@google.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Len Brown <len.brown@intel.com>, linux@endlessm.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200509113717.9084-1-pmenzel@molgen.mpg.de>
- <87eerr3ppb.fsf@nanos.tec.linutronix.de>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <edc5af47-27e6-753f-c095-bd3087942690@molgen.mpg.de>
-Date:   Mon, 11 May 2020 09:38:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE4820708;
+        Mon, 11 May 2020 07:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589182756;
+        bh=3lytq8v2NbYj3GmC4uNuIFBx8IWKYkcjo1rsyy6Dtt8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RTIe1IsoYMoTia0048SJi2pfWTObXYv2MtN6HsuOtRDWfSmrxITnFJEJf9wmxX2lQ
+         X/4F0kST4FgAyo+dtsM4s1+wC8KLA6vgXu9fgbBVQr/WsTrO3jLvQV+5FoNcWhPJyk
+         0yRhsK37lI4mtP5MQ7a/pPWdy/V76rK4w0fMkp9k=
+Date:   Mon, 11 May 2020 09:39:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     rananta@codeaurora.org
+Cc:     jslaby@suse.com, andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+Message-ID: <20200511073913.GA1347819@kroah.com>
+References: <20200428032601.22127-1-rananta@codeaurora.org>
+ <20200506094851.GA2787548@kroah.com>
+ <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+ <20200510064819.GB3400311@kroah.com>
+ <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <87eerr3ppb.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Thomas,
+On Mon, May 11, 2020 at 12:23:58AM -0700, rananta@codeaurora.org wrote:
+> On 2020-05-09 23:48, Greg KH wrote:
+> > On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
+> > > On 2020-05-06 02:48, Greg KH wrote:
+> > > > On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
+> > > > > Potentially, hvc_open() can be called in parallel when two tasks calls
+> > > > > open() on /dev/hvcX. In such a scenario, if the
+> > > > > hp->ops->notifier_add()
+> > > > > callback in the function fails, where it sets the tty->driver_data to
+> > > > > NULL, the parallel hvc_open() can see this NULL and cause a memory
+> > > > > abort.
+> > > > > Hence, serialize hvc_open and check if tty->private_data is NULL
+> > > > > before
+> > > > > proceeding ahead.
+> > > > >
+> > > > > The issue can be easily reproduced by launching two tasks
+> > > > > simultaneously
+> > > > > that does nothing but open() and close() on /dev/hvcX.
+> > > > > For example:
+> > > > > $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+> > > > >
+> > > > > Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+> > > > > ---
+> > > > >  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+> > > > >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/tty/hvc/hvc_console.c
+> > > > > b/drivers/tty/hvc/hvc_console.c
+> > > > > index 436cc51c92c3..ebe26fe5ac09 100644
+> > > > > --- a/drivers/tty/hvc/hvc_console.c
+> > > > > +++ b/drivers/tty/hvc/hvc_console.c
+> > > > > @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
+> > > > >   */
+> > > > >  static DEFINE_MUTEX(hvc_structs_mutex);
+> > > > >
+> > > > > +/* Mutex to serialize hvc_open */
+> > > > > +static DEFINE_MUTEX(hvc_open_mutex);
+> > > > >  /*
+> > > > >   * This value is used to assign a tty->index value to a hvc_struct
+> > > > > based
+> > > > >   * upon order of exposure via hvc_probe(), when we can not match it
+> > > > > to
+> > > > > @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
+> > > > > *driver, struct tty_struct *tty)
+> > > > >   */
+> > > > >  static int hvc_open(struct tty_struct *tty, struct file * filp)
+> > > > >  {
+> > > > > -	struct hvc_struct *hp = tty->driver_data;
+> > > > > +	struct hvc_struct *hp;
+> > > > >  	unsigned long flags;
+> > > > >  	int rc = 0;
+> > > > >
+> > > > > +	mutex_lock(&hvc_open_mutex);
+> > > > > +
+> > > > > +	hp = tty->driver_data;
+> > > > > +	if (!hp) {
+> > > > > +		rc = -EIO;
+> > > > > +		goto out;
+> > > > > +	}
+> > > > > +
+> > > > >  	spin_lock_irqsave(&hp->port.lock, flags);
+> > > > >  	/* Check and then increment for fast path open. */
+> > > > >  	if (hp->port.count++ > 0) {
+> > > > >  		spin_unlock_irqrestore(&hp->port.lock, flags);
+> > > > >  		hvc_kick();
+> > > > > -		return 0;
+> > > > > +		goto out;
+> > > > >  	} /* else count == 0 */
+> > > > >  	spin_unlock_irqrestore(&hp->port.lock, flags);
+> > > >
+> > > > Wait, why isn't this driver just calling tty_port_open() instead of
+> > > > trying to open-code all of this?
+> > > >
+> > > > Keeping a single mutext for open will not protect it from close, it will
+> > > > just slow things down a bit.  There should already be a tty lock held by
+> > > > the tty core for open() to keep it from racing things, right?
+> > > The tty lock should have been held, but not likely across
+> > > ->install() and
+> > > ->open() callbacks, thus resulting in a race between hvc_install() and
+> > > hvc_open(),
+> > 
+> > How?  The tty lock is held in install, and should not conflict with
+> > open(), otherwise, we would be seeing this happen in all tty drivers,
+> > right?
+> > 
+> Well, I was expecting the same, but IIRC, I see that the open() was being
+> called in parallel for the same device node.
 
+So open and install are happening at the same time?  And the tty_lock()
+does not protect the needed fields from being protected properly?  If
+not, what fields are being touched without the lock?
 
-Thank you for the quick reply.
+> Is it expected that the tty core would allow only one thread to
+> access the dev-node, while blocking the other, or is it the client
+> driver's responsibility to handle the exclusiveness?
 
-Am 11.05.20 um 09:17 schrieb Thomas Gleixner:
+The tty core should handle this correctly, for things that can mess
+stuff up (like install and open at the same time).  A driver should not
+have to worry about that.
 
-> Paul Menzel <pmenzel@molgen.mpg.de> writes:
-> 
-> please send patches to LKML and not offlist.
+> > > where hvc_install() sets a data and the hvc_open() clears it.
+> > > hvc_open()
+> > > doesn't
+> > > check if the data was set to NULL and proceeds.
+> > 
+> > What data is being set that hvc_open is checking?
+> hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL (in
+> one of the paths).
 
-Sorry about that. From `MAINTAINERS` I thought x86@kernel.org is wanted. 
-Other subsystems list LKML explicitly there.
+I see no use of private_data in drivers/tty/hvc/ so what exactly are you
+referring to?  The file private_data or the port private_data or
+something else?
 
->> From: Radoslaw Biernacki <biernacki@google.com>
->>
->> @@ -636,10 +636,24 @@ unsigned long native_calibrate_tsc(void)
->>   	 * Denverton SoCs don't report crystal clock, and also don't support
->>   	 * CPUID.0x16 for the calculation below, so hardcode the 25MHz crystal
->>   	 * clock.
->> +	 * Also estimation code is not reliable and gives 1.5%  difference for
->> +	 * tsc/clock ratio on Skylake mobile. Therefore below is a hardcoded
->> +	 * crystal frequency for Skylake which was removed by upstream commit
->> +	 * "x86/tsc: Use CPUID.0x16 to calculate missing crystal frequency"
->> +	 * This is temporary workaround for bugs:
->> +	 * b/148108096, b/154283905, b/146787525, b/153400677, b/148178929
->> +	 * chromium/1031054
->>   	 */
->> -	if (crystal_khz == 0 &&
->> -			boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT_D)
->> -		crystal_khz = 25000;
->> +	if (crystal_khz == 0) {
->> +		switch (boot_cpu_data.x86_model) {
->> +		case INTEL_FAM6_SKYLAKE_MOBILE:
->> +			crystal_khz = 24000;	/* 24.0 MHz */
->> +			break;
->> +		case INTEL_FAM6_ATOM_GOLDMONT_X:
->> +			crystal_khz = 25000;	/* 25.0 MHz */
->> +			break;
->> +		}
-> 
-> Aside of being a workaround for Google issues which are probably caused > by broken BIOSes
+> > And you are not grabbing a lock in your install callback, you are only
+> > serializing your open call here, I don't see how this is fixing anything
+> > other than perhaps slowing down your codepaths.
+> Basically, my intention was to add a NULL check before accessing *hp in
+> open().
+> The intention of the lock was to protect against this check.
+> If the tty layer would have taken care of this, then perhaps there won't be
+> a
+> need to check for NULL.
 
-Even if it was caused by broken firmware, wouldn’t Linux’ no regression 
-policy still consider this a regression as user should be able to the 
-Linux kernel “no matter what”?
+Ah, driver_data is what you are referring to, not private_data.
 
-> that patch is broken.
-> 
->     INTEL_FAM6_ATOM_GOLDMONT_D != INTEL_FAM6_ATOM_GOLDMONT_X
+Look at hvc_close(), no locking is done there to test for private_data,
+right?  Why not?  The only thing setting driver_data is in install, and
+your lock is not touching that.
 
-Good catch. The commit didn’t apply cleanly to the master branch, and I 
-missed this.
+And again, install and open should not race, if so, the tty core needs
+to be fixed.
 
-I’ll wait for Radoslaw to comment before proceeding further with this.
+> > As an arument why this isn't correct, can you answer why this same type
+> > of change wouldn't be required for all tty drivers in the tree?
+> > 
+> I agree, that if it's already taken care by the tty-core, we don't need it
+> here.
+> Correct me if I'm wrong, but looks like the tty layer is allowing parallel
+> accesses
+> to open(),
 
+I do not think that happens, try counting the calls to open(), there
+should only be one.  If not, that's a bug somewhere else.
 
-Kind regards,
+thanks,
 
-Paul
+greg k-h
