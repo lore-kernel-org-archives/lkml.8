@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B8C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3542C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A084520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A422420643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="TS/jxxw2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QEUzmMOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgEKPJP (ORCPT
+        id S1730622AbgEKPJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
+        Mon, 11 May 2020 11:09:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730295AbgEKPIc (ORCPT
+        by vger.kernel.org with ESMTP id S1730178AbgEKPIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:08:32 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A14C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id m12so13492037wmc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:31 -0700 (PDT)
+        Mon, 11 May 2020 11:08:25 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE23C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:23 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x17so11438468wrt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=TS/jxxw2AM8c/MW/14NfrNB+SUbDqKCeR6Tz9KN+jE/qC/yYIXQFmcqxM1np2Xwhd1
-         6HzzHOawVFx9Avhhy9m+y8TIrHmrRiIGgsdRGMba4aTqK1P3Std1fQ15kyhU37lGQ4Gd
-         /blU29VDw8JrGSg8cn8jWRHVrLGz1I02RRR881foQUGlY83hYx6HEVM8++7zYk9AB2gK
-         kCA8E+nT8RvG/vdg9BjOvynD4T+aWghR+0uibegwQAvlB7FNBaDmFNw22bU9G5Dh38Sa
-         blrzdx+xnrmAR8BnZBhhos2friW6xXn07zxAXVWX+4YWhBxExBXWL9JMoRRwyxerZJMn
-         S1+w==
+        bh=1RBYv7clwofuc4RomuNetMbXz5K8VN7BlCrpLgWGuKQ=;
+        b=QEUzmMOpkuLBDn1i6mv2akyBNSjR1ykf/dDpY8muLvqY0EgXk2calkzNQUqycDd3tZ
+         Vq52Ya3Uk3xcmjeqD4XPCjE06SMZvT43B+d3baVOEIBlIAHuSODNw7Vz8hN52jc4VMPM
+         30sZl8kClQFaVhHbkM8CMsnQfsKyEKE2GofBXV/nkXzcVksDj/IMhaiUIMBo0zi2jXH9
+         fyOzSkrRFnAwVEgvTmwNK8++fKTg67F+G7JzdrWpYfMCI7Hgf1/k1Nr8kC9Agq7rmAaG
+         m4BeOJkfYm5HxPNtyPslH4OBoh0U+g4I1tMmnm5rqHAspXMzqntXPLvDJCmPXjRNGDuH
+         A2yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=DPdaUWRFoAbt7o+U/vBE5bakyIHrQgr+n/s0akTeO0a4S55kWyFym04bQZpsHaP0mC
-         kmCPMaDVe+dSLS1dNptZw9Pml7LGzkeM53dUglCWn91fk1YDn3OSFZWNC2RcL30VZJPt
-         40GHJLLDWBYns5KeDoUQL3vWAfZkA0ji+21MRRcegbLs1hfCue1+YREafJBQHKKQT2hj
-         4h/wQhk4enpueQeQ2lb3cjC6AKRHAE1iLHSVWbC5WiG8UwJEsW6QZvT1lk7jU09lKqrx
-         SC362Yf+tpqQYq3ml1e6X0/2DHFy9eIOKc5B8+iEsZq0v9VXQh19WTzvGD+3TEeAybId
-         tT1w==
-X-Gm-Message-State: AGi0PubWNxace28Tr+g0u7+l/HSAdTgqk3U0T+e06ucjCWn90JckRDol
-        pzT7iXsg7XwnFMRsiIjSAI9s6g==
-X-Google-Smtp-Source: APiQypIUoY5y9pMCyWMprTL71A7BiL4tQc7BbrlTT1FoaZIkxIS6pMCmPRg9IsmwTOLUcwtTuQxL3g==
-X-Received: by 2002:a1c:abc3:: with SMTP id u186mr31368123wme.42.1589209710040;
-        Mon, 11 May 2020 08:08:30 -0700 (PDT)
+        bh=1RBYv7clwofuc4RomuNetMbXz5K8VN7BlCrpLgWGuKQ=;
+        b=kZ8+8RXZHu0xrlvtVUoMKN/W8r/XPTMBUI3aQ3xunJDsCNDoDHcbnFVOtFE+S+rGLE
+         BHlGUm8bG7hT7kPmg/qu1rNBZi9DNRYs7Xfj9ywBCcv4isrmJx61DBIZFm0+AN7ajbV6
+         E0SMREAadG8uv3oXZgCZOLD0Sh7c3ugWE6aAQbrX7DVhaPa/7Mae0FO84zq5bPOLlEEG
+         kNe2wAqYoiu4WaO9aS6qsd993QE2kh/Gj7Z5bKTXdDnjgoiPzqmBpAdYNKGksg1n1UzG
+         F8ips7rahKd0k94ofg5yFtWKcH60O3J3Yz3nXlma83kT1UDAVc1TgfN9sXgloOQJr1Dl
+         J62A==
+X-Gm-Message-State: AGi0PuYefEO8xCbFAjqku3/7TCTiOtvrlpZFlFMrlEILJUqBb3clCtGA
+        hrqX7SiQKdJ7sKh2ow2K1GMRCw==
+X-Google-Smtp-Source: APiQypLc0ablVe1skr4iCxYLHTZ5QzDJnCRmLkOSYNdEDYQvfMV6rr0vlRpnSTOJb8n8mwpIUQYYvw==
+X-Received: by 2002:adf:fa91:: with SMTP id h17mr19349496wrr.111.1589209702442;
+        Mon, 11 May 2020 08:08:22 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.28
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:08:29 -0700 (PDT)
+        Mon, 11 May 2020 08:08:21 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 07/14] net: devres: define a separate devres structure for devm_alloc_etherdev()
-Date:   Mon, 11 May 2020 17:07:52 +0200
-Message-Id: <20200511150759.18766-8-brgl@bgdev.pl>
+Subject: [PATCH v2 02/14] dt-bindings: net: add a binding document for MediaTek Ethernet MAC
+Date:   Mon, 11 May 2020 17:07:47 +0200
+Message-Id: <20200511150759.18766-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
 References: <20200511150759.18766-1-brgl@bgdev.pl>
@@ -93,64 +93,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Not using a proxy structure to store struct net_device doesn't save
-anything in terms of compiled code size or memory usage but significantly
-decreases the readability of the code with all the pointer casting.
-
-Define struct net_device_devres and use it in devm_alloc_etherdev_mqs().
+This adds yaml DT bindings for the MediaTek Ethernet MAC present on the
+mt8* family of SoCs.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- net/devres.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ .../bindings/net/mediatek,eth-mac.yaml        | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
 
-diff --git a/net/devres.c b/net/devres.c
-index c1465d9f9019..b97b0c5a8216 100644
---- a/net/devres.c
-+++ b/net/devres.c
-@@ -7,30 +7,34 @@
- #include <linux/etherdevice.h>
- #include <linux/netdevice.h>
- 
--static void devm_free_netdev(struct device *dev, void *res)
-+struct net_device_devres {
-+	struct net_device *ndev;
-+};
+diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+new file mode 100644
+index 000000000000..7682fe9d8109
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static void devm_free_netdev(struct device *dev, void *this)
- {
--	free_netdev(*(struct net_device **)res);
-+	struct net_device_devres *res = this;
++title: MediaTek Ethernet MAC Controller
 +
-+	free_netdev(res->ndev);
- }
- 
- struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
- 					   unsigned int txqs, unsigned int rxqs)
- {
--	struct net_device **dr;
--	struct net_device *netdev;
-+	struct net_device_devres *dr;
- 
- 	dr = devres_alloc(devm_free_netdev, sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
- 		return NULL;
- 
--	netdev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
--	if (!netdev) {
-+	dr->ndev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
-+	if (!dr->ndev) {
- 		devres_free(dr);
- 		return NULL;
- 	}
- 
--	*dr = netdev;
- 	devres_add(dev, dr);
- 
--	return netdev;
-+	return dr->ndev;
- }
- EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++description:
++  This Ethernet MAC is used on the MT8* family of SoCs from MediaTek.
++  It's compliant with 802.3 standards and supports half- and full-duplex
++  modes with flow-control as well as CRC offloading and VLAN tags.
++
++properties:
++  compatible:
++    enum:
++      - mediatek,mt8516-eth
++      - mediatek,mt8518-eth
++      - mediatek,mt8175-eth
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 3
++    maxItems: 3
++
++  clock-names:
++    additionalItems: false
++    items:
++      - const: core
++      - const: reg
++      - const: trans
++
++  mediatek,pericfg:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Phandle to the device containing the PERICFG register range.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - mediatek,pericfg
++  - phy-handle
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/mt8516-clk.h>
++
++    ethernet: ethernet@11180000 {
++        compatible = "mediatek,mt8516-eth";
++        reg = <0 0x11180000 0 0x1000>;
++        mediatek,pericfg = <&pericfg>;
++        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>;
++        clocks = <&topckgen CLK_TOP_RG_ETH>,
++                 <&topckgen CLK_TOP_66M_ETH>,
++                 <&topckgen CLK_TOP_133M_ETH>;
++        clock-names = "core", "reg", "trans";
++        phy-handle = <&eth_phy>;
++        phy-mode = "rmii";
++
++        mdio {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            eth_phy: ethernet-phy@0 {
++                reg = <0>;
++            };
++        };
++    };
 -- 
 2.25.0
 
