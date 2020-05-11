@@ -2,191 +2,85 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BC0C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3386BC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E3D208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589231121;
-	bh=Qe07joioYf8QnUf2mQy27AABJms/F3Lk19+M+oTq8v4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wYtsOYum57yNWxQtNKEMpza3wFw+O7Tsq47YvhJ1e75q2SpV/+h6Ae8nl/Jkww9kj
-	 9PzhLFgJuQPfn3F+KlUW1FW9Jk+xMSYmliw/hfsJz0UlGS9efdzLU6h7KyBp599dHc
-	 JyGFyRaeCd7X7N3Ep3m/eA4awSsBpy1lweJiP9RA=
+	by mail.kernel.org (Postfix) with ESMTP id 12AA924964
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732566AbgEKVFU (ORCPT
+        id S1731636AbgEKU7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:05:20 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40844 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732559AbgEKVFR (ORCPT
+        Mon, 11 May 2020 16:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730215AbgEKU7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:05:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x2so5300612pfx.7;
-        Mon, 11 May 2020 14:05:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t75vcHrGDSnK85bf5vWlaxNV98NfbPo5RXTgDatbL1Y=;
-        b=HsdVMKiDoumTkY2XsGzvllSC8ymXW9YgK2KnNfm0PRsjXI50nl0KKiJ4bwwrfA2WIj
-         tb3vY+88E/nCY7wRfNYMs5qSbf9HLXW0tGCqYc6rFoiAZBgNkjay742Rsh5AKjXMEvwp
-         lpgyEelAQVH39B7iHRDkMtLJhFI7U/qwuoqviugzlXzx73AXkc6+Jw7PRUa4sAknoLeq
-         plquygjQgZW15mEC7AJvzLTyDce/bSAm5XR5rqimKfQtu+xWWJNczKT2eHdfkrWOsu+j
-         UbMDQZxJ0jkFR/lL0Uh7oXz6Pm2jBnP0GSiHcitU7S2Xzyq6IozC9gVAHjk9wZxih9kD
-         ti+w==
-X-Gm-Message-State: AGi0PubED1jzW73VFJHiUwP/lseJ68r7vUs54mqj+/yL92l6hVSy0WOc
-        V7akPGEZsEZP9fzOTp1LEvx2sj+1hdYaVA==
-X-Google-Smtp-Source: APiQypLR9L4ljsK/1jNhGMDg4kZpQacuA0w6REvupxynKl/3lP68buLEUEk7PY9ibjXqDydibHJprA==
-X-Received: by 2002:a62:34c1:: with SMTP id b184mr17463057pfa.73.1589231116431;
-        Mon, 11 May 2020 14:05:16 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t74sm10232698pfc.64.2020.05.11.14.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:05:14 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id E54B140605; Mon, 11 May 2020 21:05:13 +0000 (UTC)
-Date:   Mon, 11 May 2020 21:05:13 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org, tytso@mit.edu, bunk@kernel.org,
-        torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        labbott@redhat.com, jeffm@suse.com, jikos@kernel.org, jeyu@suse.de,
-        tiwai@suse.de, AnDavis@suse.com, rpalethorpe@suse.de
-Subject: Re: [PATCH v3] kernel: add panic_on_taint
-Message-ID: <20200511210513.GU11244@42.do-not-panic.com>
-References: <20200509135737.622299-1-aquini@redhat.com>
- <20200511182455.GR11244@42.do-not-panic.com>
- <20200511200325.GE367616@optiplex-lnx>
+        Mon, 11 May 2020 16:59:20 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 411E3C061A0E;
+        Mon, 11 May 2020 13:59:20 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jYFWA-0005gR-NO; Mon, 11 May 2020 22:59:18 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5312C1C04CC;
+        Mon, 11 May 2020 22:59:18 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:18 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] rcutorture: Right-size TREE10 CPU consumption
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511200325.GE367616@optiplex-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158923075827.390.6532991687416116899.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 04:03:25PM -0400, Rafael Aquini wrote:
-> On Mon, May 11, 2020 at 06:24:55PM +0000, Luis Chamberlain wrote:
-> > On Sat, May 09, 2020 at 09:57:37AM -0400, Rafael Aquini wrote:
-> > > +Trigger Kdump on add_taint()
-> > > +============================
-> > > +
-> > > +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
-> > > +whenever the value set in this bitmask matches with the bit flag being set
-> > > +by add_taint(). This will cause a kdump to occur at the panic() call.
-> > > +In cases where a user wants to specify this during runtime,
-> > > +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
-> > > +to achieve the same behaviour.
-> > > +
-> > >  Contact
-> > >  =======
-> > >  
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index 7bc83f3d9bdf..4a69fe49a70d 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -3404,6 +3404,21 @@
-> > >  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
-> > >  			on a WARN().
-> > >  
-> > > +	panic_on_taint=	[KNL] conditionally panic() in add_taint()
-> > > +			Format: <str>
-> > > +			Specifies, as a string, the TAINT flag set that will
-> > > +			compose a bitmask for calling panic() when the kernel
-> > > +			gets tainted.
-> > > +			See Documentation/admin-guide/tainted-kernels.rst for
-> > > +			details on the taint flags that users can pick to
-> > > +			compose the bitmask to assign to panic_on_taint.
-> > > +			When the string is prefixed with a '-' the bitmask
-> > > +			set in panic_on_taint will be mutually exclusive
-> > > +			with the sysctl knob kernel.tainted, and any attempt
-> > > +			to write to that sysctl will fail with -EINVAL for
-> > > +			any taint value that masks with the flags set for
-> > > +			this option.
-> > 
-> > This talks about using a string, but that it sets a bitmask. Its not
-> > very clear that one must use the string representation from each taint
-> > flag. Also, I don't think to use the character representation as we
-> > limit ourselves to the alphabet and quirky what-should-be-arbitrary
-> > characters that represent the taint flags. The taint flag character
-> > representation is juse useful for human reading of a panic, but I think
-> > because of the limitation of the mask with the alphabet this was not
-> > such a great idea long term.
-> >
-> 
-> I respectfully disagree with you on this one, but that might be just
-> because I'm a non-native English speaker and the cause of confusion is 
-> not very clear to me. Would you mind providing a blurb with a text that
-> you think it would be clearer on this regard?
+The following commit has been merged into the core/rcu branch of tip:
 
-A simple example of what can be used and what it would mean would
-suffice.
+Commit-ID:     df5916845dd6ee34ce40aaad5e7b61058720419c
+Gitweb:        https://git.kernel.org/tip/df5916845dd6ee34ce40aaad5e7b61058720419c
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Mon, 30 Mar 2020 10:42:30 -07:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Thu, 07 May 2020 10:15:28 -07:00
 
-> Also, making the input of the option to match with something one
-> is used to see in taint reports make it easier to use. It would
-> be still a human setting the boot option, so it makes sense to
-> utilize a known/meaningful representation for panic_on_taint input.
+rcutorture: Right-size TREE10 CPU consumption
 
-Yes, however I still believe that what we are printing is only doing
-a disservice to limiting the size of our bitmask.
+The number of CPUs is tuned to allow "4*CFLIST TREE10" on a large system,
+up from "3*CFLIST TREE10" previously.
 
-> > So, I don't think we should keep on extending the alphabet use case, a
-> > simple digit representation would suffice. I think this means we'd need
-> > two params one for exclusive and one for the value of the taint.
-> > 
-> > Using a hex value or number also lets us make the input value shorter.
-> >
-> 
-> Albeit you're right on the limitation of an alphabetical representation, 
-> the truth is that taint flags are not introduced that frequently.
-> Considering how many times these flags were introduced in the past,
-> one could infer we probably will not run out of alphabet in the next 20 
-> years (a couple of new flags gets introduced every 2 years, or so, in
-> average), and the rate of change in these seems to be slowing down
-> considerably, as in the past 5 years, we've seen only 2 new flags.
-> 
-> I'm not against your suggestion, though, but I think it makes
-> clumsier to utilize the feature as you now require 2 kernel
-> cmdline options, instead of just one, and a less intuitive
-> way of setting it via base16 values. All at the expense of 
-> a theoretical shortage of taint flags. 
-> 
-> If the others that were already OK with the simple string interface 
-> don't object your change suggestions in that regard, I'll refactor
-> the parser to meet them. 
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ tools/testing/selftests/rcutorture/configs/rcu/TREE10 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It is just silly for us to restrict our bitmask to the alphabet. The
-alphabetic restrictions were useful for print until we started running
-out of meaningful characters, moving forward they'll just be a nuisance.
-
-I don't think its wise to encourage their use now for input, now that
-we have realized that their use will be pointless soon.
-
-> > If a kernel boots with panic-on-taint flag not yet supported, we don't
-> > complain, therefore getting a false sense of security that we will panic
-> > with a not yet supported taint flag. I think we should pr_warn() or
-> > fail to boot when that happens.
-> >
-> 
-> Bear in mind that these very early print outs (like the ones eventually
-> produced by setting panic_on_taint) to the log buffer might get lost in 
-> verbose-logging long-running time systems, but apart from that, I see no 
-> problems in being a little bit more verbose in that parser. I'll make
-> the changes for a next revision, if no one else objects them.
-
-See mitigations_parse_cmdline(), we pr_crit() there as well if we enter
-a wrong value. I think that's the best we can do.
-
-  Luis
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE10 b/tools/testing/selftests/rcutorture/configs/rcu/TREE10
+index 2debe78..7311f84 100644
+--- a/tools/testing/selftests/rcutorture/configs/rcu/TREE10
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE10
+@@ -1,5 +1,5 @@
+ CONFIG_SMP=y
+-CONFIG_NR_CPUS=100
++CONFIG_NR_CPUS=56
+ CONFIG_PREEMPT_NONE=y
+ CONFIG_PREEMPT_VOLUNTARY=n
+ CONFIG_PREEMPT=n
