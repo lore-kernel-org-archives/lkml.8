@@ -2,254 +2,107 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212D4C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B3C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA55520752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:33:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="JsgKYwjf"
+	by mail.kernel.org (Postfix) with ESMTP id B16C82078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589229305;
+	bh=wZu2QvR91WC41QmzoIY8JNxlOBqCk1UY+9nOgrl0Y6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2CoADTpKq5rv8wd4yXXLPfExP3OBmBj9D3Z/lP/Q9fHEt5E+yT1mJsy5FtVNVkj9k
+	 qZAgM1hZkneU6+wS7EuKP8kDL9gZYzPZIncNpGugFXGJnZ7+lGGpz67GAJEkunoJUh
+	 ijK0Voh0tBa0jo+6YeP9z1q5nEAGQDLvOUudw6SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgEKUdF (ORCPT
+        id S1731673AbgEKUfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:33:05 -0400
-Received: from mail-mw2nam12on2139.outbound.protection.outlook.com ([40.107.244.139]:43083
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731629AbgEKUdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:33:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JNOC2mg3UjMN0y+8UXbo2RPv6xZFS/4pCLIdhBwldH5tp1iSdjmemeIFUWEgj0Bd/0U5pCPMF0rMyaXerty8s48MmwdKKdZOOUYwAXuHxZ3KkTSQBOwHqrsMQvO+oooHV4dsFPygNgDMWbw3cHMgkfuw/Lgt7gOdR6ID5bQvcvCWUHbx3WRGFp9sh4m/q361pWNwAzlCS0PxUQLKDYgCoE9WB9zSZVsn/B46FWc9JkcZ98D9Iji2oUaCdxas13c6iVdnL0RTsfL6k0LFXZNLWADTxnTT78MMg+ORDhbnt5uvsyQKIGt1U2hvmOdm3fAES5UQg/pPdIM1yoXPqyTzkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UEOZexBqQe7wkq6C760pOvBnmfScgEkjAY+7waV2JIo=;
- b=Zk0jAMtLNRug/vrFN2uBZEHslg4BwXOf590F2OiC77+H/jm5wug3A5JD+57pwFd0H+nNj6nRt3Ov6RvPjf3HVJQ/bsBzwn7R2lN9QNnLX+czb6/0TwEeEzXZiJ8et77PwjWO0f1JEvcqb+szLlg2l/+QDC405xLTmoVV77O9UbCmac/MD6cPQjr+xhyP/3QlTVhzozyqZc1joBZJsxtrUMYV4yTzDTr2zM1GSHtfHrjY61L1SnjV6M5d2zDwi4r2pavFme7wHaRDsTnH0uNUeacZFWelpUXDLzvdcvtb+WYkGVDxJdaDXtLR3OFUHdOTF/c4ovM0E2jkR5zCnJGaHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UEOZexBqQe7wkq6C760pOvBnmfScgEkjAY+7waV2JIo=;
- b=JsgKYwjfNSXfPUljsQzui0Iic6mlPqPrsk4XxrL9kfEoeAMQjcWw+990Q8/JWQr+tWcrPAmGsqwGw9Wv/1aigJ7cwAJqeyICVdfpp+hByOPlv4qDXGvhXQdK9EYiVr3IYd528oLd+YQ8to+qE8itzoqMV3YZVJFXAhVsgce/dhg=
-Authentication-Results: amperecomputing.com; dkim=none (message not signed)
- header.d=none;amperecomputing.com; dmarc=none action=none
- header.from=os.amperecomputing.com;
-Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
- BYAPR01MB4981.prod.exchangelabs.com (2603:10b6:a03:1d::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.35; Mon, 11 May 2020 20:33:00 +0000
-Received: from BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 20:32:58 +0000
-From:   Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf: arm_dsu: Support DSU ACPI devices.
-Date:   Mon, 11 May 2020 13:32:40 -0700
-Message-Id: <1589229160-18558-1-git-send-email-tuanphan@os.amperecomputing.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR05CA0056.namprd05.prod.outlook.com
- (2603:10b6:a03:74::33) To BYAPR01MB4598.prod.exchangelabs.com
- (2603:10b6:a03:8a::18)
+        Mon, 11 May 2020 16:35:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43341 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKUfE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:35:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id j16so16281447oih.10;
+        Mon, 11 May 2020 13:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xPfARJBDe31edRqTmB22eqqJ1jCXSCt4soTep9+eCZE=;
+        b=I3feRbee1STlb3Rm82R2kiNQj+ZBEHmm5dfpcX0CGR32SIzX3MEBRcYiC+WFuLk8eo
+         ZZKAmlyK/kUcZ2K1TyQntfaGIP46H1wKL2nQ4LqSlmRFNOXWSS6ceAiMJy02a2g6iBQ9
+         YDTdvAGeFYIEQ243RGt5YXfM66y4bcSxwy9vL5o066SZbkvH5JBhneU5IyKH/ymgT+8y
+         fsGjdcKN940bS+/XJ62nD9oRvPpyb4rgPOJtjy6PBWU0Lr04pDi5DYwBqDYK/qkXBKnH
+         dQvquvJgDKQInlbusEpYRcf5C411lG9BhU/X6rmKtdVd3fPhRuQ+pNSR6EntiUCCsbR8
+         tAjQ==
+X-Gm-Message-State: AGi0PuZUrCLP/Nx+RwYfy5lD5+6gRkDg/Tm9WkE5brEj4LelOc+UkGVp
+        DnrxKhkArVk3iHePTsA2d5oDEGc=
+X-Google-Smtp-Source: APiQypLhCz0Iweh6mDeRxFs1JldCYPCWFDZ/eWcgs5VYLylwJuEA3ROhRph1lzQha6aqqe17WNMHUA==
+X-Received: by 2002:aca:5643:: with SMTP id k64mr19984093oib.152.1589229303517;
+        Mon, 11 May 2020 13:35:03 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y25sm1875229oto.29.2020.05.11.13.35.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 13:35:02 -0700 (PDT)
+Received: (nullmailer pid 32429 invoked by uid 1000);
+        Mon, 11 May 2020 20:35:01 -0000
+Date:   Mon, 11 May 2020 15:35:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de
+Subject: Re: [PATCH v3 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock
+ Controller
+Message-ID: <20200511203501.GA29988@bogus>
+References: <20200423103406.481289-1-bryan.odonoghue@linaro.org>
+ <20200423103406.481289-3-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR05CA0056.namprd05.prod.outlook.com (2603:10b6:a03:74::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.11 via Frontend Transport; Mon, 11 May 2020 20:32:58 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [4.28.12.214]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 827201bf-5b43-434d-e5f1-08d7f5ea7df5
-X-MS-TrafficTypeDiagnostic: BYAPR01MB4981:|BYAPR01MB4981:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR01MB498188B557743BBF2E5A4249E0A10@BYAPR01MB4981.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MwaKkY0gJGOH3UArFDo//Pf1o3RDRQdJuYhz6YuUeLj4aHBfBemWIJbwg602Bc0kHZZS+F9xGJ2r2k9FXJ7jMJ2y0gnomsndhfzK4QHRVfH0ITxaPdHKvfd7e2iVskS8lCJ2V4QcEx7UnajQqpX5pP17xiMQyGSxte718WZ1P+qO5muT7bKV8I6fitMcHZzQu2NYh+TyosMhbtgbCWvPNEc4JjQtrqj1/qpoaPdfMG0nHWSZHX54TqH45RP6KvVPg5DpqjNbBuGQrZAlNgD5hBmUcNtWFYZTw3BjwCTWUW5YZVA0BPEkOnhMxdT7p+AcULpiT++somOlri7pViqMU7nPwV3pFRqpddYFFuJJ4jYMgUYpA7z+qpyoed5qtBMxlgJj06nHv+O9jtytcbC3jZyLosvpPciCWlanyyUNFpOCZdmJDQRxBBcLuM8KmAW+ba46/01iSkbirWM2H5li1t9855TywHeNj5p5tG9AmQBK+grxgWlDGrTZcsMIQss7JQNlACURYx1G9JZ+9faqKp4ziGIVoA6cJlProQ/LFEU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(39840400004)(396003)(33430700001)(6666004)(66476007)(2906002)(66556008)(16526019)(186003)(66946007)(26005)(86362001)(8936002)(8676002)(109986005)(5660300002)(4326008)(6486002)(6506007)(956004)(2616005)(52116002)(54906003)(33440700001)(316002)(6512007)(478600001)(266003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 8jD0pEwSrokQLrsu4FbQDlUgyGAVge7M5W1x4I2/XfJysOVb/fj/RGmb+L+daxgy1RcSnNIekB9fambCd5E83hlmRd1U/9QZdVVOSLMCgpD3tD2YLF0CtcewXWMwAL3Oe/VJ6eghmsxW1zUevebzrKhlaSlNkYKvPBumYoP8foEmiFcAqZu+6gpU06cPYaC7n2DQexMPMwvH1cf2V4o89YiGSxG36Lk1Qfpp+iojSQs3/lDOO7/on2CBa23I2hi9TR7X9BJdB+Y5uitl8BLbXgknqvzV2EKTPhvqomV1OB2UcWnwf9D9VH4GGEk/HP2oqeL3ROUDbLwAjYXgimSeaoxWiPndzG+rhdf4YMmcii33VYzUceAZZGtvKdGTXr7OufRW5RGNr8y5NJCr9OMpAxuD3uhvoYmxHfSZADIjCP0w7vEnjskFoFO7+2gbrtegMpGSh3ns/tZqw7RnaM7RtCQSITv0v8llEghqM46yvbQ=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 827201bf-5b43-434d-e5f1-08d7f5ea7df5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 20:32:58.3294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jIpNrE+sdzPV0monBQcn9ench0MpCgB2ucrUtgD9Mbl1sXRd6/Za0d6uEY4PwpagIPFI+5Oqv7cT9zymziwfBFTBct68Ok4rZj5dU6b29rx91hYbqNhbGEhv93XAYab6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4981
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423103406.481289-3-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ACPI node probing device support. Each DSU ACPI node
-defines a "cpus" package with a per cpu MPIDR element.
+On Thu, Apr 23, 2020 at 11:34:06AM +0100, Bryan O'Donoghue wrote:
+> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
+> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
+> additional functional blocks added which require additional PLL sources. In
+> some cases functional blocks from the MSM8916 have different clock sources
+> or different supported frequencies.
+> 
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  drivers/clk/qcom/Kconfig                     |    8 +
+>  drivers/clk/qcom/Makefile                    |    1 +
+>  drivers/clk/qcom/gcc-msm8939.c               | 3999 ++++++++++++++++++
 
-Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
----
-Changes in v2:
-- Removed IRQF_SHARED.
-- Fixed ACPI runtime detection.
+>  include/dt-bindings/clock/qcom,gcc-msm8939.h |   27 +
+>  include/dt-bindings/reset/qcom,gcc-msm8939.h |   10 +
 
-The ACPI binding spec for DSU ACPI node is under beta and located
-in ARM server group under project "ACPI on ARM".
+These go in patch 1.
 
- drivers/perf/arm_dsu_pmu.c | 71 ++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 63 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index 70968c8..784d177 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -11,6 +11,7 @@
- #define DRVNAME		PMUNAME "_pmu"
- #define pr_fmt(fmt)	DRVNAME ": " fmt
- 
-+#include <linux/acpi.h>
- #include <linux/bitmap.h>
- #include <linux/bitops.h>
- #include <linux/bug.h>
-@@ -603,18 +604,21 @@ static struct dsu_pmu *dsu_pmu_alloc(struct platform_device *pdev)
- }
- 
- /**
-- * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster.
-+ * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster
-+ * from device tree.
-  */
--static int dsu_pmu_dt_get_cpus(struct device_node *dev, cpumask_t *mask)
-+static int dsu_pmu_dt_get_cpus(struct platform_device *pdev)
- {
- 	int i = 0, n, cpu;
- 	struct device_node *cpu_node;
-+	struct dsu_pmu *dsu_pmu =
-+		(struct dsu_pmu *) platform_get_drvdata(pdev);
- 
--	n = of_count_phandle_with_args(dev, "cpus", NULL);
-+	n = of_count_phandle_with_args(pdev->dev.of_node, "cpus", NULL);
- 	if (n <= 0)
- 		return -ENODEV;
- 	for (; i < n; i++) {
--		cpu_node = of_parse_phandle(dev, "cpus", i);
-+		cpu_node = of_parse_phandle(pdev->dev.of_node, "cpus", i);
- 		if (!cpu_node)
- 			break;
- 		cpu = of_cpu_node_to_id(cpu_node);
-@@ -626,11 +630,54 @@ static int dsu_pmu_dt_get_cpus(struct device_node *dev, cpumask_t *mask)
- 		 */
- 		if (cpu < 0)
- 			continue;
--		cpumask_set_cpu(cpu, mask);
-+		cpumask_set_cpu(cpu, &dsu_pmu->associated_cpus);
- 	}
- 	return 0;
- }
- 
-+/**
-+ * dsu_pmu_acpi_get_cpus: Get the list of CPUs in the cluster
-+ * from ACPI.
-+ */
-+static int dsu_pmu_acpi_get_cpus(struct platform_device *pdev)
-+{
-+	int i, cpu, ret;
-+	const union acpi_object *obj;
-+	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+	struct dsu_pmu *dsu_pmu =
-+		(struct dsu_pmu *) platform_get_drvdata(pdev);
-+
-+	ret = acpi_dev_get_property(adev, "cpus", ACPI_TYPE_PACKAGE, &obj);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < obj->package.count; i++) {
-+		/* Each element is the MPIDR of associated cpu */
-+		for_each_possible_cpu(cpu) {
-+			if (cpu_physical_id(cpu) ==
-+				obj->package.elements[i].integer.value)
-+				cpumask_set_cpu(cpu, &dsu_pmu->associated_cpus);
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int dsu_pmu_platform_get_cpus(struct platform_device *pdev)
-+{
-+	int ret = -ENOENT;
-+	struct fwnode_handle *fwnode = dev_fwnode(&pdev->dev);
-+
-+	if (IS_ERR_OR_NULL(fwnode))
-+		return ret;
-+
-+	if (is_of_node(fwnode))
-+		ret = dsu_pmu_dt_get_cpus(pdev);
-+	else if (is_acpi_device_node(fwnode))
-+		ret = dsu_pmu_acpi_get_cpus(pdev);
-+
-+	return ret;
-+}
-+
- /*
-  * dsu_pmu_probe_pmu: Probe the PMU details on a CPU in the cluster.
-  */
-@@ -683,7 +730,9 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
- 	if (IS_ERR(dsu_pmu))
- 		return PTR_ERR(dsu_pmu);
- 
--	rc = dsu_pmu_dt_get_cpus(pdev->dev.of_node, &dsu_pmu->associated_cpus);
-+	platform_set_drvdata(pdev, dsu_pmu);
-+
-+	rc = dsu_pmu_platform_get_cpus(pdev);
- 	if (rc) {
- 		dev_warn(&pdev->dev, "Failed to parse the CPUs\n");
- 		return rc;
-@@ -707,7 +756,6 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
- 	}
- 
- 	dsu_pmu->irq = irq;
--	platform_set_drvdata(pdev, dsu_pmu);
- 	rc = cpuhp_state_add_instance(dsu_pmu_cpuhp_state,
- 						&dsu_pmu->cpuhp_node);
- 	if (rc)
-@@ -754,11 +802,19 @@ static const struct of_device_id dsu_pmu_of_match[] = {
- 	{ .compatible = "arm,dsu-pmu", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, dsu_pmu_of_match);
-+
-+static const struct acpi_device_id dsu_pmu_acpi_match[] = {
-+	{ "ARMHD500", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(acpi, dsu_pmu_acpi_match);
- 
- static struct platform_driver dsu_pmu_driver = {
- 	.driver = {
- 		.name	= DRVNAME,
- 		.of_match_table = of_match_ptr(dsu_pmu_of_match),
-+		.acpi_match_table = ACPI_PTR(dsu_pmu_acpi_match),
- 	},
- 	.probe = dsu_pmu_device_probe,
- 	.remove = dsu_pmu_device_remove,
-@@ -827,7 +883,6 @@ static void __exit dsu_pmu_exit(void)
- module_init(dsu_pmu_init);
- module_exit(dsu_pmu_exit);
- 
--MODULE_DEVICE_TABLE(of, dsu_pmu_of_match);
- MODULE_DESCRIPTION("Perf driver for ARM DynamIQ Shared Unit");
- MODULE_AUTHOR("Suzuki K Poulose <suzuki.poulose@arm.com>");
- MODULE_LICENSE("GPL v2");
--- 
-2.7.4
-
+>  5 files changed, 4045 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-msm8939.c
