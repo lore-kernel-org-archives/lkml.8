@@ -2,234 +2,133 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57BFC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC1EC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B50C207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83A82075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:37:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HuZYxy6J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NlWCo7dP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgEKJgj (ORCPT
+        id S1729456AbgEKJhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
+        Mon, 11 May 2020 05:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKJgj (ORCPT
+        by vger.kernel.org with ESMTP id S1725790AbgEKJhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:36:39 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D19C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:36:38 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x73so6930691lfa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:36:38 -0700 (PDT)
+        Mon, 11 May 2020 05:37:03 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E762C061A0C;
+        Mon, 11 May 2020 02:37:03 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id a2so14337118oia.11;
+        Mon, 11 May 2020 02:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BZCRMF2/Mc5tNQ7BKp3A1EJqxFWcIg8LW8tmexmzs48=;
-        b=HuZYxy6J2ZkS5FZKxM9pdnuJVqjysWauuV2D5iWSQVp1aledpnDTittIQwaGmKRaaQ
-         N1IBxfyfFxPuzsi7ZaGRPxo1L1OmaSlpjAvVp4GM3ATEJh5GfBu3dgzIkgpD5jlLbU5r
-         aqfGthM55ihOYmvSt7j9k3GwDtIOTBtXHqh+clDvnBBUQQz0p9PZgtA5l5Yh+QSn29Hn
-         oIg0kjLalUJmKpKUuWiICqQTBrGyZQwmtEerMovY+JOFGzOS3vjcxKyVwI0xfZBkkkn/
-         pXrl1GFvEfBSUARGlqEbRCyvroAVaI9qo6kVBLYsVk3P1VfAXSRNd+XTMsb5Y05Ri8HS
-         siwA==
+        bh=22vKbxGNsiWZ2IBSP8WLC1U/nWrORH0rvsSsTyvQNUY=;
+        b=NlWCo7dP/VWuLfWFdFpzGMrV/pRiSGLxiW3StDcnOyZmQN6A9Bo+mt7HtKIxnbyb6O
+         B8AODeAWxDTon/SfhHFqtbftk7/4PBAtisXRVFzy741HpZy9IPiF9cB2mD2Ya5YgqZXP
+         +87UId71b74B5yjf3GPRANw9E1YJCdjRX8KDQr7shkLs+jfWI+OBsUBxLcs7mzOy7YYJ
+         ywqwXwg195c6oAZokkPSacE5AUF6ee09oxXDQ4jcwuzoBPpsIuLrPKqAih6S6KqileaB
+         HIjrM8/kIXAzo//UG6HWjEYL0RIDomANSO8k/Q4VxaM5ShEpBqzdVNbpJWPV8pqoOOaD
+         ootA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BZCRMF2/Mc5tNQ7BKp3A1EJqxFWcIg8LW8tmexmzs48=;
-        b=lLqpnHwyZrr3YjyBsbJZjIn9aX45iwot2Q6tplXs21r/tgDsPiawnVcITP/5MimL40
-         za56yE9wen3Fsp2jE7RtYplX60PVPscefSiHy78FDq6+SsWEnoIcbe0hVLLOpB7CufkU
-         2xT59SMJUXuoU6D1FiyJ7EhFHseDQuQtGFxfHulB8DQn9rs2//WQSfKBaDmO6eDK/tuB
-         dXaBPxo0BwjfDZpiqG1GMZzDmtMegz9HCQy8/K1EiOEdqn9fgjqNiAopBtC/OO/bcsQV
-         FGsnjkiE+N7MgbQy2t5L0Z5yjbRXNmKNTFX0PM41GLDFdlrOnhcwPFpKp/7XrX4O2m6a
-         aURw==
-X-Gm-Message-State: AOAM5326f9sgglo5LUTzT4egPhkh2nOq2GpzCGuIIcB3IcQflHiHcGeO
-        F0e7cT9epVtJCiDimnr370B5+rkw0rsz7yyBxV4dQw==
-X-Google-Smtp-Source: ABdhPJwT41GQxfG4Rosu+MW5aPgQjZJB/NhcfXXX70DGKhnexGfAF68cbugxdC8dGM6UVKoMzmBOhGAwKrVJXxzU090=
-X-Received: by 2002:ac2:46c1:: with SMTP id p1mr9898041lfo.25.1589189797122;
- Mon, 11 May 2020 02:36:37 -0700 (PDT)
+        bh=22vKbxGNsiWZ2IBSP8WLC1U/nWrORH0rvsSsTyvQNUY=;
+        b=MnpXZIboNws6C1bI7nWYQ25vyovgZILhF3Ct8lE2bxHvpQnZ6bpgLIO0dd/XSHI5Pq
+         LlkZ1TWMddpQaH8gUQoYT4aS6C1ZiKiIX8ZzQIHe5kDJlFKNl/PlS3IKJ8BCDAwPljDr
+         buX4zSrymKnzG7Ot/xG9lELao/h1Bz73FkpiFTj+FpBthJ4DvhAgeIxB1B0XCLwiIbRs
+         ryX7fXnk/2xvkameyjzju48D8jAQdwJ5NhfxegroVjN2UhREvss2X3T2WnIGHpRTs4zC
+         VK9ecF5/Y3+FX2X3/gJyq6aRm7Eo8g/YeuSTAh7zlhhKdUYwS5SCwDtdyq5k4ykBqWGo
+         /AQg==
+X-Gm-Message-State: AGi0PuZE8vFNZVnQGy82KNRg0/uxrxe7nLSHkrqLhU3FVgDJwiUEXNFP
+        brIencyDY7Ok5JdJAgITSHT+b9AtZS1gbKJWceCKYQ==
+X-Google-Smtp-Source: APiQypItVNPD5CU0V3ko73rD3gop/ALAVZC9z5N0O6VQktyi+IqeOBVFv0YirK83X6veZdCfSKOn3G7NXIZF7PpTQHY=
+X-Received: by 2002:aca:abd0:: with SMTP id u199mr18289341oie.130.1589189822681;
+ Mon, 11 May 2020 02:37:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200506141821.GA9773@lorien.usersys.redhat.com>
- <20200507203612.GF19331@lorien.usersys.redhat.com> <20200508151515.GA25974@geo.homenetwork>
- <CAKfTPtCeA1VcEierR5iyQJApU5JMFQqkMSR+2JGU4o5cG76opQ@mail.gmail.com>
- <20200508170213.GA27353@geo.homenetwork> <801229de-200d-c9d5-7fd3-8556c5abc064@arm.com>
-In-Reply-To: <801229de-200d-c9d5-7fd3-8556c5abc064@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 11 May 2020 11:36:24 +0200
-Message-ID: <CAKfTPtAq9GDgvok5Z87mHL++ie+tiuyHHnruGea1+jvfffzpvw@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: Fix enqueue_task_fair warning some more
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Tao Zhou <zohooouoto@zoho.com.cn>, Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Tao Zhou <ouwen210@hotmail.com>
+References: <20200511091142.208787-1-daniel.vetter@ffwll.ch> <20200511091142.208787-3-daniel.vetter@ffwll.ch>
+In-Reply-To: <20200511091142.208787-3-daniel.vetter@ffwll.ch>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 11 May 2020 12:36:17 +0300
+Message-ID: <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 at 10:40, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
 >
-> On 08/05/2020 19:02, Tao Zhou wrote:
-> > On Fri, May 08, 2020 at 05:27:44PM +0200, Vincent Guittot wrote:
-> >> On Fri, 8 May 2020 at 17:12, Tao Zhou <zohooouoto@zoho.com.cn> wrote:
-> >>>
-> >>> Hi Phil,
-> >>>
-> >>> On Thu, May 07, 2020 at 04:36:12PM -0400, Phil Auld wrote:
-> >>>> sched/fair: Fix enqueue_task_fair warning some more
->
-> [...]
->
-> >>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> >>>> index 02f323b85b6d..c6d57c334d51 100644
-> >>>> --- a/kernel/sched/fair.c
-> >>>> +++ b/kernel/sched/fair.c
-> >>>> @@ -5479,6 +5479,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> >>>>               /* end evaluation on encountering a throttled cfs_rq */
-> >>>>               if (cfs_rq_throttled(cfs_rq))
-> >>>>                       goto enqueue_throttle;
-> >>>> +
-> >>>> +               /*
-> >>>> +                * One parent has been throttled and cfs_rq removed from the
-> >>>> +                * list. Add it back to not break the leaf list.
-> >>>> +                */
-> >>>> +               if (throttled_hierarchy(cfs_rq))
-> >>>> +                       list_add_leaf_cfs_rq(cfs_rq);
-> >>>>       }
-> >>>
-> >>> I was confused by why the throttled cfs rq can be on list.
-> >>> It is possible when enqueue a task and thanks to the 'threads'.
-> >>> But I think the above comment does not truely put the right
-> >>> intention, right ?
-> >>> If throttled parent is onlist, the child cfs_rq is ignored
-> >>> to be added to the leaf cfs_rq list me think.
-> >>>
-> >>> unthrottle_cfs_rq() follows the same logic if i am not wrong.
-> >>> Is it necessary to add the above to it ?
-> >>
-> >> When a cfs_rq is throttled, its sched group is dequeued and all child
-> >> cfs_rq are removed from  leaf_cfs_rq list. But the sched group of the
-> >> child cfs_rq stay enqueued in the throttled cfs_rq so child sched
-> >> group->on_rq might be still set.
-> >
-> > If there is a throttle of throttle, and unthrottle the child throttled
-> > cfs_rq(ugly):
-> >                                ...
-> >                                 |
-> >                       cfs_rq throttled (parent A)
-> >                                 |
-> >                                 |
-> >                       cfs_rq in hierarchy (B)
-> >                                 |
-> >                                 |
-> >                       cfs_rq throttled (C)
-> >                                 |
-> >                                ...
-> >
-> > Then unthrottle the child throttled cfs_rq C, now the A is on the
-> > leaf_cfs_rq list. sched_group entity of C is enqueued to B, and
-> > sched_group entity of B is on_rq and is ignored by enqueue but in
-> > the throttled hierarchy and not add to leaf_cfs_rq list.
-> > The above may be absolutely wrong that I miss something.
-> >
-> > Another thing :
-> > In enqueue_task_fair():
-> >
-> >       for_each_sched_entity(se) {
-> >               cfs_rq = cfs_rq_of(se);
-> >
-> >               if (list_add_leaf_cfs_rq(cfs_rq))
-> >                       break;
-> >       }
-> >
-> > In unthrottle_cfs_rq():
-> >
-> >       for_each_sched_entity(se) {
-> >               cfs_rq = cfs_rq_of(se);
-> >
-> >               list_add_leaf_cfs_rq(cfs_rq);
-> >       }
-> >
-> > The difference between them is that if condition, add if
-> > condition to unthrottle_cfs_rq() may be an optimization and
-> > keep the same.
-> >
->
-> I'm not 100% sure if this is exactly what Tao pointed out here but I
-> also had difficulties understanding understanding how this patch works:
->
->                        p.se
->                         |
->       __________________|
->       |
->       V
->      cfs_c -> tg_c ->  se_c (se->on_rq = 1)
->                         |
->       __________________|
->       |
->       v
->      cfs_b -> tg_b ->  se_b
->                         |
->       __________________|
->       |
->       V
->      cfs_a -> tg_a ->  se_a
->                         |
->       __________________|
->       |
->       V
->      cfs_r -> tg_r
->       |
->       V
->       rq
->
-
-In your example, which cfs_ rq has been throttled ? cfs_a ?
-
-> (1) The incomplete update happens with cfs_c at the end of
->     enqueue_entity() in the first loop because of 'if ( .... ||
->     cfs_bandwidth_used())' (cfs_b->on_list=0 since cfs_a is throttled)
-
-so cfs_c is added with the 1st loop
+> It's the default.
+Thanks for catching that.
 
 >
-> (2) se_c breaks out of the first loop (se_c->on_rq = 1)
+> Also so much for "we're not going to tell the graphics people how to
+> review their code", dma_fence is a pretty core piece of gpu driver
+> infrastructure. And it's very much uapi relevant, including piles of
+> corresponding userspace protocols and libraries for how to pass these
+> around.
 >
-> (3) With the patch cfs_b is added back to the list.
->     But only because cfs_a->on_list=1.
+> Would be great if habanalabs would not use this (from a quick look
+> it's not needed at all), since open source the userspace and playing
+> by the usual rules isn't on the table. If that's not possible (because
+> it's actually using the uapi part of dma_fence to interact with gpu
+> drivers) then we have exactly what everyone promised we'd want to
+> avoid.
 
-hmm I don't understand the link between cfs_b been added and cfs_a->on_list=1
+We don't use the uapi parts, we currently only using the fencing and
+signaling ability of this module inside our kernel code. But maybe I
+didn't understand what you request. You want us *not* to use this
+well-written piece of kernel code because it is only used by graphics
+drivers ?
+I'm sorry but I don't get this argument, if this is indeed what you meant.
 
-cfs_b is added with 2nd loop because its throttle_count > 0 due to
-cfs_a been throttled (purpose of this patch)
+Oded
 
 >
-> But since cfs_a is throttled it should be cfs_a->on_list=0 as well.
-
-So 2nd loop breaks because cfs_a is throttled
-
-The 3rd loop will add cfs_a
-
-> throttle_cfs_rq()->walk_tg_tree_from(..., tg_throttle_down, ...) should
-> include cfs_a when calling list_del_leaf_cfs_rq().
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc:     Olof Johansson <olof@lixom.net>
+> Cc: Oded Gabbay <oded.gabbay@gmail.com>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: linux-media@vger.kernel.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> ---
+>  drivers/misc/habanalabs/command_submission.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> IMHO, throttle_cfs_rq() calls tg_throttle_down() for the throttled
-> cfs_rq too.
+> diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+> index 409276b6374d..cc3ce759b6c3 100644
+> --- a/drivers/misc/habanalabs/command_submission.c
+> +++ b/drivers/misc/habanalabs/command_submission.c
+> @@ -46,7 +46,6 @@ static const struct dma_fence_ops hl_fence_ops = {
+>         .get_driver_name = hl_fence_get_driver_name,
+>         .get_timeline_name = hl_fence_get_timeline_name,
+>         .enable_signaling = hl_fence_enable_signaling,
+> -       .wait = dma_fence_default_wait,
+>         .release = hl_fence_release
+>  };
 >
+> --
+> 2.26.2
 >
-> Another thing: Why don't we use throttled_hierarchy(cfs_rq) instead of
-> cfs_bandwidth_used() in enqueue_entity() as well?
-
-Mainly to be conservative because as this patch demonstrates, there
-are a lot of possible use cases and combinations and I can't ensure
-that it is always safe to use the throttled_hierarchy.
