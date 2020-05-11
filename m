@@ -2,152 +2,225 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B5BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05774C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21812070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D962A20752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xde/V+Am"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ZuzW3gEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgEKVol (ORCPT
+        id S1727917AbgEKVpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
+        Mon, 11 May 2020 17:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbgEKVok (ORCPT
+        by vger.kernel.org with ESMTP id S1725860AbgEKVpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:44:40 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E54C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:44:40 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w10so536237ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:44:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qi8QFxJcn8ospcUaTTL/msn/H2PnYlfa7gEDxoqIEDk=;
-        b=Xde/V+AmEr9RhRI0OF3eoEMOlc1isYqe7VOjexZ9+yvqXUITqDMjYykWWvmO4V34Mf
-         JOKkt+8ipvHoG6K6EnRJr+X4BE5BAeOIwVncM8mZiP+p8lL6D28UrUf9zrcUO4HYJ7Li
-         /D0qRklBhVjc7H/pRd3r6sLDxIMmGPBdiSdMvnDuECFum3YPjKLEReOjRUX1lEMISjPa
-         UxRo1lcjtjDBeAqBK9a6l4tU/5RJrH/CC/Tv8dqgB7LOsv/2hUPnh1rhH6QKtsylPMHk
-         BdDMHIPOaPWBeuE+Acy+5O+YHoJMjaQHW8cBtfuVR6w/jN0CQ0EMrdo5tDVPzgaOXoPu
-         HV7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qi8QFxJcn8ospcUaTTL/msn/H2PnYlfa7gEDxoqIEDk=;
-        b=aAH7qjFbGShTJCjA++kIEFaILpE3zSzGTmScdeUrseiLNQWr6MxVxmDs1gyScf7BNq
-         3vnzp4TsXSuI1kvJjr56DwCTQtqaw3N1htm+3+VBBgwG4N/dUMM9BwsJXQ+MNjfKv6jh
-         J3tAnvGuDHSffoLF3np78kWORBvSueqlHbkPNWV+gY+oEBxV5pb9nqOAqP9svxlU8GcB
-         yM4ncwU+Y8EUVaasQNzOE/0OS0lz/sxj5pXGdvvWK6e76C3/xEJn0XQ8hPc2WnZJyQAR
-         woVsA95ALHukR5ZubMGwaj3oqQiapbY/zeaPIPAaQUTynOfigyA8b8HsJOfNLltAD9kV
-         KYqw==
-X-Gm-Message-State: AOAM531YUAZ+ibUdxlMPlzaOqRPvnoglYF63RdFrhSUmYprBjzCK46po
-        riGCUHtWCYhkcEUhHo0SJOdKkDpdB2j7UH3Nbja7Dw==
-X-Google-Smtp-Source: ABdhPJyDBiceL/nRp52X70KoPTj1Z2mRtQJpKkdBDk00bdjCphFTyVenSJCXU23TcFAtFOAlthEP8MRn7HZ4gVuWRHg=
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr12277759ljj.265.1589233477493;
- Mon, 11 May 2020 14:44:37 -0700 (PDT)
+        Mon, 11 May 2020 17:45:05 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D32C061A0C;
+        Mon, 11 May 2020 14:45:02 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 425DF23E4D;
+        Mon, 11 May 2020 23:44:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1589233499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mUeXc7qWDqMsAtbmJANeooU975mp9voikExXUtAFyd4=;
+        b=ZuzW3gEV27FW2OH77G50DUqIKwSr42+SNZXiF4IiL/x/xPKFd7o/8WjGXnjzVnF9r/m+nB
+        ssw9jCD2ST5osYVZ1HaXphfRYwygT2ZucLtvS/LLW9YdkovQ6FaMYje0dUpU07z8LBZFqy
+        bZhJbEpmpgmLqlQGh2PaJrHX77NFMTE=
 MIME-Version: 1.0
-References: <20200507163301.229070-1-shakeelb@google.com> <20200507164653.GM6345@dhcp22.suse.cz>
- <CALvZod5TmAnDoueej1nu5_VV9rQa6VYVRXqCYuh63P5HN-o9Sw@mail.gmail.com> <20200511155646.GB306292@cmpxchg.org>
-In-Reply-To: <20200511155646.GB306292@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 11 May 2020 14:44:26 -0700
-Message-ID: <CALvZod7Js-3uF2QkxtizVNRB24QvoG_jobpsgkwScR3VkCHw9g@mail.gmail.com>
-Subject: Re: [PATCH] memcg: effective memory.high reclaim for remote charging
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 May 2020 23:44:58 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200511211359.GB3518@bogus>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-6-michael@walle.cc> <20200511211359.GB3518@bogus>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <f0fafa63047f00e912013b137e4db15c@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 8:57 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Thu, May 07, 2020 at 10:00:07AM -0700, Shakeel Butt wrote:
-> > On Thu, May 7, 2020 at 9:47 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Thu 07-05-20 09:33:01, Shakeel Butt wrote:
-> > > [...]
-> > > > @@ -2600,8 +2596,23 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > > >                               schedule_work(&memcg->high_work);
-> > > >                               break;
-> > > >                       }
-> > > > -                     current->memcg_nr_pages_over_high += batch;
-> > > > -                     set_notify_resume(current);
-> > > > +
-> > > > +                     if (gfpflags_allow_blocking(gfp_mask))
-> > > > +                             reclaim_over_high(memcg, gfp_mask, batch);
-> > > > +
-> > > > +                     if (page_counter_read(&memcg->memory) <=
-> > > > +                         READ_ONCE(memcg->high))
-> > > > +                             break;
-> > >
-> > > I am half way to a long weekend so bear with me. Shouldn't this be continue? The
-> > > parent memcg might be still in excess even the child got reclaimed,
-> > > right?
-> > >
-> >
-> > The reclaim_high() actually already does this walk up to the root and
-> > reclaim from ones who are still over their high limit. Though having
-> > 'continue' here is correct too.
->
-> If reclaim was weak and failed to bring the child back in line, we
-> still do set_notify_resume(). We should do that for ancestors too.
->
-> But it seems we keep adding hierarchy walks and it's getting somewhat
-> convoluted: page_counter does it, then we check high overage
-> recursively, and now we add the call to reclaim which itself is a walk
-> up the ancestor line.
->
-> Can we hitchhike on the page_counter_try_charge() walk, which already
-> has the concept of identifying counters with overage? Rename the @fail
-> to @limited and return the first counter that is in excess of its high
-> as well, even when the function succeeds?
->
-> Then we could ditch the entire high checking loop here and simply
-> replace it with
->
-> done_restock:
->         ...
->
->         if (*limited) {
->                 if (gfpflags_allow_blocking())
->                         reclaim_over_high(memcg_from_counter(limited));
->                 /* Reclaim may not be able to do much, ... */
->                 set_notify_resume(); // or schedule_work()
->         };
->
+Am 2020-05-11 23:13, schrieb Rob Herring:
+> On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
+>> This patch adds core support for the board management controller found
+>> on the SMARC-sAL28 board. It consists of the following functions:
+>>  - watchdog
+>>  - GPIO controller
+>>  - PWM controller
+>>  - fan sensor
+>>  - interrupt controller
+>> 
+>> At the moment, this controller is used on the Kontron SMARC-sAL28 
+>> board.
+>> 
+>> Please note that the MFD driver is defined as bool in the Kconfig
+>> because the next patch will add interrupt support.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  drivers/mfd/Kconfig    |  19 +++++
+>>  drivers/mfd/Makefile   |   2 +
+>>  drivers/mfd/sl28cpld.c | 153 
+>> +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 174 insertions(+)
+>>  create mode 100644 drivers/mfd/sl28cpld.c
+>> 
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 0a59249198d3..be0c8d93c526 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -2060,5 +2060,24 @@ config SGI_MFD_IOC3
+>>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
+>>  	  then say Y. Otherwise say N.
+>> 
+>> +config MFD_SL28CPLD
+>> +	bool "Kontron sl28 core driver"
+>> +	depends on I2C=y
+>> +	depends on OF
+>> +	select REGMAP_I2C
+>> +	select MFD_CORE
+>> +	help
+>> +	  This option enables support for the board management controller
+>> +	  found on the Kontron sl28 CPLD. You have to select individual
+>> +	  functions, such as watchdog, GPIO, etc, under the corresponding 
+>> menus
+>> +	  in order to enable them.
+>> +
+>> +	  Currently supported boards are:
+>> +
+>> +		Kontron SMARC-sAL28
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will 
+>> be
+>> +	  called sl28cpld.
+>> +
+>>  endmenu
+>>  endif
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index f935d10cbf0f..9bc38863b9c7 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+>>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>> 
+>>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>> +
+>> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+>> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
+>> new file mode 100644
+>> index 000000000000..1e5860cc7ffc
+>> --- /dev/null
+>> +++ b/drivers/mfd/sl28cpld.c
+>> @@ -0,0 +1,153 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * MFD core for the sl28cpld.
+>> + *
+>> + * Copyright 2019 Kontron Europe GmbH
+>> + */
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#define SL28CPLD_VERSION	0x03
+>> +#define SL28CPLD_WATCHDOG_BASE	0x04
+>> +#define SL28CPLD_HWMON_FAN_BASE	0x0b
+>> +#define SL28CPLD_PWM0_BASE	0x0c
+>> +#define SL28CPLD_PWM1_BASE	0x0e
+>> +#define SL28CPLD_GPIO0_BASE	0x10
+>> +#define SL28CPLD_GPIO1_BASE	0x15
+>> +#define SL28CPLD_GPO_BASE	0x1a
+>> +#define SL28CPLD_GPI_BASE	0x1b
+>> +#define SL28CPLD_INTC_BASE	0x1c
+> 
+> If you want to use 'reg' in the binding, these are the numbers you
+> should be using rather than making up numbering!
 
-I will try to code the above and will give a shot to the following
-long-term suggestion as well.
+My motivation is that I don't want to hardcode the internal addresses
+of the management controller in the device tree. For example if they
+will move around with a later update of the controller, so a driver can
+be compatible with both the old and the new version. If they are in the
+device tree, only one register layout is possible.
 
-> In the long-term, the best thing might be to integrate memory.high
-> reclaim with the regular reclaim that try_charge() is already
-> doing. Especially the part where it retries several times - we
-> currently give up on memory.high unnecessarily early. Make
-> page_counter_try_charge() fail on high and max equally, and after
-> several reclaim cycles, instead of invoking the OOM killer, inject the
-> penalty sleep and force the charges. OOM killing and throttling is
-> supposed to be the only difference between the two, anyway, and yet
-> the code diverges far more than that for no apparent reason.
->
-> But I also appreciate that this is a cleanup beyond the scope of this
-> patch here, so it's up to you how far you want to take it.
+> However, I still don't think you need any child nodes. All the data in
+> the DT binding is right here in the driver already. There's no 
+> advantage
+> to putting child nodes in DT, because this driver still has to be
+> updated if you add more nodes.
 
-Thanks,
-Shakeel
+But then any phandle will reference the mfd device. And for example 
+there
+are two different interrupt controllers, that is the INTC and the 
+GPIO[01],
+which will then be combined into one device tree node, right?
+
+So the mfd node would be
+
+cpld: sl28cpld@4a {
+   interrupt-controller;
+   #interrupt-cells = <2>;
+   gpio-controller;
+   #gpio-cells = <2>;
+   [..]
+};
+
+and then depending on the mapping one could use:
+
+interrupts-extended = <&cpld 0 FLAGS>; /* gpio0 line 0 */
+interrupts-extended = <&cpld 8 FLAGS>; /* gpio1 line 0 */
+interrupts-extended = <&cpld 12 FLAGS>; /* irq0 */
+
+gpios = <&cpld 0> /* gpio0 line 0 */
+
+But there is also offset 12, but then it is the GPI controller:
+
+gpios = <&cpld 12> /* gpi line 0, nothing to do with irq0 */
+
+I don't know if this is good practice, I guess you have to tell me. And
+is it possible to combine any sub device into the mfd node in that way?
+
+-michael
