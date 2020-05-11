@@ -6,221 +6,147 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF47C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9CEC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B75D20722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B815A20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgEKL1W (ORCPT
+        id S1729830AbgEKLZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:27:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39938 "EHLO pegase1.c-s.fr"
+        Mon, 11 May 2020 07:25:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46759 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729825AbgEKLZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:59 -0400
+        id S1729803AbgEKLZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:54 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJXG514Fz9ty3h;
-        Mon, 11 May 2020 13:25:50 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49LJX93mp6z9ty3m;
+        Mon, 11 May 2020 13:25:45 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id RZZ1EQsWwwmT; Mon, 11 May 2020 13:25:50 +0200 (CEST)
+        with ESMTP id 8rT_iJsjtrUF; Mon, 11 May 2020 13:25:45 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXG4Gmkz9ty3g;
-        Mon, 11 May 2020 13:25:50 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJX932r5z9ty3g;
+        Mon, 11 May 2020 13:25:45 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C05C8B7AE;
-        Mon, 11 May 2020 13:25:57 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2583F8B7AE;
+        Mon, 11 May 2020 13:25:52 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id sRIQspWzZyPV; Mon, 11 May 2020 13:25:57 +0200 (CEST)
+        with ESMTP id XLaEwI5d7zVD; Mon, 11 May 2020 13:25:52 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 095A88B7AD;
-        Mon, 11 May 2020 13:25:57 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DBB398B7AD;
+        Mon, 11 May 2020 13:25:51 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E1F5F65A09; Mon, 11 May 2020 11:25:56 +0000 (UTC)
-Message-Id: <ece43d638800c538ec01a3f7f7eb91d9e27fb8ce.1589196133.git.christophe.leroy@csgroup.eu>
+        id BEB7965A09; Mon, 11 May 2020 11:25:51 +0000 (UTC)
+Message-Id: <4b5d48643c74c66102e70b0a94b40f013c21a6d0.1589196133.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 30/45] powerpc/8xx: Add function to set pinned TLBs
+Subject: [PATCH v3 25/45] powerpc/8xx: Prepare handlers for _PAGE_HUGE for
+ 512k pages.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:25:56 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:25:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pinned TLBs cannot be modified when the MMU is enabled.
+Prepare ITLB handler to handle _PAGE_HUGE when CONFIG_HUGETLBFS
+is enabled. This means that the L1 entry has to be kept in r11
+until L2 entry is read, in order to insert _PAGE_HUGE into it.
 
-Create a function to rewrite the pinned TLB entries with MMU off.
-
-To set pinned TLB, we have to turn off MMU, disable pinning,
-do a TLB flush (Either with tlbie and tlbia) then reprogam
-the TLB entries, enable pinning and turn on MMU.
-
-If using tlbie, it cleared entries in both instruction and data
-TLB regardless whether pinning is disabled or not.
-If using tlbia, it clears all entries of the TLB which has
-disabled pinning.
-
-To make it easy, just clear all entries in both TLBs, and
-reprogram them.
-
-The function takes two arguments, the top of the memory to
-consider and whether data is RO under _sinittext.
-When DEBUG_PAGEALLOC is set, the top is the end of kernel rodata.
-Otherwise, that's the top of physical RAM.
-
-Everything below _sinittext is set RX, over _sinittext that's RW.
+Also move pgd_offset helpers before pte_update() as they
+will be needed there in next patch.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
-v2: Function rewritten to manage all entries at once.
----
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |   2 +
- arch/powerpc/kernel/head_8xx.S               | 103 +++++++++++++++++++
- 2 files changed, 105 insertions(+)
+ arch/powerpc/include/asm/nohash/32/pgtable.h | 13 ++++++-------
+ arch/powerpc/kernel/head_8xx.S               | 15 +++++++++------
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index a092e6434bda..4d3ef3841b00 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -193,6 +193,8 @@
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index dd5835354e33..1a86d20b58f3 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -206,6 +206,12 @@ static inline void pmd_clear(pmd_t *pmdp)
+ }
  
- #include <linux/mmdebug.h>
  
-+void mmu_pin_tlb(unsigned long top, bool readonly);
++/* to find an entry in a kernel page-table-directory */
++#define pgd_offset_k(address) pgd_offset(&init_mm, address)
 +
- typedef struct {
- 	unsigned int id;
- 	unsigned int active;
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 423465b10c82..c9e3d54e6a6f 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -16,6 +16,7 @@
- 
- #include <linux/init.h>
- #include <linux/magic.h>
-+#include <linux/sizes.h>
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/mmu.h>
-@@ -866,6 +867,108 @@ initial_mmu:
- 	mtspr	SPRN_DER, r8
- 	blr
- 
-+#ifdef CONFIG_PIN_TLB
-+_GLOBAL(mmu_pin_tlb)
-+	lis	r9, (1f - PAGE_OFFSET)@h
-+	ori	r9, r9, (1f - PAGE_OFFSET)@l
-+	mfmsr	r10
-+	mflr	r11
-+	li	r12, MSR_KERNEL & ~(MSR_IR | MSR_DR | MSR_RI)
-+	rlwinm	r0, r10, 0, ~MSR_RI
-+	rlwinm	r0, r0, 0, ~MSR_EE
-+	mtmsr	r0
-+	isync
-+	.align	4
-+	mtspr	SPRN_SRR0, r9
-+	mtspr	SPRN_SRR1, r12
-+	rfi
-+1:
-+	li	r5, 0
-+	lis	r6, MD_TWAM@h
-+	mtspr	SPRN_MI_CTR, r5
-+	mtspr	SPRN_MD_CTR, r6
-+	tlbia
-+
-+#ifdef CONFIG_PIN_TLB_TEXT
-+	LOAD_REG_IMMEDIATE(r5, 28 << 8)
-+	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
-+	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
-+	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+	LOAD_REG_ADDR(r9, _sinittext)
-+	li	r0, 4
-+	mtctr	r0
-+
-+2:	ori	r0, r6, MI_EVALID
-+	mtspr	SPRN_MI_CTR, r5
-+	mtspr	SPRN_MI_EPN, r0
-+	mtspr	SPRN_MI_TWC, r7
-+	mtspr	SPRN_MI_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r9
-+	bdnzt	lt, 2b
-+	lis	r0, MI_RSV4I@h
-+	mtspr	SPRN_MI_CTR, r0
-+#endif
-+	LOAD_REG_IMMEDIATE(r5, 28 << 8 | MD_TWAM)
-+#ifdef CONFIG_PIN_TLB_DATA
-+	LOAD_REG_IMMEDIATE(r6, PAGE_OFFSET)
-+	LOAD_REG_IMMEDIATE(r7, MI_SVALID | MI_PS8MEG)
-+#ifdef CONFIG_PIN_TLB_IMMR
-+	li	r0, 3
-+#else
-+	li	r0, 4
-+#endif
-+	mtctr	r0
-+	cmpwi	r4, 0
-+	beq	4f
-+	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_RO | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+	LOAD_REG_ADDR(r9, _sinittext)
-+
-+2:	ori	r0, r6, MD_EVALID
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r9
-+	bdnzt	lt, 2b
-+
-+4:	LOAD_REG_IMMEDIATE(r8, 0xf0 | _PAGE_SPS | _PAGE_SH | _PAGE_PRESENT)
-+2:	ori	r0, r6, MD_EVALID
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+	addi	r5, r5, 0x100
-+	addis	r6, r6, SZ_8M@h
-+	addis	r8, r8, SZ_8M@h
-+	cmplw	r6, r3
-+	bdnzt	lt, 2b
-+#endif
-+#ifdef CONFIG_PIN_TLB_IMMR
-+	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
-+	LOAD_REG_IMMEDIATE(r7, MD_SVALID | MD_PS512K | MD_GUARDED)
-+	mfspr   r8, SPRN_IMMR
-+	rlwinm	r8, r8, 0, 0xfff80000
-+	ori	r8, r8, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
-+			_PAGE_NO_CACHE | _PAGE_PRESENT
-+	mtspr	SPRN_MD_CTR, r5
-+	mtspr	SPRN_MD_EPN, r0
-+	mtspr	SPRN_MD_TWC, r7
-+	mtspr	SPRN_MD_RPN, r8
-+#endif
-+#if defined(CONFIG_PIN_TLB_IMMR) || defined(CONFIG_PIN_TLB_DATA)
-+	lis	r0, (MD_RSV4I | MD_TWAM)@h
-+	mtspr	SPRN_MI_CTR, r0
-+#endif
-+	mtspr	SPRN_SRR1, r10
-+	mtspr	SPRN_SRR0, r11
-+	rfi
-+#endif /* CONFIG_PIN_TLB */
++/* to find an entry in a page-table-directory */
++#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
++#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
  
  /*
-  * We put a few things here that have to be page-aligned.
+  * PTE updates. This function is called whenever an existing
+@@ -348,13 +354,6 @@ static inline int pte_young(pte_t pte)
+ 	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
+ #endif
+ 
+-/* to find an entry in a kernel page-table-directory */
+-#define pgd_offset_k(address) pgd_offset(&init_mm, address)
+-
+-/* to find an entry in a page-table-directory */
+-#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
+-#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
+-
+ /* Find an entry in the third-level page table.. */
+ #define pte_index(address)		\
+ 	(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 905205c79a25..adad8baadcf5 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -196,7 +196,7 @@ SystemCall:
+ 
+ InstructionTLBMiss:
+ 	mtspr	SPRN_SPRG_SCRATCH0, r10
+-#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
++#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
+ 	mtspr	SPRN_SPRG_SCRATCH1, r11
+ #endif
+ 
+@@ -235,16 +235,19 @@ InstructionTLBMiss:
+ 	rlwinm	r10, r10, 0, 20, 31
+ 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
+ 3:
++	mtcr	r11
+ #endif
++#ifdef CONFIG_HUGETLBFS
++	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
++	mtspr	SPRN_MI_TWC, r11	/* Set segment attributes */
++	mtspr	SPRN_MD_TWC, r11
++#else
+ 	lwz	r10, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
+ 	mtspr	SPRN_MI_TWC, r10	/* Set segment attributes */
+-
+ 	mtspr	SPRN_MD_TWC, r10
++#endif
+ 	mfspr	r10, SPRN_MD_TWC
+ 	lwz	r10, 0(r10)	/* Get the pte */
+-#ifdef ITLB_MISS_KERNEL
+-	mtcr	r11
+-#endif
+ #ifdef CONFIG_SWAP
+ 	rlwinm	r11, r10, 32-5, _PAGE_PRESENT
+ 	and	r11, r11, r10
+@@ -263,7 +266,7 @@ InstructionTLBMiss:
+ 
+ 	/* Restore registers */
+ 0:	mfspr	r10, SPRN_SPRG_SCRATCH0
+-#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP)
++#if defined(ITLB_MISS_KERNEL) || defined(CONFIG_SWAP) || defined(CONFIG_HUGETLBFS)
+ 	mfspr	r11, SPRN_SPRG_SCRATCH1
+ #endif
+ 	rfi
 -- 
 2.25.0
 
