@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EEAC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33748C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69D6C20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3842082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgEKErH (ORCPT
+        id S1727928AbgEKEpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
+        Mon, 11 May 2020 00:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728061AbgEKEp4 (ORCPT
+        by vger.kernel.org with ESMTP id S1725790AbgEKEpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:45:56 -0400
+        Mon, 11 May 2020 00:45:55 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D298C061A0C;
-        Sun, 10 May 2020 21:45:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D416C061A0C;
+        Sun, 10 May 2020 21:45:55 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0KA-005jI5-LQ; Mon, 11 May 2020 04:45:54 +0000
+        id 1jY0K9-005jHS-Dw; Mon, 11 May 2020 04:45:53 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/19] ip6_mc_msfilter(): pass the address list separately
-Date:   Mon, 11 May 2020 05:45:41 +0100
-Message-Id: <20200511044553.1365660-7-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 01/19] lift compat definitions of mcast [sg]etsockopt requests into net/compat.h
+Date:   Mon, 11 May 2020 05:45:35 +0100
+Message-Id: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20200511044328.GP23230@ZenIV.linux.org.uk>
 References: <20200511044328.GP23230@ZenIV.linux.org.uk>
- <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,69 +44,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-that way we'll be able to reuse it for compat case
+We want to get rid of compat_mc_[sg]etsockopt() and to have that stuff
+handled without compat_alloc_user_space(), extra copying through
+userland, etc.  To do that we'll need ipv4 and ipv6 instances of
+->compat_[sg]etsockopt() to manipulate the 32bit variants of mcast
+requests, so we need to move the definitions of those out of net/compat.c
+and into a public header.
+
+This patch just does a mechanical move to include/net/compat.h
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- include/net/ipv6.h       | 3 ++-
- net/ipv6/ipv6_sockglue.c | 2 +-
- net/ipv6/mcast.c         | 7 ++++---
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ include/net/compat.h | 24 ++++++++++++++++++++++++
+ net/compat.c         | 25 -------------------------
+ 2 files changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-index 900cc66311c4..901c78b117a1 100644
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -1134,7 +1134,8 @@ struct group_filter;
+diff --git a/include/net/compat.h b/include/net/compat.h
+index e341260642fe..9f4a56c5671e 100644
+--- a/include/net/compat.h
++++ b/include/net/compat.h
+@@ -56,4 +56,28 @@ int compat_mc_getsockopt(struct sock *, int, int, char __user *, int __user *,
+ 			 int (*)(struct sock *, int, int, char __user *,
+ 				 int __user *));
  
- int ip6_mc_source(int add, int omode, struct sock *sk,
- 		  struct group_source_req *pgsr);
--int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf);
-+int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
-+		  struct sockaddr_storage *list);
- int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
- 		  struct sockaddr_storage __user *p);
- 
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 3f127c6b3c22..33efc9112259 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -780,7 +780,7 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
- 			retv = -EINVAL;
- 			break;
- 		}
--		retv = ip6_mc_msfilter(sk, gsf);
-+		retv = ip6_mc_msfilter(sk, gsf, gsf->gf_slist);
- 		kfree(gsf);
- 
- 		break;
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 97d796c7d6c0..7e12d2114158 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -457,7 +457,8 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
- 	return err;
++struct compat_group_req {
++	__u32				 gr_interface;
++	struct __kernel_sockaddr_storage gr_group
++		__aligned(4);
++} __packed;
++
++struct compat_group_source_req {
++	__u32				 gsr_interface;
++	struct __kernel_sockaddr_storage gsr_group
++		__aligned(4);
++	struct __kernel_sockaddr_storage gsr_source
++		__aligned(4);
++} __packed;
++
++struct compat_group_filter {
++	__u32				 gf_interface;
++	struct __kernel_sockaddr_storage gf_group
++		__aligned(4);
++	__u32				 gf_fmode;
++	__u32				 gf_numsrc;
++	struct __kernel_sockaddr_storage gf_slist[1]
++		__aligned(4);
++} __packed;
++
+ #endif /* NET_COMPAT_H */
+diff --git a/net/compat.c b/net/compat.c
+index 4bed96e84d9a..06af69e7b408 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -447,34 +447,9 @@ COMPAT_SYSCALL_DEFINE5(getsockopt, int, fd, int, level, int, optname,
+ 	return __compat_sys_getsockopt(fd, level, optname, optval, optlen);
  }
  
--int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf)
-+int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf,
-+		    struct sockaddr_storage *list)
- {
- 	const struct in6_addr *group;
- 	struct ipv6_mc_socklist *pmc;
-@@ -509,10 +510,10 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf)
- 			goto done;
- 		}
- 		newpsl->sl_max = newpsl->sl_count = gsf->gf_numsrc;
--		for (i = 0; i < newpsl->sl_count; ++i) {
-+		for (i = 0; i < newpsl->sl_count; ++i, ++list) {
- 			struct sockaddr_in6 *psin6;
+-struct compat_group_req {
+-	__u32				 gr_interface;
+-	struct __kernel_sockaddr_storage gr_group
+-		__aligned(4);
+-} __packed;
+-
+-struct compat_group_source_req {
+-	__u32				 gsr_interface;
+-	struct __kernel_sockaddr_storage gsr_group
+-		__aligned(4);
+-	struct __kernel_sockaddr_storage gsr_source
+-		__aligned(4);
+-} __packed;
+-
+-struct compat_group_filter {
+-	__u32				 gf_interface;
+-	struct __kernel_sockaddr_storage gf_group
+-		__aligned(4);
+-	__u32				 gf_fmode;
+-	__u32				 gf_numsrc;
+-	struct __kernel_sockaddr_storage gf_slist[1]
+-		__aligned(4);
+-} __packed;
+-
+ #define __COMPAT_GF0_SIZE (sizeof(struct compat_group_filter) - \
+ 			sizeof(struct __kernel_sockaddr_storage))
  
--			psin6 = (struct sockaddr_in6 *)&gsf->gf_slist[i];
-+			psin6 = (struct sockaddr_in6 *)list;
- 			newpsl->sl_addr[i] = psin6->sin6_addr;
- 		}
- 		err = ip6_mc_add_src(idev, group, gsf->gf_fmode,
+-
+ int compat_mc_setsockopt(struct sock *sock, int level, int optname,
+ 	char __user *optval, unsigned int optlen,
+ 	int (*setsockopt)(struct sock *, int, int, char __user *, unsigned int))
 -- 
 2.11.0
 
