@@ -2,93 +2,92 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4E6C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E5FC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BDF20769
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589217199;
+	bh=HzRnoLxva5TEjQwJpL7oLKvb5b5J0ffUrtcmvG8XvGg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=eb843Hf1WGouq16dsqtC87JgS7DtvT25V5+vzxCM2Nl31xcjv5hE1VZCrkDHEJ3iw
+	 +Jl2JZjZVh74d3hFiFpu7QXHCvJuRG6pkeG896NYgZeJKhXelrGhEbNEMoA7VpRDCD
+	 sGOuvFeSLaY3Jr6aLKCWawHF+qKrUuvIPnFdzY7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgEKRLu (ORCPT
+        id S1730780AbgEKRNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730800AbgEKRLt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:11:49 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0EEDC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:11:49 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 53C852A0CAC
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        song@kernel.org, breeves@redhat.com, mpatocka@redhat.com,
-        khazhy@google.com, kernel@collabora.com
-Subject: Re: [PATCH v4 0/2] Historical Service Time Path Selector
-Organization: Collabora
-References: <20200511163910.3778467-1-krisman@collabora.com>
-        <20200511170235.GA7719@redhat.com>
-Date:   Mon, 11 May 2020 13:11:44 -0400
-In-Reply-To: <20200511170235.GA7719@redhat.com> (Mike Snitzer's message of
-        "Mon, 11 May 2020 13:02:35 -0400")
-Message-ID: <85ftc6l7lb.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 11 May 2020 13:13:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729731AbgEKRNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:13:18 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E87920714;
+        Mon, 11 May 2020 17:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589217198;
+        bh=HzRnoLxva5TEjQwJpL7oLKvb5b5J0ffUrtcmvG8XvGg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bl1wqPPQKxQvvTYa3bHowvivrmonuWrMLWBkCickE7r2v0LJz+eMYMQnSrHyr/pCa
+         aL4dzGv1FyRKql8ZL+NUFhBx/EDyeA92IvAjT8Gy+BDHaVz0hlgdEfIy9JQkA7Pfef
+         gI8BC9/J5W1HtjODpNpQ55FDjcYfbjd9Ak0hEuTo=
+Subject: Re: [PATCH 4.9 00/18] 4.9.223-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200508123030.497793118@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <413ec0d9-f857-c46a-0313-a8a9a34857d6@kernel.org>
+Date:   Mon, 11 May 2020 11:13:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200508123030.497793118@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mike Snitzer <snitzer@redhat.com> writes:
+On 5/8/20 6:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.223 release.
+> There are 18 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.223-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> On Mon, May 11 2020 at 12:39pm -0400,
-> Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
->
->> Hi,
->> 
->> This fourth version of HST applies the suggestion from Mikulas Patocka
->> to do the ktime_get_ns inside the mpath map_bio instead of generic
->> device-mapper code. This means that struct dm_mpath_io gained another
->> 64bit field.  For the request-based case, we continue to use the block
->> layer start time information.
->> 
->> With this modification, I was able obtain similar performance on  BIO
->> to request-based multipath with HST on the benchmarks shared in v1.
->> 
->> v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
->> v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
->> v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
->
-> I already staged your v3 in linux-next.  Please provide an incremental
-> patch that layers on this git branch:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.8
->
-> I was hopeful for a flag to be set (e.g. in 'struct path_selector') to
-> reflect whether the path selector expects highres start_time.  Makes
-> little sense to incur that extra cost of providing the time if the path
-> selector doesn't even use it.
->
-> Alternatively, could split out the setting of the time needed by .end_io
-> to a new path_selector_type method (e.g. .set_start_time).  And then
-> only use ktime_get_ns() for bio-based if .set_start_time is defined.
-> Would get a little fiddly needing to make sure a stale start_time isn't
-> used... also, makes more sense to conditionally call this
-> .set_start_time just after .start_io is.
+Compiled and booted on my test system. Same emergency message
+in this release as well.
 
-Oh, my apologies, I hadn't noticed it was merged.  I will make the time fetch
-conditional and submit a new patch based on that branch.
+Initramfs unpacking failed: Decoding failed
 
-Thanks,
+I will starting debug and let you know.
 
-
--- 
-Gabriel Krisman Bertazi
+thanks,
+-- Shuah
