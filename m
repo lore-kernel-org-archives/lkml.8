@@ -2,94 +2,93 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B928C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08318C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E962070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20150623.gappssmtp.com header.i=@fireburn-co-uk.20150623.gappssmtp.com header.b="TI0vssJB"
+	by mail.kernel.org (Postfix) with ESMTP id E204620722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgEKRCA (ORCPT
+        id S1730796AbgEKRCC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730066AbgEKRB7 (ORCPT
+        Mon, 11 May 2020 13:02:02 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33853 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730624AbgEKRCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:01:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC84C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:01:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x17so11926139wrt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mmdp25EQ8v0wuV4mVsq8FtF479Pr9MswXZ7O+Ch3s28=;
-        b=TI0vssJBeyHfKkJPorkVHrlz52YVSU/E3UCjFd1m7lHuGT9QoQxtjyQHUvUx+32lTT
-         TnayIuEewWH83ETvE+6HjPyKmVyxw/Qwp5496syBzsn6odOUhJCJnwoPNHt+BETnL609
-         j7t7wkPLHZuVBPt7wW97H5IYwYRUHdfcjEHeUUuZsGUfbhX4AhKuxe20tcFxhyjI3HP1
-         zu+Ndnby7fEYTZXWlgWQMxijIu/5Z2ylO17tYVaxpm0NuhpNL7fpCKy9TTfA2JdDWc+A
-         Z8tkX7UbTIAO5fFHJqGGWjVktr5cs/hmE4qtNS8eXVf1O4ycgeQ+3Oq7dJMqGXkgNOB+
-         2hiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mmdp25EQ8v0wuV4mVsq8FtF479Pr9MswXZ7O+Ch3s28=;
-        b=DeczmP4AjORcEk5ZTLn1vWEXjfWhNVE7T7GPZEvjHn0JSsigCDOwngf5tDh4aChso6
-         nUatW6ujD2YP1wc0LURxjDMgwisk+dahLk9lnZMshmtD4kz8bexT0fX0ComEtNXPo6ki
-         FcDSSESM8GGhY60F66vLdqe/o5iHAacrtnLpWAEcRZi9tGLZWpSNWOENBvoPz9gGnEc7
-         RKV9HqSZRfYJpclXz0xEwU+rH+rl/DT3pLIzDryR9VOgl+lER+WETdhhrgvzNLlMOudH
-         ADYWgRB+sL8W+RycmwhXI6jUWpXTUMfSwAMESHTzeSGB0F8ju3EWgAOnwAyMb7vAmiGM
-         H8oQ==
-X-Gm-Message-State: AGi0PuYoIQ5qP1TE6EXZ2ZTAz3av3kEi97KGw9aI5zQgbDJ2OfjYcsvN
-        9Gwgost/d43B/AeKVBLswbngfA==
-X-Google-Smtp-Source: APiQypJMAkUzfIFHSDDRuJ6ZptTUoB8Twc6PWnX1oRT4RX4dM5kexeDaRf54TEZ2T9NcIEm0IZstAA==
-X-Received: by 2002:adf:f1c4:: with SMTP id z4mr21486249wro.25.1589216513994;
-        Mon, 11 May 2020 10:01:53 -0700 (PDT)
-Received: from axion.fireburn.co.uk ([2a01:4b00:f40e:900::64c])
-        by smtp.gmail.com with ESMTPSA id p23sm21670792wmj.37.2020.05.11.10.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 10:01:53 -0700 (PDT)
-From:   Mike Lothian <mike@fireburn.co.uk>
-To:     nivedita@alum.mit.edu, Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Mike Lothian <mike@fireburn.co.uk>
-Subject: Re: [PATCH v2 4/5] efi/x86: Remove extra headroom for setup block
-Date:   Mon, 11 May 2020 18:01:49 +0100
-Message-Id: <20200511170149.1363260-1-mike@fireburn.co.uk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200303221205.4048668-5-nivedita@alum.mit.edu>
-References: <20200303221205.4048668-5-nivedita@alum.mit.edu>
+        Mon, 11 May 2020 13:02:00 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 6C91EC0008;
+        Mon, 11 May 2020 17:01:57 +0000 (UTC)
+Date:   Mon, 11 May 2020 19:01:56 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
+Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
+        vigneshr@ti.com, sumit.semwal@linaro.org,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 2/3] nand: brcmnand: fix CS0 layout
+Message-ID: <20200511190156.51dcc316@xps13>
+In-Reply-To: <20200510151406.2527856-2-noltari@gmail.com>
+References: <20200510151406.2527856-1-noltari@gmail.com>
+        <20200510151406.2527856-2-noltari@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hi Álvaro,
 
-This patch has been causing issues for me since switching to GCC 10.1:
+Álvaro Fernández Rojas <noltari@gmail.com> wrote on Sun, 10 May 2020
+17:14:05 +0200:
 
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-  CHK     include/generated/compile.h
-  HOSTCC  arch/x86/boot/tools/build
-/usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld: error: linker defined: multiple definition of '_end'
-/usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccEkW0jM.o: previous definition here
-collect2: error: ld returned 1 exit status
-make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
-make: *** [arch/x86/Makefile:303: bzImage] Error 2
+> Only v3.3-v5.0 have a different CS0 layout.
+> v3.3- controllers use the same layout for every CS.
 
-Cheers
+I had a hard time what you meant here, just because of the trailing
+dash. 
 
-Mike
+    "Controllers before v3.3..."
+
+would be more understandable.
+
+Also please add a Fixes/Cc: stable tag here.
+
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index 6a08dd07b058..72b268d8e3a4 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -606,8 +606,9 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+>  	} else {
+>  		ctrl->cs_offsets = brcmnand_cs_offsets;
+>  
+> -		/* v5.0 and earlier has a different CS0 offset layout */
+> -		if (ctrl->nand_version <= 0x0500)
+> +		/* v3.3-5.0 have a different CS0 offset layout */
+> +		if (ctrl->nand_version >= 0x0303 &&
+> +		    ctrl->nand_version <= 0x0500)
+>  			ctrl->cs0_offsets = brcmnand_cs_offsets_cs0;
+>  	}
+>  
+
+
+Thanks,
+Miquèl
