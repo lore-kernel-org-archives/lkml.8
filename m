@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182C5C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1258C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33B82075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7119E2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iS92wYf6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQOh+DA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731781AbgEKUhk (ORCPT
+        id S1731787AbgEKUhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
+        Mon, 11 May 2020 16:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729846AbgEKUhi (ORCPT
+        with ESMTP id S1731642AbgEKUhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:37:38 -0400
+        Mon, 11 May 2020 16:37:55 -0400
 Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F472C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:37:37 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id m24so9860548wml.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:37:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3695C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:37:53 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g12so20887564wmh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zwPM4CBdeKih2C+OJM7Sir4vxzDvnL4F9Yt0AXfN6i8=;
-        b=iS92wYf6QFibOHIP0gapdp/NVRfPS4pIDzLwx2p4ZcTpGuPYq8PQnaBUjjHse2SFKD
-         61Q4GVlkeKxp3wxnZBfL/0xw5AJRD1ei/CBgpsZPl+aFWkRBx72tIJaV756a5oc2lOkI
-         6WVlO6LVPdLNi0x92BibS2/TyT7FWFgZypruW3EmWqGtBDZMXVURZmgj8zFbBvNIq3JY
-         5r21DNXmh4Tyl00wyRWKyAFlYuUMBllartIJ2xpcgIdAOezIxa9R0N1WgiyZy5sqqW4G
-         2GjI9Xbig26T8XrGpSvwiMcaOaY1kn5f8SjXq0b9GguO8+2NQIU3JYDzYnWjJ/m7MP5l
-         JyBA==
+        bh=/ThaAQr/qV1yyCFYF8RMT74RUGH0VDpehYJsgM0FJEI=;
+        b=GQOh+DA88cQ/muA1FH3+IHTpB7WJhumTeBV+pl8GRMbQMh1flT6iBRz19+W+CsW2KG
+         9vNkQCv+ehDSeHMIdytPSDLYhRk9zMsuUfKBEw5Mt0f574jilBH8Z2DGR5MzhXjQzE+L
+         uIHmi/sjHANtjnhz+Ff1uR72IvYgVgCq1Vy+d19CwdZ1mbCEDPygZFV8xzA/7ashRfYi
+         46O8iiOG4LnhqgpptS20ZTwNhNkZWK1JzDXCAcCLAH+Pp1auji39+4LNtmO7yJSuX44Z
+         IffPJ3cWXJjFVcfufTfTxYcXUOQYWFeEtF0eestildo6rOV5fqdepr7r8vTd+SmXdmEo
+         HD8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zwPM4CBdeKih2C+OJM7Sir4vxzDvnL4F9Yt0AXfN6i8=;
-        b=P4Kb3YE79ROJNKlhQnpfGa8I2/OxYejB6WbMRbAnhjlp6440oHPy6sxB22WKlLzrov
-         7iY258UWig7q5gjZByA3+72/F/cJqwD9tDH17TqgRzzmAxQl9Njhm99h0669YVQuY/3R
-         M9QrZiK7N/i4EYIG/tTbGac786a155nml9SiQrIp2xSqlgm3/g2MtZAFGA1EPOh5R2/9
-         ZakOxCiq3lk5g2IjJrvdQaKE76nccoTRLbX6hIfZJLUh7fMu7wN5PGYrMGyY/J54YZM2
-         yVoSuZgpHTQU9+74LbWTOVUn/m/IEzeNpiyW3/hkgK/JnBPYX9xGlAVXfB4cz3P8Hn+7
-         sAGw==
-X-Gm-Message-State: AGi0PuZo5QvgJQotES6Q9NNUg9UGzxFXdr1paCwGOcAGt4lxs9/XZygt
-        qarphZBKXjaMuoP7p9wkmDbtK5JL
-X-Google-Smtp-Source: APiQypKArOteYE/UY8SupiPa12+TWO4FNZPnFWusxgpIDXPyUlWASktjgvwyxkCvhtyznMGx9Vb74A==
-X-Received: by 2002:a1c:e903:: with SMTP id q3mr32365949wmc.76.1589229455893;
-        Mon, 11 May 2020 13:37:35 -0700 (PDT)
+        bh=/ThaAQr/qV1yyCFYF8RMT74RUGH0VDpehYJsgM0FJEI=;
+        b=h71TB5MZ+iQEw3doGJr2j9YYHoBQMVVqI1pPnYe+ZmlB6MsHz9nUoIi1F3B+KTocnx
+         uyxe68D26D2JlTFLVjGHuzwoyMH5nYhAAQWrluOjsQemBbpkkrO82jcBbGIj6tYnO/tk
+         kQjTxPvTLK2bwWCAODnB8WmhbG22leCSdGI8DJ3irO7Ydux4YM8TvvSAq8vu5XZA+T9E
+         QalSkfgkwAtr30XQSaMTuHLQB68hI+8NzlScQFTstA0Xm03feYJmsAvY4loPhcKWZmI5
+         R+0tXjr0b71nrbqFNerXQMBSHejrGScwAoF8eMbwsd6lJOdaLlwWR72rNAE9ij09m78r
+         rCOw==
+X-Gm-Message-State: AGi0PubRAYDj9RXq2d0jOM2KtsqUR0gZhE+VkQdkvi0s7bMJmc5nFjRA
+        Z+eZPgPMV8m0rH319o95cPw=
+X-Google-Smtp-Source: APiQypI6Dh5Jm/iqjWtvcWxtWzm/VhqwR1NMR3+IMgZnvFAGZTvx2aG8aBPW9b3rUjq5oQFb8wbLnA==
+X-Received: by 2002:a05:600c:2c04:: with SMTP id q4mr32405698wmg.7.1589229472269;
+        Mon, 11 May 2020 13:37:52 -0700 (PDT)
 Received: from akira-laptop.home ([2a01:cb19:8b28:7600:a0b9:1c6f:cfba:2b21])
-        by smtp.googlemail.com with ESMTPSA id h188sm30815313wme.8.2020.05.11.13.37.34
+        by smtp.googlemail.com with ESMTPSA id n25sm28935704wmk.9.2020.05.11.13.37.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 13:37:35 -0700 (PDT)
+        Mon, 11 May 2020 13:37:51 -0700 (PDT)
 From:   Akira Shimahara <akira215corp@gmail.com>
 To:     greg@kroah.com, rdunlap@infradead.org
 Cc:     zbr@ioremap.net, linux-kernel@vger.kernel.org,
         Akira Shimahara <akira215corp@gmail.com>
-Subject: [PATCH v7 6/9] w1_therm: adding eeprom sysfs entry
-Date:   Mon, 11 May 2020 22:37:25 +0200
-Message-Id: <20200511203725.410844-1-akira215corp@gmail.com>
+Subject: [PATCH v7 7/9] w1_therm: optimizing temperature read timings
+Date:   Mon, 11 May 2020 22:37:42 +0200
+Message-Id: <20200511203742.411039-1-akira215corp@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,14 +75,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver implement 2 hardware functions to access device RAM:
- * copy_scratchpad
- * recall_scratchpad
-They act according to device specifications.
+Optimizing temperature reading by reducing waiting conversion time
+according to device resolution settings, as per device specification.
+This is device dependent as not all the devices supports resolution
+setting, so it has been added in device family structures.
 
-As EEPROM operations are not device dependent (all w1_therm can perform
-EEPROM read/write operation following the same protocol), it is removed
-from device families structures.
+The process to read the temperature on the device has been adapted in a
+new function 'convert_t()', which replace the former 'read_therm()', is
+introduce to deal with this timing. Strong pull up is also applied during
+the required time, according to device power status needs and
+'strong_pullup' module parameter.
+
+'temperature_from_RAM()' function is introduced to get the correct
+temperature computation (device dependent) from device RAM data.
+
+An new sysfs entry has been added to ouptut only temperature. The old
+entry w1_slave has been kept for compatibility, without changing its
+output format.
 
 Updating Documentation/ABI/testing/sysfs-driver-w1_therm accordingly.
 
@@ -97,296 +106,317 @@ Changes in v6:
 Changes in v7:
 - Formatting code comments and correcting comments mistakes
 
- .../ABI/testing/sysfs-driver-w1_therm         |  14 ++
- drivers/w1/slaves/w1_therm.c                  | 175 ++++++++++++------
- 2 files changed, 132 insertions(+), 57 deletions(-)
+ .../ABI/testing/sysfs-driver-w1_therm         |  12 +
+ drivers/w1/slaves/w1_therm.c                  | 286 +++++++++++-------
+ 2 files changed, 197 insertions(+), 101 deletions(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentation/ABI/testing/sysfs-driver-w1_therm
-index 7ed95e9..8b7ee89 100644
+index 8b7ee89..6ffd3e3 100644
 --- a/Documentation/ABI/testing/sysfs-driver-w1_therm
 +++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
-@@ -1,3 +1,17 @@
-+What:		/sys/bus/w1/devices/.../eeprom
+@@ -41,6 +41,18 @@ Users:		any user space application which wants to communicate with
+ 		w1_term device
+ 
+ 
++What:		/sys/bus/w1/devices/.../temperature
 +Date:		May 2020
 +Contact:	Akira Shimahara <akira215corp@gmail.com>
 +Description:
-+		(WO) writing that file will either trigger a save of the
-+		device data to its embedded EEPROM, either restore data
-+		embedded in device EEPROM. Be aware that devices support
-+		limited EEPROM writing cycles (typical 50k)
-+			* 'save': save device RAM to EEPROM
-+			* 'restore': restore EEPROM data in device RAM
++		(RO) return the temperature in 1/1000 degC.
++		Note that the conversion duration depend on the resolution (if
++		device support this feature). It takes 94ms in 9bits
++		resolution, 750ms for 12bits.
 +Users:		any user space application which wants to communicate with
 +		w1_term device
 +
 +
- What:		/sys/bus/w1/devices/.../ext_power
+ What:		/sys/bus/w1/devices/.../w1_slave
  Date:		May 2020
  Contact:	Akira Shimahara <akira215corp@gmail.com>
 diff --git a/drivers/w1/slaves/w1_therm.c b/drivers/w1/slaves/w1_therm.c
-index e30dab8..957b503 100644
+index 957b503..46756ea 100644
 --- a/drivers/w1/slaves/w1_therm.c
 +++ b/drivers/w1/slaves/w1_therm.c
-@@ -43,12 +43,21 @@
- static int w1_strong_pullup = 1;
- module_param_named(strong_pullup, w1_strong_pullup, int, 0);
- 
-+/* This command should be in public header w1.h but is not */
-+#define W1_RECALL_EEPROM	0xB8
-+
- /* Nb of try for an operation */
- #define W1_THERM_MAX_TRY		5
- 
- /* ms delay to retry bus mutex */
- #define W1_THERM_RETRY_DELAY		20
- 
-+/* delay in ms to write in EEPROM */
-+#define W1_THERM_EEPROM_WRITE_DELAY	10
-+
-+#define EEPROM_CMD_WRITE    "save"	/* cmd for write eeprom sysfs */
-+#define EEPROM_CMD_READ     "restore"	/* cmd for read eeprom sysfs */
-+
- /* Helpers Macros */
- 
- /*
-@@ -86,7 +95,6 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+@@ -93,6 +93,7 @@ module_param_named(strong_pullup, w1_strong_pullup, int, 0);
+  * @reserved: not used here
+  * @f: pointer to the device binding structure
   * @convert: pointer to the device conversion function
++ * @get_conversion_time: pointer to the device conversion time function
   * @set_resolution: pointer to the device set_resolution function
   * @get_resolution: pointer to the device get_resolution function
-- * @eeprom: pointer to eeprom function
   */
- struct w1_therm_family_converter {
- 	u8		broken;
-@@ -95,7 +103,6 @@ struct w1_therm_family_converter {
+@@ -101,6 +102,7 @@ struct w1_therm_family_converter {
+ 	u16		reserved;
+ 	struct w1_family	*f;
  	int		(*convert)(u8 rom[9]);
++	int		(*get_conversion_time)(struct w1_slave *sl);
  	int		(*set_resolution)(struct w1_slave *sl, int val);
  	int		(*get_resolution)(struct w1_slave *sl);
--	int		(*eeprom)(struct device *device);
  };
- 
- /**
-@@ -165,6 +172,22 @@ static int read_scratchpad(struct w1_slave *sl, struct therm_info *info);
+@@ -153,6 +155,15 @@ struct therm_info {
   */
- static int write_scratchpad(struct w1_slave *sl, const u8 *data, u8 nb_bytes);
+ static int reset_select_slave(struct w1_slave *sl);
  
 +/**
-+ * copy_scratchpad() - Copy the content of scratchpad in device EEPROM
-+ * @sl: slave involved
++ * convert_t() - Query the device for temperature conversion and read
++ * @sl: pointer to the slave to read
++ * @info: pointer to a structure to store the read results
 + *
 + * Return: 0 if success, -kernel error code otherwise
 + */
-+static int copy_scratchpad(struct w1_slave *sl);
-+
-+/**
-+ * recall_eeprom() - Restore EEPROM data to device RAM
-+ * @sl: slave involved
-+ *
-+ * Return: 0 if success, -kernel error code otherwise
-+ */
-+static int recall_eeprom(struct w1_slave *sl);
++static int convert_t(struct w1_slave *sl, struct therm_info *info);
 +
  /**
-  * read_powermode() - Query the power mode of the slave
-  * @sl: slave to retrieve the power mode
-@@ -199,12 +222,16 @@ static ssize_t resolution_show(struct device *device,
- static ssize_t resolution_store(struct device *device,
- 	struct device_attribute *attr, const char *buf, size_t size);
+  * read_scratchpad() - read the data in device RAM
+  * @sl: pointer to the slave to read
+@@ -213,6 +224,9 @@ static ssize_t w1_slave_store(struct device *device,
+ static ssize_t w1_seq_show(struct device *device,
+ 	struct device_attribute *attr, char *buf);
  
-+static ssize_t eeprom_store(struct device *device,
-+	struct device_attribute *attr, const char *buf, size_t size);
++static ssize_t temperature_show(struct device *device,
++	struct device_attribute *attr, char *buf);
 +
- /* Attributes declarations */
+ static ssize_t ext_power_show(struct device *device,
+ 	struct device_attribute *attr, char *buf);
+ 
+@@ -229,6 +243,7 @@ static ssize_t eeprom_store(struct device *device,
  
  static DEVICE_ATTR_RW(w1_slave);
  static DEVICE_ATTR_RO(w1_seq);
++static DEVICE_ATTR_RO(temperature);
  static DEVICE_ATTR_RO(ext_power);
  static DEVICE_ATTR_RW(resolution);
-+static DEVICE_ATTR_WO(eeprom);
+ static DEVICE_ATTR_WO(eeprom);
+@@ -259,6 +274,7 @@ static void w1_therm_remove_slave(struct w1_slave *sl);
  
- /* Interface Functions declaration */
- 
-@@ -234,12 +261,14 @@ static struct attribute *w1_therm_attrs[] = {
+ static struct attribute *w1_therm_attrs[] = {
  	&dev_attr_w1_slave.attr,
++	&dev_attr_temperature.attr,
  	&dev_attr_ext_power.attr,
  	&dev_attr_resolution.attr,
-+	&dev_attr_eeprom.attr,
- 	NULL,
- };
+ 	&dev_attr_eeprom.attr,
+@@ -267,6 +283,7 @@ static struct attribute *w1_therm_attrs[] = {
  
  static struct attribute *w1_ds18s20_attrs[] = {
  	&dev_attr_w1_slave.attr,
++	&dev_attr_temperature.attr,
  	&dev_attr_ext_power.attr,
-+	&dev_attr_eeprom.attr,
+ 	&dev_attr_eeprom.attr,
  	NULL,
- };
- 
-@@ -248,6 +277,7 @@ static struct attribute *w1_ds28ea00_attrs[] = {
+@@ -275,6 +292,7 @@ static struct attribute *w1_ds18s20_attrs[] = {
+ static struct attribute *w1_ds28ea00_attrs[] = {
+ 	&dev_attr_w1_slave.attr,
  	&dev_attr_w1_seq.attr,
++	&dev_attr_temperature.attr,
  	&dev_attr_ext_power.attr,
  	&dev_attr_resolution.attr,
-+	&dev_attr_eeprom.attr,
- 	NULL,
- };
- 
-@@ -359,9 +389,6 @@ static struct w1_family w1_therm_family_DS1825 = {
+ 	&dev_attr_eeprom.attr,
+@@ -389,6 +407,37 @@ static struct w1_family w1_therm_family_DS1825 = {
  
  /* Device dependent func */
  
--/* write configuration to eeprom */
--static inline int w1_therm_eeprom(struct device *device);
--
++static inline int w1_DS18B20_convert_time(struct w1_slave *sl)
++{
++	int ret;
++
++	if (!sl->family_data)
++		return -ENODEV;	/* device unknown */
++
++	/* return time in ms for conversion operation */
++	switch (SLAVE_RESOLUTION(sl)) {
++	case 9:
++		ret = 95;
++		break;
++	case 10:
++		ret = 190;
++		break;
++	case 11:
++		ret = 375;
++		break;
++	case 12:
++	default:
++		ret = 750;
++	}
++	return ret;
++}
++
++static inline int w1_DS18S20_convert_time(struct w1_slave *sl)
++{
++	(void)(sl);
++	return 750; /* always 750ms for DS18S20 */
++}
++
  static inline int w1_DS18B20_write_data(struct w1_slave *sl,
  				const u8 *data)
  {
-@@ -477,35 +504,30 @@ static struct w1_therm_family_converter w1_therm_families[] = {
- 		.convert	= w1_DS18S20_convert_temp,
- 		.set_resolution	= NULL,	/* no config register */
- 		.get_resolution	= NULL,	/* no config register */
--		.eeprom		= w1_therm_eeprom
+@@ -480,8 +529,10 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
+ {
+ 	int t, h;
+ 
+-	if (!rom[7])
++	if (!rom[7]) {
++		pr_debug("%s: Invalid argument for conversion\n", __func__);
+ 		return 0;
++	}
+ 
+ 	if (rom[1] == 0)
+ 		t = ((s32)rom[0] >> 1)*1000;
+@@ -500,34 +551,39 @@ static inline int w1_DS18S20_convert_temp(u8 rom[9])
+ 
+ static struct w1_therm_family_converter w1_therm_families[] = {
+ 	{
+-		.f		= &w1_therm_family_DS18S20,
+-		.convert	= w1_DS18S20_convert_temp,
+-		.set_resolution	= NULL,	/* no config register */
+-		.get_resolution	= NULL,	/* no config register */
++		.f				= &w1_therm_family_DS18S20,
++		.convert			= w1_DS18S20_convert_temp,
++		.get_conversion_time	= w1_DS18S20_convert_time,
++		.set_resolution		= NULL,	/* no config register */
++		.get_resolution		= NULL,	/* no config register */
  	},
  	{
- 		.f		= &w1_therm_family_DS1822,
- 		.convert	= w1_DS18B20_convert_temp,
- 		.set_resolution	= w1_DS18B20_set_resolution,
- 		.get_resolution	= w1_DS18B20_get_resolution,
--		.eeprom		= w1_therm_eeprom
+-		.f		= &w1_therm_family_DS1822,
+-		.convert	= w1_DS18B20_convert_temp,
+-		.set_resolution	= w1_DS18B20_set_resolution,
+-		.get_resolution	= w1_DS18B20_get_resolution,
++		.f				= &w1_therm_family_DS1822,
++		.convert			= w1_DS18B20_convert_temp,
++		.get_conversion_time	= w1_DS18B20_convert_time,
++		.set_resolution		= w1_DS18B20_set_resolution,
++		.get_resolution		= w1_DS18B20_get_resolution,
  	},
  	{
- 		.f		= &w1_therm_family_DS18B20,
- 		.convert	= w1_DS18B20_convert_temp,
- 		.set_resolution	= w1_DS18B20_set_resolution,
- 		.get_resolution	= w1_DS18B20_get_resolution,
--		.eeprom		= w1_therm_eeprom
+-		.f		= &w1_therm_family_DS18B20,
+-		.convert	= w1_DS18B20_convert_temp,
+-		.set_resolution	= w1_DS18B20_set_resolution,
+-		.get_resolution	= w1_DS18B20_get_resolution,
++		.f				= &w1_therm_family_DS18B20,
++		.convert			= w1_DS18B20_convert_temp,
++		.get_conversion_time	= w1_DS18B20_convert_time,
++		.set_resolution		= w1_DS18B20_set_resolution,
++		.get_resolution		= w1_DS18B20_get_resolution,
  	},
  	{
- 		.f		= &w1_therm_family_DS28EA00,
- 		.convert	= w1_DS18B20_convert_temp,
- 		.set_resolution	= w1_DS18B20_set_resolution,
- 		.get_resolution	= w1_DS18B20_get_resolution,
--		.eeprom		= w1_therm_eeprom
+-		.f		= &w1_therm_family_DS28EA00,
+-		.convert	= w1_DS18B20_convert_temp,
+-		.set_resolution	= w1_DS18B20_set_resolution,
+-		.get_resolution	= w1_DS18B20_get_resolution,
++		.f				= &w1_therm_family_DS28EA00,
++		.convert			= w1_DS18B20_convert_temp,
++		.get_conversion_time	= w1_DS18B20_convert_time,
++		.set_resolution		= w1_DS18B20_set_resolution,
++		.get_resolution		= w1_DS18B20_get_resolution,
  	},
  	{
- 		.f		= &w1_therm_family_DS1825,
- 		.convert	= w1_DS18B20_convert_temp,
- 		.set_resolution	= w1_DS18B20_set_resolution,
- 		.get_resolution	= w1_DS18B20_get_resolution,
--		.eeprom		= w1_therm_eeprom
+-		.f		= &w1_therm_family_DS1825,
+-		.convert	= w1_DS18B20_convert_temp,
+-		.set_resolution	= w1_DS18B20_set_resolution,
+-		.get_resolution	= w1_DS18B20_get_resolution,
++		.f				= &w1_therm_family_DS1825,
++		.convert			= w1_DS18B20_convert_temp,
++		.get_conversion_time	= w1_DS18B20_convert_time,
++		.set_resolution		= w1_DS18B20_set_resolution,
++		.get_resolution		= w1_DS18B20_get_resolution,
  	}
  };
  
-@@ -838,75 +860,94 @@ error:
- 	return ret;
+@@ -582,24 +638,44 @@ static inline bool bus_mutex_lock(struct mutex *lock)
  }
  
--static inline int w1_therm_eeprom(struct device *device)
-+static int copy_scratchpad(struct w1_slave *sl)
+ /**
+- * w1_convert_temp() - temperature conversion binding function
+- * @rom: data read from device RAM (8 data bytes + 1 CRC byte)
+- * @fid: device family id
++ * conversion_time() - get the Tconv for the slave
++ * @sl: device to get the conversion time
+  *
+- * The function call the temperature computation function according to
+- * device family.
++ * On device supporting resolution settings, conversion time depend
++ * on the resolution setting. This helper function get the slave timing,
++ * depending on its current setting.
+  *
+- * Return: value in millidegrees Celsius.
++ * Return: conversion time in ms, negative values are kernel error code
+  */
+-static inline int w1_convert_temp(u8 rom[9], u8 fid)
++static inline int conversion_time(struct w1_slave *sl)
  {
--	struct w1_slave *sl = dev_to_w1_slave(device);
+-	int i;
++	if (SLAVE_SPECIFIC_FUNC(sl))
++		return SLAVE_SPECIFIC_FUNC(sl)->get_conversion_time(sl);
+ 
+-	for (i = 0; i < ARRAY_SIZE(w1_therm_families); ++i)
+-		if (w1_therm_families[i].f->fid == fid)
+-			return w1_therm_families[i].convert(rom);
++	dev_info(&sl->dev,
++		"%s: Device not supported by the driver\n", __func__);
+ 
+-	return 0;
++	return -ENODEV;  /* No device family */
++}
++
++/**
++ * temperature_from_RAM() - Convert the read info to temperature
++ * @sl: device that sent the RAM data
++ * @rom: read value on the slave device RAM
++ *
++ * Device dependent, the function bind the correct computation method.
++ *
++ * Return: temperature in 1/1000degC, 0 on error.
++ */
++static inline int temperature_from_RAM(struct w1_slave *sl, u8 rom[9])
++{
++	if (SLAVE_SPECIFIC_FUNC(sl))
++		return SLAVE_SPECIFIC_FUNC(sl)->convert(rom);
++
++	dev_info(&sl->dev,
++		"%s: Device not supported by the driver\n", __func__);
++
++	return 0;  /* No device family */
+ }
+ 
+ /* Interface Functions */
+@@ -679,96 +755,74 @@ static int reset_select_slave(struct w1_slave *sl)
+ 	return 0;
+ }
+ 
+-static ssize_t read_therm(struct device *device,
+-			  struct w1_slave *sl, struct therm_info *info)
++static int convert_t(struct w1_slave *sl, struct therm_info *info)
+ {
 -	struct w1_master *dev = sl->master;
--	u8 rom[9], external_power;
+-	u8 external_power;
 -	int ret, max_trying = 10;
 -	u8 *family_data = sl->family_data;
 +	struct w1_master *dev_master = sl->master;
 +	int max_trying = W1_THERM_MAX_TRY;
-+	int t_write, ret = -ENODEV;
++	int t_conv;
++	int ret = -ENODEV;
 +	bool strong_pullup;
  
--	if (!sl->family_data) {
+-	if (!family_data) {
 -		ret = -ENODEV;
 +	if (!sl->family_data)
  		goto error;
 -	}
-+
-+	t_write = W1_THERM_EEPROM_WRITE_DELAY;
+ 
+-	/* prevent the slave from going away in sleep */
+-	atomic_inc(THERM_REFCNT(family_data));
 +	strong_pullup = (w1_strong_pullup == 2 ||
 +					(!SLAVE_POWERMODE(sl) &&
 +					w1_strong_pullup));
  
- 	/* prevent the slave from going away in sleep */
--	atomic_inc(THERM_REFCNT(family_data));
-+	atomic_inc(THERM_REFCNT(sl->family_data));
- 
 -	ret = mutex_lock_interruptible(&dev->bus_mutex);
 -	if (ret != 0)
-+	if (!bus_mutex_lock(&dev_master->bus_mutex)) {
-+		ret = -EAGAIN;	/* Didn't acquire the mutex */
- 		goto dec_refcnt;
-+	}
+-		goto dec_refcnt;
++	/* get conversion duration device and id dependent */
++	t_conv = conversion_time(sl);
  
--	memset(rom, 0, sizeof(rom));
--
+ 	memset(info->rom, 0, sizeof(info->rom));
+ 
 -	while (max_trying--) {
-+	while (max_trying-- && ret) { /* ret should be 0 */
-+		/* safe version to select slave */
- 		if (!reset_select_slave(sl)) {
--			unsigned int tm = 10;
- 			unsigned long sleep_rem;
- 
--			/* check if in parasite mode */
--			w1_write_8(dev, W1_READ_PSUPPLY);
--			external_power = w1_read_8(dev);
--
--			if (reset_select_slave(sl))
--				continue;
--
--			/* 10ms strong pullup/delay after the copy command */
--			if (w1_strong_pullup == 2 ||
--			    (!external_power && w1_strong_pullup))
--				w1_next_pullup(dev, tm);
-+			/* 10ms strong pullup (or delay) after the convert */
-+			if (strong_pullup)
-+				w1_next_pullup(dev_master, t_write);
- 
--			w1_write_8(dev, W1_COPY_SCRATCHPAD);
--
--			if (external_power) {
--				mutex_unlock(&dev->bus_mutex);
-+			w1_write_8(dev_master, W1_COPY_SCRATCHPAD);
- 
--				sleep_rem = msleep_interruptible(tm);
--				if (sleep_rem != 0) {
--					ret = -EINTR;
--					goto dec_refcnt;
--				}
--
--				ret = mutex_lock_interruptible(&dev->bus_mutex);
--				if (ret != 0)
--					goto dec_refcnt;
--			} else if (!w1_strong_pullup) {
--				sleep_rem = msleep_interruptible(tm);
-+			if (strong_pullup) {
-+				sleep_rem = msleep_interruptible(t_write);
- 				if (sleep_rem != 0) {
- 					ret = -EINTR;
- 					goto mt_unlock;
- 				}
- 			}
--
--			break;
-+			ret = 0;
- 		}
-+
- 	}
- 
- mt_unlock:
--	mutex_unlock(&dev->bus_mutex);
-+	mutex_unlock(&dev_master->bus_mutex);
- dec_refcnt:
--	atomic_dec(THERM_REFCNT(family_data));
-+	atomic_dec(THERM_REFCNT(sl->family_data));
-+error:
-+	return ret;
-+}
-+
-+static int recall_eeprom(struct w1_slave *sl)
-+{
-+	struct w1_master *dev_master = sl->master;
-+	int max_trying = W1_THERM_MAX_TRY;
-+	int ret = -ENODEV;
-+
-+	if (!sl->family_data)
-+		goto error;
-+
 +	/* prevent the slave from going away in sleep */
 +	atomic_inc(THERM_REFCNT(sl->family_data));
 +
@@ -396,61 +426,187 @@ index e30dab8..957b503 100644
 +	}
 +
 +	while (max_trying-- && ret) { /* ret should be 0 */
+ 
+ 		info->verdict = 0;
+ 		info->crc = 0;
+-
 +		/* safe version to select slave */
-+		if (!reset_select_slave(sl)) {
-+
-+			w1_write_8(dev_master, W1_RECALL_EEPROM);
-+
-+			ret = 1; /* Slave will pull line to 0 */
-+			while (ret)
-+				ret = 1 - w1_touch_bit(dev_master, 1);
-+		}
-+
-+	}
-+
+ 		if (!reset_select_slave(sl)) {
+-			int count = 0;
+-			unsigned int tm = 750;
+ 			unsigned long sleep_rem;
+ 
+-			w1_write_8(dev, W1_READ_PSUPPLY);
+-			external_power = w1_read_8(dev);
+-
+-			if (reset_select_slave(sl))
+-				continue;
+-
+ 			/* 750ms strong pullup (or delay) after the convert */
+-			if (w1_strong_pullup == 2 ||
+-					(!external_power && w1_strong_pullup))
+-				w1_next_pullup(dev, tm);
+-
+-			w1_write_8(dev, W1_CONVERT_TEMP);
++			if (strong_pullup)
++				w1_next_pullup(dev_master, t_conv);
+ 
+-			if (external_power) {
+-				mutex_unlock(&dev->bus_mutex);
++			w1_write_8(dev_master, W1_CONVERT_TEMP);
+ 
+-				sleep_rem = msleep_interruptible(tm);
++			if (strong_pullup) { /*some device need pullup */
++				sleep_rem = msleep_interruptible(t_conv);
+ 				if (sleep_rem != 0) {
+ 					ret = -EINTR;
+-					goto dec_refcnt;
++					goto mt_unlock;
+ 				}
++				mutex_unlock(&dev_master->bus_mutex);
++			} else { /*no device need pullup */
++				mutex_unlock(&dev_master->bus_mutex);
+ 
+-				ret = mutex_lock_interruptible(&dev->bus_mutex);
+-				if (ret != 0)
+-					goto dec_refcnt;
+-			} else if (!w1_strong_pullup) {
+-				sleep_rem = msleep_interruptible(tm);
++				sleep_rem = msleep_interruptible(t_conv);
+ 				if (sleep_rem != 0) {
+ 					ret = -EINTR;
+-					goto mt_unlock;
+-				}
+-			}
+-
+-			if (!reset_select_slave(sl)) {
+-
+-				w1_write_8(dev, W1_READ_SCRATCHPAD);
+-				count = w1_read_block(dev, info->rom, 9);
+-				if (count != 9) {
+-					dev_warn(device, "w1_read_block() "
+-						"returned %u instead of 9.\n",
+-						count);
++					goto dec_refcnt;
+ 				}
+-
+-				info->crc = w1_calc_crc8(info->rom, 8);
+-
+-				if (info->rom[8] == info->crc)
+-					info->verdict = 1;
+ 			}
++			ret = read_scratchpad(sl, info);
++			goto dec_refcnt;
+ 		}
+ 
+-		if (info->verdict)
+-			break;
+ 	}
+ 
+ mt_unlock:
+-	mutex_unlock(&dev->bus_mutex);
 +	mutex_unlock(&dev_master->bus_mutex);
-+
-+dec_refcnt:
+ dec_refcnt:
+-	atomic_dec(THERM_REFCNT(family_data));
 +	atomic_dec(THERM_REFCNT(sl->family_data));
  error:
  	return ret;
  }
-@@ -1006,7 +1047,7 @@ static ssize_t w1_slave_store(struct device *device,
- 	}
+@@ -1000,27 +1054,33 @@ static ssize_t w1_slave_show(struct device *device,
+ 	u8 *family_data = sl->family_data;
+ 	int ret, i;
+ 	ssize_t c = PAGE_SIZE;
+-	u8 fid = sl->family->fid;
  
- 	if (val == 0)	/* val=0 : trigger a EEPROM save */
--		ret = SLAVE_SPECIFIC_FUNC(sl)->eeprom(device);
-+		ret = copy_scratchpad(sl);
- 	else {
- 		if (SLAVE_SPECIFIC_FUNC(sl)->set_resolution)
- 			ret = SLAVE_SPECIFIC_FUNC(sl)->set_resolution(sl, val);
-@@ -1105,6 +1146,26 @@ static ssize_t resolution_store(struct device *device,
- 	return size;
+-	ret = read_therm(device, sl, &info);
+-	if (ret)
+-		return ret;
++	ret = convert_t(sl, &info);
++
++	if (ret < 0) {
++		dev_dbg(device,
++			"%s: Temperature data may be corrupted. err=%d\n",
++			__func__, ret);
++		return 0;
++	}
+ 
+ 	for (i = 0; i < 9; ++i)
+ 		c -= snprintf(buf + PAGE_SIZE - c, c, "%02x ", info.rom[i]);
+ 	c -= snprintf(buf + PAGE_SIZE - c, c, ": crc=%02x %s\n",
+ 		      info.crc, (info.verdict) ? "YES" : "NO");
++
+ 	if (info.verdict)
+ 		memcpy(family_data, info.rom, sizeof(info.rom));
+ 	else
+-		dev_warn(device, "Read failed CRC check\n");
++		dev_warn(device, "%s:Read failed CRC check\n", __func__);
+ 
+ 	for (i = 0; i < 9; ++i)
+ 		c -= snprintf(buf + PAGE_SIZE - c, c, "%02x ",
+ 			      ((u8 *)family_data)[i]);
+ 
+ 	c -= snprintf(buf + PAGE_SIZE - c, c, "t=%d\n",
+-			w1_convert_temp(info.rom, fid));
++			temperature_from_RAM(sl, info.rom));
++
+ 	ret = PAGE_SIZE - c;
+ 	return ret;
+ }
+@@ -1063,6 +1123,31 @@ static ssize_t w1_slave_store(struct device *device,
+ 	return size; /* always return size to avoid infinite calling */
  }
  
-+static ssize_t eeprom_store(struct device *device,
-+	struct device_attribute *attr, const char *buf, size_t size)
++static ssize_t temperature_show(struct device *device,
++	struct device_attribute *attr, char *buf)
 +{
 +	struct w1_slave *sl = dev_to_w1_slave(device);
-+	int ret = -EINVAL; /* Invalid argument */
++	struct therm_info info;
++	int ret = 0;
 +
-+	if (size == sizeof(EEPROM_CMD_WRITE)) {
-+		if (!strncmp(buf, EEPROM_CMD_WRITE, sizeof(EEPROM_CMD_WRITE)-1))
-+			ret = copy_scratchpad(sl);
-+	} else if (size == sizeof(EEPROM_CMD_READ)) {
-+		if (!strncmp(buf, EEPROM_CMD_READ, sizeof(EEPROM_CMD_READ)-1))
-+			ret = recall_eeprom(sl);
++	if ((!sl->family_data) || (!SLAVE_SPECIFIC_FUNC(sl))) {
++		dev_info(device,
++			"%s: Device not supported by the driver\n", __func__);
++		return 0;  /* No device family */
 +	}
 +
-+	if (ret)
-+		dev_info(device, "%s: error in process %d\n", __func__, ret);
++	ret = convert_t(sl, &info);
 +
-+	return size;
++	if (ret < 0) {
++		dev_dbg(device,
++			"%s: Temperature data may be corrupted. err=%d\n",
++			__func__, ret);
++		return 0;
++	}
++
++	return sprintf(buf, "%d\n", temperature_from_RAM(sl, info.rom));
 +}
 +
- #if IS_REACHABLE(CONFIG_HWMON)
- static int w1_read_temp(struct device *device, u32 attr, int channel,
- 			long *val)
+ static ssize_t ext_power_show(struct device *device,
+ 	struct device_attribute *attr, char *buf)
+ {
+@@ -1172,12 +1257,11 @@ static int w1_read_temp(struct device *device, u32 attr, int channel,
+ {
+ 	struct w1_slave *sl = dev_get_drvdata(device);
+ 	struct therm_info info;
+-	u8 fid = sl->family->fid;
+ 	int ret;
+ 
+ 	switch (attr) {
+ 	case hwmon_temp_input:
+-		ret = read_therm(device, sl, &info);
++		ret = convert_t(sl, &info);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -1186,7 +1270,7 @@ static int w1_read_temp(struct device *device, u32 attr, int channel,
+ 			return ret;
+ 		}
+ 
+-		*val = w1_convert_temp(info.rom, fid);
++		*val = temperature_from_RAM(sl, info.rom);
+ 		ret = 0;
+ 		break;
+ 	default:
 -- 
 2.26.2
 
