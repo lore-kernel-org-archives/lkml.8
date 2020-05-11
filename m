@@ -2,192 +2,102 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_RED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB53C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801CFC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B5F2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DEE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6vfjCtm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgEKRbG (ORCPT
+        id S1730997AbgEKRbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:31:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2188 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729698AbgEKRbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:31:06 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 1BBEFD5F880730EEF03C;
-        Mon, 11 May 2020 18:31:04 +0100 (IST)
-Received: from localhost (10.47.24.74) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 11 May
- 2020 18:31:03 +0100
-Date:   Mon, 11 May 2020 18:30:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-Message-ID: <20200511183038.000031cf@Huawei.com>
-In-Reply-To: <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
-        <20200429133943.18298-4-saravanan@linumiz.com>
-        <20200503130103.16a92131@archlinux>
-        <9e7b0365-deed-a647-ec36-b4e6ccfa2ae4@linumiz.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 May 2020 13:31:41 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27597 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729698AbgEKRbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:31:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589218300;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M7lM8hUA0SbdYYpVAj09UaKq4AT4gRnDmZQFc7p0Moo=;
+        b=i6vfjCtmOKlCvNoUHW62kMCslfaxoUwW4f7kWNkcUaGGZUI5th/6Xow5j5a26ggxKZ/kyw
+        C4bOwF7rbSIYU9qp4b4vf2jfCiACEHAJfMqtEBsRR56Q33frfj9CoQTfR+1qVg1AdO0ZWG
+        98jNM9D8dpcVU0Wj+ZIb/i+7xu0fTeo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-gL6XFok0Oly971BA8NDF1Q-1; Mon, 11 May 2020 13:31:24 -0400
+X-MC-Unique: gL6XFok0Oly971BA8NDF1Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 851C819057A0;
+        Mon, 11 May 2020 17:31:22 +0000 (UTC)
+Received: from [10.10.116.128] (ovpn-116-128.rdu2.redhat.com [10.10.116.128])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC9E66606E;
+        Mon, 11 May 2020 17:31:20 +0000 (UTC)
+Subject: Re: INFO: task hung in do_read_cache_page (3)
+To:     syzbot <syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, amir73il@gmail.com, axboe@kernel.dk,
+        darrick.wong@oracle.com, jack@suse.cz, josef@toxicpanda.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, william.kucharski@oracle.com,
+        willy@infradead.org
+References: <000000000000dc82ac05a55f3005@google.com>
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
+Date:   Mon, 11 May 2020 12:31:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <000000000000dc82ac05a55f3005@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.24.74]
-X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 20:11:55 +0200
-Saravanan Sekar <saravanan@linumiz.com> wrote:
-
-> Hi Jonathan,
+On 5/11/20 8:19 AM, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> On 03/05/20 2:01 pm, Jonathan Cameron wrote:
-> > On Wed, 29 Apr 2020 15:39:42 +0200
-> > Saravanan Sekar<saravanan@linumiz.com>  wrote:
-> >  
-> >> Add documentation about device operating mode and output data range
-> >> supported according to operating mode
-> >>
-> >> Signed-off-by: Saravanan Sekar<saravanan@linumiz.com>
-> >> ---
-> >>   .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
-> >>   1 file changed, 23 insertions(+)
-> >>   create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >> new file mode 100644
-> >> index 000000000000..5979f2b8aa1a
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> >> @@ -0,0 +1,23 @@
-> >> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
-> >> +KernelVersion:	5.7
-> >> +Contact:	linux-iio@vger.kernel.org
-> >> +Description:
-> >> +		Reading gives range of sample frequencies available for current operating mode
-> >> +		after one data has generated.  
-> > This is standard ABI so should be the main docs, not here.
-> > It also takes absolute precedence over the power modes (as mentioned below, no
-> > standard userspace will be able to use those).  So if the frequency is
-> > only available in high perf mode, then we change to high perf mode.
-> >  
-> >> +
-> >> +		Access: Read
-> >> +		Valid values: represented in Hz
-> >> +		- range [12.5, 1600] for high permormance mode
-> >> +		- range [1.6, 200] for normal/low power mode
-> >> +
-> >> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
-> >> +KernelVersion:	5.7
-> >> +Contact:	linux-iio@vger.kernel.org
-> >> +Description:
-> >> +		Represents the device operating mode. High performance mode gives high output
-> >> +		data rate and low noise compared to normal mode. Normal mode consumes less
-> >> +		current.  In single shot device enters to lowpower after one data has
-> >> +		generated.
-> >> +
-> >> +		Access: Read, Write
-> >> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"  
-> > The issue with these sort of 'mode' interface is almost no userspace will ever use them.
-> > They are too unpredictable across different types of devices.  
-> I don't understand how can we assume or say no one will use this. The 
-> device supports multiple features
-> and my understanding is driver should support according to device, not 
-> reverse.
-
-The aim of a subsystem and an ABI definition for such is to 'unify' and provide standard
-ways of doing things.  It is against that 'standard' that userspace code will generally
-be written.  So every time we define custom ABI for a device, we have basically written
-something that the vast majority of userspace code will never use.  The only exception
-is code written for a particular device.
-
-So we have two options for features like this:
-
-1) Map them to existing ABI wherever possible - ensure the code people have written
-   already for userspace will do what they would expect.  Here it's a case of providing
-   'reasonable' configuration for the full range of sampling frequencies.  That may
-   miss some corners that are optimal but we may have to live with that.
-
-2) Define new ABI that is 'generic' so that future user space code can use it.
-   The problem with power modes is they are extremely device specific, so this second
-   option is one we have never succeeded with.  In theory you could define a set of
-   modes, but they would need to fully describing.  As in you would need a record that
-   tells userspace every characteristic that is affected by each mode.
-   To put it bluntly software doesn't read data sheets.  (nor for that matter to
-   most userspace code developers :)
-
-> This is more or
-> less device specific and no sure idea about bring all the device in one 
-> umbrella.
-
-We have existing userspace code - quite a bit of it.  That code should work for your device.
-It doesn't know about your own magic interface, so it won't use it.
-That's the point of standardization around one interface, we want it to work.
-Note that the only way we make that happen is to review new ABI very carefully
-and often block it entirely.
-
-> > Some of these should also not be exposed to userspace anyway as they are about 'how'
-> > you are using the driver.  For example, if you aren't doing triggered capture then
-> > single_shot is almost always the correct option. Annoyingly I see high performance
-> > mode gives lower noise...
-> >
-> > So no need to expose single_shot to userspace.
-> >
-> > For the others we are just looking at different power vs speed and accuracy trade offs.
-> > Those are better exposed by what they effect.  Here the big control for that is
-> > sampling frequency.
-> >
-> > So if we assume the user is never going to touch this control (if it's even there)
-> > then we probably want to assume they want the best possible accuracy for whatever
-> > frequency they are running at.  So transition across the modes to provide that.
-> >
-> > Should we ever support low power mode?  It sounds nice on paper, but in reality
-> > userspace won't use so I suspect we should just drop it - certainly in an initial
-> > patch submission (as it will hold up acceptance).  Even if we did support
-> > it, as mentioned above ABI controls will take precedence so we are looking
-> > at a 'hint' not a control of mode.
-> >
-> > ABI is a pain, and we will put a lot of effort into not expanding it unless
-> > there is a good usecase plus no way of mapping to existing ABI.  
-> Obviously without any reason or requirement device manufacture won't 
-> come-up these kind of feature.
-
-Agreed, there are clear reasons for doing this, but until we understand the
-target use case it is very hard to have a discussion about how an ABI will
-be expanded.
-
-> I will change the driver as you don't accept at least for initial version.
-
-Great.
-
-Thanks,
-
-Jonathan
-
-
+> commit 2da22da573481cc4837e246d0eee4d518b3f715e
+> Author: Mike Christie <mchristi@redhat.com>
+> Date:   Tue Aug 13 16:39:52 2019 +0000
 > 
+>     nbd: fix zero cmd timeout handling v2
 > 
-> Thanks,
-> Saravanan
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d6ab14100000
+> start commit:   e99332e7 gcc-10: mark more functions __init to avoid secti..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d6ab14100000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15d6ab14100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=518c54e255b5031adde4
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e45ec100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164444a4100000
+> 
+> Reported-by: syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com
+> Fixes: 2da22da57348 ("nbd: fix zero cmd timeout handling v2")
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 > 
 
+How do you adjust/modify what is expected from the test or what is
+reported as an error?
+
+The patch added back behavior that got removed. With the patch we expect
+the hung task warnings, because we specifically want to hold onto
+running commands for longer than 120/hung_task_timeout seconds
 
