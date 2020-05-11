@@ -2,143 +2,121 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE91C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558C6C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED1220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFDA20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:48:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3mf3ZJX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JY3+JDkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgEKQrh (ORCPT
+        id S1730705AbgEKQsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728711AbgEKQrg (ORCPT
+        Mon, 11 May 2020 12:48:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58100 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729613AbgEKQsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:47:36 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B98EC061A0C;
-        Mon, 11 May 2020 09:47:36 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 18so4990949pfx.6;
-        Mon, 11 May 2020 09:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZxZ+LNXooelMFfSlZpAdADZ0tj2CGMfXwem7tyyyZjI=;
-        b=B3mf3ZJX5nxwKQ2JbRXP4UhMcFX9MMg5WxhA4VsAKC716/NMaJlz3yhHmf8UXF3y5G
-         bedq/2c6b6izlX2O+6bi1cI6UY5PNDBZCahFmlxHt/3ni+7re4QJUdL5Nh6w5bnbmhq2
-         EEnPbKQ5rdlDTXs6ikWRuODeKQAZKuQYq41SYPF5tYjE8Uw4PnnDSWy03HYdpD72b+bC
-         r58Er9/0sH/bkSzgMO2fbv8EmgjWhe5/7b45xdjZqPQv5lYgcGKibmZkPDD5fMukkbA+
-         MQIBmEF4NdanPLXZYyHqzKHV2ynKy16F+yAjcb5S9+E43aYFintrYSMHNK43B3e1S2Vi
-         8OcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=ZxZ+LNXooelMFfSlZpAdADZ0tj2CGMfXwem7tyyyZjI=;
-        b=cMk9w5aYR0sjSWyGMw0Qh6iCOvUEdZUporOatxat1w1uJg+XKrdqWP03QGHaj0QhbZ
-         idBZrptf7sLv7FbiEkBZXXjQqRRnrGnQntef+enJoJgii01vV5unVekLJo6Qj3z8F4az
-         HarD6/1DIkG0eOlW/M1jSpUY7AvrdwiPVQU+G8Y4iAmIrYmwIH+dJQiUKBcH6UjMzblc
-         P8RSxhj/z89TLJyARn5sm8D4pOCz1EC1Njwz3mVi49GYE7jv0y7VkvZoqcvVCTknzAQq
-         oWTjOmmNI6fqUG28D30I+f59Xi3ZEuA/KjQqsHk54EPgxtxQSZvSy7ObQS1uUDip9/43
-         bQYA==
-X-Gm-Message-State: AGi0PuZe+CRtFbFlGi++DK72LWpdZuLIjwpZrLPggVHcloQSxP3TLX0l
-        1VCC7c2t1ltIzO6ITMibdO41H7PB
-X-Google-Smtp-Source: APiQypK7eD9kXLOTKh+SfZrSfG2VJdbSxL4HhJuz4L/E1u/xFnHuKDTd78vaQ5iy2sTAb+0F+SCnJA==
-X-Received: by 2002:a65:6709:: with SMTP id u9mr15969426pgf.386.1589215655967;
-        Mon, 11 May 2020 09:47:35 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id cp22sm10612435pjb.28.2020.05.11.09.47.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 May 2020 09:47:35 -0700 (PDT)
-Date:   Mon, 11 May 2020 09:47:34 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     zhouchuangao <chuangaozhou@gmail.com>
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhouchuangao <zhouchuangao@xiaomi.com>
-Subject: Re: [PATCH] driver/hwmon/nct6775: Use kobj_to_dev() API
-Message-ID: <20200511164734.GA23709@roeck-us.net>
+        Mon, 11 May 2020 12:48:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589215680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=iI35m1Q2pEPIu1XMN3gYwH8xjnbhhmQn5yUKJEAaaGY=;
+        b=JY3+JDkjEKFVO559Ashqc5JtPf/22qBd4ISadbMG0zIpwwkej9iQr8CsGY/oDKivPlERUn
+        wewgUJqG2C03MggNmMN0KT1lO6YNF7FV2cR+ADhW5lYmNQ8/AF6MY1qXJqBovHaNC7Kn74
+        RvpxoGst0WNNVXlM3dFCqEYV5TP9ghk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-55-Dnascdt-PiKmtD8rXmkjvQ-1; Mon, 11 May 2020 12:47:58 -0400
+X-MC-Unique: Dnascdt-PiKmtD8rXmkjvQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F338E100CCC1;
+        Mon, 11 May 2020 16:47:56 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DDF59196AE;
+        Mon, 11 May 2020 16:47:53 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, x86@kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8] KVM: x86: Interrupt-based mechanism for async_pf 'page present' notifications
+Date:   Mon, 11 May 2020 18:47:44 +0200
+Message-Id: <20200511164752.2158645-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:43:06AM +0800, zhouchuangao wrote:
-> Use kobj_to_dev() API instead of container_of().
-> 
-> Signed-off-by: zhouchuangao <zhouchuangao@xiaomi.com>
+Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
+it seems that re-using #PF exception for a PV mechanism wasn't a great
+idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
+not present' events and normal APIC interrupts for 'page ready' events.
+This series does the later.
 
-Applied.
+Changes since RFC:
+- Using #PF for 'page ready' is deprecated and removed [Paolo Bonzini]
+- 'reason' field in 'struct kvm_vcpu_pv_apf_data' is not used for 'page ready'
+  notifications and 'pageready_token' is not used for 'page not present' events
+  [Paolo Bonzini]
+- Renamed MSR_KVM_ASYNC_PF2 -> MSR_KVM_ASYNC_PF_INT [Peter Xu]
+- Drop 'enabled' field from MSR_KVM_ASYNC_PF_INT [Peter Xu]
+- Other minor changes supporting the above.
 
-Thanks,
-Guenter
+Vitaly Kuznetsov (8):
+  Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and
+    "Page Ready" exceptions simultaneously"
+  KVM: x86: extend struct kvm_vcpu_pv_apf_data with token info
+  KVM: introduce kvm_read_guest_offset_cached()
+  KVM: x86: interrupt based APF page-ready event delivery
+  KVM: x86: acknowledgment mechanism for async pf page ready
+    notifications
+  KVM: x86: announce KVM_FEATURE_ASYNC_PF_INT
+  KVM: x86: Switch KVM guest to using interrupts for page ready APF
+    delivery
+  KVM: x86: drop KVM_PV_REASON_PAGE_READY case from
+    kvm_handle_page_fault()
 
-> ---
->  drivers/hwmon/nct6775.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-> index 7efa6bf..e7e1ddc 100644
-> --- a/drivers/hwmon/nct6775.c
-> +++ b/drivers/hwmon/nct6775.c
-> @@ -2047,7 +2047,7 @@ store_temp_beep(struct device *dev, struct device_attribute *attr,
->  static umode_t nct6775_in_is_visible(struct kobject *kobj,
->  				     struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct6775_data *data = dev_get_drvdata(dev);
->  	int in = index / 5;	/* voltage index */
->  
-> @@ -2253,7 +2253,7 @@ store_fan_pulses(struct device *dev, struct device_attribute *attr,
->  static umode_t nct6775_fan_is_visible(struct kobject *kobj,
->  				      struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct6775_data *data = dev_get_drvdata(dev);
->  	int fan = index / 6;	/* fan index */
->  	int nr = index % 6;	/* attribute index */
-> @@ -2440,7 +2440,7 @@ store_temp_type(struct device *dev, struct device_attribute *attr,
->  static umode_t nct6775_temp_is_visible(struct kobject *kobj,
->  				       struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct6775_data *data = dev_get_drvdata(dev);
->  	int temp = index / 10;	/* temp index */
->  	int nr = index % 10;	/* attribute index */
-> @@ -3257,7 +3257,7 @@ store_auto_temp(struct device *dev, struct device_attribute *attr,
->  static umode_t nct6775_pwm_is_visible(struct kobject *kobj,
->  				      struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct6775_data *data = dev_get_drvdata(dev);
->  	int pwm = index / 36;	/* pwm index */
->  	int nr = index % 36;	/* attribute index */
-> @@ -3459,7 +3459,7 @@ static SENSOR_DEVICE_ATTR(beep_enable, S_IWUSR | S_IRUGO, show_beep,
->  static umode_t nct6775_other_is_visible(struct kobject *kobj,
->  					struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct6775_data *data = dev_get_drvdata(dev);
->  
->  	if (index == 0 && !data->have_vid)
-> -- 
-> 2.7.4
-> 
+ Documentation/virt/kvm/cpuid.rst     |   6 ++
+ Documentation/virt/kvm/msr.rst       | 106 ++++++++++++++------
+ arch/s390/include/asm/kvm_host.h     |   2 +
+ arch/x86/entry/entry_32.S            |   5 +
+ arch/x86/entry/entry_64.S            |   5 +
+ arch/x86/include/asm/hardirq.h       |   3 +
+ arch/x86/include/asm/irq_vectors.h   |   6 +-
+ arch/x86/include/asm/kvm_host.h      |   7 +-
+ arch/x86/include/asm/kvm_para.h      |   6 ++
+ arch/x86/include/uapi/asm/kvm_para.h |  11 ++-
+ arch/x86/kernel/irq.c                |   9 ++
+ arch/x86/kernel/kvm.c                |  42 ++++++--
+ arch/x86/kvm/cpuid.c                 |   3 +-
+ arch/x86/kvm/mmu/mmu.c               |  10 +-
+ arch/x86/kvm/x86.c                   | 142 ++++++++++++++++++---------
+ include/linux/kvm_host.h             |   3 +
+ include/uapi/linux/kvm.h             |   1 +
+ virt/kvm/async_pf.c                  |  10 ++
+ virt/kvm/kvm_main.c                  |  19 +++-
+ 19 files changed, 295 insertions(+), 101 deletions(-)
+
+-- 
+2.25.4
+
