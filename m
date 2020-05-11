@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D7BC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8493CC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31712082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6353D2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589172842;
-	bh=/Y6JDEC90w0GBqbdeWrZTksp0NgWDLpS8ypWQddiY5s=;
+	s=default; t=1589172844;
+	bh=EE4RUFzGtBnUhpN/W6GdiN9XdyqkBSLW/UwtcHAmuGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4wW7JHHq+wM2LR8eCOxk32GXN9AcCZ1fCdWzYqTQ2IuHsvSiRFPZACuWqplT9bhE
-	 EFZI2XDyWW7ljcI5Iu9rs+AsHm3GWlGkWHl5g+7Y8Q+cQTmuWDSxrZQD2HTZadxWUn
-	 UqvrlQtZPIdfSCIvA63kv15fieQtE+vitrvxetX8=
+	b=MkU1Ki9F4hypiaTzTFx8A15WsfRGVI9jZEJp8nmLym3XXqmUkSLmeA7iITrzmFKHB
+	 ABNAn3pB1pN9mFbCpAgHEflGAQhHCuM63xoVJ3ztgNDiYwaIoWbcHHe7d10Fm51EZL
+	 8JmQXfvuegg4oue1t98gKD2SEWkpxBHMtp+3EHBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgEKExr (ORCPT
+        id S1729200AbgEKEyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37774 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 00:54:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgEKExm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:53:42 -0400
+        id S1728873AbgEKExt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:53:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D0C2495E;
-        Mon, 11 May 2020 04:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7266C24962;
+        Mon, 11 May 2020 04:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589172822;
-        bh=/Y6JDEC90w0GBqbdeWrZTksp0NgWDLpS8ypWQddiY5s=;
+        s=default; t=1589172828;
+        bh=EE4RUFzGtBnUhpN/W6GdiN9XdyqkBSLW/UwtcHAmuGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYZVgmH/kSTIbfWeLL7HuR8+roRSygikWJ5uvuxJQ1eQ+qfb21CR/0x+kCgTJaa8Z
-         4rvuqL1sKY8fXQ5VwD8iFzHX61nIIK6Bl8ZyS61PqabGtn44G5WG/kzky5xoGuALSw
-         a4HM7dQxGo/10JsVNb0Gvh89tSXQabs5fJFSIDls=
+        b=MSAfmiTCpbG79rGoqTAEgtNTANJr84QpqGcouwpToehIkPtqxMCvUj0L3wOV8OKub
+         dqVrLt5gZgDmMKec3ki/aqmGKD7JsfhKX73jM7ZAMpn0i9KFD6yHtn5kJzcVkv95oT
+         kNIsaFu92EZhx+QX7b77c0Za/HxAB4ykUVA/Rv+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
 Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
         chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v12 11/18] x86/fsgsbase/64: Use FSGSBASE in switch_to() if available
-Date:   Mon, 11 May 2020 00:53:04 -0400
-Message-Id: <20200511045311.4785-12-sashal@kernel.org>
+Subject: [PATCH v12 16/18] x86/fsgsbase/64: Enable FSGSBASE on 64bit by default and add a chicken bit
+Date:   Mon, 11 May 2020 00:53:09 -0400
+Message-Id: <20200511045311.4785-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
 References: <20200511045311.4785-1-sashal@kernel.org>
@@ -60,23 +60,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andy Lutomirski <luto@kernel.org>
 
-With the new FSGSBASE instructions, FS/GS base can be efficiently read
-and written in __switch_to(). Use that capability to preserve the full
-state.
+Now that FSGSBASE is fully supported, remove unsafe_fsgsbase, enable
+FSGSBASE by default, and add nofsgsbase to disable it.
 
-This will enable user code to do whatever it wants with the new
-instructions without any kernel-induced gotchas.  (There can still be
-architectural gotchas: movl %gs,%eax; movl %eax,%gs may change GS base
-if WRGSBASE was used, but users are expected to read the CPU manual
-before doing things like that.)
+While this changes userspace visible ABI, we could not find a project
+that would be affected by this. Few projects were contacted for input
+and ack:
 
-This is a considerable speedup. It seems to save about 100 cycles per
-context switch compared to the baseline 4.6-rc1 behavior on a Skylake
-laptop.
-
-[ chang: 5~10% performance improvements were seen by a context switch
-  benchmark that ran threads with different FS/GS base values (to the
-  baseline 4.16). ]
+- 5-level EPT: http://lkml.kernel.org/r/9ddf602b-6c8b-8c1e-ab46-07ed12366593@redhat.com
+- rr: https://mail.mozilla.org/pipermail/rr-dev/2018-March/000616.html
+- CRIU: https://lists.openvz.org/pipermail/criu/2018-March/040654.html
 
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
@@ -90,61 +83,77 @@ Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 ---
- arch/x86/kernel/process_64.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  3 +-
+ arch/x86/kernel/cpu/common.c                  | 32 ++++++++-----------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index aaa65f284b9b9..e066750be89a0 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -199,8 +199,18 @@ static __always_inline void save_fsgs(struct task_struct *task)
- {
- 	savesegment(fs, task->thread.fsindex);
- 	savesegment(gs, task->thread.gsindex);
--	save_base_legacy(task, task->thread.fsindex, FS);
--	save_base_legacy(task, task->thread.gsindex, GS);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+		/*
-+		 * If FSGSBASE is enabled, we can't make any useful guesses
-+		 * about the base, and user code expects us to save the current
-+		 * value.  Fortunately, reading the base directly is efficient.
-+		 */
-+		task->thread.fsbase = rdfsbase();
-+		task->thread.gsbase = x86_gsbase_read_cpu_inactive();
-+	} else {
-+		save_base_legacy(task, task->thread.fsindex, FS);
-+		save_base_legacy(task, task->thread.gsindex, GS);
-+	}
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index af3aaade195b8..1924845c879c2 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3033,8 +3033,7 @@
+ 	no5lvl		[X86-64] Disable 5-level paging mode. Forces
+ 			kernel to use 4-level paging instead.
+ 
+-	unsafe_fsgsbase	[X86] Allow FSGSBASE instructions.  This will be
+-			replaced with a nofsgsbase flag.
++	nofsgsbase	[X86] Disables FSGSBASE instructions.
+ 
+ 	no_console_suspend
+ 			[HW] Never suspend the console
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 4224760c74e27..0d480cbadc7dc 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -418,21 +418,21 @@ static void __init setup_cr_pinning(void)
+ 	static_key_enable(&cr_pinning.key);
  }
  
- #if IS_ENABLED(CONFIG_KVM)
-@@ -279,10 +289,22 @@ static __always_inline void load_seg_legacy(unsigned short prev_index,
- static __always_inline void x86_fsgsbase_load(struct thread_struct *prev,
- 					      struct thread_struct *next)
+-/*
+- * Temporary hack: FSGSBASE is unsafe until a few kernel code paths are
+- * updated. This allows us to get the kernel ready incrementally.
+- *
+- * Once all the pieces are in place, these will go away and be replaced with
+- * a nofsgsbase chicken flag.
+- */
+-static bool unsafe_fsgsbase;
+-
+-static __init int setup_unsafe_fsgsbase(char *arg)
++static __init int x86_nofsgsbase_setup(char *arg)
  {
--	load_seg_legacy(prev->fsindex, prev->fsbase,
--			next->fsindex, next->fsbase, FS);
--	load_seg_legacy(prev->gsindex, prev->gsbase,
--			next->gsindex, next->gsbase, GS);
-+	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-+		/* Update the FS and GS selectors if they could have changed. */
-+		if (unlikely(prev->fsindex || next->fsindex))
-+			loadseg(FS, next->fsindex);
-+		if (unlikely(prev->gsindex || next->gsindex))
-+			loadseg(GS, next->gsindex);
+-	unsafe_fsgsbase = true;
++	/* Require an exact match without trailing characters. */
++	if (strlen(arg))
++		return 0;
 +
-+		/* Update the bases. */
-+		wrfsbase(next->fsbase);
-+		x86_gsbase_write_cpu_inactive(next->gsbase);
-+	} else {
-+		load_seg_legacy(prev->fsindex, prev->fsbase,
-+				next->fsindex, next->fsbase, FS);
-+		load_seg_legacy(prev->gsindex, prev->gsbase,
-+				next->gsindex, next->gsbase, GS);
-+	}
++	/* Do not emit a message if the feature is not present. */
++	if (!boot_cpu_has(X86_FEATURE_FSGSBASE))
++		return 1;
++
++	setup_clear_cpu_cap(X86_FEATURE_FSGSBASE);
++	pr_info("FSGSBASE disabled via kernel command line\n");
+ 	return 1;
  }
+-__setup("unsafe_fsgsbase", setup_unsafe_fsgsbase);
++__setup("nofsgsbase", x86_nofsgsbase_setup);
  
- static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
+ /*
+  * Protection Keys are not available in 32-bit mode.
+@@ -1495,12 +1495,8 @@ static void identify_cpu(struct cpuinfo_x86 *c)
+ 	setup_umip(c);
+ 
+ 	/* Enable FSGSBASE instructions if available. */
+-	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
+-		if (unsafe_fsgsbase)
+-			cr4_set_bits(X86_CR4_FSGSBASE);
+-		else
+-			clear_cpu_cap(c, X86_FEATURE_FSGSBASE);
+-	}
++	if (cpu_has(c, X86_FEATURE_FSGSBASE))
++		cr4_set_bits(X86_CR4_FSGSBASE);
+ 
+ 	/*
+ 	 * The vendor-specific functions might have changed features.
 -- 
 2.20.1
 
