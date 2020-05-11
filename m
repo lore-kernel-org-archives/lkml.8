@@ -2,87 +2,95 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BDCC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D7DC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE313208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589196327;
-	bh=23t0/WcS+2Mlv461sc+mk+6Tyg7VLqyFZMsaM2GNRP8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=sa9I5mD8BJZs3W+An1r1hI/wvqCoBcQzWs34m7DjExSYvE4ta4dNqNcNsHXXq6jRs
-	 CfVyilRsjFRH7U5l3VWj5SoeZpXlYJuw7wtvdiFXiV5pYnjF9iOgyyrRzuCS9TMbkA
-	 BI/nin05eQszWkCf/0+hxMjAZWGuLMsE2eX3wW1w=
+	by mail.kernel.org (Postfix) with ESMTP id E41C620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgEKLZ1 (ORCPT
+        id S1729641AbgEKLZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 07:25:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45674 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgEKLZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:26 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A3520722;
-        Mon, 11 May 2020 11:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589196326;
-        bh=23t0/WcS+2Mlv461sc+mk+6Tyg7VLqyFZMsaM2GNRP8=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=qgF3COVBhRMrAD+N2rt5A0nGnoRrFMvXWIoourMXjd9CjX4ozvuZNoZgDKsLWjLlR
-         9jPCRhWD8iBui2HB561GKJ4NhQ8/KdalJZXV7nXd3/7UD7u6XUub9LB1yTvbIEOHGc
-         dmmAJwrL2zemuMiG71Q/ZOqSdoYw8LWb3ElLrweo=
-Date:   Mon, 11 May 2020 12:25:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     mazziesaccount@gmail.com,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     brendanhiggins@google.com, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        sre@kernel.org
-In-Reply-To: <20200509151519.GA7100@localhost.localdomain>
-References: <20200509151519.GA7100@localhost.localdomain>
-Subject: Re: [PATCH] lib: linear_ranges: Add missing MODULE_LICENSE()
-Message-Id: <158919630590.8372.10685814849051811697.b4-ty@kernel.org>
+        id S1729572AbgEKLZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49LJWh3YX5z9ty3j;
+        Mon, 11 May 2020 13:25:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id NgAeJVkG7h7r; Mon, 11 May 2020 13:25:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJWh2ZKbz9ty3g;
+        Mon, 11 May 2020 13:25:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 07EFD8B7AE;
+        Mon, 11 May 2020 13:25:27 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Lu8gn5gHy6wF; Mon, 11 May 2020 13:25:26 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CD82E8B7AD;
+        Mon, 11 May 2020 13:25:26 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B5CDC65A09; Mon, 11 May 2020 11:25:26 +0000 (UTC)
+Message-Id: <4e2cb6b7beab7350220062806181c2bb494583e0.1589196133.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 01/45] powerpc/kasan: Fix error detection on memory
+ allocation
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 May 2020 11:25:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 18:15:19 +0300, Matti Vaittinen wrote:
-> When linear_ranges is compiled as module we get warning
-> about missing MODULE_LICENSE(). Fix it by adding
-> MODULE_LICENSE("GPL") as is suggested by SPDX and EXPORTs.
+In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
+NULL allthough 'block' is NULL
 
-Applied to
+Check the return of memblock_alloc() directly instead of
+the resulting address in the loop.
 
-   local tree asoc/for-5.7
+Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Thanks!
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index cbcad369fcb2..8b15fe09b967 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
+ 		return ret;
+ 
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
++	if (!block)
++		return -ENOMEM;
+ 
+ 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_ptr_k(k_cur);
+ 		void *va = block + k_cur - k_start;
+ 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
+ 
+-		if (!va)
+-			return -ENOMEM;
+-
+ 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
+ 	}
+ 	flush_tlb_kernel_range(k_start, k_end);
+-- 
+2.25.0
 
-[1/1] lib: linear_ranges: Add missing MODULE_LICENSE()
-      (no commit info)
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
