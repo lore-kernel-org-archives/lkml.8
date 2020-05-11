@@ -6,172 +6,135 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9925C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED602C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C19322098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DF420736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbgEKL0p (ORCPT
+        id S1729953AbgEKL0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:26:45 -0400
+        Mon, 11 May 2020 07:26:48 -0400
 Received: from pegase1.c-s.fr ([93.17.236.30]:54291 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729873AbgEKL0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:26:10 -0400
+        id S1729860AbgEKL0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:26:07 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49LJXS6x2Dz9ty3m;
-        Mon, 11 May 2020 13:26:00 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49LJXP6cn7z9ty3j;
+        Mon, 11 May 2020 13:25:57 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IgkSEgs_6jgi; Mon, 11 May 2020 13:26:00 +0200 (CEST)
+        with ESMTP id ChN5xmvL_AYX; Mon, 11 May 2020 13:25:57 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXS68rCz9ty3g;
-        Mon, 11 May 2020 13:26:00 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXP5mjlz9ty3g;
+        Mon, 11 May 2020 13:25:57 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8EB018B7AE;
-        Mon, 11 May 2020 13:26:07 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7AE4E8B7AE;
+        Mon, 11 May 2020 13:26:04 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9L0XK6pmeTwo; Mon, 11 May 2020 13:26:07 +0200 (CEST)
+        with ESMTP id Ry3s_qjLDGHS; Mon, 11 May 2020 13:26:04 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 511078B7AD;
-        Mon, 11 May 2020 13:26:07 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F3D78B7B1;
+        Mon, 11 May 2020 13:26:04 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3253565A09; Mon, 11 May 2020 11:26:07 +0000 (UTC)
-Message-Id: <de4bd44cfcd32101268aad034e4d9c014ad78b3b.1589196133.git.christophe.leroy@csgroup.eu>
+        id 1C6D565A09; Mon, 11 May 2020 11:26:04 +0000 (UTC)
+Message-Id: <e72b392b0626c66585ce82521e5e43e82f9c3fc9.1589196133.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v3 40/45] powerpc/8xx: Map linear memory with huge pages
+Subject: [PATCH v3 37/45] powerpc/8xx: Refactor kernel address boundary
+ comparison
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 May 2020 11:26:07 +0000 (UTC)
+Date:   Mon, 11 May 2020 11:26:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map linear memory space with 512k and 8M pages whenever
-possible.
+Now that linear and IMMR dedicated TLB handling is gone, kernel
+boundary address comparison is similar in ITLB miss handler and
+in DTLB miss handler.
 
-Three mappings are performed:
-- One for kernel text
-- One for RO data
-- One for the rest
+Create a macro named compare_to_kernel_boundary.
 
-Separating the mappings is done to be able to update the
-protection later when using STRICT_KERNEL_RWX.
+When TASK_SIZE is strictly below 0x80000000 and PAGE_OFFSET is
+above 0x80000000, it is enough to compare to 0x8000000, and this
+can be done with a single instruction.
 
-The ITLB miss handler now need to also handle huge TLBs
-unless kernel text in pinned.
+Using not. instruction, we get to use 'blt' conditional branch as
+when doing a regular comparison:
+
+0x00000000 <= addr <= 0x7fffffff ==>
+0xffffffff >= NOT(addr) >= 0x80000000
+The above test corresponds to a 'blt'
+
+Otherwise, do a regular comparison using two instructions.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/head_8xx.S |  4 +--
- arch/powerpc/mm/nohash/8xx.c   | 50 +++++++++++++++++++++++++++++++++-
- 2 files changed, 51 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/head_8xx.S | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 9a117b9f0998..abb71fad7d6a 100644
+index 9f3f7f3d03a7..9a117b9f0998 100644
 --- a/arch/powerpc/kernel/head_8xx.S
 +++ b/arch/powerpc/kernel/head_8xx.S
-@@ -224,7 +224,7 @@ InstructionTLBMiss:
+@@ -32,10 +32,15 @@
+ 
+ #include "head_32.h"
+ 
++.macro compare_to_kernel_boundary scratch, addr
+ #if CONFIG_TASK_SIZE <= 0x80000000 && CONFIG_PAGE_OFFSET >= 0x80000000
+ /* By simply checking Address >= 0x80000000, we know if its a kernel address */
+-#define SIMPLE_KERNEL_ADDRESS		1
++	not.	\scratch, \addr
++#else
++	rlwinm	\scratch, \addr, 16, 0xfff8
++	cmpli	cr0, \scratch, PAGE_OFFSET@h
+ #endif
++.endm
+ 
+ /*
+  * We need an ITLB miss handler for kernel addresses if:
+@@ -209,20 +214,11 @@ InstructionTLBMiss:
+ 	mtspr	SPRN_MD_EPN, r10
+ #ifdef ITLB_MISS_KERNEL
+ 	mfcr	r11
+-#if defined(SIMPLE_KERNEL_ADDRESS)
+-	cmpi	cr0, r10, 0	/* Address >= 0x80000000 */
+-#else
+-	rlwinm	r10, r10, 16, 0xfff8
+-	cmpli	cr0, r10, PAGE_OFFSET@h
+-#endif
++	compare_to_kernel_boundary r10, r10
+ #endif
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ #ifdef ITLB_MISS_KERNEL
+-#if defined(SIMPLE_KERNEL_ADDRESS)
+-	bge+	3f
+-#else
+ 	blt+	3f
+-#endif
+ 	rlwinm	r10, r10, 0, 20, 31
+ 	oris	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@ha
  3:
- 	mtcr	r11
- #endif
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	lwz	r11, (swapper_pg_dir-PAGE_OFFSET)@l(r10)	/* Get level 1 entry */
- 	mtspr	SPRN_MD_TWC, r11
- #else
-@@ -234,7 +234,7 @@ InstructionTLBMiss:
- #endif
- 	mfspr	r10, SPRN_MD_TWC
- 	lwz	r10, 0(r10)	/* Get the pte */
--#ifdef CONFIG_HUGETLBFS
-+#if defined(CONFIG_HUGETLBFS) || !defined(CONFIG_PIN_TLB_TEXT)
- 	rlwimi	r11, r10, 32 - 9, _PMD_PAGE_512K
- 	mtspr	SPRN_MI_TWC, r11
- #endif
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index fb31a0c1c2a4..c62cab996d4d 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -126,20 +126,68 @@ void __init mmu_mapin_immr(void)
- 				    PAGE_KERNEL_NCG, MMU_PAGE_512K, true);
- }
- 
-+static void __init mmu_mapin_ram_chunk(unsigned long offset, unsigned long top,
-+				       pgprot_t prot, bool new)
-+{
-+	unsigned long v = PAGE_OFFSET + offset;
-+	unsigned long p = offset;
-+
-+	WARN_ON(!IS_ALIGNED(offset, SZ_512K) || !IS_ALIGNED(top, SZ_512K));
-+
-+	for (; p < ALIGN(p, SZ_8M) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+	for (; p < ALIGN_DOWN(top, SZ_8M) && p < top; p += SZ_8M, v += SZ_8M)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
-+	for (; p < ALIGN_DOWN(top, SZ_512K) && p < top; p += SZ_512K, v += SZ_512K)
-+		__early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+
-+	if (!new)
-+		flush_tlb_kernel_range(PAGE_OFFSET + v, PAGE_OFFSET + top);
-+}
-+
- unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
-+
-+	WARN_ON(top < einittext8);
-+
- 	mmu_mapin_immr();
- 
--	return 0;
-+	if (__map_without_ltlbs)
-+		return 0;
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL_TEXT, true);
-+	mmu_mapin_ram_chunk(einittext8, top, PAGE_KERNEL, true);
-+
-+	if (top > SZ_32M)
-+		memblock_set_current_limit(top);
-+
-+	block_mapped_ram = top;
-+
-+	return top;
- }
- 
- void mmu_mark_initmem_nx(void)
- {
-+	unsigned long etext8 = ALIGN(__pa(_etext), SZ_8M);
-+	unsigned long sinittext = __pa(_sinittext);
-+	unsigned long boundary = strict_kernel_rwx_enabled() ? sinittext : etext8;
-+	unsigned long einittext8 = ALIGN(__pa(_einittext), SZ_8M);
-+
-+	mmu_mapin_ram_chunk(0, boundary, PAGE_KERNEL_TEXT, false);
-+	mmu_mapin_ram_chunk(boundary, einittext8, PAGE_KERNEL, false);
- }
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
- void mmu_mark_rodata_ro(void)
- {
-+	unsigned long sinittext = __pa(_sinittext);
-+
-+	mmu_mapin_ram_chunk(0, sinittext, PAGE_KERNEL_ROX, false);
- }
- #endif
- 
+@@ -288,9 +284,7 @@ DataStoreTLBMiss:
+ 	 * kernel page tables.
+ 	 */
+ 	mfspr	r10, SPRN_MD_EPN
+-	rlwinm	r10, r10, 16, 0xfff8
+-	cmpli	cr0, r10, PAGE_OFFSET@h
+-
++	compare_to_kernel_boundary r10, r10
+ 	mfspr	r10, SPRN_M_TWB	/* Get level 1 table */
+ 	blt+	3f
+ 	rlwinm	r10, r10, 0, 20, 31
 -- 
 2.25.0
 
