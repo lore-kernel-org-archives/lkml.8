@@ -2,142 +2,62 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831B9C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7398DC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6282020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QRIMqbF5"
+	by mail.kernel.org (Postfix) with ESMTP id 5CF8C20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:17:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731361AbgEKTPi (ORCPT
+        id S1731368AbgEKTRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:15:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35722 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbgEKTPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:15:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFZNf083357;
-        Mon, 11 May 2020 14:15:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589224535;
-        bh=i3l1grILIbxc03pyhfwIusQdRfYWPfn5hdnAbv7xGzw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QRIMqbF5Jue8dYveT0mJj8JkwiOMW3yewVqcZtzlL7XYiQcg2jxMw0fHBVbwXHXHn
-         spp0E7TO0OMq0zksJd5IIKLjfrq7KgeVKY9f4f7VWLxSiDdGfbjojZI89IjY95YZbr
-         L7fuius7nMy3/X0cBiAiOs5p7OZ1nikRCrRqBekc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BJFZHA077175
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 14:15:35 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 14:15:34 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 14:15:34 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BJFVuO003772;
-        Mon, 11 May 2020 14:15:34 -0500
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-References: <20200507183013.27261-1-dmurphy@ti.com>
- <20200510161721.257vprq6rqp64wu5@earth.universe>
- <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
- <20200511143241.nmkti7meahvj2swt@earth.universe>
- <8674289c-038d-d811-4786-322d66072527@ti.com>
- <20200511145700.lnytcr747snnolya@earth.universe>
- <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
- <20200511153055.7u7afdcpcfbsmswq@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <767f3083-45ae-9198-0a25-6beddc7e0c03@ti.com>
-Date:   Mon, 11 May 2020 14:06:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 11 May 2020 15:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730974AbgEKTRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 15:17:14 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6275206E6;
+        Mon, 11 May 2020 19:17:13 +0000 (UTC)
+Date:   Mon, 11 May 2020 15:17:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5] streamline_config.pl: add LMC_KEEP to preserve some
+ kconfigs
+Message-ID: <20200511151712.21a767d9@gandalf.local.home>
+In-Reply-To: <20200510010603.3896-1-changbin.du@gmail.com>
+References: <20200510010603.3896-1-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200511153055.7u7afdcpcfbsmswq@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+On Sun, 10 May 2020 09:06:03 +0800
+Changbin Du <changbin.du@gmail.com> wrote:
 
-On 5/11/20 10:30 AM, Sebastian Reichel wrote:
-> Hi,
->
-> On Mon, May 11, 2020 at 09:55:11AM -0500, Dan Murphy wrote:
->> On 5/11/20 9:57 AM, Sebastian Reichel wrote:
->>> On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
->>>> On 5/11/20 9:32 AM, Sebastian Reichel wrote:
->>>>> On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
->>>>>> On 5/10/20 11:17 AM, Sebastian Reichel wrote:
->>>>>>> This needs is missing the power-supplies property. The N900 DT
->>>>>>> contains a bq27200 referencing the charger, so it should fail the DT
->>>>>>> check without the property being listed here.
->>>>>> Hmm.  I ran the dt checker specifically on the binding and it did not fail.
->>>>>> Unless I need to build some other DTs as well.
->>>>>> Either I will have the power-supplies property
->>>>> I just tried it myself. The problem is the way you are specifying
->>>>> the compatible strings. This is the parsing result:
->>>>>
->>>>> enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 - deprecated,
->>>>>          use revision specific property below', ...
->>>>>
->>>>> You can see this in Documentation/devicetree/bindings/processed-schema.yaml, which
->>>>> is generated by running the check. The compatible comments need a # as separation
->>>>> character like this to generate proper bindings:
->>>>>
->>>>> properties:
->>>>>      compatible:
->>>>>        enum:
->>>>>          - ti,bq27200 # BQ27200
->>>>>          - ti,bq27210 # BQ27210
->>>>>          - ti,bq27500 # deprecated, use revision specific property below
->>>> Well honestly not sure why we need the comment either. These are pretty
->>>> self explanatory maybe we should just remove the additional comments
->>> Fine with me.
->> Ack
->>>> Any consideration on just removing the deprecated values?
->>> Let's keep them with their comment for now. Removing them should
->>> start with marking them as depracated in the binding and generating
->>> a runtime warning in the driver, so that people become aware of the
->>> problem. At least for ti,bq27500 we have mainline users At least for
->>> ti,bq27500 we have mainline users.
->> There are only 2 dts files that have this reference unless we are not sure
->> which device is actually in use.
-> DT is considered ABI and one is supposed to be able to boot a new
-> kernel with an old DT. It's not enough to just update the in-tree
-> dts files. I suppose we can consider removing support for the old
-> compatible values after having the warning being printed for some
-> time and the mainline users being converted to the new binding.
-
-Yes I know. I may have said that before.
-
-After looking at the driver and how this is all stitched together I 
-think I am just going to stick to the DT conversion as is.
-
-I will make the basic changes for conversion but any changes to the 
-compatibles should be done later.
-
-Dan
+> Sometimes it is useful to preserve batches of configs when making
+> localmodconfig. For example, I usually don't want any usb and fs
+> modules to be disabled. Now we can do it by:
+> 
+>  $ make LMC_KEEP="drivers/usb:fs" localmodconfig
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> 
 
 
-> -- Sebastian
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
