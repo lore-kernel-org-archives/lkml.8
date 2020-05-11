@@ -2,149 +2,95 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632DCC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EC8C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E4E206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8580D206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589217704;
+	bh=26/lzuyJSNJHTBq52yvxlizty5jVmHdqC8aFKJMIJ4A=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=VOJp5U2/SWOeLYLJfCO1kGct7SfpT+rfBQNkFi2S5Enar8ihHoie4fxEv0Quinz5P
+	 4WOZzNRNUQdXji2fro8BLA4e+LDc0tKLB7bLSsOOb2X2dhSGrnlm66xU8PaXHSKpAB
+	 NcW3E0LdwaQ3gUE/UXgol1QpGvZNhRNKzF3MDW7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgEKRVQ (ORCPT
+        id S1730949AbgEKRVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:21:16 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:53835 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730644AbgEKRVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:21:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id g10so10135402iov.20
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:21:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=n/Jv74xGVecUMFGbk0cscRosnzR2e3OxqcMoNdQON/Y=;
-        b=Nzp4qBumFTRwv//+oZ+JEcLscqFYWV4c4lqVEMzZOZodw7XdYHDekhnTGodKMXyjye
-         0bc9YDrWQQ7LCz4Gt459S88R4sNMZcExe8S2laETGfbWuO1z6hoXv8mRtO9x0P9bDR/H
-         M08TYEyRnXn9mKEciIlXv8sAvA+8D9r6N1dnQXFBiqgG5O0nGL+/U7KSoqDMUAjUfPyT
-         d9qBVaWJ8K3D6MTxKRdtWHysbN0aSzqVBf/JNum68py6uurwSJZ+pUWfMxb8TOE0/yQW
-         5gNsBQz3u0x2tj942B5tTjHWnFs7jvPYbb9Jw3bSMtYOfHqaZPnKlwWH3xlDTFTXroQk
-         QJkQ==
-X-Gm-Message-State: AGi0PuYQVB/5YD2e6Ds7BSaYLD6Urnsu1pLorGGQGaz0NRnBJ9pbxefh
-        ZqfO2/f5Vbsr8YZ9A6RifFsSYWS9zUw2NsLqk4E47oQnwNLr
-X-Google-Smtp-Source: APiQypL7z32WqVtJf+HU76MSmqdvhpd5b/+cWTCe8doO6sm7iJCSjXzZWEJ2xO7z9PbqCNV4hMLSwQdu3OIPRYsm0YiBnlo2Q/Bm
-MIME-Version: 1.0
-X-Received: by 2002:a02:3b4b:: with SMTP id i11mr16625500jaf.16.1589217673581;
- Mon, 11 May 2020 10:21:13 -0700 (PDT)
-Date:   Mon, 11 May 2020 10:21:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e79ab005a56292f5@google.com>
-Subject: WARNING in cgroup_finalize_control
-From:   syzbot <syzbot+9c08aaa363ca5784c9e9@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, christian@brauner.io,
-        coreteam@netfilter.org, daniel@iogearbox.net, davem@davemloft.net,
-        hannes@cmpxchg.org, john.fastabend@gmail.com, kaber@trash.net,
-        kadlec@blackhole.kfki.hu, kafai@fb.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        lizefan@huawei.com, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        nhorman@tuxdriver.com, pablo@netfilter.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        vyasevich@gmail.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 May 2020 13:21:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730644AbgEKRVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:21:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905E720714;
+        Mon, 11 May 2020 17:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589217703;
+        bh=26/lzuyJSNJHTBq52yvxlizty5jVmHdqC8aFKJMIJ4A=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=fM/pMnS4gzd9iZKxQkSoxVmuFQ0w1GVe84fQ5VXA08+KkLxlZ+dl5rhZW2jJ3xqPV
+         vDFQ72HmdVqkUWVsEDPGJWw0AdyGSnxWNaj4RI8qIywnvnPvmMTpuOKA3e6SngyWGA
+         SBuNa4sqlawQAdWF+BWYEfpFjxQAnGALv13+JeOg=
+Date:   Mon, 11 May 2020 18:21:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yongbo Zhang <giraffesnn123@gmail.com>, lgirdwood@gmail.com
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Chen Li <licheng0822@thundersoft.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200511100415.12502-1-giraffesnn123@gmail.com>
+References: <20200511100415.12502-1-giraffesnn123@gmail.com>
+Subject: Re: [PATCH v1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+Message-Id: <158921769452.22432.14661061075576126965.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 11 May 2020 18:04:15 +0800, Yongbo Zhang wrote:
+> SSI BUSIF buffer is possible to overflow or underflow, especially in a
+> hypervisor environment. If there is no interrupt support, it will eventually
+> lead to errors in pcm data.
+> This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+> 
+> Reported-by: Chen Li <licheng0822@thundersoft.com>
+> Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
+> Tested-by: Chen Li <licheng0822@thundersoft.com>
+> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> [...]
 
-syzbot found the following crash on:
+Applied to
 
-HEAD commit:    a811c1fa Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16ad1d70100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=43badbd0e7e1137e
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c08aaa363ca5784c9e9
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d3c588100000
+   local tree spi/for-5.7
 
-The bug was bisected to:
+Thanks!
 
-commit eab59075d3cd7f3535aa2dbbc19a198dfee58892
-Author: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Date:   Wed Dec 28 11:26:31 2016 +0000
+[1/1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+      (no commit info)
 
-    sctp: reduce indent level at sctp_sf_tabort_8_4_8
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=151b6c7c100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=171b6c7c100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=131b6c7c100000
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9c08aaa363ca5784c9e9@syzkaller.appspotmail.com
-Fixes: eab59075d3cd ("sctp: reduce indent level at sctp_sf_tabort_8_4_8")
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7373 at kernel/cgroup/cgroup.c:3111 cgroup_apply_control_disable kernel/cgroup/cgroup.c:3111 [inline]
-WARNING: CPU: 0 PID: 7373 at kernel/cgroup/cgroup.c:3111 cgroup_finalize_control+0xb6c/0xd60 kernel/cgroup/cgroup.c:3178
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7373 Comm: syz-executor.0 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1ac/0x2d0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:cgroup_apply_control_disable kernel/cgroup/cgroup.c:3111 [inline]
-RIP: 0010:cgroup_finalize_control+0xb6c/0xd60 kernel/cgroup/cgroup.c:3178
-Code: 89 f7 ff d3 eb 08 e8 53 fe 07 00 0f 1f 00 49 ff c4 49 83 fc 0d 0f 84 63 01 00 00 e8 3e fe 07 00 e9 a9 f8 ff ff e8 34 fe 07 00 <0f> 0b e9 88 f9 ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c cd f8 ff
-RSP: 0018:ffffc900035a7ba8 EFLAGS: 00010293
-RAX: ffffffff816b637c RBX: 0000000000000002 RCX: ffff88809e876100
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffffffff89307148 R08: ffffffff816b5cfc R09: ffffed1015d07074
-R10: ffffed1015d07074 R11: 0000000000000000 R12: 0000000000000008
-R13: ffff88809251c000 R14: ffff88808eef2400 R15: dffffc0000000000
- rebind_subsystems+0x737/0xe60 kernel/cgroup/cgroup.c:1750
- cgroup_setup_root+0x679/0xd50 kernel/cgroup/cgroup.c:1984
- cgroup1_root_to_use kernel/cgroup/cgroup-v1.c:1190 [inline]
- cgroup1_get_tree+0x7a2/0xae0 kernel/cgroup/cgroup-v1.c:1207
- vfs_get_tree+0x88/0x270 fs/super.c:1547
- do_new_mount fs/namespace.c:2816 [inline]
- do_mount+0x17ec/0x2900 fs/namespace.c:3141
- __do_sys_mount fs/namespace.c:3350 [inline]
- __se_sys_mount+0xd3/0x100 fs/namespace.c:3327
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45f27a
-Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 ad 8c fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 8a 8c fb ff c3 66 0f 1f 84 00 00 00 00 00
-RSP: 002b:00007fff4f78e3a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fff4f78e400 RCX: 000000000045f27a
-RDX: 00000000004cad91 RSI: 00000000004c1465 RDI: 00000000004c1428
-RBP: 0000000000000000 R08: 00000000004cf7b8 R09: 000000000000001c
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000418390
-R13: 00007fff4f78e628 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Mark
