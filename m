@@ -2,130 +2,163 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C5EC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A66C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301BD206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589206280;
-	bh=lFBRI4DN/R77S5Yt9QxWhkSUdrIKsZpnMJObWJ7t4PI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eNYWU3WNyMjlRo5vP1TG62KuiRWE0eNt8TK+5xZYHxo8YMdqANup2CSYPLppJKDzh
-	 zAbGnBeaOdFG1hklVeZp9+SrS59Ta5PQ95CzFFZ1VhYenlAdIc/zrU8gmd2rhE6gRd
-	 7S1m27tIIkBjoMf3Xwv0PfzYCkC47QWYdjGsT6kk=
+	by mail.kernel.org (Postfix) with ESMTP id 55BB7206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:11:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gk6cYpF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEKOLT (ORCPT
+        id S1730425AbgEKOLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:11:19 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33648 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgEKOLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:11:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x77so4804466pfc.0;
-        Mon, 11 May 2020 07:11:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AWgg7qj1bkym/xNblxQzDHT3If2HCewLrF/zJm6gRzY=;
-        b=npawjWnwtbK/fg8Yq6Frejo0kpo7h9WnRz/l1yBtBW482mr4oFAS2C7X0dURs0p6k2
-         U6DNLUs3t5YFi8ACItK//MfI6SHmvRKtppysbN0pUCF/WxwSJsXzbInb6fueD6Msd2wA
-         uvkSa6Lei/iaZD0Q1OhKTAwHdlTdymrx0ZG7dKMDzuLMuyEiVOSPzaOynprs9YL19c53
-         3lRzWst6p/AnKXPaLTnWLo0om7oEvHFcz1POEnWNgeRoNbvpE4Wb4OH1huufn7VatB30
-         aE10OimdCe2wOc9Fz8SqLLeohUa9IJbgXHPcE945j3AQdbRv7sFKe71xJN8xYFDU+VLT
-         f3aA==
-X-Gm-Message-State: AGi0PuZ4m4Y09i2VXVACgSMVGQow72zG2Yl9xPyXfKr7zVVxVjLVc/6F
-        5e2dOxfAPKAmwPGUrmIvnnA=
-X-Google-Smtp-Source: APiQypJAWxBoNUs8vRFOmSa70+GttdBRfZ31F3iEsLPfSIWeZ0YvxscN5GsJ8v/OgCgqmm2miDWFVw==
-X-Received: by 2002:a63:ee4f:: with SMTP id n15mr14981159pgk.149.1589206276809;
-        Mon, 11 May 2020 07:11:16 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id g40sm10650446pje.38.2020.05.11.07.11.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 07:11:14 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C270E40605; Mon, 11 May 2020 14:11:13 +0000 (UTC)
-Date:   Mon, 11 May 2020 14:11:13 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Jiri Pirko <jiri@resnulli.us>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] net: taint when the device driver firmware crashes
-Message-ID: <20200511141113.GP11244@42.do-not-panic.com>
-References: <20200509043552.8745-1-mcgrof@kernel.org>
- <20200509113546.7dcd1599@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Mon, 11 May 2020 10:11:32 -0400
+Received: from mail-eopbgr1320125.outbound.protection.outlook.com ([40.107.132.125]:63808
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730314AbgEKOL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:11:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jh/Jgchc2XqvX4G+oKZL1WS+aKhxg3zJeRxYwqdUyi0sSEUTeEEyaAVtycy/reDYdQk+9+ohMwJIklTr9T0Gt9cv51Mdz6vqorjYgsIo5f4gTWPv5SskkBIvcMN0Zewi83XJSpm8pIZZfN/vJ15fYlkTh5VTajedysr8AeXS17yytFBuUm+CG4dbNRXLhtWLXa/o3Z2jpKUS9quUqqspU60NDwii+hxsfwYK9r3y4tGjx0MPxnDedA/10U/DNH5HwIqLrV210gQGVtr6oFdb04tuGfXHytKhIONbjxhS5CczpszzvjAp/hrJqZm9gG2NpGLZtP3YttgbmN9bgtOndA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gbtQKxVOAfiR4njrekkmCrT9W4lFFwM4LpR2xN6Bew8=;
+ b=dIPFeRC+ze52jgCdONzn6QKa6VN8MFlnTINSBWSyjB143tpb6eXHy+T51r1JpPRNQP2VZK/4u0q+JZPxdJQim9NKvZOcOPR8g0YjQcvluQwMXkrMTFpikOqfw/Kj5BoxvUiE+k/wylVpvsbiky7XVQ5w7E9YO9wNS4fROwSuGPyV2vo8FGYfrZ55h1A0oqinzBi/0dV1sGPWO/uXWKRF6xUsUVvBrZHWKH20paEYqTjteLvhPIovN49vWoLQkmxhlBVysjzXPlgpx1OkZUWIpzVHOWNl23gJHjtotB42V6BsS5MaqCBppSChdXNS32HyUT+ymFQ3eZG1fz4CZAwAAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gbtQKxVOAfiR4njrekkmCrT9W4lFFwM4LpR2xN6Bew8=;
+ b=gk6cYpF4guYDL8xFr/lmPCD2bqcoxW3CsI3U5iPeEHQYU0VzhYs8wK9HXajWEnXF/+/xCJEops0atI7o0JJaQzCu2sfDHdkpbAVVkXIhv0RIHS8JlFt0ncoFBPNWoEUxPulqxkYEzWw/wkRXj/YtkB/Q/dqa8uJKSRaqseNwkrU=
+Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM (2603:1096:4:8c::10) by
+ SG2P153MB0270.APCP153.PROD.OUTLOOK.COM (2603:1096:4:ad::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.1; Mon, 11 May 2020 14:11:22 +0000
+Received: from SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9979:a66f:c953:ce10]) by SG2P153MB0213.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9979:a66f:c953:ce10%5]) with mapi id 15.20.3021.002; Mon, 11 May 2020
+ 14:11:22 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Topic: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the first
+ attempt failed with invalid device state
+Thread-Index: AQHWJCzash5RmaIcnEaW8yRfAeCuS6iixDMAgAAuD3A=
+Date:   Mon, 11 May 2020 14:11:21 +0000
+Message-ID: <SG2P153MB0213CB7EB0E1BE05F2D621CEBBA10@SG2P153MB0213.APCP153.PROD.OUTLOOK.COM>
+References: <20200507050300.10974-1-weh@microsoft.com>
+ <20200511112112.GC24954@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200511112112.GC24954@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-11T14:11:19.8431719Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5dc7db8c-1ff0-4a09-8a09-1e83ea86ebaf;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [180.157.10.88]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: da23b11f-0327-4122-c509-08d7f5b52ef4
+x-ms-traffictypediagnostic: SG2P153MB0270:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SG2P153MB02703A3C9D4D71AB75A1796CBBA10@SG2P153MB0270.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c/WVSRO5fYpKioiFnaa7ebbE17wssSYj/tjO2hWfbQs1V+vJX3FkKz9GqXRjhzr+wfOFBs476XidpXyf5fZzjyBUYYzwNOLGhHxeeoLbsRUTH5ehJHEMCAagNG+//f19kbj5xhnjHAZOvEmyGV+rFMZic41VJ4+TIuHouNvykWKscwYLk057FFIQc+51y+e1O1ZsLToMptmWMe437Hv+3xfc/y2iM4o87qglslBfoGCJZpmdmDyZz7qWHIfXilhoxmzuokFNgV9mqZfZNg6zu/Yr4tkugM80wMIJ+IgWKIzYV9vCPxamvVuz+GLfpF99y8Ti2WD3YO2LmDj9D8fAf+PL5uylLDnmz8rpgsjI1bt1TMWKECtIC4RB6rSaYN55sgj765a8FulfdlavkpGDJlYlolJNAQNfHOZ9QAF8EOY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2P153MB0213.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(33430700001)(55016002)(8936002)(82950400001)(82960400001)(4326008)(76116006)(66446008)(66556008)(66946007)(2906002)(66476007)(10290500003)(64756008)(6916009)(52536014)(86362001)(478600001)(8676002)(107886003)(9686003)(316002)(71200400001)(5660300002)(53546011)(186003)(26005)(7696005)(33440700001)(33656002)(6506007)(8990500004)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Yuk6/yGN/B4Wz0/pFWgnPilcMXbs3nfkutpmipwpU7rPCkK38b8/wRzbBfZYdkqUEKQnnTb5A0RpGOZZ8QOjC1/XE2Q/05hNXkiEZIYE57E6cU/YAgv2UKkePb0B/HI4/E+JjY2OvTIZjZUKezr5E5Fc8awYBaXR5Sm0TVI8q4UFZzp1U1KVX0Nj8kNG0ZTgQVxiuWukVvFHPZV6q4owgtyJJgctgE2TtB5IW+x3LhG90DZnS88IWGhqC5jF+xUDJTLFM6PPso7PaWWvOc+z9E21addVTRFZ8k6Pda73saIdUreByuzaLK+r+HoQzjByFb+Zy68HZN1kUaL7emq7UJqVmKhE791rGQKyP4IqswO1wl2+uYxiVa4toyvpFOhVati/dULkyVO29FW87TcyDbUqAnE0DXQjtVBKKA0cFatSSShdikUrwkOZqCHFZsuJzTCDx8iYDqbGEYHd97S0fZ4TEaJXfdSaqrTvOb0NYY8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509113546.7dcd1599@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da23b11f-0327-4122-c509-08d7f5b52ef4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 14:11:21.7675
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I4QPNRr5lL3tP0zZm6/+aAg89bQPqBnGJ57UviO/PZxAPc+NzVL9yg57YZrlNzvpr34d8pfgDFynPfopBiARKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0270
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 11:35:46AM -0700, Jakub Kicinski wrote:
-> On Sat,  9 May 2020 04:35:37 +0000 Luis Chamberlain wrote:
-> > Device driver firmware can crash, and sometimes, this can leave your
-> > system in a state which makes the device or subsystem completely
-> > useless. Detecting this by inspecting /proc/sys/kernel/tainted instead
-> > of scraping some magical words from the kernel log, which is driver
-> > specific, is much easier. So instead this series provides a helper which
-> > lets drivers annotate this and shows how to use this on networking
-> > drivers.
-> > 
-> > My methodology for finding when firmware crashes is to git grep for
-> > "crash" and then doing some study of the code to see if this indeed
-> > a place where the firmware crashes. In some places this is quite
-> > obvious.
-> > 
-> > I'm starting off with networking first, if this gets merged later on I
-> > can focus on the other drivers, but I already have some work done on
-> > other subsytems.
-> > 
-> > Review, flames, etc are greatly appreciated.
-> 
-> Tainting itself may be useful, but that's just the first step. I'd much
-> rather see folks start using the devlink health infrastructure. Devlink
-> is netlink based, but it's _not_ networking specific (many of its
-> optional features obviously are, but don't let that mislead you).
-> 
-> With devlink health we get (a) a standard notification on the failure; 
-> (b) information/state dump in a (somewhat) structured form, which can be
-> collected & shared with vendors; (c) automatic remediation (usually
-> device reset of some scope).
 
-It indeed sounds very useful!
 
-> Now regarding the tainting - as I said it may be useful, but don't we
-> have to define what constitutes a "firmware crash"?
+> -----Original Message-----
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Monday, May 11, 2020 7:21 PM
+> To: Wei Hu <weh@microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> wei.liu@kernel.org; robh@kernel.org; bhelgaas@google.com; linux-
+> hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Dexuan Cui <decui@microsoft.com>; Michael Kelley
+> <mikelley@microsoft.com>
+> Subject: Re: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the firs=
+t
+> attempt failed with invalid device state
+>=20
+> On Thu, May 07, 2020 at 01:03:00PM +0800, Wei Hu wrote:
+> > In the case of kdump, the PCI device was not cleanly shut down before
+> > the kdump kernel starts. This causes the initial attempt of entering
+> > D0 state in the kdump kernel to fail with invalid device state
+> > returned from Hyper-V host.
+> > When this happens, explicitly call PCI bus exit and retry to enter the
+> > D0 state.
+> >
+> > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > ---
+> >     v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+> >     Bjorn Helgaas
+> >
+> >  drivers/pci/controller/pci-hyperv.c | 40
+> > +++++++++++++++++++++++++++--
+> >  1 file changed, 38 insertions(+), 2 deletions(-)
+>=20
+> Subject: exceeded 80 chars and commit log needed rewording and paragraphs
+> rewrapping. I did it this time but please pay attention to commit log con=
+tent
+> (and format).
 
-Yes indeed, I missed clarifying this in the documentation. I'll do so
-in my next respin.
+Got it. Thanks much for correcting it for me this time!
 
-> There are many
-> failure modes, some perfectly recoverable (e.g. processing queue hang), 
-> some mere bugs (e.g. device fails to initialize some functions). All of
-> them may impact the functioning of the system. How do we choose those
-> that taint? 
+Wei
 
-Its up to the maintainers of the device driver, what I was aiming for
-were those firmware crashes which indeed *can* have an impact on user
-experience, and can *even* potentially require a driver removal / addition
-to to get things back in order again.
+>=20
+> Thanks,
+> Lorenzo
+>=20
 
-  Luis
