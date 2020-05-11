@@ -2,136 +2,182 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE86C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C616C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A56C206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD50206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kvjPeIRq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mqCzMPdN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgEKKiD (ORCPT
+        id S1729509AbgEKKiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:38:03 -0400
-Received: from www381.your-server.de ([78.46.137.84]:37078 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgEKKiD (ORCPT
+        Mon, 11 May 2020 06:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728209AbgEKKip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:38:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=E7nGXJbtt/k5x9QUqlVuoKuVtxO6ANKMbKDzRQDuE/U=; b=kvjPeIRqkktKS1wOItSxOcBzpN
-        SAlHDVlSLbcndI9YbOafxoj9cY1bD5gpv8CEvK1CsMVzFAQm9tyM3FeuKB3rfUsyqxdYpNbuD/eYS
-        NAQzJ+5qcu4CVimTpCGpUpMUeTIOAc6ue21HUKZiuj/9cqV0L3cz5+5UhiRPnpVFYASOaIw57cIrb
-        uUMY/HSLuAToVTVkuZ71CbkX/Pk4qna4fUvFyDLOlWzjVrY4bJOVhdmZXQhH9LwupptMJU0bOIAzw
-        ILGDQmi4Jif2mUkQL3mLRuzIeQNXHcnY2DhdikXb7MYDEgI5OnGFdBjfZW618X3wWVtCveG7UumIF
-        jH9m538Q==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jY5or-00013Q-A7; Mon, 11 May 2020 12:37:57 +0200
-Received: from [82.135.66.51] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jY5or-000Kt0-1x; Mon, 11 May 2020 12:37:57 +0200
-Subject: Re: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
- <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
- <20200510110958.29046a18@archlinux>
- <8c5d9ef5ed4ea9037c5459daa2044d1cd7c5db7a.camel@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <c88b17c3-a9d6-e755-04e8-bc9f225e2a3b@metafoo.de>
-Date:   Mon, 11 May 2020 12:37:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 11 May 2020 06:38:45 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DAEC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:38:45 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id l1so3949382qtp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uf04Bplo4VLk4LrjpEdz9FsKxhkP+ZdN12Hn8z8gR3k=;
+        b=mqCzMPdN1teGg+bTUJ01IQPzCKWAyY17rXaBqjFXSPbHfTK6eVvfpfhpRGaGtPu+so
+         iv6Jd3DU9G0rPUCR44eqM9VMiVhXQIUY4PSxySOMunDn7pPZiNpTE8QVn0gklug4tYtL
+         HhxyJGVKSCzbVbUBfSexUl29cX/iFDCHXNBoyFYW1CsI18YThM3pKlwl72PNt3AjZolH
+         /avPwS+NyEJL+Kshm6XR1HRSQDQ5ObnJ37DttPS1Bh+ugYOMsAJGHM8M8aUCU/iGQ611
+         B2GlRrMt09krd7851/RYyF3ez8kweAYOugm5MtHHlGE2cFq18qlesvNwgwhgIwZ7MF18
+         notg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uf04Bplo4VLk4LrjpEdz9FsKxhkP+ZdN12Hn8z8gR3k=;
+        b=eoTiq6r3j92XaG1NECfBeVlOXbLbaMZ887HdbgesXLuA2LAoMsIdrHlWTGIQ1V3N1c
+         Wh6X8+Q2TBOUsWaYvSguy9VgjNxAObPF4KEIUJpRVbMiuIoQuCC02As/p/6xDomw96yJ
+         DIjWw40/rTfwdY+zrMyRideXt28UEvoUCK8R3M5Vl7jDKDQkUmW2au70SXPtW3ktlilJ
+         6bAmyuU0n1LSHOOmP21E/1d8eUQeCHlFk+QBhEt/67CJUV/QUMTRmfcqLjmz5E38Hmfc
+         iBRzwsYYg2OzgQhVtq2UgM+I50cDMJBZa4ZAobf7rDRfNUYQ/3d4tTTHqzXmP+q7wBlO
+         g+Ug==
+X-Gm-Message-State: AGi0PubmkqCNp17Rm4ZrQ9zu/PmuryEpjowqFFuw+43TDido/zZj4feQ
+        ARmZAGLzfit79I6ASlxBxyEC3vXrwvaSUrPUK50UfQ==
+X-Google-Smtp-Source: APiQypKA80aT7+91W0G/UAG3ToBMU16CEkrdAIjzMcXXPQQBDIf2vVmju/g34hV4WYzwqrhQjb6qWRfjMFJ+BMKUNlw=
+X-Received: by 2002:ac8:6c24:: with SMTP id k4mr15495561qtu.257.1589193524519;
+ Mon, 11 May 2020 03:38:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8c5d9ef5ed4ea9037c5459daa2044d1cd7c5db7a.camel@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25808/Sun May 10 14:11:51 2020)
+References: <20200511022359.15063-1-walter-zh.wu@mediatek.com>
+ <CACT4Y+aC4i8cAVFu2-s82RczWCjYMpPVJLwS0OBLELR9qF8SYg@mail.gmail.com> <1589193126.2930.2.camel@mtksdccf07>
+In-Reply-To: <1589193126.2930.2.camel@mtksdccf07>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 May 2020 12:38:32 +0200
+Message-ID: <CACT4Y+b16+-R=nQs-x1iDBZwBZKgJWf22Q=o1MvqkGP+8ybzmA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] kasan: memorize and print call_rcu stack
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/20 12:33 PM, Ardelean, Alexandru wrote:
-> On Sun, 2020-05-10 at 11:09 +0100, Jonathan Cameron wrote:
->> [External]
->>
->> On Sat, 9 May 2020 10:52:14 +0200
->> Lars-Peter Clausen <lars@metafoo.de> wrote:
->>
->>> On 5/8/20 3:53 PM, Alexandru Ardelean wrote:
->>>> [...]
->>>> What I don't like, is that iio:device3 has iio:buffer3:0 (to 3).
->>>> This is because the 'buffer->dev.parent = &indio_dev->dev'.
->>>> But I do feel this is correct.
->>>> So, now I don't know whether to leave it like that or symlink to shorter
->>>> versions like 'iio:buffer3:Y' -> 'iio:device3/bufferY'.
->>>> The reason for naming the IIO buffer devices to 'iio:bufferX:Y' is
->>>> mostly to make the names unique. It would have looked weird to do
->>>> '/dev/buffer1' if I would have named the buffer devices 'bufferX'.
->>>>
->>>> So, now I'm thinking of whether all this is acceptable.
->>>> Or what is acceptable?
->>>> Should I symlink 'iio:device3/iio:buffer3:0' -> 'iio:device3/buffer0'?
->>>> What else should I consider moving forward?
->>>> What means forward?
->>>> Where did I leave my beer?
->>> Looking at how the /dev/ devices are named I think we can provide a name
->>> that is different from the dev_name() of the device. Have a look at
->>> device_get_devnode() in drivers/base/core.c. We should be able to
->>> provide the name for the chardev through the devnode() callback.
->>>
->>> While we are at this, do we want to move the new devices into an iio
->>> subfolder? So iio/buffer0:0 instead of iio:buffer0:0?
->> Possibly on the folder.  I can't for the life of me remember why I decided
->> not to do that the first time around - I'll leave it at the
->> mysterious "it may turn out to be harder than you'd think..."
->> Hopefully not ;)
-> I was also thinking about the /dev/iio subfolder while doing this.
-> I can copy that from /dev/input
-> They seem to do it already.
-> I don't know how difficult it would be. But it looks like a good precedent.
-
-All you have to do is return "iio/..." from the devnode() callback.
-
+On Mon, May 11, 2020 at 12:32 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 >
-> My concern regarding going to use stuff from core [like device_get_devnode()] is
-> that it seems to bypass some layers of kernel.
-> If I do 'git grep device_get_devnode', I get:
+> On Mon, 2020-05-11 at 12:01 +0200, 'Dmitry Vyukov' via kasan-dev wrote:
+> > On Mon, May 11, 2020 at 4:24 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > >
+> > > This patchset improves KASAN reports by making them to have
+> > > call_rcu() call stack information. It is useful for programmers
+> > > to solve use-after-free or double-free memory issue.
+> >
+> > Hi Walter,
+> >
+> > I am looking at this now.
+> >
+> > I've upload the change to gerrit [1]
+> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2458
+> >
+> > I am not capable enough to meaningfully review such changes in this format...
+> >
+> > [1] https://linux.googlesource.com/Documentation
+> >
 >
-> drivers/base/core.c:            name = device_get_devnode(dev, &mode, &uid,
-> &gid, &tmp);
-> drivers/base/core.c: * device_get_devnode - path of device node file
-> drivers/base/core.c:const char *device_get_devnode(struct device *dev,
-> drivers/base/devtmpfs.c:        req.name = device_get_devnode(dev, &req.mode,
-> &req.uid, &req.gid, &tmp);
-> drivers/base/devtmpfs.c:        req.name = device_get_devnode(dev, NULL, NULL,
-> NULL, &tmp);
-> include/linux/device.h:extern const char *device_get_devnode(struct device *dev,
-> (END)
+> Hi Dmitry,
 >
-> So, basically, most uses of device_get_devnode() are in core code, and I feel
-> that this may be sanctioned somewhere by some core people, if I do it.
-> I could be wrong, but if you disagree, I'll take your word for it.
-You are not supposed to use the function itself, you should implement 
-the devnode() callback for the IIO bus, which is then used by the core 
-device_get_devnode() function.
+> I don't fully understand your meaning, our patchset's format has
+> problem? or?
 
+No, it does not have any problems. Your patch format is standard for kernel.
+
+It's just complex patches in the standard kernel format that are hard
+to review for me.
+
+
+> > > The KASAN report was as follows(cleaned up slightly):
+> > >
+> > > BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
+> > >
+> > > Freed by task 0:
+> > >  save_stack+0x24/0x50
+> > >  __kasan_slab_free+0x110/0x178
+> > >  kasan_slab_free+0x10/0x18
+> > >  kfree+0x98/0x270
+> > >  kasan_rcu_reclaim+0x1c/0x60
+> > >  rcu_core+0x8b4/0x10f8
+> > >  rcu_core_si+0xc/0x18
+> > >  efi_header_end+0x238/0xa6c
+> > >
+> > > First call_rcu() call stack:
+> > >  save_stack+0x24/0x50
+> > >  kasan_record_callrcu+0xc8/0xd8
+> > >  call_rcu+0x190/0x580
+> > >  kasan_rcu_uaf+0x1d8/0x278
+> > >
+> > > Last call_rcu() call stack:
+> > > (stack is not available)
+> > >
+> > > Generic KASAN will record first and last call_rcu() call stack
+> > > and print two call_rcu() call stack in KASAN report.
+> > >
+> > > This feature doesn't increase the cost of memory consumption. It is
+> > > only suitable for generic KASAN.
+> > >
+> > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> > > [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
+> > >
+> > > Changes since v2:
+> > > - remove new config option, default enable it in generic KASAN
+> > > - test this feature in SLAB/SLUB, it is pass.
+> > > - modify macro to be more clearly
+> > > - modify documentation
+> > >
+> > > Walter Wu (3):
+> > > rcu/kasan: record and print call_rcu() call stack
+> > > kasan: record and print the free track
+> > > kasan: update documentation for generic kasan
+> > >
+> > > Documentation/dev-tools/kasan.rst |  6 ++++++
+> > > include/linux/kasan.h             |  2 ++
+> > > kernel/rcu/tree.c                 |  4 ++++
+> > > lib/Kconfig.kasan                 |  2 ++
+> > > mm/kasan/common.c                 | 26 ++++----------------------
+> > > mm/kasan/generic.c                | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > mm/kasan/kasan.h                  | 23 +++++++++++++++++++++++
+> > > mm/kasan/report.c                 | 47 +++++++++++++++++++++--------------------------
+> > > mm/kasan/tags.c                   | 37 +++++++++++++++++++++++++++++++++++++
+> > > 9 files changed, 149 insertions(+), 48 deletions(-)
+> > >
+> > > --
+> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200511022359.15063-1-walter-zh.wu%40mediatek.com.
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1589193126.2930.2.camel%40mtksdccf07.
