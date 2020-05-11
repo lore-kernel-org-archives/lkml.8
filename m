@@ -2,144 +2,142 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37552C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC01C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1197720731
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC6520731
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4za8q6x"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hmgf4bF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgEKJn4 (ORCPT
+        id S1729457AbgEKJop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728209AbgEKJnz (ORCPT
+        Mon, 11 May 2020 05:44:45 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44160 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729309AbgEKJop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:43:55 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEEF4C061A0C;
-        Mon, 11 May 2020 02:43:55 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c12so13556041oic.1;
-        Mon, 11 May 2020 02:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YO2ZrbWa/GjLyrkjg6sCgnAZgQAjgJWk4AMO7gsTNVw=;
-        b=W4za8q6xCq1PKmE8TDaVI/YbrU6tqAlPw3FphOaONDGWKNRL+n6K8rSmWR95gSdRiB
-         Pc72TnO3EiTLrsUZOm9sQ9P1mv8VLDl/jEofb3UQT982ll1L4zGpE+upTgjddatOLAGi
-         vTjZ7BJoLpiDK2xvIqRWE4g2aK6pBxn4ErUuAAbwgR00NO6t/QQ0GQnRF7+CCx8vg5jb
-         Z6vodzvYigvmI1gybtXoYIhvzlrouuL/Dah9ipcyPIL3UHonNON0i7OGh1x9WaaQwXl+
-         9FErOVivQrBuiln/MSiNpAGkh7eH59IlB1cI28gkmcyr6hMcDhyW46K97SROLNgAiiej
-         SryA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YO2ZrbWa/GjLyrkjg6sCgnAZgQAjgJWk4AMO7gsTNVw=;
-        b=UBfBCUNOB7u6J3cVkULD24yfF1id3DC4Hdl1cZpDgNxgSdHS4oQDuBWKoZcGhrGCEQ
-         fQn2mUTlC6vVyAYQkHktV/fq8OGIsXxUFowkmBw89dZXtXDx2AYOk/liyQxvlpdjmxpF
-         pR/S/d86iCxQCH+1v8z4kZB2JhG88SY7SmePNF85j8npT8OhRsF8OSWy8kvXjX0UCgbv
-         3si4S+p9h5cBQfynz959EemFcvBNb+tTVZZc4Mv4T/pcW6Kp3iOavt7QciTHUY1TKMip
-         Zo3DnsAF7/9gDCPk0BScG+98t846RDawp1TGnxQRLLTY815pcPJYo2HtUA2kYQ08stRc
-         CtUQ==
-X-Gm-Message-State: AGi0PuY7EJMpl4iiSHGTIOjT4dNBh87QJFrMVbX+I5shrTm9xvxO7JHa
-        hb9csuOuJeJpXrQJLyClIn4OTej+YMUwIUXfDU7trnCPkTs=
-X-Google-Smtp-Source: APiQypK+nD0Gmx36F2wXwHrGVNh8L6LLcNUzenp1CD2DqFB/EQ8oek6utcYJ1Lr3zoWhnSPdbH5CwdqJePlWg1ebiqY=
-X-Received: by 2002:aca:abd0:: with SMTP id u199mr18301648oie.130.1589190234071;
- Mon, 11 May 2020 02:43:54 -0700 (PDT)
+        Mon, 11 May 2020 05:44:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04B9i1TG078513;
+        Mon, 11 May 2020 04:44:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589190241;
+        bh=byFyzQdwQhDM3dT5bOyJ2WghB41M52QlHFMI+0b6a0I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hmgf4bF3g5JuARgRipO90N1PvW0GwD8QNTHDuyyXUDlNeHfIhIWTM5Yg3hUr2a3L1
+         q07eUpscFLogOsbMvNc/eJXct8Ojitroy8pSAuFjzbUwA2g0KKj4kXlvl2/dZwwf+j
+         py8opZGiTzJ3Y7mEwFYKPcp8TOWIcmLU3/N1OCRI=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04B9i1AJ059978
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 04:44:01 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ May 2020 04:44:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 May 2020 04:44:01 -0500
+Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04B9htxe073284;
+        Mon, 11 May 2020 04:43:56 -0500
+Subject: Re: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
+To:     <Tudor.Ambarus@microchip.com>, <p.yadav@ti.com>,
+        <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <broonie@kernel.org>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+ <3649933.zuh8VGJVCz@192.168.0.120>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <7462190d-7459-7756-a32e-fb08e18d2ee2@ti.com>
+Date:   Mon, 11 May 2020 15:13:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-3-daniel.vetter@ffwll.ch> <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
-In-Reply-To: <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 11 May 2020 12:43:09 +0300
-Message-ID: <CAFCwf11MrovJbcutkuyhJpvAY9v9rtRdHAkY8wJF7S-z5vrWTg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3649933.zuh8VGJVCz@192.168.0.120>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And just FYI, the driver was written internally at 2016-17, where the
-dma-buf module didn't check the .wait ops before calling it and that's
-why the initialization of the default wait was there in the first
-place.
-I should have removed it when I upstreamed it but it missed my review.
-Thanks,
-Oded
 
-On Mon, May 11, 2020 at 12:36 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
->
-> On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> >
-> > It's the default.
-> Thanks for catching that.
->
-> >
-> > Also so much for "we're not going to tell the graphics people how to
-> > review their code", dma_fence is a pretty core piece of gpu driver
-> > infrastructure. And it's very much uapi relevant, including piles of
-> > corresponding userspace protocols and libraries for how to pass these
-> > around.
-> >
-> > Would be great if habanalabs would not use this (from a quick look
-> > it's not needed at all), since open source the userspace and playing
-> > by the usual rules isn't on the table. If that's not possible (because
-> > it's actually using the uapi part of dma_fence to interact with gpu
-> > drivers) then we have exactly what everyone promised we'd want to
-> > avoid.
->
-> We don't use the uapi parts, we currently only using the fencing and
-> signaling ability of this module inside our kernel code. But maybe I
-> didn't understand what you request. You want us *not* to use this
-> well-written piece of kernel code because it is only used by graphics
-> drivers ?
-> I'm sorry but I don't get this argument, if this is indeed what you meant.
->
-> Oded
->
-> >
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc:     Olof Johansson <olof@lixom.net>
-> > Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > ---
-> >  drivers/misc/habanalabs/command_submission.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-> > index 409276b6374d..cc3ce759b6c3 100644
-> > --- a/drivers/misc/habanalabs/command_submission.c
-> > +++ b/drivers/misc/habanalabs/command_submission.c
-> > @@ -46,7 +46,6 @@ static const struct dma_fence_ops hl_fence_ops = {
-> >         .get_driver_name = hl_fence_get_driver_name,
-> >         .get_timeline_name = hl_fence_get_timeline_name,
-> >         .enable_signaling = hl_fence_enable_signaling,
-> > -       .wait = dma_fence_default_wait,
-> >         .release = hl_fence_release
-> >  };
-> >
-> > --
-> > 2.26.2
-> >
+
+On 11/05/20 2:30 pm, Tudor.Ambarus@microchip.com wrote:
+> Hi, Pratyush, Boris,
+> 
+> On Friday, April 24, 2020 9:43:54 PM EEST Pratyush Yadav wrote:
+>> This series adds support for octal DTR flashes in the spi-nor framework,
+> 
+> I'm still learning about this, but I can give you my 2 cents as of now, to 
+> open the discussion. Enabling 2-2-2, 4-4-4, and 8-8-8 modes is dangerous 
+> because the flash may not recover from unexpected resets. 
+
+Unfortunately, xSPI compliant flashes need to support 1S-1S-1S and
+8D-8D-8D (or 4S-4D-4D) mode only. So we have to start supporting
+state-full modes
+
+> Entering one of these modes can be:
+> 1/ volatile selectable, the device return to the 1-1-1 protocol after the next 
+> power-on. I guess this is conditioned by the optional RESET pin, but I'll have 
+> to check. Also the flash can return to the 1-1-1 mode using the software reset 
+> or through writing to its Configuration Register, without power-on or power-
+> off.
+
+Right, I guess switching to octal mode be made conditional based upon
+SNOR_F_BROKEN_RESET?
+
+> 2/ non-volatile selectable in which RESET# and software reset are useless, the 
+> flash defaults to the mode selected in the non volatile Configuration Register 
+> bits. The only way to get back to 1-1-1 is to write to the Configuration 
+> Register.
+> 
+
+In addition to reset issue, supporting flash that boot up in Octal DDR
+mode (due to non-volatile setting) is still pretty difficult. Commands
+like Read ID and READ SFDP (that are used for flash discovery at
+runtime) follow different protocols across different vendors in Octal
+DDR mode. So its almost impossible to support such flashes w/o a hint
+about device type from DT (or somewhere else).
+I would really stick to option 1 for now until someone makes a
+compelling case to support option 2.
+
+
+> Not recovering from unexpected resets is unacceptable. One should always 
+> prefer option 1/ and condition the entering in 2-2-2, 4-4-4 and 8-8-8 with the 
+> presence of the optional RESET pin.
+> 
+> For the unfortunate flashes that support just option 2/, we should not enter 
+> these modes on our own, just by discovering the capabilities from the SFDP 
+> tables or by the flags in the flash_info struct. The best we can do for them 
+> is to move the responsibility to the user. Maybe to add a Kconfig option that 
+> is disabled by default with which we condition the entering in 2-2-2, 4-4-4 or 
+> 8-8-8 modes. Once entered in one of these modes, if an unexpected reset comes, 
+> you most likely are doomed, because early stage bootloaders may not work in 
+> these modes and you'll not be able to boot the board. Assuming that one uses 
+> other environment to boot the board, we should at least make sure that the 
+> flash works in linux after an unexpected reset. We should try to determine in 
+> which mode we are at init, so maybe an extension of the default_init hook is 
+> needed. But all this looks like a BIG compromise, I'm not yet sure if we 
+> should adress 2/. Thoughts?
+> 
+
+
+Agree, lets not worry about option 2 for now...
+
+Regards
+Vignesh
