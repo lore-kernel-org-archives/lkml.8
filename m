@@ -2,92 +2,90 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A8EC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC7C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45714206DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7D4206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbgEKO7Z convert rfc822-to-8bit (ORCPT
+        id S1729937AbgEKO7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:59:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:34337 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727019AbgEKO7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:59:25 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-157-TNtXyxpxO8qGl8Sa13yMrg-1; Mon, 11 May 2020 15:59:21 +0100
-X-MC-Unique: TNtXyxpxO8qGl8Sa13yMrg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 11 May 2020 15:59:20 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 11 May 2020 15:59:20 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Masami Hiramatsu' <mhiramat@kernel.org>
-CC:     Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Andreas Schwab <schwab@linux-m68k.org>
-Subject: RE: [PATCH v2] selftests/ftrace: Use printf for backslash included
- command
-Thread-Topic: [PATCH v2] selftests/ftrace: Use printf for backslash included
- command
-Thread-Index: AQHWJ5lrSXqvrVhCTk6tpfgbVx7YuKii+RAg
-Date:   Mon, 11 May 2020 14:59:20 +0000
-Message-ID: <f61eda03333941958d62f9df93ba534b@AcuMS.aculab.com>
-References: <87imh21x6f.fsf@igel.home>
-        <158920418730.16156.8299185499520876735.stgit@devnote2>
- <20200511223804.9483cab03c9221818ff4fc5b@kernel.org>
-In-Reply-To: <20200511223804.9483cab03c9221818ff4fc5b@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 11 May 2020 10:59:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34164 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729766AbgEKO7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:59:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CBD3DADC2;
+        Mon, 11 May 2020 14:59:30 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 6182A6033E; Mon, 11 May 2020 16:59:26 +0200 (CEST)
+Date:   Mon, 11 May 2020 16:59:26 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: signal quality and cable diagnostic
+Message-ID: <20200511145926.GC8503@lion.mk-sys.cz>
+References: <20200511141310.GA2543@pengutronix.de>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511141310.GA2543@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
-> > +    command=$(printf "%s" "$2" | tr -d ^)
+On Mon, May 11, 2020 at 04:13:10PM +0200, Oleksij Rempel wrote:
+> 
+> I continue to work on TJA11xx PHY and need to export some additional
+> cable diagnostic/link stability information: Signal Quality Index (SQI).
+> The PHY data sheet describes it as following [1]:
+> ================================================================================
+>   6.10.3   Link stability
+> 
+> The signal-to-noise ratio is the parameter used to estimate link
+> stability. The PMA Receive function monitors the signal-to-noise ratio
+> continuously. Once the signal-to-noise ratio falls below a configurable
+> threshold (SQI_FAILLIMIT), the link status is set to FAIL and
+> communication is interrupted. The TJA1100 allows for adjusting the
+> sensitivity of the PMA Receive function by configuring this threshold.
+> The microcontroller can always check the current value of the
+> signal-to-noise ratio via the SMI, allowing it to track a possible
+> degradation in link stability.
+> ================================================================================
+> 
+> Since this functionality is present at least on TJA11xx PHYs and
+> mandatory according to Open Alliance[2], I hope this functionality is
+> present on other 100/1000Base-T1 PHYs. So may be some common abstraction
+> is possible. What would be the best place to provide it for the user
+> space? According to the [2] SQI, is the part of Dynamic Channel Quality
+> (DCQ) together with Mean Square Error (MSE) and Peak MSE value (pMSE).
 
-You may want to put all the $(...) inside "" to avoid field splitting
-(not relevant to a shell assignment with modern shells) and
-filename globbing.
+IIUC these would be read-only parameters describing current state of the
+link which can be queried at any time. If this is the case, adding them
+as attributes to ETHTOOL_MSG_LINKSTATE_GET_REPLY message seems most
+fitting.
 
-> >      echo "Test command: $command"
-> >      echo > error_log
-> > -    (! echo "$command" >> "$3" ) 2> /dev/null
-> > +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
+As for getting / setting the threshold, perhaps ETHTOOL_MSG_LINKINFO_GET
+and ETHTOOL_MSG_LINKINFO_SET. Unless you expect more configurable
+parameters like this in which case we may want to consider adding new
+request type (e.g. link params or link management).
 
-WTF is the (! for ??
-The (...) is a subshell.
-And ! inverts the exit status.
-Neither is needed at all.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Michal
