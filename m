@@ -2,155 +2,150 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68275C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BE7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE5620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206B020722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgEKLVU (ORCPT
+        id S1729713AbgEKLVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:21:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:57476 "EHLO foss.arm.com"
+        Mon, 11 May 2020 07:21:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:57496 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgEKLVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:21:16 -0400
+        id S1729687AbgEKLVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:21:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E26D1106F;
-        Mon, 11 May 2020 04:21:15 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E02D3F7B4;
-        Mon, 11 May 2020 04:21:14 -0700 (PDT)
-Date:   Mon, 11 May 2020 12:21:12 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, decui@microsoft.com,
-        mikelley@microsoft.com
-Subject: Re: [PATCH v3 2/2] PCI: hv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state
-Message-ID: <20200511112112.GC24954@e121166-lin.cambridge.arm.com>
-References: <20200507050300.10974-1-weh@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507050300.10974-1-weh@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15129106F;
+        Mon, 11 May 2020 04:21:22 -0700 (PDT)
+Received: from e123648.arm.com (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0919F3F305;
+        Mon, 11 May 2020 04:21:11 -0700 (PDT)
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
+        patrick.bellasi@matbug.net, orjan.eide@arm.com,
+        rdunlap@infradead.org, mka@chromium.org
+Subject: [PATCH v7 10/15] thermal: devfreq_cooling: get device load and frequency directly
+Date:   Mon, 11 May 2020 12:19:07 +0100
+Message-Id: <20200511111912.3001-11-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511111912.3001-1-lukasz.luba@arm.com>
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:03:00PM +0800, Wei Hu wrote:
-> In the case of kdump, the PCI device was not cleanly shut down
-> before the kdump kernel starts. This causes the initial
-> attempt of entering D0 state in the kdump kernel to fail with
-> invalid device state returned from Hyper-V host.
-> When this happens, explicitly call PCI bus exit and retry to
-> enter the D0 state.
-> 
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->     v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
->     Bjorn Helgaas
-> 
->  drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
+Devfreq cooling needs to now the correct status of the device in order
+to operate. Do not rely on Devfreq last_status which might be a stale data
+and get more up-to-date values of load and frequency.
 
-Subject: exceeded 80 chars and commit log needed rewording and
-paragraphs rewrapping. I did it this time but please pay attention
-to commit log content (and format).
+In addition this patch adds normalization function, which also makes sure
+that whatever data comes from the device, it is in a sane range.
 
-Thanks,
-Lorenzo
+Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+---
+ drivers/thermal/devfreq_cooling.c | 38 +++++++++++++++++++++++++++----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index e6fac0187722..92092a47d3af 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
->  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
->  }
->  
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
-> +
->  /**
->   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> +	bool retry = true;
->  	int ret;
->  
-> +enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	if (ret)
->  		goto exit;
->  
-> +	/*
-> +	 * In certain case (Kdump) the pci device of interest was
-> +	 * not cleanly shut down and resource is still held on host
-> +	 * side, the host could return invalid device status.
-> +	 * We need to explicitly request host to release the resource
-> +	 * and try to enter D0 again.
-> +	 */
-> +	if (comp_pkt.completion_status < 0 && retry) {
-> +		retry = false;
-> +
-> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> +
-> +		/*
-> +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-> +		 * to free up resources of its child devices.
-> +		 * In the kdump kernel we need to set the
-> +		 * wslot_res_allocated to 255 so it scans all child
-> +		 * devices to release resources allocated in the
-> +		 * normal kernel before panic happened.
-> +		 */
-> +		hbus->wslot_res_allocated = 255;
-> +
-> +		ret = hv_pci_bus_exit(hdev, true);
-> +
-> +		if (ret == 0) {
-> +			kfree(pkt);
-> +			goto enter_d0_retry;
-> +		}
-> +		dev_err(&hdev->device,
-> +			"Retrying D0 failed with ret %d\n", ret);
-> +	}
-> +
->  	if (comp_pkt.completion_status < 0) {
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-> @@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	return ret;
->  }
->  
-> -static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->  {
->  	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
->  	struct {
-> @@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
->  	if (hdev->channel->rescind)
->  		return 0;
->  
-> -	if (!hibernating) {
-> +	if (!keep_devs) {
->  		/* Delete any children which might still exist. */
->  		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
->  		if (dr && hv_pci_start_relations_work(hbus, dr))
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+index 52694d4bd819..396f16bb6566 100644
+--- a/drivers/thermal/devfreq_cooling.c
++++ b/drivers/thermal/devfreq_cooling.c
+@@ -235,6 +235,24 @@ static inline unsigned long get_total_power(struct devfreq_cooling_device *dfc,
+ 							       voltage);
+ }
+ 
++static void _normalize_load(struct devfreq_dev_status *status)
++{
++	/* Make some space if needed */
++	if (status->busy_time > 0xffff) {
++		status->busy_time >>= 10;
++		status->total_time >>= 10;
++	}
++
++	if (status->busy_time > status->total_time)
++		status->busy_time = status->total_time;
++
++	status->busy_time *= 100;
++	status->busy_time /= status->total_time ? : 1;
++
++	/* Avoid division by 0 */
++	status->busy_time = status->busy_time ? : 1;
++	status->total_time = 100;
++}
+ 
+ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cdev,
+ 					       struct thermal_zone_device *tz,
+@@ -242,14 +260,22 @@ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cd
+ {
+ 	struct devfreq_cooling_device *dfc = cdev->devdata;
+ 	struct devfreq *df = dfc->devfreq;
+-	struct devfreq_dev_status *status = &df->last_status;
++	struct devfreq_dev_status status;
+ 	unsigned long state;
+-	unsigned long freq = status->current_frequency;
++	unsigned long freq;
+ 	unsigned long voltage;
+ 	u32 dyn_power = 0;
+ 	u32 static_power = 0;
+ 	int res;
+ 
++	mutex_lock(&df->lock);
++	res = df->profile->get_dev_status(df->dev.parent, &status);
++	mutex_unlock(&df->lock);
++	if (res)
++		return res;
++
++	freq = status.current_frequency;
++
+ 	state = freq_get_state(dfc, freq);
+ 	if (state == THERMAL_CSTATE_INVALID) {
+ 		res = -EAGAIN;
+@@ -277,16 +303,18 @@ static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cd
+ 	} else {
+ 		dyn_power = dfc->power_table[state];
+ 
++		_normalize_load(&status);
++
+ 		/* Scale dynamic power for utilization */
+-		dyn_power *= status->busy_time;
+-		dyn_power /= status->total_time;
++		dyn_power *= status.busy_time;
++		dyn_power /= status.total_time;
+ 		/* Get static power */
+ 		static_power = get_static_power(dfc, freq);
+ 
+ 		*power = dyn_power + static_power;
+ 	}
+ 
+-	trace_thermal_power_devfreq_get_power(cdev, status, freq, *power);
++	trace_thermal_power_devfreq_get_power(cdev, &status, freq, *power);
+ 
+ 	return 0;
+ fail:
+-- 
+2.17.1
+
