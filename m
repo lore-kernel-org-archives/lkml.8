@@ -2,94 +2,231 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56DC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14286C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCA420722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0726208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgEKL1N (ORCPT
+        id S1729978AbgEKL1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:27:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39953 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbgEKL1I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:27:08 -0400
-Received: from mail-ej1-f69.google.com ([209.85.218.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1jY6aP-0005ZQ-El
-        for linux-kernel@vger.kernel.org; Mon, 11 May 2020 11:27:05 +0000
-Received: by mail-ej1-f69.google.com with SMTP id cb22so3747266ejb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:27:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6s913c52qXog287G0uRKNKSekm/u+OcHV1ByehHSyNs=;
-        b=rwVPt9VGk2LHgJmQ3Hifkm3M896BLggv7ABT5e1qbw4/Q4PuDgLzRB3i8Unz7woY0r
-         Vpmiwt+T0g5P6cm486uNaPpLRXZeaox9KfyBPnREYLhAv10DMvGBRG4YRrW/x8OJD5M8
-         FzU/+DA3Wo8hR0X6L4gLaznthuVtwinDfpVNc3J6vJubPPyEFcA5eYacl3GKWn3gRvb0
-         RRDQNf8355fKizK2bSJspbWq3/C9myj2LMff5W7UhDQEB7rESSaEd+GqB+tjePGRF4uP
-         7XchhKbf4COn20wbtr/4S5R8KAtCYlZob3T6gi+DSj6jHPR5mGDPrHF1Y4YrWIPSoJuL
-         PS5Q==
-X-Gm-Message-State: AGi0PuZrrB4IbDQ8yySVnSJddGzKbVNyLMfx2jSvNNNZI+Oh/aEnkdLw
-        MRNMvpCB4wdKgjP3/FTqBwLPsycMXZO6/uRLLA3rDmF7bTl/EOYJykJ6EdQ71r0XrKwMrvvvc7j
-        IzvHiFxS9EILoR7gxviTid7dZtdqCoplnOy/dywKlCzWQVjBw6/SX68y0cQ==
-X-Received: by 2002:a17:906:e098:: with SMTP id gh24mr13250455ejb.44.1589196425147;
-        Mon, 11 May 2020 04:27:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJK5vYrawWYQ4rT6+ywp/xCU6lU3xhBAyIqYrYAMAAN44ZPbDkRzW2yvynqnjzplQWrqO23kmx5LdF727eZk+s=
-X-Received: by 2002:a17:906:e098:: with SMTP id gh24mr13250440ejb.44.1589196424851;
- Mon, 11 May 2020 04:27:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200507215946.22589-1-gpiccoli@canonical.com>
- <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org>
- <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com>
- <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
- <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com> <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 11 May 2020 08:26:28 -0300
-Message-ID: <CAHD1Q_zrQmUTRpdW3bZ0CRKuu2dKgueXUjqCNtC5oyZ67CGp2A@mail.gmail.com>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-To:     David Rientjes <rientjes@google.com>
-Cc:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 May 2020 07:27:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46759 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729833AbgEKL0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:26:01 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49LJXH5Tvgz9ty3q;
+        Mon, 11 May 2020 13:25:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id UTkeDddTYE_f; Mon, 11 May 2020 13:25:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJXH4h6sz9ty3g;
+        Mon, 11 May 2020 13:25:51 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53F4B8B7AE;
+        Mon, 11 May 2020 13:25:58 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id AcowpS2JQt6J; Mon, 11 May 2020 13:25:58 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1045C8B7AD;
+        Mon, 11 May 2020 13:25:58 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id E7C5565A09; Mon, 11 May 2020 11:25:57 +0000 (UTC)
+Message-Id: <e77dd354ee9ec5db432e020d72d31fc9361abe8c.1589196133.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 31/45] powerpc/8xx: Don't set IMMR map anymore at boot
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 May 2020 11:25:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 10:25 PM David Rientjes <rientjes@google.com> wrote:
-> [...]
-> The kernel log is not preferred for this (or drop_caches, really) because
-> the amount of info can causing important information to be lost.  We don't
-> really gain anything by printing that someone manually triggered
-> compaction; they could just write to the kernel log themselves if they
-> really wanted to.  The reverse is not true: we can't suppress your kernel
-> message with this patch.
->
-> Instead, a statsfs-like approach could be used to indicate when this has
-> happened and there is no chance of losing events because it got scrolled
-> off the kernel log.  It has the added benefit of not requiring the entire
-> log to be parsed for such events.
+Only early debug requires IMMR to be mapped early.
 
-OK, agreed! Let's forget the kernel log. So, do you think the way to
-go is the statsfs, not a zoneinfo stat, a per-node thing? I'm saying
-that because kernel mm subsystem statistics seem pretty.."comfortable"
-the way they are, in files like vmstat, zoneinfo, etc. Let me know
-your thoughts on this, if I could work on that or should wait statsfs.
-Thanks,
+No need to set it up and pin it in assembly. Map it
+through page tables at udbg init when necessary.
 
+If CONFIG_PIN_TLB_IMMR is selected, pin it once we
+don't need the 32 Mb pinned RAM anymore.
 
-Guilherme
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+v2: Disable TLB reservation to modify entry 31
+---
+ arch/powerpc/kernel/head_8xx.S     | 39 +++++++++++++-----------------
+ arch/powerpc/mm/mmu_decl.h         |  4 +++
+ arch/powerpc/mm/nohash/8xx.c       | 15 +++++++++---
+ arch/powerpc/platforms/8xx/Kconfig |  2 +-
+ arch/powerpc/sysdev/cpm_common.c   |  2 ++
+ 5 files changed, 35 insertions(+), 27 deletions(-)
+
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index c9e3d54e6a6f..d607f4b53e0f 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -749,6 +749,23 @@ start_here:
+ 	rfi
+ /* Load up the kernel context */
+ 2:
++#ifdef CONFIG_PIN_TLB_IMMR
++	lis	r0, MD_TWAM@h
++	oris	r0, r0, 0x1f00
++	mtspr	SPRN_MD_CTR, r0
++	LOAD_REG_IMMEDIATE(r0, VIRT_IMMR_BASE | MD_EVALID)
++	tlbie	r0
++	mtspr	SPRN_MD_EPN, r0
++	LOAD_REG_IMMEDIATE(r0, MD_SVALID | MD_PS512K | MD_GUARDED)
++	mtspr	SPRN_MD_TWC, r0
++	mfspr   r0, SPRN_IMMR
++	rlwinm	r0, r0, 0, 0xfff80000
++	ori	r0, r0, 0xf0 | _PAGE_DIRTY | _PAGE_SPS | _PAGE_SH | \
++			_PAGE_NO_CACHE | _PAGE_PRESENT
++	mtspr	SPRN_MD_RPN, r0
++	lis	r0, (MD_TWAM | MD_RSV4I)@h
++	mtspr	SPRN_MD_CTR, r0
++#endif
+ 	tlbia			/* Clear all TLB entries */
+ 	sync			/* wait for tlbia/tlbie to finish */
+ 
+@@ -797,28 +814,6 @@ initial_mmu:
+ 	ori	r8, r8, MD_APG_INIT@l
+ 	mtspr	SPRN_MD_AP, r8
+ 
+-	/* Map a 512k page for the IMMR to get the processor
+-	 * internal registers (among other things).
+-	 */
+-#ifdef CONFIG_PIN_TLB_IMMR
+-	oris	r10, r10, MD_RSV4I@h
+-	ori	r10, r10, 0x1c00
+-	mtspr	SPRN_MD_CTR, r10
+-
+-	mfspr	r9, 638			/* Get current IMMR */
+-	andis.	r9, r9, 0xfff8		/* Get 512 kbytes boundary */
+-
+-	lis	r8, VIRT_IMMR_BASE@h	/* Create vaddr for TLB */
+-	ori	r8, r8, MD_EVALID	/* Mark it valid */
+-	mtspr	SPRN_MD_EPN, r8
+-	li	r8, MD_PS512K | MD_GUARDED	/* Set 512k byte page */
+-	ori	r8, r8, MD_SVALID	/* Make it valid */
+-	mtspr	SPRN_MD_TWC, r8
+-	mr	r8, r9			/* Create paddr for TLB */
+-	ori	r8, r8, MI_BOOTINIT|0x2 /* Inhibit cache -- Cort */
+-	mtspr	SPRN_MD_RPN, r8
+-#endif
+-
+ 	/* Now map the lower RAM (up to 32 Mbytes) into the ITLB. */
+ #ifdef CONFIG_PIN_TLB_TEXT
+ 	lis	r8, MI_RSV4I@h
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 7097e07a209a..1b6d39e9baed 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -182,6 +182,10 @@ static inline void mmu_mark_initmem_nx(void) { }
+ static inline void mmu_mark_rodata_ro(void) { }
+ #endif
+ 
++#ifdef CONFIG_PPC_8xx
++void __init mmu_mapin_immr(void);
++#endif
++
+ #ifdef CONFIG_PPC_DEBUG_WX
+ void ptdump_check_wx(void);
+ #else
+diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
+index d83a12c5bc7f..d54d395c3378 100644
+--- a/arch/powerpc/mm/nohash/8xx.c
++++ b/arch/powerpc/mm/nohash/8xx.c
+@@ -65,7 +65,7 @@ void __init MMU_init_hw(void)
+ 	if (IS_ENABLED(CONFIG_PIN_TLB_DATA)) {
+ 		unsigned long ctr = mfspr(SPRN_MD_CTR) & 0xfe000000;
+ 		unsigned long flags = 0xf0 | MD_SPS16K | _PAGE_SH | _PAGE_DIRTY;
+-		int i = IS_ENABLED(CONFIG_PIN_TLB_IMMR) ? 29 : 28;
++		int i = 28;
+ 		unsigned long addr = 0;
+ 		unsigned long mem = total_lowmem;
+ 
+@@ -80,12 +80,19 @@ void __init MMU_init_hw(void)
+ 	}
+ }
+ 
+-static void __init mmu_mapin_immr(void)
++static bool immr_is_mapped __initdata;
++
++void __init mmu_mapin_immr(void)
+ {
+ 	unsigned long p = PHYS_IMMR_BASE;
+ 	unsigned long v = VIRT_IMMR_BASE;
+ 	int offset;
+ 
++	if (immr_is_mapped)
++		return;
++
++	immr_is_mapped = true;
++
+ 	for (offset = 0; offset < IMMR_SIZE; offset += PAGE_SIZE)
+ 		map_kernel_page(v + offset, p + offset, PAGE_KERNEL_NCG);
+ }
+@@ -121,9 +128,10 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ {
+ 	unsigned long mapped;
+ 
++	mmu_mapin_immr();
++
+ 	if (__map_without_ltlbs) {
+ 		mapped = 0;
+-		mmu_mapin_immr();
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_IMMR))
+ 			patch_instruction_site(&patch__dtlbmiss_immr_jmp, PPC_INST_NOP);
+ 		if (!IS_ENABLED(CONFIG_PIN_TLB_TEXT))
+@@ -142,7 +150,6 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+ 		 */
+ 		mmu_mapin_ram_chunk(0, einittext8, PAGE_KERNEL_X);
+ 		mmu_mapin_ram_chunk(einittext8, mapped, PAGE_KERNEL);
+-		mmu_mapin_immr();
+ 	}
+ 
+ 	mmu_patch_cmp_limit(&patch__dtlbmiss_linmem_top, mapped);
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index 0d036cd868ef..04ea1a8a0bdc 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -187,7 +187,7 @@ config PIN_TLB_DATA
+ 
+ config PIN_TLB_IMMR
+ 	bool "Pinned TLB for IMMR"
+-	depends on PIN_TLB || PPC_EARLY_DEBUG_CPM
++	depends on PIN_TLB
+ 	default y
+ 	help
+ 	  This pins the IMMR area with a 512kbytes page. In case
+diff --git a/arch/powerpc/sysdev/cpm_common.c b/arch/powerpc/sysdev/cpm_common.c
+index 71660bacb264..7dc1960f8bdb 100644
+--- a/arch/powerpc/sysdev/cpm_common.c
++++ b/arch/powerpc/sysdev/cpm_common.c
+@@ -68,6 +68,8 @@ static void udbg_putc_cpm(char c)
+ void __init udbg_init_cpm(void)
+ {
+ #ifdef CONFIG_PPC_8xx
++	mmu_mapin_immr();
++
+ 	cpm_udbg_txdesc = (u32 __iomem __force *)
+ 			  (CONFIG_PPC_EARLY_DEBUG_CPM_ADDR - PHYS_IMMR_BASE +
+ 			   VIRT_IMMR_BASE);
+-- 
+2.25.0
+
