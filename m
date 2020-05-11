@@ -2,433 +2,244 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C3C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063CAC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDA22082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="utK2ldak"
+	by mail.kernel.org (Postfix) with ESMTP id D39A22075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589198198;
+	bh=6hkPqUfE/A52mAHI4n5dRpGiROlJaXK2p0PZhJDcAPo=;
+	h=Subject:To:Cc:From:Date:List-ID:From;
+	b=SLX2av8dZkbSGGaJq3sWhhQnZZJUkdK3993RxCzMJZAWDq1LnVXms/X0/oQ/7u2XN
+	 NulVSysqS3w61KNe5YbTDnbW+ntSIQ+X8klAzwbyE54VA5fROMnDlt7Ay4n8fbi9T9
+	 ZUweqY+RocBlTVfdho3o4oHczEpmfQd26yno6LHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgEKLzz (ORCPT
+        id S1729923AbgEKL4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:55:55 -0400
-Received: from mail-bn7nam10on2089.outbound.protection.outlook.com ([40.107.92.89]:59072
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727873AbgEKLzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:55:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I71sEfM+40el2QRHd5crI4HqDZC/s1ToeFhmzqCOJgmPREAzfoR51ymSr/CciFm3U3CrNPVUhqJkZU1PeY7LiIs6LWV3dyMsHM4XV7PsTSAdOEL4I/jXnW/wlvl6nI1pcAjAa8bGmoD6m8xkTeFENyzx4azRSMnowpu5uueAh1DQyPZ0NIY0QAoim7TwpuJONGc3HD/AZgF7bduGZX+zV8ypqIfIzXvJGoaHZUSlHeOeNv8p2R567Edu4X5LVbASTWEdcecSFRJoz/WbOml9h+IrLR51g/HJ0k2Jxw6pqBVlEG20ZjIVlO7lAKnWzLNwP5aMrNb+153GMhL0Ax0GLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJMBkV0wyvCPLmBSC2MY8+eXDbG1R/7GzhMspqICHcU=;
- b=iYO+X7+mfWHnrC9Saykju9vO6IisOrqG4/YPiG4kKg2vCP87caIq0T8Cb0r6dpDmcdRiqZQ88x7A29RYJSPt5dZ4mK01Xb9CBth4EbaiialogMDG1EfXE18Hh0YLL58Y7Xa87Q81FIow0AKzc4SK0uSNAo3OyPkpxV3xpwNwHI1gaSedtTQeMstjQ2EbvXzdawzXIdmwkSfIVy5N3JKQJDsQEpSFLfXKFOf/PkELr6Gs/wB7fIBGUXIADjVNNtL9oezlV6hj3t12EMRZraGcBx9KBUgQNneTdWfs+8KMrQEXZ2SRGx2b7AQUZ0Gaz13Pxiz5GY2taswS1P23hqvZJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJMBkV0wyvCPLmBSC2MY8+eXDbG1R/7GzhMspqICHcU=;
- b=utK2ldakdLgL9Dp6iFSYgmg/USHS3rkU2HmGG55YqUAXi+nr6JfFbZwHof8sb+1MwrBwcR7hXkayYNnkOdyi36VXc4MK/PukhTKB+7TFp2HEnWeirtoF8KjKBsSt6lS8EpBgSHrnD7mQH9z5qTQpprqOFIpps+j3YujU20ndF+0=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=amd.com;
-Received: from CY4PR12MB1159.namprd12.prod.outlook.com (2603:10b6:903:36::17)
- by CY4PR12MB1944.namprd12.prod.outlook.com (2603:10b6:903:127::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 11:55:43 +0000
-Received: from CY4PR12MB1159.namprd12.prod.outlook.com
- ([fe80::e9c0:2506:396c:70b7]) by CY4PR12MB1159.namprd12.prod.outlook.com
- ([fe80::e9c0:2506:396c:70b7%10]) with mapi id 15.20.2979.033; Mon, 11 May
- 2020 11:55:43 +0000
-From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Subject: [PATCH V4 3/3] drm/vkms: Add support for writeback
-Date:   Mon, 11 May 2020 07:55:24 -0400
-Message-Id: <20200511115524.22602-4-Rodrigo.Siqueira@amd.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200511115524.22602-1-Rodrigo.Siqueira@amd.com>
-References: <20200511115524.22602-1-Rodrigo.Siqueira@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT1PR01CA0104.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::13) To CY4PR12MB1159.namprd12.prod.outlook.com
- (2603:10b6:903:36::17)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from atma2.hitronhub.home (2607:fea8:56a0:11a1::2) by YT1PR01CA0104.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2c::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 11:55:42 +0000
-X-Mailer: git-send-email 2.26.2
-X-Originating-IP: [2607:fea8:56a0:11a1::2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a62877ef-2a4e-4765-3f2c-08d7f5a23bb9
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1944:
-X-Microsoft-Antispam-PRVS: <CY4PR12MB1944C898472A37EE0AC2D0B398A10@CY4PR12MB1944.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:466;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: prdt/S9Qutt9fiK+cOVp+/SHnV+gWb2xnIoRjOm59jhd07TU04jVy6UBfxuCsF6K7VECt9r7GgztKzDxGRXUGhrxvAV4oY5fA82gCe07Biwt5JXvg/CKEng2NunioPzMQygNS41E64Mr/94/P1QuJpwUKOf7PNy+6jlLTvjmc9xj8/RsvG101yf6sma2CeEHSv0sulQm4CsQjsBf5AwcWlyMDf1ASUd/nxgb6FYT067KZ5y7b1bbpLER2al0KtvQxGLlmz1nLSy97HELvZZk0rB/hrm4CnbL70pic8crmevoLapza1LxukoOHagGjNWBUJpcdKesUF/BqOUv2SlvWzpC/aminEHTI4c88U2WomqI9yTftL5QhJj4PVcEXlb1l7zQAwIB0asS+0nWYfJVeKd2srL3ZeeHfECtBpcYgD4Wx39mpmEi/NVaNhgiZYIIrs3+kvg8tFyS0ChUH9PbYxbHvnwIpuFIdtIpLFLXj8uPPvop2qcjdnhRjt9WeHp322gT4Kht+nDDVFE9CFd3KQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1159.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(33430700001)(36756003)(66946007)(66476007)(86362001)(66556008)(1076003)(6666004)(6506007)(16526019)(52116002)(186003)(316002)(110136005)(2616005)(4326008)(478600001)(6512007)(2906002)(6486002)(5660300002)(33440700001)(8676002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4dM651CoXLIO4Uvm01jaM/G0skB+Nf1I+1I7CEyi+bdXiRpuGHVnL+jMqxLkYaOU3K8VcQTHNHr0+HEiftM94ZmaYN45B9fC/B5zVl6QGCFaXPTv37i+p5GId0j3/XY8cpVjZtKtOw2SyGK0rgGUAYQPNWmb0RyHbnS1lFpOBg3+RfPHtCSxRZx8gGNHkwKx3KFe8Rto2CC62u7ERYmanD8D4uXcZ8pmCY5c6FePM4u/61cAL9nEnQMIgT8Vd+WaZxdnnhrJBLltocO+0Of0OOGliM0fSgyNXdd++/WshzOFlw9IiLCZmoYnRuGCqrz5UoOWJ3l7mI+6dkKc91qiXKblt3GrVlBBLR1efBkZrdpi7s6SzuqTqX3TDWHJd4g50NUvgTuXf73hAj4G7ppsVcy2vLOEtTRQCLyRhTsN8quK6ZLB86z/Iyi5XXW7gz2w2B1x06zOVB7wQQk1NFdEkBPmp7VAmsc3QG+DiZWWkwbJVxoZFZR9iT6bEfSQndpx
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a62877ef-2a4e-4765-3f2c-08d7f5a23bb9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 11:55:43.3706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wqRkrsYl2z85ICMMiKhjGTwQx0SvZkxVDuxi0qcaG2GEA9sg5Ysz0Q1uDeho9w0CybO6gMakPkZC/PPeYqFWKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1944
+        Mon, 11 May 2020 07:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729909AbgEKL4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:56:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31893206F5;
+        Mon, 11 May 2020 11:56:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589198193;
+        bh=6hkPqUfE/A52mAHI4n5dRpGiROlJaXK2p0PZhJDcAPo=;
+        h=Subject:To:Cc:From:Date:From;
+        b=zuTfb1hZIeHsL2p+g+//+P3k87j3Yc2PUmudv7+0f2Ldp8bnXfTFdZrbcutczouo0
+         XqYLIgqV2be0ALohS23GJ1Mjg4kRD1n5/LjMiyy0+L0SRSeJbVzt9SanRlaByKpV8g
+         Hstv27jTsKYwo387mmPN2yBpGGR3VVUDxvRTHNGE=
+Subject: Linux 5.6.12
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Mon, 11 May 2020 13:56:23 +0200
+Message-ID: <1589198183975@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+I'm announcing the release of the 5.6.12 kernel.
 
-This patch implements the necessary functions to add writeback support
-for vkms. This feature is useful for testing compositors if you don't
-have hardware with writeback support.
+All users of the 5.6 kernel series must upgrade.
 
-Change in V3 (Daniel):
-- If writeback is enabled, compose everything into the writeback buffer
-instead of CRC private buffer.
-- Guarantees that the CRC will match exactly what we have in the
-writeback buffer.
+The updated 5.6.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.6.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Change in V2:
-- Rework signal completion (Brian)
-- Integrates writeback with active_planes (Daniel)
-- Compose cursor (Daniel)
+thanks,
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/vkms/Makefile         |   9 +-
- drivers/gpu/drm/vkms/vkms_composer.c  |  16 ++-
- drivers/gpu/drm/vkms/vkms_drv.c       |   4 +
- drivers/gpu/drm/vkms/vkms_drv.h       |   8 ++
- drivers/gpu/drm/vkms/vkms_output.c    |  10 ++
- drivers/gpu/drm/vkms/vkms_writeback.c | 142 ++++++++++++++++++++++++++
- 6 files changed, 186 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
+greg k-h
 
-diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-index 0b767d7efa24..333d3cead0e3 100644
---- a/drivers/gpu/drm/vkms/Makefile
-+++ b/drivers/gpu/drm/vkms/Makefile
-@@ -1,4 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
--vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_composer.o
-+vkms-y := \
-+	vkms_drv.o \
-+	vkms_plane.o \
-+	vkms_output.o \
-+	vkms_crtc.o \
-+	vkms_gem.o \
-+	vkms_composer.o \
-+	vkms_writeback.o
- 
- obj-$(CONFIG_DRM_VKMS) += vkms.o
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 686d25e7b01d..19849e39f8b9 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -160,16 +160,17 @@ void vkms_composer_worker(struct work_struct *work)
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
- 	struct vkms_composer *primary_composer = NULL;
- 	struct vkms_composer *cursor_composer = NULL;
-+	bool crc_pending, wb_pending;
- 	void *vaddr_out = NULL;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
--	bool crc_pending;
- 	int ret;
- 
- 	spin_lock_irq(&out->composer_lock);
- 	frame_start = crtc_state->frame_start;
- 	frame_end = crtc_state->frame_end;
- 	crc_pending = crtc_state->crc_pending;
-+	wb_pending = crtc_state->wb_pending;
- 	crtc_state->frame_start = 0;
- 	crtc_state->frame_end = 0;
- 	crtc_state->crc_pending = false;
-@@ -191,9 +192,12 @@ void vkms_composer_worker(struct work_struct *work)
- 	if (!primary_composer)
- 		return;
- 
-+	if (wb_pending)
-+		vaddr_out = crtc_state->active_writeback;
-+
- 	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
- 	if (ret) {
--		if (ret == -EINVAL)
-+		if (ret == -EINVAL && !wb_pending)
- 			kfree(vaddr_out);
- 		return;
- 	}
-@@ -206,6 +210,14 @@ void vkms_composer_worker(struct work_struct *work)
- 	while (frame_start <= frame_end)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
- 
-+	if (wb_pending) {
-+		drm_writeback_signal_completion(&out->wb_connector, 0);
-+		spin_lock_irq(&out->composer_lock);
-+		crtc_state->wb_pending = false;
-+		spin_unlock_irq(&out->composer_lock);
-+		return;
-+	}
-+
- 	kfree(vaddr_out);
- }
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index 1e8b2169d834..34dd74dc8eb0 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -39,6 +39,10 @@ bool enable_cursor = true;
- module_param_named(enable_cursor, enable_cursor, bool, 0444);
- MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
- 
-+bool enable_writeback;
-+module_param_named(enable_writeback, enable_writeback, bool, 0444);
-+MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector");
-+
- static const struct file_operations vkms_driver_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= drm_open,
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index f4036bb0b9a8..35f0b71413c9 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -8,6 +8,7 @@
- #include <drm/drm.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_encoder.h>
-+#include <drm/drm_writeback.h>
- 
- #define XRES_MIN    20
- #define YRES_MIN    20
-@@ -19,6 +20,7 @@
- #define YRES_MAX  8192
- 
- extern bool enable_cursor;
-+extern bool enable_writeback;
- 
- struct vkms_composer {
- 	struct drm_framebuffer fb;
-@@ -52,9 +54,11 @@ struct vkms_crtc_state {
- 	int num_active_planes;
- 	/* stack of active planes for crc computation, should be in z order */
- 	struct vkms_plane_state **active_planes;
-+	void *active_writeback;
- 
- 	/* below three are protected by vkms_output.composer_lock */
- 	bool crc_pending;
-+	bool wb_pending;
- 	u64 frame_start;
- 	u64 frame_end;
- };
-@@ -63,6 +67,7 @@ struct vkms_output {
- 	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
- 	struct drm_connector connector;
-+	struct drm_writeback_connector wb_connector;
- 	struct hrtimer vblank_hrtimer;
- 	ktime_t period_ns;
- 	struct drm_pending_vblank_event *event;
-@@ -144,4 +149,7 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
- /* Composer Support */
- void vkms_composer_worker(struct work_struct *work);
- 
-+/* Writeback */
-+int enable_writeback_connector(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_DRV_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 85afb77e97f0..19ffc67affec 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -80,6 +80,16 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
- 		goto err_attach;
- 	}
- 
-+	if (enable_writeback) {
-+		ret = enable_writeback_connector(vkmsdev);
-+		if (!ret) {
-+			output->composer_enabled = true;
-+			DRM_INFO("Writeback connector enabled");
-+		} else {
-+			DRM_ERROR("Failed to init writeback connector\n");
-+		}
-+	}
-+
- 	drm_mode_config_reset(dev);
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-new file mode 100644
-index 000000000000..868f0d15ca9f
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include "vkms_drv.h"
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_writeback.h>
-+#include <drm/drm_probe_helper.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+
-+static const u32 vkms_wb_formats[] = {
-+	DRM_FORMAT_XRGB8888,
-+};
-+
-+static const struct drm_connector_funcs vkms_wb_connector_funcs = {
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = drm_connector_cleanup,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int vkms_wb_encoder_atomic_check(struct drm_encoder *encoder,
-+					struct drm_crtc_state *crtc_state,
-+					struct drm_connector_state *conn_state)
-+{
-+	struct drm_framebuffer *fb;
-+	const struct drm_display_mode *mode = &crtc_state->mode;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+		return 0;
-+
-+	fb = conn_state->writeback_job->fb;
-+	if (fb->width != mode->hdisplay || fb->height != mode->vdisplay) {
-+		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
-+			      fb->width, fb->height);
-+		return -EINVAL;
-+	}
-+
-+	if (fb->format->format != DRM_FORMAT_XRGB8888) {
-+		struct drm_format_name_buf format_name;
-+
-+		DRM_DEBUG_KMS("Invalid pixel format %s\n",
-+			      drm_get_format_name(fb->format->format,
-+						  &format_name));
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct drm_encoder_helper_funcs vkms_wb_encoder_helper_funcs = {
-+	.atomic_check = vkms_wb_encoder_atomic_check,
-+};
-+
-+static int vkms_wb_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct drm_device *dev = connector->dev;
-+
-+	return drm_add_modes_noedid(connector, dev->mode_config.max_width,
-+				    dev->mode_config.max_height);
-+}
-+
-+static int vkms_wb_prepare_job(struct drm_writeback_connector *wb_connector,
-+			       struct drm_writeback_job *job)
-+{
-+	struct vkms_gem_object *vkms_obj;
-+	struct drm_gem_object *gem_obj;
-+	int ret;
-+
-+	if (!job->fb)
-+		return 0;
-+
-+	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
-+	ret = vkms_gem_vmap(gem_obj);
-+	if (ret) {
-+		DRM_ERROR("vmap failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	vkms_obj = drm_gem_to_vkms_gem(gem_obj);
-+	job->priv = vkms_obj->vaddr;
-+
-+	return 0;
-+}
-+
-+static void vkms_wb_cleanup_job(struct drm_writeback_connector *connector,
-+				struct drm_writeback_job *job)
-+{
-+	struct drm_gem_object *gem_obj;
-+
-+	if (!job->fb)
-+		return;
-+
-+	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
-+	vkms_gem_vunmap(gem_obj);
-+}
-+
-+static void vkms_wb_atomic_commit(struct drm_connector *conn,
-+				  struct drm_connector_state *state)
-+{
-+	struct vkms_device *vkmsdev = drm_device_to_vkms_device(conn->dev);
-+	struct vkms_output *output = &vkmsdev->output;
-+	struct drm_writeback_connector *wb_conn = &output->wb_connector;
-+	struct drm_connector_state *conn_state = wb_conn->base.state;
-+	struct vkms_crtc_state *crtc_state = output->composer_state;
-+
-+	if (!conn_state)
-+		return;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
-+		DRM_DEBUG_DRIVER("Disable writeback\n");
-+		return;
-+	}
-+
-+	spin_lock_irq(&output->composer_lock);
-+	crtc_state->active_writeback = conn_state->writeback_job->priv;
-+	crtc_state->wb_pending = true;
-+	spin_unlock_irq(&output->composer_lock);
-+	drm_writeback_queue_job(wb_conn, state);
-+}
-+
-+static const struct drm_connector_helper_funcs vkms_wb_conn_helper_funcs = {
-+	.get_modes = vkms_wb_connector_get_modes,
-+	.prepare_writeback_job = vkms_wb_prepare_job,
-+	.cleanup_writeback_job = vkms_wb_cleanup_job,
-+	.atomic_commit = vkms_wb_atomic_commit,
-+};
-+
-+int enable_writeback_connector(struct vkms_device *vkmsdev)
-+{
-+	struct drm_writeback_connector *wb = &vkmsdev->output.wb_connector;
-+
-+	vkmsdev->output.wb_connector.encoder.possible_crtcs = 1;
-+	drm_connector_helper_add(&wb->base, &vkms_wb_conn_helper_funcs);
-+
-+	return drm_writeback_connector_init(&vkmsdev->drm, wb,
-+					    &vkms_wb_connector_funcs,
-+					    &vkms_wb_encoder_helper_funcs,
-+					    vkms_wb_formats,
-+					    ARRAY_SIZE(vkms_wb_formats));
-+}
-+
--- 
-2.26.2
+------------
+
+ Makefile                                              |    2 
+ arch/x86/kvm/vmx/ops.h                                |    1 
+ drivers/acpi/sleep.c                                  |    5 
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c                |    3 
+ drivers/gpu/drm/amd/powerplay/hwmgr/processpptables.c |   26 ++++
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c            |    7 -
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c    |    3 
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c    |   33 +++--
+ drivers/gpu/drm/exynos/exynos_dp.c                    |   29 ++--
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c       |   36 ++---
+ drivers/net/ethernet/broadcom/bcmsysport.c            |    3 
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c        |    3 
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c   |    9 -
+ drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c |   12 +
+ drivers/net/phy/bcm84881.c                            |    6 
+ drivers/net/wimax/i2400m/usb-fw.c                     |    1 
+ drivers/platform/x86/gpd-pocket-fan.c                 |    2 
+ drivers/remoteproc/qcom_q6v5_mss.c                    |    2 
+ drivers/scsi/sg.c                                     |    4 
+ drivers/usb/dwc3/core.h                               |    4 
+ drivers/usb/dwc3/gadget.c                             |   52 ++++++--
+ drivers/vhost/vsock.c                                 |    5 
+ fs/cifs/connect.c                                     |    6 
+ include/drm/bridge/analogix_dp.h                      |    5 
+ include/linux/ieee80211.h                             |    9 +
+ kernel/trace/ftrace.c                                 |    1 
+ kernel/trace/trace_events_hist.c                      |    7 +
+ lib/mpi/longlong.h                                    |   34 ++---
+ mm/mremap.c                                           |   10 +
+ net/core/netclassid_cgroup.c                          |    4 
+ net/mac80211/mlme.c                                   |    2 
+ net/mac80211/rx.c                                     |    8 -
+ net/mac80211/sta_info.c                               |    3 
+ net/mac80211/status.c                                 |    5 
+ net/mac80211/tx.c                                     |    2 
+ net/sctp/sm_make_chunk.c                              |    6 
+ net/sunrpc/cache.c                                    |    5 
+ scripts/config                                        |    5 
+ sound/pci/hda/hda_intel.c                             |    9 -
+ sound/soc/codecs/hdac_hdmi.c                          |    6 
+ sound/soc/codecs/sgtl5000.c                           |   34 +++++
+ sound/soc/codecs/sgtl5000.h                           |    1 
+ sound/soc/sh/rcar/ssi.c                               |   11 +
+ sound/soc/sh/rcar/ssiu.c                              |    2 
+ sound/soc/soc-topology.c                              |  115 +++++++++++++-----
+ tools/bpf/runqslower/Makefile                         |    2 
+ tools/testing/selftests/ipc/msgque.c                  |    2 
+ tools/testing/selftests/tpm2/test_smoke.sh            |   13 --
+ tools/testing/selftests/tpm2/test_space.sh            |    9 -
+ tools/testing/selftests/vm/Makefile                   |    4 
+ tools/testing/selftests/vm/run_vmtests                |    2 
+ 51 files changed, 401 insertions(+), 169 deletions(-)
+
+Aaron Ma (1):
+      drm/amdgpu: Fix oops when pp_funcs is unset in ACPI event
+
+Alex Elder (1):
+      remoteproc: qcom_q6v5_mss: fix a bug in q6v5_probe()
+
+Amadeusz Sławiński (8):
+      ASoC: topology: Add missing memory checks
+      ASoC: topology: Check return value of soc_tplg_create_tlv
+      ASoC: topology: Check return value of soc_tplg_*_create
+      ASoC: topology: Check soc_tplg_add_route return value
+      ASoC: topology: Check return value of pcm_new_ver
+      ASoC: topology: Check return value of soc_tplg_dai_config
+      ASoC: topology: Fix endianness issue
+      ASoC: codecs: hdac_hdmi: Fix incorrect use of list_for_each_entry
+
+Andrii Nakryiko (1):
+      tools/runqslower: Ensure own vmlinux.h is picked up first
+
+Doug Berger (2):
+      net: bcmgenet: suppress warnings on failed Rx SKB allocations
+      net: systemport: suppress warnings on failed Rx SKB allocations
+
+Greg Kroah-Hartman (1):
+      Linux 5.6.12
+
+Hans de Goede (1):
+      platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
+
+Jarkko Sakkinen (1):
+      Revert "Kernel selftests: tpm2: check for tpm support"
+
+Jere Leppänen (1):
+      sctp: Fix SHUTDOWN CTSN Ack in the peer restart case
+
+Jeremie Francois (on alpha) (1):
+      scripts/config: allow colons in option strings for sed
+
+Jia He (1):
+      vhost: vsock: kick send_pkt worker once device is started
+
+Jiri Slaby (1):
+      cgroup, netclassid: remove double cond_resched
+
+Julien Beraud (2):
+      net: stmmac: fix enabling socfpga's ptp_ref_clock
+      net: stmmac: Fix sub-second increment
+
+Madhuparna Bhowmik (1):
+      mac80211: sta_info: Add lockdep condition for RCU list usage
+
+Marek Szyprowski (1):
+      drm/bridge: analogix_dp: Split bind() into probe() and real bind()
+
+Matthias Blankertz (4):
+      ASoC: rsnd: Fix parent SSI start/stop in multi-SSI mode
+      ASoC: rsnd: Fix HDMI channel mapping for multi-SSI mode
+      ASoC: rsnd: Don't treat master SSI in multi SSI setup as parent
+      ASoC: rsnd: Fix "status check failed" spam for multi-SSI
+
+Nathan Chancellor (1):
+      lib/mpi: Fix building for powerpc with clang
+
+Paulo Alcantara (1):
+      cifs: do not share tcons with DFS
+
+Prike Liang (1):
+      drm/amd/powerplay: fix resume failed as smu table initialize early exit
+
+Qian Cai (1):
+      x86/kvm: fix a missing-prototypes "vmread_error"
+
+Rafael J. Wysocki (1):
+      ACPI: PM: s2idle: Fix comment in acpi_s2idle_prepare_late()
+
+Ronnie Sahlberg (1):
+      cifs: protect updating server->dstaddr with a spinlock
+
+Russell King (1):
+      net: phy: bcm84881: clear settings on link down
+
+Sandeep Raghuraman (1):
+      drm/amdgpu: Correctly initialize thermal controller for GPUs with Powerplay table v0 (e.g Hawaii)
+
+Sandipan Das (2):
+      selftests: vm: Do not override definition of ARCH
+      selftests: vm: Fix 64-bit test builds for powerpc64le
+
+Sebastian Reichel (1):
+      ASoC: sgtl5000: Fix VAG power-on handling
+
+Steven Rostedt (VMware) (1):
+      ftrace: Fix memory leak caused by not freeing entry in unregister_ftrace_direct()
+
+Takashi Iwai (1):
+      ALSA: hda: Match both PCI ID and SSID for driver blacklist
+
+Thinh Nguyen (1):
+      usb: dwc3: gadget: Properly set maxpacket limit
+
+Thomas Pedersen (1):
+      mac80211: add ieee80211_is_any_nullfunc()
+
+Tyler Hicks (1):
+      selftests/ipc: Fix test failure seen after initial test run
+
+Vamshi K Sthambamkadi (1):
+      tracing: Fix memory leaks in trace_events_hist.c
+
+Vasily Khoruzhick (1):
+      drm/bridge: anx6345: set correct BPC for display_info of connector
+
+Will Deacon (1):
+      mm/mremap: Add comment explaining the untagging behaviour of mremap()
+
+Wu Bo (1):
+      scsi: sg: add sg_remove_request in sg_write
+
+Xiyu Yang (1):
+      wimax/i2400m: Fix potential urb refcnt leak
+
+Yihao Wu (1):
+      SUNRPC/cache: Fix unsafe traverse caused double-free in cache_purge
 
