@@ -2,170 +2,79 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9C2C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D560C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E3A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7414E206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RuqsoxaZ"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="AYQWm2ps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgEKRTm (ORCPT
+        id S1730919AbgEKRTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:19:42 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:34916 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbgEKRTl (ORCPT
+        Mon, 11 May 2020 13:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730887AbgEKRTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:19:41 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200511171936epoutp04a52aaa9d7e497e858c46092d2530131e~OCPdOYBLB0521405214epoutp04d
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:19:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200511171936epoutp04a52aaa9d7e497e858c46092d2530131e~OCPdOYBLB0521405214epoutp04d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589217576;
-        bh=XkZoF8bL+bmw6UFZu9nmezi2UN3bV2DKzUpjNkExP+A=;
-        h=From:To:In-Reply-To:Subject:Date:References:From;
-        b=RuqsoxaZPwCjgCwCu+zmgMdSh1sO9TFDsQTy/FdkdtpWhttU1KnAMIYRepj2DdSF/
-         QiZLIhYqCbBkRvZrwNMdnH/qdCKw3nwMaFeVCWzQ2x9FvPO2XOLPMX7UkvBcNbGlc5
-         odqZ6Wagfn4F4q4bxnrHGJ7YdmSXPNgxOIO7f+No=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200511171935epcas5p4837446790187456ca2d44680eed9d347~OCPb2hmUQ2639726397epcas5p4u;
-        Mon, 11 May 2020 17:19:35 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        30.20.23569.72989BE5; Tue, 12 May 2020 02:19:35 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200511171934epcas5p3d2a352c98597f5e2fb675335f44045e8~OCPbJPusS2275922759epcas5p3n;
-        Mon, 11 May 2020 17:19:34 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200511171934epsmtrp286f54a97071b1c89e911cda715216d0e~OCPbIfG0q1266012660epsmtrp2b;
-        Mon, 11 May 2020 17:19:34 +0000 (GMT)
-X-AuditID: b6c32a4a-3c7ff70000005c11-82-5eb989276487
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        05.EA.25866.62989BE5; Tue, 12 May 2020 02:19:34 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200511171931epsmtip2f45b88acd7da81b800bef79fd132c195~OCPYb2bv30769707697epsmtip2o;
-        Mon, 11 May 2020 17:19:31 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Jonathan Cameron'" <jic23@kernel.org>,
-        "'Hartmut Knaack'" <knaack.h@gmx.de>,
-        "'Lars-Peter Clausen'" <lars@metafoo.de>,
-        "'Peter Meerwald-Stadler'" <pmeerw@pmeerw.net>,
-        "'Kukjin Kim'" <kgene@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511083348.7577-1-krzk@kernel.org>
-Subject: RE: [PATCH] iio: adc: exynos: Simplify Exynos7-specific init
-Date:   Mon, 11 May 2020 22:49:28 +0530
-Message-ID: <037501d627b8$56f06870$04d13950$@samsung.com>
+        Mon, 11 May 2020 13:19:43 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C84C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:19:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u6so10383133ljl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KjilQVaMW5bj1pstvVNrQfVUnVke7cHNmi4yKLCUZ6w=;
+        b=AYQWm2psEssn6RcwA/1ys2dBNI/JI+tBpIv11JuKCaOXFMe7jgQKAqs4DPisAZBYJp
+         1Vqe/i0BZRyNzYYunmt6K6lRXeC+XC4qcq9nUI7y4OdEIIOZSF9cb+Y3kA4SsQAIkYqt
+         MOdoqylx00o2aJcTgTdDR413rNIAwZ//EhPeILleb0aDCK6eCDUIqjQPDNc6B0oEZuXN
+         n7m9FCtOrS3Xlrz6h6IZ5dBjvXA9D7RZg7w/Zs0grINq40y2rXdw9n9MNOFVb8l8rdLP
+         US1dtfiH+bAxICJnCCmIQaCjUVmS5HLU1V6h68YVlKPkbw77j1fpKe4PpTfvo1z3It3a
+         nkGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KjilQVaMW5bj1pstvVNrQfVUnVke7cHNmi4yKLCUZ6w=;
+        b=uPs5Cy+VWkBNKBXFpmvjD/uFnNOfs+4Vrog+5tP6cjR77WIYA0BHSpyKWZvaoKBAsP
+         BIpjCShV5OUkKMiW+kV5kupKly/a6FHZ+d+txm7tUcM8hOpvfuC03y/UMMNqKTpuRfTs
+         3vonB138hzPY/CRwde+z1UmfFtHjkpWR6wwOw5iQcG6P2in3lfYrPS99EDygV9/SQG0m
+         /rscSp06TTTVcGXKIeqoIF8vEncemK0M7L2z60B8d7yztQbTyhw0tGgtycdGniJI10NP
+         2v6+jlJdhwGDkc7NMVACaNbA+NsBkC6BBE9LXMjtexifyzwsI7JgWKreoam3rKgHA53T
+         NZew==
+X-Gm-Message-State: AOAM531sMvOqIesy16U8IWe3szmLj0RqxU4/r0khOIJbwubq6wGMON+n
+        rgPMq69Q6lJN28vJnXvLoYHTRhSD8d212h3oJ9BUeQ==
+X-Google-Smtp-Source: ABdhPJw+Gpn0+EhlnD4SdYB5UdkdBPhPbGkg64H3e47IhbM3cIzbaAAhJ8fU69wfv5sEfZh1PMjcJtj/fZkQ55I7EEc=
+X-Received: by 2002:a2e:3012:: with SMTP id w18mr11187530ljw.55.1589217581389;
+ Mon, 11 May 2020 10:19:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJ1pKagA2Ry5zpOzQca1EbCUSXy4gH86Yp2p1Q/gjA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7bCmpq565844gz3d3BYPmlYxWfQ/fs1s
-        sev/G2aL8+c3sFssmTyf1WLT42usFvOOvGOxuLxrDpvFjPP7mCx+7zrG7sDl8eFjnMemVZ1s
-        HpuX1HsseXOI1eN88xFGj8+b5ALYorhsUlJzMstSi/TtErgyFl3+wFSwk7ei9dUpxgbGZdxd
-        jJwcEgImEh8Wb2LtYuTiEBLYzSgxZ9c9NpCEkMAnIGe7O4T9mVHiyNN6mIZZa5rYIRp2MUrs
-        ndrNBFH0hlFiysJUEJtNQFdix+I2NpAiEYFeZomNn5eDTeUE6t7zcSuYLSzgKjH79jEWEJtF
-        QFVi04cesEG8ApYSh/6eh7IFJU7OfAJWwywgL7H97RxmiCsUJH4+XcYKYosIWEm8XDCPEaJG
-        XOLozx6omqUcEhdmcUDYLhJ/+iayQNjCEq+Ob2GHsKUkPr/bC3QPB5CdLdGzyxgiXCOxdN4x
-        qHJ7iQNX5rCAlDALaEqs36UPsYlPovf3EyaITl6JjjYhiGpVieZ3V6E6pSUmdnezQtgeErsu
-        /mGHhFQ7o0TPfcsJjAqzkPw4C8mPs5D8Mgth8QJGllWMkqkFxbnpqcWmBUZ5qeV6xYm5xaV5
-        6XrJ+bmbGMFJSstrB+PDBx/0DjEycTAeYpTgYFYS4W3J3BknxJuSWFmVWpQfX1Sak1p8iFGa
-        g0VJnDepcUuckEB6YklqdmpqQWoRTJaJg1OqgSmYYc2vhsITuiV1K+pFjD0n7PsxcYG001Sr
-        Lw45Zytqm5Wn71x9/LpRuY2E3eH35keS7JevWJQYfNHUOP6b3l5Dzye7V0d2vbolGvzM867u
-        mpud7xfVTn1/1j73RdfFNJHiR+k7PgYy9r50fsSl5Jh8e0m/7vTNt3uf2yqtPn853k5f5Nf9
-        47f+f/CvzXKxDWveNPt58bHN/LmakVeX/3CW1PIwS/h0UFLxZMfRKbvvC79Xz+3REDHVOuNV
-        qnvFo+1h/sLX7076eggtkM9UMeMWWur75iJ3LfeqzII3zkclTh4zmdfmeDcqUXTyi87OD7Ei
-        9XIZjP9SknI/hUT8SfgWpWW1z2vCihlvD9qxrlViKc5INNRiLipOBADgRj7KwQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJXletc2ecwe7JUhYPmlYxWfQ/fs1s
-        sev/G2aL8+c3sFssmTyf1WLT42usFvOOvGOxuLxrDpvFjPP7mCx+7zrG7sDl8eFjnMemVZ1s
-        HpuX1HsseXOI1eN88xFGj8+b5ALYorhsUlJzMstSi/TtErgyFl3+wFSwk7ei9dUpxgbGZdxd
-        jJwcEgImErPWNLF3MXJxCAnsYJSY/vA4O0RCWuL6xglQtrDEyn/PoYpeMUpcOz2fFSTBJqAr
-        sWNxGxtIQkRgKrPEuW+n2SCqWhklji9/yQZSxQm0Y8/HrWC2sICrxOzbx1hAbBYBVYlNH3qY
-        QGxeAUuJQ3/PQ9mCEidnPgGq4eBgFtCTaNvICBJmFpCX2P52DjPERQoSP58uAztCRMBK4uWC
-        eVA14hJHf/YwT2AUmoVk0iyESbOQTJqFpGMBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS9
-        5PzcTYzg2NLS2sG4Z9UHvUOMTByMhxglOJiVRHhbMnfGCfGmJFZWpRblxxeV5qQWH2KU5mBR
-        Euf9OmthnJBAemJJanZqakFqEUyWiYNTqoFpn5ZaAduqovV9K1iKDkoJXHdf+Shu6b2fDwRs
-        tv21OXFLwaflkNUK7gcv3X1lrT9Jpp5xOzxvlb67Mlv88VeN3D2d9b2XU0WOeRpsVXa04zG8
-        euVcRNIVu7V/l1VvWXh3l9Rf9RUC0RUSYeKMU2umfJr0Ye3rpk8iXjN+zneemJjy7/DqYyvE
-        asyzK2Qa3sjzv1R6pmyv2GAeZWg6NXTHQWH2J0/XeuiYhe7r5gk3XXQxe8aP2zWL6i7XSAYK
-        5gn17nTcLr+m4MiqCasT3Ffmc6nsWavrGrHhAmvsU+PUO7d45ompcOcWf1BhXbllUs/hY9cE
-        6m/eP7hF/ueJeANbswdKxZN8zjJbz9U9sMdJiaU4I9FQi7moOBEArIs2DBwDAAA=
-X-CMS-MailID: 20200511171934epcas5p3d2a352c98597f5e2fb675335f44045e8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200511083406epcas5p18e835634e60f362dc408d73886aa5563
-References: <CGME20200511083406epcas5p18e835634e60f362dc408d73886aa5563@epcas5p1.samsung.com>
-        <20200511083348.7577-1-krzk@kernel.org>
+References: <20200511110250.23869-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20200511110250.23869-1-nsaenzjulienne@suse.de>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Mon, 11 May 2020 10:19:30 -0700
+Message-ID: <CADaigPV7JAPtXqkVf8ooPFFn8hxZYcV_iabzO5mGZO18+ZB4dA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Update Raspberry Pi development repository
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Krzysztof,
-Thanks for the patch.
+On Mon, May 11, 2020 at 4:02 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Eric Anholt's repo isn't used anymore. List current one.
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: 11 May 2020 14:04
-> To: Jonathan Cameron <jic23@kernel.org>; Hartmut Knaack
-> <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>; Peter Meerwald-
-> Stadler <pmeerw@pmeerw.net>; Kukjin Kim <kgene@kernel.org>; Krzysztof
-> Kozlowski <krzk@kernel.org>; linux-iio@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: Alim Akhtar <alim.akhtar@samsung.com>
-> Subject: [PATCH] iio: adc: exynos: Simplify Exynos7-specific init
-> 
-> The Exynos7-specific code bits in ADC driver do not play with PHY:
-> the field exynos_adc_data.needs_adc_phy is not set in exynos7_adc_data
-> instance.  Therefore the initialization code does not have to check if it
-is true.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Tested on exynos7-espresso board so,
-Tested-by:  Alim Akhtar <alim.akhtar@samsung.com>
-
-> ---
-> 
-> Only build tested.
-> ---
->  drivers/iio/adc/exynos_adc.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index
-> 22131a677445..219c8eb32d16 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -449,9 +449,6 @@ static void exynos_adc_exynos7_init_hw(struct
-> exynos_adc *info)  {
->  	u32 con1, con2;
-> 
-> -	if (info->data->needs_adc_phy)
-> -		regmap_write(info->pmu_map, info->data->phy_offset, 1);
-> -
->  	con1 = ADC_V2_CON1_SOFT_RESET;
->  	writel(con1, ADC_V2_CON1(info->regs));
-> 
-> --
-> 2.17.1
-
-
+Acked-by: Eric Anholt <eric@anholt.net>
