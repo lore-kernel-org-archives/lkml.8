@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0483BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974DAC54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCC5820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835BE20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbgEKSV0 (ORCPT
+        id S1731105AbgEKSVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:21:26 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42805 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731032AbgEKSVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 14:21:22 -0400
-Received: by mail-io1-f69.google.com with SMTP id c2so9214432iod.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:21:21 -0700 (PDT)
+Received: from mail-il1-f198.google.com ([209.85.166.198]:48960 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729825AbgEKSVV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:21:21 -0400
+Received: by mail-il1-f198.google.com with SMTP id i2so10162724ile.15
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:21:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CHOkFnrfNMfKG7b6Q4Npd24oP1fJe4QpB/xNqqVOEeY=;
-        b=HOt5c0+7x51MIKC0NaRpNe0tMdhtrYmGltX/XZSk1O3l/qGdwrDbvbnx6d7wzQL44I
-         UenVPBSKz31m4zFzCgIZpxhNDStmju1P4RVRAm3TCOM8NKYqecqeKNlcRW+61Bk292Dc
-         a2sjCxmKSu1hQRRrx74rwqgneJvWVlBE+n3HFE+zczquAIYsRcaSm/sXvNaA/CpTGeUW
-         nm8phYCKms2ROtsi8p6lsksaGAc+CMzlAFyI9BVPYM4f0PYPz+hJQB8Bbzi5UoEWeBa6
-         n8XXapgVdjCd6Ns0cJVvCTgthCBNsPXew4n9rZj5C+IhpnlbkxyIeG6jiolxFt97gFue
-         r6Aw==
-X-Gm-Message-State: AGi0PuYgJj/JQp0e4KRRBcUgE6ihZwkXm981tffQA8z23GExDPL5JWri
-        fTzXEOdvIcGuZU4SkYtrlvdKuLASg/ua87eWF8SdVN71OYll
-X-Google-Smtp-Source: APiQypJANE+T8nnZenndQy6vlFpGHn8hSZA1QXdsDb/mGt/aXgGztJl2ua8QNjF5t/eJxlkmZdfrfVObMupVvY1IvY4Fz6XDHuWh
+        bh=6IhQVM21jouY7unYnKk8xoX6AewAdvt9Su+siXbvu9Q=;
+        b=qBYYEl8uLCkIkGEkiLXshr1Ioi4mdk+Fi2BFVVScNYbiS+rmxvaFoKxOcHcwoDxjfc
+         CIVIPZbQpZydRbKJ4uWfT1Z33RDDV5yBMPQGfw0lBa1tkrOjReqdEgHHHXxm7yIcMPTa
+         YUyLBqm8D6bs1mwq+3S4o8rr5lLaOt53LcR05mRlZPmz6SvCVpKbJfYkFRsCCWt7T4Kr
+         NvBfXDRBtaEK6Vn9jNhJg2bI/pvM3y2CYWDBlSp38cIwzb0kWZ6lzP95o1oB2OTUz/lS
+         LeSgd0B0oxhs0nfLvfJkaZRfV/FH1OdQxbosY/z0Cm/7ZtXRxj9HfCYtpN0SBRO84cDK
+         at8g==
+X-Gm-Message-State: AGi0PuaSyDOovECJgX6JCpGkVs4PMvTXpMdTD+VC1lnUXV2ty1dqP5+/
+        EBSH7olN7RWZ+7GGOPBacWHRUB5mhnf4QEdTVFh73uld2Zml
+X-Google-Smtp-Source: APiQypKk9BzI5bmAuB7bOiRXIisFnD9ZGVqUW1uDSRyhqz1+fyIfPz5wIODV8zkIdpJDFQ2y/MUCPhy8Or0CVm37ApnS21xXNNS+
 MIME-Version: 1.0
-X-Received: by 2002:a02:c615:: with SMTP id i21mr6690238jan.30.1589221281346;
- Mon, 11 May 2020 11:21:21 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:21:21 -0700
+X-Received: by 2002:a02:3b4b:: with SMTP id i11mr16870119jaf.16.1589221280294;
+ Mon, 11 May 2020 11:21:20 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:21:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1b78f05a563695e@google.com>
-Subject: possible deadlock in sk_diag_fill (2)
-From:   syzbot <syzbot+c07a7e4d97298524f320@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, felipe@felipegasper.com,
-        gregkh@linuxfoundation.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <000000000000e1accc05a563699e@google.com>
+Subject: memory leak in erase_aeb (2)
+From:   syzbot <syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,154 +57,37 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    e99332e7 gcc-10: mark more functions __init to avoid secti..
+HEAD commit:    2ef96a5b Linux 5.7-rc5
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1557910c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
-dashboard link: https://syzkaller.appspot.com/bug?extid=c07a7e4d97298524f320
+console output: https://syzkaller.appspot.com/x/log.txt?x=1383fd32100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c566cc03357343ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=d9aab50b1154e3d163f5
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this crash yet.
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1166ab14100000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c07a7e4d97298524f320@syzkaller.appspotmail.com
+Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.7.0-rc4-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.3/31514 is trying to acquire lock:
-ffff88806be19668 (&u->lock/1){+.+.}-{2:2}, at: sk_diag_dump_icons net/unix/diag.c:86 [inline]
-ffff88806be19668 (&u->lock/1){+.+.}-{2:2}, at: sk_diag_fill.isra.0+0x9d0/0x10e0 net/unix/diag.c:154
+BUG: memory leak
+unreferenced object 0xffff888127f372c0 (size 32):
+  comm "syz-executor.0", pid 6931, jiffies 4294945277 (age 14.410s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
+  backtrace:
+    [<0000000049aad7d8>] erase_aeb+0x25/0x110 drivers/mtd/ubi/wl.c:1690
+    [<000000004a6c95d3>] ubi_wl_init+0x193/0x5c0 drivers/mtd/ubi/wl.c:1757
+    [<00000000a1d58128>] ubi_attach+0x611/0x18ba drivers/mtd/ubi/attach.c:1605
+    [<00000000eb6b9da4>] ubi_attach_mtd_dev+0x665/0xcc0 drivers/mtd/ubi/build.c:967
+    [<000000000a8ebd80>] ctrl_cdev_ioctl+0x144/0x1b0 drivers/mtd/ubi/cdev.c:1043
+    [<000000007ada47ea>] vfs_ioctl fs/ioctl.c:47 [inline]
+    [<000000007ada47ea>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:771
+    [<00000000bd687125>] __do_sys_ioctl fs/ioctl.c:780 [inline]
+    [<00000000bd687125>] __se_sys_ioctl fs/ioctl.c:778 [inline]
+    [<00000000bd687125>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:778
+    [<000000006f0eae66>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
+    [<00000000eaee3164>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-but task is already holding lock:
-ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
-ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: sk_diag_dump_icons net/unix/diag.c:68 [inline]
-ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: sk_diag_fill.isra.0+0x8eb/0x10e0 net/unix/diag.c:154
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (rlock-AF_UNIX){+.+.}-{2:2}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
-       skb_queue_tail+0x27/0x180 net/core/skbuff.c:3143
-       unix_dgram_sendmsg+0xc96/0x12e0 net/unix/af_unix.c:1806
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       ____sys_sendmsg+0x308/0x7e0 net/socket.c:2362
-       ___sys_sendmsg+0x100/0x170 net/socket.c:2416
-       __sys_sendmmsg+0x296/0x480 net/socket.c:2499
-       __compat_sys_sendmmsg net/compat.c:672 [inline]
-       __do_compat_sys_sendmmsg net/compat.c:679 [inline]
-       __se_compat_sys_sendmmsg net/compat.c:676 [inline]
-       __ia32_compat_sys_sendmmsg+0x9b/0x100 net/compat.c:676
-       do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-       do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
-       entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
--> #0 (&u->lock/1){+.+.}-{2:2}:
-       check_prev_add kernel/locking/lockdep.c:2515 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2620 [inline]
-       validate_chain kernel/locking/lockdep.c:3237 [inline]
-       __lock_acquire+0x2ab1/0x4c50 kernel/locking/lockdep.c:4355
-       lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
-       _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
-       sk_diag_dump_icons net/unix/diag.c:86 [inline]
-       sk_diag_fill.isra.0+0x9d0/0x10e0 net/unix/diag.c:154
-       sk_diag_dump net/unix/diag.c:192 [inline]
-       unix_diag_dump+0x441/0x550 net/unix/diag.c:220
-       netlink_dump+0x50b/0xf50 net/netlink/af_netlink.c:2245
-       __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
-       netlink_dump_start include/linux/netlink.h:246 [inline]
-       unix_diag_handler_dump+0x3ea/0x7b0 net/unix/diag.c:321
-       __sock_diag_cmd net/core/sock_diag.c:233 [inline]
-       sock_diag_rcv_msg+0x2fe/0x3e0 net/core/sock_diag.c:264
-       netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
-       sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
-       netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-       netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
-       netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
-       sock_sendmsg_nosec net/socket.c:652 [inline]
-       sock_sendmsg+0xcf/0x120 net/socket.c:672
-       sock_write_iter+0x289/0x3c0 net/socket.c:1004
-       call_write_iter include/linux/fs.h:1907 [inline]
-       do_iter_readv_writev+0x5a8/0x850 fs/read_write.c:694
-       do_iter_write fs/read_write.c:999 [inline]
-       do_iter_write+0x18b/0x600 fs/read_write.c:980
-       compat_writev+0x1f1/0x390 fs/read_write.c:1352
-       do_compat_writev+0xd5/0x1d0 fs/read_write.c:1373
-       do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-       do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
-       entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(rlock-AF_UNIX);
-                               lock(&u->lock/1);
-                               lock(rlock-AF_UNIX);
-  lock(&u->lock/1);
-
- *** DEADLOCK ***
-
-5 locks held by syz-executor.3/31514:
- #0: ffffffff8a58a388 (sock_diag_mutex){+.+.}-{3:3}, at: sock_diag_rcv+0x17/0x40 net/core/sock_diag.c:274
- #1: ffffffff8a58a448 (sock_diag_table_mutex){+.+.}-{3:3}, at: __sock_diag_cmd net/core/sock_diag.c:228 [inline]
- #1: ffffffff8a58a448 (sock_diag_table_mutex){+.+.}-{3:3}, at: sock_diag_rcv_msg+0x18d/0x3e0 net/core/sock_diag.c:264
- #2: ffff888050ce1630 (nlk_cb_mutex-SOCK_DIAG){+.+.}-{3:3}, at: netlink_dump+0xd4/0xf50 net/netlink/af_netlink.c:2200
- #3: ffffffff8a65df18 (unix_table_lock){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
- #3: ffffffff8a65df18 (unix_table_lock){+.+.}-{2:2}, at: unix_diag_dump+0x10c/0x550 net/unix/diag.c:206
- #4: ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:353 [inline]
- #4: ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: sk_diag_dump_icons net/unix/diag.c:68 [inline]
- #4: ffff888091bbf1e0 (rlock-AF_UNIX){+.+.}-{2:2}, at: sk_diag_fill.isra.0+0x8eb/0x10e0 net/unix/diag.c:154
-
-stack backtrace:
-CPU: 0 PID: 31514 Comm: syz-executor.3 Not tainted 5.7.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1846
- check_prev_add kernel/locking/lockdep.c:2515 [inline]
- check_prevs_add kernel/locking/lockdep.c:2620 [inline]
- validate_chain kernel/locking/lockdep.c:3237 [inline]
- __lock_acquire+0x2ab1/0x4c50 kernel/locking/lockdep.c:4355
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- _raw_spin_lock_nested+0x30/0x40 kernel/locking/spinlock.c:361
- sk_diag_dump_icons net/unix/diag.c:86 [inline]
- sk_diag_fill.isra.0+0x9d0/0x10e0 net/unix/diag.c:154
- sk_diag_dump net/unix/diag.c:192 [inline]
- unix_diag_dump+0x441/0x550 net/unix/diag.c:220
- netlink_dump+0x50b/0xf50 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
- netlink_dump_start include/linux/netlink.h:246 [inline]
- unix_diag_handler_dump+0x3ea/0x7b0 net/unix/diag.c:321
- __sock_diag_cmd net/core/sock_diag.c:233 [inline]
- sock_diag_rcv_msg+0x2fe/0x3e0 net/core/sock_diag.c:264
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- sock_write_iter+0x289/0x3c0 net/socket.c:1004
- call_write_iter include/linux/fs.h:1907 [inline]
- do_iter_readv_writev+0x5a8/0x850 fs/read_write.c:694
- do_iter_write fs/read_write.c:999 [inline]
- do_iter_write+0x18b/0x600 fs/read_write.c:980
- compat_writev+0x1f1/0x390 fs/read_write.c:1352
- do_compat_writev+0xd5/0x1d0 fs/read_write.c:1373
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
 
 
 ---
@@ -215,3 +97,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
