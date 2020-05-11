@@ -2,97 +2,100 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D3C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA71C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43ACE2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cYYX+rnq"
+	by mail.kernel.org (Postfix) with ESMTP id 34D7120720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589169032;
+	bh=8hUvG3Fi0UVFsF5qX28A8k9eYFFptGhIYkDv82e5ZDA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PUEET/l6hPuYi4w8rL5a0mKg/kreNF0D/CeXfwa44dKHec1w3jsttIcy4w/ag+lJI
+	 lGdG83uqNfsEoDBQdHZ7gQRweSvq/1xDKqkkeuq69GVkhrrJ5dudGmMpTP5oW+x5m7
+	 NQR8OQzPx4+iGtG5sTITYE29FRLlzNHa7He5N2vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgEKDrU (ORCPT
+        id S1728344AbgEKDub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728058AbgEKDrU (ORCPT
+        Sun, 10 May 2020 23:50:31 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:43402 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbgEKDub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:47:20 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAC9C061A0C;
-        Sun, 10 May 2020 20:47:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L6M83sxTz9sRf;
-        Mon, 11 May 2020 13:47:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589168837;
-        bh=O6zAs4Q3XikfztIZH1d1NrZqdEwNh2c50gDfoygxdLc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cYYX+rnqJKBB7kkvpkom4AgbZA7Ut6K3fpZHtO9UVJm8HYD2zmmy7OA13Pf6keGMZ
-         NVDSLByMO8p3eaG3rjej++DJafBPsi0ViWThdh+CTxpqmqcrlBWr25VRFpyh9BnEf6
-         FNX3inFLdDuWNdAovuQoV+kn5xmvBZbXMssYe5/yn05GRt3dCSIKR+OZenfcBfPbIk
-         KaPDUqGLKxc6VY3m/9wD4rw+UIV4lJL+zoa5aR/jw2ctCku3RgTFJgGM1hE3xpd1i9
-         pGkjeTF3vHRfr0Ma98XoXZjJusKBPHw3NOUlMMo5ONnziBnYQ32zm/mFaf0gEK2Wq6
-         gJhF69tafPXpQ==
-Date:   Mon, 11 May 2020 13:47:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: build warning after merge of the drm tree
-Message-ID: <20200511134711.4956a5d0@canb.auug.org.au>
+        Sun, 10 May 2020 23:50:31 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 04B3oFtr022396;
+        Mon, 11 May 2020 12:50:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04B3oFtr022396
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589169016;
+        bh=ynltv6m6rrglNcqnS2A++z6WnYqXoMB6E93POpjic5s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KGezrf8qzm08ZMBV96NesQomBm/dI8jB2tJ/KaEdUhYxKpf6wsx+LsQPWBLyTvlHu
+         5C0qq95D3HZEu1GaPJ0Vj5czUnUkdXVIOlD8SpNoN1i2Jube2yDTz9Do8ZmDuAkqdc
+         wU4d7ZZdNuBnC/z1+vtJpF4erAFIcfl9gAGh/1gNtAX02POU7l7pLmL1D4gU+ODiSc
+         pTSem9yXxeGCeG16AaNaPRs8n2vYpCO8o2Qb9EwuU1Zue4AT8t7YANDH2GKMU/LxyC
+         oLYwb06o1xPnrAd9wgwUWx6ycQs7nQPwvezlieRmHh7YB31LhaxmC9gdkQducbIzDC
+         50GnOEI1teKFA==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: add this-makefile as a shorthand for $(lastword $(MAKEFILE_LIST))
+Date:   Mon, 11 May 2020 12:50:12 +0900
+Message-Id: <20200511035013.1629672-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hf4wbgX98YvTZGDZmMXnOFY";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hf4wbgX98YvTZGDZmMXnOFY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Make it clearer, and self-documenting.
 
-Hi all,
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
+ Makefile | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-v=
-isionox-rm69299.o
+diff --git a/Makefile b/Makefile
+index 119a08c90abb..1a4977ad7cd9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -157,12 +157,14 @@ MAKEFLAGS += --include-dir=$(abs_srctree)
+ need-sub-make := 1
+ endif
+ 
++this-makefile := $(lastword $(MAKEFILE_LIST))
++
+ ifneq ($(filter 3.%,$(MAKE_VERSION)),)
+ # 'MAKEFLAGS += -rR' does not immediately become effective for GNU Make 3.x
+ # We need to invoke sub-make to avoid implicit rules in the top Makefile.
+ need-sub-make := 1
+ # Cancel implicit rules for this Makefile.
+-$(lastword $(MAKEFILE_LIST)): ;
++$(this-makefile): ;
+ endif
+ 
+ export abs_srctree abs_objtree
+@@ -172,7 +174,7 @@ ifeq ($(need-sub-make),1)
+ 
+ PHONY += $(MAKECMDGOALS) sub-make
+ 
+-$(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all: sub-make
++$(filter-out _all sub-make $(this-makefile), $(MAKECMDGOALS)) _all: sub-make
+ 	@:
+ 
+ # Invoke a second make in the output directory, passing relevant variables
+-- 
+2.25.1
 
-Introduced by commit
-
-  c7f66d32dd43 ("drm/panel: add support for rm69299 visionox panel")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hf4wbgX98YvTZGDZmMXnOFY
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64yr8ACgkQAVBC80lX
-0Gzz5wf/SzmSBIVJ8psuZOrI1EHRvhok21kidiDElkDPfM+wUiZQvM8SpHsE7rLt
-jlWz+olEdZKQTf16JDo0SLMi5cvQgoz89CSwK9DJnTUFza70Mz8K4NHlTwxJfJde
-aW5Wgua4+Uw+AghtNwSiuY6MRRCSiGfKBIexdtiLf8mJPmapMvBCYTLTXGyg/TEg
-2RJbbY3hQz+4pLireQgelqmn3CntKDyFTifb1GT35N7iWrCJnJGwHMPA5/ap+8Ef
-bX5iUgsfho6/y3vmnFXC0EpffphZiA3kDTs4z+mtWiVeY+v7HJAqe2KFU3Z6lK8C
-LEJGa1rzLr5ayYXpgWVCS7vxFI/GVg==
-=y+Pu
------END PGP SIGNATURE-----
-
---Sig_/hf4wbgX98YvTZGDZmMXnOFY--
