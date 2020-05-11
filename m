@@ -2,223 +2,241 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E81C54E91
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E86C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B99206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E422206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730960AbgEKRo1 convert rfc822-to-8bit (ORCPT
+        id S1730066AbgEKRr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:44:27 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:36801 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728711AbgEKRo0 (ORCPT
+        Mon, 11 May 2020 13:47:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34706 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726310AbgEKRr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:44:26 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E52B1200006;
-        Mon, 11 May 2020 17:44:21 +0000 (UTC)
-Date:   Mon, 11 May 2020 19:44:20 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
-        vigneshr@ti.com, sumit.semwal@linaro.org,
-        linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH 3/3] nand: brcmnand: support v2.1-v2.2 controllers
-Message-ID: <20200511194420.00af6b1f@xps13>
-In-Reply-To: <20200510151406.2527856-3-noltari@gmail.com>
-References: <20200510151406.2527856-1-noltari@gmail.com>
-        <20200510151406.2527856-3-noltari@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 11 May 2020 13:47:58 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BHZtqx098804;
+        Mon, 11 May 2020 13:47:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wry0nbd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 13:47:39 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04BHa3UB099843;
+        Mon, 11 May 2020 13:47:38 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wry0nbcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 13:47:38 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BHlbYA028935;
+        Mon, 11 May 2020 17:47:37 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 30wm559yfg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 17:47:36 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BHlYSm64290822
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 17:47:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EB434C046;
+        Mon, 11 May 2020 17:47:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 933F54C044;
+        Mon, 11 May 2020 17:47:32 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 11 May 2020 17:47:32 +0000 (GMT)
+Date:   Mon, 11 May 2020 23:17:31 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+Message-ID: <20200511174731.GD1961@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
+ <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
+ <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
+ <20200429014145.GD19958@linux.vnet.ibm.com>
+ <20200429122211.GD28637@dhcp22.suse.cz>
+ <20200430071820.GF19958@linux.vnet.ibm.com>
+ <20200504093712.GL22838@dhcp22.suse.cz>
+ <20200508130304.GA1961@linux.vnet.ibm.com>
+ <3bfe7469-1d8c-baa4-6d9d-f4786492eaa8@redhat.com>
+ <ce9d47bc-f92c-dd22-0d59-e8d59c913526@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <ce9d47bc-f92c-dd22-0d59-e8d59c913526@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_08:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 lowpriorityscore=0 spamscore=0
+ suspectscore=2 mlxlogscore=999 malwarescore=0 impostorscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
+* David Hildenbrand <david@redhat.com> [2020-05-08 15:42:12]:
 
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Sun, 10 May 2020
-17:14:06 +0200:
+Hi David,
 
-> Tested on Netgear DGND3700v2 (BCM6362 with v2.2 controller).
+Thanks for the steps to tryout.
 
-I'd propose to do this in two steps:
+> > 
+> > #! /bin/bash
+> > sudo x86_64-softmmu/qemu-system-x86_64 \
+> >     --enable-kvm \
+> >     -m 4G,maxmem=20G,slots=2 \
+> >     -smp sockets=2,cores=2 \
+> >     -numa node,nodeid=0,cpus=0-1,mem=4G -numa node,nodeid=1,cpus=2-3,mem=0G \
+> 
+> Sorry, this line has to be
+> 
+> -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G \
+> 
+> >     -kernel /home/dhildenb/git/linux/arch/x86_64/boot/bzImage \
+> >     -append "console=ttyS0 rd.shell rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0" \
+> >     -initrd /boot/initramfs-5.2.8-200.fc30.x86_64.img \
+> >     -machine pc,nvdimm \
+> >     -nographic \
+> >     -nodefaults \
+> >     -chardev stdio,id=serial \
+> >     -device isa-serial,chardev=serial \
+> >     -chardev socket,id=monitor,path=/var/tmp/monitor,server,nowait \
+> >     -mon chardev=monitor,mode=readline
+> > 
+> > to get a cpu-less and memory-less node 1. Never tried with node 0.
+> > 
 
-First rename what needs to be rename to be more accurate without adding
-anything specific to this version of the IP, then, in another patch,
-just add the necessary bits.
+I tried 
+
+qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
+
+and the resulting guest was.
+
+[root@localhost ~]# numactl -H
+available: 1 nodes (0)
+node 0 cpus: 0 1 2 3
+node 0 size: 3927 MB
+node 0 free: 3316 MB
+node distances:
+node   0
+  0:  10
+
+[root@localhost ~]# lscpu
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+Address sizes:       40 bits physical, 48 bits virtual
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  2
+Socket(s):           2
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               46
+Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
+Stepping:            6
+CPU MHz:             2260.986
+BogoMIPS:            4521.97
+Virtualization:      VT-x
+Hypervisor vendor:   KVM
+Virtualization type: full
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            4096K
+L3 cache:            16384K
+NUMA node0 CPU(s):   0-3
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
+
+[root@localhost ~]# cat /sys/devices/system/node/online
+0
+[root@localhost ~]# cat /sys/devices/system/node/possible
+0-1
+
+---------------------------------------------------------------------------------
+
+I also tried
+
+qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=1,cpus=0-3,mem=4G -numa node,nodeid=0,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
+
+and the resulting guest was.
+
+[root@localhost ~]# numactl -H
+available: 1 nodes (0)
+node 0 cpus: 0 1 2 3
+node 0 size: 3927 MB
+node 0 free: 3316 MB
+node distances:
+node   0
+  0:  10
+
+[root@localhost ~]# lscpu
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+Address sizes:       40 bits physical, 48 bits virtual
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  2
+Socket(s):           2
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               46
+Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
+Stepping:            6
+CPU MHz:             2260.986
+BogoMIPS:            4521.97
+Virtualization:      VT-x
+Hypervisor vendor:   KVM
+Virtualization type: full
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            4096K
+L3 cache:            16384K
+NUMA node0 CPU(s):   0-3
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
+
+[root@localhost ~]# cat /sys/devices/system/node/online
+0
+[root@localhost ~]# cat /sys/devices/system/node/possible
+0-1
+
+Even without my patch, both the combinations, I am still unable to see a
+cpuless, memoryless node being online. And the interesting part being even
+if I mark node 0 as cpuless,memoryless and node 1 as actual node, the system
+somewhere marks node 0 as the actual node.
 
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 76 +++++++++++++++++++++---
->  1 file changed, 67 insertions(+), 9 deletions(-)
+> David / dhildenb
 > 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 72b268d8e3a4..718c601d0e59 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -338,6 +338,36 @@ enum brcmnand_reg {
->  	BRCMNAND_FC_BASE,
->  };
->  
-> +/* BRCMNAND v2.1-v2.2 */
-> +static const u16 brcmnand_regs_v21[] = {
-> +	[BRCMNAND_CMD_START]		=  0x04,
-> +	[BRCMNAND_CMD_EXT_ADDRESS]	=  0x08,
-> +	[BRCMNAND_CMD_ADDRESS]		=  0x0c,
-> +	[BRCMNAND_INTFC_STATUS]		=  0x5c,
-> +	[BRCMNAND_CS_SELECT]		=  0x14,
-> +	[BRCMNAND_CS_XOR]		=  0x18,
-> +	[BRCMNAND_LL_OP]		=     0,
-> +	[BRCMNAND_CS0_BASE]		=  0x40,
-> +	[BRCMNAND_CS1_BASE]		=     0,
-> +	[BRCMNAND_CORR_THRESHOLD]	=     0,
-> +	[BRCMNAND_CORR_THRESHOLD_EXT]	=     0,
-> +	[BRCMNAND_UNCORR_COUNT]		=     0,
-> +	[BRCMNAND_CORR_COUNT]		=     0,
-> +	[BRCMNAND_CORR_EXT_ADDR]	=  0x60,
-> +	[BRCMNAND_CORR_ADDR]		=  0x64,
-> +	[BRCMNAND_UNCORR_EXT_ADDR]	=  0x68,
-> +	[BRCMNAND_UNCORR_ADDR]		=  0x6c,
-> +	[BRCMNAND_SEMAPHORE]		=  0x50,
-> +	[BRCMNAND_ID]			=  0x54,
-> +	[BRCMNAND_ID_EXT]		=     0,
-> +	[BRCMNAND_LL_RDATA]		=     0,
-> +	[BRCMNAND_OOB_READ_BASE]	=  0x20,
-> +	[BRCMNAND_OOB_READ_10_BASE]	=     0,
-> +	[BRCMNAND_OOB_WRITE_BASE]	=  0x30,
-> +	[BRCMNAND_OOB_WRITE_10_BASE]	=     0,
-> +	[BRCMNAND_FC_BASE]		= 0x200,
-> +};
-> +
->  /* BRCMNAND v3.3-v4.0 */
->  static const u16 brcmnand_regs_v33[] = {
->  	[BRCMNAND_CMD_START]		=  0x04,
-> @@ -571,12 +601,16 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
->  {
->  	static const unsigned int block_sizes_v6[] = { 8, 16, 128, 256, 512, 1024, 2048, 0 };
->  	static const unsigned int block_sizes_v4[] = { 16, 128, 8, 512, 256, 1024, 2048, 0 };
-> -	static const unsigned int page_sizes[] = { 512, 2048, 4096, 8192, 0 };
-> +	static const unsigned int block_sizes_v2_2[] = { 16, 128, 8, 512, 256, 0 };
-> +	static const unsigned int block_sizes[] = { 16, 128, 8, 512, 0 };
-> +	static const unsigned int page_sizes_v3_4[] = { 512, 2048, 4096, 8192, 0 };
-> +	static const unsigned int page_sizes_v2_2[] = { 512, 2048, 4096, 0 };
-> +	static const unsigned int page_sizes[] = { 512, 2048, 0 };
 
-Can you name a version everywhere?
-
->  
->  	ctrl->nand_version = nand_readreg(ctrl, 0) & 0xffff;
->  
-> -	/* Only support v4.0+? */
-> -	if (ctrl->nand_version < 0x0400) {
-> +	/* Only support v2.1+ */
-> +	if (ctrl->nand_version < 0x0201) {
->  		dev_err(ctrl->dev, "version %#x not supported\n",
->  			ctrl->nand_version);
->  		return -ENODEV;
-> @@ -593,6 +627,8 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
->  		ctrl->reg_offsets = brcmnand_regs_v50;
->  	else if (ctrl->nand_version >= 0x0303)
->  		ctrl->reg_offsets = brcmnand_regs_v33;
-> +	else if (ctrl->nand_version >= 0x0201)
-> +		ctrl->reg_offsets = brcmnand_regs_v21;
->  
->  	/* Chip-select stride */
->  	if (ctrl->nand_version >= 0x0701)
-> @@ -618,14 +654,27 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
->  		ctrl->max_page_size = 16 * 1024;
->  		ctrl->max_block_size = 2 * 1024 * 1024;
->  	} else {
-> -		ctrl->page_sizes = page_sizes;
-> +		if (ctrl->nand_version >= 0x0304)
-> +			ctrl->page_sizes = page_sizes_v3_4;
-> +		else if (ctrl->nand_version >= 0x0202)
-> +			ctrl->page_sizes = page_sizes_v2_2;
-> +		else
-> +			ctrl->page_sizes = page_sizes;
-> +
->  		if (ctrl->nand_version >= 0x0600)
->  			ctrl->block_sizes = block_sizes_v6;
-> -		else
-> +		else if (ctrl->nand_version >= 0x0400)
->  			ctrl->block_sizes = block_sizes_v4;
-> +		else if (ctrl->nand_version >= 0x0202)
-> +			ctrl->block_sizes = block_sizes_v2_2;
-> +		else
-> +			ctrl->block_sizes = block_sizes;
->  
->  		if (ctrl->nand_version < 0x0400) {
-> -			ctrl->max_page_size = 4096;
-> +			if (ctrl->nand_version < 0x0202)
-> +				ctrl->max_page_size = 2048;
-> +			else
-> +				ctrl->max_page_size = 4096;
->  			ctrl->max_block_size = 512 * 1024;
->  		}
->  	}
-> @@ -811,6 +860,9 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
->  	enum brcmnand_reg reg = BRCMNAND_CORR_THRESHOLD;
->  	int cs = host->cs;
->  
-> +	if (!ctrl->reg_offsets[reg])
-> +		return;
-> +
->  	if (ctrl->nand_version == 0x0702)
->  		bits = 7;
->  	else if (ctrl->nand_version >= 0x0600)
-> @@ -869,8 +921,10 @@ static inline u32 brcmnand_spare_area_mask(struct brcmnand_controller *ctrl)
->  		return GENMASK(7, 0);
->  	else if (ctrl->nand_version >= 0x0600)
->  		return GENMASK(6, 0);
-> -	else
-> +	else if (ctrl->nand_version >= 0x0303)
->  		return GENMASK(5, 0);
-> +	else
-> +		return GENMASK(4, 0);
->  }
->  
->  #define NAND_ACC_CONTROL_ECC_SHIFT	16
-> @@ -2390,9 +2444,11 @@ static int brcmnand_set_cfg(struct brcmnand_host *host,
->  
->  	tmp = nand_readreg(ctrl, acc_control_offs);
->  	tmp &= ~brcmnand_ecc_level_mask(ctrl);
-> -	tmp |= cfg->ecc_level << NAND_ACC_CONTROL_ECC_SHIFT;
->  	tmp &= ~brcmnand_spare_area_mask(ctrl);
-> -	tmp |= cfg->spare_area_size;
-> +	if (ctrl->nand_version >= 0x0302) {
-> +		tmp |= cfg->ecc_level << NAND_ACC_CONTROL_ECC_SHIFT;
-> +		tmp |= cfg->spare_area_size;
-> +	}
->  	nand_writereg(ctrl, acc_control_offs, tmp);
->  
->  	brcmnand_set_sector_size_1k(host, cfg->sector_size_1k);
-> @@ -2766,6 +2822,8 @@ const struct dev_pm_ops brcmnand_pm_ops = {
->  EXPORT_SYMBOL_GPL(brcmnand_pm_ops);
->  
->  static const struct of_device_id brcmnand_of_match[] = {
-> +	{ .compatible = "brcm,brcmnand-v2.1" },
-> +	{ .compatible = "brcm,brcmnand-v2.2" },
->  	{ .compatible = "brcm,brcmnand-v4.0" },
->  	{ .compatible = "brcm,brcmnand-v5.0" },
->  	{ .compatible = "brcm,brcmnand-v6.0" },
-
-You should also document these new bindings in a separate patch
-(before this one).
-
-Thanks,
-Miquèl
+-- 
+Thanks and Regards
+Srikar Dronamraju
