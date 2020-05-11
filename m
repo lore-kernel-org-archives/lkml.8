@@ -2,96 +2,130 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9819BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C49EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E19320752
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF827206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="racU3yOE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vc3uSObP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgEKWxK (ORCPT
+        id S1727123AbgEKWxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        Mon, 11 May 2020 18:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725854AbgEKWxJ (ORCPT
+        by vger.kernel.org with ESMTP id S1725836AbgEKWx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:53:09 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6418DC061A0C;
-        Mon, 11 May 2020 15:53:09 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x15so4828841pfa.1;
-        Mon, 11 May 2020 15:53:09 -0700 (PDT)
+        Mon, 11 May 2020 18:53:28 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DB9C061A0C;
+        Mon, 11 May 2020 15:53:27 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so9556287qtb.5;
+        Mon, 11 May 2020 15:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=UX1e3G5pICdv5Su1p/sHdO03fKVIDVMRh4AFP2GMseE=;
-        b=racU3yOERnVSf5OhYIkc9jAWD01kboHgb3/lbfpBmxiO4BseFcRMIOD5Qsj1l54O2W
-         dInXhd+J48W54qeuxmwuxZ+OkDffW91DIOwh3wlQl+c1w/LuR0TsSdMgK2sKNg/ViBqs
-         iTxnpY8gCtlKIjZk8q1keLzQvvN5fpJ1xlrMrbbsIUeKFd15azTSduXc+4FDS7gdV4B4
-         tIuJXYh1m65ngKWHOZNsOisb+qu/0XB1VLyhiI6AVvaJ+4Gphk58tT8r3ZDDdJYCD007
-         B14939Vvj4g5ZzfGTNMfxPTz8b1q9XkJpYeq8W/dOuG0O90MWtm9OMceFnK/B1/2O7tX
-         T/KQ==
+        bh=YphSq6A1v4I+cV1naaXrYy9+htaDBx1Hhi/F0oFai1E=;
+        b=vc3uSObPLePA6JT0lSL3grgVDF8dkVZqHkTljTrBVZapWRF92Thk9z0hcIIUhu2Mwg
+         wkXlTsyNDosMUUWpL3ho7Ar2sEWUEIbA2DZdWnswQhvGfnBUWdDPmlZ/8LmtJnOzopJs
+         x2py/I3vEg2KGuD0i673/J2rFs/bOTC9pRclJ1E4tHtzOLx9uwohYfl+m6bs4ozrUFkw
+         eaSyVIyatC2Cnz1wgnECAuu6hA8UkOLvE5m3d0grTgjA0Wyf8k0w+f5VS4hXrqbYXI1e
+         DxXrNHsgEc7e5fPHAp2Qfq/s3HglwjFBWC3VNiLwfG7E5UU8WV5bvZmPIEgaPn8Zi5p+
+         HMtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UX1e3G5pICdv5Su1p/sHdO03fKVIDVMRh4AFP2GMseE=;
-        b=DeYoyt9/FNwG1RRb6VSyjjY9ZxSehm3gpxjJv5nDfB4ZBTcQjLtbuTKU9cDgKDGWSm
-         y1fGvJTIN77uLl+sovSzc0FGm37ux7p4KgQUYvkVglTnTZdkS2Eb3dYV0fQHsvYCtvB1
-         17sT+BwFYobpMtKMK1l2nxbAwYbAwTYgDXEgvaCtv9eNcdIqsilC/uxrG5u+UNltYrd6
-         ryHMzu7J5UXF16L6gL3u0+GCUxy1RywPjShPhm8glry+0iyJlbuQIIEtY+LS5wwKBCm2
-         /NQ0Gvak3toHZLKYIFwUe6p0pFwsZt3n9nmcTroZf54wn69vKoutVMFhyVB5KuMO43dn
-         TbHg==
-X-Gm-Message-State: AGi0PuZZY337iZny/+JjTe9NVUBCEwKC97730n/0u3zoM/kdtsLoRvRR
-        QNOErVeAfMWFUe/Jk0l0/LAMaMLu
-X-Google-Smtp-Source: APiQypIszNkyW+FWifA0HmCJUvh7Uj9uFZ2z4L5r4YQV4AKx+rnH9X4sw3t2EssDH5XhvS6wM7fwSA==
-X-Received: by 2002:a62:1704:: with SMTP id 4mr17344633pfx.197.1589237588718;
-        Mon, 11 May 2020 15:53:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id gn20sm11094498pjb.24.2020.05.11.15.53.07
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=YphSq6A1v4I+cV1naaXrYy9+htaDBx1Hhi/F0oFai1E=;
+        b=p+bDCKEhpWkdTl7r6U4tt2+Ywr1S4KmsP9zYHPhYrcel8XIMIRvgwiSBFv8kjxQnEO
+         ntLWbNQgmaoJg1kiBt6KEZWYfQlZT6+lcmo9uS1K8YDtHA0usvSvtDNa3wesECre4F31
+         9IpJKXBax0uPFX3kMJkEWC/8goLozaoyyH3HzyKyMb3uXo2MqmdL6Fw9vxOv1jZO2dZf
+         WSRwk2SB26aWowzIwdw6LWHqi/6b/Pp1rglaxqC15Ya/PT1c1YRie3upaoLVjMaAfPF/
+         xJdypjSeY7BkEqUOnzkFKm8PVfqBoUAjBn1rXvq4+Tyy/hzX7CGvdq6NyUUk43GVMS78
+         ZYUw==
+X-Gm-Message-State: AGi0Pua/jXTq8rztatBwqT48IZeqQM/OGCHKd1U19fbCqs/7uV16VOb+
+        M37r00RGXPvT8UNLf68GW/AhnjH971g=
+X-Google-Smtp-Source: APiQypLYqUazQMqxESsO3qdbOBln1514e3zcNq96foSMd6Kfctag6VJpizyanbpss3qBoDztbfVW/A==
+X-Received: by 2002:ac8:839:: with SMTP id u54mr12267672qth.382.1589237606886;
+        Mon, 11 May 2020 15:53:26 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b33sm2382131qtk.97.2020.05.11.15.53.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:53:08 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:53:06 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-Subject: Re: [PATCH v11 07/56] Input: atmel_mxt_ts - implement T9
- vector/orientation support
-Message-ID: <20200511225306.GA89269@dtor-ws>
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200508055656.96389-8-jiada_wang@mentor.com>
+        Mon, 11 May 2020 15:53:26 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 11 May 2020 18:53:24 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 4/5] efi/x86: Remove extra headroom for setup block
+Message-ID: <20200511225324.GA1307788@rani.riverdale.lan>
+References: <20200303221205.4048668-5-nivedita@alum.mit.edu>
+ <20200511170149.1363260-1-mike@fireburn.co.uk>
+ <20200511183645.GA596850@rani.riverdale.lan>
+ <CAMj1kXEmJRpVyWDVkBn9eL0y0J4iVrUkYZd_pk_oKOeQPH661g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200508055656.96389-8-jiada_wang@mentor.com>
+In-Reply-To: <CAMj1kXEmJRpVyWDVkBn9eL0y0J4iVrUkYZd_pk_oKOeQPH661g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 10:56:07PM -0700, Jiada Wang wrote:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Mon, May 11, 2020 at 11:13:00PM +0200, Ard Biesheuvel wrote:
+> On Mon, 11 May 2020 at 20:36, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Mon, May 11, 2020 at 06:01:49PM +0100, Mike Lothian wrote:
+> > > Hi
+> > >
+> > > This patch has been causing issues for me since switching to GCC 10.1:
+> > >
+> > >   CALL    scripts/checksyscalls.sh
+> > >   CALL    scripts/atomic/check-atomics.sh
+> > >   DESCEND  objtool
+> > >   CHK     include/generated/compile.h
+> > >   HOSTCC  arch/x86/boot/tools/build
+> > > /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld: error: linker defined: multiple definition of '_end'
+> > > /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld: /tmp/ccEkW0jM.o: previous definition here
+> > > collect2: error: ld returned 1 exit status
+> > > make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
+> > > make: *** [arch/x86/Makefile:303: bzImage] Error 2
+> > >
+> > > Cheers
+> > >
+> > > Mike
+> >
+> > I'm not getting an error even with gcc 10 for some reason, but I can see
+> > that it is busted. It's using the linker-defined _end symbol which is
+> > just pass the end of the .bss.
+> >
+> > Does adding "static" to the declaration of _end fix your error?
 > 
-> The atmel touch messages contain orientation information as a byte in a
-> packed format which can be passed straight on to Android if the input
-> device configuration is correct.
+> This is in a host tool, so it depends on the builtin linker script the
+> toolchain decides to use. This is risky, though, as it may be using
+> PROVIDE() for _end, which means that in cases where it doesn't break,
+> other references to _end that may exist will be linked to the wrong
+> symbol. I don't think 'build' should be expected to do anything
+> interesting with its own representation in memory, but better fix it
+> nonetheless.
 
-No, unfortunately I can not accept this. Please convert to the proper
-format for ABS_MT_ORIENTATION as defined in
-Documentation/input/multi-touch-protocol.rst 
+Right, _end _is_ getting redefined in my system linker script too: I can
+see with objdump that the final _end symbol in my version of build is
+actually pointing beyond the .bss. But my toolchain doesn't report an
+error for some reason.
 
-Thanks.
+> 
+> Arvind: mind sending a fix for this, please?
 
--- 
-Dmitry
+Yeah, I have one ready -- was just waiting to hear back if "static" did
+fix it, but I can send it out now.
