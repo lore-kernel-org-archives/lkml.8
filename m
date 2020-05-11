@@ -2,105 +2,82 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32484C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873FDC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE31206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUCyo6Hv"
+	by mail.kernel.org (Postfix) with ESMTP id 6FBCD20746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgEKPNs (ORCPT
+        id S1730387AbgEKPOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729955AbgEKPNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:13:44 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082B6C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:13:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so18415930wmk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=78AgJ42s3Q16hO+wDB1aQPKCwHIWi6iB2h6vI6aZe/0=;
-        b=DUCyo6HvLO9kLMdy+40UVDXO11UmGRGFfOpgWRexn0KaIVV+k1cwYN2fFn7Q7SJTsK
-         +G5FB4DwzqUzxtjX1ySwYKaW5253gpRqkbLSFYu9Bxkhuv9qLrF4Hqrg5pAqnvJO2s9P
-         JjNAeM1pyJf2iZgqwx2rQp448fypOfj5ip/8t0Ku9ChjBhPcbZEu8xkqA0TkX/8cVnaJ
-         lkrAMZ1qKRzGRB8rKWLvwuc2WdJ7oH+gz+wmK66qiAYZ+N7UrEUacC5BUMi0+v7vm+Qw
-         L+LaDrAxeJbAZLA/9KijBpm9D101HNrPn7vMkhVazxIQ0fAv9Y8nvONmpde+LQAhOmfu
-         uz5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=78AgJ42s3Q16hO+wDB1aQPKCwHIWi6iB2h6vI6aZe/0=;
-        b=ZuxK1xuXt3ExWtxzuB6Nx4o+Gk0Zvpx7GtYjdmppXG3DatWyaVZqGwYOedb/5lh3eN
-         B6dwspX3ELM7jQzLpW4dC1IV+nkf1ZrQBiEU9Wb2h1BpJNDksu08ZoJPAPsCvKUWIh93
-         jf+9u8wtyn5dm8qdCAaZw1vqnYF9bbFUNbiRKo4mITNXJce0VKrQ2NUNetJh+u2gwcaO
-         i21G9I0x08L25gsaprTIr2eRAZAtL98X6dgVBJJ+hxkPpdcipFFSAnILasAcllKCw3Lq
-         M1UV+k1vcM4Qs5ed7jYLCrvc/x75bdP70mkdCvNUZrDLU+yF3g0puEuv0cRELfNSZ1RF
-         Xqag==
-X-Gm-Message-State: AGi0Pua/P/G8qCNUvakMZhDpi78XUQwMuNzucohoPri5WDHELeE36kTG
-        a9DXFgLPO0/kv4DEmxf/aPiNRg==
-X-Google-Smtp-Source: APiQypJHsCP/nIMdk6EEkgGCx//CIdFuDrJFlr8SwGlgNFmTEZ1ajUaL/dx2un6IoYGeHw+Oh53Muw==
-X-Received: by 2002:a1c:2b46:: with SMTP id r67mr33766791wmr.160.1589210022758;
-        Mon, 11 May 2020 08:13:42 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t7sm15462181wrq.39.2020.05.11.08.13.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:13:42 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Saravana Kannan <saravanak@google.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/2] slimbus: core: Fix mismatch in of_node_get/put
-Date:   Mon, 11 May 2020 16:13:34 +0100
-Message-Id: <20200511151334.362-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200511151334.362-1-srinivas.kandagatla@linaro.org>
-References: <20200511151334.362-1-srinivas.kandagatla@linaro.org>
+        Mon, 11 May 2020 11:14:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:36611 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729955AbgEKPOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 11:14:01 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id B6F0368BFE; Mon, 11 May 2020 17:13:56 +0200 (CEST)
+Date:   Mon, 11 May 2020 17:13:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Michal Simek <monstr@monstr.eu>,
+        Jessica Yu <jeyu@kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: sort out the flush_icache_range mess
+Message-ID: <20200511151356.GB28634@lst.de>
+References: <20200510075510.987823-1-hch@lst.de> <CAMuHMdXazsBw0mjJd0uFHQud7qbb5-Uw-PTDB3+-M=huRWOfgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXazsBw0mjJd0uFHQud7qbb5-Uw-PTDB3+-M=huRWOfgQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+On Mon, May 11, 2020 at 09:46:17AM +0200, Geert Uytterhoeven wrote:
+> Hi Christoph,
+> 
+> On Sun, May 10, 2020 at 9:55 AM Christoph Hellwig <hch@lst.de> wrote:
+> > none of which really are used by a typical MMU enabled kernel, as a.out can
+> > only be build for alpha and m68k to start with.
+> 
+> Quoting myself:
+> "I think it's safe to assume no one still runs a.out binaries on m68k."
+> http://lore.kernel.org/r/CAMuHMdW+m0Q+j3rsQdMXnrEPm+XB5Y2AQrxW5sD1mZAKgmEqoA@mail.gmail.com
 
-Adding missing corresponding of_node_put
+Do you want to drop the:
 
-Fixes: 7588a511bdb4 ("slimbus: core: add support to device tree helper")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-[Srini: added fixes tag, removed NULL check and updated log]
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/slimbus/core.c | 1 +
- 1 file changed, 1 insertion(+)
+    select HAVE_AOUT if MMU
 
-diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
-index 1f3beee74fdf..ae1e248a8fb8 100644
---- a/drivers/slimbus/core.c
-+++ b/drivers/slimbus/core.c
-@@ -282,6 +282,7 @@ EXPORT_SYMBOL_GPL(slim_register_controller);
- /* slim_remove_device: Remove the effect of slim_add_device() */
- static void slim_remove_device(struct slim_device *sbdev)
- {
-+	of_node_put(sbdev->dev.of_node);
- 	device_unregister(&sbdev->dev);
- }
- 
--- 
-2.21.0
+for m68k then?
 
+Note that we'll still need flush_icache_user_range for m68k with mmu,
+as it also allows binfmt_flat for mmu configs.
