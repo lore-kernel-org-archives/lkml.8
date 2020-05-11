@@ -2,132 +2,156 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1526DC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2540C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E982082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589191637;
-	bh=PeMJyUQHWiz33XZwe2UJaxkzwdSBOLPltK412dvqs6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qqreaBCqD+g25qQfcXilcYCKikxS8DmGXHOJlE+kflcO2fOAiIsZtlATEoD1V1eum
-	 zNIWcBZeaIzqFBkJjPj3AT6IJxGxeg+bnSPgIm0Fht3sPkSNqXYrjuNVKUqUI5V46O
-	 yLvQDYOvCF6on36K4w1XXmj6Lusbdre3RWNm9MmA=
+	by mail.kernel.org (Postfix) with ESMTP id 7D58720720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="uYZaErh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgEKKHR (ORCPT
+        id S1729207AbgEKKI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:07:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53179 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgEKKHQ (ORCPT
+        Mon, 11 May 2020 06:08:26 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:42387 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725983AbgEKKI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:07:16 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m24so7798556wml.2;
-        Mon, 11 May 2020 03:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oS9WtyDRHWlRdyoRSU0/FnBNR13KjsZKG7jcHWkqIkU=;
-        b=kzBH7J9I+upt8FssoC3ZSQM4NFOEi8mu3424YSoV33W2GGCCFW2Mix17HYF31VWdR3
-         hU5xHaM5+rlHOt5mY/OW52RkbsjOC5zsDq0NoYxko4YxQvYtH3ckS0jZweKX1C1zCwoJ
-         nXiZqKmqiEM5DiN+pbRDD/IUWInMRQLqiKXbczHzGMR9YCGoqlC0o5F88vRNVjhRUhyr
-         rhZHfjP1jokvrin8AZ+/ldWX/CwXLvCgz5NMyPqPbVCgSQxQNXNLBmc7CTg+hRyTMeV2
-         z2x6mT0JOdBHHDisFJlsZCbZSKlyIYFqWVTHI30f3aSfrxKicWOjvytpV0GtjxMnTkwo
-         xGDg==
-X-Gm-Message-State: AGi0Pua42W94lg4cIhlaUxaY460Lfesf5ndF8hRFEVOmt+e4WERxISA5
-        z4+KB0+qyA+zRd3o4S0rjDA=
-X-Google-Smtp-Source: APiQypJkwSIKemO65K6ZcN6yWG6sAWj3mdwEhFrdCFM8763O2S3TjPOdJ0Xitr7mhqHPujXKMLw3dg==
-X-Received: by 2002:a7b:c0cb:: with SMTP id s11mr33139486wmh.180.1589191633454;
-        Mon, 11 May 2020 03:07:13 -0700 (PDT)
-Received: from localhost (ip-37-188-228-19.eurotel.cz. [37.188.228.19])
-        by smtp.gmail.com with ESMTPSA id m18sm10287104wru.78.2020.05.11.03.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 03:07:12 -0700 (PDT)
-Date:   Mon, 11 May 2020 12:07:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memcg: effective memory.high reclaim for remote charging
-Message-ID: <20200511100711.GD29153@dhcp22.suse.cz>
-References: <20200507163301.229070-1-shakeelb@google.com>
+        Mon, 11 May 2020 06:08:26 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id Y5MBjA4BPhEkrY5MCjFzrG; Mon, 11 May 2020 12:08:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589191703; bh=TouBDOQ1cLBvDP/VkvIDXNmXljBFUOeKcWA2hkXwZL4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=uYZaErh93zi8Si+lFZewQ4Xg7X+BCIe0tZZ7do2fh8C0WAwtJJ3/DO/do1bYwaGTl
+         TaePjYTICt5/AUbCcezqzGgYpJpQuQBWpXlHaoaKawXopD3ctDDLcx7amjlIV2AxHO
+         bFVxXJN7W2ZzNR1EDn9jD8PW3UyRZDT9n9kFkpsKb5bQmAcDIfZbkykGA5tpQ6hFgN
+         M6JbTrqTpCjvcytDelSTB3AMfZw9fAOebGKJJ+oIVoSeJV8sj6RQ3VMtjlfEM6rGtk
+         1I+zUmwppCR9XiQpEZNpikhJsN+ffB/YqFDEY6qv6MNVSJ18kokuL09cKFzbeuwOzV
+         EgIeQpuRc4EOw==
+Subject: Re: gspca webcam: need to plug it 5 times before it works
+To:     Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, samr7@cs.washington.edu,
+        gerard@gkall.hobby.nl
+Cc:     linux@rainbow-software.org, kilgota@auburn.edu, moinejf@free.fr
+References: <20200404184732.GA17534@duo.ucw.cz>
+ <20200404191530.GA19753@duo.ucw.cz> <20200404191846.GA20044@duo.ucw.cz>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1e034f42-6997-d778-dce2-e5d641d91d0e@xs4all.nl>
+Date:   Mon, 11 May 2020 12:08:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507163301.229070-1-shakeelb@google.com>
+In-Reply-To: <20200404191846.GA20044@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKAUB970jI9ej9JDOMqm7PEEICWjgG/kh5MAchhg/dGUqa6aY5MS+Z18/6Bq+QLIRAk7DahiTY1+1HIU34VHLSdAc19TnxgONJIhy/bO8YIJ74Qilqm/
+ Tpd5r2x+F/05pyfeHXnBBkpk3RrlwxgINkPifdv/DrHLDvprOElBXlIJ11D17eFH1+LBaKDzhpyghW3tY/AvzLKDfpf5B1g70tIs68GJGFYc6DdOXVCD+VJX
+ w298z3z1OA1xz3PAwcCvHtFJTeSd9vM6yyIyTHMfwM+j44sUyrbNon3w3n0DdC/R6c2OE1X+s4AfQYgztKH3dsiTQXES3k9I1+R0Rg8uvnnJOIFDxztzvwKW
+ U/a/8h4JXcQUHWmZiia3xxUEIcYSBWX5DSKogCkZ6j0kOjQKyihFhZ0el4VAxTa9Ko5WkLW5FEMHQaSlOhEWJPe9g7jBSTe00i/1SMI0Xt3vMfsfOMUG354m
+ 93gmy3wOIr2s5ayzhbLulT6CGsh6R/ROC9KjLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 07-05-20 09:33:01, Shakeel Butt wrote:
-> Currently the reclaim of excessive usage over memory.high is scheduled
-> to run on returning to the userland. The main reason behind this
-> approach was simplicity i.e. always reclaim with GFP_KERNEL context.
-> However the underlying assumptions behind this approach are: the current
-> task shares the memcg hierarchy with the given memcg and the memcg of
-> the current task most probably will not change on return to userland.
+Hi Pavel,
+
+I tested with my sq930x (Creative WebCam Notebook Ultra) and I couldn't
+reproduce this. Changing gain/exposure while streaming worked fine too.
+
+It could be flaky usb hardware on your side, it's hard to tell.
+
+Regards,
+
+	Hans
+
+On 04/04/2020 21:18, Pavel Machek wrote:
+> Hi!
 > 
-> With the remote charging, the first assumption breaks and it allows the
-> usage to grow way beyond the memory.high as the reclaim and the
-> throttling becomes ineffective.
+>>> ..but if I'm patient enough, it eventually starts working... somehow.
+>>>
+>>> Incoming data seems to go in reliably. Outgoing commands (such as
+>>> change gain) don't seem to be unreliable.
+>>>
+>>> Any idea how to debug / what could be wrong?
+>>
+>> And I can force it to probe like this: which... makes it work, but
+>> does not fix the outgoing commands.
+>>
+>> Any ideas?
 > 
-> This patch forces the synchronous reclaim and potentially throttling for
-> the callers with context that allows blocking. For unblockable callers
-> or whose synch high reclaim is still not successful, a high reclaim is
-> scheduled either to return-to-userland if current task shares the
-> hierarchy with the given memcg or to system work queue.
+> (Adding people from module_authors to the list.)
 > 
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-I would just make the early break a bit more clear.
-
-[...]
-> @@ -2600,8 +2596,23 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->  				schedule_work(&memcg->high_work);
->  				break;
->  			}
-> -			current->memcg_nr_pages_over_high += batch;
-> -			set_notify_resume(current);
-> +
-> +			if (gfpflags_allow_blocking(gfp_mask))
-> +				reclaim_over_high(memcg, gfp_mask, batch);
-> +
-
-			/*
-			 * reclaim_over_high reclaims parents up the
-			 * hierarchy so we can break out early here.
-			 */
-> +			if (page_counter_read(&memcg->memory) <=
-> +			    READ_ONCE(memcg->high))
-> +				break;
-> +			/*
-> +			 * The above reclaim might not be able to do much. Punt
-> +			 * the high reclaim to return to userland if the current
-> +			 * task shares the hierarchy.
-> +			 */
-> +			if (current->mm && mm_match_cgroup(current->mm, memcg)) {
-> +				current->memcg_nr_pages_over_high += batch;
-> +				set_notify_resume(current);
-> +			} else
-> +				schedule_work(&memcg->high_work);
->  			break;
->  		}
->  	} while ((memcg = parent_mem_cgroup(memcg)));
-> -- 
-> 2.26.2.526.g744177e7f7-goog
+>  								Pavel
+>  
+>> diff --git a/drivers/media/usb/gspca/sq930x.c b/drivers/media/usb/gspca/sq930x.c
+>> index c3610247a90e..c9756c0a78df 100644
+>> --- a/drivers/media/usb/gspca/sq930x.c
+>> +++ b/drivers/media/usb/gspca/sq930x.c
+>> @@ -7,6 +7,7 @@
+>>   * Copyright (C) 2007 Sam Revitch <samr7@cs.washington.edu>
+>>   */
+>>  
+>> +#define DEBUG
+>>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>  
+>>  #define MODULE_NAME "sq930x"
+>> @@ -446,7 +447,7 @@ static void reg_w(struct gspca_dev *gspca_dev, u16 value, u16 index)
+>>  			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+>>  			value, index, NULL, 0,
+>>  			500);
+>> -	msleep(30);
+>> +	msleep(90);
+>>  	if (ret < 0) {
+>>  		pr_err("reg_w %04x %04x failed %d\n", value, index, ret);
+>>  		gspca_dev->usb_err = ret;
+>> @@ -635,19 +636,25 @@ static void cmos_probe(struct gspca_dev *gspca_dev)
+>>  		SENSOR_MT9V111,
+>>  	};
+>>  
+>> +	printk("CMOS Probing...\n");
+>>  	for (i = 0; i < ARRAY_SIZE(probe_order); i++) {
+>> +	  printk("Probing type %d...\n", i);
+>> +	  
+>>  		sensor = &sensor_tb[probe_order[i]];
+>>  		ucbus_write(&sd->gspca_dev, sensor->cmd, sensor->cmd_len, 8);
+>>  		gpio_init(sd, sensor->gpio);
+>> -		msleep(100);
+>> +		msleep(200);
+>>  		reg_r(gspca_dev, (sensor->i2c_addr << 8) | 0x001c, 1);
+>> -		msleep(100);
+>> -		if (gspca_dev->usb_buf[0] != 0)
+>> +		msleep(200);
+>> +		if (gspca_dev->usb_buf[0] != 0) {
+>> +		  printk("#### LUCKY! Have type %d\n", i);
+>>  			break;
+>> +		}
+>>  	}
+>>  	if (i >= ARRAY_SIZE(probe_order)) {
+>> -		pr_err("Unknown sensor\n");
+>> -		gspca_dev->usb_err = -EINVAL;
+>> +		printk("Unknown sensor ... hmm?\n");
+>> +		sd->sensor = probe_order[i-1];
+>> +		//gspca_dev->usb_err = -EINVAL;
+>>  		return;
+>>  	}
+>>  	sd->sensor = probe_order[i];
+>>
+>>
+>> -- 
+>> (english) http://www.livejournal.com/~pavelmachek
+>> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
+> 
 > 
 
--- 
-Michal Hocko
-SUSE Labs
