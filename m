@@ -2,216 +2,355 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C0C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA5DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF1A207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33643206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fqbUPWt+"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="P+oc80lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbgEKMfh (ORCPT
+        id S1730071AbgEKMfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:35:37 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53291 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730042AbgEKMfg (ORCPT
+        Mon, 11 May 2020 08:35:40 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:46771 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730040AbgEKMfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:35:36 -0400
-X-UUID: a08f585149444c5dafa1d56144653cc0-20200511
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Date:Content-Type:References:In-Reply-To:CC:To:From:Subject:Message-ID; bh=yQncGQQZJ25A+h0/Kz+1oWQVoS9ywaMd94bmZgrpNzY=;
-        b=fqbUPWt+3xG3z7ggSfqpfD/pWXUQPj+LOCYv3GNjVjmVGeKkoWj08zZDjX4wU1xUDoO1e7Hs2wq11ykya6hB8fM9xNtJXMzJnyW4oSVbPDP/E3Cz0ZiLPOz6XnVwaaT7Wpz+YjKCY++IZIfOpSykmiFyNXEp5XkFzkMq2xjlqI0=;
-X-UUID: a08f585149444c5dafa1d56144653cc0-20200511
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 258015588; Mon, 11 May 2020 20:35:33 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 11 May 2020 20:35:30 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 11 May 2020 20:35:30 +0800
-Message-ID: <1589200361.22902.15.camel@mtkswgap22>
-Subject: Re: [PATCH v4 3/3] binder: add transaction latency tracer
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
-In-Reply-To: <20200507085544.GB1097552@kroah.com>
-References: <20200430085105.GF2496467@kroah.com>
-         <1588839055-26677-1-git-send-email-Frankie.Chang@mediatek.com>
-         <1588839055-26677-4-git-send-email-Frankie.Chang@mediatek.com>
-         <20200507085544.GB1097552@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Mon, 11 May 2020 20:32:41 +0800
+        Mon, 11 May 2020 08:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589200536; x=1620736536;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=GfwmAepOlGw0jc65vePXQyjyaX4cDEsLZQAUUm5+13E=;
+  b=P+oc80lf3Lx5F8lVKz/XUqkVnWGa6Hp/Rvyycp58yfDUYdiixCMBNqzr
+   HKkUL0HBqVIBoYnkjwzhSRMX1d5aSETU/0xFY/wzBjpCs4Xj5atYQ8ydy
+   uv3h80f9IVFUJ8Y8Vf/egaxRPZNMTY2V4GT7lob3RlfnbjZDdCYEMvfow
+   0=;
+IronPort-SDR: h9+H7/56yIOfZ/NHSAmFHYIywlJl9LOrq0URnBSV4VfyRPHlCoJy0XsxkHWsqUKpAmUQGHzw+Z
+ 0o/BsRfKWKfw==
+X-IronPort-AV: E=Sophos;i="5.73,379,1583193600"; 
+   d="scan'208";a="29668255"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 11 May 2020 12:35:19 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id B3FC4A245D;
+        Mon, 11 May 2020 12:35:07 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:35:06 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:34:50 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 03/16] mm: Introduce Data Access MONitor (DAMON)
+Date:   Mon, 11 May 2020 14:32:49 +0200
+Message-ID: <20200511123302.12520-4-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
+References: <20200511123302.12520-1-sjpark@amazon.com>
 MIME-Version: 1.0
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.253]
+X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTA3IGF0IDEwOjU1ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
-dGU6DQo+IE9uIFRodSwgTWF5IDA3LCAyMDIwIGF0IDA0OjEwOjU1UE0gKzA4MDAsIEZyYW5raWUg
-Q2hhbmcgd3JvdGU6DQo+ID4gRnJvbTogIkZyYW5raWUuQ2hhbmciIDxGcmFua2llLkNoYW5nQG1l
-ZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBSZWNvcmQgc3RhcnQvZW5kIHRpbWVzdGFtcCBmb3IgYmlu
-ZGVyIHRyYW5zYWN0aW9uLg0KPiA+IFdoZW4gdHJhbnNhY3Rpb24gaXMgY29tcGxldGVkIG9yIHRy
-YW5zYWN0aW9uIGlzIGZyZWUsDQo+ID4gaXQgd291bGQgYmUgY2hlY2tlZCBpZiB0cmFuc2FjdGlv
-biBsYXRlbmN5IG92ZXIgdGhyZXNob2xkICgyIHNlYyksDQo+ID4gaWYgeWVzLCBwcmludGluZyBy
-ZWxhdGVkIGluZm9ybWF0aW9uIGZvciB0cmFjaW5nLg0KPiANCj4gU2hvdWxkbid0IHRoYXQgInBy
-aW50aW5nIiBnbyB0byB0aGUgdHJhY2UgYnVmZmVyIGFuZCBub3QgdG8gdGhlIGtlcm5lbA0KPiBp
-bmZvcm1hdGlvbiBsb2c/DQo+IA0KDQpUaW1lIGxpbWl0YXRpb24gb2YgcmVjb3JkaW5nIGlzIHRo
-ZSByZWFzb24gd2h5IHdlIGRvbid0IGp1c3QgdXNlIHRyYWNlDQpoZXJlLg0KDQpJbiBzb21lIGxv
-bmcgdGltZSBzdGFiaWxpdHkgdGVzdCwgc3VjaCBhcyBNVEJGLA0KdGhlIGV4Y2VwdGlvbiBpcyBj
-YXVzZWQgYnkgYSBzZXJpZXMgb2YgdHJhbnNhY3Rpb25zIGludGVyYWN0aW9uLg0KU29tZSBhYm5v
-cm1hbCB0cmFuc2FjdGlvbnMgbWF5IGJlIHBlbmRpbmcgZm9yIGEgbG9uZyB0aW1lIGFnbywgdGhl
-eSANCmNvdWxkIG5vdCBiZSByZWNvcmRlZCBkdWUgdG8gYnVmZmVyIGxpbWl0ZWQuDQoNCj4gPiAN
-Cj4gPiAvKiBJbXBsZW1lbnQgZGV0YWlscyAqLw0KPiA+IC0gQWRkIGxhdGVuY3kgdHJhY2VyIG1v
-ZHVsZSB0byBtb25pdG9yIHNsb3cgdHJhbnNhY3Rpb24uDQo+ID4gICBUaGUgdHJhY2VfYmluZGVy
-X2ZyZWVfdHJhbnNhY3Rpb24gd291bGQgbm90IGJlIGVuYWJsZWQNCj4gPiAgIGJ5IGRlZmF1bHQu
-IE1vbml0b3Jpbmcgd2hpY2ggdHJhbnNhY3Rpb24gaXMgdG9vIHNsb3cgdG8NCj4gPiAgIGNhdXNl
-IHNvbWUgb2YgZXhjZXB0aW9ucyBpcyBpbXBvcnRhbnQuIFNvIHdlIGhvb2sgdGhlDQo+ID4gICB0
-cmFjZXBvaW50IHRvIGNhbGwgdGhlIG1vbml0b3IgZnVuY3Rpb24uDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRnJhbmtpZS5DaGFuZyA8RnJhbmtpZS5DaGFuZ0BtZWRpYXRlay5jb20+DQo+ID4g
-LS0tDQo+ID4gIGRyaXZlcnMvYW5kcm9pZC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgIDgg
-KysrDQo+ID4gIGRyaXZlcnMvYW5kcm9pZC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgIDEg
-Kw0KPiA+ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMgICAgICAgICAgICAgICAgfCAgICAyICsN
-Cj4gPiAgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oICAgICAgIHwgICAxMyArKysr
-DQo+ID4gIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5jeV90cmFjZXIuYyB8ICAxMDUgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBkcml2ZXJzL2FuZHJvaWQvYmluZGVy
-X3RyYWNlLmggICAgICAgICAgfCAgIDI2ICsrKysrKystDQo+ID4gIDYgZmlsZXMgY2hhbmdlZCwg
-MTUyIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2FuZHJvaWQvYmluZGVyX2xhdGVuY3lfdHJhY2VyLmMNCj4gPiANCj4gPiAgQ2hh
-bmdlIGZyb20gdjQ6DQo+ID4gICAgc3BsaXQgdXAgaW50byBwYXRjaCBzZXJpZXMuDQo+ID4gDQo+
-ID4gIENoYW5nZSBmcm9tIHYzOg0KPiA+ICAgIHVzZSB0cmFjZXBvaW50cyBmb3IgYmluZGVyX3Vw
-ZGF0ZV9pbmZvIGFuZCBwcmludF9iaW5kZXJfdHJhbnNhY3Rpb25fZXh0LA0KPiA+ICAgIGluc3Rl
-YWQgb2YgY3VzdG9tIHJlZ2lzdHJhdGlvbiBmdW5jdGlvbnMuDQo+ID4gDQo+ID4gIENoYW5nZSBm
-cm9tIHYyOg0KPiA+ICAgIGNyZWF0ZSB0cmFuc2FjdGlvbiBsYXRlbmN5IG1vZHVsZSB0byBtb25p
-dG9yIHNsb3cgdHJhbnNhY3Rpb24uDQo+ID4gDQo+ID4gIENoYW5nZSBmcm9tIHYxOg0KPiA+ICAg
-IGZpcnN0IHBhdGNoc2V0Lg0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FuZHJvaWQv
-S2NvbmZpZyBiL2RyaXZlcnMvYW5kcm9pZC9LY29uZmlnDQo+ID4gaW5kZXggNmZkZjJhYi4uN2Jh
-ODBlYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2FuZHJvaWQvS2NvbmZpZw0KPiA+ICsrKyBi
-L2RyaXZlcnMvYW5kcm9pZC9LY29uZmlnDQo+ID4gQEAgLTU0LDYgKzU0LDE0IEBAIGNvbmZpZyBB
-TkRST0lEX0JJTkRFUl9JUENfU0VMRlRFU1QNCj4gPiAgCSAgZXhoYXVzdGl2ZWx5IHdpdGggY29t
-YmluYXRpb25zIG9mIHZhcmlvdXMgYnVmZmVyIHNpemVzIGFuZA0KPiA+ICAJICBhbGlnbm1lbnRz
-Lg0KPiA+ICANCj4gPiArY29uZmlnIEJJTkRFUl9VU0VSX1RSQUNLSU5HDQo+ID4gKwlib29sICJB
-bmRyb2lkIEJpbmRlciB0cmFuc2FjdGlvbiB0cmFja2luZyINCj4gPiArCWhlbHANCj4gPiArCSAg
-VXNlZCBmb3IgdHJhY2sgYWJub3JtYWwgYmluZGVyIHRyYW5zYWN0aW9uIHdoaWNoIGlzIG92ZXIg
-MiBzZWNvbmRzLA0KPiA+ICsJICB3aGVuIHRoZSB0cmFuc2FjdGlvbiBpcyBkb25lIG9yIGJlIGZy
-ZWUsIHRoaXMgdHJhbnNhY3Rpb24gd291bGQgYmUNCj4gPiArCSAgY2hlY2tlZCB3aGV0aGVyIGl0
-IGV4ZWN1dGVkIG92ZXJ0aW1lLg0KPiA+ICsJICBJZiB5ZXMsIHByaW50aW5nIG91dCB0aGUgZGV0
-YWlsIGluZm8gYWJvdXQgaXQuDQo+ID4gKw0KPiA+ICBlbmRpZiAjIGlmIEFORFJPSUQNCj4gPiAg
-DQo+ID4gIGVuZG1lbnUNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL01ha2VmaWxl
-IGIvZHJpdmVycy9hbmRyb2lkL01ha2VmaWxlDQo+ID4gaW5kZXggYzlkM2QwYzkuLjU1MmU4YWMg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9hbmRyb2lkL01ha2VmaWxlDQo+ID4gKysrIGIvZHJp
-dmVycy9hbmRyb2lkL01ha2VmaWxlDQo+ID4gQEAgLTQsMyArNCw0IEBAIGNjZmxhZ3MteSArPSAt
-SSQoc3JjKQkJCSMgbmVlZGVkIGZvciB0cmFjZSBldmVudHMNCj4gPiAgb2JqLSQoQ09ORklHX0FO
-RFJPSURfQklOREVSRlMpCQkrPSBiaW5kZXJmcy5vDQo+ID4gIG9iai0kKENPTkZJR19BTkRST0lE
-X0JJTkRFUl9JUEMpCSs9IGJpbmRlci5vIGJpbmRlcl9hbGxvYy5vDQo+ID4gIG9iai0kKENPTkZJ
-R19BTkRST0lEX0JJTkRFUl9JUENfU0VMRlRFU1QpICs9IGJpbmRlcl9hbGxvY19zZWxmdGVzdC5v
-DQo+ID4gK29iai0kKENPTkZJR19CSU5ERVJfVVNFUl9UUkFDS0lORykJKz0gYmluZGVyX2xhdGVu
-Y3lfdHJhY2VyLm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jIGIv
-ZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jDQo+ID4gaW5kZXggNGMzZGQ5OC4uYjg5ZDc1YSAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMNCj4gPiArKysgYi9kcml2ZXJz
-L2FuZHJvaWQvYmluZGVyLmMNCj4gPiBAQCAtMjY1Nyw2ICsyNjU3LDcgQEAgc3RhdGljIHZvaWQg
-YmluZGVyX3RyYW5zYWN0aW9uKHN0cnVjdCBiaW5kZXJfcHJvYyAqcHJvYywNCj4gPiAgCQlyZXR1
-cm5fZXJyb3JfbGluZSA9IF9fTElORV9fOw0KPiA+ICAJCWdvdG8gZXJyX2FsbG9jX3RfZmFpbGVk
-Ow0KPiA+ICAJfQ0KPiA+ICsJdHJhY2VfYmluZGVyX3VwZGF0ZV9pbmZvKHQsIGUpOw0KPiA+ICAJ
-SU5JVF9MSVNUX0hFQUQoJnQtPmZkX2ZpeHVwcyk7DQo+ID4gIAliaW5kZXJfc3RhdHNfY3JlYXRl
-ZChCSU5ERVJfU1RBVF9UUkFOU0FDVElPTik7DQo+ID4gIAlzcGluX2xvY2tfaW5pdCgmdC0+bG9j
-ayk7DQo+ID4gQEAgLTUxNDUsNiArNTE0Niw3IEBAIHN0YXRpYyB2b2lkIHByaW50X2JpbmRlcl90
-cmFuc2FjdGlvbl9pbG9ja2VkKHN0cnVjdCBzZXFfZmlsZSAqbSwNCj4gPiAgCQkgICB0LT50b190
-aHJlYWQgPyB0LT50b190aHJlYWQtPnBpZCA6IDAsDQo+ID4gIAkJICAgdC0+Y29kZSwgdC0+Zmxh
-Z3MsIHQtPnByaW9yaXR5LCB0LT5uZWVkX3JlcGx5KTsNCj4gPiAgCXNwaW5fdW5sb2NrKCZ0LT5s
-b2NrKTsNCj4gPiArCXRyYWNlX3ByaW50X2JpbmRlcl90cmFuc2FjdGlvbl9leHQobSwgdCk7DQo+
-ID4gIA0KPiA+ICAJaWYgKHByb2MgIT0gdG9fcHJvYykgew0KPiA+ICAJCS8qDQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50ZXJuYWwuaCBiL2RyaXZlcnMvYW5kcm9p
-ZC9iaW5kZXJfaW50ZXJuYWwuaA0KPiA+IGluZGV4IGVkNjFiM2UuLjI0ZDdiZWIgMTAwNjQ0DQo+
-ID4gLS0tIGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oDQo+ID4gKysrIGIvZHJp
-dmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oDQo+ID4gQEAgLTEyLDYgKzEyLDExIEBADQo+
-ID4gICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvdWlkZ2lk
-Lmg+DQo+ID4gIA0KPiA+ICsjaWZkZWYgQ09ORklHX0JJTkRFUl9VU0VSX1RSQUNLSU5HDQo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9ydGMuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3RpbWUuaD4NCj4g
-PiArI2VuZGlmDQo+ID4gKw0KPiA+ICBzdHJ1Y3QgYmluZGVyX2NvbnRleHQgew0KPiA+ICAJc3Ry
-dWN0IGJpbmRlcl9ub2RlICpiaW5kZXJfY29udGV4dF9tZ3Jfbm9kZTsNCj4gPiAgCXN0cnVjdCBt
-dXRleCBjb250ZXh0X21ncl9ub2RlX2xvY2s7DQo+ID4gQEAgLTEzMSw2ICsxMzYsMTAgQEAgc3Ry
-dWN0IGJpbmRlcl90cmFuc2FjdGlvbl9sb2dfZW50cnkgew0KPiA+ICAJdWludDMyX3QgcmV0dXJu
-X2Vycm9yOw0KPiA+ICAJdWludDMyX3QgcmV0dXJuX2Vycm9yX3BhcmFtOw0KPiA+ICAJY2hhciBj
-b250ZXh0X25hbWVbQklOREVSRlNfTUFYX05BTUUgKyAxXTsNCj4gPiArI2lmZGVmIENPTkZJR19C
-SU5ERVJfVVNFUl9UUkFDS0lORw0KPiA+ICsJc3RydWN0IHRpbWVzcGVjIHRpbWVzdGFtcDsNCj4g
-PiArCXN0cnVjdCB0aW1ldmFsIHR2Ow0KPiA+ICsjZW5kaWYNCj4gPiAgfTsNCj4gPiAgDQo+ID4g
-IHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb25fbG9nIHsNCj4gPiBAQCAtNTIwLDYgKzUyOSwxMCBA
-QCBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9uIHsNCj4gPiAgCSAqIGR1cmluZyB0aHJlYWQgdGVh
-cmRvd24NCj4gPiAgCSAqLw0KPiA+ICAJc3BpbmxvY2tfdCBsb2NrOw0KPiA+ICsjaWZkZWYgQ09O
-RklHX0JJTkRFUl9VU0VSX1RSQUNLSU5HDQo+ID4gKwlzdHJ1Y3QgdGltZXNwZWMgdGltZXN0YW1w
-Ow0KPiA+ICsJc3RydWN0IHRpbWV2YWwgdHY7DQo+ID4gKyNlbmRpZg0KPiA+ICB9Ow0KPiA+ICAN
-Cj4gPiAgLyoqDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5j
-eV90cmFjZXIuYyBiL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5jeV90cmFjZXIuYw0KPiA+
-IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNDVjMTRmYg0KPiA+IC0t
-LSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVyX2xhdGVuY3lfdHJh
-Y2VyLmMNCj4gPiBAQCAtMCwwICsxLDEwNSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTkgTWVkaWFU
-ZWsgSW5jLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4N
-Cj4gPiArI2luY2x1ZGUgPHVhcGkvbGludXgvYW5kcm9pZC9iaW5kZXIuaD4NCj4gPiArI2luY2x1
-ZGUgImJpbmRlcl9hbGxvYy5oIg0KPiA+ICsjaW5jbHVkZSAiYmluZGVyX2ludGVybmFsLmgiDQo+
-ID4gKyNpbmNsdWRlICJiaW5kZXJfdHJhY2UuaCINCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIHBy
-b2JlX2JpbmRlcl9mcmVlX3RyYW5zYWN0aW9uIC0gT3V0cHV0IGluZm8gb2YgYSBkZWxheSB0cmFu
-c2FjdGlvbg0KPiA+ICsgKiBAdDogICAgICAgICAgcG9pbnRlciB0byB0aGUgb3Zlci10aW1lIHRy
-YW5zYWN0aW9uDQo+ID4gKyAqLw0KPiA+ICt2b2lkIHByb2JlX2JpbmRlcl9mcmVlX3RyYW5zYWN0
-aW9uKHZvaWQgKmlnbm9yZSwgc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiAqdCkNCj4gPiArew0K
-PiA+ICsJc3RydWN0IHJ0Y190aW1lIHRtOw0KPiA+ICsJc3RydWN0IHRpbWVzcGVjICpzdGFydGlt
-ZTsNCj4gPiArCXN0cnVjdCB0aW1lc3BlYyBjdXIsIHN1Yl90Ow0KPiA+ICsNCj4gPiArCWt0aW1l
-X2dldF90cygmY3VyKTsNCj4gPiArCXN0YXJ0aW1lID0gJnQtPnRpbWVzdGFtcDsNCj4gPiArCXN1
-Yl90ID0gdGltZXNwZWNfc3ViKGN1ciwgKnN0YXJ0aW1lKTsNCj4gPiArDQo+ID4gKwkvKiBpZiB0
-cmFuc2FjdGlvbiB0aW1lIGlzIG92ZXIgdGhhbiAyIHNlYywNCj4gPiArCSAqIHNob3cgdGltZW91
-dCB3YXJuaW5nIGxvZy4NCj4gPiArCSAqLw0KPiA+ICsJaWYgKHN1Yl90LnR2X3NlYyA8IDIpDQo+
-ID4gKwkJcmV0dXJuOw0KPiANCj4gV2h5IGlzIDIgc2Vjb25kcyBzb21laG93ICJtYWdpYyIgaGVy
-ZT8NCj4gDQoNClNvbWUgb2YgbW9kdWxlcyB3b3VsZCB0cmlnZ2VyIHRpbWVvdXQgTkUgaWYgdGhl
-aXIgYmluZGVyIHRyYW5zYWN0aW9uDQpkb24ndCBmaW5pc2ggaW4gdGltZSwgc3VjaCBhcyBhdWRp
-byB0aW1lb3V0ICg1IHNlYyksIGV2ZW4gQlQgY29tbWFuZA0KdGltZW91dCAoMiBzZWMpLCBldGMu
-DQoNClRoZXJlZm9yZSwgd2Ugd2FudCB0byByZWNvcmQgcmVsYXRlZCB0cmFuc2FjdGlvbnMgd2hp
-Y2ggZXhjZWVkIDIgc2VjLiBJdA0KY291bGQgYmUgaGVscGZ1bCB0byBkZWJ1Zy4NCg0KPiANCj4g
-DQo+ID4gKw0KPiA+ICsJcnRjX3RpbWVfdG9fdG0odC0+dHYudHZfc2VjLCAmdG0pOw0KPiA+ICsN
-Cj4gPiArCXNwaW5fbG9jaygmdC0+bG9jayk7DQo+ID4gKwlwcl9pbmZvX3JhdGVsaW1pdGVkKCIl
-ZDogZnJvbSAlZDolZCB0byAlZDolZCIsDQo+ID4gKwkJCXQtPmRlYnVnX2lkLA0KPiA+ICsJCQl0
-LT5mcm9tID8gdC0+ZnJvbS0+cHJvYy0+cGlkIDogMCwNCj4gPiArCQkJdC0+ZnJvbSA/IHQtPmZy
-b20tPnBpZCA6IDAsDQo+ID4gKwkJCXQtPnRvX3Byb2MgPyB0LT50b19wcm9jLT5waWQgOiAwLA0K
-PiA+ICsJCQl0LT50b190aHJlYWQgPyB0LT50b190aHJlYWQtPnBpZCA6IDApOw0KPiA+ICsJc3Bp
-bl91bmxvY2soJnQtPmxvY2spOw0KPiANCj4gV2h5IGlzIHRoZSBsb2NrIG9rIHRvIGdpdmUgdXAg
-aGVyZSBhbmQgbm90IGFmdGVyIHRoZSBuZXh0IGNhbGw/DQo+IA0KDQpXZSB3b3VsZCBnaXZlIHVw
-IGxvY2sgbm90IGhlcmUgYnV0IGFmdGVyIHRoZSBuZXh0IGNhbGwsIHRoYW5rcyBmb3INCnJlbWlu
-ZGluZy4NCg0KPiA+ICsNCj4gPiArCXByX2luZm9fcmF0ZWxpbWl0ZWQoIiB0b3RhbCAldS4lMDNs
-ZCBzIGNvZGUgJXUgc3RhcnQgJWx1LiUwM2xkIGFuZHJvaWQgJWQtJTAyZC0lMDJkICUwMmQ6JTAy
-ZDolMDJkLiUwM2x1XG4iLA0KPiA+ICsJCQkodW5zaWduZWQgaW50KXN1Yl90LnR2X3NlYywNCj4g
-PiArCQkJKHN1Yl90LnR2X25zZWMgLyBOU0VDX1BFUl9NU0VDKSwNCj4gPiArCQkJdC0+Y29kZSwN
-Cj4gPiArCQkJKHVuc2lnbmVkIGxvbmcpc3RhcnRpbWUtPnR2X3NlYywNCj4gPiArCQkJKHN0YXJ0
-aW1lLT50dl9uc2VjIC8gTlNFQ19QRVJfTVNFQyksDQo+ID4gKwkJCSh0bS50bV95ZWFyICsgMTkw
-MCksICh0bS50bV9tb24gKyAxKSwgdG0udG1fbWRheSwNCj4gPiArCQkJdG0udG1faG91ciwgdG0u
-dG1fbWluLCB0bS50bV9zZWMsDQo+ID4gKwkJCSh1bnNpZ25lZCBsb25nKSh0LT50di50dl91c2Vj
-IC8gVVNFQ19QRVJfTVNFQykpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBwcm9i
-ZV9iaW5kZXJfdXBkYXRlX2luZm8odm9pZCAqaWdub3JlLCBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0
-aW9uICp0LA0KPiA+ICsJCQkgICBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9uX2xvZ19lbnRyeSAq
-ZSkNCj4gPiArew0KPiA+ICsJa3RpbWVfZ2V0X3RzKCZlLT50aW1lc3RhbXApOw0KPiA+ICsJZG9f
-Z2V0dGltZW9mZGF5KCZlLT50dik7DQo+ID4gKwllLT50di50dl9zZWMgLT0gKHN5c190ei50el9t
-aW51dGVzd2VzdCAqIDYwKTsNCj4gPiArCW1lbWNweSgmdC0+dGltZXN0YW1wLCAmZS0+dGltZXN0
-YW1wLCBzaXplb2Yoc3RydWN0IHRpbWVzcGVjKSk7DQo+ID4gKwltZW1jcHkoJnQtPnR2LCAmZS0+
-dHYsIHNpemVvZihzdHJ1Y3QgdGltZXZhbCkpOw0KPiANCj4gTm8gbG9ja2luZyBuZWVkZWQ/DQo+
-IA0KDQpXZSB3b3VsZCBhZGQgbG9jayBwcm90ZWN0aW9uIGhlcmUsIHRoYW5rcyBhIGxvdC4NCg0K
-DQo=
+From: SeongJae Park <sjpark@amazon.de>
+
+This commit introduces a kernel module named DAMON.  Note that this
+commit is implementing only the stub for the module load/unload, basic
+data structures, and simple manipulation functions of the structures to
+keep the size of commit small.  The core mechanisms of DAMON will be
+implemented one by one by following commits.
+
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ include/linux/damon.h |  36 +++++++++
+ mm/Kconfig            |  12 +++
+ mm/Makefile           |   1 +
+ mm/damon.c            | 173 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 222 insertions(+)
+ create mode 100644 include/linux/damon.h
+ create mode 100644 mm/damon.c
+
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+new file mode 100644
+index 000000000000..19f411d36c0d
+--- /dev/null
++++ b/include/linux/damon.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * DAMON api
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#ifndef _DAMON_H_
++#define _DAMON_H_
++
++#include <linux/random.h>
++#include <linux/types.h>
++
++/* Represents a monitoring target region of [vm_start, vm_end) */
++struct damon_region {
++	unsigned long vm_start;
++	unsigned long vm_end;
++	unsigned long sampling_addr;
++	unsigned int nr_accesses;
++	struct list_head list;
++};
++
++/* Represents a monitoring target task */
++struct damon_task {
++	int pid;
++	struct list_head regions_list;
++	struct list_head list;
++};
++
++struct damon_ctx {
++	struct list_head tasks_list;	/* 'damon_task' objects */
++};
++
++#endif
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ab80933be65f..9ea49633a6df 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -739,4 +739,16 @@ config ARCH_HAS_HUGEPD
+ config MAPPING_DIRTY_HELPERS
+         bool
+ 
++config DAMON
++	tristate "Data Access Monitor"
++	depends on MMU
++	help
++	  Provides data access monitoring.
++
++	  DAMON is a kernel module that allows users to monitor the actual
++	  memory access pattern of specific user-space processes.  It aims to
++	  be 1) accurate enough to be useful for performance-centric domains,
++	  and 2) sufficiently light-weight so that it can be applied online.
++	  If unsure, say N.
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index 272e66039e70..5346314edee6 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -110,3 +110,4 @@ obj-$(CONFIG_HMM_MIRROR) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
+ obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
+ obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
++obj-$(CONFIG_DAMON) += damon.o
+diff --git a/mm/damon.c b/mm/damon.c
+new file mode 100644
+index 000000000000..e319c1e19f3d
+--- /dev/null
++++ b/mm/damon.c
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Data Access Monitor
++ *
++ * Copyright 2019-2020 Amazon.com, Inc. or its affiliates.
++ *
++ * Author: SeongJae Park <sjpark@amazon.de>
++ */
++
++#define pr_fmt(fmt) "damon: " fmt
++
++#include <linux/damon.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++#define damon_get_task_struct(t) \
++	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
++
++#define damon_next_region(r) \
++	(container_of(r->list.next, struct damon_region, list))
++
++#define damon_prev_region(r) \
++	(container_of(r->list.prev, struct damon_region, list))
++
++#define damon_for_each_region(r, t) \
++	list_for_each_entry(r, &t->regions_list, list)
++
++#define damon_for_each_region_safe(r, next, t) \
++	list_for_each_entry_safe(r, next, &t->regions_list, list)
++
++#define damon_for_each_task(ctx, t) \
++	list_for_each_entry(t, &(ctx)->tasks_list, list)
++
++#define damon_for_each_task_safe(ctx, t, next) \
++	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
++
++/* Get a random number in [l, r) */
++#define damon_rand(l, r) (l + prandom_u32() % (r - l))
++
++/*
++ * Construct a damon_region struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_region *damon_new_region(struct damon_ctx *ctx,
++				unsigned long vm_start, unsigned long vm_end)
++{
++	struct damon_region *region;
++
++	region = kmalloc(sizeof(*region), GFP_KERNEL);
++	if (!region)
++		return NULL;
++
++	region->vm_start = vm_start;
++	region->vm_end = vm_end;
++	region->nr_accesses = 0;
++	INIT_LIST_HEAD(&region->list);
++
++	return region;
++}
++
++/*
++ * Add a region between two other regions
++ */
++static inline void damon_insert_region(struct damon_region *r,
++		struct damon_region *prev, struct damon_region *next)
++{
++	__list_add(&r->list, &prev->list, &next->list);
++}
++
++static void damon_add_region(struct damon_region *r, struct damon_task *t)
++{
++	list_add_tail(&r->list, &t->regions_list);
++}
++
++static void damon_del_region(struct damon_region *r)
++{
++	list_del(&r->list);
++}
++
++static void damon_free_region(struct damon_region *r)
++{
++	kfree(r);
++}
++
++static void damon_destroy_region(struct damon_region *r)
++{
++	damon_del_region(r);
++	damon_free_region(r);
++}
++
++/*
++ * Construct a damon_task struct
++ *
++ * Returns the pointer to the new struct if success, or NULL otherwise
++ */
++static struct damon_task *damon_new_task(int pid)
++{
++	struct damon_task *t;
++
++	t = kmalloc(sizeof(*t), GFP_KERNEL);
++	if (!t)
++		return NULL;
++
++	t->pid = pid;
++	INIT_LIST_HEAD(&t->regions_list);
++
++	return t;
++}
++
++static void damon_add_task(struct damon_ctx *ctx, struct damon_task *t)
++{
++	list_add_tail(&t->list, &ctx->tasks_list);
++}
++
++static void damon_del_task(struct damon_task *t)
++{
++	list_del(&t->list);
++}
++
++static void damon_free_task(struct damon_task *t)
++{
++	struct damon_region *r, *next;
++
++	damon_for_each_region_safe(r, next, t)
++		damon_free_region(r);
++	kfree(t);
++}
++
++static void damon_destroy_task(struct damon_task *t)
++{
++	damon_del_task(t);
++	damon_free_task(t);
++}
++
++static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
++{
++	struct damon_task *t;
++	unsigned int nr_tasks = 0;
++
++	damon_for_each_task(ctx, t)
++		nr_tasks++;
++
++	return nr_tasks;
++}
++
++static unsigned int nr_damon_regions(struct damon_task *t)
++{
++	struct damon_region *r;
++	unsigned int nr_regions = 0;
++
++	damon_for_each_region(r, t)
++		nr_regions++;
++
++	return nr_regions;
++}
++
++static int __init damon_init(void)
++{
++	return 0;
++}
++
++static void __exit damon_exit(void)
++{
++}
++
++module_init(damon_init);
++module_exit(damon_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
++MODULE_DESCRIPTION("DAMON: Data Access MONitor");
+-- 
+2.17.1
 
