@@ -2,114 +2,104 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D77C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B2AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D84E2206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1CF206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgEKPZ7 (ORCPT
+        id S1730045AbgEKP0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:25:59 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36978 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgEKPZ6 (ORCPT
+        Mon, 11 May 2020 11:26:37 -0400
+Received: from www62.your-server.de ([213.133.104.62]:55710 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgEKP0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:25:58 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so15415948oij.4;
-        Mon, 11 May 2020 08:25:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TzBIrOjeonGRZOL/Fq7k9DQ5ZvmwekoG5+JYmyzDCXE=;
-        b=jOR/6PLEpfED1ickDxn5i2ZrU3OM+CrqcXnBUtHMbnWSnkl6n6KaDix3nyu9JJO0F/
-         FfdrvHpPXZAM5WZZc/sC/eyV8V4lrdJXmvGHqXpSiPzLKN+VSuUrNfuGxKMJpQjreoMM
-         AzAy+PI8DEoVz2icsbyhP0YFl8siNsITfrPQSjoQPy18A6PbAGobwRG4E0fOWCXGSsVb
-         MQvaNTX4vk7/l4tO0ivuyg90lMBGLh8YWYPrR9IBMGqXsxgJCe6WDO8GvaJqUKgcXcoS
-         s8BqoOVWbymQKb2ovrdKUKEQDnKrfXvVtoM7eMhJb7rLOz/lEX2VNizsKIdbY24WJ9a0
-         XjlA==
-X-Gm-Message-State: AGi0PuZXRLSMWl+TlgDCCeF6yJHFuJETAiti9ETrRx3W3GXlMeQsP3DT
-        OcuUc0Z8gZQ3pqhYGqDaz6Bm7Evuxpd5h18aZlI=
-X-Google-Smtp-Source: APiQypLlj1mTr31cEwJB2xy6sDTZQtzFBc6S7Z09a7MvI75cUG4xFy+vj6rnOik7yeSDKBHlS8j7JE0DJYDjRznsD0s=
-X-Received: by 2002:aca:895:: with SMTP id 143mr19322774oii.153.1589210756876;
- Mon, 11 May 2020 08:25:56 -0700 (PDT)
+        Mon, 11 May 2020 11:26:37 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jYAK8-0004PL-AQ; Mon, 11 May 2020 17:26:32 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jYAK7-0008Vc-UJ; Mon, 11 May 2020 17:26:31 +0200
+Subject: Re: [PATCH] libbpf: Replace zero-length array with flexible-array
+To:     Yonghong Song <yhs@fb.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200507185057.GA13981@embeddedor>
+ <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <13960d59-3786-a58e-0be0-f9d91f8ee919@iogearbox.net>
+Date:   Mon, 11 May 2020 17:26:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200510075510.987823-1-hch@lst.de> <CAMuHMdXazsBw0mjJd0uFHQud7qbb5-Uw-PTDB3+-M=huRWOfgQ@mail.gmail.com>
- <20200511151356.GB28634@lst.de>
-In-Reply-To: <20200511151356.GB28634@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 May 2020 17:25:45 +0200
-Message-ID: <CAMuHMdU1xAmyWysi5xRoaRL7PFurPncvEL0CcEY0V_sUz3EJPw@mail.gmail.com>
-Subject: Re: sort out the flush_icache_range mess
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Roman Zippel <zippel@linux-m68k.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Michal Simek <monstr@monstr.eu>,
-        Jessica Yu <jeyu@kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        linux-c6x-dev@linux-c6x.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25809/Mon May 11 14:16:55 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On 5/9/20 9:16 PM, Yonghong Song wrote:
+> On 5/7/20 11:50 AM, Gustavo A. R. Silva wrote:
+>> The current codebase makes use of the zero-length array language
+>> extension to the C90 standard, but the preferred mechanism to declare
+>> variable-length types such as these ones is a flexible array member[1][2],
+>> introduced in C99:
+>>
+>> struct foo {
+>>          int stuff;
+>>          struct boo array[];
+>> };
+>>
+>> By making use of the mechanism above, we will get a compiler warning
+>> in case the flexible array does not occur last in the structure, which
+>> will help us prevent some kind of undefined behavior bugs from being
+>> inadvertently introduced[3] to the codebase from now on.
+>>
+>> Also, notice that, dynamic memory allocations won't be affected by
+>> this change:
+>>
+>> "Flexible array members have incomplete type, and so the sizeof operator
+>> may not be applied. As a quirk of the original implementation of
+>> zero-length arrays, sizeof evaluates to zero."[1]
+>>
+>> sizeof(flexible-array-member) triggers a warning because flexible array
+>> members have incomplete type[1]. There are some instances of code in
+>> which the sizeof operator is being incorrectly/erroneously applied to
+>> zero-length arrays and the result is zero. Such instances may be hiding
+>> some bugs. So, this work (flexible-array member conversions) will also
+>> help to get completely rid of those sorts of issues.
+>>
+>> This issue was found with the help of Coccinelle.
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> I think this is probably for bpf-next.
+> 
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-On Mon, May 11, 2020 at 5:14 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Mon, May 11, 2020 at 09:46:17AM +0200, Geert Uytterhoeven wrote:
-> > On Sun, May 10, 2020 at 9:55 AM Christoph Hellwig <hch@lst.de> wrote:
-> > > none of which really are used by a typical MMU enabled kernel, as a.out can
-> > > only be build for alpha and m68k to start with.
-> >
-> > Quoting myself:
-> > "I think it's safe to assume no one still runs a.out binaries on m68k."
-> > http://lore.kernel.org/r/CAMuHMdW+m0Q+j3rsQdMXnrEPm+XB5Y2AQrxW5sD1mZAKgmEqoA@mail.gmail.com
->
-> Do you want to drop the:
->
->     select HAVE_AOUT if MMU
->
-> for m68k then?
-
-If that helps to reduce maintenance, it's fine for me.
-That leaves alpha as the sole user?
-
-> Note that we'll still need flush_icache_user_range for m68k with mmu,
-> as it also allows binfmt_flat for mmu configs.
-
-Understood.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Applied, thanks!
