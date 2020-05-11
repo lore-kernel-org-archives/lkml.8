@@ -7,44 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3201C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B306EC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C4C24955
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8A9208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbgEKVAk (ORCPT
+        id S1732207AbgEKVAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
+        Mon, 11 May 2020 17:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732133AbgEKVAO (ORCPT
+        by vger.kernel.org with ESMTP id S1732121AbgEKVAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:00:14 -0400
+        Mon, 11 May 2020 17:00:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E51BC061A0C;
-        Mon, 11 May 2020 14:00:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BCBC061A0C;
+        Mon, 11 May 2020 14:00:11 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFWx-00062J-Bs; Mon, 11 May 2020 23:00:07 +0200
+        id 1jYFWz-00063U-8M; Mon, 11 May 2020 23:00:09 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 96D421C0870;
-        Mon, 11 May 2020 22:59:44 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:44 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 58B321C0872;
+        Mon, 11 May 2020 22:59:45 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:45 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] drm: Make drm_dp_mst_dsc_aux_for_port() safe for old
- compilers
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Joe Perches <joe@perches.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu: Add WRITE_ONCE() to rcu_node ->boost_tasks
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158923078455.390.9569709273729823212.tip-bot2@tip-bot2>
+Message-ID: <158923078527.390.9732610515449854619.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,38 +56,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     53965dbe5396d2945c7cf53c77c7b5532b08791c
-Gitweb:        https://git.kernel.org/tip/53965dbe5396d2945c7cf53c77c7b5532b08791c
+Commit-ID:     5822b8126ff01e0baaf7d5168adc4ac8aeae088c
+Gitweb:        https://git.kernel.org/tip/5822b8126ff01e0baaf7d5168adc4ac8aeae088c
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 19 Feb 2020 16:42:47 -08:00
+AuthorDate:    Sat, 04 Jan 2020 10:44:41 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Mon, 27 Apr 2020 11:01:16 -07:00
 
-drm: Make drm_dp_mst_dsc_aux_for_port() safe for old compilers
+rcu: Add WRITE_ONCE() to rcu_node ->boost_tasks
 
-Older compilers either want two extra pairs of curly braces around the
-initializer for local variable desc, or they want a single pair of curly
-braces with nothing inside.  Because current Linux-kernel practice favors
-the latter, this commit makes it so.
+The rcu_node structure's ->boost_tasks field is read locklessly, so this
+commit adds the WRITE_ONCE() to an update in order to provide proper
+documentation and READ_ONCE()/WRITE_ONCE() pairing.
 
-Suggested-by: Chris Wilson <chris@chris-wilson.co.uk>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
+
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree_plugin.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 70c4b7a..c409867 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -5494,7 +5494,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
- {
- 	struct drm_dp_mst_port *immediate_upstream_port;
- 	struct drm_dp_mst_port *fec_port;
--	struct drm_dp_desc desc = { 0 };
-+	struct drm_dp_desc desc = { };
- 	u8 endpoint_fec;
- 	u8 endpoint_dsc;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index ed6bb46..664d0aa 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -505,7 +505,7 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 			/* Snapshot ->boost_mtx ownership w/rnp->lock held. */
+ 			drop_boost_mutex = rt_mutex_owner(&rnp->boost_mtx) == t;
+ 			if (&t->rcu_node_entry == rnp->boost_tasks)
+-				rnp->boost_tasks = np;
++				WRITE_ONCE(rnp->boost_tasks, np);
+ 		}
  
+ 		/*
+@@ -1082,7 +1082,7 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 	     rnp->qsmask == 0 &&
+ 	     (ULONG_CMP_GE(jiffies, rnp->boost_time) || rcu_state.cbovld))) {
+ 		if (rnp->exp_tasks == NULL)
+-			rnp->boost_tasks = rnp->gp_tasks;
++			WRITE_ONCE(rnp->boost_tasks, rnp->gp_tasks);
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 		rcu_wake_cond(rnp->boost_kthread_task,
+ 			      READ_ONCE(rnp->boost_kthread_status));
