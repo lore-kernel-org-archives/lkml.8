@@ -2,80 +2,136 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A42C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C202EC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F158206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ncTIibIn"
+	by mail.kernel.org (Postfix) with ESMTP id AFA54206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbgEKTcK (ORCPT
+        id S1731455AbgEKTdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:32:10 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35890 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731041AbgEKTcJ (ORCPT
+        Mon, 11 May 2020 15:33:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49834 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729453AbgEKTdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:32:09 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589225529; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=sAZDaw+WM1tRH6zdEndZjZXWJLv0r3DaQahoiRA1aOI=; b=ncTIibIny9D0pnj/JoyZKs2qj6bUj86KvOxn+Zmd0N295gm99pGh2ad3/Hx+JRWOzIEQy3D/
- rvURtiDwogASpVdFYG+P0lLspuO5MZr0Br1wWunjlryI6Fg/OPFozdzLUuXnV2K4PH+xXVcj
- dLEOK9r7s4eLfn1YKEkM0myf32A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb9a825.7ffa94fa3848-smtp-out-n04;
- Mon, 11 May 2020 19:31:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D98E7C432C2; Mon, 11 May 2020 19:31:48 +0000 (UTC)
-Received: from [192.168.1.179] (cpe-76-167-231-33.san.res.rr.com [76.167.231.33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34720C433F2;
-        Mon, 11 May 2020 19:31:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34720C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-Subject: Re: [PATCH] Revert "dynamic_debug: Remove unnecessary __used"
-To:     Joe Perches <joe@perches.com>, Jason Baron <jbaron@akamai.com>
-Cc:     Trilok Soni <tsoni@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Murali Nalajala <mnalajal@codeaurora.org>
-References: <1589221618-21808-1-git-send-email-eberman@codeaurora.org>
- <59b3e2aac1388209d168a31294dfd2b1f7d21513.camel@perches.com>
-From:   Elliot Berman <eberman@codeaurora.org>
-Message-ID: <9b6694ac-acb3-6bc4-49c9-39ad1c64d6e1@codeaurora.org>
-Date:   Mon, 11 May 2020 12:31:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 15:33:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 45FF1803080A;
+        Mon, 11 May 2020 19:32:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Q65asuHJMWNf; Mon, 11 May 2020 22:32:57 +0300 (MSK)
+Date:   Mon, 11 May 2020 22:32:55 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <59b3e2aac1388209d168a31294dfd2b1f7d21513.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/2020 11:54 AM, Joe Perches wrote> Change-Id: probably isn't necessary.
+On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
+> On Mon, May 11, 2020 at 4:48 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
+> > >
+> > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > > > driver will split it into the max transaction chunks anyway.
+> > >
+> > > That sounds like you need to also impose a limit on the maximum message
+> > > size as well then, with that you should be able to handle messages up
+> > > to whatever that limit is.  There's code for that bit already, so long
+> > > as the limit is not too low it should be fine for most devices and
+> > > client drivers can see the limit so they can be updated to work with it
+> > > if needed.
+> >
+> > Hmm, this might work. The problem will be with imposing such limitation through
+> > the DW APB SSI driver. In order to do this I need to know:
+> > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > 2) Maximum DW DMA transfer block size.
+> > Then I'll be able to use this information in the can_dma() callback to enable
+> > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > parameter, then setting it won't work, because it just limits the SG items size
+> > not the total length of a single transfer.
+> >
+> > So the question is of how to export the multi-block LLP flag from DW DMAc
+> > driver. Andy?
+> 
+> I'm not sure I understand why do you need this being exported. Just
+> always supply SG list out of single entry and define the length
+> according to the maximum segment size (it's done IIRC in SPI core).
 
-Thanks for the catch
+Finally I see your point. So you suggest to feed the DMA engine with SG list
+entries one-by-one instead of sending all of them at once in a single
+dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
+session. Hm, this solution will work, but there is an issue. There is no
+guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
+number of items with the same sizes. It depends on the Tx/Rx buffers physical
+address alignment and their offsets within the memory pages. Though this
+problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
+to implement a clever DMA IO loop, which would extract the DMA
+addresses/lengths from the SG entries and perform the single-buffer DMA 
+transactions with the DMA buffers of the same length.
+
+Regarding noLLP being exported. Obviously I intended to solve the problem in a
+generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
+In order to do this we need to know whether the multi-block LLP feature is
+unsupported by the DW DMA controller. We either make such info somehow exported
+from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
+could be ready to work around the problem; or just implement a flag-based quirk
+in the DMA client driver, which would be enabled in the platform-specific basis
+depending on the platform device actually detected (for instance, a specific
+version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
+
+Regarding SPI core toggling CS. It is irrelevant to this problem, since DMA
+transactions are implemented within a single SPI transfer so the CS won't be
+touched by the SPI core while we are working wht the xfer descriptor. Though
+the problem with DW APB SSI native CS automatic toggling will persist anyway
+no matter whether the multi-block LLPs are supported on not.
+
+-Sergey
 
 > 
-> Is there a separate mechanism possible to avoid bloating the
-> otherwise unused content?
-
-This struct is being used in lib/dynamic_debug.c but compiler doesn't know
-about this usage when optimizing the struct/branch away.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> -- 
+> With Best Regards,
+> Andy Shevchenko
