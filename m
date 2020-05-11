@@ -2,68 +2,80 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7871C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E022C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B2207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AEA2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589178911;
+	bh=KyuIUdXk6ImejpwWHr2XizXxJ+jflrS5vzjvNVBqFxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DeBVPEgTJ1e+r1LIw4Px591BxoBOtPZiMZ0ZuUYTO9JxP/xSBP/rin7OC5V+UXSZk
+	 VDSZmqSn4zrTgo1N3Vji2pujCzsg/K7NUpKtc0KjpFHuYBafKJsl3aeBF1Y3UnIGei
+	 OE3ux9l05Ai0v/8PZcYs/OaEM80BN7Zwr9qVrysk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgEKGdx (ORCPT
+        id S1728224AbgEKGfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 02:33:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35402 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbgEKGdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 02:33:53 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A5A8413641D030E591CA;
-        Mon, 11 May 2020 14:33:49 +0800 (CST)
-Received: from euler.huawei.com (10.175.100.98) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 11 May 2020 14:33:48 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf timechart: Remove redundant assignment
-Date:   Mon, 11 May 2020 14:33:26 +0800
-Message-ID: <20200511063326.27961-1-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 11 May 2020 02:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbgEKGfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 02:35:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0470207FF;
+        Mon, 11 May 2020 06:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589178909;
+        bh=KyuIUdXk6ImejpwWHr2XizXxJ+jflrS5vzjvNVBqFxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UtWJ6/xGSfPjH6JPV/9VxGIshATPf5///EAYYdQBYYYnG0C8sbtuVDizax08o7rCT
+         MF3wSZ9LHqNYtAWmUgXddB3aqqc8587oB0/K/4CQ2E84a425NHHP+i4nyZue8q6lqY
+         hU9RiFlFpOQHYDaEqnW/YNXyIz93EjWtrdszk8p0=
+Date:   Mon, 11 May 2020 08:35:07 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kyungtae Kim <kt0755@gmail.com>
+Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Tian <dave.jing.tian@gmail.com>
+Subject: Re: KASAN: use-after-free Write in config_item_get
+Message-ID: <20200511063507.GA1275674@kroah.com>
+References: <20200511055200.GA31686@pizza01>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.98]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511055200.GA31686@pizza01>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant assignment, no functional change.
+On Mon, May 11, 2020 at 05:52:16AM +0000, Kyungtae Kim wrote:
+> We report a bug (in linux-5.6.8) found by FuzzUSB (a modified version
+> of syzkaller)
+> 
+> kernel config: https://kt0755.github.io/etc/config_v5.6.8
+> 
+> 
+> This bug happened when accessing a configfs_item instance right after being
+> deallocated.
+> Specifically, config_item_get() tries to access ci_kref element in a config_item instance. 
+> But this led to memory access violation because that instance (held by a fsg_opts structure) 
+> had been freed by fsg_free_inst() in another thread (PID: 2603).
+> 
+> To fix, it needs to check if the config_item instance is still in use 
+> when trying to deallocate it.
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- tools/perf/builtin-timechart.c | 1 -
- 1 file changed, 1 deletion(-)
+Great, can you create a patch to fix this now that you have a solid test
+for it?
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 9e84fae9b096..5e4f809d7e5d 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1149,7 +1149,6 @@ static void draw_io_bars(struct timechart *tchart)
- 			}
- 
- 			svg_box(Y, c->start_time, c->end_time, "process3");
--			sample = c->io_samples;
- 			for (sample = c->io_samples; sample; sample = sample->next) {
- 				double h = (double)sample->bytes / c->max_bytes;
- 
--- 
-2.17.1
+thanks,
 
+greg k-h
