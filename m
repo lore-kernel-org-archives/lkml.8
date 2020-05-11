@@ -2,82 +2,311 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9265C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD12C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47912137B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F033B208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589173403;
-	bh=AEQ5/eHF4mOqL/y16T898LganyocNlGAK0Fzmso4HzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZTdKv/nDgWa+6cDBohA4s96fgDkgRfDCVsd7gaTjQ304Of3mhrGBDdjko7vj7eWwq
-	 xNZwFyBcWf4H5WDX9aEZHOZKcpbFE3CBkyTgTcMETqsFp2ANM4CUHQqmwNRPhXjeR/
-	 bRYViSNLU2oDhyKbnpuEVgbQyd0No7+6qKsy6kuo=
+	s=default; t=1589173544;
+	bh=OccYV41EjR0H/rhVcZ9I7FliXAUSId9al3z7li2y18g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AQje/DWCTA6e1u0Yc0rM73uV/o7YMHQjEe7Mbr5lrI6WxWeUW0FjTE5w9MB3LxVji
+	 oJgl52ETmGsOr+nj1VnPudECaWDzWh+bGh9m8cwUrieUVtLSjkR0SduaQ7Q8VcJ9a3
+	 Hn9q+CWGQpJtKzIFgzPx9hl8rPLypWDTgFr8Yhck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgEKFDX (ORCPT
+        id S1728136AbgEKFFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 01:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47754 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 01:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgEKFDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 01:03:22 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1725916AbgEKFFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 01:05:42 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAE62082E;
-        Mon, 11 May 2020 05:03:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB922082E;
+        Mon, 11 May 2020 05:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589173402;
-        bh=AEQ5/eHF4mOqL/y16T898LganyocNlGAK0Fzmso4HzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F9HiS8pWarfCpH7Ng0cm9R9PYx1ieS/AWHG+N8Y7CCrLII34xmqET1r7qbTQXyGpi
-         vDsjQ1tDTzEvSmfFo7kyoo7F2C5ka95CW9qiVZygzfum7+A2L2WZd70FhFiaetZlao
-         +6y1HWIgdnjcn7XkeJQOBMBz5/ofGjPIqlE9Dg9Q=
-Date:   Mon, 11 May 2020 01:03:21 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, luto@kernel.org,
-        tony.luck@intel.com, chang.seok.bae@intel.com
-Subject: Re: [PATCH v10 00/18] Enable FSGSBASE instructions
-Message-ID: <20200511050321.GO13035@sasha-vm>
-References: <20200423232207.5797-1-sashal@kernel.org>
- <5a6a0ef5-4dfc-d0b1-9181-5df4211cfcd9@oracle.com>
- <d7111932-6ba5-1484-4347-210d9e80316f@oracle.com>
- <20200511004842.GJ3538@tassilo.jf.intel.com>
- <20200511005028.GA226400@tassilo.jf.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200511005028.GA226400@tassilo.jf.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1589173541;
+        bh=OccYV41EjR0H/rhVcZ9I7FliXAUSId9al3z7li2y18g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jtG6thU2hDFQBsxnFNEcJglOdVxLrtZFF7gcgjjRKA4JhIyV86NWR5mPtWf1y7Pi2
+         ZxdRSpx9Md590okoiqOOZ2b5UGidQrqdAJ7Xoemg498lgsaYmS/7rovoW/GEpmNEfw
+         uKOKvTy52tu5CH3ClSkG+aSXZJuVo9VfE0HzExwc=
+Date:   Mon, 11 May 2020 14:05:36 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/15] maccess: always use strict semantics for
+ probe_kernel_read
+Message-Id: <20200511140536.a15f3f15c71309fdf219c2e4@kernel.org>
+In-Reply-To: <20200506062223.30032-13-hch@lst.de>
+References: <20200506062223.30032-1-hch@lst.de>
+        <20200506062223.30032-13-hch@lst.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 05:50:28PM -0700, Andi Kleen wrote:
->> So this is a check that checks if you're running in user mode if
->> you have a debug trap with single step, but somehow it triggered
->> for a user segment.
->>
->> Probably the regs got corrupted.
->>
->> Sasha, I suspect you're missing a mov %rsp,%rdi somewhere in the
->> debug entry path that sets up the regs argument for the C code.
->
->... Ah never mind. Thomas has a better explanation.
+Hi Christoph,
 
-FWIW, this series was heavily tested for the past few months to the
-point that we're comfortable in enabling it for 3rd party users on
-Azure:
-https://bugs.launchpad.net/ubuntu/+source/linux-azure/+bug/1877425.
+At first, thank you for your work on cleaning up these functions!
+
+On Wed,  6 May 2020 08:22:20 +0200
+Christoph Hellwig <hch@lst.de> wrote:
+
+> Except for historical confusion in the kprobes/uprobes and bpf tracers
+> there is no good reason to ever allow user memory accesses from
+> probe_kernel_read.
+
+Yes, thus now trace_kprobe supports "ustring" type for accessing
+user space memory. (If the address spaces are overwrapped, we have
+no way to distinguish whether an address is kernel or user)
+
+>  Make the tracers fall back to a probe_user_read
+> if the probe_kernel_read falls to keep the core API clean.
+
+For trace_kprobes doesn't need to fall back. User must specify
+the probe should be read from user space or kernel space. This is
+because it has  fetch_store_string_user() and probe_mem_read_user()
+variants.
+
+Thank you,
+
+
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/parisc/lib/memcpy.c    |  3 +--
+>  arch/um/kernel/maccess.c    |  3 +--
+>  arch/x86/mm/maccess.c       |  5 +----
+>  include/linux/uaccess.h     |  4 +---
+>  kernel/trace/bpf_trace.c    | 20 +++++++++++++------
+>  kernel/trace/trace_kprobe.c | 11 ++++++++++-
+>  mm/maccess.c                | 39 ++++++-------------------------------
+>  7 files changed, 34 insertions(+), 51 deletions(-)
+> 
+> diff --git a/arch/parisc/lib/memcpy.c b/arch/parisc/lib/memcpy.c
+> index 5ef648bd33119..9fe662b3b5604 100644
+> --- a/arch/parisc/lib/memcpy.c
+> +++ b/arch/parisc/lib/memcpy.c
+> @@ -57,8 +57,7 @@ void * memcpy(void * dst,const void *src, size_t count)
+>  EXPORT_SYMBOL(raw_copy_in_user);
+>  EXPORT_SYMBOL(memcpy);
+>  
+> -bool probe_kernel_read_allowed(void *dst, const void *unsafe_src, size_t size,
+> -		bool strict)
+> +bool probe_kernel_read_allowed(void *dst, const void *unsafe_src, size_t size)
+>  {
+>  	if ((unsigned long)unsafe_src < PAGE_SIZE)
+>  		return false;
+> diff --git a/arch/um/kernel/maccess.c b/arch/um/kernel/maccess.c
+> index 90a1bec923158..734f3d7e57c0f 100644
+> --- a/arch/um/kernel/maccess.c
+> +++ b/arch/um/kernel/maccess.c
+> @@ -7,8 +7,7 @@
+>  #include <linux/kernel.h>
+>  #include <os.h>
+>  
+> -bool probe_kernel_read_allowed(void *dst, const void *src, size_t size,
+> -		bool strict)
+> +bool probe_kernel_read_allowed(void *dst, const void *src, size_t size)
+>  {
+>  	void *psrc = (void *)rounddown((unsigned long)src, PAGE_SIZE);
+>  
+> diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+> index 5c323ab187b27..a1bd81677aa72 100644
+> --- a/arch/x86/mm/maccess.c
+> +++ b/arch/x86/mm/maccess.c
+> @@ -26,10 +26,7 @@ static __always_inline bool invalid_probe_range(u64 vaddr)
+>  }
+>  #endif
+>  
+> -bool probe_kernel_read_allowed(void *dst, const void *unsafe_src, size_t size,
+> -		bool strict)
+> +bool probe_kernel_read_allowed(void *dst, const void *unsafe_src, size_t size)
+>  {
+> -	if (!strict)
+> -		return true;
+>  	return !invalid_probe_range((unsigned long)unsafe_src);
+>  }
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 09d6e358883cc..99e2c2a41164a 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -301,11 +301,9 @@ copy_struct_from_user(void *dst, size_t ksize, const void __user *src,
+>  	return 0;
+>  }
+>  
+> -bool probe_kernel_read_allowed(void *dst, const void *unsafe_src,
+> -		size_t size, bool strict);
+> +bool probe_kernel_read_allowed(void *dst, const void *unsafe_src, size_t size);
+>  
+>  extern long probe_kernel_read(void *dst, const void *src, size_t size);
+> -extern long probe_kernel_read_strict(void *dst, const void *src, size_t size);
+>  extern long probe_user_read(void *dst, const void __user *src, size_t size);
+>  
+>  extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index ffe841433caa1..f694befe8ec9b 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -183,12 +183,20 @@ bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr,
+>  	int ret = security_locked_down(LOCKDOWN_BPF_READ);
+>  
+>  	if (unlikely(ret < 0))
+> -		goto out;
+> -	ret = compat ? probe_kernel_read(dst, unsafe_ptr, size) :
+> -	      probe_kernel_read_strict(dst, unsafe_ptr, size);
+> -	if (unlikely(ret < 0))
+> -out:
+> -		memset(dst, 0, size);
+> +		goto fail;
+> +
+> +	ret = probe_kernel_read(dst, unsafe_ptr, size);
+> +	if (unlikely(ret < 0)) {
+> +		if (compat)
+> +			ret = probe_user_read(dst,
+> +				(__force const void __user *)unsafe_ptr, size);
+> +		if (unlikely(ret < 0))
+> +			goto fail;
+> +	}
+> +
+> +	return 0;
+> +fail:
+> +	memset(dst, 0, size);
+>  	return ret;
+>  }
+>  
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 525d12137325c..1300c9fd5c755 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1203,6 +1203,9 @@ fetch_store_strlen(unsigned long addr)
+>  
+>  	do {
+>  		ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
+> +		if (ret)
+> +			ret = probe_user_read(&c,
+> +				(__force u8 __user *)addr + len, 1);
+>  		len++;
+>  	} while (c && ret == 0 && len < MAX_STRING_SIZE);
+>  
+> @@ -1275,7 +1278,13 @@ fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>  static nokprobe_inline int
+>  probe_mem_read(void *dest, void *src, size_t size)
+>  {
+> -	return probe_kernel_read(dest, src, size);
+> +	int ret;
+> +
+> +	ret = probe_kernel_read(dest, src, size);
+> +	if (ret)
+> +		ret = probe_user_read(dest, (__force const void __user *)src,
+> +				size);
+> +	return ret;
+>  }
+>  
+>  static nokprobe_inline int
+> diff --git a/mm/maccess.c b/mm/maccess.c
+> index cbd9d668aa46e..811f49e8de113 100644
+> --- a/mm/maccess.c
+> +++ b/mm/maccess.c
+> @@ -6,36 +6,14 @@
+>  #include <linux/mm.h>
+>  #include <linux/uaccess.h>
+>  
+> -static long __probe_kernel_read(void *dst, const void *src, size_t size,
+> -		bool strict);
+> -
+>  bool __weak probe_kernel_read_allowed(void *dst, const void *unsafe_src,
+> -		size_t size, bool strict)
+> +		size_t size)
+>  {
+>  	return true;
+>  }
+>  
+>  /**
+> - * probe_kernel_read(): safely attempt to read from any location
+> - * @dst: pointer to the buffer that shall take the data
+> - * @src: address to read from
+> - * @size: size of the data chunk
+> - *
+> - * Same as probe_kernel_read_strict() except that for architectures with
+> - * not fully separated user and kernel address spaces this function also works
+> - * for user address tanges.
+> - *
+> - * DO NOT USE THIS FUNCTION - it is broken on architectures with entirely
+> - * separate kernel and user address spaces, and also a bad idea otherwise.
+> - */
+> -long probe_kernel_read(void *dst, const void *src, size_t size)
+> -{
+> -	return __probe_kernel_read(dst, src, size, false);
+> -}
+> -EXPORT_SYMBOL_GPL(probe_kernel_read);
+> -
+> -/**
+> - * probe_kernel_read_strict(): safely attempt to read from kernel-space
+> + * probe_kernel_read(): safely attempt to read from kernel-space
+>   * @dst: pointer to the buffer that shall take the data
+>   * @src: address to read from
+>   * @size: size of the data chunk
+> @@ -48,18 +26,12 @@ EXPORT_SYMBOL_GPL(probe_kernel_read);
+>   * probe_kernel_read() suitable for use within regions where the caller
+>   * already holds mmap_sem, or other locks which nest inside mmap_sem.
+>   */
+> -long probe_kernel_read_strict(void *dst, const void *src, size_t size)
+> -{
+> -	return __probe_kernel_read(dst, src, size, true);
+> -}
+> -
+> -static long __probe_kernel_read(void *dst, const void *src, size_t size,
+> -		bool strict)
+> +long probe_kernel_read(void *dst, const void *src, size_t size)
+>  {
+>  	long ret;
+>  	mm_segment_t old_fs = get_fs();
+>  
+> -	if (!probe_kernel_read_allowed(dst, src, size, strict))
+> +	if (!probe_kernel_read_allowed(dst, src, size))
+>  		return -EFAULT;
+>  
+>  	set_fs(KERNEL_DS);
+> @@ -73,6 +45,7 @@ static long __probe_kernel_read(void *dst, const void *src, size_t size,
+>  		return -EFAULT;
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(probe_kernel_read);
+>  
+>  /**
+>   * probe_user_read(): safely attempt to read from a user-space location
+> @@ -180,7 +153,7 @@ long strncpy_from_kernel_unsafe(char *dst, const void *unsafe_addr, long count)
+>  
+>  	if (unlikely(count <= 0))
+>  		return 0;
+> -	if (!probe_kernel_read_allowed(dst, unsafe_addr, count, true))
+> +	if (!probe_kernel_read_allowed(dst, unsafe_addr, count))
+>  		return -EFAULT;
+>  
+>  	set_fs(KERNEL_DS);
+> -- 
+> 2.26.2
+> 
+
 
 -- 
-Thanks,
-Sasha
+Masami Hiramatsu <mhiramat@kernel.org>
