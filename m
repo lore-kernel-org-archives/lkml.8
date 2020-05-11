@@ -2,105 +2,112 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A8C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239EBC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0000A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E7C206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tpbbUDaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgEKQ3b convert rfc822-to-8bit (ORCPT
+        id S1730710AbgEKQ3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:29:31 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45141 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729463AbgEKQ3b (ORCPT
+        Mon, 11 May 2020 12:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729463AbgEKQ3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:29:31 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BACE960012;
-        Mon, 11 May 2020 16:29:24 +0000 (UTC)
-Date:   Mon, 11 May 2020 18:29:23 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>,
-        richard@nod.at, vigneshr@ti.com, s.hauer@pengutronix.de,
-        masonccyang@mxic.com.tw, christophe.kerello@st.com,
-        stefan@agner.ch, piotrs@cadence.com, devik@eaxlabs.cz,
-        tglx@linutronix.de, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nand: raw: use write_oob_raw for MTD_OPS_AUTO_OOB mode
-Message-ID: <20200511182923.6a4961ab@xps13>
-In-Reply-To: <20200504123237.5c128668@collabora.com>
-References: <20200504094253.2741109-1-noltari@gmail.com>
-        <20200504123237.5c128668@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 11 May 2020 12:29:37 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533FBC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:29:37 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id m24so9098644wml.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KfKRBxYbb6m/b9/QgIvfPiqDsDk95S9RSARlHkl9An0=;
+        b=tpbbUDaAZgNrNk6b/o76dv2RwUJW97IOxe00ZbkrdrnRmywGmfAcFgQsKy7HSDdaBz
+         /JuMTpwP917IjwDx1/UoF8IXmuR8N6LsfGGfA82Zq883kkxmCQqnMi2yy1Gsdv+UFSZ2
+         LJ9IlGoDv1nPJ7moHEYnOXMk5cn9lsFdrx8ZQSYmL3QKg3XHg59cZFcmMo1uylKQCTBR
+         Aa3PGblZ0yHOFMzKC06F8+MmwdlTZ2MSLPe+k+6QTiyuRAuT6msI5rBhwnPEmnKNPcEf
+         xLWqAndl9jaaFYKI7YBsyKH7LRsbFawTBChG5bQK3QmmR64ux4F4z04VizBWJQVX8qgG
+         e8mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KfKRBxYbb6m/b9/QgIvfPiqDsDk95S9RSARlHkl9An0=;
+        b=Vu37VegXOTd5RsHeD+Z2xGOZW2928xwpNPuEoJLy/L2tENnF6fw7W/w0zGFUKe1Tkk
+         wuXZiTtVIKTveGfKI3tb3SGHZYfFMsnhM9i7tzGC3MuOljWB/zjSBphkmWqzFQzE6Mp9
+         WgIwknjCgKFmXJXfrlEPxfsvWtuVNMpfKqIciHY4LxdMObdwPKymMXEt7lCAYOXXbeFe
+         niobDF9rkihov6SgI73+W02lcOabKXusyYtAdq/431N/7XsrLL3mlsKuoGrF8rK8hLHn
+         kHBnCtS6vHI5SlD8ymvvhkuCNzZwHZjFkvO/Weh2BHhjlJb3iFVSI9q9gENbBSlB+REx
+         PsQg==
+X-Gm-Message-State: AGi0PuYr2KRibwa2FwRQKMhQ4vo4XVRamOmD8NBdXfEmz4+LYRJLABD5
+        dmXeguVBMuWS5JQYUtIGU4j2mA==
+X-Google-Smtp-Source: APiQypKnL7Dw9SKRhLpoN/UNhN4ri2w0wkwrh/2jeR0e6yW4+wkl3lNIi1z/67KMUeRls0AE2M5Yag==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr18700616wml.117.1589214575942;
+        Mon, 11 May 2020 09:29:35 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id 7sm20448844wra.50.2020.05.11.09.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 09:29:35 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
+Date:   Mon, 11 May 2020 17:29:27 +0100
+Message-Id: <20200511162927.2843-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+fastrpc_invoke_ctx can have refcount of 2 in error path where
+rpmsg_send() fails to send invoke message. decrement the refcount
+properly in the error path to fix this leak.
 
-Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 4 May
-2020 12:32:37 +0200:
+This also fixes below static checker warning:
 
-> On Mon,  4 May 2020 11:42:53 +0200
-> Álvaro Fernández Rojas <noltari@gmail.com> wrote:
-> 
-> > Some NAND controllers change the ECC bytes when OOB is written with ECC
-> > enabled.
-> > This is a problem in brcmnand, since adding JFFS2 cleanmarkers after the page
-> > has been erased will change the ECC bytes to 0 and the controller will think
-> > the block is bad.
-> > It can be fixed by using write_oob_raw, which ensures ECC is disabled.
-> > 
-> > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> > ---
-> >  drivers/mtd/nand/raw/nand_base.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> > index c24e5e2ba130..755d25200520 100644
-> > --- a/drivers/mtd/nand/raw/nand_base.c
-> > +++ b/drivers/mtd/nand/raw/nand_base.c
-> > @@ -488,7 +488,7 @@ static int nand_do_write_oob(struct nand_chip *chip, loff_t to,
-> >  
-> >  	nand_fill_oob(chip, ops->oobbuf, ops->ooblen, ops);
-> >  
-> > -	if (ops->mode == MTD_OPS_RAW)
-> > +	if (ops->mode == MTD_OPS_AUTO_OOB || ops->mode == MTD_OPS_RAW)
-> >  		status = chip->ecc.write_oob_raw(chip, page & chip->pagemask);  
-> 
-> The doc says:
-> 
-> @MTD_OPS_PLACE_OOB:  OOB data are placed at the given offset (default)
-> @MTD_OPS_AUTO_OOB:   OOB data are automatically placed at the free areas
->                      which are defined by the internal ecclayout
-> @MTD_OPS_RAW:        data are transferred as-is, with no error
-> 		     correction; this mode implies %MTD_OPS_PLACE_OOB
-> 
-> To me, that means MTD_OPS_PLACE_OOB and MTD_OPS_AUTO_OOB do not imply
-> MTD_OPS_RAW. Anyway those modes are just too vague. We really should
-> separate the ECC-disabled/ECC-enabled concept (AKA raw vs non-raw mode)
-> from the OOB placement scheme. IIRC, Miquel had a patchset doing that.
-> 
-> We also should have the concept of protected OOB-region vs
-> unprotected-OOB-region if we want JFFS2 to work with controllers that
-> protect part of the OOB region. Once we have that we can patch JFFS2
-> to write things with "ECC-disabled"+"auto-OOB-placement-on-unprotected
-> area".
+drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
+warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
 
-I see the problem but as Boris said the fix is not valid as-is.
-Problem is: I don't have a better proposal yet.
+Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/misc/fastrpc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Is forcing JFFS2 to write cleanmarkers in raw mode only an option?
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 9065d3e71ff7..07065728e39f 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -949,8 +949,10 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+ 	dma_wmb();
+ 	/* Send invoke buffer to remote dsp */
+ 	err = fastrpc_invoke_send(fl->sctx, ctx, kernel, handle);
+-	if (err)
++	if (err) {
++		fastrpc_context_put(ctx);
+ 		goto bail;
++	}
+ 
+ 	if (kernel) {
+ 		if (!wait_for_completion_timeout(&ctx->work, 10 * HZ))
+-- 
+2.21.0
+
