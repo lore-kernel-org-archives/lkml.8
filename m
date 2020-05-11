@@ -2,103 +2,163 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76DEC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D70CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A64B9207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F75206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgEKOPe (ORCPT
+        id S1730472AbgEKOQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:15:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:33126 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730158AbgEKOPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:15:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0E33D6E;
-        Mon, 11 May 2020 07:15:32 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B8D13F68F;
-        Mon, 11 May 2020 07:15:31 -0700 (PDT)
-Date:   Mon, 11 May 2020 15:15:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Mon, 11 May 2020 10:16:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6610 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730158AbgEKOQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 10:16:36 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BDXD0a161500;
+        Mon, 11 May 2020 10:15:47 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wrvrxy12-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 10:15:47 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BEB2Gc003182;
+        Mon, 11 May 2020 14:15:44 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 30wm55mhcy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 14:15:44 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BEFg6J62193780
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 14:15:42 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E49024204B;
+        Mon, 11 May 2020 14:15:41 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C160C42045;
+        Mon, 11 May 2020 14:15:38 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.203.187])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 11 May 2020 14:15:38 +0000 (GMT)
+Date:   Mon, 11 May 2020 17:15:36 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, Rich Felker <dalias@libc.org>,
+        linux-ia64@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-sh@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        linux-hexagon@vger.kernel.org, Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu, Jonas Bonn <jonas@southpole.se>,
+        linux-arch@vger.kernel.org, Brian Cain <bcain@codeaurora.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org, Stafford Horne <shorne@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
         linux-arm-kernel@lists.infradead.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] MAINTAINERS: correct typo in new NXP
- LAYERSCAPE GEN4
-Message-ID: <20200511141508.GA27249@e121166-lin.cambridge.arm.com>
-References: <20200506052130.5780-1-lukas.bulwahn@gmail.com>
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Tony Luck <tony.luck@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
+        =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v4 02/14] arm: add support for folded p4d page tables
+Message-ID: <20200511141536.GB983798@linux.ibm.com>
+References: <20200414153455.21744-1-rppt@kernel.org>
+ <20200414153455.21744-3-rppt@kernel.org>
+ <CGME20200507121658eucas1p240cf4a3e0fe5c22dda5ec4f72734149f@eucas1p2.samsung.com>
+ <39ba8a04-d6b5-649d-c289-0c8b27cb66c5@samsung.com>
+ <20200507161155.GE683243@linux.ibm.com>
+ <98229ab1-fbf8-0a89-c5d6-270c828799e7@samsung.com>
+ <20200508174232.GA759899@linux.ibm.com>
+ <665dade8-727a-3318-6779-3998080da18f@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506052130.5780-1-lukas.bulwahn@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <665dade8-727a-3318-6779-3998080da18f@samsung.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_05:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 suspectscore=1 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 07:21:30AM +0200, Lukas Bulwahn wrote:
-> Commit 3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
-> controller") includes a new entry in MAINTAINERS, but slipped in a typo in
-> one of the file entries.
-> 
-> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
-> 
->   warning: no file matches F: \
->     drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> 
-> Correct the typo in PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Rob, please pick this patch (it is not urgent, though).
-> 
-> v1: https://lore.kernel.org/lkml/20200314142559.13505-1-lukas.bulwahn@gmail.com/
->   - already received: Reviewed-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->   - Bjorn Helgaas' suggestion to squash this into commit 3edeb49525bb
->     ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4 controller") before
->     merging upstream did not happen.
-> 
-> v1 -> v2:
->   - v1 does not apply after reordering MAINTAINERS, i.e., commit 4400b7d68f6e
->     ("MAINTAINERS: sort entries by entry name") and commit 3b50142d8528
->     ("MAINTAINERS: sort field names for all entries").
->   - PATCH v2 applies on v5.7-rc1 now. Please pick v2 instead of v1.
-> 
-> v2-resend:
->   - resend of v2: https://lore.kernel.org/lkml/20200413070649.7014-1-lukas.bulwahn@gmail.com/ 
->   - still applies to v5.7-rc4 and next-20200505
-> 
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Marek,
 
-Applied to pci/misc, thanks !
+On Mon, May 11, 2020 at 08:36:41AM +0200, Marek Szyprowski wrote:
+> Hi Mike,
+> 
+> On 08.05.2020 19:42, Mike Rapoport wrote:
+> > On Fri, May 08, 2020 at 08:53:27AM +0200, Marek Szyprowski wrote:
+> >> On 07.05.2020 18:11, Mike Rapoport wrote:
+> >>> On Thu, May 07, 2020 at 02:16:56PM +0200, Marek Szyprowski wrote:
+> >>>> On 14.04.2020 17:34, Mike Rapoport wrote:
+> >>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+> >>>>>
+> >>>>> Implement primitives necessary for the 4th level folding, add walks of p4d
+> >>>>> level where appropriate, and remove __ARCH_USE_5LEVEL_HACK.
+> >>>>>
+> >>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > Can you please try the patch below:
+> >
+> > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> > index 963b5284d284..f86b3d17928e 100644
+> > --- a/arch/arm/mm/init.c
+> > +++ b/arch/arm/mm/init.c
+> > @@ -571,7 +571,7 @@ static inline void section_update(unsigned long addr, pmdval_t mask,
+> >   {
+> >   	pmd_t *pmd;
+> >   
+> > -	pmd = pmd_off_k(addr);
+> > +	pmd = pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), addr), addr), addr);
+> >   
+> >   #ifdef CONFIG_ARM_LPAE
+> >   	pmd[0] = __pmd((pmd_val(pmd[0]) & mask) | prot);
+> This fixes kexec issue! Thanks!
+> 
+> 
+> Feel free to add:
+> 
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Fixes: 218f1c390557 ("arm: add support for folded p4d page tables")
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Lorenzo
+Thanks for testing!
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db31497..0fd27329e6f7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12941,7 +12941,7 @@ L:	linux-pci@vger.kernel.org
->  L:	linux-arm-kernel@lists.infradead.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> -F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
-> +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
->  
->  PCI DRIVER FOR RENESAS R-CAR
->  M:	Marek Vasut <marek.vasut+renesas@gmail.com>
+The patch is still in mmotm tree, so I don't think "Fixes" apply.
+
+Andrew, would you like me to send the fix as a formal patch or will pick
+it up as a fixup?
+
+> Best regards
 > -- 
-> 2.17.1
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
 > 
+
+-- 
+Sincerely yours,
+Mike.
