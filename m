@@ -2,290 +2,202 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8490CC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D13C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B3A206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F38206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eXruX/xC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgEKWFd (ORCPT
+        id S1726950AbgEKWJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:05:33 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22436 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725860AbgEKWFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:05:32 -0400
-IronPort-SDR: zLkLsT+bWY49JnWP2W73+wJYuJXRdEQhaQrEb3BBEKAMe5kIGdIr7a+loPLVyGzRpSlMWmFeOd
- 4/Z7OWYtlv1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 15:05:31 -0700
-IronPort-SDR: kHqOJzJSe172729f+kh6nTCkRXgHWriwhyIPr/rKS9zHYCgli/BmF1N7ZEQmyrxM5Q82p0as6J
- sjJtVqAq/LQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="251276107"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 11 May 2020 15:05:30 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] KVM: nVMX: Tweak handling of failure code for nested VM-Enter failure
-Date:   Mon, 11 May 2020 15:05:29 -0700
-Message-Id: <20200511220529.11402-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 11 May 2020 18:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgEKWJM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 18:09:12 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B37C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:09:12 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t9so8549057pjw.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aomPkVehe7TL/kKU0Me66UERAR5lg9DL9drhmGOnVxE=;
+        b=eXruX/xCbQJfFsbqHN2CJokshetL/6PLgXB+QVz+bKAQHCpfXEbAjzkghODaZYT7ca
+         m5uHGvS9M34uv2UOLK5nR38ppj2wJP1ipPrT7Jmh7OPNkwyvQ6/GBDca4TK8s9gZrDyE
+         0WW0D6lDwjdQ29RO6Hfqi8ztL4q7UGcHG3W/U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aomPkVehe7TL/kKU0Me66UERAR5lg9DL9drhmGOnVxE=;
+        b=QRLXL0h1/TQLf1XMSHcuDPvEDv1UFgm6uPoeE8RomcGueQ2djuBuFAOaxfkCI/cXSr
+         KWpolz0Jhdeoj2zMz8jY1HfFyht0V738Bsr5OeAXWOKg5tJvmTK+0EF1XGYG/4RlxPWk
+         Jw/AVyAAHOc9rYjdsCUqMWavb4ac/oj1uC6JFgPOUI10kSd4dyjpaVh70udps6IsriM6
+         wOyj5YRhDOqPYqoPro+JaqCqp/4bTDbSUsIZ0Dkqr/cX6hkyDh46SiuxUho4gG0CHY5b
+         5AdP9z5CHL+3hhKvvQn3fpemLFVf9GPQOa2JVmIPyaJGtvG8CwWMLs75AUGMiAo5x2oa
+         4ikQ==
+X-Gm-Message-State: AGi0Pua6DFky74Mt3WmfcSChobS4ifVEjM9g7u0neX7vK0Ef0br+eR1h
+        vFmm60/TMEwskyr44qMcu+meFA==
+X-Google-Smtp-Source: APiQypKi68we7ermoAWRfQW2qEytOl35kvRZgSR1OMlPxo26w8nY5kkYJw6WqdApCEIF0R4HUGYN7A==
+X-Received: by 2002:a17:90b:614:: with SMTP id gb20mr21080900pjb.211.1589234951533;
+        Mon, 11 May 2020 15:09:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s101sm10918738pjb.57.2020.05.11.15.09.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 15:09:10 -0700 (PDT)
+Date:   Mon, 11 May 2020 15:09:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 4/5] exec: Allow load_misc_binary to call prepare_binfmt
+ unconditionally
+Message-ID: <202005111457.8CC3A4A7@keescook>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <878si0zyhs.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878si0zyhs.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use an enum for passing around the failure code for a failed VM-Enter
-that results in VM-Exit to provide a level of indirection from the final
-resting place of the failure code, vmcs.EXIT_QUALIFICATION.  The exit
-qualification field is an unsigned long, e.g. passing around
-'u32 exit_qual' throws up red flags as it suggests KVM may be dropping
-bits when reporting errors to L1.  This is a red herring because the
-only defined failure codes are 0, 2, 3, and 4, i.e. don't come remotely
-close to overflowing a u32.
+On Sat, May 09, 2020 at 02:42:23PM -0500, Eric W. Biederman wrote:
+> 
+> Add a flag preserve_creds that binfmt_misc can set to prevent
+> credentials from being updated.  This allows binfmrt_misc to always
+> call prepare_binfmt.  Allowing the credential computation logic to be
+> consolidated.
+> 
+> Ref: c407c033de84 ("[PATCH] binfmt_misc: improve calculation of interpreter's credentials")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  fs/binfmt_misc.c        | 15 +++------------
+>  fs/exec.c               | 14 +++++++++-----
+>  include/linux/binfmts.h |  2 ++
+>  3 files changed, 14 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
+> index 127fae9c21ab..16bfafd2671d 100644
+> --- a/fs/binfmt_misc.c
+> +++ b/fs/binfmt_misc.c
+> @@ -218,19 +218,10 @@ static int load_misc_binary(struct linux_binprm *bprm)
+>  		goto error;
+>  
+>  	bprm->file = interp_file;
+> -	if (fmt->flags & MISC_FMT_CREDENTIALS) {
+> -		loff_t pos = 0;
+> -
+> -		/*
+> -		 * No need to call prepare_binprm(), it's already been
+> -		 * done.  bprm->buf is stale, update from interp_file.
+> -		 */
+> -		memset(bprm->buf, 0, BINPRM_BUF_SIZE);
+> -		retval = kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE,
+> -				&pos);
+> -	} else
+> -		retval = prepare_binprm(bprm);
+> +	if (fmt->flags & MISC_FMT_CREDENTIALS)
+> +		bprm->preserve_creds = 1;
+>  
+> +	retval = prepare_binprm(bprm);
+>  	if (retval < 0)
+>  		goto error;
+>  
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 8bbf5fa785a6..01dbeb025c46 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1630,14 +1630,18 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+>   */
+>  int prepare_binprm(struct linux_binprm *bprm)
+>  {
+> -	int retval;
+>  	loff_t pos = 0;
+>  
+> -	bprm_fill_uid(bprm);
+> +	if (!bprm->preserve_creds) {
 
-Setting vmcs.EXIT_QUALIFICATION on entry failure is further complicated
-by the MSR load list, which returns the (1-based) entry that failed, and
-the number of MSRs to load is a 32-bit VMCS field.  At first blush, it
-would appear that overflowing a u32 is possible, but the number of MSRs
-that can be loaded is hardcapped at 4096 (limited by MSR_IA32_VMX_MISC).
+nit: hint this to the common execution path:
 
-In other words, there are two completely disparate types of data that
-eventually get stuffed into vmcs.EXIT_QUALIFICATION, neither of which is
-an 'unsigned long' in nature.  This was presumably the reasoning for
-switching to 'u32' when the related code was refactored in commit
-ca0bde28f2ed6 ("kvm: nVMX: Split VMCS checks from nested_vmx_run()").
+	if (likely(!bprm->preserve_creds) {
 
-Using an enum for the failure code addresses the technically-possible-
-but-will-never-happen scenario where Intel defines a failure code that
-doesn't fit in a 32-bit integer.  The enum variables and values will
-either be automatically sized (gcc 5.4 behavior) or be subjected to some
-combination of truncation.  The former case will simply work, while the
-latter will trigger a compile-time warning unless the compiler is being
-particularly unhelpful.
+> +		int retval;
+>  
+> -	retval = cap_bprm_set_creds(bprm);
+> -	if (retval)
+> -		return retval;
+> +		bprm_fill_uid(bprm);
+> +
+> +		retval = cap_bprm_set_creds(bprm);
+> +		if (retval)
+> +			return retval;
+> +	}
+> +	bprm->preserve_creds = 0;
+>  
+>  	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
+>  	return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index 89f1135dcb75..cb016f001e7a 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -26,6 +26,8 @@ struct linux_binprm {
+>  	unsigned long p; /* current top of mem */
+>  	unsigned long argmin; /* rlimit marker for copy_strings() */
+>  	unsigned int
+> +		/* Don't update the creds for an interpreter (see binfmt_misc) */
 
-Separating the failure code from the failed MSR entry allows for
-disassociating both from vmcs.EXIT_QUALIFICATION, which avoids the
-conundrum where KVM has to choose between 'u32 exit_qual' and tracking
-values as 'unsigned long' that have no business being tracked as such.
-To cement the split, set vmcs12->exit_qualification directly from the
-entry error code or failed MSR index instead of bouncing through a local
-variable.
+I'd like a much more verbose comment here. How about this:
 
-Opportunistically rename the variables in load_vmcs12_host_state() and
-vmx_set_nested_state() to call out that they're ignored, set exit_reason
-on demand on nested VM-Enter failure, and add a comment in
-nested_vmx_load_msr() to call out that returning 'i + 1' can't wrap.
+		/*
+		 * Skip setting new privileges for an interpreter (see
+		 * binfmt_misc) on the next call to prepare_binprm().
+		 */
 
-No functional change intended.
+> +		preserve_creds:1,
 
-Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+Nit pick: we've seen there is a logical difference here between "creds"
+(which mean "the creds struct itself") and "privileges" (which are
+stored in the cred struct). I think we should reinforce this distinction
+here and name this:
 
-v3:
-  - Set exit qual and reason in prepare_vmcs02() failure path. [kernel
-    test robot]
+		preserve_privileges:1,
 
-v2:
-  - Set vmcs12->exit_qualification directly to avoid writing the failed
-    MSR index (a u32) to the entry_failure_code enum. [Jim]
-  - Set exit_reason on demand since the "goto vm_exit" paths need to set
-    vmcs12->exit_qualification anyways, i.e. already have curly braces.
+>  		/*
+>  		 * True if most recent call to the commoncaps bprm_set_creds
+>  		 * hook (due to multiple prepare_binprm() calls from the
+> -- 
+> 2.25.0
+> 
 
- arch/x86/include/asm/vmx.h | 10 ++++----
- arch/x86/kvm/vmx/nested.c  | 47 +++++++++++++++++++++++---------------
- 2 files changed, 34 insertions(+), 23 deletions(-)
+Otherwise, yeah, this seems okay to me.
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 5e090d1f03f8d..cd7de4b401fee 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -527,10 +527,12 @@ struct vmx_msr_entry {
- /*
-  * Exit Qualifications for entry failure during or after loading guest state
-  */
--#define ENTRY_FAIL_DEFAULT		0
--#define ENTRY_FAIL_PDPTE		2
--#define ENTRY_FAIL_NMI			3
--#define ENTRY_FAIL_VMCS_LINK_PTR	4
-+enum vm_entry_failure_code {
-+	ENTRY_FAIL_DEFAULT		= 0,
-+	ENTRY_FAIL_PDPTE		= 2,
-+	ENTRY_FAIL_NMI			= 3,
-+	ENTRY_FAIL_VMCS_LINK_PTR	= 4,
-+};
- 
- /*
-  * Exit Qualifications for EPT Violations
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 2c36f3f531088..8f1b41599f58d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -922,6 +922,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- 	}
- 	return 0;
- fail:
-+	/* Note, max_msr_list_size is at most 4096, i.e. this can't wrap. */
- 	return i + 1;
- }
- 
-@@ -1117,7 +1118,7 @@ static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
-  * @entry_failure_code.
-  */
- static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
--			       u32 *entry_failure_code)
-+			       enum vm_entry_failure_code *entry_failure_code)
- {
- 	if (cr3 != kvm_read_cr3(vcpu) || (!nested_ept && pdptrs_changed(vcpu))) {
- 		if (CC(!nested_cr3_valid(vcpu, cr3))) {
-@@ -2470,7 +2471,7 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
-  * is assigned to entry_failure_code on failure.
-  */
- static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
--			  u32 *entry_failure_code)
-+			  enum vm_entry_failure_code *entry_failure_code)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
-@@ -2930,11 +2931,11 @@ static int nested_check_guest_non_reg_state(struct vmcs12 *vmcs12)
- 
- static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
- 					struct vmcs12 *vmcs12,
--					u32 *exit_qual)
-+					enum vm_entry_failure_code *entry_failure_code)
- {
- 	bool ia32e;
- 
--	*exit_qual = ENTRY_FAIL_DEFAULT;
-+	*entry_failure_code = ENTRY_FAIL_DEFAULT;
- 
- 	if (CC(!nested_guest_cr0_valid(vcpu, vmcs12->guest_cr0)) ||
- 	    CC(!nested_guest_cr4_valid(vcpu, vmcs12->guest_cr4)))
-@@ -2949,7 +2950,7 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 
- 	if (nested_vmx_check_vmcs_link_ptr(vcpu, vmcs12)) {
--		*exit_qual = ENTRY_FAIL_VMCS_LINK_PTR;
-+		*entry_failure_code = ENTRY_FAIL_VMCS_LINK_PTR;
- 		return -EINVAL;
- 	}
- 
-@@ -3241,9 +3242,9 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	enum vm_entry_failure_code entry_failure_code;
- 	bool evaluate_pending_interrupts;
--	u32 exit_reason = EXIT_REASON_INVALID_STATE;
--	u32 exit_qual;
-+	u32 exit_reason, failed_index;
- 
- 	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
- 		kvm_vcpu_flush_tlb_current(vcpu);
-@@ -3291,24 +3292,33 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 			return NVMX_VMENTRY_VMFAIL;
- 		}
- 
--		if (nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
-+		if (nested_vmx_check_guest_state(vcpu, vmcs12,
-+						 &entry_failure_code)) {
-+			exit_reason = EXIT_REASON_INVALID_STATE;
-+			vmcs12->exit_qualification = entry_failure_code;
- 			goto vmentry_fail_vmexit;
-+		}
- 	}
- 
- 	enter_guest_mode(vcpu);
- 	if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETTING)
- 		vcpu->arch.tsc_offset += vmcs12->tsc_offset;
- 
--	if (prepare_vmcs02(vcpu, vmcs12, &exit_qual))
-+	if (prepare_vmcs02(vcpu, vmcs12, &entry_failure_code)) {
-+		exit_reason = EXIT_REASON_INVALID_STATE;
-+		vmcs12->exit_qualification = entry_failure_code;
- 		goto vmentry_fail_vmexit_guest_mode;
-+	}
- 
- 	if (from_vmentry) {
--		exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
--		exit_qual = nested_vmx_load_msr(vcpu,
--						vmcs12->vm_entry_msr_load_addr,
--						vmcs12->vm_entry_msr_load_count);
--		if (exit_qual)
-+		failed_index = nested_vmx_load_msr(vcpu,
-+						   vmcs12->vm_entry_msr_load_addr,
-+						   vmcs12->vm_entry_msr_load_count);
-+		if (failed_index) {
-+			exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
-+			vmcs12->exit_qualification = failed_index;
- 			goto vmentry_fail_vmexit_guest_mode;
-+		}
- 	} else {
- 		/*
- 		 * The MMU is not initialized to point at the right entities yet and
-@@ -3372,7 +3382,6 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
- 
- 	load_vmcs12_host_state(vcpu, vmcs12);
- 	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
--	vmcs12->exit_qualification = exit_qual;
- 	if (enable_shadow_vmcs || vmx->nested.hv_evmcs)
- 		vmx->nested.need_vmcs12_to_shadow_sync = true;
- 	return NVMX_VMENTRY_VMEXIT;
-@@ -4066,8 +4075,8 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 				   struct vmcs12 *vmcs12)
- {
-+	enum vm_entry_failure_code ignored;
- 	struct kvm_segment seg;
--	u32 entry_failure_code;
- 
- 	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_EFER)
- 		vcpu->arch.efer = vmcs12->host_ia32_efer;
-@@ -4102,7 +4111,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
- 	 * couldn't have changed.
- 	 */
--	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &entry_failure_code))
-+	if (nested_vmx_load_cr3(vcpu, vmcs12->host_cr3, false, &ignored))
- 		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
- 
- 	if (!enable_ept)
-@@ -6002,7 +6011,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmcs12 *vmcs12;
--	u32 exit_qual;
-+	enum vm_entry_failure_code ignored;
- 	struct kvm_vmx_nested_state_data __user *user_vmx_nested_state =
- 		&user_kvm_nested_state->data.vmx[0];
- 	int ret;
-@@ -6143,7 +6152,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 
- 	if (nested_vmx_check_controls(vcpu, vmcs12) ||
- 	    nested_vmx_check_host_state(vcpu, vmcs12) ||
--	    nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
-+	    nested_vmx_check_guest_state(vcpu, vmcs12, &ignored))
- 		goto error_guest_mode;
- 
- 	vmx->nested.dirty_vmcs12 = true;
 -- 
-2.26.0
-
+Kees Cook
