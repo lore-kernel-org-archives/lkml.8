@@ -2,100 +2,163 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BBCC54E91
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE6DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F2C206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45862206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tdzX/Og6"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="raAND24w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgEKMeP (ORCPT
+        id S1730003AbgEKMeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:34:15 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64162 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729416AbgEKMeO (ORCPT
+        Mon, 11 May 2020 08:34:24 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:32910 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgEKMeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:34:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589200453; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=K/ZVBtan0dAMs+9OwwNDoOBPaVIbhgR20VKrES40O3Q=;
- b=tdzX/Og6GN28Rwn+1gLgeaPAjCmBas9BesdtK14dgp6mGThkOT/5APNHwKH1r+kJ2zsAhyP4
- QLH45PTu54hni011uPwMkoyEH5AXTxRnuf66iCuD6Sv2s2ZXAKa2oIgBJ7GBOfIIziGmmsso
- kvQSTmU62tCALKYWXeO53B9U74E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb94630.7f93acdfeab0-smtp-out-n04;
- Mon, 11 May 2020 12:33:52 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D753CC43637; Mon, 11 May 2020 12:33:52 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75375C432C2;
-        Mon, 11 May 2020 12:33:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 75375C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 May 2020 08:34:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589200462; x=1620736462;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=iUKxsyy8EDqa4LYd6lWomJlLTmy2039pJ+ilYaUf9pk=;
+  b=raAND24w/jqMX7z5rfUmI5qxTXptDGqcOQtHGb0WgEL2+sx4yR5vVOoC
+   rxuhoiJu2BSPEhpl1FP4PW6B5zrcvmgdWxlA4wn9sEcmlXjn8KXryW3Jx
+   sN94J+OMYdiew78oTyc3693MsGRE7A0dlKKaZmcMDX1dvQpIHIN8LEL6O
+   c=;
+IronPort-SDR: E1P0Scvi08EA1KBg+AP79GvCMQ4zXEhWJj7Kr1t/jNEwZ8qxaUVujEfDLgh8Bts7/n6ARyfyDm
+ 81iceauew21g==
+X-IronPort-AV: E=Sophos;i="5.73,379,1583193600"; 
+   d="scan'208";a="29802095"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 May 2020 12:34:09 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-16acd5e0.us-east-1.amazon.com (Postfix) with ESMTPS id 7BD62A2462;
+        Mon, 11 May 2020 12:33:57 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:33:56 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 11 May 2020 12:33:41 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 01/16] scripts/spelling: Add a few more typos
+Date:   Mon, 11 May 2020 14:32:47 +0200
+Message-ID: <20200511123302.12520-2-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
+References: <20200511123302.12520-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wil6210: avoid gcc-10 zero-length-bounds warning
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200505143332.1398524-1-arnd@arndb.de>
-References: <20200505143332.1398524-1-arnd@arndb.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Maya Erez <merez@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dedy Lansky <dlansky@codeaurora.org>,
-        Ahmad Masri <amasri@codeaurora.org>,
-        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Tzahi Sabo <stzahi@codeaurora.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lior David <liord@codeaurora.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200511123352.D753CC43637@smtp.codeaurora.org>
-Date:   Mon, 11 May 2020 12:33:52 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.253]
+X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> wrote:
+From: SeongJae Park <sjpark@amazon.de>
 
-> gcc-10 warns about accesses inside of a zero-length array:
-> 
-> drivers/net/wireless/ath/wil6210/cfg80211.c: In function 'wil_cfg80211_scan':
-> drivers/net/wireless/ath/wil6210/cfg80211.c:970:23: error: array subscript 255 is outside the bounds of an interior zero-length array 'struct <anonymous>[0]' [-Werror=zero-length-bounds]
->   970 |   cmd.cmd.channel_list[cmd.cmd.num_channels++].channel = ch - 1;
->       |   ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from drivers/net/wireless/ath/wil6210/wil6210.h:17,
->                  from drivers/net/wireless/ath/wil6210/cfg80211.c:11:
-> drivers/net/wireless/ath/wil6210/wmi.h:477:4: note: while referencing 'channel_list'
->   477 |  } channel_list[0];
->       |    ^~~~~~~~~~~~
-> 
-> Turn this into a flexible array to avoid the warning.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This commit adds typos found from DAMON patchset.
 
-Patch applied to ath-next branch of ath.git, thanks.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ scripts/spelling.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-04a4d3416372 wil6210: avoid gcc-10 zero-length-bounds warning
-
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index ffa838f3a2b5..a8214d8e8e4b 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -59,6 +59,7 @@ actualy||actually
+ acumulating||accumulating
+ acumulative||accumulative
+ acumulator||accumulator
++acutally||actually
+ adapater||adapter
+ addional||additional
+ additionaly||additionally
+@@ -245,6 +246,7 @@ calescing||coalescing
+ calle||called
+ callibration||calibration
+ callled||called
++callser||caller
+ calucate||calculate
+ calulate||calculate
+ cancelation||cancellation
+@@ -664,6 +666,7 @@ hanlde||handle
+ hanled||handled
+ happend||happened
+ harware||hardware
++havind||having
+ heirarchically||hierarchically
+ helpfull||helpful
+ hexdecimal||hexadecimal
+@@ -835,6 +838,7 @@ logile||logfile
+ loobpack||loopback
+ loosing||losing
+ losted||lost
++maangement||management
+ machinary||machinery
+ maibox||mailbox
+ maintainance||maintenance
+@@ -999,6 +1003,7 @@ partiton||partition
+ pased||passed
+ passin||passing
+ pathes||paths
++pattrns||patterns
+ pecularities||peculiarities
+ peformance||performance
+ peforming||performing
+@@ -1238,6 +1243,7 @@ shoule||should
+ shrinked||shrunk
+ siginificantly||significantly
+ signabl||signal
++significanly||significantly
+ similary||similarly
+ similiar||similar
+ simlar||similar
+@@ -1352,6 +1358,7 @@ thead||thread
+ therfore||therefore
+ thier||their
+ threds||threads
++threee||three
+ threshhold||threshold
+ thresold||threshold
+ throught||through
+@@ -1391,6 +1398,7 @@ tyep||type
+ udpate||update
+ uesd||used
+ uknown||unknown
++usccess||success
+ usupported||unsupported
+ uncommited||uncommitted
+ unconditionaly||unconditionally
 -- 
-https://patchwork.kernel.org/patch/11529309/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
