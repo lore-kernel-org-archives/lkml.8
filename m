@@ -2,89 +2,105 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB68C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A8C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E33420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589214482;
-	bh=dWnpFgb+Yx+pcGOYtWqzFL2thynqYWnO1OaoLx7QFcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmTXjmq+i9Vto96K6DJWfkR0BfOR24c0/ZwTEcn76Yhy/m29v9+K9dP1SUftbALmq
-	 8R0InUc4f6L4JfDgrcF1DhUyjVJdHgh3nT7LtHd0MgH7xAMJZNwWm0GyUe5uUlQKvW
-	 mlEYoD3ApThHnVnpQKs6hSEPnuUsAQTs8YbEUGvc=
+	by mail.kernel.org (Postfix) with ESMTP id 0000A206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgEKQ2B (ORCPT
+        id S1730702AbgEKQ3b convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbgEKQ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:28:01 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E269C2070B;
-        Mon, 11 May 2020 16:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589214480;
-        bh=dWnpFgb+Yx+pcGOYtWqzFL2thynqYWnO1OaoLx7QFcc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1r5JMwQvUG65cvK8P/9WIeAwFKoXlUIJbPRdq5VFo9X6fs8fyFnAq6eXNviydjJT
-         BdYV26bfkEKLslnf5ij/wG/z7Wq+aymrnC+HEO0ILvDX9cD1O6js758TulIe5Z3jcC
-         vYWXDe7w28B73UGMgccD11aG5k8fcJQv1pEq4MyU=
-From:   Will Deacon <will@kernel.org>
-To:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        kexec@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
-Date:   Mon, 11 May 2020 17:27:54 +0100
-Message-Id: <158920375123.230375.8898075017057814195.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1589202116-18265-1-git-send-email-amit.kachhap@arm.com>
-References: <1589202116-18265-1-git-send-email-amit.kachhap@arm.com>
+        Mon, 11 May 2020 12:29:31 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45141 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729463AbgEKQ3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:29:31 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BACE960012;
+        Mon, 11 May 2020 16:29:24 +0000 (UTC)
+Date:   Mon, 11 May 2020 18:29:23 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>,
+        richard@nod.at, vigneshr@ti.com, s.hauer@pengutronix.de,
+        masonccyang@mxic.com.tw, christophe.kerello@st.com,
+        stefan@agner.ch, piotrs@cadence.com, devik@eaxlabs.cz,
+        tglx@linutronix.de, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nand: raw: use write_oob_raw for MTD_OPS_AUTO_OOB mode
+Message-ID: <20200511182923.6a4961ab@xps13>
+In-Reply-To: <20200504123237.5c128668@collabora.com>
+References: <20200504094253.2741109-1-noltari@gmail.com>
+        <20200504123237.5c128668@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 18:31:55 +0530, Amit Daniel Kachhap wrote:
-> Recently arm64 linux kernel added support for Armv8.3-A Pointer
-> Authentication feature. If this feature is enabled in the kernel and the
-> hardware supports address authentication then the return addresses are
-> signed and stored in the stack to prevent ROP kind of attack. Kdump tool
-> will now dump the kernel with signed lr values in the stack.
+Hello,
+
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 4 May
+2020 12:32:37 +0200:
+
+> On Mon,  4 May 2020 11:42:53 +0200
+> Álvaro Fernández Rojas <noltari@gmail.com> wrote:
 > 
-> Any user analysis tool for this kernel dump may need the kernel pac mask
-> information in vmcoreinfo to generate the correct return address for
-> stacktrace purpose as well as to resolve the symbol name.
+> > Some NAND controllers change the ECC bytes when OOB is written with ECC
+> > enabled.
+> > This is a problem in brcmnand, since adding JFFS2 cleanmarkers after the page
+> > has been erased will change the ECC bytes to 0 and the controller will think
+> > the block is bad.
+> > It can be fixed by using write_oob_raw, which ensures ECC is disabled.
+> > 
+> > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/nand_base.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > index c24e5e2ba130..755d25200520 100644
+> > --- a/drivers/mtd/nand/raw/nand_base.c
+> > +++ b/drivers/mtd/nand/raw/nand_base.c
+> > @@ -488,7 +488,7 @@ static int nand_do_write_oob(struct nand_chip *chip, loff_t to,
+> >  
+> >  	nand_fill_oob(chip, ops->oobbuf, ops->ooblen, ops);
+> >  
+> > -	if (ops->mode == MTD_OPS_RAW)
+> > +	if (ops->mode == MTD_OPS_AUTO_OOB || ops->mode == MTD_OPS_RAW)
+> >  		status = chip->ecc.write_oob_raw(chip, page & chip->pagemask);  
 > 
-> [...]
+> The doc says:
+> 
+> @MTD_OPS_PLACE_OOB:  OOB data are placed at the given offset (default)
+> @MTD_OPS_AUTO_OOB:   OOB data are automatically placed at the free areas
+>                      which are defined by the internal ecclayout
+> @MTD_OPS_RAW:        data are transferred as-is, with no error
+> 		     correction; this mode implies %MTD_OPS_PLACE_OOB
+> 
+> To me, that means MTD_OPS_PLACE_OOB and MTD_OPS_AUTO_OOB do not imply
+> MTD_OPS_RAW. Anyway those modes are just too vague. We really should
+> separate the ECC-disabled/ECC-enabled concept (AKA raw vs non-raw mode)
+> from the OOB placement scheme. IIRC, Miquel had a patchset doing that.
+> 
+> We also should have the concept of protected OOB-region vs
+> unprotected-OOB-region if we want JFFS2 to work with controllers that
+> protect part of the OOB region. Once we have that we can patch JFFS2
+> to write things with "ECC-disabled"+"auto-OOB-placement-on-unprotected
+> area".
 
-Applied to arm64 (for-next/ptr-auth), thanks!
+I see the problem but as Boris said the fix is not valid as-is.
+Problem is: I don't have a better proposal yet.
 
-[1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
-      https://git.kernel.org/arm64/c/203b1152d18c
-[2/2] Documentation/vmcoreinfo: Add documentation for 'KERNELPACMASK'
-      https://git.kernel.org/arm64/c/c0fc00ec6304
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Is forcing JFFS2 to write cleanmarkers in raw mode only an option?
