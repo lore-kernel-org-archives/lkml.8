@@ -2,146 +2,218 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F382AC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D7BC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5D2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ReG51ffh"
+	by mail.kernel.org (Postfix) with ESMTP id D4CE52082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgEKL2r (ORCPT
+        id S1730059AbgEKL2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:28:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42850 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730048AbgEKL2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:28:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589196519;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kMThpkceIHVkmBtaCW1DTUS61tjMEkTTbd1IFAK0wUA=;
-        b=ReG51ffhaegyAspANLL/LnKwUeh+VltMTQKDaBgXZ/TLbVU8Z18UlpKavOusqAajdvSi/X
-        mNHXTMzPzmeN9CvsfkIQyxgg5OKQ2/b3viwj6GMF/vwr5YcIH6Qnv/kggpdYoJGggkFDJ3
-        8nRXcwHjD6M4CxB5bNtB0a7jW2JosGE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-isU4oOttPfiFwIgzJyiw7A-1; Mon, 11 May 2020 07:28:37 -0400
-X-MC-Unique: isU4oOttPfiFwIgzJyiw7A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4019E107ACCD;
-        Mon, 11 May 2020 11:28:36 +0000 (UTC)
-Received: from krava (unknown [10.40.194.31])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4414B9CB9;
-        Mon, 11 May 2020 11:28:34 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:28:33 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Anand K Mistry <amistry@google.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf record: Use an eventfd to wakeup when done
-Message-ID: <20200511112833.GE2986380@krava>
-References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Mon, 11 May 2020 07:28:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:55717 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729507AbgEKLZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49LJWg4x48z9ty3h;
+        Mon, 11 May 2020 13:25:19 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id pVBKvBQpWqqQ; Mon, 11 May 2020 13:25:19 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJWg3sKfz9ty3g;
+        Mon, 11 May 2020 13:25:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2DF3A8B7AE;
+        Mon, 11 May 2020 13:25:26 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id rn0jcSSwAFcz; Mon, 11 May 2020 13:25:26 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CF2688B7AD;
+        Mon, 11 May 2020 13:25:25 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id A532C65A09; Mon, 11 May 2020 11:25:25 +0000 (UTC)
+Message-Id: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 00/45] Use hugepages to map kernel mem on 8xx
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 May 2020 11:25:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:56:43PM +1000, Anand K Mistry wrote:
-> The setting and checking of 'done' contains a rare race where the signal
-> handler setting 'done' is run after checking to break the loop, but
-> before waiting in evlist__poll(). In this case, the main loop won't wake
-> up until either another signal is sent, or the perf data fd causes a
-> wake up.
-> 
-> The following simple script can trigger this condition (but you might
-> need to run it for several hours):
-> for ((i = 0; i >= 0; i++)) ; do
->   echo "Loop $i"
->   delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
->   ./perf record -- sleep 30000000 >/dev/null&
->   pid=$!
->   sleep $delay
->   kill -TERM $pid
->   echo "PID $pid"
->   wait $pid
-> done
-> 
-> At some point, the loop will stall. Adding logging, even though perf has
-> received the SIGTERM and set 'done = 1', perf will remain sleeping until
-> a second signal is sent.
+The main purpose of this big series is to:
+- reorganise huge page handling to avoid using mm_slices.
+- use huge pages to map kernel memory on the 8xx.
 
-so it's just few instructions in between the check and the evlist__poll
+The 8xx supports 4 page sizes: 4k, 16k, 512k and 8M.
+It uses 2 Level page tables, PGD having 1024 entries, each entry
+covering 4M address space. Then each page table has 1024 entries.
 
-         if (done || draining)
-               break;
-         err = evlist__poll(rec->evlist, -1);
+At the time being, page sizes are managed in PGD entries, implying
+the use of mm_slices as it can't mix several pages of the same size
+in one page table.
 
-nice catch!
+The first purpose of this series is to reorganise things so that
+standard page tables can also handle 512k pages. This is done by
+adding a new _PAGE_HUGE flag which will be copied into the Level 1
+entry in the TLB miss handler. That done, we have 2 types of pages:
+- PGD entries to regular page tables handling 4k/16k and 512k pages
+- PGD entries to hugepd tables handling 8M pages.
 
-SNIP
+There is no need to mix 8M pages with other sizes, because a 8M page
+will use more than what a single PGD covers.
 
-> @@ -518,15 +519,19 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
->  
->  static volatile int signr = -1;
->  static volatile int child_finished;
-> +static int done_fd = -1;
->  
->  static void sig_handler(int sig)
->  {
-> +	u64 tmp = 1;
->  	if (sig == SIGCHLD)
->  		child_finished = 1;
->  	else
->  		signr = sig;
->  
->  	done = 1;
+Then comes the second purpose of this series. At the time being, the
+8xx has implemented special handling in the TLB miss handlers in order
+to transparently map kernel linear address space and the IMMR using
+huge pages by building the TLB entries in assembly at the time of the
+exception.
 
-could you please put some explaining comment in here,
-so we are not confused by this in few months ;-)
+As mm_slices is only for user space pages, and also because it would
+anyway not be convenient to slice kernel address space, it was not
+possible to use huge pages for kernel address space. But after step
+one of the series, it is now more flexible to use huge pages.
 
-> +	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
-> +		pr_err("failed to signal wakeup fd\n");
->  }
->  
->  static void sigsegv_handler(int sig)
-> @@ -1424,6 +1429,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  	int fd;
->  	float ratio = 0;
->  
-> +	done_fd = eventfd(0, EFD_NONBLOCK);
-> +	evlist__add_pollfd(rec->evlist, done_fd);
+This series drop all assembly 'just in time' handling of huge pages
+and use huge pages in page tables instead.
 
-both of those can fail, please check the return values
+Once the above is done, then comes the cherry on cake:
+- Use huge pages for KASAN shadow mapping
+- Allow pinned TLBs with strict kernel rwx
+- Allow pinned TLBs with debug pagealloc
 
-thanks,
-jirka
+Then, last but not least, those modifications for the 8xx allows the
+following improvement on book3s/32:
+- Mapping KASAN shadow with BATs
+- Allowing BATs with debug pagealloc
 
-> +
->  	atexit(record__sig_exit);
->  	signal(SIGCHLD, sig_handler);
->  	signal(SIGINT, sig_handler);
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
+All this allows to considerably simplify TLB miss handlers and associated
+initialisation. The overhead of reading page tables is negligible
+compared to the reduction of the miss handlers.
+
+While we were at touching pte_update(), some cleanup was done
+there too.
+
+Tested widely on 8xx and 832x. Boot tested on QEMU MAC99.
+
+Changes in v3:
+- Fixed the handling of leaf pages page size which didn't build on PPC64 and was invisibily bogus on PPC32 (patch 12)
+
+Changes in v2:
+- Selecting HUGETLBFS instead of HUGETLB_PAGE which leads to link failure.
+- Rebase on latest powerpc/merge branch
+- Reworked the way TLB 28 to 31 are pinned because it was not working.
+
+Christophe Leroy (45):
+  powerpc/kasan: Fix error detection on memory allocation
+  powerpc/kasan: Fix issues by lowering KASAN_SHADOW_END
+  powerpc/kasan: Fix shadow pages allocation failure
+  powerpc/kasan: Remove unnecessary page table locking
+  powerpc/kasan: Refactor update of early shadow mappings
+  powerpc/kasan: Declare kasan_init_region() weak
+  powerpc/ptdump: Limit size of flags text to 1/2 chars on PPC32
+  powerpc/ptdump: Reorder flags
+  powerpc/ptdump: Add _PAGE_COHERENT flag
+  powerpc/ptdump: Display size of BATs
+  powerpc/ptdump: Standardise display of BAT flags
+  powerpc/ptdump: Properly handle non standard page size
+  powerpc/ptdump: Handle hugepd at PGD level
+  powerpc/32s: Don't warn when mapping RO data ROX.
+  powerpc/mm: Allocate static page tables for fixmap
+  powerpc/mm: Fix conditions to perform MMU specific management by
+    blocks on PPC32.
+  powerpc/mm: PTE_ATOMIC_UPDATES is only for 40x
+  powerpc/mm: Refactor pte_update() on nohash/32
+  powerpc/mm: Refactor pte_update() on book3s/32
+  powerpc/mm: Standardise __ptep_test_and_clear_young() params between
+    PPC32 and PPC64
+  powerpc/mm: Standardise pte_update() prototype between PPC32 and PPC64
+  powerpc/mm: Create a dedicated pte_update() for 8xx
+  powerpc/mm: Reduce hugepd size for 8M hugepages on 8xx
+  powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+  powerpc/8xx: Prepare handlers for _PAGE_HUGE for 512k pages.
+  powerpc/8xx: Manage 512k huge pages as standard pages.
+  powerpc/8xx: Only 8M pages are hugepte pages now
+  powerpc/8xx: MM_SLICE is not needed anymore
+  powerpc/8xx: Move PPC_PIN_TLB options into 8xx Kconfig
+  powerpc/8xx: Add function to set pinned TLBs
+  powerpc/8xx: Don't set IMMR map anymore at boot
+  powerpc/8xx: Always pin TLBs at startup.
+  powerpc/8xx: Drop special handling of Linear and IMMR mappings in I/D
+    TLB handlers
+  powerpc/8xx: Remove now unused TLB miss functions
+  powerpc/8xx: Move DTLB perf handling closer.
+  powerpc/mm: Don't be too strict with _etext alignment on PPC32
+  powerpc/8xx: Refactor kernel address boundary comparison
+  powerpc/8xx: Add a function to early map kernel via huge pages
+  powerpc/8xx: Map IMMR with a huge page
+  powerpc/8xx: Map linear memory with huge pages
+  powerpc/8xx: Allow STRICT_KERNEL_RwX with pinned TLB
+  powerpc/8xx: Allow large TLBs with DEBUG_PAGEALLOC
+  powerpc/8xx: Implement dedicated kasan_init_region()
+  powerpc/32s: Allow mapping with BATs with DEBUG_PAGEALLOC
+  powerpc/32s: Implement dedicated kasan_init_region()
+
+ arch/powerpc/Kconfig                          |  62 +--
+ arch/powerpc/configs/adder875_defconfig       |   1 -
+ arch/powerpc/configs/ep88xc_defconfig         |   1 -
+ arch/powerpc/configs/mpc866_ads_defconfig     |   1 -
+ arch/powerpc/configs/mpc885_ads_defconfig     |   1 -
+ arch/powerpc/configs/tqm8xx_defconfig         |   1 -
+ arch/powerpc/include/asm/book3s/32/pgtable.h  |  78 ++--
+ arch/powerpc/include/asm/fixmap.h             |   4 +
+ arch/powerpc/include/asm/hugetlb.h            |   4 -
+ arch/powerpc/include/asm/kasan.h              |  10 +-
+ .../include/asm/nohash/32/hugetlb-8xx.h       |  32 +-
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h  |  74 +---
+ arch/powerpc/include/asm/nohash/32/pgtable.h  | 104 +++--
+ arch/powerpc/include/asm/nohash/32/pte-8xx.h  |   4 +-
+ arch/powerpc/include/asm/nohash/32/slice.h    |  20 -
+ arch/powerpc/include/asm/nohash/64/pgtable.h  |  28 +-
+ arch/powerpc/include/asm/nohash/pgtable.h     |   2 +-
+ arch/powerpc/include/asm/pgtable.h            |   2 +
+ arch/powerpc/include/asm/slice.h              |   2 -
+ arch/powerpc/kernel/head_8xx.S                | 354 ++++++++----------
+ arch/powerpc/kernel/setup_32.c                |   2 +-
+ arch/powerpc/kernel/vmlinux.lds.S             |   3 +-
+ arch/powerpc/mm/book3s32/mmu.c                |  12 +-
+ arch/powerpc/mm/hugetlbpage.c                 |  41 +-
+ arch/powerpc/mm/init_32.c                     |  12 +-
+ arch/powerpc/mm/kasan/8xx.c                   |  74 ++++
+ arch/powerpc/mm/kasan/Makefile                |   2 +
+ arch/powerpc/mm/kasan/book3s_32.c             |  57 +++
+ arch/powerpc/mm/kasan/kasan_init_32.c         |  88 ++---
+ arch/powerpc/mm/mmu_decl.h                    |   4 +
+ arch/powerpc/mm/nohash/8xx.c                  | 226 ++++++-----
+ arch/powerpc/mm/pgtable.c                     |  34 +-
+ arch/powerpc/mm/pgtable_32.c                  |  22 +-
+ arch/powerpc/mm/ptdump/8xx.c                  |  52 +--
+ arch/powerpc/mm/ptdump/bats.c                 |  41 +-
+ arch/powerpc/mm/ptdump/ptdump.c               |  71 +++-
+ arch/powerpc/mm/ptdump/ptdump.h               |   3 +
+ arch/powerpc/mm/ptdump/shared.c               |  58 +--
+ arch/powerpc/perf/8xx-pmu.c                   |  10 -
+ arch/powerpc/platforms/8xx/Kconfig            |  50 ++-
+ arch/powerpc/platforms/Kconfig.cputype        |   2 +-
+ arch/powerpc/sysdev/cpm_common.c              |   2 +
+ 42 files changed, 853 insertions(+), 798 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/nohash/32/slice.h
+ create mode 100644 arch/powerpc/mm/kasan/8xx.c
+ create mode 100644 arch/powerpc/mm/kasan/book3s_32.c
+
+-- 
+2.25.0
 
