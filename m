@@ -2,114 +2,80 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BBFC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919F7C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339A12075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723EF2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgEKKTj (ORCPT
+        id S1729443AbgEKKUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:19:39 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60153 "EHLO mga09.intel.com"
+        Mon, 11 May 2020 06:20:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45324 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgEKKTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:19:31 -0400
-IronPort-SDR: CpfMjcxYewT0+DNQhP5qX4TutEN50ZfjfYiyVNrKIoOpsNmnTufXB8Ndjit7/49qLTGLsHzS5r
- 2hgiFPQfvPIg==
+        id S1728968AbgEKKUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:20:17 -0400
+IronPort-SDR: NpyVzT8A0pswTth/SRUcJKHBD0IB7NRDvcmyLFi7uLrUbY7FuKJpD2uKFkrPQso22wVKmLY+fy
+ Oa1jZUc0IbgA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 03:19:27 -0700
-IronPort-SDR: pdhUQcMw0nd5lv8JNlKh867//xSKWOV//CePf+o0qYqs0xqnHP06Dej0E2N4BIb5VTp0Ka9nSh
- KfKUug0/vXOw==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 03:20:16 -0700
+IronPort-SDR: GykbylfSzbmV/Ej+HXrmqwM/DP9kmXhFLxS8nBCs3aM1cZXR1XgO6RGiLYoXzJ+n6eh2RUiScd
+ ecpFI6YZJogQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
-   d="scan'208";a="371179750"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 11 May 2020 03:19:25 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 11 May 2020 13:19:24 +0300
-Date:   Mon, 11 May 2020 13:19:24 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB TYPEC CLASS" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v3] usb: typec: mux: intel: Fix DP_HPD_LVL bit field
-Message-ID: <20200511101924.GC1295548@kuha.fi.intel.com>
-References: <20200511091837.102508-1-pmalani@chromium.org>
+   d="scan'208";a="340510307"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 11 May 2020 03:20:16 -0700
+Received: from [10.255.160.142] (vramuthx-mobl1.gar.corp.intel.com [10.255.160.142])
+        by linux.intel.com (Postfix) with ESMTP id 715E4580569;
+        Mon, 11 May 2020 03:20:13 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH 0/6] mtd: spi-nor: Move cadence-qaudspi to spi-mem
+ framework
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, marex@denx.de
+References: <20200508185411.487-1-vigneshr@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <22e0fc24-fa40-9fe9-8a1b-7b8e5c080020@linux.intel.com>
+Date:   Mon, 11 May 2020 18:20:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511091837.102508-1-pmalani@chromium.org>
+In-Reply-To: <20200508185411.487-1-vigneshr@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 02:18:34AM -0700, Prashant Malani wrote:
-> According to the PMC Type C Subsystem (TCSS) Mux programming guide rev
-> 0.6, the PMC HPD request LVL bit field is bit 4.
-> Fix the definition here to match the programming guide.
-> 
-> Since this bit field is changing, explicitly define a field for the
-> HPD_HIGH mode data bit.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> Fixes: 6701adfa9693 ("usb: typec: driver for Intel PMC mux control")
-> Reviewed-by: Benson Leung <bleung@chromium.org>
+Hi Vignesh,
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On 9/5/2020 2:54 am, Vignesh Raghavendra wrote:
+> Vadivel,
+> 
+> I have maintained the additional changes needed on top of this series
+> for Intel platform that were part of your v12 series here (needs cleanup):
+> 
+> https://github.com/r-vignesh/linux.git  branch: cqspi-mig
+> 
+> Please use above branch to test the same.
 
-> ---
-> 
-> Changes in v3:
-> - Fixed sorting of the bit field after modification.
-> 
-> Changes in v2:
-> - Fixed bit error in commit message.
-> 
->  drivers/usb/typec/mux/intel_pmc_mux.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-> index 67c5139cfa0d..c22e5c4bbf1a 100644
-> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
-> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-> @@ -63,6 +63,7 @@ enum {
->  #define PMC_USB_ALTMODE_DP_MODE_SHIFT	8
->  
->  /* TBT specific Mode Data bits */
-> +#define PMC_USB_ALTMODE_HPD_HIGH	BIT(14)
->  #define PMC_USB_ALTMODE_TBT_TYPE	BIT(17)
->  #define PMC_USB_ALTMODE_CABLE_TYPE	BIT(18)
->  #define PMC_USB_ALTMODE_ACTIVE_LINK	BIT(20)
-> @@ -74,8 +75,8 @@ enum {
->  #define PMC_USB_ALTMODE_TBT_GEN(_g_)	(((_g_) & GENMASK(1, 0)) << 28)
->  
->  /* Display HPD Request bits */
-> +#define PMC_USB_DP_HPD_LVL		BIT(4)
->  #define PMC_USB_DP_HPD_IRQ		BIT(5)
-> -#define PMC_USB_DP_HPD_LVL		BIT(6)
->  
->  struct pmc_usb;
->  
-> @@ -158,8 +159,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
->  			 PMC_USB_ALTMODE_DP_MODE_SHIFT;
->  
->  	if (data->status & DP_STATUS_HPD_STATE)
-> -		req.mode_data |= PMC_USB_DP_HPD_LVL <<
-> -				 PMC_USB_ALTMODE_DP_MODE_SHIFT;
-> +		req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
->  
->  	return pmc_usb_command(port, (void *)&req, sizeof(req));
->  }
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
+Thank you for the sending the patches on behalf of, will do the cleanup.
+also I have already prepared YAML file , will send as separate patch.
 
--- 
-heikki
+Regards
+Vadivel
