@@ -2,179 +2,131 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9451CC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A876BC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A032137B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589171668;
-	bh=8cxkOBY+9EGYNdm5+60pMObgZTrCL4Ui1+VzaqkIpZ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RysKIW3sZKz0jaFEydlCBlNCjntNrtt/c8EZ/zuGrJQz6PK7htYNd9g4JHhp4IBDn
-	 Io1Or8XJkkxn+MEyKNmOCh7vZaaYt6CJevl/8vxq4wUceZmXgb1feXrbidQQR783kp
-	 f9KJBQRtSsxt+k0JOu7B3c2IgXus0hRK6+7e7oLg=
+	by mail.kernel.org (Postfix) with ESMTP id 72DAF20735
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:35:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KAW6y7vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbgEKEe1 (ORCPT
+        id S1726553AbgEKEfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgEKEe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:34:27 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60FEF2184D
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589171666;
-        bh=8cxkOBY+9EGYNdm5+60pMObgZTrCL4Ui1+VzaqkIpZ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=icHPgs+m3HthZ5wt9gM3yK9UF6VIeTCPc/3n+R/liPRL9TH15bTwljCaz9WVGa7Sj
-         n5vXV4iFfNa7F1nFipQnqQqo3xAeBC8PGE3Wxwj+YzWH4ujfXeU4UbRrMahYqAf+xx
-         xgBe9wgam+nTQ6RgO+y/0DJXjydPuiL5g8vZq4JI=
-Received: by mail-wr1-f46.google.com with SMTP id i15so9095794wrx.10
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:34:26 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYjLv5LYdRU8P7aG+xzw6fGOIG9QrI3TgJHHxrB7E1W156jRDh+
-        7zjDT53xvi2kJI8ZaRf1uO6KhIuBOkpWAf+/1ydjzQ==
-X-Google-Smtp-Source: APiQypLOI0V0OjmUYoU5+bXZs9UBJ7YTup8v3BS8zzZtKeow7wSPauRIgVPZNzMKVpyNW6DRZKQzRLnLSBWR5JD5NBI=
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr16355884wrs.257.1589171664822;
- Sun, 10 May 2020 21:34:24 -0700 (PDT)
+        Mon, 11 May 2020 00:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725840AbgEKEfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:35:01 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB82C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:35:00 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id di6so3887503qvb.10
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 21:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eAd4gbb0pcNnApGm6Og5wCWvp0yRJHJXtLCgR/gxdK4=;
+        b=KAW6y7vm9lCjNEy0YAU6G7q+RuEfJEjJ0WGtTcfF5+EDnb0VUdt+EuDEMmnxAU8uuI
+         6Vg7JkVSpSPv1CCUzufDIZVzUXHtCFf1UHZ45JvPn8T8NOs84T++3dXQkIG0VtvW9mAY
+         2oiemNvUY9qm/uOTIy3Kg7w1rraNMNR8GsEVXJEnFU0g6iK2ov0qr8ILjlfx1jrGXavX
+         PYqT/1iOUrnXjiTtFVU+eziz5YUmPIUOaXDIlyUAy+GxwFrI6rCeuun67mfiqth3ixx8
+         xc1mqCVnn1+SD2CTriYUIJFRsYVJ6fCEp0wdh+uytF8zDHHLgHUv6oJx3qm1JFVJwxCZ
+         v3Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eAd4gbb0pcNnApGm6Og5wCWvp0yRJHJXtLCgR/gxdK4=;
+        b=Km8Jw2u7AcWxMZ0manI7DUayoMgeL+sieJMyq0QVpzMSVEUPnJRbPue3kjGWVB7t44
+         pO06qFrAVtKn0UN6OOyoLCCWUsMUWUmwv2K3/N4bR7z4eEEVh2IRHlAMpmmvHGt8YreA
+         ZZqdfPc41UDPEUdpLGgWL9jXyYe9UeXFtm90pGhcQsEukVl9JsbP5RK3ZpjLjtg9Czc/
+         22dJwoN2FRvCQURRemsjwLL+cDpDFxSIiajP7aTCYPn+XWfurmkTokCO7RiSkxfxbGS9
+         pbsboaskoqF/cg/bkFwf9+zSWx1SBFQb7b0vF0ihG0mR4/FGebS1JXZZjqKAjibM+mRF
+         aeaQ==
+X-Gm-Message-State: AGi0Pub8fUS/A9hXHrihc4rkqM93KUMiwXYvL38aBqCIQuLttLqxYphA
+        QM+ny7jgrf5FMxEAVvuzhbXDrQ==
+X-Google-Smtp-Source: APiQypLFNnKP7c/SRXW2/x9gJo9sMJpGIWsLIMrsDdA2a1mki4zFpL/KN4MNfuGlgTnwSxSkYBzbJA==
+X-Received: by 2002:a0c:f70c:: with SMTP id w12mr13674265qvn.28.1589171699967;
+        Sun, 10 May 2020 21:34:59 -0700 (PDT)
+Received: from ovpn-112-210.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e16sm8384451qtc.92.2020.05.10.21.34.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 May 2020 21:34:59 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     alex.williamson@redhat.com
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] vfio/pci: fix memory leaks of eventfd ctx
+Date:   Mon, 11 May 2020 00:34:50 -0400
+Message-Id: <20200511043450.2718-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134904.457578656@linutronix.de>
-In-Reply-To: <20200505134904.457578656@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 May 2020 21:34:13 -0700
-X-Gmail-Original-Message-ID: <CALCETrXwuxtZgniJxKZOy5ryqXSbbGMHMBwgEb400Pn9XpynzQ@mail.gmail.com>
-Message-ID: <CALCETrXwuxtZgniJxKZOy5ryqXSbbGMHMBwgEb400Pn9XpynzQ@mail.gmail.com>
-Subject: Re: [patch V4 part 3 12/29] x86/entry/common: Provide idtentry_enter/exit()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Provide functions which handle the low level entry and exit similiar to
-> enter/exit from user mode.
->
+Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+Fix it by calling eventfd_ctx_put() for those memory in
+vfio_pci_release() before vfio_device_release().
 
-> +
-> +/**
-> + * idtentry_exit - Common code to handle return from exceptions
-> + * @regs:      Pointer to pt_regs (exception entry regs)
-> + *
-> + * Depending on the return target (kernel/user) this runs the necessary
-> + * preemption and work checks if possible and reguired and returns to
-> + * the caller with interrupts disabled and no further work pending.
-> + *
-> + * This is the last action before returning to the low level ASM code which
-> + * just needs to return to the appropriate context.
-> + *
-> + * Invoked by all exception/interrupt IDTENTRY handlers which are not
-> + * returning through the paranoid exit path (all except NMI, #DF and the IST
-> + * variants of #MC and #DB).
+unreferenced object 0xebff008981cc2b00 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
+unreferenced object 0x29ff008981cc4180 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
 
-The paranoid-exit bit is not really relevant.  The important part is
-which stack we're on.  See below.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/vfio/pci/vfio_pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> + */
-> +void noinstr idtentry_exit(struct pt_regs *regs)
-> +{
-> +       lockdep_assert_irqs_disabled();
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 6c6b37b5c04e..080e6608f297 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -519,6 +519,10 @@ static void vfio_pci_release(void *device_data)
+ 		vfio_pci_vf_token_user_add(vdev, -1);
+ 		vfio_spapr_pci_eeh_release(vdev->pdev);
+ 		vfio_pci_disable(vdev);
++		if (vdev->err_trigger)
++			eventfd_ctx_put(vdev->err_trigger);
++		if (vdev->req_trigger)
++			eventfd_ctx_put(vdev->req_trigger);
+ 	}
+ 
+ 	mutex_unlock(&vdev->reflck->lock);
+-- 
+2.21.0 (Apple Git-122.2)
 
-How about:
-
-#ifdef CONFIG_DEBUG_ENTRY
-WARN_ON_ONCE(!on_thread_stack());
-#endif
-
-> +
-> +       /* Check whether this returns to user mode */
-> +       if (user_mode(regs)) {
-> +               prepare_exit_to_usermode(regs);
-> +       } else if (regs->flags & X86_EFLAGS_IF) {
-> +               /* Check kernel preemption, if enabled */
-> +               if (IS_ENABLED(CONFIG_PREEMPTION)) {
-> +                       /*
-> +                        * This needs to be done very carefully.
-> +                        * idtentry_enter() invoked rcu_irq_enter(). This
-> +                        * needs to undone before scheduling.
-> +                        *
-> +                        * Preemption is disabled inside of RCU idle
-> +                        * sections. When the task returns from
-> +                        * preempt_schedule_irq(), RCU is still watching.
-> +                        *
-> +                        * rcu_irq_exit_preempt() has additional state
-> +                        * checking if CONFIG_PROVE_RCU=y
-> +                        */
-> +                       if (!preempt_count()) {
-> +                               instr_begin();
-> +                               rcu_irq_exit_preempt();
-> +                               if (need_resched())
-> +                                       preempt_schedule_irq();
-
-This is an excellent improvement.  Thanks!
-
-> +                               /* Covers both tracing and lockdep */
-> +                               trace_hardirqs_on();
-> +                               instr_end();
-> +                               return;
-> +                       }
-> +               }
-> +               instr_begin();
-> +               /* Tell the tracer that IRET will enable interrupts */
-> +               trace_hardirqs_on_prepare();
-
-Why is trace_hardirqs_on() okay above but not here?  Is it that we
-know we weren't RCU-quiescent if we had preemption and IF on?  But
-even this code path came from an IF-on context.  I'm confused.  Maybe
-some comments as to why this case seems to be ordered so differently
-from the !preempt_count() case would be helpful.
-
-> +               lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-> +               instr_end();
-> +               rcu_irq_exit();
-> +               lockdep_hardirqs_on(CALLER_ADDR0);
-> +       } else {
-> +               /* IRQ flags state is correct already. Just tell RCU */
-> +               rcu_irq_exit();
-> +       }
-> +}
-> --- a/arch/x86/include/asm/idtentry.h
-> +++ b/arch/x86/include/asm/idtentry.h
-> @@ -7,6 +7,9 @@
->
->  #ifndef __ASSEMBLY__
->
-> +void idtentry_enter(struct pt_regs *regs);
-> +void idtentry_exit(struct pt_regs *regs);
-> +
->  /**
->   * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
->   *                   No error code pushed by hardware
->
