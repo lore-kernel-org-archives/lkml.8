@@ -2,218 +2,116 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBC5C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E645AC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D592F20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589210801;
-	bh=3HU+lnnd0iDBTlMkpiQcDfp68dPY5JVgbBSYjSY6kuo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WaxWAbJlg8TM/57sREz3rlXm3Bv7dSwGnwVU402C2kcEOVYkYyNvKjeq1j2D8hVzS
-	 WpZCPupnv78pXCAW8Rpu3rLxRdjr+tYjfSXyFD4yGczo/qsMuLqrEwFyiSF8WFmnzA
-	 iNv+BxOlBRxCy8E1fIP10/93Kyzc/XqvurfVd9nI=
+	by mail.kernel.org (Postfix) with ESMTP id BC3BB20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:28:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WkH6I4MX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbgEKP0l (ORCPT
+        id S1729763AbgEKP20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:26:41 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:36977 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgEKP0i (ORCPT
+        Mon, 11 May 2020 11:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726173AbgEKP20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:26:38 -0400
-Received: by mail-oo1-f67.google.com with SMTP id v6so2014419oou.4;
-        Mon, 11 May 2020 08:26:38 -0700 (PDT)
+        Mon, 11 May 2020 11:28:26 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E6EC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:28:26 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u15so134379plm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sU6/Ap1ejE6vLfYumdjwgHoh2Gd0VUeSHIvSaou8lbY=;
+        b=WkH6I4MXB4YwCmjTwfC9sYSwt75AgJ+dqhYinn/45vvg7OHLvtfhBrLP8vBgxvEfhf
+         tuLrZuazYIHXGpIvEqWrLUIGPplFgTesIX+FvwDKx8QYQgDfeDrTcEnYtl5snfKUqOb4
+         +27RxtciXPvLwM6njCKRBqpsb9ffD0AsaauSLROIkeCDVEergyaYGoHx62blUScRW10A
+         WzD0iLST7rdFLY0Yrkv2UHmXsqXXTdCcM9BuzAIwJ+6UvAVR+fTahnWlOVV9d6xc4o5g
+         rUVVFlL36ApWWGBYHi2V6M/pmnu1jHrT7oEdXuL+bpCgMhMLchnz4SVJVfWUxlY7a2SJ
+         /yhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gqxtbamSYrDjCiG2Sa6OgrEIPkjy0PKI+7BZGr9gIXA=;
-        b=dSJWE3o7H3iyfv2Y+1fp/rjzUXH5SEiIwtE+bblrmTVtKZ4vG2ITnohZjUNPAMmvq/
-         nx+z6ZF18pIbx29+/XGM5n1JCc1MpkC7Tpm2A/2FjmimEA3jT+tWXmIjYk/9kxe0t6EU
-         dPFTQtlujbEcDWFGdtE71DwY0hoj01SH6NiESXwTQ2RrDZDgdJ1G2AyeJIvwBRvIPbUr
-         WOfcuFIV2E4DhACbCrDsxDuLwQz0CdJ9fdGQerHbHt+UBhLNmgOzIjQL4RONYGb+50CJ
-         jySh7we8uPp9qz7TRPYc/s4pQ7oPhdzFIp73p7zifFOfrerNn6huHDomr6nrt3Q3oLu/
-         0hOA==
-X-Gm-Message-State: AGi0PuYwZjXxNf4/krVwsqLdEQUQ4sPoMGqnIrxEY7GgL1mRxJETeoZW
-        c238JVb20C96Di/F9D2M5FbTsDhAqhSCcGZqhTY=
-X-Google-Smtp-Source: APiQypLq5jwWsqunJB5ifvHoh9oneaKxF7zKbKuAepuLszChzT3ZWyMlvRfbS+itaggAC9KM0ZNU+FCjePlLSSduPko=
-X-Received: by 2002:a4a:d204:: with SMTP id c4mr2387438oos.1.1589210797413;
- Mon, 11 May 2020 08:26:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200507181012.29791-1-qperret@google.com> <20200508081128.GM5298@hirez.programming.kicks-ass.net>
- <20200508103721.GA3860390@kroah.com> <20200508111612.GA252673@google.com>
- <20200508113141.GB5298@hirez.programming.kicks-ass.net> <20200508130507.GA10541@google.com>
- <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com> <20200511090049.GA229633@google.com>
-In-Reply-To: <20200511090049.GA229633@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 11 May 2020 17:26:26 +0200
-Message-ID: <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
-Subject: Re: [PATCH 00/14] Modularize schedutil
-To:     Quentin Perret <qperret@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sU6/Ap1ejE6vLfYumdjwgHoh2Gd0VUeSHIvSaou8lbY=;
+        b=TcIMUYaF0wV+Llf/rGiu8V6II5Iix/a5I1OJsAY1JbxOOvFWbputjq80MTPR0N0TNe
+         ekGnnOoX76+4Sglce5j0HoG+zgpViCmJHVrzmu3xpHra6GvX+6PmYbWy8OskqGlj+VvJ
+         9QwHFyvJ0xge4iamnNmLaorSQxFwndjdc05esSHFLw20Gp+YhO8z3ULMOdmdAeq8yXDI
+         9lFIK+JH59vE9jWV1AHhn7dmaV8LigmA938Ty9FlcYXDyTuu9EEtaYsJpLjazdeOOJXx
+         y7W3iwg1lRQk9T2aR8Wv+L60965Lv9bKuzh3wd8Tg4P1ydCr+LlT5Cp/0QIb8lrvR+/M
+         xHTQ==
+X-Gm-Message-State: AGi0PuZF0iCtuDN7g1CDPobLRgOpUPMLPvR0Hml6XV2b1QlfjxkHpP31
+        WEbpSmJ0yuA61TYmqzXs8wjHHHAuGeE=
+X-Google-Smtp-Source: APiQypJ839OdEAVyroEW6HDW3lotjBrNt50hVB0MDGzX9Xkb+EriFzeC7/X6yWfaIRwuKdO5G74DuQ==
+X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr15384209plb.243.1589210905743;
+        Mon, 11 May 2020 08:28:25 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:2dd6:4c58:486d:263e? ([2605:e000:100e:8c61:2dd6:4c58:486d:263e])
+        by smtp.gmail.com with ESMTPSA id y7sm9563873pfq.21.2020.05.11.08.28.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 08:28:24 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jan Kara <jack@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20200511142756.1b7ef706@canb.auug.org.au>
+ <74a0ddc6-8637-c821-7128-4431261b0c12@kernel.dk>
+ <20200511151749.GA29295@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <20234840-c9f4-1e68-14f1-57b1ccd1c730@kernel.dk>
+Date:   Mon, 11 May 2020 09:28:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200511151749.GA29295@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:00 AM Quentin Perret <qperret@google.com> wrote:
->
-> Hi Rafael,
->
-> On Friday 08 May 2020 at 15:40:34 (+0200), Rafael J. Wysocki wrote:
-> > On Fri, May 8, 2020 at 3:05 PM Quentin Perret <qperret@google.com> wrote:
-> > >
-> > > On Friday 08 May 2020 at 13:31:41 (+0200), Peter Zijlstra wrote:
-> > > > On Fri, May 08, 2020 at 12:16:12PM +0100, Quentin Perret wrote:
-> > > > > However, the point I tried to make here is orthogonal to that. As of
-> > > > > today using another governor than schedutil is fully supported upstream,
-> > > > > and in fact it isn't even enabled by default for most archs. If vendors
-> > > > > feel like using something else makes their product better, then I don't
-> > > > > see why I need to argue with them about that. And frankly I don't see
-> > > > > that support being removed from upstream any time soon.
-> > > >
-> > > > Right, it'll take a while to get there. But that doesn't mean we
-> > > > shouldn't encourage schedutil usage wherever and whenever possible. That
-> > > > includes not making it easier to not use it.
-> > > >
-> > > > In that respect making it modular goes against our ultimate goal (world
-> > > > domination, <mad giggles here>).
-> > >
-> > > Right, I definitely understand the sentiment. OTOH, things like that
-> > > give vendors weapons against GKI ('you-force-us-to-build-in-things-we-dont't-want'
-> > > etc etc). That _is_ true to some extent, but it's important we make sure
-> > > to keep this to an absolute minimum, otherwise GKI just won't happen
-> > > (and I really think that'd be a shame, GKI _is_ a good thing for
-> > > upstream).
-> > >
-> > > And sure, schedutil isn't that big, and we can make an exception. But
-> > > I'm sure you know what happens when you starting making exceptions ;)
-> >
-> > This is a very weak argument, if it can be regarded as an argument at all.
->
-> Well, fair enough :)
->
-> > You will have to make exceptions, the question is how many and on what
-> > criteria and you really need to figure that out for the GKI plan.
->
-> The base idea is, anything that we know from experience is used by
-> everybody can be built in, anything else will need investigation. And as
-> you've understood, schedutil falls in that second category.
+On 5/11/20 9:17 AM, Christoph Hellwig wrote:
+> On Mon, May 11, 2020 at 09:06:41AM -0600, Jens Axboe wrote:
+>> On 5/10/20 10:27 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> After merging the block tree, today's linux-next build (x86_64
+>>> allmodconfig) failed like this:
+>>>
+>>> drivers/block/aoe/aoeblk.c: In function 'aoeblk_gdalloc':
+>>> drivers/block/aoe/aoeblk.c:410:21: error: 'struct backing_dev_info' has no member named 'name'
+>>>   410 |  q->backing_dev_info->name = "aoe";
+>>>       |                     ^~
+>>>
+>>> Caused by commit
+>>>
+>>>   1cd925d58385 ("bdi: remove the name field in struct backing_dev_info")
+>>
+>> Gah, thanks Stephen. This series is looking less and less impressive,
+>> fallout for both 5.7 and 5.8, in terms of build testing (none).
+> 
+> And the sad part is that it has been sitting out there exposed to the
+> buildbot for weeks.  Sigh.
 
-The fact that the vendor sets up a different governor by default
-doesn't mean that there should be no way to switch over to schedutil
-IMO.
+Indeed, I do wish the build bot was a bit more expedient (as in 24h turn
+around would be good), and reliable. Seems hit or miss, don't fully trust
+it and this series is an example of why.
 
-> > > So, all in all, I don't think the series actively makes schedutil worse
-> > > by adding out-of-line calls in the hot path or anything like that, and
-> > > having it as a module helps with GKI which I'm arguing is a good thing
-> > > in the grand scheme of things.
-> >
-> > Frankly, I'm not sure if it really helps.
->
-> Oh, why not?
->
-> > The idea of making schedutil modular seems to be based on the
-> > observation that it is not part of the core kernel, which I don't
-> > agree with.
->
-> Right, so that I think is the core of the discussion.
->
-> > Arguably, things like util clamps need it to work as
-> > expected.
->
-> Sure, but loading sugov dynamically as a module doesn't change much does
-> it?
->
-> If you are referring to the Kconfig dependency of uclamp on schedutil,
-> then that is a good point and I will argue that it should be removed.
-> In fact I'll add a patch to v2 that does just that, with the following
-> rationale:
+-- 
+Jens Axboe
 
-Which isn't correct AFAICS.
-
->  - it is obsolete:
-
-No, it isn't IMO.
-
-> the reason that dependency was added originally was
->    because sugov was the only place where util clamps where taken into
->    accounts. But that is no longer true -- we check them in the capacity
->    aware wake-up path as well, which is entirely independent from the
->    currently running governor;
-
-But this is done under the assumption that the governor will also take
-the clamps into account, isn't it?
-
-Otherwise you can see your "low util" tasks running at high
-frequencies and "high util" ones running slowly.  Surely, that's not
-desirable?
-
-IIUC, the task placement needs to be consistent with the governor's
-decisions for things to work as expected.
-
->  - because of the above, it is (now) largely useless: a compile time
->    dependency doesn't guarantee we are actually running with schedutil
->    at all;
->  - it is artificial: there are no actual compilation dependencies
->    between sugov and uclamp, everything will compile just fine without
->    that 'depends on';
-
-That actually is the case, but it doesn't mean that there is no
-dependency in there.
-
-> Or maybe you were thinking of something else?
->
-> > > That of course is only true if we can
-> > > agree on a reasonable set of exported symbols, so I'll give others some
-> > > time to complain and see if I can post a v2 addressing these issues!
-> >
-> > This isn't just about exported symbols, it is about what is regarded
-> > as essential and what isn't.
->
-> Right, the exported symbols are, IMO, quite interesting because they
-> show how 'core' the governor is. But what exactly do you mean by
-> 'essential' here? Essential in what sense?
-
-IMO the question is how much value there is in making it possible to
-avoid loading a particular piece of kernel code into memory.
-
-You've demonstrated that it can be done with schedutil, but does that
-matter that it needs to be done?
-
-I thought that the original idea was to make it closely integrated
-with the scheduler, so it could access the scheduler's data structures
-(that we specifically didn't want to expose to the *other* governors)
-and so as to avoid forgetting about any dependencies when making
-changes to either the scheduler or schedutil.  Allowing it to be build
-as a module would make make us have to worry about those things again,
-so is it really worth it?
