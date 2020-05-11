@@ -2,164 +2,118 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0825AC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7F3C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9877206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E53720708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589204195;
+	bh=8DynboS6OUq8obog0yLupsM4d16CMsXlKuWciX/Red8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J2UGKUB2GrUa6EuGbOfZ+3aWaCfDjnNJ5oImjE6IEhLyAFESade+sDRhOekkNVXgl
+	 Jh1kH/d6GvfNAYyszvg4eqXqetrumSfBQwzx0YwlmhKRuJddCG8XLy2lP8O3LAjbz8
+	 s5w/YGmpBxz2VvxpkumX59b7CJb4stZwl/wSghm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgEKNgQ (ORCPT
+        id S1729789AbgEKNge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:36:16 -0400
-Received: from m177129.mail.qiye.163.com ([123.58.177.129]:38992 "EHLO
-        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729641AbgEKNgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:36:16 -0400
-X-Greylist: delayed 570 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 May 2020 09:36:13 EDT
-Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
-        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 226BB5C277D;
-        Mon, 11 May 2020 21:26:08 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <ANcALQDPCP5Hd0yYHkOTZKph.3.1589203568035.Hmail.bernard@vivo.com>
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Ori Messinger <Ori.Messinger@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "opensource.kernel@vivo.com" <opensource.kernel@vivo.com>
-Subject: =?UTF-8?B?UmU6UkU6IFtQQVRDSCB2Ml0gZHJtL2FtZC9hbWRncHU6IGNsZWFudXAgY29kaW5nIHN0eWxlIGEgYml0?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E20C5BD@FMSMSX108.amr.corp.intel.com>
+        Mon, 11 May 2020 09:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729546AbgEKNge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 09:36:34 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C88206F9;
+        Mon, 11 May 2020 13:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589204193;
+        bh=8DynboS6OUq8obog0yLupsM4d16CMsXlKuWciX/Red8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aCmXliY0Luuna4EBlNA170YSeDStzaq/FBchKGaD1YBe5XzWo0xCbYQvOuuL4lFef
+         AFHvZOHpDFaVsi3i2X182LMexoAFz7oX3lPFIVKK6SKrvCi0ye34B65xH2kW0J8PY6
+         EcbzeOkJrfdpIeNZE9sTe62aRqptPpDoJ92nR7y4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH v2] selftests/ftrace: Use printf for backslash included command
+Date:   Mon, 11 May 2020 22:36:27 +0900
+Message-Id: <158920418730.16156.8299185499520876735.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <87imh21x6f.fsf@igel.home>
+References: <87imh21x6f.fsf@igel.home>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Mon, 11 May 2020 21:26:08 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Mon, 11 May 2020 21:26:08 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSVVITklCQkJNQ0xKQk9DSVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTU1LSUxOT0NIN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6NRg6Nyo*KzgrTjMfSwIiMxA0LyEwCxNVSFVKTkNCSUtITkxPSUlJVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBSktMTEI3Bg++
-X-HM-Tid: 0a7203ea06156447kurs226bb5c277d
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cgrlj5Hku7bkurrvvJoiUnVobCwgTWljaGFlbCBKIiA8bWljaGFlbC5qLnJ1aGxAaW50ZWwuY29t
-Pgrlj5HpgIHml6XmnJ/vvJoyMDIwLTA1LTA4IDIzOjQ1OjA3CuaUtuS7tuS6uu+8mkJlcm5hcmQg
-WmhhbyA8YmVybmFyZEB2aXZvLmNvbT4sQWxleCBEZXVjaGVyIDxhbGV4YW5kZXIuZGV1Y2hlckBh
-bWQuY29tPiwiQ2hyaXN0aWFuIEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4sIkRh
-dmlkIChDaHVuTWluZykgWmhvdSIgPERhdmlkMS5aaG91QGFtZC5jb20+LERhdmlkIEFpcmxpZSA8
-YWlybGllZEBsaW51eC5pZT4sRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPixUb20gU3Qg
-RGVuaXMgPHRvbS5zdGRlbmlzQGFtZC5jb20+LFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9y
-Zz4sT3JpIE1lc3NpbmdlciA8T3JpLk1lc3NpbmdlckBhbWQuY29tPiwiYW1kLWdmeEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmciIDxhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZz4sImRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmciIDxkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-PiwibGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyIgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc+CuaKhOmAgeS6uu+8miJvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbSIgPG9wZW5zb3Vy
-Y2Uua2VybmVsQHZpdm8uY29tPgrkuLvpopjvvJpSRTogW1BBVENIIHYyXSBkcm0vYW1kL2FtZGdw
-dTogY2xlYW51cCBjb2Rpbmcgc3R5bGUgYSBiaXQ+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-Cj4+RnJvbTogZHJpLWRldmVsIDxkcmktZGV2ZWwtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5v
-cmc+IE9uIEJlaGFsZiBPZgo+PkJlcm5hcmQgWmhhbwo+PlNlbnQ6IFRodXJzZGF5LCBNYXkgNywg
-MjAyMCA1OjEzIEFNCj4+VG86IEFsZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNv
-bT47IENocmlzdGlhbiBLw7ZuaWcKPj48Y2hyaXN0aWFuLmtvZW5pZ0BhbWQuY29tPjsgRGF2aWQg
-KENodW5NaW5nKSBaaG91Cj4+PERhdmlkMS5aaG91QGFtZC5jb20+OyBEYXZpZCBBaXJsaWUgPGFp
-cmxpZWRAbGludXguaWU+OyBEYW5pZWwgVmV0dGVyCj4+PGRhbmllbEBmZndsbC5jaD47IFRvbSBT
-dCBEZW5pcyA8dG9tLnN0ZGVuaXNAYW1kLmNvbT47IFNhbSBSYXZuYm9yZwo+PjxzYW1AcmF2bmJv
-cmcub3JnPjsgT3JpIE1lc3NpbmdlciA8T3JpLk1lc3NpbmdlckBhbWQuY29tPjsgQmVybmFyZAo+
-PlpoYW8gPGJlcm5hcmRAdml2by5jb20+OyBhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsg
-ZHJpLQo+PmRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZwo+PkNjOiBvcGVuc291cmNlLmtlcm5lbEB2aXZvLmNvbQo+PlN1YmplY3Q6IFtQQVRD
-SCB2Ml0gZHJtL2FtZC9hbWRncHU6IGNsZWFudXAgY29kaW5nIHN0eWxlIGEgYml0Cj4+Cj4+VGhl
-cmUgaXMgREVWSUNFX0FUVFIgbWVjaGFuaXNtIGluIHNlcGFyYXRlIGF0dHJpYnV0ZSBkZWZpbmUu
-Cj4+U28gdGhpcyBjaGFuZ2UgaXMgdG8gdXNlIGF0dHIgYXJyYXksIGFsc28gdXNlCj4+c3lzZnNf
-Y3JlYXRlX2ZpbGVzIGluIGluaXQgZnVuY3Rpb24gJiBzeXNmc19yZW1vdmVfZmlsZXMgaW4KPj5m
-aW5pIGZ1bmN0aW9uLgo+PlRoaXMgbWF5YmUgbWFrZSB0aGUgY29kZSBhIGJpdCByZWFkYWJsZS4K
-Pj4KPj5TaWduZWQtb2ZmLWJ5OiBCZXJuYXJkIFpoYW8gPGJlcm5hcmRAdml2by5jb20+Cj4+Cj4+
-Q2hhbmdlcyBzaW5jZSBWMToKPj4qVXNlIERFVklDRV9BVFRSIG1lY2hhbmlzbQo+Pgo+Pkxpbmsg
-Zm9yIFYxOgo+PipodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTIyODA3
-Ni8KPj4tLS0KPj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMg
-fCA0MyArKysrKystLS0tLS0tLS0tLS0tCj4+LQo+PiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0
-aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pCj4+Cj4+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9hbWQvYW1kZ3B1L2FtZGdwdV92cmFtX21nci5jCj4+Yi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
-ZGdwdS9hbWRncHVfdnJhbV9tZ3IuYwo+PmluZGV4IDgyYTMyOTllNTNjMC4uNTdiYmM3MDY2MmZm
-IDEwMDY0NAo+Pi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV92cmFtX21n
-ci5jCj4+KysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X3ZyYW1fbWdyLmMK
-Pj5AQCAtMTQ4LDYgKzE0OCwxNSBAQCBzdGF0aWMgREVWSUNFX0FUVFIobWVtX2luZm9fdmlzX3Zy
-YW1fdXNlZCwKPj5TX0lSVUdPLAo+PiBzdGF0aWMgREVWSUNFX0FUVFIobWVtX2luZm9fdnJhbV92
-ZW5kb3IsIFNfSVJVR08sCj4+IAkJICAgYW1kZ3B1X21lbV9pbmZvX3ZyYW1fdmVuZG9yLCBOVUxM
-KTsKPj4KPj4rc3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKmFtZGdwdV92cmFtX21ncl9hdHRyaWJ1
-dGVzW10gPSB7Cj4+KwkmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV90b3RhbC5hdHRyLAo+PisJJmRl
-dl9hdHRyX21lbV9pbmZvX3Zpc192cmFtX3RvdGFsLmF0dHIsCj4+KwkmZGV2X2F0dHJfbWVtX2lu
-Zm9fdnJhbV91c2VkLmF0dHIsCj4+KwkmZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdXNlZC5h
-dHRyLAo+PisJJmRldl9hdHRyX21lbV9pbmZvX3ZyYW1fdmVuZG9yLmF0dHIsCj4+KwlOVUxMCj4+
-K307Cj4+Kwo+PiAvKioKPj4gICogYW1kZ3B1X3ZyYW1fbWdyX2luaXQgLSBpbml0IFZSQU0gbWFu
-YWdlciBhbmQgRFJNIE1NCj4+ICAqCj4+QEAgLTE3MiwzMSArMTgxLDkgQEAgc3RhdGljIGludCBh
-bWRncHVfdnJhbV9tZ3JfaW5pdChzdHJ1Y3QKPj50dG1fbWVtX3R5cGVfbWFuYWdlciAqbWFuLAo+
-PiAJbWFuLT5wcml2ID0gbWdyOwo+Pgo+PiAJLyogQWRkIHRoZSB0d28gVlJBTS1yZWxhdGVkIHN5
-c2ZzIGZpbGVzICovCj4+LQlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LAo+PiZk
-ZXZfYXR0cl9tZW1faW5mb192cmFtX3RvdGFsKTsKPj4tCWlmIChyZXQpIHsKPj4tCQlEUk1fRVJS
-T1IoIkZhaWxlZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUKPj5tZW1faW5mb192cmFtX3RvdGFsXG4i
-KTsKPj4tCQlyZXR1cm4gcmV0Owo+Pi0JfQo+Pi0JcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKGFk
-ZXYtPmRldiwKPj4mZGV2X2F0dHJfbWVtX2luZm9fdmlzX3ZyYW1fdG90YWwpOwo+Pi0JaWYgKHJl
-dCkgewo+Pi0JCURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZQo+Pm1lbV9p
-bmZvX3Zpc192cmFtX3RvdGFsXG4iKTsKPj4tCQlyZXR1cm4gcmV0Owo+Pi0JfQo+Pi0JcmV0ID0g
-ZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRldiwKPj4mZGV2X2F0dHJfbWVtX2luZm9fdnJhbV91
-c2VkKTsKPj4tCWlmIChyZXQpIHsKPj4tCQlEUk1fRVJST1IoIkZhaWxlZCB0byBjcmVhdGUgZGV2
-aWNlIGZpbGUKPj5tZW1faW5mb192cmFtX3VzZWRcbiIpOwo+Pi0JCXJldHVybiByZXQ7Cj4+LQl9
-Cj4+LQlyZXQgPSBkZXZpY2VfY3JlYXRlX2ZpbGUoYWRldi0+ZGV2LAo+PiZkZXZfYXR0cl9tZW1f
-aW5mb192aXNfdnJhbV91c2VkKTsKPj4tCWlmIChyZXQpIHsKPj4tCQlEUk1fRVJST1IoIkZhaWxl
-ZCB0byBjcmVhdGUgZGV2aWNlIGZpbGUKPj5tZW1faW5mb192aXNfdnJhbV91c2VkXG4iKTsKPj4t
-CQlyZXR1cm4gcmV0Owo+Pi0JfQo+Pi0JcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKGFkZXYtPmRl
-diwKPj4mZGV2X2F0dHJfbWVtX2luZm9fdnJhbV92ZW5kb3IpOwo+Pi0JaWYgKHJldCkgewo+Pi0J
-CURSTV9FUlJPUigiRmFpbGVkIHRvIGNyZWF0ZSBkZXZpY2UgZmlsZQo+Pm1lbV9pbmZvX3ZyYW1f
-dmVuZG9yXG4iKTsKPj4tCQlyZXR1cm4gcmV0Owo+Pi0JfQo+PisJcmV0ID0gc3lzZnNfY3JlYXRl
-X2ZpbGVzKCZhZGV2LT5kZXYtPmtvYmosCj4+YW1kZ3B1X3ZyYW1fbWdyX2F0dHJpYnV0ZXMpOwo+
-PisJaWYgKHJldCkKPj4rCQlEUk1fRVJST1IoIkZhaWxlZCB0byByZWdpc3RlciBzeXNmc1xuIik7
-Cj4KPlRoaXMgbG9va3MgZ29vZCB0byBtZS4KPgo+SSB0aGluayB0aGF0IHRoZXJlIGlzIGEgbmV3
-IGVycm9yIG1hY3JvIChkcm1fZXJyPykgdGhhdCB5b3UgbWlnaHQKPndhbnQgdG8gdXNlIGluc3Rl
-YWQgb2YgRFJNX0VSUk9SKCkuCj4KPk90aGVyd2lzZToKPgo+QWNrZWQtYnk6IE1pY2hhZWwgSi4g
-UnVobCA8bWljaGFlbC5qLnJ1aGxAaW50ZWwuY29tPgo+Cj5tCgpIaQpTdXJlLCBJIGFtIHdpbGxp
-bmcgdG8gbWFrZSB0aGlzIG1vZGlmaWNhdGlvbiwgYWxzbyBpbiBHUFUgVE9ETyBsaXN0LCB0aGVy
-ZSBpcyBvbmUgY29udGVudDoKIkNvbnZlcnQgbG9nZ2luZyB0byBkcm1fKiBmdW5jdGlvbnMgd2l0
-aCBkcm1fZGV2aWNlIHBhcmFtYXRlcixGb3IgZHJpdmVycyB3aGljaCBjb3VsZCAKaGF2ZSBtdWx0
-aXBsZSBpbnN0YW5jZXMsIGl0IGlzIG5lY2Vzc2FyeSB0byBkaWZmZXJlbnRpYXRlIGJldHdlZW4g
-d2hpY2ggaXMgd2hpY2ggaW4gdGhlIGxvZ3MuIApTaW5jZSBEUk1fSU5GTy9XQVJOL0VSUk9SIGRv
-buKAmXQgZG8gdGhpcywgZHJpdmVycyB1c2VkIGRldl9pbmZvL3dhcm4vZXJyIHRvIG1ha2UgCnRo
-aXMgZGlmZmVyZW50aWF0aW9uLiBXZSBub3cgaGF2ZSBkcm1fKiB2YXJpYW50cyBvZiB0aGUgZHJt
-IHByaW50IGZ1bmN0aW9ucywgc28gd2UgY2FuIHN0YXJ0IAp0byBjb252ZXJ0IHRob3NlIGRyaXZl
-cnMgYmFjayB0byB1c2luZyBkcm0tZm9ybWF0dGVkIHNwZWNpZmljIGxvZyBtZXNzYWdlcy4iCkZy
-b20gaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC92NS43LXJjNS9ncHUvdG9kby5odG1s
-I3N1YnN5c3RlbS13aWRlLXJlZmFjdG9yaW5ncy4KCkJ1dCBpIGhhdmUgdG8gc2F5IHRoYXQgbm93
-IGluIHRoZSBEUk0vQU1EIG1vZHVsZXMsIGFsbCBhcmUgdXNlZCBEUk1fSU5GTy9XQVJOSU5HL0VS
-Uk9SCkknbSBub3Qgc3VyZSB3ZWF0aGVyIG1haW50YWluZXJzIHdhbnQgdG8gcmVwbGFjZSB0aGVz
-ZS4KClJlZ2FyZHMsCkJlcm5hcmQKCj4+Cj4+IAlyZXR1cm4gMDsKPj4gfQo+PkBAIC0yMTksMTEg
-KzIwNiw3IEBAIHN0YXRpYyBpbnQgYW1kZ3B1X3ZyYW1fbWdyX2Zpbmkoc3RydWN0Cj4+dHRtX21l
-bV90eXBlX21hbmFnZXIgKm1hbikKPj4gCXNwaW5fdW5sb2NrKCZtZ3ItPmxvY2spOwo+PiAJa2Zy
-ZWUobWdyKTsKPj4gCW1hbi0+cHJpdiA9IE5VTEw7Cj4+LQlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRl
-di0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV90b3RhbCk7Cj4+LQlkZXZpY2VfcmVtb3Zl
-X2ZpbGUoYWRldi0+ZGV2LAo+PiZkZXZfYXR0cl9tZW1faW5mb192aXNfdnJhbV90b3RhbCk7Cj4+
-LQlkZXZpY2VfcmVtb3ZlX2ZpbGUoYWRldi0+ZGV2LCAmZGV2X2F0dHJfbWVtX2luZm9fdnJhbV91
-c2VkKTsKPj4tCWRldmljZV9yZW1vdmVfZmlsZShhZGV2LT5kZXYsCj4+JmRldl9hdHRyX21lbV9p
-bmZvX3Zpc192cmFtX3VzZWQpOwo+Pi0JZGV2aWNlX3JlbW92ZV9maWxlKGFkZXYtPmRldiwKPj4m
-ZGV2X2F0dHJfbWVtX2luZm9fdnJhbV92ZW5kb3IpOwo+PisJc3lzZnNfcmVtb3ZlX2ZpbGVzKCZh
-ZGV2LT5kZXYtPmtvYmosCj4+YW1kZ3B1X3ZyYW1fbWdyX2F0dHJpYnV0ZXMpOwo+PiAJcmV0dXJu
-IDA7Cj4+IH0KPj4KPj4tLQo+PjIuMjYuMgo+Pgo+Pl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4+ZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+PmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPj5odHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoNCg0K
+Since the built-in echo has different behavior in POSIX shell
+(dash) and bash, kprobe_syntax_errors.tc can fail on dash which
+interpret backslash escape automatically.
+
+To fix this issue, we explicitly use printf "%s" (not interpret
+backslash escapes) if the command string can include backslash.
+
+Reported-by: Liu Yiding <yidingx.liu@intel.com>
+Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+index 61a3c7e2634d..697c77ef2e2b 100644
+--- a/tools/testing/selftests/ftrace/test.d/functions
++++ b/tools/testing/selftests/ftrace/test.d/functions
+@@ -119,12 +119,14 @@ yield() {
+     ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
+ }
+ 
++# Since probe event command may include backslash, explicitly use printf "%s"
++# to NOT interpret it.
+ ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
+-    pos=$(echo -n "${2%^*}" | wc -c) # error position
+-    command=$(echo "$2" | tr -d ^)
++    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
++    command=$(printf "%s" "$2" | tr -d ^)
+     echo "Test command: $command"
+     echo > error_log
+-    (! echo "$command" >> "$3" ) 2> /dev/null
++    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
+     grep "$1: error:" -A 3 error_log
+     N=$(tail -n 1 error_log | wc -c)
+     # "  Command: " and "^\n" => 13
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index ef1e9bafb098..eb0f4ab4e070 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -91,7 +91,9 @@ esac
+ if grep -q "Create/append/" README && grep -q "imm-value" README; then
+ echo 'p:kprobes/testevent _do_fork' > kprobe_events
+ check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
+-echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
++
++# Explicitly use printf "%s" to not interpret \1
++printf "%s" 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
+ check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
+
