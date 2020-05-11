@@ -2,130 +2,112 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCC2C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD48C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF992080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9810920801
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TocUd7QB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dpuCWriu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgEKM0N (ORCPT
+        id S1730009AbgEKM0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48370 "EHLO
+        Mon, 11 May 2020 08:26:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729960AbgEKM0I (ORCPT
+        by vger.kernel.org with ESMTP id S1727019AbgEKM0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:26:08 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D9AC05BD0A
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:06 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id r7so7753749edo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:06 -0700 (PDT)
+        Mon, 11 May 2020 08:26:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B01C05BD0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q24so7706676pjd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 05:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2EN8bcyFVSWdG2LyezQQ8oCrjUutuFeHxXpmjXGuS0M=;
-        b=TocUd7QBMuxELeVQIclwEwhNwZ51aFXx4DeH5YgrrumzZciDVWnPvzltX/S1ugv1ii
-         5E0iZOqOZgwgYeazNVKnAscq1Gf0jJaYh7zXejxjfmsLdTBq4ann9CBZ0Zp+Et1gnOx6
-         csGJZAegn3dXfqJgRVFCHUXWbN4lRvZ4bmgmE=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6UPeYtFxFAx9gPdqtUllM7hIOHzpNJ87ucNQvEyM/W4=;
+        b=dpuCWriuMUzF0JT7TfJy/jv3b0jgrrU72bBaJjT1jCmEuJjRUN4ZM+j5GKrrwQI7lp
+         v96w4P9TimNRooGph5RFZKg7a8I5I/N4UQ/m35tfgeg556gISKAS7c9X+PcJgNw0lLdX
+         ajUDubLvh0FClNcx7j0a1eNK2exQGmMNJ9RLkCBC53NpFUfLrNEJaf/ZnMohP2rHwEwa
+         9sGm3MWCrw34sI5hDr1j6uPN4qJ/lWPeXJ14MPUXmU/qZwqKXn5i5NNhrqBEOVOUGDce
+         183BM1xLwzgw5o48z1bAJ8+DIie4elOnqPYb0+YcAx602GqqiA6P1g0RB3nNU+jPFV6L
+         o2Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2EN8bcyFVSWdG2LyezQQ8oCrjUutuFeHxXpmjXGuS0M=;
-        b=rBLAprvMQNW01MApetPcjTwCdyWFRpmr745L0eIPo+X+uqE+wpvGYpXeFpIwwa8nca
-         RBcH5vw1GuFzgYMj9NIzqSKl1H2f4RxQhr3l2jpwKmh9BaWNXOb6XPgtLKfg2j6xnZtj
-         JkHVldnb63YqVp9dak83+0YHh/ouV7QUVld2jAA/LMWycKX2vrg5cROydkM7y839147r
-         AreTXXNHNtOKjdOZA0BMyzYbEck38qGJZqE5+1CAN4BbbEZfZ3NsLHP5geiLQz1ok+9b
-         x7d25hmt4SKQm5SLym7tq0rWgMzUMS+fbtV3Nfikfrs0QtzVcWTTECHym7cMYX+FpOtr
-         ndeg==
-X-Gm-Message-State: AGi0PuYlsQjH3wRhiymlj1Y9Ce/o4LrKL5QpObvRObtvUXTLHIRe5bSY
-        GLO21WE5YH5nbk/eq9V/ts9Rq9WxuG+44dy/UdXWKA==
-X-Google-Smtp-Source: APiQypI0RnkmhdnNNKq94iFMEVCCm1LcUFOTW66OOLC6+dFFohZ56vzj/6GxcQ/jT8FOFcqF+Rlp5uYkhgYIYqDhLNo=
-X-Received: by 2002:aa7:cdd9:: with SMTP id h25mr13644594edw.17.1589199964897;
- Mon, 11 May 2020 05:26:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6UPeYtFxFAx9gPdqtUllM7hIOHzpNJ87ucNQvEyM/W4=;
+        b=IpRXudKSYxTbE1c4+JfijPudVw3VZD50Zgg3vcYE/N1Rkz7STdRJoDjlq99jhIocAc
+         URFHbnBlf538AX2ZkxBYvvgThx1oqgrDXCf9XCoT2xxHPyWKcilDjZKJ2+ZVVNvpQHcL
+         3TaWGBmZoGuNEAHgKxkcHyO4fzhKP2Ep7rTvrLC4qaUuF92M96BQ/pGnvfRju2Nk8J1o
+         qm7hWc3io0+zc+/rL/hF5601rCRId1xd+padEWeQc6aOgaPFLEvTK0k9I0vdHiTd+Nio
+         +4EPE+pRafA2g0pO2bNu882x33f+ZqlJsuj17Af5Lo3VBxk+WWoMSHzzyEID2F+SoLoc
+         H35Q==
+X-Gm-Message-State: AGi0PuYFguMKHFSliNr3GXAXidhbbENcz5pe4tgILo7ohfktXtZ8v6QJ
+        mRGY/b4sawz394+br7UtCQWsdvT4VMo=
+X-Google-Smtp-Source: APiQypKRc5pNcAFtU8nJC4T0/Mj8a73yMDHrfKjYPg2Qve+SWffvBDZg6bGiuSNMLM2cmdKvT+yoTw==
+X-Received: by 2002:a17:902:9b8e:: with SMTP id y14mr15048603plp.109.1589199973056;
+        Mon, 11 May 2020 05:26:13 -0700 (PDT)
+Received: from localhost ([45.127.45.102])
+        by smtp.gmail.com with ESMTPSA id f6sm9198173pfn.189.2020.05.11.05.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 05:26:12 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        daniel.lezcano@linaro.org,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH 10/14] thermal/drivers/cpufreq_cooling: Replace module.h with export.h
+Date:   Mon, 11 May 2020 17:54:58 +0530
+Message-Id: <7a439e41e91d8bc5ff99207f99723fcf04ca36eb.1589199124.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1589199124.git.amit.kucheria@linaro.org>
+References: <cover.1589199124.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <1585733475-5222-1-git-send-email-chakragithub@gmail.com>
- <CAJfpegtk=pbLgBzM92tRq8UMUh+vxcDcwLL77iAcv=Mxw3r4Lw@mail.gmail.com>
- <CAH7=fosGV3AOcU9tG0AK3EJ2yTXZL3KGfsuVUA5gMBjC4Nn-WQ@mail.gmail.com>
- <CAH7=fosz9KDSBN86+7OxYTLJWUSdUSkeLZR5Y0YyM6=GE0BdOw@mail.gmail.com>
- <CAJfpegvWBHootLiE_zsw35G6Ee387V=Da_wCzaV9NhZQVDKYGg@mail.gmail.com> <CAH7=fosn3fnNBkKzHNBSvoQh+Gjpi2J0mZ3rRENitMmFmpHcUw@mail.gmail.com>
-In-Reply-To: <CAH7=fosn3fnNBkKzHNBSvoQh+Gjpi2J0mZ3rRENitMmFmpHcUw@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 11 May 2020 14:25:53 +0200
-Message-ID: <CAJfpegu4BzWybuBH=-ojqZ5Qfw4+0Lv+yqbTrerw3+tb=qghWw@mail.gmail.com>
-Subject: Re: [PATCH] fuse:rely on fuse_perm for exec when no mode bits set
-To:     Chakra Divi <chakragithub@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:14 PM Chakra Divi <chakragithub@gmail.com> wrote:
->
-> On Tue, Apr 28, 2020 at 1:51 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > On Mon, Apr 27, 2020 at 3:46 PM Chakra Divi <chakragithub@gmail.com> wrote:
-> > >
-> > > On Tue, Apr 21, 2020 at 4:21 PM Chakra Divi <chakragithub@gmail.com> wrote:
-> > > >
-> > > > On Mon, Apr 20, 2020 at 4:55 PM Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > > >
-> > > > > On Wed, Apr 1, 2020 at 11:31 AM Chakra Divi <chakragithub@gmail.com> wrote:
-> > > > > >
-> > > > > > In current code, for exec we are checking mode bits
-> > > > > > for x bit set even though the fuse_perm_getattr returns
-> > > > > > success. Changes in this patch avoids mode bit explicit
-> > > > > > check, leaves the exec checking to fuse file system
-> > > > > > in uspace.
-> > > > >
-> > > > > Why is this needed?
-> > > >
-> > > > Thanks for responding Miklos. We have an use case with our remote file
-> > > > system mounted on fuse , where permissions checks will happen remotely
-> > > > without the need of mode bits. In case of read, write it worked
-> > > > without issues. But for executable files, we found that fuse kernel is
-> > > > explicitly checking 'x' mode bit set on the file. We want this
-> > > > checking also to be pushed to remote instead of kernel doing it - so
-> > > > modified the kernel code to send getattr op to usespace in exec case
-> > > > too.
-> > >
-> > > Any help on this Miklos....
-> >
-> > I still don't understand what you are requesting.  What your patch
-> > does is unconditionally allow execution, even without any 'x' bits in
-> > the mode.  What does that achieve?
->
-> Thanks for the help Miklos. We have a network based filesystem that
-> supports acls.
-> As our filesystem give granular access, we wipe out the mode bits and
-> completely rely on ACLs.
+cpufreq_cooling cannot be modular, remove the unnecessary module.h
+include and replace with export.h to handle EXPORT_SYMBOL family of
+macros.
 
-Are you using POSIX ACLs?   Why can't you translate the ACL's back
-into mode bits (that's what all filesystems do)?
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/thermal/cpufreq_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Fuse works well for all other ops (with default_permissions disabled )
->  as all the checks are done at the filesystems.
-> But only executables have problems because fuse kernel rejects the
-> execution by doing access checks on mode bit.
-> To push this check to filesystem, in the above patch - i'm relying on
-> return value from fuse_perm_getattr() ignoring the mode bits.
->
-> When the fuse module is asked to rely on filesystem for access checks,
-> why do we need this explicit check for executables?
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index 1b5a63b4763d..9e124020519f 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -10,12 +10,12 @@
+  *		Viresh Kumar <viresh.kumar@linaro.org>
+  *
+  */
+-#include <linux/module.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
+ #include <linux/cpu_cooling.h>
+ #include <linux/energy_model.h>
+ #include <linux/err.h>
++#include <linux/export.h>
+ #include <linux/idr.h>
+ #include <linux/pm_opp.h>
+ #include <linux/pm_qos.h>
+-- 
+2.20.1
 
-Because there's no other check.  Have you noticed that with your patch
-*all* files become executable?  I guess that's not what you wanted...
-
-Thanks,
-Miklos
