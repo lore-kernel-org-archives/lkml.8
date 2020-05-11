@@ -2,124 +2,196 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC89C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C31C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4922F206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709C520708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sbEk651S"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Aufiv6Ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgEKLdv (ORCPT
+        id S1729622AbgEKLet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729441AbgEKLdv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:33:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5649C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:33:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k1so10509841wrx.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 04:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aghPrnxgIqTUh49Mv3GDkYVcU8sexFcoivHzenw7/H0=;
-        b=sbEk651SXVWVUfKgOyAuNMUY0Rez/6FVOuhR7fakxiZncWRUCspzC598sOYUWP1JHA
-         fy8/5B0h/rqg9UAOBDF/WBFjLk/PQR+FDvj6BrJPz1XBiR8wM92UPMSUHO+R+0GvKjhF
-         RLc7KyQGAjo05d+lkhBTYY5Ab4NrA0EVFRH1IprvuuB94B4DnQwx4m9cy2jqHg5l+yhr
-         R1QXzo9n9g50waU6k5QD6bj74oj2LEnQhBztabZDyQLrs98T5DK95cMeuU9bsV0HvJZP
-         nP+ErxcZb+HbgITrLARb6ZzXPY1uNqphBbuFAjT8KnU/1qXb7N4hrjPztAnC9oZ9T/oM
-         neQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aghPrnxgIqTUh49Mv3GDkYVcU8sexFcoivHzenw7/H0=;
-        b=eywg5PUHwjy6Dgmt/JXXeSR9jHV5vyfRcDbk1BGgRd+RZZG89xWJuQc4rsnRMbu4Ue
-         +oleOOntWbfF9C2HilPcPPGAbRp7a/uZgA7uX06/yeEtfaFesJFNy51VOYWowEYgz+80
-         K6bKsPeuLiFlWdLFyaP4Zh7LQuVSPbm7piynZm6KLfhGO0RE9MEJGIDQmGVU32EIfrJU
-         389UwLVhX71TBRLu42hYrnGy0WRUkxUfbzpa/a7DCis2GqJOv6PpENGbLA/MyxWfdUzy
-         y04Vw+3BsdRJ/ofagNO9LNJzxsRpz4tDeohGjdsXiGLOc2/g7EDks4Mxaaij6YSfncyp
-         Wmxw==
-X-Gm-Message-State: AGi0PuY9vt8ar1WhXDsXHpwcBT+D9vVevxmw4dztkcHXPAQHc824/VXc
-        nHrIN/0QW9s2qTuMkQVsLhMzE1mKyhc=
-X-Google-Smtp-Source: APiQypJCD68/DdWjBAXUQwIfF/NSQMFW7UV/BZY7MMKd7QVOoucMJmxZJrmHKlk5MkU93TQYoDWsTg==
-X-Received: by 2002:a5d:6443:: with SMTP id d3mr1272019wrw.5.1589196829086;
-        Mon, 11 May 2020 04:33:49 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id q74sm19714950wme.14.2020.05.11.04.33.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 May 2020 04:33:48 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] nvmem: core: skip nodes with compatibles other
- than "nvmem-cell"
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     kernel@pengutronix.de, ceggers@arri.de,
-        linux-kernel@vger.kernel.org
-References: <20200428111829.2215-1-a.fatoum@pengutronix.de>
- <20200428111829.2215-3-a.fatoum@pengutronix.de>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d03d60b0-1907-1aaf-bc98-3ae9869194df@linaro.org>
-Date:   Mon, 11 May 2020 12:33:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200428111829.2215-3-a.fatoum@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 11 May 2020 07:34:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21179 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728776AbgEKLet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:34:49 -0400
+IronPort-SDR: SL/JPlgvYXCkYqKjYvLLSERyvOjMZWfNeFo0CpWvZ/pkoqVWZWM7lrWAjQK9F51MoBMLLExI7Q
+ LX5nBhR4rcsA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 04:34:41 -0700
+IronPort-SDR: LkuwUuohHKDq8FHNy8Q76JO6stHuSghqqpaG7CBGWaNLnKndQ9WCLIoDf11wS36UfDYfS6z3q4
+ NL6xIwvA7Jkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
+   d="scan'208";a="408892919"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga004.jf.intel.com with ESMTP; 11 May 2020 04:34:40 -0700
+Received: from fmsmsx117.amr.corp.intel.com (10.18.116.17) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 04:34:39 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx117.amr.corp.intel.com (10.18.116.17) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 04:34:39 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 11 May 2020 04:34:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L8pw7sNfgc0r8NmuKkyU55FtcYUoET76wW5l6F8+Ki7ThJVVOWdvZ/7icPibLZP0C13nl5Urd829eSSDa+yl7AzjRR/SvFPtdfv8NU4WB9rEpYHn5d5ZtMIN3vJUW65TUMo1bFCvPZ70f00fnv+jpvXLoMie38SiL0tK9+8WN2nl/NddWRdUJ/naAEZFU+sMpQWtHfSBWcNLdrJ6lCW0woFWfsdbtc+vFK9qsN8l4hjSizQrKBRUNVWPkzvw+9K6l5Mzfx9XxjZtaCXv8/BFzzC5dcl553rnKj/y7pVE9z8RCFAzV4jE7Mvhp34rOpe0QceTIc92oaNZ3i0lKI3bpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KE/I/urNjRH2sYMp2lJSM+bYqxJSlaJppq5FhudbgV0=;
+ b=aa2qIQF+S6tbOQoaXDWPbfqBpipyxlN26denTErAVV0zSrrDKj+c9AfV71YzcleJ8BwAsHqXuocspADmASxe05o2kUKQ5Cl+O1v9BEDtmlhoOr82HOZ/5vS/DYDyIak1ox/PPSk2nauaKJf51B8M/VUxZku8D+gx02ouRThleg7+9Q8TXFSearvS1MR5tKyG1ZrteduyniJJmNpHnXKhJNTwzFdtdFSLdaX3LXAXV2NVJro/v6j7fq8zuoXkWHLfaPmjJyvpT+jR/O4wk645gqW9PNyvpi15W8sznmisuYZnzEP5Zr48EQJaa9pDTQ7rtiXcvuPLVhESZJMTQ5EhRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KE/I/urNjRH2sYMp2lJSM+bYqxJSlaJppq5FhudbgV0=;
+ b=Aufiv6Ep6NxWi7wK4/kVCZhtPbiRWBL9U0zU9LwCAyyqGgbS/pp6+nDOZRh+w1eff+pWO3zC5dks86OQrYL4IkbrA4Z1Z+9vXC5Z2MOzDiq+eCLvWa2qjvVaKhSUySy3j0XblupPuzOc4LzXWOLnZu8+jczIyZAP8Hj9DO78my4=
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
+ DM6PR11MB3066.namprd11.prod.outlook.com (2603:10b6:5:64::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.30; Mon, 11 May 2020 11:34:38 +0000
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::6921:e03e:b890:fd53]) by DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::6921:e03e:b890:fd53%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 11:34:38 +0000
+From:   "Liao, Bard" <bard.liao@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: RE: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Thread-Topic: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Thread-Index: AQHWHrsvVp1w6XL6HkWXivkwcq57E6iifmqAgAAQ+dCAABhEgIAAIVWA
+Date:   Mon, 11 May 2020 11:34:38 +0000
+Message-ID: <DM6PR11MB407432225D0DA6E671DBAF67FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+ <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
+ <20200511090003.GT1375924@vkoul-mobl>
+In-Reply-To: <20200511090003.GT1375924@vkoul-mobl>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.193]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78112712-fb65-49b1-cffd-08d7f59f49f4
+x-ms-traffictypediagnostic: DM6PR11MB3066:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB30666D880B23AE717FC19D24FFA10@DM6PR11MB3066.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: scB5UtcxJjrgnEwkIKEhYzgFeTyCUhXaE9+2b9h8foPwQMoAqO7wI9H62RmkDDD65fOEg7n62UVVU2OtxFnmVpFo0nm2Xqm4CXWk8b6m7Z38OJwYU24ejk/y0gNTPZkI27N8Pp6oJ3tt/2FoEu84jC2mufnbRommE7ZSwv5Ho1dKcV6NCRMV4IyMU7IvBT2RHgEw/JnJLo2xF6r4/Jpe1Cj45XsbAsfDJKPiNyE5bKmfHd/+/K+Uw7QT7L3ipAbXw4ePOdiil/OTekS0SNLmK9NuTHsgOq8actLzgWSzosDEwnbVGQ+H5CZgJddascAiibl3KottMC61o+eI9se8Uj8qaS8Nwv7UyE9fvkzzEFyLfaO6uoOOzqcMhEzKipPv7jedcAAwv6xe18zsLs1LJXPcndP11Q2d5i8j2hk9B9vXxmYIzz/UEgOsP9HaYDELmiNjj7BOcd0N4FGrcDK+VzTN+3gKZOKe1/kmJZ0J8j8jjq/1UKiBXN4gW8T8+0Cd5tc8m/CL44250rgJFW3QMg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(346002)(396003)(136003)(376002)(33430700001)(7696005)(53546011)(6506007)(55016002)(71200400001)(66946007)(66476007)(66446008)(64756008)(478600001)(6916009)(66556008)(26005)(8676002)(4326008)(5660300002)(33656002)(7416002)(186003)(9686003)(8936002)(54906003)(33440700001)(316002)(52536014)(86362001)(2906002)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 9aSGFO2XGOM5Z68SVQBw8Uep9JXX5rMAss22vkq1cOUbpoPhkVolMyc2aJkO8Nw6gy5zZQCMwtM6byv2u+jJ564S8AEJd3qdl8/oGEE/xo+AnJo1RygZyXsdozU0o/EowDmAWvr84MawIVD8PLoXNTBCjAXnfd0lz0i+ZxjJ+Mu1q7baWMJO+4Oom8ZS7gxrvphy+lQrlbuDHhFfWGJo20WE8PJolVxZbFJ04lSEJDY9tLG+jhRqMpxJTi4okGqm6KM7RyC2fXTdwuhsom0aTUQMvlLPwz2OGCSagXQ6RDRAfXRnwJvXR5lCuHRbcFoZbahzJnBFMoo2gLlLd3hdYhMgOHKPwAnzZCz6v7uTIxZ2f0lsy1ca5Lj/sTNL7anhT+ZeKKDxoH/pTRtn26FNeTP1sr2mdy6c1b7Uh/UKiH0+HvAjfXzdv+la5lTRzGuwMoymCimzRa0gGLL/arPtMtIiSAP71UK65cJHPXgusgE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78112712-fb65-49b1-cffd-08d7f59f49f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 11:34:38.4091
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NjZmLSZi7UbuN2YPEIyg6uCGay3b9RbbURc8Ad/hWnSGoSiWKLaOt3i7YVg0H3tCwDjXXhVtaQk5dwJU0Watsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3066
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/04/2020 12:18, Ahmad Fatoum wrote:
-> The nvmem cell binding used to apply to all objects which match
-> "^.*@[0-9a-f]+$", without taking a compatible into account, which
-> precluded extension of EEPROMs by child nodes other than nvmem.
-> 
-> A previous commit changed the binding, so that nvmem cells that
-> feature a compatible property must have "nvmem-cell" as the value,
-> otherwise they are skipped.
-> 
-> Adjust the driver to observe the new binding change. This change
-> does not change behavior for any device tree that was already
-> compliant with the nvmem binding.
-> 
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-
-Thanks for the patch, this looks good to me, lets wait for Rob to ack 
-the bindings!
-
---srini
-> ---
->   drivers/nvmem/core.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 05c6ae4b0b97..eb697f5ad07d 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -547,6 +547,10 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
->   	parent = dev->of_node;
->   
->   	for_each_child_of_node(parent, child) {
-> +		if (of_find_property(child, "compatible", NULL) &&
-> +		    !of_device_is_compatible(child, "nvmem-cell"))
-> +			continue;
-> +
->   		addr = of_get_property(child, "reg", &len);
->   		if (!addr || (len < 2 * sizeof(u32))) {
->   			dev_err(dev, "nvmem: invalid reg on %pOF\n", child);
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVmlub2QgS291bCA8dmtv
+dWxAa2VybmVsLm9yZz4NCj4gU2VudDogTW9uZGF5LCBNYXkgMTEsIDIwMjAgNTowMCBQTQ0KPiBU
+bzogTGlhbywgQmFyZCA8YmFyZC5saWFvQGludGVsLmNvbT4NCj4gQ2M6IEJhcmQgTGlhbyA8eXVu
+Zy1jaHVhbi5saWFvQGxpbnV4LmludGVsLmNvbT47IGFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9y
+ZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgdGl3YWlAc3VzZS5kZTsgYnJvb25p
+ZUBrZXJuZWwub3JnOw0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgamFua0BjYWRlbmNl
+LmNvbTsNCj4gc3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnOyByYW5kZXIud2FuZ0BsaW51
+eC5pbnRlbC5jb207DQo+IHJhbmphbmkuc3JpZGhhcmFuQGxpbnV4LmludGVsLmNvbTsgaHVpLndh
+bmdAY2Fub25pY2FsLmNvbTsgcGllcnJlLQ0KPiBsb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNv
+bTsgS2FsZSwgU2FueW9nIFIgPHNhbnlvZy5yLmthbGVAaW50ZWwuY29tPjsNCj4gQmxhdWNpYWss
+IFNsYXdvbWlyIDxzbGF3b21pci5ibGF1Y2lha0BpbnRlbC5jb20+OyBMaW4sIE1lbmdkb25nDQo+
+IDxtZW5nZG9uZy5saW5AaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gc291
+bmR3aXJlOiBidXNfdHlwZTogYWRkIHNkd19tYXN0ZXJfZGV2aWNlIHN1cHBvcnQNCj4gDQo+IE9u
+IDExLTA1LTIwLCAwODowNCwgTGlhbywgQmFyZCB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPg0K
+PiA+ID4gU2VudDogTW9uZGF5LCBNYXkgMTEsIDIwMjAgMjozMiBQTQ0KPiA+ID4gVG86IEJhcmQg
+TGlhbyA8eXVuZy1jaHVhbi5saWFvQGxpbnV4LmludGVsLmNvbT4NCj4gPiA+IENjOiBhbHNhLWRl
+dmVsQGFsc2EtcHJvamVjdC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4g
+PiB0aXdhaUBzdXNlLmRlOyBicm9vbmllQGtlcm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRp
+b24ub3JnOw0KPiA+ID4gamFua0BjYWRlbmNlLmNvbTsgc3Jpbml2YXMua2FuZGFnYXRsYUBsaW5h
+cm8ub3JnOw0KPiA+ID4gcmFuZGVyLndhbmdAbGludXguaW50ZWwuY29tOyByYW5qYW5pLnNyaWRo
+YXJhbkBsaW51eC5pbnRlbC5jb207DQo+ID4gPiBodWkud2FuZ0BjYW5vbmljYWwuY29tOyBwaWVy
+cmUtIGxvdWlzLmJvc3NhcnRAbGludXguaW50ZWwuY29tOyBLYWxlLA0KPiA+ID4gU2FueW9nIFIg
+PHNhbnlvZy5yLmthbGVAaW50ZWwuY29tPjsgQmxhdWNpYWssIFNsYXdvbWlyDQo+ID4gPiA8c2xh
+d29taXIuYmxhdWNpYWtAaW50ZWwuY29tPjsgTGluLCBNZW5nZG9uZw0KPiA+ID4gPG1lbmdkb25n
+LmxpbkBpbnRlbC5jb20+OyBMaWFvLCBCYXJkIDxiYXJkLmxpYW9AaW50ZWwuY29tPg0KPiA+ID4g
+U3ViamVjdDogUmU6IFtQQVRDSCAzLzNdIHNvdW5kd2lyZTogYnVzX3R5cGU6IGFkZCBzZHdfbWFz
+dGVyX2RldmljZQ0KPiA+ID4gc3VwcG9ydA0KPiA+ID4NCj4gPiA+IE9uIDMwLTA0LTIwLCAwMjo1
+MSwgQmFyZCBMaWFvIHdyb3RlOg0KPiA+ID4gPiBAQCAtMjQsOSArMjQsMTQgQEAgaW50IHNkd19i
+dXNfbWFzdGVyX2FkZChzdHJ1Y3Qgc2R3X2J1cyAqYnVzLA0KPiA+ID4gPiBzdHJ1Y3QNCj4gPiA+
+IGRldmljZSAqcGFyZW50LA0KPiA+ID4gPiAgCXN0cnVjdCBzZHdfbWFzdGVyX3Byb3AgKnByb3Ag
+PSBOVUxMOw0KPiA+ID4gPiAgCWludCByZXQ7DQo+ID4gPiA+DQo+ID4gPiA+IC0JaWYgKCFidXMt
+PmRldikgew0KPiA+ID4gPiAtCQlwcl9lcnIoIlNvdW5kV2lyZSBidXMgaGFzIG5vIGRldmljZVxu
+Iik7DQo+ID4gPiA+IC0JCXJldHVybiAtRU5PREVWOw0KPiA+ID4NCj4gPiA+IFRoaXMgY2hlY2sg
+aXMgcmVtb3ZlZCBhbmQgbm90IG1vdmVkIGludG8gc2R3X21hc3Rlcl9kZXZpY2VfYWRkKCkNCj4g
+PiA+IGVpdGhlciwgY2FuIHlvdSBhZGQgaGVyZSBvciBpbiBwYXRjaCAxIGFuZCBrZWVwIGNoZWNr
+aW5nIHRoZSBwYXJlbnQNCj4gPiA+IGRldmljZSBwbGVhc2UNCj4gPg0KPiA+IFdlIHdpbGwgc2V0
+IGJ1cy0+ZGV2ID0gJm1kLT5kZXYgaW4gdGhlIGVuZCBvZiBzZHdfbWFzdGVyX2RldmljZV9hZGQo
+KS4NCj4gDQo+IFdlIG5lZWQgdG8gdGVzdCBpZiB0aGlzIGlzIHZhbGlkIG9yIG5vdCA6KQ0KPiAN
+Cj4gPiBUaGF0J3Mgd2h5IHdlIHJlbW92ZSB0aGUgdGVzdC4gQnV0IG5vdyBJIGFtIHdhbmRlcmlu
+ZyBkb2VzIGl0IG1ha2UNCj4gPiBzZW5zZSB0byBzZXQgYnVzLT5kZXYgPSAmbWQtPmRldj8gTWF5
+YmUgaXQgbWFrZXMgbW9yZSBzZW5zZSB0byBzZXQNCj4gPiBidXMtPmRldiA9IHNkdyBjb250cm9s
+IGRldmljZS4NCj4gPiBBIGZvbGxvdyB1cCBxdWVzdGlvbiBpcyB0aGF0IHNob3VsZCBzbGF2ZSBk
+ZXZpY2UgYSBjaGlsZCBvZiBidXMgZGV2aWNlDQo+ID4gb3IgbWFzdGVyIGRldmljZT8gSSB3b3Vs
+ZCBwcmVmZXIgYnVzIGRldmljZSBpZiBpdCBtYWtlcyBzZW5zZS4NCj4gPiBJIHdpbGwgY2hlY2sg
+YnVzLT5kZXYgYW5kIHBhcmVudCBhbmQgcmVtb3ZlIGJ1cy0+ZGV2ID0gJm1kLT5kZXYgaW4gdGhl
+DQo+ID4gbmV4dCB2ZXJzaW9uLg0KPiANCj4gdGhlIHBhcmVudCBpcyBidXMtPmRldiBhbmQgc2R3
+X21hc3Rlcl9kZXZpY2UgY3JlYXRlZCB3b3VsZCBiZSBjaGlsZCBvZiB0aGlzDQo+IGFuZCBzaG91
+bGQgYmUgc2V0IGFzIHN1Y2guIFlvdSBjYW4gcmVtb3ZlIGl0IGZyb20gYnVzIG9iamVjdCBhbmQg
+a2VlcCBpbg0KPiBzZHdfbWFzdGVyX2RldmljZSBvYmplY3QsIHRoYXQgaXMgZmluZSBieSBtZS4N
+Cg0KTG9va3MgbGlrZSB3ZSBkb24ndCBuZWVkIHRoZSBwYXJlbnQgYW5kIGZ3bm9kZSBwYXJhbWV0
+ZXIgc2luY2Ugd2UgY2FuDQpnZXQgdGhlbSBmcm9tIGJ1cy0+ZGV2IPCfmIoNCg0KPiANCj4gVGhl
+IHNkd19zbGF2ZSBpcyBjaGlsZCBvZiBzZHdfbWFzdGVyX2RldmljZSBub3cgYW5kIGxvb2tzIHRv
+IGJlIHNldCBjb3JyZWN0Lg0KDQpTbywgaXQgd2lsbCBiZQ0KYnVzIGRldmljZQ0KICAgIC0+IG1h
+c3RlciBkZXZpY2UNCiAgICAgICAgIC0+IHNsYXZlIGRldmljZQ0KcmlnaHQ/DQoNCkkgaGF2ZSBh
+IHF1ZXN0aW9uIGhlcmUuIFdlIGhhdmUgcG0gc3VwcG9ydGVkIG9uIGJ1cyBhbmQgc2xhdmUgZGV2
+aWNlcywNCmJ1dCBub3QgbWFzdGVyIGRldmljZS4gV2lsbCBwbSB3b3JrIHdpdGggdGhpcyBhcmNo
+aXRlY3R1cmU/DQpDYW4gaXQgYmUNCmJ1cyBkZXZpY2UNCiAgICAtPiBtYXN0ZXIgZGV2aWNlICYg
+c2xhdmUgZGV2aWNlPw0KDQoNCj4gDQo+IC0tDQo+IH5WaW5vZA0K
