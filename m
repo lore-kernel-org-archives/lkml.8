@@ -2,96 +2,306 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D19C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778D5C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41233206B9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D2F206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GGEICkGv"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SvZpKz7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbgEKSBg (ORCPT
+        id S1731025AbgEKSCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:01:36 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42296 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgEKSBf (ORCPT
+        Mon, 11 May 2020 14:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgEKSCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:01:35 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BI1JcN074891;
-        Mon, 11 May 2020 13:01:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589220079;
-        bh=4hUaTl/w7V55aG/pzRHCWNRooX3Cd6J39x6QfIzCmS8=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=GGEICkGv2Gv87Dluudb293qzSwzPaLlh6xLIGeNSFwS5M7/uN8DkoHUW34FAVrJlU
-         wJ89Lgft6U/1kQoqCexYtNg4RzOjO8uEx/yV67lsxUOh05Pt/4PUpFdOoITGzjAi1J
-         Q69o29d9FVvUZ7FSYiloNfGSUZgggZKo3+DW5Opg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BI1JMc123744
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 13:01:19 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 13:01:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 13:01:19 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BI1IO4038165;
-        Mon, 11 May 2020 13:01:19 -0500
-Date:   Mon, 11 May 2020 23:31:17 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     <Tudor.Ambarus@microchip.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <broonie@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>
-Subject: Re: [PATCH v4 12/16] mtd: spi-nor: perform a Soft Reset on shutdown
-Message-ID: <20200511180115.zpbfecwdeuhy5qzr@ti.com>
-References: <20200424184410.8578-1-p.yadav@ti.com>
- <20200424184410.8578-13-p.yadav@ti.com>
- <6809202.hICg0JTlGu@192.168.0.120>
+        Mon, 11 May 2020 14:02:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD042C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:02:36 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e25so10561122ljg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KN4Bw4jdoDlNbb2x0GKSiOiWfddLAMYHfygVxNpIf6g=;
+        b=SvZpKz7yYJU/v4SDDIo5TOzIj+jwoV/TpTBN3rKCL602OojQJglY2dw5xOeiunPOFi
+         DyzhSP/Fy5UBdfge/am/cx04rOkqTbKWuxOjxqsp+K/Okzus3lAn3dbBKJ/ZCJ6HxuVq
+         h39u7djqdlksyB3tKveo/W8quLa8tPXg7veTON0HABVQg+M+e7pjqhtcNTCkt/TMbnSd
+         pN3CVJwzAKb5Ge7s+venQ9Nw4IxBg2uM87+P3w0lHhVzCAZjiNOP0HW0I/ovgLPoNSb8
+         nXG3b+J9z5POi+mxIRKklmwiOkmQ4nrSM4G66SUjogC5jXd4xS5Qd0ky++iU4xkLdE/O
+         nPhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KN4Bw4jdoDlNbb2x0GKSiOiWfddLAMYHfygVxNpIf6g=;
+        b=ctNyG6BXQTnwD7ixARY8hJhn40Zs2le3hBOiqgsxjjnpedHZRjRQsFcIt7y4jc9nmG
+         kvFniMelmurZVvPZQjKfSi1K78aUXrMrG0EvHsW8ZPgfhruNNDs07cekFd2BSQ1oTleu
+         Oq2kGhtH9yJmRFZWAQyP6+mY6QyEgBoyZWxVdFau75kr06dyrlYUfraReBphVf0AHIRx
+         /+1+YXlh6nkm3HbpUS9aEHeOs4piIihxHqXetCclVaYnjGn9Y9Mc8oD/RX4IohsJh84i
+         s5aD7lPJWB8vFVZu8sVCoKrvBzAcHQmfaSK00TMrPpCTMiw/kW1dBCYD9ymV7Lq9ybsS
+         YYJw==
+X-Gm-Message-State: AOAM532S+e+dDbkuKVjtnDmB3tBjB+o0zsX/paKl5rKjGH3npuoGUSyw
+        8m1SoFF1tvUvuc4d5GPGCY+Q3k+FU5ECq5tnUsiaDw==
+X-Google-Smtp-Source: ABdhPJxGkpgqjRn8BVvDcLIEp5cLnJADuGxbnHoJriKzo/Q9RHfyD4Lbjurxqz0QK3XVSAVu71GUD3ugQHO/GuSk9AQ=
+X-Received: by 2002:a2e:b52a:: with SMTP id z10mr322629ljm.200.1589220154131;
+ Mon, 11 May 2020 11:02:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6809202.hICg0JTlGu@192.168.0.120>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com> <20200507214418.GA22159@bogus>
+In-Reply-To: <20200507214418.GA22159@bogus>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Mon, 11 May 2020 11:02:23 -0700
+Message-ID: <CABEDWGxhCCrVT4Dj=o+9sKtL1EvrOZjNkyuXqYYcZoQ8b-aXEg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: endpoint: functions/pci-epf-test: Support slave DMA transfer
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
+        efremov@linux.com, b.zolnierkie@samsung.com, vidyas@nvidia.com,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/20 11:22AM, Tudor.Ambarus@microchip.com wrote:
-> Hi, Pratyush,
-> 
-> On Friday, April 24, 2020 9:44:06 PM EEST Pratyush Yadav wrote:
-> > A Software Reset sequence will return the flash to Power-on-Reset (POR)
-> > state. It consists of two commands: Soft Reset Enable and Soft Reset.
-> > 
-> > Perform a Soft Reset on shutdown on flashes that support it so that the
-> > flash can be reset to its initial state and any configurations made by
-> > spi-nor (given that they're only done in volatile registers) will be
-> > reset. This will hand back the flash in pristine state for any further
-> > operations on it.
-> 
-> Please don't introduce SPI_NOR_SOFT_RESET yet. We should instead determine the 
-> software reset sequence by inspecting BFPT[16], bits 13:8.
- 
- Ok. Will do.
+On Thu, May 7, 2020 at 2:44 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, May 01, 2020 at 05:29:12PM -0700, Alan Mikhak wrote:
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
+> >
+> > Modify pci_epf_test_data_transfer() to also support slave DMA transfers.
+> > Adds a direction parameter so caller can specify one of the supported DMA
+> > transfer directions: DMA_MEM_TO_MEM, DMA_MEM_TO_DEV, and DMA_DEV_TO_MEM.
+> > For DMA_MEM_TO_MEM, the function calls dmaengine_prep_dma_memcpy() as it
+> > did before. For DMA_MEM_TO_DEV or DMA_DEV_TO_MEM direction, the function
+> > calls dmaengine_slave_config() to configure the slave channel before it
+> > calls dmaengine_prep_slave_single().
+> >
+> > Modify existing callers to specify DMA_MEM_TO_MEM since that is the only
+> > possible option so far. Rename the phys_addr local variable in some of the
+> > callers for more readability. Tighten some of the timing function calls to
+> > avoid counting error print time in case of error.
+>
+> Looks fine, but also needs a user. The last sentence sounds like a
+> separate change.
 
--- 
+Thanks Rob for your comment.
+
+I will address your concern in a future v2 patch.
+
 Regards,
-Pratyush Yadav
-Texas Instruments India
+Alan
+
+>
+> >
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-test.c | 67 ++++++++++++++++++---------
+> >  1 file changed, 44 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > index 60330f3e3751..1d026682febb 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> > @@ -104,25 +104,41 @@ static void pci_epf_test_dma_callback(void *param)
+> >   * The function returns '0' on success and negative value on failure.
+> >   */
+> >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+> > -                                   dma_addr_t dma_dst, dma_addr_t dma_src,
+> > -                                   size_t len)
+> > +                                   dma_addr_t dma_dst,
+> > +                                   dma_addr_t dma_src,
+> > +                                   size_t len,
+> > +                                   enum dma_transfer_direction dir)
+> >  {
+> >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+> >       struct dma_chan *chan = epf_test->dma_chan;
+> >       struct pci_epf *epf = epf_test->epf;
+> > +     struct dma_slave_config sconf;
+> >       struct dma_async_tx_descriptor *tx;
+> >       struct device *dev = &epf->dev;
+> >       dma_cookie_t cookie;
+> > +     dma_addr_t buf;
+> >       int ret;
+> >
+> >       if (IS_ERR_OR_NULL(chan)) {
+> > -             dev_err(dev, "Invalid DMA memcpy channel\n");
+> > +             dev_err(dev, "Invalid DMA channel\n");
+> >               return -EINVAL;
+> >       }
+> >
+> > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
+> > +     if (dir == DMA_MEM_TO_MEM) {
+> > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src,
+> > +                                            len, flags);
+> > +     } else {
+> > +             memset(&sconf, 0, sizeof(sconf));
+> > +             sconf.direction = dir;
+> > +             sconf.dst_addr = dma_dst;
+> > +             sconf.src_addr = dma_src;
+> > +             dmaengine_slave_config(chan, &sconf);
+> > +
+> > +             buf = (dir == DMA_MEM_TO_DEV) ? dma_dst : dma_src;
+> > +             tx = dmaengine_prep_slave_single(chan, buf, len, dir, flags);
+> > +     }
+> >       if (!tx) {
+> > -             dev_err(dev, "Failed to prepare DMA memcpy\n");
+> > +             dev_err(dev, "Failed to prepare DMA transfer\n");
+> >               return -EIO;
+> >       }
+> >
+> > @@ -268,7 +284,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> >               goto err_dst_addr;
+> >       }
+> >
+> > -     ktime_get_ts64(&start);
+> >       use_dma = !!(reg->flags & FLAG_USE_DMA);
+> >       if (use_dma) {
+> >               if (!epf_test->dma_supported) {
+> > @@ -277,14 +292,18 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+> >                       goto err_map_addr;
+> >               }
+> >
+> > +             ktime_get_ts64(&start);
+> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> > -                                              src_phys_addr, reg->size);
+> > +                                              src_phys_addr, reg->size,
+> > +                                              DMA_MEM_TO_MEM);
+> > +             ktime_get_ts64(&end);
+> >               if (ret)
+> >                       dev_err(dev, "Data transfer failed\n");
+> >       } else {
+> > +             ktime_get_ts64(&start);
+> >               memcpy(dst_addr, src_addr, reg->size);
+> > +             ktime_get_ts64(&end);
+> >       }
+> > -     ktime_get_ts64(&end);
+> >       pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
+> >
+> >  err_map_addr:
+> > @@ -310,7 +329,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >       void *buf;
+> >       u32 crc32;
+> >       bool use_dma;
+> > -     phys_addr_t phys_addr;
+> > +     phys_addr_t src_phys_addr;
+> >       phys_addr_t dst_phys_addr;
+> >       struct timespec64 start, end;
+> >       struct pci_epf *epf = epf_test->epf;
+> > @@ -319,8 +338,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >       struct device *dma_dev = epf->epc->dev.parent;
+> >       enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >       struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > +     enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+> >
+> > -     src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> > +     src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+> >       if (!src_addr) {
+> >               dev_err(dev, "Failed to allocate address\n");
+> >               reg->status = STATUS_SRC_ADDR_INVALID;
+> > @@ -328,7 +348,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >               goto err;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+> >                              reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map address\n");
+> > @@ -360,10 +380,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >
+> >               ktime_get_ts64(&start);
+> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> > -                                              phys_addr, reg->size);
+> > +                                              src_phys_addr, reg->size, dir);
+> > +             ktime_get_ts64(&end);
+> >               if (ret)
+> >                       dev_err(dev, "Data transfer failed\n");
+> > -             ktime_get_ts64(&end);
+> >
+> >               dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
+> >                                DMA_FROM_DEVICE);
+> > @@ -383,10 +403,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+> >       kfree(buf);
+> >
+> >  err_map_addr:
+> > -     pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
+> > +     pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
+> >
+> >  err_addr:
+> > -     pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
+> > +     pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
+> >
+> >  err:
+> >       return ret;
+> > @@ -398,7 +418,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >       void __iomem *dst_addr;
+> >       void *buf;
+> >       bool use_dma;
+> > -     phys_addr_t phys_addr;
+> > +     phys_addr_t dst_phys_addr;
+> >       phys_addr_t src_phys_addr;
+> >       struct timespec64 start, end;
+> >       struct pci_epf *epf = epf_test->epf;
+> > @@ -407,8 +427,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >       struct device *dma_dev = epf->epc->dev.parent;
+> >       enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> >       struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
+> > +     enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+> >
+> > -     dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+> > +     dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+> >       if (!dst_addr) {
+> >               dev_err(dev, "Failed to allocate address\n");
+> >               reg->status = STATUS_DST_ADDR_INVALID;
+> > @@ -416,7 +437,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >               goto err;
+> >       }
+> >
+> > -     ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
+> > +     ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+> >                              reg->size);
+> >       if (ret) {
+> >               dev_err(dev, "Failed to map address\n");
+> > @@ -450,11 +471,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >               }
+> >
+> >               ktime_get_ts64(&start);
+> > -             ret = pci_epf_test_data_transfer(epf_test, phys_addr,
+> > -                                              src_phys_addr, reg->size);
+> > +             ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+> > +                                              src_phys_addr, reg->size, dir);
+> > +             ktime_get_ts64(&end);
+> >               if (ret)
+> >                       dev_err(dev, "Data transfer failed\n");
+> > -             ktime_get_ts64(&end);
+> >
+> >               dma_unmap_single(dma_dev, src_phys_addr, reg->size,
+> >                                DMA_TO_DEVICE);
+> > @@ -476,10 +497,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+> >       kfree(buf);
+> >
+> >  err_map_addr:
+> > -     pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
+> > +     pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
+> >
+> >  err_addr:
+> > -     pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
+> > +     pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
+> >
+> >  err:
+> >       return ret;
+> > --
+> > 2.7.4
+> >
