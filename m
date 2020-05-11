@@ -2,58 +2,58 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB25C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659E1C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B458F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3919320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="US32DFy2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HPR5Cl2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgEKXct (ORCPT
+        id S1728230AbgEKXcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39648 "EHLO
+        Mon, 11 May 2020 19:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728148AbgEKXcl (ORCPT
+        by vger.kernel.org with ESMTP id S1728145AbgEKXck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:32:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F91C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:41 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s11so1782973pgv.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:41 -0700 (PDT)
+        Mon, 11 May 2020 19:32:40 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46454C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:39 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a5so8603885pjh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k9Bvq3x0VWjBGgSeVCRYNWOrntPPtjAkFzn78+9NuuU=;
-        b=US32DFy2zWY5EYw5JysLZOaVs5vZmgXQbYzk7oY8rLRlkswYjcFHE+YjsXroJgjBsz
-         E4MX3hKf8Xuwiy82SbReSsiNqeLyS/C1DOTHHrluztPF1wdK+zxHhh96qHHc+8yoqVTK
-         2Yvym3sNSlpNg5oZ2noA18909V5nudllKMtuE=
+        bh=EonzMrSQ5xoIpulNRIFPEIW9ivTufOr3sl2TimdVQ8s=;
+        b=HPR5Cl2Nzighy+CnMw4A5dYNsJBqZGDixXiGX6W0cT0lxYLFmcS5w1sqyIjPcory0w
+         1VElw14qIgoJFzWuNzfU33huJZzVW0yP9bKEWhBIMdjp9LnFG5u6P+fAjS24IVqeFums
+         y9s0bYgNDAu1l3Fp85Bga6SIRLs2JRA+ufGBU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k9Bvq3x0VWjBGgSeVCRYNWOrntPPtjAkFzn78+9NuuU=;
-        b=kwISP1yoEL21Udv0+G3Q6bJV0g8dW6UeXuIcqwHV5o01tXUPqNklnP79wqWW5qvE+2
-         eYrcE935Zugp5aZsUiqq+FdWT+ePO2S6KHucdPXeQCs09DK/68smOSjoXRAtFQettJDk
-         QSB+ZkOurdJP91BHM1hOulpi97sdx6r/UYEgNqNpqL4CnQJZbbtNqWN0txv4FIA0YQVb
-         tp/SuOsUJljeQ3q6L765BiAcwSNqN1lDnfMAM9KNezY06SbhQM3RJcJaw4G2jeLqY8sI
-         ovC/EYHQ0+FOtD3XPxb7ilwT/opN4lGYo0V4YFTLLZEOha/2keBIt3TgWZle/6damINI
-         imAQ==
-X-Gm-Message-State: AGi0PuZub8U34SktdFjaRzeAtSAIFmM9A9YpWdUtgoC3vglYSN5qd9Xs
-        po/h+RrSncRtkP9mPcJkemCzEw==
-X-Google-Smtp-Source: APiQypLT/8HtptN4aSnDBKXO0lF8+b8MjZ0O/qZi69epCoLsUREl3ellPRMBk9C3WoTpbosiRjcsYw==
-X-Received: by 2002:a63:d252:: with SMTP id t18mr13267016pgi.318.1589239960600;
-        Mon, 11 May 2020 16:32:40 -0700 (PDT)
+        bh=EonzMrSQ5xoIpulNRIFPEIW9ivTufOr3sl2TimdVQ8s=;
+        b=DRqBIjgArtDhJP91g5YeqRoXz+vsCFzxmtfiwK7ytBOYwErAMnMUSXw9rJQJ22SxrE
+         OiGx2IuvvJqvKh/4NU3DIjk9+dSAqLBzgPTsj5+5CNC2UAyNrN7+jzrHk6SdDQRJEk2i
+         7JOFbITJCJtgwB0TG0SMUm/MiyQlQgzea445YadH2ZyctukOXID0odUW9X430lfmyEKh
+         B/E0SNFx7UFha6Fv8PFxRSiD75D5rnLUKQozcbIfiHscJy2c+PrJgyRd7sC50VNmwpbX
+         sZkyV2Ys2r3XOMQZMk8UdlqsQjiT2ZzX1xlvWlqWwOJxFL/tN4ugC31NsS5XKhqZy+sA
+         Ithw==
+X-Gm-Message-State: AGi0PuYWAtSI2V3N4oPebL7W9HeLQulHlPTK1q9oNZWW7caR3HtMz8Fw
+        +Bd2ybwApMH2MsB3otemuoNYLQ==
+X-Google-Smtp-Source: APiQypJf8xd6VCLDMUk5dgSV3427oa7JtIVQY8aWUEOJWjWx27qX3neLxq+4fhV6VLLM85eRr5s0yQ==
+X-Received: by 2002:a17:90a:5287:: with SMTP id w7mr25852185pjh.66.1589239958666;
+        Mon, 11 May 2020 16:32:38 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w30sm10247358pfj.25.2020.05.11.16.32.34
+        by smtp.gmail.com with ESMTPSA id l6sm10098779pfl.128.2020.05.11.16.32.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 11 May 2020 16:32:35 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -68,9 +68,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v8 10/11] mtd: Support kmsg dumper based on pstore/blk
-Date:   Mon, 11 May 2020 16:32:28 -0700
-Message-Id: <20200511233229.27745-11-keescook@chromium.org>
+Subject: [PATCH v8 06/11] Documentation: Add details for pstore/blk
+Date:   Mon, 11 May 2020 16:32:24 -0700
+Message-Id: <20200511233229.27745-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511233229.27745-1-keescook@chromium.org>
 References: <20200511233229.27745-1-keescook@chromium.org>
@@ -83,668 +83,279 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 
-This introduces mtdpstore, which is similar to mtdoops but more
-powerful. It uses pstore/blk, and aims to store panic and oops logs to
-a flash partition, where pstore can later read back and present as files
-in the mounted pstore filesystem.
-
-To make mtdpstore work, the "blkdev" of pstore/blk should be set
-as MTD device name or MTD device number. For more details, see
-Documentation/admin-guide/pstore-blk.rst
-
-This solves a number of issues:
-- Work duplication: both of pstore and mtdoops do the same job storing
-  panic/oops log. They have very similar logic, registering to kmsg
-  dumper and storing logs to several chunks one by one.
-- Layer violations: drivers should provides methods instead of polices.
-  MTD should provide read/write/erase operations, and allow a higher
-  level drivers to provide the chunk management, kmsg dump
-  configuration, etc.
-- Missing features: pstore provides many additional features, including
-  presenting the logs as files, logging dump time and count, and
-  supporting other frontends like pmsg, console, etc.
+Add details on using pstore/blk, the new backend of pstore to record
+dumps to block devices, in Documentation/admin-guide/pstore-blk.rst
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Link: https://lore.kernel.org/r/1585126506-18635-12-git-send-email-liaoweixiong@allwinnertech.com
+Link: https://lore.kernel.org/r/1585126506-18635-8-git-send-email-liaoweixiong@allwinnertech.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/admin-guide/pstore-blk.rst |   9 +-
- drivers/mtd/Kconfig                      |  10 +
- drivers/mtd/Makefile                     |   1 +
- drivers/mtd/mtdpstore.c                  | 563 +++++++++++++++++++++++
- 4 files changed, 581 insertions(+), 2 deletions(-)
- create mode 100644 drivers/mtd/mtdpstore.c
+ Documentation/admin-guide/pstore-blk.rst | 229 +++++++++++++++++++++++
+ MAINTAINERS                              |   1 +
+ fs/pstore/Kconfig                        |   2 +
+ 3 files changed, 232 insertions(+)
+ create mode 100644 Documentation/admin-guide/pstore-blk.rst
 
 diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin-guide/pstore-blk.rst
-index d45341e55e82..296d5027787a 100644
---- a/Documentation/admin-guide/pstore-blk.rst
-+++ b/Documentation/admin-guide/pstore-blk.rst
-@@ -43,9 +43,9 @@ blkdev
- ~~~~~~
- 
- The block device to use. Most of the time, it is a partition of block device.
--It's required for pstore/blk.
-+It's required for pstore/blk. It is also used for MTD device.
- 
--It accepts the following variants:
-+It accepts the following variants for block device:
- 
- 1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
-    leading 0x, for example b302.
-@@ -64,6 +64,11 @@ It accepts the following variants:
-    partition with a known unique id.
- #. <major>:<minor> major and minor number of the device separated by a colon.
- 
-+It accepts the following variants for MTD device:
-+
-+1. <device name> MTD device name. "pstore" is recommended.
-+#. <device number> MTD device number.
-+
- kmsg_size
- ~~~~~~~~~
- 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 42d401ea60ee..6ddab796216d 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -170,6 +170,16 @@ config MTD_OOPS
- 	  buffer in a flash partition where it can be read back at some
- 	  later point.
- 
-+config MTD_PSTORE
-+	tristate "Log panic/oops to an MTD buffer based on pstore"
-+	depends on PSTORE_BLK
-+	help
-+	  This enables panic and oops messages to be logged to a circular
-+	  buffer in a flash partition where it can be read back as files after
-+	  mounting pstore filesystem.
-+
-+	  If unsure, say N.
-+
- config MTD_SWAP
- 	tristate "Swap on MTD device support"
- 	depends on MTD && SWAP
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 56cc60ccc477..593d0593a038 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_RFD_FTL)		+= rfd_ftl.o
- obj-$(CONFIG_SSFDC)		+= ssfdc.o
- obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
- obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
-+obj-$(CONFIG_MTD_PSTORE)	+= mtdpstore.o
- obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
- 
- nftl-objs		:= nftlcore.o nftlmount.o
-diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
 new file mode 100644
-index 000000000000..06084eff1004
+index 000000000000..bef8c7436721
 --- /dev/null
-+++ b/drivers/mtd/mtdpstore.c
-@@ -0,0 +1,563 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define dev_fmt(fmt) "mtdoops-pstore: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pstore_blk.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/bitops.h>
-+
-+static struct mtdpstore_context {
-+	int index;
-+	struct pstore_blk_config info;
-+	struct pstore_device_info dev;
-+	struct mtd_info *mtd;
-+	unsigned long *rmmap;		/* removed bit map */
-+	unsigned long *usedmap;		/* used bit map */
-+	/*
-+	 * used for panic write
-+	 * As there are no block_isbad for panic case, we should keep this
-+	 * status before panic to ensure panic_write not failed.
-+	 */
-+	unsigned long *badmap;		/* bad block bit map */
-+} oops_cxt;
-+
-+static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	int ret;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 blknum = div_u64(off, mtd->erasesize);
-+
-+	if (test_bit(blknum, cxt->badmap))
-+		return true;
-+	ret = mtd_block_isbad(mtd, off);
-+	if (ret < 0) {
-+		dev_err(&mtd->dev, "mtd_block_isbad failed, aborting\n");
-+		return ret;
-+	} else if (ret > 0) {
-+		set_bit(blknum, cxt->badmap);
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 blknum = div_u64(off, mtd->erasesize);
-+
-+	return test_bit(blknum, cxt->badmap);
-+}
-+
-+static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu used\n", zonenum);
-+	set_bit(zonenum, cxt->usedmap);
-+}
-+
-+static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
-+	clear_bit(zonenum, cxt->usedmap);
-+}
-+
-+static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+
-+	while (zonecnt > 0) {
-+		dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
-+		clear_bit(zonenum, cxt->usedmap);
-+		zonenum++;
-+		zonecnt--;
-+	}
-+}
-+
-+static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+	u64 blknum = div_u64(off, cxt->mtd->erasesize);
-+
-+	if (test_bit(blknum, cxt->badmap))
-+		return true;
-+	return test_bit(zonenum, cxt->usedmap);
-+}
-+
-+static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+
-+	while (zonecnt > 0) {
-+		if (test_bit(zonenum, cxt->usedmap))
-+			return true;
-+		zonenum++;
-+		zonecnt--;
-+	}
-+	return false;
-+}
-+
-+static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
-+		size_t size)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t sz;
-+	int i;
-+
-+	sz = min_t(uint32_t, size, mtd->writesize / 4);
-+	for (i = 0; i < sz; i++) {
-+		if (buf[i] != (char)0xFF)
-+			return false;
-+	}
-+	return true;
-+}
-+
-+static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu removed\n", zonenum);
-+	set_bit(zonenum, cxt->rmmap);
-+}
-+
-+static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+
-+	while (zonecnt > 0) {
-+		clear_bit(zonenum, cxt->rmmap);
-+		zonenum++;
-+		zonecnt--;
-+	}
-+}
-+
-+static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+
-+	while (zonecnt > 0) {
-+		if (test_bit(zonenum, cxt->rmmap))
-+			return true;
-+		zonenum++;
-+		zonecnt--;
-+	}
-+	return false;
-+}
-+
-+static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	struct erase_info erase;
-+	int ret;
-+
-+	dev_dbg(&mtd->dev, "try to erase off 0x%llx\n", off);
-+	erase.len = cxt->mtd->erasesize;
-+	erase.addr = off;
-+	ret = mtd_erase(cxt->mtd, &erase);
-+	if (!ret)
-+		mtdpstore_block_clear_removed(cxt, off);
-+	else
-+		dev_err(&mtd->dev, "erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
-+		       (unsigned long long)erase.addr,
-+		       (unsigned long long)erase.len, cxt->info.device);
-+	return ret;
-+}
-+
-+/*
-+ * called while removing file
-+ *
-+ * Avoiding over erasing, do erase block only when the whole block is unused.
-+ * If the block contains valid log, do erase lazily on flush_removed() when
-+ * unregister.
-+ */
-+static ssize_t mtdpstore_erase(size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -EIO;
-+
-+	mtdpstore_mark_unused(cxt, off);
-+
-+	/* If the block still has valid data, mtdpstore do erase lazily */
-+	if (likely(mtdpstore_block_is_used(cxt, off))) {
-+		mtdpstore_mark_removed(cxt, off);
-+		return 0;
-+	}
-+
-+	/* all zones are unused, erase it */
-+	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
-+	return mtdpstore_erase_do(cxt, off);
-+}
-+
-+/*
-+ * What is security for mtdpstore?
-+ * As there is no erase for panic case, we should ensure at least one zone
-+ * is writable. Otherwise, panic write will fail.
-+ * If zone is used, write operation will return -ENOMSG, which means that
-+ * pstore/blk will try one by one until gets an empty zone. So, it is not
-+ * needed to ensure the next zone is empty, but at least one.
-+ */
-+static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	int ret = 0, i;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u32 zonenum = (u32)div_u64(off, cxt->info.kmsg_size);
-+	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->info.kmsg_size);
-+	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
-+	u32 erasesize = cxt->mtd->erasesize;
-+
-+	for (i = 0; i < zonecnt; i++) {
-+		u32 num = (zonenum + i) % zonecnt;
-+
-+		/* found empty zone */
-+		if (!test_bit(num, cxt->usedmap))
-+			return 0;
-+	}
-+
-+	/* If there is no any empty zone, we have no way but to do erase */
-+	off = ALIGN_DOWN(off, erasesize);
-+	while (blkcnt--) {
-+		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
-+
-+		if (mtdpstore_block_isbad(cxt, off))
-+			continue;
-+
-+		ret = mtdpstore_erase_do(cxt, off);
-+		if (!ret) {
-+			mtdpstore_block_mark_unused(cxt, off);
-+			break;
-+		}
-+	}
-+
-+	if (ret)
-+		dev_err(&mtd->dev, "all blocks bad!\n");
-+	dev_dbg(&mtd->dev, "end security\n");
-+	return ret;
-+}
-+
-+static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen;
-+	int ret;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	/* zone is used, please try next one */
-+	if (mtdpstore_is_used(cxt, off))
-+		return -ENOMSG;
-+
-+	dev_dbg(&mtd->dev, "try to write off 0x%llx size %zu\n", off, size);
-+	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
-+	if (ret < 0 || retlen != size) {
-+		dev_err(&mtd->dev, "write failure at %lld (%zu of %zu written), err %d\n",
-+				off, retlen, size, ret);
-+		return -EIO;
-+	}
-+	mtdpstore_mark_used(cxt, off);
-+
-+	mtdpstore_security(cxt, off);
-+	return retlen;
-+}
-+
-+static inline bool mtdpstore_is_io_error(int ret)
-+{
-+	return ret < 0 && !mtd_is_bitflip(ret) && !mtd_is_eccerr(ret);
-+}
-+
-+/*
-+ * All zones will be read as pstore/blk will read zone one by one when do
-+ * recover.
-+ */
-+static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen, done;
-+	int ret;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	dev_dbg(&mtd->dev, "try to read off 0x%llx size %zu\n", off, size);
-+	for (done = 0, retlen = 0; done < size; done += retlen) {
-+		retlen = 0;
-+
-+		ret = mtd_read(cxt->mtd, off + done, size - done, &retlen,
-+				(u_char *)buf + done);
-+		if (mtdpstore_is_io_error(ret)) {
-+			dev_err(&mtd->dev, "read failure at %lld (%zu of %zu read), err %d\n",
-+					off + done, retlen, size - done, ret);
-+			/* the zone may be broken, try next one */
-+			return -ENOMSG;
-+		}
-+
-+		/*
-+		 * ECC error. The impact on log data is so small. Maybe we can
-+		 * still read it and try to understand. So mtdpstore just hands
-+		 * over what it gets and user can judge whether the data is
-+		 * valid or not.
-+		 */
-+		if (mtd_is_eccerr(ret)) {
-+			dev_err(&mtd->dev, "ecc error at %lld (%zu of %zu read), err %d\n",
-+					off + done, retlen, size - done, ret);
-+			/* driver may not set retlen when ecc error */
-+			retlen = retlen == 0 ? size - done : retlen;
-+		}
-+	}
-+
-+	if (mtdpstore_is_empty(cxt, buf, size))
-+		mtdpstore_mark_unused(cxt, off);
-+	else
-+		mtdpstore_mark_used(cxt, off);
-+
-+	mtdpstore_security(cxt, off);
-+	return retlen;
-+}
-+
-+static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen;
-+	int ret;
-+
-+	if (mtdpstore_panic_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	/* zone is used, please try next one */
-+	if (mtdpstore_is_used(cxt, off))
-+		return -ENOMSG;
-+
-+	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
-+	if (ret < 0 || size != retlen) {
-+		dev_err(&mtd->dev, "panic write failure at %lld (%zu of %zu read), err %d\n",
-+				off, retlen, size, ret);
-+		return -EIO;
-+	}
-+	mtdpstore_mark_used(cxt, off);
-+
-+	return retlen;
-+}
-+
-+static void mtdpstore_notify_add(struct mtd_info *mtd)
-+{
-+	int ret;
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct pstore_blk_config *info = &cxt->info;
-+	unsigned long longcnt;
-+
-+	if (!strcmp(mtd->name, info->device))
-+		cxt->index = mtd->index;
-+
-+	if (mtd->index != cxt->index || cxt->index < 0)
-+		return;
-+
-+	dev_dbg(&mtd->dev, "found matching MTD device %s\n", mtd->name);
-+
-+	if (mtd->size < info->kmsg_size * 2) {
-+		dev_err(&mtd->dev, "MTD partition %d not big enough\n",
-+				mtd->index);
-+		return;
-+	}
-+	/*
-+	 * kmsg_size must be aligned to 4096 Bytes, which is limited by
-+	 * psblk. The default value of kmsg_size is 64KB. If kmsg_size
-+	 * is larger than erasesize, some errors will occur since mtdpsotre
-+	 * is designed on it.
-+	 */
-+	if (mtd->erasesize < info->kmsg_size) {
-+		dev_err(&mtd->dev, "eraseblock size of MTD partition %d too small\n",
-+				mtd->index);
-+		return;
-+	}
-+	if (unlikely(info->kmsg_size % mtd->writesize)) {
-+		dev_err(&mtd->dev, "record size %lu KB must align to write size %d KB\n",
-+				info->kmsg_size / 1024,
-+				mtd->writesize / 1024);
-+		return;
-+	}
-+
-+	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->kmsg_size));
-+	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+
-+	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
-+	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+
-+	cxt->dev.total_size = mtd->size;
-+	/* just support dmesg right now */
-+	cxt->dev.flags = PSTORE_FLAGS_DMESG;
-+	cxt->dev.read = mtdpstore_read;
-+	cxt->dev.write = mtdpstore_write;
-+	cxt->dev.erase = mtdpstore_erase;
-+	cxt->dev.panic_write = mtdpstore_panic_write;
-+
-+	ret = register_pstore_device(&cxt->dev);
-+	if (ret) {
-+		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
-+				mtd->index);
-+		return;
-+	}
-+	cxt->mtd = mtd;
-+	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
-+}
-+
-+static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
-+		loff_t off, size_t size)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u_char *buf;
-+	int ret;
-+	size_t retlen;
-+	struct erase_info erase;
-+
-+	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* 1st. read to cache */
-+	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
-+	if (mtdpstore_is_io_error(ret))
-+		goto free;
-+
-+	/* 2nd. erase block */
-+	erase.len = mtd->erasesize;
-+	erase.addr = off;
-+	ret = mtd_erase(mtd, &erase);
-+	if (ret)
-+		goto free;
-+
-+	/* 3rd. write back */
-+	while (size) {
-+		unsigned int zonesize = cxt->info.kmsg_size;
-+
-+		/* there is valid data on block, write back */
-+		if (mtdpstore_is_used(cxt, off)) {
-+			ret = mtd_write(mtd, off, zonesize, &retlen, buf);
-+			if (ret)
-+				dev_err(&mtd->dev, "write failure at %lld (%zu of %u written), err %d\n",
-+						off, retlen, zonesize, ret);
-+		}
-+
-+		off += zonesize;
-+		size -= min_t(unsigned int, zonesize, size);
-+	}
-+
-+free:
-+	kfree(buf);
-+	return ret;
-+}
-+
-+/*
-+ * What does mtdpstore_flush_removed() do?
-+ * When user remove any log file on pstore filesystem, mtdpstore should do
-+ * something to ensure log file removed. If the whole block is no longer used,
-+ * it's nice to erase the block. However if the block still contains valid log,
-+ * what mtdpstore can do is to erase and write the valid log back.
-+ */
-+static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	int ret;
-+	loff_t off;
-+	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
-+
-+	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
-+		ret = mtdpstore_block_isbad(cxt, off);
-+		if (ret)
-+			continue;
-+
-+		ret = mtdpstore_block_is_removed(cxt, off);
-+		if (!ret)
-+			continue;
-+
-+		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static void mtdpstore_notify_remove(struct mtd_info *mtd)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+
-+	if (mtd->index != cxt->index || cxt->index < 0)
-+		return;
-+
-+	mtdpstore_flush_removed(cxt);
-+
-+	unregister_pstore_device(&cxt->dev);
-+	kfree(cxt->badmap);
-+	kfree(cxt->usedmap);
-+	kfree(cxt->rmmap);
-+	cxt->mtd = NULL;
-+	cxt->index = -1;
-+}
-+
-+static struct mtd_notifier mtdpstore_notifier = {
-+	.add	= mtdpstore_notify_add,
-+	.remove	= mtdpstore_notify_remove,
-+};
-+
-+static int __init mtdpstore_init(void)
-+{
-+	int ret;
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct pstore_blk_config *info = &cxt->info;
-+
-+	ret = pstore_blk_get_config(info);
-+	if (unlikely(ret))
-+		return ret;
-+
-+	if (strlen(info->device) == 0) {
-+		pr_err("mtd device must be supplied (device name is empty)\n");
-+		return -EINVAL;
-+	}
-+	if (!info->kmsg_size) {
-+		pr_err("no backend enabled (kmsg_size is 0)\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Setup the MTD device to use */
-+	ret = kstrtoint((char *)info->device, 0, &cxt->index);
-+	if (ret)
-+		cxt->index = -1;
-+
-+	register_mtd_user(&mtdpstore_notifier);
-+	return 0;
-+}
-+module_init(mtdpstore_init);
-+
-+static void __exit mtdpstore_exit(void)
-+{
-+	unregister_mtd_user(&mtdpstore_notifier);
-+}
-+module_exit(mtdpstore_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
-+MODULE_DESCRIPTION("MTD backend for pstore/blk");
++++ b/Documentation/admin-guide/pstore-blk.rst
+@@ -0,0 +1,229 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++pstore block oops/panic logger
++==============================
++
++Introduction
++------------
++
++pstore block (pstore/blk) is an oops/panic logger that writes its logs to a
++block device before the system crashes. You can get these log files by
++mounting pstore filesystem like::
++
++    mount -t pstore pstore /sys/fs/pstore
++
++
++pstore block concepts
++---------------------
++
++pstore/blk provides efficient configuration method for pstore/blk, which
++divides all configurations into two parts, configurations for user and
++configurations for driver.
++
++Configurations for user determine how pstore/blk works, such as pmsg_size,
++kmsg_size and so on. All of them support both Kconfig and module parameters,
++but module parameters have priority over Kconfig.
++
++Configurations for driver are all about block device, such as total_size
++of block device and read/write operations.
++
++Configurations for user
++-----------------------
++
++All of these configurations support both Kconfig and module parameters, but
++module parameters have priority over Kconfig.
++
++Here is an example for module parameters::
++
++        pstore_blk.blkdev=179:7 pstore_blk.kmsg_size=64
++
++The detail of each configurations may be of interest to you.
++
++blkdev
++~~~~~~
++
++The block device to use. Most of the time, it is a partition of block device.
++It's required for pstore/blk.
++
++It accepts the following variants:
++
++1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
++   leading 0x, for example b302.
++#. /dev/<disk_name> represents the device number of disk
++#. /dev/<disk_name><decimal> represents the device number of partition - device
++   number of disk plus the partition number
++#. /dev/<disk_name>p<decimal> - same as the above; this form is used when disk
++   name of partitioned disk ends with a digit.
++#. PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF represents the unique id of
++   a partition if the partition table provides it. The UUID may be either an
++   EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
++   where SSSSSSSS is a zero-filled hex representation of the 32-bit
++   "NT disk signature", and PP is a zero-filled hex representation of the
++   1-based partition number.
++#. PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to a
++   partition with a known unique id.
++#. <major>:<minor> major and minor number of the device separated by a colon.
++
++kmsg_size
++~~~~~~~~~
++
++The chunk size in KB for oops/panic front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care oops/panic log.
++
++There are multiple chunks for oops/panic front-end depending on the remaining
++space except other pstore front-ends.
++
++pstore/blk will log to oops/panic chunks one by one, and always overwrite the
++oldest chunk if there is no more free chunk.
++
++pmsg_size
++~~~~~~~~~
++
++The chunk size in KB for pmsg front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care pmsg log.
++
++Unlike oops/panic front-end, there is only one chunk for pmsg front-end.
++
++Pmsg is a user space accessible pstore object. Writes to */dev/pmsg0* are
++appended to the chunk. On reboot the contents are available in
++*/sys/fs/pstore/pmsg-pstore-blk-0*.
++
++console_size
++~~~~~~~~~~~~
++
++The chunk size in KB for console front-end.  It **MUST** be a multiple of 4.
++It's optional if you do not care console log.
++
++Similar to pmsg front-end, there is only one chunk for console front-end.
++
++All log of console will be appended to the chunk. On reboot the contents are
++available in */sys/fs/pstore/console-pstore-blk-0*.
++
++ftrace_size
++~~~~~~~~~~~
++
++The chunk size in KB for ftrace front-end. It **MUST** be a multiple of 4.
++It's optional if you do not care console log.
++
++Similar to oops front-end, there are multiple chunks for ftrace front-end
++depending on the count of cpu processors. Each chunk size is equal to
++ftrace_size / processors_count.
++
++All log of ftrace will be appended to the chunk. On reboot the contents are
++combined and available in */sys/fs/pstore/ftrace-pstore-blk-0*.
++
++Persistent function tracing might be useful for debugging software or hardware
++related hangs. Here is an example of usage::
++
++ # mount -t pstore pstore /sys/fs/pstore
++ # mount -t debugfs debugfs /sys/kernel/debug/
++ # echo 1 > /sys/kernel/debug/pstore/record_ftrace
++ # reboot -f
++ [...]
++ # mount -t pstore pstore /sys/fs/pstore
++ # tail /sys/fs/pstore/ftrace-pstore-blk-0
++ CPU:0 ts:5914676 c0063828  c0063b94  call_cpuidle <- cpu_startup_entry+0x1b8/0x1e0
++ CPU:0 ts:5914678 c039ecdc  c006385c  cpuidle_enter_state <- call_cpuidle+0x44/0x48
++ CPU:0 ts:5914680 c039e9a0  c039ecf0  cpuidle_enter_freeze <- cpuidle_enter_state+0x304/0x314
++ CPU:0 ts:5914681 c0063870  c039ea30  sched_idle_set_state <- cpuidle_enter_state+0x44/0x314
++ CPU:1 ts:5916720 c0160f59  c015ee04  kernfs_unmap_bin_file <- __kernfs_remove+0x140/0x204
++ CPU:1 ts:5916721 c05ca625  c015ee0c  __mutex_lock_slowpath <- __kernfs_remove+0x148/0x204
++ CPU:1 ts:5916723 c05c813d  c05ca630  yield_to <- __mutex_lock_slowpath+0x314/0x358
++ CPU:1 ts:5916724 c05ca2d1  c05ca638  __ww_mutex_lock <- __mutex_lock_slowpath+0x31c/0x358
++
++max_reason
++~~~~~~~~~~
++
++Limiting which kinds of kmsg dumps are stored can be controlled via
++the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
++``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
++``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
++``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
++(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
++``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
++otherwise KMSG_DUMP_MAX.
++
++Configurations for driver
++-------------------------
++
++Only a block device driver cares about these configurations. A block device
++driver uses ``register_pstore_blk`` to register to pstore/blk.
++
++.. kernel-doc:: fs/pstore/blk.c
++   :identifiers: register_pstore_blk
++
++Compression and header
++----------------------
++
++Block device is large enough for uncompressed oops data. Actually we do not
++recommend data compression because pstore/blk will insert some information into
++the first line of oops/panic data. For example::
++
++        Panic: Total 16 times
++
++It means that it's OOPS|Panic for the 16th time since the first booting.
++Sometimes the number of occurrences of oops|panic since the first booting is
++important to judge whether the system is stable.
++
++The following line is inserted by pstore filesystem. For example::
++
++        Oops#2 Part1
++
++It means that it's OOPS for the 2nd time on the last boot.
++
++Reading the data
++----------------
++
++The dump data can be read from the pstore filesystem. The format for these
++files is ``dmesg-pstore-blk-[N]`` for oops/panic front-end,
++``pmsg-pstore-blk-0`` for pmsg front-end and so on.  The timestamp of the
++dump file records the trigger time. To delete a stored record from block
++device, simply unlink the respective pstore file.
++
++Attentions in panic read/write APIs
++-----------------------------------
++
++If on panic, the kernel is not going to run for much longer, the tasks will not
++be scheduled and most kernel resources will be out of service. It
++looks like a single-threaded program running on a single-core computer.
++
++The following points require special attention for panic read/write APIs:
++
++1. Can **NOT** allocate any memory.
++   If you need memory, just allocate while the block driver is initializing
++   rather than waiting until the panic.
++#. Must be polled, **NOT** interrupt driven.
++   No task schedule any more. The block driver should delay to ensure the write
++   succeeds, but NOT sleep.
++#. Can **NOT** take any lock.
++   There is no other task, nor any shared resource; you are safe to break all
++   locks.
++#. Just use CPU to transfer.
++   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
++#. Control registers directly.
++   Please control registers directly rather than use Linux kernel resources.
++   Do I/O map while initializing rather than wait until a panic occurs.
++#. Reset your block device and controller if necessary.
++   If you are not sure of the state of your block device and controller when
++   a panic occurs, you are safe to stop and reset them.
++
++pstore/blk supports psblk_blkdev_info(), which is defined in
++*linux/pstore_blk.h*, to get information of using block device, such as the
++device number, sector count and start sector of the whole disk.
++
++pstore block internals
++----------------------
++
++For developer reference, here are all the important structures and APIs:
++
++.. kernel-doc:: fs/pstore/zone.c
++   :internal:
++
++.. kernel-doc:: include/linux/pstore_zone.h
++   :internal:
++
++.. kernel-doc:: fs/pstore/blk.c
++   :export:
++
++.. kernel-doc:: include/linux/pstore_blk.h
++   :internal:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db31497..9c1f4feff418 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13660,6 +13660,7 @@ M:	Tony Luck <tony.luck@intel.com>
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+ F:	Documentation/admin-guide/ramoops.rst
++F:	Documentation/admin-guide/pstore-blk.rst
+ F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+ F:	drivers/acpi/apei/erst.c
+ F:	drivers/firmware/efi/efi-pstore.c
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index c2237984b407..e16a49ebfe54 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -171,6 +171,8 @@ config PSTORE_BLK
+ 	  This enables panic and oops message to be logged to a block dev
+ 	  where it can be read back at some later point.
+ 
++	  For more information, see Documentation/admin-guide/pstore-blk.rst
++
+ 	  If unsure, say N.
+ 
+ config PSTORE_BLK_BLKDEV
 -- 
 2.20.1
 
