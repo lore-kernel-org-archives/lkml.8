@@ -2,100 +2,113 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFDCC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54A4C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5665D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA658206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589215943;
-	bh=b/yxjgJC2CuxHj+5rql56i3dEt86BgH3xwqCAuAIF9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oBU+5vEg+5zvb1QcADvk2ZMRicuuAw0fzPPI9wO6XyrCIMxThz5dyGgbkCbCm9O5N
-	 kOqmWaovSt+z4MvdkVvG+2Uxiucb3DoLU5wdDfxGoWrI9A+5Vi7Y9l3TIFLdqJqXA0
-	 k4aWkD9ORYHeE0ck0cYmr6NyV/xWaw9KQLMKuZDw=
+	s=default; t=1589216010;
+	bh=dam+wrisZkSDTYvLRv5tNOfLqS88LxqpLl5TR80UCVk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qPWv91FOomFn61rhMWwDx9kJ2zM9RY02iy54o3Ychf3aH8sU7vtAnAuM09A3qwjLS
+	 qx792wth1FjqdlMjC/h4//IyB/qqgj6WnXzOEkTee2E78He22hM9Vcw8aAnOGEvYwQ
+	 frhWziC+1knp3QPMGnbFP5wFtYzOBsg1dAjqvJgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbgEKQwW (ORCPT
+        id S1730742AbgEKQx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 12:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgEKQwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:52:22 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1727874AbgEKQx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:53:28 -0400
+Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.5])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D75206D7;
-        Mon, 11 May 2020 16:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880A8206D7;
+        Mon, 11 May 2020 16:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589215941;
-        bh=b/yxjgJC2CuxHj+5rql56i3dEt86BgH3xwqCAuAIF9M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TE6o75wLdo/KppzMxATQ0XogQnqrpmH3VGgJVIfprF/zLj1RhAdH1vRUEjim/Bt5S
-         nsRFEPcxFaft8RBBLV0BJEreD5eUD/NQwLrgbamFBkiNOMJihz1Db4A0D+nnvmRhhl
-         zCxe1EKi9NG3bkd+wN24IlGduwRBUkwqnECqdm64=
-Date:   Mon, 11 May 2020 17:52:17 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Elver Marco <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [PATCH -next v2] locking/osq_lock: annotate a data race in
- osq_lock
-Message-ID: <20200511165216.GA23081@willie-the-truck>
-References: <20200509161217.GN2869@paulmck-ThinkPad-P72>
- <45D9EEEB-D887-485D-9045-417A7F2C6A1A@lca.pw>
- <20200509213654.GO2869@paulmck-ThinkPad-P72>
- <20200511155812.GB22270@willie-the-truck>
- <20200511164319.GV2869@paulmck-ThinkPad-P72>
+        s=default; t=1589216007;
+        bh=dam+wrisZkSDTYvLRv5tNOfLqS88LxqpLl5TR80UCVk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=d8jO5YdLOxZDIhJGblPnmWACNyek/+jRk4BMNiwiEL6q3TsQ2CqFaNc/Nm7ntTT4L
+         qM4+xSdjOHm3lx5p7N5wKSKj4jb/fBEeArcY2v2Yt1MrEhFDV5rGFktcqSPdr2CGfc
+         9R0KiAH4YbnDO25W/RPpKdqokJC3lX9ro6oge+nI=
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Joe Perches <joe@perches.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch,
+        linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH net-next v2] checkpatch: warn about uses of ENOTSUPP
+Date:   Mon, 11 May 2020 09:53:19 -0700
+Message-Id: <20200511165319.2251678-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511164319.GV2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:43:19AM -0700, Paul E. McKenney wrote:
-> On Mon, May 11, 2020 at 04:58:13PM +0100, Will Deacon wrote:
-> > On Sat, May 09, 2020 at 02:36:54PM -0700, Paul E. McKenney wrote:
-> > > diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> > > index 1f77349..1de006e 100644
-> > > --- a/kernel/locking/osq_lock.c
-> > > +++ b/kernel/locking/osq_lock.c
-> > > @@ -154,7 +154,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
-> > >  	 */
-> > >  
-> > >  	for (;;) {
-> > > -		if (prev->next == node &&
-> > > +		/*
-> > > +		 * cpu_relax() below implies a compiler barrier which would
-> > > +		 * prevent this comparison being optimized away.
-> > > +		 */
-> > > +		if (data_race(prev->next) == node &&
-> > >  		    cmpxchg(&prev->next, node, NULL) == node)
-> > >  			break;
-> > 
-> > I'm fine with the data_race() placement, but I don't find the comment
-> > very helpful. We assign the result of a READ_ONCE() to 'prev' in the
-> > loop, so I don't think that the cpu_relax() is really relevant.
-> 
-> Suppose that the compiler loaded a value that was not equal to "node".
-> In that case, the cmpxchg() won't happen, so something else must force
-> the compiler to do the reload in order to avoid an infinite loop, right?
-> Or am I missing something here?
+ENOTSUPP often feels like the right error code to use, but it's
+in fact not a standard Unix error. E.g.:
 
-Then we just go round the loop and reload prev:
+$ python
+>>> import errno
+>>> errno.errorcode[errno.ENOTSUPP]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: module 'errno' has no attribute 'ENOTSUPP'
 
-	prev = READ_ONCE(node->prev);
+There were numerous commits converting the uses back to EOPNOTSUPP
+but in some cases we are stuck with the high error code for backward
+compatibility reasons.
 
-which should be enough to stop the compiler, no?
+Let's try prevent more ENOTSUPPs from getting into the kernel.
 
-Will
+Recent example:
+https://lore.kernel.org/netdev/20200510182252.GA411829@lunn.ch/
+
+v2 (Joe):
+ - add a link to recent discussion,
+ - don't match when scanning files, not patches to avoid sudden
+   influx of conversion patches.
+
+v1:
+https://lore.kernel.org/netdev/20200510185148.2230767-1-kuba@kernel.org/
+
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+ scripts/checkpatch.pl | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index eac40f0abd56..bfbdc869cd99 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -4199,6 +4199,17 @@ sub process {
+ 			     "ENOSYS means 'invalid syscall nr' and nothing else\n" . $herecurr);
+ 		}
+ 
++# ENOTSUPP is not a standard error code and should be avoided in new patches.
++# Folks usually mean EOPNOTSUPP (also called ENOTSUP), when they type ENOTSUPP.
++# Similarly to ENOSYS warning a small number of false positives is expected.
++		if (~$file && $line =~ /\bENOTSUPP\b/) {
++			if (WARN("ENOTSUPP",
++				 "ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP\n" . $herecurr) &&
++			    $fix) {
++				$fixed[$fixlinenr] =~ s/\bENOTSUPP\b/EOPNOTSUPP/;
++			}
++		}
++
+ # function brace can't be on same line, except for #defines of do while,
+ # or if closed on same line
+ 		if ($perl_version_ok &&
+-- 
+2.25.4
+
