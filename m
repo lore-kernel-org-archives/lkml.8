@@ -2,125 +2,105 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FFDC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D21C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1694720644
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E5D2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EjLINloi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LOVr45y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgEKDRx (ORCPT
+        id S1728396AbgEKDXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:17:53 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4435 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgEKDRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:17:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eb8c3d30001>; Sun, 10 May 2020 20:17:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 10 May 2020 20:17:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 10 May 2020 20:17:52 -0700
-Received: from [10.19.66.205] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
- 2020 03:17:49 +0000
-Subject: Re: [PATCH V2 6/8] phy: tegra: xusb: Add support for charger detect
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
- <1586939108-10075-7-git-send-email-nkristam@nvidia.com>
- <20200428105510.GH3592148@ulmo>
- <ea0f5906-4681-8b84-a55a-e959ce40aece@nvidia.com>
- <20200504155029.GB614153@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <229333de-8dd6-2d09-c8ad-99afdcec703f@nvidia.com>
-Date:   Mon, 11 May 2020 08:49:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 10 May 2020 23:23:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:49193 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbgEKDXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 23:23:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L5qZ28x0z9sPF;
+        Mon, 11 May 2020 13:23:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589167402;
+        bh=ei+7VrtRtIWjZ6v1Y0Tjx02DowX18VkOoZ08mt7TJzY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LOVr45y6NbvfCyJz4PnG2KQFJDtVzNUYF/ATJGU7kx/U+yOEW1zLsWWub7DyWZGvA
+         4UuticK1bQd07/vc1SD3ud0vQ6kEYtQAqLvM8Nswbb6MAc5bwQWrKW72m+j4tjpshj
+         97uYHPTCRcYPhlu63pggcsy9/GYH0II0y4W3jJacjE5PrgeGROzcWUtCNshwGFU78p
+         cxrQk9ta9gvhtoLllMfek10CtbVbGfoFMVzAJkH55cdNMScs7NXqgPKzYFXUut6Iet
+         sUR6LuN+8G9ToatZ+63G0ACK/hOvuqxuijQsKFEykF0HBIdc7iO9qIgG9vpoB+4Ge/
+         4uptuhQK1zF9w==
+Date:   Mon, 11 May 2020 13:23:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: manual merge of the crypto tree with Linus' tree
+Message-ID: <20200511132319.2d39781b@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200504155029.GB614153@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589167059; bh=dhOCrrvTkzHB+DWGZHHMWxRBnVmIB3xIwhi9oro8Ae4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EjLINloir2HvrF0Xcs//fNNihRZi7fY12ShF48GOmR2ek7FpdH28Fd56VuOqH90Ea
-         eMgsFlP41Y3N4fqJBLDkoL/tOZiTQtp2RAYh1WXI5DZD5GnI6TH6P0HUH8j9QcTEui
-         uZgYjpVwQDhYs2dC/KOyG9pIgErQaf4Wj3moctX+6r+GWdo8yeIghs+CR56oKe4mgI
-         LvwhEC6Ox9J0FS58SL4NFlyEQ988BzhxYj3012lFzQkHdWN3UpKvrQjxA3EPrd1pNR
-         PpwckUh4jC8DUv7pSArMHGjGtTMOUv7H9uFVzsML82zs3J7hd+dQQ0yoS9SMRUEcIv
-         GUmi4oW+StK/Q==
+Content-Type: multipart/signed; boundary="Sig_/YU9ipyUeRpaMQcaUOwyWSNw";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/YU9ipyUeRpaMQcaUOwyWSNw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 04-05-2020 21:20, Thierry Reding wrote:
-> 
-> On Mon, May 04, 2020 at 02:32:51PM +0530, Nagarjuna Kristam wrote:
->>> On 28-04-2020 16:25, Thierry Reding wrote:
->>>> On Wed, Apr 15, 2020 at 01:55:06PM +0530, Nagarjuna Kristam wrote:
-> [...]
->>>> diff --git a/drivers/phy/tegra/xusb-tegra-cd.c b/drivers/phy/tegra/xusb-tegra-cd.c
->>>> +static void tegra_xusb_padctl_utmi_pad_dcd(struct tegra_xusb_padctl *padctl,
->>>> +					      u32 index)
->>>> +{
->>>> +	u32 value;
->>>> +	int dcd_timeout_ms = 0;
->>>> +	bool ret = false;
->>>> +
->>>> +	/* Turn on IDP_SRC */
->>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->>>> +	value |= OP_I_SRC_EN;
->>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->>>> +
->>>> +	/* Turn on D- pull-down resistor */
->>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->>>> +	value |= USBON_RPD_OVRD_VAL;
->>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->>>> +
->>>> +	/* Wait for TDCD_DBNC */
->>>> +	usleep_range(10000, 120000);
->>>   From the comment this looks like we're waiting for some hardware
->>> condition. Can we somehow obtain this rather than implementing a fixed
->>> sleep? Especially since the range here is so large.
->>>
->> As per data sheet we need to wait for 10 micro seconds as settle time.
-> Okay, so TDCD_DBNC is a value that comes from a timing diagram in a
-> datasheet? Seems fine to leave it as-is then. Perhaps add parentheses
-> and mention which exact datasheet that's from, and perhaps which figure
-> so that people can more easily reference it. Provided there is a
-> publicly available datasheet, of course.
-> 
-Will update reference to table in the data sheet where these values are 
-recommended. ITs part of BC 1.2 spec from USB.
+Today's linux-next merge of the crypto tree got conflicts in:
 
-> Actually, one other thing: If the data sheet says to wait 10 us, why do
-> you use an upper range of 120 us? Shouldn't a range of 10-20 us be good
-> enough?
-> Yes, will reduce it to 20ms.
+  crypto/lrw.c
+  crypto/xts.c
 
--Nagarjuna
+between commit:
+
+  1a263ae60b04 ("gcc-10: avoid shadowing standard library 'free()' in crypt=
+o")
+
+from Linus' tree and commit:
+
+  d099ea6e6fde ("crypto - Avoid free() namespace collision")
+
+from the crypto tree.
+
+I fixed it up (I just used the versions from the crypto tree) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/YU9ipyUeRpaMQcaUOwyWSNw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64xScACgkQAVBC80lX
+0Gz7Twf/ZGQ5W1CsG3jk612T0kjSvC82Qn6Izn3RE2aW8pMdFqcBf2chnipHdy06
+9oY7qGH7U9mNF6J7kmeFQ0/HeZPlHjYnhxqJ9bSZgzTfz/CChUu//Baz55X9usVC
+R7qvicU/gnTkACBWn0yA2WHbBDaMm9EhupUjgxddpbMhant4xjLz7MZuEfzepbYb
+whYKnuPfOjVQJWaWqmzZlHcDfYS9CFyjYsBflGP81aqg6k66cC+kwIGRitGG6fYd
+8r91mblPlB360aoY7IRKUs0R/QOI3SO4tUZv7ayuXWC9LGpEo3REvoFf1jQQFFqJ
+Y/BfuWUjCKMszXkJS6MUfbrfdxYw3Q==
+=3CX3
+-----END PGP SIGNATURE-----
+
+--Sig_/YU9ipyUeRpaMQcaUOwyWSNw--
