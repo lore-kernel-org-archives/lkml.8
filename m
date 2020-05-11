@@ -2,86 +2,189 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680E0C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8D0C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4698C20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589227919;
-	bh=BAT96320Mf+ek7q+6TUr2heEI1ld3mlQvzBygXm4ikE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EizpnbrfxEDO8SwpFulozP0kFxyGgNB4j/9JqS0atJI69PbCqi6u/IKoe+DEVXMyo
-	 C1Ju8B6xw8Y624x6oxskW8zAlT9mlQYPhTPm2eRL9/xLfb0csbaDFcsAhxjep4sGdi
-	 1nPzed9TnPDP3hCc64qRSlU6F3QsWNUDeoJ50L5s=
+	by mail.kernel.org (Postfix) with ESMTP id 1A43F206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbgEKUL6 (ORCPT
+        id S1731287AbgEKUOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgEKUL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:11:58 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59BD3206F5;
-        Mon, 11 May 2020 20:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589227916;
-        bh=BAT96320Mf+ek7q+6TUr2heEI1ld3mlQvzBygXm4ikE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uPubk21j63Zr9AqxVjUUQOVQXFKVjWUSWJfHwi1uxn3D00X6uBTsfwvupX7tc3PMl
-         RTEdBA+0n4PZyJFKM9NPrKn4/wD6EqvnI91oTc2wka/nk7nEpQ024X7GzYEtSWHBXu
-         3xtLDutwV9/Oo3DqaGdV/W7ryzxKHu+R4Yb6cz8A=
-Date:   Mon, 11 May 2020 13:11:55 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Charan Teja Reddy <charante@codeaurora.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        vinmenon@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: reset the zone->watermark_boost early
-Message-Id: <20200511131155.0b40ee443c3367e8f748b16f@linux-foundation.org>
-In-Reply-To: <1589204408-5152-1-git-send-email-charante@codeaurora.org>
-References: <1589204408-5152-1-git-send-email-charante@codeaurora.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 11 May 2020 16:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKUOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:14:16 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166A7C061A0C;
+        Mon, 11 May 2020 13:14:16 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYEoP-0004s2-DW; Mon, 11 May 2020 22:14:05 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 9C713FFBF8; Mon, 11 May 2020 22:14:04 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     "Raj\, Ashok" <ashok.raj@linux.intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <20200511190341.GA95413@otc-nc-03>
+References: <20200508005528.GB61703@otc-nc-03> <87368almbm.fsf@nanos.tec.linutronix.de> <20200508160958.GA19631@otc-nc-03> <87h7wqjrsk.fsf@nanos.tec.linutronix.de> <20200511190341.GA95413@otc-nc-03>
+Date:   Mon, 11 May 2020 22:14:04 +0200
+Message-ID: <87h7wm5iwj.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 19:10:08 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
+Ashok,
 
-> Updating the zone watermarks by any means, like extra_free_kbytes,
-> min_free_kbytes, water_mark_scale_factor e.t.c, when watermark_boost is
-> set will result into the higher low and high watermarks than the user
-> asks. This can be avoided by resetting the zone->watermark_boost to zero
-> early.
-
-Does this solve some problem which has been observed in testing?
-
-> ...
+"Raj, Ashok" <ashok.raj@intel.com> writes:
+> On Fri, May 08, 2020 at 06:49:15PM +0200, Thomas Gleixner wrote:
+>> "Raj, Ashok" <ashok.raj@intel.com> writes:
+>> > With legacy MSI we can have these races and kernel is trying to do the
+>> > song and dance, but we see this happening even when IR is turned on.
+>> > Which is perplexing. I think when we have IR, once we do the change vector 
+>> > and flush the interrupt entry cache, if there was an outstandng one in 
+>> > flight it should be in IRR. Possibly should be clearned up by the
+>> > send_cleanup_vector() i suppose.
+>> 
+>> Ouch. With IR this really should never happen and yes the old vector
+>> will catch one which was raised just before the migration disabled the
+>> IR entry. During the change nothing can go wrong because the entry is
+>> disabled and only reenabled after it's flushed which will send a pending
+>> one to the new vector.
 >
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -7746,9 +7746,9 @@ static void __setup_per_zone_wmarks(void)
->  			    mult_frac(zone_managed_pages(zone),
->  				      watermark_scale_factor, 10000));
->  
-> +		zone->watermark_boost = 0;
->  		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
->  		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
-> -		zone->watermark_boost = 0;
->  
->  		spin_unlock_irqrestore(&zone->lock, flags);
->  	}
+> with IR, I'm not sure if we actually mask the interrupt except when
+> its a Posted Interrupt.
 
-This could only be a problem if code is accessing these things without
-holding zone->lock.  Is that ever the case?
+Indeed. Memory tricked me.
 
+> We do an atomic update to IRTE, with cmpxchg_double
+>
+> 	ret = cmpxchg_double(&irte->low, &irte->high,
+> 			     irte->low, irte->high,
+> 			     irte_modified->low, irte_modified->high);
+
+We only do this if:
+
+        if ((irte->pst == 1) || (irte_modified->pst == 1))
+
+i.e. the irte entry was or is going to be used for posted interrupts.
+
+In the non-posted remapping case we do:
+
+       set_64bit(&irte->low, irte_modified->low);
+       set_64bit(&irte->high, irte_modified->high);
+
+> followed by flushing the interrupt entry cache. After which any 
+> old ones in flight before the flush should be sittig in IRR
+> on the outgoing cpu.
+
+Correct.
+
+> The send_cleanup_vector() sends IPI to the apic_id->old_cpu which 
+> would be the cpu we are running on correct? and this is a self_ipi
+> to IRQ_MOVE_CLEANUP_VECTOR.
+
+Yes, for the IR case the cleanup vector IPI is sent right away because
+the IR logic allegedly guarantees that after flushing the IRTE cache no
+interrupt can be sent to the old vector. IOW, after the flush a vector
+sent to the previous CPU must be already in the IRR of that CPU.
+
+> smp_irq_move_cleanup_interrupt() seems to check IRR with 
+> apicid_prev_vector()
+>
+> 	irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+> 	if (irr & (1U << (vector % 32))) {
+> 		apic->send_IPI_self(IRQ_MOVE_CLEANUP_VECTOR);
+> 		continue;
+> 	}
+>
+> And this would allow any pending IRR bits in the outgoing CPU to 
+> call the relevant ISR's before draining all vectors on the outgoing
+> CPU.
+
+No. When the CPU goes offline it does not handle anything after moving
+the interrupts away. The pending bits are handled in fixup_irq() after
+the forced migration. If the vector is set in the IRR it sends an IPI to
+the new target CPU.
+
+That IRR check is paranoia for the following case where interrupt
+migration happens between live CPUs:
+
+    Old CPU
+
+    set affinity                <- device sends to old vector/cpu
+    ...                 
+    irte_...()
+    send_cleanup_vector();
+
+    handle_cleanup_vector()     <- Would remove the vector
+                                   without that IRR check and
+                                   then result in a spurious interrupt
+
+This should actually never happen because the cleanup vector is the
+lowest priority vector.
+
+> I couldn't quite pin down how the device ISR's are hooked up through
+> this send_cleanup_vector() and what follows.
+
+Device ISRs don't know anything about the underlying irq machinery.
+
+The non IR migration does:
+
+    Old CPU          New CPU
+
+    set affinity
+    ...                 
+                                <- device sends to new vector/cpu
+                     handle_irq
+                       ack()
+                        apic_ack_irq()
+                          irq_complete_move()
+                            send_cleanup_vector()
+
+    handle_cleanup_vector()
+
+In case that an interrupt still hits the old CPU:
+
+    set affinity                <- device sends to old vector/cpu
+    ...
+    handle_irq
+     ack()
+      apic_ack_irq()
+       irq_complete_move()      (Does not send cleanup vector because wrong CPU)
+
+                                <- device sends to new vector/cpu
+                     handle_irq
+                       ack()
+                        apic_ack_irq()
+                          irq_complete_move()
+                            send_cleanup_vector()
+
+    handle_cleanup_vector()
+
+Thanks,
+
+        tglx
