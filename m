@@ -2,206 +2,361 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C28C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C9EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034AB20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1752206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 14:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="BCtdLU1i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm043rBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbgEKOUV (ORCPT
+        id S1730216AbgEKOVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 10:20:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40966 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726173AbgEKOUU (ORCPT
+        Mon, 11 May 2020 10:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729548AbgEKOVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 10:20:20 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BEGcGs006570;
-        Mon, 11 May 2020 16:19:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=S3ukbw9u6FBmyTso7iZC4fMons9sfi9Jz8USWlyYHr4=;
- b=BCtdLU1i1e1sY0kQKq6NHtKCA7Qa6KE+1bPXjU5tWMIsb8NrQePj6yz7jM1GBBs6Sfv7
- ciiTqp7NHfJq0KlVTvGTpF73y4W7fywa7bfaHJgHL0lYQC4EleydGZzpaNbad+n2xdDI
- oYlMatPd4BpLa8J4IqZ/JeVh44pTggoKbITnKLNDkxPc2f6nBEYXc+J565BboL/+//f+
- ZIiyg9kS0sFlKNh9jAPRtonqAYLsXrQr3ycz1Qfxee3MHT7bRSe/rfUbyZSr13RzeYCR
- hWXCayAH68a6IulyYJh+Kk6yB3QGJjUQT938jxvt2NyMxNX72fPUhsRfembY2W7cdgVU FQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30wkdgtj4s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 16:19:52 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 99626100034;
-        Mon, 11 May 2020 16:19:50 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7B24D2C38B2;
-        Mon, 11 May 2020 16:19:50 +0200 (CEST)
-Received: from [10.211.5.64] (10.75.127.50) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 11 May
- 2020 16:19:48 +0200
-Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
- parent node
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
- <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
- <20200511111855.48216940@xps13> <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
- <20200511135926.3e5c622d@xps13> <0c704fea-f2a6-2cec-8741-d322acf6afd5@st.com>
- <20200511145855.35c6abfb@xps13>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <6f822f79-18f1-5308-16cc-b31f0be80d5a@st.com>
-Date:   Mon, 11 May 2020 16:19:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 11 May 2020 10:21:17 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4770BC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 07:21:17 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id h12so7455607pjz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 07:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sV15Q/FPo0j4ZxFPtLoM2GMC6Onv5A/wnn8BczrjGEw=;
+        b=cm043rBqCqvqd1opVpUgq2L/3lCpidT32n6/lo2Ym/0vxW9KCGjzvGx6Hyr9dwO/hR
+         mTS76R6FLUFInxtm5S/X1lsVmZbqk7IdVYyVWVyq4mr/Gjft304pHoNO/ivKxsXrnDNU
+         vmWFfSWGTcTWLglJMHm7jN4FSnla2brFxUrb3qTSdrZlScXM1fi9bRDdc14BREWLG1ag
+         9dAR260UrdmQTYJCal8So5lxqZdldjDUG8XVt3rR2O2PxlagvVYCa71+o0SQeUZ/Zgp8
+         cMZVKxUu2VlNjlYk82RsynEfEPf6AmCLY3ANcKcsf4KVbMvnFNDC0XZz+s0tuZNJG6qr
+         eBNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sV15Q/FPo0j4ZxFPtLoM2GMC6Onv5A/wnn8BczrjGEw=;
+        b=fvk66NFUC6zYRb57IDPXwjLVVi+rAwCgWGgsfHEY8m3nMEu8yzhgpStBzKxSaLLrzv
+         C9sAKzpsVAJdjW5pL0oJcUcLrLEXvn5BZ7kbNXOAeO3yQ7NCM+Qw/nWb9XU0IFZTGMdE
+         gwQP2m6rGQ0bxzjjxEMKy++TNDltTlrzHBPVn2HUJ5v/1cnZ9zVQqV5uOcleVnpdZNi8
+         kum+Y6PbAF79oAL5YmxVpFRDu+HetaF7qm9TJ9Uljmyvy6Rq6brL5DRsr+VJlxv9qNyU
+         1Sc1CqbhTaXy4yTiT9PWga+i8eRFh2BQWVQ2BxxfVPPfGrHntjpFASx9T/37em1Bt12q
+         LWRA==
+X-Gm-Message-State: AGi0PubExs9zfY8d5VgQtst2RNS90hZGEH2DVn2MqqorlIvhtAu6MyAr
+        YgKOVVjLdPfqRNR1M4aK4hc=
+X-Google-Smtp-Source: APiQypK6M0sY19Gtjy7nS1sphRME3KWyAkkX+Ju1Bt8IOthxt3PBOdurOtvEddUJ/prhJmyU7Koa0A==
+X-Received: by 2002:a17:90a:f98b:: with SMTP id cq11mr22426402pjb.193.1589206876520;
+        Mon, 11 May 2020 07:21:16 -0700 (PDT)
+Received: from localhost ([183.82.184.32])
+        by smtp.gmail.com with ESMTPSA id 4sm9592345pff.18.2020.05.11.07.21.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 07:21:15 -0700 (PDT)
+Date:   Mon, 11 May 2020 19:51:13 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: ARM: static kernel in vmalloc space (was Re: [PATCH 0/3] Highmem
+ support for 32-bit RISC-V)
+Message-ID: <20200511142113.GA31707@afzalpc>
+References: <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
+ <20200408035118.GA1451@andestech.com>
+ <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
+ <20200414151748.GA5624@afzalpc>
+ <CAK8P3a0JW9x-Wk9Ec3+zLjPHbWAvPQx8MF-xe-PnWUgEjRAuTg@mail.gmail.com>
+ <20200415135407.GA6553@afzalpc>
+ <20200503145017.GA5074@afzalpc>
+ <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
+ <20200504091018.GA24897@afzalpc>
+ <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200511145855.35c6abfb@xps13>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_06:2020-05-11,2020-05-11 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+Hi,
 
-On 5/11/20 2:58 PM, Miquel Raynal wrote:
-> Hi Christophe,
-> 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
-> 2020 14:47:09 +0200:
-> 
->> Hi Miquel,
->>
->> On 5/11/20 1:59 PM, Miquel Raynal wrote:
->>> Hi Christophe,
->>>
->>> Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
->>> 2020 12:21:03 +0200:
->>>    
->>>> Hi Miquel,
->>>>
->>>> On 5/11/20 11:18 AM, Miquel Raynal wrote:
->>>>> Hi Christophe,
->>>>>
->>>>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
->>>>> 11:11:19 +0200:
->>>>>     >>>> FMC2 EBI support has been added. Common resources (registers base
->>>>>> and clock) are now shared between the 2 drivers. It means that the
->>>>>> common resources should now be found in the parent device when EBI
->>>>>> node is available.
->>>>>>
->>>>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->>>>>> ---
->>>>>
->>>>> [...]
->>>>>     >>>> +
->>>>>> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
->>>>>> +{
->>>>>> +	u32 i;
->>>>>> +	int nb_resources = 0;
->>>>>> +
->>>>>> +	/* Count the number of resources in reg property */
->>>>>> +	for (i = 0; i < pdev->num_resources; i++) {
->>>>>> +		struct resource *res = &pdev->resource[i];
->>>>>> +
->>>>>> +		if (resource_type(res) == IORESOURCE_MEM)
->>>>>> +			nb_resources++;
->>>>>> +	}
->>>>>> +
->>>>>> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
->>>>>> +	if (nb_resources % 3)
->>>>>> +		return false;
->>>>>> +
->>>>>> +	return true;
->>>>>> +}
->>>>>
->>>>> This function looks fragile. Why not just checking the compatible
->>>>> string of the parent node?
->>>>>     >>
->>>> Yes, it is another way to check that we have an EBI parent node.
->>>>
->>>> In this implementation, I was checking the number of reg tuples.
->>>> In case we have 6, it means that the register base address is defined in the parent node (EBI node).
->>>> In case we have 7, it means that the register base address is defined in the current node (NFC node).
->>>
->>> Yes, I understand what you are doing, but I kind of dislike the logic.
->>> Relying on the number of reg tuples is something that can be done (I
->>> used it myself one time), but I think this is more a hack that you do
->>> when you have no other way to differentiate. I guess the proper way
->>> would be to look at the parent's compatible. If it matches what you
->>> expect, then you can store the dev->of_node->parent->dev somewhere in
->>> your controller's structure and then use it to initialize the clock and
->>> regmap. This way you don't have to move anything else in the probe path.
->>>    
->>
->> OK, I will check the compatible string of the parent device using of_device_is_compatible API in v5.
->> In case of the parent is found, I will add it in the structure of the controller (dev_parent).
->> I will rely on this field only to get the common resources (the register base address and the clock) in the NFC node or in the EBI node.
-> 
-> I had something slightly different in mind: what about setting a
-> default value to this field as being the controller's device itself.
-> This way, once it is set to either the parent device or the device
-> itself, you can use it "blindly" in your devm_clk_get/regmap_init calls?
-> 
+Kernel now boots to prompt w/ static kernel mapping moved to vmalloc
+space.
 
-I will try to explain what I have in mind.
+Changes currently done have a couple of platform specific things, this
+has to be modified to make it multiplatform friendly (also to be taken
+care is ARM_PATCH_PHYS_VIRT case). Module address space has to be
+taken care as well.
 
-I will add a new field in the structure of the controller (not called 
-dev_parent but cdev)
-struct device *cdev;
+Logs follows
 
-Then, at probe time, this field will be assigned:
-nfc->cdev = of_device_is_compatible(dev->parent->of_node, "bla bla") : 
-dev->parent ? dev;
+Regards
+afzal
 
-For the clock, it will be
-nfc->clk = devm_clk_get(nfc->cdev, NULL);
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.7.0-rc1-00043-ge8ffd99475b9c (afzal@afzalpc) (gcc version 8.2.0 (GCC_MA), GNU ld (GCC_MA) 2.31.1) #277 SMP Mon May 11 18:16:51 IST 2020
+[    0.000000] CPU: ARMv7 Processor [412fc0f1] revision 1 (ARMv7), cr=10c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction cache
+[    0.000000] OF: fdt: Machine model: V2P-CA15
+[    0.000000] printk: bootconsole [earlycon0] enabled
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] efi: UEFI not found.
+[    0.000000] Reserved memory: created DMA memory pool at 0x18000000, size 8 MiB
+[    0.000000] OF: reserved mem: initialized node vram@18000000, compatible id shared-dma-pool
+[    0.000000] percpu: Embedded 20 pages/cpu s49164 r8192 d24564 u81920
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 522751
+[    0.000000] Kernel command line: console=ttyAMA0,115200 rootwait root=/dev/mmcblk0 earlyprintk
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 2057032K/2097148K available (12288K kernel code, 1785K rwdata, 5188K rodata, 2048K init, 403K bss, 40116K reserved, 0K cma-reserved, 1310716K highmem)
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xffc00000 - 0xfff00000   (3072 kB)
+[    0.000000]     vmalloc : 0xf1000000 - 0xff800000   ( 232 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xf0000000   ( 768 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .text : 0xf1208000 - 0xf1f00000   (13280 kB)
+[    0.000000]       .init : 0xf2500000 - 0xf2700000   (2048 kB)
+[    0.000000]       .data : 0xf2700000 - 0xf28be558   (1786 kB)
+[    0.000000]        .bss : 0xf28be558 - 0xf29231a8   ( 404 kB)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=16 to nr_cpu_ids=2.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=2
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] random: get_random_bytes called from start_kernel+0x304/0x49c with crng_init=0
+[    0.000311] sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 89478484971ns
+[    0.006788] clocksource: arm,sp804: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns
+[    0.008479] Failed to initialize '/bus@8000000/motherboard/iofpga@3,00000000/timer@120000': -22
+[    0.013414] arch_timer: cp15 timer(s) running at 62.50MHz (virt).
+[    0.013875] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x1cd42e208c, max_idle_ns: 881590405314 ns
+[    0.014610] sched_clock: 56 bits at 62MHz, resolution 16ns, wraps every 4398046511096ns
+[    0.015199] Switching to timer-based delay loop, resolution 16ns
+[    0.020168] Console: colour dummy device 80x30
+[    0.022219] Calibrating delay loop (skipped), value calculated using timer frequency.. 125.00 BogoMIPS (lpj=625000)
+[    0.026998] pid_max: default: 32768 minimum: 301
+[    0.028835] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.029319] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.044484] CPU: Testing write buffer coherency: ok
+[    0.045452] CPU0: Spectre v2: firmware did not set auxiliary control register IBE bit, system vulnerable
+[    0.057536] /cpus/cpu@0 missing clock-frequency property
+[    0.058065] /cpus/cpu@1 missing clock-frequency property
+[    0.058538] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.066972] Setting up static identity map for 0x80300000 - 0x803000ac
+[    0.074772] rcu: Hierarchical SRCU implementation.
+[    0.083336] EFI services will not be available.
+[    0.085605] smp: Bringing up secondary CPUs ...
+[    0.090454] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.090560] CPU1: Spectre v2: firmware did not set auxiliary control register IBE bit, system vulnerable
+[    0.096711] smp: Brought up 1 node, 2 CPUs
+[    0.097132] SMP: Total of 2 processors activated (250.00 BogoMIPS).
+[    0.097557] CPU: All CPU(s) started in SVC mode.
+[    0.120848] devtmpfs: initialized
+[    0.142952] VFP support v0.3: implementor 41 architecture 4 part 30 variant f rev 0
+[    0.163536] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.165733] futex hash table entries: 512 (order: 3, 32768 bytes, linear)
+[    0.171110] pinctrl core: initialized pinctrl subsystem
+[    0.212940] thermal_sys: Registered thermal governor 'step_wise'
+[    0.214839] DMI not present or invalid.
+[    0.224963] NET: Registered protocol family 16
+[    0.229817] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.465443] cpuidle: using governor menu
+[    0.467208] No ATAGs?
+[    0.469397] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.470084] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.485193] Serial: AMBA PL011 UART driver
+[    0.518698] 1c090000.uart: ttyAMA0 at MMIO 0x1c090000 (irq = 33, base_baud = 0) is a PL011 rev1
+[    0.520790] printk: console [ttyAMA0] enabled
+[    0.520790] printk: console [ttyAMA0] enabled
+[    0.521639] printk: bootconsole [earlycon0] disabled
+[    0.521639] printk: bootconsole [earlycon0] disabled
+[    0.529010] 1c0a0000.uart: ttyAMA1 at MMIO 0x1c0a0000 (irq = 34, base_baud = 0) is a PL011 rev1
+[    0.532819] 1c0b0000.uart: ttyAMA2 at MMIO 0x1c0b0000 (irq = 35, base_baud = 0) is a PL011 rev1
+[    0.536532] 1c0c0000.uart: ttyAMA3 at MMIO 0x1c0c0000 (irq = 36, base_baud = 0) is a PL011 rev1
+[    0.540655] OF: amba_device_add() failed (-19) for /bus@8000000/motherboard/iofpga@3,00000000/wdt@f0000
+[    0.551052] OF: amba_device_add() failed (-19) for /memory-controller@2b0a0000
+[    0.552311] OF: amba_device_add() failed (-19) for /memory-controller@7ffd0000
+[    0.553945] OF: amba_device_add() failed (-19) for /dma@7ffb0000
+[    0.662992] AT91: Could not find identification node
+[    0.672222] iommu: Default domain type: Translated 
+[    0.674784] vgaarb: loaded
+[    0.679204] SCSI subsystem initialized
+[    0.683940] usbcore: registered new interface driver usbfs
+[    0.684662] usbcore: registered new interface driver hub
+[    0.685326] usbcore: registered new device driver usb
+[    0.689559] pps_core: LinuxPPS API ver. 1 registered
+[    0.689914] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.690916] PTP clock support registered
+[    0.691941] EDAC MC: Ver: 3.0.0
+[    0.718934] clocksource: Switched to clocksource arch_sys_counter
+[    1.933420] NET: Registered protocol family 2
+[    1.940976] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 6144 bytes, linear)
+[    1.941657] TCP established hash table entries: 8192 (order: 3, 32768 bytes, linear)
+[    1.942394] TCP bind hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    1.943048] TCP: Hash tables configured (established 8192 bind 8192)
+[    1.945065] UDP hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    1.945726] UDP-Lite hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    1.947919] NET: Registered protocol family 1
+[    1.953266] RPC: Registered named UNIX socket transport module.
+[    1.953707] RPC: Registered udp transport module.
+[    1.954027] RPC: Registered tcp transport module.
+[    1.954329] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    1.954838] PCI: CLS 0 bytes, default 64
+[    1.963271] hw perfevents: no interrupt-affinity property for /pmu, guessing.
+[    1.967592] hw perfevents: enabled with armv7_cortex_a15 PMU driver, 1 counters available
+[    1.973260] Initialise system trusted keyrings
+[    1.976327] workingset: timestamp_bits=30 max_order=19 bucket_order=0
+[    2.004549] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    2.009700] NFS: Registering the id_resolver key type
+[    2.010286] Key type id_resolver registered
+[    2.010606] Key type id_legacy registered
+[    2.011037] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    2.011896] ntfs: driver 2.1.32 [Flags: R/O].
+[    2.014565] Key type asymmetric registered
+[    2.014933] Asymmetric key parser 'x509' registered
+[    2.015464] bounce: pool size: 64 pages
+[    2.016042] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 248)
+[    2.016684] io scheduler mq-deadline registered
+[    2.017084] io scheduler kyber registered
+[    2.750925] Serial: 8250/16550 driver, 5 ports, IRQ sharing enabled
+[    2.768719] SuperH (H)SCI(F) driver initialized
+[    2.772315] msm_serial: driver initialized
+[    2.773272] STMicroelectronics ASC driver initialized
+[    2.777155] STM32 USART driver initialized
+[    2.844599] brd: module loaded
+[    2.892007] loop: module loaded
+[    2.910637] physmap-flash 8000000.flash: physmap platform flash device: [mem 0x08000000-0x0bffffff]
+[    2.912893] 8000000.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    2.913992] Intel/Sharp Extended Query Table at 0x0031
+[    2.914976] Using buffer write method
+[    2.918471] physmap-flash 8000000.flash: physmap platform flash device: [mem 0x0c000000-0x0fffffff]
+[    2.919575] 8000000.flash: Found 2 x16 devices at 0x0 in 32-bit bank. Manufacturer ID 0x000000 Chip ID 0x000000
+[    2.920202] Intel/Sharp Extended Query Table at 0x0031
+[    2.920911] Using buffer write method
+[    2.921294] Concatenating MTD devices:
+[    2.921588] (0): "8000000.flash"
+[    2.921811] (1): "8000000.flash"
+[    2.922032] into device "8000000.flash"
+[    2.937990] physmap-flash 14000000.psram: physmap platform flash device: [mem 0x14000000-0x15ffffff]
+[    2.940888] physmap-flash 14000000.psram: map_probe failed
+[    2.967104] libphy: Fixed MDIO Bus: probed
+[    2.972770] CAN device driver interface
+[    2.975546] bgmac_bcma: Broadcom 47xx GBit MAC driver loaded
+[    2.979445] e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
+[    2.979877] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    2.980464] igb: Intel(R) Gigabit Ethernet Network Driver - version 5.6.0-k
+[    2.980903] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    3.060434] libphy: smsc911x-mdio: probed
+[    3.063490] smsc911x 1a000000.ethernet eth0: MAC Address: 52:54:00:12:34:56
+[    3.073487] pegasus: v0.9.3 (2013/04/25), Pegasus/Pegasus II USB Ethernet driver
+[    3.074171] usbcore: registered new interface driver pegasus
+[    3.074716] usbcore: registered new interface driver asix
+[    3.075172] usbcore: registered new interface driver ax88179_178a
+[    3.075782] usbcore: registered new interface driver cdc_ether
+[    3.076321] usbcore: registered new interface driver smsc75xx
+[    3.076838] usbcore: registered new interface driver smsc95xx
+[    3.077343] usbcore: registered new interface driver net1080
+[    3.077813] usbcore: registered new interface driver cdc_subset
+[    3.078734] usbcore: registered new interface driver zaurus
+[    3.079352] usbcore: registered new interface driver cdc_ncm
+[    3.199902] isp1760 1b000000.usb: bus width: 32, oc: digital
+[    3.201761] isp1760 1b000000.usb: NXP ISP1760 USB Host Controller
+[    3.202801] isp1760 1b000000.usb: new USB bus registered, assigned bus number 1
+[    3.205096] isp1760 1b000000.usb: Scratch test failed.
+[    3.205605] isp1760 1b000000.usb: can't setup: -19
+[    3.206685] isp1760 1b000000.usb: USB bus 1 deregistered
+[    3.209178] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    3.209645] ehci-pci: EHCI PCI platform driver
+[    3.210241] ehci-platform: EHCI generic platform driver
+[    3.211257] ehci-orion: EHCI orion driver
+[    3.212078] SPEAr-ehci: EHCI SPEAr driver
+[    3.212843] ehci-st: EHCI STMicroelectronics driver
+[    3.213655] ehci-exynos: EHCI Exynos driver
+[    3.214447] ehci-atmel: EHCI Atmel driver
+[    3.215263] tegra-ehci: Tegra EHCI driver
+[    3.216089] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    3.216616] ohci-pci: OHCI PCI platform driver
+[    3.217214] ohci-platform: OHCI generic platform driver
+[    3.218371] SPEAr-ohci: OHCI SPEAr driver
+[    3.219194] ohci-st: OHCI STMicroelectronics driver
+[    3.220017] ohci-atmel: OHCI Atmel driver
+[    3.222828] usbcore: registered new interface driver usb-storage
+[    3.247467] rtc-pl031 1c170000.rtc: registered as rtc0
+[    3.249524] rtc-pl031 1c170000.rtc: setting system clock to 2020-05-11T12:47:12 UTC (1589201232)
+[    3.255627] i2c /dev entries driver
+[    3.306738] mmci-pl18x 1c050000.mmci: Got CD GPIO
+[    3.307311] mmci-pl18x 1c050000.mmci: Got WP GPIO
+[    3.311750] mmci-pl18x 1c050000.mmci: mmc0: PL181 manf 41 rev0 at 0x1c050000 irq 29,30 (pio)
+[    3.343018] sdhci: Secure Digital Host Controller Interface driver
+[    3.343731] sdhci: Copyright(c) Pierre Ossman
+[    3.354530] Synopsys Designware Multimedia Card Interface Driver
+[    3.360247] sdhci-pltfm: SDHCI platform and OF driver helper
+[    3.380790] input: AT Raw Set 2 keyboard as /devices/platform/bus@8000000/bus@8000000:motherboard/bus@8000000:motherboard:iofpga@3,00000000/1c060000.kmi/serio0/input/input0
+[    3.387235] ledtrig-cpu: registered to indicate activity on CPUs
+[    3.392136] usbcore: registered new interface driver usbhid
+[    3.392544] usbhid: USB HID core driver
+[    3.406774] drop_monitor: Initializing network drop monitor service
+[    3.412034] NET: Registered protocol family 10
+[    3.413410] mmc0: new SD card at address 4567
+[    3.417368] mmcblk0: mmc0:4567 QEMU! 60.0 MiB 
+[    3.422359] Segment Routing with IPv6
+[    3.423208] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    3.427555] NET: Registered protocol family 17
+[    3.428389] can: controller area network core (rev 20170425 abi 9)
+[    3.429451] NET: Registered protocol family 29
+[    3.429872] can: raw protocol (rev 20170425)
+[    3.430260] can: broadcast manager protocol (rev 20170425 t)
+[    3.430729] can: netlink gateway (rev 20190810) max_hops=1
+[    3.432999] Key type dns_resolver registered
+[    3.433966] ThumbEE CPU extension supported.
+[    3.434334] Registering SWP/SWPB emulation handler
+[    3.436377] Loading compiled-in X.509 certificates
+[    3.467861] uart-pl011 1c090000.uart: no DMA platform data
+[    4.027279] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/bus@8000000/bus@8000000:motherboard/bus@8000000:motherboard:iofpga@3,00000000/1c070000.kmi/serio1/input/input2
+[    4.053481] EXT4-fs (mmcblk0): mounting ext2 file system using the ext4 subsystem
+[    4.056802] random: fast init done
+[    4.095798] EXT4-fs (mmcblk0): mounted filesystem without journal. Opts: (null)
+[    4.098373] VFS: Mounted root (ext2 filesystem) readonly on device 179:0.
+[    4.103806] devtmpfs: mounted
+[    6.986226] Freeing unused kernel memory: 2048K
+[    7.082498] Run /sbin/init as init process
+[    7.141076] process '/bin/busybox' started with executable stack
+[    7.887228] random: crng init done
+[    8.519622] EXT4-fs (mmcblk0): warning: mounting unchecked fs, running e2fsck is recommended
+[    8.523397] EXT4-fs (mmcblk0): re-mounted. Opts: (null)
+[    8.524252] ext2 filesystem being remounted at / supports timestamps until 2038 (0x7fffffff)
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+Initializing random number generator... done.
+Starting network: [   10.177578] SMSC LAN911x Internal PHY 1a000000.ethernet-ffffffff:01: attached PHY driver [SMSC LAN911x Internal PHY] (mii_bus:phy_addr=1a000000.ethernet-ffffffff:01, irq=POLL)
+[   10.208699] smsc911x 1a000000.ethernet eth0: SMSC911x/921x identified at 0xf2b30000, IRQ: 26
+[   10.216383] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+udhcpc: started, v1.31.0
+udhcpc: sending discover
+udhcpc: sending select for 10.0.2.15
+udhcpc: lease of 10.0.2.15 obtained, lease time 86400
+deleting routers
+adding dns 10.0.2.3
+OK
 
-For the register base, I need to replace:
-res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-mmio = devm_ioremap_resource(dev, res);
-if (IS_ERR(mmio))
-	return PTR_ERR(mmio);
+Welcome to Buildroot
 
-nfc->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
-if (IS_ERR(nfc->regmap))
-	return PTR_ERR(nfc->regmap);
-
-nfc->io_phys_addr = res->start;
-
-With:
-
-ret = of_address_to_resource(nfc->cdev->of_node, 0, &res);
-if (ret)
-	return ret;
-
-nfc->io_phys_addr = res.start;
-
-nfc->regmap = device_node_to_regmap(nfc->cdev->of_node);
-if (IS_ERR(nfc->regmap))
-	return PTR_ERR(nfc->regmap);
-
-I expect that you were thinking about something like this proposal.
-
-Regards,
-Christophe Kerello.
+buildroot login: root
+# uname -a
+Linux buildroot 5.7.0-rc1-00043-ge8ffd99475b9c #277 SMP Mon May 11 18:16:51 IST 2020 armv7l GNU/Linux
