@@ -2,104 +2,218 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B2AC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBC5C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1CF206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D592F20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589210801;
+	bh=3HU+lnnd0iDBTlMkpiQcDfp68dPY5JVgbBSYjSY6kuo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WaxWAbJlg8TM/57sREz3rlXm3Bv7dSwGnwVU402C2kcEOVYkYyNvKjeq1j2D8hVzS
+	 WpZCPupnv78pXCAW8Rpu3rLxRdjr+tYjfSXyFD4yGczo/qsMuLqrEwFyiSF8WFmnzA
+	 iNv+BxOlBRxCy8E1fIP10/93Kyzc/XqvurfVd9nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbgEKP0h (ORCPT
+        id S1730443AbgEKP0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:26:37 -0400
-Received: from www62.your-server.de ([213.133.104.62]:55710 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgEKP0h (ORCPT
+        Mon, 11 May 2020 11:26:41 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:36977 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgEKP0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:26:37 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jYAK8-0004PL-AQ; Mon, 11 May 2020 17:26:32 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jYAK7-0008Vc-UJ; Mon, 11 May 2020 17:26:31 +0200
-Subject: Re: [PATCH] libbpf: Replace zero-length array with flexible-array
-To:     Yonghong Song <yhs@fb.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200507185057.GA13981@embeddedor>
- <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <13960d59-3786-a58e-0be0-f9d91f8ee919@iogearbox.net>
-Date:   Mon, 11 May 2020 17:26:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 11 May 2020 11:26:38 -0400
+Received: by mail-oo1-f67.google.com with SMTP id v6so2014419oou.4;
+        Mon, 11 May 2020 08:26:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gqxtbamSYrDjCiG2Sa6OgrEIPkjy0PKI+7BZGr9gIXA=;
+        b=dSJWE3o7H3iyfv2Y+1fp/rjzUXH5SEiIwtE+bblrmTVtKZ4vG2ITnohZjUNPAMmvq/
+         nx+z6ZF18pIbx29+/XGM5n1JCc1MpkC7Tpm2A/2FjmimEA3jT+tWXmIjYk/9kxe0t6EU
+         dPFTQtlujbEcDWFGdtE71DwY0hoj01SH6NiESXwTQ2RrDZDgdJ1G2AyeJIvwBRvIPbUr
+         WOfcuFIV2E4DhACbCrDsxDuLwQz0CdJ9fdGQerHbHt+UBhLNmgOzIjQL4RONYGb+50CJ
+         jySh7we8uPp9qz7TRPYc/s4pQ7oPhdzFIp73p7zifFOfrerNn6huHDomr6nrt3Q3oLu/
+         0hOA==
+X-Gm-Message-State: AGi0PuYwZjXxNf4/krVwsqLdEQUQ4sPoMGqnIrxEY7GgL1mRxJETeoZW
+        c238JVb20C96Di/F9D2M5FbTsDhAqhSCcGZqhTY=
+X-Google-Smtp-Source: APiQypLq5jwWsqunJB5ifvHoh9oneaKxF7zKbKuAepuLszChzT3ZWyMlvRfbS+itaggAC9KM0ZNU+FCjePlLSSduPko=
+X-Received: by 2002:a4a:d204:: with SMTP id c4mr2387438oos.1.1589210797413;
+ Mon, 11 May 2020 08:26:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0ba4c222-b1e6-c003-56f1-6f43405066f0@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25809/Mon May 11 14:16:55 2020)
+References: <20200507181012.29791-1-qperret@google.com> <20200508081128.GM5298@hirez.programming.kicks-ass.net>
+ <20200508103721.GA3860390@kroah.com> <20200508111612.GA252673@google.com>
+ <20200508113141.GB5298@hirez.programming.kicks-ass.net> <20200508130507.GA10541@google.com>
+ <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com> <20200511090049.GA229633@google.com>
+In-Reply-To: <20200511090049.GA229633@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 11 May 2020 17:26:26 +0200
+Message-ID: <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/20 9:16 PM, Yonghong Song wrote:
-> On 5/7/20 11:50 AM, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>          int stuff;
->>          struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
->> sizeof(flexible-array-member) triggers a warning because flexible array
->> members have incomplete type[1]. There are some instances of code in
->> which the sizeof operator is being incorrectly/erroneously applied to
->> zero-length arrays and the result is zero. Such instances may be hiding
->> some bugs. So, this work (flexible-array member conversions) will also
->> help to get completely rid of those sorts of issues.
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> I think this is probably for bpf-next.
-> 
-> Acked-by: Yonghong Song <yhs@fb.com>
+On Mon, May 11, 2020 at 11:00 AM Quentin Perret <qperret@google.com> wrote:
+>
+> Hi Rafael,
+>
+> On Friday 08 May 2020 at 15:40:34 (+0200), Rafael J. Wysocki wrote:
+> > On Fri, May 8, 2020 at 3:05 PM Quentin Perret <qperret@google.com> wrote:
+> > >
+> > > On Friday 08 May 2020 at 13:31:41 (+0200), Peter Zijlstra wrote:
+> > > > On Fri, May 08, 2020 at 12:16:12PM +0100, Quentin Perret wrote:
+> > > > > However, the point I tried to make here is orthogonal to that. As of
+> > > > > today using another governor than schedutil is fully supported upstream,
+> > > > > and in fact it isn't even enabled by default for most archs. If vendors
+> > > > > feel like using something else makes their product better, then I don't
+> > > > > see why I need to argue with them about that. And frankly I don't see
+> > > > > that support being removed from upstream any time soon.
+> > > >
+> > > > Right, it'll take a while to get there. But that doesn't mean we
+> > > > shouldn't encourage schedutil usage wherever and whenever possible. That
+> > > > includes not making it easier to not use it.
+> > > >
+> > > > In that respect making it modular goes against our ultimate goal (world
+> > > > domination, <mad giggles here>).
+> > >
+> > > Right, I definitely understand the sentiment. OTOH, things like that
+> > > give vendors weapons against GKI ('you-force-us-to-build-in-things-we-dont't-want'
+> > > etc etc). That _is_ true to some extent, but it's important we make sure
+> > > to keep this to an absolute minimum, otherwise GKI just won't happen
+> > > (and I really think that'd be a shame, GKI _is_ a good thing for
+> > > upstream).
+> > >
+> > > And sure, schedutil isn't that big, and we can make an exception. But
+> > > I'm sure you know what happens when you starting making exceptions ;)
+> >
+> > This is a very weak argument, if it can be regarded as an argument at all.
+>
+> Well, fair enough :)
+>
+> > You will have to make exceptions, the question is how many and on what
+> > criteria and you really need to figure that out for the GKI plan.
+>
+> The base idea is, anything that we know from experience is used by
+> everybody can be built in, anything else will need investigation. And as
+> you've understood, schedutil falls in that second category.
 
-Applied, thanks!
+The fact that the vendor sets up a different governor by default
+doesn't mean that there should be no way to switch over to schedutil
+IMO.
+
+> > > So, all in all, I don't think the series actively makes schedutil worse
+> > > by adding out-of-line calls in the hot path or anything like that, and
+> > > having it as a module helps with GKI which I'm arguing is a good thing
+> > > in the grand scheme of things.
+> >
+> > Frankly, I'm not sure if it really helps.
+>
+> Oh, why not?
+>
+> > The idea of making schedutil modular seems to be based on the
+> > observation that it is not part of the core kernel, which I don't
+> > agree with.
+>
+> Right, so that I think is the core of the discussion.
+>
+> > Arguably, things like util clamps need it to work as
+> > expected.
+>
+> Sure, but loading sugov dynamically as a module doesn't change much does
+> it?
+>
+> If you are referring to the Kconfig dependency of uclamp on schedutil,
+> then that is a good point and I will argue that it should be removed.
+> In fact I'll add a patch to v2 that does just that, with the following
+> rationale:
+
+Which isn't correct AFAICS.
+
+>  - it is obsolete:
+
+No, it isn't IMO.
+
+> the reason that dependency was added originally was
+>    because sugov was the only place where util clamps where taken into
+>    accounts. But that is no longer true -- we check them in the capacity
+>    aware wake-up path as well, which is entirely independent from the
+>    currently running governor;
+
+But this is done under the assumption that the governor will also take
+the clamps into account, isn't it?
+
+Otherwise you can see your "low util" tasks running at high
+frequencies and "high util" ones running slowly.  Surely, that's not
+desirable?
+
+IIUC, the task placement needs to be consistent with the governor's
+decisions for things to work as expected.
+
+>  - because of the above, it is (now) largely useless: a compile time
+>    dependency doesn't guarantee we are actually running with schedutil
+>    at all;
+>  - it is artificial: there are no actual compilation dependencies
+>    between sugov and uclamp, everything will compile just fine without
+>    that 'depends on';
+
+That actually is the case, but it doesn't mean that there is no
+dependency in there.
+
+> Or maybe you were thinking of something else?
+>
+> > > That of course is only true if we can
+> > > agree on a reasonable set of exported symbols, so I'll give others some
+> > > time to complain and see if I can post a v2 addressing these issues!
+> >
+> > This isn't just about exported symbols, it is about what is regarded
+> > as essential and what isn't.
+>
+> Right, the exported symbols are, IMO, quite interesting because they
+> show how 'core' the governor is. But what exactly do you mean by
+> 'essential' here? Essential in what sense?
+
+IMO the question is how much value there is in making it possible to
+avoid loading a particular piece of kernel code into memory.
+
+You've demonstrated that it can be done with schedutil, but does that
+matter that it needs to be done?
+
+I thought that the original idea was to make it closely integrated
+with the scheduler, so it could access the scheduler's data structures
+(that we specifically didn't want to expose to the *other* governors)
+and so as to avoid forgetting about any dependencies when making
+changes to either the scheduler or schedutil.  Allowing it to be build
+as a module would make make us have to worry about those things again,
+so is it really worth it?
