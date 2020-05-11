@@ -2,241 +2,146 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932ACC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4281C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 688FB20757
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0BC218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="vFO25KpX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="q37ckKvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgEKPHI (ORCPT
+        id S1730176AbgEKPIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45406 "EHLO
+        Mon, 11 May 2020 11:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728090AbgEKPHI (ORCPT
+        by vger.kernel.org with ESMTP id S1729986AbgEKPIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:07:08 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DF8C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:07:08 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id z80so4518078qka.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:07:08 -0700 (PDT)
+        Mon, 11 May 2020 11:08:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D2DC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l18so11399773wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ANAit2WX+K9wu4n6he8ngZbFdqawZzoQDVcmzxgA7go=;
-        b=vFO25KpXwg/4vtW8tD+XIfm9LH46+fQ6vvusO0tJeYwSNeBknXcUE5831e2qvIbxNB
-         +vEmtna2uZpKf+W/kuG3dxSgsESJKBqc4IhSu+vI0v1ulFrcCqAfkILo2N91JoiKJ1VS
-         IeKrygvNCP9TwKSM4nZZV+6aUOr9YP4M9uU2NnO214vrmh+gcV3XI6IYat+zBLyslXuz
-         qBTXHi14HEys8m8tByH7DOimgJvM9+KyoJhvhLRU6cUdxDSd9pfqwDB/NC1bpgSTNoHb
-         q4xx6h6LAXEjkdPchQEnaYQXvlQK/oG/0FN9w9FLsVDpbYuXFot5iHbtHU6WrxwDv07O
-         REGw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sewIQrOfMSMCFki5vvjbKoo8BkZz8WZa7NzooTrVnts=;
+        b=q37ckKvI97gdW/9Qf733N08+axobkxxkecqbP8tELu1P7icQxfg3axOfLOYxiFCBwl
+         oW05IYZCYgxJNYg+koCtaEP74kUPAP7PvkOTtmB8izDdFoqQ7hUPr6KHdo+QapU5fG+q
+         okYraohC8Z+OVy+h3pew0mfKrvkCW5otHVTVv/M3aUqhjbBCgmNhqm0DjbiAtK+BOLLi
+         J3u3/fW1XlTDrkKTN/e8xinBIg+wOmpGaGiK4N+T0FY9XJO2tq6hVKqSmb/ITP3KJx0m
+         772YiDG8qWBy+CWk7PZaNjByABatlmXAblj8wCORl9qC2OeLAPGB+ni3oUS02zE0ASo0
+         jDXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ANAit2WX+K9wu4n6he8ngZbFdqawZzoQDVcmzxgA7go=;
-        b=SBmDBEvjSWqBUE+587cpeyIq/rkqGJJFEUn5bBCjJ4a8cYt0Ig6yn7WvorlC5A9BvV
-         Z0ldLuiN8qGydsCAXEG4txEnx0FdYD9o3oxIdZVnD/PFSamuHHCgHycJKjfnAcS4WpAF
-         2umNgnxiDGPBu8dBDZIqq20pyXBmngJxEYVE+T7gB1b0CmlFBVKUCnxLzwms+tkOKsIk
-         jZ6vEN7ipW9I41zdzBrwwkCqPcqhdLbhIQCpdvTNjvsjEQCJoIlcgFCqN8BOMfsShlFR
-         ZogFkxcSPgGZsMAvX6Z9TNfBh6L8xLSnCRuF/1lYH1uB85EYs/bI+2QRb6h0iMspQhZq
-         NLoA==
-X-Gm-Message-State: AGi0PuYSJUcOkn3c38fVYtcJVlN24u0Ts9ONXbWfK4p5Aq43GGF+9xsP
-        Ky/Z6x5Xru4dPf6EC7C5LMSbRA==
-X-Google-Smtp-Source: APiQypI3zax9mzs3ycZgpcHPMyHsq5/Hz/R3+ZSCs3htkIuCuIQ6i4eEs5zbW+/YH57wPpBL6Xadpg==
-X-Received: by 2002:a37:9344:: with SMTP id v65mr14585673qkd.366.1589209627242;
-        Mon, 11 May 2020 08:07:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id l22sm8360550qki.45.2020.05.11.08.07.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sewIQrOfMSMCFki5vvjbKoo8BkZz8WZa7NzooTrVnts=;
+        b=W+Nt/L6T12/TKFxoZEumUSJCn6xK4sxPBsaeVSoFvQUGWGmKa32cfK2U1leaRZyByI
+         89EIuN3+6x0o6he/lc8uGv9MiHe2fTW4M9j9/OyfYgjWuh/eFouL7B61ffLr9FD1Sxj0
+         TZ7hHSvNsl4M9qgeodD7YTCCta+w47+B0WlrL02sZxCReSyxg3QE8ZrX5/pcFE6Xh1WN
+         1wtjeQk1pQoA9SLRvYnP6basXKUmP3awasCrGHbaiGZe+T9j0dT3B4MvypRBIi35uUye
+         CjXJITKPMdGYuTsDOnNNeBo2q7XmbJMdbnpqJHfRQBMjKraRwujOsaNoyr0Q/7qzN73E
+         OPJw==
+X-Gm-Message-State: AGi0PuZ7Zwk8pVKmkMRtBvuy/zOFo4vDQr6F0DCQjpOZOHDkpZWYnOP3
+        TQ0jcnd0QmzQ7iQ6wNdmYAUPHA==
+X-Google-Smtp-Source: APiQypJkabPSlSRTzxm2g+2Pcl2v8TJeYzS/3rcaydFEeD66RCudiytYlqP+kPoPaNBs86GUJFZHvA==
+X-Received: by 2002:adf:f605:: with SMTP id t5mr19294913wrp.354.1589209700812;
+        Mon, 11 May 2020 08:08:20 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:07:06 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:06:48 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Joonsoo Kim <js1304@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 05/18] mm: memcontrol: convert page cache to a new
- mem_cgroup_charge() API
-Message-ID: <20200511150648.GA306292@cmpxchg.org>
-References: <20200420221126.341272-1-hannes@cmpxchg.org>
- <20200420221126.341272-6-hannes@cmpxchg.org>
- <20200422064041.GE6780@js1304-desktop>
- <20200422120946.GA358439@cmpxchg.org>
- <20200423052450.GA12538@js1304-desktop>
- <20200508160122.GB181181@cmpxchg.org>
- <alpine.LSU.2.11.2005102350360.2769@eggly.anvils>
+        Mon, 11 May 2020 08:08:20 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 01/14] dt-bindings: arm: add a binding document for MediaTek PERICFG controller
+Date:   Mon, 11 May 2020 17:07:46 +0200
+Message-Id: <20200511150759.18766-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
+References: <20200511150759.18766-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2005102350360.2769@eggly.anvils>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:38:04AM -0700, Hugh Dickins wrote:
-> On Fri, 8 May 2020, Johannes Weiner wrote:
-> > 
-> > I looked at this some more, as well as compared it to non-shmem
-> > swapping. My conclusion is - and Hugh may correct me on this - that
-> > the deletion looks mandatory but is actually an optimization. Page
-> > reclaim will ultimately pick these pages up.
-> > 
-> > When non-shmem pages are swapped in by readahead (locked until IO
-> > completes) and their page tables are simultaneously unmapped, the
-> > zap_pte_range() code calls free_swap_and_cache() and the locked pages
-> > are stranded in the swap cache with no page table references. We rely
-> > on page reclaim to pick them up later on.
-> > 
-> > The same appears to be true for shmem. If the references to the swap
-> > page are zapped while we're trying to swap in, we can strand the page
-> > in the swap cache. But it's not up to swapin to detect this reliably,
-> > it just frees the page more quickly than having to wait for reclaim.
-> 
-> I think you've got all that exactly right, thanks for working it out.
-> It originates from v3.7's 215c02bc33bb ("tmpfs: fix shmem_getpage_gfp()
-> VM_BUG_ON") - in which I also had to thank you.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I should have looked where it actually came from - I had forgotten
-about that patch!
+This adds a binding document for the PERICFG controller present on
+MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
 
-> I think I chose to do the delete_from_swap_cache() right there, partly
-> because of following shmem_unuse_inode() code which already did that,
-> partly on the basis that while we have to observe the case then it's
-> better to clean it up, and partly out of guilt that our page lock here
-> is what had prevented shmem_undo_range() from completing its job; but
-> I believe you're right that unused swapcache reclaim would sort it out
-> eventually.
-
-That makes sense to me.
-
-> > diff --git a/mm/shmem.c b/mm/shmem.c
-> > index e80167927dce..236642775f89 100644
-> > --- a/mm/shmem.c
-> > +++ b/mm/shmem.c
-> > @@ -640,7 +640,7 @@ static int shmem_add_to_page_cache(struct page *page,
-> >  		xas_lock_irq(&xas);
-> >  		entry = xas_find_conflict(&xas);
-> >  		if (entry != expected)
-> > -			xas_set_err(&xas, -EEXIST);
-> > +			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
-> 
-> Two things on this.
-> 
-> Minor matter of taste, I'd prefer that as
-> 			xas_set_err(&xas, entry ? -EEXIST : -ENOENT);
-> which would be more general and more understandable -
-> but what you have written should be fine for the actual callers.
-
-Yes, checking `expected' was to differentiate the behavior depending
-on the callsite. But testing `entry' is more obvious in that location.
-
-> Except... I think returning -ENOENT there will not work correctly,
-> in the case of a punched hole.  Because (unless you've reworked it
-> and I just haven't looked) shmem_getpage_gfp() knows to retry in
-> the case of -EEXIST, but -ENOENT will percolate up to shmem_fault()
-> and result in a SIGBUS, or a read/write error, when the hole should
-> just get refilled instead.
-
-Good catch, I had indeed missed that. I'm going to make it retry on
--ENOENT as well.
-
-We could have it go directly to allocating a new page, but it seems
-unnecessarily complicated: we've already been retrying in this
-situation until now, so I would stick to "there was a race, retry."
-
-> Not something that needs fixing in a hurry (it took trinity to
-> generate this racy case in the first place), I'll take another look
-> once I've pulled it into a tree (or collected next mmotm) - unless
-> you've already have changed it around by then.
-
-Attaching a delta fix based on your observations.
-
-Andrew, barring any objections to this, could you please fold it into
-the version you have in your tree already?
-
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
+ .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
 
-From 33d03ceebce0a6261d472ddc9c5a07940f44714c Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Mon, 11 May 2020 10:45:14 -0400
-Subject: [PATCH] mm: memcontrol: convert page cache to a new
- mem_cgroup_charge() API fix
-
-Incorporate Hugh's feedback:
-
-- shmem_getpage_gfp() needs to handle the new -ENOENT that was
-  previously implied in the -EEXIST when a swap entry changed under us
-  in any way. Otherwise hole punching could cause a racing fault to
-  SIGBUS instead of allocating a new page.
-
-- It is indeed page reclaim that picks up any swapcache we leave
-  stranded when free_swap_and_cache() runs on a page locked by
-  somebody else. Document that our delete_from_swap_cache() is an
-  optimization, not something we rely on for correctness.
-
-- Style cleanup: testing `expected' to decide on -EEXIST vs -ENOENT
-  differentiates the callsites, but is a bit awkward to read. Test
-  `entry' instead.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/shmem.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index afd5a057ebb7..00fb001e8f3e 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -638,7 +638,7 @@ static int shmem_add_to_page_cache(struct page *page,
- 		xas_lock_irq(&xas);
- 		entry = xas_find_conflict(&xas);
- 		if (entry != expected)
--			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
-+			xas_set_err(&xas, entry ? -EEXIST : -ENOENT);
- 		xas_create_range(&xas);
- 		if (xas_error(&xas))
- 			goto unlock;
-@@ -1686,10 +1686,13 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
- 		 * We already confirmed swap under page lock, but
- 		 * free_swap_and_cache() only trylocks a page, so it
- 		 * is just possible that the entry has been truncated
--		 * or holepunched since swap was confirmed.
--		 * shmem_undo_range() will have done some of the
--		 * unaccounting, now delete_from_swap_cache() will do
--		 * the rest.
-+		 * or holepunched since swap was confirmed. This could
-+		 * occur at any time while the page is locked, and
-+		 * usually page reclaim will take care of the stranded
-+		 * swapcache page. But when we catch it, we may as
-+		 * well clean up after ourselves: shmem_undo_range()
-+		 * will have done some of the unaccounting, now
-+		 * delete_from_swap_cache() will do the rest.
- 		 */
- 		if (error == -ENOENT)
- 			delete_from_swap_cache(page);
-@@ -1765,7 +1768,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
- 	if (xa_is_value(page)) {
- 		error = shmem_swapin_page(inode, index, &page,
- 					  sgp, gfp, vma, fault_type);
--		if (error == -EEXIST)
-+		if (error == -EEXIST || error == -ENOENT)
- 			goto repeat;
- 
- 		*pagep = page;
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+new file mode 100644
+index 000000000000..74b2a6173ffb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: MediaTek Peripheral Configuration Controller
++
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - mediatek,pericfg
++        - const: syscon
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pericfg: pericfg@10003050 {
++        compatible = "mediatek,mt8516-pericfg", "syscon";
++        reg = <0 0x10003050 0 0x1000>;
++    };
 -- 
-2.26.2
+2.25.0
+
