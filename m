@@ -2,101 +2,132 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7592BC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E74EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E79A20746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589201724;
-	bh=fI1SN20EX/4GtN+QbDDKwe0uGIQ2raxx/8QClojgIe8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zn6w3cyj15LMt2fOFPAMddYFLssp3MZlJzhP2Uxeq+Z9C9MIpBDJMJoEbM/J1tPXX
-	 iCEQWMAE+4MfOagpLBED3r1o3Jrn8d/c+7nWqP2Tmwmkley8E7/ThoY7Kfehna/6dL
-	 PtLJk1HZK8TdmHDuTlz/EW/Klb3B+8OKzWTzxMQw=
+	by mail.kernel.org (Postfix) with ESMTP id 82DA120575
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgEKMzX (ORCPT
+        id S1729439AbgEKM7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:55:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgEKMzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:55:23 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8853F20722;
-        Mon, 11 May 2020 12:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589201722;
-        bh=fI1SN20EX/4GtN+QbDDKwe0uGIQ2raxx/8QClojgIe8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etOzo4t5b4u6f5ics6j3+lhzkrKUN/2V1AICzngaF8C0uUKuW8Mg5PQfavbLP/Ovc
-         sB1hhGd6UUAkEK/1bnpkLITxHhaSbNAe+g5FLXAxJwbL26/zxpkAUIqj2BqmopS1Ia
-         y9wb2cFrwTuWkWbxBEuqFfsqITcTFm8x4t6TYtAw=
-From:   Will Deacon <will@kernel.org>
-To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
-Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoffer Dall <christoffer.dall@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Yonghong Song <yhs@fb.com>, clang-built-linux@googlegroups.com,
-        Alexios Zavras <alexios.zavras@intel.com>
-Subject: Re: [PATCH bpf-next v2 0/3] arm64 BPF JIT Optimizations
-Date:   Mon, 11 May 2020 13:55:08 +0100
-Message-Id: <158919609995.133008.6274359604607907270.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200508181547.24783-1-luke.r.nels@gmail.com>
-References: <20200508181547.24783-1-luke.r.nels@gmail.com>
+        Mon, 11 May 2020 08:59:02 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58093 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgEKM7B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:59:01 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BBCCF24001A;
+        Mon, 11 May 2020 12:58:56 +0000 (UTC)
+Date:   Mon, 11 May 2020 14:58:55 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
+ parent node
+Message-ID: <20200511145855.35c6abfb@xps13>
+In-Reply-To: <0c704fea-f2a6-2cec-8741-d322acf6afd5@st.com>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+        <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
+        <20200511111855.48216940@xps13>
+        <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
+        <20200511135926.3e5c622d@xps13>
+        <0c704fea-f2a6-2cec-8741-d322acf6afd5@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020 11:15:43 -0700, Luke Nelson wrote:
-> This patch series introduces several optimizations to the arm64 BPF JIT.
-> The optimizations make use of arm64 immediate instructions to avoid
-> loading BPF immediates to temporary registers, when possible.
+Hi Christophe,
+
+Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
+2020 14:47:09 +0200:
+
+> Hi Miquel,
 > 
-> In the process, we discovered two bugs in the logical immediate encoding
-> function in arch/arm64/kernel/insn.c using Serval. The series also fixes
-> the two bugs before introducing the optimizations.
+> On 5/11/20 1:59 PM, Miquel Raynal wrote:
+> > Hi Christophe,
+> > 
+> > Christophe Kerello <christophe.kerello@st.com> wrote on Mon, 11 May
+> > 2020 12:21:03 +0200:
+> >   
+> >> Hi Miquel,
+> >>
+> >> On 5/11/20 11:18 AM, Miquel Raynal wrote:  
+> >>> Hi Christophe,
+> >>>
+> >>> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
+> >>> 11:11:19 +0200:  
+> >>>    >>>> FMC2 EBI support has been added. Common resources (registers base  
+> >>>> and clock) are now shared between the 2 drivers. It means that the
+> >>>> common resources should now be found in the parent device when EBI
+> >>>> node is available.
+> >>>>
+> >>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >>>> ---  
+> >>>
+> >>> [...]  
+> >>>    >>>> +  
+> >>>> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
+> >>>> +{
+> >>>> +	u32 i;
+> >>>> +	int nb_resources = 0;
+> >>>> +
+> >>>> +	/* Count the number of resources in reg property */
+> >>>> +	for (i = 0; i < pdev->num_resources; i++) {
+> >>>> +		struct resource *res = &pdev->resource[i];
+> >>>> +
+> >>>> +		if (resource_type(res) == IORESOURCE_MEM)
+> >>>> +			nb_resources++;
+> >>>> +	}
+> >>>> +
+> >>>> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
+> >>>> +	if (nb_resources % 3)
+> >>>> +		return false;
+> >>>> +
+> >>>> +	return true;
+> >>>> +}  
+> >>>
+> >>> This function looks fragile. Why not just checking the compatible
+> >>> string of the parent node?  
+> >>>    >>  
+> >> Yes, it is another way to check that we have an EBI parent node.
+> >>
+> >> In this implementation, I was checking the number of reg tuples.
+> >> In case we have 6, it means that the register base address is defined in the parent node (EBI node).
+> >> In case we have 7, it means that the register base address is defined in the current node (NFC node).  
+> > 
+> > Yes, I understand what you are doing, but I kind of dislike the logic.
+> > Relying on the number of reg tuples is something that can be done (I
+> > used it myself one time), but I think this is more a hack that you do
+> > when you have no other way to differentiate. I guess the proper way
+> > would be to look at the parent's compatible. If it matches what you
+> > expect, then you can store the dev->of_node->parent->dev somewhere in
+> > your controller's structure and then use it to initialize the clock and
+> > regmap. This way you don't have to move anything else in the probe path.
+> >   
 > 
-> [...]
+> OK, I will check the compatible string of the parent device using of_device_is_compatible API in v5.
+> In case of the parent is found, I will add it in the structure of the controller (dev_parent).
+> I will rely on this field only to get the common resources (the register base address and the clock) in the NFC node or in the EBI node.
 
-Applied to arm64 (for-next/bpf), thanks!
-
-[1/3] arm64: insn: Fix two bugs in encoding 32-bit logical immediates
-      https://git.kernel.org/arm64/c/579d1b3faa37
-[2/3] bpf, arm64: Optimize AND,OR,XOR,JSET BPF_K using arm64 logical immediates
-      https://git.kernel.org/arm64/c/fd49591cb49b
-[3/3] bpf, arm64: Optimize ADD,SUB,JMP BPF_K using arm64 add/sub immediates
-      https://git.kernel.org/arm64/c/fd868f148189
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+I had something slightly different in mind: what about setting a
+default value to this field as being the controller's device itself.
+This way, once it is set to either the parent device or the device
+itself, you can use it "blindly" in your devm_clk_get/regmap_init calls?
