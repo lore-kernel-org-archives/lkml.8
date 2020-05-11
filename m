@@ -2,135 +2,135 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C64CC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D61C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAC2206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307D920720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M3zPyWcs"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="plDyvByA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgEKTgO (ORCPT
+        id S1731495AbgEKTgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:36:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52599 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731243AbgEKTgO (ORCPT
+        Mon, 11 May 2020 15:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731243AbgEKTgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:36:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589225772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n1Azc72m1cbrlLpDQQKhMzhm3+sIV9uhpCTEmWjBjEo=;
-        b=M3zPyWcsBucCaC0ZUT1gEop6aiQQF6RQAoDTeYmBfJ8K34mAd1AiPy0m1hDj9PLUvNcALt
-        xog5jp6nEEdhz06H6DcB0BdCYsbKnoUNsdNOBqHHkvkI4xlLXR9st7LVUqm+g/bVCXwigy
-        NPsuQ2fU+wjQP42yyshp+lYHt0qHHJs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-fKVFL0qOMnau3mM0hfQlUg-1; Mon, 11 May 2020 15:36:10 -0400
-X-MC-Unique: fKVFL0qOMnau3mM0hfQlUg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09825835B42;
-        Mon, 11 May 2020 19:36:09 +0000 (UTC)
-Received: from krava (unknown [10.40.194.31])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 200C05D9DC;
-        Mon, 11 May 2020 19:36:05 +0000 (UTC)
-Date:   Mon, 11 May 2020 21:36:04 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3] perf c2c: fix '-e list'
-Message-ID: <20200511193604.GF2986380@krava>
-References: <20200507220604.3391-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507220604.3391-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 11 May 2020 15:36:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8462C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:36:30 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k19so4344574pll.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 12:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=v1qEow1xr6Tl9HbXqv92zljMgDOgKRbT8DcK2r8augk=;
+        b=plDyvByAezPxhtBNLRCuVK5NXRrexQXBfSR++YGjC0ACfezjvSTQ4rrVuyxXsCEEtI
+         BbW2+qXKERUMz2XYA8LhCw/+uX3PWkPklugw6VNmlNZHrIV9ej6nD8FWRwEx4o/TnPww
+         kdkwcs9KYpIuASMr/BNGVsia2pyZK0W8b74Y7BYxSeziRLkruJFJtlwWfB42Jb/9JiYn
+         jpE//U7WrRm9hAm7hc+DTdNO5lt3CAdRHqXSFSO4ZA0Pcf/8p0ITa134SktFrq7OsKod
+         PUhx3J9d5uROpjm74uAh0LSUBbPjFLkfCcx5a7c2NiuPxx+1GBDwMHyv2zsWWB661Y5j
+         xlXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=v1qEow1xr6Tl9HbXqv92zljMgDOgKRbT8DcK2r8augk=;
+        b=o+hq0FQZUruXU93XEsMEWyWJiFsRM02Y/R7ekriqpUrzokJ936vy1ER+R1Q04PAqum
+         Cosjb2T7W2yu6Kkn4Iy8qq5YzDrYKy4mESREtvr2cvNQIhIFDOcQqP341kbmTqGq9mDL
+         WabCOCyxCzriHIn+EzwJWY0RS55trD1mZH6urgomCufs2FvcyOXmXP06pRLBA9EEqqbx
+         WX3RVVuHlwmia6NEg4eRfSXLVPUFVIBDxokXZAbaumfnKp2x2nb6HdQ1CumXPJNyzCX7
+         Pl6RM+zcppZYVdlN3R0Qc02O88OChlyx78tdq91SSpC5HTvEIIDryBYizyvrHG6l1WnN
+         c3Ow==
+X-Gm-Message-State: AGi0PuZTmfZNPKbNhwGbllavn9z4HpuOxX7Y2L/KbuFqkjR/b7C0C2gn
+        CkO/XImDCqGFsoyByE26FG+21Q==
+X-Google-Smtp-Source: APiQypJ1YiMdk4N4C7CbB/W/+fhruAj/pk5oDUlcqa/TNtBxnj77+hdowSnvFuUKeaQO4a8ClZqGSA==
+X-Received: by 2002:a17:902:8b86:: with SMTP id ay6mr16163755plb.338.1589225790091;
+        Mon, 11 May 2020 12:36:30 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:8:ac6e:cd4:7f73? ([2601:646:c200:1ef2:8:ac6e:cd4:7f73])
+        by smtp.gmail.com with ESMTPSA id u17sm4090429pgo.90.2020.05.11.12.36.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 12:36:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Date:   Mon, 11 May 2020 12:36:19 -0700
+Message-Id: <8D6745B7-0EC2-4FCC-B6FC-E7E1557EB18E@amacapital.net>
+References: <20200511191414.GY8135@suse.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+In-Reply-To: <20200511191414.GY8135@suse.de>
+To:     Joerg Roedel <jroedel@suse.de>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:06:04PM -0700, Ian Rogers wrote:
-> When the event is passed as list, the default events should be listed as
-> per 'perf mem record -e list'. Previous behavior is:
-> 
-> $ perf c2c record -e list
-> failed: event 'list' not found, use '-e list' to get list of available events
-> 
->  Usage: perf c2c record [<options>] [<command>]
->     or: perf c2c record [<options>] -- <command> [<options>]
-> 
->     -e, --event <event>   event selector. Use 'perf mem record -e list' to list available events
-> 
-> New behavior:
-> 
-> $ perf c2c record -e list
-> ldlat-loads  : available
-> ldlat-stores : available
-> 
-> v3: is a rebase.
-> v2: addresses review comments by Jiri Olsa.
-> https://lore.kernel.org/lkml/20191127081844.GH32367@krava/
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/perf-c2c.txt |  2 +-
->  tools/perf/builtin-c2c.c              |  9 ++++++++-
->  tools/perf/builtin-mem.c              | 24 +++++++-----------------
->  tools/perf/util/mem-events.c          | 15 +++++++++++++++
->  tools/perf/util/mem-events.h          |  2 ++
->  5 files changed, 33 insertions(+), 19 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-> index 2133eb320cb0..98efdab5fbd4 100644
-> --- a/tools/perf/Documentation/perf-c2c.txt
-> +++ b/tools/perf/Documentation/perf-c2c.txt
-> @@ -40,7 +40,7 @@ RECORD OPTIONS
->  --------------
->  -e::
->  --event=::
-> -	Select the PMU event. Use 'perf mem record -e list'
-> +	Select the PMU event. Use 'perf c2c record -e list'
->  	to list available events.
->  
->  -v::
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 1baf4cae086f..d617d5682c68 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -2887,8 +2887,15 @@ static int parse_record_events(const struct option *opt,
->  {
->  	bool *event_set = (bool *) opt->value;
->  
-> +	if (!strcmp(str, "list")) {
-> +		perf_mem_events__list();
-> +		exit(0);
-> +	}
-> +	if (perf_mem_events__parse(str))
-> +		exit(-1);
 
-won't this exit(-1) callsbreak the parsing stuff?
-like displaying the option values on error or such?
+> On May 11, 2020, at 12:14 PM, Joerg Roedel <jroedel@suse.de> wrote:
+>=20
+> =EF=BB=BFOn Mon, May 11, 2020 at 08:36:31AM -0700, Andy Lutomirski wrote:
+>> What if we make 32-bit PTI depend on PAE?
+>=20
+> It already does, PTI support for legacy paging had to be removed because
+> there were memory corruption problems with THP. The reason was that huge
+> PTEs in the user-space area were mapped in two page-tables (kernel and
+> user), but A/D bits were only fetched from the kernel part. To not make
+> things more complicated we agreed on just not supporting PTI without
+> PAE.
+>=20
+>> And drop 32-bit Xen PV support?  And make 32-bit huge pages depend on
+>> PAE?  Then 32-bit non-PAE can use the direct-mapped LDT, 32-bit PTI
+>> (and optionally PAE non-PTI) can use the evil virtually mapped LDT.
+>> And 32-bit non-PAE (the 2-level case) will only have pointers to page
+>> tables at the top level.  And then we can preallocate.
+>=20
+> Not sure I can follow you here. How can 32-bit PTI with PAE use the LDT
+> from the direct mapping? I am guessing you want to get rid of the
+> SHARED_KERNEL_PMD=3D=3D0 case for PAE kernels.
 
-other than that it looks ok to me
+I wrote nonsense. I mean bite off a piece of the *user* portion of the addre=
+ss space and stick the LDT there.
 
-jirka
+I contemplated doing this when I wrote the 64-bit code, but I decided we had=
+ so much address space to throw around that I liked my solution better.
 
+> This would indeed make
+> syncing unneccessary on PAE, but pre-allocation would still be needed
+> for 2-level paging. Just the amount of memory needed for the
+> pre-allocated PTE pages is half as big as it would be with PAE.
+>=20
+>> Or maybe we don't want to defeature this much, or maybe the memory hit
+>> from this preallocation will hurt little 2-level 32-bit systems too
+>> much.
+>=20
+> It will certainly make Linux less likely to boot on low-memory x86-32
+> systems, whoever will be affected by this.
+>=20
+>=20
+
+I=E2=80=99m guessing the right solution is either your series or your series=
+ plus preallocation on 64-bit. I=E2=80=99m just grumpy about it...=
