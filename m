@@ -2,147 +2,105 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53CC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6D3C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836C720735
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073B82192A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589183486;
+	bh=ujV3u+dsl5PKS0aIWtuPo2XlUIWTrnZfhH9932lJ3Ck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=avpQeyyAMEvvjubvxTG6JO4AUadsDyi3+P4roOcvcFneG9pNWXDeEe/PHXM4xajOv
+	 BRa9SEhZ1fh8ykeYY2Cn9sHzbKhWd0Ob64yeJhIE0hllk3EFeTiPR2O4kEZ5D6Le8r
+	 e7P8+FNuXMYw9IuIdk9IIMyOZFrpVVYMjLdywQ3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgEKHrS (ORCPT
+        id S1728408AbgEKHvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:47:18 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:53102 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbgEKHrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:47:17 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Mon, 11 May 2020 03:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgEKHvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 03:51:24 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 65F4220080;
-        Mon, 11 May 2020 09:47:10 +0200 (CEST)
-Date:   Mon, 11 May 2020 09:47:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     srk@48.io
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Sean Cross <xobs@kosagi.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add Innolux N133HSE panel support
-Message-ID: <20200511074708.GA2759@ravnborg.org>
-References: <20200509111834.26335-1-srk@48.io>
- <20200509111834.26335-3-srk@48.io>
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B2F20735;
+        Mon, 11 May 2020 07:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589183483;
+        bh=ujV3u+dsl5PKS0aIWtuPo2XlUIWTrnZfhH9932lJ3Ck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0mQ7t5as8jZps7eSFkQLnwLtzVeQdo1iP3qe/Hftt/g3zJxfzwQVDrNcWnrxBfusE
+         WGRRbC87hk6tU7Y02J552JkiWyPKHGmHG8/2xNIIubv0rRSCeTtP6ug62nSc345L3i
+         YbZ4edSRI7cSRvmZAntksnLnC8c2Z4vBB1WMY+EY=
+Date:   Mon, 11 May 2020 08:51:15 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>, james.morse@arm.com,
+        catalin.marinas@arm.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 02/31] arm64: fix the flush_icache_range arguments in
+ machine_kexec
+Message-ID: <20200511075115.GA16134@willie-the-truck>
+References: <20200510075510.987823-1-hch@lst.de>
+ <20200510075510.987823-3-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509111834.26335-3-srk@48.io>
+In-Reply-To: <20200510075510.987823-3-hch@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=ULXz4hXy c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=YpGV6msqAAAA:8 a=VwQbUJbxAAAA:8 a=8AirrxEcAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=grMRCvxJCDGD2aPsybUA:9
-        a=CjuIK1q_8ugA:10 a=7Sa5D-Tva0wx0rmpRu8Y:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=ST-jHhOKWsTCqRlWije3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard.
+[+James and Catalin]
 
-On Sat, May 09, 2020 at 01:18:34PM +0200, srk@48.io wrote:
-> From: Sean Cross <xobs@kosagi.com>
+On Sun, May 10, 2020 at 09:54:41AM +0200, Christoph Hellwig wrote:
+> The second argument is the end "pointer", not the length.
 > 
-> The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
-> integrated backlight, and connects via eDP.
-> 
-> It is used in the Kosagi Novena.
-
-Thanks for the patch.
-
-
-> 
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> Signed-off-by: Richard Marko <srk@48.io>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> To: dri-devel@lists.freedesktop.org
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  arch/arm64/kernel/machine_kexec.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 3ad828eaefe1..c8a93771d398 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1906,6 +1906,30 @@ static const struct panel_desc innolux_n116bge = {
->  	},
->  };
->  
-> +static const struct drm_display_mode innolux_n133hse_ea1_mode = {
-> +	.clock = 138500,
-> +	.hdisplay = 1920,
-> +	.hsync_start = 1920 + 46,
-> +	.hsync_end = 1920 + 46 + 30,
-> +	.htotal = 1920 + 46 + 30 + 84,
-> +	.vdisplay = 1080,
-> +	.vsync_start = 1080 + 2,
-> +	.vsync_end = 1080 + 2 + 4,
-> +	.vtotal = 1080 + 2 + 4 + 26,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc innolux_n133hse_ea1 = {
-> +	.modes = &innolux_n133hse_ea1_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 293,
-> +		.height = 165,
-> +	},
-> +	.connector_type = DRM_MODE_CONNECTOR_eDP,
-Please include .bus_format and .bus_flags info too.
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index 8e9c924423b4e..a0b144cfaea71 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -177,6 +177,7 @@ void machine_kexec(struct kimage *kimage)
+>  	 * the offline CPUs. Therefore, we must use the __* variant here.
+>  	 */
+>  	__flush_icache_range((uintptr_t)reboot_code_buffer,
+> +			     (uintptr_t)reboot_code_buffer +
+>  			     arm64_relocate_new_kernel_size);
 
-We are relying more and more on this type of info so we need it to be
-present.
+Urgh, well spotted. It's annoyingly different from __flush_dcache_area().
 
-	Sam
+But now I'm wondering what this code actually does... the loop condition
+in invalidate_icache_by_line works with 64-bit arithmetic, so we could
+spend a /very/ long time here afaict. It's also a bit annoying that we
+do a bunch of redundant D-cache maintenance too.
 
+Should we use invalidate_icache_range() here instead? (and why does that
+thing need to toggle uaccess)? Argh, too many questions!
 
-
-> +};
-> +
->  static const struct drm_display_mode innolux_n156bge_l21_mode = {
->  	.clock = 69300,
->  	.hdisplay = 1366,
-> @@ -3577,6 +3601,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "innolux,n116bge",
->  		.data = &innolux_n116bge,
-> +	}, {
-> +		.compatible = "innolux,n133hse-ea1",
-> +		.data = &innolux_n133hse_ea1,
->  	}, {
->  		.compatible = "innolux,n156bge-l21",
->  		.data = &innolux_n156bge_l21,
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Will
