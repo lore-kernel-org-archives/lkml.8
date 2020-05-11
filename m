@@ -6,74 +6,93 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67286C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6896C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A083207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EE72080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgEKHng (ORCPT
+        id S1728501AbgEKHqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:43:36 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55306 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgEKHng (ORCPT
+        Mon, 11 May 2020 03:46:32 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46070 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgEKHqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:43:36 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-209-P9C41s_OM427cyZHLO5SQQ-1; Mon, 11 May 2020 08:43:32 +0100
-X-MC-Unique: P9C41s_OM427cyZHLO5SQQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 11 May 2020 08:43:32 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 11 May 2020 08:43:32 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: I disabled more compiler warnings..
-Thread-Topic: I disabled more compiler warnings..
-Thread-Index: AQHWJwHjj7O/Wk29GEyLgXD8YJ1BI6iigEwg
-Date:   Mon, 11 May 2020 07:43:32 +0000
-Message-ID: <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
-References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 11 May 2020 03:46:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k133so14121675oih.12;
+        Mon, 11 May 2020 00:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2yJ6ElOmiCSyE9da4JBaYJBkgTCIAd7AfbCRMY3E6sk=;
+        b=CYgJuZ4uypKOO7akrvDzrgeG0+luXAu1rsayCe7ORe03spcvQoouZAZ/hHAgv7GsLE
+         VBazfrnHjJcMVRdaOELsqm3jifzqBc8lUnUEFayOlgAknCldcC1ptX79Yvo64k9WqowY
+         DIc8WbEKalmQp5v18VAIrdinyB9NKhcWzoR/I2fAE0ULy6jb/jDSlCDAkqaa/vTOXUsY
+         HlZUNUqhUIuq9h6+ICTMpW7lFA8IbDXh8NhdQOw+JSu7a+iMVmLrb5PEFFDz9PXFheTb
+         70/4Fo3h7g18VpCdhUNkflqBUShF4Gw4uRQiJ4Eqnn0LRKkYxREciR1our9j17AZqlg3
+         +zOw==
+X-Gm-Message-State: AGi0PuZ8VV4gxFIxHnJJ1huBFN2IEXztT1MSIbYFPCT5oknAUEs9XMep
+        PEx9CL1Fz1d8zXffLbr0uRFi2VBGyhjapyPxuJk=
+X-Google-Smtp-Source: APiQypIoFxa7a3EUthZ/8xx0aZ//Vc0pDLpqFY6DB0zkXv6WP4wkoKn8ne3ghzK30RcpwYDHtmi30TMFV3MiIELEMLg=
+X-Received: by 2002:aca:895:: with SMTP id 143mr18042949oii.153.1589183188927;
+ Mon, 11 May 2020 00:46:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20200510075510.987823-1-hch@lst.de>
+In-Reply-To: <20200510075510.987823-1-hch@lst.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 May 2020 09:46:17 +0200
+Message-ID: <CAMuHMdXazsBw0mjJd0uFHQud7qbb5-Uw-PTDB3+-M=huRWOfgQ@mail.gmail.com>
+Subject: Re: sort out the flush_icache_range mess
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Michal Simek <monstr@monstr.eu>,
+        Jessica Yu <jeyu@kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTAgTWF5IDIwMjAgMjA6MzMNCi4uLg0KPiBB
-bmQgYXMgcGFydCBvZiB0aGF0LCB0aGVyZSB3ZXJlIGEgbG90IG9mIG5ldyB3YXJuaW5ncyBpbiB0
-aGUga2VybmVsIGJ1aWxkLg0KPiANCj4gSSBsZXQgdGhlbSBnbyBmb3IgYSB3aGlsZSwgaW4gdGhl
-IGJlbGllZiB0aGF0IEkgY291bGQgZGVhbCB3aXRoIGl0LA0KPiBidXQgdGhlbiB5ZXN0ZXJkYXkg
-SSBkaWQgYSBwdWxsIGFuZCBkaWRuJ3QgaW5pdGlhbGx5IGV2ZW4gbm90aWNlIHRoYXQNCj4gdGhl
-IGVuZCByZXN1bHQgZGlkbid0IGNvbXBpbGUgZm9yIG1lLCBiZWNhdXNlIHRoZSBidWlsZCBlcnJv
-ciB3YXMNCj4gaGlkZGVuIGJ5IHRoZSBodW5kcmVkcyBvZiBsaW5lcyBvZiB3YXJuaW5ncyAuLi4N
-Cg0KT25lIHByb2JsZW0gaXMgdGhhdCBnbWFrZSBpcyB2ZXJ5IGJhZCBhdCBzdG9wcGluZyBwYXJh
-bGxlbA0KbWFrZXMgd2hlbiBvbmUgY29tbWFuZCBmYWlscy4NClNvIHRoZSBrZXJuZWwgYnVpbGQg
-Y2FycmllcyBvbiBmaXJpbmcgb2ZmIG5ldyBjb21waWxhdGlvbnMNCmV2ZW4gYWZ0ZXIgb25lIGhh
-cyBmYWlsZWQuDQoNCkkndmUgbm90IGxvb2tlZCBpbnNpZGUgZ21ha2UsIGJ1dCBJIGZpeGVkIG5t
-YWtlIHNvIHRoYXQgaXQNCnByb3Blcmx5IHVzZWQgYSBzaW5nbGUgam9iIHRva2VuIHBpcGUgZm9y
-IHRoZSBlbnRpcmUgKE5ldEJTRCkNCmJ1aWxkIGFuZCB0aGVuIGZsdXNoZWQgYW5kIHJlZmlsbGVk
-IGl0IHdpdGggJ2Fib3J0JyB0b2tlbnMNCndoZW4gYW55IGNvbW1hbmQgZmFpbGVkLg0KVGhhdCBt
-YWRlIHRoZSBidWlsZCBzdG9wIGFsbW9zdCBpbW1lZGlhdGVseS4NCg0KCURhdmlkDQoNCi0NClJl
-Z2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0
-b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykN
-Cg==
+Hi Christoph,
 
+On Sun, May 10, 2020 at 9:55 AM Christoph Hellwig <hch@lst.de> wrote:
+> none of which really are used by a typical MMU enabled kernel, as a.out can
+> only be build for alpha and m68k to start with.
+
+Quoting myself:
+"I think it's safe to assume no one still runs a.out binaries on m68k."
+http://lore.kernel.org/r/CAMuHMdW+m0Q+j3rsQdMXnrEPm+XB5Y2AQrxW5sD1mZAKgmEqoA@mail.gmail.com
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
