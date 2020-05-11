@@ -2,313 +2,170 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D249C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9C2C54E8F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2F820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E3A206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RuqsoxaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730880AbgEKRS4 (ORCPT
+        id S1730886AbgEKRTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:18:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:36516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgEKRSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:18:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 918B430E;
-        Mon, 11 May 2020 10:18:54 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AC263F305;
-        Mon, 11 May 2020 10:18:52 -0700 (PDT)
-Date:   Mon, 11 May 2020 18:18:49 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200511171849.55rsnpdbqdgopnxs@e107158-lin.cambridge.arm.com>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
+        Mon, 11 May 2020 13:19:42 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:34916 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbgEKRTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:19:41 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200511171936epoutp04a52aaa9d7e497e858c46092d2530131e~OCPdOYBLB0521405214epoutp04d
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:19:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200511171936epoutp04a52aaa9d7e497e858c46092d2530131e~OCPdOYBLB0521405214epoutp04d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589217576;
+        bh=XkZoF8bL+bmw6UFZu9nmezi2UN3bV2DKzUpjNkExP+A=;
+        h=From:To:In-Reply-To:Subject:Date:References:From;
+        b=RuqsoxaZPwCjgCwCu+zmgMdSh1sO9TFDsQTy/FdkdtpWhttU1KnAMIYRepj2DdSF/
+         QiZLIhYqCbBkRvZrwNMdnH/qdCKw3nwMaFeVCWzQ2x9FvPO2XOLPMX7UkvBcNbGlc5
+         odqZ6Wagfn4F4q4bxnrHGJ7YdmSXPNgxOIO7f+No=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20200511171935epcas5p4837446790187456ca2d44680eed9d347~OCPb2hmUQ2639726397epcas5p4u;
+        Mon, 11 May 2020 17:19:35 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        30.20.23569.72989BE5; Tue, 12 May 2020 02:19:35 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200511171934epcas5p3d2a352c98597f5e2fb675335f44045e8~OCPbJPusS2275922759epcas5p3n;
+        Mon, 11 May 2020 17:19:34 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200511171934epsmtrp286f54a97071b1c89e911cda715216d0e~OCPbIfG0q1266012660epsmtrp2b;
+        Mon, 11 May 2020 17:19:34 +0000 (GMT)
+X-AuditID: b6c32a4a-3c7ff70000005c11-82-5eb989276487
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        05.EA.25866.62989BE5; Tue, 12 May 2020 02:19:34 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200511171931epsmtip2f45b88acd7da81b800bef79fd132c195~OCPYb2bv30769707697epsmtip2o;
+        Mon, 11 May 2020 17:19:31 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Jonathan Cameron'" <jic23@kernel.org>,
+        "'Hartmut Knaack'" <knaack.h@gmx.de>,
+        "'Lars-Peter Clausen'" <lars@metafoo.de>,
+        "'Peter Meerwald-Stadler'" <pmeerw@pmeerw.net>,
+        "'Kukjin Kim'" <kgene@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200511083348.7577-1-krzk@kernel.org>
+Subject: RE: [PATCH] iio: adc: exynos: Simplify Exynos7-specific init
+Date:   Mon, 11 May 2020 22:49:28 +0530
+Message-ID: <037501d627b8$56f06870$04d13950$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200511154053.7822-1-qais.yousef@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJ1pKagA2Ry5zpOzQca1EbCUSXy4gH86Yp2p1Q/gjA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7bCmpq565844gz3d3BYPmlYxWfQ/fs1s
+        sev/G2aL8+c3sFssmTyf1WLT42usFvOOvGOxuLxrDpvFjPP7mCx+7zrG7sDl8eFjnMemVZ1s
+        HpuX1HsseXOI1eN88xFGj8+b5ALYorhsUlJzMstSi/TtErgyFl3+wFSwk7ei9dUpxgbGZdxd
+        jJwcEgImEh8Wb2LtYuTiEBLYzSgxZ9c9NpCEkMAnIGe7O4T9mVHiyNN6mIZZa5rYIRp2MUrs
+        ndrNBFH0hlFiysJUEJtNQFdix+I2NpAiEYFeZomNn5eDTeUE6t7zcSuYLSzgKjH79jEWEJtF
+        QFVi04cesEG8ApYSh/6eh7IFJU7OfAJWwywgL7H97RxmiCsUJH4+XcYKYosIWEm8XDCPEaJG
+        XOLozx6omqUcEhdmcUDYLhJ/+iayQNjCEq+Ob2GHsKUkPr/bC3QPB5CdLdGzyxgiXCOxdN4x
+        qHJ7iQNX5rCAlDALaEqs36UPsYlPovf3EyaITl6JjjYhiGpVieZ3V6E6pSUmdnezQtgeErsu
+        /mGHhFQ7o0TPfcsJjAqzkPw4C8mPs5D8Mgth8QJGllWMkqkFxbnpqcWmBUZ5qeV6xYm5xaV5
+        6XrJ+bmbGMFJSstrB+PDBx/0DjEycTAeYpTgYFYS4W3J3BknxJuSWFmVWpQfX1Sak1p8iFGa
+        g0VJnDepcUuckEB6YklqdmpqQWoRTJaJg1OqgSmYYc2vhsITuiV1K+pFjD0n7PsxcYG001Sr
+        Lw45Zytqm5Wn71x9/LpRuY2E3eH35keS7JevWJQYfNHUOP6b3l5Dzye7V0d2vbolGvzM867u
+        mpud7xfVTn1/1j73RdfFNJHiR+k7PgYy9r50fsSl5Jh8e0m/7vTNt3uf2yqtPn853k5f5Nf9
+        47f+f/CvzXKxDWveNPt58bHN/LmakVeX/3CW1PIwS/h0UFLxZMfRKbvvC79Xz+3REDHVOuNV
+        qnvFo+1h/sLX7076eggtkM9UMeMWWur75iJ3LfeqzII3zkclTh4zmdfmeDcqUXTyi87OD7Ei
+        9XIZjP9SknI/hUT8SfgWpWW1z2vCihlvD9qxrlViKc5INNRiLipOBADgRj7KwQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJXletc2ecwe7JUhYPmlYxWfQ/fs1s
+        sev/G2aL8+c3sFssmTyf1WLT42usFvOOvGOxuLxrDpvFjPP7mCx+7zrG7sDl8eFjnMemVZ1s
+        HpuX1HsseXOI1eN88xFGj8+b5ALYorhsUlJzMstSi/TtErgyFl3+wFSwk7ei9dUpxgbGZdxd
+        jJwcEgImErPWNLF3MXJxCAnsYJSY/vA4O0RCWuL6xglQtrDEyn/PoYpeMUpcOz2fFSTBJqAr
+        sWNxGxtIQkRgKrPEuW+n2SCqWhklji9/yQZSxQm0Y8/HrWC2sICrxOzbx1hAbBYBVYlNH3qY
+        QGxeAUuJQ3/PQ9mCEidnPgGq4eBgFtCTaNvICBJmFpCX2P52DjPERQoSP58uAztCRMBK4uWC
+        eVA14hJHf/YwT2AUmoVk0iyESbOQTJqFpGMBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS9
+        5PzcTYzg2NLS2sG4Z9UHvUOMTByMhxglOJiVRHhbMnfGCfGmJFZWpRblxxeV5qQWH2KU5mBR
+        Euf9OmthnJBAemJJanZqakFqEUyWiYNTqoFpn5ZaAduqovV9K1iKDkoJXHdf+Shu6b2fDwRs
+        tv21OXFLwaflkNUK7gcv3X1lrT9Jpp5xOzxvlb67Mlv88VeN3D2d9b2XU0WOeRpsVXa04zG8
+        euVcRNIVu7V/l1VvWXh3l9Rf9RUC0RUSYeKMU2umfJr0Ye3rpk8iXjN+zneemJjy7/DqYyvE
+        asyzK2Qa3sjzv1R6pmyv2GAeZWg6NXTHQWH2J0/XeuiYhe7r5gk3XXQxe8aP2zWL6i7XSAYK
+        5gn17nTcLr+m4MiqCasT3Ffmc6nsWavrGrHhAmvsU+PUO7d45ompcOcWf1BhXbllUs/hY9cE
+        6m/eP7hF/ueJeANbswdKxZN8zjJbz9U9sMdJiaU4I9FQi7moOBEArIs2DBwDAAA=
+X-CMS-MailID: 20200511171934epcas5p3d2a352c98597f5e2fb675335f44045e8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200511083406epcas5p18e835634e60f362dc408d73886aa5563
+References: <CGME20200511083406epcas5p18e835634e60f362dc408d73886aa5563@epcas5p1.samsung.com>
+        <20200511083348.7577-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry I forgot to label this as v5 in the subject line.
+Hello Krzysztof,
+Thanks for the patch.
 
---
-Qais Yousef
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: 11 May 2020 14:04
+> To: Jonathan Cameron <jic23@kernel.org>; Hartmut Knaack
+> <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>; Peter Meerwald-
+> Stadler <pmeerw@pmeerw.net>; Kukjin Kim <kgene@kernel.org>; Krzysztof
+> Kozlowski <krzk@kernel.org>; linux-iio@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Cc: Alim Akhtar <alim.akhtar@samsung.com>
+> Subject: [PATCH] iio: adc: exynos: Simplify Exynos7-specific init
+> 
+> The Exynos7-specific code bits in ADC driver do not play with PHY:
+> the field exynos_adc_data.needs_adc_phy is not set in exynos7_adc_data
+> instance.  Therefore the initialization code does not have to check if it
+is true.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested on exynos7-espresso board so,
+Tested-by:  Alim Akhtar <alim.akhtar@samsung.com>
 
-On 05/11/20 16:40, Qais Yousef wrote:
-> RT tasks by default run at the highest capacity/performance level. When
-> uclamp is selected this default behavior is retained by enforcing the
-> requested uclamp.min (p->uclamp_req[UCLAMP_MIN]) of the RT tasks to be
-> uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
-> value.
-> 
-> This is also referred to as 'the default boost value of RT tasks'.
-> 
-> See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
-> 
-> On battery powered devices, it is desired to control this default
-> (currently hardcoded) behavior at runtime to reduce energy consumed by
-> RT tasks.
-> 
-> For example, a mobile device manufacturer where big.LITTLE architecture
-> is dominant, the performance of the little cores varies across SoCs, and
-> on high end ones the big cores could be too power hungry.
-> 
-> Given the diversity of SoCs, the new knob allows manufactures to tune
-> the best performance/power for RT tasks for the particular hardware they
-> run on.
-> 
-> They could opt to further tune the value when the user selects
-> a different power saving mode or when the device is actively charging.
-> 
-> The runtime aspect of it further helps in creating a single kernel image
-> that can be run on multiple devices that require different tuning.
-> 
-> Keep in mind that a lot of RT tasks in the system are created by the
-> kernel. On Android for instance I can see over 50 RT tasks, only
-> a handful of which created by the Android framework.
-> 
-> To control the default behavior globally by system admins and device
-> integrators, introduce the new sysctl_sched_uclamp_util_min_rt_default
-> to change the default boost value of the RT tasks.
-> 
-> I anticipate this to be mostly in the form of modifying the init script
-> of a particular device.
-> 
-> Whenever the new default changes, it'd be applied lazily on the next
-> opportunity the scheduler needs to calculate the effective uclamp.min
-> value for the task, assuming that it still uses the system default value
-> and not a user applied one.
-> 
-> Tested on Juno-r2 in combination with the RT capacity awareness [1].
-> By default an RT task will go to the highest capacity CPU and run at the
-> maximum frequency, which is particularly energy inefficient on high end
-> mobile devices because the biggest core[s] are 'huge' and power hungry.
-> 
-> With this patch the RT task can be controlled to run anywhere by
-> default, and doesn't cause the frequency to be maximum all the time.
-> Yet any task that really needs to be boosted can easily escape this
-> default behavior by modifying its requested uclamp.min value
-> (p->uclamp_req[UCLAMP_MIN]) via sched_setattr() syscall.
-> 
-> [1] 804d402fb6f6: ("sched/rt: Make RT capacity-aware")
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Jonathan Corbet <corbet@lwn.net>
-> CC: Juri Lelli <juri.lelli@redhat.com>
-> CC: Vincent Guittot <vincent.guittot@linaro.org>
-> CC: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: Ben Segall <bsegall@google.com>
-> CC: Mel Gorman <mgorman@suse.de>
-> CC: Luis Chamberlain <mcgrof@kernel.org>
-> CC: Kees Cook <keescook@chromium.org>
-> CC: Iurii Zaikin <yzaikin@google.com>
-> CC: Quentin Perret <qperret@google.com>
-> CC: Valentin Schneider <valentin.schneider@arm.com>
-> CC: Patrick Bellasi <patrick.bellasi@matbug.net>
-> CC: Pavan Kondeti <pkondeti@codeaurora.org>
-> CC: linux-doc@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> CC: linux-fsdevel@vger.kernel.org
 > ---
 > 
-> Changes in v5 (all from Patrick):
-> 	* Remove use of likely/unlikely
-> 	* Use short hand variable for sysctl_sched_uclamp_util_min_rt_default
-> 	* Combine if conditions that checks for errors when setting
-> 	  sysctl_sched_uclamp_util_min_rt_default
-> 	* Fit a comment in a single line
+> Only build tested.
+> ---
+>  drivers/iio/adc/exynos_adc.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> v4 discussion:
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index
+> 22131a677445..219c8eb32d16 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -449,9 +449,6 @@ static void exynos_adc_exynos7_init_hw(struct
+> exynos_adc *info)  {
+>  	u32 con1, con2;
 > 
-> https://lore.kernel.org/lkml/20200501114927.15248-1-qais.yousef@arm.com/
-> 
->  include/linux/sched/sysctl.h |  1 +
->  kernel/sched/core.c          | 63 +++++++++++++++++++++++++++++++-----
->  kernel/sysctl.c              |  7 ++++
->  3 files changed, 63 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> index d4f6215ee03f..e62cef019094 100644
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -59,6 +59,7 @@ extern int sysctl_sched_rt_runtime;
->  #ifdef CONFIG_UCLAMP_TASK
->  extern unsigned int sysctl_sched_uclamp_util_min;
->  extern unsigned int sysctl_sched_uclamp_util_max;
-> +extern unsigned int sysctl_sched_uclamp_util_min_rt_default;
->  #endif
->  
->  #ifdef CONFIG_CFS_BANDWIDTH
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 9a2fbf98fd6f..ea1e11db78bb 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -790,6 +790,26 @@ unsigned int sysctl_sched_uclamp_util_min = SCHED_CAPACITY_SCALE;
->  /* Max allowed maximum utilization */
->  unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
->  
-> +/*
-> + * By default RT tasks run at the maximum performance point/capacity of the
-> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-> + * SCHED_CAPACITY_SCALE.
-> + *
-> + * This knob allows admins to change the default behavior when uclamp is being
-> + * used. In battery powered devices, particularly, running at the maximum
-> + * capacity and frequency will increase energy consumption and shorten the
-> + * battery life.
-> + *
-> + * This knob only affects RT tasks that their uclamp_se->user_defined == false.
-> + *
-> + * This knob will not override the system default sched_util_clamp_min defined
-> + * above.
-> + *
-> + * Any modification is applied lazily on the next attempt to calculate the
-> + * effective value of the task.
-> + */
-> +unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
-> +
->  /* All clamps are required to be less or equal than these values */
->  static struct uclamp_se uclamp_default[UCLAMP_CNT];
->  
-> @@ -872,6 +892,28 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
->  	return uclamp_idle_value(rq, clamp_id, clamp_value);
->  }
->  
-> +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
-> +						   enum uclamp_id clamp_id)
-> +{
-> +	unsigned int default_util_min = sysctl_sched_uclamp_util_min_rt_default;
-> +	struct uclamp_se *uc_se;
-> +
-> +	/* Only sync for UCLAMP_MIN and RT tasks */
-> +	if (clamp_id != UCLAMP_MIN || !rt_task(p))
-> +		return;
-> +
-> +	uc_se = &p->uclamp_req[UCLAMP_MIN];
-> +
-> +	/*
-> +	 * Only sync if user didn't override the default request and the sysctl
-> +	 * knob has changed.
-> +	 */
-> +	if (uc_se->user_defined || uc_se->value == default_util_min)
-> +		return;
-> +
-> +	uclamp_se_set(uc_se, default_util_min, false);
-> +}
-> +
->  static inline struct uclamp_se
->  uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
->  {
-> @@ -907,8 +949,13 @@ uclamp_tg_restrict(struct task_struct *p, enum uclamp_id clamp_id)
->  static inline struct uclamp_se
->  uclamp_eff_get(struct task_struct *p, enum uclamp_id clamp_id)
->  {
-> -	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
-> -	struct uclamp_se uc_max = uclamp_default[clamp_id];
-> +	struct uclamp_se uc_req, uc_max;
-> +
-> +	/* Sync up any change to sysctl_sched_uclamp_util_min_rt_default. */
-> +	uclamp_sync_util_min_rt_default(p, clamp_id);
-> +
-> +	uc_req = uclamp_tg_restrict(p, clamp_id);
-> +	uc_max = uclamp_default[clamp_id];
->  
->  	/* System default restrictions always apply */
->  	if (unlikely(uc_req.value > uc_max.value))
-> @@ -1114,12 +1161,13 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  				loff_t *ppos)
->  {
->  	bool update_root_tg = false;
-> -	int old_min, old_max;
-> +	int old_min, old_max, old_min_rt;
->  	int result;
->  
->  	mutex_lock(&uclamp_mutex);
->  	old_min = sysctl_sched_uclamp_util_min;
->  	old_max = sysctl_sched_uclamp_util_max;
-> +	old_min_rt = sysctl_sched_uclamp_util_min_rt_default;
->  
->  	result = proc_dointvec(table, write, buffer, lenp, ppos);
->  	if (result)
-> @@ -1128,7 +1176,9 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  		goto done;
->  
->  	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
-> -	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE) {
-> +	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE		||
-> +	    sysctl_sched_uclamp_util_min_rt_default > SCHED_CAPACITY_SCALE) {
-> +
->  		result = -EINVAL;
->  		goto undo;
->  	}
-> @@ -1158,6 +1208,7 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->  undo:
->  	sysctl_sched_uclamp_util_min = old_min;
->  	sysctl_sched_uclamp_util_max = old_max;
-> +	sysctl_sched_uclamp_util_min_rt_default = old_min_rt;
->  done:
->  	mutex_unlock(&uclamp_mutex);
->  
-> @@ -1200,10 +1251,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
->  		if (uc_se->user_defined)
->  			continue;
->  
-> -		/* By default, RT tasks always get 100% boost */
-> -		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-> -			clamp_value = uclamp_none(UCLAMP_MAX);
+> -	if (info->data->needs_adc_phy)
+> -		regmap_write(info->pmu_map, info->data->phy_offset, 1);
 > -
->  		uclamp_se_set(uc_se, clamp_value, false);
->  	}
->  
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8727a3..64117363c502 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -453,6 +453,13 @@ static struct ctl_table kern_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= sysctl_sched_uclamp_handler,
->  	},
-> +	{
-> +		.procname	= "sched_util_clamp_min_rt_default",
-> +		.data		= &sysctl_sched_uclamp_util_min_rt_default,
-> +		.maxlen		= sizeof(unsigned int),
-> +		.mode		= 0644,
-> +		.proc_handler	= sysctl_sched_uclamp_handler,
-> +	},
->  #endif
->  #ifdef CONFIG_SCHED_AUTOGROUP
->  	{
-> -- 
-> 2.17.1
+>  	con1 = ADC_V2_CON1_SOFT_RESET;
+>  	writel(con1, ADC_V2_CON1(info->regs));
 > 
+> --
+> 2.17.1
+
+
