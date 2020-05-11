@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E202C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B67FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3C120746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588082080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="IONh+Dpn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="lGEfjqd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgEKPI2 (ORCPT
+        id S1730302AbgEKPIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
+        Mon, 11 May 2020 11:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730229AbgEKPI1 (ORCPT
+        by vger.kernel.org with ESMTP id S1730274AbgEKPI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:08:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AAEC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s8so11414359wrt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:26 -0700 (PDT)
+        Mon, 11 May 2020 11:08:28 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34113C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:28 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l18so11400219wrn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=IONh+DpnmejFuXALAwr/I/OjxLG9/eNbjfLpyONcGQibovX8pI46VIZgC9xXwCv98H
-         Ky9NUKjT2vd6Ug4cS8NQuuG/ijvNN86K2vpP/v5IdxeXFOrdi9TwLnprkwDDJXsKFnuw
-         /vRoJJX2IslmnZxnrfWaBBRCyW1JbduGoxT58Yx/n3jOInNrLcgpirPWOVnp07i32Q7+
-         vjHPKCdqY5TRz9Krgcho0oar/Ep/f5M5qDpMJgBk88UWDXbKxzhxsOeSaIA8vbRlD2Eo
-         XUzGSDPMVx702v2gEp1ifsTebqSwhxEbem43H0bhsSH+4P7qfxv5J+IWtyUaPlnHxjuF
-         Fq9Q==
+        bh=TLMq2XwRgUC25FFpg44rE1jATuYcYABivRm1tKC5XTM=;
+        b=lGEfjqd/Aqo91nNbYHQC/XXhvPNRro/VrpfSU0EKrgUiO5UJ0lZXxyaNjy0vwymwSb
+         uxwP22CTUu7BkW2bIoeK3qhHOwvoFsYhIhZngMUlHLW4GZlrj2EaI2Od7rJuyEum2hPJ
+         mOOddMd5+KhA4BsHVTsFc1TO02ZsDR/PDJsjrmcYeCSNntHIyaYLDAKJYR4kDyHYUkdo
+         fa8cnqPq4/GDF/sZDgDOT2ZTLehxieagSqPBErq+zM756mvMYXQKGiraMxfd2vT4/Pq4
+         A/Z1mAM/jRHFEXGLC9eB34BPWmePWBU9/Ou4b7W0qT+98gs2/rruU5IXXYcZJR3Y5Amy
+         Dh+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=YX/CMlc9Sl7ss5/yc5aEz1/1xoMOEUD1W/8PUUTEU7IYd1iCysb+qbdVDcDWwN5ybv
-         Z1WqTObR0TtKhapm78y8aSM5ipIfTO4KxM3IRS43yZWX8gjEQPY02aM4tTCeeS22lpjh
-         ceuBKxYeg9O2PbX3WqhaWRWIVPRBOOKW8S1uDugQawvd0Z0jcCuzrUH5YCP0u9ee3vjs
-         bPq7BiSPWFfvrP8AG1aH+sw4Rm7R8w4gQkQly0mCoFr0ozH0J9WdO+c4IOfcOkw4Fsc2
-         aFshQ3kdrpLrxJE3vLg4JYDg4JH+961KrOIkmqFL8BG9/2a+ymoLPEDB4sneq1im8upQ
-         r8TQ==
-X-Gm-Message-State: AGi0PuZW96U2KVzyHj5T1OI+wfBH9w2nguFFl7+YbmdUTRmOLt//Sm9d
-        26iMPv1uTVXZQst/OKm6LoEPVjU6RXk=
-X-Google-Smtp-Source: APiQypIP0Bn3KOIOBxC1UBNqcqDai8qWfKN8IcFL5zqV14Hb8VXZDCZKqkzaVDqG/Ivki43uegY3ag==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr8322148wrp.427.1589209705382;
-        Mon, 11 May 2020 08:08:25 -0700 (PDT)
+        bh=TLMq2XwRgUC25FFpg44rE1jATuYcYABivRm1tKC5XTM=;
+        b=UqGF3kO3zEOxHE8dobmQBo+9kboMPkd1iLvOJvYVJc700qJSwvMnqUxyuHPyo3VHqz
+         BaDcZTX4r0w22E1A0XI1QNt3DPZZgDI+i9HlfU6DEcj8fpsgNXtvvDB7kPnErJH3UR1D
+         mDyoibZ28SfwNz7yRgG8uq/U8lQ0FauFTKDnNif+FtCo7qNQWIWqlhH0bOTFICflBJLh
+         L18o0n2cd8H7iZ3x4W2Svg7cTN7i9dDBBod7e48OtOGHg/Aykwah35JwcIr4ocFhOsdd
+         0oktgdu6FxN/ntNkeV+0LV04VBpLXr4vwXWupj4fEFe1z2hM1LHFUuw764fCut/xwXJa
+         sPBg==
+X-Gm-Message-State: AGi0PuYVdo2aRN/8gBE5XHUPPc83oTJaOP+2u583UevJFWH3JTded3HO
+        iCPYccRHaAN+u4/7NzNPCHG4DMK6xHw=
+X-Google-Smtp-Source: APiQypLrstV08k3pPp3S+tVHPnE3B6GnlgxYC6jtUQXLXJtg4uaQOjgd0DZV0NaM/PAy80Q8A9SMbg==
+X-Received: by 2002:a5d:4801:: with SMTP id l1mr18746418wrq.235.1589209706975;
+        Mon, 11 May 2020 08:08:26 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.24
+        by smtp.gmail.com with ESMTPSA id 94sm3514792wrf.74.2020.05.11.08.08.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 08:08:24 -0700 (PDT)
+        Mon, 11 May 2020 08:08:26 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 04/14] net: ethernet: mediatek: remove unnecessary spaces from Makefile
-Date:   Mon, 11 May 2020 17:07:49 +0200
-Message-Id: <20200511150759.18766-5-brgl@bgdev.pl>
+Subject: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+Date:   Mon, 11 May 2020 17:07:50 +0200
+Message-Id: <20200511150759.18766-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200511150759.18766-1-brgl@bgdev.pl>
 References: <20200511150759.18766-1-brgl@bgdev.pl>
@@ -93,25 +93,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The Makefile formatting in the kernel tree usually doesn't use tabs,
-so remove them before we add a second driver.
+Appropriate amount of extra memory for private data is allocated at
+the end of struct net_device. We have a helper - netdev_priv() - that
+returns its address but we don't have the reverse: a function which
+given the address of the private data, returns the address of struct
+net_device.
+
+This has caused many drivers to store the pointer to net_device in
+the private data structure, which basically means storing the pointer
+to a structure in this very structure.
+
+This patch proposes to add priv_to_netdev() - a helper which converts
+the address of the private data to the address of the associated
+net_device.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/ethernet/mediatek/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/netdevice.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/mediatek/Makefile b/drivers/net/ethernet/mediatek/Makefile
-index 2d8362f9341b..3362fb7ef859 100644
---- a/drivers/net/ethernet/mediatek/Makefile
-+++ b/drivers/net/ethernet/mediatek/Makefile
-@@ -3,5 +3,5 @@
- # Makefile for the Mediatek SoCs built-in ethernet macs
- #
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 130a668049ab..933c6808a87f 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2249,6 +2249,18 @@ static inline void *netdev_priv(const struct net_device *dev)
+ 	return (char *)dev + ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
+ }
  
--obj-$(CONFIG_NET_MEDIATEK_SOC)                 += mtk_eth.o
-+obj-$(CONFIG_NET_MEDIATEK_SOC) += mtk_eth.o
- mtk_eth-y := mtk_eth_soc.o mtk_sgmii.o mtk_eth_path.o
++/**
++ *	priv_to_netdev - get the net_device from private data
++ *	@priv: net_device private data
++ *
++ * Get the address of network device associated with this private data.
++ */
++static inline struct net_device *priv_to_netdev(void *priv)
++{
++	priv = (char *)priv - ALIGN(sizeof(struct net_device), NETDEV_ALIGN);
++	return (struct net_device *)priv;
++}
++
+ /* Set the sysfs physical device reference for the network logical device
+  * if set prior to registration will cause a symlink during initialization.
+  */
 -- 
 2.25.0
 
