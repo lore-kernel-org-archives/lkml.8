@@ -2,112 +2,104 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94776C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08760C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D91B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cBDRrTAx"
+	by mail.kernel.org (Postfix) with ESMTP id E96832192A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgEKSPV (ORCPT
+        id S1731086AbgEKSPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:15:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729750AbgEKSPU (ORCPT
+        Mon, 11 May 2020 14:15:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729673AbgEKSPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:15:20 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57E0C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:15:20 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id r25so15931036oij.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y6gpOVSJl7lrYMpPspDPOwT905Iv9urAirQvkpvSx34=;
-        b=cBDRrTAxc8bdQGofdLumcpSo9AwuCBzcdPIo0QyVdeyv8eC2XwFdk9/C9DaJy93D2H
-         0ctUoaoTDj+uAEAg1mlDSfFwoe8DrDSkEAPo3lUXi3ja1ggGr3FS6H/7XtSmroHgXzK/
-         BNXAK8BQtYk+mIP8R0aStsa6gwMJIr6/Jfx6g3vgDE+AAOId8U7hunHhdeKxSYYLqiJV
-         opA8PcVKjLQCXZUlqy0zqM5zOqLvkTl1+l4EmaT4nFKWrGaJ4SN/lT2PvQe+2nXh38k4
-         vZBuqizx6+pBxHyWVdQX92IKT0m7aA0VVI6BB5lrSClUDs6mvT5JbxKGScwaSETSATvL
-         G/Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y6gpOVSJl7lrYMpPspDPOwT905Iv9urAirQvkpvSx34=;
-        b=dCHp7CfqpylOeYRTOhmCvEFnFwY13CAV3urN3UJTRLTJhUnbBOqakIyStNIla/M7SM
-         4uguWzn8cRXoSDr5g3uGme+QoIoMB5IJTTDU47gtIE7AFKLd6mSBkal1czw5Wv5FAcLg
-         WxwxVxPSxIreHJRe6R2ZaX0Xf7gDzG+rse0BiMNklX/wvhGAmYuTsMHWbPH12cp8LLUM
-         DerTRuZU29dVbrzHEcIvDmr88R6FqzTa3jLcRQ+6/iukbdXEbcJweZ2+IWfOYBfaEzRz
-         kiUo1hWtK685Nl40F+cmaJeDBmoqbU95iv4lFg/FEsf+3yHbH7l/vcngNJRfUdOcJzVz
-         bdKA==
-X-Gm-Message-State: AGi0Pub6f9Vjef1KptgZ0mlyd/rfdI7dsjlf31VVVU/5JilsI90/6vJF
-        in160sHdEdmrr1JPeCj8fKI2QZznDBBwz+1+O0l7IM91
-X-Google-Smtp-Source: APiQypJ+PkSA8uenryJETuWW7bHYFLqIga4xeFPZz4MV5587HJ3lvd/ps/KS9pTb3okcz9vlcXOV4qLqP5YNxhBUmmg=
-X-Received: by 2002:aca:3254:: with SMTP id y81mr573964oiy.172.1589220919864;
- Mon, 11 May 2020 11:15:19 -0700 (PDT)
+        Mon, 11 May 2020 14:15:21 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BI5q4g194657;
+        Mon, 11 May 2020 14:15:18 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30yaeja9ke-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 14:15:18 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BI1Bq5021203;
+        Mon, 11 May 2020 18:15:15 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 30wm55mvve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 18:15:15 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BIFDiq56361002
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 18:15:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C40F52052;
+        Mon, 11 May 2020 18:15:13 +0000 (GMT)
+Received: from [9.199.34.77] (unknown [9.199.34.77])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1DE4852063;
+        Mon, 11 May 2020 18:15:10 +0000 (GMT)
+Subject: Re: [PATCH] perf powerpc: Don't ignore sym-handling.c file
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, acme@kernel.org
+Cc:     leo.yan@linaro.org, jolsa@kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
+References: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+From:   Sandipan Das <sandipan@linux.ibm.com>
+Message-ID: <88066ce0-f586-b88d-75b5-2706684818d7@linux.ibm.com>
+Date:   Mon, 11 May 2020 23:45:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200511151334.362-1-srinivas.kandagatla@linaro.org> <20200511151334.362-2-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200511151334.362-2-srinivas.kandagatla@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 11 May 2020 11:14:44 -0700
-Message-ID: <CAGETcx8+khWkCUffwWqHit1c-koKFqLKJbRZTF_ZnDX=srJ=pg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] slimbus: core: Set fwnode for a device when setting of_node
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_08:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ priorityscore=1501 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ impostorscore=0 spamscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 8:13 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> From: Saravana Kannan <saravanak@google.com>
->
-> When setting the of_node for a newly created device, also set the
-> fwnode. This allows fw_devlink feature to work for slimbus devices.
->
-> Also, remove some unnecessary NULL checks. The functions in question
-> already do NULL checks.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> [Srini: removed unnecessary NULL check from other patch]
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+On 09/05/20 4:51 pm, Ravi Bangoria wrote:
+> Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+> removed powerpc specific sym-handling.c file from Build. This wasn't
+> caught by build CI because all functions in this file are declared
+> as __weak in common code. Fix it.
+> 
+> Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+> Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 > ---
->  drivers/slimbus/core.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
-> index 526e3215d8fe..1f3beee74fdf 100644
-> --- a/drivers/slimbus/core.c
-> +++ b/drivers/slimbus/core.c
-> @@ -162,9 +162,8 @@ static int slim_add_device(struct slim_controller *ctrl,
->         sbdev->ctrl = ctrl;
->         INIT_LIST_HEAD(&sbdev->stream_list);
->         spin_lock_init(&sbdev->stream_list_lock);
-> -
-> -       if (node)
-> -               sbdev->dev.of_node = of_node_get(node);
-> +       sbdev->dev.of_node = of_node_get(node);
-> +       sbdev->dev.fwnode = of_fwnode_handle(node);
->
->         dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
->                                   sbdev->e_addr.manf_id,
-> --
-> 2.21.0
+>  tools/perf/arch/powerpc/util/Build | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+> index e5c9504f8586..e86e210bf514 100644
+> --- a/tools/perf/arch/powerpc/util/Build
+> +++ b/tools/perf/arch/powerpc/util/Build
+> @@ -2,6 +2,7 @@ perf-y += header.o
+>  perf-y += kvm-stat.o
+>  perf-y += perf_regs.o
+>  perf-y += mem-events.o
+> +perf-y += sym-handling.o
+>  
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_DWARF) += skip-callchain-idx.o
+> 
 
-The edits look fine to me.
+Thanks for fixing this!
 
--Saravana
+Acked-by: Sandipan Das <sandipan@linux.ibm.com>
