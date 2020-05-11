@@ -2,303 +2,178 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93743C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5181DC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56C602070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA312070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:03:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbeMsNET"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QfzYDsuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbgEKRCy (ORCPT
+        id S1730874AbgEKRDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730835AbgEKRCw (ORCPT
+        Mon, 11 May 2020 13:03:12 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:34973 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730862AbgEKRDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:02:52 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1FEC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id i19so10543083ioh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
-        b=tbeMsNETXaEX3eJAcNRFx55zA4c6oWWywXJTG0m9Laj8pgKvsqI7TxoQJ64X4vE4z1
-         KA3IuRAIIjUJrjr3WjqA24MmwomMG4cu4cWAni3plBKjfwhrJxPfbLuO9m1FjoAf6c2V
-         tNwkuMMNnJOXVORPh8uuO8jvnKUOsmiy8jjjP4G8ZvPYf3udSJVnLdWmuCJoz2u0yxMi
-         +oIituEo72EEqvu9+Pa+GXdkvq/PgDg2nH8Gt73tTw2l/vZacrGPtfkJoLRPxzDERdkD
-         BYVqxGGvUD8JSOma+Kr/PXclcfjnUHDrFgS/59PETBSkayfVQEvNfaTrCfIDG18RKAec
-         dwYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
-        b=ARmAp1kCZII95JRjinD6nWku7irBgIH3Js920+oFXg2gpsuvWf5tdDyKnZTEzPhEo8
-         j7sBJFiuq5wKI2sSdwhLVZsNz4Bsd5T3yTsvhwTP2mNAJWma1xM0bNv48Q1Q4KVWfh7K
-         Sc4a9JZl7BYSJDWrWBwtbbthxXibmqFNcsdo1XF6gDZrn3cZS+XcEklL2mA3vWWAfk7s
-         7oGr+oEzT7+rX7PbWHYnVobGhgcWQptElrpPP3M/YGIY/HqjrKAh6OVu2pCdV3morDg3
-         4qD7p75TMCK+IkSBxOPmXbAzKof+WFBzETgcoOqXcv1XaFW+YaVbP4W21gGSoWnXoOr1
-         cHwA==
-X-Gm-Message-State: AGi0PuYrpsaZ2jx3i5Lc1vsQWLI385WxZ5hUkvjqOcbfHGqjR3Q8yE4r
-        ojnYeIENWPwg3/CvGqKglpA0keNQnT3wkkIQXnjZ
-X-Google-Smtp-Source: APiQypIzyhjcdRL5OT7UxMCqUNX1Cf2+MX0zMCcjnimWF5EBRCR6JtPmcD8rSAVKspTwViI94ganHU9wtPVKGKmx8k0=
-X-Received: by 2002:a6b:dd06:: with SMTP id f6mr12960070ioc.90.1589216571449;
- Mon, 11 May 2020 10:02:51 -0700 (PDT)
+        Mon, 11 May 2020 13:03:11 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200511170308epoutp02a22f7eff04b658b522f211a81adbff77~OCBEk3lh22777427774epoutp02Y
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:03:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200511170308epoutp02a22f7eff04b658b522f211a81adbff77~OCBEk3lh22777427774epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589216588;
+        bh=BP0GmkEpYQ0GqUiqdlf5eptimMZ4Tdy6/dykKqQWuFk=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=QfzYDsuGy0FFWKAR1Xhv521BmsBSBmvheot3+SL/IbWwAAxXJ6M34sY8wfBlpiThf
+         Llmw1DMR8kd/L89xqwDREEiN4QWPQq7GdyLwANj+KAGYhvHG0bWzMgfDNOuOvH81Rq
+         WVNJJFv0nby7XVhEsBMJ6UXCDAcWS0UGcrZ8d2C8=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200511170306epcas5p2f9e34c776e0e46842b8fca5083b1680c~OCBDa8vHz1696616966epcas5p2-;
+        Mon, 11 May 2020 17:03:06 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F3.B7.10010.A4589BE5; Tue, 12 May 2020 02:03:06 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200511170306epcas5p3ccb24e93409e22c01cee3ca2146c4b57~OCBCv-6u91934419344epcas5p3i;
+        Mon, 11 May 2020 17:03:06 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200511170306epsmtrp2a470c7712dd96f0d23d86cc9d0ba2679~OCBCvK9C-0054600546epsmtrp2d;
+        Mon, 11 May 2020 17:03:06 +0000 (GMT)
+X-AuditID: b6c32a49-71fff7000000271a-32-5eb9854ae6f0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        42.0D.18461.A4589BE5; Tue, 12 May 2020 02:03:06 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200511170302epsmtip2950973488d6edc7e8639c79cda388b1c~OCA-aWL8_3019230192epsmtip2f;
+        Mon, 11 May 2020 17:03:02 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Randy Dunlap'" <rdunlap@infradead.org>, <robh@kernel.org>
+Cc:     <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <krzk@kernel.org>, <avri.altman@wdc.com>,
+        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <80a387eb-2325-caab-6754-6d94daeeabac@infradead.org>
+Subject: RE: [PATCH v8 09/10] scsi: ufs-exynos: add UFS host support for
+ Exynos SoCs
+Date:   Mon, 11 May 2020 22:33:00 +0530
+Message-ID: <036901d627b6$09da7050$1d8f50f0$@samsung.com>
 MIME-Version: 1.0
-References: <20200504110344.17560-1-eesposit@redhat.com> <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
- <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
-In-Reply-To: <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
-From:   Jonathan Adams <jwadams@google.com>
-Date:   Mon, 11 May 2020 10:02:14 -0700
-Message-ID: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIr/+V/dIQXVbOwuFE2pmdpRHTClQGDb/BuAb5g8twBywnFG6fPBS1A
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPKsWRmVeSWpSXmKPExsWy7bCmhq5X6844g/MTTC1e/rzKZvFp/TJW
+        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8XbO9NZLP7v2cFu
+        sXTrTUYHXo/Lfb1MHptXaHlsWtXJ5rF5Sb1Hy8n9LB4fn95i8ejbsorR4/MmOY/2A91MAZxR
+        XDYpqTmZZalF+nYJXBkLW9cwF3TzVfR3X2dqYNzN3cXIySEhYCIxYUoPSxcjF4eQwG5GiUOL
+        pzNCOJ8YJfa8n8EM4XxjlHh2azErTMuxv5/YIBJ7GSV+H38A1fKGUWLqssWMIFVsAroSOxa3
+        sYHYIgL2EgfnnAYrYhY4ziTxuOMWE0iCU8BR4szKNWC2sECYxMUfz4H2cXCwCKhK3H8lBhLm
+        FbCU+PR0CQuELShxcuYTMJtZQFti2cLXzBAXKUj8fLqMFWKXm8TSGSeYIGrEJY7+7AF7QULg
+        BofE60VHoV5wkfgxcy8jhC0s8er4FnYIW0ri87u9bCA3SAhkS/TsMoYI10gsnXeMBcK2lzhw
+        ZQ4LSAmzgKbE+l36EKv4JHp/P2GC6OSV6GgTgqhWlWh+dxWqU1piYnc31AEeEu1fPzFNYFSc
+        heSxWUgem4XkgVkIyxYwsqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOc1qeOxjv
+        Pvigd4iRiYPxEKMEB7OSCG9L5s44Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4ryn07bECQmkJ5ak
+        ZqemFqQWwWSZODilGpj0ZW/pzVz3a51+VH/zmV/3/n826DkW66V+ZX5l9D7eh/ZfbaNfVt5s
+        yz7Iuq6+6DD7nx9Tc1SYp7GnO9y+1Jl1YNb3F3uOKXcJslQr1DNdSNK1nd3+s6Lwf0/Ijdup
+        BfH2OuYz/xye3XIh7TnPbKeXIUeX8H22Uw0JEl5RcfbFsY1/TotzMGpwnezgbf31NO7UvMXl
+        ho1/1xzvXP8oXHP5ptbF3AtrfGd+XC/9XrJJ+YmL3U/FQI091+dOY7tZdkAgO4PZ8L2IhLjH
+        xLlxL2ykXimorM3bv6aJgzVZqil48m7pp/8PnfilPzPVm9///x3plk8n97qKCzA2PylpCL6e
+        e4n7z1aDvlCl84k+39YqsRRnJBpqMRcVJwIAx990ReIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSvK5X6844g5XP2Cxe/rzKZvFp/TJW
+        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8XbO9NZLP7v2cFu
+        sXTrTUYHXo/Lfb1MHptXaHlsWtXJ5rF5Sb1Hy8n9LB4fn95i8ejbsorR4/MmOY/2A91MAZxR
+        XDYpqTmZZalF+nYJXBmHrnezFlznrVj2kb+BsZm7i5GTQ0LAROLY309sXYxcHEICuxkl/m46
+        xwyRkJa4vnECO4QtLLHy33N2iKJXjBI3vy8HS7AJ6ErsWNzGBmKLCDhK7N/wmxmkiFngMpPE
+        kTcvoMZ+ZZS4vuIZK0gVJ1DVmZVrmEBsYYEQiXnd84AmcXCwCKhK3H8lBhLmFbCU+PR0CQuE
+        LShxcuYTMJtZQFui92ErI4y9bOFrqEsVJH4+XcYKcYSbxNIZJ5ggasQljv7sYZ7AKDwLyahZ
+        SEbNQjJqFpKWBYwsqxglUwuKc9Nziw0LDPNSy/WKE3OLS/PS9ZLzczcxguNVS3MH4/ZVH/QO
+        MTJxMB5ilOBgVhLhbcncGSfEm5JYWZValB9fVJqTWnyIUZqDRUmc90bhwjghgfTEktTs1NSC
+        1CKYLBMHp1QDU8DFNVtTXtyWPbN1rcz0x0uP9fNXqFlVZU15n8fydd/Vtflv1cpTua91Te/n
+        DXL6YiDp8G/i2dxnkwVytTjXNZmuOme+9/fGPwXHuBuVlWf6/q27IlmasVJpWWLw8u4Hie5V
+        3rLpS7dG26if2CodOr37lu6N53E15z8sUuS2O6Ks6LSQu+f7Hv41VgXScm7ubHd1zgTkN+2b
+        +uzFB4O3UoY3+zh5VVe9YdZR0NOR1Azu/5u2qL2jZeklexHd22+2cop++PZvttnk9i3T1qQZ
+        lx6/YBRRVSMWH2DSV1XU6HuheEF2muHCztkvXgiaLvD/wma154iEatDP18q/L9wXYN5t97Ev
+        bzZv1r7DV+IDlViKMxINtZiLihMBNDT9sEYDAAA=
+X-CMS-MailID: 20200511170306epcas5p3ccb24e93409e22c01cee3ca2146c4b57
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200511021409epcas5p3b78fe59669f13ffae481b57a944da675
+References: <20200511020031.25730-1-alim.akhtar@samsung.com>
+        <CGME20200511021409epcas5p3b78fe59669f13ffae481b57a944da675@epcas5p3.samsung.com>
+        <20200511020031.25730-10-alim.akhtar@samsung.com>
+        <80a387eb-2325-caab-6754-6d94daeeabac@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 2:44 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> [Answering for Emanuele because he's not available until Monday]
->
-> On 07/05/20 19:45, Jonathan Adams wrote:
-> > This is good work.  As David Rientjes mentioned, I'm currently investigating
-> > a similar project, based on a google-internal debugfs-based FS we call
-> > "metricfs".  It's
-> > designed in a slightly different fashion than statsfs here is, and the
-> > statistics exported are
-> > mostly fed into our OpenTelemetry-like system.  We're motivated by
-> > wanting an upstreamed solution, so that we can upstream the metrics we
-> > create that are of general interest, and lower the overall rebasing
-> > burden for our tree.
->
-> Cool.  We included a public reading API exactly so that there could be
-> other "frontends".  I was mostly thinking of BPF as an in-tree user, but
-> your metricfs could definitely use the reading API.
->
-> >  - the 8/16/32/64 signed/unsigned integers seems like a wart, and the
-> > built-in support to grab any offset from a structure doesn't seem like
-> > much of an advantage. A simpler interface would be to just support an> "integer" (possibly signed/unsigned) type, which is always 64-bit, and
-> > allow the caller to provide a function pointer to retrieve the value,
-> > with one or two void *s cbargs.  Then the framework could provide an
-> > offset-based callback (or callbacks) similar to the existing
-> > functionality, and a similar one for per-CPU based statistics.  A
-> > second "clear" callback could be optionally provided to allow for
-> > statistics to be cleared, as in your current proposal.
->
-> Ok, so basically splitting get_simple_value into many separate
-> callbacks.  The callbacks would be in a struct like
->
-> struct stats_fs_type {
->         uint64_t (*get)(struct stats_fs_value *, void *);
->         void (*clear)(struct stats_fs_value *, void *);
->         bool signed;
-> }
-...
-> struct stats_fs_type stats_fs_type_u8 = {
->         stats_fs_get_u8,
->         stats_fs_clear_u8,
->         false
-> };
->
-> and custom types can be defined using "&(struct stats_fs_type) {...}".
+Hi Randy
 
-That makes sense.
-
-> >  - Beyond the statistic's type, one *very* useful piece of metadata
-> > for telemetry tools is knowing whether a given statistic is
-> > "cumulative" (an unsigned counter which is only ever increased), as
-> > opposed to a floating value (like "amount of memory used").
->
-> Good idea.  Also, clearing does not make sense for a floating value, so
-> we can use cumulative/floating to get a default for the mode: KVM
-> statistics for example are mostly cumulative and mode 644, except a few
-> that are floating and those are all mode 444.  Therefore it makes sense
-> to add cumulative/floating even before outputting it as metadata.
->
-> > I'm more
-> > concerned with getting the statistics model and capabilities right
-> > from the beginning, because those are harder to adjust later.
->
-> Agreed.
->
-> > 1. Each metricfs metric can have one or two string or integer "keys".
-> > If these exist, they expand the metric from a single value into a
-> > multi-dimensional table. For example, we use this to report a hash
-> > table we keep of functions calling "WARN()", in a 'warnings'
-> > statistic:
+> -----Original Message-----
+> From: Randy Dunlap <rdunlap=40infradead.org>
+> Sent: 11 May 2020 08:43
+> To: Alim Akhtar <alim.akhtar=40samsung.com>; robh=40kernel.org
+> Cc: devicetree=40vger.kernel.org; linux-scsi=40vger.kernel.org; krzk=40ke=
+rnel.org;
+> avri.altman=40wdc.com; martin.petersen=40oracle.com;
+> kwmad.kim=40samsung.com; stanley.chu=40mediatek.com;
+> cang=40codeaurora.org; linux-samsung-soc=40vger.kernel.org; linux-arm-
+> kernel=40lists.infradead.org; linux-kernel=40vger.kernel.org
+> Subject: Re: =5BPATCH v8 09/10=5D scsi: ufs-exynos: add UFS host support =
+for Exynos
+> SoCs
+>=20
+> On 5/10/20 7:00 PM, Alim Akhtar wrote:
+> > diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig index
+> > e2005aeddc2d..cc7e29c8c24f 100644
+> > --- a/drivers/scsi/ufs/Kconfig
+> > +++ b/drivers/scsi/ufs/Kconfig
+> > =40=40 -160,3 +160,15 =40=40 config SCSI_UFS_BSG
 > >
-> > % cat .../warnings/values
-> > x86_pmu_stop 1
-> > %
-> >
-> > Indicates that the x86_pmu_stop() function has had a WARN() fire once
-> > since the system was booted.  If multiple functions have fired
-> > WARN()s, they are listed in this table with their own counts. [1]  We
-> > also use these to report per-CPU counters on a CPU-by-CPU basis:
-> >
-> > % cat .../irq_x86/NMI/values
-> > 0 42
-> > 1 18
-> > ... one line per cpu
-> > % cat .../rx_bytes/values
-> > lo 501360681
-> > eth0 1457631256
->
-> These seem like two different things.
+> >  	  Select this if you need a bsg device node for your UFS controller.
+> >  	  If unsure, say N.
+> > +
+> > +config SCSI_UFS_EXYNOS
+> > +	bool =22EXYNOS specific hooks to UFS controller platform driver=22
+> > +	depends on SCSI_UFSHCD_PLATFORM && ARCH_EXYNOS =7C=7C
+> COMPILE_TEST
+>=20
+> Since && has higher precedence than =7C=7C, I am thinking that this shoul=
+d be
+>=20
+> 	depends on SCSI_UFSHCD_PLATFORM && (ARCH_EXYNOS =7C=7C
+> COMPILE_TEST)
+>=20
+Sure, I missed this, will add in next version.
 
-I see your point; I agree that there are two different things here.
+> > +	select PHY_SAMSUNG_UFS
+> > +	help
+> > +	  This selects the EXYNOS specific additions to UFSHCD platform drive=
+r.
+> > +	  UFS host on EXYNOS includes HCI and UNIPRO layer, and associates
+> with
+> > +	  UFS-PHY driver.
+> > +
+> > +	  Select this if you have UFS host controller on EXYNOS chipset.
+> > +	  If unsure, say N.
+>=20
+>=20
+> --
+> =7ERandy
 
-> The percpu and per-interface values are best represented as subordinate
-> sources, one per CPU and one per interface.  For interfaces I would just
-> use a separate directory, but it doesn't really make sense for CPUs.  So
-> if we can cater for it in the model, it's better.  For example:
->
-> - add a new argument to statsfs_create_source and statsfs_create_values
-> that makes it not create directories and files respectively.
->
-> - add a new "aggregate function" STATS_FS_LIST that directs the parent
-> to build a table of all the simple values below it
->
-> We can also add a helper statsfs_add_values_percpu that creates a new
-> source for each CPU, I think.
 
-I think I'd characterize this slightly differently; we have a set of
-statistics which are essentially "in parallel":
-
-  - a variety of statistics, N CPUs they're available for, or
-  - a variety of statistics, N interfaces they're available for.
-  - a variety of statistics, N kvm object they're available for.
-
-Recreating a parallel hierarchy of statistics any time we add/subtract
-a CPU or interface seems like a lot of overhead.  Perhaps a better
-model would
-be some sort of "parameter enumn" (naming is hard; parameter set?), so
-when a CPU/network interface/etc is added you'd add its ID to the
-"CPUs" we know about, and at removal time you'd take it out; it would
-have an associated cbarg for the value getting callback.
-
-Does that make sense as a design?
-
-I'm working on characterizing all of our metricfs usage; I'll see if
-this looks like it mostly covers our usecases.
-
-> The warnings one instead is a real hash table.  It should be possible to
-> implement it as some kind of customized aggregation, that is implemented
-> in the client instead of coming from subordinate sources.  The
-> presentation can then just use STATS_FS_LIST.  I don't see anything in
-> the design that is a blocker.
-
-Yes; though if it's low-enough overhead, you could imagine having a
-dynamically-updated parameter enum based on the hash table.
-
-> > 2.  We also export some metadata about each statistic.  For example,
-> > the metadata for the NMI counter above looks like:
-> >
-> > % cat .../NMI/annotations
-> > DESCRIPTION Non-maskable\ interrupts
-> > CUMULATIVE
-> > % cat .../NMI/fields
-> > cpu value
-> > int int
-> > %
->
-> Good idea.  I would prefer per-directory dot-named files for this.  For
-> example a hypothetical statsfs version of /proc/interrupts could be like
-> this:
->
-> $ cat /sys/kernel/stats/interrupts/.schema
-> 0                                          // Name
-> CUMULATIVE                                 // Flags
-> int:int                                    // Type(s)
-> IR-IO-APIC    2-edge      timer            // Description
-> ...
-> LOC
-> CUMULATIVE
-> int:int
-> Local timer interrupts
-> ...
-> $ cat /sys/kernel/stats/interrupts/LOC
-> 0 4286815
-> 1 4151572
-> 2 4199361
-> 3 4229248
->
-> > 3. We have a (very few) statistics where the value itself is a string,
-> > usually for device statuses.
->
-> Maybe in addition to CUMULATIVE and FLOATING we can have ENUM
-> properties, and a table to convert those enums to strings.  Aggregation
-> could also be used to make a histogram out of enums in subordinate
-> sources, e.g.
->
-> $ cat /sys/kernel/stats/kvm/637-1/vcpu_state
-> running 12
-> uninitialized 0
-> halted 4
-
-That's along similar lines to the parameter enums, yeah.
-
-> So in general I'd say the sources/values model holds up.  We certainly
-> want to:
->
-> - switch immediately to callbacks instead of the type constants (so that
-> core statsfs code only does signed/unsigned)
->
-> - add a field to distinguish cumulative and floating properties (and use
-> it to determine the default file mode)
-
-Yup, these make sense.
-
-> - add a new argument to statsfs_create_source and statsfs_create_values
-> that makes it not create directories and files respectively
->
-> - add a new API to look for a statsfs_value recursively in all the
-> subordinate sources, and pass the source/value pair to a callback
-> function; and reimplement recursive aggregation and clear in terms of
-> this function.
-
-This is where I think a little iteration on the "parameter enums"
-should happen before jumping into implementation.
-
-> > For our use cases, we generally don't both output a statistic and it's
-> > aggregation from the kernel; either we sum up things in the kernel
-> > (e.g. over a bunch of per-cpu or per-memcg counters) and only have the
-> > result statistic, or we expect user-space to sum up the data if it's
-> > interested.  The tabular form makes it pretty easy to do so (i.e. you
-> > can use awk(1) to sum all of the per-cpu NMI counters).
->
-> Yep, the above "not create a dentry" flag would handle the case where
-> you sum things up in the kernel because the more fine grained counters
-> would be overwhelming.
-
-nodnod; or the callback could handle the sum itself.
-
-Thanks,
-- jonathan
