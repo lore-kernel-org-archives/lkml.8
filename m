@@ -2,166 +2,125 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9AC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FFDC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E40C2071C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1694720644
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nw8KjYth"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EjLINloi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgEKDPj (ORCPT
+        id S1728471AbgEKDRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728104AbgEKDPi (ORCPT
+        Sun, 10 May 2020 23:17:53 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4435 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbgEKDRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:15:38 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0E4C05BD09
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:15:37 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 18so4113840pfv.8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 20:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=biu5X9JLtv6WRnXKVc8xUOK25p8WSyjfbFSVrSRcQ9E=;
-        b=Nw8KjYthz4ugGIkV7t+7zKTL/p5keRxvml5MguBls6kEJ9EldeSye3ObC588Q8BAk1
-         PBVypmzmrpBdBzfm6v8KgM/kk6TTWzuZb3fU3mex1KLOrZEjkktJhJIoOXb4Sctg6rH3
-         1uiLOHVzfAGh/1qBgXTHEQehQu7xwjJyP815o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=biu5X9JLtv6WRnXKVc8xUOK25p8WSyjfbFSVrSRcQ9E=;
-        b=hmpJsKDIY0tf9ayXJ7a04S1z97fmsg172aI5E8E1NeD8ThjZWKkp2COPE7bFcQ0wXb
-         HmgyAkw1UYvCCt/7y8L3+dXFLPrFG3JBX0PsnJWCq3QdA5fmnFZyWo8nuPB+CpqQD3Ti
-         w9vEyxGsIrKL5LS6ktIRyqjRc85n69h3q8mfTURsv8kIhCtTKBMWnNc0u812O2HoRokl
-         wofVLp/MrCxcvqcU2ikUl/LFNs/tO39Tus9nhFT2mf9ND5MAG2GLSdZfRaXdAPzxRqMe
-         ul4mXJP+EVq1lw+WNTaeMgsYfxYOtGnDyu80av0O/b3yUHST1n7G9KDwuKg+1ObcMcHG
-         0P/g==
-X-Gm-Message-State: AGi0PuYEgOk9lPTBznEZL9GJ51p9bMTJYBzadCYpsJQH3vEcNSK0HMxg
-        C7kkpYvykW/pLOe3LTOTT2Jnpw==
-X-Google-Smtp-Source: APiQypJxhmyeJZSarW6LgvJTnaApg7gY80iM7fHvZ9PNI7Twn0eOw6d19/FzRXiOud1ybxNdArL8xA==
-X-Received: by 2002:aa7:958f:: with SMTP id z15mr13543700pfj.10.1589166936598;
-        Sun, 10 May 2020 20:15:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w75sm7834318pfc.156.2020.05.10.20.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 20:15:35 -0700 (PDT)
-Date:   Sun, 10 May 2020 20:15:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 2/5] exec: Directly call security_bprm_set_creds from
- __do_execve_file
-Message-ID: <202005101929.A4374D0F56@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
+        Sun, 10 May 2020 23:17:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb8c3d30001>; Sun, 10 May 2020 20:17:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 10 May 2020 20:17:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 10 May 2020 20:17:52 -0700
+Received: from [10.19.66.205] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
+ 2020 03:17:49 +0000
+Subject: Re: [PATCH V2 6/8] phy: tegra: xusb: Add support for charger detect
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
+ <1586939108-10075-7-git-send-email-nkristam@nvidia.com>
+ <20200428105510.GH3592148@ulmo>
+ <ea0f5906-4681-8b84-a55a-e959ce40aece@nvidia.com>
+ <20200504155029.GB614153@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <229333de-8dd6-2d09-c8ad-99afdcec703f@nvidia.com>
+Date:   Mon, 11 May 2020 08:49:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k11kzyjm.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <20200504155029.GB614153@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589167059; bh=dhOCrrvTkzHB+DWGZHHMWxRBnVmIB3xIwhi9oro8Ae4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EjLINloir2HvrF0Xcs//fNNihRZi7fY12ShF48GOmR2ek7FpdH28Fd56VuOqH90Ea
+         eMgsFlP41Y3N4fqJBLDkoL/tOZiTQtp2RAYh1WXI5DZD5GnI6TH6P0HUH8j9QcTEui
+         uZgYjpVwQDhYs2dC/KOyG9pIgErQaf4Wj3moctX+6r+GWdo8yeIghs+CR56oKe4mgI
+         LvwhEC6Ox9J0FS58SL4NFlyEQ988BzhxYj3012lFzQkHdWN3UpKvrQjxA3EPrd1pNR
+         PpwckUh4jC8DUv7pSArMHGjGtTMOUv7H9uFVzsML82zs3J7hd+dQQ0yoS9SMRUEcIv
+         GUmi4oW+StK/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 02:41:17PM -0500, Eric W. Biederman wrote:
+
+
+On 04-05-2020 21:20, Thierry Reding wrote:
 > 
-> Now that security_bprm_set_creds is no longer responsible for calling
-> cap_bprm_set_creds, security_bprm_set_creds only does something for
-> the primary file that is being executed (not any interpreters it may
-> have).  Therefore call security_bprm_set_creds from __do_execve_file,
-> instead of from prepare_binprm so that it is only called once, and
-> remove the now unnecessary called_set_creds field of struct binprm.
+> On Mon, May 04, 2020 at 02:32:51PM +0530, Nagarjuna Kristam wrote:
+>>> On 28-04-2020 16:25, Thierry Reding wrote:
+>>>> On Wed, Apr 15, 2020 at 01:55:06PM +0530, Nagarjuna Kristam wrote:
+> [...]
+>>>> diff --git a/drivers/phy/tegra/xusb-tegra-cd.c b/drivers/phy/tegra/xusb-tegra-cd.c
+>>>> +static void tegra_xusb_padctl_utmi_pad_dcd(struct tegra_xusb_padctl *padctl,
+>>>> +					      u32 index)
+>>>> +{
+>>>> +	u32 value;
+>>>> +	int dcd_timeout_ms = 0;
+>>>> +	bool ret = false;
+>>>> +
+>>>> +	/* Turn on IDP_SRC */
+>>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+>>>> +	value |= OP_I_SRC_EN;
+>>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+>>>> +
+>>>> +	/* Turn on D- pull-down resistor */
+>>>> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+>>>> +	value |= USBON_RPD_OVRD_VAL;
+>>>> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+>>>> +
+>>>> +	/* Wait for TDCD_DBNC */
+>>>> +	usleep_range(10000, 120000);
+>>>   From the comment this looks like we're waiting for some hardware
+>>> condition. Can we somehow obtain this rather than implementing a fixed
+>>> sleep? Especially since the range here is so large.
+>>>
+>> As per data sheet we need to wait for 10 micro seconds as settle time.
+> Okay, so TDCD_DBNC is a value that comes from a timing diagram in a
+> datasheet? Seems fine to leave it as-is then. Perhaps add parentheses
+> and mention which exact datasheet that's from, and perhaps which figure
+> so that people can more easily reference it. Provided there is a
+> publicly available datasheet, of course.
 > 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  fs/exec.c                  | 11 +++++------
->  include/linux/binfmts.h    |  6 ------
->  security/apparmor/domain.c |  3 ---
->  security/selinux/hooks.c   |  2 --
->  security/smack/smack_lsm.c |  3 ---
->  security/tomoyo/tomoyo.c   |  6 ------
->  6 files changed, 5 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 765bfd51a546..635b5085050c 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1635,12 +1635,6 @@ int prepare_binprm(struct linux_binprm *bprm)
->  
->  	bprm_fill_uid(bprm);
->  
-> -	/* fill in binprm security blob */
-> -	retval = security_bprm_set_creds(bprm);
-> -	if (retval)
-> -		return retval;
-> -	bprm->called_set_creds = 1;
-> -
->  	retval = cap_bprm_set_creds(bprm);
->  	if (retval)
->  		return retval;
-> @@ -1858,6 +1852,11 @@ static int __do_execve_file(int fd, struct filename *filename,
->  	if (retval < 0)
->  		goto out;
->  
-> +	/* fill in binprm security blob */
-> +	retval = security_bprm_set_creds(bprm);
-> +	if (retval)
-> +		goto out;
-> +
->  	retval = prepare_binprm(bprm);
->  	if (retval < 0)
->  		goto out;
-> 
+Will update reference to table in the data sheet where these values are 
+recommended. ITs part of BC 1.2 spec from USB.
 
-Here I go with a Sunday night review, so hopefully I'm thinking better
-than Friday night's review, but I *think* this patch is broken from
-the LSM sense of the world in that security_bprm_set_creds() is getting
-called _before_ the creds actually get fully set (in prepare_binprm()
-by the calls to bprm_fill_uid(), cap_bprm_set_creds(), and
-check_unsafe_exec()).
+> Actually, one other thing: If the data sheet says to wait 10 us, why do
+> you use an upper range of 120 us? Shouldn't a range of 10-20 us be good
+> enough?
+> Yes, will reduce it to 20ms.
 
-As a specific example, see the setting of LSM_UNSAFE_NO_NEW_PRIVS in
-bprm->unsafe during check_unsafe_exec(), which must happen after
-bprm_fill_uid(bprm) and cap_bprm_set_creds(bprm), to have a "true" view
-of the execution privileges. Apparmor checks for this flag in its
-security_bprm_set_creds() hook. Similarly do selinux, smack, etc...
-
-The security_bprm_set_creds() boundary for LSM is to see the "final"
-state of the process privileges, and that needs to happen after
-bprm_fill_uid(), cap_bprm_set_creds(), and check_unsafe_exec() have all
-finished.
-
-So, as it stands, I don't think this will work, but perhaps it can still
-be rearranged to avoid the called_set_creds silliness. I'll look more
-this week...
-
--Kees
-
--- 
-Kees Cook
+-Nagarjuna
