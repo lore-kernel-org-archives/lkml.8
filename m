@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B31C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C97C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 887AF2495E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04DF2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589172815;
-	bh=gpPTyRYEHCVUZzxNy70fQ1duYwfPpzkaeocUDOMazW8=;
+	s=default; t=1589172819;
+	bh=3HxCBk+i1/xuyraquCNdCuSz2+rSr/9JEZRSASx8d8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiSANmJ/FVJF9W6+pl27df3C+VV+Da8j1znsBLbzH4oDy73+Vhe1qSmQO7HsU32X7
-	 hoAjP9zWzAVjUt8t51NVrPGfBWQB5rw8ocPUQo1aWi7VGKTdaFPRQWHuICJM4Nnbdq
-	 PKCep3ZTMijJlnVlGa5dGwtts8HjwqwPILXfpuMs=
+	b=jJ4PpQ0d/DEl8ztJfs7piL10dPoqS0cQQTLRKiI1mdxmZbP4e/NDW+jMIkzmurYkZ
+	 SWewfTE/SGV6sZ1sBHu5MU4WUDZwxYcxUc2PES/LL3Y1h98bmsrMfYwkCGztIyyjsr
+	 KjU7DWM2w8sThhQScbDRGmTc7MGH3GJbQJWdou7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEKExe (ORCPT
+        id S1728501AbgEKExi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37280 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 00:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728356AbgEKExc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:53:32 -0400
+        id S1728402AbgEKExe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:53:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3766B24953;
-        Mon, 11 May 2020 04:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97AFD208CA;
+        Mon, 11 May 2020 04:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589172812;
-        bh=gpPTyRYEHCVUZzxNy70fQ1duYwfPpzkaeocUDOMazW8=;
+        s=default; t=1589172813;
+        bh=3HxCBk+i1/xuyraquCNdCuSz2+rSr/9JEZRSASx8d8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z4of81+qAjATUEZZNxQfMtf6JEGravhTuY0P01z2C4v5sYQYsJF+NVfiSAJkH/5+a
-         3y/SFAIjoASSfQPmB4BB3y0MDO9DqAxAiBFLcO7oAoojbZcrGFp2wajOf+p/hC1DzT
-         lyrhgkYmH9+4ejSmM+FXVzeQE9jAErJhvRp/H+Lc=
+        b=HtzEeJ/sLW7i7ykoJ5YdZfZX6ZUKvdyUdqWrzAu+6aP/E3sX9iNpLwKK1USP7pmPZ
+         ckEigyHhNLGGZ0NeWbigP07G1cOntkoOklzmgJatM9bB1p6IhF8avMAaPyKIAGF0KZ
+         M8rOGIw05V65fD9JZ0Rt0SnQI01G+zj3l1NA5Ra0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
         luto@kernel.org
@@ -46,9 +46,9 @@ Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
         ak@linux.intel.com, ravi.v.shankar@intel.com,
         chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>,
         Vegard Nossum <vegard.nossum@oracle.com>
-Subject: [PATCH v12 04/18] x86/entry/64: Clean up paranoid exit
-Date:   Mon, 11 May 2020 00:52:57 -0400
-Message-Id: <20200511045311.4785-5-sashal@kernel.org>
+Subject: [PATCH v12 05/18] x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+Date:   Mon, 11 May 2020 00:52:58 -0400
+Message-Id: <20200511045311.4785-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
 References: <20200511045311.4785-1-sashal@kernel.org>
@@ -59,13 +59,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
 
-All that paranoid exit needs to do is to disable IRQs, handle IRQ tracing,
-then restore CR3, and restore GS base. Simply do those actions in that
-order. Cleaning up the spaghetti code.
+When FSGSBASE is enabled, the GS base handling in paranoid entry will need
+to retrieve the kernel GS base which requires that the kernel page table is
+active.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
+As the CR3 switch to the kernel page tables (PTI is active) does not depend
+on kernel GS base, move the CR3 switch in front of the GS base handling.
+
+Comment the EBX content while at it.
+
+No functional change.
+
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
@@ -78,49 +84,65 @@ Cc: Tony Luck <tony.luck@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Vegard Nossum <vegard.nossum@oracle.com>
 ---
- arch/x86/entry/entry_64.S | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ arch/x86/entry/entry_64.S | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 3063aa9090f9a..0da56e6791b73 100644
+index 0da56e6791b73..3ac1313724eaa 100644
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1266,19 +1266,25 @@ SYM_CODE_END(paranoid_entry)
- SYM_CODE_START_LOCAL(paranoid_exit)
- 	UNWIND_HINT_REGS
- 	DISABLE_INTERRUPTS(CLBR_ANY)
-+
-+	/*
-+	 * The order of operations is important. IRQ tracing requires
-+	 * kernel GS base and CR3. RESTORE_CR3 requires kernel GS base.
-+	 *
-+	 * NB to anyone to try to optimize this code: this code does
-+	 * not execute at all for exceptions from user mode. Those
-+	 * exceptions go through error_exit instead.
-+	 */
- 	TRACE_IRQS_OFF_DEBUG
--	testl	%ebx, %ebx			/* swapgs needed? */
--	jnz	.Lparanoid_exit_no_swapgs
--	TRACE_IRQS_IRETQ
--	/* Always restore stashed CR3 value (see paranoid_entry) */
--	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
-+	RESTORE_CR3	scratch_reg=%rax save_reg=%r14
-+
-+	/* If EBX is 0, SWAPGS is required */
-+	testl	%ebx, %ebx
-+	jnz	restore_regs_and_return_to_kernel
-+
-+	/* We are returning to a context with user GS base */
- 	SWAPGS_UNSAFE_STACK
- 	jmp	restore_regs_and_return_to_kernel
--.Lparanoid_exit_no_swapgs:
--	TRACE_IRQS_IRETQ_DEBUG
--	/* Always restore stashed CR3 value (see paranoid_entry) */
--	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
--	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(paranoid_exit)
+@@ -1220,15 +1220,7 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	cld
+ 	PUSH_AND_CLEAR_REGS save_ret=1
+ 	ENCODE_FRAME_POINTER 8
+-	movl	$1, %ebx
+-	movl	$MSR_GS_BASE, %ecx
+-	rdmsr
+-	testl	%edx, %edx
+-	js	1f				/* negative -> in kernel */
+-	SWAPGS
+-	xorl	%ebx, %ebx
  
- /*
+-1:
+ 	/*
+ 	 * Always stash CR3 in %r14.  This value will be restored,
+ 	 * verbatim, at exit.  Needed if paranoid_entry interrupted
+@@ -1238,16 +1230,31 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 * This is also why CS (stashed in the "iret frame" by the
+ 	 * hardware at entry) can not be used: this may be a return
+ 	 * to kernel code, but with a user CR3 value.
++	 *
++	 * Switching CR3 does not depend on kernel GS base so it can
++	 * be done before switching to the kernel GS base. This is
++	 * required for FSGSBASE because the kernel GS base has to
++	 * be retrieved from a kernel internal table.
+ 	 */
+ 	SAVE_AND_SWITCH_TO_KERNEL_CR3 scratch_reg=%rax save_reg=%r14
+ 
++	/* EBX = 1 -> kernel GSBASE active, no restore required */
++	movl	$1, %ebx
+ 	/*
+-	 * The above SAVE_AND_SWITCH_TO_KERNEL_CR3 macro doesn't do an
+-	 * unconditional CR3 write, even in the PTI case.  So do an lfence
+-	 * to prevent GS speculation, regardless of whether PTI is enabled.
++	 * The kernel-enforced convention is a negative GS base indicates
++	 * a kernel value. No SWAPGS needed on entry and exit.
+ 	 */
+-	FENCE_SWAPGS_KERNEL_ENTRY
++	movl	$MSR_GS_BASE, %ecx
++	rdmsr
++	testl	%edx, %edx
++	jns	.Lparanoid_entry_swapgs
++	ret
+ 
++.Lparanoid_entry_swapgs:
++	SWAPGS
++	FENCE_SWAPGS_KERNEL_ENTRY
++	/* EBX = 0 -> SWAPGS required on exit */
++	xorl	%ebx, %ebx
+ 	ret
+ SYM_CODE_END(paranoid_entry)
+ 
 -- 
 2.20.1
 
