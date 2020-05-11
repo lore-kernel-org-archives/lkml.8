@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC4FC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8D0C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE58A2075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB61520752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbgEKTZo (ORCPT
+        id S1731603AbgEKTZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:25:44 -0400
-Received: from v6.sk ([167.172.42.174]:52348 "EHLO v6.sk"
+        Mon, 11 May 2020 15:25:46 -0400
+Received: from v6.sk ([167.172.42.174]:52400 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgEKTZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:25:41 -0400
+        id S1731534AbgEKTZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 15:25:43 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 2D5AF610CF;
-        Mon, 11 May 2020 19:25:40 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id A6820610D3;
+        Mon, 11 May 2020 19:25:41 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Michael Turquette <mturquette@baylibre.com>
 Cc:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 08/10] clk: mmp2: Add the audio clock
-Date:   Mon, 11 May 2020 21:25:15 +0200
-Message-Id: <20200511192517.1206442-9-lkundrak@v3.sk>
+        devicetree@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 09/10] dt-bindings: marvell,mmp2: Add ids for the power domains
+Date:   Mon, 11 May 2020 21:25:16 +0200
+Message-Id: <20200511192517.1206442-10-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200511192517.1206442-1-lkundrak@v3.sk>
 References: <20200511192517.1206442-1-lkundrak@v3.sk>
@@ -40,42 +41,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This clocks the Audio block.
+On MMP2 the audio and GPU blocks are on separate power islands. On MMP3
+the camera block's power is also controlled separately.
+
+Add the numbers that we could use to refer to the power domains for
+respective power islands from the device tree.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/mmp/clk-of-mmp2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/clk/mmp/clk-of-mmp2.c b/drivers/clk/mmp/clk-of-mmp2.c
-index dcdff06a698a..c686c16fca82 100644
---- a/drivers/clk/mmp/clk-of-mmp2.c
-+++ b/drivers/clk/mmp/clk-of-mmp2.c
-@@ -62,6 +62,7 @@
- #define APMU_USBHSIC0	0xf8
- #define APMU_USBHSIC1	0xfc
- #define APMU_GPU	0xcc
-+#define APMU_AUDIO	0x10c
- 
- #define MPMU_FCCR		0x8
- #define MPMU_POSR		0x10
-@@ -317,6 +318,8 @@ static u32 mmp2_gpu_bus_parent_table[] =         { 0x0000,   0x0020,   0x0030,
- static const char * const mmp3_gpu_bus_parent_names[] = {"pll1_4", "pll1_6", "pll1_2", "pll2_2"};
- static const char * const mmp3_gpu_gc_parent_names[] =  {"pll1",   "pll2",   "pll1_p", "pll2_p"};
- 
-+static DEFINE_SPINLOCK(audio_lock);
+---
+Changes since v1:
+- Rob's ack
+
+ include/dt-bindings/power/marvell,mmp2.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 include/dt-bindings/power/marvell,mmp2.h
+
+diff --git a/include/dt-bindings/power/marvell,mmp2.h b/include/dt-bindings/power/marvell,mmp2.h
+new file mode 100644
+index 000000000000..c53d2b3e1057
+--- /dev/null
++++ b/include/dt-bindings/power/marvell,mmp2.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DTS_MARVELL_MMP2_POWER_H
++#define __DTS_MARVELL_MMP2_POWER_H
 +
- static struct mmp_clk_mix_config ccic0_mix_config = {
- 	.reg_info = DEFINE_MIX_REG_INFO(4, 17, 2, 6, 32),
- };
-@@ -372,6 +375,7 @@ static struct mmp_param_gate_clk apmu_gate_clks[] = {
- 	{MMP2_CLK_CCIC1_PHY, "ccic1_phy_clk", "ccic1_mix_clk", CLK_SET_RATE_PARENT, APMU_CCIC1, 0x24, 0x24, 0x0, 0, &ccic1_lock},
- 	{MMP2_CLK_CCIC1_SPHY, "ccic1_sphy_clk", "ccic1_sphy_div", CLK_SET_RATE_PARENT, APMU_CCIC1, 0x300, 0x300, 0x0, 0, &ccic1_lock},
- 	{MMP2_CLK_GPU_BUS, "gpu_bus_clk", "gpu_bus_mux", CLK_SET_RATE_PARENT, APMU_GPU, 0xa, 0xa, 0x0, MMP_CLK_GATE_NEED_DELAY, &gpu_lock},
-+	{MMP2_CLK_AUDIO, "audio_clk", "audio_mix_clk", CLK_SET_RATE_PARENT, APMU_AUDIO, 0x12, 0x12, 0x0, 0, &audio_lock},
- };
- 
- static struct mmp_param_gate_clk mmp2_apmu_gate_clks[] = {
++#define MMP2_POWER_DOMAIN_GPU		0
++#define MMP2_POWER_DOMAIN_AUDIO		1
++#define MMP3_POWER_DOMAIN_CAMERA	2
++
++#define MMP2_NR_POWER_DOMAINS		3
++
++#endif
 -- 
 2.26.2
 
