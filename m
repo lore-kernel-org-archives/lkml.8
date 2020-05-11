@@ -2,212 +2,161 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B60C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F676C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 340AE207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551702080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Uvm5+q5O";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ckkifgXt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fc1FlTQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgEKJtT (ORCPT
+        id S1728566AbgEKKB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:49:19 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50167 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728209AbgEKJtS (ORCPT
+        Mon, 11 May 2020 06:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725983AbgEKKB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:49:18 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 16EDC580127;
-        Mon, 11 May 2020 05:49:17 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 11 May 2020 05:49:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=AFDLytZLwrAWtNS6DftLVcVEIvL
-        2Q1JHb78PJuPzU/M=; b=Uvm5+q5OsZm2v0RMLRdSFFCJo7uBUm6w9n26rAXCE+B
-        f7fuiytA91+yrBL92MjnHgURaATHNuP6+l9ph1omHb5SKDpMCMH4PinGNSzSDzR5
-        7p/0UtSDpXs15ibFeRX7gDFcOmk44bbNLsXwFFy0TxhWCk/T5DJGJwjgnPc1Ds9L
-        bdtg4wdBizph2hQ3GvNT2pGESoN6kv749kiFNRpsj4HSmddVlAowVueSvPpY1CHQ
-        W62rABcYmdpaOqJmXx+dyNsVBaybCRIusPE0Buzp3vFJtWvVTN637mA4Cwpz5ZOu
-        OtlvsQXd6Ukb8w77TUW67IazNoRzHAbsicrXkbXIaOg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=AFDLyt
-        ZLwrAWtNS6DftLVcVEIvL2Q1JHb78PJuPzU/M=; b=ckkifgXt+nysktk4wv6UV6
-        1gbPDRcIH2cD3SJ8roY9Y6hEddLlw+JW1MM7JgKdkmi2tWecPdoHssB7VWpaUbjI
-        XmZdkswIvB2KqkZxzb+NVbrtKfywS5CrFEqCZ3mWLrf17cMGFN+kJX+8qc00InmS
-        eOY4pkSeWKiJEVqBPvb8grtgH6YGoRMKoZ3EgZe+fQVjRq5H62fx5b2AVSmDG0Hy
-        520cbYNJn2v0LgU932TL27NbPDbj2tvoiMzr/Exuq2j+lwdJ9A9Eoud4V3NSOLd5
-        iIthU6k/5cwscP2sdALnb9DC4AncuypWH8ODQDIzEMTHo4bZK6r30hwJkmq2IBNA
-        ==
-X-ME-Sender: <xms:mh-5XqruMGqX-eu2ARjQhmI5xCT7GS__lszJB6LLkuJmcB_GRebGVA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrledtgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeeutdfgjeeuudehvefgvedvtedtudelfffgffekledtffekgedukeejueevieeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:mh-5XoUcdSeueLFnBPD-uw5IlFrUgKX8oHEcpRcfPf0Dp3eVEl6xtA>
-    <xmx:mh-5Xq0okQc7pvI4nbMsz10hkUPpuEoh-AhCdE4hmlDPZG7_vd7ZLg>
-    <xmx:mh-5XlsDJCCL641W3VBXHe3o_A2KbVYymUGjW4ayScl2SdkUQdxozg>
-    <xmx:nR-5Xn4bRiNIsYfFIbrgL2QYKPtVSj2XizXlI7Qrpn4qYhibzd4Htg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A216F328005A;
-        Mon, 11 May 2020 05:49:14 -0400 (EDT)
-Date:   Mon, 11 May 2020 11:49:13 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-sunxi@googlegroups.com,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 2/2] media: cedrus: Implement runtime PM
-Message-ID: <20200511094913.g6mcaq7gmg23zjar@gilmour.lan>
-References: <20200422040410.6251-1-samuel@sholland.org>
- <20200422040410.6251-2-samuel@sholland.org>
- <CAAEAJfBdRVZwvEZNU_Hu4eutOO5HJzLLU2HJ2OcP=L+pBZfiTg@mail.gmail.com>
- <e3bba831-f835-d35b-58a3-c4b6b22c8949@sholland.org>
+        Mon, 11 May 2020 06:01:28 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F96C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:01:27 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id x13so2296350qvr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:01:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dEBQw3076mBvIY7CBwoK5uqpgbduOcTYtDKSbai7h/o=;
+        b=Fc1FlTQbTssxu2TxqBIzl+6Xlu+t3hasOFsdn49nv21GLo9Z8aBGG/ltllQ5Mqv3vs
+         /cS1DoIzzoA0etpn9Wb1dNWhoo4a7PnSU9gFA/dVQZkuny77X/CNk7hdQFyQxT8H3DVE
+         EoV6Ku67L0CdgauG4BIN5MwiXPgC4FyhVfqLLtuUmawjRwNgqWpzTu0V3aeonSzSRMtL
+         8R9P8SURGv9c8w0VL0TDSiPfiUAE1V/xB68UPSMA7ViHFp2ND2ft3yukF1C5a44SZ8PL
+         nkAwzrc+hrrENogaw8HqC+e+2No138vdOykTEcUxjE1xBWU0GiZOAnz+kfac1whzdwd7
+         J8OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dEBQw3076mBvIY7CBwoK5uqpgbduOcTYtDKSbai7h/o=;
+        b=q0eEpGVbJPSfxZMtPM2YTjrsHyM75i0Pdootz2hTbS6XLxJ51+G84lI+J0cqMgoIW2
+         qLXTl3o0RMMEGbXqjuH+i43lQFuqi2J739jgdtGoxZ+y9RaYWineJdGI2Tr6YNwgYeCw
+         fBjbroqd8+HdLw3zTuKEScdOsS6zQCYMRthcOeMw/CIeITRoqWFvEoF67vF6M78CKsuy
+         vbWPZ4FtS16rhhB++mmg55XOD9v6my8q188LJFbkmKBbeFUXLPWLwx7UOUeHR7UxtWJy
+         FBBW3kgfTU7NkjjBBKDScjafit7nQkiWEziqr4aFqtoEmiJvYL+MuldSJW+2ej1NOJFH
+         CliA==
+X-Gm-Message-State: AGi0PubBN4tj5tIYQ7VJXTYh/hWjLjCTsgujsUruWVGg88GKDHRCOi6f
+        VjVF0OX02PDleS4WTS1yCEd3549fXoHsJhrQSeHi2A==
+X-Google-Smtp-Source: APiQypK3J4Uss9hZs4ShXGbm1QYq+YrrdMGKWDeQyyrRLVZFWF+P7Ohh0VDwlQa19CWjtVyUyFUBSpLqPPKQVLzi6XA=
+X-Received: by 2002:ad4:5a48:: with SMTP id ej8mr15299087qvb.122.1589191286510;
+ Mon, 11 May 2020 03:01:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7huedradtlhh76dw"
-Content-Disposition: inline
-In-Reply-To: <e3bba831-f835-d35b-58a3-c4b6b22c8949@sholland.org>
+References: <20200511022359.15063-1-walter-zh.wu@mediatek.com>
+In-Reply-To: <20200511022359.15063-1-walter-zh.wu@mediatek.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 May 2020 12:01:14 +0200
+Message-ID: <CACT4Y+aC4i8cAVFu2-s82RczWCjYMpPVJLwS0OBLELR9qF8SYg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] kasan: memorize and print call_rcu stack
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 11, 2020 at 4:24 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+>
+> This patchset improves KASAN reports by making them to have
+> call_rcu() call stack information. It is useful for programmers
+> to solve use-after-free or double-free memory issue.
 
---7huedradtlhh76dw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Walter,
 
-On Sat, May 09, 2020 at 03:03:55PM -0500, Samuel Holland wrote:
-> On 5/5/20 7:53 AM, Ezequiel Garcia wrote:
-> > On Wed, 22 Apr 2020 at 01:00, Samuel Holland <samuel@sholland.org> wrot=
-e:
-> >>
-> >> This allows the VE clocks and PLL_VE to be disabled most of the time.
-> >> A runtime PM reference is held while streaming.
-> >>
-> >> Originally-by: Jernej =C5=A0krabec <jernej.skrabec@gmail.com>
-> >=20
-> > Originally-by is not documented, perhaps just go with Signed-off-by,
-> > as Jernej suggested.
-> >=20
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> >> ---
-> >>
-> >> v2: moved PM reference to cedrus_{start,stop}_streaming, based on an
-> >>     earlier patch by Jernej Skrabec. Removes the need for autosuspend.
-> >>     I tested this with running 2x v4l2-request-test in parallel.
-> >>
-> >> ---
-> >>  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
-> >>  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 106 ++++++++++++------
-> >>  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
-> >>  .../staging/media/sunxi/cedrus/cedrus_video.c |  33 ++++--
-> >>  4 files changed, 104 insertions(+), 45 deletions(-)
-> >>
-> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/sta=
-ging/media/sunxi/cedrus/cedrus.c
-> >> index 05a85517ff60..bc27f9430eeb 100644
-> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> >> @@ -16,6 +16,7 @@
-> >>  #include <linux/platform_device.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/of.h>
-> >> +#include <linux/pm.h>
-> >>
-> >>  #include <media/v4l2-device.h>
-> >>  #include <media/v4l2-ioctl.h>
-> >> @@ -551,12 +552,18 @@ static const struct of_device_id cedrus_dt_match=
-[] =3D {
-> >>  };
-> >>  MODULE_DEVICE_TABLE(of, cedrus_dt_match);
-> >>
-> >> +static const struct dev_pm_ops cedrus_dev_pm_ops =3D {
-> >> +       SET_RUNTIME_PM_OPS(cedrus_hw_suspend,
-> >> +                          cedrus_hw_resume, NULL)
-> >> +};
-> >> +
-> >>  static struct platform_driver cedrus_driver =3D {
-> >>         .probe          =3D cedrus_probe,
-> >>         .remove         =3D cedrus_remove,
-> >>         .driver         =3D {
-> >>                 .name           =3D CEDRUS_NAME,
-> >>                 .of_match_table =3D of_match_ptr(cedrus_dt_match),
-> >> +               .pm             =3D &cedrus_dev_pm_ops,
-> >>         },
-> >>  };
-> >>  module_platform_driver(cedrus_driver);
-> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_hw.c
-> >> index daf5f244f93b..1744e6fcc999 100644
-> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> >> @@ -19,6 +19,7 @@
-> >>  #include <linux/dma-mapping.h>
-> >>  #include <linux/interrupt.h>
-> >>  #include <linux/clk.h>
-> >> +#include <linux/pm_runtime.h>
-> >>  #include <linux/regmap.h>
-> >>  #include <linux/reset.h>
-> >>  #include <linux/soc/sunxi/sunxi_sram.h>
-> >> @@ -140,6 +141,64 @@ static irqreturn_t cedrus_irq(int irq, void *data)
-> >>         return IRQ_HANDLED;
-> >>  }
-> >>
-> >> +int cedrus_hw_suspend(struct device *device)
-> >> +{
-> >> +       struct cedrus_dev *dev =3D dev_get_drvdata(device);
-> >> +
-> >> +       reset_control_assert(dev->rstc);
-> >> +
-> >> +       clk_disable_unprepare(dev->ram_clk);
-> >> +       clk_disable_unprepare(dev->mod_clk);
-> >> +       clk_disable_unprepare(dev->ahb_clk);
-> >> +
-> >=20
-> > You can use clk_bulk API here.
->=20
-> Since this change is already tested, I'd prefer to do that as a separate
-> patch.
+I am looking at this now.
 
-Given that those three clocks are also pretty different from a semantic poi=
-nt of
-view, I'm not sure it's wise to switch to the bulk API anyway.
+I've upload the change to gerrit [1]
+https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2458
 
-Maxime
+I am not capable enough to meaningfully review such changes in this format...
 
---7huedradtlhh76dw
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://linux.googlesource.com/Documentation
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrkfmQAKCRDj7w1vZxhR
-xUgWAP475V+7CuCjiCo2hfLc1qvsVn92Yy/nTm4A9bJS8+oKvwD/eNmxqGe8EaXn
-wGIEJR5YrOpOK0VckZQzMe2av1+1UAw=
-=ZpSw
------END PGP SIGNATURE-----
-
---7huedradtlhh76dw--
+> The KASAN report was as follows(cleaned up slightly):
+>
+> BUG: KASAN: use-after-free in kasan_rcu_reclaim+0x58/0x60
+>
+> Freed by task 0:
+>  save_stack+0x24/0x50
+>  __kasan_slab_free+0x110/0x178
+>  kasan_slab_free+0x10/0x18
+>  kfree+0x98/0x270
+>  kasan_rcu_reclaim+0x1c/0x60
+>  rcu_core+0x8b4/0x10f8
+>  rcu_core_si+0xc/0x18
+>  efi_header_end+0x238/0xa6c
+>
+> First call_rcu() call stack:
+>  save_stack+0x24/0x50
+>  kasan_record_callrcu+0xc8/0xd8
+>  call_rcu+0x190/0x580
+>  kasan_rcu_uaf+0x1d8/0x278
+>
+> Last call_rcu() call stack:
+> (stack is not available)
+>
+> Generic KASAN will record first and last call_rcu() call stack
+> and print two call_rcu() call stack in KASAN report.
+>
+> This feature doesn't increase the cost of memory consumption. It is
+> only suitable for generic KASAN.
+>
+> [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
+>
+> Changes since v2:
+> - remove new config option, default enable it in generic KASAN
+> - test this feature in SLAB/SLUB, it is pass.
+> - modify macro to be more clearly
+> - modify documentation
+>
+> Walter Wu (3):
+> rcu/kasan: record and print call_rcu() call stack
+> kasan: record and print the free track
+> kasan: update documentation for generic kasan
+>
+> Documentation/dev-tools/kasan.rst |  6 ++++++
+> include/linux/kasan.h             |  2 ++
+> kernel/rcu/tree.c                 |  4 ++++
+> lib/Kconfig.kasan                 |  2 ++
+> mm/kasan/common.c                 | 26 ++++----------------------
+> mm/kasan/generic.c                | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> mm/kasan/kasan.h                  | 23 +++++++++++++++++++++++
+> mm/kasan/report.c                 | 47 +++++++++++++++++++++--------------------------
+> mm/kasan/tags.c                   | 37 +++++++++++++++++++++++++++++++++++++
+> 9 files changed, 149 insertions(+), 48 deletions(-)
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200511022359.15063-1-walter-zh.wu%40mediatek.com.
