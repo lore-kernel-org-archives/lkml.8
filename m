@@ -2,132 +2,71 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D53C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2F4C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B4F20769
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uv/YZnkN"
+	by mail.kernel.org (Postfix) with ESMTP id 44C3820757
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:02:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbgEKQC3 (ORCPT
+        id S1730541AbgEKQCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729802AbgEKQC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:02:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC396C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:02:28 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so18607960wmk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YJxLpJX62Fekaa+AoIWZZCIoU3KlFpvhoNLivrRXfy0=;
-        b=uv/YZnkNB3ieOwzEoD7DCWpFpAn+e/KKj67tegbx5RTEoNCuSd/EAzBjup0e9sx0K8
-         /mY90Bfv1qB2WQ4Yvi98RQtvi7IHohDApmRWP6Dk5I61Qa6Bm/uSvVKg8/JhOyBeXlE8
-         nTATGRzTclMXnN4nzeAazZGf3P4ZP0h2F049N6/eaGWwhE30RlY9o2sM7ZWmFitx9uX/
-         zPAGOX2FnmhjfBGWIIjjiZPeThZM2hYn5g0cnMbFaM0UDtrj17O5kMJkGq/CLQU4dqS7
-         VPrG8ITNOqjV0naX6BbyG5ftg+IT3O1MBbW9rbj4/Apb/9es0DgNxSzA2HAEujAMiv0H
-         kZ/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YJxLpJX62Fekaa+AoIWZZCIoU3KlFpvhoNLivrRXfy0=;
-        b=j6DPpHYQlAOEsCNaLkk/aiairfdVlztZEoFDyiWnAUyPKpgk2k8bsvdA719GTcciM7
-         t9Vo34YsmCgxJPZA9IF8R2PqRlnItCEX9NGD8il/pdzpdLDUQ4ue6rMOrIwlNq06GvxU
-         c4lSiZcDrwuttZGE3HsVrOvOAmgtLzaPVTDvD6rSCxzBLWbAoAaNd2POy5GBWYCIMJhA
-         inRXX+Udh/u9PED4hOr3ahTDzuGnAYzIRUA91/EUslAacZslkiudXOLD7KkvSetPgKA1
-         x1oiQviwRokbdgkhUYFtG5fJhpZvfI/Ux2RWNzCJZYAcqnedby8JXRTpSMmF4PXgXkPg
-         qyBw==
-X-Gm-Message-State: AGi0PuYMhJJaD1hfhOVGmf0XjP+oVdQ1Irsse0ctgihx495iZALz4d6I
-        DyF6r7M+ckNP+nnyjA/xVhIUgQ==
-X-Google-Smtp-Source: APiQypJf2L0prcQVNRJ7wp9Af8wHYgkMBEEqatM3HbAZY3RC7lUVWyWWeVTHGg5jc/YsIzU0qNqOgg==
-X-Received: by 2002:a7b:c931:: with SMTP id h17mr34342830wml.105.1589212947333;
-        Mon, 11 May 2020 09:02:27 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v124sm27068657wme.45.2020.05.11.09.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 09:02:26 -0700 (PDT)
-Date:   Mon, 11 May 2020 17:02:24 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
-        corbet@lwn.net, frowand.list@gmail.com, bjorn.andersson@linaro.org,
-        linux-serial@vger.kernel.org, mingo@redhat.com, hpa@zytor.com,
-        jslaby@suse.com, kgdb-bugreport@lists.sourceforge.net,
-        sumit.garg@linaro.org, will@kernel.org, tglx@linutronix.de,
-        agross@kernel.org, catalin.marinas@arm.com, bp@alien8.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/12] kgdboc: Remove useless #ifdef
- CONFIG_KGDB_SERIAL_CONSOLE in kgdboc
-Message-ID: <20200511160224.cvelsmnpxc2ykgzb@holly.lan>
-References: <20200507200850.60646-1-dianders@chromium.org>
- <20200507130644.v4.7.Icb528f03d0026d957e60f537aa711ada6fd219dc@changeid>
+        Mon, 11 May 2020 12:02:33 -0400
+Received: from elvis.franken.de ([193.175.24.41]:48696 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729550AbgEKQCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:02:30 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jYAsk-0000qr-00; Mon, 11 May 2020 18:02:18 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 8CE72C0473; Mon, 11 May 2020 18:01:35 +0200 (CEST)
+Date:   Mon, 11 May 2020 18:01:35 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 03/31] MIPS: unexport __flush_icache_user_range
+Message-ID: <20200511160135.GA17079@alpha.franken.de>
+References: <20200510075510.987823-1-hch@lst.de>
+ <20200510075510.987823-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507130644.v4.7.Icb528f03d0026d957e60f537aa711ada6fd219dc@changeid>
+In-Reply-To: <20200510075510.987823-4-hch@lst.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:08:45PM -0700, Douglas Anderson wrote:
-> This file is only ever compiled if that config is on since the
-> Makefile says:
+On Sun, May 10, 2020 at 09:54:42AM +0200, Christoph Hellwig wrote:
+> __flush_icache_user_range is not used in modular code, so unexport it.
 > 
->   obj-$(CONFIG_KGDB_SERIAL_CONSOLE) += kgdboc.o
-> 
-> Let's get rid of the useless #ifdef.
-> 
-> Reported-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
-> 
-> Changes in v4:
-> - ("kgdboc: Remove useless #ifdef...") new for v4.
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/tty/serial/kgdboc.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> index 519d8cfbfbed..2e9158fff976 100644
-> --- a/drivers/tty/serial/kgdboc.c
-> +++ b/drivers/tty/serial/kgdboc.c
-> @@ -380,7 +380,6 @@ static struct kgdb_io kgdboc_io_ops = {
->  	.post_exception		= kgdboc_post_exp_handler,
->  };
->  
-> -#ifdef CONFIG_KGDB_SERIAL_CONSOLE
->  static int kgdboc_option_setup(char *opt)
->  {
->  	if (!opt) {
-> @@ -409,7 +408,6 @@ static int __init kgdboc_early_init(char *opt)
->  }
->  
->  early_param("ekgdboc", kgdboc_early_init);
-> -#endif /* CONFIG_KGDB_SERIAL_CONSOLE */
->  
->  module_init(init_kgdboc);
->  module_exit(exit_kgdboc);
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
+>  arch/mips/mm/cache.c | 1 -
+>  1 file changed, 1 deletion(-)
+
+applied to mips-next.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
