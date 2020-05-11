@@ -2,79 +2,212 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E561FC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B60C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE46206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340AE207DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:49:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Uvm5+q5O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ckkifgXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgEKJrf (ORCPT
+        id S1729457AbgEKJtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:47:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:55006 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKJre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:47:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31DFC1FB;
-        Mon, 11 May 2020 02:47:34 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1734D3F305;
-        Mon, 11 May 2020 02:47:32 -0700 (PDT)
-Date:   Mon, 11 May 2020 10:47:27 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
-Message-ID: <20200511094727.GA24149@e121166-lin.cambridge.arm.com>
-References: <20200414102512.27506-1-pali@kernel.org>
+        Mon, 11 May 2020 05:49:19 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50167 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728209AbgEKJtS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:49:18 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 16EDC580127;
+        Mon, 11 May 2020 05:49:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 11 May 2020 05:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=AFDLytZLwrAWtNS6DftLVcVEIvL
+        2Q1JHb78PJuPzU/M=; b=Uvm5+q5OsZm2v0RMLRdSFFCJo7uBUm6w9n26rAXCE+B
+        f7fuiytA91+yrBL92MjnHgURaATHNuP6+l9ph1omHb5SKDpMCMH4PinGNSzSDzR5
+        7p/0UtSDpXs15ibFeRX7gDFcOmk44bbNLsXwFFy0TxhWCk/T5DJGJwjgnPc1Ds9L
+        bdtg4wdBizph2hQ3GvNT2pGESoN6kv749kiFNRpsj4HSmddVlAowVueSvPpY1CHQ
+        W62rABcYmdpaOqJmXx+dyNsVBaybCRIusPE0Buzp3vFJtWvVTN637mA4Cwpz5ZOu
+        OtlvsQXd6Ukb8w77TUW67IazNoRzHAbsicrXkbXIaOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=AFDLyt
+        ZLwrAWtNS6DftLVcVEIvL2Q1JHb78PJuPzU/M=; b=ckkifgXt+nysktk4wv6UV6
+        1gbPDRcIH2cD3SJ8roY9Y6hEddLlw+JW1MM7JgKdkmi2tWecPdoHssB7VWpaUbjI
+        XmZdkswIvB2KqkZxzb+NVbrtKfywS5CrFEqCZ3mWLrf17cMGFN+kJX+8qc00InmS
+        eOY4pkSeWKiJEVqBPvb8grtgH6YGoRMKoZ3EgZe+fQVjRq5H62fx5b2AVSmDG0Hy
+        520cbYNJn2v0LgU932TL27NbPDbj2tvoiMzr/Exuq2j+lwdJ9A9Eoud4V3NSOLd5
+        iIthU6k/5cwscP2sdALnb9DC4AncuypWH8ODQDIzEMTHo4bZK6r30hwJkmq2IBNA
+        ==
+X-ME-Sender: <xms:mh-5XqruMGqX-eu2ARjQhmI5xCT7GS__lszJB6LLkuJmcB_GRebGVA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrledtgdduhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeeutdfgjeeuudehvefgvedvtedtudelfffgffekledtffekgedukeejueevieeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:mh-5XoUcdSeueLFnBPD-uw5IlFrUgKX8oHEcpRcfPf0Dp3eVEl6xtA>
+    <xmx:mh-5Xq0okQc7pvI4nbMsz10hkUPpuEoh-AhCdE4hmlDPZG7_vd7ZLg>
+    <xmx:mh-5XlsDJCCL641W3VBXHe3o_A2KbVYymUGjW4ayScl2SdkUQdxozg>
+    <xmx:nR-5Xn4bRiNIsYfFIbrgL2QYKPtVSj2XizXlI7Qrpn4qYhibzd4Htg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A216F328005A;
+        Mon, 11 May 2020 05:49:14 -0400 (EDT)
+Date:   Mon, 11 May 2020 11:49:13 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-sunxi@googlegroups.com,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 2/2] media: cedrus: Implement runtime PM
+Message-ID: <20200511094913.g6mcaq7gmg23zjar@gilmour.lan>
+References: <20200422040410.6251-1-samuel@sholland.org>
+ <20200422040410.6251-2-samuel@sholland.org>
+ <CAAEAJfBdRVZwvEZNU_Hu4eutOO5HJzLLU2HJ2OcP=L+pBZfiTg@mail.gmail.com>
+ <e3bba831-f835-d35b-58a3-c4b6b22c8949@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7huedradtlhh76dw"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414102512.27506-1-pali@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <e3bba831-f835-d35b-58a3-c4b6b22c8949@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:25:12PM +0200, Pali Rohár wrote:
-> Error code is stored in rp->reset_gpio and not in err variable.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  drivers/pci/controller/pci-tegra.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied to pci/tegra, thanks.
+--7huedradtlhh76dw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Lorenzo
+On Sat, May 09, 2020 at 03:03:55PM -0500, Samuel Holland wrote:
+> On 5/5/20 7:53 AM, Ezequiel Garcia wrote:
+> > On Wed, 22 Apr 2020 at 01:00, Samuel Holland <samuel@sholland.org> wrot=
+e:
+> >>
+> >> This allows the VE clocks and PLL_VE to be disabled most of the time.
+> >> A runtime PM reference is held while streaming.
+> >>
+> >> Originally-by: Jernej =C5=A0krabec <jernej.skrabec@gmail.com>
+> >=20
+> > Originally-by is not documented, perhaps just go with Signed-off-by,
+> > as Jernej suggested.
+> >=20
+> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> >> ---
+> >>
+> >> v2: moved PM reference to cedrus_{start,stop}_streaming, based on an
+> >>     earlier patch by Jernej Skrabec. Removes the need for autosuspend.
+> >>     I tested this with running 2x v4l2-request-test in parallel.
+> >>
+> >> ---
+> >>  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
+> >>  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 106 ++++++++++++------
+> >>  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
+> >>  .../staging/media/sunxi/cedrus/cedrus_video.c |  33 ++++--
+> >>  4 files changed, 104 insertions(+), 45 deletions(-)
+> >>
+> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/sta=
+ging/media/sunxi/cedrus/cedrus.c
+> >> index 05a85517ff60..bc27f9430eeb 100644
+> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> >> @@ -16,6 +16,7 @@
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/module.h>
+> >>  #include <linux/of.h>
+> >> +#include <linux/pm.h>
+> >>
+> >>  #include <media/v4l2-device.h>
+> >>  #include <media/v4l2-ioctl.h>
+> >> @@ -551,12 +552,18 @@ static const struct of_device_id cedrus_dt_match=
+[] =3D {
+> >>  };
+> >>  MODULE_DEVICE_TABLE(of, cedrus_dt_match);
+> >>
+> >> +static const struct dev_pm_ops cedrus_dev_pm_ops =3D {
+> >> +       SET_RUNTIME_PM_OPS(cedrus_hw_suspend,
+> >> +                          cedrus_hw_resume, NULL)
+> >> +};
+> >> +
+> >>  static struct platform_driver cedrus_driver =3D {
+> >>         .probe          =3D cedrus_probe,
+> >>         .remove         =3D cedrus_remove,
+> >>         .driver         =3D {
+> >>                 .name           =3D CEDRUS_NAME,
+> >>                 .of_match_table =3D of_match_ptr(cedrus_dt_match),
+> >> +               .pm             =3D &cedrus_dev_pm_ops,
+> >>         },
+> >>  };
+> >>  module_platform_driver(cedrus_driver);
+> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/=
+staging/media/sunxi/cedrus/cedrus_hw.c
+> >> index daf5f244f93b..1744e6fcc999 100644
+> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> >> @@ -19,6 +19,7 @@
+> >>  #include <linux/dma-mapping.h>
+> >>  #include <linux/interrupt.h>
+> >>  #include <linux/clk.h>
+> >> +#include <linux/pm_runtime.h>
+> >>  #include <linux/regmap.h>
+> >>  #include <linux/reset.h>
+> >>  #include <linux/soc/sunxi/sunxi_sram.h>
+> >> @@ -140,6 +141,64 @@ static irqreturn_t cedrus_irq(int irq, void *data)
+> >>         return IRQ_HANDLED;
+> >>  }
+> >>
+> >> +int cedrus_hw_suspend(struct device *device)
+> >> +{
+> >> +       struct cedrus_dev *dev =3D dev_get_drvdata(device);
+> >> +
+> >> +       reset_control_assert(dev->rstc);
+> >> +
+> >> +       clk_disable_unprepare(dev->ram_clk);
+> >> +       clk_disable_unprepare(dev->mod_clk);
+> >> +       clk_disable_unprepare(dev->ahb_clk);
+> >> +
+> >=20
+> > You can use clk_bulk API here.
+>=20
+> Since this change is already tested, I'd prefer to do that as a separate
+> patch.
 
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index 0e03cef72840..378d5a8773c7 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2314,8 +2314,8 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->  			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
->  				rp->reset_gpio = NULL;
->  			} else {
-> -				dev_err(dev, "failed to get reset GPIO: %d\n",
-> -					err);
-> +				dev_err(dev, "failed to get reset GPIO: %ld\n",
-> +					PTR_ERR(rp->reset_gpio));
->  				return PTR_ERR(rp->reset_gpio);
->  			}
->  		}
-> -- 
-> 2.20.1
-> 
+Given that those three clocks are also pretty different from a semantic poi=
+nt of
+view, I'm not sure it's wise to switch to the bulk API anyway.
+
+Maxime
+
+--7huedradtlhh76dw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrkfmQAKCRDj7w1vZxhR
+xUgWAP475V+7CuCjiCo2hfLc1qvsVn92Yy/nTm4A9bJS8+oKvwD/eNmxqGe8EaXn
+wGIEJR5YrOpOK0VckZQzMe2av1+1UAw=
+=ZpSw
+-----END PGP SIGNATURE-----
+
+--7huedradtlhh76dw--
