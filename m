@@ -2,128 +2,153 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92C8C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2F0C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD492075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4047320736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Or824gsh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="06Nbqi6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgEKJhL (ORCPT
+        id S1729435AbgEKJjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:37:11 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21744 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729459AbgEKJhJ (ORCPT
+        Mon, 11 May 2020 05:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725790AbgEKJjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:37:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589189828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9/z8oJy0DrW82NKQzFo0pYOXFvWx+Vn3ieQ420AJ3lc=;
-        b=Or824gshAxJh9WOS+X/WmIVuhaACN/xsBpOMow3E7W7/tNv3v5zydn5wBdNRVYnKgMGqZd
-        hIRYGEyJpBX3pyvj0YrEdtX07AhYX1+AuEUmgX4kjIaQKr6/Viugg2zG5STQwWBQA2NORY
-        y0JlmGkDpG9l4Oc4H8vCPart9d87y9U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-x5Nmtl54NsWQZnneZiV0WA-1; Mon, 11 May 2020 05:37:05 -0400
-X-MC-Unique: x5Nmtl54NsWQZnneZiV0WA-1
-Received: by mail-wr1-f69.google.com with SMTP id h12so4974576wrr.19
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 02:37:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9/z8oJy0DrW82NKQzFo0pYOXFvWx+Vn3ieQ420AJ3lc=;
-        b=Hl1jGuS0jcszVkZrJO7WH6+lXfzY+ATvvXITD7cIstzNDzlAmWhUTw3WVYOog3mD0W
-         LZGBPJjpSbZAHYMSvPMYegSZ45CK67ZM9r2gj7tdHa9G1/GeLXr4Jdc88UmOwwL/CRfN
-         V78PUVaX3PqTqw8pOW3gTtim4+AMs3eIaZ/xZtZTODa6PfQC2/DvoXK7yrI4EZS8M7SF
-         t8212+DAfxsjIYbfid44dBMrhiwN7JcBHgoR2neo2rHOVunx+hEQwRUNpNv6q0CC6quZ
-         EdQzpnVlum95dsRWANKEM8VlvFEe0x5UVCKtHfKXs+eIZthJ4pfgu0i6rSAVDztSz21L
-         x2tQ==
-X-Gm-Message-State: AGi0PuZ/artx+fFUlHh99l0bQcWZd011MKCYZBjCNv+4DWTK8Hq7ytQd
-        ubLtaBbZpqJyW1kZ2qZyfHTyH91mRGgGq678ZZqwxa5KnoM+6ziVdWzEKjw9+vknMbuLN6BlKvW
-        WirbBgUL7xcm08WnGwpdZPzam
-X-Received: by 2002:adf:9447:: with SMTP id 65mr18006254wrq.331.1589189824501;
-        Mon, 11 May 2020 02:37:04 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLgXJL2J4QG833y891iupVzJ12ZpeHXWlbbAPxxD6jgWVlOjQHWoAXK6Z1hUwl6JqLwXHJL/w==
-X-Received: by 2002:adf:9447:: with SMTP id 65mr18006221wrq.331.1589189824311;
-        Mon, 11 May 2020 02:37:04 -0700 (PDT)
-Received: from localhost.localdomain ([194.230.155.159])
-        by smtp.gmail.com with ESMTPSA id r14sm1636537wmb.2.2020.05.11.02.37.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 02:37:03 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Adams <jwadams@google.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        David Rientjes <rientjes@google.com>
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
- <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
-From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Message-ID: <20c45f7b-3daa-c300-a8e7-0fd26664080b@redhat.com>
-Date:   Mon, 11 May 2020 11:37:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 11 May 2020 05:39:31 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6EBC061A0C;
+        Mon, 11 May 2020 02:39:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JXYKE2YvBIgyujZ6k0qik2Y4FBN5h7JmUD/1Z324Bzw=; b=06Nbqi6ULbmPZiLvQwzGzSEOH
+        4qSNuekc6jhgvszk86LXQc9whmYGJChSEd1O5sgtpwpWh6Xd080AZOG3ozpuwYWBGVmlb9AOjUKoa
+        mIkk+CKcCB1Vily19TBX7nK8YXr3WIx1JKuZ6N6+GHchRRZGbMIMqFuvZVCBqQ9P3URDA6Zs3xIdL
+        X0RnlxZEKBlbldWHHrcFUh2KYtSKkjAT7ieXMqodj/oxQ8qC2qDO312vIhA9LUz9xfvAIiKt2RATW
+        kZNtT8TBHl9vl4aZld0Cteo2T/nk3oDPcRS2cUYo9ESDve7UO2wVrNBKJ+/WGyRQ/6DyOpKt1fS2x
+        QB+Rdnt7A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59006)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jY4tm-0005bR-H9; Mon, 11 May 2020 10:38:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jY4td-0005WV-Ml; Mon, 11 May 2020 10:38:49 +0100
+Date:   Mon, 11 May 2020 10:38:49 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux.cj@gmail.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Cristi Sovaiala <cristian.sovaiala@nxp.com>,
+        Florin Laurentiu Chiculita <florinlaurentiu.chiculita@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        netdev <netdev@vger.kernel.org>, Marcin Wojtas <mw@semihalf.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Makarand Pawagi <makarand.pawagi@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [net-next PATCH v3 4/5] net: phy: Introduce fwnode_get_phy_id()
+Message-ID: <20200511093849.GO1551@shell.armlinux.org.uk>
+References: <67e263cf-5cd7-98d1-56ff-ebd9ac2265b6@arm.com>
+ <CAHp75Vew8Fh6HEoOACk+J9KCpw+AE2t2+oFnXteK1eShopfYAA@mail.gmail.com>
+ <83ab4ca4-9c34-4cdd-4413-3b4cdf96727d@arm.com>
+ <20200508160755.GB10296@lsv03152.swis.in-blr01.nxp.com>
+ <20200508181301.GF298574@lunn.ch>
+ <1e33605e-42fd-baf8-7584-e8fcd5ca6fd3@arm.com>
+ <20200508202722.GI298574@lunn.ch>
+ <97a9e145-bbaa-efb8-6215-dc3109ee7290@arm.com>
+ <20200508234257.GA338317@lunn.ch>
+ <20200511080040.GC12725@lsv03152.swis.in-blr01.nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511080040.GC12725@lsv03152.swis.in-blr01.nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/8/20 11:44 AM, Paolo Bonzini wrote:
-> So in general I'd say the sources/values model holds up.  We certainly
-> want to:
+On Mon, May 11, 2020 at 01:30:40PM +0530, Calvin Johnson wrote:
+> On Sat, May 09, 2020 at 01:42:57AM +0200, Andrew Lunn wrote:
+> > On Fri, May 08, 2020 at 05:48:33PM -0500, Jeremy Linton wrote:
+> > > Hi,
+> > > 
+> > > On 5/8/20 3:27 PM, Andrew Lunn wrote:
+> > > > > > There is a very small number of devices where the vendor messed up,
+> > > > > > and did not put valid contents in the ID registers. In such cases, we
+> > > > > > can read the IDs from device tree. These are then used in exactly the
+> > > > > > same way as if they were read from the device.
+> > > > > > 
+> > > > > 
+> > > > > Is that the case here?
+> > > > 
+> > > > Sorry, I don't understand the question?
+> > > 
+> > > I was asking in general, does this machine report the ID's correctly.
+> > 
+> > Very likely, it does.
+> > 
+> > > The embedded single mac:mdio per nic case seems like the normal case, and
+> > > most of the existing ACPI described devices are setup that way.
+> > 
+> > Somebody in this thread pointed to ACPI patches for the
+> > MACCHIATOBin. If i remember the hardware correctly, it has 4 Ethernet
+> > interfaces, and two MDIO bus masters. One of the bus masters can only
+> > do C22 and the other can only do C45. It is expected that the busses
+> > are shared, not a nice one to one mapping.
+> > 
+> > > But at the same time, that shifts the c22/45 question to the nic
+> > > driver, where use of a DSD property before instantiating/probing
+> > > MDIO isn't really a problem if needed.
+> > 
+> > This in fact does not help you. The MAC driver has no idea what PHY is
+> > connected to it. The MAC does not know if it is C22 or C45. It uses
+> > the phylib abstraction which hides all this. Even if you assume 1:1,
+> > use phy_find_first(), it will not find a C45 PHY because without
+> > knowing there is a C45 PHY, we don't scan for it. And we should expect
+> > C45 PHYs to become more popular in the next few years.
 > 
-> - switch immediately to callbacks instead of the type constants (so that
-> core statsfs code only does signed/unsigned)
+> Agree.
 > 
-> - add a field to distinguish cumulative and floating properties (and use
-> it to determine the default file mode)
+> NXP's LX2160ARDB platform currently has the following MDIO-PHY connection.
 > 
-> - add a new argument to statsfs_create_source and statsfs_create_values
-> that makes it not create directories and files respectively
-> 
-> - add a new API to look for a statsfs_value recursively in all the
-> subordinate sources, and pass the source/value pair to a callback
-> function; and reimplement recursive aggregation and clear in terms of
-> this function.
+> MDIO-1 ==> one 40G PHY, two 1G PHYs(C45), two 10G PHYs(C22)
 
-Ok I will apply this, thank you for all the suggestions. 
-I will post the v3 patchset in the next few weeks. 
+I'm not entirely sure you have that correct.  The Clause 45 register set
+as defined by IEEE 802.3 does not define registers for 1G negotiation,
+unless the PHY either supports Clause 22 accesses, or implements some
+kind of vendor extension.  For a 1G PHY, this would be wasteful, and
+likely incompatible with a lot of hardware/software.
 
-In the meanwhile, I wrote the documentation you asked (even though it's 
-going to change in v3), you can find it here:
+Conversely, Clause 22 does not define registers for 10G speeds, except
+accessing Clause 45 registers indirectly through clause 22 registers,
+which would also be wasteful.
 
-https://github.com/esposem/linux/commit/dfa92f270f1aed73d5f3b7f12640b2a1635c711f
-
-Thank you,
-Emanuele
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
