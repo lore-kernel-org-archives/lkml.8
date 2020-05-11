@@ -2,87 +2,100 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44653C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCABC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24788218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589196539;
-	bh=qMkiO+nWfOUzErqZNGHGc5Th27FIV5HW8D5tvjyuXHs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=oeWWxAfAzuBswFGdAZ+MZE0cH8F5Iw6nrSxHWO5ELouQoy/SKwoaau2K4B1nmBE8I
-	 q4z+2yv1om87+jKixleTJfQF42XQLrYAtYvAiuukIUzuO+SylVvyrVV8w7C/cALrEB
-	 v5rwXqaJiuPn77bsvVlCGwaTxI88crQjOzJt1F48=
+	by mail.kernel.org (Postfix) with ESMTP id 896BB2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgEKL26 (ORCPT
+        id S1730074AbgEKL3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40932 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 07:29:00 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49645 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgEKLZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C62C2082E;
-        Mon, 11 May 2020 11:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589196332;
-        bh=qMkiO+nWfOUzErqZNGHGc5Th27FIV5HW8D5tvjyuXHs=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=0oXMv+ETdO3rQxlCT0GO3lg73QBlXaBRcVjUnmUmVSboJLx5amHazoi5qvJWKDrRC
-         zzEaPGumfz6VaPkcXFGWHOspaKif1CwGLM9rZiH91DnCeeV2pivO4KSRJcXUb7LItx
-         EDEHzmf2oVptDj5bzZr3iOYblS4ZmO+DHjPHJI0Y=
-Date:   Mon, 11 May 2020 12:25:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-In-Reply-To: <1589185530-28170-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1589185530-28170-1-git-send-email-hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 1/2] spi: uniphier: Depend on HAS_IOMEM
-Message-Id: <158919630590.8372.2120054682053294081.b4-ty@kernel.org>
+        id S1729576AbgEKLZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49LJWj47h2z9ty3m;
+        Mon, 11 May 2020 13:25:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id BDfGMIPT8x-X; Mon, 11 May 2020 13:25:21 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJWj38k8z9ty3k;
+        Mon, 11 May 2020 13:25:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1F88F8B7AE;
+        Mon, 11 May 2020 13:25:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FRhu3HcDIC0H; Mon, 11 May 2020 13:25:28 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D5CD78B7AD;
+        Mon, 11 May 2020 13:25:27 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id BD1FA65A09; Mon, 11 May 2020 11:25:27 +0000 (UTC)
+Message-Id: <f5b173c662b8675a8f375dd436449da7e866b659.1589196133.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 02/45] powerpc/kasan: Fix issues by lowering
+ KASAN_SHADOW_END
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 May 2020 11:25:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 17:25:29 +0900, Kunihiko Hayashi wrote:
-> The driver uses devm_ioremap_resource() which is only available when
-> CONFIG_HAS_IOMEM is set, so the driver depends on this option.
+At the time being, KASAN_SHADOW_END is 0x100000000, which
+is 0 in 32 bits representation.
 
-Applied to
+This leads to a couple of issues:
+- kasan_remap_early_shadow_ro() does nothing because the comparison
+k_cur < k_end is always false.
+- In ptdump, address comparison for markers display fails and the
+marker's name is printed at the start of the KASAN area instead of
+being printed at the end.
 
-   local tree asoc/for-5.7
+However, there is no need to shadow the KASAN shadow area itself,
+so the KASAN shadow area can stop shadowing memory at the start
+of itself.
 
-Thanks!
+With a PAGE_OFFSET set to 0xc0000000, KASAN shadow area is then going
+from 0xf8000000 to 0xff000000.
 
-[1/2] spi: uniphier: Depend on HAS_IOMEM
-      (no commit info)
-[2/2] spi: uniphier: Use devm_platform_get_and_ioremap_resource() to simplify code
-      (no commit info)
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Fixes: cbd18991e24f ("powerpc/mm: Fix an Oops in kasan_mmu_init()")
+Cc: stable@vger.kernel.org
+---
+ arch/powerpc/include/asm/kasan.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
+index fbff9ff9032e..fc900937f653 100644
+--- a/arch/powerpc/include/asm/kasan.h
++++ b/arch/powerpc/include/asm/kasan.h
+@@ -23,9 +23,7 @@
+ 
+ #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
+ 
+-#define KASAN_SHADOW_END	0UL
+-
+-#define KASAN_SHADOW_SIZE	(KASAN_SHADOW_END - KASAN_SHADOW_START)
++#define KASAN_SHADOW_END	(-(-KASAN_SHADOW_START >> KASAN_SHADOW_SCALE_SHIFT))
+ 
+ #ifdef CONFIG_KASAN
+ void kasan_early_init(void);
+-- 
+2.25.0
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
