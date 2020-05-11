@@ -2,127 +2,278 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B159C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84EEC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2332F20736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B805B206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="AEN8KkiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731010AbgEKSKm (ORCPT
+        id S1729910AbgEKSLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:10:42 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:38421 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726891AbgEKSKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:10:42 -0400
-Received: from localhost.localdomain (ip5f5af07e.dynamic.kabel-deutschland.de [95.90.240.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3091F2002EE0A;
-        Mon, 11 May 2020 20:10:39 +0200 (CEST)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: [PATCH] clocksource: Add `nopmtmr` to disable ACPI PM Timer at run-time
-Date:   Mon, 11 May 2020 20:07:02 +0200
-Message-Id: <20200511180702.27893-1-pmenzel@molgen.mpg.de>
-X-Mailer: git-send-email 2.26.2
+        Mon, 11 May 2020 14:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgEKSLR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:11:17 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA51C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:11:16 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id z9so2934900qvi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MI5GKMcoK4TviI3WF6z6u2HB9Cfoz7+kubiJIKPYUWE=;
+        b=AEN8KkiYPYwfVSoQVqseYwpocY1TfVhiJYojiwk9th6YQc7qtPSkgavtSovEINxz+R
+         0ECszgowJK/0/emZehvREB809fbDq2GbZI2obor9CmziGW7xJyuK/u8Oy6SI9NHsqLez
+         Y8Gv5epSujXxBkLACxGUJOvgqGByBKB7fC0YdMOPR8+rcxcYRDrm8+FMAHJtwgS/3Y72
+         pHR6CbIk9t8T52OraTDDW2Kz5xQVwpLpLNebFASCtJk1e0EitOX/Ttvg/gYW2AM7zuc3
+         SjdsmY4O6mRhUFIHy6vZ9P46vi/szWL1zQkIM9zqmjnzdwCDCFFw6RuCsNGQw7DE2ZUo
+         Am/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MI5GKMcoK4TviI3WF6z6u2HB9Cfoz7+kubiJIKPYUWE=;
+        b=mgYXq1BzhxBt5tNjXw6CTz9We9Yqkov5sop84vwhmit/VboxPOmEd8ZtXl4/WcCs1C
+         YPHrzWY+J4zWqaBmuaneOFusopObH+0jRREL0/90+58QWhF4VUqN7eYGOzEsUSjo9SOU
+         UmS1OKnXv84SRMyOXUNgawAAARO0MJipPMU2ILt85cklYhEJKduDUGEiS8RoSnTqvlw6
+         a890z7yhQDhh3d4fmEPwCEw7he56xkuqNWzdx4XpWvqZsN0Mc7KsOhwdzir4/i9dsYQL
+         o7ZlZhIeiWFilCLXNP6rbP+1bvScj+8e5OOuJ7NGXK/z65F58mi8Tbn0s/0dXxvjhMGV
+         uA9g==
+X-Gm-Message-State: AGi0PubNSSpbeJPdfUZ9r9Y9quDi944E6kH0UCI041+HkZ1dEjQvOWn5
+        klbCEmvNPi+Q/fVlM4LAvgro8w==
+X-Google-Smtp-Source: APiQypIiL+Uvt0D6OURk+1kUi0AqM95GOEbO8F+YGtSNongxrVNfdbTl+JkelH9PusUh3Sl6lWtpMg==
+X-Received: by 2002:ad4:4d06:: with SMTP id l6mr17187495qvl.34.1589220675020;
+        Mon, 11 May 2020 11:11:15 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id d7sm8878948qkk.26.2020.05.11.11.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 11:11:14 -0700 (PDT)
+Date:   Mon, 11 May 2020 14:10:56 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Joonsoo Kim <js1304@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 05/18] mm: memcontrol: convert page cache to a new
+ mem_cgroup_charge() API
+Message-ID: <20200511181056.GA339505@cmpxchg.org>
+References: <20200420221126.341272-1-hannes@cmpxchg.org>
+ <20200420221126.341272-6-hannes@cmpxchg.org>
+ <20200422064041.GE6780@js1304-desktop>
+ <20200422120946.GA358439@cmpxchg.org>
+ <20200423052450.GA12538@js1304-desktop>
+ <20200508160122.GB181181@cmpxchg.org>
+ <alpine.LSU.2.11.2005102350360.2769@eggly.anvils>
+ <20200511150648.GA306292@cmpxchg.org>
+ <alpine.LSU.2.11.2005110912180.3431@eggly.anvils>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005110912180.3431@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initializing the ACPI Power Management Timer takes 33 ms on the ASUS
-F2A85-M PRO.
+On Mon, May 11, 2020 at 09:32:16AM -0700, Hugh Dickins wrote:
+> On Mon, 11 May 2020, Johannes Weiner wrote:
+> > On Mon, May 11, 2020 at 12:38:04AM -0700, Hugh Dickins wrote:
+> > > On Fri, 8 May 2020, Johannes Weiner wrote:
+> > > > 
+> > > > I looked at this some more, as well as compared it to non-shmem
+> > > > swapping. My conclusion is - and Hugh may correct me on this - that
+> > > > the deletion looks mandatory but is actually an optimization. Page
+> > > > reclaim will ultimately pick these pages up.
+> > > > 
+> > > > When non-shmem pages are swapped in by readahead (locked until IO
+> > > > completes) and their page tables are simultaneously unmapped, the
+> > > > zap_pte_range() code calls free_swap_and_cache() and the locked pages
+> > > > are stranded in the swap cache with no page table references. We rely
+> > > > on page reclaim to pick them up later on.
+> > > > 
+> > > > The same appears to be true for shmem. If the references to the swap
+> > > > page are zapped while we're trying to swap in, we can strand the page
+> > > > in the swap cache. But it's not up to swapin to detect this reliably,
+> > > > it just frees the page more quickly than having to wait for reclaim.
+> > > 
+> > > I think you've got all that exactly right, thanks for working it out.
+> > > It originates from v3.7's 215c02bc33bb ("tmpfs: fix shmem_getpage_gfp()
+> > > VM_BUG_ON") - in which I also had to thank you.
+> > 
+> > I should have looked where it actually came from - I had forgotten
+> > about that patch!
+> > 
+> > > I think I chose to do the delete_from_swap_cache() right there, partly
+> > > because of following shmem_unuse_inode() code which already did that,
+> > > partly on the basis that while we have to observe the case then it's
+> > > better to clean it up, and partly out of guilt that our page lock here
+> > > is what had prevented shmem_undo_range() from completing its job; but
+> > > I believe you're right that unused swapcache reclaim would sort it out
+> > > eventually.
+> > 
+> > That makes sense to me.
+> > 
+> > > > diff --git a/mm/shmem.c b/mm/shmem.c
+> > > > index e80167927dce..236642775f89 100644
+> > > > --- a/mm/shmem.c
+> > > > +++ b/mm/shmem.c
+> > > > @@ -640,7 +640,7 @@ static int shmem_add_to_page_cache(struct page *page,
+> > > >  		xas_lock_irq(&xas);
+> > > >  		entry = xas_find_conflict(&xas);
+> > > >  		if (entry != expected)
+> > > > -			xas_set_err(&xas, -EEXIST);
+> > > > +			xas_set_err(&xas, expected ? -ENOENT : -EEXIST);
+> > > 
+> > > Two things on this.
+> > > 
+> > > Minor matter of taste, I'd prefer that as
+> > > 			xas_set_err(&xas, entry ? -EEXIST : -ENOENT);
+> > > which would be more general and more understandable -
+> > > but what you have written should be fine for the actual callers.
+> > 
+> > Yes, checking `expected' was to differentiate the behavior depending
+> > on the callsite. But testing `entry' is more obvious in that location.
+> > 
+> > > Except... I think returning -ENOENT there will not work correctly,
+> > > in the case of a punched hole.  Because (unless you've reworked it
+> > > and I just haven't looked) shmem_getpage_gfp() knows to retry in
+> > > the case of -EEXIST, but -ENOENT will percolate up to shmem_fault()
+> > > and result in a SIGBUS, or a read/write error, when the hole should
+> > > just get refilled instead.
+> > 
+> > Good catch, I had indeed missed that. I'm going to make it retry on
+> > -ENOENT as well.
+> > 
+> > We could have it go directly to allocating a new page, but it seems
+> > unnecessarily complicated: we've already been retrying in this
+> > situation until now, so I would stick to "there was a race, retry."
+> > 
+> > > Not something that needs fixing in a hurry (it took trinity to
+> > > generate this racy case in the first place), I'll take another look
+> > > once I've pulled it into a tree (or collected next mmotm) - unless
+> > > you've already have changed it around by then.
+> > 
+> > Attaching a delta fix based on your observations.
+> > 
+> > Andrew, barring any objections to this, could you please fold it into
+> > the version you have in your tree already?
+> 
+> Not so strong as an objection, and I won't get to see whether your
+> retry on -ENOENT is good (can -ENOENT arrive at that point from any
+> other case, that might endlessly retry?) until I've got the full
+> context; but I had arrived at the opposite conclusion overnight.
+> 
+> Given that this case only appeared with a fuzzer, and stale swapcache
+> reclaim is anyway relied upon to clean up after plenty of other such
+> races, I think we should agree that I over-complicated the VM_BUG_ON
+> removal originally, and it's best to kill that delete_from_swap_cache(),
+> and the comment having to explain it, and your EEXIST/ENOENT distinction.
+> 
+> (I haven't checked, but I suspect that the shmem_unuse_inode() case
+> that I copied from, actually really needed to delete_from_swap_cache(),
+> in order to swapoff the page without full retry of the big swapoff loop.)
 
-     [    0.248373] calling  init_acpi_pm_clocksource+0x0/0x197 @ 1
-     [    0.282913] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
-     [    0.282916] initcall init_acpi_pm_clocksource+0x0/0x197 returned 0 after 33731 usecs
+Since commit b56a2d8af914 ("mm: rid swapoff of quadratic complexity"),
+shmem_unuse_inode() doesn't have its own copy anymore - it uses
+shmem_swapin_page().
 
-Currently, it’s only possible to disable that clocksource with the
-Kconfig option `X86_PM_TIMER`, so add the option `nopmtmr` to disable
-that clocksource at run-time.
+However, that commit appears to have made shmem's private call to
+delete_from_swap_cache() obsolete as well. Whereas before this change
+we fully relied on shmem_unuse() to find and clear a shmem swap entry
+and its swapcache page, we now only need it to clean out shmem's
+private state in the inode, as it's followed by a loop over all
+remaining swap slots, calling try_to_free_swap() on stragglers.
 
-     [    0.248381] calling  init_acpi_pm_clocksource+0x0/0x197 @ 1
-     [    0.248383] initcall init_acpi_pm_clocksource+0x0/0x197 returned -19 after 0 usecs
+Unless I missed something, it's still merely an optimization, and we
+can delete it for simplicity:
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
-Please consider this a request for comments.
 
-1.  What would be the correct return value? Can ENODEV be used?
-2.  Should the attribute `__read_mostly` be added?
+From fc9dcaf68c8b54baf365cd670fb5780c7f0d243f Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Mon, 11 May 2020 12:59:08 -0400
+Subject: [PATCH] mm: shmem: remove rare optimization when swapin races with
+ hole punching
+
+Commit 215c02bc33bb ("tmpfs: fix shmem_getpage_gfp() VM_BUG_ON")
+recognized that hole punching can race with swapin and removed the
+BUG_ON() for a truncated entry from the swapin path.
+
+The patch also added a swapcache deletion to optimize this rare case:
+Since swapin has the page locked, and free_swap_and_cache() merely
+trylocks, this situation can leave the page stranded in
+swapcache. Usually, page reclaim picks up stale swapcache pages, and
+the race can happen at any other time when the page is locked. (The
+same happens for non-shmem swapin racing with page table zapping.) The
+thinking here was: we already observed the race and we have the page
+locked, we may as well do the cleanup instead of waiting for reclaim.
+
+However, this optimization complicates the next patch which moves the
+cgroup charging code around. As this is just a minor speedup for a
+race condition that is so rare that it required a fuzzer to trigger
+the original BUG_ON(), it's no longer worth the complications.
+
+Suggested-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  2 ++
- drivers/clocksource/acpi_pm.c                   | 15 +++++++++++++++
- 2 files changed, 17 insertions(+)
+ mm/shmem.c | 25 +++++++------------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..4ea7fa94b015 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3246,6 +3246,8 @@
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d505b6cce4ab..729bbb3513cd 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1665,27 +1665,16 @@ static int shmem_swapin_page(struct inode *inode, pgoff_t index,
+ 	}
  
- 	nopcid		[X86-64] Disable the PCID cpu feature.
+ 	error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg);
+-	if (!error) {
+-		error = shmem_add_to_page_cache(page, mapping, index,
+-						swp_to_radix_entry(swap), gfp);
+-		/*
+-		 * We already confirmed swap under page lock, and make
+-		 * no memory allocation here, so usually no possibility
+-		 * of error; but free_swap_and_cache() only trylocks a
+-		 * page, so it is just possible that the entry has been
+-		 * truncated or holepunched since swap was confirmed.
+-		 * shmem_undo_range() will have done some of the
+-		 * unaccounting, now delete_from_swap_cache() will do
+-		 * the rest.
+-		 */
+-		if (error) {
+-			mem_cgroup_cancel_charge(page, memcg);
+-			delete_from_swap_cache(page);
+-		}
+-	}
+ 	if (error)
+ 		goto failed;
  
-+	nopmtmr		[X86] Disable the ACPI Power Management Timer.
++	error = shmem_add_to_page_cache(page, mapping, index,
++					swp_to_radix_entry(swap), gfp);
++	if (error) {
++		mem_cgroup_cancel_charge(page, memcg);
++		goto failed;
++	}
 +
- 	norandmaps	Don't use address space randomization.  Equivalent to
- 			echo 0 > /proc/sys/kernel/randomize_va_space
+ 	mem_cgroup_commit_charge(page, memcg, true);
  
-diff --git a/drivers/clocksource/acpi_pm.c b/drivers/clocksource/acpi_pm.c
-index eb596ff9e7bb..c1249f9c9acf 100644
---- a/drivers/clocksource/acpi_pm.c
-+++ b/drivers/clocksource/acpi_pm.c
-@@ -30,6 +30,7 @@
-  * in arch/i386/kernel/acpi/boot.c
-  */
- u32 pmtmr_ioport __read_mostly;
-+static bool nopmtmr;
- 
- static inline u32 read_pmtmr(void)
- {
-@@ -177,6 +178,9 @@ static int __init init_acpi_pm_clocksource(void)
- 	u64 value1, value2;
- 	unsigned int i, j = 0;
- 
-+	if (nopmtmr)
-+		return -ENODEV;
-+
- 	if (!pmtmr_ioport)
- 		return -ENODEV;
- 
-@@ -239,3 +243,14 @@ static int __init parse_pmtmr(char *arg)
- 	return 1;
- }
- __setup("pmtmr=", parse_pmtmr);
-+
-+/*
-+ * Allow to disable PMTimer at run-time.
-+ */
-+static int __init parse_nopmtmr(char *arg)
-+{
-+	nopmtmr = true;
-+
-+	return 0;
-+}
-+__setup("nopmtmr", parse_nopmtmr);
+ 	spin_lock_irq(&info->lock);
 -- 
 2.26.2
 
