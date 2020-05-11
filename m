@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB1FC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85482C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E8120720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA0620720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JcZ2ieOu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bGnAz+Ev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgEKKLz (ORCPT
+        id S1729359AbgEKKL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:11:55 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56913 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728574AbgEKKLy (ORCPT
+        Mon, 11 May 2020 06:11:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38871 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729305AbgEKKL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:11:54 -0400
+        Mon, 11 May 2020 06:11:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589191912;
+        s=mimecast20190719; t=1589191916;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=8rIJ/HCKqeDNuhBVCnARIXHuevQW0iI68fcfjw4hurk=;
-        b=JcZ2ieOur6lia07C2xkB1A7EnGgLerve1/EsOfS8ZslQpBAUGOL38SRTbw1w9fGFPnJLfN
-        4C69nj74+7dM4/kgvEcOsU/YOfLr14R9AeXsCLYmgpcKKwl++LHUgladsrA6EjOyJLvHTJ
-        +m7U0652pu2HsNq7zsZX+ulXr2GhaY0=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-Tn97hWBtP1iFU2lMNZDHUA-1; Mon, 11 May 2020 06:11:51 -0400
-X-MC-Unique: Tn97hWBtP1iFU2lMNZDHUA-1
-Received: by mail-pl1-f200.google.com with SMTP id q7so7026466plr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:11:50 -0700 (PDT)
+        bh=ZN7xwg5CWZvOzQGTmaByrLX25ajcsG3GF52exfugwgc=;
+        b=bGnAz+EvMKihQjuT4lj344jlprwrC+m0nsEX6URRFQ/Gby19OHhj8jcz8gn/XwVxIHVUN4
+        dQ1rrVtP+YdHV1Y+87dPMTJPSMyKtIYFryv95DjFIz9/+HijpLOrifjf+N0YZU9Gh3soGp
+        dfBGhnb+/2Pjl1KJjYVeTPIxyYiAqNU=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-GRFP5Sg8PXyF7zCf3qotCA-1; Mon, 11 May 2020 06:11:55 -0400
+X-MC-Unique: GRFP5Sg8PXyF7zCf3qotCA-1
+Received: by mail-pg1-f200.google.com with SMTP id g11so7386130pgd.20
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 03:11:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=8rIJ/HCKqeDNuhBVCnARIXHuevQW0iI68fcfjw4hurk=;
-        b=Bn5WtqQNMLWg0X2X28kDah1G61x8uQ4kRicGqm7nNmcEKSSA9AZRVC9zFvSOuzXLYM
-         hP9h0RpJoUnSD3rICMi9R7IdUzFtLmFbYvSLZrXDaw3T7N1RUAEdeAzguChX+9Cu5WG1
-         wF0KpHlYApvDYsFV3h8Cj3aGoNWvPaoYJVr/e+VYa4Kj8gUwt6z2hX2Yn3y5lK7OD8tX
-         oFliRKwUSFFzs7gqpwI3CrxExQAQyWmcuORkDr6g3ctqPEnRe69hxZNtWxLL3JpbHAyj
-         6JPEyUYLjiCjfbNviAyOVA0lmNlX5VTas5wFp7RUn7fOWgnSavxjZDNsisV0n9PXbSm2
-         g7Hg==
-X-Gm-Message-State: AGi0PuZRt5IBgdN+QorftlYGPNcP1DVXbJjB5yPfPb0jH8gSlkDiEJWA
-        Ya4VKm5YTFlu+P3U8dVnGcgp2nBp13b+5bZ6zhZMFF5ls7A9bImJgnjP0uRCVE+1wJgSPEtddgj
-        /pQCHPUpqKwXHCRhbWin9pvf9
-X-Received: by 2002:a63:1a16:: with SMTP id a22mr14247242pga.264.1589191909948;
-        Mon, 11 May 2020 03:11:49 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIrWZlVCElZ4EiLMyjUtvtYVoLvegFRsAleXJFufyVTBZQHo6zM2eSohv7NXejuepQZbH+sDQ==
-X-Received: by 2002:a63:1a16:: with SMTP id a22mr14247218pga.264.1589191909658;
-        Mon, 11 May 2020 03:11:49 -0700 (PDT)
+        bh=ZN7xwg5CWZvOzQGTmaByrLX25ajcsG3GF52exfugwgc=;
+        b=EDMEKKyaDXnnu4e0aIOvHtpb2HCFe2QAGtRiINBoekw9Za7mxfxuox+4GxTcnPLZYM
+         05wmGjQ/ta8nGjfn6Buxhdg2cbgh+lnSXHB6MYrqn8/qtMUW+gxLwQGitq/0R6LDjzev
+         Pq8WRdX0/8Ba0k6V0EckI7uIn1lCa7m2ODVkfdcmaeHyC3vOLapVdvAPhCC4nbQ2jyyN
+         vTY/2ytMcl1yQhcRMwrTNrIlCXzdXQ0aEzmDEifLQAnDCOHgLN8CnErRDLf0Zj27TaLF
+         NKspKIfBIgLxoSO5Obw6KT7jV65QE7geDSgV3K8u6nQPmeStID+WDxgzwLP5gTWEOvtF
+         K9tg==
+X-Gm-Message-State: AGi0PuaqJUrxTuowKl3CtD6QeKppfgVejXBXWA7qaG7wDdjiiN5ZdnwB
+        A4uUDDChVUuW4+TLCTqLr/BrVRsWu0HfiD+/Hw0zYNEjYWuzFquplp8uUl8wsi7K6KGzx97s+lM
+        Qry0brrTk2G2ZiZMZu/QQXkb8
+X-Received: by 2002:a17:902:32b:: with SMTP id 40mr14128019pld.73.1589191913262;
+        Mon, 11 May 2020 03:11:53 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJWyWXGdAoto/0EXXwdx9Dr2HzYt8dFPCj8KebFaRpzS/r4xZule3kpAQxzMDRxJPy9o+z/rg==
+X-Received: by 2002:a17:902:32b:: with SMTP id 40mr14127998pld.73.1589191912970;
+        Mon, 11 May 2020 03:11:52 -0700 (PDT)
 Received: from localhost ([223.235.87.110])
-        by smtp.gmail.com with ESMTPSA id q72sm9712037pjb.53.2020.05.11.03.11.48
+        by smtp.gmail.com with ESMTPSA id s136sm9033998pfc.29.2020.05.11.03.11.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 May 2020 03:11:49 -0700 (PDT)
+        Mon, 11 May 2020 03:11:52 -0700 (PDT)
 From:   Bhupesh Sharma <bhsharma@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
         kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
         aelior@marvell.com, GR-everest-linux-l2@marvell.com,
         manishc@marvell.com, davem@davemloft.net, irusskikh@marvell.com
-Subject: [PATCH v2 1/2] net: qed*: Reduce RX and TX default ring count when running inside kdump kernel
-Date:   Mon, 11 May 2020 15:41:41 +0530
-Message-Id: <1589191902-958-2-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v2 2/2] net: qed: Disable SRIOV functionality inside kdump kernel
+Date:   Mon, 11 May 2020 15:41:42 +0530
+Message-Id: <1589191902-958-3-git-send-email-bhsharma@redhat.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589191902-958-1-git-send-email-bhsharma@redhat.com>
 References: <1589191902-958-1-git-send-email-bhsharma@redhat.com>
@@ -77,74 +77,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Normally kdump kernel(s) run under severe memory constraint with the
-basic idea being to save the crashdump vmcore reliably when the primary
-kernel panics/hangs.
+Since we have kdump kernel(s) running under severe memory constraint
+it makes sense to disable the qed SRIOV functionality when running the
+kdump kernel as kdump configurations on several distributions don't
+support SRIOV targets for saving the vmcore (see [1] for example).
 
-Currently the qed* ethernet driver ends up consuming a lot of memory in
-the kdump kernel, leading to kdump kernel panic when one tries to save
-the vmcore via ssh/nfs (thus utilizing the services of the underlying
-qed* network interfaces).
+Currently the qed SRIOV functionality ends up consuming memory in
+the kdump kernel, when we don't really use the same.
 
-An example OOM message log seen in the kdump kernel can be seen here
-[1], with crashkernel size reservation of 512M.
-
-Using tools like memstrack (see [2]), we can track the modules taking up
-the bulk of memory in the kdump kernel and organize the memory usage
-output as per 'highest allocator first'. An example log for the OOM case
-indicates that the qed* modules end up allocating approximately 216M
-memory, which is a large part of the total crashkernel size:
-
+An example log seen in the kdump kernel with the SRIOV functionality
+enabled can be seen below (obtained via memstrack tool, see [2]):
  dracut-pre-pivot[676]: ======== Report format module_summary: ========
  dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
- dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
 
-This patch reduces the default RX and TX ring count from 1024 to 64
-when running inside kdump kernel, which leads to a significant memory
-saving.
+This patch disables the SRIOV functionality inside kdump kernel and with
+the same applied the memory consumption goes down:
+ dracut-pre-pivot[671]: ======== Report format module_summary: ========
+ dracut-pre-pivot[671]: Module qed using 124.6MB (1993 pages), peak allocation 124.7MB (1995 pages)
 
-An example log with the patch applied shows the reduced memory
-allocation in the kdump kernel:
- dracut-pre-pivot[674]: ======== Report format module_summary: ========
- dracut-pre-pivot[674]: Module qed using 141.8MB (2268 pages), peak allocation 141.8MB (2268 pages)
- <..snip..>
-[dracut-pre-pivot[674]: Module qede using 4.8MB (76 pages), peak allocation 4.9MB (78 pages)
-
-Tested crashdump vmcore save via ssh/nfs protocol using underlying qed*
-network interface after applying this patch.
-
-[1] OOM log:
-------------
-
- kworker/0:6: page allocation failure: order:6,
- mode:0x60c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null)
- kworker/0:6 cpuset=/ mems_allowed=0
- CPU: 0 PID: 145 Comm: kworker/0:6 Not tainted 4.18.0-109.el8.aarch64 #1
- Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL025
- 01/18/2019
- Workqueue: events work_for_cpu_fn
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x24/0x30
-  dump_stack+0x90/0xb4
-  warn_alloc+0xf4/0x178
-  __alloc_pages_nodemask+0xcac/0xd58
-  alloc_pages_current+0x8c/0xf8
-  kmalloc_order_trace+0x38/0x108
-  qed_iov_alloc+0x40/0x248 [qed]
-  qed_resc_alloc+0x224/0x518 [qed]
-  qed_slowpath_start+0x254/0x928 [qed]
-   __qede_probe+0xf8/0x5e0 [qede]
-  qede_probe+0x68/0xd8 [qede]
-  local_pci_probe+0x44/0xa8
-  work_for_cpu_fn+0x20/0x30
-  process_one_work+0x1ac/0x3e8
-  worker_thread+0x44/0x448
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x18
-  Cannot start slowpath
-  qede: probe of 0000:05:00.1 failed with error -12
-
+[1]. https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/installing-and-configuring-kdump_managing-monitoring-and-updating-the-kernel#supported-kdump-targets_supported-kdump-configurations-and-targets
 [2]. Memstrack tool: https://github.com/ryncsn/memstrack
 
 Cc: kexec@lists.infradead.org
@@ -155,58 +106,51 @@ Cc: Manish Chopra <manishc@marvell.com>
 Cc: David S. Miller <davem@davemloft.net>
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
- drivers/net/ethernet/qlogic/qede/qede_main.c | 11 +++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_sriov.h  | 10 +++++++---
+ drivers/net/ethernet/qlogic/qede/qede_main.c |  2 +-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index 234c6f30effb..234c7e35ee1e 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -574,12 +574,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
- #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
- #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
- #define NUM_RX_BDS_MIN		128
-+#define NUM_RX_BDS_KDUMP_MIN	63
- #define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.h b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
+index 368e88565783..aabeaf03135e 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_sriov.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
+@@ -32,6 +32,7 @@
  
- #define TX_RING_SIZE_POW	13
- #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
- #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
- #define NUM_TX_BDS_MIN		128
-+#define NUM_TX_BDS_KDUMP_MIN	63
- #define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
+ #ifndef _QED_SRIOV_H
+ #define _QED_SRIOV_H
++#include <linux/crash_dump.h>
+ #include <linux/types.h>
+ #include "qed_vf.h"
  
- #define QEDE_MIN_PKT_LEN		64
+@@ -40,9 +41,12 @@
+ #define QED_VF_ARRAY_LENGTH (3)
+ 
+ #ifdef CONFIG_QED_SRIOV
+-#define IS_VF(cdev)             ((cdev)->b_is_vf)
+-#define IS_PF(cdev)             (!((cdev)->b_is_vf))
+-#define IS_PF_SRIOV(p_hwfn)     (!!((p_hwfn)->cdev->p_iov_info))
++#define IS_VF(cdev)             (is_kdump_kernel() ? \
++				 (0) : ((cdev)->b_is_vf))
++#define IS_PF(cdev)             (is_kdump_kernel() ? \
++				 (1) : !((cdev)->b_is_vf))
++#define IS_PF_SRIOV(p_hwfn)     (is_kdump_kernel() ? \
++				 (0) : !!((p_hwfn)->cdev->p_iov_info))
+ #else
+ #define IS_VF(cdev)             (0)
+ #define IS_PF(cdev)             (1)
 diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 34fa3917eb33..1a83d1fd8ccd 100644
+index 1a83d1fd8ccd..28afa0c49fe8 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede_main.c
 +++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -29,6 +29,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
-+#include <linux/crash_dump.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/version.h>
-@@ -707,8 +708,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
- 	edev->dp_module = dp_module;
- 	edev->dp_level = dp_level;
- 	edev->ops = qed_ops;
--	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
--	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-+
-+	if (is_kdump_kernel()) {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_KDUMP_MIN;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_KDUMP_MIN;
-+	} else {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-+	}
- 
- 	DP_INFO(edev, "Allocated netdev with %d tx queues and %d rx queues\n",
- 		info->num_queues, info->num_queues);
+@@ -1194,7 +1194,7 @@ static int qede_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	case QEDE_PRIVATE_VF:
+ 		if (debug & QED_LOG_VERBOSE_MASK)
+ 			dev_err(&pdev->dev, "Probing a VF\n");
+-		is_vf = true;
++		is_vf = is_kdump_kernel() ? false : true;
+ 		break;
+ 	default:
+ 		if (debug & QED_LOG_VERBOSE_MASK)
 -- 
 2.7.4
 
