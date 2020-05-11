@@ -2,85 +2,140 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D18DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6725BC54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71C6320722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589196513;
-	bh=iM8v+QfgxIMkd/ubDyYGJ/Lo+FpxBTAgrfwxnETDfBA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=sw0VYptC7QiwWZxQ1bipxPfKvBGpCAqBR+B8Y2kjyHq9qrR6S3TsG7dhErQ/CZG6i
-	 V2kUe5cwY0yFSHkbdss6ShttIAvoNAj36gFZxU6hs/3YgOrFCfwm2Zp/51dfV6bTD2
-	 jRa3gals23s653eLdiD9M/3cF55TxgD5YPAAD9oY=
+	by mail.kernel.org (Postfix) with ESMTP id 49A0E20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbgEKL2c (ORCPT
+        id S1730046AbgEKL2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 07:28:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:33368 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729650AbgEKLZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:25:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 813C920736;
-        Mon, 11 May 2020 11:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589196338;
-        bh=iM8v+QfgxIMkd/ubDyYGJ/Lo+FpxBTAgrfwxnETDfBA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Y5SuKuX/7yPBXeDxkYtcbXQwgIhCYWiK7SRh6xG90AJ0YwUiByurS0ZviupWe1VH2
-         BV2ldz8nERLbCEWDPxHILaNt2Yyxcq5RK0sSyOkmiQMtJ2Zv90tIaP/cc1bCIDxndA
-         tN2uTKGTA+cQO/XhdoTX5+9mXeGxnotA8SJm1Bmo=
-Date:   Mon, 11 May 2020 12:25:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-spi@vger.kernel.org,
-        Alistair Francis <alistair@alistair23.me>
-Cc:     linux-kernel@vger.kernel.org, wens@csie.org, mripard@kernel.org,
-        linux-arm-kernel@lists.infradead.org, alistair23@gmail.com
-In-Reply-To: <20200511045330.690507-1-alistair@alistair23.me>
-References: <20200511045330.690507-1-alistair@alistair23.me>
-Subject: Re: [PATCH v2] spi: sun6i: Add support for GPIO chip select lines
-Message-Id: <158919630591.8372.404655401498379497.b4-ty@kernel.org>
+        id S1729333AbgEKLZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:25:37 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49LJWs4dq0z9ty3r;
+        Mon, 11 May 2020 13:25:29 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id EW7JhfG-Ppsl; Mon, 11 May 2020 13:25:29 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49LJWs3tvFz9ty3g;
+        Mon, 11 May 2020 13:25:29 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 34F898B7AE;
+        Mon, 11 May 2020 13:25:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id R21n_tgWPMnG; Mon, 11 May 2020 13:25:31 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EEC7F8B7AD;
+        Mon, 11 May 2020 13:25:30 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id D5E6065A09; Mon, 11 May 2020 11:25:30 +0000 (UTC)
+Message-Id: <076f24223e6771c7262f8c0b9f857e8f7d9b45d6.1589196133.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+References: <cover.1589196133.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v3 05/45] powerpc/kasan: Refactor update of early shadow
+ mappings
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 May 2020 11:25:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 21:53:30 -0700, Alistair Francis wrote:
-> Set use_gpio_descriptors as true to support using generic GPIO
-> lines for the chip select.
+kasan_remap_early_shadow_ro() and kasan_unmap_early_shadow_vmalloc()
+are both updating the early shadow mapping: the first one sets
+the mapping read-only while the other clears the mapping.
 
-Applied to
+Refactor and create kasan_update_early_region()
 
-   local tree asoc/for-5.7
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/mm/kasan/kasan_init_32.c | 39 +++++++++++++--------------
+ 1 file changed, 18 insertions(+), 21 deletions(-)
 
-Thanks!
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index 91e2ade75192..10481d904fea 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -79,45 +79,42 @@ static int __init kasan_init_region(void *start, size_t size)
+ 	return 0;
+ }
+ 
+-static void __init kasan_remap_early_shadow_ro(void)
++static void __init
++kasan_update_early_region(unsigned long k_start, unsigned long k_end, pte_t pte)
+ {
+-	pgprot_t prot = kasan_prot_ro();
+-	unsigned long k_start = KASAN_SHADOW_START;
+-	unsigned long k_end = KASAN_SHADOW_END;
+ 	unsigned long k_cur;
+ 	phys_addr_t pa = __pa(kasan_early_shadow_page);
+ 
+-	kasan_populate_pte(kasan_early_shadow_pte, prot);
+-
+-	for (k_cur = k_start & PAGE_MASK; k_cur != k_end; k_cur += PAGE_SIZE) {
++	for (k_cur = k_start; k_cur != k_end; k_cur += PAGE_SIZE) {
+ 		pmd_t *pmd = pmd_ptr_k(k_cur);
+ 		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
+ 
+ 		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
+ 			continue;
+ 
+-		__set_pte_at(&init_mm, k_cur, ptep, pfn_pte(PHYS_PFN(pa), prot), 0);
++		__set_pte_at(&init_mm, k_cur, ptep, pte, 0);
+ 	}
+-	flush_tlb_kernel_range(KASAN_SHADOW_START, KASAN_SHADOW_END);
++
++	flush_tlb_kernel_range(k_start, k_end);
+ }
+ 
+-static void __init kasan_unmap_early_shadow_vmalloc(void)
++static void __init kasan_remap_early_shadow_ro(void)
+ {
+-	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
+-	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
+-	unsigned long k_cur;
++	pgprot_t prot = kasan_prot_ro();
+ 	phys_addr_t pa = __pa(kasan_early_shadow_page);
+ 
+-	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+-		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
+-		pte_t *ptep = pte_offset_kernel(pmd, k_cur);
++	kasan_populate_pte(kasan_early_shadow_pte, prot);
+ 
+-		if ((pte_val(*ptep) & PTE_RPN_MASK) != pa)
+-			continue;
++	kasan_update_early_region(KASAN_SHADOW_START, KASAN_SHADOW_END,
++				  pfn_pte(PHYS_PFN(pa), prot));
++}
+ 
+-		__set_pte_at(&init_mm, k_cur, ptep, __pte(0), 0);
+-	}
+-	flush_tlb_kernel_range(k_start, k_end);
++static void __init kasan_unmap_early_shadow_vmalloc(void)
++{
++	unsigned long k_start = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_START);
++	unsigned long k_end = (unsigned long)kasan_mem_to_shadow((void *)VMALLOC_END);
++
++	kasan_update_early_region(k_start, k_end, __pte(0));
+ }
+ 
+ static void __init kasan_mmu_init(void)
+-- 
+2.25.0
 
-[1/1] spi: sun6i: Add support for GPIO chip select lines
-      (no commit info)
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
