@@ -2,125 +2,149 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172BAC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09020C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E763720820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589172871;
-	bh=NWCdWvrnftahbOeAAAbo3rET17oclfuJbv2R+igmKSw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgJ1l/K2wo9QzVTT0Vfpi0R70xN03tpfpiPlubxRPJzUjZ5n4pl/8Dl9gvPOzntdD
-	 uXQGLSt6he/CkMmSMDsbdn8vl2Aa6AbTY4iiOcfWnsCchcmD1VUCZNZihSI8vX2tYY
-	 IUHlT3xY8AfYg0IZQTmz1uQjYxqFSN5MrtRQtzlA=
+	by mail.kernel.org (Postfix) with ESMTP id B9FAC2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ruGIkzzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgEKExa (ORCPT
+        id S1726632AbgEKE7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:53:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgEKEx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:53:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 11 May 2020 00:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725884AbgEKE7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:59:21 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75121C061A0C;
+        Sun, 10 May 2020 21:59:20 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5942184D;
-        Mon, 11 May 2020 04:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589172808;
-        bh=NWCdWvrnftahbOeAAAbo3rET17oclfuJbv2R+igmKSw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jSHPIIZm4bPQsKV4zhO2mMN7Tzl07Tv6CdlDC0ZsVIDZoa+GqVcB6XDuDI8SI9cO
-         A7YlQ8Igz2pqCmOnaUasI7628HcM9OYsWS1dBcvCnucESOk3RmMII3UB5Czlh+bkYn
-         Jb0uezZNoLxhwuP6iCq49s07pbRCPYUw6L6lXFpg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        luto@kernel.org
-Cc:     hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ak@linux.intel.com, ravi.v.shankar@intel.com,
-        chang.seok.bae@intel.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v12 01/18] x86/ptrace: Prevent ptrace from clearing the FS/GS selector
-Date:   Mon, 11 May 2020 00:52:54 -0400
-Message-Id: <20200511045311.4785-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200511045311.4785-1-sashal@kernel.org>
-References: <20200511045311.4785-1-sashal@kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L7yF3Khqz9sRY;
+        Mon, 11 May 2020 14:59:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589173157;
+        bh=WUujOLimoeAvDljYiMPixtckD8vaBObKHQz9F4iBiWI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ruGIkzzcPER0x91jO8wyv+BvsFONC/afbQjoAwXnuYwbkBMRxyBxO2hnlYxa6XPUX
+         gJw5BecasERj0DgD0NJjovW7kHqRnt6P6sDdHVSoCL5x4o+xyPCScSSYsvhQOB8WMO
+         Q1/VahqcFdiB/hoAR9ZCQh5VG5qNHcKxJi+W1s17iTEVTw7op7HL/ls//p7i6xS4Yl
+         LrQmsxFT+79lj4uzAFl/EdXqZSATf73spFUpt5bhjrVFc6yTwTUznLle0xTl5Bs6Rx
+         4HvfsWTwV7f/S30T8jUzNWHJzczTXApQWqGXrGlFfxTr4I9IeR5F6hamHkU94T8zOp
+         jziGuffJQ5gpA==
+Date:   Mon, 11 May 2020 14:59:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: linux-next: manual merge of the keys tree with Linus' tree
+Message-ID: <20200511145915.3bef0c16@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/I=eeMJ48ut2BBgMwtYzMluM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
+--Sig_/I=eeMJ48ut2BBgMwtYzMluM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When a ptracer writes a ptracee's FS/GS base with a different value, the
-selector is also cleared. While this behavior is incorrect as the selector
-should be preserved, most userspace applications did not notice that as
-they do not use non-zero segments to begin with.
+Hi all,
 
-Instead, with this patch, when a tracee sets the base we will let it do
-so without clearing the selector.
+Today's linux-next merge of the keys tree got a conflict in:
 
-The change above means that a tracee that already has a selector set
-will fail in an attempt to set the base - the change won't stick and the
-value will be instead based on the value of the selector. As with the
-above, we haven't found userspace that would be affected by this change.
+  fs/splice.c
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-[sasha: rewrite commit message]
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
----
- arch/x86/kernel/ptrace.c | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+between commit:
 
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index f0e1ddbc2fd78..cc56efb75d275 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -380,25 +380,12 @@ static int putreg(struct task_struct *child,
- 	case offsetof(struct user_regs_struct,fs_base):
- 		if (value >= TASK_SIZE_MAX)
- 			return -EIO;
--		/*
--		 * When changing the FS base, use do_arch_prctl_64()
--		 * to set the index to zero and to set the base
--		 * as requested.
--		 *
--		 * NB: This behavior is nonsensical and likely needs to
--		 * change when FSGSBASE support is added.
--		 */
--		if (child->thread.fsbase != value)
--			return do_arch_prctl_64(child, ARCH_SET_FS, value);
-+		x86_fsbase_write_task(child, value);
- 		return 0;
- 	case offsetof(struct user_regs_struct,gs_base):
--		/*
--		 * Exactly the same here as the %fs handling above.
--		 */
- 		if (value >= TASK_SIZE_MAX)
- 			return -EIO;
--		if (child->thread.gsbase != value)
--			return do_arch_prctl_64(child, ARCH_SET_GS, value);
-+		x86_gsbase_write_task(child, value);
- 		return 0;
- #endif
- 	}
--- 
-2.20.1
+  90da2e3f25c8 ("splice: move f_mode checks to do_{splice,tee}()")
 
+from Linus' tree and commit:
+
+  549d46d3827d ("pipe: Add general notification queue support")
+
+from the keys tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/splice.c
+index fd0a1e7e5959,6e6ea30c72b4..000000000000
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@@ -1118,12 -1118,8 +1118,12 @@@ long do_splice(struct file *in, loff_t=20
+  	loff_t offset;
+  	long ret;
+ =20
+ +	if (unlikely(!(in->f_mode & FMODE_READ) ||
+ +		     !(out->f_mode & FMODE_WRITE)))
+ +		return -EBADF;
+ +
+- 	ipipe =3D get_pipe_info(in);
+- 	opipe =3D get_pipe_info(out);
++ 	ipipe =3D get_pipe_info(in, true);
++ 	opipe =3D get_pipe_info(out, true);
+ =20
+  	if (ipipe && opipe) {
+  		if (off_in || off_out)
+@@@ -1757,14 -1766,10 +1757,17 @@@ static int link_pipe(struct pipe_inode_
+  static long do_tee(struct file *in, struct file *out, size_t len,
+  		   unsigned int flags)
+  {
+- 	struct pipe_inode_info *ipipe =3D get_pipe_info(in);
+- 	struct pipe_inode_info *opipe =3D get_pipe_info(out);
+ -	struct pipe_inode_info *ipipe =3D get_pipe_info(in, true);
+ -	struct pipe_inode_info *opipe =3D get_pipe_info(out, true);
+++	struct pipe_inode_info *ipipe;
+++	struct pipe_inode_info *opipe;
+  	int ret =3D -EINVAL;
+ =20
+ +	if (unlikely(!(in->f_mode & FMODE_READ) ||
+ +		     !(out->f_mode & FMODE_WRITE)))
+ +		return -EBADF;
+ +
+++	ipipe =3D get_pipe_info(in, true);
+++	opipe =3D get_pipe_info(out, true);
+++
+  	/*
+  	 * Duplicate the contents of ipipe to opipe without actually
+  	 * copying the data.
+
+--Sig_/I=eeMJ48ut2BBgMwtYzMluM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6426MACgkQAVBC80lX
+0GxirQf7B4Vg54aYUZcBzIKxcaUnOBzTEgcQVt9XNG80kzwBY+OtrrmLA5ENve7f
+luO2RKNfTNwhO2nfVPmYSUZtccORDNHd9w4xaLOJD+FCwSewhIvpj1VtLvEOGTVn
+2Rgo57CmvlDc9gdxZlCSSv/SBT9IHvsJ2e0cWIAZuvRlmd25Y5o1r3xSW5fjlcfV
+DPjhZGUOaSd9wvFDocOjgWbKGOrWlhRRd+L3ovnzL8ZCR51KQhg4MYDUdJnRLsFz
+BaJfJesaQoUdFTR0e2eUuCKa9uDzKrL0F3x79LD8UM7ONaVV0H508HodW8vykenJ
+mBf4osiyoG0iJpR8pu8bQqZJ1Kx1Ng==
+=ZAJP
+-----END PGP SIGNATURE-----
+
+--Sig_/I=eeMJ48ut2BBgMwtYzMluM--
