@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEA3C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21D5C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47C820736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A0206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+TbnEGX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7dE5d36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgEKNyi (ORCPT
+        id S1730480AbgEKNys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:54:38 -0400
+        Mon, 11 May 2020 09:54:48 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730364AbgEKNyA (ORCPT
+        by vger.kernel.org with ESMTP id S1730352AbgEKNx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:54:00 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD441C061A0C;
-        Mon, 11 May 2020 06:53:59 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u16so19349494wmc.5;
-        Mon, 11 May 2020 06:53:59 -0700 (PDT)
+        Mon, 11 May 2020 09:53:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16623C061A0E;
+        Mon, 11 May 2020 06:53:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id j5so11088410wrq.2;
+        Mon, 11 May 2020 06:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5yYq83J3DNw5JPTZxpduvzw1hu6JwH0+ETQQlvjCbiY=;
-        b=g+TbnEGXibLAtaFEzqHKYaVUpu4EnsOMosmd8ar5iEpOYTTGI+SjrD9xn4cMoMfHck
-         T9K41g3KlYzkKjSVsHEf5ThzAqw5Hj7PEcH0/poBommb3qov1mKObkO2wuRYU3yjWkHG
-         PWUKGP0aG5qd0yrSbplQ2JGUb4qz1yLNyW1Uaf55s6uQ+6/n5n6UWutVSaTVSrDmDyL+
-         okkUd+IzlWaRs5BTTHGMW7A0a5kiL4XTZOqYVkfvxjjgBOyZzSeVzg8ko1xtvRQnNR+j
-         0ZjmC6TyQxMCiyfhoj+0dry6TE61P+ckmSlKq8KytDCKB++n1+1gs/sTm94zFAKOrsAq
-         t+Iw==
+        bh=V8mlDWecQSyX2mssBOMsBiZI+MANvLYpX262jCYYdwg=;
+        b=G7dE5d36sbeMwUYcoPmcdZL+KhahOF+dCM/D2sl/KDgg+tmDDqKUybY3a/xulVPnAw
+         Z3JYUIfsS4Z/qxromZyDEWNmCM8VGt2T2UZ9rygFsmFQSMnAXqxhL+jnaMvSLhC5ZvT8
+         6WMmWyO0ovevE08qpRdAY1EaubZ5O78i7Srca8LU8DMp1jiBA++VMY7sEE+k1+8tdH/4
+         B3eLetXpAfCEMMPe+fcUoZYtgt0ZYJH4oXOG9HdpPrD1wmR7fPCTN5544AZpZfomwJCV
+         7RVfQIyyH0sOJUpKs+HSRQwmmB3gEu7UoZ4qYtrPeKZ9EatoeSVlaRhWkaTao9pPGsJu
+         ITRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5yYq83J3DNw5JPTZxpduvzw1hu6JwH0+ETQQlvjCbiY=;
-        b=HcSnLMI1gn6ctR965p/HCT5bAY3Be4tkk69iRIjJEu4u7wLAqs0yk78sLiuovVtPD0
-         gMTf6bSdZCaG31sPaU0YMh2FYRAziGYEltdRMgKrSVimbJ0Avg902576Cm90ChhW52wZ
-         ZyU9P43SYHbsmqCoSCZdpgas47IoISaLUo7wIoIh8eFQcuEDkyRR+488Wb6b2Z/rLl80
-         DF+JNgRjsSPntTaLSjORLYftQSxrRT/cCajeLf7vyE+a5v24OoVTnYNs2zWfwuS2A9nI
-         XSYwIUGwKzy6eWAE/SBUFF+fLqZBHx2fXXQ8wY5BTEgUCCj3VslHqZ4vpus3nBlcEcgf
-         PhWA==
-X-Gm-Message-State: AGi0PuYsT3hRip1wS61rMnix1Bv+FQKGn0AyDO33X03KIEXE8ItGE0Gt
-        bTdjZaw+zR5Yya3+uYKa+Hk=
-X-Google-Smtp-Source: APiQypIIKim2tgOuuVHcPnljwsXVuuz8RsQOmTvflIJk5/SY/B6iVXeO3M15lFo9i4e7svZ926sd6A==
-X-Received: by 2002:a05:600c:297:: with SMTP id 23mr3299568wmk.12.1589205238603;
-        Mon, 11 May 2020 06:53:58 -0700 (PDT)
+        bh=V8mlDWecQSyX2mssBOMsBiZI+MANvLYpX262jCYYdwg=;
+        b=GpxDjJlIODTcw5EU4/d8m+UBbRNoveBOrjmUJRgLnTUcf+HJtuFf07efnh04VUk3Nw
+         r6gCc0R7FXMk6zUxadCQ+zLloVZkkKiANBgN1gA4c8KOifC5shl6jslYAwDoNmTdjnwX
+         hZEceddbN0U04lOUx5NFD5MeOoP6jzKTeVFUebF5yuOjBYOme8tQm2a36KFIdSIPS5vy
+         cnnERc6eoFuZyVK5RrkKsc7ICJZzC88swMR6Dh043rUYW2YOOdUho/SzfBbV8AP3ED2T
+         F3hOPP3t3VPq8v9iTvuy+0w2pDjrPm80NISTHB17vG66YtwuUy5/Cc7icf1+HOdHFmhT
+         Pt7w==
+X-Gm-Message-State: AGi0PuYCuSpz9Gxmdxd4Cl/K021JXm60mDzcIM7WekH2abju8uL/7EvZ
+        E736ywXncRX93XTqm7acEbk=
+X-Google-Smtp-Source: APiQypJYPJOx0lt5P8+Zq9IenPsFEEEMKmEM+VagUZo+P5VrWwCepVbv641fGt4wBNia+LHKPl+J6Q==
+X-Received: by 2002:a5d:6988:: with SMTP id g8mr12736862wru.47.1589205234776;
+        Mon, 11 May 2020 06:53:54 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.53.57
+        by smtp.gmail.com with ESMTPSA id 2sm17596413wre.25.2020.05.11.06.53.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:53:58 -0700 (PDT)
+        Mon, 11 May 2020 06:53:54 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 11/15] net: dsa: sja1105: add a new best_effort_vlan_filtering devlink parameter
-Date:   Mon, 11 May 2020 16:53:34 +0300
-Message-Id: <20200511135338.20263-12-olteanv@gmail.com>
+Subject: [PATCH v2 net-next 08/15] net: dsa: sja1105: prepare tagger for handling DSA tags and VLAN simultaneously
+Date:   Mon, 11 May 2020 16:53:31 +0300
+Message-Id: <20200511135338.20263-9-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200511135338.20263-1-olteanv@gmail.com>
 References: <20200511135338.20263-1-olteanv@gmail.com>
@@ -77,245 +77,207 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This devlink parameter enables the handling of DSA tags when enslaved to
-a bridge with vlan_filtering=1. There are very good reasons to want
-this, but there are also very good reasons for not enabling it by
-default. So a devlink param named best_effort_vlan_filtering, currently
-driver-specific and exported only by sja1105, is used to configure this.
+In VLAN-unaware mode, sja1105 uses VLAN tags with a custom TPID of
+0xdadb. While in the yet-to-be introduced best_effort_vlan_filtering
+mode, it needs to work with normal VLAN TPID values.
 
-In practice, this is perhaps the way that most users are going to use
-the switch in. It assumes that no more than 7 VLANs are needed per port.
+A complication arises when we must transmit a VLAN-tagged packet to the
+switch when it's in VLAN-aware mode. We need to construct a packet with
+2 VLAN tags, and the switch will use the outer header for routing and
+pop it on egress. But sadly, here the 2 hardware generations don't
+behave the same:
+
+- E/T switches won't pop an ETH_P_8021AD tag on egress, it seems
+  (packets will remain double-tagged).
+- P/Q/R/S switches will drop a packet with 2 ETH_P_8021Q tags (it looks
+  like it tries to prevent VLAN hopping).
+
+But looks like the reverse is also true:
+
+- E/T switches have no problem popping the outer tag from packets with
+  2 ETH_P_8021Q tags.
+- P/Q/R/S will have no problem popping a single tag even if that is
+  ETH_P_8021AD.
+
+So it is clear that if we want the hardware to work with dsa_8021q
+tagging in VLAN-aware mode, we need to send different TPIDs depending on
+revision. Keep that information in priv->info->qinq_tpid.
+
+The per-port tagger structure will hold an xmit_tpid value that depends
+not only upon the qinq_tpid, but also upon the VLAN awareness state
+itself (in case we must transmit using 0xdadb).
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-- In sja1105_best_effort_vlan_filtering_set, get the vlan_filtering
-  value of each port instead of just one time for port 0. Normally this
-  shouldn't matter, but it avoids issues when port 0 is disabled in
-  device tree.
+None.
 
- drivers/net/dsa/sja1105/sja1105.h      |   2 +
- drivers/net/dsa/sja1105/sja1105_main.c | 122 ++++++++++++++++++++++++-
- 2 files changed, 120 insertions(+), 4 deletions(-)
+ drivers/net/dsa/sja1105/sja1105.h      |  6 ++++++
+ drivers/net/dsa/sja1105/sja1105_main.c | 10 ++++++++++
+ drivers/net/dsa/sja1105/sja1105_spi.c  |  6 ++++++
+ include/linux/dsa/sja1105.h            |  2 ++
+ net/dsa/tag_sja1105.c                  | 17 +++++++----------
+ 5 files changed, 31 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index a019ffae38f1..1dcaecab0912 100644
+index c80f1999c694..a019ffae38f1 100644
 --- a/drivers/net/dsa/sja1105/sja1105.h
 +++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -194,6 +194,7 @@ struct sja1105_bridge_vlan {
- 
- enum sja1105_vlan_state {
- 	SJA1105_VLAN_UNAWARE,
-+	SJA1105_VLAN_BEST_EFFORT,
- 	SJA1105_VLAN_FILTERING_FULL,
- };
- 
-@@ -201,6 +202,7 @@ struct sja1105_private {
- 	struct sja1105_static_config static_config;
- 	bool rgmii_rx_delay[SJA1105_NUM_PORTS];
- 	bool rgmii_tx_delay[SJA1105_NUM_PORTS];
-+	bool best_effort_vlan_filtering;
- 	const struct sja1105_info *info;
- 	struct gpio_desc *reset_gpio;
- 	struct spi_device *spidev;
+@@ -87,6 +87,12 @@ struct sja1105_info {
+ 	const struct sja1105_dynamic_table_ops *dyn_ops;
+ 	const struct sja1105_table_ops *static_ops;
+ 	const struct sja1105_regs *regs;
++	/* Both E/T and P/Q/R/S have quirks when it comes to popping the S-Tag
++	 * from double-tagged frames. E/T will pop it only when it's equal to
++	 * TPID from the General Parameters Table, while P/Q/R/S will only
++	 * pop it when it's equal to TPID2.
++	 */
++	u16 qinq_tpid;
+ 	int (*reset_cmd)(struct dsa_switch *ds);
+ 	int (*setup_rgmii_delay)(const void *ctx, int port);
+ 	/* Prototypes from include/net/dsa.h */
 diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index fe300cf94509..99139fcdc715 100644
+index 82b424a03658..042ecbbc5572 100644
 --- a/drivers/net/dsa/sja1105/sja1105_main.c
 +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -2132,6 +2132,7 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 	enum sja1105_vlan_state state;
- 	struct sja1105_table *table;
- 	struct sja1105_rule *rule;
-+	bool want_tagging;
- 	u16 tpid, tpid2;
- 	int rc;
- 
-@@ -2164,6 +2165,8 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 
- 	if (!enabled)
- 		state = SJA1105_VLAN_UNAWARE;
-+	else if (priv->best_effort_vlan_filtering)
-+		state = SJA1105_VLAN_BEST_EFFORT;
- 	else
- 		state = SJA1105_VLAN_FILTERING_FULL;
- 
-@@ -2171,6 +2174,8 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 		return 0;
- 
- 	priv->vlan_state = state;
-+	want_tagging = (state == SJA1105_VLAN_UNAWARE ||
-+			state == SJA1105_VLAN_BEST_EFFORT);
- 
- 	table = &priv->static_config.tables[BLK_IDX_GENERAL_PARAMS];
- 	general_params = table->entries;
-@@ -2184,8 +2189,10 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 	general_params->incl_srcpt1 = enabled;
- 	general_params->incl_srcpt0 = enabled;
- 
-+	want_tagging = priv->best_effort_vlan_filtering || !enabled;
-+
- 	/* VLAN filtering => independent VLAN learning.
--	 * No VLAN filtering => shared VLAN learning.
-+	 * No VLAN filtering (or best effort) => shared VLAN learning.
- 	 *
- 	 * In shared VLAN learning mode, untagged traffic still gets
- 	 * pvid-tagged, and the FDB table gets populated with entries
-@@ -2204,7 +2211,7 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 	 */
- 	table = &priv->static_config.tables[BLK_IDX_L2_LOOKUP_PARAMS];
- 	l2_lookup_params = table->entries;
--	l2_lookup_params->shared_learn = !enabled;
-+	l2_lookup_params->shared_learn = want_tagging;
- 
- 	rc = sja1105_static_config_reload(priv, SJA1105_VLAN_FILTERING);
- 	if (rc)
-@@ -2212,9 +2219,10 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
- 
- 	/* Switch port identification based on 802.1Q is only passable
- 	 * if we are not under a vlan_filtering bridge. So make sure
--	 * the two configurations are mutually exclusive.
-+	 * the two configurations are mutually exclusive (of course, the
-+	 * user may know better, i.e. best_effort_vlan_filtering).
- 	 */
--	return sja1105_setup_8021q_tagging(ds, !enabled);
-+	return sja1105_setup_8021q_tagging(ds, want_tagging);
- }
- 
- bool sja1105_can_use_vlan_as_tags(struct dsa_switch *ds)
-@@ -2305,6 +2313,105 @@ static int sja1105_vlan_del(struct dsa_switch *ds, int port,
- 	return sja1105_build_vlan_table(priv, true);
- }
- 
-+static int sja1105_best_effort_vlan_filtering_get(struct sja1105_private *priv,
-+						  bool *be_vlan)
-+{
-+	*be_vlan = priv->best_effort_vlan_filtering;
-+
-+	return 0;
-+}
-+
-+static int sja1105_best_effort_vlan_filtering_set(struct sja1105_private *priv,
-+						  bool be_vlan)
-+{
-+	struct dsa_switch *ds = priv->ds;
-+	bool vlan_filtering;
-+	int port;
-+	int rc;
-+
-+	priv->best_effort_vlan_filtering = be_vlan;
-+
-+	rtnl_lock();
-+	for (port = 0; port < ds->num_ports; port++) {
-+		struct dsa_port *dp;
-+
-+		if (!dsa_is_user_port(ds, port))
-+			continue;
-+
-+		dp = dsa_to_port(ds, port);
-+		vlan_filtering = dsa_port_is_vlan_filtering(dp);
-+
-+		rc = sja1105_vlan_filtering(ds, port, vlan_filtering);
-+		if (rc)
-+			break;
-+	}
-+	rtnl_unlock();
-+
-+	return rc;
-+}
-+
-+enum sja1105_devlink_param_id {
-+	SJA1105_DEVLINK_PARAM_ID_BASE = DEVLINK_PARAM_GENERIC_ID_MAX,
-+	SJA1105_DEVLINK_PARAM_ID_BEST_EFFORT_VLAN_FILTERING,
-+};
-+
-+static int sja1105_devlink_param_get(struct dsa_switch *ds, u32 id,
-+				     struct devlink_param_gset_ctx *ctx)
-+{
-+	struct sja1105_private *priv = ds->priv;
-+	int err;
-+
-+	switch (id) {
-+	case SJA1105_DEVLINK_PARAM_ID_BEST_EFFORT_VLAN_FILTERING:
-+		err = sja1105_best_effort_vlan_filtering_get(priv,
-+							     &ctx->val.vbool);
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
-+static int sja1105_devlink_param_set(struct dsa_switch *ds, u32 id,
-+				     struct devlink_param_gset_ctx *ctx)
-+{
-+	struct sja1105_private *priv = ds->priv;
-+	int err;
-+
-+	switch (id) {
-+	case SJA1105_DEVLINK_PARAM_ID_BEST_EFFORT_VLAN_FILTERING:
-+		err = sja1105_best_effort_vlan_filtering_set(priv,
-+							     ctx->val.vbool);
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
-+static const struct devlink_param sja1105_devlink_params[] = {
-+	DSA_DEVLINK_PARAM_DRIVER(SJA1105_DEVLINK_PARAM_ID_BEST_EFFORT_VLAN_FILTERING,
-+				 "best_effort_vlan_filtering",
-+				 DEVLINK_PARAM_TYPE_BOOL,
-+				 BIT(DEVLINK_PARAM_CMODE_RUNTIME)),
-+};
-+
-+static int sja1105_setup_devlink_params(struct dsa_switch *ds)
-+{
-+	return dsa_devlink_params_register(ds, sja1105_devlink_params,
-+					   ARRAY_SIZE(sja1105_devlink_params));
-+}
-+
-+static void sja1105_teardown_devlink_params(struct dsa_switch *ds)
-+{
-+	dsa_devlink_params_unregister(ds, sja1105_devlink_params,
-+				      ARRAY_SIZE(sja1105_devlink_params));
-+}
-+
- /* The programming model for the SJA1105 switch is "all-at-once" via static
-  * configuration tables. Some of these can be dynamically modified at runtime,
-  * but not the xMII mode parameters table.
-@@ -2372,6 +2479,10 @@ static int sja1105_setup(struct dsa_switch *ds)
- 
- 	ds->configure_vlans_while_disabled = true;
- 
-+	rc = sja1105_setup_devlink_params(ds);
-+	if (rc < 0)
-+		return rc;
-+
- 	/* The DSA/switchdev model brings up switch ports in standalone mode by
- 	 * default, and that means vlan_filtering is 0 since they're not under
- 	 * a bridge, so it's safe to set up switch tagging at this time.
-@@ -2395,6 +2506,7 @@ static void sja1105_teardown(struct dsa_switch *ds)
- 			kthread_destroy_worker(sp->xmit_worker);
+@@ -2153,6 +2153,15 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
+ 		tpid2 = ETH_P_SJA1105;
  	}
  
-+	sja1105_teardown_devlink_params(ds);
- 	sja1105_flower_teardown(ds);
- 	sja1105_tas_teardown(ds);
- 	sja1105_ptp_clock_unregister(ds);
-@@ -2746,6 +2858,8 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
- 	.cls_flower_stats	= sja1105_cls_flower_stats,
- 	.crosschip_bridge_join	= sja1105_crosschip_bridge_join,
- 	.crosschip_bridge_leave	= sja1105_crosschip_bridge_leave,
-+	.devlink_param_get	= sja1105_devlink_param_get,
-+	.devlink_param_set	= sja1105_devlink_param_set,
++	for (port = 0; port < ds->num_ports; port++) {
++		struct sja1105_port *sp = &priv->ports[port];
++
++		if (enabled)
++			sp->xmit_tpid = priv->info->qinq_tpid;
++		else
++			sp->xmit_tpid = ETH_P_SJA1105;
++	}
++
+ 	if (!enabled)
+ 		state = SJA1105_VLAN_UNAWARE;
+ 	else
+@@ -2874,6 +2883,7 @@ static int sja1105_probe(struct spi_device *spi)
+ 			goto out;
+ 		}
+ 		skb_queue_head_init(&sp->xmit_queue);
++		sp->xmit_tpid = ETH_P_SJA1105;
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index 0be75c49e6c3..a0dacae803cc 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -512,6 +512,7 @@ struct sja1105_info sja1105e_info = {
+ 	.part_no		= SJA1105ET_PART_NO,
+ 	.static_ops		= sja1105e_table_ops,
+ 	.dyn_ops		= sja1105et_dyn_ops,
++	.qinq_tpid		= ETH_P_8021Q,
+ 	.ptp_ts_bits		= 24,
+ 	.ptpegr_ts_bytes	= 4,
+ 	.reset_cmd		= sja1105et_reset_cmd,
+@@ -526,6 +527,7 @@ struct sja1105_info sja1105t_info = {
+ 	.part_no		= SJA1105ET_PART_NO,
+ 	.static_ops		= sja1105t_table_ops,
+ 	.dyn_ops		= sja1105et_dyn_ops,
++	.qinq_tpid		= ETH_P_8021Q,
+ 	.ptp_ts_bits		= 24,
+ 	.ptpegr_ts_bytes	= 4,
+ 	.reset_cmd		= sja1105et_reset_cmd,
+@@ -540,6 +542,7 @@ struct sja1105_info sja1105p_info = {
+ 	.part_no		= SJA1105P_PART_NO,
+ 	.static_ops		= sja1105p_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.qinq_tpid		= ETH_P_8021AD,
+ 	.ptp_ts_bits		= 32,
+ 	.ptpegr_ts_bytes	= 8,
+ 	.setup_rgmii_delay	= sja1105pqrs_setup_rgmii_delay,
+@@ -555,6 +558,7 @@ struct sja1105_info sja1105q_info = {
+ 	.part_no		= SJA1105Q_PART_NO,
+ 	.static_ops		= sja1105q_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.qinq_tpid		= ETH_P_8021AD,
+ 	.ptp_ts_bits		= 32,
+ 	.ptpegr_ts_bytes	= 8,
+ 	.setup_rgmii_delay	= sja1105pqrs_setup_rgmii_delay,
+@@ -570,6 +574,7 @@ struct sja1105_info sja1105r_info = {
+ 	.part_no		= SJA1105R_PART_NO,
+ 	.static_ops		= sja1105r_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
++	.qinq_tpid		= ETH_P_8021AD,
+ 	.ptp_ts_bits		= 32,
+ 	.ptpegr_ts_bytes	= 8,
+ 	.setup_rgmii_delay	= sja1105pqrs_setup_rgmii_delay,
+@@ -586,6 +591,7 @@ struct sja1105_info sja1105s_info = {
+ 	.static_ops		= sja1105s_table_ops,
+ 	.dyn_ops		= sja1105pqrs_dyn_ops,
+ 	.regs			= &sja1105pqrs_regs,
++	.qinq_tpid		= ETH_P_8021AD,
+ 	.ptp_ts_bits		= 32,
+ 	.ptpegr_ts_bytes	= 8,
+ 	.setup_rgmii_delay	= sja1105pqrs_setup_rgmii_delay,
+diff --git a/include/linux/dsa/sja1105.h b/include/linux/dsa/sja1105.h
+index 136481ce3c6f..e47acf0965c5 100644
+--- a/include/linux/dsa/sja1105.h
++++ b/include/linux/dsa/sja1105.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/skbuff.h>
+ #include <linux/etherdevice.h>
++#include <linux/dsa/8021q.h>
+ #include <net/dsa.h>
+ 
+ #define ETH_P_SJA1105				ETH_P_DSA_8021Q
+@@ -59,6 +60,7 @@ struct sja1105_port {
+ 	struct sja1105_tagger_data *data;
+ 	struct dsa_port *dp;
+ 	bool hwts_tx_en;
++	u16 xmit_tpid;
  };
  
- static int sja1105_check_device_id(struct sja1105_private *priv)
+ bool sja1105_can_use_vlan_as_tags(struct dsa_switch *ds);
+diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
+index 5368cd34bcf4..0a95fdd7bff8 100644
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -96,6 +96,11 @@ static struct sk_buff *sja1105_defer_xmit(struct sja1105_port *sp,
+ 	return NULL;
+ }
+ 
++static u16 sja1105_xmit_tpid(struct sja1105_port *sp)
++{
++	return sp->xmit_tpid;
++}
++
+ static struct sk_buff *sja1105_xmit(struct sk_buff *skb,
+ 				    struct net_device *netdev)
+ {
+@@ -111,15 +116,7 @@ static struct sk_buff *sja1105_xmit(struct sk_buff *skb,
+ 	if (unlikely(sja1105_is_link_local(skb)))
+ 		return sja1105_defer_xmit(dp->priv, skb);
+ 
+-	/* If we are under a vlan_filtering bridge, IP termination on
+-	 * switch ports based on 802.1Q tags is simply too brittle to
+-	 * be passable. So just defer to the dsa_slave_notag_xmit
+-	 * implementation.
+-	 */
+-	if (dsa_port_is_vlan_filtering(dp))
+-		return skb;
+-
+-	return dsa_8021q_xmit(skb, netdev, ETH_P_SJA1105,
++	return dsa_8021q_xmit(skb, netdev, sja1105_xmit_tpid(dp->priv),
+ 			     ((pcp << VLAN_PRIO_SHIFT) | tx_vid));
+ }
+ 
+@@ -258,7 +255,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
+ 
+ 	hdr = eth_hdr(skb);
+ 	tpid = ntohs(hdr->h_proto);
+-	is_tagged = (tpid == ETH_P_SJA1105);
++	is_tagged = (tpid == ETH_P_SJA1105 || tpid == ETH_P_8021Q);
+ 	is_link_local = sja1105_is_link_local(skb);
+ 	is_meta = sja1105_is_meta_frame(skb);
+ 
 -- 
 2.17.1
 
