@@ -2,195 +2,132 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED71C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D9AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54AE320722
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1535120722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JYTwqrWT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="e3vzpO9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgEKLPm (ORCPT
+        id S1729507AbgEKLQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:15:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34741 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgEKLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:15:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LJJV56jgz9sPF;
-        Mon, 11 May 2020 21:15:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1589195738;
-        bh=6jMBGt6cCuxG5ogHappx3RvOBhGXUdUBt4srA2FzeVQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JYTwqrWTtatawX9E9uCWvSCMdxzbkYKyGUKiRXi2FvNjjN22Zi7b2VYkhjEYqr6Zs
-         gpefe7juiqlnLR23hGKNV4nJBW1KwxcokfhrriOPXi+/0HVXRsuEMvASGwZE4qh/F4
-         o9A//EnFaS+D5iMUhDiakpPbVVdBe407TFKLg344kzdrvzLuTvYonCg8URRl6pxzSi
-         f7yWo60ABiuz6jzxYuUn4tAgt5BvpJUTO8vqUF1ZCCaU63BvSeczs7m+hVSQmopm+g
-         OubQRRbncGIVGb7WxI5SR+UNnXSvI494vS7ocfn/W9ETbahHmKeBbnDp+NlGaoibk5
-         dRIyyp023LHuQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     paulus@ozlabs.org, benh@kernel.crashing.org,
-        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH] powerpc/kvm: silence kmemleak false positives
-In-Reply-To: <20200509015538.3183-1-cai@lca.pw>
-References: <20200509015538.3183-1-cai@lca.pw>
-Date:   Mon, 11 May 2020 21:15:55 +1000
-Message-ID: <87y2pybu38.fsf@mpe.ellerman.id.au>
+        Mon, 11 May 2020 07:16:29 -0400
+Received: from mail-eopbgr30074.outbound.protection.outlook.com ([40.107.3.74]:54259
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726068AbgEKLQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:16:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l9NZ5UaD+p+aVKsDd0of3Wpquf8N7Ma5LCwQ6qgcy6RJd4iHX0/q6+5ugS4S56Iia7yD4jCRyANEPyTzdryxOtLUmlXL9ZtizbQqdJuoYxgsHGxAqB4ZoV95RcNbJYvRCKIPUXeN3hH1wxF/XT2jCCkco48bvt/FTkfjUjDE158Gc16IY1v+cxJC3Xfvwr6nUqPMGTqFMuEeQ9pm76ACEPMh2Rt133yEg8LvuJiuI590nR25ODJPhJzTFkxCiUUvukA+xtnPiFjmy9bilLPpV2MmCm6Lug4QBS85NoMNZqx3zMBkgHI+2/kd4voIIhptFKoaVttw7UBedME6bhfoxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qenBc9Pexn/0UqftHkM+2gP6cZ7+lEhBohMfn9bK1Uw=;
+ b=lMidS5ZVHSTF5yDiTrCni0p/FhONnRedjug+wpiV582kHxs7OueLdSKqDSf8/Ca1THHnbFxic/IUFvcSNNxqRkqfOezJR4TZ0wCZyC2Tuo7/P68jokb0jP+Nl1diCtvQMB4ldcXmt6mvdDTJGUwB0BC1L5nei8qlq/8AKUyEwmSyq3hgn3YnOiR/VvJWZiswpAIAsxnyHx0gvyRnhSjrzMOnm4NU4pop8lIvz5rJK2MNUgorLikRuFSK41GMm83tAvWUFdrnnTqv94UTaAaX4NeQ+oLHcNPG/wh2cuKM47pIK+0c8h9wtvWIjPp9omlJJx9GSp84YL/Up4NoluX88Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qenBc9Pexn/0UqftHkM+2gP6cZ7+lEhBohMfn9bK1Uw=;
+ b=e3vzpO9LV0B92Ii1z/UuoUqthXrl98c0rMYQcOvqSNZ7s2Ub5fhR179qVs5qcGgaeTqdbQU/z8NBONBCcqbSlyO7H2ZPaYAkh3JVSJs0vcIHDXgmQqO2jk9o1m6MFFXBv1PCFwW4vt4RDvhEbSWnCUzL6k0nx+AgbssdD8TV7fs=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4150.eurprd04.prod.outlook.com (2603:10a6:209:43::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
+ 2020 11:16:24 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 11:16:24 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
+Thread-Topic: [PATCH] dt-bindings: reset: Convert i.MX7 reset to json-schema
+Thread-Index: AQHWJdsuI+RtHYyd5EydI3B2US1zJqiivf5g
+Date:   Mon, 11 May 2020 11:16:24 +0000
+Message-ID: <AM6PR04MB4966E5E547A29199B84936A180A10@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1589012077-12088-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f0e341fb-e3b6-4077-6baf-08d7f59cbe0e
+x-ms-traffictypediagnostic: AM6PR04MB4150:|AM6PR04MB4150:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB41508C4B20CDD982029632AF80A10@AM6PR04MB4150.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qgFKjBeVLR8RXnbzE6hBBeA9Ap05a4mRxXOiketvjcooKe7ctWhiAY7pQjzySdXrhRvjhq9ZpxOJYL8bTHda6NEWdrdFfuDQwnc8gAP/JfFeRI7w04K/wGk9V9HFLq4Gur3R8TAPU9umguq3mdN7YsleTAgiatEerrrk94KTB8uskUT7zlknXN4Wv+QoptKt/R8GdSmu5woLXHKGfcm527/kcxnX57SAdu900C0NWVKa9i5OZBu9pC7uvejNYIVdMLjwHZXWdGM/ph8rlo6CHmy2Yi/1wYiTGh0sEvJwHA2myUBh/lSfMfymqJLG6agApuHLLJiBfSmIuECsGTwZmIkC052xNc9Fy1v/kDZ+pCQ7dVZ6j+INbieE3r62EMfzw6gif6dkcQXDFpoE6g4sLCflJkVNtvvoibAC8VdhL8n9Rb15VzW7+YE8o3tumDzaa5yZG1wR+4pmcVcFbbsvVkZkhMA4nXxUkPPsLbf86Dt5VUO0YLuyuIJHXBju3GBi2a586LikKom8eUcQdkR13+cqyq75ZtTpxrpduO+EZ40=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(33430700001)(55016002)(4326008)(5660300002)(52536014)(8936002)(478600001)(76116006)(66476007)(66946007)(33440700001)(64756008)(66556008)(66446008)(33656002)(71200400001)(110136005)(9686003)(86362001)(6506007)(316002)(44832011)(2906002)(8676002)(26005)(7696005)(186003)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: r6J9uiNRwfJH9UMHMtCtPDt76iOVxq5NF2MV/mbQ6k/nsoWYWTtvNn/D4OjJzY0dkeEttXfiT0v2vNARsWXbStEJi/DklVhkX+Cb4V/hX9o8NvUw3C6oKf2n6t0b36tdRiMS/+ai3IO3kXxB6bIAy5cj8ovPyexs8Xj01teV2h+7KxH1k8HK705dn1ueZqyHDuc4G59/XgFHhQy3ELFM6JjzzbmiNhwIA+24LBK/+eYIbwCdHXi+zwLtM5FKrkO2pOwDtwobUJGOnTxLThjp0unvKAxUVj5Ke/pR//a87+EG90k9Bl1GJSkanthR+U0eMf79sTSPh/79mjEAlsDA/ljwqSiwoXxbiMme248Qzjq/x5kvYo8JdACW1OteQABIA2ZxSK9+Qju8ZK6EJ+glgdgTXrCOSIklTcQZNK9e+KsrAGYkNnCbXe5OnW48olVPe6W2gHo/7CrSQmKZW45FsG4JYTw122go71nzN75uz9c=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0e341fb-e3b6-4077-6baf-08d7f59cbe0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 11:16:24.7844
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wAuQ2TFp5+vzmDyHbK5ITZ6zLSoq4zUXS1IMSysSAvx8z2b4jO/+OZnD4yeDdSXAcN1RYTCzOZ8lXi5EcTuu7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
-> kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
-> pud_populate() and pmd_populate() will use __pa() to reference the newly
-> allocated memory. The same is in xive_native_provision_pages().
->
-> Since kmemleak is unable to track the physical memory resulting in false
-> positives, silence those by using kmemleak_ignore().
-
-There is kmemleak_alloc_phys(), which according to the docs can be used
-for tracking a phys address.
-
-Did you try that?
-
-cheers
-
-
-> unreferenced object 0xc000201c382a1000 (size 4096):
->   comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
->   hex dump (first 32 bytes):
->     c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
->     c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
->   backtrace:
->     [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
->     kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
->     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
->     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
->     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
->     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
->     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
->     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
->     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
->     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
->     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
->     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
->     [<000000004afc4310>] system_call_exception+0x114/0x1e0
->     [<00000000fb70a873>] system_call_common+0xf0/0x278
-> unreferenced object 0xc0002001f0c03900 (size 256):
->   comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
->   hex dump (first 32 bytes):
->     c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
->     c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
->   backtrace:
->     [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
->     kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
->     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
->     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
->     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
->     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
->     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
->     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
->     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
->     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
->     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
->     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
->     [<000000004afc4310>] system_call_exception+0x114/0x1e0
->     [<00000000fb70a873>] system_call_common+0xf0/0x278
-> unreferenced object 0xc000201b53e90000 (size 65536):
->   comm "qemu-kvm", pid 124557, jiffies 4295650285 (age 364.370s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000acc2fb77>] xive_native_alloc_vp_block+0x168/0x210
->     xive_native_provision_pages at arch/powerpc/sysdev/xive/native.c:645
->     (inlined by) xive_native_alloc_vp_block at arch/powerpc/sysdev/xive/native.c:674
->     [<000000004d5c7964>] kvmppc_xive_compute_vp_id+0x20c/0x3b0 [kvm]
->     [<0000000055317cd2>] kvmppc_xive_connect_vcpu+0xa4/0x4a0 [kvm]
->     [<0000000093dfc014>] kvm_arch_vcpu_ioctl+0x388/0x508 [kvm]
->     [<00000000d25aea0f>] kvm_vcpu_ioctl+0x15c/0x950 [kvm]
->     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
->     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
->     [<000000004afc4310>] system_call_exception+0x114/0x1e0
->     [<00000000fb70a873>] system_call_common+0xf0/0x278
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
->  arch/powerpc/sysdev/xive/native.c      |  4 ++++
->  2 files changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> index aa12cd4078b3..bc6c1aa3d0e9 100644
-> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> @@ -353,7 +353,13 @@ static struct kmem_cache *kvm_pmd_cache;
->  
->  static pte_t *kvmppc_pte_alloc(void)
->  {
-> -	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-> +	pte_t *pte;
-> +
-> +	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
-> +	/* pmd_populate() will only reference _pa(pte). */
-> +	kmemleak_ignore(pte);
-> +
-> +	return pte;
->  }
->  
->  static void kvmppc_pte_free(pte_t *ptep)
-> @@ -363,7 +369,13 @@ static void kvmppc_pte_free(pte_t *ptep)
->  
->  static pmd_t *kvmppc_pmd_alloc(void)
->  {
-> -	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-> +	pmd_t *pmd;
-> +
-> +	pmd = kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-> +	/* pud_populate() will only reference _pa(pmd). */
-> +	kmemleak_ignore(pmd);
-> +
-> +	return pmd;
->  }
->  
->  static void kvmppc_pmd_free(pmd_t *pmdp)
-> diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-> index 5218fdc4b29a..2d19f28967a6 100644
-> --- a/arch/powerpc/sysdev/xive/native.c
-> +++ b/arch/powerpc/sysdev/xive/native.c
-> @@ -18,6 +18,7 @@
->  #include <linux/delay.h>
->  #include <linux/cpumask.h>
->  #include <linux/mm.h>
-> +#include <linux/kmemleak.h>
->  
->  #include <asm/machdep.h>
->  #include <asm/prom.h>
-> @@ -647,6 +648,9 @@ static bool xive_native_provision_pages(void)
->  			pr_err("Failed to allocate provisioning page\n");
->  			return false;
->  		}
-> +		/* Kmemleak is unable to track the physical address. */
-> +		kmemleak_ignore(p);
-> +
->  		opal_xive_donate_page(chip, __pa(p));
->  	}
->  	return true;
-> -- 
-> 2.21.0 (Apple Git-122.2)
+Wy4uLl0NCg0KPiArDQo+ICttYWludGFpbmVyczoNCj4gKyAgLSBBbnNvbiBIdWFuZyA8QW5zb24u
+SHVhbmdAbnhwLmNvbT4NCj4gKw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhlIHN5c3RlbSBy
+ZXNldCBjb250cm9sbGVyIGNhbiBiZSB1c2VkIHRvIHJlc2V0IHZhcmlvdXMgc2V0IG9mDQo+ICsg
+IHBlcmlwaGVyYWxzLiBEZXZpY2Ugbm9kZXMgdGhhdCBuZWVkIGFjY2VzcyB0byByZXNldCBsaW5l
+cyBzaG91bGQNCj4gKyAgc3BlY2lmeSB0aGVtIGFzIGEgcmVzZXQgcGhhbmRsZSBpbiB0aGVpciBj
+b3JyZXNwb25kaW5nIG5vZGUgYXMNCj4gKyAgc3BlY2lmaWVkIGluIHJlc2V0LnR4dC4NCj4gKw0K
+PiArICBGb3IgbGlzdCBvZiBhbGwgdmFsaWQgcmVzZXQgaW5kaWNlcyBzZWUNCj4gKyAgICA8ZHQt
+YmluZGluZ3MvcmVzZXQvaW14Ny1yZXNldC5oPiBmb3IgaS5NWDcsDQo+ICsgICAgPGR0LWJpbmRp
+bmdzL3Jlc2V0L2lteDhtcS1yZXNldC5oPiBmb3IgaS5NWDhNUSBhbmQNCj4gKyAgICA8ZHQtYmlu
+ZGluZ3MvcmVzZXQvaW14OG1xLXJlc2V0Lmg+IGZvciBpLk1YOE1NIGFuZA0KPiArICAgIDxkdC1i
+aW5kaW5ncy9yZXNldC9pbXg4bXEtcmVzZXQuaD4gZm9yIGkuTVg4TU4gYW5kDQoNCkhvdyBhYm91
+dCBjb21iaW5lIGFib3ZlIHRocmVlIGl0ZW1zPw0KDQo+ICsgICAgPGR0LWJpbmRpbmdzL3Jlc2V0
+L2lteDhtcC1yZXNldC5oPiBmb3IgaS5NWDhNUA0KPiArDQo+ICtwcm9wZXJ0aWVzOg0KPiArICBj
+b21wYXRpYmxlOg0KPiArICAgIGl0ZW1zOg0KPiArICAgICAgLSBlbnVtOg0KPiArICAgICAgICAt
+IGZzbCxpbXg3ZC1zcmMNCj4gKyAgICAgICAgLSBmc2wsaW14OG1xLXNyYw0KPiArICAgICAgICAt
+IGZzbCxpbXg4bW0tc3JjDQo+ICsgICAgICAgIC0gZnNsLGlteDhtbi1zcmMNCj4gKyAgICAgICAg
+LSBmc2wsaW14OG1wLXNyYw0KPiArICAgICAgLSBjb25zdDogc3lzY29uDQo+ICsNCj4gKyAgcmVn
+Og0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgaW50ZXJydXB0czoNCj4gKyAgICBtYXhJ
+dGVtczogMQ0KPiArDQo+ICsgICcjcmVzZXQtY2VsbHMnOg0KPiArICAgIGNvbnN0OiAxDQo+ICsN
+Cj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSByZWcNCj4gKyAgLSBpbnRl
+cnJ1cHRzDQo+ICsgIC0gJyNyZXNldC1jZWxscycNCj4gKw0KPiArYWRkaXRpb25hbFByb3BlcnRp
+ZXM6IGZhbHNlDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwNCj4gKyAgICAjaW5jbHVkZSA8
+ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiArDQo+ICsgICAg
+cmVzZXQtY29udHJvbGxlckAzMDM5MDAwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiZnNs
+LGlteDdkLXNyYyIsICJzeXNjb24iOw0KPiArICAgICAgICByZWcgPSA8MHgzMDM5MDAwMCAweDIw
+MDA+Ow0KPiArICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODkgSVJRX1RZUEVfTEVWRUxf
+SElHSD47DQo+ICsgICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4gKyAgICB9Ow0KPiArDQo+
+ICsuLi4NCg0KSXMgdGhpcyByZXF1aXJlZD8NCg0KUmVnYXJkcw0KQWlzaGVuZw0KDQo+IC0tDQo+
+IDIuNy40DQoNCg==
