@@ -7,93 +7,89 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E13EC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A0C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3234F206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8D720752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 22:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589235920;
-	bh=Y5IYBjAv2oKyFLUXQHlgvPhtx0/8/xS0jgkUwY7Mn0s=;
+	s=default; t=1589235951;
+	bh=rRbOM1L+fwH0nbxI5H+zl9oJEi4To787Arbt4gDRQ7g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J42nfvLoFh2on/aYca8GEikmRssHpuem4w2QkhbxtxPVMMAOKOuQsamGqM6iNOE8v
-	 Q7cfO+fZ5W4CKRzz8bv9UO+N+j/P86iLPYfWLWsraQyDDBSAPV7r8rkhmDPeTztCoz
-	 2/EloN7u0NfEqvwAfp6G/1+ezXE4FzYGPgl4VxPM=
+	b=fEPFd0aoxqd4vEB6i2oHeIKVeC2mZwiR1oYRzB8AcUwNz/65qj3tVwyvFG7P6Gno7
+	 Plm6yk34g1aMYK3EGMYGaHNELu+UGVgfrJ3lrz2Kvn+taijG1SWrczWvQaVWXA5urN
+	 7dizgXDJMg1PDxXWN2IYyBnXaZf3diQTIPos3vUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgEKWZT (ORCPT
+        id S1727125AbgEKWZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 18:25:19 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42188 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgEKWZT (ORCPT
+        Mon, 11 May 2020 18:25:51 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38460 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgEKWZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 18:25:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i13so16558988oie.9;
-        Mon, 11 May 2020 15:25:18 -0700 (PDT)
+        Mon, 11 May 2020 18:25:50 -0400
+Received: by mail-oi1-f195.google.com with SMTP id r66so16564848oie.5;
+        Mon, 11 May 2020 15:25:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N73zBrwIBmYpG8/mtE42ByaDIOPbOcw7oUrz+Oif3Eo=;
-        b=KsHC6pWVhMc3u3KWFX6jvW1WDMh8Z99+WwXbH+nd1H0NwcxlkOGUiAyWfut8HRBgsw
-         fnSiDI6tHI6C4iey8wn/5x1xm+cp4WX8hW5QOJ5y60tmADj+E3x4az0M2qwjcZSWRE7k
-         DryQVJ2UF2a+41suDkIzRyACs2Iiz2oqAp4u6JzsQV/ewwuDHyuHoRWljaAMnnSQrIGL
-         s9DtKpvmykO8Ai952V16B1MS3Wc38U4CJaCZCtHVOSXgY1dqwyTfaOvISWTyZSgspnLV
-         RZBC/IpqIw2DQFI1NmmYvo5fSwzKyB1dssmDpf57Sb4F6SqQyHr7MCSh2WiyxQpuSgWK
-         4hrQ==
-X-Gm-Message-State: AGi0PuYUELogYsDnM0NsPFePybKdj6FD2+izAS7FGsfy3F0UE+SqJgY8
-        mI00BkbEthsSOb+Jr8WRql9v0Kc=
-X-Google-Smtp-Source: APiQypIdxF+D8MOPQ2d/giDq1zA7n3B31P983KHIrpVlUv9jtqc3f9KpvrzKWtblGovXNsvgE8KCzA==
-X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr22304882oie.152.1589235918092;
-        Mon, 11 May 2020 15:25:18 -0700 (PDT)
+        bh=7+5vSNb8IxUA2MM9e6x9N0FrIu+LoC01HvigV+gZqJo=;
+        b=byuqLZKUXw3pzscmmFEWK5JNroInVneIarpHIwF72iHcgJ5QQsCT/l7hkd/UhyA/Ha
+         de88o51t3qZfkE0u2F66l9anYBix5TIVqX2YRCUkKS68ywy7Nn6sthTXGxyjECxiARS6
+         h58lnNI5WWBnX4pvdOSaicUWkZmG/ADCHy9mt461ZuUoNJBZxudFMjJmnrYRyReAW9A2
+         /RCR6bnOLZ7slOzx7vYJ5k8xwTozw1n68w5/l9QEwhYF0q5qINe+b9iA9uZMEU4avSd3
+         fqtMU63NXSotLLYbYeOzpPCukt5/FeJ1XScSsPRnC3kyQw2Fqa6wlidVjYuPGMgzsEq0
+         2Y4Q==
+X-Gm-Message-State: AGi0PubvvsWtA8NL0TVSicRVjM2eaa9qAsau0JeKIeFNF38S1cSTu6Of
+        ciDYkS9giQoWXgc//O1BZA==
+X-Google-Smtp-Source: APiQypJ9eQAYcH5jaLEtRYYyKWBWFhBc+JEnyD+r1v2xL8VlHzzA3LVNArk2SC8qvGZFebPkJp9VEQ==
+X-Received: by 2002:aca:b2c2:: with SMTP id b185mr16208902oif.169.1589235949735;
+        Mon, 11 May 2020 15:25:49 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g94sm2982774otg.74.2020.05.11.15.25.16
+        by smtp.gmail.com with ESMTPSA id m16sm3137413oop.40.2020.05.11.15.25.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 15:25:17 -0700 (PDT)
-Received: (nullmailer pid 25383 invoked by uid 1000);
-        Mon, 11 May 2020 22:25:16 -0000
-Date:   Mon, 11 May 2020 17:25:16 -0500
+        Mon, 11 May 2020 15:25:49 -0700 (PDT)
+Received: (nullmailer pid 26457 invoked by uid 1000);
+        Mon, 11 May 2020 22:25:48 -0000
+Date:   Mon, 11 May 2020 17:25:48 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, airlied@linux.ie
-Subject: Re: [PATCH] dt-bindings: gpu: add power-domains #cooling-cells to
- arm, mali-bifrost.yaml
-Message-ID: <20200511222516.GA25294@bogus>
-References: <20200425154037.21083-1-jbx6244@gmail.com>
+Cc:     heiko@sntech.de, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: usb: dwc2: add power-domains property
+Message-ID: <20200511222548.GA26381@bogus>
+References: <20200425170833.26718-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200425154037.21083-1-jbx6244@gmail.com>
+In-Reply-To: <20200425170833.26718-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Apr 2020 17:40:37 +0200, Johan Jonker wrote:
+On Sat, 25 Apr 2020 19:08:33 +0200, Johan Jonker wrote:
 > A test with the command below gives this error:
 > 
-> arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: gpu@ff400000:
-> '#cooling-cells', 'power-domains'
-> do not match any of the regexes: 'pinctrl-[0-9]+'
+> arch/arm64/boot/dts/rockchip/px30-evb.dt.yaml: usb@ff300000:
+> 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
 > With the conversion to yaml it also filters things
 > in a node that are used by other drivers like
-> '#cooling-cells' and 'power-domains'
-> for Rockchip px30 gpu nodes,
-> so add them to 'arm,mali-bifrost.yaml'.
+> 'power-domains' for Rockchip px30 usb nodes,
+> so add them to 'dwc2.yaml'.
 > 
 > make ARCH=arm64 dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/gpu/
-> arm,mali-bifrost.yaml
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/usb/dwc2.yaml
 > 
 > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/usb/dwc2.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 Applied, thanks!
