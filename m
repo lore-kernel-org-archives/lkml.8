@@ -2,84 +2,110 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50896C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9BDC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE7A2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stiW8was"
+	by mail.kernel.org (Postfix) with ESMTP id A2EA92078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732109AbgEKVCs (ORCPT
+        id S1732130AbgEKVC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44580 "EHLO
+        Mon, 11 May 2020 17:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732073AbgEKVCq (ORCPT
+        by vger.kernel.org with ESMTP id S1732068AbgEKVAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:02:46 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A40BC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:02:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f6so5116955pgm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 14:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sSsJuiuQVhX5mi+0hDBDIBKGp39VuH2U96/o+lEhntI=;
-        b=stiW8was2ZkQrskwkMD/u2MqfHNAkQB3uEQRKk2uZn0hcIA29HYKSr3aPf1ip6E+NJ
-         FBhCXI0cO1MfkYL21OBWDivT/nxpnciW3X0O1EqTHGxnd8rpceTIlIywSF+1WmHuRxLd
-         1eLOhrAeK4ff1GxvFOIr2SXkukkZy++YIzbggOIiW2e5u3u/lnt+5FDSuTgryx2rkQsp
-         hQIPP9Z8tcIch+2lr4rzOjabDM15Elvzb+15SWvw/UA1FQisl+VB4bH375R7ztwqqNeE
-         NeKVvvMeTtV9hM9NktOXPBE921OW8ecDMiTIWudZCcpglwaq+LZldC2cKOdGsPe/TkZz
-         9NtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sSsJuiuQVhX5mi+0hDBDIBKGp39VuH2U96/o+lEhntI=;
-        b=i/GwAVdCVduRDKcK3I6n5m/mGsrGEnFmSZ48J0bIk8EApQNRHnfYK101ND4li35AAS
-         DJPBRnGKi9U0XUK4Sm9SbZUJJajS1Sg7btlj7XhM666V7pB47jdg61ZY96ntX4yVWG60
-         /rNlICoEFlUgVKEiCN2k02RTKocDhjiw136DKd64Yga15SOzGDAOwkyx/djiyVzPtSRB
-         0NWIxWAsAngSyY0YBoh/5OgN9AaSkLqw7MALJRJStvjfveD04MXNOmyE8/+oOeQ2YDMh
-         AyLu++04bx/GSSn4BsQW4WXrQy+E7luVCfLqBnZy2RGRPiiky8PJ1oA/bjBfWR9o97/U
-         WFxg==
-X-Gm-Message-State: AGi0Pubp3xoYBqVfQ6/sDuMzBDzHfT2shp1d/7oPOlfJkEpaJqsKvmJu
-        k87qXtXST5ESOXjcLLMq5Do=
-X-Google-Smtp-Source: APiQypJRVv554GH4F41XHegtP2kTtAQfKN5F1lohS2Cs+iIkrMulrtyKgFejve5HIUAqf2YdCxUfsA==
-X-Received: by 2002:a63:5a41:: with SMTP id k1mr17002700pgm.424.1589230964794;
-        Mon, 11 May 2020 14:02:44 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p24sm9899121pff.92.2020.05.11.14.02.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:02:43 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org
-Cc:     eric@anholt.net, linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH] MAINTAINERS: Update Raspberry Pi development repository
-Date:   Mon, 11 May 2020 14:02:42 -0700
-Message-Id: <20200511210242.27892-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511110250.23869-1-nsaenzjulienne@suse.de>
-References: <20200511110250.23869-1-nsaenzjulienne@suse.de>
+        Mon, 11 May 2020 17:00:01 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE38C061A0E;
+        Mon, 11 May 2020 14:00:01 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jYFWp-00060s-Iy; Mon, 11 May 2020 22:59:59 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2E2991C07F8;
+        Mon, 11 May 2020 22:59:43 +0200 (CEST)
+Date:   Mon, 11 May 2020 20:59:43 -0000
+From:   "tip-bot2 for Mauro Carvalho Chehab" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/rcu] rcu: Get rid of some doc warnings in update.c
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+MIME-Version: 1.0
+Message-ID: <158923078309.390.2071709326416344298.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 13:02:50 +0200, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
-> Eric Anholt's repo isn't used anymore. List current one.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
+The following commit has been merged into the core/rcu branch of tip:
 
-Applied to maintainers/next, thanks!
---
-Florian
+Commit-ID:     c28d5c09d09f86374a00b70a57d3cb75e3fc7fa9
+Gitweb:        https://git.kernel.org/tip/c28d5c09d09f86374a00b70a57d3cb75e3fc7fa9
+Author:        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+AuthorDate:    Tue, 17 Mar 2020 15:54:18 +01:00
+Committer:     Paul E. McKenney <paulmck@kernel.org>
+CommitterDate: Mon, 27 Apr 2020 11:01:16 -07:00
+
+rcu: Get rid of some doc warnings in update.c
+
+This commit escapes *ret, because otherwise the documentation system
+thinks that this is an incomplete emphasis block:
+
+	./kernel/rcu/update.c:65: WARNING: Inline emphasis start-string without end-string.
+	./kernel/rcu/update.c:65: WARNING: Inline emphasis start-string without end-string.
+	./kernel/rcu/update.c:70: WARNING: Inline emphasis start-string without end-string.
+	./kernel/rcu/update.c:82: WARNING: Inline emphasis start-string without end-string.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/update.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 28a8bdc..72461dd 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -63,12 +63,12 @@ module_param(rcu_normal_after_boot, int, 0);
+  * rcu_read_lock_held_common() - might we be in RCU-sched read-side critical section?
+  * @ret:	Best guess answer if lockdep cannot be relied on
+  *
+- * Returns true if lockdep must be ignored, in which case *ret contains
++ * Returns true if lockdep must be ignored, in which case ``*ret`` contains
+  * the best guess described below.  Otherwise returns false, in which
+- * case *ret tells the caller nothing and the caller should instead
++ * case ``*ret`` tells the caller nothing and the caller should instead
+  * consult lockdep.
+  *
+- * If CONFIG_DEBUG_LOCK_ALLOC is selected, set *ret to nonzero iff in an
++ * If CONFIG_DEBUG_LOCK_ALLOC is selected, set ``*ret`` to nonzero iff in an
+  * RCU-sched read-side critical section.  In absence of
+  * CONFIG_DEBUG_LOCK_ALLOC, this assumes we are in an RCU-sched read-side
+  * critical section unless it can prove otherwise.  Note that disabling
+@@ -82,7 +82,7 @@ module_param(rcu_normal_after_boot, int, 0);
+  *
+  * Note that if the CPU is in the idle loop from an RCU point of view (ie:
+  * that we are in the section between rcu_idle_enter() and rcu_idle_exit())
+- * then rcu_read_lock_held() sets *ret to false even if the CPU did an
++ * then rcu_read_lock_held() sets ``*ret`` to false even if the CPU did an
+  * rcu_read_lock().  The reason for this is that RCU ignores CPUs that are
+  * in such a section, considering these as in extended quiescent state,
+  * so such a CPU is effectively never in an RCU read-side critical section
