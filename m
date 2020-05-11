@@ -2,114 +2,138 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EFEC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971ABC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1D620736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589222226;
-	bh=KovIunH0QbOW8jeIoCbPdo34qGqD6dQaWkP0car8BDA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SKvmCWumdbIdtVvTUnXF3tLMeJTVLCSDT7w+TT6CQgfhkBnrLGWz2osGmxG/MGn3f
-	 avAQDYrO8pr8pnssixxSVWQht9uoQC7bpj7GcRSEto9iqlGQh89e144abdKdf1VuRG
-	 ePxcFoh096tdEqSYY5+ODgS/lVEuVmbQGicgFkMo=
+	by mail.kernel.org (Postfix) with ESMTP id 7491B20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AULQJavu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbgEKShG (ORCPT
+        id S1731081AbgEKSlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729727AbgEKShF (ORCPT
+        Mon, 11 May 2020 14:41:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25864 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729768AbgEKSlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:37:05 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E86AC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:37:05 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id v5so4296325lfp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TcSOOR6oXnrgDwVzHY9DAIp9Hsd3wV34tn9evP5v+z4=;
-        b=FzSncrNXy1YB/2+RGJSqjihsohcVlNOpC4kZBoEm+OGeIfM+XGAsJTT+B1qRU92SrI
-         aTg7H/OwWHFPVMJMOI2Cayc6Gp2iyiE6NTVs/lVQT2UAXvg5ffV9770Bfy3E4tb5RABB
-         Nw46F7RJ7QVkgpuB6/9awhwl4q7axpOX+QCl4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TcSOOR6oXnrgDwVzHY9DAIp9Hsd3wV34tn9evP5v+z4=;
-        b=FCBmmG9B0rPorbQc7xO095Yc6AEhB1c1LUUJAC20z1G/cJP8TCwJmp+tD1qWWb+kFW
-         3ef2SlYSoczB41ybFJZUXOZb51CEMtLCeYFJX6sSQHOJx9ukg/lGglDmzxhQ+2rb0jl7
-         o0Rd4CIS4rBmoMZtXGOBijRrO9fNKu6qNjqtW3RNfXRMzvnZ9DyFLYgWwbHPRiUE7nTA
-         t9ougI6iDO4kwiRFtoFXWDJxRHqhBlX1ESd0Bchv+y0PFvpXVAFkngT97jCP/pZ79Ves
-         ggHnCENI0EG0EEV+a6I2AxiZaKncTo+nJJB3pvr4T14pdAN2Mmo3IzyewHj/pwrEmFuU
-         8b4A==
-X-Gm-Message-State: AOAM533PdHXkSkbtRIsqHPwS8JaeAuQLHWrPVb/rqipHTEd1ktPtIY8/
-        HGL7bydVtRTnS5GHuMhbF8HHrjdJ7ow=
-X-Google-Smtp-Source: ABdhPJw+ZdCj9fnZs8RDnXW4bPIFt4zvI0KsW7A0vOxWpCTGD2bGrqrhEWUvec+S8CuXH800CaSTRw==
-X-Received: by 2002:ac2:5215:: with SMTP id a21mr11650442lfl.13.1589222222903;
-        Mon, 11 May 2020 11:37:02 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id x21sm10407413ljm.74.2020.05.11.11.37.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 11:37:00 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id e25so10679754ljg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:37:00 -0700 (PDT)
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr11004422ljg.204.1589222219867;
- Mon, 11 May 2020 11:36:59 -0700 (PDT)
+        Mon, 11 May 2020 14:41:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589222511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XWo1dhUmPcxI5RGaFhx3UMrLMTx+OfBASGTN8Q1Mv3g=;
+        b=AULQJavuqARgzrg41+xex0RyCge8s2uiofyuGjQCTVZKRSJRgS9oQtrbXGF4CEujgrJ73x
+        oypOdwPWM6++F9MTKQYMM7nTOqBGP6mG3NDk9fIGhJ0d/E1hvOMGNjLoYqmu8jFR4aW9nT
+        yvwoG2GWGdBIQQJ0ORROW4RKY9GTpOg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-8SlbbwLQOwudMFP9HfDsIA-1; Mon, 11 May 2020 14:41:48 -0400
+X-MC-Unique: 8SlbbwLQOwudMFP9HfDsIA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC7D51005510;
+        Mon, 11 May 2020 18:41:47 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 73487784AF;
+        Mon, 11 May 2020 18:41:44 +0000 (UTC)
+Date:   Mon, 11 May 2020 14:41:43 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        song@kernel.org, breeves@redhat.com, mpatocka@redhat.com,
+        khazhy@google.com, kernel@collabora.com
+Subject: Re: [PATCH v4 0/2] Historical Service Time Path Selector
+Message-ID: <20200511184143.GA8274@redhat.com>
+References: <20200511163910.3778467-1-krisman@collabora.com>
+ <20200511170235.GA7719@redhat.com>
+ <85ftc6l7lb.fsf@collabora.com>
+ <20200511173155.GA7892@redhat.com>
 MIME-Version: 1.0
-References: <20200504230309.237398-1-ndesaulniers@google.com>
- <CAKwvOdmspKUknbzDn9kY2jMgkFw=Ktvst0ZtwambDOfybqJGWw@mail.gmail.com>
- <CAHk-=wif=_ZomkWJAmQRCUAMHQ72V3NEQ-OteiPE56K7KoSjbQ@mail.gmail.com> <CAHk-=whhCBvjXtRiFM2JEZ4XyBmuPprvdo5tpPVBqUhkRszxiQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whhCBvjXtRiFM2JEZ4XyBmuPprvdo5tpPVBqUhkRszxiQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 May 2020 11:36:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whkz12DeKOt3iw19Ey=c5HkXH+4disNJ3DwZuSDr-Tt5w@mail.gmail.com>
-Message-ID: <CAHk-=whkz12DeKOt3iw19Ey=c5HkXH+4disNJ3DwZuSDr-Tt5w@mail.gmail.com>
-Subject: Re: [PATCH] x86: support i386 with Clang
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Golovin <dima@golovin.in>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511173155.GA7892@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:24 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I guess I should just test it, since I have that clang tree.
+On Mon, May 11 2020 at  1:31pm -0400,
+Mike Snitzer <snitzer@redhat.com> wrote:
 
-No, clang doesn't seem to handle it even with __builtin_choose_expr(),
-and has that
+> On Mon, May 11 2020 at  1:11pm -0400,
+> Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
+> 
+> > Mike Snitzer <snitzer@redhat.com> writes:
+> > 
+> > > On Mon, May 11 2020 at 12:39pm -0400,
+> > > Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
+> > >
+> > >> Hi,
+> > >> 
+> > >> This fourth version of HST applies the suggestion from Mikulas Patocka
+> > >> to do the ktime_get_ns inside the mpath map_bio instead of generic
+> > >> device-mapper code. This means that struct dm_mpath_io gained another
+> > >> 64bit field.  For the request-based case, we continue to use the block
+> > >> layer start time information.
+> > >> 
+> > >> With this modification, I was able obtain similar performance on  BIO
+> > >> to request-based multipath with HST on the benchmarks shared in v1.
+> > >> 
+> > >> v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
+> > >> v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
+> > >> v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
+> > >
+> > > I already staged your v3 in linux-next.  Please provide an incremental
+> > > patch that layers on this git branch:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.8
+> > >
+> > > I was hopeful for a flag to be set (e.g. in 'struct path_selector') to
+> > > reflect whether the path selector expects highres start_time.  Makes
+> > > little sense to incur that extra cost of providing the time if the path
+> > > selector doesn't even use it.
+> > >
+> > > Alternatively, could split out the setting of the time needed by .end_io
+> > > to a new path_selector_type method (e.g. .set_start_time).  And then
+> > > only use ktime_get_ns() for bio-based if .set_start_time is defined.
+> > > Would get a little fiddly needing to make sure a stale start_time isn't
+> > > used... also, makes more sense to conditionally call this
+> > > .set_start_time just after .start_io is.
+> > 
+> > Oh, my apologies, I hadn't noticed it was merged.  I will make the time fetch
+> > conditional and submit a new patch based on that branch.
+> 
+> I don't want to waste your time so please don't run with that idea just yet.
+> 
+> There is a possibility we really _do_ need higher resolution time.
+> 
+> I'm about to have a concall to discuss some disk IO stat issues with DM
+> disk stats vs NVMe disk stats (provided by block core).
+> 
+> I'll let you know the outcome and we can discuss further.
 
-     invalid input size for constraint 'qi'
+OK, that concall's issue had nothing to do with needing higher
+resolution time (was about IOPs realized with requested-based vs
+bio-based).
 
-even when it's in a side that is never chosen.
+Reality is, DM won't need anything higher resolution than jiffies until
+block core's interfaces require something other than jiffies
+(e.g. generic_end_io_acct).
 
-Very annoying. A lot of our magic macros are literally about "pick one
-case when the others are not valid for this type".
+So feel free to proceed with the conditional time fetch solution you
+were going to run with (prior to my previous mail asking you to hold
+off).
 
-             Linus
+Sorry for the noise.  Thanks,
+Mike
+
