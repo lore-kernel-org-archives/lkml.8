@@ -2,100 +2,99 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C080BC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8464C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA292082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SOO0YQg1"
+	by mail.kernel.org (Postfix) with ESMTP id 864E7208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgEKByN (ORCPT
+        id S1729271AbgEKBz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:54:13 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16772 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727789AbgEKByN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:54:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589162053; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sKT+oxTM1IiLkHUsa6WEuo4yedQX4JYSfJZMYeF+gSg=; b=SOO0YQg18W4wuJFwD8Um67oEI9Llhl05i6Di5mbZNYDsbzzZWpFSvuYcL/1Zc9TOQohK59pI
- qFAxJokL6vch9sDsZkwTZYwj4uysHiu50YscaUnD+tMljO8r8HjgY+m7XsV1ZgLj5y+P8XR8
- 9/vbygyLMfxT58e+iqq0jNgebQc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb8b033.7ffa428a06c0-smtp-out-n02;
- Mon, 11 May 2020 01:53:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0585FC44791; Mon, 11 May 2020 01:53:53 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 924B4C433CB;
-        Mon, 11 May 2020 01:53:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 924B4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v2] sched/debug: Fix requested task uclamp values shown in procfs
-Date:   Mon, 11 May 2020 07:23:30 +0530
-Message-Id: <1589162011-4998-1-git-send-email-pkondeti@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 May 2020 21:55:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51308 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729177AbgEKBz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 21:55:27 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 36CC5B2F649EB3DADC61;
+        Mon, 11 May 2020 09:55:24 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Mon, 11 May 2020
+ 09:55:22 +0800
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+Date:   Mon, 11 May 2020 09:55:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20200511111123.68ccbaa3@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The intention of commit 96e74ebf8d59 ("sched/debug: Add task uclamp
-values to SCHED_DEBUG procfs") was to print requested and effective
-task uclamp values. The requested values printed are read from p->uclamp,
-which holds the last effective values. Fix this by printing the values
-from p->uclamp_req.
+On 2020/5/11 9:11, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the vfs tree got a conflict in:
+> 
+>    kernel/sysctl.c
+> 
+> between commit:
+> 
+>    b6522fa409cf ("parisc: add sysctl file interface panic_on_stackoverflow")
+> 
+> from the parisc-hd tree and commit:
+> 
+>    f461d2dcd511 ("sysctl: avoid forward declarations")
+> 
+> from the vfs tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
 
-Fixes: 96e74ebf8d59 ("sched/debug: Add task uclamp values to SCHED_DEBUG procfs")
-Tested-and-reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
----
 
-V2: Added "requested" prefix (suggested by Valentin)
+Kernel/sysctl.c contains more than 190 interface files, and there are a 
+large number of config macro controls. When modifying the sysctl 
+interface directly in kernel/sysctl.c , conflicts are very easy to occur.
 
- kernel/sched/debug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+At the same time, the register_sysctl_table() provided by the system can 
+easily add the sysctl interface, and there is no conflict of 
+kernel/sysctl.c .
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index a562df5..77ecebd 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -948,8 +948,8 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 	P(se.avg.util_est.enqueued);
- #endif
- #ifdef CONFIG_UCLAMP_TASK
--	__PS("uclamp.min", p->uclamp[UCLAMP_MIN].value);
--	__PS("uclamp.max", p->uclamp[UCLAMP_MAX].value);
-+	__PS("requested uclamp.min", p->uclamp_req[UCLAMP_MIN].value);
-+	__PS("requested uclamp.max", p->uclamp_req[UCLAMP_MAX].value);
- 	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
- 	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
- #endif
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Should we add instructions in the patch guide (coding-style.rst 
+submitting-patches.rst):
+Preferentially use register_sysctl_table() to add a new sysctl 
+interface, centralize feature codes, and avoid directly modifying 
+kernel/sysctl.c ?
+
+In addition, is it necessary to transfer the architecture-related sysctl 
+interface to arch/xxx/kernel/sysctl.c ?
+
+Thanks
+Xiaoming Ni
+
