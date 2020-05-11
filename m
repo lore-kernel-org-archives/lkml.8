@@ -2,105 +2,131 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5738AC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A522FC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A0F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EB22070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7crp00o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/iY0vx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgEKXr2 (ORCPT
+        id S1728094AbgEKXwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
+        Mon, 11 May 2020 19:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725854AbgEKXrZ (ORCPT
+        by vger.kernel.org with ESMTP id S1725854AbgEKXwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:47:25 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FF5C061A0C;
-        Mon, 11 May 2020 16:47:24 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id a4so5297851pgc.0;
-        Mon, 11 May 2020 16:47:24 -0700 (PDT)
+        Mon, 11 May 2020 19:52:07 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC22C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:52:07 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d7so11931827ioq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HCTXvjvCph24DEkMzpVFI7z1KfM5XrIGnv5g1ieUcQA=;
-        b=q7crp00oViKdMXl3r+hhT9Xw+KFTIcVZz8jv6k9kmC9elV4fMkkDNCv7QVJ7qE1mgC
-         GhiN+oBgSZfLotaDTrBnG2ovcDrRBWf4isFaqwgcdwYxJCBsmjyu/q/yTolMiqtqpm6b
-         3jUhK14qh+3QMZvpdTBfc3eMPeE1FVRrZmPU50w95MXpysSmcpyioLvifhnMIpwGl6ho
-         xz7gv6rY4nYZ2D7SrybvmL8/zTEZWfecZC+/7WO2c1ejbC67+QahafadsPJhYWS9ANkT
-         oJJqEKP+UVkwmIBMs7tc0+aYGAq0qKT12hobCoXhArh+uJJ+xwxiTqk+9Az8fbqqMQDY
-         G8Dg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E0ufWGYomYJh/CRjPmWsKjyHaGblzMVR+WH0oCRkU7E=;
+        b=f/iY0vx2TUE477Mbf6Hol0ZEB/geLQUWTBNLPH99rC4gbt8DEL0wyNqLPFi7DoGFZr
+         7ilzXRx1RjxnU4M6u/agvEQzIfHZW6rcOaLec7iRZfgdIs5es+hT/nY8/8XCkUuiSJCX
+         1/Xo/s8W0u9nQcPmXTW+yClHZJpEfzP09WjThC38iJaPtMInIRKGDIW64VPwup1usYnG
+         AKTAxx1ZlgIGoPscs5F0u5camKL1ghBq3FWoUTRWNGwRUydM7qXX5aa3q2mQfCE2lQvm
+         QvM7wHQRSeTAI/OwdDkvYruA7jQMIm50ltwqi7LpJEkvov6e9xGs54dTSluoov5M6i7F
+         Kggg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HCTXvjvCph24DEkMzpVFI7z1KfM5XrIGnv5g1ieUcQA=;
-        b=VhN0lP8R0Uadj/wsl8P8JC7pbFuGoCYvum13XHgPEurRE8WPyXC40DI6kjomm+4uI1
-         n04mZqQLRCnApu8n5IFJdT/zgLj5QfaeFdyoN4H651WDTfA0V8dT4hSc5dPV6J2Tpp1y
-         fNZFwFnF95k4OhHAnMPD4HEVz4X73WDgyeW4rJZupSv8BRtu4CZlQo5xD+hxxnh74S/r
-         rok2IPwydxGpHQDzvA3iPjqlGbjesIHaYxqLkBMKPiGBmOArcugfD3CujjrUSUYsa73I
-         v8ncfDhKLP1S2JB4fyTFUMXaAlphjjcAX3OZpChLK3BQ22FtLhGfDhqrFkSc+JBUQm74
-         Fddw==
-X-Gm-Message-State: AGi0PubV0EJncChjsZAZlqf6XzKnzG91cyTnMCHRZWGL4Fw0CrPtqGKb
-        yN95pma17Rah150SErdvrbgSZhax
-X-Google-Smtp-Source: APiQypL5lCvaX2b1ma8hp4DkKbdagZ+7Jn4osDYAdoBb6d00+X8pgLMKQ2YQAMmJ/mV57qCtyhho5A==
-X-Received: by 2002:a63:b51b:: with SMTP id y27mr15677430pge.400.1589240843391;
-        Mon, 11 May 2020 16:47:23 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e21sm3455317pga.71.2020.05.11.16.47.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:47:22 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/2] net: dsa: tag_sja1105: Constify dsa_device_ops
-Date:   Mon, 11 May 2020 16:47:15 -0700
-Message-Id: <20200511234715.23566-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511234715.23566-1-f.fainelli@gmail.com>
-References: <20200511234715.23566-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E0ufWGYomYJh/CRjPmWsKjyHaGblzMVR+WH0oCRkU7E=;
+        b=jOuUNkuA7ipd+OIrbmhuFLT2ofNWwXJT0bKkzjk8vVj4KPMkyJ3zAfXcONBaQGBaUu
+         /6lb84MICqJIRfGnNy5Eth+PcjvAyT1w19evgJKLCXnhvk2AeTqrQ/1Qr333X5oxFbQt
+         kKeBKUyNlv6W2icW9tEsQqq9xLdrCsbXXOkm00YwgcJ5jouCB6pVRX4SAO7AeB2g7T8P
+         UfTZBA+db50lzwyT+iFkcnft6RSpyl2FdWOh9K1uYK5/pNLNivt3Mz91kyPMU05WYbP9
+         lu7SDFengGiaxN7jCNGUlkZ9S8hTTDBQ4Mb8wkm/DiqnsHA7D9JmL07vVf9eCmkDG3ER
+         UnSg==
+X-Gm-Message-State: AGi0PuYyGzXAPJ2SAZosmqANxqF8XXPm8VwZBDoeMnSZYinVy1n6uIJa
+        V5HWfP/mXffvrfptQnDHDbDcY+8+6i+MyWXw6jA0tQ==
+X-Google-Smtp-Source: APiQypIE6swexZI94wnqzlV1sfe5g/6LxPhc7dA+0DPciSA53MnNiKcoJyfwwEW85sZRfHbRaVKSPPW19M6MPYvWcsY=
+X-Received: by 2002:a02:a60f:: with SMTP id c15mr7562634jam.24.1589241125957;
+ Mon, 11 May 2020 16:52:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
+ <158923999440.20128.4859351750654993810.stgit@naples-babu.amd.com>
+In-Reply-To: <158923999440.20128.4859351750654993810.stgit@naples-babu.amd.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 11 May 2020 16:51:54 -0700
+Message-ID: <CALMp9eTs4hYpDK+KzXEzaAptcfor+9f7cM9Yd9kvd5v27sdFRw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] KVM: x86: Move MPK feature detection to common code
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        mchehab+samsung@kernel.org, changbin.du@intel.com,
+        Nadav Amit <namit@vmware.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        yang.shi@linux.alibaba.com,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arjun Roy <arjunroy@google.com>, logang@deltatee.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        pawan.kumar.gupta@linux.intel.com,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sja1105_netdev_ops should be const since that is what the DSA layer
-expects.
+On Mon, May 11, 2020 at 4:33 PM Babu Moger <babu.moger@amd.com> wrote:
+>
+> Both Intel and AMD support (MPK) Memory Protection Key feature.
+> Move the feature detection from VMX to the common code. It should
+> work for both the platforms now.
+>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+>  arch/x86/kvm/cpuid.c   |    4 +++-
+>  arch/x86/kvm/vmx/vmx.c |    4 ----
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 901cd1fdecd9..3da7d6ea7574 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -278,6 +278,8 @@ void kvm_set_cpu_caps(void)
+>  #ifdef CONFIG_X86_64
+>         unsigned int f_gbpages = F(GBPAGES);
+>         unsigned int f_lm = F(LM);
+> +       /* PKU is not yet implemented for shadow paging. */
+> +       unsigned int f_pku = tdp_enabled ? F(PKU) : 0;
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- net/dsa/tag_sja1105.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/dsa/tag_sja1105.c b/net/dsa/tag_sja1105.c
-index d553bf36bd41..5ecac5921a7d 100644
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -304,7 +304,7 @@ static struct sk_buff *sja1105_rcv(struct sk_buff *skb,
- 					      is_meta);
- }
- 
--static struct dsa_device_ops sja1105_netdev_ops = {
-+static const struct dsa_device_ops sja1105_netdev_ops = {
- 	.name = "sja1105",
- 	.proto = DSA_TAG_PROTO_SJA1105,
- 	.xmit = sja1105_xmit,
--- 
-2.17.1
-
+I think we still want to require that OSPKE be set on the host before
+exposing PKU to the guest.
