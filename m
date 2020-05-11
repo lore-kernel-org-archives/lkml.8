@@ -2,107 +2,92 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E678C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D5C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A94B206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m0ElpsF0"
+	by mail.kernel.org (Postfix) with ESMTP id 02C31206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbgEKNos (ORCPT
+        id S1730188AbgEKNpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729641AbgEKNor (ORCPT
+        Mon, 11 May 2020 09:45:07 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49194 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729641AbgEKNpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:44:47 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F21EC05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:44:47 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h17so2143833wrc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hpFE9CUsmF5QuTw9fCnRsO/HIcrfLKfZVWo5gx0AO38=;
-        b=m0ElpsF0pRp5TglEUDXatsddqa+Pb36Mj0Ppynh2iPIzzZz0EgUlzEtzkWyZeAg3vB
-         uBs8o5cgAfl1IJaebtKgziRr73o57iHO5kRqVLTfaRC9X/zbKfqE0X7WUY3tyIHVtzsE
-         vFx9MY8AD+wURjQHSKOL4msglFChmdK1OF0GOTXEyOPCB+/qCeUlNUl3WRSD8mjpJY46
-         hSQALRhOTEhqYS5oyb8QdeT0A4PD7fA1adHgJP7v3DqW9SxYfGkzAgGWjuOFXLrwzjzb
-         N6qFsfSm3T/OSIzW2mqIAKD2F9YJwb6IdZnQgigtlyOUiCH7V2syhUCmrF3QsgphlAHW
-         IDRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hpFE9CUsmF5QuTw9fCnRsO/HIcrfLKfZVWo5gx0AO38=;
-        b=srzwoHKAxlD4FmaXTw2dJGGZppMCiVrYoQCGfw5ciUejo951FupyZ3bgGkIG07KyPO
-         DRs9dgOKzWNCsjLd+IcUzc1kC+y5vfHC0afvsrYHlf32hrpvOZO4NH+jzaQn3iJQpp5f
-         WYU+u0McOTh4HvytUixIaLcI/Zz+h06zr8nukk1y1nVKdOSVEDrSDSWPsySGvVrhPtHo
-         1QETT8vo8sfc2sdQarstR+VMpQW4ogPNEd/8s0PwXSaHT9/7KNdyAmKKSK6EFxC0ZjWx
-         9ptOyCiHWB4JxdDvKnTjr8Q6wAEt+Ic47ZLk6GHcAjpiQ1d8VIcnykvs3rHTtlIbj24I
-         H1WQ==
-X-Gm-Message-State: AGi0PubWHZWGn/CxyYqlgCOpamIhj0GtunOGLpBJ+Wlzf7PWdbD4Tb+5
-        0qhL+TE33DTQuJl5I20fHsLM5IJqD1+YZA==
-X-Google-Smtp-Source: APiQypLqeWUYDX3crs5ryt2QKIDbqRz/76rh57q7pYtJbxnpgj5n76IycVeDM/ojI700iAgxeVhE4Q==
-X-Received: by 2002:adf:e28c:: with SMTP id v12mr21053389wri.157.1589204686152;
-        Mon, 11 May 2020 06:44:46 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id a15sm18111170wrw.56.2020.05.11.06.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:44:45 -0700 (PDT)
-Date:   Mon, 11 May 2020 14:44:41 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-Subject: Re: [PATCH v7 05/15] PM / EM: remove em_register_perf_domain
-Message-ID: <20200511134441.GB29112@google.com>
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
- <20200511111912.3001-6-lukasz.luba@arm.com>
+        Mon, 11 May 2020 09:45:06 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id EC8F08030807;
+        Mon, 11 May 2020 13:45:03 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id b5TYIIyRMs46; Mon, 11 May 2020 16:45:03 +0300 (MSK)
+Date:   Mon, 11 May 2020 16:45:02 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511134502.hjbu5evkiuh75chr@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200511111912.3001-6-lukasz.luba@arm.com>
+In-Reply-To: <20200511115813.GG8216@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 11 May 2020 at 12:19:02 (+0100), Lukasz Luba wrote:
-> Remove old function em_register_perf_domain which is no longer needed.
-> There is em_dev_register_perf_domain that covers old use cases and new as
-> well.
+On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
+> On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
 > 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> > Alas linearizing the SPI messages won't help in this case because the DW DMA
+> > driver will split it into the max transaction chunks anyway.
+> 
+> That sounds like you need to also impose a limit on the maximum message
+> size as well then, with that you should be able to handle messages up
+> to whatever that limit is.  There's code for that bit already, so long
+> as the limit is not too low it should be fine for most devices and
+> client drivers can see the limit so they can be updated to work with it
+> if needed.
 
-So, as mentioned in patch 03, I think this one could be squashed. But in
-any case:
+Hmm, this might work. The problem will be with imposing such limitation through
+the DW APB SSI driver. In order to do this I need to know:
+1) Whether multi-block LLP is supported by the DW DMA controller.
+2) Maximum DW DMA transfer block size.
+Then I'll be able to use this information in the can_dma() callback to enable
+the DMA xfers only for the safe transfers. Did you mean something like this when
+you said "There's code for that bit already" ? If you meant the max_dma_len
+parameter, then setting it won't work, because it just limits the SG items size
+not the total length of a single transfer.
 
-Acked-by: Quentin Perret <qperret@google.com>
+So the question is of how to export the multi-block LLP flag from DW DMAc
+driver. Andy?
+
+-Sergey
+
