@@ -2,86 +2,78 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A2C54E8E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B6C54E8D
 	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D116E2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kRR8fAIc"
+	by mail.kernel.org (Postfix) with ESMTP id 860D720722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbgEKQjR (ORCPT
+        id S1730653AbgEKQjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 11 May 2020 12:39:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54004 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbgEKQjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729613AbgEKQjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 12:39:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=PO2c3L65UWqL1EcOkY6DtrTcnu4QOhrD4mFFAvp9mOQ=; b=kRR8fAIckpSJoyBIVZvk5Ch9q/
-        8NsxPE3cQU+6IoWGenHjd+iDoF4PopnCIiln9GsylXeZN+Gmg4aLn2Gh/1wGK/q2s53Oi1jc9iamT
-        2W8dv+rlBtfIaLOlx01u831Bev6nPjrTpk8VeQZez+6vCAEUVxnsA+6FTKo0EkYG12fU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYBSM-001sLM-JX; Mon, 11 May 2020 18:39:06 +0200
-Date:   Mon, 11 May 2020 18:39:06 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
-Message-ID: <20200511163906.GD413878@lunn.ch>
-References: <20200511150759.18766-1-brgl@bgdev.pl>
- <20200511150759.18766-6-brgl@bgdev.pl>
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6810C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 09:39:16 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id 5BD812A07F2
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     agk@redhat.com, snitzer@redhat.com
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org, song@kernel.org,
+        breeves@redhat.com, mpatocka@redhat.com, khazhy@google.com,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCH v4 0/2] Historical Service Time Path Selector
+Date:   Mon, 11 May 2020 12:39:08 -0400
+Message-Id: <20200511163910.3778467-1-krisman@collabora.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511150759.18766-6-brgl@bgdev.pl>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 05:07:50PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Appropriate amount of extra memory for private data is allocated at
-> the end of struct net_device. We have a helper - netdev_priv() - that
-> returns its address but we don't have the reverse: a function which
-> given the address of the private data, returns the address of struct
-> net_device.
-> 
-> This has caused many drivers to store the pointer to net_device in
-> the private data structure, which basically means storing the pointer
-> to a structure in this very structure.
+Hi,
 
-To some extent, that is the way it is done now. To do anything else
-just makes your driver different and so harder to maintain. Is 4/8
-bytes for a pointer really worth being different?
- 
-	Andrew
+This fourth version of HST applies the suggestion from Mikulas Patocka
+to do the ktime_get_ns inside the mpath map_bio instead of generic
+device-mapper code. This means that struct dm_mpath_io gained another
+64bit field.  For the request-based case, we continue to use the block
+layer start time information.
+
+With this modification, I was able obtain similar performance on  BIO
+to request-based multipath with HST on the benchmarks shared in v1.
+
+v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
+v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
+v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
+
+Gabriel Krisman Bertazi (1):
+  md: mpath: Pass IO start time to path selector
+
+Khazhismel Kumykov (1):
+  md: mpath: Add Historical Service Time Path Selector
+
+ drivers/md/Kconfig                      |  11 +
+ drivers/md/Makefile                     |   1 +
+ drivers/md/dm-historical-service-time.c | 561 ++++++++++++++++++++++++
+ drivers/md/dm-mpath.c                   |  12 +-
+ drivers/md/dm-path-selector.h           |   2 +-
+ drivers/md/dm-queue-length.c            |   2 +-
+ drivers/md/dm-service-time.c            |   2 +-
+ 7 files changed, 585 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/md/dm-historical-service-time.c
+
+-- 
+2.26.2
+
