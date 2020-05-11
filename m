@@ -2,130 +2,128 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7DDC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAD0C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BA8207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589170996;
-	bh=KlBhoyn/MnBO9/WZNMuYVKpy6pF5Ofw0HZk43nWR0t0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=D3naRX1l5egZSZgVU0E82XWPdV1Bj/FwJy3dGcXtVC/szUJJHcK8vn1+NYFqhkMCM
-	 +ATifwaK6tyh51778Kf9r+kCLZSRur9NEO8umlis6Q+Bao4+S9E9k4ROdjJxiJHUvF
-	 gDag3++rYX/0CzdQg6pkeH7uZ0vCV84iO8mZCa8Y=
+	by mail.kernel.org (Postfix) with ESMTP id C807F2495A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:28:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GNPCe7UQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbgEKEXQ (ORCPT
+        id S1726160AbgEKE2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:23:16 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:29748 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgEKEXP (ORCPT
+        Mon, 11 May 2020 00:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725840AbgEKE2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:23:15 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 04B4LsSl009856;
-        Mon, 11 May 2020 13:21:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 04B4LsSl009856
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589170915;
-        bh=bEd3hBdLhKUwiRkpNdiCa9W/1TH8Wtl6cdq8NlrF14Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=befzyPqsVsx2syuhFxp9p3bHbYTwnF9na1iJjkcFtrZuEsAUiCR57FjAh2LZgozLt
-         QYSv3U1HPIqe523P/m7N96jfhZY+htjvMmQz9gyGuqtNJOEM1uZw4LXN7yfrt99sqM
-         54xQ5cy4vDKxFWuwxjkv4dwsUEBsom3FPn2eOQ+IRunljIYd4cye/W/qXOh5tHDQPg
-         AWOmbnh69qkGpCKA54DyuoioAD4uc8S8KillSpfPNB5Z4I6EgSmbkOGp2NAB1M3tQr
-         HY5lVGMR3BV1vNsk2DPlZttslCSi89jcjeFHSzmo9MrE3FGUp+CzCvX1li/2OgvE+P
-         /OXaJCnUw8w5g==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Mon, 11 May 2020 00:28:08 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B059C061A0C;
+        Sun, 10 May 2020 21:28:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L7GC31HRz9sRf;
+        Mon, 11 May 2020 14:28:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589171285;
+        bh=yBNPGPJvyInqkgXgt21qKXVWdj+gpMXL9nih+47URB0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GNPCe7UQlUM5gX6gOKIeWIGxZOjs3jiRQ2UKNgwTKgexZBSbcVDyPX5AgbrbUjuFH
+         ND8iyjDf9/2aMvuvVsXidgPL2gTYM5S8Q8rwJNFEa35wjl85zDq9t7EnklShUx7x8y
+         WmyQdNdArOV3BjbVD5sIgX2zVh99GaF8W9XeY/K7G3Gk+5P+4QWW0v79p2dJSPS6oz
+         i9eneL0RBPWaW/nl2ZjsdYGPPbPaERo+FG27F8OFx+44DsjrLK3ta2+g3evf7OVupT
+         GP9574bc4B2Yixt9zJ+O7Sb6ZfZHw8laU2dAVkl5EkU88XHA++dHmrjhbHEH+akEDk
+         6el7KQjD8LE6w==
+Date:   Mon, 11 May 2020 14:27:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: make module name conflict fatal error
-Date:   Mon, 11 May 2020 13:21:49 +0900
-Message-Id: <20200511042149.1712876-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Bart Van Assche <bvanassche@acm.org>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20200511142756.1b7ef706@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/R_hSrhV=U6k=lMgYIz9KNWa";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think all the warnings have been fixed by now. Make it a fatal error.
+--Sig_/R_hSrhV=U6k=lMgYIz9KNWa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Check it before modpost because we need to stop building *.ko files.
-Also, pass modules.order via a script parameter.
+Hi all,
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/block/aoe/aoeblk.c: In function 'aoeblk_gdalloc':
+drivers/block/aoe/aoeblk.c:410:21: error: 'struct backing_dev_info' has no =
+member named 'name'
+  410 |  q->backing_dev_info->name =3D "aoe";
+      |                     ^~
+
+Caused by commit
+
+  1cd925d58385 ("bdi: remove the name field in struct backing_dev_info")
+
+I applied the following patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 11 May 2020 14:19:30 +1000
+Subject: [PATCH] bdi: fix up for "remove the name field in struct
+ backing_dev_info"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
+ drivers/block/aoe/aoeblk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- Makefile                 |  7 +++++--
- scripts/modules-check.sh | 16 +++++++++++++---
- 2 files changed, 18 insertions(+), 5 deletions(-)
+diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
+index a27804d71e12..5ca7216e9e01 100644
+--- a/drivers/block/aoe/aoeblk.c
++++ b/drivers/block/aoe/aoeblk.c
+@@ -407,7 +407,6 @@ aoeblk_gdalloc(void *vp)
+ 	WARN_ON(d->gd);
+ 	WARN_ON(d->flags & DEVFL_UP);
+ 	blk_queue_max_hw_sectors(q, BLK_DEF_MAX_SECTORS);
+-	q->backing_dev_info->name =3D "aoe";
+ 	q->backing_dev_info->ra_pages =3D READ_AHEAD / PAGE_SIZE;
+ 	d->bufpool =3D mp;
+ 	d->blkq =3D gd->queue =3D q;
+--=20
+2.26.2
 
-diff --git a/Makefile b/Makefile
-index 1162cb04860c..a2e4d0945500 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1328,9 +1328,12 @@ all: modules
- # using awk while concatenating to the final file.
- 
- PHONY += modules
--modules: $(if $(KBUILD_BUILTIN),vmlinux) modules.order
-+modules: $(if $(KBUILD_BUILTIN),vmlinux) modules_check
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
--	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
-+
-+PHONY += modules_check
-+modules_check: modules.order
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh $<
- 
- modules.order: descend
- 	$(Q)$(AWK) '!x[$$0]++' $(addsuffix /$@, $(build-dirs)) > $@
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-index f51f446707b8..43de226071ae 100755
---- a/scripts/modules-check.sh
-+++ b/scripts/modules-check.sh
-@@ -3,14 +3,24 @@
- 
- set -e
- 
-+if [ $# != 1 ]; then
-+	echo "Usage: $0 <modules.order>" >& 2
-+	exit 1
-+fi
-+
-+exit_code=0
-+
- # Check uniqueness of module names
- check_same_name_modules()
- {
--	for m in $(sed 's:.*/::' modules.order | sort | uniq -d)
-+	for m in $(sed 's:.*/::' $1 | sort | uniq -d)
- 	do
--		echo "warning: same module names found:" >&2
-+		echo "error: the following would cause module name conflict:" >&2
- 		sed -n "/\/$m/s:^:  :p" modules.order >&2
-+		exit_code=1
- 	done
- }
- 
--check_same_name_modules
-+check_same_name_modules "$1"
-+
-+exit $exit_code
--- 
-2.25.1
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/R_hSrhV=U6k=lMgYIz9KNWa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl641EwACgkQAVBC80lX
+0GyHDgf+KGWDOig/y4JfUGEQy6Zav4bXJrhAUxeBXnjvUVVfavUSE7TMimRQVeB2
+23dP+BNMaM7acCqPuXgbkw2wPArY40/96sw+mA11p3ekvY0YXTKhaz8PRW6YobDY
+QfAX/bz92cx1vH3+wmoCqi4shoY6iUzxf0gSYKQTW0a5EGFC+6msHk33jg5+zWOd
+WygWr0amXgopn5ETKi/xV4CsFEgROPaILSJtgd4Yx90lI+5JVMj/MtzTSwlv3NPm
+ZFKNZh+Dxlq3X6Z+ObMUTD7bCc/Ys/1IaWck43j7+iaLhiLGypniGB4zGw+uGj59
+RZBDVxO/o2N65pUPIumVdZ1z9O9jeA==
+=8OUk
+-----END PGP SIGNATURE-----
+
+--Sig_/R_hSrhV=U6k=lMgYIz9KNWa--
