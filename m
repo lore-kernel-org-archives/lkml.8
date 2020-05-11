@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B818CC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760CBC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B23320820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5729C20820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgEKEqZ (ORCPT
+        id S1728971AbgEKEqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33444 "EHLO
+        Mon, 11 May 2020 00:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728355AbgEKEp6 (ORCPT
+        by vger.kernel.org with ESMTP id S1728299AbgEKEp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:45:58 -0400
+        Mon, 11 May 2020 00:45:57 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56C2C061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAE1C05BD09;
         Sun, 10 May 2020 21:45:57 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0KC-005jJ3-7c; Mon, 11 May 2020 04:45:56 +0000
+        id 1jY0KB-005jIf-LW; Mon, 11 May 2020 04:45:55 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/19] atm: separate ATM_GETNAMES handling from the rest of atm_dev_ioctl()
-Date:   Mon, 11 May 2020 05:45:49 +0100
-Message-Id: <20200511044553.1365660-15-viro@ZenIV.linux.org.uk>
+Subject: [PATCH 12/19] handle the group_source_req options directly
+Date:   Mon, 11 May 2020 05:45:46 +0100
+Message-Id: <20200511044553.1365660-12-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
 References: <20200511044328.GP23230@ZenIV.linux.org.uk>
@@ -45,158 +45,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-atm_dev_ioctl() does copyin in two different ways - one for
-ATM_GETNAMES, another for everything else.  Start with separating
-the former into a new helper (atm_getnames()).  The next step
-will be to lift the copyin into the callers.
+Native ->setsockopt() handling of these options (MCAST_..._SOURCE_GROUP
+and MCAST_{,UN}BLOCK_SOURCE) consists of copyin + call of a helper that
+does the actual work.  The only change needed for ->compat_setsockopt()
+is a slightly different copyin - the helpers can be reused as-is.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- net/atm/ioctl.c     |  6 +++-
- net/atm/resources.c | 88 +++++++++++++++++++++++++++--------------------------
- net/atm/resources.h |  1 +
- 3 files changed, 51 insertions(+), 44 deletions(-)
+ net/ipv4/ip_sockglue.c   | 23 +++++++++++++++++++++--
+ net/ipv6/ipv6_sockglue.c | 23 +++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 4 deletions(-)
 
-diff --git a/net/atm/ioctl.c b/net/atm/ioctl.c
-index d955b683aa7c..0b4b07740fe4 100644
---- a/net/atm/ioctl.c
-+++ b/net/atm/ioctl.c
-@@ -162,7 +162,11 @@ static int do_vcc_ioctl(struct socket *sock, unsigned int cmd,
- 	if (error != -ENOIOCTLCMD)
- 		goto done;
- 
--	error = atm_dev_ioctl(cmd, argp, compat);
-+	if (cmd == ATM_GETNAMES) {
-+		error = atm_getnames(argp, compat);
-+	} else {
-+		error = atm_dev_ioctl(cmd, argp, compat);
-+	}
- 
- done:
- 	return error;
-diff --git a/net/atm/resources.c b/net/atm/resources.c
-index 889349c6d90d..a2ab75929eec 100644
---- a/net/atm/resources.c
-+++ b/net/atm/resources.c
-@@ -193,61 +193,63 @@ static int fetch_stats(struct atm_dev *dev, struct atm_dev_stats __user *arg,
- 	return error ? -EFAULT : 0;
- }
- 
--int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
-+int atm_getnames(void __user *arg, int compat)
- {
- 	void __user *buf;
--	int error, len, number, size = 0;
-+	int error, len, size = 0;
- 	struct atm_dev *dev;
- 	struct list_head *p;
- 	int *tmp_buf, *tmp_p;
--	int __user *sioc_len;
- 	int __user *iobuf_len;
- 
--	switch (cmd) {
--	case ATM_GETNAMES:
--		if (IS_ENABLED(CONFIG_COMPAT) && compat) {
-+	if (IS_ENABLED(CONFIG_COMPAT) && compat) {
- #ifdef CONFIG_COMPAT
--			struct compat_atm_iobuf __user *ciobuf = arg;
--			compat_uptr_t cbuf;
--			iobuf_len = &ciobuf->length;
--			if (get_user(cbuf, &ciobuf->buffer))
--				return -EFAULT;
--			buf = compat_ptr(cbuf);
-+		struct compat_atm_iobuf __user *ciobuf = arg;
-+		compat_uptr_t cbuf;
-+		iobuf_len = &ciobuf->length;
-+		if (get_user(cbuf, &ciobuf->buffer))
-+			return -EFAULT;
-+		buf = compat_ptr(cbuf);
- #endif
--		} else {
--			struct atm_iobuf __user *iobuf = arg;
--			iobuf_len = &iobuf->length;
--			if (get_user(buf, &iobuf->buffer))
--				return -EFAULT;
--		}
--		if (get_user(len, iobuf_len))
-+	} else {
-+		struct atm_iobuf __user *iobuf = arg;
-+		iobuf_len = &iobuf->length;
-+		if (get_user(buf, &iobuf->buffer))
- 			return -EFAULT;
--		mutex_lock(&atm_dev_mutex);
--		list_for_each(p, &atm_devs)
--			size += sizeof(int);
--		if (size > len) {
--			mutex_unlock(&atm_dev_mutex);
--			return -E2BIG;
--		}
--		tmp_buf = kmalloc(size, GFP_ATOMIC);
--		if (!tmp_buf) {
--			mutex_unlock(&atm_dev_mutex);
--			return -ENOMEM;
--		}
--		tmp_p = tmp_buf;
--		list_for_each(p, &atm_devs) {
--			dev = list_entry(p, struct atm_dev, dev_list);
--			*tmp_p++ = dev->number;
--		}
-+	}
-+	if (get_user(len, iobuf_len))
-+		return -EFAULT;
-+	mutex_lock(&atm_dev_mutex);
-+	list_for_each(p, &atm_devs)
-+		size += sizeof(int);
-+	if (size > len) {
- 		mutex_unlock(&atm_dev_mutex);
--		error = ((copy_to_user(buf, tmp_buf, size)) ||
--			 put_user(size, iobuf_len))
--			? -EFAULT : 0;
--		kfree(tmp_buf);
--		return error;
--	default:
--		break;
-+		return -E2BIG;
- 	}
-+	tmp_buf = kmalloc(size, GFP_ATOMIC);
-+	if (!tmp_buf) {
-+		mutex_unlock(&atm_dev_mutex);
-+		return -ENOMEM;
-+	}
-+	tmp_p = tmp_buf;
-+	list_for_each(p, &atm_devs) {
-+		dev = list_entry(p, struct atm_dev, dev_list);
-+		*tmp_p++ = dev->number;
-+	}
-+	mutex_unlock(&atm_dev_mutex);
-+	error = ((copy_to_user(buf, tmp_buf, size)) ||
-+		 put_user(size, iobuf_len))
-+		? -EFAULT : 0;
-+	kfree(tmp_buf);
-+	return error;
-+}
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 4f412b0bdda4..8a3b879dc0f5 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1322,8 +1322,27 @@ int compat_ip_setsockopt(struct sock *sk, int level, int optname,
+ 	case MCAST_LEAVE_SOURCE_GROUP:
+ 	case MCAST_BLOCK_SOURCE:
+ 	case MCAST_UNBLOCK_SOURCE:
+-		return compat_mc_setsockopt(sk, level, optname, optval, optlen,
+-			ip_setsockopt);
++	{
++		struct compat_group_source_req __user *gsr32 = (void __user *)optval;
++		struct group_source_req greqs;
 +
-+int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
-+{
-+	void __user *buf;
-+	int error, len, number, size = 0;
-+	struct atm_dev *dev;
-+	int __user *sioc_len;
- 
- 	if (IS_ENABLED(CONFIG_COMPAT) && compat) {
- #ifdef CONFIG_COMPAT
-diff --git a/net/atm/resources.h b/net/atm/resources.h
-index 048232e4d4c6..18f8e5948ce4 100644
---- a/net/atm/resources.h
-+++ b/net/atm/resources.h
-@@ -14,6 +14,7 @@
- extern struct list_head atm_devs;
- extern struct mutex atm_dev_mutex;
- 
-+int atm_getnames(void __user *arg, int compat);
- int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat);
- 
- 
++		if (optlen != sizeof(struct compat_group_source_req))
++			return -EINVAL;
++
++		if (get_user(greqs.gsr_interface, &gsr32->gsr_interface) ||
++		    copy_from_user(&greqs.gsr_group, &gsr32->gsr_group,
++				sizeof(greqs.gsr_group)) ||
++		    copy_from_user(&greqs.gsr_source, &gsr32->gsr_source,
++				sizeof(greqs.gsr_source)))
++			return -EFAULT;
++
++		rtnl_lock();
++		lock_sock(sk);
++		err = do_mcast_group_source(sk, optname, &greqs);
++		release_sock(sk);
++		rtnl_unlock();
++		return err;
++	}
+ 	case MCAST_MSFILTER:
+ 	{
+ 		const int size0 = offsetof(struct compat_group_filter, gf_slist);
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index fc525ad9ed3c..4c9a9f2f83cf 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -1015,8 +1015,27 @@ int compat_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 	case MCAST_LEAVE_SOURCE_GROUP:
+ 	case MCAST_BLOCK_SOURCE:
+ 	case MCAST_UNBLOCK_SOURCE:
+-		return compat_mc_setsockopt(sk, level, optname, optval, optlen,
+-			ipv6_setsockopt);
++	{
++		struct compat_group_source_req __user *gsr32 = (void __user *)optval;
++		struct group_source_req greqs;
++
++		if (optlen < sizeof(struct compat_group_source_req))
++			return -EINVAL;
++
++		if (get_user(greqs.gsr_interface, &gsr32->gsr_interface) ||
++		    copy_from_user(&greqs.gsr_group, &gsr32->gsr_group,
++				sizeof(greqs.gsr_group)) ||
++		    copy_from_user(&greqs.gsr_source, &gsr32->gsr_source,
++				sizeof(greqs.gsr_source)))
++			return -EFAULT;
++
++		rtnl_lock();
++		lock_sock(sk);
++		err = do_ipv6_mcast_group_source(sk, optname, &greqs);
++		release_sock(sk);
++		rtnl_unlock();
++		return err;
++	}
+ 	case MCAST_MSFILTER:
+ 	{
+ 		const int size0 = offsetof(struct compat_group_filter, gf_slist);
 -- 
 2.11.0
 
