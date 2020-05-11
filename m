@@ -2,133 +2,97 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80314C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681D3C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B62920746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43ACE2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dykk22od"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cYYX+rnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgEKDnR (ORCPT
+        id S1728300AbgEKDrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51992 "EHLO
+        Sun, 10 May 2020 23:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727824AbgEKDnR (ORCPT
+        by vger.kernel.org with ESMTP id S1728058AbgEKDrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:43:17 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00296C061A0C;
-        Sun, 10 May 2020 20:43:16 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r10so3461392pgv.8;
-        Sun, 10 May 2020 20:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U84COOeYtRpAM7eRRotZrI3ddShd7/ixg+GnaNA9BFg=;
-        b=Dykk22od04k4WptQIHPcyfgSQUiGElApYnK2RcqI7mKqCR1HUqTIUL1DuuN5GVRpSZ
-         0LbnLW9FS1a9nVPygMPt5PFqfoEtlzf9Z1giIFYzcRqIuy1WFHJCSLW/RpdmQsjeST7M
-         KuTaFT0I96DSBZiJAkgRTn0+csux+B4yjr6YfhEdHXZvlPxin4XiUVmBhMiXv7FxVsVt
-         LvKIErU9uqw/sZ9/Vt/Y0foM7jaS1zUga/6KPysw4WTV3MsKm1WAXXB/Co+xkT2kUmqb
-         OkAw7EAq9oT9YRlpZMe7I7BEa/c3sMUcQerHMvg8KLX5IKhhSQbzOG+5ZG5a4l2UENn0
-         5/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U84COOeYtRpAM7eRRotZrI3ddShd7/ixg+GnaNA9BFg=;
-        b=PD5YVV68GP6DGN0rRMWqCufwb+0FYQqjx33w6R/6HT/JaO3WuaK9K1t4m4mp70JQkl
-         qs9j91QQMSpUezw3wI0jTJDyglHmojoNFGmBlRwYNWnAkoRCDE6TXsRZ5j7Tsg4WGjTP
-         niPf+s8qdBl9Tk4bKQg2cLrGzkTdUWIvNfXJEPHPxdzIr1c/cdAzeb9V2I2AKxyWsfx2
-         qWcVM6nFsvcOhtiIxah8Ucv2SSXvJdFu3+Rm0pYFpxbmflSInuF7I6fY58taA6GTTHRT
-         nkBYex4iXPc5Pc+RaXE9bwdkuRe4xtzdcb8Wrgix6FgO+5n5izT3TPjPz58fzUKyEU93
-         0QpA==
-X-Gm-Message-State: AGi0PuYr1H2GO5jS6kheDqVNcA/2f0PEk7BuB6eqBdux9H4utn/ASTC/
-        g1kqob8nJORdsmU6lO1Bl9k=
-X-Google-Smtp-Source: APiQypKOH/jX/6/Yy0is3q7Nj5+T7ceq2B5BiieYUefl7AD1XRAqNmYG226QniqidKrxTJ4RzM4Ycg==
-X-Received: by 2002:a63:6f4c:: with SMTP id k73mr12569699pgc.241.1589168596436;
-        Sun, 10 May 2020 20:43:16 -0700 (PDT)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id y16sm8108282pfp.45.2020.05.10.20.43.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 May 2020 20:43:15 -0700 (PDT)
-From:   zhouchuangao <chuangaozhou@gmail.com>
-X-Google-Original-From: zhouchuangao <zhouchuangao@xiaomi.com>
-To:     linux@roeck-us.net
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhouchuangao <zhouchuangao@xiaomi.com>
-Subject: [PATCH] driver/hwmon/nct6775: Use kobj_to_dev() API
-Date:   Mon, 11 May 2020 11:43:06 +0800
-Message-Id: <1589168586-7796-1-git-send-email-zhouchuangao@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 10 May 2020 23:47:20 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAC9C061A0C;
+        Sun, 10 May 2020 20:47:20 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L6M83sxTz9sRf;
+        Mon, 11 May 2020 13:47:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589168837;
+        bh=O6zAs4Q3XikfztIZH1d1NrZqdEwNh2c50gDfoygxdLc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cYYX+rnqJKBB7kkvpkom4AgbZA7Ut6K3fpZHtO9UVJm8HYD2zmmy7OA13Pf6keGMZ
+         NVDSLByMO8p3eaG3rjej++DJafBPsi0ViWThdh+CTxpqmqcrlBWr25VRFpyh9BnEf6
+         FNX3inFLdDuWNdAovuQoV+kn5xmvBZbXMssYe5/yn05GRt3dCSIKR+OZenfcBfPbIk
+         KaPDUqGLKxc6VY3m/9wD4rw+UIV4lJL+zoa5aR/jw2ctCku3RgTFJgGM1hE3xpd1i9
+         pGkjeTF3vHRfr0Ma98XoXZjJusKBPHw3NOUlMMo5ONnziBnYQ32zm/mFaf0gEK2Wq6
+         gJhF69tafPXpQ==
+Date:   Mon, 11 May 2020 13:47:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: linux-next: build warning after merge of the drm tree
+Message-ID: <20200511134711.4956a5d0@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/hf4wbgX98YvTZGDZmMXnOFY";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kobj_to_dev() API instead of container_of().
+--Sig_/hf4wbgX98YvTZGDZmMXnOFY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: zhouchuangao <zhouchuangao@xiaomi.com>
----
- drivers/hwmon/nct6775.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Hi all,
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index 7efa6bf..e7e1ddc 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -2047,7 +2047,7 @@ store_temp_beep(struct device *dev, struct device_attribute *attr,
- static umode_t nct6775_in_is_visible(struct kobject *kobj,
- 				     struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nct6775_data *data = dev_get_drvdata(dev);
- 	int in = index / 5;	/* voltage index */
- 
-@@ -2253,7 +2253,7 @@ store_fan_pulses(struct device *dev, struct device_attribute *attr,
- static umode_t nct6775_fan_is_visible(struct kobject *kobj,
- 				      struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nct6775_data *data = dev_get_drvdata(dev);
- 	int fan = index / 6;	/* fan index */
- 	int nr = index % 6;	/* attribute index */
-@@ -2440,7 +2440,7 @@ store_temp_type(struct device *dev, struct device_attribute *attr,
- static umode_t nct6775_temp_is_visible(struct kobject *kobj,
- 				       struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nct6775_data *data = dev_get_drvdata(dev);
- 	int temp = index / 10;	/* temp index */
- 	int nr = index % 10;	/* attribute index */
-@@ -3257,7 +3257,7 @@ store_auto_temp(struct device *dev, struct device_attribute *attr,
- static umode_t nct6775_pwm_is_visible(struct kobject *kobj,
- 				      struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nct6775_data *data = dev_get_drvdata(dev);
- 	int pwm = index / 36;	/* pwm index */
- 	int nr = index % 36;	/* attribute index */
-@@ -3459,7 +3459,7 @@ static SENSOR_DEVICE_ATTR(beep_enable, S_IWUSR | S_IRUGO, show_beep,
- static umode_t nct6775_other_is_visible(struct kobject *kobj,
- 					struct attribute *attr, int index)
- {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nct6775_data *data = dev_get_drvdata(dev);
- 
- 	if (index == 0 && !data->have_vid)
--- 
-2.7.4
+After merging the drm tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
 
+WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-v=
+isionox-rm69299.o
+
+Introduced by commit
+
+  c7f66d32dd43 ("drm/panel: add support for rm69299 visionox panel")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hf4wbgX98YvTZGDZmMXnOFY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64yr8ACgkQAVBC80lX
+0Gzz5wf/SzmSBIVJ8psuZOrI1EHRvhok21kidiDElkDPfM+wUiZQvM8SpHsE7rLt
+jlWz+olEdZKQTf16JDo0SLMi5cvQgoz89CSwK9DJnTUFza70Mz8K4NHlTwxJfJde
+aW5Wgua4+Uw+AghtNwSiuY6MRRCSiGfKBIexdtiLf8mJPmapMvBCYTLTXGyg/TEg
+2RJbbY3hQz+4pLireQgelqmn3CntKDyFTifb1GT35N7iWrCJnJGwHMPA5/ap+8Ef
+bX5iUgsfho6/y3vmnFXC0EpffphZiA3kDTs4z+mtWiVeY+v7HJAqe2KFU3Z6lK8C
+LEJGa1rzLr5ayYXpgWVCS7vxFI/GVg==
+=y+Pu
+-----END PGP SIGNATURE-----
+
+--Sig_/hf4wbgX98YvTZGDZmMXnOFY--
