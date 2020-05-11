@@ -2,87 +2,141 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959BAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54753C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698382098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589193954;
-	bh=YKQf+yut5PyTaJyO4G7QVdbZDAhqYM8hMpLBt+mLfWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AdsCgEf6OB+N2a6aKRCO8k72djeGgK+fDGxwYgBRH6dPGdJb9qGgLecnQNMWs5kAM
-	 ha1Dk6R9QsWU/6QJB4OGPGRvmivUn/bcKA04kauofBn+tv66EvwJhj7XS7GH+Q25uO
-	 kG/ms+kPW1Wa94cIbtYtto15KYsVX5qf3b+lTMrM=
+	by mail.kernel.org (Postfix) with ESMTP id 33FD520720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgEKKpx (ORCPT
+        id S1729544AbgEKKqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43288 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 06:46:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35929 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKKpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:45:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 200D520720;
-        Mon, 11 May 2020 10:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589193952;
-        bh=YKQf+yut5PyTaJyO4G7QVdbZDAhqYM8hMpLBt+mLfWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ycstioGxXdrQGSjd1FbMW5NialkNNzH7qxmD3nZgQaJepgaHbkX1XZrSmoVkgHDB5
-         6Tsu5bdNmeCcCWb8d5XliJVau7vx57UvdbM8XF+aPkrmKCoSAI3WKjxFmnZa3NMQn1
-         FZhDYtUQZBR1s4qXma1yfnMnruFrhG3bUUl7jPak=
-Date:   Mon, 11 May 2020 11:45:48 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Zong Li <zong.li@sifive.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: remove the specific name of arm64
-Message-ID: <20200511104548.GB18310@willie-the-truck>
-References: <cover.1589178399.git.zong.li@sifive.com>
- <3a6a92ecedc54e1d0fc941398e63d504c2cd5611.1589178399.git.zong.li@sifive.com>
+        id S1728209AbgEKKqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:46:07 -0400
+IronPort-SDR: MU9XcCbWKgTZPKtzlcVfIX2egQgty+6tTm6+j9MGFjpjBIiwRoJZnkInx389npW3E/3tFhvzvi
+ PkrQmDK6Ewpg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 03:46:07 -0700
+IronPort-SDR: 6+wlxQGsVBrFkYcdLlZFMmpWwHUXCZDfh8jl9RM72uix1XLHClRhOnf+DraSIizGZYnxI9okUZ
+ ODsCpMZBjBMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
+   d="scan'208";a="371183811"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 11 May 2020 03:46:04 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 11 May 2020 13:46:03 +0300
+Date:   Mon, 11 May 2020 13:46:03 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-usb@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, nikolaus.voss@loewensteinmedical.de,
+        andriy.shevchenko@linux.intel.com, garsilva@embeddedor.com,
+        keescook@chromium.org
+Subject: Re: [PATCH v2] usb: typec: tps6598x: Add USB role switching logic
+Message-ID: <20200511104603.GA2062175@kuha.fi.intel.com>
+References: <20200507215938.1983363-1-bryan.odonoghue@linaro.org>
+ <20200507215938.1983363-2-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a6a92ecedc54e1d0fc941398e63d504c2cd5611.1589178399.git.zong.li@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200507215938.1983363-2-bryan.odonoghue@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 02:28:19PM +0800, Zong Li wrote:
-> UXN is the name of arm64 page-table descriptors.
-> 
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> CC: Will Deacon <will@kernel.org>
-> ---
->  mm/Kconfig.debug | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-> index e19f94c6df90..b8cbe035247f 100644
-> --- a/mm/Kconfig.debug
-> +++ b/mm/Kconfig.debug
-> @@ -130,8 +130,6 @@ config DEBUG_WX
+Hi,
+
+On Thu, May 07, 2020 at 10:59:38PM +0100, Bryan O'Donoghue wrote:
+> @@ -452,6 +471,7 @@ static int tps6598x_probe(struct i2c_client *client)
+>  {
+>  	struct typec_capability typec_cap = { };
+>  	struct tps6598x *tps;
+> +	struct fwnode_handle *fwnode;
+>  	u32 status;
+>  	u32 conf;
+>  	u32 vid;
+> @@ -495,11 +515,21 @@ static int tps6598x_probe(struct i2c_client *client)
+>  	if (ret < 0)
+>  		return ret;
 >  
->  	  This is useful for discovering cases where the kernel is leaving W+X
->  	  mappings after applying NX, as such mappings are a security risk.
-> -	  This check also includes UXN, which should be set on all kernel
-> -	  mappings.
+> +	fwnode = device_get_named_child_node(&client->dev, "connector");
+> +	if (!IS_ERR_OR_NULL(fwnode)) {
+> +		tps->role_sw = fwnode_usb_role_switch_get(fwnode);
+> +		if (IS_ERR(tps->role_sw)) {
+> +			ret = PTR_ERR(tps->role_sw);
+> +			goto err_fwnode_put;
+> +		}
+> +	}
+
+        fwnode = device_get_named_child_node(&client->dev, "connector");
+        if (IS_ERR(fwnode))
+                return PTR_ERR(fwnode);
+
+        tps->role_sw = fwnode_usb_role_switch_get(fwnode);
+        if (IS_ERR(tps->role_sw)) {
+        	ret = PTR_ERR(tps->role_sw);
+        	goto err_fwnode_put;
+        }
+
+>  	typec_cap.revision = USB_TYPEC_REV_1_2;
+>  	typec_cap.pd_revision = 0x200;
+>  	typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
+>  	typec_cap.driver_data = tps;
+>  	typec_cap.ops = &tps6598x_ops;
+> +	typec_cap.fwnode = fwnode;
 >  
->  	  Look for a message in dmesg output like this:
+>  	switch (TPS_SYSCONF_PORTINFO(conf)) {
+>  	case TPS_PORTINFO_SINK_ACCESSORY:
+> @@ -525,12 +555,16 @@ static int tps6598x_probe(struct i2c_client *client)
+>  		typec_cap.data = TYPEC_PORT_DFP;
+>  		break;
+>  	default:
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_role_put;
+>  	}
+>  
+>  	tps->port = typec_register_port(&client->dev, &typec_cap);
+> -	if (IS_ERR(tps->port))
+> -		return PTR_ERR(tps->port);
+> +	if (IS_ERR(tps->port)) {
+> +		ret = PTR_ERR(tps->port);
+> +		goto err_role_put;
+> +	}
+> +	fwnode_handle_put(fwnode);
+>  
+>  	if (status & TPS_STATUS_PLUG_PRESENT) {
+>  		ret = tps6598x_connect(tps, status);
+> @@ -545,12 +579,19 @@ static int tps6598x_probe(struct i2c_client *client)
+>  	if (ret) {
+>  		tps6598x_disconnect(tps, 0);
+>  		typec_unregister_port(tps->port);
+> -		return ret;
+> +		goto err_role_put;
+>  	}
+>  
+>  	i2c_set_clientdata(client, tps);
+>  
+>  	return 0;
+> +
+> +err_role_put:
+> +	usb_role_switch_put(tps->role_sw);
+> +err_fwnode_put:
+> +	fwnode_handle_put(fwnode);
+> +
+> +	return ret;
+>  }
 
-Acked-by: Will Deacon <will@kernel.org>
+thanks,
 
-The commit message needs help, but I'm assuming Andrew will just fold this
-into the other patch so it doesn't matter.
-
-Will
+-- 
+heikki
