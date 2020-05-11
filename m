@@ -2,183 +2,227 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37317C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E275EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1B9207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA98207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRs5hd/g"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="vJSefEqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgEKIBb (ORCPT
+        id S1728341AbgEKIFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:01:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49192 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726082AbgEKIBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:01:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589184088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p4xy/gFUAuwiSRnEJ/0Zyb9V6KmjnNYS+I/N0r7gbyo=;
-        b=IRs5hd/gwLvjv0t2XXUd+rPxQlxvAjfl0qEVYFqFNnanDJj1meq1wP0mkB5q7i9eVvm/9Y
-        M5y9/mqXbqn78Uz0DBUOXsCJ7y7rdJ3DFtzhDBwr/WgC63wmNS40OluPLo1C9cpHbZ3v2n
-        F8hv8VmVDck6FNMcsCx6IuAxPiTTWd8=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-82-7U-PuGQLOKOHm-DsJ7HoAw-1; Mon, 11 May 2020 04:01:27 -0400
-X-MC-Unique: 7U-PuGQLOKOHm-DsJ7HoAw-1
-Received: by mail-wr1-f70.google.com with SMTP id y7so4841421wrd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 01:01:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=p4xy/gFUAuwiSRnEJ/0Zyb9V6KmjnNYS+I/N0r7gbyo=;
-        b=fHj87fP4xxJkA3fd9WMoi+5haEkP1ae1i5cUKN+FAXQzw2ufWJr3o2t5HH5Z/m6p0h
-         XCvZYS0PiljJb5arFZ7Cqg4qvipQirdF7Qe09f5zky8WFfreZXrdoXyRlO6QJusOnzIg
-         UdBCKPdh+jH+2YUcwX6q5uvnK+78W7IEI7WiKhUi+ydH05c1sSI/k1PBDGtsbYq3Hulo
-         VAzE9Cn5ql0Pnbar8hK/XNyeKevLNCcm8y6YZIBAJXGm2tvwa1nZ/zIHyOb4ghN9Q8F+
-         y4oNbZTKpKbWVKyiF/cTG4PHGCR/h9PQN5mhZAGAZcXZLQer7+mHkYCJslEnCvH4+htk
-         Cj8w==
-X-Gm-Message-State: AGi0PuZ4nly8x3qYSJtjK56etoaJJDiq1vGdVEKBDofhKNlfDJF9H5a6
-        TvcSuFvTiPdP/HdrqQZJv+XJ3H+uY0USZRx9eL4jPOHJAuNyzn24tCvn3hEx/DWJ44Y7yFbPUDa
-        uVNuO9SkNTFyXUWRP4lU2IjV7
-X-Received: by 2002:a7b:c399:: with SMTP id s25mr29022667wmj.169.1589184085594;
-        Mon, 11 May 2020 01:01:25 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJi7KgElDznJi8RYRILtoK90//JU/fTYzSqy/uMCTx2LhklfS/ESIFkO3EoCNpQjm4FX9zGfw==
-X-Received: by 2002:a7b:c399:: with SMTP id s25mr29022632wmj.169.1589184085258;
-        Mon, 11 May 2020 01:01:25 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.188.60])
-        by smtp.gmail.com with ESMTPSA id x5sm17344688wro.12.2020.05.11.01.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 01:01:24 -0700 (PDT)
-Date:   Mon, 11 May 2020 10:01:22 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] sched/deadline: Add dl_bw_capacity()
-Message-ID: <20200511080122.GI264022@localhost.localdomain>
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-4-dietmar.eggemann@arm.com>
- <23bde551-0d91-4bfe-ce65-40af9fbfdef9@arm.com>
- <20200506123738.GJ17381@localhost.localdomain>
- <d07a0517-b1bf-0879-575b-7933063c7597@arm.com>
+        Mon, 11 May 2020 04:05:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62436 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgEKIFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 04:05:00 -0400
+IronPort-SDR: gcVkZ4H7bd9/yX6uMngufUGuDgYzV7vs4K0gtmF3VAGAb9RaNQrv7H/dNXUIqdP5fSC+FFMIzs
+ Oo3FeiRbQhGQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 01:04:57 -0700
+IronPort-SDR: a3lIWqPE/g1jDM+p7cQw7M/N1Y/ingRLH9yG7WO64xsxvKNVSm2AqCOVr/J/nJGl1gUjdi9uiH
+ dJxniEk8B1pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,379,1583222400"; 
+   d="scan'208";a="371149000"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga001.fm.intel.com with ESMTP; 11 May 2020 01:04:57 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 01:04:56 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 11 May 2020 01:04:56 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 11 May 2020 01:04:56 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 11 May 2020 01:04:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S30YjUdLhR6u2yKU81AShfty2Kwowtvgp57++2I+IhAk0sNXXa/RnagMTcFRvWWpVrcR4uvl6Z3Ras/YzECKumWklX7IIeYMghM6OPxg+GvhA4tGiSheQ2L1YfLitXU1RD0e+LDZPTkflB1YJ55z5m9Jr8LjSlHq4c17Nx9APEaeI21Np93F6i2gUwcn/OuY3EgCzqL19F2VQD8vg3QG6l6wf7GFyTMggbeK109qBygYKM2xG1hDdSglIIsbVYwZdOXCE+MashIFIcWHCcGeqmcVHgwc920ADa/tbTGx6BVHXz+TV3iy9wD0gmcvojXfuHio2F4j9BCENIjKJJ68OA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/Crx/4ryfyoYTz8/Q4AamoSf6Ouj8hu6jQTcdh1jCyg=;
+ b=csTOhie9A1ufPMZreOa8t7cnDHLOT5259bQnlYPnmEwOn65W9Kp9H14arVGRPHOuXwyHm7COQOF9x9cJiIU5RnLLHVmzMgvhn50XrsoEnunbxcTNbf8xkoABHinCvZ+LQXTA+ebgZlPxqnAtHVn+oMW6UTXhU2AOAoypIpYncThOmT/Q/wrlKJnN1xJl6RTy9B1yxC2Io7FOQWrq1ij+W2inNQgZUuJKTNc7gFvp/ehQmC7B3HdHtqRbJWYmPI4NBlgoSsLksHZBGjJRC/2G/DcyvJ4vAFP+cJMV0DDs8061IEXBiSoQGVGBOXgQTOmNSMabHCLs7YAtJSTmGuHCvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/Crx/4ryfyoYTz8/Q4AamoSf6Ouj8hu6jQTcdh1jCyg=;
+ b=vJSefEqz6jWEBNPT0Tz2/f8+FvWzSGekhY0QBtR0oWC0wgK8+x6CYQ7D7lulDMJKe/JKAUY7M4RRFOnQaRd5Zxf60eABzDFfK0bR15SJGVetcWhQixA4QxDqJ4y3NAvLEclj2L98wFopF7djQ2MOKEbu9KeE15/F6+iHd9OSx0k=
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
+ DM6PR11MB3818.namprd11.prod.outlook.com (2603:10b6:5:145::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.28; Mon, 11 May 2020 08:04:44 +0000
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::6921:e03e:b890:fd53]) by DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::6921:e03e:b890:fd53%7]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 08:04:44 +0000
+From:   "Liao, Bard" <bard.liao@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: RE: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Thread-Topic: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+Thread-Index: AQHWHrsvVp1w6XL6HkWXivkwcq57E6iifmqAgAAQ+dA=
+Date:   Mon, 11 May 2020 08:04:43 +0000
+Message-ID: <DM6PR11MB40748EA6346831A67BD218C7FFA10@DM6PR11MB4074.namprd11.prod.outlook.com>
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+In-Reply-To: <20200511063227.GS1375924@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.193]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: efb13727-2230-4846-2aa3-08d7f581f705
+x-ms-traffictypediagnostic: DM6PR11MB3818:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB38182862BB13CEB46198EA3CFFA10@DM6PR11MB3818.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NBKRpm4pAkSSgBv/LOnvXuTf3vNy6oyXAc3UOm0YTo+asUWeH1Tds62Hka1eBv8gW4HCq1nBZuBc/FpWzOflfCexrzGjmJAN1xisBk2UDy1B7xgv4BK/Ov4vNNZxH7ML1ybPOatARXj6dLff/qd86J/A39ML3LMQR/JvzN5t+7aQzGc15dCunFdG209tsaHbmoHLUdAZyesGnneDBjWoksgSDSNcikTRKBQrp8mf6Qkxj/URClqOJ1QN2U3wIzHhQZTZ0AxkoffOEaEVkG9f33T97FMZGVhGu5jLB1BEAZzp5DEwyPorbXEqTSQhgnq3dsO/EMdtALAjkthRuB6n7pT3kXvfwB6NbeE0e57xtWs+N33mdWjUDf5Js1VIPJIk/wPZjKJWFTEumsgGU7ZXM86O9102PYCRjhAA7h2Hs5x1x8EMEQNwCnBGgfWz/whKY5XiHerUwKARR24DyhISN9Eg10GOA6lwtcsTzaKgiFlmczxKkhGeeafQHMYVVvPdk0ZovbHGr8qGC3/dJrP+Ig==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(376002)(346002)(136003)(39860400002)(33430700001)(8936002)(2906002)(6506007)(52536014)(186003)(110136005)(54906003)(53546011)(7696005)(26005)(478600001)(8676002)(86362001)(71200400001)(55016002)(7416002)(33440700001)(4326008)(66476007)(33656002)(64756008)(66946007)(66556008)(66446008)(5660300002)(316002)(9686003)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: n2eaAig5+XCLM82aZ7fK1yp/ynA+x8wMkMDc/b0Z3XdfYbTgn6cn0bZmjIuXKDYHwNvuil9shpY7fOfEDEY1X0ndsgRP/2lJ3u/j+lwnUmpZbGXfuBiegQ+qL2fqsLI2pWDWCQh4+8QQC8daJw4RZVeAIbLAE7OIYyJQoSJWae7pE8jY0+Y3UeN9TYeQTbWG+zMMdljTs9Y2ffYJzbx9hDZDE6683D4EwcWTEFDE+1DoqT6dLvYAQhq9MMYrL86My/ux93TlH5nHNHrJmrRweYAGzN3/6TAwDmdYoEGZgcHifJWk1FXthlAucZ3jxVETZLbmn5SN8bpbMTAUY8JdTOj/LLOIkAR6wLrdwhA/MC7rk68zHUhQ+CA+XTkkh5kbAKi3ot/hUi5Xlw1auY4aYjEeXaIL1d0qJ0wHJ0ns+t9BTd/ruxFLjfJjLfhX6iKsCAUCCgNmgyA/W4waGUBbTD096BxYeCGFk4S/B/o1MFc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d07a0517-b1bf-0879-575b-7933063c7597@arm.com>
+X-MS-Exchange-CrossTenant-Network-Message-Id: efb13727-2230-4846-2aa3-08d7f581f705
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 08:04:43.9152
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 83a6xzVVMCooAkJ86pZvbcTPyGTjsfRz6SR0G5HFHAXy9tNwPj/40BFImuibYXx10cRtyW9PPwlPlp0QJKGSrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3818
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/20 17:09, Dietmar Eggemann wrote:
-> On 06/05/2020 14:37, Juri Lelli wrote:
-> > On 06/05/20 12:54, Dietmar Eggemann wrote:
-> >> On 27/04/2020 10:37, Dietmar Eggemann wrote:
-> 
-> [...]
-> 
-> >> There is an issue w/ excl. cpusets and cpuset.sched_load_balance=0. The
-> >> latter is needed to demonstrate the problem since DL task affinity can't
-> >> be altered.
-> >>
-> >> A CPU in such a cpuset has its rq attached to def_root_domain which does
-> >> not have its 'sum_cpu_capacity' properly set.
-> > 
-> > Hummm, but if sched_load_balance is disabled it means that we've now got
-> > a subset of CPUs which (from a DL AC pow) are partitioned. So, I'd tend
-> 
-> Yes, the CPUs of the cpuset w/ cpuset.sched_load_balance=0 (cpuset B in
-> the example).
-> 
-> > to say that we actually want to check new tasks bw requirement against
-> > the available bandwidth of the particular CPU they happen to be running
-> > (and will continue to run) when setscheduler is called.
-> 
-> By 'available bandwidth of the particular CPU' you refer to
-> '\Sum_{cpu_rq(i)->rd->span} CPU capacity', right?
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Monday, May 11, 2020 2:32 PM
+> To: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse=
+.de;
+> broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
+> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
+> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
+> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
+> Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
+> <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
+> Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device suppo=
+rt
+>=20
+> On 30-04-20, 02:51, Bard Liao wrote:
+> > @@ -24,9 +24,14 @@ int sdw_bus_master_add(struct sdw_bus *bus, struct
+> device *parent,
+> >  	struct sdw_master_prop *prop =3D NULL;
+> >  	int ret;
+> >
+> > -	if (!bus->dev) {
+> > -		pr_err("SoundWire bus has no device\n");
+> > -		return -ENODEV;
+>=20
+> This check is removed and not moved into sdw_master_device_add() either, =
+can
+> you add here or in patch 1 and keep checking the parent device please
 
-No. I was referring to the single CPU capacity. The capacity of the CPU
-where a task is running when setscheduler is called for it (and DL AC
-performed). See below, maybe more clear why I wondered about this case..
+We will set bus->dev =3D &md->dev in the end of sdw_master_device_add().
+That's why we remove the test. But now I am wandering does it make sense
+to set bus->dev =3D &md->dev? Maybe it makes more sense to set bus->dev =3D
+sdw control device.=20
+A follow up question is that should slave device a child of bus device or
+master device? I would prefer bus device if it makes sense.=20
+I will check bus->dev and parent and remove bus->dev =3D &md->dev in the
+next version.
 
-> This is what this fix tries to achieve. Regardless whether cpu_rq(i)->rd
-> is a 'real' rd or the def_root_domain, dl_bw_capacity() will now always
-> return '\Sum_{cpu_rq(i)->rd->span} CPU capacity'
-> 
-> > If then load balance is enabled again, AC check we did above should
-> > still be valid for all tasks admitted in the meantime, no?
->  
-> Example (w/ this fix) on Juno [L b b L L L], capacity_orig_of(L)=446 :
-> 
-> mkdir /sys/fs/cgroup/cpuset/A
-> echo 0 > /sys/fs/cgroup/cpuset/A/cpuset.mems
-> echo 1 > /sys/fs/cgroup/cpuset/A/cpuset.cpu_exclusive
-> echo 0-2 > /sys/fs/cgroup/cpuset/A/cpuset.cpus
-> 
-> mkdir /sys/fs/cgroup/cpuset/B
-> echo 0 > /sys/fs/cgroup/cpuset/B/cpuset.mems
-> echo 1 > /sys/fs/cgroup/cpuset/B/cpuset.cpu_exclusive
-> echo 3-5 > /sys/fs/cgroup/cpuset/B/cpuset.cpus
-> 
-> echo 0 > /sys/fs/cgroup/cpuset/B/cpuset.sched_load_balance
-> echo 0 > /sys/fs/cgroup/cpuset/cpuset.sched_load_balance
-> 
-> echo $$ > /sys/fs/cgroup/cpuset/B/tasks
-> chrt -d --sched-runtime 8000 --sched-period 16000 -p 0 $$
-> 
-> ...
-> [  144.920102] __dl_bw_capacity CPU3 rd->span=3-5 return 1338
-> [  144.925607] sched_dl_overflow: [bash 1999] task_cpu(p)=3 cap=1338 cpus_ptr=3-5
 
-So, here you are checking new task bw against 1338 which is 3*L
-capacity. However, since load balance is disabled at this point for 3-5,
-once admitted the task will only be able to run on CPU 3. Now, if more
-tasks on CPU 3 are admitted the same way (up to 1338) I believe they
-will start to experience deadline misses because only 446 will be
-actually available to them until load balance is enabled below and they
-are then free to migrate to CPUs 4 and 5.
+>=20
+> > +int sdw_master_device_add(struct sdw_bus *bus, struct device *parent,
+> > +			  struct fwnode_handle *fwnode)
+> > +{
+> > +	struct sdw_master_device *md;
+> > +	int ret;
+> > +
+> > +	if (!bus)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * Unlike traditional devices, there's no allocation here since the
+> > +	 * sdw_master_device is embedded in the bus structure.
+> > +	 */
+>=20
+> Looking at this and empty sdw_master_device_release() above, makes me
+> wonder if it is a wise move? Should we rather allocate the
+> sdw_master_device() and then free that up in sdw_master_device_release() =
+or it
+> is really overkill given that this is called when we remove the sdw_bus i=
+nstance
+> as well...
 
-Does it makes sense?
+Yes, I will allocate sdw_master_device here and free it in
+sdw_master_device_release().
 
-> [  144.932841] __dl_bw_capacity CPU3 rd->span=3-5 return 1338
-> ...
-> 
-> echo 1 > /sys/fs/cgroup/cpuset/B/cpuset.sched_load_balance
-> 
-> echo $$ > /sys/fs/cgroup/cpuset/B/tasks
-> chrt -d --sched-runtime 8000 --sched-period 16000 -p 0 $$
-> 
-> ...
-> [  254.367982] __dl_bw_capacity CPU5 rd->span=3-5 return 1338
-> [  254.373487] sched_dl_overflow: [bash 2052] task_cpu(p)=5 cap=1338 cpus_ptr=3-5
-> [  254.380721] __dl_bw_capacity CPU5 rd->span=3-5 return 1338
-> ...
-> 
-> Regardless of 'B/cpuset.sched_load_balance'
-> '\Sum_{cpu_rq(i)->rd->span} CPU capacity' stays 1338 (3*446)
-> 
-> So IMHO, DL AC check stays intact.
-> 
+>=20
+> > +	md =3D &bus->md;
+> > +	md->dev.bus =3D &sdw_bus_type;
+> > +	md->dev.type =3D &sdw_master_type;
+> > +	md->dev.parent =3D parent;
+> > +	md->dev.of_node =3D parent->of_node;
+> > +	md->dev.fwnode =3D fwnode;
+> > +	md->dev.dma_mask =3D parent->dma_mask;
+> > +
+> > +	dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
+>=20
+> This give nice sdw-master-0. In DT this comes from reg property. I dont s=
+eem to
+> recall if the ACPI/Disco spec treats link_id as unique across the system,=
+ can you
+> check that please, if not we would need to update this.
 
+Sure, I will check it.
+
+>=20
+> --
+> ~Vinod
