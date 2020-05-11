@@ -2,115 +2,92 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4DDC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F876C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3975A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:18:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="KIf/Q0XY"
+	by mail.kernel.org (Postfix) with ESMTP id EC499206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589232093;
+	bh=cj+gY25YFYSlSakLvNyyvLbwApYrU33TjY+R4pY9Nxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ikg6w6YQYtB2y64lRi49obkgB40LlgwuNjJWNhxx9NL2BKVgYUMOQZSsaOkG5+mTB
+	 bxoN5U6ub/hDt8k03Y5c7HRMCVHoZLBF9GAs+zJCASykRGIxkLFmriZePLfEyevOLV
+	 gGDL/ID3eyUC14j2rPpi2bH4o440D7QDSbbEXilY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgEKVSq (ORCPT
+        id S1726948AbgEKVVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:18:46 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:56962 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgEKVSq (ORCPT
+        Mon, 11 May 2020 17:21:32 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:39054 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgEKVVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:18:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4C7D927E05BE;
-        Mon, 11 May 2020 23:18:44 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id G8nyLIkWJSJN; Mon, 11 May 2020 23:18:44 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id F29C427E05D1;
-        Mon, 11 May 2020 23:18:43 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F29C427E05D1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1589231924;
-        bh=5x0ABVhNlbMdXxTh8MHf7m0UxlvKT+zK8VMupqi0OrQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=KIf/Q0XYPkwtMMwUl0i5C7J9SW9h7qBmtdctchQe8r0GJU93fsNBloc/GsIuCxpZ2
-         V+GQpTSRZfKLfWvAnV6Hl6d5UARPDp2o9li9QwGCLI8YBV1JQIYh2p/aFAB3VQtv9n
-         AyJ5qbKPoZJxbvPD7YBdp1Beb7l90cPf2HSxGH9I=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Iv3WE6goo6xJ; Mon, 11 May 2020 23:18:43 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DE47927E05BE;
-        Mon, 11 May 2020 23:18:43 +0200 (CEST)
-Date:   Mon, 11 May 2020 23:18:43 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <1306795191.2034071.1589231923729.JavaMail.zimbra@kalray.eu>
-Subject: reserved_mem and early builtin device tree usage
+        Mon, 11 May 2020 17:21:32 -0400
+Received: by mail-oo1-f66.google.com with SMTP id c83so2265799oob.6;
+        Mon, 11 May 2020 14:21:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BuN92xQKE1O2gCcfAoLZqAomgXd8adBPnCrmK9Ay5OI=;
+        b=LmI/i3qQU1bAxWt7iSzv/cMoueAmtftdbjh/4qyJNRujK48UhYsWNjn6R+75JM6e2s
+         wvQyaSzQ+p/XCLGeGkjh8SKn5y38sEOfYiAPEMzWpwbndqJZdLLKCogU3DHDILj/N5+u
+         b285AsjmUEBcvY8X9ljkcPYJVGzbqEgHkYsxDgsCWtR5VEE5jQxUIzpF2A8heDJAaf+j
+         T/hs63Hxe272MRuW1dYB+/TjHROS56mIF0ZBsNo5iQmZlxfuOsaLTjtp/j/hozXFYjPT
+         NAUXWyQtaThRN4QDU/rYbcOpQiZQr+Rq86udUeQeYTP6jflahm8gxs1haWRBDh03KaTO
+         HT0g==
+X-Gm-Message-State: AGi0PuZsZm46d3paUfrhERGap3i4iAEVhXJ/subgcGp7UyLX8BN8o5xc
+        KV/BnBpQgPw1qJL1sF9WRQ==
+X-Google-Smtp-Source: APiQypLnylkh5RtyKnJucQVNptDtrvSqg94sFVspZqr+nL1wlN/fvMFck/XbwCiTrWyJMEwAhkexgA==
+X-Received: by 2002:a4a:86cd:: with SMTP id y13mr6631353ooh.87.1589232090833;
+        Mon, 11 May 2020 14:21:30 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 85sm4919969oie.17.2020.05.11.14.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 14:21:30 -0700 (PDT)
+Received: (nullmailer pid 32549 invoked by uid 1000);
+        Mon, 11 May 2020 21:21:29 -0000
+Date:   Mon, 11 May 2020 16:21:29 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert UniPhier SPI controller to
+ json-schema
+Message-ID: <20200511212129.GA32453@bogus>
+References: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
-Thread-Index: 2Sdjv+NE14cZ7kqfvsgX2/nahmnvvQ==
-Thread-Topic: reserved_mem and early builtin device tree usage
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 24 Apr 2020 18:29:22 +0900, Kunihiko Hayashi wrote:
+> Convert UniPhier SPI controller binding to DT schema format.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+> 
+> Changes since v1:
+> - Put "#address-cells" and "#size-cells" into the required list
+> 
+>  .../bindings/spi/socionext,uniphier-spi.yaml       | 57 ++++++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-uniphier.txt       | 28 -----------
+>  2 files changed, 57 insertions(+), 28 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/socionext,uniphier-spi.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+> 
 
-I'm currently experiencing a bug during the port of the kernel on
-a new architecture and after looking at other architectures, I
-suspect the problem might be there too. my question is about
-reserved memories and usage of early device tree.
-
-From what I understand, when reserved memory is initialized using
-early_init_fdt_scan_reserved_mem, the reserved memories are
-created using some pointers inside the early dt (mainly the names).
-If this early device tree is located into the init section (when
-using a builtin dtb for instance), this section will be discarded
-(when calling free_initmem_default) and memset with a zero/poison
-value. So all pointers which are referencing the early dt will be
-invalid. This will clobber all the "names" of the reserved memory
-entries. As a side effect, all drivers using of_reserved_mem_lookup
-after the init section has been freed will always failed because
-the search is based on the name of the reserved mem.
-
-I also said that it might be present on other architectures because
-the usual function call I found is the following:
-- early_init_dt_scan
-- early_init_fdt_reserve_self (only reserve memory in memblock)
-- early_init_fdt_scan_reserved_mem
-- unflatten_and_copy_device_tree
-- free_initmem_default
-- potential calls to of_reserved_mem_lookup
-
-Which (if the device tree is builtin in init section) will lead
-to the result I described before.=20
-
-So my question is about the legit usage of pointers referencing
-the early dtb. If is it ok to use such pointers, this means that
-the early dtb must always be available and that when using a
-builtin dtb, then it should probably be copied early before
-using it for scan operations with unflatten_and_copy_device_tree.
-
-However, since the scan of the reserved mem nodes is required to
-avoid allocating in reserved memory, unflatten_and_copy_device_tree
-should probably not be called before early_init_fdt_scan_reserved_mem
-since it allocates data. So this is a bit of the snake biting its
-tail and thus, early dt pointers should probably not be used.
-
-Is my understanding correct ? Or have I missed something since it
-seems to haven't been noticed on other architectures ?
-
-Thanks & regards,
-
-Cl=C3=A9ment
+Reviewed-by: Rob Herring <robh@kernel.org>
