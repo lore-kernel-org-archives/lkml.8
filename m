@@ -2,130 +2,84 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B9C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A4AC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2C372075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A77F208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 07:32:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P8dhMvRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgEKHb6 (ORCPT
+        id S1728989AbgEKHcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 03:31:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47424 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbgEKHb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 03:31:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 00914AC90;
-        Mon, 11 May 2020 07:31:56 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH 2/2] xen/xenbus: let xenbus_map_ring_valloc() return errno values only
-Date:   Mon, 11 May 2020 09:31:51 +0200
-Message-Id: <20200511073151.19043-3-jgross@suse.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200511073151.19043-1-jgross@suse.com>
-References: <20200511073151.19043-1-jgross@suse.com>
+        Mon, 11 May 2020 03:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728564AbgEKHcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 03:32:21 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6E3C061A0C;
+        Mon, 11 May 2020 00:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UQU0B9NH1zcG5ih3frGbvcAoJriOpbADo62D6un1kGw=; b=P8dhMvRZsO8HVSTS2DKAhF4+Dz
+        l3+qc9UNmKUvRNxyjm1fe3xdICnaYrQKfmOFATzkAIA+m/55V7+aGGbsb24aXS93rtFf+TDD+3h/j
+        +WcquBE0T/zxLzUhRauRp/opgqKE8XryQTA+G8Jmp+J5XSJsHCIjLysjbehvGdp++fWujWmpOufCo
+        Dcht8qJgNXr3YA1l6sNQunsdCYslASmkMQkVQHwf7C4FfAK3lWRfXTjd4ogg08M0tlXXtbM+P+kwF
+        6tRNzMrRnuylt7QDtGn75SzZsYyEcmnzBnt0g5sDJk7XFLqH2SdQm72ztyhSO6ysYzo/nYNoAMH1y
+        PSfnKYpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jY2uY-0006aH-EN; Mon, 11 May 2020 07:31:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 94E02301A80;
+        Mon, 11 May 2020 09:31:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 792BB2077D3FE; Mon, 11 May 2020 09:31:34 +0200 (CEST)
+Date:   Mon, 11 May 2020 09:31:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Joerg Roedel <joro@8bytes.org>,
+        x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
+Message-ID: <20200511073134.GD2957@hirez.programming.kicks-ass.net>
+References: <20200508144043.13893-1-joro@8bytes.org>
+ <20200508192000.GB2957@hirez.programming.kicks-ass.net>
+ <20200508213407.GT8135@suse.de>
+ <20200509092516.GC2957@hirez.programming.kicks-ass.net>
+ <20200510011157.GU16070@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510011157.GU16070@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today xenbus_map_ring_valloc() can return either a negative errno
-value (-ENOMEM or -EINVAL) or a grant status value. This is a mess as
-e.g -ENOMEM and GNTST_eagain have the same numeric value.
+On Sat, May 09, 2020 at 06:11:57PM -0700, Matthew Wilcox wrote:
+> Iterating an XArray (whether the entire thing
+> or with marks) is RCU-safe and faster than iterating a linked list,
+> so this should solve the problem?
 
-Fix that by turning all grant mapping errors into -ENOENT. This is
-no problem as all callers of xenbus_map_ring_valloc() only use the
-return value to print an error message, and in case of mapping errors
-the grant status value has already been printed by __xenbus_map_ring()
-before.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/xen/xenbus/xenbus_client.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index d8e5c5e4fa67..5e6b256ca916 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -456,8 +456,7 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
-  * Map @nr_grefs pages of memory into this domain from another
-  * domain's grant table.  xenbus_map_ring_valloc allocates @nr_grefs
-  * pages of virtual address space, maps the pages to that address, and
-- * sets *vaddr to that address.  Returns 0 on success, and GNTST_*
-- * (see xen/include/interface/grant_table.h) or -ENOMEM / -EINVAL on
-+ * sets *vaddr to that address.  Returns 0 on success, and -errno on
-  * error. If an error is returned, device will switch to
-  * XenbusStateClosing and the error message will be saved in XenStore.
-  */
-@@ -477,18 +476,11 @@ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
- 		return -ENOMEM;
- 
- 	info->node = kzalloc(sizeof(*info->node), GFP_KERNEL);
--	if (!info->node) {
-+	if (!info->node)
- 		err = -ENOMEM;
--		goto out;
--	}
--
--	err = ring_ops->map(dev, info, gnt_refs, nr_grefs, vaddr);
--
--	/* Some hypervisors are buggy and can return 1. */
--	if (err > 0)
--		err = GNTST_general_error;
-+	else
-+		err = ring_ops->map(dev, info, gnt_refs, nr_grefs, vaddr);
- 
-- out:
- 	kfree(info->node);
- 	kfree(info);
- 	return err;
-@@ -507,7 +499,6 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 			     bool *leaked)
- {
- 	int i, j;
--	int err = GNTST_okay;
- 
- 	if (nr_grefs > XENBUS_MAX_RING_GRANTS)
- 		return -EINVAL;
-@@ -522,7 +513,6 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 
- 	for (i = 0; i < nr_grefs; i++) {
- 		if (info->map[i].status != GNTST_okay) {
--			err = info->map[i].status;
- 			xenbus_dev_fatal(dev, info->map[i].status,
- 					 "mapping in shared page %d from domain %d",
- 					 gnt_refs[i], dev->otherend_id);
-@@ -531,7 +521,7 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 			handles[i] = info->map[i].handle;
- 	}
- 
--	return GNTST_okay;
-+	return 0;
- 
-  fail:
- 	for (i = j = 0; i < nr_grefs; i++) {
-@@ -554,7 +544,7 @@ static int __xenbus_map_ring(struct xenbus_device *dev,
- 		}
- 	}
- 
--	return err;
-+	return -ENOENT;
- }
- 
- /**
--- 
-2.26.1
-
+It can hardly be faster if you want all elements -- which is I think the
+case here. We only call into this if we change an entry, and then we
+need to propagate that change to all.
