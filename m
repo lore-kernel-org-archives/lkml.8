@@ -2,114 +2,114 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE3C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA1C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE06B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BCB20736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgEKA2c (ORCPT
+        id S1729347AbgEKAey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 20:28:32 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:38942 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729168AbgEKA2c (ORCPT
+        Sun, 10 May 2020 20:34:54 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47740 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729255AbgEKAey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 20:28:32 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id AAECC299CB;
-        Sun, 10 May 2020 20:28:27 -0400 (EDT)
-Date:   Mon, 11 May 2020 10:28:34 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: net/sonic: Fix some resource leaks in error handling paths
-In-Reply-To: <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
-Message-ID: <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet>
-References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de> <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet> <9d279f21-6172-5318-4e29-061277e82157@web.de> <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet>
- <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
+        Sun, 10 May 2020 20:34:54 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 83B488030807;
+        Mon, 11 May 2020 00:34:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MfPFw58JDpyC; Mon, 11 May 2020 03:34:46 +0300 (MSK)
+Date:   Mon, 11 May 2020 03:34:44 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 19/20] mips: cevt-r4k: Update the r4k-clockevent
+ frequency in sync with CPU
+Message-ID: <20200511003444.rcxp7e4elxdcgpyi@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-20-Sergey.Semin@baikalelectronics.ru>
+ <20200508154045.GA22247@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463811774-1651048744-1589151508=:8"
-Content-ID: <alpine.LNX.2.22.394.2005110858570.8@nippy.intranet>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200508154045.GA22247@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, May 08, 2020 at 05:40:46PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 06, 2020 at 08:42:37PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+> > index 17a9cbb8b3df..f5b72fb7d5ee 100644
+> > --- a/arch/mips/kernel/cevt-r4k.c
+> > +++ b/arch/mips/kernel/cevt-r4k.c
+> > @@ -8,6 +8,7 @@
+> >   */
+> >  #include <linux/clockchips.h>
+> >  #include <linux/interrupt.h>
+> > +#include <linux/cpufreq.h>
+> >  #include <linux/percpu.h>
+> >  #include <linux/smp.h>
+> >  #include <linux/irq.h>
+> > @@ -250,6 +251,49 @@ unsigned int __weak get_c0_compare_int(void)
+> >  	return MIPS_CPU_IRQ_BASE + cp0_compare_irq;
+> >  }
+> >  
+> > +#ifdef CONFIG_CPU_FREQ
+> > +
+> > +static unsigned long mips_ref_freq;
+> > +
+> > +static int cpufreq_callback(struct notifier_block *nb,
+> > +			    unsigned long val, void *data)
+> 
+> please prefix function names with r4k_ to make them different from
+> the other ones you implemented in kernel/time.c. I know they are
+> static, but keeping different names makes looking at crashes easier.
 
----1463811774-1651048744-1589151508=:8
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <alpine.LNX.2.22.394.2005110858571.8@nippy.intranet>
+Agreed. I'll fix it in v3.
 
-On Sun, 10 May 2020, Markus Elfring wrote:
+> 
+> > +	struct cpufreq_freqs *freq = data;
+> > +	struct clock_event_device *cd;
+> > +	unsigned long rate;
+> > +	int cpu;
+> > +
+> > +	if (!mips_ref_freq)
+> > +		mips_ref_freq = freq->old;
+> 
+> isn't this the same as mips_hpt_frequency ?
 
-> >
-> > Do you know when these bugs were introduced?
->=20
-> I suggest to take another look at a provided tag =E2=80=9CFixes=E2=80=9D.
+No. Here I save the initial CPU frequency so use one then to scale the
+mips_hpt_frequency value in accordance with the CPU clock rate change. Yes,
+mips_hpt_frequency value may initially match the CPU frequency on some platforms
+but normally the r4k timer is clocked with half of it while some systems may have
+a complicated algorithm of the timer ref clock rate calculation.
 
-If you can't determine when the bug was introduced, how can you criticise=
-=20
-a patch for the lack of a Fixes tag?
+-Sergey
 
-> To which commit would you like to refer to for the proposed adjustment=20
-> of the function =E2=80=9Cmac_sonic_platform_probe=E2=80=9D?
->=20
-
-That was my question to you. We seem to be talking past each other.=20
-Unforunately I only speak English, so if this misunderstanding is to be=20
-resolved, you're going to have to try harder to make yourself understood.
-
-> > Naming goto labels is just painting another bikeshed. Yes, some=20
-> > alternatives are preferable but it takes too long to identify them and=
-=20
-> > finding consensus is unlikely anyway, as it's a matter of taste.
->=20
-> Would you find numbered labels unwanted according to a possible=20
-> interpretation related to 'GW-BASIC' identifier selection?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/coding-style.rst?id=3De99332e7b4cda6e60f5b5916cf9943a7=
-9dbef902#n460
->=20
-
-My preference is unimportant here. Therefore, your question must be=20
-rhetorical. I presume that you mean to assert that Christophe's patch=20
-breaches the style guide.
-
-However, 'sonic_probe1' is the name of a function. The name of the goto=20
-label 'undo_probe1' reflects the name of the function.
-
-This is not some sequence of GW-BASIC labels referred to in the style=20
-guide. And neither does the patch add new functions with numbered names.
-
-> Can programming preferences evolve into the direction of =E2=80=9Csay wha=
-t the=20
-> goto does=E2=80=9D?
->=20
-
-I could agree that macsonic.c has no function resembling "probe1", and=20
-that portion of the patch could be improved.
-
-Was that the opinion you were trying to express by way of rhetorical=20
-questions? I can't tell.
-
-Is it possible for a reviewer to effectively criticise C by use of=20
-English, when his C ability surpasses his English ability?
-
-You needn't answer that question, but please do consider it.
-
-> Regards,
-> Markus
->=20
----1463811774-1651048744-1589151508=:8--
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
