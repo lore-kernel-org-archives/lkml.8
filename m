@@ -2,100 +2,113 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB1C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88549C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A153B20801
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6530E20801
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DIdCEE0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbgEKMRO (ORCPT
+        id S1729642AbgEKMRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:17:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49796 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbgEKMRO (ORCPT
+        Mon, 11 May 2020 08:17:24 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:50866 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728531AbgEKMRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:17:14 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id E08E42A0FD7
-Message-ID: <49a15300a5db8b4c61115c4a89eac1762dc3f31a.camel@collabora.com>
-Subject: Re: [PATCH v3 2/3] media: uapi: Add VP9 stateless decoder controls
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Mon, 11 May 2020 08:17:06 -0400
-In-Reply-To: <7846cb19-c5e0-4f95-c361-cf78d2c1b16a@xs4all.nl>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-3-ezequiel@collabora.com>
-         <6459bd9f-20f6-9910-8d45-04870a19019d@xs4all.nl>
-         <f885e94250778916c09a29269f9c9f42eb67cb66.camel@collabora.com>
-         <7846cb19-c5e0-4f95-c361-cf78d2c1b16a@xs4all.nl>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-7FJdwtw3aqO6RvgErWDP"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Mon, 11 May 2020 08:17:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589199443; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=LJkqkksPCoqKwanmP1G5QFQXBwL68pGeFkXkb/IEhLI=; b=DIdCEE0ZnbYYA6EdDGH6m1PXu8s23lHjiROXcwJNEzur51nqqUOSYyTXir3cXNmIqLQgVsO3
+ h4T9tlGCBT6GPgSXl5GlxXfEs5YSNq7tomINhpr7MB6FeHbvAVQ7IabxAb7WmBc+RLtz5kb+
+ FYjm3B0TdU01Ov34w0pH5y22Mlk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb9424f.7ff7e8760b58-smtp-out-n05;
+ Mon, 11 May 2020 12:17:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EBA01C432C2; Mon, 11 May 2020 12:17:17 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F2C65C433F2;
+        Mon, 11 May 2020 12:17:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F2C65C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Maharaja Kennadyrajan <mkenna@codeaurora.org>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ath10k@lists.infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 2/2] ath10k: fix ath10k_pci struct layout
+References: <20200509120707.188595-1-arnd@arndb.de>
+        <20200509120707.188595-2-arnd@arndb.de>
+        <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+Date:   Mon, 11 May 2020 15:17:12 +0300
+In-Reply-To: <87v9l24qz6.fsf@kamboji.qca.qualcomm.com> (Kalle Valo's message
+        of "Mon, 11 May 2020 15:05:01 +0300")
+Message-ID: <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kalle Valo <kvalo@codeaurora.org> writes:
 
---=-7FJdwtw3aqO6RvgErWDP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Arnd Bergmann <arnd@arndb.de> writes:
+>
+>> gcc-10 correctly points out a bug with a zero-length array in
+>> struct ath10k_pci:
+>>
+>> drivers/net/wireless/ath/ath10k/ahb.c: In function 'ath10k_ahb_remove':
+>> drivers/net/wireless/ath/ath10k/ahb.c:30:9: error: array subscript 0
+>> is outside the bounds of an interior zero-length array 'struct
+>> ath10k_ahb[0]' [-Werror=zero-length-bounds]
+>>    30 |  return &((struct ath10k_pci *)ar->drv_priv)->ahb[0];
+>>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> In file included from drivers/net/wireless/ath/ath10k/ahb.c:13:
+>> drivers/net/wireless/ath/ath10k/pci.h:185:20: note: while referencing 'ahb'
+>>   185 |  struct ath10k_ahb ahb[0];
+>>       |                    ^~~
+>>
+>> The last addition to the struct ignored the comments and added
+>> new members behind the array that must remain last.
+>>
+>> Change it to a flexible-array member and move it last again to
+>> make it work correctly, prevent the same thing from happening
+>> again (all compilers warn about flexible-array members in the
+>> middle of a struct) and get it to build without warnings.
+>
+> Very good find, thanks! This bug would cause all sort of strange memory
+> corruption issues.
 
-Le vendredi 08 mai 2020 =C3=A0 15:16 +0200, Hans Verkuil a =C3=A9crit :
-> > I think this comes directly from the spec. The Rockchip VDEC doesn't
-> > seem to use it.
-> > Do you think we can drop it from here, and rely on the V4L2 colorspace
-> > passed in the format negotiation?
->=20
->=20
-> That would be preferred, yes. Otherwise you would have two places where y=
-ou can
-> define colorspaces, and that's confusing.
+This motivated me to switch to using GCC 10.x and I noticed that you had
+already upgraded crosstool so it was a trivial thing to do, awesome :)
 
-This is indeed redundant with the color information in the format. In
-VP8/9 there is only 1 header for everything, so it's harder to figure-
-out what to filter. While in H.264/HEVC this information is usually set
-an an extension header.
+https://mirrors.edge.kernel.org/pub/tools/crosstool/
 
-Though this do re-open the discussion about SPS in H.264/HEVC. In there
-you will find the coded size and the crop window and the sub-sampling.
-I don't remember exactly what was the conclusion, but I think it was
-kept to allow allow bitstream reconstruction. But it will effectively
-overlap directly (or indirectly) with some V4L2 generic API.
+I use crosstool like this using GNUmakefile:
 
-regards,
-Nicolas
+CROSS_COMPILE=/opt/cross/gcc-10.1.0-nolibc/x86_64-linux/bin/x86_64-linux-
+include Makefile
 
---=-7FJdwtw3aqO6RvgErWDP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+I think it's handy trick and would be good to mention that in the
+crosstool main page. That way I could just point people to the crosstool
+main page when they are using ancient compilers and would need to
+upgrade.
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXrlCQgAKCRBxUwItrAao
-HBt3AJ9qVuHoo7obOay42xsXt2h91zXANwCfTanxrgZ1TNarsZjy64md+ngxdW4=
-=eeld
------END PGP SIGNATURE-----
-
---=-7FJdwtw3aqO6RvgErWDP--
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
