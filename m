@@ -2,164 +2,120 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35220C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9724206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:24:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zNA36/v3"
+	by mail.kernel.org (Postfix) with ESMTP id 16AF0206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbgEKUYv (ORCPT
+        id S1731657AbgEKUZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:24:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51222 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgEKUYs (ORCPT
+        Mon, 11 May 2020 16:25:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbgEKUZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:24:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BKN1ae178275;
-        Mon, 11 May 2020 20:23:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Zo5Cza0n1Es3FSckgTZNHDduwVjYv8Se3/rnvi5K1+U=;
- b=zNA36/v3LiAoVOKNe46hByFJzcgmlm6fSXJxh2iNnyOiub80LYucHlnc0/E56KgILM9H
- IFRiKn4q0LUdaR2nYs6dCPMSq80mGCHofR6f2TqItyeoJMBmDZXvQ7v2tUhfVy9k1X36
- tcBZGa4jzU7DQvWfHUpO9TKxtWFGYZZ9nF7VsO1e0ZGnb9D9DoRmFfbUB6r4TRv4NYPv
- o37UJDnsiD3w8Clee8jwQnZrV85aEd6/M09htR49v5WSHMk/NB7F5FD5bkmsoKKY23Ji
- COyA88eG4SJcYvBMQXLI4Ajl98LrSZ6SUDDOJAn/OQQSjR8daR7AoTwaaFTFsvb7nqV0 BA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30x3mbqayv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 20:23:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BKMUL6165379;
-        Mon, 11 May 2020 20:23:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30xbgfkcvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 20:23:13 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04BKMsCT016911;
-        Mon, 11 May 2020 20:22:55 GMT
-Received: from [192.168.2.157] (/73.164.160.178)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 May 2020 13:22:53 -0700
-Subject: Re: [PATCH V3 3/3] mm/hugetlb: Define a generic fallback for
- arch_clear_hugepage_flags()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
- <1588907271-11920-4-git-send-email-anshuman.khandual@arm.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <cbccae27-ff79-5580-80be-0a9493d063ba@oracle.com>
-Date:   Mon, 11 May 2020 13:22:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1588907271-11920-4-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 11 May 2020 16:25:25 -0400
+Received: from eggs.gnu.org (eggs.gnu.org [IPv6:2001:470:142:3::10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D9CC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 13:25:25 -0700 (PDT)
+Received: from fencepost.gnu.org ([2001:470:142:3::e]:46623)
+        by eggs.gnu.org with esmtp (Exim 4.90_1)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYEzI-00071x-T2; Mon, 11 May 2020 16:25:20 -0400
+Received: from pool-98-118-0-140.bstnma.fios.verizon.net ([98.118.0.140]:38080 helo=pdslaptop.home)
+        by fencepost.gnu.org with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.82)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYEzA-0002IL-Kc; Mon, 11 May 2020 16:25:13 -0400
+Message-ID: <7c5cedf6a5f522087b431e0a9f88b6ba66c21405.camel@gnu.org>
+Subject: Re: I disabled more compiler warnings..
+From:   Paul Smith <psmith@gnu.org>
+Reply-To: psmith@gnu.org
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 11 May 2020 16:25:11 -0400
+In-Reply-To: <CAHk-=wi=SbaC20nRx5tmAZ2_tOpVOq7469V+KvZU9=4yvfvmnA@mail.gmail.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+         <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+         <CAHk-=whLY8dXE6qMuPNE+Tjc6uXy+W2jACyWLxtRUH6GU2=PAA@mail.gmail.com>
+         <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+         <CAHk-=wi=SbaC20nRx5tmAZ2_tOpVOq7469V+KvZU9=4yvfvmnA@mail.gmail.com>
+Organization: GNU's Not UNIX!
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=784
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=817 phishscore=0
- malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/20 8:07 PM, Anshuman Khandual wrote:
-> There are multiple similar definitions for arch_clear_hugepage_flags() on
-> various platforms. Lets just add it's generic fallback definition for
-> platforms that do not override. This help reduce code duplication.
+On Mon, 2020-05-11 at 12:33 -0700, Linus Torvalds wrote:
+> I wonder if you could just have three different file descriptors:
 > 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: x86@kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>  - the "current token file descriptor"
+>  - a /dev/null file descriptor
+>  - the jobserver pipe file descriptor. This is left blocking.
 
-Thanks!
-Removing duplicate code is good.
+If I'm understanding your suggestion correctly, this is pretty much how
+it worked originally.  Except I didn't use a /dev/null file descriptor:
+I dup the jobserver FD, read() the dup, and then in the signal handler
+I _closed_ the dup.
 
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+So, I can tell what happened by whether the read() returns EINTR vs.
+EBADF.
 
--- 
-Mike Kravetz
+This is still how things work on systems without pselect() support.
+
+There's a blog page I wrote about this many (er... MANY) years ago:
+
+http://make.mad-scientist.net/papers/jobserver-implementation/
+
+You can skip the blather at the top: search down to "Then it gets
+ugly..." and check the algorithm there to see if that's what you had in
+mind.
+
+
+The problem is that SA_RESTART works well in Linux but is not always
+reliable on other OS's, and it's not always possible to catch EINTR
+everywhere (for example, in third party libraries like libintl) so you
+can't always automatically restart from a SIGCHLD.
+
+See this bug reported on OS X for example:
+  https://savannah.gnu.org/bugs/?func=detailitem&item_id=46261
+
+
+But, the issue I have now is not related to SIGCHLD, it's related to
+SIGINT/SIGTERM etc. handling.  Today, GNU make calls its die() function
+directly from the SIGINT signal handler, and die() does A LOT of very
+signal-unsafe stuff.  Gross, but it's worked like that for 30 years.
+
+My idea was that since GNU make already uses an EINTRLOOP() macro to
+check EINTR returns from system calls and restart, I would have the
+SIGINT handler just set a variable, then install into the EINTRLOOP
+macro a check of that variable, which would let me transition from
+signal handler to user-space without dropping checks all over the code
+(at least, not visibly :)).  Maybe I'd check directly in a few places,
+where we may go for some time without a system call.
+
+That worked but I do have to contend with the same issue as the
+jobserver: any time I need to wait for something I have a race between
+the last time I checked for an interrupt and the wait operation.
+
+I have had to put this aside for a bit, so I haven't decided how to
+address it but I'm sure it's doable.  The issue with GNU make is it has
+to be as portable as possible: make is a foundational tool for any sort
+of system bootstrap.  Of course, we could just not support parallel
+builds on insufficient systems but...
+
+If people feel this isn't an appropriate topic for lkml, I invite
+anyone interested parties to post to bug-make@gnu.org :).
+
