@@ -2,122 +2,144 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53936C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6F6C54E4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C002075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192472075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQCg4mUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgEKJFy (ORCPT
+        id S1729270AbgEKJGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:05:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKJFy (ORCPT
+        Mon, 11 May 2020 05:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgEKJGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:05:54 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B939Ot109199;
-        Mon, 11 May 2020 05:05:33 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30wsc2wc93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 05:05:33 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B915f7029312;
-        Mon, 11 May 2020 09:05:31 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 30wm559mfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 09:05:31 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B95S2B61079688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 09:05:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D5D74C052;
-        Mon, 11 May 2020 09:05:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6A0C4C044;
-        Mon, 11 May 2020 09:05:27 +0000 (GMT)
-Received: from sig-9-145-153-65.de.ibm.com (unknown [9.145.153.65])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 May 2020 09:05:27 +0000 (GMT)
-Message-ID: <2dbdf71e427a4b1df365412df34c773bc57528a9.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH -next] s390/cio: Remove unused inline
- functionidset_sch_get_first
-From:   Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
-To:     YueHaibing <yuehaibing@huawei.com>, vneethv@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, gustavo@embeddedor.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 11 May 2020 11:05:27 +0200
-In-Reply-To: <20200508140643.30540-1-yuehaibing@huawei.com>
-References: <20200508140643.30540-1-yuehaibing@huawei.com>
+        Mon, 11 May 2020 05:06:00 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0E0C061A0C;
+        Mon, 11 May 2020 02:06:00 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id r2so7709249ilo.6;
+        Mon, 11 May 2020 02:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KXPQ8oL1xKkz5N/1TA82hvXaOeCuVTJr1m04oqy4j94=;
+        b=QQCg4mUX+wQSt9HJ5j0qgOn36rHY+87ZROvttm9Pa4pxhRgqIoB+DGF613qUhKHRQt
+         H7L2MAbI9i0x6oxqXk8aB9lVAJuhwZPxftcdY+6+Hxe3SF9yVatTdtd5zdBTcAiYpEZ7
+         0cXXftjo38Hv1w15ZeWjTTLAKEtl6DQVyksD1tXQ5u8lO86y9szmheVmCsODRIQXUfQb
+         ssgeZsR+jpJd9xGQALPQg/ZzfnATi+JPXIqUidFbf3WSZDHQ3MCybXqws+iEsv1rS4wW
+         Os+41ItdlZu00mg0xVudeuIg834QhX9wM4Q+DCodtzjvjTjlAryTAJduavjzUy44zZib
+         +UhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KXPQ8oL1xKkz5N/1TA82hvXaOeCuVTJr1m04oqy4j94=;
+        b=oz/YdI+1fkIG+SsXvVxWcp/QbBAgSl6En3C3oKBGZaQ/S2C4kCa03LbXldpt/Ir7ia
+         PsUY1M8HVCv6pAVmV2wKoLpTu4nIf/6fy+dS0KG3eq/6XOQpiUalnoq2wUw9mBh0LUnD
+         81amw3NSBj+vTcMXyJsEEyzThDeWAQAH4L6svMet6Xa/E1YWLfezna91qdE0Pr/p7kyH
+         5GpMUu2D8OK3IPW7jkO7monOC3d8QwDWM80b8SL/m81D8eMks/S2Z4M9lMdcSbdWpZ4w
+         jXQMaxVsIEvwV3svhjt4aNUFBD3s0pQJG8AokJjk1+PXIc9dS1mBR0dHHVKdBcj5wxyu
+         iMTA==
+X-Gm-Message-State: AGi0PubLAiCPATRE6Nt1jVpfrmz+enhvDNwxHpGLqGLoB6LvyAEW3TuC
+        qYi3el3d9V/2GwCYOg0yjffuFfvQo35RmDYJSLc=
+X-Google-Smtp-Source: APiQypLnjwDCTOoTp7cg995FVjGSfRMddjPCiRtwufCtIHvwd/5nPCOyL6yw+XfWN/gd71cdELN5CvnqJnAptBslxQQ=
+X-Received: by 2002:a92:607:: with SMTP id x7mr13744092ilg.218.1589187959912;
+ Mon, 11 May 2020 02:05:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589007503-9523-1-git-send-email-dillon.minfei@gmail.com>
+ <1589007503-9523-3-git-send-email-dillon.minfei@gmail.com> <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
+In-Reply-To: <404e7f47-9c0f-44b1-aedb-a8d3af832d40@st.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Mon, 11 May 2020 17:05:23 +0800
+Message-ID: <CAL9mu0+5T3q8V8Ng_1jfPGfBxDWzgd7T1hzcdUXj23-rEtOgfg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco board
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        Mark Brown <broonie@kernel.org>, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Hua Dillon <dillonhua@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-5.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=843
- impostorscore=0 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
- spamscore=0 bulkscore=0 suspectscore=3 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you.
-This patch will be part of the s390's next patch submission.
+Hi, Alexandre,
 
-Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Thanks for review.
 
-Regards,
-Vineeth
-
-
-On Fri, 2020-05-08 at 22:06 +0800, YueHaibing wrote:
-> commit 8ebd51a705c5 ("s390/cio: idset.c: remove some unused
-> functions")
-> left behind this, remove it
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/s390/cio/idset.c | 12 ------------
->  1 file changed, 12 deletions(-)
-> 
-> diff --git a/drivers/s390/cio/idset.c b/drivers/s390/cio/idset.c
-> index 77d0ea7b381b..45f9c0736be4 100644
-> --- a/drivers/s390/cio/idset.c
-> +++ b/drivers/s390/cio/idset.c
-> @@ -59,18 +59,6 @@ static inline int idset_contains(struct idset *set,
-> int ssid, int id)
->  	return test_bit(ssid * set->num_id + id, set->bitmap);
->  }
->  
-> -static inline int idset_get_first(struct idset *set, int *ssid, int
-> *id)
-> -{
-> -	int bitnum;
-> -
-> -	bitnum = find_first_bit(set->bitmap, set->num_ssid * set-
-> >num_id);
-> -	if (bitnum >= set->num_ssid * set->num_id)
-> -		return 0;
-> -	*ssid = bitnum / set->num_id;
-> -	*id = bitnum % set->num_id;
-> -	return 1;
-> -}
-> -
->  struct idset *idset_sch_new(void)
->  {
->  	return idset_new(max_ssid + 1, __MAX_SUBCHANNEL + 1);
-
+On Mon, May 11, 2020 at 3:17 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+> Hi
+>
+> On 5/9/20 8:58 AM, dillon.minfei@gmail.com wrote:
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > Enable l3gd20 on stm32429-disco board.
+>
+> You could add some words about l3gd20
+ok, thanks, i will add some description about l3gd20.
+>
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> > ---
+> >   arch/arm/boot/dts/stm32f429-disco.dts | 24 ++++++++++++++++++++++++
+> >   1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+> > index 30c0f67..d365358 100644
+> > --- a/arch/arm/boot/dts/stm32f429-disco.dts
+> > +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+> > @@ -49,6 +49,8 @@
+> >   #include "stm32f429.dtsi"
+> >   #include "stm32f429-pinctrl.dtsi"
+> >   #include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> >
+> >   / {
+> >       model = "STMicroelectronics STM32F429i-DISCO board";
+> > @@ -127,3 +129,25 @@
+> >       pinctrl-names = "default";
+> >       status = "okay";
+> >   };
+> > +
+> > +&spi5 {
+> > +     status = "okay";
+> > +     pinctrl-0 = <&spi5_pins>;
+> > +     pinctrl-names = "default";
+> > +     #address-cells = <1>;
+> > +     #size-cells = <0>;
+> > +     cs-gpios = <&gpioc 1 GPIO_ACTIVE_LOW>;
+> > +     dmas = <&dma2 3 2 0x400 0x0>,
+> > +            <&dma2 4 2 0x400 0x0>;
+> > +     dma-names = "rx", "tx";
+>
+> Insert blank line here.
+ok
+>
+> > +     l3gd20: l3gd20@0 {
+> > +             compatible = "st,l3gd20-gyro";
+> > +             spi-max-frequency = <10000000>;
+> > +             st,drdy-int-pin = <2>;
+> > +             interrupt-parent = <&gpioa>;
+> > +             interrupts = <1 IRQ_TYPE_EDGE_RISING>,
+> > +                             <2 IRQ_TYPE_EDGE_RISING>;
+> > +             reg = <0>;
+> > +             status = "okay";
+> > +     };
+> > +};
+> >
