@@ -2,366 +2,98 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F08FC54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8E7C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE84D206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E490206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbgEKTuw (ORCPT
+        id S1731112AbgEKTvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:50:52 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49896 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgEKTuv (ORCPT
+        Mon, 11 May 2020 15:51:07 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59711 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729501AbgEKTvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 15:50:51 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C30F78030807;
-        Mon, 11 May 2020 19:50:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4XXZNM_WfrkJ; Mon, 11 May 2020 22:50:43 +0300 (MSK)
-Date:   Mon, 11 May 2020 22:50:42 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/12] dt-bindings: i2c: Convert DW I2C binding to DT
- schema
-Message-ID: <20200511195042.zqd45ckwwdbk4qnr@mobilestation>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-3-Sergey.Semin@baikalelectronics.ru>
- <20200511160924.GA9628@bogus>
+        Mon, 11 May 2020 15:51:06 -0400
+Received: (qmail 19143 invoked by uid 500); 11 May 2020 15:51:05 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 11 May 2020 15:51:05 -0400
+Date:   Mon, 11 May 2020 15:51:05 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Al Cooper <alcooperx@gmail.com>
+cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v9 4/5] usb: ehci: Add new EHCI driver for Broadcom STB
+ SoC's
+In-Reply-To: <20200511193643.30926-5-alcooperx@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2005111542310.11417-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511160924.GA9628@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:09:24AM -0500, Rob Herring wrote:
-> On Sun, May 10, 2020 at 12:50:08PM +0300, Serge Semin wrote:
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with dt-schema. This commit replaces Synopsys DW I2C
-> > legacy bare text bindings with YAML file. As before the bindings file
-> > states that the corresponding dts node is supposed to be compatible
-> > either with generic DW I2C controller or with Microsemi Ocelot SoC I2C
-> > one, to have registers, interrupts and clocks properties. In addition
-> > the node may have clock-frequency, i2c-sda-hold-time-ns,
-> > i2c-scl-falling-time-ns and i2c-sda-falling-time-ns optional properties.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: linux-mips@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Make sure that "mscc,ocelot-i2c" compatible node may have up to two
-> >   registers space defined, while normal DW I2C controller will have only
-> >   one registers space.
-> > - Add "mscc,ocelot-i2c" example to test the previous fix.
-> > - Declare "unevaluatedProperties" property instead of
-> >   "additionalProperties" one.
-> > - Due to the previous fix we can now discard the dummy boolean properties
-> >   definitions, since the proper type evaluation will be performed by the
-> >   generic i2c-controller.yaml schema.
-> > ---
-> >  .../bindings/i2c/i2c-designware.txt           |  73 ---------
-> >  .../bindings/i2c/snps,designware-i2c.yaml     | 154 ++++++++++++++++++
-> >  2 files changed, 154 insertions(+), 73 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > deleted file mode 100644
-> > index 08be4d3846e5..000000000000
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > +++ /dev/null
-> > @@ -1,73 +0,0 @@
-> > -* Synopsys DesignWare I2C
-> > -
-> > -Required properties :
-> > -
-> > - - compatible : should be "snps,designware-i2c"
-> > -                or "mscc,ocelot-i2c" with "snps,designware-i2c" for fallback
-> > - - reg : Offset and length of the register set for the device
-> > - - interrupts : <IRQ> where IRQ is the interrupt number.
-> > - - clocks : phandles for the clocks, see the description of clock-names below.
-> > -   The phandle for the "ic_clk" clock is required. The phandle for the "pclk"
-> > -   clock is optional. If a single clock is specified but no clock-name, it is
-> > -   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be first.
-> > -
-> > -Recommended properties :
-> > -
-> > - - clock-frequency : desired I2C bus clock frequency in Hz.
-> > -
-> > -Optional properties :
-> > -
-> > - - clock-names : Contains the names of the clocks:
-> > -    "ic_clk", for the core clock used to generate the external I2C clock.
-> > -    "pclk", the interface clock, required for register access.
-> > -
-> > - - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
-> > -   time, named ICPU_CFG:TWI_DELAY in the datasheet.
-> > -
-> > - - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
-> > -   This option is only supported in hardware blocks version 1.11a or newer and
-> > -   on Microsemi SoCs ("mscc,ocelot-i2c" compatible).
-> > -
-> > - - i2c-scl-falling-time-ns : should contain the SCL falling time in nanoseconds.
-> > -   This value which is by default 300ns is used to compute the tLOW period.
-> > -
-> > - - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
-> > -   This value which is by default 300ns is used to compute the tHIGH period.
-> > -
-> > -Examples :
-> > -
-> > -	i2c@f0000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		compatible = "snps,designware-i2c";
-> > -		reg = <0xf0000 0x1000>;
-> > -		interrupts = <11>;
-> > -		clock-frequency = <400000>;
-> > -	};
-> > -
-> > -	i2c@1120000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		compatible = "snps,designware-i2c";
-> > -		reg = <0x1120000 0x1000>;
-> > -		interrupt-parent = <&ictl>;
-> > -		interrupts = <12 1>;
-> > -		clock-frequency = <400000>;
-> > -		i2c-sda-hold-time-ns = <300>;
-> > -		i2c-sda-falling-time-ns = <300>;
-> > -		i2c-scl-falling-time-ns = <300>;
-> > -	};
-> > -
-> > -	i2c@1120000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		reg = <0x2000 0x100>;
-> > -		clock-frequency = <400000>;
-> > -		clocks = <&i2cclk>;
-> > -		interrupts = <0>;
-> > -
-> > -		eeprom@64 {
-> > -			compatible = "linux,slave-24c02";
-> > -			reg = <0x40000064>;
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > new file mode 100644
-> > index 000000000000..8d4e5fccbd1c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > @@ -0,0 +1,154 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/i2c/snps,designware-i2c.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys DesignWare APB I2C Controller
-> > +
-> > +maintainers:
-> > +  - Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          not:
-> > +            contains:
-> > +              const: mscc,ocelot-i2c
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          maxItems: 1
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: Generic Synopsys DesignWare I2C controller
-> > +        const: snps,designware-i2c
-> > +      - description: Microsemi Ocelot SoCs I2C controller
-> > +        items:
-> > +          - const: mscc,ocelot-i2c
-> > +          - const: snps,designware-i2c
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: DW APB I2C controller memory mapped registers
-> > +      - description: |
-> > +          ICPU_CFG:TWI_DELAY registers to setup the SDA hold time.
-> > +          This registers are specific to the Ocelot I2C-controller.
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: I2C controller reference clock source
-> > +      - description: APB interface clock source
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: ref
-> > +      - const: pclk
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  clock-frequency:
-> > +    description: Desired I2C bus clock frequency in Hz
-> > +    enum: [100000, 400000, 1000000, 3400000]
-> > +    default: 400000
-> > +
-> > +  i2c-sda-hold-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
+On Mon, 11 May 2020, Al Cooper wrote:
+
+> Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
+> was created instead of adding support to the existing ehci platform
+> driver because of the code required to work around bugs in the EHCI
+> controller. The primary workaround is for a bug where the Core
+> violates the SOF interval between the first two SOFs transmitted after
+> resume. This only happens if the resume occurs near the end of a
+> microframe. The fix is to intercept the ehci-hcd request to complete
+> RESUME and align it to the start of the next microframe.
 > 
-> Don't need a type ref as properties with a unit-suffix already have one.
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-Ok. Seeing "-ns" suffixed properties have uint32-array type I'll have to add the
-restriction "maxItems: 1" here then.
+I hate to point this out...
 
-> 
-> > +    description: |
-> > +      The property should contain the SDA hold time in nanoseconds. This option
-> > +      is only supported in hardware blocks version 1.11a or newer or on
-> > +      Microsemi SoCs.
-> > +
-> > +  i2c-scl-falling-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      The property should contain the SCL falling time in nanoseconds.
-> > +      This value is used to compute the tLOW period.
-> > +    default: 300
-> > +
-> > +  i2c-sda-falling-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      The property should contain the SDA falling time in nanoseconds.
-> > +      This value is used to compute the tHIGH period.
-> > +    default: 300
-> > +
-> > +  dmas:
-> > +    items:
-> > +      - description: TX DMA Channel
-> > +      - description: RX DMA Channel
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: tx
-> > +      - const: rx
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c@f0000 {
-> > +      compatible = "snps,designware-i2c";
-> > +      reg = <0xf0000 0x1000>;
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      interrupts = <11>;
-> > +      clock-frequency = <400000>;
-> > +    };
-> > +  - |
-> > +    i2c@1120000 {
-> > +      compatible = "snps,designware-i2c";
-> > +      reg = <0x1120000 0x1000>;
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      interrupts = <12 1>;
-> > +      clock-frequency = <400000>;
-> > +      i2c-sda-hold-time-ns = <300>;
-> > +      i2c-sda-falling-time-ns = <300>;
-> > +      i2c-scl-falling-time-ns = <300>;
-> > +    };
-> > +  - |
-> > +    i2c@2000 {
-> > +      compatible = "snps,designware-i2c";
-> > +      reg = <0x2000 0x100>;
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      clock-frequency = <400000>;
-> > +      clocks = <&i2cclk>;
-> > +      interrupts = <0>;
-> > +
-> > +      eeprom@64 {
-> > +        compatible = "linux,slave-24c02";
-> > +        reg = <0x40000064>;
-> 
-> This causes 'make dt_binding_check' to fail. The unit-address should be 
-> '40000064'. However, there's a bug in dtc not liking the high bits set 
-> either. There's a fix pending, but I'd just fix the example here to 
-> avoid the issue. 
+> +static int ehci_brcm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res_mem;
+> +	struct brcm_priv *priv;
+> +	struct usb_hcd *hcd;
+> +	int irq;
+> +	int err;
+> +
+> +	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +	if (err)
+> +		return err;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq <= 0)
+> +		return irq ? irq : EINVAL;
 
-Do you mean a fix suggested in this patchset or someplace else? I've submitted
-it before this patch so to solve the problem you've discovered.
+That should be -EINVAL.
 
-Regarding the example. Do you suggest to completely remove the eeprom
-sub-node? I am asking because without proper reg flags setting the i2c-slave
-mode example would be just wrong.
+To tell the truth, I'm not sure it's worthwhile checking for irq == 0.  
+That's up to Greg to decide.
 
--Sergey
+Anyway, as far as I'm concerned you can either change EINVAL to -EINVAL
+or change the whole thing back to "if (irq < 0) return irq;".  Either
+way, you may add:
 
-> 
-> > +      };
-> > +    };
-> > +  - |
-> > +    i2c@100400 {
-> > +      compatible = "mscc,ocelot-i2c", "snps,designware-i2c";
-> > +      reg = <0x100400 0x100>, <0x198 0x8>;
-> > +      pinctrl-0 = <&i2c_pins>;
-> > +      pinctrl-names = "default";
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      interrupts = <8>;
-> > +      clocks = <&ahb_clk>;
-> > +    };
-> > +...
-> > -- 
-> > 2.25.1
-> > 
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+Alan Stern
+
