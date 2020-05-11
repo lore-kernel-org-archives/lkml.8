@@ -2,133 +2,102 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3085DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B44C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAE720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589238779;
-	bh=x8x3DhB8f5kbUfakzncJcuvtoDFk8v6tNoBbHJVN20I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AgWweAS/u+bDZasH/FKs0MrTcyVXbLcva75gyTgkNrEhhsntreXUmfItRADJmn5nc
-	 /jnP6DCkVfvq5gjIt61BEFVpegvje/dP59WYngG3Lyb/KbFqnezFrQnNmM4rnNnvBN
-	 UAyehe5NQKaD3FsKsRxWKAR21RLAjlb+U9BCaBgc=
+	by mail.kernel.org (Postfix) with ESMTP id 134B120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAebR1Cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgEKXM6 (ORCPT
+        id S1728061AbgEKXNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:12:58 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:46431 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgEKXM6 (ORCPT
+        Mon, 11 May 2020 19:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725836AbgEKXNj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:12:58 -0400
-Received: by mail-oo1-f67.google.com with SMTP id x16so2324336oop.13;
-        Mon, 11 May 2020 16:12:57 -0700 (PDT)
+        Mon, 11 May 2020 19:13:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7132C061A0C;
+        Mon, 11 May 2020 16:13:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d22so2919419lfm.11;
+        Mon, 11 May 2020 16:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jI7y+bt8aRpRs0SbxC5gQS+fojHmgiIKZwFJuFi59fo=;
+        b=IAebR1CmP9C8rf8PdszEc6TwoFAK+Kx26+JvzFnlhMeSWKTvdC7KgJeZx8NuoEPUTO
+         Vluti786x2eAUFafQrSnYr2JKo+kWzNlFt144d+gY30g+sVdw/22+0KiIyG0U/QA0laU
+         uHYCCEnhtzN8U1oNVF/mzmboYiIAAQKqBvYlcpOOU9GZzDWhHND8kUMW2JgsHa7g+y3K
+         38kvNO+I/bT0ui4C5igL2Lqxoe370uJg1VVvRr84iTIbVHuHsEwvTbHUsOR428jOaQ8N
+         hfjQ1CK96usL2EY/p2ob5Kq0/PtBPRLhANC2Smggz9eUxs47Lk1WZTURRduX1QU0Wwh1
+         AuWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YDsjgW4MArlBA1SB+uZg3khyj2WK0GRuGD4JKeBynv8=;
-        b=OvD1PtAqLFZSYqeXOJRIw1+jVbfNsbD9Ze/zWqKiTzrL3NYbehegJ5bvNMkKG3vYKp
-         bCJdRr9BQZ5BxgMXV4pd1eM6YuWL+Pz7XrDuYcEe+AkC9+RF9tWHfcDFMCOwy6nUIbAy
-         mo4mSevWP61/sxq89y09eky+53ju2goCLCY3n6Gh1YpVDAIEj9Fftd8fxB8UiGyw4zVq
-         nu0wMqxKDOB0Iwr8MeYx7sHMdl2T+W4coDaH5wtRWPLsWXKAhmulIps/aotWHa65fVg+
-         t4eoqpy8LhHnYGvGXOAO64D93s67s2Z/aBmebicgO8V90jpPoVr422BC36pxrdW3r/Z4
-         6jTA==
-X-Gm-Message-State: AGi0PubbRzk+Tyh4NUYMF7hoKyLxo/MS8szh1CzsV2MMv7L+udSZYICf
-        ZYVGWKy9itWyM5Vf2RSc3g==
-X-Google-Smtp-Source: APiQypJYcIJELa5zMY/ISbRUVZAa+Q7Ic4+PGG1ZB0L0pvzkPLwl0FKURFdszYQ9BrNGvh3O0VOGQw==
-X-Received: by 2002:a4a:af0d:: with SMTP id w13mr3249600oon.77.1589238776873;
-        Mon, 11 May 2020 16:12:56 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m65sm2138476oib.49.2020.05.11.16.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:12:56 -0700 (PDT)
-Received: (nullmailer pid 11706 invoked by uid 1000);
-        Mon, 11 May 2020 23:12:55 -0000
-Date:   Mon, 11 May 2020 18:12:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: leds: common: Drop enumeration for
- linux,default-triggers
-Message-ID: <20200511231255.GA24112@bogus>
-References: <20200427073132.29997-1-wens@kernel.org>
- <20200427073132.29997-2-wens@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jI7y+bt8aRpRs0SbxC5gQS+fojHmgiIKZwFJuFi59fo=;
+        b=dcUSJ/ywfOeAf4SmHKOjCcG7lrR6HVADveBBNUJ5tWvYknkt9V6NWpFPjFf2JFmMYJ
+         XJN2b9/+nnVycor8yo9fmqwtmw92Ke1K6aj4Vsec+/aXFf+0R/xpQ0xOoETOEY+humRg
+         ItWN8DrOzTaMqLKb6F7VqAR4JfF1tMIMN22zhQytqkhCi5V95gPSTNFq4I4AcAZ3tVYO
+         UaaJy1FAPorZJ46NUH2dNWZ/Dt6DR7jHjENU2RVZp0l34qdccEunalqXlMyyhK1Vl4TZ
+         TDVkoHoU3BNAvzfCTQm9sdT3Ic/PYNpwZV5BwrggYHsZVlYXPPomQba3W9IrUJHbjU1q
+         EcvA==
+X-Gm-Message-State: AOAM531PY0hcLroAHJjekE7yRsh7jkpPWRXWKkLGxd7bT+p90EPqeNKR
+        iQ2tcl7ltx1XWbNARdBQoNOext2w
+X-Google-Smtp-Source: ABdhPJzux+Tcpc+G1MlCZmBO7jLElbX4iQ2ajZrWC6lroeOjJ1p6/+mgRf17KBjS5B2O69s9m3aTFg==
+X-Received: by 2002:ac2:5ccf:: with SMTP id f15mr12414833lfq.216.1589238817276;
+        Mon, 11 May 2020 16:13:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j19sm12116382lfh.19.2020.05.11.16.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 16:13:36 -0700 (PDT)
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+ <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+ <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
+Date:   Tue, 12 May 2020 02:13:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427073132.29997-2-wens@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 03:31:30PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
+11.05.2020 05:05, Wang, Jiada пишет:
+> Hello Dmitry
 > 
-> The bindings currently list a very small subset of valid triggers for
-> LEDs. Since many drivers or subsystems in Linux register custom
-> triggers, the list would become very hard to maintain.
+> Thanks for your comment and test,
+> 
+> can you let me know which platform (board) you are using for test,
+> and DTS changes if you have added any.
 
-The idea was we'll consolidate around standardized names and that new 
-users should use 'function' instead.
+That's this device-tree [1] without any extra changes.
 
-There was discussion around this when adding 'function'.
+[1]
+https://patchwork.ozlabs.org/project/linux-tegra/patch/20200505022517.30523-2-digetx@gmail.com/
 
-> 
-> Instead, just drop the list and allow free form strings.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  .../devicetree/bindings/leds/common.yaml      | 21 +------------------
->  1 file changed, 1 insertion(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-> index 4c270fde4567..3b3cdab3fc15 100644
-> --- a/Documentation/devicetree/bindings/leds/common.yaml
-> +++ b/Documentation/devicetree/bindings/leds/common.yaml
-> @@ -79,26 +79,7 @@ properties:
->      description:
->        This parameter, if present, is a string defining the trigger assigned to
->        the LED.
-> -    allOf:
-> -      - $ref: /schemas/types.yaml#definitions/string
-> -    enum:
-> -        # LED will act as a back-light, controlled by the framebuffer system
-> -      - backlight
-> -        # LED will turn on (but for leds-gpio see "default-state" property in
-> -        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
-> -      - default-on
-> -        # LED "double" flashes at a load average based rate
-> -      - heartbeat
-> -        # LED indicates disk activity
-> -      - disk-activity
-> -        # LED indicates IDE disk activity (deprecated), in new implementations
-> -        # use "disk-activity"
-> -      - ide-disk
-> -        # LED flashes at a fixed, configurable rate
-> -      - timer
-> -        # LED alters the brightness for the specified duration with one software
-> -        # timer (requires "led-pattern" property)
-> -      - pattern
-> +    $ref: /schemas/types.yaml#definitions/string
->  
->    led-pattern:
->      description: |
-> -- 
-> 2.26.0
-> 
+The v10 was working fine. I'm take a more detailed look at the problem
+later this week.
