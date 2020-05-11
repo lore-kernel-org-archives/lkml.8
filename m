@@ -2,118 +2,189 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04896C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4344BC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D51F0206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212A520746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFToSqLl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mEYRAboh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbgEKNn2 (ORCPT
+        id S1730149AbgEKNn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:43:28 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31112 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729279AbgEKNn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 09:43:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589204606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2B7uPape2I014WfjGR+zUrOyLplbfNy3rAyirYvotDU=;
-        b=BFToSqLl4bXIvCnlbtGGUXNabFio9BKuEWz5nPBWiewMcrI/RUnvT2UWLUJjwnL0V1C6OH
-        QIvPJEzV8p7Wo6LX1kCUH6/3fKxp9KGXb5xQvW8pIpK35RpJVlaAAkFykfCliCe/NUnkiO
-        iDPKv6CK8rz9tAb5wEYy659Y2QoSs3c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-SgIWMMZ0NyOVZPUX71462A-1; Mon, 11 May 2020 09:43:15 -0400
-X-MC-Unique: SgIWMMZ0NyOVZPUX71462A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A95B107ACF3;
-        Mon, 11 May 2020 13:43:14 +0000 (UTC)
-Received: from [10.3.128.27] (unknown [10.3.128.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 156965C1D3;
-        Mon, 11 May 2020 13:43:11 +0000 (UTC)
-Subject: Re: Failure to shutdown/reboot with intel_iommu=on
-To:     Joerg Roedel <jroedel@suse.de>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>
-Cc:     linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, x86@kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-References: <20200506144558.GA4019@taurus.defre.kleine-koenig.org>
- <20200508150734.GP8135@suse.de>
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-Message-ID: <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
-Date:   Mon, 11 May 2020 09:43:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729514AbgEKNn0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 09:43:26 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB79C05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:43:25 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h17so2137796wrc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 06:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0fpk5Xqv9Yro05H314xa5B77PsSpk1e22VGbukZepR0=;
+        b=mEYRAbohHj9FT80QIN/XzGP0RK1RJdYQ+SPBVrhjGvEG1fo/b/wSbQUryrPWgltT0o
+         IkcFU/TN3+CssRVyv7w9pbFo1Ao857ZUnI61mXnTixG4CNdUkxo1TqBtb+18gV/r0s9T
+         PPmzLqaj4sRqLx9LKDx1ZKjj7S/l7K66pZ7BoueguIMGC7RkhcUpGCTxIqf80k1bRJMt
+         K4r7mmsbyu5ERiD9qkW6VioEmXn0IV06q0wEgK46c748II6H/HGiqFskqR/x66mf2GeN
+         X68E2XP0oEEZzqsVFopP+39+jSNN9eg9gI+iHo96H/QWJXde4g2p+s6l6KmyLM09APAS
+         DDWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0fpk5Xqv9Yro05H314xa5B77PsSpk1e22VGbukZepR0=;
+        b=bYMnN5ZtRbhi6S2LOt01RwyNsaMf8xAzwYV0CYO6s/Ouq/8UjFZCUdys/qvgSlyOG1
+         pD1gACVfYcGWJZloCtfOTbzbbE6fGClfwsi4shrFiEbGjg1vGHpBMYBdrJiMbAic0jlR
+         qxvkqPAyrTHpXVogciVjZdOSXLZPAjoZoFlvaPP/0SeeazZWSdicBRqkcZcaApmkpeSY
+         FPWhHEe5X/rGkx8g1BOaOjgYaeKitIuYRzuQfLwvkmhXLdZyNlKbA4zi1JCt8pi7nzOG
+         +7mtxuWWgDkuAblCla5S5zIGJLy6S6tvLsMScF8d6VXR+EjyvXEDAWIjJO54hU6xDqwj
+         YAOg==
+X-Gm-Message-State: AGi0PuYbSRpD6tL6/Kra31ItWJFncsy+1hhALZEVxvvFuqr/FpF5Vl9p
+        1XYqOA+7JNoKBiSppOLX/CVTPw==
+X-Google-Smtp-Source: APiQypItJDTCfkEocXHWq2r5Ng7HfPcqePb/ZXsdjVC/ZzMJj4eOCaQ+uMUlRLgbkt8pygDOHi6PUw==
+X-Received: by 2002:adf:eac6:: with SMTP id o6mr18960567wrn.297.1589204603437;
+        Mon, 11 May 2020 06:43:23 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id q184sm27142122wma.25.2020.05.11.06.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 06:43:22 -0700 (PDT)
+Date:   Mon, 11 May 2020 14:43:19 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+Subject: Re: [PATCH v7 04/15] PM / EM: add support for other devices than
+ CPUs in Energy Model
+Message-ID: <20200511134319.GA29112@google.com>
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-5-lukasz.luba@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200508150734.GP8135@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511111912.3001-5-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 11:07 AM, Joerg Roedel wrote:
-> + Baolu, Maintainer of Intel IOMMU
-> 
-> Baolu, does that ring any bells?
-> 
-> On Wed, May 06, 2020 at 04:46:02PM +0200, Uwe Kleine-König wrote:
->> Hello,
->>
->> On my Lenovo T460p I cannot shutdown and reboot when the iommu is
->> enabled. This is using linux 5.2.7 as provided by Debian, 5.6.4 has the
->> same problem. Suspend/resume also fails; I suspect this is the same
->> issue.
->>
->> When requesting power off the kernel messages just end with:
->>
->> 	sd 0:0:0:0: [sda] Synchronizing SCSI cache
->> 	sd 0:0:0:0: [sda] Stopping disk
->> 	e1000e: EEE TX LPI TIMER: 00000011
->> 	ACPI: Preparing to enter system sleep state S5
->> 	reboot: Power down
->> 	acpi_power_off called
->>
->> (photo at https://www.kleine-koenig.org/tmp/uklsiommu.jpg in case I
->> mistyped something. Full dmesg and lspci -vvv at
->> https://www.kleine-koenig.org/tmp/uklsiommu.tar.gz with and without
->> iommu enabled.)
->>
->> With the iommu disabled (CONFIG_INTEL_IOMMU_DEFAULT_ON unset or
->> intel_iommu=off on cmdline) the machine just works as expected
->> (including working suspend/resume).
->>
->> I already talked to tglx on irc but unfortunately no new insights
->> resulted from that.
->>> Any ideas how to fix or continue debugging the issue?
->>
->> Best regards
->> Uwe
-> 
-> 
+Hey Lukasz,
 
-I suspect that you have TPM 2.x functionality enabled in the BIOS/firmware.
+On Monday 11 May 2020 at 12:19:01 (+0100), Lukasz Luba wrote:
+<snip>
+> @@ -27,12 +29,15 @@ struct em_perf_state {
+>   * em_perf_domain - Performance domain
+>   * @table:		List of performance states, in ascending order
+>   * @nr_perf_states:	Number of performance states
+> - * @cpus:		Cpumask covering the CPUs of the domain
+> + * @cpus:		Cpumask covering the CPUs of the domain. It's here
+> + *			for performance reasons to avoid potential cache
+> + *			misses during energy calculations in the scheduler
 
-Unless you are actually using the TPM, try setting it to TPM 1.2 mode.
-I've seen an incompatiblity on other Lenovo laptops between using the
-IOMMU, TPM 2.x implementation in firmware, and shutdown/suspend.
+And because that saves a pointer, and simplifies allocating/freeing that
+memory region :)
 
-                        -Lenny.
+<snip>
+> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+> index 5b8a1566526a..9cc7f2973600 100644
+> --- a/kernel/power/energy_model.c
+> +++ b/kernel/power/energy_model.c
+> @@ -2,8 +2,9 @@
+>  /*
+>   * Energy Model of CPUs
 
+Should this comment change too?
+
+<snip>
+> -static void em_debug_create_pd(struct em_perf_domain *pd, int cpu)
+> +static void em_debug_create_pd(struct device *dev)
+>  {
+>  	struct dentry *d;
+> -	char name[8];
+>  	int i;
+>  
+> -	snprintf(name, sizeof(name), "pd%d", cpu);
+> -
+>  	/* Create the directory of the performance domain */
+> -	d = debugfs_create_dir(name, rootdir);
+> +	d = debugfs_create_dir(dev_name(dev), rootdir);
+
+So what will be the name for the perf domain of CPUs now? cpuX?
+
+<snip>
+> @@ -142,8 +149,8 @@ em_create_pd(struct device *dev, int nr_states, struct em_data_callback *cb,
+>  		 */
+>  		opp_eff = freq / power;
+>  		if (opp_eff >= prev_opp_eff)
+> -			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
+> -					cpu, i, i - 1);
+> +			dev_dbg(dev, "EM: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
+> +					i, i - 1);
+
+It feels like changing from warn to debug doesn't really belong to this
+patch no?
+
+<snip>
+> @@ -216,47 +274,50 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
+>  	 */
+>  	mutex_lock(&em_pd_mutex);
+>  
+> -	for_each_cpu(cpu, span) {
+> -		/* Make sure we don't register again an existing domain. */
+> -		if (READ_ONCE(per_cpu(em_data, cpu))) {
+> -			ret = -EEXIST;
+> -			goto unlock;
+> -		}
+> +	if (dev->em_pd) {
+> +		ret = -EEXIST;
+> +		goto unlock;
+> +	}
+>  
+> -		/*
+> -		 * All CPUs of a domain must have the same micro-architecture
+> -		 * since they all share the same table.
+> -		 */
+> -		cap = arch_scale_cpu_capacity(cpu);
+> -		if (prev_cap && prev_cap != cap) {
+> -			pr_err("CPUs of %*pbl must have the same capacity\n",
+> -							cpumask_pr_args(span));
+> +	if (_is_cpu_device(dev)) {
+
+Something like
+
+	if (!_is_cpu_device(dev))
+		goto device;
+
+would limit the diff a bit, but that may just be personal taste.
+
+But appart from these nits, the patch LGTM.
+
+Thanks,
+Quentin
