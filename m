@@ -2,99 +2,94 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA75C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18ACC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C111E2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7769720836
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:06:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxZGLlzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732320AbgEKVFu (ORCPT
+        id S1731927AbgEKVG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43886 "EHLO
+        Mon, 11 May 2020 17:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729501AbgEKU7R (ORCPT
+        by vger.kernel.org with ESMTP id S1726946AbgEKVGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:59:17 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0572BC061A0C;
-        Mon, 11 May 2020 13:59:17 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYFW7-0005et-IF; Mon, 11 May 2020 22:59:15 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 39F691C0494;
-        Mon, 11 May 2020 22:59:15 +0200 (CEST)
-Date:   Mon, 11 May 2020 20:59:15 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Allow scenario-specific Kconfig options to
- override CFcommon
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Mon, 11 May 2020 17:06:55 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43373C061A0C;
+        Mon, 11 May 2020 14:06:55 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id s10so11495208iog.7;
+        Mon, 11 May 2020 14:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ueyDxErctHSTRdHdQtC1WB7REi3NqF34PG0me2FzsY=;
+        b=LxZGLlzYiXXZFDJqEDO2gKToEoZMfLTFUJL1nrt4xthMX1vCvFQr2DCm0Y52vHZny5
+         dyffsk+Qp5EMwMYyIlwsSNKssXJBYq61PDEdcxeBfej5+kaMmedCoPJHqQhKr3Ff2qo4
+         iQYRLKvfoHe4exPEZi4mUfSoVc2Di9fsa4UnRcXnuxsl+qovV1JpVoYHpcLzu5dtVDFT
+         Aerk5ucfrto0LQBEK8yju7tmhhR2Gd32rhgWxSwuRctV/0iewh4OPYFieKeGdyt25ENt
+         ecIgX/ExeQEcQVAHXC/59o0kwfbOkQZkMZ3lnaoXakPRv0hTyDrb5Yi//Hgaa1sZ6S+m
+         2pVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ueyDxErctHSTRdHdQtC1WB7REi3NqF34PG0me2FzsY=;
+        b=uKnFFoicR70xiay82Vw7EgG4LTo8gdsUvzkqMu3dT/FGgZH6GM2hGpQvmjUxKkAeoI
+         Lha0UJmLWy70kssVjxuJ0hg74r4pGxedrXErbpOI2KgRmBNLt/yh5C/hvR1p7sB7JNN0
+         VTpvDcCHL9N7R91Qejy0xiIZXXuNm+Szu4ZFxyfyUzMwIbzHLOrBLaRxrh9+4qaX1a4N
+         uo3qRK4dXbQfsUcoTrUGBXeCNdRSvM8rj0FrsvqXTH3B0U8UtpMh5GgwqrKCQPv1BmQ/
+         PE8kQ75RPT4fzCxIAPf1MjcXi9OWNPlsQI/GZsigbzHn+/Z/M4aWnpgmtPYzPAbgITe2
+         TypQ==
+X-Gm-Message-State: AGi0PubBGjWJqLlYYg8Q9yQVW2/jdG2Nm0isV3I0NSfJEQ15kXR4e9QX
+        zXVx3ygLrESMNyxcUKUPhjjv7S3Gv6dYilfKIOA=
+X-Google-Smtp-Source: APiQypIXeT2hw5xoo/BASceF3qnkTblBRgFVpJQUnRLWUxlPki1C+wwZoEefIYG+Cwy8D3bgBamhrbcwqD91QXmRVD4=
+X-Received: by 2002:a02:c00e:: with SMTP id y14mr11836302jai.15.1589231214644;
+ Mon, 11 May 2020 14:06:54 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158923075516.390.16456820083714310693.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200501205201.149804-1-konradybcio@gmail.com>
+ <CAOCk7NqbOsQ2Bz1K8Gkeh75pLHDaUn6MhE1T7NkMYEHOPoL0NQ@mail.gmail.com> <CAMS8qEWNuuo5t+D1Xq_aNbh5-GSvVSMJM6BpKX4SR=-2eBegpQ@mail.gmail.com>
+In-Reply-To: <CAMS8qEWNuuo5t+D1Xq_aNbh5-GSvVSMJM6BpKX4SR=-2eBegpQ@mail.gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 11 May 2020 15:06:43 -0600
+Message-ID: <CAOCk7Nr3bLD1vY_1LXNGZojxdyZZjt8Ghrdfb1spa5vF5ptYDw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: gpu: drm: Add MDP5 configuration for MSM8x36 and
+ its derivatives, such as MSM8939.
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+On Mon, May 11, 2020 at 3:03 PM Konrad Dybcio <konradybcio@gmail.com> wrote:
+>
+> >Is the "| 0" really adding value here?
+>
+> As far as I can see, it is present in every other config.
 
-Commit-ID:     5b6b4b69ad6494733dafa090c09dd80eda741d1f
-Gitweb:        https://git.kernel.org/tip/5b6b4b69ad6494733dafa090c09dd80eda741d1f
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Thu, 09 Apr 2020 16:38:20 -07:00
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 07 May 2020 10:15:29 -07:00
+Ah, I forgot about that.
 
-torture: Allow scenario-specific Kconfig options to override CFcommon
-
-This commit applies config_override_param() to allow scenario-specific
-Kconfig options to override those in CFcommon.  This in turn will allow
-additional Kconfig options to be placed in CFcommon, for example, an
-option common to all but a few scenario can be placed in CFcommon and
-then overridden in those few scenarios.  Plus this change saves one
-whole line of code.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-index b7296f1..c7534fd 100755
---- a/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-+++ b/tools/testing/selftests/rcutorture/bin/kvm-test-1-run.sh
-@@ -67,12 +67,11 @@ if test -r "$config_dir/CFcommon"
- then
- 	echo " --- $config_dir/CFcommon" >> $resdir/ConfigFragment.input
- 	cat < $config_dir/CFcommon >> $resdir/ConfigFragment.input
--	config_override.sh $config_dir/CFcommon $config_template > $T/Kc1
-+	cp $config_dir/CFcommon $T/Kc0
- else
--	cp $config_template $T/Kc1
-+	echo > $T/Kc0
- fi
--echo " --- $config_template" >> $resdir/ConfigFragment.input
--cat $config_template >> $resdir/ConfigFragment.input
-+config_override_param "$config_template" Kc0 Kc1 "`cat $config_template 2> /dev/null`"
- config_override_param "--kcsan options" Kc1 Kc2 "$TORTURE_KCONFIG_KCSAN_ARG"
- config_override_param "--kconfig argument" Kc2 Kc3 "$TORTURE_KCONFIG_ARG"
- cp $T/Kc3 $resdir/ConfigFragment
+Nothing to see here.
