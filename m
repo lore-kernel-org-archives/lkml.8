@@ -2,129 +2,70 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC82C54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2736BC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFAF2206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtJPvnSD"
+	by mail.kernel.org (Postfix) with ESMTP id 1015420746
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgEKMiw (ORCPT
+        id S1730131AbgEKMi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729343AbgEKMiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:38:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208DC061A0C;
-        Mon, 11 May 2020 05:38:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j5so10772072wrq.2;
-        Mon, 11 May 2020 05:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/7g+Dk3ulGJzA1ZqqgcvZurwlfTuEzqTNp6ZYliVW4=;
-        b=rtJPvnSDjKuOSMfGnG/B2uMl5ngrAGDoVHkoFM4MO24RwTb42n3UNtiOk15NtGYfw6
-         8uw/mobincTc+Y1Dkrvw/+WuIIuPaIq4L3JrxEXscFXkOmgnK3a0EGRruaG/y7P5pTGN
-         UJTYd5NQPGskTdo/EGmEmU8Bd8ohjtqoxp5vsyER/31I7feNHy0o6/WafUuZ8Zfr4w5o
-         2FjhCHhqKubUuAaxtQTRSLsgQdFULhaTkFhV3SU1nncjaR2nRuZmYNLQOlQHxW3Z1rT6
-         0M4+3kC4kP54w1YR9rdllPZaWEy/BqE3uPY18dCH5TKgpeFk9hJpb/UyeX9ZNIk+TWsx
-         jpDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e/7g+Dk3ulGJzA1ZqqgcvZurwlfTuEzqTNp6ZYliVW4=;
-        b=Fh9xnkTiFBeCjUErL4O+cB0RS1AyKUdTENAjua+XEB7JXY1BJqroEte9euCdjbV6M8
-         7wSfCZHoSCGUgu7SXb8Kgejlq4Y4jU5roOE7ZW2bCMKd4sOPLU0LBRSkhO4JaUFLJfkn
-         rsGEOksXE/nHJIq/9zW5MIdGifYtJm2faP8qYKsRGS+3aUIs60fo1P7T0MBiS9pKw9iV
-         KW+0MIQ/I7WSEwu5P5HdxTIdGr0bJ8AO7fFNeM/6LZqNheeGXshyccZ3nDrWr+Jd2L8p
-         QJ5aarrWt8/lwzNUl5757ezrgMr0B6tFu6MhEv58sC5gyFoziaRszeg8P/10yWZ0pQiA
-         b3SQ==
-X-Gm-Message-State: AGi0Pub2CwP5iZHcfA8INMGCAYsPdFAdayQQwSLQWtVR9XraZI5G+qBa
-        j7r9UVS4SMMDYevs9h7iAjZsAnaJsTwkBQ==
-X-Google-Smtp-Source: APiQypIEWKDu44A+npU7MmH4oc2np5qOouKCs0oVitxMIUb0GK3Z+Ab/RzdBhjYvMZAXgblwnKWCFQ==
-X-Received: by 2002:a5d:4801:: with SMTP id l1mr18074398wrq.235.1589200729281;
-        Mon, 11 May 2020 05:38:49 -0700 (PDT)
-Received: from localhost.localdomain.at (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id y3sm16965388wrt.87.2020.05.11.05.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 05:38:48 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/etnaviv: fix perfmon domain interation
-Date:   Mon, 11 May 2020 14:38:41 +0200
-Message-Id: <20200511123846.96594-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 11 May 2020 08:38:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4390 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730049AbgEKMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 08:38:57 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 97C0786391CC538598C0;
+        Mon, 11 May 2020 20:38:49 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 20:38:48 +0800
+From:   Ma Feng <mafeng.ma@huawei.com>
+To:     <linux@armlinux.org.uk>, <ben.dooks@codethink.co.uk>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: topology: make cpu_corepower_mask static
+Date:   Mon, 11 May 2020 20:44:55 +0800
+Message-ID: <1589201095-12884-1-git-send-email-mafeng.ma@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GC860 has one GPU device which has a 2d and 3d core. In this case
-we want to expose perfmon information for both cores.
+Fix sparse warning:
 
-The driver has one array which contains all possible perfmon domains
-with some meta data - doms_meta. Here we can see that for the GC860
-two elements of that array are relevant:
+arch/arm/kernel/topology.c:184:22: warning: symbol 'cpu_corepower_mask'
+was not declared. Should it be static?
 
-  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
-  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
-
-The userspace driver wants to get a list of all perfmon domains and
-their perfmon signals. This is done by iterating over all domains and
-their signals. If the userspace driver wants to access the domain with
-id 8 the kernel driver fails and returns invalid data from doms_3d with
-and invalid offset.
-
-This results in:
-  Unable to handle kernel paging request at virtual address 00000000
-
-On such a device it is not possible to use the userspace driver at all.
-
-The fix for this off-by-one error is quite simple.
-
-Reported-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
-Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 2 +-
+ arch/arm/kernel/topology.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-index e6795bafcbb9..35f7171e779a 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
- 		if (!(gpu->identity.features & meta->feature))
- 			continue;
- 
--		if (meta->nr_domains < (index - offset)) {
-+		if ((meta->nr_domains - 1) < (index - offset)) {
- 			offset += meta->nr_domains;
- 			continue;
- 		}
--- 
-2.26.2
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index b5adaf7..563fdaa 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -181,7 +181,7 @@ static inline void update_cpu_capacity(unsigned int cpuid) {}
+  * The current assumption is that we can power gate each core independently.
+  * This will be superseded by DT binding once available.
+  */
+-const struct cpumask *cpu_corepower_mask(int cpu)
++static const struct cpumask *cpu_corepower_mask(int cpu)
+ {
+ 	return &cpu_topology[cpu].thread_sibling;
+ }
+--
+2.6.2
 
