@@ -2,158 +2,67 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466DDC54E8F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2B9C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25DE2207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:28:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YFyWS89N"
+	by mail.kernel.org (Postfix) with ESMTP id 0F09420735
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 08:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgEKI2X (ORCPT
+        id S1729131AbgEKI3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 04:28:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:62830 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgEKI2X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 04:28:23 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B8S0Bg010988;
-        Mon, 11 May 2020 10:28:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=ARKtW82Ju4foRRG5jzp6GKL8UxrRXVO/KxZ4yej17EA=;
- b=YFyWS89NgLXHX4OBgXe4bdHZ0ZrWu3Se8fTc63Y7Y7DZ1QCCq3Hd6g+I9JYmYYTEmEcY
- oMDyhNRAzcGcsj4jrNNcl5qEQy/W4P0iBT84tCCw894FoqHhLIHhDIRgoeCOLz/jMwOa
- xdIXW8pRnV/jgNccj3k6tzeSOlvLjCCn3FDmVpcu6DYota4vSFCdOHMfZVviRLnYONC9
- uXwtKcj+BW8RSD/0e733l81RcgUU1B4R8EuolGkDqpLbsJZ8yjTXzHcWfGaaoQ0LW2hC
- mn/9z3mAQ86o5V+xQgSZmyAFm/nNwJXG6aJ7ygfyA3RrRhk7tZNSYmxOcAwFJAC9DWsU jQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30wj01sa7x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 10:28:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D58A10002A;
-        Mon, 11 May 2020 10:28:06 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5B1482B27B5;
-        Mon, 11 May 2020 10:28:06 +0200 (CEST)
-Received: from [10.131.226.156] (10.75.127.47) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 11 May
- 2020 10:28:04 +0200
-Subject: Re: [PATCH 2/4] i2c: addition of client reg/unreg callbacks
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-3-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <a68f47ca-47e1-a293-f4ad-a5104c9ee620@st.com>
-Date:   Mon, 11 May 2020 10:28:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 11 May 2020 04:29:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4327 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728341AbgEKI3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 04:29:34 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6C974235951EAA2CC910;
+        Mon, 11 May 2020 16:29:32 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 11 May 2020 16:29:25 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <song@kernel.org>
+CC:     <linux-raid@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH] md: add a newline when printing parameter 'start_ro' by sysfs
+Date:   Mon, 11 May 2020 16:23:25 +0800
+Message-ID: <1589185405-39519-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <1588657871-14747-3-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Add a missing newline when printing module parameter 'start_ro' by
+sysfs.
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+---
+ drivers/md/md.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 271e8a5..acffcc0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -9785,7 +9785,7 @@ static __exit void md_exit(void)
+ 
+ static int get_ro(char *buffer, const struct kernel_param *kp)
+ {
+-	return sprintf(buffer, "%d", start_readonly);
++	return sprintf(buffer, "%d\n", start_readonly);
+ }
+ static int set_ro(const char *val, const struct kernel_param *kp)
+ {
+-- 
+1.7.12.4
 
-On 5/5/20 7:51 AM, Alain Volmat wrote:
-> Addition of two callbacks reg_client and unreg_client that can be
-> implemented by adapter drivers in order to take action whenever a
-> client is being registered to it.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 11 +++++++++++
->  include/linux/i2c.h         |  6 ++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 2e4560671183..4c84c6264314 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -319,6 +319,12 @@ static int i2c_device_probe(struct device *dev)
->  	if (!client)
->  		return 0;
->  
-> +	if (client->adapter->algo->reg_client) {
-> +		status = client->adapter->algo->reg_client(client);
-> +		if (status)
-> +			return status;
-> +	}
-> +
->  	driver = to_i2c_driver(dev->driver);
->  
->  	client->irq = client->init_irq;
-> @@ -417,6 +423,8 @@ static int i2c_device_probe(struct device *dev)
->  put_sync_adapter:
->  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
->  		pm_runtime_put_sync(&client->adapter->dev);
-> +	if (client->adapter->algo->reg_client)
-> +		client->adapter->algo->unreg_client(client);
->  
->  	return status;
->  }
-> @@ -445,6 +453,9 @@ static int i2c_device_remove(struct device *dev)
->  	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
->  		pm_runtime_put(&client->adapter->dev);
->  
-> +	if (client->adapter->algo->unreg_client)
-> +		client->adapter->algo->unreg_client(client);
-> +
->  	return status;
->  }
->  
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 45d36ba4826b..61b838caf454 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -509,6 +509,8 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
->   *   so e.g. PMICs can be accessed very late before shutdown. Optional.
->   * @functionality: Return the flags that this algorithm/adapter pair supports
->   *   from the ``I2C_FUNC_*`` flags.
-> + * @reg_client: Callback informing that a new client is being registered
-> + * @unreg_client: Callback informing that a client is being removed
->   * @reg_slave: Register given client to I2C slave mode of this adapter
->   * @unreg_slave: Unregister given client from I2C slave mode of this adapter
->   *
-> @@ -545,6 +547,10 @@ struct i2c_algorithm {
->  	/* To determine what the adapter supports */
->  	u32 (*functionality)(struct i2c_adapter *adap);
->  
-> +	/* To inform the adapter of the probe/remove of a client */
-> +	int (*reg_client)(struct i2c_client *client);
-> +	void (*unreg_client)(struct i2c_client *client);
-> +
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
->  	int (*reg_slave)(struct i2c_client *client);
->  	int (*unreg_slave)(struct i2c_client *client);
-> 
