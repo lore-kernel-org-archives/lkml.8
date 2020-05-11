@@ -2,161 +2,236 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1591C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E29BC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818072075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACCF2075E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ixjdwi4v"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Jhwm4G3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgEKKUg (ORCPT
+        id S1729491AbgEKKVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:20:36 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:37225 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727093AbgEKKUg (ORCPT
+        Mon, 11 May 2020 06:21:32 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10890 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728776AbgEKKVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:20:36 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Y5XyjA9BJhEkrY5Y0jG36T; Mon, 11 May 2020 12:20:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589192432; bh=v30NtQeC3gcqtHWLR4991ZFdZBLF0lN/Kr3HY4BLSBM=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Ixjdwi4vvoUnq6c9t9ekk+1Yb9LC1cc83KBF4VN/A6ZiggC55CMPHDNVaDPyPhVXN
-         JOiDS9s4EK8Jlvudao3wwN9ItlcFJcHrVbwF7HX8e1ccO0l9/zSses+CNrQI3BuEap
-         tpv5uZ2OG1ms/i5oMJ44I9j4wVfExxQqQrMMS5TxRKQGRJUowkqUoa5eN/P5RD2rOi
-         UWeD5mC8t2ZZH2fa60uz8Prvl9QKCbW6JOI8roxkEbL3ZM8VrnfwJmbsdMjW7HGdEa
-         jUwfPTRLTMz1xwbvfM6w5OQAfc3hZezBrVGwUFjT7E85QweAxCj47qMClPARWC6pAU
-         HIqBNkHkXroaQ==
-Subject: Re: [PATCH v8 4/4] media: i2c: Add RDACM20 driver
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        sakari.ailus@iki.fi, Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Rob Herring <robh@kernel.org>
-References: <20200417103424.5875-1-kieran.bingham+renesas@ideasonboard.com>
- <20200417103424.5875-5-kieran.bingham+renesas@ideasonboard.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <9542009f-7290-eec4-3190-9fc8dad6f214@xs4all.nl>
-Date:   Mon, 11 May 2020 12:20:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 06:21:32 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BAI1NJ017907;
+        Mon, 11 May 2020 12:21:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=HYIucn+K7P4IZIxEJitoqQ+kIYFvDpyLmXWqjyGXEpg=;
+ b=Jhwm4G3t4wSW5c97351Ap3of9lmNawd9/Ya+JqvlnP9d5MDXETNHV+DjLAuOv4Pzg1q3
+ gv+9lS6iODHmf1xdUgdINI1n+cKBvOvUSCpAR0YV+tiFj8DSgOgQsxl90LayHMRRcxvP
+ tjSHhfa7pIykiiMZlLSVUl9Cp1ypVrLGn2ihzzrqIr8D+ILwpnAs8yJeuLWQklCO3xov
+ a1Cr0bsk2RZCjbzfrJfE46/P/aGkNsTSKoh+Mw4AyNJX6LsG2GZVLjt/A6FfiFnTvu1q
+ YSv1lc7zCm5SJoDTE+2RLl4+2po2Fu2Iz//6m/Xmo9sPcwMhRIy6D/QQ0x4HSSG2Vdif 8w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30whn99t5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 12:21:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7BA1D10002A;
+        Mon, 11 May 2020 12:21:06 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 438C32C38B8;
+        Mon, 11 May 2020 12:21:06 +0200 (CEST)
+Received: from [10.211.5.64] (10.75.127.49) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 11 May
+ 2020 12:21:04 +0200
+Subject: Re: [PATCH v4 10/10] mtd: rawnand: stm32_fmc2: get resources from
+ parent node
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-11-git-send-email-christophe.kerello@st.com>
+ <20200511111855.48216940@xps13>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <3377adc6-3e5e-b9b7-12be-c7aa44bfac82@st.com>
+Date:   Mon, 11 May 2020 12:21:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20200417103424.5875-5-kieran.bingham+renesas@ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200511111855.48216940@xps13>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfJEY/valHly88FpnjoxOAXAEx4SvJ8hiONrbmS6097U1wDlDWti5PkSctG0PxjuILKrfyat1/KEOHklkxtfynxOQTVAgF3+kCjeYyI5gPEWaD/KKABZY
- F9tJB7c6iwzIACKI5JgaeWl/fcOyOa7FhKcL++ZATjbLTQPQoznEXrS3lpTGmxMrUTZSPJuzzMJ5L+OmYlYVWQcOllVusIWU+PDUIhMrVSXkJtojB1aAatIX
- 2cTq12lyF56EAKbpxQROGFU/2Ts30t2V1qkxuCJuufHCZi+I2R4Cy8R6bpvZeBVWZnwnVRh6y0k29WcEkos31aaFzpavhR/bRjhZVFj5d7f8E4Sib0c8tQDp
- 0bwiStvj7UxrKLjmz3DnWAPGkHkg6pWLxZ6yyb6DGjktqfSECqpc612W4v8arqicCkpgVWROH4mose9I6XHer8EhbO1a0W5cRSbdpKKB3/Vx88NIHa412RE6
- 3BycoYIVPz73E7OVefgDWa7vqRyBTJCcRvpPSkM8ehjBIkibhymcscLYH0M2Tx5mpaVkSp9fgPJ4jsK/xibBLXiz6mPPfEWY/2ZqUa2+i93O4DuVLDQHrr0+
- GuC7SKjvf5QfGoZsJPfY1Kd+DigRcAFW4Zr4fYamfnfhwFrGE8YwhPpBjROn74AfazT12tEwEg6ERd/3PanjL0IDhdqqK5Wr6YH/EG3u552tTZoj6GOEy7+C
- Z38Qd5AKsRKopC//UrQ1RSo9BM7+WWFuACxeroHKzsGOouBac91Ci6gdVSobbE7yNhCptK4AT63oBZNUYeCKWMB5C1GBaiiRMMhVAK7N4MevjHbTtke57aYG
- W07bZD8ifZVAydfo8aCnwpGh9Jd68W6QiYX9+CLHPf3oEaAsKttno71H3e+Gj2OHpr71GatvFToxT3c6fffmS23/vx7N/SntnjP+/oB7YykV6ffkUYfUn1RE
- bx1wpBXBR/Uq6HTIjGlqVeKrd7I=
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_04:2020-05-11,2020-05-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2020 12:34, Kieran Bingham wrote:
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> The RDACM20 is a GMSL camera supporting 1280x800 resolution images
-> developed by IMI based on an Omnivision 10635 sensor and a Maxim MAX9271
-> GMSL serializer.
-> 
-> The GMSL link carries power, control (I2C) and video data over a
-> single coax cable.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> ---
+Hi Miquel,
 
-<snip>
+On 5/11/20 11:18 AM, Miquel Raynal wrote:
+> Hi Christophe,
+> 
+> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
+> 11:11:19 +0200:
+> 
+>> FMC2 EBI support has been added. Common resources (registers base
+>> and clock) are now shared between the 2 drivers. It means that the
+>> common resources should now be found in the parent device when EBI
+>> node is available.
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>> ---
+> 
+> [...]
+> 
+>> +
+>> +static bool stm32_fmc2_nfc_check_for_parent(struct platform_device *pdev)
+>> +{
+>> +	u32 i;
+>> +	int nb_resources = 0;
+>> +
+>> +	/* Count the number of resources in reg property */
+>> +	for (i = 0; i < pdev->num_resources; i++) {
+>> +		struct resource *res = &pdev->resource[i];
+>> +
+>> +		if (resource_type(res) == IORESOURCE_MEM)
+>> +			nb_resources++;
+>> +	}
+>> +
+>> +	/* Each CS needs 3 resources defined (data, cmd and addr) */
+>> +	if (nb_resources % 3)
+>> +		return false;
+>> +
+>> +	return true;
+>> +}
+> 
+> This function looks fragile. Why not just checking the compatible
+> string of the parent node?
+> 
 
-> diff --git a/drivers/media/i2c/rdacm20.c b/drivers/media/i2c/rdacm20.c
-> new file mode 100644
-> index 000000000000..37786998878b
-> --- /dev/null
-> +++ b/drivers/media/i2c/rdacm20.c
-> @@ -0,0 +1,668 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * IMI RDACM20 GMSL Camera Driver
-> + *
-> + * Copyright (C) 2017-2020 Jacopo Mondi
-> + * Copyright (C) 2017-2020 Kieran Bingham
-> + * Copyright (C) 2017-2019 Laurent Pinchart
-> + * Copyright (C) 2017-2019 Niklas Söderlund
-> + * Copyright (C) 2016 Renesas Electronics Corporation
-> + * Copyright (C) 2015 Cogent Embedded, Inc.
-> + */
-> +
-> +/*
-> + * The camera is made of an Omnivision OV10635 sensor connected to a Maxim
-> + * MAX9271 GMSL serializer.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/fwnode.h>
-> +#include <linux/init.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/videodev2.h>
-> +
-> +#include <media/v4l2-async.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-subdev.h>
-> +
-> +#include "max9271.h"
-> +
-> +#define OV10635_I2C_ADDRESS		0x30
-> +
-> +#define OV10635_SOFTWARE_RESET		0x0103
-> +#define OV10635_PID			0x300a
-> +#define OV10635_VER			0x300b
-> +#define OV10635_SC_CMMN_SCCB_ID		0x300c
-> +#define OV10635_SC_CMMN_SCCB_ID_SELECT	BIT(0)
-> +#define OV10635_VERSION			0xa635
-> +
-> +#define OV10635_WIDTH			1280
-> +#define OV10635_HEIGHT			800
-> +#define OV10635_FORMAT			MEDIA_BUS_FMT_UYVY8_2X8
+Yes, it is another way to check that we have an EBI parent node.
 
-This OV10635_FORMAT define was very confusing when I reviewed this code.
+In this implementation, I was checking the number of reg tuples.
+In case we have 6, it means that the register base address is defined in 
+the parent node (EBI node).
+In case we have 7, it means that the register base address is defined in 
+the current node (NFC node).
 
-Please just use MEDIA_BUS_FMT_UYVY8_2X8 directly instead of introducing
-an alias. While reviewing I thought for a moment that OV10635_FORMAT was
-somehow a new mediabus format that was added elsewhere. I had to dig into
-the code to figure out that it really was an alias.
+>> +
+>>   static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>> @@ -1824,8 +1865,8 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>>   	struct resource *res;
+>>   	struct mtd_info *mtd;
+>>   	struct nand_chip *chip;
+>> -	void __iomem *mmio;
+>>   	int chip_cs, mem_region, ret, irq;
+>> +	int num_region = 1;
+>>   
+>>   	nfc = devm_kzalloc(dev, sizeof(*nfc), GFP_KERNEL);
+>>   	if (!nfc)
+>> @@ -1834,23 +1875,19 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>>   	nfc->dev = dev;
+>>   	nand_controller_init(&nfc->base);
+>>   	nfc->base.ops = &stm32_fmc2_nfc_controller_ops;
+>> +	nfc->has_parent = stm32_fmc2_nfc_check_for_parent(pdev);
+>> +	if (nfc->has_parent)
+>> +		num_region = 0;
+>>   
+>>   	ret = stm32_fmc2_nfc_parse_dt(nfc);
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -	mmio = devm_ioremap_resource(dev, res);
+>> -	if (IS_ERR(mmio))
+>> -		return PTR_ERR(mmio);
+>> -
+>> -	nfc->regmap = devm_regmap_init_mmio(dev, mmio, &stm32_fmc2_regmap_cfg);
+>> -	if (IS_ERR(nfc->regmap))
+>> -		return PTR_ERR(nfc->regmap);
+>> -
+>> -	nfc->io_phys_addr = res->start;
+>> +	ret = stm32_fmc2_nfc_set_regmap_clk(pdev, nfc);
+>> +	if (ret)
+>> +		return ret;
+> 
+> Are you sure this driver sill works without the EBI block?
+> 
+> This change looks suspect.
+> 
+
+Yes, the driver works fine with current bindings and with EBI bindings.
+In case we have an EBI parent node, it means that the register base 
+address and the clock are defined in the parent node.
+Without any EBI parent node, it means that the register base address and 
+the clock are defined in the NFC node.
+
+The new function stm32_fmc2_nfc_set_regmap_clk is looking for these 2 
+resources in the NFC node or in the parent node.
+static int stm32_fmc2_nfc_set_regmap_clk(struct platform_device *pdev,
+					 struct stm32_fmc2_nfc *nfc)
+{
+	struct device *dev = &pdev->dev;
+	struct resource res;
+	int ret;
+
+	if (nfc->has_parent)
+		dev = dev->parent;
+
+	ret = of_address_to_resource(dev->of_node, 0, &res);
+	if (ret)
+		return ret;
+
+	nfc->io_phys_addr = res.start;
+
+	nfc->regmap = device_node_to_regmap(dev->of_node);
+	if (IS_ERR(nfc->regmap))
+		return PTR_ERR(nfc->regmap);
+
+	nfc->clk = devm_clk_get(dev, NULL);
+	if (IS_ERR(nfc->clk))
+		return PTR_ERR(nfc->clk);
+
+	return 0;
+}
 
 Regards,
+Christophe Kerello.
 
-	Hans
-
+>>   
+>> -	for (chip_cs = 0, mem_region = 1; chip_cs < FMC2_MAX_CE;
+>> +	for (chip_cs = 0, mem_region = num_region; chip_cs < FMC2_MAX_CE;
+>>   	     chip_cs++, mem_region += 3) {
+>>   		if (!(nfc->cs_assigned & BIT(chip_cs)))
+>>   			continue;
+>> @@ -1888,10 +1925,6 @@ static int stm32_fmc2_nfc_probe(struct platform_device *pdev)
+>>   
+>>   	init_completion(&nfc->complete);
+>>   
+>> -	nfc->clk = devm_clk_get(dev, NULL);
+>> -	if (IS_ERR(nfc->clk))
+>> -		return PTR_ERR(nfc->clk);
+>> -
+> 
+> Same here
+> 
+>>   	ret = clk_prepare_enable(nfc->clk);
+>>   	if (ret) {
+>>   		dev_err(dev, "can not enable the clock\n");
+> 
