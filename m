@@ -2,117 +2,91 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3493DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C8CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A81206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:49:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KWyhKWj/"
+	by mail.kernel.org (Postfix) with ESMTP id BA19820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589215766;
+	bh=g44eaDpexa8q0IvKbWKMJAVtbiDTd6wY0dEFuy1+nww=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=KZKD8OneMn0eRUjZlyN8EVh+AUUIcyk5PXoxabPJxJGqX4tLvJpwVqeIKBrPtbSgC
+	 XK9HmIPtXsHRVFKeGBLwW7K5IUrga99pNqilpkkKvTUxG/jdqNg6sR2cWfngSmHtsR
+	 CCB7Q39xGF/XREw1s6Us6NAp/O7S9QI8TyUmKCx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbgEKQs7 (ORCPT
+        id S1730852AbgEKQt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:48:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39388 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730852AbgEKQs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:48:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589215736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=X8L7h7D0ZYrLjNfJnLUVqpCrchUXXgbyRVZhx5BAtmY=;
-        b=KWyhKWj/nZUFFY9ZqMWIsBWj096LNYKX5wcOrKHceqWqSMJ/y6hO2rAXDy2zNt1a6Qqr7c
-        Bjs4J7pLZ4xqdsFVmtaqg4xc5DOOw0B7tn1RH8vHK4JuiX1pKnBXozRPmabjuNBJcriJbS
-        EgDSN+wnpwlztI554YXHdwpSWQBLhjk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-KuiF88lPMBKdzDRTKad1FQ-1; Mon, 11 May 2020 12:48:51 -0400
-X-MC-Unique: KuiF88lPMBKdzDRTKad1FQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 11 May 2020 12:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729619AbgEKQtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:49:25 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE8C71899520;
-        Mon, 11 May 2020 16:48:49 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63CE6341FF;
-        Mon, 11 May 2020 16:48:46 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, x86@kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id C77F8206D7;
+        Mon, 11 May 2020 16:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589215765;
+        bh=g44eaDpexa8q0IvKbWKMJAVtbiDTd6wY0dEFuy1+nww=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=0zDVv0F+5by/BhDpvOPpfbP34SkNX4Q5r7QuJJ2QxgvodHZEO2p72KbBXjhcWyxxl
+         soNQJiteXRw1hhWx/MGt1uM2rxjRl+oqX00vP9Qt2PoDI6t2X5n5r7A3nwHSpk0glt
+         YFtYF0LLpkY9fX7DBDXV6LljMwYh5zkKDU5u4rv8=
+Subject: Re: [PATCH 4.19 00/32] 4.19.122-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] KVM: x86: drop KVM_PV_REASON_PAGE_READY case from kvm_handle_page_fault()
-Date:   Mon, 11 May 2020 18:47:52 +0200
-Message-Id: <20200511164752.2158645-9-vkuznets@redhat.com>
-In-Reply-To: <20200511164752.2158645-1-vkuznets@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200508123034.886699170@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0a2447b9-7fab-dd3a-a8ae-c61245e861d2@kernel.org>
+Date:   Mon, 11 May 2020 10:49:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200508123034.886699170@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM guest code in Linux enables APF only when KVM_FEATURE_ASYNC_PF_INT
-is supported, this means we will never see KVM_PV_REASON_PAGE_READY
-when handling page fault vmexit in KVM.
+On 5/8/20 6:35 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.122 release.
+> There are 32 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 10 May 2020 12:29:44 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.122-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-While on it, make sure we only follow genuine page fault path when
-APF reason is zero. If we happen to see something else this means
-that the underlying hypervisor is misbehaving. Leave WARN_ON_ONCE()
-to catch that.
+Compiled and booted on my test system. I am seeing the same emergency
+message in this release as well.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/mmu/mmu.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Initramfs unpacking failed: Decoding failed
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 8071952e9cf2..5a9fca908ca9 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4187,7 +4187,7 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- 
- 	vcpu->arch.l1tf_flush_l1d = true;
- 	switch (vcpu->arch.apf.host_apf_reason) {
--	default:
-+	case 0:
- 		trace_kvm_page_fault(fault_address, error_code);
- 
- 		if (kvm_event_needs_reinjection(vcpu))
-@@ -4201,12 +4201,8 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- 		kvm_async_pf_task_wait(fault_address, 0);
- 		local_irq_enable();
- 		break;
--	case KVM_PV_REASON_PAGE_READY:
--		vcpu->arch.apf.host_apf_reason = 0;
--		local_irq_disable();
--		kvm_async_pf_task_wake(fault_address);
--		local_irq_enable();
--		break;
-+	default:
-+		WARN_ON_ONCE(1);
- 	}
- 	return r;
- }
--- 
-2.25.4
+thanks,
+-- Shuah
 
