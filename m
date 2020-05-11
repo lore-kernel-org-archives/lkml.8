@@ -2,74 +2,83 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F1C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C044C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B0C206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608D320752
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbgEKUkW (ORCPT
+        id S1731727AbgEKUlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgEKUkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:40:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F77B20661;
-        Mon, 11 May 2020 20:40:21 +0000 (UTC)
-Date:   Mon, 11 May 2020 16:40:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     <mingo@redhat.com>, <tj@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <wangle6@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] trace: Remove duplicate semicolons at the end of line
-Message-ID: <20200511164019.354a6d60@gandalf.local.home>
-In-Reply-To: <1589196062-84310-1-git-send-email-nixiaoming@huawei.com>
-References: <1589196062-84310-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 11 May 2020 16:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbgEKUlT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:41:19 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A865BC061A0C;
+        Mon, 11 May 2020 13:41:19 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0599311F5F667;
+        Mon, 11 May 2020 13:41:17 -0700 (PDT)
+Date:   Mon, 11 May 2020 13:41:17 -0700 (PDT)
+Message-Id: <20200511.134117.1336222619714836904.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org,
+        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com, kuba@kernel.org,
+        arnd@arndb.de, fparent@baylibre.com, hkallweit1@gmail.com,
+        edwin.peer@broadcom.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        stephane.leprovost@mediatek.com, pedro.tsai@mediatek.com,
+        andrew.perepech@mediatek.com, bgolaszewski@baylibre.com
+Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200511150759.18766-6-brgl@bgdev.pl>
+References: <20200511150759.18766-1-brgl@bgdev.pl>
+        <20200511150759.18766-6-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 13:41:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 19:21:02 +0800
-Xiaoming Ni <nixiaoming@huawei.com> wrote:
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 11 May 2020 17:07:50 +0200
 
-> Remove duplicate semicolons at the end of line in
-> include/trace/events/iocost.h
-
-This looks like it should go through Jens's tree.
-
--- Steve
-
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> ---
->  include/trace/events/iocost.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Appropriate amount of extra memory for private data is allocated at
+> the end of struct net_device. We have a helper - netdev_priv() - that
+> returns its address but we don't have the reverse: a function which
+> given the address of the private data, returns the address of struct
+> net_device.
 > 
-> diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-> index 7ecaa65b..91297eb 100644
-> --- a/include/trace/events/iocost.h
-> +++ b/include/trace/events/iocost.h
-> @@ -152,7 +152,7 @@
->  
->  	TP_fast_assign(
->  		__assign_str(devname, ioc_name(ioc));
-> -		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
-> +		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);
->  		__entry->new_vrate = new_vrate;
->  		__entry->busy_level = ioc->busy_level;
->  		__entry->read_missed_ppm = (*missed_ppm)[READ];
+> This has caused many drivers to store the pointer to net_device in
+> the private data structure, which basically means storing the pointer
+> to a structure in this very structure.
+> 
+> This patch proposes to add priv_to_netdev() - a helper which converts
+> the address of the private data to the address of the associated
+> net_device.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+Sorry, please don't do this.  We had this almost two decades ago and
+explicitly removed it intentionally.
+
+Store the back pointer in your software state just like everyone else
+does.
