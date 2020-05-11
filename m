@@ -2,117 +2,276 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E194AC38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E0CC38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B92B824962
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:25:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XWwCZN3j"
+	by mail.kernel.org (Postfix) with ESMTP id DEB63206D5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgEKBZA (ORCPT
+        id S1729170AbgEKB2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727789AbgEKBZA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:25:00 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FE4C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 18:25:00 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x77so4022245pfc.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 18:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=rrpue9ELDAyjtjXQonJqUPBUAIMsAtBRTq6A+RPQWpw=;
-        b=XWwCZN3jW3/5HtRXyFm+DTTr5MV4v9xZjc1MlfUlO//spcTx5rVeX/uovT5jprL0QC
-         GQBFO+UtZrdtb4gEq5y1skPW8asQ/rag5f77L0I8AdH/AgEwoX2wDVEK8OLDK0WU4rU4
-         JCutFIXlcwaGirD1TnrQ320raqdIyH4ZdVA2bezfFFl98GBrnI+h0FipAMm8s6CCivlm
-         JubRMJELEpK6EZOJZ5sw4hB8NTz1mu7rjH69Bb56gDerLBtPO2oFkyx4oGq2WrV7YkG/
-         rPExuNrXFDCLfmqSwBwP9MpyZliK9c+xNBOlpLmAerKY0/Pil4n+9Dp9mAXOmzLzyi9Y
-         1N+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=rrpue9ELDAyjtjXQonJqUPBUAIMsAtBRTq6A+RPQWpw=;
-        b=ExcpItB2uLa4IBE5Gl7Zx3Hpw5TpqSpqTWYYssJ135znZVuqBhkhyqCpb6NKIjKMt0
-         gmrQpwLXQXp1yArTA7uZpMUlashFuSb3S5DcMJcE2a9ei4WmxUCOtm4+8p8m6bbYjYhV
-         0bzfBJfTo486ySsMqwb5UF46MMDiFSLDYLATpVlz0JXg+Ea+dWYMiMkopScabI8OIIrp
-         cYCC82sbcYAHUYtz8+KzCzruNTexKp3qcWMiLDUlicCsjicCkzIvbDbtnxT+5jX+3u+6
-         73dE6s1vYClZ6lC2s/Hr8omuoQZt4XtxuSlKAUtzT6Y9NffmcVHXSqgy/S4ypdXdkEUc
-         cOKQ==
-X-Gm-Message-State: AGi0PuZ9+34L5QMLdxG+9KXrm+3oxS4aJkROZr7GMg7wsHptl+atcD1N
-        oGvjSKYUrXpUgsDkrP7dG8k9uQ==
-X-Google-Smtp-Source: APiQypJrh7BKHwezP7S81MyJCWTh95bZ2XZG16s2AtPiogeoGAV6AtXRKla8hC6TTMm92E+FhkmvSQ==
-X-Received: by 2002:a63:792:: with SMTP id 140mr7940224pgh.65.1589160299547;
-        Sun, 10 May 2020 18:24:59 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id z7sm7622992pff.47.2020.05.10.18.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2020 18:24:58 -0700 (PDT)
-Date:   Sun, 10 May 2020 18:24:58 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Guilherme Piccoli <gpiccoli@canonical.com>
-cc:     "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Gavin Guo <gavin.guo@canonical.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [PATCH] mm, compaction: Indicate when compaction is manually
- triggered by sysctl
-In-Reply-To: <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2005101821160.172131@chino.kir.corp.google.com>
-References: <20200507215946.22589-1-gpiccoli@canonical.com> <20200507160438.ed336a1e00c23c6863d75ae5@linux-foundation.org> <CALJn8nNDqWwanhmutCiP-WBLN1eSg2URrG2j5R4kzgHTYObs7Q@mail.gmail.com> <alpine.DEB.2.22.394.2005081129100.236131@chino.kir.corp.google.com>
- <CAHD1Q_wF6Mzf5JipXGZKvn2YDR+FQ6ePuKOe-1W-t_VapxMCxg@mail.gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Sun, 10 May 2020 21:28:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4323 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728630AbgEKB2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 21:28:51 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 47DF1854CE10196CE5D;
+        Mon, 11 May 2020 09:28:49 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 11 May
+ 2020 09:28:48 +0800
+Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Sayali Lokhande <sayalil@codeaurora.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <stummala@codeaurora.org>, <linux-kernel@vger.kernel.org>
+References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
+ <20200508161052.GA49579@google.com>
+ <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
+ <20200509190342.GA11239@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <fbb5ef1e-214d-f34a-e1a0-32534c765e56@huawei.com>
+Date:   Mon, 11 May 2020 09:28:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200509190342.GA11239@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 8 May 2020, Guilherme Piccoli wrote:
-
-> On Fri, May 8, 2020 at 3:31 PM David Rientjes <rientjes@google.com> wrote:
-> > It doesn't make sense because it's only being done here for the entire
-> > system, there are also per-node sysfs triggers so you could do something
-> > like iterate over the nodemask of all nodes with memory and trigger
-> > compaction manually and then nothing is emitted to the kernel log.
-> >
-> > There is new statsfs support that Red Hat is proposing that can be used
-> > for things like this.  It currently only supports KVM statistics but
-> > adding MM statistics is something that would be a natural extension and
-> > avoids polluting both the kernel log and /proc/vmstat.
+On 2020/5/10 3:03, Jaegeuk Kim wrote:
+> On 05/09, Chao Yu wrote:
+>> On 2020/5/9 0:10, Jaegeuk Kim wrote:
+>>> Hi Sayali,
+>>>
+>>> In order to address the perf regression, how about this?
+>>>
+>>> >From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
+>>> From: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> Date: Fri, 8 May 2020 09:08:37 -0700
+>>> Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
+>>>
+>>> There could be a scenario where f2fs_sync_node_pages gets
+>>> called during checkpoint, which in turn tries to flush
+>>> inline data and calls iput(). This results in deadlock as
+>>> iput() tries to hold cp_rwsem, which is already held at the
+>>> beginning by checkpoint->block_operations().
+>>>
+>>> Call stack :
+>>>
+>>> Thread A		Thread B
+>>> f2fs_write_checkpoint()
+>>> - block_operations(sbi)
+>>>  - f2fs_lock_all(sbi);
+>>>   - down_write(&sbi->cp_rwsem);
+>>>
+>>>                         - open()
+>>>                          - igrab()
+>>>                         - write() write inline data
+>>>                         - unlink()
+>>> - f2fs_sync_node_pages()
+>>>  - if (is_inline_node(page))
+>>>   - flush_inline_data()
+>>>    - ilookup()
+>>>      page = f2fs_pagecache_get_page()
+>>>      if (!page)
+>>>       goto iput_out;
+>>>      iput_out:
+>>> 			-close()
+>>> 			-iput()
+>>>        iput(inode);
+>>>        - f2fs_evict_inode()
+>>>         - f2fs_truncate_blocks()
+>>>          - f2fs_lock_op()
+>>>            - down_read(&sbi->cp_rwsem);
+>>>
+>>> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+>>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/node.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>>> index 1db8cabf727ef..626d7daca09de 100644
+>>> --- a/fs/f2fs/node.c
+>>> +++ b/fs/f2fs/node.c
+>>> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+>>>  				goto continue_unlock;
+>>>  			}
+>>>  
+>>> -			/* flush inline_data */
+>>> -			if (is_inline_node(page)) {
+>>> +			/* flush inline_data, if it's not sync path. */
+>>> +			if (do_balance && is_inline_node(page)) {
+>>
+>> IIRC, this flow was designed to avoid running out of free space issue
+>> during checkpoint:
+>>
+>> 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+>>
+>> The sceanrio is:
+>> 1. create fully node blocks
+>> 2. flush node blocks
+>> 3. write inline_data for all the node blocks again
+>> 4. flush node blocks redundantly
+>>
+>> I guess this may cause failing one case of fstest.
 > 
-> Thanks for the review. Is this what you're talking about [0] ? Very interesting!
+> Yeah, actually I was hitting 204 failure, and thus, revised like this.
+> Now, I don't see any regression in fstest.
 > 
-
-Exactly.
-
-> Also, I agree about the per-node compaction, it's a good point. But at
-> the same time, having the information on the number of manual
-> compaction triggered is interesting, at least for some users. What if
-> we add that as a per-node stat in zoneinfo?
+>>From 8f1882acfb0a5fc43e5a2bbd576a8f3c681a7d2c Mon Sep 17 00:00:00 2001
+> From: Sayali Lokhande <sayalil@codeaurora.org>
+> Date: Thu, 30 Apr 2020 16:28:29 +0530
+> Subject: [PATCH] f2fs: Avoid double lock for cp_rwsem during checkpoint
 > 
+> There could be a scenario where f2fs_sync_node_pages gets
+> called during checkpoint, which in turn tries to flush
+> inline data and calls iput(). This results in deadlock as
+> iput() tries to hold cp_rwsem, which is already held at the
+> beginning by checkpoint->block_operations().
+> 
+> Call stack :
+> 
+> Thread A		Thread B
+> f2fs_write_checkpoint()
+> - block_operations(sbi)
+>  - f2fs_lock_all(sbi);
+>   - down_write(&sbi->cp_rwsem);
+> 
+>                         - open()
+>                          - igrab()
+>                         - write() write inline data
+>                         - unlink()
+> - f2fs_sync_node_pages()
+>  - if (is_inline_node(page))
+>   - flush_inline_data()
+>    - ilookup()
+>      page = f2fs_pagecache_get_page()
+>      if (!page)
+>       goto iput_out;
+>      iput_out:
+> 			-close()
+> 			-iput()
+>        iput(inode);
+>        - f2fs_evict_inode()
+>         - f2fs_truncate_blocks()
+>          - f2fs_lock_op()
+>            - down_read(&sbi->cp_rwsem);
+> 
+> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/checkpoint.c |  9 ++++++++-
+>  fs/f2fs/f2fs.h       |  4 ++--
+>  fs/f2fs/node.c       | 10 +++++-----
+>  3 files changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index d49f7a01d8a26..928aea4ff663d 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1168,6 +1168,12 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>  	};
+>  	int err = 0, cnt = 0;
+>  
+> +	/*
+> +	 * Let's flush node pages first to flush inline_data.
+> +	 * We'll actually guarantee everything below under f2fs_lock_all.
+> +	 */
+> +	f2fs_sync_node_pages(sbi, &wbc, false, false, FS_CP_NODE_IO);
 
-The kernel log is not preferred for this (or drop_caches, really) because 
-the amount of info can causing important information to be lost.  We don't 
-really gain anything by printing that someone manually triggered 
-compaction; they could just write to the kernel log themselves if they 
-really wanted to.  The reverse is not true: we can't suppress your kernel 
-message with this patch.
+It is possible that user write a large number of inline data in between
+f2fs_sync_node_pages() and f2fs_lock_all(), it will cause the no-space issue in
+race condition.
 
-Instead, a statsfs-like approach could be used to indicate when this has 
-happened and there is no chance of losing events because it got scrolled 
-off the kernel log.  It has the added benefit of not requiring the entire 
-log to be parsed for such events.
+Also, if there is huge number of F2FS_DIRTY_IMETA, after this change, we will
+flush inode page twice which is unneeded.
+
+f2fs_sync_node_pages() --- flush dirty inode page
+f2fs_lock_all()
+...
+f2fs_sync_inode_meta() --- update dirty inode page
+f2fs_sync_node_pages() --- flush dirty inode page again.
+
+Thanks,
+
+> +
+>  retry_flush_quotas:
+>  	f2fs_lock_all(sbi);
+>  	if (__need_flush_quota(sbi)) {
+> @@ -1222,7 +1228,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>  	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
+>  		up_write(&sbi->node_write);
+>  		atomic_inc(&sbi->wb_sync_req[NODE]);
+> -		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
+> +		err = f2fs_sync_node_pages(sbi, &wbc, false,
+> +					true, FS_CP_NODE_IO);
+>  		atomic_dec(&sbi->wb_sync_req[NODE]);
+>  		if (err) {
+>  			up_write(&sbi->node_change);
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index d916540f12813..ac6ae42b9dd4e 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3286,8 +3286,8 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
+>  			struct writeback_control *wbc, bool atomic,
+>  			unsigned int *seq_id);
+>  int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+> -			struct writeback_control *wbc,
+> -			bool do_balance, enum iostat_type io_type);
+> +		struct writeback_control *wbc,
+> +		bool do_balance, bool sync, enum iostat_type io_type);
+>  int f2fs_build_free_nids(struct f2fs_sb_info *sbi, bool sync, bool mount);
+>  bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
+>  void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index 1db8cabf727ef..fd00a8c119088 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -1808,8 +1808,8 @@ static bool flush_dirty_inode(struct page *page)
+>  }
+>  
+>  int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+> -				struct writeback_control *wbc,
+> -				bool do_balance, enum iostat_type io_type)
+> +			struct writeback_control *wbc,
+> +			bool do_balance, bool sync, enum iostat_type io_type)
+>  {
+>  	pgoff_t index;
+>  	struct pagevec pvec;
+> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+>  				goto continue_unlock;
+>  			}
+>  
+> -			/* flush inline_data */
+> -			if (is_inline_node(page)) {
+> +			/* flush inline_data, if it's async context. */
+> +			if (!sync && is_inline_node(page)) {
+>  				clear_inline_node(page);
+>  				unlock_page(page);
+>  				flush_inline_data(sbi, ino_of_node(page));
+> @@ -1999,7 +1999,7 @@ static int f2fs_write_node_pages(struct address_space *mapping,
+>  
+>  	diff = nr_pages_to_write(sbi, NODE, wbc);
+>  	blk_start_plug(&plug);
+> -	f2fs_sync_node_pages(sbi, wbc, true, FS_NODE_IO);
+> +	f2fs_sync_node_pages(sbi, wbc, true, false, FS_NODE_IO);
+>  	blk_finish_plug(&plug);
+>  	wbc->nr_to_write = max((long)0, wbc->nr_to_write - diff);
+>  
+> 
