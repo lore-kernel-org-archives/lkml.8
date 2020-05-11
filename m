@@ -2,107 +2,108 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2531BC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DD3C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF002080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VxSEeN8B"
+	by mail.kernel.org (Postfix) with ESMTP id 02F9220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 06:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgEKGXP (ORCPT
+        id S1728566AbgEKGZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 02:23:15 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:52770 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgEKGXP (ORCPT
+        Mon, 11 May 2020 02:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725863AbgEKGZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 02:23:15 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 04B6M5C5023979;
-        Mon, 11 May 2020 15:22:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 04B6M5C5023979
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589178126;
-        bh=lWEEk/UB9W3ReMXixlbRZ9stMPWNA/9DV2LRsKm7SiI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VxSEeN8BYA9+zhkFuXUrgVQ7dqnZw4w133yzIG24bjpADHkLL5yVEsPF1l1BvqQWA
-         bHB4u40jjq8xa3TaIYpFcpv/9fL7K21qUSBeli/9UE7P/OVemWihFEBXnKhMYRe3PO
-         8625aMG6dnE6z/H8Ao4kqKx3fEb2jIiHPngGjfphMX8qi73WUuB3dcqorB4bw3iKXq
-         82/FUlPlzxJogQWBx2NM2F+Btq/FWsZj+/Y6V7wOKbyCPgHSXNi72qjr+VN5VyX8dS
-         BpUeu11FFNsADGIcHgVaiQEr62rmrSmRA0QOzzilExU8iz0Yes0AiYGkXaQ/o+bagT
-         eN6YzL3IzO59Q==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: uniphier-sd: call devm_request_irq() after tmio_mmc_host_probe()
-Date:   Mon, 11 May 2020 15:21:58 +0900
-Message-Id: <20200511062158.1790924-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 11 May 2020 02:25:54 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D91BC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 23:25:54 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jY1sq-0002h4-Ij; Mon, 11 May 2020 08:25:48 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jY1sk-0003yO-BB; Mon, 11 May 2020 08:25:42 +0200
+Date:   Mon, 11 May 2020 08:25:42 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     zhoubo.mr@foxmail.com
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/davicom: Add SOC to dm9000 to initialize SROM_BANK
+ clock.
+Message-ID: <20200511062542.GO5877@pengutronix.de>
+References: <20200510110213.2432-1-zhoubo.mr@foxmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510110213.2432-1-zhoubo.mr@foxmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:04:25 up 81 days, 13:34, 93 users,  load average: 0.14, 0.30,
+ 0.19
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, tmio_mmc_irq() handler is registered before the host is
-fully initialized by tmio_mmc_host_probe(). I did not previously notice
-this problem.
+On Sun, May 10, 2020 at 07:02:13PM +0800, zhoubo.mr@foxmail.com wrote:
+> From: To-run-away <zhoubo.mr@foxmail.com>
+> 
+> Increase the use of dm9000 to initialize the SROM_BANK clock in the SOC,
+> otherwise the chip will not work.
 
-The boot ROM of a new Socionext SoC unmasks interrupts (CTL_IRQ_MASK)
-somehow. The handler is invoked before tmio_mmc_host_probe(), then
-emits noisy call trace.
+The dm9000 doesn't have anything called SROM in it. You have to
+describe the clock input pin of the dm9000 here, not the pin of
+your SoC where the clock is coming out.
 
-Move devm_request_irq() below tmio_mmc_host_probe().
+> The device tree file can be increased like this:
+> ethernet@88000000 {
+>     compatible = "davicom,dm9000";
+>     ....
+>     clocks = <&clocks CLK_SROMC>;
+>     clock-names = "sromc";
 
-Fixes: 3fd784f745dd ("mmc: uniphier-sd: add UniPhier SD/eMMC controller driver")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+This must be documented in
+Documentation/devicetree/bindings/net/davicom-dm9000.txt.
 
- drivers/mmc/host/uniphier-sd.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> +	/* Enable clock if specified */
+> +	if (!of_property_read_string(dev->of_node, "clock-names", &clk_name)) {
+> +		struct clk *clk = devm_clk_get(dev, clk_name);
+> +		if (IS_ERR(clk)) {
+> +			dev_err(dev, "cannot get clock of %s\n", clk_name);
+> +			ret = PTR_ERR(clk);
+> +			goto out;
+> +		}
+> +		clk_prepare_enable(clk);
+> +		dev_info(dev, "enable clock '%s'\n", clk_name);
+> +	}
 
-diff --git a/drivers/mmc/host/uniphier-sd.c b/drivers/mmc/host/uniphier-sd.c
-index a1683c49cb90..f82baf99fd69 100644
---- a/drivers/mmc/host/uniphier-sd.c
-+++ b/drivers/mmc/host/uniphier-sd.c
-@@ -610,11 +610,6 @@ static int uniphier_sd_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
--			       dev_name(dev), host);
--	if (ret)
--		goto free_host;
--
- 	if (priv->caps & UNIPHIER_SD_CAP_EXTENDED_IP)
- 		host->dma_ops = &uniphier_sd_internal_dma_ops;
- 	else
-@@ -642,8 +637,15 @@ static int uniphier_sd_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_host;
- 
-+	ret = devm_request_irq(dev, irq, tmio_mmc_irq, IRQF_SHARED,
-+			       dev_name(dev), host);
-+	if (ret)
-+		goto remove_host;
-+
- 	return 0;
- 
-+remove_host:
-+	tmio_mmc_host_remove(host);
- free_host:
- 	tmio_mmc_host_free(host);
- 
+There's devm_clk_get_optional() which you should use here.
+
+the "name" passed to devm_clk_get_optional() should match the name of
+the clock, you must specify it according to the dm9000 datasheet. It
+makes no sense to read the name from the device tree, instead pick a
+name which you expect to be there.
+
+Sascha
+
 -- 
-2.25.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
