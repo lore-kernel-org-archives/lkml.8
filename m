@@ -2,163 +2,99 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777BEC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57968C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591A12070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kRBX/UYT"
+	by mail.kernel.org (Postfix) with ESMTP id 4356820720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgEKSZK (ORCPT
+        id S1731090AbgEKSZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:25:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44838 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729685AbgEKSZK (ORCPT
+        Mon, 11 May 2020 14:25:41 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49720 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729678AbgEKSZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:25:10 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BIOvqo080948;
-        Mon, 11 May 2020 13:24:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589221497;
-        bh=hJLYMptzNWCT2nBGzqtwtRbCzj89zOemjfUVGWWmvq8=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=kRBX/UYTIJPvURcW2quJqeY9dWna9Z8FokWumJAkr2O9TfPJKXW1C/WVCGnL8sF46
-         fAGKfo4rrchhj/nm5pJiZpZ/f9uMxBBFO55qGa3sYNaa2nExrfhe9FfR8ppHTAtBgt
-         w3DXFEbQpRVcW3TH80+XA37ROsdVgCekZS+Vfxd8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BIOvSX024459
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 13:24:57 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- May 2020 13:24:56 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 May 2020 13:24:56 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BIOu9u096276;
-        Mon, 11 May 2020 13:24:56 -0500
-Date:   Mon, 11 May 2020 23:54:55 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     <Tudor.Ambarus@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <vigneshr@ti.com>, <richard@nod.at>, <nsekhar@ti.com>,
-        <Nicolas.Ferre@microchip.com>, <linux-kernel@vger.kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <broonie@kernel.org>,
-        <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
-        <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
-Message-ID: <20200511182453.ivfwu4wlfn2ta5ag@ti.com>
-References: <20200424184410.8578-1-p.yadav@ti.com>
- <3649933.zuh8VGJVCz@192.168.0.120>
- <20200511112712.466f7246@collabora.com>
+        Mon, 11 May 2020 14:25:41 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4B329803080A;
+        Mon, 11 May 2020 18:25:38 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Vze97ONxmtmJ; Mon, 11 May 2020 21:25:36 +0300 (MSK)
+Date:   Mon, 11 May 2020 21:25:35 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511182535.uvijbdjreqw2zsfc@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+ <20200511174800.GM8216@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200511112712.466f7246@collabora.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200511174800.GM8216@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/05/20 11:27AM, Boris Brezillon wrote:
-> On Mon, 11 May 2020 09:00:35 +0000
-> <Tudor.Ambarus@microchip.com> wrote:
+On Mon, May 11, 2020 at 06:48:00PM +0100, Mark Brown wrote:
+> On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 11, 2020 at 4:48 PM Serge Semin
 > 
-> > Hi, Pratyush, Boris,
-> > 
-> > On Friday, April 24, 2020 9:43:54 PM EEST Pratyush Yadav wrote:
-> > > This series adds support for octal DTR flashes in the spi-nor framework,  
-> > 
-> > I'm still learning about this, but I can give you my 2 cents as of now, to 
-> > open the discussion. Enabling 2-2-2, 4-4-4, and 8-8-8 modes is dangerous 
-> > because the flash may not recover from unexpected resets. Entering one of 
-> > these modes can be:
-> > 1/ volatile selectable, the device return to the 1-1-1 protocol after the next 
-> > power-on. I guess this is conditioned by the optional RESET pin, but I'll have 
-> > to check. Also the flash can return to the 1-1-1 mode using the software reset 
-> > or through writing to its Configuration Register, without power-on or power-
-> > off.
+> > > So the question is of how to export the multi-block LLP flag from DW DMAc
+> > > driver. Andy?
 > 
-> My understanding is that there's no standard software reset procedure
-> that guarantees no conflict with existing 1S commands, so even the
-> software reset approach doesn't work here.
+> > I'm not sure I understand why do you need this being exported. Just
+> > always supply SG list out of single entry and define the length
+> > according to the maximum segment size (it's done IIRC in SPI core).
 > 
-> > 2/ non-volatile selectable in which RESET# and software reset are useless, the 
-> > flash defaults to the mode selected in the non volatile Configuration Register 
-> > bits. The only way to get back to 1-1-1 is to write to the Configuration 
-> > Register.
-> 
-> I'm less worried about this case though, since I'd expect the ROM
-> code and bootloaders to be able to deal with xD-xD-xD modes when the
-> flash is set in this mode by default. That implies letting Linux know
-> about this default mode of course, maybe through an extra DT
-> property/cmdline param.
-> 
-> > 
-> > Not recovering from unexpected resets is unacceptable. One should always 
-> > prefer option 1/ and condition the entering in 2-2-2, 4-4-4 and 8-8-8 with the 
-> > presence of the optional RESET pin.
-> 
-> Totally agree with you on that one, but we know what happens in
-> practice...
-> 
-> > 
-> > For the unfortunate flashes that support just option 2/, we should not enter 
-> > these modes on our own, just by discovering the capabilities from the SFDP 
-> > tables or by the flags in the flash_info struct. The best we can do for them 
-> > is to move the responsibility to the user. Maybe to add a Kconfig option that 
-> > is disabled by default with which we condition the entering in 2-2-2, 4-4-4 or 
-> > 8-8-8 modes.
-> 
-> Hm, a Kconfig option doesn't sound like the right solution to the
-> problem, since it should be a per-flash decision, not something you set
-> system-wise.
+> If there's a limit from the dmaengine it'd be a bit cleaner to export
+> the limit from the DMA engine (and it'd help with code reuse for clients
+> that might work with other DMA controllers without needing to add custom
+> compatibles for those instantiations).
 
-Agreed.
+Right. I've already posted a patch which exports the max segment size from the
+DW DMA controller driver. The SPI core will get the limit in the spi_map_buf()
+method by calling the dma_get_max_seg_size() function. The problem I
+described concerns of how to determine whether to apply the solution Andy
+suggested, since normally if DW DMA controller has true multi-block LLP
+supported the workaround isn't required. So in order to solve the problem in a
+generic way the easiest way would be to somehow get the noLLP flag from the DW
+DMAC private data and select a one-by-one SG entries submission algorithm
+instead of the normal one... On the other hand we could just implement a
+flag-based quirks in the DW APB SSI driver and determine whether the LLP
+problem exists for the platform-specific DW APB SSI controller.
 
-Is there any such flash in use today? The two flashes the series adds 
-support for both have volatile configuration for 8D mode. Unless we have 
-to support a flash like this in practice, I think such a change is out 
-of the scope of this series.
- 
-> > Once entered in one of these modes, if an unexpected reset comes, 
-> > you most likely are doomed, because early stage bootloaders may not work in 
-> > these modes and you'll not be able to boot the board. Assuming that one uses 
-> > other environment to boot the board, we should at least make sure that the 
-> > flash works in linux after an unexpected reset. We should try to determine in 
-> > which mode we are at init, so maybe an extension of the default_init hook is 
-> > needed. But all this looks like a BIG compromise, I'm not yet sure if we 
-> > should adress 2/. Thoughts?
-> 
-> We should definitely not write non-volatile regs on our own, but
-> instead use the mode that's been chosen there. I doubt anyone
-> setting the non-volative conf to 8D-8D-8D will ever want to go back to
-> 1S-1S-1S anyway, so 8D -> 1S transitions are not really an issue, right?
-> 
-> Of course, that still leaves us with the 'mode detection' issue, and I
-> have no solution other than flagging it through the DT/cmdline for that
-> one...
+-Sergey
 
-Correct. I tried doing it, and the best way I could figure out was to 
-try reading the SFDP signature in 1S and 8D mode, and see where we get 
-the correct value. But unfortunately, because the Read ID command is 
-different in 8D mode for different flashes, we can't then figure out 
-which flash it actually is.
-
--- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
