@@ -2,216 +2,162 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC7DC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC3BC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B900A206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172B620736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbgEKN1G (ORCPT
+        id S1729442AbgEKNb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:27:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50970 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgEKN1F (ORCPT
+        Mon, 11 May 2020 09:31:27 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49156 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgEKNb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:27:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 848842A13D9
-Message-ID: <cc259e64e01b0700d63b955ad0ab6933b3f71447.camel@collabora.com>
-Subject: Re: [PATCH v3 3/3] media: rkvdec: Add the VP9 backend
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Mon, 11 May 2020 10:26:53 -0300
-In-Reply-To: <CAAFQd5C3MpWqRRMGQJTW8rNz65T2CRYj6yFa56mJWR+DFqrFzg@mail.gmail.com>
-References: <20200505134110.3435-1-ezequiel@collabora.com>
-         <20200505134110.3435-4-ezequiel@collabora.com>
-         <8e8eda07-e5f5-86dc-899b-0823ea0479f2@xs4all.nl>
-         <b2160325f5b9bae5b437a37069db926d2a464e8d.camel@collabora.com>
-         <CAAFQd5C3MpWqRRMGQJTW8rNz65T2CRYj6yFa56mJWR+DFqrFzg@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Mon, 11 May 2020 09:31:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 83FF7803088B;
+        Mon, 11 May 2020 13:31:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JL0tmpxOQGd4; Mon, 11 May 2020 16:31:22 +0300 (MSK)
+Date:   Mon, 11 May 2020 16:31:21 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200508154150.GB22247@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-08 at 18:56 +0200, Tomasz Figa wrote:
-> On Fri, May 8, 2020 at 6:26 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > On Fri, 2020-05-08 at 12:34 +0200, Hans Verkuil wrote:
-> > > On 05/05/2020 15:41, Ezequiel Garcia wrote:
-> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > 
-> > > > The Rockchip VDEC supports VP9 profile 0 up to 4096x2304@30fps. Add
-> > > > a backend for this new format.
-> > > > 
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  drivers/staging/media/rkvdec/Makefile     |    2 +-
-> > > >  drivers/staging/media/rkvdec/rkvdec-vp9.c | 1577 +++++++++++++++++++++
-> > > >  drivers/staging/media/rkvdec/rkvdec.c     |   56 +-
-> > > >  drivers/staging/media/rkvdec/rkvdec.h     |    6 +
-> > > >  4 files changed, 1637 insertions(+), 4 deletions(-)
-> > > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > > > 
-> > > > diff --git a/drivers/staging/media/rkvdec/Makefile b/drivers/staging/media/rkvdec/Makefile
-> > > > index c08fed0a39f9..cb86b429cfaa 100644
-> > > > --- a/drivers/staging/media/rkvdec/Makefile
-> > > > +++ b/drivers/staging/media/rkvdec/Makefile
-> > > > @@ -1,3 +1,3 @@
-> > > >  obj-$(CONFIG_VIDEO_ROCKCHIP_VDEC) += rockchip-vdec.o
-> > > > 
-> > > > -rockchip-vdec-y += rkvdec.o rkvdec-h264.o
-> > > > +rockchip-vdec-y += rkvdec.o rkvdec-h264.o rkvdec-vp9.o
-> > > > diff --git a/drivers/staging/media/rkvdec/rkvdec-vp9.c b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > > > new file mode 100644
-> > > > index 000000000000..37d0ea4e3570
-> > > > --- /dev/null
-> > > > +++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-> > > > @@ -0,0 +1,1577 @@
-> > > 
-> > > <snip>
-> > > 
-> > > > +static void init_inter_probs(struct rkvdec_ctx *ctx,
-> > > > +                        const struct rkvdec_vp9_run *run)
-> > > > +{
-> > > > +   const struct v4l2_ctrl_vp9_frame_decode_params *dec_params;
-> > > > +   struct rkvdec_vp9_ctx *vp9_ctx = ctx->priv;
-> > > > +   struct rkvdec_vp9_priv_tbl *tbl = vp9_ctx->priv_tbl.cpu;
-> > > > +   struct rkvdec_vp9_inter_frame_probs *rkprobs;
-> > > > +   const struct v4l2_vp9_probabilities *probs;
-> > > > +   unsigned int i, j, k;
-> > > > +
-> > > > +   rkprobs = &tbl->probs.inter;
-> > > > +   dec_params = run->decode_params;
-> > > > +   probs = &dec_params->probs;
-> > > > +
-> > > > +   /*
-> > > > +    * inter probs
-> > > > +    * 151 x 128 bits, aligned to 152 x 128 bits
-> > > > +    * inter only
-> > > > +    * intra_y_mode & inter_block info 6 x 128 bits
-> > > > +    */
-> > > > +
-> > > > +   memcpy(rkprobs->y_mode, probs->y_mode, sizeof(rkprobs->y_mode));
-> > > > +   memcpy(rkprobs->comp_mode, probs->comp_mode,
-> > > > +          sizeof(rkprobs->comp_mode));
-> > > > +   memcpy(rkprobs->comp_ref, probs->comp_ref,
-> > > > +          sizeof(rkprobs->comp_ref));
-> > > > +   memcpy(rkprobs->single_ref, probs->single_ref,
-> > > > +          sizeof(rkprobs->single_ref));
-> > > > +   memcpy(rkprobs->inter_mode, probs->inter_mode,
-> > > > +          sizeof(rkprobs->inter_mode));
-> > > > +   memcpy(rkprobs->interp_filter, probs->interp_filter,
-> > > > +          sizeof(rkprobs->interp_filter));
-> > > > +
-> > > > +   /* 128 x 128 bits coeff related */
-> > > > +   for (i = 0; i < ARRAY_SIZE(probs->coef); i++) {
-> > > > +           for (j = 0; j < ARRAY_SIZE(probs->coef[0]); j++) {
-> > > > +                   for (k = 0; k < ARRAY_SIZE(probs->coef[0][0]); k++)
-> > > > +                           write_coeff_plane(probs->coef[i][j][k],
-> > > > +                                             rkprobs->coef[k][i][j]);
-> > > > +           }
-> > > > +   }
-> > > > +
-> > > > +   /* intra uv mode 6 x 128 */
-> > > > +   memcpy(rkprobs->uv_mode_0_2, &probs->uv_mode[0],
-> > > > +          sizeof(rkprobs->uv_mode_0_2));
-> > > > +   memcpy(rkprobs->uv_mode_3_5, &probs->uv_mode[3],
-> > > > +          sizeof(rkprobs->uv_mode_3_5));
-> > > > +   memcpy(rkprobs->uv_mode_6_8, &probs->uv_mode[6],
-> > > > +          sizeof(rkprobs->uv_mode_6_8));
-> > > > +   memcpy(rkprobs->uv_mode_9, &probs->uv_mode[9],
-> > > > +          sizeof(rkprobs->uv_mode_9));
-> > > > +
-> > > > +   /* mv related 6 x 128 */
-> > > > +   memcpy(rkprobs->mv.joint, probs->mv.joint,
-> > > > +          sizeof(rkprobs->mv.joint));
-> > > > +   memcpy(rkprobs->mv.sign, probs->mv.sign,
-> > > > +          sizeof(rkprobs->mv.sign));
-> > > > +   memcpy(rkprobs->mv.class, probs->mv.class,
-> > > > +          sizeof(rkprobs->mv.class));
-> > > > +   memcpy(rkprobs->mv.class0_bit, probs->mv.class0_bit,
-> > > > +          sizeof(rkprobs->mv.class0_bit));
-> > > > +   memcpy(rkprobs->mv.bits, probs->mv.bits,
-> > > > +          sizeof(rkprobs->mv.bits));
-> > > > +   memcpy(rkprobs->mv.class0_fr, probs->mv.class0_fr,
-> > > > +          sizeof(rkprobs->mv.class0_fr));
-> > > > +   memcpy(rkprobs->mv.fr, probs->mv.fr,
-> > > > +          sizeof(rkprobs->mv.fr));
-> > > > +   memcpy(rkprobs->mv.class0_hp, probs->mv.class0_hp,
-> > > > +          sizeof(rkprobs->mv.class0_hp));
-> > > > +   memcpy(rkprobs->mv.hp, probs->mv.hp,
-> > > > +          sizeof(rkprobs->mv.hp));
-> > > 
-> > > Can't you just do: 'rkprobs->mv = probs->mv'?
-> > > 
+On Fri, May 08, 2020 at 05:41:50PM +0200, Thomas Bogendoerfer wrote:
+> On Wed, May 06, 2020 at 08:42:36PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > 
-> > I think I'd like to keep this as-is.
+> > Commit 07d69579e7fe ("MIPS: Don't register r4k sched clock when
+> > CPUFREQ enabled") disabled the r4k-clock usage for scheduler ticks
+> > counting due to the scheduler being non-tolerant for unstable
+> > clocks sources. For the same reason the clock should be used
+> > in the system clocksource framework only as a last resort if CPU
+> > frequency may change.
 > > 
-> > Having the memcpy makes it explicit that we are copying
-> > these structs around. While the assignment would
-> > bring type checking, it can be misleading for readers.
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  arch/mips/kernel/csrc-r4k.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
+> > index 437dda64fd7a..d81fb374f477 100644
+> > --- a/arch/mips/kernel/csrc-r4k.c
+> > +++ b/arch/mips/kernel/csrc-r4k.c
+> > @@ -71,7 +71,11 @@ int __init init_r4k_clocksource(void)
+> >  		return -ENXIO;
+> >  
+> >  	/* Calculate a somewhat reasonable rating value */
+> > +#ifndef CONFIG_CPU_FREQ
+> >  	clocksource_mips.rating = 200 + mips_hpt_frequency / 10000000;
+> > +#else
+> > +	clocksource_mips.rating = 99;
+> > +#endif
 > 
-> On the other hand, it's not obvious from the code that all fields of
-> the structure are copied. Perhaps memcpy(&rkprobs->mv, &probs->mv,
-> sizeof(rkprobs->mv)) would be a good compromise?
+> I dislike this patch. Assuming you have an other clocksource, why not
+> simply disable csrc-r4k, if CPU_FREQ is enabled ?
 
-Well, that would effectively (inadvertedly) tie probs:mv to rkprobs:mv,
-so we might as well do something like:
+Me neither and the best way would be to update the clocksource frequency
+dynamically the same way it's done for cevt-r4k and MIPS GIC timers. Alas the
+clocksource doesn't support it. Due to this together with CPU-freq facility
+enabled we have to use a very slow DW APB Timer instead of the fast embedded
+into the CPU core r4k and MIPS GIC timers. Just note the difference: it takes
+220 ns to read the counter from DW APB Timer in comparison to a few nanoseconds
+reading from MIPS GIC and R4K. So IMO disabling the timer as you suggest isn't
+the best option. By making the CPUFREQ and CSRC_R4K mutual exclusive we'd
+assume a use-case that the system will always use the CPU-freq facility changing
+the CPU reference frequency. This is obviously not true. Noone prevents the
+system administrator to leave the default setting of the CPU-freq with fixed
+frequency and select a faster, more accurate timer like in our case.
 
-(thanks Boris for the suggestion)
+My idea was not to try to predict how the system would be used, but to let the
+system administration to choose which timer is applicable in particular usecase
+enabling a safest one by default. So if CPUFREQ is available, then we fallback
+to the external timer as safest one. If the system user wouldn't need to have
+the CPUFREQ facility utilized, then the system administrator would want to
+leave the default CPU-freq governor with pre-defined CPU frequency and
+select either R4K (MIPS) or MIPS GIC timer just by writing its name into
+/sys/bus/clocksource/devices/clocksource0/current_clocksource .
+ 
+I should note, that currently CPU_FREQ won't be available if there is no
+MIPS_EXTERNAL_TIMER available for the platform. It's prohibited by means of the
+conditional kbuild config inclusion declared in the arch/mips/Kconfig:
++ if CPU_SUPPORTS_CPUFREQ && MIPS_EXTERNAL_TIMER
++ source "drivers/cpufreq/Kconfig"
++ endif
+So if there is no external timer working independently from the CPU core clock
+source, the CPUFREQ won't be available to select for the kernel. Though currently
+this limitation is supposed to be applicable for the R4K/MIPS GIC clocksource
+timers only since clockevents must work fine in unstable reference clock conditions.
 
---- a/drivers/staging/media/rkvdec/rkvdec-vp9.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-vp9.c
-@@ -48,17 +48,7 @@ struct rkvdec_vp9_inter_frame_probs {
-        u8 uv_mode_9[9];
-        u8 padding4[7];
-        u8 padding5[16];
--       struct {
--               u8 joint[3];
--               u8 sign[2];
--               u8 class[2][10];
--               u8 class0_bit[2];
--               u8 bits[2][10];
--               u8 class0_fr[2][2][3];
--               u8 fr[2][3];
--               u8 class0_hp[2];
--               u8 hp[2];
--       } mv;
-+       struct v4l2_vp9_mv_probabilities mv;
- };
+So what can we do to improve the patch? First one is a solution I suggested in
+this patch but it could be a bit altered by using IS_ENABLED() macro to:
++ clocksource_mips.rating = !IS_ENABLED(CONFIG_CPU_FREQ) ?
++			    200 + mips_hpt_frequency / 10000000 : 99;
 
+Another idea I discovered when have been searching through the x86 arch code.
+x86's got the same problem with TSC timer, but it doesn't disable it if
+CPU-frequency is switched on. Instead it just marks it as unstable by calling
+the clocksource_mark_unstable() method if CPU frequency changes. I suggest to
+implement the same approach in our case of MIPS GIC (another patchset
+I've sent, see "clocksource: Fix MIPS GIC and DW APB Timer for Baikal-T1 SoC
+support" in your email client) and R4K timers. We'll subscribe to the CPU
+frequency change and if it changes we'll call clocksource_mark_unstable() with
+MIPS GIC and R4K clocksource handlers passed. This shall reduce their rating and
+cause selecting a clocksource with better one. BTW I suppose it won't be
+necessary to initially lower the rating of the MIPS GIC and R4K clocksource
+timers if this is implemented.
 
-However, I'm reluctant to consider any of these suggestions
-because we are effectively matching a hardware descriptor
-to a software interface, where the latter is unstable.
+So, what do you think?
 
-If we were to change the software interface at any point,
-we'd break this driver.
+-Sergey
 
-The more I think about this, the more I think the drivers
-needs to stay as-is.
-
-Thanks,
-Ezequiel
-
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
