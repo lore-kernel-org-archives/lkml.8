@@ -2,122 +2,99 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB3EC47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69272C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3985A20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SoEMt2VX"
+	by mail.kernel.org (Postfix) with ESMTP id 3ED7B20722
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589218430;
+	bh=Mb6RDzi1I5+pxVNi9IB0d0jSTDxGRu/TLIydO2Q4lJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yg11WRobmlBWjpkU42NK/7LcbL8prodMvkkCMYI7mm3VOJo9jzPMdpOJpqhTm0QIQ
+	 gpumugvHRf2oRxEIJrzP6gtSvwQHxFVxCqKb1ramZ4bRns9PlXsGesDghgIhI1a0wf
+	 eyl3+xZQyaIRdFRpNirtFJL6CCKzxmXMb0szNmm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbgEKRcE (ORCPT
+        id S1730955AbgEKRdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:32:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57591 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728556AbgEKRcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:32:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589218322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qy83UmAGOjbze61BxDQ8wVOsVZu3BaGioUxMSAl0SsQ=;
-        b=SoEMt2VXVwsXiVANvxiAJ/+7Zb2LkAflDEzHFs+xkbtJadKZoB7j+d1RmxNR/4pAs0t2dl
-        qtX8Jggv2Ute8nFdDcO4ufVJZw5KRd+FGUveZHqTShMhPix/W9GojpkXevG0W/20Rc3cPq
-        NoZA5A0t7kgmfsKsFchkPzx6Tmy41U0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-509-rlj_CWElNYGeviLiWdhSaw-1; Mon, 11 May 2020 13:32:00 -0400
-X-MC-Unique: rlj_CWElNYGeviLiWdhSaw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 11 May 2020 13:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730644AbgEKRdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 13:33:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45567100CCC1;
-        Mon, 11 May 2020 17:31:59 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AD9C5EE0C;
-        Mon, 11 May 2020 17:31:56 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:31:55 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        song@kernel.org, breeves@redhat.com, mpatocka@redhat.com,
-        khazhy@google.com, kernel@collabora.com
-Subject: Re: [PATCH v4 0/2] Historical Service Time Path Selector
-Message-ID: <20200511173155.GA7892@redhat.com>
-References: <20200511163910.3778467-1-krisman@collabora.com>
- <20200511170235.GA7719@redhat.com>
- <85ftc6l7lb.fsf@collabora.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 161032070B;
+        Mon, 11 May 2020 17:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589218428;
+        bh=Mb6RDzi1I5+pxVNi9IB0d0jSTDxGRu/TLIydO2Q4lJE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T/2eOuH5QCYOzoinKHiT/GQWdIeVf38zkWU5xBTf3KDBjnKPfklV1oUWcy30as3qf
+         Pviqp0nqZrOuqtrbMPtFUUgucxqbKdgFAeG1qVlVT8dmkjDf3TVCajOZfhwqoSBKca
+         9s7mID8UWsAf5Oc4BRkIiIrAu/PLyrYsmUxPWaXY=
+Date:   Mon, 11 May 2020 18:33:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yongbo Zhang <giraffesnn123@gmail.com>, lgirdwood@gmail.com
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Chen Li <licheng0822@thundersoft.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+Message-ID: <20200511173346.GK8216@sirena.org.uk>
+References: <20200511100415.12502-1-giraffesnn123@gmail.com>
+ <158921769452.22432.14661061075576126965.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mFHiwr52TKrxpkjc"
 Content-Disposition: inline
-In-Reply-To: <85ftc6l7lb.fsf@collabora.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <158921769452.22432.14661061075576126965.b4-ty@kernel.org>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11 2020 at  1:11pm -0400,
-Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
 
-> Mike Snitzer <snitzer@redhat.com> writes:
-> 
-> > On Mon, May 11 2020 at 12:39pm -0400,
-> > Gabriel Krisman Bertazi <krisman@collabora.com> wrote:
-> >
-> >> Hi,
-> >> 
-> >> This fourth version of HST applies the suggestion from Mikulas Patocka
-> >> to do the ktime_get_ns inside the mpath map_bio instead of generic
-> >> device-mapper code. This means that struct dm_mpath_io gained another
-> >> 64bit field.  For the request-based case, we continue to use the block
-> >> layer start time information.
-> >> 
-> >> With this modification, I was able obtain similar performance on  BIO
-> >> to request-based multipath with HST on the benchmarks shared in v1.
-> >> 
-> >> v3: https://www.redhat.com/archives/dm-devel/2020-April/msg00308.html
-> >> v2: https://www.redhat.com/archives/dm-devel/2020-April/msg00270.html
-> >> v1: https://www.redhat.com/archives/dm-devel/2020-April/msg00176.html
-> >
-> > I already staged your v3 in linux-next.  Please provide an incremental
-> > patch that layers on this git branch:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/log/?h=dm-5.8
-> >
-> > I was hopeful for a flag to be set (e.g. in 'struct path_selector') to
-> > reflect whether the path selector expects highres start_time.  Makes
-> > little sense to incur that extra cost of providing the time if the path
-> > selector doesn't even use it.
-> >
-> > Alternatively, could split out the setting of the time needed by .end_io
-> > to a new path_selector_type method (e.g. .set_start_time).  And then
-> > only use ktime_get_ns() for bio-based if .set_start_time is defined.
-> > Would get a little fiddly needing to make sure a stale start_time isn't
-> > used... also, makes more sense to conditionally call this
-> > .set_start_time just after .start_io is.
-> 
-> Oh, my apologies, I hadn't noticed it was merged.  I will make the time fetch
-> conditional and submit a new patch based on that branch.
+--mFHiwr52TKrxpkjc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't want to waste your time so please don't run with that idea just yet.
+On Mon, May 11, 2020 at 06:21:43PM +0100, Mark Brown wrote:
+> On Mon, 11 May 2020 18:04:15 +0800, Yongbo Zhang wrote:
+> > SSI BUSIF buffer is possible to overflow or underflow, especially in a
+> > hypervisor environment. If there is no interrupt support, it will event=
+ually
+> > lead to errors in pcm data.
+> > This patch adds overflow and underflow interrupt support for SSI BUSIF =
+buffer.
 
-There is a possibility we really _do_ need higher resolution time.
+> Applied to
+>=20
+>    local tree spi/for-5.7
 
-I'm about to have a concall to discuss some disk IO stat issues with DM
-disk stats vs NVMe disk stats (provided by block core).
+No, it wasn't - sorry for the noise here.
 
-I'll let you know the outcome and we can discuss further.
+--mFHiwr52TKrxpkjc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Mike
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65jHkACgkQJNaLcl1U
+h9CwNwf+N4JBwIeoNbEiscFu6yuAq4jAIXqttETDDdGngT++PzvYroU5VF0sbXwp
+nzT1SgBu+h9Qe1AymyhkL0Gy5GIsH3ITIyLqx18fZYrFf07pAAQO6VxpECK55XhX
+Bz0rIcm0XXRBpwQkv+3XvKM7UXGLim9Cz2JbPNcVwuaWPHhEhSjozzU0x2B9UTmB
+YZM3aArzBAlepcS2IO/whPKgCNXxe67o+VK4ykGRW1bCVHvaNJUWfv1uRQgHgOaS
+KyUXRpZbXdxScJLDJvKkygQEAhf3FXgz233+U2MKU0fpSTdPzDtbJre0Q+7G1lms
+4grrqYsVI1Sniiq9cpf5CZ/UqtIYYg==
+=PJ7/
+-----END PGP SIGNATURE-----
+
+--mFHiwr52TKrxpkjc--
