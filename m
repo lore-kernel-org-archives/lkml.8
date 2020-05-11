@@ -2,138 +2,155 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D567C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5E7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0983206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BMJCAA/U"
+	by mail.kernel.org (Postfix) with ESMTP id C8D6A20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 20:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589227676;
+	bh=/Oy/Sf2u70Yzd63mUcR8KEbAcs1JY1pR2AzcGOPrLA4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CZ2o5sqm4pj/2Yhtq1dy1bbGLlj2rmzIQtmfXqYMeWUZxU7jZ7bj8qlTJKwRxcvD6
+	 ZTOTnWd8ukqo3z9OyhEXT05pj2x1ToEkcSmwd67QNlnnwAfU5OtkNN8DBXdR4SsyAx
+	 AYiY6r2wwJmAxtZCBLFttNtLcYD/Z07sAUNbScjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbgEKUHR (ORCPT
+        id S1731556AbgEKUH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 16:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729215AbgEKUHQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 16:07:16 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A64C061A0C;
-        Mon, 11 May 2020 13:07:16 -0700 (PDT)
-Received: from zn.tnic (p200300EC2F05F100A8DEEC94B2257A59.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:f100:a8de:ec94:b225:7a59])
+        Mon, 11 May 2020 16:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgEKUHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 16:07:55 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D318C1EC0181;
-        Mon, 11 May 2020 22:07:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589227635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6V0UglHmaPSn0pB7O5vwdd6aAFUZM3fIGTypXgEARCU=;
-        b=BMJCAA/UBiKZxAw/nUA7M3/0bJYk5/UYgZ3bdMYa+unPvnqZd8t1p+785fVTys2QvCbQFs
-        lCJitOtnkhOhGi4I00ZpvyqaIsWnkNWYeHeUpIYoko6aQucsWFbcs7U1XmBA+Kh5Gie/1X
-        j7jJxWHctWYX79YCC0gI55on7Ud9r7s=
-Date:   Mon, 11 May 2020 22:07:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 23/75] x86/boot/compressed/64: Setup GHCB Based VC
- Exception handler
-Message-ID: <20200511200709.GE25861@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-24-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F9ED206F5;
+        Mon, 11 May 2020 20:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589227674;
+        bh=/Oy/Sf2u70Yzd63mUcR8KEbAcs1JY1pR2AzcGOPrLA4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RxVbVM1go98ghgRmXsKhAPljplz/QBHdCeitk1fe1WOPCo3w6VLg/KUYs2uAX8Ac2
+         sahuyYyvVhljvswaAIiglR9itd+IHOPwQ5k8VXpa+ZevDvxsMxxp3tn71XIPReCLph
+         AsS2Xd0UPrVEo9FvHopYfrp9mGtGHkZyUBOHK/pM=
+Date:   Mon, 11 May 2020 15:12:27 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] perf/core: Replace zero-length array with flexible-array
+Message-ID: <20200511201227.GA14041@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-24-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:33PM +0200, Joerg Roedel wrote:
-> @@ -63,3 +175,45 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
->  	while (true)
->  		asm volatile("hlt\n");
->  }
-> +
-> +static enum es_result vc_insn_string_read(struct es_em_ctxt *ctxt,
-> +					  void *src, char *buf,
-> +					  unsigned int data_size,
-> +					  unsigned int count,
-> +					  bool backwards)
-> +{
-> +	int i, b = backwards ? -1 : 1;
-> +	enum es_result ret = ES_OK;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		void *s = src + (i * data_size * b);
-> +		char *d = buf + (i * data_size);
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-From a previous review:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Where are we checking whether that count is not exceeding @buf or
-similar discrepancies?
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Ditto below.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-> +
-> +		ret = vc_read_mem(ctxt, s, d, data_size);
-> +		if (ret != ES_OK)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static enum es_result vc_insn_string_write(struct es_em_ctxt *ctxt,
-> +					   void *dst, char *buf,
-> +					   unsigned int data_size,
-> +					   unsigned int count,
-> +					   bool backwards)
-> +{
-> +	int i, s = backwards ? -1 : 1;
-> +	enum es_result ret = ES_OK;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		void *d = dst + (i * data_size * s);
-> +		char *b = buf + (i * data_size);
-> +
-> +		ret = vc_write_mem(ctxt, d, b, data_size);
-> +		if (ret != ES_OK)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> -- 
-> 2.17.1
-> 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/linux/perf_event.h | 4 ++--
+ kernel/events/callchain.c  | 2 +-
+ kernel/events/internal.h   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 9c3e7619c929..306b07b56cc6 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -61,7 +61,7 @@ struct perf_guest_info_callbacks {
+ 
+ struct perf_callchain_entry {
+ 	__u64				nr;
+-	__u64				ip[0]; /* /proc/sys/kernel/perf_event_max_stack */
++	__u64				ip[]; /* /proc/sys/kernel/perf_event_max_stack */
+ };
+ 
+ struct perf_callchain_entry_ctx {
+@@ -113,7 +113,7 @@ struct perf_raw_record {
+ struct perf_branch_stack {
+ 	__u64				nr;
+ 	__u64				hw_idx;
+-	struct perf_branch_entry	entries[0];
++	struct perf_branch_entry	entries[];
+ };
+ 
+ struct task_struct;
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index c2b41a263166..b1991043b7d8 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -16,7 +16,7 @@
+ 
+ struct callchain_cpus_entries {
+ 	struct rcu_head			rcu_head;
+-	struct perf_callchain_entry	*cpu_entries[0];
++	struct perf_callchain_entry	*cpu_entries[];
+ };
+ 
+ int sysctl_perf_event_max_stack __read_mostly = PERF_MAX_STACK_DEPTH;
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index f16f66b6b655..fcbf5616a441 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -55,7 +55,7 @@ struct perf_buffer {
+ 	void				*aux_priv;
+ 
+ 	struct perf_event_mmap_page	*user_page;
+-	void				*data_pages[0];
++	void				*data_pages[];
+ };
+ 
+ extern void rb_free(struct perf_buffer *rb);
 -- 
-Regards/Gruss,
-    Boris.
+2.26.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
