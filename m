@@ -2,149 +2,135 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17977C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DF9C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2ED020720
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 03:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589169053;
-	bh=qzbDkYpmx4JV2Mvo5m823x0KS0bwZGj8Nfb7WGOs4qM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oXETYulYldifc9ZHRuzFLlKnxs/Q6q9QWfMm+5sVAJ06oc/GVxwHQed+uJdxTE9Bk
-	 KQFo2/XI7r6aPm/2VuD2M/qtixoDZSpaVdZpjRPf6vnZjvPLR013WA/VHlOXgYUAl1
-	 Q3gWAeJTxqF/fv4/6vAUvUiJRshdcMXyh4pZBPFs=
+	by mail.kernel.org (Postfix) with ESMTP id 80D75206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgEKDux (ORCPT
+        id S1725888AbgEKECv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 23:50:53 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:44054 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728058AbgEKDux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 23:50:53 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 04B3oFts022396;
-        Mon, 11 May 2020 12:50:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 04B3oFts022396
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589169016;
-        bh=0XAx4F4+9RG7//GyYplcO9iPdaPpdu6uh8fjArPWH6M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x4WFcasaWdYCkwIwk98Gijalsz7FISOfDXj+R26BgMnoFPHLTndQGGSLMIuaBjSHN
-         Y5kh1Vhi+j8vKAW6QqNURhFuWon8sToAVotX8YNARdxmxGLkOOQ4KZ3tiUbfCBOg7z
-         fKfRBogjgzQH6m1QcxyMEuG+IrR6ERRUMclpMpsFVSIp/YUiApHMC+KbxLMT/Vbc9E
-         +8HoYRoymy+ae5px3WHC+vF6AJZcuHIKw+P5JFpmf8iWGdi0D8Si7Prn4BDtjkrXN7
-         +9QSeE5FxWAfs0QQnb8SSddH2E3KVqElH2eE1shcCQZQwxgYnHXokDLU7XQ2Z+W2cr
-         WpEXT8bp/iRhw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kbuild: error out if targets prefixed with '__' are directly run
-Date:   Mon, 11 May 2020 12:50:13 +0900
-Message-Id: <20200511035013.1629672-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200511035013.1629672-1-masahiroy@kernel.org>
-References: <20200511035013.1629672-1-masahiroy@kernel.org>
+        Mon, 11 May 2020 00:02:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:50664 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgEKECu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 00:02:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F047D6E;
+        Sun, 10 May 2020 21:02:49 -0700 (PDT)
+Received: from [10.163.72.179] (unknown [10.163.72.179])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1448C3F71E;
+        Sun, 10 May 2020 21:02:46 -0700 (PDT)
+Subject: Re: [PATCH V3 1/3] arm64/mm: Drop __HAVE_ARCH_HUGE_PTEP_GET
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
+ <1588907271-11920-2-git-send-email-anshuman.khandual@arm.com>
+ <7db44202-0d21-d8fb-6998-0210508a488a@oracle.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <19ffbe33-3a42-6d90-6c48-19645a898383@arm.com>
+Date:   Mon, 11 May 2020 09:32:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7db44202-0d21-d8fb-6998-0210508a488a@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some targets are internal-use only.
 
-It is tedious to care about "what if __build_one_by_one is contained
-in $(MAKECMDGOALS)?" etc.
 
-Prefix internal targets with double underscores. Stop parsing Makefile
-if they are directly run.
+On 05/09/2020 03:39 AM, Mike Kravetz wrote:
+> On 5/7/20 8:07 PM, Anshuman Khandual wrote:
+>> Platform specific huge_ptep_get() is required only when fetching the huge
+>> PTE involves more than just dereferencing the page table pointer. This is
+>> not the case on arm64 platform. Hence huge_ptep_pte() can be dropped along
+>> with it's __HAVE_ARCH_HUGE_PTEP_GET subscription. Before that, it updates
+>> the generic huge_ptep_get() with READ_ONCE() which will prevent known page
+>> table issues with THP on arm64.
+>>
+>> https://lore.kernel.org/r/1506527369-19535-1-git-send-email-will.deacon@arm.com/
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/hugetlb.h | 6 ------
+>>  include/asm-generic/hugetlb.h    | 2 +-
+>>  2 files changed, 1 insertion(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+>> index 2eb6c234d594..b88878ddc88b 100644
+>> --- a/arch/arm64/include/asm/hugetlb.h
+>> +++ b/arch/arm64/include/asm/hugetlb.h
+>> @@ -17,12 +17,6 @@
+>>  extern bool arch_hugetlb_migration_supported(struct hstate *h);
+>>  #endif
+>>  
+>> -#define __HAVE_ARCH_HUGE_PTEP_GET
+>> -static inline pte_t huge_ptep_get(pte_t *ptep)
+>> -{
+>> -	return READ_ONCE(*ptep);
+>> -}
+>> -
+>>  static inline int is_hugepage_only_range(struct mm_struct *mm,
+>>  					 unsigned long addr, unsigned long len)
+>>  {
+>> diff --git a/include/asm-generic/hugetlb.h b/include/asm-generic/hugetlb.h
+>> index 822f433ac95c..40f85decc2ee 100644
+>> --- a/include/asm-generic/hugetlb.h
+>> +++ b/include/asm-generic/hugetlb.h
+>> @@ -122,7 +122,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>>  #ifndef __HAVE_ARCH_HUGE_PTEP_GET
+>>  static inline pte_t huge_ptep_get(pte_t *ptep)
+>>  {
+>> -	return *ptep;
+>> +	return READ_ONCE(*ptep);
+>>  }
+>>  #endif
+> 
+> I know you made this change in response to Will's comment.  And, since
+> changes were made to consistently use READ_ONCE in arm64 code, it makes
+> sense for that architecture.
+> 
+> However, with this change to generic code, you introduce READ_ONCE to
+> other architectures where it was not used before.  Could this possibly
+> introduce inconsistencies in their use of READ_ONCE?  To be honest, I
+> am not very good at identifying any possible issues this could cause.
+> However, it does seem possible.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Could you please give some more details. Is there any particular problem
+which might be caused by this new READ_ONCE() here, that you you are
+concerned about. READ_ONCE() is already getting used in multiple places
+in core MM which can not be configured out (like mm/gup.c). It is getting
+used in core HugeTLB (mm/hugetlb.c) as well. AFAICS, there is no standard
+for using READ_ONCE() while walking page tables entries. We have examples
+in core MM for both ways.
 
- Makefile | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/Makefile b/Makefile
-index 1a4977ad7cd9..1162cb04860c 100644
---- a/Makefile
-+++ b/Makefile
-@@ -11,9 +11,12 @@ NAME = Kleptomaniac Octopus
- # Comments in this file are targeted only to the developer, do not
- # expect to learn how to build the kernel reading this file.
- 
-+$(if $(filter __%, $(MAKECMDGOALS)), \
-+	$(error targets prefixed with '__' are only for internal use))
-+
- # That's our default target when none is given on the command line
--PHONY := _all
--_all:
-+PHONY := __all
-+__all:
- 
- # We are using a recursive build, so we need to do a little thinking
- # to get the ordering right.
-@@ -172,13 +175,13 @@ export sub_make_done := 1
- 
- ifeq ($(need-sub-make),1)
- 
--PHONY += $(MAKECMDGOALS) sub-make
-+PHONY += $(MAKECMDGOALS) __sub-make
- 
--$(filter-out _all sub-make $(this-makefile), $(MAKECMDGOALS)) _all: sub-make
-+$(filter-out $(this-makefile), $(MAKECMDGOALS)) __all: __sub-make
- 	@:
- 
- # Invoke a second make in the output directory, passing relevant variables
--sub-make:
-+__sub-make:
- 	$(Q)$(MAKE) -C $(abs_objtree) -f $(abs_srctree)/Makefile $(MAKECMDGOALS)
- 
- endif # need-sub-make
-@@ -323,7 +326,7 @@ ifdef mixed-build
- 
- PHONY += $(MAKECMDGOALS) __build_one_by_one
- 
--$(filter-out __build_one_by_one, $(MAKECMDGOALS)): __build_one_by_one
-+$(MAKECMDGOALS): __build_one_by_one
- 	@:
- 
- __build_one_by_one:
-@@ -598,12 +601,12 @@ else #!config-build
- # targets and others. In general all targets except *config targets.
- 
- # If building an external module we do not care about the all: rule
--# but instead _all depend on modules
-+# but instead __all depend on modules
- PHONY += all
- ifeq ($(KBUILD_EXTMOD),)
--_all: all
-+__all: all
- else
--_all: modules
-+__all: modules
- endif
- 
- # Decide whether to build built-in, modular, or both.
-@@ -625,7 +628,7 @@ endif
- # in addition to whatever we do anyway.
- # Just "make" or "make all" shall build modules as well
- 
--ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
-+ifneq ($(filter all modules nsdeps,$(MAKECMDGOALS)),)
-   KBUILD_MODULES := 1
- endif
- 
--- 
-2.25.1
-
+> 
+> Will was nervous about dropping this from arm64.  I'm just a little nervous
+> about adding it to other architectures.
+> 
+AFAICS, __HAVE_ARCH_HUGE_PTEP_GET should be used on a platform only when
+a HugeTLB entry could not constructed by dereferencing a page table entry
+as in the case with ARM (32 bit). Using READ_ONCE() while dereferencing is
+really not a special case that will need __HAVE_ARCH_HUGE_PTEP_GET. Moving
+READ_ONCE() into generic definition solves the problem while also taking
+care of a known problem on arm64. IMHO, it seems like the right thing to
+do unless there is another problem that pops up some where else because of
+READ_ONCE().
