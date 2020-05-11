@@ -2,152 +2,135 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC503C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A409EC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9CCF20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D7E2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 05:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgEKF5l (ORCPT
+        id S1728564AbgEKF6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 01:57:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20492 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgEKF5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 01:57:39 -0400
-IronPort-SDR: x/K4pQ0oqvM2jmSbv2rbe6CbSpRr/B1NOz/gShZV7HFQvyel+H9LVXnnqjoHAqsg/ZldcgvDtZ
- ENTrmco8Eq3w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2020 22:57:39 -0700
-IronPort-SDR: KT7xHhnA8nltF3WSt3opgqjmdNPBOF4e9WIgcuD9/lmEsFHEHQlKy8sL3DfI9mqoUS1QWZgLtH
- +WtCtzX0Im+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,378,1583222400"; 
-   d="scan'208";a="408805975"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 10 May 2020 22:57:37 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 2/2] serial: lantiq: Make driver modular
-Date:   Mon, 11 May 2020 13:57:27 +0800
-Message-Id: <ad9422de006c317401bfa5fe61bdd4293dd29b5e.1589176044.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1589176044.git.rahul.tanwar@linux.intel.com>
-References: <cover.1589176044.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1589176044.git.rahul.tanwar@linux.intel.com>
-References: <cover.1589176044.git.rahul.tanwar@linux.intel.com>
+        Mon, 11 May 2020 01:58:14 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:38433 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgEKF6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 01:58:14 -0400
+Received: by mail-io1-f72.google.com with SMTP id j17so8392919iow.5
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 22:58:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7HmtHDrDQRyCrTM7049liGEJqpLTeS0kM+LgJa7QGJ0=;
+        b=QOIqU5kTljEhiZbN2JwjAu/mZo6Cd68OIMxI9xPmzuFndlWvGO3L2DfMkX/McbcQaF
+         8qaLQITQMcDxASjZirxcslynz5+xLTYvOk6OglNSF3sJ3vbINuzvm8B2DMuBSXFaal3D
+         G6jsElXMUlyH4Zy/riKNpkYJxXMhpoVQsLMqnekX53iNuJdvrCVLZ9t7VyRks9V8kft0
+         UIWvrMeIH9LLYXPAqvh/DVCa5uNGWvuocLz/+FU5CMEauEe01/5BcGPpRIOk2+XC/Ztb
+         AaMYrSVYw1NKEBa3JH35nGFyic32766oslVp04572eYqHS+dlubVXpA5OqwfdJSXFD7l
+         Gotg==
+X-Gm-Message-State: AGi0PuZE48QgApNCLBW9zPjJSKxl23VZYgyhN1/PgBccjnqUW2NBLyjf
+        CLScTpykOJqzOWnWgvVOn10t9fZsvdGP/z+boo2GwZHvzS6f
+X-Google-Smtp-Source: APiQypJIs7OdVM1+rko2myKyXkEEkqBC/jBGw9mcdwhfq4042Q/9EQBWGSNLtGnJhQtu5/Yrj82IXWtrGUae7VfxRwQuAWuP6pew
+MIME-Version: 1.0
+X-Received: by 2002:a92:dd09:: with SMTP id n9mr15125602ilm.132.1589176693193;
+ Sun, 10 May 2020 22:58:13 -0700 (PDT)
+Date:   Sun, 10 May 2020 22:58:13 -0700
+In-Reply-To: <00000000000043ed6f059d1944bf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000048839b05a55908b2@google.com>
+Subject: Re: INFO: task hung in do_read_cache_page (3)
+From:   syzbot <syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add changes so Lantiq serial driver can be compiled as a module.
+syzbot has found a reproducer for the following crash on:
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/tty/serial/Kconfig  |  4 +++-
- drivers/tty/serial/lantiq.c | 29 +++++++++++++++++++++++++----
- 2 files changed, 28 insertions(+), 5 deletions(-)
+HEAD commit:    e99332e7 gcc-10: mark more functions __init to avoid secti..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1344fb14100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
+dashboard link: https://syzkaller.appspot.com/bug?extid=518c54e255b5031adde4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e45ec100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164444a4100000
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index bb4009a1135f..c0681da66653 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1034,11 +1034,13 @@ config SERIAL_SIFIVE_CONSOLE
- 	  boot time.)
- 
- config SERIAL_LANTIQ
--	bool "Lantiq serial driver"
-+	tristate "Lantiq serial driver"
- 	depends on (LANTIQ || X86) || COMPILE_TEST
- 	select SERIAL_CORE
- 	help
- 	  Support for UART on Lantiq and Intel SoCs.
-+	  To compile this driver as a module, select M here. The
-+	  module will be called lantiq.
- 
- config SERIAL_LANTIQ_CONSOLE
- 	bool "Console on Lantiq UART"
-diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-index d3b62a1be6ad..62813e421f12 100644
---- a/drivers/tty/serial/lantiq.c
-+++ b/drivers/tty/serial/lantiq.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/lantiq.h>
-+#include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -823,8 +824,7 @@ static void free_irq_intel(struct uart_port *port)
- 	free_irq(ltq_port->common_irq, port);
- }
- 
--static int __init
--lqasc_probe(struct platform_device *pdev)
-+static int lqasc_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	struct ltq_uart_port *ltq_port;
-@@ -908,6 +908,13 @@ lqasc_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int lqasc_remove(struct platform_device *pdev)
-+{
-+	struct uart_port *port = platform_get_drvdata(pdev);
-+
-+	return uart_remove_one_port(&lqasc_reg, port);
-+}
-+
- static const struct ltq_soc_data soc_data_lantiq = {
- 	.fetch_irq = fetch_irq_lantiq,
- 	.request_irq = request_irq_lantiq,
-@@ -925,8 +932,11 @@ static const struct of_device_id ltq_asc_match[] = {
- 	{ .compatible = "intel,lgm-asc", .data = &soc_data_intel },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, ltq_asc_match);
- 
- static struct platform_driver lqasc_driver = {
-+	.probe		= lqasc_probe,
-+	.remove		= lqasc_remove,
- 	.driver		= {
- 		.name	= DRVNAME,
- 		.of_match_table = ltq_asc_match,
-@@ -942,10 +952,21 @@ init_lqasc(void)
- 	if (ret != 0)
- 		return ret;
- 
--	ret = platform_driver_probe(&lqasc_driver, lqasc_probe);
-+	ret = platform_driver_register(&lqasc_driver);
- 	if (ret != 0)
- 		uart_unregister_driver(&lqasc_reg);
- 
- 	return ret;
- }
--device_initcall(init_lqasc);
-+
-+static void __exit exit_lqasc(void)
-+{
-+	platform_driver_unregister(&lqasc_driver);
-+	uart_unregister_driver(&lqasc_reg);
-+}
-+
-+module_init(init_lqasc);
-+module_exit(exit_lqasc);
-+
-+MODULE_DESCRIPTION("Serial driver for Lantiq & Intel gateway SoCs");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com
+
+INFO: task syz-executor928:7064 blocked for more than 143 seconds.
+      Not tainted 5.7.0-rc4-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor928 D26720  7064   7053 0x00004004
+Call Trace:
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4158
+ io_schedule+0x17/0x60 kernel/sched/core.c:5801
+ wait_on_page_bit_common mm/filemap.c:1153 [inline]
+ wait_on_page_bit mm/filemap.c:1202 [inline]
+ wait_on_page_locked include/linux/pagemap.h:528 [inline]
+ do_read_cache_page+0x648/0x1810 mm/filemap.c:2814
+ read_mapping_page include/linux/pagemap.h:397 [inline]
+ read_part_sector+0xf6/0x600 block/partitions/core.c:643
+ adfspart_check_ICS+0x9d/0xc80 block/partitions/acorn.c:360
+ check_partition block/partitions/core.c:140 [inline]
+ blk_add_partitions+0x474/0xe50 block/partitions/core.c:571
+ bdev_disk_changed+0x1fb/0x380 fs/block_dev.c:1543
+ __blkdev_get+0x130c/0x1530 fs/block_dev.c:1681
+ blkdev_get+0x41/0x2b0 fs/block_dev.c:1748
+ blkdev_open+0x21d/0x2b0 fs/block_dev.c:1887
+ do_dentry_open+0x4ba/0x1290 fs/open.c:797
+ do_open fs/namei.c:3229 [inline]
+ path_openat+0x1e59/0x27d0 fs/namei.c:3346
+ do_filp_open+0x192/0x260 fs/namei.c:3373
+ do_sys_openat2+0x585/0x7d0 fs/open.c:1148
+ do_sys_open+0xc3/0x140 fs/open.c:1164
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x405a71
+Code: Bad RIP value.
+RSP: 002b:00007f26eda2b830 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000405a71
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f26eda2b8d0
+RBP: 00000000006dbc40 R08: 000000000000000f R09: 00007f26eda2c700
+R10: 00007f26eda2c9d0 R11: 0000000000000293 R12: 00000000006dbc4c
+R13: 00007ffcaf21940f R14: 00007f26eda2c9c0 R15: 20c49ba5e353f7cf
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1139:
+ #0: ffffffff899bebc0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5754
+2 locks held by in:imklog/6726:
+ #0: ffff88809eddc3f0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
+ #1: ffff8880aa001818 (&parent->list_lock){-.-.}-{2:2}, at: syslog_print kernel/printk/printk.c:1392 [inline]
+ #1: ffff8880aa001818 (&parent->list_lock){-.-.}-{2:2}, at: do_syslog kernel/printk/printk.c:1557 [inline]
+ #1: ffff8880aa001818 (&parent->list_lock){-.-.}-{2:2}, at: do_syslog+0x632/0x16d0 kernel/printk/printk.c:1531
+1 lock held by syz-executor928/7064:
+ #0: ffff888088cbb380 (&bdev->bd_mutex){+.+.}-{3:3}, at: __blkdev_get+0x179/0x1530 fs/block_dev.c:1600
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1139 Comm: khungtaskd Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
+ watchdog+0xa8c/0x1010 kernel/hung_task.c:289
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
 
