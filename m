@@ -2,93 +2,127 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F070FC54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86593C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D150520736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589223068;
-	bh=9J7M4Hd1lcMIKr+8f03BJpOtYXdgALrfsNMubS9rz/c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mt6J+hSZx2+kpBU6dNHMhJw2+kfCHN+sn9Z0NbVBX7kve69JXLpfV+4AUhXCVbLF8
-	 OgmhlXQetj7XdM8j3rVgavJRMiLpxobks24Mbmfn6WwNFUjR931+rwNfEmnpKwM9Be
-	 m5vJxVuklk2slOJwVhzPDv/Ml9A9EBxDSUXDtyT8=
+	by mail.kernel.org (Postfix) with ESMTP id 5EFFB20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vbBEkmgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgEKSvI (ORCPT
+        id S1731229AbgEKSwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:51:08 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45000 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729661AbgEKSvH (ORCPT
+        Mon, 11 May 2020 14:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731198AbgEKSw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:51:07 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j4so8409369otr.11;
-        Mon, 11 May 2020 11:51:05 -0700 (PDT)
+        Mon, 11 May 2020 14:52:29 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3A5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:52:29 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b71so2827189ilg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 11:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YTCOmg8Lu45FSlE0YEbxP+MF1nPzk5IAZBv8bJFRLRw=;
+        b=vbBEkmgSK85oY+vxRZC1osCwudndVFKMCeTNym/mh2sSWP5BuafaU/fqMM4tyMzYSJ
+         vFf7KCghS35C/3+K1U2N/9qnLeXU74a6qoekCaZKzAiKgZZDLOLvFVEu6Zi1wF0QU8e/
+         WeC4QziV41rhxCXWuudTiGCwGuPuRGbCG6x5Zjf98rHK2s1LKL5FFf4i0jkrKf55ulJU
+         iAQY2COLLuULM7sV6EkAV91tk9nPKtLwsKOid77BRlE8Qy+XJsH/k1xUcl0TkfpXD0pb
+         07JQGAyX02YIzQew2l/Dopaaxz5Nhj7iq2lHnXqQeOueVvnxLReV96/o4NIptmgbLM6M
+         18Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kE5/Go6t2fYGvoXtO9HkWgvHFtqFj74OSf+x9Glf+U8=;
-        b=UjZSYw4RSv+TpNcr0pTQrHpT/aFHcX2Idooxt6BBtneGl17MTpstYmDCesutGWFs4E
-         Rdu6GMJp9K4J3MA9YzxgDfn95uUWvaIQ50neusqdJ1ymMeuLzdkAjIarS9dqYV0JlJ0D
-         66kpTqhMNYptELLPUGwp6T23lJS2D3x/8MQAVgT6Yr/CZ8wUZQ7aikql7H620+6GY4mE
-         v+y8EEXZ1SYa7DtR1fKYxt4KaoPSFox6LfgiuEd5ewn9M/MrroeIV8u3mHcvvS92bSqj
-         tM7uoKXpD9nSZTLtaVOVNPxB9ZdFdoi3fZEoM6PVrP+EBx3qQDTzrXDrw/sNH9kQKb67
-         IJHA==
-X-Gm-Message-State: AGi0PuaUyBJ7/weP7U+zxzskrOtkZX4i3Tgi8EzIfrVR9eslWYENBVYX
-        Ttb9Y+BhBpDBmp0hksoi6R6qHMo=
-X-Google-Smtp-Source: APiQypIRsow20DA+OFWNNQtxZ4M+f9YRd4zN3KlQ4rWozGy8h57PD0s4/z5hpOktemuW1PcKm94mMw==
-X-Received: by 2002:a9d:19af:: with SMTP id k44mr13367362otk.80.1589223065262;
-        Mon, 11 May 2020 11:51:05 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k84sm4766130oib.10.2020.05.11.11.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:51:04 -0700 (PDT)
-Received: (nullmailer pid 25902 invoked by uid 1000);
-        Mon, 11 May 2020 18:51:03 -0000
-Date:   Mon, 11 May 2020 13:51:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     amit.kucheria@verdurent.com, rui.zhang@intel.com,
-        s.hauer@pengutronix.de, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, shawnguo@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com, festevam@gmail.com, kernel@pengutronix.de,
-        robh+dt@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [PATCH V3] dt-bindings: thermal: Convert i.MX8MM to json-schema
-Message-ID: <20200511185103.GA25293@bogus>
-References: <1587477544-20052-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YTCOmg8Lu45FSlE0YEbxP+MF1nPzk5IAZBv8bJFRLRw=;
+        b=rQJhftd1JgFofpb6WNp6I1pYUiicrFDNxxI19J3gadL+175ZK5seUcCE4nqKnI4Kxl
+         UdkcwNjjIzWq3V6NLRVQ6lWh/hixJbEhQZLTN3304bKFXcZ9iuqIyyzbce9+Etn4Huzz
+         TXhyKvFQy7mIzsd+pXyPj7o3AaxrYCUphOKLzKoDLLK36a83XxEItewEu5thdIbvDRwc
+         e22/IO1tNmFXAd4WhrVfZKokQw+VnDp3IMD0tykwwABLYDGfk1jPXsJ3yYR9VQAwWXVf
+         AWCtMBBkTWmRLqMQReKZTOTMkKO+kYEvOcyZqwx0BSv6Ai5UqNOavBSH2ADDplFqEJuz
+         Es7Q==
+X-Gm-Message-State: AGi0PuYqBof4QC5CvNyrTwHOdObRyoDFgb0qULRj36e/3RaabpuXUPx/
+        y9goiCIjpQ1lH8bOEXsouxxTSRn1VzKpftN0KQ==
+X-Google-Smtp-Source: APiQypL/DApkOcWUS8mpKi+CmS9HQIfuw1B10rr8ZBJgvWbIOu1VecdC3XBssG1mNb8aVWv3sYi4QMiCv79L/mD591k=
+X-Received: by 2002:a05:6e02:5a3:: with SMTP id k3mr11399870ils.11.1589223148150;
+ Mon, 11 May 2020 11:52:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1587477544-20052-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200508182835.228107-1-ndesaulniers@google.com> <20200508183230.229464-1-ndesaulniers@google.com>
+In-Reply-To: <20200508183230.229464-1-ndesaulniers@google.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Mon, 11 May 2020 14:52:16 -0400
+Message-ID: <CAMzpN2hUQwGoYQnsKZJHFY=p-=-zXTwhRnCejhoztCvPX8e=CA@mail.gmail.com>
+Subject: Re: [PATCH v5] x86: bitops: fix build regression
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Axtens <dja@axtens.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 Apr 2020 21:59:04 +0800, Anson Huang wrote:
-> Convert the i.MX8MM thermal binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- drop unnecessary description for reg/clocks;
-> 	- improve compatible;
-> 	- use thermal-sensor as node name.
-> ---
->  .../devicetree/bindings/thermal/imx8mm-thermal.txt | 15 ------
->  .../bindings/thermal/imx8mm-thermal.yaml           | 58 ++++++++++++++++++++++
->  2 files changed, 58 insertions(+), 15 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.txt
->  create mode 100644 Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
-> 
+On Fri, May 8, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+>
+> It turns out that if your config tickles __builtin_constant_p via
+> differences in choices to inline or not, these statements produce
+> invalid assembly:
+>
+> $ cat foo.c
+> long a(long b, long c) {
+>   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+>   return c;
+> }
+> $ gcc foo.c
+> foo.c: Assembler messages:
+> foo.c:2: Error: `%rax' not allowed with `orb'
+>
+> Use the `%b` "x86 Operand Modifier" to instead force register allocation
+> to select a lower-8-bit GPR operand.
+>
+> The "q" constraint only has meaning on -m32 otherwise is treated as
+> "r". Not all GPRs have low-8-bit aliases for -m32.
+>
+> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/961
+> Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
+> Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
+> Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Applied, thanks!
+Reviewed-By: Brian Gerst <brgerst@gmail.com>
