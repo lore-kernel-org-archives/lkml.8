@@ -2,119 +2,119 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAEBC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1605CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 947F220746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB72206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 12:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hwmbJSTF"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="D9+5etmD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IKaKXAWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgEKMmt (ORCPT
+        id S1730141AbgEKMmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 08:42:49 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:35497 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgEKMmt (ORCPT
+        Mon, 11 May 2020 08:42:54 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45625 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729666AbgEKMmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 08:42:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589200969; x=1620736969;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=+0kzseOEO2Wgx77lNa15u7+p1olXeh9q9Qu05DxPffM=;
-  b=hwmbJSTFLHfd1Fq0MJ5MUN0HXvk5uVehwiDtO7XVU9WAN3wHtzanJWmS
-   kcn2P9kDYwMYCMepe249H9RJQCzRRMpR68CtY63Bw13YyLpYG6rALSlNs
-   9YoeO6LdwaMAI/khhoQX7VCvOVXcSJJZzKWTUqIPGyvki2rHPQsG0BfRu
-   M=;
-IronPort-SDR: T1f0tZE5i4QokyyfFESrh/Sh92g8h/nk/Bli4jzDfh6Y5k95taw6IK/040R/6w64RvR7Rz4Z5V
- JpyYjgTlDfcg==
-X-IronPort-AV: E=Sophos;i="5.73,379,1583193600"; 
-   d="scan'208";a="29804199"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 May 2020 12:42:49 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 4B815A18DC;
-        Mon, 11 May 2020 12:42:36 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:42:36 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.253) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 11 May 2020 12:42:21 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v11 16/16] MAINTAINERS: Update for DAMON
-Date:   Mon, 11 May 2020 14:33:02 +0200
-Message-ID: <20200511123302.12520-17-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511123302.12520-1-sjpark@amazon.com>
-References: <20200511123302.12520-1-sjpark@amazon.com>
+        Mon, 11 May 2020 08:42:52 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7E8055C0081;
+        Mon, 11 May 2020 08:42:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 11 May 2020 08:42:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=LwUS7EdzKn64SedzwWMrtH0cjWc
+        iOHlJCMLvGeb+ziQ=; b=D9+5etmDfCEqjeK2DeQ0h1Wa55xH8Wjgi8Z87jnpAbQ
+        37sP/nZ4qcfMdoLpm68pZUWq7lxhl5TtbrwVIdznCD/V/krOPVH9CJZy378PVsji
+        x9Sj7t9xZiSsqD9xWOxI4MLB4cTaEk+eQntZwWhf/XMEfbPG3Dcso7rbC08Fe2T1
+        /GyjqAPjKSJZA9cFANBbQKA7UMwa2ZuqGnHsHUT1c2aFl+bPGuSRgqT0xsMIe8Sv
+        fBfF70LucSdvEoYj3wYpfEWO120O85YymQFCuF3v3RQjiHDfYck66WTBI3gZDpwo
+        75SsnapyxboZGwmMhHndR7ycE5AU4IKP09HeauaBStA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LwUS7E
+        dzKn64SedzwWMrtH0cjWciOHlJCMLvGeb+ziQ=; b=IKaKXAWa/e9hbi4Bh3pPbn
+        yRfCY3KU8IoUHVek7FpkmKuqghXQldCXDATc8DtaXVp20R9NjVRS1v4t3coaIvj1
+        LRm+bkXsc/Mm2JbuRJY6eZ8fUlTuHN8p0YkLLy175AodhakV4V2IufBHCOqMTw+0
+        SpxNhGj7S0esFTLqJOe/1S9HVQT2mtYTTiKRFQGKa0DrXhBsdERMeKz4cxZketr9
+        d+MbPG3VkVveSGgQecQ3SwSY+jlUuKBnuV6EPig/d5YWU/H9kggh9m0D76y+1cys
+        Lzba7jFTWfVnsEYtz1/NyW400T6eJshk1q8bEXq3O14TZ7f1Ue+9d4BF67XwWetg
+        ==
+X-ME-Sender: <xms:R0i5XuqL3_3hug-BGHFSpGtmruFvd_-v-Z_n_n8pV7zX_dM7MYYOgg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrledtgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:R0i5XoX4xbW0ustp5-hauH7UThD1uM2wW4TGAqy9wKDqH_puj-Az0g>
+    <xmx:R0i5Xi_lUHGj7LX8zr1QCFf0eztpGB44CqJUWF7fo3-QMQZzOJTXuQ>
+    <xmx:R0i5XhHPUz_JK-FaapuzfMJ_weQqdLU9TscWupNOUcnhQkHIldtC_Q>
+    <xmx:S0i5XrSYMBwe5o9XlEFZBnva7-nIj4z5oO8HHkWs09qtqFzG_-zdEQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9AE853280060;
+        Mon, 11 May 2020 08:42:47 -0400 (EDT)
+Date:   Mon, 11 May 2020 14:42:45 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org,
+        Alistair Francis <alistair@alistair23.me>,
+        linux-kernel@vger.kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, alistair23@gmail.com
+Subject: Re: [PATCH v2] spi: sun6i: Add support for GPIO chip select lines
+Message-ID: <20200511124245.j5pdnpsuhixzvs32@gilmour.lan>
+References: <20200511045330.690507-1-alistair@alistair23.me>
+ <158919630591.8372.404655401498379497.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.253]
-X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pan7d2v2d5d6woy5"
+Content-Disposition: inline
+In-Reply-To: <158919630591.8372.404655401498379497.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
 
-This commit updates MAINTAINERS file for DAMON related files.
+--pan7d2v2d5d6woy5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hi Mark
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..cb4a7fa3cdfe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4661,6 +4661,18 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/data_access_monitor.rst
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+F:	tools/testing/selftests/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
--- 
-2.17.1
+On Mon, May 11, 2020 at 12:25:35PM +0100, Mark Brown wrote:
+> On Sun, 10 May 2020 21:53:30 -0700, Alistair Francis wrote:
+> > Set use_gpio_descriptors as true to support using generic GPIO
+> > lines for the chip select.
+>=20
+> Applied to
+>=20
+>    local tree asoc/for-5.7
 
+Are you sure this is the proper tree?
+
+Maxime
+
+--pan7d2v2d5d6woy5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrlIRQAKCRDj7w1vZxhR
+xdG7AQCDOq4jweV0JSLjkAtdWOcG+q5K0eA3YJ6cDKXKDjvoZgEAiCXDDT4BkV28
+Fcl4Hx8EELgjn1vtcI7hLwSEnzTABQ0=
+=P7p2
+-----END PGP SIGNATURE-----
+
+--pan7d2v2d5d6woy5--
