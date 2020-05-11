@@ -2,99 +2,101 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C52C38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED98C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1069B2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589158528;
-	bh=aoUZGApnNHdzjKvoHee7osP+3B+0Np7mo+jawIXTt/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YgKpJcLRMia81k/pbTnoRem8+fJGMNUmvNXmaYmJK4Xn8bZttjW09Mlswg05QfKks
-	 PiN2uq7XXRQceTMk6hGW0o5zQU5tGFW6zdyfY9fthOjVNJkI76wGT6Tr19W2KitBv7
-	 ZnOBMCsF0Yud2K4tyTsFK8Q6aJnaEHlugPcVSg3U=
+	by mail.kernel.org (Postfix) with ESMTP id 6F8A220820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 00:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cYCKPTpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgEKAz1 (ORCPT
+        id S1729436AbgEKA4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 20:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgEKAz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 20:55:26 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 10 May 2020 20:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729095AbgEKA4G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 20:56:06 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C75C061A0C;
+        Sun, 10 May 2020 17:56:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E408E2495B
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 00:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589158526;
-        bh=aoUZGApnNHdzjKvoHee7osP+3B+0Np7mo+jawIXTt/4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0B5kFdyI5zGmJYycA7nt4gwljoDS5Y4t079wGEOtUM4SWUawyAJ2rvkJWyAQt5Odw
-         sFbA3lnGJRIsrKnO/Ty5DlLnL2ISMHvK+0HEhwutOjbXlSOBzdrZn0cLOhJXsDJdk/
-         xcFThsdG15eFDGA5BVykKF2dz5v8lapBdgzEvxY4=
-Received: by mail-wr1-f45.google.com with SMTP id g13so8799088wrb.8
-        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 17:55:25 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua7OXkFMOYfAPkdZreV47HsyOaytCio6NjFGYGNGV9W2j0GwtEN
-        Sv3R/BJ54oiccYfCPf++3MPXETxoTlyl9GC/emqKow==
-X-Google-Smtp-Source: APiQypL0jfqRxOFY9tblYrnRg3Cragd5Ch8bGhBw6ZT3Fdt0IZWGOZCQxCxqQHqM0RuEIH7cWMLw9x2MsA0SU/IeCNU=
-X-Received: by 2002:adf:f446:: with SMTP id f6mr8119499wrp.75.1589158524320;
- Sun, 10 May 2020 17:55:24 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L2YY2gCjz9sNH;
+        Mon, 11 May 2020 10:56:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589158561;
+        bh=3eiYwrwq+UWNv2DKt0WWMmUdAScaJYefS/hMcV+xq4g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cYCKPTpOw/paT+agieYDU/PlDCtF1xL/9aq4++AARniWGUeHRRHFOlqLw3TMvfUvd
+         H/OdQiX8IGZxhmkRkSE5oAe9P7Tqlo8SVVaFhYUJ0ADn4Y4bHWw0Qh2JYwq2oQS3CK
+         5KYSK3iWWuRtkxZ9Cm06dZFLHp9xqCz8DT3jaF3KxBs1XfI+6egnaFFD/bYYrneFEQ
+         Qs3Z7AGD5XcpCLjAPXe4j3InKPDifbugoV0eJ7xs/mB7BSyMieNiDxEZtyUartW1vW
+         8zN6f3KXLUbkyhFUfOwzZ7UWtM3UjNOmjMbgrR8smlIVpYKBUItSXHHjnbQs40Jlj6
+         iHCe4x0qRa4MQ==
+Date:   Mon, 11 May 2020 10:55:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the clk tree
+Message-ID: <20200511105556.5b13a4b4@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134904.166735365@linutronix.de>
-In-Reply-To: <20200505134904.166735365@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 10 May 2020 17:55:12 -0700
-X-Gmail-Original-Message-ID: <CALCETrXUus+nQk5BmZLnjnPJ2ywuQg6RsNwqFfwCKpiir9o7wg@mail.gmail.com>
-Message-ID: <CALCETrXUus+nQk5BmZLnjnPJ2ywuQg6RsNwqFfwCKpiir9o7wg@mail.gmail.com>
-Subject: Re: [patch V4 part 3 09/29] x86/entry/32: Provide macro to emit IDT
- entry stubs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/_8F7eZl6XC3Oi.wb+VaUsJD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Thomas Gleixner <tglx@linutronix.de>
->
-> 32 and 64 bit have unnecessary different ways to populate the exception
-> entry code. Provide a idtentry macro which allows to consolidate all of
-> that.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+--Sig_/_8F7eZl6XC3Oi.wb+VaUsJD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
-> +       /* fixup %gs */
-> +       GS_TO_REG %ecx
-> +       movl    PT_GS(%esp), %edi               # get the function address
-> +       REG_TO_PTGS %ecx
-> +       SET_KERNEL_GS %ecx
+Hi all,
 
-This GS garbage remains an atrocity.  Some day if I'm inspired to
-clean up 32-bit stuff, I'll decrapify it.
+After merging the clk tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+arch/arm/mach-mmp/time.c:37:10: fatal error: clock.h: No such file or direc=
+tory
+   37 | #include "clock.h"
+      |          ^~~~~~~~~
+
+Caused by commit
+
+  e4d1fdf89751 ("ARM: mmp: Remove legacy clk code")
+
+I have disabled CONFIG_ARCH_MPP for today.  (For some reason, this
+build error did not show up until several more trees had been merged
+...)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_8F7eZl6XC3Oi.wb+VaUsJD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64op0ACgkQAVBC80lX
+0GwfnAf+PApJ44F0QjPlqZzAffsJyAKvuB+mRtlS864kFScZd3LsVjKEC5oew9QJ
+CgzYZIIWARUYgJtlIVFcMTXuJ8yRC6kAwpREsZXiRy772kOz6ezrE8507DtUMttc
+FrONrwpFjLHzz79yeMiB7oKI+DuOIjc1ICS93MQO1NYtiBfpqJXpTp7XqV9ayUtf
+hNLZU2hdi3IPS732dJoFtwK0EfUu5a5Rd1UgH0AlEgtqMAbjLmM+KxXUV6Xhw1cA
+o4/7NpiUaZJIXBSMiL1i2Z3xSN6vle03JyK+aS+X10g6mrSD9ECYJvYkZBjJM9I/
++K1KN+Og1Oibclv5DL7kIM5jjDVKYQ==
+=ruyD
+-----END PGP SIGNATURE-----
+
+--Sig_/_8F7eZl6XC3Oi.wb+VaUsJD--
