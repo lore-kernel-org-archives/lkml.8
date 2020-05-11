@@ -2,184 +2,102 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69150C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FD7C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F06420836
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E10420836
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbgEKVCA (ORCPT
+        id S1732402AbgEKVCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:02:00 -0400
-Received: from v6.sk ([167.172.42.174]:52586 "EHLO v6.sk"
+        Mon, 11 May 2020 17:02:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46854 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732376AbgEKVBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:01:54 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 9506C610D4;
-        Mon, 11 May 2020 21:01:52 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 10/11] dt-bindings: sound: Add Marvell MMP SSPA binding
-Date:   Mon, 11 May 2020 23:01:33 +0200
-Message-Id: <20200511210134.1224532-11-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200511210134.1224532-1-lkundrak@v3.sk>
-References: <20200511210134.1224532-1-lkundrak@v3.sk>
+        id S1732394AbgEKVCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:02:02 -0400
+IronPort-SDR: FxP6TRRGHphqbp6jDxLoZXUEBv25bZKRIqXHajCn3WHBWk128mbUQ7PDACgs+XU5z/s3GPVbLy
+ +9OcQ7E2RpXg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:01:39 -0700
+IronPort-SDR: rm1hhYS517j4tRfG8qoVJZn+JTLquoo7K7+mgWFQddz7WgPeNX5R+Tvnm0hdl0TpEecMCJAPnB
+ tXC7fyMLlgSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="463521700"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 11 May 2020 14:01:37 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYFYQ-0063Cu-VM; Tue, 12 May 2020 00:01:38 +0300
+Date:   Tue, 12 May 2020 00:01:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200511210138.GN185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+ <20200508111242.GH185537@smile.fi.intel.com>
+ <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for the audio serial port interface (I2S) on
-Marvell MMP SoCs.
+On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > This array property is used to indicate the maximum burst transaction
+> > > length supported by each DMA channel.
+> > 
+> > > +  snps,max-burst-len:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +    description: |
+> > > +      Maximum length of burst transactions supported by hardware.
+> > > +      It's an array property with one cell per channel in units of
+> > > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
+> > > +    items:
+> > > +      maxItems: 8
+> > > +      items:
+> > 
+> > > +        enum: [4, 8, 16, 32, 64, 128, 256]
+> > 
+> > Isn't 1 allowed?
+> 
+> Burst length of 1 unit is supported, but in accordance with Data Book the MAX
+> burst length is limited to be equal to a value from the set I submitted. So the
+> max value can be either 4, or 8, or 16 and so on.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- .../bindings/sound/marvell,mmp-sspa.yaml      | 122 ++++++++++++++++++
- 1 file changed, 122 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml
+Hmm... It seems you mistakenly took here DMAH_CHx_MAX_MULT_SIZE pre-silicon
+configuration parameter instead of runtime as described in Table 26:
+CTLx.SRC_MSIZE and DEST_MSIZE Decoding.
 
-diff --git a/Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml b/Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml
-new file mode 100644
-index 000000000000..6d20a24a2ae9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/marvell,mmp-sspa.yaml
-@@ -0,0 +1,122 @@
-+# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/marvell,mmp-sspa.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvel SSPA Digital Audio Interface Bindings
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+properties:
-+  $nodename:
-+    pattern: "^audio-controller(@.*)?$"
-+
-+  compatible:
-+    const: marvell,mmp-sspa
-+
-+  reg:
-+    items:
-+      - description: RX block
-+      - description: TX block
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Clock for the Audio block
-+      - description: I2S bit clock
-+
-+  clock-names:
-+    items:
-+      - const: audio
-+      - const: bitclk
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  '#sound-dai-cells':
-+    const: 0
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  port:
-+    type: object
-+
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          remote-endpoint: true
-+
-+          frame-master:
-+            type: boolean
-+            description: SoC generates the frame clock
-+
-+          bitclock-master:
-+            type: boolean
-+            description: SoC generates the bit clock
-+
-+          dai-format:
-+            $ref: /schemas/types.yaml#/definitions/string
-+            description: The digital audio format
-+            const: i2s
-+
-+        required:
-+          - remote-endpoint
-+
-+    required:
-+      - endpoint
-+
-+    additionalProperties: false
-+
-+required:
-+  - "#sound-dai-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-+
-+    audio-controller@d42a0c00 {
-+      compatible = "marvell,mmp-sspa";
-+      reg = <0xd42a0c00 0x30>,
-+            <0xd42a0c80 0x30>;
-+      interrupts = <2>;
-+      clock-names = "audio", "bitclk";
-+      clocks = <&soc_clocks 127>,
-+               <&audio_clk 1>;
-+      #sound-dai-cells = <0>;
-+      dmas = <&adma0 0>, <&adma0 1>;
-+      dma-names = "tx", "rx";
-+      port {
-+        endpoint {
-+          remote-endpoint = <&rt5631_0>;
-+          frame-master;
-+          bitclock-master;
-+          dai-format = "i2s";
-+        };
-+      };
-+    };
-+
-+...
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
