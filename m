@@ -2,139 +2,106 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03A6C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B6CC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A72D620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C49B206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589211097;
+	bh=gSFwgi6KRNOf6GXeGdW9MNXB6P4io37niSrrQMmZOVA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t+r/aAvDxOjers50TV0v2P9L1/hAw/64voPWP8zMJtD0KYKCJ+XLB5YXi6xp9DjoY
+	 /yU1sOq9CP0TIF+GyuV/ZqPqlGuzyH0DtATRxx7jTcQIlXc2pJ1etZ1yNqGqnjmcdb
+	 px9wUB4a4Cla6IM2HWWylFrJsQ4NbFb98RUFyzdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgEKPbB (ORCPT
+        id S1730029AbgEKPbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:31:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52660 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgEKPbA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:31:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3BCD62A0923
-Received: by earth.universe (Postfix, from userid 1000)
-        id 0AA733C08C6; Mon, 11 May 2020 17:30:56 +0200 (CEST)
-Date:   Mon, 11 May 2020 17:30:55 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: power: Convert bq27xxx dt to yaml
-Message-ID: <20200511153055.7u7afdcpcfbsmswq@earth.universe>
-References: <20200507183013.27261-1-dmurphy@ti.com>
- <20200510161721.257vprq6rqp64wu5@earth.universe>
- <fb9b240e-9bfe-1295-6fc4-700d886ea7c9@ti.com>
- <20200511143241.nmkti7meahvj2swt@earth.universe>
- <8674289c-038d-d811-4786-322d66072527@ti.com>
- <20200511145700.lnytcr747snnolya@earth.universe>
- <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
+        Mon, 11 May 2020 11:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727019AbgEKPbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 11:31:36 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 555D220722
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 15:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589211095;
+        bh=gSFwgi6KRNOf6GXeGdW9MNXB6P4io37niSrrQMmZOVA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jES46bsxQhNuWgu9nt3PSsoehA/8Ww43cjESs9Weung5mg3SY7yHvdoMQ+pvWBMiX
+         5nLI29a8ojfwZBxxNnnYpAI7Vnher8EnHkaJxokzchnPnASIxBzGpJW5Qe79znCeUz
+         DnzA8arCY4gUTBZSipwlGJRDmuDRIBaeYmYBz64w=
+Received: by mail-wm1-f50.google.com with SMTP id g14so7139651wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:31:35 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYNum0UgmQLuvi2DRfHQGnZEN4vumdgVvT/yrReC6xhAZM/vEqQ
+        TObtSZNS7pHNZriq00CKgRpvhWIT/i/25piVkRTE4A==
+X-Google-Smtp-Source: APiQypLkWQv937HjGWl7ohAEq4ql5ydjQobOuLsHlzx87rge3rk+D7KiOlkKTAdtLocRQqkPs0rAdRCu+utc7TJQgGU=
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr31085022wmk.36.1589211093752;
+ Mon, 11 May 2020 08:31:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p6a5pm5xcfp2qz24"
-Content-Disposition: inline
-In-Reply-To: <57e2495d-ec06-53ff-c2b5-10062da2848f@ti.com>
+References: <20200505134354.774943181@linutronix.de> <20200505134904.457578656@linutronix.de>
+ <CALCETrXwuxtZgniJxKZOy5ryqXSbbGMHMBwgEb400Pn9XpynzQ@mail.gmail.com> <874ksm7n5d.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <874ksm7n5d.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 11 May 2020 08:31:22 -0700
+X-Gmail-Original-Message-ID: <CALCETrX6p6o0NJszjon7R8Tb+fFa=Jw5=CQQ56yZi+YVggopiQ@mail.gmail.com>
+Message-ID: <CALCETrX6p6o0NJszjon7R8Tb+fFa=Jw5=CQQ56yZi+YVggopiQ@mail.gmail.com>
+Subject: Re: [patch V5 part 3 12/29] x86/entry/common: Provide idtentry_enter/exit()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 11, 2020 at 3:59 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> >> + * Invoked by all exception/interrupt IDTENTRY handlers which are not
+> >> + * returning through the paranoid exit path (all except NMI, #DF and the IST
+> >> + * variants of #MC and #DB).
+> >
 
---p6a5pm5xcfp2qz24
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +void noinstr idtentry_exit(struct pt_regs *regs)
+> +{
+> +       lockdep_assert_irqs_disabled();
+> +
+> +       if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+> +               WARN_ON_ONCE(!on_thread_stack());
 
-Hi,
+Whoops.  After sleeping on this, this is obviously wrong.  If this is
+something like a page fault, we can be on an IST or IRQ stack.
+Perhaps the actual condition should be:
 
-On Mon, May 11, 2020 at 09:55:11AM -0500, Dan Murphy wrote:
-> On 5/11/20 9:57 AM, Sebastian Reichel wrote:
-> > On Mon, May 11, 2020 at 09:29:59AM -0500, Dan Murphy wrote:
-> > > On 5/11/20 9:32 AM, Sebastian Reichel wrote:
-> > > > On Mon, May 11, 2020 at 07:25:06AM -0500, Dan Murphy wrote:
-> > > > > On 5/10/20 11:17 AM, Sebastian Reichel wrote:
-> > > > > > This needs is missing the power-supplies property. The N900 DT
-> > > > > > contains a bq27200 referencing the charger, so it should fail t=
-he DT
-> > > > > > check without the property being listed here.
-> > > > > Hmm.=A0 I ran the dt checker specifically on the binding and it d=
-id not fail.
-> > > > > Unless I need to build some other DTs as well.
-> > > > > Either I will have the power-supplies property
-> > > > I just tried it myself. The problem is the way you are specifying
-> > > > the compatible strings. This is the parsing result:
-> > > >=20
-> > > > enum: ['ti,bq27200 - BQ27200', 'ti,bq27210 - BQ27210', 'ti,bq27500 =
-- deprecated,
-> > > >         use revision specific property below', ...
-> > > >=20
-> > > > You can see this in Documentation/devicetree/bindings/processed-sch=
-ema.yaml, which
-> > > > is generated by running the check. The compatible comments need a #=
- as separation
-> > > > character like this to generate proper bindings:
-> > > >=20
-> > > > properties:
-> > > >     compatible:
-> > > >       enum:
-> > > >         - ti,bq27200 # BQ27200
-> > > >         - ti,bq27210 # BQ27210
-> > > >         - ti,bq27500 # deprecated, use revision specific property b=
-elow
-> > > Well honestly not sure why we need the comment either.=A0These are pr=
-etty
-> > > self explanatory maybe we should just remove the additional comments
-> > Fine with me.
-> Ack
-> >=20
-> > > Any consideration on just removing the deprecated values?
-> > Let's keep them with their comment for now. Removing them should
-> > start with marking them as depracated in the binding and generating
-> > a runtime warning in the driver, so that people become aware of the
-> > problem. At least for ti,bq27500 we have mainline users At least for
-> > ti,bq27500 we have mainline users.
->=20
-> There are only 2 dts files that have this reference unless we are not sure
-> which device is actually in use.
+WARN_ON_ONCE(!on_thread_stack() && (regs->flags & X86_FLAGS_IF) &&
+preempt_count() == 0);
 
-DT is considered ABI and one is supposed to be able to boot a new
-kernel with an old DT. It's not enough to just update the in-tree
-dts files. I suppose we can consider removing support for the old
-compatible values after having the warning being printed for some
-time and the mainline users being converted to the new binding.
+IOW, the actual condition we want is that, if the idtenter_entry/exit
+code might schedule or if a cond_local_irq_enable() path might
+schedule, we had better be on the correct stack.
 
--- Sebastian
-
---p6a5pm5xcfp2qz24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl65b6oACgkQ2O7X88g7
-+prdsA/+LRNbHjpJM/eGMeZL07Zi7D0x1usYEjVEkUDLpt4jUoyk+rwGe7Lf5c/f
-UZJHzGn6FvTKpNi8IJNYZ/mBywIPIyt/0PYqAuHpE2vNaEB+g7IA4KzDkWlLOxxX
-Oep5YeyezarXQwLrv/2m6DFvOYteMxn1/FPwGgMED3T6diw1691ajAmLTSyshshp
-tKkXtK0gMcPHNKzdSh85z7eNXRGpQh0V9Zi+iOc6Hz1/VlC+cPysOgF2zjaUTfAR
-g0E+jR7FAfBsexmQt/IedMS1vjusQhqQN/ogQrjGEkRnoAb1HgJojvLWmLfRgn/k
-bF7uwfh+fqShrkBtyl7uPJQMsAMuTKkWNZwjaNtZfsyylpLP7ugDiBVqUg+ni17d
-mkcYKuQ9hdJQ99Rkn/FH+atEUKqnCUzX5PKgMMfyszeklyAZ8fEi1D3/0w7A8U39
-a96TBija1qzCQh3yR4vLNkeNoVajlf0k1xdigL2YKvDMjQ3AyTRdDzD1/6/Zn9VS
-mVyczXSpb27X5oNGOPrstf/UQvtzTJ6nUIdVnOeGzu0m0LWQ7ViAneKdePT9aNKY
-RohcxgnRxnIeTcKdzy119iE3kHogyf0hgeH0HUBfv/wuWGQHHFpTFv97bG23C3p+
-gv34Kd8ytuTW8ga9M4nFCyVqFWI5riic49ZbtGqxuwwXKaPOMqs=
-=0M+W
------END PGP SIGNATURE-----
-
---p6a5pm5xcfp2qz24--
+Sorry for causing confusion.
