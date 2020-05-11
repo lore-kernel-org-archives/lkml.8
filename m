@@ -2,109 +2,69 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE693C54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2E2C38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA8420736
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3454320736
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kJRUU3ih"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OLA2H+jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgEKBOj (ORCPT
+        id S1729178AbgEKBQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        Sun, 10 May 2020 21:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727789AbgEKBOj (ORCPT
+        by vger.kernel.org with ESMTP id S1728301AbgEKBQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:14:39 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9B1C061A0C;
-        Sun, 10 May 2020 18:14:38 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49L2yz1SVHz9sRf;
-        Mon, 11 May 2020 11:14:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589159677;
-        bh=KHwibB8jYouq/vD17bjr+6oBJR1pwMjnqgFMEWDVR4I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kJRUU3ihVKgsLV7QfFOXeAv+OzYIl5EnV5lTTOiS7LmfdnDl037Q+1pdXvkXhj2xd
-         p2PFvvHRx7lgQQpWlWX8r5Gn/VlIATaKcTV7eK4DvO9s1gS5ARONWAy6AlvogVeZPg
-         PaLQkb6Vl2KwVKKx9ZJuRJdjgFSDNkQChpKvvcjRTvNz2qh3QUV18oCxw0nvI3H031
-         /yqVW5T1g27z1p1aGUV4VcOtLS2Trznsa7TuuVKfMTcpqgVW8lmDiMilPc1f4kFBPH
-         PrnpLIoOTvNov7VunRdDUGATKdRTQfzzHk5JcVTEOQNQp7PZsQ4dOxcdmuGljHbB4q
-         FZTl6ixkUqcMw==
-Date:   Mon, 11 May 2020 11:14:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the vfs tree with the mips tree
-Message-ID: <20200511111434.366de078@canb.auug.org.au>
+        Sun, 10 May 2020 21:16:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D453FC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun, 10 May 2020 18:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Xqv2Ym3vil3bxjrUrKiymMGOx7fjyB/5xTF20GtSfUI=; b=OLA2H+jlCahiKFgvFw0/DNkhrf
+        jPb185DyqOjFHYo9Y2lIOdbNoLetv/rIshO1ryUDS5vVcqFHSD1yANTgnNDCYAI7mQcNf1oZ8Ofg4
+        vLBGo8TcTQy/266PkdM0nEkjwIU6DxnWWRYXiN+QO89E5O/eiXvbvKXBWnRweaJnkB/WxRdzOeLGO
+        Rzqin1p++yQtRwlnWppYxc7J1dH0HpOJirtwMbkrl6LR0s7rtSikI+Iu4Yx3PDkzVB0eOiqSU/fJg
+        QZFT1fuO4EVIC0LxQIedWc05SeMIZgnS7PM9BN/Gek+5sL1DlBETk3uE2QXlVACjNFD9kMfRrcZ5n
+        m0wdPNwQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jXx33-0005Go-67; Mon, 11 May 2020 01:16:01 +0000
+Date:   Sun, 10 May 2020 18:16:01 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     0day robot <lkp@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [pipe] f2af7d90e2: xfstests.btrfs.052.fail
+Message-ID: <20200511011601.GV16070@bombadil.infradead.org>
+References: <20200511010957.GW5770@shao2-debian>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/u4gCOZ=P++QUBKRJzqaIDc_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511010957.GW5770@shao2-debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/u4gCOZ=P++QUBKRJzqaIDc_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 11, 2020 at 09:09:57AM +0800, kernel test robot wrote:
+>     --- tests/btrfs/095.out	2020-04-09 10:45:28.000000000 +0800
+>     +++ /lkp/benchmarks/xfstests/results//btrfs/095.out.bad	2020-05-06 21:13:51.276485703 +0800
+>     @@ -1,35 +1,9 @@
+>      QA output created by 095
+>     -Blocks modified: [135 - 164]
+>     -Blocks modified: [768 - 792]
+>     +awk: line 19: function strtonum never defined
+>     +awk: line 19: function strtonum never defined
+>     +awk: line 19: function strtonum never defined
+>     +awk: line 19: function strtonum never defined
 
-Hi all,
+This looks like a problem with the test setup.
 
-Today's linux-next merge of the vfs tree got a conflict in:
-
-  arch/mips/lasat/sysctl.c
-
-between commit:
-
-  10760dde9be3 ("MIPS: Remove support for LASAT")
-
-from the mips tree and commit:
-
-  32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-
-from the vfs tree.
-
-I fixed it up (the former removed the file, so I did that) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/u4gCOZ=P++QUBKRJzqaIDc_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl64pvoACgkQAVBC80lX
-0Gycngf9Gh/JMsqdGjHtI7VirrRrgZu6gdqz5sVjQ4NakL99L2J9S2zmhps7R6N8
-54YriPGHcbRiyP7GXpM6jfgftg+ywW9STGJLMqBT/Dqomkw0dwbfC324lHg7e0kM
-t+hp7T8Oj1/s6sMFrP1vAdDJ/mK3Nm7fVwY5BckKPI2ZB+cVI8Z+Ab7lV8KcO0IS
-ZeiCe2IrbMqEHC2AdbdhPmYQThvW6SUriKUgozINXuizm9ePTWNk1vwsSnFi/MuR
-IgyAyyzy8Kg4bJaEqk4hlVUtOgmvQpztTwMt+ORRr7R2sIffA+pgBohP2pBEI0KB
-/bbQtBeoMaPwYfFR91g92XKwwkAmSg==
-=mfto
------END PGP SIGNATURE-----
-
---Sig_/u4gCOZ=P++QUBKRJzqaIDc_--
