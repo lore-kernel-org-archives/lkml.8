@@ -2,138 +2,98 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4966C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC9EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46D4206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6TUd2jE"
+	by mail.kernel.org (Postfix) with ESMTP id DCAA9206D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgEKVfh (ORCPT
+        id S1727845AbgEKVfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbgEKVfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:35:36 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5126CC061A0C;
-        Mon, 11 May 2020 14:35:36 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id f18so11221573lja.13;
-        Mon, 11 May 2020 14:35:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fYJkLNV120eh6j9XZEAijsb1unZiMgZ34U7xH85m09s=;
-        b=e6TUd2jEZN5MfVmrTCY58XKUvyZLG3kIpYwRSkhy4nHFSYWtfncPDWC9br1e5MOZzQ
-         uUOMqQn9raMq9mQXggKII9sECrVTJCrGvGGzzvGOhgYan10woqRsqIIrABexKospKj3B
-         cCxfTBI/jS6ucT3l0xJP0V0Q/5aSU4XCk9YuZOOMK8j2XmLyqzmO8QdvBTsjSxhM9YsL
-         MSI/acv2GdVFa+vdmrJNftsuHZ2g0y1lhogHt6KX48MUJd7sCy3S1QBId6ke2AoEEorr
-         bqO7dIHF+mr/fhXHVq8t6nPWkikUNR0gSwBSP0zBIgjjGxHvE2LBf2pbou8QMN5Iawdo
-         QVsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fYJkLNV120eh6j9XZEAijsb1unZiMgZ34U7xH85m09s=;
-        b=cgwnnNAy4D+YCFMfwltlneWfoS44sHvz7AiD9TzuYNEw56tSntKOaxJjuWhj5TW/RF
-         7P1BD9IBdI/cGxP/zvHLk0WA1UG+0njwDbvq7BJKlHVWEYVpD3SgW5ckRwaSB2Hrf2OL
-         5Py1urjNRr+9WwFKJT90WR9Wh7+L2RhUx35wJRg3P1VfEHPgvsOtp2Iru0zn/Sj0IsWp
-         q8I5fSZg8ZyhvaqEhqe9U49n91q0RX9sGLjywIVEpAAnQIWAzZNbRQHobUVTAssuJk9R
-         zzqLa1ZeeBt3a4e3JemKVEpTf+WsiCvk/77pbrE41vCZ3+wwZPpQMnuLDujJUqpeVlAs
-         xI9Q==
-X-Gm-Message-State: AOAM530ux1G9F7ddoLm/kAuAuYsvsU6ppm6w+Px/rdWhykZJDSJeh2oF
-        EdcgeJ9hamhEsbhPGKVcYJs=
-X-Google-Smtp-Source: ABdhPJyFHiB0xr+CkXOcmAFcyDvbJir3HL6j/bBjATnZzqDS/avlkEaI1AplLwAszR8XVdGM0UC8ig==
-X-Received: by 2002:a2e:7d12:: with SMTP id y18mr11868247ljc.211.1589232934836;
-        Mon, 11 May 2020 14:35:34 -0700 (PDT)
-Received: from mobilestation ([95.79.139.244])
-        by smtp.gmail.com with ESMTPSA id m22sm10751538lji.75.2020.05.11.14.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 14:35:33 -0700 (PDT)
-Date:   Tue, 12 May 2020 00:35:31 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200511213531.wnywlljiulvndx6s@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
- <20200508111242.GH185537@smile.fi.intel.com>
- <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
- <20200511210138.GN185537@smile.fi.intel.com>
+        Mon, 11 May 2020 17:35:40 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60365 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgEKVfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:35:39 -0400
+IronPort-SDR: wriaR/azF9TKgKu3FcwI13hKY7RRv0rUEwMIfxDHFA+joqjRdQQHd3jOB1tmolIbmOrQTEfvs0
+ 978PInEqeX6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:35:38 -0700
+IronPort-SDR: MhjHBKd/Mq3CgJY1K/3o4/wCo4CUifFrparfxvFTKpcSWrrZQYytKnYNbEkAE4uWmptzxlH7oC
+ bkVZaCLq3MmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="297817392"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga008.jf.intel.com with ESMTP; 11 May 2020 14:35:37 -0700
+Date:   Mon, 11 May 2020 14:35:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        xudong.hao@intel.com
+Subject: Re: [KVM] 6b6a864bd7: kernel-selftests.kvm.vmx_tsc_adjust_test.fail
+Message-ID: <20200511213537.GG24052@linux.intel.com>
+References: <20200428173217.5430-1-sean.j.christopherson@intel.com>
+ <20200511010926.GV5770@shao2-debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511210138.GN185537@smile.fi.intel.com>
+In-Reply-To: <20200511010926.GV5770@shao2-debian>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > This array property is used to indicate the maximum burst transaction
-> > > > length supported by each DMA channel.
-> > > 
-> > > > +  snps,max-burst-len:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > +    description: |
-> > > > +      Maximum length of burst transactions supported by hardware.
-> > > > +      It's an array property with one cell per channel in units of
-> > > > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
-> > > > +    items:
-> > > > +      maxItems: 8
-> > > > +      items:
-> > > 
-> > > > +        enum: [4, 8, 16, 32, 64, 128, 256]
-> > > 
-> > > Isn't 1 allowed?
-> > 
-> > Burst length of 1 unit is supported, but in accordance with Data Book the MAX
-> > burst length is limited to be equal to a value from the set I submitted. So the
-> > max value can be either 4, or 8, or 16 and so on.
+On Mon, May 11, 2020 at 09:09:26AM +0800, kernel test robot wrote:
+> Greeting,
 > 
-> Hmm... It seems you mistakenly took here DMAH_CHx_MAX_MULT_SIZE pre-silicon
-> configuration parameter instead of runtime as described in Table 26:
-> CTLx.SRC_MSIZE and DEST_MSIZE Decoding.
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: 6b6a864bd7d7eb12a82ec6da1c2dd97a43f79449 ("[PATCH v2] KVM: nVMX: Tweak handling of failure code for nested VM-Enter failure")
+> url: https://github.com/0day-ci/linux/commits/Sean-Christopherson/KVM-nVMX-Tweak-handling-of-failure-code-for-nested-VM-Enter-failure/20200429-052911
+> base: https://git.kernel.org/cgit/virt/kvm/kvm.git linux-next
+> 
+> in testcase: kernel-selftests
+> with following parameters:
+> 
+> 	group: kselftests-kvm
+> 	ucode: 0x500002c
+> 
+> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> 
+> 
+> on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> 
+> 
+> 
+> # selftests: kvm: vmx_tsc_adjust_test
+> # ==== Test Assertion Failure ====
+> #   x86_64/vmx_tsc_adjust_test.c:153: false
+> #   pid=12157 tid=12157 - Interrupted system call
+> #      1	0x000000000040116a: main at vmx_tsc_adjust_test.c:153
+> #      2	0x00007fafd54bce0a: ?? ??:0
+> #      3	0x00000000004011e9: _start at ??:?
+> #   Failed guest assert: (vmreadz(VM_EXIT_REASON) == (0x80000000 | 33))
+> # IA32_TSC_ADJUST is -4294972240 (-1 * TSC_ADJUST_VALUE + -4944).
+> not ok 14 selftests: kvm: vmx_tsc_adjust_test # exit=254
 
-No. You misunderstood what I meant. We shouldn't use a runtime parameters values
-here. Why would we? Property "snps,max-burst-len" matches DMAH_CHx_MAX_MULT_SIZE
-config parameter. See a comment to the "SRC_MSIZE" and "DEST_MSIZE" fields of the
-registers. You'll find out that their maximum value is determined by the
-DMAH_CHx_MAX_MULT_SIZE parameter, which must belong to the set [4, 8, 16, 32, 64,
-128, 256]. So no matter how you synthesize the DW DMAC block you'll have at least
-4x max burst length supported.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Ugh, missed the prepare_vmcs02() path.  v3 incoming.
