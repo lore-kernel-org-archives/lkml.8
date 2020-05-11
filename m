@@ -2,109 +2,87 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12012C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5C5C54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C55206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589204344;
-	bh=kKEeipjthD8YXEfwx7zR7xcpx7Qr0DvKx7aI3GMd+68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=neQvFdjkycvUSpvhzTkG+NLzR/zb7OBNMSZdWoBYyOT1lf0wSOlI3zwbCoQX/uJhm
-	 0M5MF7RVsIbm2KWQSXWb4aEt4pFejYISTnyIkkYt4oz/S7lfMta1NSXtA2KcXKjNRq
-	 Fzg0K3hX4RFJHqNQAhMTxJ837qveNbt1SHsyc+qE=
+	by mail.kernel.org (Postfix) with ESMTP id 6E33F206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nfc2QDHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbgEKNjE (ORCPT
+        id S1729762AbgEKNk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:39:04 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36642 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgEKNjD (ORCPT
+        Mon, 11 May 2020 09:40:28 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51143 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbgEKNk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:39:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f15so3954819plr.3;
-        Mon, 11 May 2020 06:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a77Oq5OXHF7el+BrAxI3YkOcCnUkeWqP0J5f4YEVkXM=;
-        b=YQs25M+jwEExvjUyvU+Ezm/hkPO1YVNHZrH0kjTbgn6gYpmPkufFzN9GKUTKYXIeHK
-         K1sshT+U1LP0nRJ3nHccr+atUmWQwJGcPnNkQNJZU6O7UJudGrmRKs9FGgw1JCd5CE7L
-         UVOPGTna4jQJQRNbVHuIlaZP+pmpsClZHcQQ2KEBAElfAoTp2oAI3iuwbEwia6lxLJAd
-         uBJV/c4zNqfWvsD7b1LcL8LAh+HiGnJCZxbKdXc01dxj+1NLOLYbOuo/w4UumGo9zEyF
-         kUELN0mtUyh3K1ikqC2bEEMCV9ZOe5qWMPH9q85zmAm9zF83ajU1qS97CZL/VO6gOOfV
-         Piug==
-X-Gm-Message-State: AGi0Pubo6PBDSnrXkqCNKSXcQs52IvYAkhNEojqwPiZUbTZCsGmUXNx7
-        6tBC0M8RoWo3UH/8Yiu0ifk=
-X-Google-Smtp-Source: APiQypKqHlxgJmo3bwvHjknzSYEsG4x2Ee1DWrk4HLFXH26haXIT+z521EOT/qAn2yUInaHP1vs5wQ==
-X-Received: by 2002:a17:90a:c702:: with SMTP id o2mr22379928pjt.196.1589204342837;
-        Mon, 11 May 2020 06:39:02 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id t8sm8122734pgn.81.2020.05.11.06.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 06:39:01 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 8354D40605; Mon, 11 May 2020 13:39:00 +0000 (UTC)
-Date:   Mon, 11 May 2020 13:39:00 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] blktrace: break out of blktrace setup on
- concurrent calls
-Message-ID: <20200511133900.GL11244@42.do-not-panic.com>
-References: <20200509031058.8239-1-mcgrof@kernel.org>
- <20200509031058.8239-5-mcgrof@kernel.org>
- <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e728acea-61c1-fcb5-489b-9be8cafe61ea@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 May 2020 09:40:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589204427; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=BjnT+wQssjNt8bOOqGZ9Ke9C4pujItT6DZsy/y1cchM=; b=nfc2QDHKVaZBzJdKP14JvUJw+uHK8ajUwr5yQZUnBMHfSgpSoK9AkbamrC+zfY4jfRFX1paE
+ ZlXszFyD1MlNvY/ZeYH7K0SDN+++2JOgckd7gs3O8kAWOfF0gWU+J3k4/d9PzVnjuMupHFmx
+ XDnxWaFcaEuIv5Thtx+3prDuxps=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb955c4.7fe1efd24b20-smtp-out-n05;
+ Mon, 11 May 2020 13:40:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8B55EC433CB; Mon, 11 May 2020 13:40:19 +0000 (UTC)
+Received: from charante-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4786EC433F2;
+        Mon, 11 May 2020 13:40:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4786EC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+From:   Charan Teja Reddy <charante@codeaurora.org>
+To:     akpm@linux-foundation.org, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        Charan Teja Reddy <charante@codeaurora.org>
+Subject: [PATCH] mm, page_alloc: reset the zone->watermark_boost early
+Date:   Mon, 11 May 2020 19:10:08 +0530
+Message-Id: <1589204408-5152-1-git-send-email-charante@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 06:09:38PM -0700, Bart Van Assche wrote:
-> On 2020-05-08 20:10, Luis Chamberlain wrote:
-> > @@ -493,6 +496,12 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
-> >  	 */
-> >  	strreplace(buts->name, '/', '_');
-> >  
-> > +	if (q->blk_trace) {
-> > +		pr_warn("Concurrent blktraces are not allowed on %s\n",
-> > +			buts->name);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> >  	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
-> >  	if (!bt)
-> >  		return -ENOMEM;
-> 
-> Is this really sufficient? Shouldn't concurrent do_blk_trace_setup()
-> calls that refer to the same request queue be serialized to really
-> prevent that debugfs attribute creation fails?
+Updating the zone watermarks by any means, like extra_free_kbytes,
+min_free_kbytes, water_mark_scale_factor e.t.c, when watermark_boost is
+set will result into the higher low and high watermarks than the user
+asks. This can be avoided by resetting the zone->watermark_boost to zero
+early.
 
-We'd have to add something like a linked list. Right now I'm just
-clarifying things which were not clear before. What you describe is
-a functional feature change. I'm just trying to fix a bug and clarify
-limitations.
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> How about using the block device name instead of the partition name in
-> the error message since the concurrency context is the block device and
-> not the partition?
-
-blk device argument can be NULL here. sg-generic is one case.
-
- Luis
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 1b265b09..822e262 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7746,9 +7746,9 @@ static void __setup_per_zone_wmarks(void)
+ 			    mult_frac(zone_managed_pages(zone),
+ 				      watermark_scale_factor, 10000));
+ 
++		zone->watermark_boost = 0;
+ 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+ 		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+-		zone->watermark_boost = 0;
+ 
+ 		spin_unlock_irqrestore(&zone->lock, flags);
+ 	}
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
