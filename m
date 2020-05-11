@@ -2,91 +2,101 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64618C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F8BC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9A9206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6431220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 16:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589213255;
+	bh=Jw4EUPHyRghQxx0znjPMiNopC/3ADmRdiztkcgJmBRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x+47Lwj9nBmvC3pFlZjjzncX+cOPZylX+zU2HRUgs2+O6Xlh1wSwLuG7tAICKS3Ad
+	 R6MhCsge2pcy/Ab2BeQKhL5xgOvyQzHXpPib0TlLJ6avq1Gh7DbyoDCo512VscBxQt
+	 zu/X281sVEmrGU+kzoE9zDSaRuDNTIwND5uAGAOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgEKQFt (ORCPT
+        id S1730660AbgEKQHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 12:05:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4979 "EHLO mga17.intel.com"
+        Mon, 11 May 2020 12:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729556AbgEKQFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 12:05:49 -0400
-IronPort-SDR: WyOoBFdLgQZkD3SGqrwvEQD9YVgA35ycz63XCKo4Jb4HX2FJ4JfeGyKLXOy1D0MHtyiwlgdXgf
- NFdiZ4LTt7og==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 09:05:37 -0700
-IronPort-SDR: CuMDmvp+guQCKnW5QRpcjkWNuNQFRokn/Nj3L8qOqtPmgy06fw4MKiTsfMC/lEktCXYOblITrY
- UgO4wK6iXg2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="463220514"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 11 May 2020 09:05:37 -0700
-Date:   Mon, 11 May 2020 09:05:37 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Oliver Upton <oupton@google.com>,
-        Tony Cook <tony-cook@bigpond.com>, zoran.davidovac@gmail.com,
-        euloanty@live.com
-Subject: Re: [PATCH] KVM: Fix a warning in __kvm_gfn_to_hva_cache_init()
-Message-ID: <20200511160537.GC24052@linux.intel.com>
-References: <20200504190526.84456-1-peterx@redhat.com>
- <20200505013929.GA17225@linux.intel.com>
- <20200505141245.GH6299@xz-x1>
+        id S1730370AbgEKQHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 12:07:34 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67092206E6;
+        Mon, 11 May 2020 16:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589213254;
+        bh=Jw4EUPHyRghQxx0znjPMiNopC/3ADmRdiztkcgJmBRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u19DzjOEydKdWr79FdACTBtmi9myJlEvJ3UTDk/gm+AK3FSKsJ/1viymQTO+pQyW4
+         Q0DJS7SALk25UIf7udXqN/sYlRjXk4b1dD5sKGg3c2YQrI40Fs7KMv1b7bjz0Lt0CP
+         YcGbw0dtL6qnXw9WVnUZhZ10eq1K1q+Nqkkvasd8=
+Date:   Mon, 11 May 2020 17:07:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yongbo Zhang <giraffesnn123@gmail.com>
+Cc:     lgirdwood@gmail.com, Chen Li <licheng0822@thundersoft.com>,
+        alsa-devel@alsa-project.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+Message-ID: <20200511160731.GA3618@sirena.org.uk>
+References: <20200511100415.12502-1-giraffesnn123@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505141245.GH6299@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200511100415.12502-1-giraffesnn123@gmail.com>
+X-Cookie: Check your local listings.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc a few other people that have reported this at one time or another.
 
-On Tue, May 05, 2020 at 10:12:45AM -0400, Peter Xu wrote:
-> On Mon, May 04, 2020 at 06:39:29PM -0700, Sean Christopherson wrote:
-> > On Mon, May 04, 2020 at 03:05:26PM -0400, Peter Xu wrote:
-> > > GCC 10.0.1 gives me this warning when building KVM:
-> > > 
-> > >   warning: ‘nr_pages_avail’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > >   2442 |  for ( ; start_gfn <= end_gfn; start_gfn += nr_pages_avail) {
-> > > 
-> > > It should not happen, but silent it.
-> > 
-> > Heh, third times a charm?  This has been reported and proposed twice
-> > before[1][2].  Are you using any custom compiler flags?  E.g. -O3 is known
-> > to cause false positives with -Wmaybe-uninitialized.
-> 
-> No, what I did was only upgrading to Fedora 32 (which will auto-upgrade GCC),
-> so it should be using the default params of whatever provided.
-> 
-> > 
-> > If we do end up killing this warning, I'd still prefer to use
-> > uninitialized_var() over zero-initializing the variable.
-> > 
-> > [1] https://lkml.kernel.org/r/20200218184756.242904-1-oupton@google.com
-> > [2] https://bugzilla.kernel.org/show_bug.cgi?id=207173
-> 
-> OK, I didn't know this is a known problem and discussions going on.  But I
-> guess it would be good to address this sooner because it could become a common
-> warning very soon after people upgrades gcc.
+--+HP7ph2BbKc20aGI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ya, others are hitting this as well.  It's especially painful with the
-existence of KVM_WERROR.
+On Mon, May 11, 2020 at 06:04:15PM +0800, Yongbo Zhang wrote:
+> SSI BUSIF buffer is possible to overflow or underflow, especially in a
+> hypervisor environment. If there is no interrupt support, it will eventually
+> lead to errors in pcm data.
+> This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
 
-Paolo, any preference on how to resolve this?  It would appear GCC 10 got
-"smarter".
+This introduces loads of build errors on for-5.8 with an x86
+allmodconfig:
+
+/mnt/kernel/sound/soc/sh/rcar/ssi.c: In function 'rsnd_ssi_quit':
+/mnt/kernel/sound/soc/sh/rcar/ssi.c:596:12: error: invalid storage class for function 'rsnd_ssi_hw_params'
+ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+            ^~~~~~~~~~~~~~~~~~
+/mnt/kernel/sound/soc/sh/rcar/ssi.c:596:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ static int rsnd_ssi_hw_params(struct rsnd_mod *mod,
+ ^~~~~~
+
+and so on for ages.  Probably just needs a rebase I guess?
+
+--+HP7ph2BbKc20aGI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65eEIACgkQJNaLcl1U
+h9D6tgf7BtkZhzn4Ek9W+lN6u/0eBOTZZhpzgCCjwgdfk+L3YM3ZRQxCA8+WLr21
+JZp/URIp4PS2kLFFsD9J3qJyajCCOAsGRHBan0pGUDnfn2bWlqrqmpZXmiI+ttFq
+GvCN/AN4Am9i49rQqWzRMu5M5px5H+7AHz9QpM6icZsDNAM3C3sIIXAq9HY+ujEu
+3XriJGxE+S3/yZlyUArQrAHgIfk0FHwP2k8yyfN671dMTGNgczArgRXkaCKfPDc2
+vKbBSFdEsJ4AoyCLmNaAny5k0qCCmIE/bU/wUGDLRVI88MCULm18qxb15cMJ3vYe
+GBoRg4hDXzX1ybIjK7n5QJ1VyWwVFQ==
+=OG33
+-----END PGP SIGNATURE-----
+
+--+HP7ph2BbKc20aGI--
