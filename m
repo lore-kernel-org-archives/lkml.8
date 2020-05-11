@@ -2,276 +2,152 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E0CC38A2A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D49C38A2A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB63206D5
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446E5207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 01:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="im2FUEp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgEKB2w (ORCPT
+        id S1729227AbgEKBaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 May 2020 21:28:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4323 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728630AbgEKB2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 May 2020 21:28:51 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 47DF1854CE10196CE5D;
-        Mon, 11 May 2020 09:28:49 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 11 May
- 2020 09:28:48 +0800
-Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Sayali Lokhande <sayalil@codeaurora.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <stummala@codeaurora.org>, <linux-kernel@vger.kernel.org>
-References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
- <20200508161052.GA49579@google.com>
- <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
- <20200509190342.GA11239@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <fbb5ef1e-214d-f34a-e1a0-32534c765e56@huawei.com>
-Date:   Mon, 11 May 2020 09:28:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 10 May 2020 21:30:04 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39678 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728630AbgEKBaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 May 2020 21:30:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589160602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dC309k+ibsw/3VjV9/ejnOFqXLiqMyJIRDkc+VSBHTM=;
+        b=im2FUEp83BBZWIpaKy8lyQOT/K0aVZnVArLn/pEv94CqB8DD9hZMHccVp9mXSJpvRqiLN5
+        ZT26q3Fl0/zEBzWE5X46GgUKqrLxPoLIkM2dXtkP5ZhpT7Cbo+rt88Csv86Fd+7teF+11D
+        yFEv/MMMRZbEu3X9KAM9LJ+UnKaYpnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-L0Dlu4ofNQ2Eftgkm3b_uA-1; Sun, 10 May 2020 21:29:58 -0400
+X-MC-Unique: L0Dlu4ofNQ2Eftgkm3b_uA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65B2880058A;
+        Mon, 11 May 2020 01:29:56 +0000 (UTC)
+Received: from T590 (ovpn-13-75.pek2.redhat.com [10.72.13.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEB425D77B;
+        Mon, 11 May 2020 01:29:46 +0000 (UTC)
+Date:   Mon, 11 May 2020 09:29:42 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Baolin Wang <baolin.wang7@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 1/7] block: Extand commit_rqs() to do batch
+ processing
+Message-ID: <20200511012942.GA1418834@T590>
+References: <cover.1587888520.git.baolin.wang7@gmail.com>
+ <c8bd9e5ba815a3f1bc9dac0a4bc2fbadadbc0a43.1587888520.git.baolin.wang7@gmail.com>
+ <20200427154645.GA1201@infradead.org>
+ <e4d47000-f89c-a135-ae58-011f0e9cc39e@grimberg.me>
+ <20200508214639.GA1389136@T590>
+ <fe6bd8b9-6ed9-b225-f80c-314746133722@grimberg.me>
+ <20200508232222.GA1391368@T590>
+ <CADBw62ooysT7TJ5CjpPBC6zs7pvpUQysg8QqP9oW5jN7BSYS7g@mail.gmail.com>
+ <20200509094306.GA1414369@T590>
+ <6579459b-aa98-78f2-f805-a6cd46f37b6c@grimberg.me>
 MIME-Version: 1.0
-In-Reply-To: <20200509190342.GA11239@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6579459b-aa98-78f2-f805-a6cd46f37b6c@grimberg.me>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/10 3:03, Jaegeuk Kim wrote:
-> On 05/09, Chao Yu wrote:
->> On 2020/5/9 0:10, Jaegeuk Kim wrote:
->>> Hi Sayali,
->>>
->>> In order to address the perf regression, how about this?
->>>
->>> >From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
->>> From: Jaegeuk Kim <jaegeuk@kernel.org>
->>> Date: Fri, 8 May 2020 09:08:37 -0700
->>> Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
->>>
->>> There could be a scenario where f2fs_sync_node_pages gets
->>> called during checkpoint, which in turn tries to flush
->>> inline data and calls iput(). This results in deadlock as
->>> iput() tries to hold cp_rwsem, which is already held at the
->>> beginning by checkpoint->block_operations().
->>>
->>> Call stack :
->>>
->>> Thread A		Thread B
->>> f2fs_write_checkpoint()
->>> - block_operations(sbi)
->>>  - f2fs_lock_all(sbi);
->>>   - down_write(&sbi->cp_rwsem);
->>>
->>>                         - open()
->>>                          - igrab()
->>>                         - write() write inline data
->>>                         - unlink()
->>> - f2fs_sync_node_pages()
->>>  - if (is_inline_node(page))
->>>   - flush_inline_data()
->>>    - ilookup()
->>>      page = f2fs_pagecache_get_page()
->>>      if (!page)
->>>       goto iput_out;
->>>      iput_out:
->>> 			-close()
->>> 			-iput()
->>>        iput(inode);
->>>        - f2fs_evict_inode()
->>>         - f2fs_truncate_blocks()
->>>          - f2fs_lock_op()
->>>            - down_read(&sbi->cp_rwsem);
->>>
->>> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
->>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>  fs/f2fs/node.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>> index 1db8cabf727ef..626d7daca09de 100644
->>> --- a/fs/f2fs/node.c
->>> +++ b/fs/f2fs/node.c
->>> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
->>>  				goto continue_unlock;
->>>  			}
->>>  
->>> -			/* flush inline_data */
->>> -			if (is_inline_node(page)) {
->>> +			/* flush inline_data, if it's not sync path. */
->>> +			if (do_balance && is_inline_node(page)) {
->>
->> IIRC, this flow was designed to avoid running out of free space issue
->> during checkpoint:
->>
->> 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
->>
->> The sceanrio is:
->> 1. create fully node blocks
->> 2. flush node blocks
->> 3. write inline_data for all the node blocks again
->> 4. flush node blocks redundantly
->>
->> I guess this may cause failing one case of fstest.
+On Sun, May 10, 2020 at 12:44:53AM -0700, Sagi Grimberg wrote:
 > 
-> Yeah, actually I was hitting 204 failure, and thus, revised like this.
-> Now, I don't see any regression in fstest.
+> > > > > You're mostly correct. This is exactly why an I/O scheduler may be
+> > > > > applicable here IMO. Mostly because I/O schedulers tend to optimize for
+> > > > > something specific and always present tradeoffs. Users need to
+> > > > > understand what they are optimizing for.
+> > > > > 
+> > > > > Hence I'd say this functionality can definitely be available to an I/O
+> > > > > scheduler should one exist.
+> > > > > 
+> > > > 
+> > > > I guess it is just that there can be multiple requests available from
+> > > > scheduler queue. Actually it can be so for other non-nvme drivers in
+> > > > case of none, such as SCSI.
+> > > > 
+> > > > Another way is to use one per-task list(such as plug list) to hold the
+> > > > requests for dispatch, then every drivers may see real .last flag, so they
+> > > > may get chance for optimizing batch queuing. I will think about the
+> > > > idea further and see if it is really doable.
+> > > 
+> > > How about my RFC v1 patch set[1], which allows dispatching more than
+> > > one request from the scheduler to support batch requests?
+> > > 
+> > > [1]
+> > > https://lore.kernel.org/patchwork/patch/1210034/
+> > > https://lore.kernel.org/patchwork/patch/1210035/
+> > 
+> > Basically, my idea is to dequeue request one by one, and for each
+> > dequeued request:
+> > 
+> > - we try to get a budget and driver tag, if both succeed, add the
+> > request to one per-task list which can be stored in stack variable,
+> > then continue to dequeue more request
+> > 
+> > - if either budget or driver tag can't be allocated for this request,
+> > marks the last request in the per-task list as .last, and send the
+> > batching requests stored in the list to LLD
+> > 
+> > - when queueing batching requests to LLD, if one request isn't queued
+> > to driver successfully, calling .commit_rqs() like before, meantime
+> > adding the remained requests in the per-task list back to scheduler
+> > queue or hctx->dispatch.
 > 
->>From 8f1882acfb0a5fc43e5a2bbd576a8f3c681a7d2c Mon Sep 17 00:00:00 2001
-> From: Sayali Lokhande <sayalil@codeaurora.org>
-> Date: Thu, 30 Apr 2020 16:28:29 +0530
-> Subject: [PATCH] f2fs: Avoid double lock for cp_rwsem during checkpoint
+> Sounds good to me.
 > 
-> There could be a scenario where f2fs_sync_node_pages gets
-> called during checkpoint, which in turn tries to flush
-> inline data and calls iput(). This results in deadlock as
-> iput() tries to hold cp_rwsem, which is already held at the
-> beginning by checkpoint->block_operations().
+> > One issue is that this way might degrade sequential IO performance if
+> > the LLD just tells queue busy to blk-mq via return value of .queue_rq(),
+> > so I guess we still may need one flag, such as BLK_MQ_F_BATCHING_SUBMISSION.
 > 
-> Call stack :
-> 
-> Thread A		Thread B
-> f2fs_write_checkpoint()
-> - block_operations(sbi)
->  - f2fs_lock_all(sbi);
->   - down_write(&sbi->cp_rwsem);
-> 
->                         - open()
->                          - igrab()
->                         - write() write inline data
->                         - unlink()
-> - f2fs_sync_node_pages()
->  - if (is_inline_node(page))
->   - flush_inline_data()
->    - ilookup()
->      page = f2fs_pagecache_get_page()
->      if (!page)
->       goto iput_out;
->      iput_out:
-> 			-close()
-> 			-iput()
->        iput(inode);
->        - f2fs_evict_inode()
->         - f2fs_truncate_blocks()
->          - f2fs_lock_op()
->            - down_read(&sbi->cp_rwsem);
-> 
-> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c |  9 ++++++++-
->  fs/f2fs/f2fs.h       |  4 ++--
->  fs/f2fs/node.c       | 10 +++++-----
->  3 files changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index d49f7a01d8a26..928aea4ff663d 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1168,6 +1168,12 @@ static int block_operations(struct f2fs_sb_info *sbi)
->  	};
->  	int err = 0, cnt = 0;
->  
-> +	/*
-> +	 * Let's flush node pages first to flush inline_data.
-> +	 * We'll actually guarantee everything below under f2fs_lock_all.
-> +	 */
-> +	f2fs_sync_node_pages(sbi, &wbc, false, false, FS_CP_NODE_IO);
+> Why is that degrading sequential I/O performance? because the specific
 
-It is possible that user write a large number of inline data in between
-f2fs_sync_node_pages() and f2fs_lock_all(), it will cause the no-space issue in
-race condition.
+Some devices may only return BLK_STS_RESOURCE from .queue_rq(), then more
+requests are dequeued from scheduler queue if we always queue batching IOs
+to LLD, and chance of IO merge is reduced, so sequential IO performance will
+be effected.
 
-Also, if there is huge number of F2FS_DIRTY_IMETA, after this change, we will
-flush inode page twice which is unneeded.
+Such as some scsi device which doesn't use sdev->queue_depth for
+throttling IOs.
 
-f2fs_sync_node_pages() --- flush dirty inode page
-f2fs_lock_all()
-...
-f2fs_sync_inode_meta() --- update dirty inode page
-f2fs_sync_node_pages() --- flush dirty inode page again.
+For virtio-scsi or virtio-blk, we may stop queue for avoiding the
+potential affect.
+
+> device will do better without batching submissions? If so, the driver
+
+It isn't related with batching submission, IMO.
+
 
 Thanks,
+Ming
 
-> +
->  retry_flush_quotas:
->  	f2fs_lock_all(sbi);
->  	if (__need_flush_quota(sbi)) {
-> @@ -1222,7 +1228,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
->  	if (get_pages(sbi, F2FS_DIRTY_NODES)) {
->  		up_write(&sbi->node_write);
->  		atomic_inc(&sbi->wb_sync_req[NODE]);
-> -		err = f2fs_sync_node_pages(sbi, &wbc, false, FS_CP_NODE_IO);
-> +		err = f2fs_sync_node_pages(sbi, &wbc, false,
-> +					true, FS_CP_NODE_IO);
->  		atomic_dec(&sbi->wb_sync_req[NODE]);
->  		if (err) {
->  			up_write(&sbi->node_change);
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index d916540f12813..ac6ae42b9dd4e 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -3286,8 +3286,8 @@ int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
->  			struct writeback_control *wbc, bool atomic,
->  			unsigned int *seq_id);
->  int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
-> -			struct writeback_control *wbc,
-> -			bool do_balance, enum iostat_type io_type);
-> +		struct writeback_control *wbc,
-> +		bool do_balance, bool sync, enum iostat_type io_type);
->  int f2fs_build_free_nids(struct f2fs_sb_info *sbi, bool sync, bool mount);
->  bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
->  void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 1db8cabf727ef..fd00a8c119088 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -1808,8 +1808,8 @@ static bool flush_dirty_inode(struct page *page)
->  }
->  
->  int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
-> -				struct writeback_control *wbc,
-> -				bool do_balance, enum iostat_type io_type)
-> +			struct writeback_control *wbc,
-> +			bool do_balance, bool sync, enum iostat_type io_type)
->  {
->  	pgoff_t index;
->  	struct pagevec pvec;
-> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
->  				goto continue_unlock;
->  			}
->  
-> -			/* flush inline_data */
-> -			if (is_inline_node(page)) {
-> +			/* flush inline_data, if it's async context. */
-> +			if (!sync && is_inline_node(page)) {
->  				clear_inline_node(page);
->  				unlock_page(page);
->  				flush_inline_data(sbi, ino_of_node(page));
-> @@ -1999,7 +1999,7 @@ static int f2fs_write_node_pages(struct address_space *mapping,
->  
->  	diff = nr_pages_to_write(sbi, NODE, wbc);
->  	blk_start_plug(&plug);
-> -	f2fs_sync_node_pages(sbi, wbc, true, FS_NODE_IO);
-> +	f2fs_sync_node_pages(sbi, wbc, true, false, FS_NODE_IO);
->  	blk_finish_plug(&plug);
->  	wbc->nr_to_write = max((long)0, wbc->nr_to_write - diff);
->  
-> 
