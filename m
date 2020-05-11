@@ -2,345 +2,79 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA417C54E4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E561FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD43206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVK7xaej"
+	by mail.kernel.org (Postfix) with ESMTP id CEE46206F9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 09:47:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgEKJp7 (ORCPT
+        id S1729405AbgEKJrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 05:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728209AbgEKJp7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 05:45:59 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0D0C061A0C;
-        Mon, 11 May 2020 02:45:57 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so3720467plt.5;
-        Mon, 11 May 2020 02:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vcK4SfwbcLr+s8byI3BvwLALcx36TKx0SQI4h58vtQ0=;
-        b=VVK7xaej2/0RPV3c4V4ArF7OVCfQ4fH9AkRwZhFkkBH+6+glMD4+/ZXpzVGLto+KqP
-         ablwhPYEpXojQgHEixGyehvIvKOPCi89nHLe5TjtBlPtR0Qh2jSwLD5r0ukFeAJAI2Tn
-         Q6igwr0nIKhx9hIiw/3ixpR/+r5RBE2S0G0V/KHUCyx0d9/Od1kxu6HpwPv3hJJgvg6D
-         YHNgbgQvea0pvEf4nUaF6IpSe6pttQB3c4DsNF1a5Nx54y7XmZKBPQF0biYL1y4ugoQr
-         Vv9D8FexwQAQ77uVRuMyW+Se8iCoTQw4kwdJ01T6We8WyR2Sn3qoQEYIRixnfM2v74XW
-         7NTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vcK4SfwbcLr+s8byI3BvwLALcx36TKx0SQI4h58vtQ0=;
-        b=eO39T0VV31IbNL1FMWZxt/ew39/z+zae5SqmTKjN7Gkse82XkNWsdBVT6FqSqC07gG
-         Q4PjjBe9LDBnfw9/lAnXc1hUVBCaOEF7EoPfbcDlmgRUy7Bd41KGlN9jA0awInibFxlC
-         sufitl6YzamBvsJzEWkkfU/PI9PtMUXTPWeDepkQdW3OG09LnBhQ72oLq3tI8Ug1M4ap
-         LDUaR5f2wppWklvKK4ym5seZjdticSyY35vm42o8Aj/yvMxlhUY7lRgFj/VvOCiyzWOI
-         ebG0g3yD9L1EvHzunmEd11cJJRtJlsaxV0G3YqF93KjGv6BUlDB8ph+xmtSybcSF7xfE
-         ng/A==
-X-Gm-Message-State: AGi0PubEh6S125lE4004xaUI63m3Se2wI4Y2ZOcr84GtbBx8V+vnGMbg
-        avR4dyaJam0I9B0lY9dOEi0=
-X-Google-Smtp-Source: APiQypLAsE8fvF5iJDqhY9NuQzwixWxZrqAfTfhheqUAorPs61gCHf4xVs9ll7wFXFHfN+38W/ZlAQ==
-X-Received: by 2002:a17:90a:c293:: with SMTP id f19mr19714450pjt.96.1589190357257;
-        Mon, 11 May 2020 02:45:57 -0700 (PDT)
-Received: from localhost.localdomain ([124.156.210.110])
-        by smtp.gmail.com with ESMTPSA id i3sm623798pfe.44.2020.05.11.02.45.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 May 2020 02:45:56 -0700 (PDT)
-From:   Yongbo Zhang <giraffesnn123@gmail.com>
-To:     broonie@kernel.org, lgirdwood@gmail.com
-Cc:     alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Yongbo Zhang <giraffesnn123@gmail.com>,
-        Chen Li <licheng0822@thundersoft.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH v1] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
-Date:   Mon, 11 May 2020 17:45:20 +0800
-Message-Id: <20200511094520.4648-1-giraffesnn123@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 11 May 2020 05:47:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:55006 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728209AbgEKJre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 05:47:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31DFC1FB;
+        Mon, 11 May 2020 02:47:34 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1734D3F305;
+        Mon, 11 May 2020 02:47:32 -0700 (PDT)
+Date:   Mon, 11 May 2020 10:47:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Fix reporting GPIO error value
+Message-ID: <20200511094727.GA24149@e121166-lin.cambridge.arm.com>
+References: <20200414102512.27506-1-pali@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200414102512.27506-1-pali@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSI BUSIF buffer is possible to overflow or underflow, especially in a
-hypervisor environment. If there is no interrupt support, it will eventually
-lead to errors in pcm data.
-This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+On Tue, Apr 14, 2020 at 12:25:12PM +0200, Pali Rohár wrote:
+> Error code is stored in rp->reset_gpio and not in err variable.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reported-by: Chen Li <licheng0822@thundersoft.com>
-Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
-Tested-by: Chen Li <licheng0822@thundersoft.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
----
- sound/soc/sh/rcar/gen.c  |   8 +++
- sound/soc/sh/rcar/rsnd.h |   9 +++
- sound/soc/sh/rcar/ssi.c  | 142 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 159 insertions(+)
+Applied to pci/tegra, thanks.
 
-diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
-index af19010b9d88..8bd49c8a9517 100644
---- a/sound/soc/sh/rcar/gen.c
-+++ b/sound/soc/sh/rcar/gen.c
-@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
- 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
- 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
- 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
- 
-diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
-index ea6cbaa9743e..d47608ff5fac 100644
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -189,6 +189,14 @@ enum rsnd_reg {
- 	SSI_SYS_STATUS5,
- 	SSI_SYS_STATUS6,
- 	SSI_SYS_STATUS7,
-+	SSI_SYS_INT_ENABLE0,
-+	SSI_SYS_INT_ENABLE1,
-+	SSI_SYS_INT_ENABLE2,
-+	SSI_SYS_INT_ENABLE3,
-+	SSI_SYS_INT_ENABLE4,
-+	SSI_SYS_INT_ENABLE5,
-+	SSI_SYS_INT_ENABLE6,
-+	SSI_SYS_INT_ENABLE7,
- 	HDMI0_SEL,
- 	HDMI1_SEL,
- 	SSI9_BUSIF0_MODE,
-@@ -237,6 +245,7 @@ enum rsnd_reg {
- #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
- #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
- #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
-+#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
- 
- 
- struct rsnd_priv;
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 4a7d3413917f..87a2182a4514 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 	u32 wsr		= ssi->wsr;
- 	int width;
- 	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
- 
- 	is_tdm		= rsnd_runtime_is_tdm(io);
- 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
-@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
- 	}
- 
-+	/* enable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable |= 0xf << (id * 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable |= 0xf << 4;
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+	}
-+
- init_end:
- 	ssi->cr_own	= cr_own;
- 	ssi->cr_mode	= cr_mode;
-@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
- {
- 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
- 	struct device *dev = rsnd_priv_to_dev(priv);
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	if (!rsnd_ssi_is_run_mods(mod, io))
- 		return 0;
-@@ -517,6 +559,37 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
- 		ssi->wsr	= 0;
- 	}
- 
-+	/* disable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+						SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable &= ~(0xf << (id * 4));
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable &= ~(0xf << 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+
- 	return 0;
- }
- 
-@@ -622,6 +695,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 			int enable)
- {
- 	u32 val = 0;
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	if (rsnd_is_gen1(priv))
- 		return 0;
-@@ -635,6 +713,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 	if (enable)
- 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
- 
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+		case 9:
-+			val |= 0x0000ff00;
-+			break;
-+		}
-+	}
-+
- 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
- 
- 	return 0;
-@@ -651,6 +742,10 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 	u32 status;
- 	bool elapsed = false;
- 	bool stop = false;
-+	int is_tdm, is_tdm_split;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	spin_lock(&priv->lock);
- 
-@@ -672,6 +767,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 		stop = true;
- 	}
- 
-+	status = 0;
-+
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_read(mod,
-+						       SSI_SYS_STATUS(i * 2));
-+				status &= 0xf << (id * 4);
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						       SSI_SYS_STATUS(i * 2),
-+						       0xf << (id * 4));
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_write(mod,
-+						SSI_SYS_STATUS((i * 2) + 1));
-+				status &= 0xf << 4;
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						SSI_SYS_STATUS((i * 2) + 1),
-+						0xf << 4);
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+	}
-+
- 	rsnd_ssi_status_clear(mod);
- rsnd_ssi_interrupt_out:
- 	spin_unlock(&priv->lock);
--- 
-2.26.2
+Lorenzo
 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 0e03cef72840..378d5a8773c7 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2314,8 +2314,8 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>  			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
+>  				rp->reset_gpio = NULL;
+>  			} else {
+> -				dev_err(dev, "failed to get reset GPIO: %d\n",
+> -					err);
+> +				dev_err(dev, "failed to get reset GPIO: %ld\n",
+> +					PTR_ERR(rp->reset_gpio));
+>  				return PTR_ERR(rp->reset_gpio);
+>  			}
+>  		}
+> -- 
+> 2.20.1
+> 
