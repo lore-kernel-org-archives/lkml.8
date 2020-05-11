@@ -2,147 +2,85 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F686C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7476C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888702078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975AF20836
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbgEKVIE (ORCPT
+        id S1727896AbgEKVJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:08:04 -0400
-Received: from mga11.intel.com ([192.55.52.93]:44557 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728046AbgEKVID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:08:03 -0400
-IronPort-SDR: Rcp3EDn6fhm2vgJ2fBeDsP/fyMxSfzxOJAyrSHednMDgsRs7lQJg5Mp0cX/mtKyzCNuMTkBAFg
- uz2zkaNdteKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:08:01 -0700
-IronPort-SDR: t4AxqHHHkr6vBGqkbBrHjdrapcTu7uZg3Ts+CnG9/CbtCyLSWH4X/mHEA7plgOTYMvOs51mUzw
- YYCBa3V3UedA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="251264806"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 11 May 2020 14:07:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jYFea-0063GS-Rm; Tue, 12 May 2020 00:08:00 +0300
-Date:   Tue, 12 May 2020 00:08:00 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
+        Mon, 11 May 2020 17:09:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47399 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725888AbgEKVJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:09:07 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-277-ofGzWwF0MoWtalZnKw9quw-1; Mon, 11 May 2020 22:09:03 +0100
+X-MC-Unique: ofGzWwF0MoWtalZnKw9quw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 11 May 2020 22:09:03 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 11 May 2020 22:09:03 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'psmith@gnu.org'" <psmith@gnu.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511210800.GP185537@smile.fi.intel.com>
-References: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
+Subject: RE: I disabled more compiler warnings..
+Thread-Topic: I disabled more compiler warnings..
+Thread-Index: AQHWJwHjj7O/Wk29GEyLgXD8YJ1BI6iigEwggACtZraAADOL0A==
+Date:   Mon, 11 May 2020 21:09:03 +0000
+Message-ID: <90909f30775744b89d1a0c40265779d9@AcuMS.aculab.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+         <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+         <CAHk-=whLY8dXE6qMuPNE+Tjc6uXy+W2jACyWLxtRUH6GU2=PAA@mail.gmail.com>
+ <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+In-Reply-To: <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511210714.GO185537@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
-> On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
-> > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
-> > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
-> > > > >
-> > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
-> > > > > > driver will split it into the max transaction chunks anyway.
-> > > > >
-> > > > > That sounds like you need to also impose a limit on the maximum message
-> > > > > size as well then, with that you should be able to handle messages up
-> > > > > to whatever that limit is.  There's code for that bit already, so long
-> > > > > as the limit is not too low it should be fine for most devices and
-> > > > > client drivers can see the limit so they can be updated to work with it
-> > > > > if needed.
-> > > >
-> > > > Hmm, this might work. The problem will be with imposing such limitation through
-> > > > the DW APB SSI driver. In order to do this I need to know:
-> > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > > > 2) Maximum DW DMA transfer block size.
-> > > > Then I'll be able to use this information in the can_dma() callback to enable
-> > > > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > > > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > > > parameter, then setting it won't work, because it just limits the SG items size
-> > > > not the total length of a single transfer.
-> > > >
-> > > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > > driver. Andy?
-> > > 
-> > > I'm not sure I understand why do you need this being exported. Just
-> > > always supply SG list out of single entry and define the length
-> > > according to the maximum segment size (it's done IIRC in SPI core).
-> > 
-> > Finally I see your point. So you suggest to feed the DMA engine with SG list
-> > entries one-by-one instead of sending all of them at once in a single
-> > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
-> > session. Hm, this solution will work, but there is an issue. There is no
-> > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
-> > number of items with the same sizes. It depends on the Tx/Rx buffers physical
-> > address alignment and their offsets within the memory pages. Though this
-> > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
-> > to implement a clever DMA IO loop, which would extract the DMA
-> > addresses/lengths from the SG entries and perform the single-buffer DMA 
-> > transactions with the DMA buffers of the same length.
-> > 
-> > Regarding noLLP being exported. Obviously I intended to solve the problem in a
-> > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
-> > In order to do this we need to know whether the multi-block LLP feature is
-> > unsupported by the DW DMA controller. We either make such info somehow exported
-> > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
-> > could be ready to work around the problem; or just implement a flag-based quirk
-> > in the DMA client driver, which would be enabled in the platform-specific basis
-> > depending on the platform device actually detected (for instance, a specific
-> > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
-> 
-> So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
-> - 0: Auto (DMA driver handles any cases itself)
-> - 1: Only single entry
-> - 2: Up to two...
-
-It will left implementation details (or i.o.w. obstacles or limitation) why DMA
-can't do otherwise.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+RnJvbTogUGF1bCBTbWl0aA0KPiBTZW50OiAxMSBNYXkgMjAyMCAxODo1OQ0KPiBPbiBNb24sIDIw
+MjAtMDUtMTEgYXQgMTA6NDEgLTA3MDAsIExpbnVzIFRvcnZhbGRzIHdyb3RlOg0KPiA+IE9uIE1v
+biwgTWF5IDExLCAyMDIwIGF0IDEyOjQzIEFNIERhdmlkIExhaWdodCA8DQo+ID4gRGF2aWQuTGFp
+Z2h0QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IEkndmUgbm90IGxvb2tlZCBpbnNp
+ZGUgZ21ha2UsIGJ1dCBJIGZpeGVkIG5tYWtlIHNvIHRoYXQgaXQNCj4gPiA+IHByb3Blcmx5IHVz
+ZWQgYSBzaW5nbGUgam9iIHRva2VuIHBpcGUgZm9yIHRoZSBlbnRpcmUgKE5ldEJTRCkNCj4gPiA+
+IGJ1aWxkIGFuZCB0aGVuIGZsdXNoZWQgYW5kIHJlZmlsbGVkIGl0IHdpdGggJ2Fib3J0JyB0b2tl
+bnMNCj4gPiA+IHdoZW4gYW55IGNvbW1hbmQgZmFpbGVkLg0KPiA+ID4gVGhhdCBtYWRlIHRoZSBi
+dWlsZCBzdG9wIGFsbW9zdCBpbW1lZGlhdGVseS4NCj4gPg0KPiA+IFRoZSBHTlUgam9ic2VydmVy
+IGRvZXNuJ3QgaGF2ZSBhbnl0aGluZyBsaWtlIHRoYXQsIGFmYWlrLg0KPiA+DQo+ID4gSSB0aGlu
+ayBpdCBhbHdheXMgd3JpdGVzIGEgJysnIGNoYXJhY3RlciBhcyBhIHRva2VuLCBzbyBJIGd1ZXNz
+IGl0DQo+ID4gY291bGQgYmUgZXh0ZW5kZWQgdG8gd3JpdGUgc29tZXRoaW5nIGVsc2UgZm9yIHRo
+ZSAiYWJvcnQgbm93Ig0KPiA+IHNpdHVhdGlvbiAocHJlc3VtYWJseSBhICctJyBjaGFyYWN0ZXIp
+Lg0KPiANCj4gVGhhdCB3YXMgZXhhY3RseSBteSBwbGFuLg0KDQpJU1RSIHVzaW5nICcqJyA6LSkg
+V2FzIGEgbG9uZyB0aW1lIGFnby4NCg0KT25lIHByb2JsZW0gaXMgZW5zdXJpbmcgdGhhdCBhbGwg
+dGhlIHJlY3Vyc2l2ZSBtYWtlcyBhY3R1YWxseQ0KdXNlIHRoZSBzYW1lIHRva2VuIHF1ZXVlLg0K
+VGhlIExpbnV4IGtlcm5lbCBidWlsZCBhY3RzIGFzIHRob3VnaCB0aGUgc3ViLW1ha2VzIGhhdmUg
+dGhlaXINCm93biBxdWV1ZSAtIEkgY2VydGFpbmx5IGhhZCB0byBmaXggdGhhdCBhcyB3ZWxsLg0K
+DQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQs
+IE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86
+IDEzOTczODYgKFdhbGVzKQ0K
 
