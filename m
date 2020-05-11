@@ -7,180 +7,156 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04D6C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE6C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4814206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF12206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 17:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KJnTxBod"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="W2XTIwq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgEKR0r (ORCPT
+        id S1730937AbgEKR1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 13:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        Mon, 11 May 2020 13:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730730AbgEKR0r (ORCPT
+        with ESMTP id S1730730AbgEKR1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 13:26:47 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F72C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:26:46 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w20so10434375ljj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:26:46 -0700 (PDT)
+        Mon, 11 May 2020 13:27:55 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E970C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:27:55 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c64so10577405qkf.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 10:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2syOPhIUuk5+IIGwPWtaFvYhD+RO13CJnl5VVYLO2dc=;
-        b=KJnTxBodECfNSWC+eXV6D9gkJ/P9LWcTJrXC4Ghx2Vn9hyQwnoY7rP9e/Qnv64vGu+
-         ShEE2LP25xfnfLorU/NMyCqQarLGS419o5kBE3SwFxQs98FNZzckVPVqSSnApRO5k/YO
-         F7kuYSn8gjSSEiC7F9lvthwHeRQoIqLWSslcr9J1OVKxajVJmhOYy0MgcdAyIxT96kFY
-         O00pFB6HFyU8tmRMpmL7HTwei/rqW0eocZTDHnXeyZwi/ifgD1HA7UQCk7hJr8yrZ+d7
-         kQvhk7wrn6lfmCpUvmtB1JJsBA6vb9O0R+mz/B2OpP8dHg8rLhiWx2YfvdG1CaBBsptw
-         cFZQ==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UM9gsd3fd5O0uAUURv9BaNBZctm2fMnWWALVccCUp6Q=;
+        b=W2XTIwq2caGPCLLV0Zo5+c8mMkd5a3SsEOnaiRYzJMpg+A09bryN+mBFPccDafmnmv
+         Wi543zpmvLiEqVK5e02i/z33A4xKZkUAT4Jf7dnprQLsKxhUDk3dfLIFu7GszAqrM3/1
+         u13PUHmJ+py/n+LryR2Y7QHDLljJPaQ/3ZDCI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2syOPhIUuk5+IIGwPWtaFvYhD+RO13CJnl5VVYLO2dc=;
-        b=hTQZCacjvk8dW4emmPeMxcp3badFSuFZzVtUJJBWj2/N4sBzOipm2mMLM7tGfybjQ9
-         ey/1O9RiROxVVULhWPRuqnoVhLv2s3fbdEIG7SiuB/q1tmUh7Ach7OnM4Zhjc7qrCqFR
-         xDeQudKsmVoBgYypQ/OlcsOeiFvNeiQ4D3CQDRLOvLOZ7jQy5u0JIv0JDacoU/N5ZqhJ
-         h7Wlxw4TyGVFakljeOTdUWUvoei+ivdbLYjtHNRWEdiDB9eN7SzuB16IpxTipd/OIqdN
-         XW0jdjhnVWVSZTps8dx8J/L69BGABJJa5Nlu8KGXWsZu2MDCxn2uVgad0wVyR8Wx18h1
-         c5bQ==
-X-Gm-Message-State: AOAM532R36IqlwqsRz1LxwXzZoy6mj+7FNOsoxpTEev2Mv+b92rZiSab
-        R2q3KwBFZvgKpeLMAGYw9YjA5p4n4qfpGQWLbzQdVA==
-X-Google-Smtp-Source: ABdhPJzLWh2c6HKanzjF35gvufPT/AenACZyvySv0aUIe5AQ4TxUG2/GcC/bY0xcWzmTE/GXX51eHW/7Q84P+RgSIZY=
-X-Received: by 2002:a2e:b52a:: with SMTP id z10mr237472ljm.200.1589218005149;
- Mon, 11 May 2020 10:26:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UM9gsd3fd5O0uAUURv9BaNBZctm2fMnWWALVccCUp6Q=;
+        b=UB1IKz2hUd7gpZoKwCAetAFs8SgCjzJeX+8XJiRZ7cTofeX8U9s7nT/ph30U6K8xRG
+         dhXSi7CLhrUg+Cl1N/lFnD6yKlCgF4y4wpIzQ++6BdscGA/IKn1Smhm4dsauxsyrPqiY
+         fBy8q0NqQa3vgljkrZU1NXmk4Yef68H3KoXtA22g/LQAifoIwnX9RomTQRz7WoVPYWC0
+         8kP7CWjKh6PT/2gkzgFGpzZNPTGef0Yh+hH98WhiJWcyqKrvIoyNgB3gMqAt5GEKbbIp
+         kGVCstOsJykCBFjnU/HNq6jZDyT/9+/zsTD0dmTX9kKhPqWtbGiNTHbiKm4cZgY8sgtZ
+         vBKQ==
+X-Gm-Message-State: AGi0Puar2Bzao4tVjlFtQJvpOswJqm2fjrHZJLHHW41ORhmzJrK8EM64
+        UHimQs2gvkxWCrFsFj9an2JC+w==
+X-Google-Smtp-Source: APiQypIPXPVdkPUHdNTnQUFS0SEXrsu9+htHEUzgCBx0qoXV9LQyp5QCzfr6JKwuRJOWpb7KU7oDow==
+X-Received: by 2002:a05:620a:1594:: with SMTP id d20mr16559637qkk.217.1589218074479;
+        Mon, 11 May 2020 10:27:54 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d196sm8760154qkg.16.2020.05.11.10.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 10:27:53 -0700 (PDT)
+Date:   Mon, 11 May 2020 13:27:53 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>
+Subject: Re: [PATCH] tracing: Wait for preempt irq delay thread to execute
+Message-ID: <20200511172753.GA173916@google.com>
+References: <20200510114210.15d9e4af@oasis.local.home>
 MIME-Version: 1.0
-References: <1588350008-8143-1-git-send-email-alan.mikhak@sifive.com> <20200507214234.GA5449@bogus>
-In-Reply-To: <20200507214234.GA5449@bogus>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Mon, 11 May 2020 10:26:33 -0700
-Message-ID: <CABEDWGygtfK0-dd7VUKH2K1FWy8KweG8o7bRjNFQAXfWHkT8fA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: endpoint: functions/pci-epf-test: Enable picking DMA
- channel by name
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        lorenzo.pieralisi@arm.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>, sebott@linux.ibm.com,
-        efremov@linux.com, vidyas@nvidia.com,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510114210.15d9e4af@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 2:42 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, May 01, 2020 at 09:20:08AM -0700, Alan Mikhak wrote:
-> > From: Alan Mikhak <alan.mikhak@sifive.com>
-> >
-> > Modify pci_epf_test_init_dma_chan() to call dma_request_channel() with a
-> > filter function to pick DMA channel by name, if desired.
-> >
-> > Add a new filter function pci_epf_test_pick_dma_chan() which takes a name
-> > string as an optional parameter. If desired name is specified, the filter
-> > function checks the name of each DMA channel candidate against the desired
-> > name. If no match, the filter function rejects the candidate channel.
-> > Otherwise, the candidate channel is accepted. If optional name parameter
-> > is null or an empty string, filter function picks the first DMA channel
-> > candidate, thereby preserving the existing behavior of pci-epf-test.
-> >
-> > Currently, pci-epf-test picks the first suitable DMA channel. Adding a
-> > filter function enables a developer to modify the optional parameter
-> > during debugging by providing the name of a desired DMA channel. This is
-> > useful during debugging because it allows different DMA channels to be
-> > exercised.
-> >
-> > Adding a filter function also takes one step toward modifying pcitest to
-> > allow the user to choose a DMA channel by providing a name string at the
-> > command line when issuing the -d parameter for DMA transfers.
->
-> This mostly looks fine, but needs to be part of a series giving it a
-> user.
+On Sun, May 10, 2020 at 11:42:10AM -0400, Steven Rostedt wrote:
+> \From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> A bug report was posted that running the preempt irq delay module on a slow
+> machine, and removing it quickly could lead to the thread created by the
+> modlue to execute after the module is removed, and this could cause the
+> kernel to crash. The fix for this was to call kthread_stop() after creating
+> the thread to make sure it finishes before allowing the module to be
+> removed.
+> 
+> Now this caused the opposite problem on fast machines. What now happens is
+> the kthread_stop() can cause the kthread never to execute and the test never
+> to run. To fix this, add a completion and wait for the kthread to execute,
+> then wait for it to end.
+> 
+> This issue caused the ftracetest selftests to fail on the preemptirq tests.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: d16a8c31077e ("tracing: Wait for preempt irq delay thread to finish")
 
-Thanks Rob for your comments.
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I do have other changes in mind that build on this patch to give this
-filter function a user other than its current caller that is passing a
-NULL pointer as the filter parameter. I can hold it back until then.
-However, those changes are more involved and may take longer to implement
-and review. In the meantime, maybe this can be accepted independently as
-an interim measure to aid debugging during development. If this patch were
-to be applied to the codebase, it becomes much simpler to manually edit
-the code during development and replace the NULL with a string such as
-"dma0chan1" until a command line option becomes available.
+thanks,
 
-This patch is also not necessarily related to my other patch about
-supporting slave dma transfers. Even when working on machines that just
-have platform dma channels and no slave dma channels, I experience the
-same limitation where I cannot exercise any channel other than the one
-picked by default.
+ - Joel
 
->
-> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > ---
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 24 ++++++++++++++++++++----
-> >  1 file changed, 20 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > index 60330f3e3751..043916d3ab5f 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > @@ -149,10 +149,26 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >  }
-> >
-> >  /**
-> > - * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> > - * @epf_test: the EPF test device that performs data transfer operation
-> > + * pci_epf_test_pick_dma_chan() - Filter DMA channel based on desired criteria
-> > + * @chan: the DMA channel to examine
-> >   *
-> > - * Function to initialize EPF test DMA channel.
-> > + * Filter DMA channel candidates by matching against an optional desired name.
-> > + * Pick first candidate channel if desired name is not specified.
-> > + * Reject candidate channel if its name does not match the desired name.
-> > + */
-> > +static bool pci_epf_test_pick_dma_chan(struct dma_chan *chan, void *name)
-> > +{
-> > +     if (name && strlen(name) && strcmp(dma_chan_name(chan), name))
->
-> Doesn't this cause warning with 'name' being void*?
 
-I compiled this patch for riscv and x86_64 but didn't see any warning. I will
-address your concern by posting a v2 patch.
-
->
->
-> > +             return false;
-> > +
-> > +     return true;
-> > +}
-> > +
-> > +/**
-> > + * pci_epf_test_init_dma_chan() - Helper to initialize EPF DMA channel
-> > + * @epf: the EPF device that has to perform the data transfer operation
-> > + *
-> > + * Helper to initialize EPF DMA channel.
-> >   */
-> >  static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >  {
-> > @@ -165,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >       dma_cap_zero(mask);
-> >       dma_cap_set(DMA_MEMCPY, mask);
-> >
-> > -     dma_chan = dma_request_chan_by_mask(&mask);
-> > +     dma_chan = dma_request_channel(mask, pci_epf_test_pick_dma_chan, NULL);
-> >       if (IS_ERR(dma_chan)) {
-> >               ret = PTR_ERR(dma_chan);
-> >               if (ret != -EPROBE_DEFER)
-> > --
-> > 2.7.4
-> >
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/preemptirq_delay_test.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
+> index c4c86de63cf9..312d1a0ca3b6 100644
+> --- a/kernel/trace/preemptirq_delay_test.c
+> +++ b/kernel/trace/preemptirq_delay_test.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/printk.h>
+>  #include <linux/string.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/completion.h>
+>  
+>  static ulong delay = 100;
+>  static char test_mode[12] = "irq";
+> @@ -28,6 +29,8 @@ MODULE_PARM_DESC(delay, "Period in microseconds (100 us default)");
+>  MODULE_PARM_DESC(test_mode, "Mode of the test such as preempt, irq, or alternate (default irq)");
+>  MODULE_PARM_DESC(burst_size, "The size of a burst (default 1)");
+>  
+> +static struct completion done;
+> +
+>  #define MIN(x, y) ((x) < (y) ? (x) : (y))
+>  
+>  static void busy_wait(ulong time)
+> @@ -114,6 +117,8 @@ static int preemptirq_delay_run(void *data)
+>  	for (i = 0; i < s; i++)
+>  		(testfuncs[i])(i);
+>  
+> +	complete(&done);
+> +
+>  	set_current_state(TASK_INTERRUPTIBLE);
+>  	while (!kthread_should_stop()) {
+>  		schedule();
+> @@ -128,15 +133,18 @@ static int preemptirq_delay_run(void *data)
+>  static int preemptirq_run_test(void)
+>  {
+>  	struct task_struct *task;
+> -
+>  	char task_name[50];
+>  
+> +	init_completion(&done);
+> +
+>  	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
+>  	task =  kthread_run(preemptirq_delay_run, NULL, task_name);
+>  	if (IS_ERR(task))
+>  		return PTR_ERR(task);
+> -	if (task)
+> +	if (task) {
+> +		wait_for_completion(&done);
+>  		kthread_stop(task);
+> +	}
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
+> 
