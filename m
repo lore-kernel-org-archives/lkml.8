@@ -2,135 +2,163 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B19C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777BEC54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5984B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589221499;
-	bh=n8z6zdT0rN5SyD8JJU1EwIIfA21xKom77rlOoFytujo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IKW4Jcj5XDPpRDyn25SgcXP39BE+GoVzfLnFk6O5AFDfbLsYnhsfyWJt0nIT58Gi1
-	 cstcNIfccbjiERWy/TacDcyVU2A2Vc66ClawjTqau+FcsmwZdYarPnZwV+9znfFj1X
-	 CgvQaN9bHRLLLa/lvr4f6DLjcwNgz52fblFYROv4=
+	by mail.kernel.org (Postfix) with ESMTP id 591A12070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kRBX/UYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgEKSY7 (ORCPT
+        id S1729953AbgEKSZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:24:59 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37113 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729713AbgEKSY6 (ORCPT
+        Mon, 11 May 2020 14:25:10 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44838 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729685AbgEKSZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:24:58 -0400
-Received: by mail-pj1-f65.google.com with SMTP id a7so8199362pju.2;
-        Mon, 11 May 2020 11:24:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gzjYF0ep8XMaeJksKcr1mwS/Ul5KRJgBfVKTrx7XdJ8=;
-        b=YDHwCHen8nAIlXkNjGyytBp4l/3THc/CLlDSTpZ2ov/9MEQ9lgcGqlURz9eWD6UY49
-         Ht+7MCXeLI4re36/2CCRhVtRAz59KEmu1sZ+TgiPFxhMNu7lJr9cYWEKvA40lcd+dhi8
-         qkRg97EWRcR8h3DdOA6gQMW/3obhX9IcJxhXyiFEqC2hO9t2GwThObeG6skwYIlx8sp3
-         0zY/VMtBmda9nvA7gUkcTaLaxTDKB4s03ctagWfEms0bF0vWacZ5eUWbRmpXDPGBBJFV
-         rkTLmHOUQuyw6s7yTeHsEFzZvW3IgdEtgld/kh7ONUN99NarRzrJCrk3w2p73DYXxSg4
-         yvmw==
-X-Gm-Message-State: AGi0PubnsxvtM0K7F8T+3Rp5ASSZyrscyWV9K/tJiAZ9AfB91aoC7qHH
-        o/NqBnO51FBLWtJQBWzGq38RwVF1Mo0=
-X-Google-Smtp-Source: APiQypKPXNbqjUaKuNkDw/NfTC1wA3JKFcVH3i5a3y/+Dd5/xFN9T+yDEPZ7DD1beXNuM8j6Z44Wqw==
-X-Received: by 2002:a17:902:8e87:: with SMTP id bg7mr16102782plb.91.1589221497577;
-        Mon, 11 May 2020 11:24:57 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id k6sm10585413pju.44.2020.05.11.11.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 11:24:56 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 62A1240605; Mon, 11 May 2020 18:24:55 +0000 (UTC)
-Date:   Mon, 11 May 2020 18:24:55 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org, tytso@mit.edu, bunk@kernel.org,
-        torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        labbott@redhat.com, jeffm@suse.com, jikos@kernel.org, jeyu@suse.de,
-        tiwai@suse.de, AnDavis@suse.com, rpalethorpe@suse.de
-Subject: Re: [PATCH v3] kernel: add panic_on_taint
-Message-ID: <20200511182455.GR11244@42.do-not-panic.com>
-References: <20200509135737.622299-1-aquini@redhat.com>
+        Mon, 11 May 2020 14:25:10 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04BIOvqo080948;
+        Mon, 11 May 2020 13:24:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589221497;
+        bh=hJLYMptzNWCT2nBGzqtwtRbCzj89zOemjfUVGWWmvq8=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=kRBX/UYTIJPvURcW2quJqeY9dWna9Z8FokWumJAkr2O9TfPJKXW1C/WVCGnL8sF46
+         fAGKfo4rrchhj/nm5pJiZpZ/f9uMxBBFO55qGa3sYNaa2nExrfhe9FfR8ppHTAtBgt
+         w3DXFEbQpRVcW3TH80+XA37ROsdVgCekZS+Vfxd8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04BIOvSX024459
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 13:24:57 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ May 2020 13:24:56 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 May 2020 13:24:56 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04BIOu9u096276;
+        Mon, 11 May 2020 13:24:56 -0500
+Date:   Mon, 11 May 2020 23:54:55 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     <Tudor.Ambarus@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <vigneshr@ti.com>, <richard@nod.at>, <nsekhar@ti.com>,
+        <Nicolas.Ferre@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <broonie@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <miquel.raynal@bootlin.com>,
+        <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
+Message-ID: <20200511182453.ivfwu4wlfn2ta5ag@ti.com>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+ <3649933.zuh8VGJVCz@192.168.0.120>
+ <20200511112712.466f7246@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200509135737.622299-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511112712.466f7246@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 09:57:37AM -0400, Rafael Aquini wrote:
-> +Trigger Kdump on add_taint()
-> +============================
-> +
-> +The kernel parameter, panic_on_taint, calls panic() from within add_taint(),
-> +whenever the value set in this bitmask matches with the bit flag being set
-> +by add_taint(). This will cause a kdump to occur at the panic() call.
-> +In cases where a user wants to specify this during runtime,
-> +/proc/sys/kernel/panic_on_taint can be set to a respective bitmask value
-> +to achieve the same behaviour.
-> +
->  Contact
->  =======
->  
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7bc83f3d9bdf..4a69fe49a70d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3404,6 +3404,21 @@
->  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
->  			on a WARN().
->  
-> +	panic_on_taint=	[KNL] conditionally panic() in add_taint()
-> +			Format: <str>
-> +			Specifies, as a string, the TAINT flag set that will
-> +			compose a bitmask for calling panic() when the kernel
-> +			gets tainted.
-> +			See Documentation/admin-guide/tainted-kernels.rst for
-> +			details on the taint flags that users can pick to
-> +			compose the bitmask to assign to panic_on_taint.
-> +			When the string is prefixed with a '-' the bitmask
-> +			set in panic_on_taint will be mutually exclusive
-> +			with the sysctl knob kernel.tainted, and any attempt
-> +			to write to that sysctl will fail with -EINVAL for
-> +			any taint value that masks with the flags set for
-> +			this option.
+On 11/05/20 11:27AM, Boris Brezillon wrote:
+> On Mon, 11 May 2020 09:00:35 +0000
+> <Tudor.Ambarus@microchip.com> wrote:
+> 
+> > Hi, Pratyush, Boris,
+> > 
+> > On Friday, April 24, 2020 9:43:54 PM EEST Pratyush Yadav wrote:
+> > > This series adds support for octal DTR flashes in the spi-nor framework,  
+> > 
+> > I'm still learning about this, but I can give you my 2 cents as of now, to 
+> > open the discussion. Enabling 2-2-2, 4-4-4, and 8-8-8 modes is dangerous 
+> > because the flash may not recover from unexpected resets. Entering one of 
+> > these modes can be:
+> > 1/ volatile selectable, the device return to the 1-1-1 protocol after the next 
+> > power-on. I guess this is conditioned by the optional RESET pin, but I'll have 
+> > to check. Also the flash can return to the 1-1-1 mode using the software reset 
+> > or through writing to its Configuration Register, without power-on or power-
+> > off.
+> 
+> My understanding is that there's no standard software reset procedure
+> that guarantees no conflict with existing 1S commands, so even the
+> software reset approach doesn't work here.
+> 
+> > 2/ non-volatile selectable in which RESET# and software reset are useless, the 
+> > flash defaults to the mode selected in the non volatile Configuration Register 
+> > bits. The only way to get back to 1-1-1 is to write to the Configuration 
+> > Register.
+> 
+> I'm less worried about this case though, since I'd expect the ROM
+> code and bootloaders to be able to deal with xD-xD-xD modes when the
+> flash is set in this mode by default. That implies letting Linux know
+> about this default mode of course, maybe through an extra DT
+> property/cmdline param.
+> 
+> > 
+> > Not recovering from unexpected resets is unacceptable. One should always 
+> > prefer option 1/ and condition the entering in 2-2-2, 4-4-4 and 8-8-8 with the 
+> > presence of the optional RESET pin.
+> 
+> Totally agree with you on that one, but we know what happens in
+> practice...
+> 
+> > 
+> > For the unfortunate flashes that support just option 2/, we should not enter 
+> > these modes on our own, just by discovering the capabilities from the SFDP 
+> > tables or by the flags in the flash_info struct. The best we can do for them 
+> > is to move the responsibility to the user. Maybe to add a Kconfig option that 
+> > is disabled by default with which we condition the entering in 2-2-2, 4-4-4 or 
+> > 8-8-8 modes.
+> 
+> Hm, a Kconfig option doesn't sound like the right solution to the
+> problem, since it should be a per-flash decision, not something you set
+> system-wise.
 
-This talks about using a string, but that it sets a bitmask. Its not
-very clear that one must use the string representation from each taint
-flag. Also, I don't think to use the character representation as we
-limit ourselves to the alphabet and quirky what-should-be-arbitrary
-characters that represent the taint flags. The taint flag character
-representation is juse useful for human reading of a panic, but I think
-because of the limitation of the mask with the alphabet this was not
-such a great idea long term.
+Agreed.
 
-So, I don't think we should keep on extending the alphabet use case, a
-simple digit representation would suffice. I think this means we'd need
-two params one for exclusive and one for the value of the taint.
+Is there any such flash in use today? The two flashes the series adds 
+support for both have volatile configuration for 8D mode. Unless we have 
+to support a flash like this in practice, I think such a change is out 
+of the scope of this series.
+ 
+> > Once entered in one of these modes, if an unexpected reset comes, 
+> > you most likely are doomed, because early stage bootloaders may not work in 
+> > these modes and you'll not be able to boot the board. Assuming that one uses 
+> > other environment to boot the board, we should at least make sure that the 
+> > flash works in linux after an unexpected reset. We should try to determine in 
+> > which mode we are at init, so maybe an extension of the default_init hook is 
+> > needed. But all this looks like a BIG compromise, I'm not yet sure if we 
+> > should adress 2/. Thoughts?
+> 
+> We should definitely not write non-volatile regs on our own, but
+> instead use the mode that's been chosen there. I doubt anyone
+> setting the non-volative conf to 8D-8D-8D will ever want to go back to
+> 1S-1S-1S anyway, so 8D -> 1S transitions are not really an issue, right?
+> 
+> Of course, that still leaves us with the 'mode detection' issue, and I
+> have no solution other than flagging it through the DT/cmdline for that
+> one...
 
-Using a hex value or number also lets us make the input value shorter.
+Correct. I tried doing it, and the best way I could figure out was to 
+try reading the SFDP signature in 1S and 8D mode, and see where we get 
+the correct value. But unfortunately, because the Read ID command is 
+different in 8D mode for different flashes, we can't then figure out 
+which flash it actually is.
 
-If a kernel boots with panic-on-taint flag not yet supported, we don't
-complain, therefore getting a false sense of security that we will panic
-with a not yet supported taint flag. I think we should pr_warn() or
-fail to boot when that happens.
-
-  Luis
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
