@@ -2,261 +2,178 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBEEC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA06C54E8E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12B4B20820
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A0020820
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 04:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="QCTj+BVk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gFP7sW5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgEKErf (ORCPT
+        id S1726287AbgEKEwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 00:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727836AbgEKEpz (ORCPT
+        Mon, 11 May 2020 00:52:51 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:55687 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725884AbgEKEwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 00:45:55 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78751C061A0C;
-        Sun, 10 May 2020 21:45:55 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jY0K9-005jHc-So; Mon, 11 May 2020 04:45:53 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     netdev@vger.kernel.org
-Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/19] ip*_mc_gsfget(): lift copyout of struct group_filter into callers
-Date:   Mon, 11 May 2020 05:45:37 +0100
-Message-Id: <20200511044553.1365660-3-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
-References: <20200511044328.GP23230@ZenIV.linux.org.uk>
- <20200511044553.1365660-1-viro@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 11 May 2020 00:52:50 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 5AFCA3FA;
+        Mon, 11 May 2020 00:52:49 -0400 (EDT)
+Received: from imap26 ([10.202.2.76])
+  by compute3.internal (MEProxy); Mon, 11 May 2020 00:52:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm1; bh=tHIWHGwD2awLQ7YfvHIbcGG38ivg
+        dphn08I12CZ2Xx4=; b=QCTj+BVkhFwvH/TOjPuWMhgNEpOGamwHoEcavOmIuSIW
+        VPQCGmRBC5zrYOHgXfRxcH7T33qczjumF32ChqB7WqueeG7i86pNit8OspWAhgla
+        lQoTj01/mnZLMkxD2xeJBZMRk3AQPLtcJScVuc9BxWzxyHBooRqSBp1kHE+3MhWl
+        6Gh4y81FVOHt/UfyOC9d/7NZ73zFDiMul2U8AZgceVQXhYEQkVrOKA1sFc96ViZK
+        P/vjcvVmBimEFphNpz8SXx5RwAuOvipiQMZJqU9yM9MNQv0sp84hGO77cAEh2xeP
+        v+3aMOA0fOtHVcSSZfKIm5/bfYjzlHqZjeys4Uld+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=tHIWHG
+        wD2awLQ7YfvHIbcGG38ivgdphn08I12CZ2Xx4=; b=gFP7sW5ExcrIVbqJ+saGLi
+        i99R+Z3Q5Ik33sL3sQpDH+F5vCwrHfC945pQeaA/E0u6Vsfl4bvfd6PwrK2ntx2H
+        iSTzHu0fHoD9Uhpt+MjRtr7LXjb8lbME/661m2WKkNFGmI1UDW9QucZHAUAiNjOR
+        KScxVJzDTI4eg1F1VqjzyWlkwd2IL1ZPIX62nCS8RyL3XU4LX8E+c3KhxOtxmByX
+        /RTfvGanwj5+XvxtH/D0n5S7f9o4fFpGtgTSXkKFw6DPPD3uPe0bHgOkUe4disWz
+        z7nJdxzGZqOKigGt6/g0JWJTF9a+qHOe2eStSLtafbo9KAUJA35zAZUFEZDl3Tpg
+        ==
+X-ME-Sender: <xms:INq4XhHZYc17U9LVumxao8pYJxhjT3UkutMvDJWgUVUtVMrHtf8puQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrkeelgdekiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpeetlhhishht
+    rghirhcuoegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvgeqnecuggftrfgrth
+    htvghrnhepueffkeevheejledtueevieekleekjefhjeehudfhtdfgtdfgjeejkedvveej
+    veeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgv
+X-ME-Proxy: <xmx:INq4XtOYh1BjK-l9aCyqQ3N8CAmTdf-2sj69GAnnPTBJC5QTNA8TOg>
+    <xmx:INq4Xrc2oJyv7MLmmA5mEaYGv8hEtzSnDLBuMU8h5kzjbPMiJJDHqw>
+    <xmx:INq4XivgtEnnbOfpUcLdjQ-kdG4AX2gtuM9uH7UCQUvvu98hb50nng>
+    <xmx:Idq4Xn-si6AyLlkZU2ihXLcHNdiHyr0DRv_TSgEGL63mmPBIJSbPfA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2766E14200A2; Mon, 11 May 2020 00:52:48 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-dev0-413-g750b809-fmstable-20200507v1
+Mime-Version: 1.0
+Message-Id: <7d6d1494-31a7-4780-85f3-8bbc2f32bcd6@www.fastmail.com>
+In-Reply-To: <CAMuHMdV7qGSbw44O+ykSz3W6h6oxj-ir+9qRbeazKb+p7Z=2Mg@mail.gmail.com>
+References: <20200506014135.2941967-1-alistair@alistair23.me>
+ <CAMuHMdV7qGSbw44O+ykSz3W6h6oxj-ir+9qRbeazKb+p7Z=2Mg@mail.gmail.com>
+Date:   Sun, 10 May 2020 21:52:27 -0700
+From:   Alistair <alistair@alistair23.me>
+To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc:     "Mark Brown" <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Maxime Ripard" <mripard@kernel.org>,
+        "Chen-Yu Tsai" <wens@csie.org>,
+        "Alistair Francis" <alistair23@gmail.com>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] spi: sun6i: Add support for GPIO chip select lines
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Wed, May 6, 2020, at 1:27 AM, Geert Uytterhoeven wrote:
+> Hi Alistair,
+> 
+> On Wed, May 6, 2020 at 3:41 AM Alistair Francis <alistair@alistair23.me> wrote:
+> > Add a setup function that can be used to support using generic GPIO
+> > lines for the chip select.
+> >
+> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> > ---
+> > drivers/spi/spi-sun6i.c | 27 +++++++++++++++++++++++++++
+> > 1 file changed, 27 insertions(+)
+> >
+> > diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+> > index ec7967be9e2f..fd4e19434942 100644
+> > --- a/drivers/spi/spi-sun6i.c
+> > +++ b/drivers/spi/spi-sun6i.c
+> > @@ -10,6 +10,7 @@
+> > #include <linux/clk.h>
+> > #include <linux/delay.h>
+> > #include <linux/device.h>
+> > +#include <linux/gpio.h>
+> > #include <linux/interrupt.h>
+> > #include <linux/io.h>
+> > #include <linux/module.h>
+> > @@ -171,6 +172,31 @@ static inline void sun6i_spi_fill_fifo(struct sun6i_spi *sspi, int len)
+> > }
+> > }
+> >
+> > +static int sun6i_spi_setup(struct spi_device *spi)
+> > +{
+> > + int ret;
+> > +
+> > + /* sanity check for native cs */
+> > + if (spi->mode & SPI_NO_CS)
+> > + return 0;
+> > + if (gpio_is_valid(spi->cs_gpio)) {
+> > + /* with gpio-cs set the GPIO to the correct level
+> > + * and as output (in case the dt has the gpio not configured
+> > + * as output but native cs)
+> > + */
+> > + ret = gpio_direction_output(spi->cs_gpio,
+> > + (spi->mode & SPI_CS_HIGH) ? 0 : 1);
+> > + if (ret)
+> > + dev_err(&spi->dev,
+> > + "could not set gpio %i as output: %i\n",
+> > + spi->cs_gpio, ret);
+> > +
+> > + return ret;
+> > + }
+> > +
+> > + return 0;
+> > +}
+> > +
+> > static void sun6i_spi_set_cs(struct spi_device *spi, bool enable)
+> > {
+> > struct sun6i_spi *sspi = spi_master_get_devdata(spi->master);
+> > @@ -470,6 +496,7 @@ static int sun6i_spi_probe(struct platform_device *pdev)
+> >
+> > master->max_speed_hz = 100 * 1000 * 1000;
+> > master->min_speed_hz = 3 * 1000;
+> > + master->setup = sun6i_spi_setup;
+> > master->set_cs = sun6i_spi_set_cs;
+> > master->transfer_one = sun6i_spi_transfer_one;
+> > master->num_chipselect = 4;
+> 
+> Can't you just set
+> 
+>  master->use_gpio_descriptors = true;
+> 
+> instead and be done with it?
+> Then drivers/spi/spi.c:spi_get_gpio_descs() will configure the GPIO line
+> as output for you.
 
-pass the userland pointer to the array in its tail, so that part
-gets copied out by our functions; copyout of everything else is
-done in the callers.  Rationale: reuse for compat; the array
-is the same in native and compat, the layout of parts before it
-is different for compat.
+Yep, it looks like that works. Sending a v2.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- include/linux/igmp.h     |  2 +-
- include/net/ipv6.h       |  2 +-
- net/ipv4/igmp.c          | 18 +++++-------------
- net/ipv4/ip_sockglue.c   | 19 ++++++++++++++-----
- net/ipv6/ipv6_sockglue.c | 18 ++++++++++++++----
- net/ipv6/mcast.c         | 10 +++-------
- 6 files changed, 38 insertions(+), 31 deletions(-)
+Alistair
 
-diff --git a/include/linux/igmp.h b/include/linux/igmp.h
-index faa6586a5783..64ce8cd1cfaf 100644
---- a/include/linux/igmp.h
-+++ b/include/linux/igmp.h
-@@ -123,7 +123,7 @@ extern int ip_mc_msfilter(struct sock *sk, struct ip_msfilter *msf,int ifindex);
- extern int ip_mc_msfget(struct sock *sk, struct ip_msfilter *msf,
- 		struct ip_msfilter __user *optval, int __user *optlen);
- extern int ip_mc_gsfget(struct sock *sk, struct group_filter *gsf,
--		struct group_filter __user *optval, int __user *optlen);
-+			struct sockaddr_storage __user *p);
- extern int ip_mc_sf_allow(struct sock *sk, __be32 local, __be32 rmt,
- 			  int dif, int sdif);
- extern void ip_mc_init_dev(struct in_device *);
-diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-index 955badd1e8ff..900cc66311c4 100644
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -1136,7 +1136,7 @@ int ip6_mc_source(int add, int omode, struct sock *sk,
- 		  struct group_source_req *pgsr);
- int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf);
- int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
--		  struct group_filter __user *optval, int __user *optlen);
-+		  struct sockaddr_storage __user *p);
- 
- #ifdef CONFIG_PROC_FS
- int ac6_proc_init(struct net *net);
-diff --git a/net/ipv4/igmp.c b/net/ipv4/igmp.c
-index 47f0502b2101..7b272bbed2b4 100644
---- a/net/ipv4/igmp.c
-+++ b/net/ipv4/igmp.c
-@@ -2565,9 +2565,9 @@ int ip_mc_msfget(struct sock *sk, struct ip_msfilter *msf,
- }
- 
- int ip_mc_gsfget(struct sock *sk, struct group_filter *gsf,
--	struct group_filter __user *optval, int __user *optlen)
-+	struct sockaddr_storage __user *p)
- {
--	int err, i, count, copycount;
-+	int i, count, copycount;
- 	struct sockaddr_in *psin;
- 	__be32 addr;
- 	struct ip_mc_socklist *pmc;
-@@ -2583,37 +2583,29 @@ int ip_mc_gsfget(struct sock *sk, struct group_filter *gsf,
- 	if (!ipv4_is_multicast(addr))
- 		return -EINVAL;
- 
--	err = -EADDRNOTAVAIL;
--
- 	for_each_pmc_rtnl(inet, pmc) {
- 		if (pmc->multi.imr_multiaddr.s_addr == addr &&
- 		    pmc->multi.imr_ifindex == gsf->gf_interface)
- 			break;
- 	}
- 	if (!pmc)		/* must have a prior join */
--		goto done;
-+		return -EADDRNOTAVAIL;
- 	gsf->gf_fmode = pmc->sfmode;
- 	psl = rtnl_dereference(pmc->sflist);
- 	count = psl ? psl->sl_count : 0;
- 	copycount = count < gsf->gf_numsrc ? count : gsf->gf_numsrc;
- 	gsf->gf_numsrc = count;
--	if (put_user(GROUP_FILTER_SIZE(copycount), optlen) ||
--	    copy_to_user(optval, gsf, GROUP_FILTER_SIZE(0))) {
--		return -EFAULT;
--	}
--	for (i = 0; i < copycount; i++) {
-+	for (i = 0; i < copycount; i++, p++) {
- 		struct sockaddr_storage ss;
- 
- 		psin = (struct sockaddr_in *)&ss;
- 		memset(&ss, 0, sizeof(ss));
- 		psin->sin_family = AF_INET;
- 		psin->sin_addr.s_addr = psl->sl_addr[i];
--		if (copy_to_user(&optval->gf_slist[i], &ss, sizeof(ss)))
-+		if (copy_to_user(p, &ss, sizeof(ss)))
- 			return -EFAULT;
- 	}
- 	return 0;
--done:
--	return err;
- }
- 
- /*
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index 8f550cf4c1c0..8616c38bd420 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -1473,19 +1473,28 @@ static int do_ip_getsockopt(struct sock *sk, int level, int optname,
- 	}
- 	case MCAST_MSFILTER:
- 	{
-+		struct group_filter __user *p = (void __user *)optval;
- 		struct group_filter gsf;
-+		const int size0 = offsetof(struct group_filter, gf_slist);
-+		int num;
- 
--		if (len < GROUP_FILTER_SIZE(0)) {
-+		if (len < size0) {
- 			err = -EINVAL;
- 			goto out;
- 		}
--		if (copy_from_user(&gsf, optval, GROUP_FILTER_SIZE(0))) {
-+		if (copy_from_user(&gsf, p, size0)) {
- 			err = -EFAULT;
- 			goto out;
- 		}
--		err = ip_mc_gsfget(sk, &gsf,
--				   (struct group_filter __user *)optval,
--				   optlen);
-+		num = gsf.gf_numsrc;
-+		err = ip_mc_gsfget(sk, &gsf, p->gf_slist);
-+		if (err)
-+			goto out;
-+		if (gsf.gf_numsrc < num)
-+			num = gsf.gf_numsrc;
-+		if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
-+		    copy_to_user(p, &gsf, size0))
-+			err = -EFAULT;
- 		goto out;
- 	}
- 	case IP_MULTICAST_ALL:
-diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-index 1b4ad4f8dc42..6441e824b63b 100644
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -1056,18 +1056,28 @@ static int do_ipv6_getsockopt(struct sock *sk, int level, int optname,
- 		break;
- 	case MCAST_MSFILTER:
- 	{
-+		struct group_filter __user *p = (void __user *)optval;
- 		struct group_filter gsf;
-+		const int size0 = offsetof(struct group_filter, gf_slist);
-+		int num;
- 		int err;
- 
--		if (len < GROUP_FILTER_SIZE(0))
-+		if (len < size0)
- 			return -EINVAL;
--		if (copy_from_user(&gsf, optval, GROUP_FILTER_SIZE(0)))
-+		if (copy_from_user(&gsf, p, size0))
- 			return -EFAULT;
- 		if (gsf.gf_group.ss_family != AF_INET6)
- 			return -EADDRNOTAVAIL;
-+		num = gsf.gf_numsrc;
- 		lock_sock(sk);
--		err = ip6_mc_msfget(sk, &gsf,
--			(struct group_filter __user *)optval, optlen);
-+		err = ip6_mc_msfget(sk, &gsf, p->gf_slist);
-+		if (!err) {
-+			if (num > gsf.gf_numsrc)
-+				num = gsf.gf_numsrc;
-+			if (put_user(GROUP_FILTER_SIZE(num), optlen) ||
-+			    copy_to_user(p, &gsf, size0))
-+				err = -EFAULT;
-+		}
- 		release_sock(sk);
- 		return err;
- 	}
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index eaa4c2cc2fbb..97d796c7d6c0 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -547,7 +547,7 @@ int ip6_mc_msfilter(struct sock *sk, struct group_filter *gsf)
- }
- 
- int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
--	struct group_filter __user *optval, int __user *optlen)
-+	struct sockaddr_storage *p)
- {
- 	int err, i, count, copycount;
- 	const struct in6_addr *group;
-@@ -592,14 +592,10 @@ int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
- 
- 	copycount = count < gsf->gf_numsrc ? count : gsf->gf_numsrc;
- 	gsf->gf_numsrc = count;
--	if (put_user(GROUP_FILTER_SIZE(copycount), optlen) ||
--	    copy_to_user(optval, gsf, GROUP_FILTER_SIZE(0))) {
--		return -EFAULT;
--	}
- 	/* changes to psl require the socket lock, and a write lock
- 	 * on pmc->sflock. We have the socket lock so reading here is safe.
- 	 */
--	for (i = 0; i < copycount; i++) {
-+	for (i = 0; i < copycount; i++, p++) {
- 		struct sockaddr_in6 *psin6;
- 		struct sockaddr_storage ss;
- 
-@@ -607,7 +603,7 @@ int ip6_mc_msfget(struct sock *sk, struct group_filter *gsf,
- 		memset(&ss, 0, sizeof(ss));
- 		psin6->sin6_family = AF_INET6;
- 		psin6->sin6_addr = psl->sl_addr[i];
--		if (copy_to_user(&optval->gf_slist[i], &ss, sizeof(ss)))
-+		if (copy_to_user(p, &ss, sizeof(ss)))
- 			return -EFAULT;
- 	}
- 	return 0;
--- 
-2.11.0
-
+> 
+> Gr{oetje,eeting}s,
+> 
+>  Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>  -- Linus Torvalds
+> 
