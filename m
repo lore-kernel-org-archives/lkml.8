@@ -2,351 +2,190 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DE0C54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B806AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D222075E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89979206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 13:25:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="YtBmnW2b";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="mEP62Of2"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="cN7ngzRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgEKNUn (ORCPT
+        id S1729181AbgEKNZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 09:20:43 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:36958 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726013AbgEKNUm (ORCPT
+        Mon, 11 May 2020 09:25:08 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31678 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbgEKNZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 09:20:42 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BD8BxC016654;
-        Mon, 11 May 2020 06:15:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=MC4fFwRxiOhMm5cfHt7BVPrcLVdhdXxS9WNj0pAT2LY=;
- b=YtBmnW2b6AwaCo1rbm3GNUBw1xfV1/8kTB8l+fmnhi0zXNSknNBHm1M4EpCsxmJXV8Rc
- B7q/+OckHOySIQc3q+QaiaPLLNVnLRRb+7D35P5RQ4xUAt8yLHId5umMN8xP1fnPXw8X
- Q2To7XFkOscp32cYhbrNfuVWgpFh25e8Tw63KoTbbpC9uIti7D77SFaZKPtNZUeAzrnD
- mcTYeVN+0fpkOpIKf1jo31eWRRUva23Sia8UIyrwbIt7eMyB+nhvUYUZ3BiZ0kv6gHyK
- YCHsbltscSzn1xiYJDT8L70I8jQge+shLXe/sh29IRakIsv3dD6LcSs0SJmstWo6Armx FQ== 
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 30ws2xx413-1
+        Mon, 11 May 2020 09:25:07 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BDNRNQ025164;
+        Mon, 11 May 2020 09:24:53 -0400
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+        by mx0a-00128a01.pphosted.com with ESMTP id 30wse5n5p2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 06:15:36 -0700
+        Mon, 11 May 2020 09:24:52 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EHYM8I2CBb83D13rTu3uOrldmPkvOrGsf+g611TD9qZzC3G9ly6y0cuC5lQ4XofKXAAi2L7a6q1VWld/1ZXOi2/tsHwDkoXMwazUXAbuNOtoDNgF2QDL84qWziqReJJb8bdfy5HwfqIDlvB6a6TLRqtbx1w0IwePsq771fYvkaU7fbTmcLFzRhp4yZXGs8OgUfenrdrGJjvrLm42MnJXLEOEK4cO5wBRWU68OdR1jxLUTS00VpZODsfhIBCv5+0BXbDPJ9irRdzJ1/6uZY2MxZHXYXe0KSbaTMijzPCEEpIUTNBQQW7pBZfIu02BRKpbLfX2DCQGpsp3hGVcy9YRPQ==
+ b=WFTeoNoaJJKoA/Ag0CoKGmFWJLhqlQ58dFxurzIZlYT0o1XMmOEbodV/bBNMjgR8wMpR4zsStVpUqb+IVLctb/HM+xUkGv2j34gFCgNX2MnfG5KCwStn+cXtWKB2j8ZpMmIgtVf5ZdMoWlwBNYmYurbHVrG/BsPxxXDk0b39/xQdWaZJWkZ283VO4ogljLreoH2jE8KkmnnhYO6Ed17eLkG6rISefc79G8LNwQMOGAkg4keM5yld0zh87dlipsPdJZvuJ9ZB2e5278pBiH2Y81Qd/nus7gLqOJy1d5QlhBsZFw9/cQxunMf0kvP6TJtTahIGXNRytj4+BhsWncl/GQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MC4fFwRxiOhMm5cfHt7BVPrcLVdhdXxS9WNj0pAT2LY=;
- b=VnNIuzwvrWzmInSaPcmIEL4qCW1srdk7kvJ8/rilBo7PYsmfNbUPXhNTtYf0JzaiAYmBqbBAeH4bA0FkJYx7bFZpxb/UR5QZO5NySFUmLIKPEa6HtpM81DuR1gdGfzdF37aZ151qACpZRbh4bZFoSTLrzhmztu2wAjbFNeBFTRlUdtilYw7jmUPgLOREPN1xdFRJF9pRWWCZL5TkNZJrjH9njyHoosCuiQJ5J1inEkNq7WkLC1mLcBJGu6WbObzXTYtQ97ZQ214mU/3ybKEkG8HIADATdIb0D9cgI1uOMBcvjT/x5LRbQ9fVlunyrmYxlduhEtvCzFh5SYn5S70UIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 158.140.1.147) smtp.rcpttodomain=synopsys.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=6MVCEFXSCfAqeKttMtDf0sXi/1ceCKMXI5O17mxfv6Y=;
+ b=B5plO8VWEaWHc661jZxAQwWZSC0f37BLOiy+3ItjkzDIyqDf2KTB0yXVvfjCx5urZls9YTVMB9EuzH9TYBaWGPr96nzH/QOldIQ0EyhiPoYmhdF+61oyYywzHft/3rRCtEZ6SblrW9KIGlKVICE/Wa6nZzJOydC3Dg9U0e29ODT0ruMVrFpggxOtG3vkNK2g/+tVACztl/FJPa1QcYtfcRuICgS6qn3uPNt7v0VjcmPB4Van99Tcj/WrJujIky+0Y/Drre/cRPpCq3XOREnSmSCDX4bSWFE5MDVaFq0VU2+tz+NRE7nvfOw0TdBA5DLzG02r21sXgO3W6bWKeW6kwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MC4fFwRxiOhMm5cfHt7BVPrcLVdhdXxS9WNj0pAT2LY=;
- b=mEP62Of29MUkQNMX/KoNNfG99EohPajiojs6qx+B7OVSYIC9aL/sE79cMAABOO7kSfF3QugNa7kA0633spgSmaj0ZwnBX4eTEF6kshEKlZzDMerdMH2PEp4JVUB7DPl2g6VNMxgv8Z76lVP/sBi1lXjE88wBeZd4QUFjmg4Jl7Q=
-Received: from BN4PR13CA0016.namprd13.prod.outlook.com (2603:10b6:403:3::26)
- by MN2PR07MB7200.namprd07.prod.outlook.com (2603:10b6:208:1d5::24) with
+ bh=6MVCEFXSCfAqeKttMtDf0sXi/1ceCKMXI5O17mxfv6Y=;
+ b=cN7ngzRm2J5p+kj59TeulXUjJ90UapEUpHIrpnmTLUG4zFkHm8aa6mzyZ3MBhD8kJiwBjAH1gnhpRvum9PCWDvPY2Wx0L6k1dNu5FlzZXK6Yn4E6B4btZJEUh0oKqn63gnVjlc+lbjWRUnV4joye6k8cJvD1YJgYbP1Ixo0SG7A=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4347.namprd03.prod.outlook.com (2603:10b6:5:110::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Mon, 11 May
- 2020 13:15:34 +0000
-Received: from BN8NAM12FT022.eop-nam12.prod.protection.outlook.com
- (2603:10b6:403:3:cafe::c8) by BN4PR13CA0016.outlook.office365.com
- (2603:10b6:403:3::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend
- Transport; Mon, 11 May 2020 13:15:34 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 158.140.1.147 as permitted sender) receiver=protection.outlook.com;
- client-ip=158.140.1.147; helo=sjmaillnx1.cadence.com;
-Received: from sjmaillnx1.cadence.com (158.140.1.147) by
- BN8NAM12FT022.mail.protection.outlook.com (10.13.183.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.11 via Frontend Transport; Mon, 11 May 2020 13:15:33 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 04BDFU2Q028905
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 11 May 2020 06:15:31 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 11 May 2020 15:15:29 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 11 May 2020 15:15:29 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 04BDFTIT009970;
-        Mon, 11 May 2020 15:15:29 +0200
-Received: (from pthombar@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 04BDFTFh009969;
-        Mon, 11 May 2020 15:15:29 +0200
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>
-CC:     <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
-        <praneeth@ti.com>, Parshuram Thombare <pthombar@cadence.com>
-Subject: [PATCH v7 5/7] i3c: master: add defslvs processing
-Date:   Mon, 11 May 2020 15:15:28 +0200
-Message-ID: <1589202928-9912-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1589202702-4879-1-git-send-email-pthombar@cadence.com>
-References: <1589202702-4879-1-git-send-email-pthombar@cadence.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Mon, 11 May
+ 2020 13:24:47 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::e02f:b3c0:d1e9:5eaf]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::e02f:b3c0:d1e9:5eaf%3]) with mapi id 15.20.2979.033; Mon, 11 May 2020
+ 13:24:47 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
+Thread-Topic: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
+Thread-Index: AQHWJUAdPxP6vzcVf0GdP2M4m7Jctaifc8QAgAGoDQCAAZjjAIAAAUIAgAAoyACAAAXVAA==
+Date:   Mon, 11 May 2020 13:24:47 +0000
+Message-ID: <7d2c8174e345bf8e241d48de65066d2606143503.camel@analog.com>
+References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
+         <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
+         <20200510110958.29046a18@archlinux>
+         <8c5d9ef5ed4ea9037c5459daa2044d1cd7c5db7a.camel@analog.com>
+         <c88b17c3-a9d6-e755-04e8-bc9f225e2a3b@metafoo.de>
+         <554fe46f0cdd1cafb313f534c0edd93f5686b806.camel@analog.com>
+In-Reply-To: <554fe46f0cdd1cafb313f534c0edd93f5686b806.camel@analog.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [188.27.130.47]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 729bf7cb-45c9-4db0-2bbf-08d7f5aead36
+x-ms-traffictypediagnostic: DM6PR03MB4347:
+x-microsoft-antispam-prvs: <DM6PR03MB434784971A195B8999DB0BE3F9A10@DM6PR03MB4347.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04004D94E2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +/WByI0t7DfNFwluJZoknC5IFXjvayjATSQH5oXJEBxCU2BnBp6w5hOLWPeksSrTWNUIh35ueFN8gniJfZb08+gxnzizWx7LcDc4jwYYhCZ/gMGOFzYe69rAheXj/pMw1YCQn7zMen+nc4TijA4JUp+P4OHnlGSQ175b4l8D7vgJtvOqowCojmD4c7KvkXhl2WSFGbCT5nWK7nRSyzwdHHoujZr96tt2EqHp2vbU+w18gz9xCB+8+DtqDmhJQcNeoB9bZ46HM+yFHJxRwW30kBzZ5nrXFfJ+mJHOScu2P/kc2+9Xq62xPiKSXT4LkYs3ZC1DtRjc2F9Ut6Ecxmr4rEGdI/c5bqWFVDjumipRCO0XOTiDch609nflxgmDRQlBa7pyttj3lY1+FGOMFljP12sPSWSmEWjzt9RQpJtvyH6SjN7D4jgQXsj40nRuhiW1OTNJSVAEw7MBFzeripN5Z3LHFtpiFUhF5gtyfn5L48PNRmRJoLIiUt7n4/ORlxXVRerqX9tzHJsOCdBvdK001w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(366004)(376002)(39860400002)(136003)(33430700001)(4326008)(5660300002)(8936002)(478600001)(66476007)(66946007)(64756008)(33440700001)(66446008)(36756003)(91956017)(66556008)(76116006)(71200400001)(54906003)(2616005)(6486002)(110136005)(6512007)(6506007)(86362001)(316002)(53546011)(8676002)(2906002)(186003)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: aLp3MH/tBZmMC1mErLXG3SEy1PesXnnvaCw2YA83pgW4MoQvh6xu+1yNOZZ7fRK36+tHVNc0YEoARU5wio0PaV2/1dB8ixvS/8bomrM1Lw+FS2EyGPeDnxaQulSfWSgulVzR4ejr7Y2jw7BeuswbZi+k5Ou8uA2Lq2f24GiQUUzuV8P+wvhAx5Zk5NdPafcFPs8KL6iAurX6bzsoKwxJ5tNl9DM7/u3rLj649lQsWd/hWOD1dYB322Kwg1PBVX3Uii8JK48cadRiDzWi5b03xlW/DGKviOtIgd3gKsOyCKHFlCm9fD8lpzN3P3OxbOvm63MoLnLfdwkL7pdlC7iN1vajcZzYjJYmd/elIj3O0JkxYb+9ywQFQQi7B98ClOKcyjcst2Qh56lCfe1j23ew8GhdbwdxlWBLEcGOfz3rpcEUaV7rivTMFI6suSQiPquros58b3geWp08yps3M57LGhnJwcWDXI+xBiBzeP0efw8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9A575A187A4CA44CA5FED6F40C71A951@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.147;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx1.cadence.com;PTR:unknown.Cadence.COM;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(346002)(136003)(36092001)(46966005)(33430700001)(82740400003)(478600001)(47076004)(4326008)(316002)(186003)(110136005)(42186006)(26005)(107886003)(54906003)(36906005)(86362001)(70586007)(70206006)(2906002)(36756003)(336012)(7636003)(8936002)(356005)(8676002)(82310400002)(33440700001)(5660300002)(2616005)(426003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8e743f9b-1ff5-4478-c31c-08d7f5ad62fc
-X-MS-TrafficTypeDiagnostic: MN2PR07MB7200:
-X-Microsoft-Antispam-PRVS: <MN2PR07MB7200887704F7252016D4D28DC1A10@MN2PR07MB7200.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-Forefront-PRVS: 04004D94E2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8pKDVdmlLvCWGxTP7xQD/WKiKzuRLyr8oebnXE+/uUNLSTjz3SX6XIFVVv4d3K3iBjXUTop0SbUzaV5mtiI9TmTelW0YgT19m0lLNcSu+ykVhfYY+n1Ta+os+Bw99WA3oS2qG+X3si0rZohOQtnnMpxt+OxMkWCdFSc8OSRFnu5WMczWmW1v/I8gzSeAQQNs+0yhovYt9Ja48yit81NxH4Ql9qZe9nHEwL7Q+NbsvcBUFiedhFWe+nrZOBPOs0z0CXTn5NqFGAXbXSEDnj673Lr0cVrrRXmvoV/mpJGkH26++lyFbh8XSJ2VDh9EjlivTL8t2vkYw2H619KaubtA9w/LTxsyB8BZwB4sdZs0c4PMzlX2KWH6CJ8K5jrIkPz1IwzWYXI3MaJOUeswWbQtJqdyt5sDFIXXdrLYCuyxCqF1GKQDBS7kYrBwvaotMTzV8MEv+PlpYSa+3l4B0dFTgsY/o1CYV0vt0PCLBZIWIejw391jS/cKUQj2oFfFFPnI+PF5dvLPFQFtLb7FhqxH4L8Qa/QJKGCIyDL+FYKAcFSpTJ0ogIWQIbfLgLGsVrEyin0tUsbq+Hds5tEkrDYk3KOs3vJVOrV2JZD3BYVMQwM=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 13:15:33.3734
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 729bf7cb-45c9-4db0-2bbf-08d7f5aead36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 13:24:47.4887
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e743f9b-1ff5-4478-c31c-08d7f5ad62fc
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.147];Helo=[sjmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB7200
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fzS23zVyw/75ztq3QUR7U1lnWI+p81iqBs8MHkCLJRYp1mc/83G+4yDQZ6bfCCgSnMGSr/v34WgXcQdwdfuYDzJNXGT+wIQPzOAHgBZQdKw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4347
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-11_05:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 spamscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 suspectscore=2 impostorscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110109
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added defslvs processing code to the I3C master subsystem.
-
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- drivers/i3c/master.c       | 142 ++++++++++++++++++++++++++++++++++++-
- include/linux/i3c/master.h |   7 ++
- 2 files changed, 147 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 9c8250a6a2b0..ea53fadeed99 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -2639,7 +2639,8 @@ static int i3c_master_check_ops(const struct i3c_master_controller_ops *ops)
- 		return -EINVAL;
- 
- 	if (ops->request_mastership &&
--	    (!ops->enable_mr_events || !ops->check_event_set))
-+	    (!ops->enable_mr_events || !ops->check_event_set ||
-+	     !ops->sec_mst_dyn_addr))
- 		return -EINVAL;
- 
- 	return 0;
-@@ -2818,12 +2819,20 @@ int i3c_secondary_master_register(struct i3c_master_controller *master,
- 				  struct device *parent,
- 				  const struct i3c_master_controller_ops *ops)
- {
--	int ret;
-+	int ret, sz;
- 
- 	ret = i3c_master_init(master, parent, ops, true);
- 	if (ret)
- 		return ret;
- 
-+	sz = sizeof(struct i3c_ccc_dev_desc) * I3C_BUS_MAX_DEVS;
-+	master->defslvs_data.devs = devm_kzalloc(&master->dev, sz,
-+						 GFP_KERNEL);
-+	if (!master->defslvs_data.devs) {
-+		ret = -ENOMEM;
-+		goto err_cleanup_bus;
-+	}
-+
- 	ret = device_add(&master->dev);
- 	if (ret)
- 		goto err_cleanup_bus;
-@@ -2856,6 +2865,135 @@ int i3c_secondary_master_register(struct i3c_master_controller *master,
- }
- EXPORT_SYMBOL_GPL(i3c_secondary_master_register);
- 
-+static int i3c_master_populate_bus(struct i3c_master_controller *master)
-+{
-+	struct i3c_dev_desc *i3cdev, *olddev, *tmp;
-+	struct i3c_ccc_dev_desc *desc;
-+	struct list_head i3c_old;
-+	struct i3c_bus *i3cbus;
-+	int slot, dyn_addr, ret;
-+
-+	i3cbus = i3c_master_get_bus(master);
-+
-+	INIT_LIST_HEAD(&i3c_old);
-+	list_for_each_entry_safe(olddev, tmp, &i3cbus->devs.i3c, common.node) {
-+		i3c_master_put_i3c_addrs(olddev);
-+		list_del(&olddev->common.node);
-+		list_add(&olddev->common.node, &i3c_old);
-+	}
-+
-+	dyn_addr = master->ops->sec_mst_dyn_addr(master);
-+	master->this->info.dyn_addr = dyn_addr;
-+	i3c_master_get_i3c_addrs(master->this);
-+	list_del(&master->this->common.node);
-+	list_add(&master->this->common.node, &i3cbus->devs.i3c);
-+
-+	desc = master->defslvs_data.devs;
-+	for (slot = 0; slot < master->defslvs_data.ndevs; slot++, desc++) {
-+		struct i3c_device_info info = {
-+			.dyn_addr = desc->dyn_addr
-+		};
-+
-+		if (dyn_addr == info.dyn_addr)
-+			continue;
-+
-+		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-+		if (IS_ERR(i3cdev)) {
-+			ret = PTR_ERR(i3cdev);
-+			goto populate_bus_fail;
-+		}
-+
-+		i3c_master_get_i3c_addrs(i3cdev);
-+		ret = i3c_master_retrieve_dev_info(i3cdev);
-+		i3c_master_put_i3c_addrs(i3cdev);
-+		if (ret) {
-+			i3c_master_free_i3c_dev(i3cdev);
-+			goto populate_bus_fail;
-+		}
-+
-+		list_for_each_entry_safe(olddev, tmp, &i3c_old, common.node) {
-+			if (olddev->info.pid == i3cdev->info.pid) {
-+				olddev->info.dyn_addr = info.dyn_addr;
-+				i3c_master_get_i3c_addrs(olddev);
-+				list_del(&olddev->common.node);
-+				list_add(&olddev->common.node,
-+					 &i3cbus->devs.i3c);
-+				i3c_master_free_i3c_dev(i3cdev);
-+				i3cdev = NULL;
-+				break;
-+			}
-+		}
-+
-+		if (i3cdev) {
-+			ret = i3c_master_attach_i3c_dev(master, i3cdev);
-+			if (ret) {
-+				i3c_master_free_i3c_dev(i3cdev);
-+				goto populate_bus_fail;
-+			}
-+		}
-+	}
-+
-+	list_for_each_entry_safe(olddev, tmp, &i3c_old, common.node) {
-+		if (olddev->dev) {
-+			olddev->dev->desc = NULL;
-+			if (device_is_registered(&olddev->dev->dev))
-+				device_unregister(&olddev->dev->dev);
-+			else
-+				put_device(&olddev->dev->dev);
-+			kfree(olddev->dev);
-+		}
-+		list_del(&olddev->common.node);
-+		i3c_master_free_i3c_dev(olddev);
-+	}
-+
-+	return 0;
-+
-+populate_bus_fail:
-+	/*
-+	 * Try to restore i3cbus->devs.i3c list, so far no i3c
-+	 * device is deleted, only moved or added to the original
-+	 * i3c list. Move rest of the i3c devices from old list,
-+	 * to correctly process defslvs in rety.
-+	 */
-+	list_for_each_entry_safe(olddev, tmp, &i3c_old, common.node) {
-+		list_del(&olddev->common.node);
-+		list_add(&olddev->common.node, &i3cbus->devs.i3c);
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * i3c_master_process_defslvs() - process I3C device list received in
-+ * DEFSLVS for device plug/unplug and address change.
-+ * @m: I3C master object
-+ *
-+ * This function may sleep, so should not be called in the atomic context.
-+ */
-+int i3c_master_process_defslvs(struct i3c_master_controller *m)
-+{
-+	int ret;
-+
-+	i3c_bus_normaluse_lock(&m->bus);
-+	ret = i3c_master_acquire_bus(m);
-+	i3c_bus_normaluse_unlock(&m->bus);
-+	if (ret)
-+		return ret;
-+
-+	i3c_bus_maintenance_lock(&m->bus);
-+	ret = i3c_master_populate_bus(m);
-+	i3c_bus_maintenance_unlock(&m->bus);
-+	if (!ret) {
-+		i3c_bus_normaluse_lock(&m->bus);
-+		i3c_master_register_new_i3c_devs(m);
-+		i3c_bus_normaluse_unlock(&m->bus);
-+	}
-+	i3c_master_enable_mr_events(m);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(i3c_master_process_defslvs);
-+
- /**
-  * i3c_master_unregister() - unregister an I3C master
-  * @master: master used to send frames on the bus
-diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-index dd67497ad8b1..688487c4a62a 100644
---- a/include/linux/i3c/master.h
-+++ b/include/linux/i3c/master.h
-@@ -488,6 +488,8 @@ struct i3c_master_controller_ops {
-  *	in a thread context. Typical examples are Hot Join processing which
-  *	requires taking the bus lock in maintenance, which in turn, can only
-  *	be done from a sleep-able context
-+ * @defslvs_data: list used to pass i3c device list received in DEFSLVS message,
-+ *	from DEFSLVS controller driver to I3C core
-  *
-  * A &struct i3c_master_controller has to be registered to the I3C subsystem
-  * through i3c_master_register(). None of &struct i3c_master_controller fields
-@@ -507,6 +509,10 @@ struct i3c_master_controller {
- 	} boardinfo;
- 	struct i3c_bus bus;
- 	struct workqueue_struct *wq;
-+	struct {
-+		u32 ndevs;
-+		struct i3c_ccc_dev_desc *devs;
-+	} defslvs_data;
- };
- 
- /**
-@@ -533,6 +539,7 @@ struct i3c_master_controller {
- 
- void i3c_master_yield_bus(struct i3c_master_controller *m,
- 			  u8 sec_mst_dyn_addr);
-+int i3c_master_process_defslvs(struct i3c_master_controller *m);
- int i3c_master_do_i2c_xfers(struct i3c_master_controller *master,
- 			    const struct i2c_msg *xfers,
- 			    int nxfers);
--- 
-2.17.1
-
+T24gTW9uLCAyMDIwLTA1LTExIGF0IDEzOjAzICswMDAwLCBBcmRlbGVhbiwgQWxleGFuZHJ1IHdy
+b3RlOg0KPiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBNb24sIDIwMjAtMDUtMTEgYXQgMTI6MzcgKzAy
+MDAsIExhcnMtUGV0ZXIgQ2xhdXNlbiB3cm90ZToNCj4gPiBbRXh0ZXJuYWxdDQo+ID4gDQo+ID4g
+T24gNS8xMS8yMCAxMjozMyBQTSwgQXJkZWxlYW4sIEFsZXhhbmRydSB3cm90ZToNCj4gPiA+IE9u
+IFN1biwgMjAyMC0wNS0xMCBhdCAxMTowOSArMDEwMCwgSm9uYXRoYW4gQ2FtZXJvbiB3cm90ZToN
+Cj4gPiA+ID4gW0V4dGVybmFsXQ0KPiA+ID4gPiANCj4gPiA+ID4gT24gU2F0LCA5IE1heSAyMDIw
+IDEwOjUyOjE0ICswMjAwDQo+ID4gPiA+IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9v
+LmRlPiB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+ID4gT24gNS84LzIwIDM6NTMgUE0sIEFsZXhh
+bmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiA+ID4gPiA+IFsuLi5dDQo+ID4gPiA+ID4gPiBXaGF0
+IEkgZG9uJ3QgbGlrZSwgaXMgdGhhdCBpaW86ZGV2aWNlMyBoYXMgaWlvOmJ1ZmZlcjM6MCAodG8g
+MykuDQo+ID4gPiA+ID4gPiBUaGlzIGlzIGJlY2F1c2UgdGhlICdidWZmZXItPmRldi5wYXJlbnQg
+PSAmaW5kaW9fZGV2LT5kZXYnLg0KPiA+ID4gPiA+ID4gQnV0IEkgZG8gZmVlbCB0aGlzIGlzIGNv
+cnJlY3QuDQo+ID4gPiA+ID4gPiBTbywgbm93IEkgZG9uJ3Qga25vdyB3aGV0aGVyIHRvIGxlYXZl
+IGl0IGxpa2UgdGhhdCBvciBzeW1saW5rIHRvDQo+ID4gPiA+ID4gPiBzaG9ydGVyDQo+ID4gPiA+
+ID4gPiB2ZXJzaW9ucyBsaWtlICdpaW86YnVmZmVyMzpZJyAtPiAnaWlvOmRldmljZTMvYnVmZmVy
+WScuDQo+ID4gPiA+ID4gPiBUaGUgcmVhc29uIGZvciBuYW1pbmcgdGhlIElJTyBidWZmZXIgZGV2
+aWNlcyB0byAnaWlvOmJ1ZmZlclg6WScgaXMNCj4gPiA+ID4gPiA+IG1vc3RseSB0byBtYWtlIHRo
+ZSBuYW1lcyB1bmlxdWUuIEl0IHdvdWxkIGhhdmUgbG9va2VkIHdlaXJkIHRvIGRvDQo+ID4gPiA+
+ID4gPiAnL2Rldi9idWZmZXIxJyBpZiBJIHdvdWxkIGhhdmUgbmFtZWQgdGhlIGJ1ZmZlciBkZXZp
+Y2VzICdidWZmZXJYJy4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gU28sIG5vdyBJJ20gdGhp
+bmtpbmcgb2Ygd2hldGhlciBhbGwgdGhpcyBpcyBhY2NlcHRhYmxlLg0KPiA+ID4gPiA+ID4gT3Ig
+d2hhdCBpcyBhY2NlcHRhYmxlPw0KPiA+ID4gPiA+ID4gU2hvdWxkIEkgc3ltbGluayAnaWlvOmRl
+dmljZTMvaWlvOmJ1ZmZlcjM6MCcgLT4NCj4gPiA+ID4gPiA+ICdpaW86ZGV2aWNlMy9idWZmZXIw
+Jz8NCj4gPiA+ID4gPiA+IFdoYXQgZWxzZSBzaG91bGQgSSBjb25zaWRlciBtb3ZpbmcgZm9yd2Fy
+ZD8NCj4gPiA+ID4gPiA+IFdoYXQgbWVhbnMgZm9yd2FyZD8NCj4gPiA+ID4gPiA+IFdoZXJlIGRp
+ZCBJIGxlYXZlIG15IGJlZXI/DQo+ID4gPiA+ID4gTG9va2luZyBhdCBob3cgdGhlIC9kZXYvIGRl
+dmljZXMgYXJlIG5hbWVkIEkgdGhpbmsgd2UgY2FuIHByb3ZpZGUgYQ0KPiA+ID4gPiA+IG5hbWUN
+Cj4gPiA+ID4gPiB0aGF0IGlzIGRpZmZlcmVudCBmcm9tIHRoZSBkZXZfbmFtZSgpIG9mIHRoZSBk
+ZXZpY2UuIEhhdmUgYSBsb29rIGF0DQo+ID4gPiA+ID4gZGV2aWNlX2dldF9kZXZub2RlKCkgaW4g
+ZHJpdmVycy9iYXNlL2NvcmUuYy4gV2Ugc2hvdWxkIGJlIGFibGUgdG8NCj4gPiA+ID4gPiBwcm92
+aWRlIHRoZSBuYW1lIGZvciB0aGUgY2hhcmRldiB0aHJvdWdoIHRoZSBkZXZub2RlKCkgY2FsbGJh
+Y2suDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2hpbGUgd2UgYXJlIGF0IHRoaXMsIGRvIHdlIHdh
+bnQgdG8gbW92ZSB0aGUgbmV3IGRldmljZXMgaW50byBhbiBpaW8NCj4gPiA+ID4gPiBzdWJmb2xk
+ZXI/IFNvIGlpby9idWZmZXIwOjAgaW5zdGVhZCBvZiBpaW86YnVmZmVyMDowPw0KPiA+ID4gPiBQ
+b3NzaWJseSBvbiB0aGUgZm9sZGVyLiAgSSBjYW4ndCBmb3IgdGhlIGxpZmUgb2YgbWUgcmVtZW1i
+ZXIgd2h5IEkNCj4gPiA+ID4gZGVjaWRlZA0KPiA+ID4gPiBub3QgdG8gZG8gdGhhdCB0aGUgZmly
+c3QgdGltZSBhcm91bmQgLSBJJ2xsIGxlYXZlIGl0IGF0IHRoZQ0KPiA+ID4gPiBteXN0ZXJpb3Vz
+ICJpdCBtYXkgdHVybiBvdXQgdG8gYmUgaGFyZGVyIHRoYW4geW91J2QgdGhpbmsuLi4iDQo+ID4g
+PiA+IEhvcGVmdWxseSBub3QgOykNCj4gPiA+IEkgd2FzIGFsc28gdGhpbmtpbmcgYWJvdXQgdGhl
+IC9kZXYvaWlvIHN1YmZvbGRlciB3aGlsZSBkb2luZyB0aGlzLg0KPiA+ID4gSSBjYW4gY29weSB0
+aGF0IGZyb20gL2Rldi9pbnB1dA0KPiA+ID4gVGhleSBzZWVtIHRvIGRvIGl0IGFscmVhZHkuDQo+
+ID4gPiBJIGRvbid0IGtub3cgaG93IGRpZmZpY3VsdCBpdCB3b3VsZCBiZS4gQnV0IGl0IGxvb2tz
+IGxpa2UgYSBnb29kDQo+ID4gPiBwcmVjZWRlbnQuDQo+ID4gDQo+ID4gQWxsIHlvdSBoYXZlIHRv
+IGRvIGlzIHJldHVybiAiaWlvLy4uLiIgZnJvbSB0aGUgZGV2bm9kZSgpIGNhbGxiYWNrLg0KPiAN
+Cj4gSSBhZG1pdCBJIGRpZCBub3QgbG9vayBjbG9zZWx5IGludG8gZHJpdmVycy9pbnB1dC9pbnB1
+dC5jIGJlZm9yZSBtZW50aW9uaW5nDQo+IHRoaXMNCj4gYXMgYXMgZ29vZCBwcmVjZWRlbnQuDQo+
+IA0KPiBCdXQsIEkgbG9va3MgbGlrZSAvZGV2L2lucHB1dCBpcyBhIGNsYXNzLg0KPiBXaGlsZSBJ
+SU8gZGV2aWNlcyBhcmUgYSBidXNfdHlwZSBkZXZpY2VzLg0KPiBTaG91bGQgd2Ugc3RhcnQgaW1w
+bGVtZW50aW5nIGFuIElJTyBjbGFzcz8gb3I/DQoNCldoYXQgSSBzaG91bGQgaGF2ZSBoaWdobGln
+aHRlZCBbYmVmb3JlXSB3aXRoIHRoaXMsIGlzIHRoYXQgdGhlcmUgaXMgbm8gZGV2bm9kZSgpDQpj
+YWxsYmFjayBmb3IgdGhlIGJ1c190eXBlIFt0eXBlXS4NCg0KPiANCj4gDQo+ID4gPiBNeSBjb25j
+ZXJuIHJlZ2FyZGluZyBnb2luZyB0byB1c2Ugc3R1ZmYgZnJvbSBjb3JlIFtsaWtlDQo+ID4gPiBk
+ZXZpY2VfZ2V0X2Rldm5vZGUoKV0gaXMNCj4gPiA+IHRoYXQgaXQgc2VlbXMgdG8gYnlwYXNzIHNv
+bWUgbGF5ZXJzIG9mIGtlcm5lbC4NCj4gPiA+IElmIEkgZG8gJ2dpdCBncmVwIGRldmljZV9nZXRf
+ZGV2bm9kZScsIEkgZ2V0Og0KPiA+ID4gDQo+ID4gPiBkcml2ZXJzL2Jhc2UvY29yZS5jOiAgICAg
+ICAgICAgIG5hbWUgPSBkZXZpY2VfZ2V0X2Rldm5vZGUoZGV2LCAmbW9kZSwNCj4gPiA+ICZ1aWQs
+DQo+ID4gPiAmZ2lkLCAmdG1wKTsNCj4gPiA+IGRyaXZlcnMvYmFzZS9jb3JlLmM6ICogZGV2aWNl
+X2dldF9kZXZub2RlIC0gcGF0aCBvZiBkZXZpY2Ugbm9kZSBmaWxlDQo+ID4gPiBkcml2ZXJzL2Jh
+c2UvY29yZS5jOmNvbnN0IGNoYXIgKmRldmljZV9nZXRfZGV2bm9kZShzdHJ1Y3QgZGV2aWNlICpk
+ZXYsDQo+ID4gPiBkcml2ZXJzL2Jhc2UvZGV2dG1wZnMuYzogICAgICAgIHJlcS5uYW1lID0gZGV2
+aWNlX2dldF9kZXZub2RlKGRldiwNCj4gPiA+ICZyZXEubW9kZSwNCj4gPiA+ICZyZXEudWlkLCAm
+cmVxLmdpZCwgJnRtcCk7DQo+ID4gPiBkcml2ZXJzL2Jhc2UvZGV2dG1wZnMuYzogICAgICAgIHJl
+cS5uYW1lID0gZGV2aWNlX2dldF9kZXZub2RlKGRldiwgTlVMTCwNCj4gPiA+IE5VTEwsDQo+ID4g
+PiBOVUxMLCAmdG1wKTsNCj4gPiA+IGluY2x1ZGUvbGludXgvZGV2aWNlLmg6ZXh0ZXJuIGNvbnN0
+IGNoYXIgKmRldmljZV9nZXRfZGV2bm9kZShzdHJ1Y3QgZGV2aWNlDQo+ID4gPiAqZGV2LA0KPiA+
+ID4gKEVORCkNCj4gPiA+IA0KPiA+ID4gU28sIGJhc2ljYWxseSwgbW9zdCB1c2VzIG9mIGRldmlj
+ZV9nZXRfZGV2bm9kZSgpIGFyZSBpbiBjb3JlIGNvZGUsIGFuZCBJDQo+ID4gPiBmZWVsDQo+ID4g
+PiB0aGF0IHRoaXMgbWF5IGJlIHNhbmN0aW9uZWQgc29tZXdoZXJlIGJ5IHNvbWUgY29yZSBwZW9w
+bGUsIGlmIEkgZG8gaXQuDQo+ID4gPiBJIGNvdWxkIGJlIHdyb25nLCBidXQgaWYgeW91IGRpc2Fn
+cmVlLCBJJ2xsIHRha2UgeW91ciB3b3JkIGZvciBpdC4NCj4gPiBZb3UgYXJlIG5vdCBzdXBwb3Nl
+ZCB0byB1c2UgdGhlIGZ1bmN0aW9uIGl0c2VsZiwgeW91IHNob3VsZCBpbXBsZW1lbnQgDQo+ID4g
+dGhlIGRldm5vZGUoKSBjYWxsYmFjayBmb3IgdGhlIElJTyBidXMsIHdoaWNoIGlzIHRoZW4gdXNl
+ZCBieSB0aGUgY29yZSANCj4gPiBkZXZpY2VfZ2V0X2Rldm5vZGUoKSBmdW5jdGlvbi4NCj4gPiAN
+Cg==
