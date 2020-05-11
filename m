@@ -2,261 +2,213 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73B3C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD8EC47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B860020746
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589211849;
-	bh=XQZ4bTetd/fEUJV+XnMbIowvtB5da1w3aAqHnAGU8c0=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=z2+zghMsMcX6tJMs1OgtzDogz/nKeKDnT6S/fO2exmP1hXcho7ctxZor0ZE3KnYMf
-	 gLZh8w4W7iORSGtz2h0X/l2r7T3BzkSGs9znw3/Q7nzC7YiGIs+3OKTnaMdHn4r3qg
-	 mzci5VKDso9HPQX6Hz0EQJAdgO5ZxJUoczPvRiYY=
+	by mail.kernel.org (Postfix) with ESMTP id 653B2206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 15:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgEKPoJ (ORCPT
+        id S1730227AbgEKPop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 11:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbgEKPoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 11:44:08 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        Mon, 11 May 2020 11:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726687AbgEKPop (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 11:44:45 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A81C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 08:44:44 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD632206A3;
-        Mon, 11 May 2020 15:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589211846;
-        bh=XQZ4bTetd/fEUJV+XnMbIowvtB5da1w3aAqHnAGU8c0=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=MLqDZakSYs62ZPuIZdkUfcpRX9x9SmZmITSckPBAOmUgYYWJ+stI3msZLLOCWXoeZ
-         MReq5d0k1wS7QuCmt2vb3etQdAG7uL5Eu7hvc2FZ8dg+SO7mX0lQqmgdVA/m5eMv+n
-         lZ7s9ASHMmU7a3K7WpQwKQjD/AKSK9+b3nHh2XaU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5C42135226DF; Mon, 11 May 2020 08:44:06 -0700 (PDT)
-Date:   Mon, 11 May 2020 08:44:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        kernel-team@vger.kernel.org, jbi.octave@gmail.com,
-        j.neuschaefer@gmx.net, joel@joelfernandes.org,
-        laijs@linux.alibaba.com, mchehab+huawei@kernel.org,
-        rdunlap@infradead.org, yanaijie@huawei.com, zhangzl2013@126.com
-Subject: [GIT PULL tip/core/rcu] RCU commits for v5.8
-Message-ID: <20200511154406.GA32144@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B36BB2A0A4B;
+        Mon, 11 May 2020 16:44:40 +0100 (BST)
+Date:   Mon, 11 May 2020 17:44:37 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
+        <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <praneeth@ti.com>
+Subject: Re: [PATCH v7 2/7] i3c: master: use i3c_master_register only for
+ main master
+Message-ID: <20200511174437.1a886231@collabora.com>
+In-Reply-To: <1589202785-6174-1-git-send-email-pthombar@cadence.com>
+References: <1589202702-4879-1-git-send-email-pthombar@cadence.com>
+        <1589202785-6174-1-git-send-email-pthombar@cadence.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Mon, 11 May 2020 15:13:05 +0200
+Parshuram Thombare <pthombar@cadence.com> wrote:
 
-This pull request contains the following changes:
+> Removed last argument 'secondary' and refactored
+> i3c_master_register to move code that can be common
+> to i3c_secondary_master_register to separate function
+> i3c_master_init.
+> 
+> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+> ---
+>  drivers/i3c/master.c                 | 69 +++++++++++++++++-----------
+>  drivers/i3c/master/dw-i3c-master.c   |  2 +-
+>  drivers/i3c/master/i3c-master-cdns.c |  2 +-
+>  include/linux/i3c/master.h           |  3 +-
+>  4 files changed, 46 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 5f4bd52121fe..ba07a7d49633 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -2391,31 +2391,10 @@ static int i3c_master_check_ops(const struct i3c_master_controller_ops *ops)
+>  	return 0;
+>  }
+>  
+> -/**
+> - * i3c_master_register() - register an I3C master
+> - * @master: master used to send frames on the bus
+> - * @parent: the parent device (the one that provides this I3C master
+> - *	    controller)
+> - * @ops: the master controller operations
+> - * @secondary: true if you are registering a secondary master. Will return
+> - *	       -ENOTSUPP if set to true since secondary masters are not yet
+> - *	       supported
+> - *
+> - * This function takes care of everything for you:
+> - *
+> - * - creates and initializes the I3C bus
+> - * - populates the bus with static I2C devs if @parent->of_node is not
+> - *   NULL
+> - * - registers all I3C devices added by the controller during bus
+> - *   initialization
+> - * - registers the I2C adapter and all I2C devices
+> - *
+> - * Return: 0 in case of success, a negative error code otherwise.
+> - */
+> -int i3c_master_register(struct i3c_master_controller *master,
+> -			struct device *parent,
+> -			const struct i3c_master_controller_ops *ops,
+> -			bool secondary)
+> +static int i3c_master_init(struct i3c_master_controller *master,
+> +			   struct device *parent,
+> +			   const struct i3c_master_controller_ops *ops,
+> +			   bool secondary)
+>  {
+>  	struct i3c_bus *i3cbus = i3c_master_get_bus(master);
+>  	enum i3c_bus_mode mode = I3C_BUS_MODE_PURE;
+> @@ -2482,6 +2461,45 @@ int i3c_master_register(struct i3c_master_controller *master,
+>  	if (ret)
+>  		goto err_put_dev;
+>  
+> +	return 0;
+> +
+> +err_put_dev:
+> +	put_device(&master->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * i3c_master_register() - register an I3C master
 
-1.	Miscellaneous fixes.
+The function should be renamed and the doc updated to reflect the fact
+that it only works for primary masters:
 
-	https://lore.kernel.org/lkml/20200415171017.GA7821@paulmck-ThinkPad-P72
+i3c_primary_master_register() - register a primary I3C master
 
-2.	kfree_rcu() updates.
+> + * @master: master used to send frames on the bus
+> + * @parent: the parent device (the one that provides this I3C master
+> + *	    controller)
+> + * @ops: the master controller operations
+> + * @secondary: true if you are registering a secondary master. Will return
+> + *	       -ENOTSUPP if set to true since secondary masters are not yet
+> + *	       supported
 
-	https://lore.kernel.org/lkml/20200415171924.GA9270@paulmck-ThinkPad-P72
+This argument no longer exists.
 
-3.	Remove scheduler locking restriction
+> + *
+> + * This function takes care of everything for you:
+> + *
+> + * - creates and initializes the I3C bus
+> + * - populates the bus with static I2C devs if @parent->of_node is not
+> + *   NULL
+> + * - registers all I3C devices added by the controller during bus
+> + *   initialization
+> + * - registers the I2C adapter and all I2C devices
+> + *
+> + * Return: 0 in case of success, a negative error code otherwise.
+> + */
+> +int i3c_master_register(struct i3c_master_controller *master,
+> +			struct device *parent,
+> +			const struct i3c_master_controller_ops *ops)
+> +{
+> +	int ret;
+> +
+> +	ret = i3c_master_init(master, parent, ops, false);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = device_add(&master->dev);
+>  	if (ret)
+>  		goto err_cleanup_bus;
+> @@ -2511,7 +2529,6 @@ int i3c_master_register(struct i3c_master_controller *master,
+>  err_cleanup_bus:
+>  	i3c_master_bus_cleanup(master);
+>  
+> -err_put_dev:
+>  	put_device(&master->dev);
+>  
+>  	return ret;
+> diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+> index 1d83c97431c7..5d5a8a90ec06 100644
+> --- a/drivers/i3c/master/dw-i3c-master.c
+> +++ b/drivers/i3c/master/dw-i3c-master.c
+> @@ -1158,7 +1158,7 @@ static int dw_i3c_probe(struct platform_device *pdev)
+>  	master->free_pos = GENMASK(master->maxdevs - 1, 0);
+>  
+>  	ret = i3c_master_register(&master->base, &pdev->dev,
+> -				  &dw_mipi_i3c_ops, false);
+> +				  &dw_mipi_i3c_ops);
+>  	if (ret)
+>  		goto err_assert_rst;
+>  
+> diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
+> index 8889a4fdb454..ed4f43807f9e 100644
+> --- a/drivers/i3c/master/i3c-master-cdns.c
+> +++ b/drivers/i3c/master/i3c-master-cdns.c
+> @@ -1615,7 +1615,7 @@ static int cdns_i3c_master_probe(struct platform_device *pdev)
+>  	writel(DEVS_CTRL_DEV_CLR_ALL, master->regs + DEVS_CTRL);
+>  
+>  	ret = i3c_master_register(&master->base, &pdev->dev,
+> -				  &cdns_i3c_master_ops, false);
+> +				  &cdns_i3c_master_ops);
+>  	if (ret)
+>  		goto err_disable_sysclk;
+>  
+> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+> index f13fd8b1dd79..f5ba82c390bc 100644
+> --- a/include/linux/i3c/master.h
+> +++ b/include/linux/i3c/master.h
+> @@ -533,8 +533,7 @@ int i3c_master_set_info(struct i3c_master_controller *master,
+>  
+>  int i3c_master_register(struct i3c_master_controller *master,
+>  			struct device *parent,
+> -			const struct i3c_master_controller_ops *ops,
+> -			bool secondary);
+> +			const struct i3c_master_controller_ops *ops);
+>  int i3c_master_unregister(struct i3c_master_controller *master);
+>  
+>  /**
 
-	https://lore.kernel.org/lkml/20200415175543.GA10416@paulmck-ThinkPad-P72
-
-4.	RCU-tasks update, including addition of RCU Tasks Trace for
-	BPF use and RCU Tasks Rude.  (This branch is on top of #3 due
-	to overlap of changed code.)
-
-	https://lore.kernel.org/lkml/20200415181856.GA11037@paulmck-ThinkPad-P72
-
-5.	RCU CPU stall warning updates.
-
-	https://lore.kernel.org/lkml/20200415172341.GA9519@paulmck-ThinkPad-P72
-
-6.	Torture-test updates.
-
-	https://lore.kernel.org/lkml/20200415173037.GA9768@paulmck-ThinkPad-P72
-
-All of these have been subjected to the kbuild test robot and -next
-testing, and are available in the git repository based on v5.7-rc2 at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
-
-for you to fetch changes up to f736e0f1a55a88cb258b73da77463573739e9ac9:
-
-  Merge branches 'fixes.2020.04.27a', 'kfree_rcu.2020.04.27a', 'rcu-tasks.2020.04.27a', 'stall.2020.04.27a' and 'torture.2020.05.07a' into HEAD (2020-05-07 10:18:32 -0700)
-
-----------------------------------------------------------------
-Jason Yan (1):
-      rcutorture: Make rcu_fwds and rcu_fwd_emergency_stop static
-
-Joel Fernandes (Google) (3):
-      rcuperf: Add ability to increase object allocation size
-      rcu/tree: Add a shrinker to prevent OOM due to kfree_rcu() batching
-      rcu/tree: Count number of batched kfree_rcu() locklessly
-
-Jonathan Neuschäfer (1):
-      Revert "rculist: Describe variadic macro argument in a Sphinx-compatible way"
-
-Jules Irenge (2):
-      rcu: Replace assigned pointer ret value by corresponding boolean value
-      rcu: Replace 1 by true
-
-Lai Jiangshan (3):
-      rcu: Don't set nesting depth negative in rcu_preempt_deferred_qs()
-      rcu: Remove unused ->rcu_read_unlock_special.b.deferred_qs field
-      rcu: Don't use negative nesting depth in __rcu_read_unlock()
-
-Mauro Carvalho Chehab (1):
-      rcu: Get rid of some doc warnings in update.c
-
-Paul E. McKenney (74):
-      rcu: Add KCSAN stubs
-      srcu: Add KCSAN stubs
-      rcu: Mark rcu_state.ncpus to detect concurrent writes
-      rcu: Add *_ONCE() and data_race() to rcu_node ->exp_tasks plus locking
-      rcu: Add READ_ONCE and data_race() to rcu_node ->boost_tasks
-      srcu: Add data_race() to ->srcu_lock_count and ->srcu_unlock_count arrays
-      rcu: Add WRITE_ONCE() to rcu_node ->boost_tasks
-      rcu: Use data_race() for RCU CPU stall-warning prints
-      drm: Make drm_dp_mst_dsc_aux_for_port() safe for old compilers
-      rcu: Expedite first two FQS scans under callback-overload conditions
-      rcu: Mark rcu_state.gp_seq to detect more concurrent writes
-      rcu: Convert ULONG_CMP_GE() to time_after() for jiffy comparison
-      rcu: Convert rcu_initiate_boost() ULONG_CMP_GE() to time_after()
-      rcu: Convert rcu_nohz_full_cpu() ULONG_CMP_LT() to time_before()
-      rcu: Add rcu_gp_might_be_stalled()
-      rcu: Add KCSAN stubs to update.c
-      rcu: Make rcu_read_unlock_special() safe for rq/pi locks
-      rcutorture: Add test of holding scheduler locks across rcu_read_unlock()
-      rcu: Add comments marking transitions between RCU watching and not
-      rcu-tasks: Use context-switch hook for PREEMPT=y kernels
-      sched/core: Add function to sample state of locked-down task
-      rcu: Add per-task state to RCU CPU stall warnings
-      rcu-tasks: Move Tasks RCU to its own file
-      rcu-tasks: Create struct to hold state information
-      rcu: Reinstate synchronize_rcu_mult()
-      rcutorture: Add a test for synchronize_rcu_mult()
-      rcu-tasks: Refactor RCU-tasks to allow variants to be added
-      rcu-tasks: Add an RCU-tasks rude variant
-      rcutorture: Add torture tests for RCU Tasks Rude
-      rcu-tasks: Use unique names for RCU-Tasks kthreads and messages
-      rcu-tasks: Further refactor RCU-tasks to allow adding more variants
-      rcu-tasks: Code movement to allow more Tasks RCU variants
-      rcu-tasks: Add an RCU Tasks Trace to simplify protection of tracing hooks
-      rcutorture: Add torture tests for RCU Tasks Trace
-      rcu-tasks: Add stall warnings for RCU Tasks Trace
-      rcu-tasks: Move #ifdef into tasks.h
-      rcu-tasks: Add RCU tasks to rcutorture writer stall output
-      rcu-tasks: Make rcutorture writer stall output include GP state
-      rcu-tasks: Make RCU Tasks Trace make use of RCU scheduler hooks
-      rcu-tasks: Add a grace-period start time for throttling and debug
-      rcu-tasks: Provide boot parameter to delay IPIs until late in grace period
-      rcu-tasks: Split ->trc_reader_need_end
-      rcu-tasks: Add grace-period and IPI counts to statistics
-      rcu-tasks: Add Kconfig option to mediate smp_mb() vs. IPI
-      rcu-tasks: Avoid IPIing userspace/idle tasks if kernel is so built
-      rcu-tasks: Allow rcu_read_unlock_trace() under scheduler locks
-      rcu-tasks: Disable CPU hotplug across RCU tasks trace scans
-      rcu-tasks: Handle the running-offline idle-task special case
-      rcu-tasks: Make RCU tasks trace also wait for idle tasks
-      rcu-tasks: Add rcu_dynticks_zero_in_eqs() effectiveness statistics
-      rcu-tasks: Add count for idle tasks on offline CPUs
-      rcutorture: Add TRACE02 scenario enabling RCU Tasks Trace IPIs
-      rcu-tasks: Add IPI failure count to statistics
-      rcu-tasks: Allow standalone use of TASKS_{TRACE_,}RCU
-      ftrace: Use synchronize_rcu_tasks_rude() instead of ftrace_sync()
-      rcu: Use data_race() for RCU expedited CPU stall-warning prints
-      rcu: When GP kthread is starved, tag idle threads as false positives
-      rcu: Remove self-stack-trace when all quiescent states seen
-      rcutorture: Add KCSAN stubs
-      rcutorture: Make kvm-recheck-rcu.sh handle truncated lines
-      rcutorture: Mark data-race potential for rcu_barrier() test statistics
-      rcutorture: Add flag to produce non-busy-wait task stalls
-      rcutorture: Right-size TREE10 CPU consumption
-      rcu: Allow rcutorture to starve grace-period kthread
-      torture: Add --kcsan argument to top-level kvm.sh script
-      torture: Make --kcsan argument also create a summary
-      torture: Eliminate duplicate #CHECK# from ConfigFragment
-      torture: Abstract application of additional Kconfig options
-      torture: Allow --kconfig options to override --kcsan defaults
-      torture: Allow scenario-specific Kconfig options to override CFcommon
-      torture: Save a few lines by using config_override_param initially
-      torture: Add a --kasan argument
-      rcutorture: Convert ULONG_CMP_LT() to time_before()
-      Merge branches 'fixes.2020.04.27a', 'kfree_rcu.2020.04.27a', 'rcu-tasks.2020.04.27a', 'stall.2020.04.27a' and 'torture.2020.05.07a' into HEAD
-
-Randy Dunlap (1):
-      locktorture.c: Fix if-statement empty body warnings
-
-Zhaolong Zhang (1):
-      rcu: Fix the (t=0 jiffies) false positive
-
- .../RCU/Design/Requirements/Requirements.rst       |   61 +-
- Documentation/admin-guide/kernel-parameters.txt    |   19 +
- drivers/gpu/drm/drm_dp_mst_topology.c              |    2 +-
- include/linux/rculist.h                            |    4 +-
- include/linux/rcupdate.h                           |   53 +-
- include/linux/rcupdate_trace.h                     |   88 ++
- include/linux/rcupdate_wait.h                      |   19 +
- include/linux/rcutiny.h                            |    3 +-
- include/linux/rcutree.h                            |    1 +
- include/linux/sched.h                              |   10 +-
- include/linux/torture.h                            |    2 +-
- include/linux/wait.h                               |    2 +
- init/init_task.c                                   |    5 +
- kernel/fork.c                                      |    5 +
- kernel/rcu/Kconfig                                 |   46 +-
- kernel/rcu/Kconfig.debug                           |    4 +
- kernel/rcu/rcu.h                                   |    7 +
- kernel/rcu/rcuperf.c                               |    5 +-
- kernel/rcu/rcutorture.c                            |  155 ++-
- kernel/rcu/srcutree.c                              |   21 +-
- kernel/rcu/tasks.h                                 | 1193 ++++++++++++++++++++
- kernel/rcu/tree.c                                  |  179 ++-
- kernel/rcu/tree.h                                  |    3 +
- kernel/rcu/tree_exp.h                              |   50 +-
- kernel/rcu/tree_plugin.h                           |   86 +-
- kernel/rcu/tree_stall.h                            |  144 ++-
- kernel/rcu/update.c                                |  394 +------
- kernel/sched/core.c                                |   48 +
- kernel/trace/Kconfig                               |    1 +
- kernel/trace/ftrace.c                              |   17 +-
- .../selftests/rcutorture/bin/kcsan-collapse.sh     |   22 +
- .../selftests/rcutorture/bin/kvm-recheck-rcu.sh    |   16 +-
- .../selftests/rcutorture/bin/kvm-recheck.sh        |    9 +
- .../selftests/rcutorture/bin/kvm-test-1-run.sh     |   52 +-
- tools/testing/selftests/rcutorture/bin/kvm.sh      |   11 +
- .../selftests/rcutorture/configs/rcu/CFLIST        |    3 +
- .../selftests/rcutorture/configs/rcu/RUDE01        |   10 +
- .../selftests/rcutorture/configs/rcu/RUDE01.boot   |    1 +
- .../selftests/rcutorture/configs/rcu/TRACE01       |   11 +
- .../selftests/rcutorture/configs/rcu/TRACE01.boot  |    1 +
- .../selftests/rcutorture/configs/rcu/TRACE02       |   11 +
- .../selftests/rcutorture/configs/rcu/TRACE02.boot  |    1 +
- .../selftests/rcutorture/configs/rcu/TREE10        |    2 +-
- 43 files changed, 2156 insertions(+), 621 deletions(-)
- create mode 100644 include/linux/rcupdate_trace.h
- create mode 100644 kernel/rcu/tasks.h
- create mode 100755 tools/testing/selftests/rcutorture/bin/kcsan-collapse.sh
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/RUDE01
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE01
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE02
- create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRACE02.boot
