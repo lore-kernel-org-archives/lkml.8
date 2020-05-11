@@ -2,125 +2,80 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04473C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A42C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D625B206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F158206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 19:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wykyy4kN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ncTIibIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgEKTcL (ORCPT
+        id S1731416AbgEKTcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 15:32:11 -0400
-Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:32386
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731199AbgEKTcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 15:32:10 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:35890 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731041AbgEKTcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 15:32:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PkmsPt6s026EoCOvPFvmBUFyJQujJ8f5HRFxCa3uFbHbgh6ubE/RUZcz4ZBD3VHvwj20vXFMeFppjyjJ/qTpeYRqkz6iaJOCGDw9EON5A1FxrR5DDmlzsQ81g0SXM+dm3iyRcZVPIC82y7QLA4PbABxP/08WPS7PGL9synFmQ9oNQG7+RunLCKaXXWFtsUcBVGSsGm6cu4PsEumng4mqgwEah4H/q8bkUq705oUe6jgdJX9XL2p2y2FmJUuykCdaJD9043d2j5TTRg/yWMTSmBe72YVCvXl34MfMPjRYrnXXCeDDZBo3FICLJ86NYMzpQNqbvfyIh10T6QQ5GJECJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fK+qszBePQZd22vqz068pkGQUQypGtBzdjrE1sBA1TI=;
- b=jIae/1aS4asdo4RMBnHAtrk4Uc8aMbH/abeGZtLN3RgoHbY6n8fm++chtUPwK0HC+En7EwvL9LwSnZb9V8rFhK8FMl5UNTalco8nDENs7MBZvU6Rq/KlnWSFeY+IaaLyWICxel52fcs0wyQgk6cyvFjBR7cPjrxA6Etwjf1Nvhs2eG16uZuS1dvLRy/HeGU2io798FfX6hLAO7MpAf21YJjs/fWPFXg/Rey39XS0hDO7ImVFPFqqvDWXG41U92yQVVcG42M4Fctp2vKOYIjrvt+ZlkghNdGNs7H5vjtE6ecdLfyJaSYZJMQm2DSuKDlKrDnmEhnSSi8TCIfj50eI+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fK+qszBePQZd22vqz068pkGQUQypGtBzdjrE1sBA1TI=;
- b=Wykyy4kNlZei1F9RTiQtpP+46xC5j1321h8GkdCyBAHMbGPZi9kbuFIVMblumPBGDCuaJTipYhGUnRBi4OGXez+CMvilK0lgQ/RWwet/D0faEd7+AsA5CoMO4u8gTGeVUJIM6wN9cFEHqc2A5+C43nrlYDr+gPkjLrJ+mmTfcG0=
-Received: from AM0PR04MB7041.eurprd04.prod.outlook.com (2603:10a6:208:19a::13)
- by AM0PR04MB6356.eurprd04.prod.outlook.com (2603:10a6:208:17a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 19:32:05 +0000
-Received: from AM0PR04MB7041.eurprd04.prod.outlook.com
- ([fe80::1cab:2a78:51cb:2a00]) by AM0PR04MB7041.eurprd04.prod.outlook.com
- ([fe80::1cab:2a78:51cb:2a00%9]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 19:32:05 +0000
-From:   Christian Herber <christian.herber@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Jander <david@protonic.nl>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "mkl@pengutronix.de" <mkl@pengutronix.de>,
-        Marek Vasut <marex@denx.de>
-Subject: RE: Re: signal quality and cable diagnostic
-Thread-Topic: Re: signal quality and cable diagnostic
-Thread-Index: AdYnygHjlwz8mecvTV6Sgw0PGhSTqA==
-Date:   Mon, 11 May 2020 19:32:05 +0000
-Message-ID: <AM0PR04MB70410EA61C984E45615CCF8B86A10@AM0PR04MB7041.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [88.130.52.30]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 15c89018-82df-4792-9e90-08d7f5e1fd01
-x-ms-traffictypediagnostic: AM0PR04MB6356:
-x-microsoft-antispam-prvs: <AM0PR04MB635616DF7B6229D66743456A86A10@AM0PR04MB6356.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 04004D94E2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iyUqZLywB896OmabTy21MBiXg4ry8AoQtFtxC5ed9NDrxlLrYiGcyx+kSA+Me2c5XtwkChzPVNKXg9PeACoumABFryR8KFtizZ1yVSsSTh7s/KStsuEi8lJmmKQ2yW9cG1Czep9NK1h29TOzmjAqg1h8Nftk6aoAUHsR6+YjZ19ldCHLoN2yNjdyVu3LoyLauBvyjJbrjv3no155JUi7JHNQ0abUbe3c4NS5D3iWXJXNUCf19wdA06F/nfkvbW8oG86Xf9cmZoPKJ2d7KgxCJlpnn4ZwrUC4+sUlvUbGxSoVNk2wodotozkyadefda0yYPvrj4tvMoMaaKNC4JK2Faqn7ijXXBOkOE/Lyj47akrbV32Bjs7FEQaEgee9mIzUE8E2GUCX+3P/UO0ZkwtJ32CQvM2itBEUtQfJTJcik33JfZNp5+Gr8vL49j7eQ7MdJKEwYuV3CD+ANWMUJEYkXl8Gx5Y23RPDflSFkxEWMpwNPCzqAdj500Snqu5wEWtcqB3I4VOT8J9PkgJmlm2ifTFv17LDtjOiPksVQ97vUO2TMtZC3F9Ut7c2oHFwK5HxaM4KeW+as73l5MtjnjLyICJVwUqRoerfPxBuARPO7yk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7041.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(33430700001)(4326008)(7696005)(9686003)(55016002)(44832011)(66946007)(86362001)(2906002)(66556008)(64756008)(76116006)(66476007)(66446008)(52536014)(33656002)(966005)(6506007)(4744005)(8676002)(8936002)(186003)(478600001)(33440700001)(71200400001)(26005)(7416002)(110136005)(54906003)(5660300002)(53546011)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: RHuqAUQnHJBeZwgku2VB+7u2HgVvn4RqqZ9y11Op4Vf/QFEcQF7wJYRS/nAZhQzgRVqyzIYSmAw8WIK+F01cOyUsghDIpjGIThKzFPqM4YHILB1wcDPopXYr2nN1XnT0PAwiJTjLDrJWTtN0UJDe0lzsPgm5N9Y8T9PiNPty2fgpKX9kUlz/KFzU/+FDX24+fHeHIAU51TZAgUhh7my+y9m/ww9uW6GQfgrsJZRzxaHR1x2gwsNeUJTHjDBNRYgAPPag2sxs/KGKu2OjteeqPeRE3cWDkXAp+TNW70x91KJs3Kh1MeGbwKxvtK2L/DJb01CESicz/qoMjhAc9el4l6ng8LAqUhqYZ2jTc2MEr835y3KWiEyO09PwEMnQ4vDAQZdGroXQH4OUPCm20mST7fJ8iJaEwIln/Zx9YqeJer6pNU9svkT5fgp3+FAhxr3McPCBg9RuaBg6cFWb5AdqKBCXGd37dHI4d99o4yLf44I=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589225529; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=sAZDaw+WM1tRH6zdEndZjZXWJLv0r3DaQahoiRA1aOI=; b=ncTIibIny9D0pnj/JoyZKs2qj6bUj86KvOxn+Zmd0N295gm99pGh2ad3/Hx+JRWOzIEQy3D/
+ rvURtiDwogASpVdFYG+P0lLspuO5MZr0Br1wWunjlryI6Fg/OPFozdzLUuXnV2K4PH+xXVcj
+ dLEOK9r7s4eLfn1YKEkM0myf32A=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb9a825.7ffa94fa3848-smtp-out-n04;
+ Mon, 11 May 2020 19:31:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D98E7C432C2; Mon, 11 May 2020 19:31:48 +0000 (UTC)
+Received: from [192.168.1.179] (cpe-76-167-231-33.san.res.rr.com [76.167.231.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34720C433F2;
+        Mon, 11 May 2020 19:31:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34720C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+Subject: Re: [PATCH] Revert "dynamic_debug: Remove unnecessary __used"
+To:     Joe Perches <joe@perches.com>, Jason Baron <jbaron@akamai.com>
+Cc:     Trilok Soni <tsoni@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Murali Nalajala <mnalajal@codeaurora.org>
+References: <1589221618-21808-1-git-send-email-eberman@codeaurora.org>
+ <59b3e2aac1388209d168a31294dfd2b1f7d21513.camel@perches.com>
+From:   Elliot Berman <eberman@codeaurora.org>
+Message-ID: <9b6694ac-acb3-6bc4-49c9-39ad1c64d6e1@codeaurora.org>
+Date:   Mon, 11 May 2020 12:31:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15c89018-82df-4792-9e90-08d7f5e1fd01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2020 19:32:05.5889
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FVHfoMTt10plXaAlkDO4mfBt25Szp3jvtyax0QxmFBUacRWn+Wqjhu0WfFXcSsj4hxNKFvY1lGUhXEfgByaOcjVzlBsBm2V0Kp5UMLCOGfs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6356
+In-Reply-To: <59b3e2aac1388209d168a31294dfd2b1f7d21513.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 11, 2020 4:33:53 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> Are the classes part of the Open Alliance specification? Ideally we
-> want to report something standardized, not something proprietary to
-> NXP.
->
->        Andrew
+On 5/11/2020 11:54 AM, Joe Perches wrote> Change-Id: probably isn't necessary.
 
-Hi Andrew,
+Thanks for the catch
 
-Such mechanisms are standardized and supported by pretty much all devices i=
-n the market. The Open Alliance specification is publicly available here: h=
-ttp://www.opensig.org/download/document/218/Advanced_PHY_features_for_autom=
-otive_Ethernet_V1.0.pdf
+> 
+> Is there a separate mechanism possible to avoid bloating the
+> otherwise unused content?
 
-As the specification is newer than the 100BASE-T1 spec, do not expect first=
- generation devices to follow the register definitions as per Open Alliance=
-. But for future devices, also registers should be same across different ve=
-ndors.
-
-Christian
+This struct is being used in lib/dynamic_debug.c but compiler doesn't know
+about this usage when optimizing the struct/branch away.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
