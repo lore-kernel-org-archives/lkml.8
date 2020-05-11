@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14F9C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B5C54E90
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FEA206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDB520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 23:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="koo56XMT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AkFclbD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgEKXck (ORCPT
+        id S1728174AbgEKXcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 19:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39604 "EHLO
+        Mon, 11 May 2020 19:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728025AbgEKXcf (ORCPT
+        by vger.kernel.org with ESMTP id S1728115AbgEKXci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 19:32:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818DFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so8495468pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:34 -0700 (PDT)
+        Mon, 11 May 2020 19:32:38 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF53BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:36 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id a4so5283074pgc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 16:32:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WAHLMQ0H2jjEXrgHtgoJjPvdRV41LQYIcjOK7tESAMc=;
-        b=koo56XMT4vpF+oxQNJVhv/6fKEEA13ZZsvaNXDzuv19l91zMXbAqHDpZpSqptOWCOy
-         hfgQ86oLSEm1cGRkh9mRsDX0F5Wl+wMK+NkYQDsTVfYBwOApD63hqfq83F0CxPM5DGCo
-         dbMB0uakhcAUzJIFZQR8mO7ujT7kn0WgJJyj0=
+        bh=tpIzgaI4OMBct4jCn7TZ+2RgsRSNP7jmM9tat9WfIfQ=;
+        b=AkFclbD6NO9ZDE4EC0rkztvJXsssJYZCefJz+BVteG3bmoEc2L3X0FM0loDIFKqU4G
+         NyVW6FgUq/wKNBgv0rRz3cSbitGLYM0sG/zbGWfer4d4gguJ6GthJY7WM3hQUtk2N8E7
+         qgO77MMnM8sgxQT01JV5elHi/TE2Lip6Xue8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WAHLMQ0H2jjEXrgHtgoJjPvdRV41LQYIcjOK7tESAMc=;
-        b=g9rOU3xqvCr5xVFX4eW3PQSevKr5rhChYAk8YWeSMJDCe1IKBZSv2NNk57XxZDFT6v
-         iHeHSE3qb64nZnkXFDSZ3pHF6qngRr5lrWlpqSq4qC6G4BuG/lYNKq2pG+9fHj1WFolp
-         L9mQAytYBDLOj8RlObuwLLKMS0z7fXQ8pRdjIZKy8njC3/1WFfTry5SOKBW16FEZtyHk
-         EjF0L9RENCSy6yXm3HEiXEfD/ueUv5h8D6iKV0yGFuPscxtJ9Yk5tA1cW/KbSKBjSfSG
-         eLzG8OGAAoa6DB3QQpTQf+f5JKlMjsdd+TVdrzQ9c6yP/9EMXdVVqBMMvHyBbnA5dnlC
-         +taQ==
-X-Gm-Message-State: AGi0Pubjq/ja7mDVo2OATCAGQ+OANL89ETTy/lnz32ihxut7j30n1aEH
-        iN1PZFuCcVtBmj2MQ3G6c3Vn0w==
-X-Google-Smtp-Source: APiQypLQQfTip3SLWiuw6dodlp5e2jixqm4SGStLHf7SyT7mbNUnpk9xjr6H6O3vZQP8fm5OikxAWg==
-X-Received: by 2002:a17:90a:246c:: with SMTP id h99mr21239205pje.125.1589239953835;
-        Mon, 11 May 2020 16:32:33 -0700 (PDT)
+        bh=tpIzgaI4OMBct4jCn7TZ+2RgsRSNP7jmM9tat9WfIfQ=;
+        b=mp79D9KRfrLR9XZHGpJ3kEQnOZZaUJ0MDwWWDO6z6typReVXpvjMn5cKjVHg9tt2mA
+         Mmm4qjEqBdMhdBDnMS7G29NhRkClythTnFRiO+HMJpyde+8TojEJRsOFZkISYu0U3fen
+         1DvfywX8K6BBHy2taWj768hNgsSN8o4+Ainj1opcGeDfHwbL2ARH9kJC/PqpALx4CqZR
+         4kP+MkXVHZ1H+cOhvJ2mbzoYSWsgXg6CR3pS1Ho4C1D4/AFSx4yoJX3XIw8nVc2KKpVB
+         vccxBMyUsoZMbQ2JHNsvxaHo7EcWV8BkDgasQUXyUepENOX6LPb2QGeS9BTYjhK2EEw/
+         FnFw==
+X-Gm-Message-State: AGi0PuYXIYUg4LT6Z4d4R7AjxVDtM1h8Ai+iEXXhQvSpsk1CEay4aA0l
+        baQYMYXMGN4bp/Aj4PFjCmK65Q==
+X-Google-Smtp-Source: APiQypLJZHiRjbD2BXBPR2scpgdGM2MgX2QbG41VPTkd7dmIx1oGM8BQ3KxyKT6/zkmSVVUiAQdPWQ==
+X-Received: by 2002:aa7:9546:: with SMTP id w6mr18072906pfq.114.1589239956266;
+        Mon, 11 May 2020 16:32:36 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p190sm10444226pfp.207.2020.05.11.16.32.31
+        by smtp.gmail.com with ESMTPSA id b67sm9577414pfg.60.2020.05.11.16.32.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 16:32:31 -0700 (PDT)
+        Mon, 11 May 2020 16:32:35 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -68,9 +68,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v8 03/11] pstore/zone,blk: Add support for pmsg frontend
-Date:   Mon, 11 May 2020 16:32:21 -0700
-Message-Id: <20200511233229.27745-4-keescook@chromium.org>
+Subject: [PATCH v8 05/11] pstore/zone,blk: Add ftrace frontend support
+Date:   Mon, 11 May 2020 16:32:23 -0700
+Message-Id: <20200511233229.27745-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200511233229.27745-1-keescook@chromium.org>
 References: <20200511233229.27745-1-keescook@chromium.org>
@@ -83,545 +83,329 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 
-Add pmsg support to pstore/blk (through pstore/zone). To enable, pmsg_size
-must be greater than 0 and a multiple of 4096.
+Support backend for ftrace. To enable ftrace backend, just make
+ftrace_size be greater than 0 and a multiple of 4096.
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Link: https://lore.kernel.org/r/1585126506-18635-5-git-send-email-liaoweixiong@allwinnertech.com
+Link: https://lore.kernel.org/r/1585126506-18635-7-git-send-email-liaoweixiong@allwinnertech.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/Kconfig           |  12 ++
- fs/pstore/blk.c             |   9 ++
- fs/pstore/zone.c            | 265 ++++++++++++++++++++++++++++++++++--
+ fs/pstore/Kconfig           |  12 ++++
+ fs/pstore/blk.c             |   9 +++
+ fs/pstore/zone.c            | 113 +++++++++++++++++++++++++++++++++++-
  include/linux/pstore_zone.h |   2 +
- 4 files changed, 279 insertions(+), 9 deletions(-)
+ 4 files changed, 135 insertions(+), 1 deletion(-)
 
 diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index 958bec75f907..ef01c48f0ff7 100644
+index 126aa6c3ecf2..c2237984b407 100644
 --- a/fs/pstore/Kconfig
 +++ b/fs/pstore/Kconfig
-@@ -224,3 +224,15 @@ config PSTORE_BLK_MAX_REASON
+@@ -248,3 +248,15 @@ config PSTORE_BLK_CONSOLE_SIZE
  
  	  NOTE that, both Kconfig and module parameters can configure
  	  pstore/blk, but module parameters have priority over Kconfig.
 +
-+config PSTORE_BLK_PMSG_SIZE
-+	int "Size in Kbytes of pmsg to store"
++config PSTORE_BLK_FTRACE_SIZE
++	int "Size in Kbytes of ftrace log to store"
 +	depends on PSTORE_BLK
-+	depends on PSTORE_PMSG
++	depends on PSTORE_FTRACE
 +	default 64
 +	help
-+	  This just sets size of pmsg (pmsg_size) for pstore/blk. The size is
-+	  in KB and must be a multiple of 4.
++	  This just sets size of ftrace log (ftrace_size) for pstore/blk. The
++	  size is in KB and must be a multiple of 4.
 +
 +	  NOTE that, both Kconfig and module parameters can configure
 +	  pstore/blk, but module parameters have priority over Kconfig.
 diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
-index 6490c60af0dc..e3fa29988b0f 100644
+index 0b88c0bcd36c..9f1f0d5b3795 100644
 --- a/fs/pstore/blk.c
 +++ b/fs/pstore/blk.c
-@@ -27,6 +27,14 @@ module_param(max_reason, int, 0400);
- MODULE_PARM_DESC(max_reason,
- 		 "maximum reason for kmsg dump (default 2: Oops and Panic)");
+@@ -43,6 +43,14 @@ static long console_size = -1;
+ module_param(console_size, long, 0400);
+ MODULE_PARM_DESC(console_size, "console size in kbytes");
  
-+#if IS_ENABLED(CONFIG_PSTORE_PMSG)
-+static long pmsg_size = CONFIG_PSTORE_BLK_PMSG_SIZE;
++#if IS_ENABLED(CONFIG_PSTORE_FTRACE)
++static long ftrace_size = CONFIG_PSTORE_BLK_FTRACE_SIZE;
 +#else
-+static long pmsg_size = -1;
++static long ftrace_size = -1;
 +#endif
-+module_param(pmsg_size, long, 0400);
-+MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
++module_param(ftrace_size, long, 0400);
++MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
 +
  /*
   * blkdev - the block device to use for pstore storage
   *
-@@ -133,6 +141,7 @@ static int psblk_register_do(struct pstore_device_info *dev)
- 	}
- 
+@@ -152,6 +160,7 @@ static int psblk_register_do(struct pstore_device_info *dev)
  	verify_size(kmsg_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
-+	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
+ 	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
+ 	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
++	verify_size(ftrace_size, 4096, dev->flags & PSTORE_FLAGS_FTRACE);
  #undef verify_size
  
  	pstore_zone_info->total_size = dev->total_size;
 diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 20fa52385c78..fe6fde96d722 100644
+index 33c99dc5f980..d83b24f3cdd9 100644
 --- a/fs/pstore/zone.c
 +++ b/fs/pstore/zone.c
-@@ -27,12 +27,14 @@
-  *
-  * @sig: signature to indicate header (PSZ_SIG xor PSZONE-type value)
-  * @datalen: length of data in @data
-+ * @start: offset into @data where the beginning of the stored bytes begin
-  * @data: zone data.
-  */
- struct psz_buffer {
- #define PSZ_SIG (0x43474244) /* DBGC */
- 	uint32_t sig;
- 	atomic_t datalen;
-+	atomic_t start;
- 	uint8_t data[];
- };
- 
-@@ -88,9 +90,11 @@ struct pstore_zone {
-  * struct psz_context - all about running state of pstore/zone
-  *
+@@ -92,11 +92,14 @@ struct pstore_zone {
   * @kpszs: kmsg dump storage zones
-+ * @ppsz: pmsg storage zone
+  * @ppsz: pmsg storage zone
+  * @cpsz: console storage zone
++ * @fpszs: ftrace storage zones
   * @kmsg_max_cnt: max count of @kpszs
   * @kmsg_read_cnt: counter of total read kmsg dumps
   * @kmsg_write_cnt: counter of total kmsg dump writes
-+ * @pmsg_read_cnt: counter of total read pmsg zone
+  * @pmsg_read_cnt: counter of total read pmsg zone
+  * @console_read_cnt: counter of total read console zone
++ * @ftrace_max_cnt: max count of @fpszs
++ * @ftrace_read_cnt: counter of max read ftrace zone
   * @oops_counter: counter of oops dumps
   * @panic_counter: counter of panic dumps
   * @recovered: whether finished recovering data from storage
-@@ -101,9 +105,11 @@ struct pstore_zone {
-  */
- struct psz_context {
+@@ -109,11 +112,14 @@ struct psz_context {
  	struct pstore_zone **kpszs;
-+	struct pstore_zone *ppsz;
+ 	struct pstore_zone *ppsz;
+ 	struct pstore_zone *cpsz;
++	struct pstore_zone **fpszs;
  	unsigned int kmsg_max_cnt;
  	unsigned int kmsg_read_cnt;
  	unsigned int kmsg_write_cnt;
-+	unsigned int pmsg_read_cnt;
+ 	unsigned int pmsg_read_cnt;
+ 	unsigned int console_read_cnt;
++	unsigned int ftrace_max_cnt;
++	unsigned int ftrace_read_cnt;
  	/*
  	 * These counters should be calculated during recovery.
  	 * It records the oops/panic times after crashes rather than boots.
-@@ -143,15 +149,20 @@ static inline int buffer_datalen(struct pstore_zone *zone)
- 	return atomic_read(&zone->buffer->datalen);
+@@ -314,6 +320,8 @@ static void psz_flush_all_dirty_zones(struct work_struct *work)
+ 		ret |= psz_flush_dirty_zone(cxt->cpsz);
+ 	if (cxt->kpszs)
+ 		ret |= psz_flush_dirty_zones(cxt->kpszs, cxt->kmsg_max_cnt);
++	if (cxt->fpszs)
++		ret |= psz_flush_dirty_zones(cxt->fpszs, cxt->ftrace_max_cnt);
+ 	if (ret && cxt->pstore_zone_info)
+ 		schedule_delayed_work(&psz_cleaner, msecs_to_jiffies(1000));
  }
- 
-+static inline int buffer_start(struct pstore_zone *zone)
-+{
-+	return atomic_read(&zone->buffer->start);
-+}
-+
- static inline bool is_on_panic(void)
- {
- 	return atomic_read(&pstore_zone_cxt.on_panic);
- }
- 
--static ssize_t psz_zone_read(struct pstore_zone *zone, char *buf,
-+static ssize_t psz_zone_read_buffer(struct pstore_zone *zone, char *buf,
- 		size_t len, unsigned long off)
- {
--	if (!buf || !zone->buffer)
-+	if (!buf || !zone || !zone->buffer)
- 		return -EINVAL;
- 	if (off > zone->buffer_size)
- 		return -EINVAL;
-@@ -160,6 +171,18 @@ static ssize_t psz_zone_read(struct pstore_zone *zone, char *buf,
- 	return len;
- }
- 
-+static int psz_zone_read_oldbuf(struct pstore_zone *zone, char *buf,
-+		size_t len, unsigned long off)
-+{
-+	if (!buf || !zone || !zone->oldbuf)
-+		return -EINVAL;
-+	if (off > zone->buffer_size)
-+		return -EINVAL;
-+	len = min_t(size_t, len, zone->buffer_size - off);
-+	memcpy(buf, zone->oldbuf->data + off, len);
-+	return 0;
-+}
-+
- static int psz_zone_write(struct pstore_zone *zone,
- 		enum psz_flush_mode flush_mode, const char *buf,
- 		size_t len, unsigned long off)
-@@ -415,6 +438,93 @@ static int psz_kmsg_recover(struct psz_context *cxt)
+@@ -550,6 +558,31 @@ static int psz_recover_zone(struct psz_context *cxt, struct pstore_zone *zone)
  	return ret;
  }
  
-+static int psz_recover_zone(struct psz_context *cxt, struct pstore_zone *zone)
++static int psz_recover_zones(struct psz_context *cxt,
++		struct pstore_zone **zones, unsigned int cnt)
 +{
-+	struct pstore_zone_info *info = cxt->pstore_zone_info;
-+	struct psz_buffer *oldbuf, tmpbuf;
-+	int ret = 0;
-+	char *buf;
-+	ssize_t rcnt, len, start, off;
++	int ret;
++	unsigned int i;
++	struct pstore_zone *zone;
 +
-+	if (!zone || zone->oldbuf)
++	if (!zones)
 +		return 0;
 +
-+	if (is_on_panic()) {
-+		/* save data as much as possible */
-+		psz_flush_dirty_zone(zone);
-+		return 0;
++	for (i = 0; i < cnt; i++) {
++		zone = zones[i];
++		if (unlikely(!zone))
++			continue;
++		ret = psz_recover_zone(cxt, zone);
++		if (ret)
++			goto recover_fail;
 +	}
 +
-+	if (unlikely(!info->read))
-+		return -EINVAL;
-+
-+	len = sizeof(struct psz_buffer);
-+	rcnt = info->read((char *)&tmpbuf, len, zone->off);
-+	if (rcnt != len) {
-+		pr_debug("read zone %s failed\n", zone->name);
-+		return (int)rcnt < 0 ? (int)rcnt : -EIO;
-+	}
-+
-+	if (tmpbuf.sig != zone->buffer->sig) {
-+		pr_debug("no valid data in zone %s\n", zone->name);
-+		return 0;
-+	}
-+
-+	if (zone->buffer_size < atomic_read(&tmpbuf.datalen) ||
-+		zone->buffer_size < atomic_read(&tmpbuf.start)) {
-+		pr_info("found overtop zone: %s: off %lld, size %zu\n",
-+				zone->name, zone->off, zone->buffer_size);
-+		/* just keep going */
-+		return 0;
-+	}
-+
-+	if (!atomic_read(&tmpbuf.datalen)) {
-+		pr_debug("found erased zone: %s: off %lld, size %zu, datalen %d\n",
-+				zone->name, zone->off, zone->buffer_size,
-+				atomic_read(&tmpbuf.datalen));
-+		return 0;
-+	}
-+
-+	pr_debug("found nice zone: %s: off %lld, size %zu, datalen %d\n",
-+			zone->name, zone->off, zone->buffer_size,
-+			atomic_read(&tmpbuf.datalen));
-+
-+	len = atomic_read(&tmpbuf.datalen) + sizeof(*oldbuf);
-+	oldbuf = kzalloc(len, GFP_KERNEL);
-+	if (!oldbuf)
-+		return -ENOMEM;
-+
-+	memcpy(oldbuf, &tmpbuf, sizeof(*oldbuf));
-+	buf = (char *)oldbuf + sizeof(*oldbuf);
-+	len = atomic_read(&oldbuf->datalen);
-+	start = atomic_read(&oldbuf->start);
-+	off = zone->off + sizeof(*oldbuf);
-+
-+	/* get part of data */
-+	rcnt = info->read(buf, len - start, off + start);
-+	if (rcnt != len - start) {
-+		pr_err("read zone %s failed\n", zone->name);
-+		ret = (int)rcnt < 0 ? (int)rcnt : -EIO;
-+		goto free_oldbuf;
-+	}
-+
-+	/* get the rest of data */
-+	rcnt = info->read(buf + len - start, start, off);
-+	if (rcnt != start) {
-+		pr_err("read zone %s failed\n", zone->name);
-+		ret = (int)rcnt < 0 ? (int)rcnt : -EIO;
-+		goto free_oldbuf;
-+	}
-+
-+	zone->oldbuf = oldbuf;
-+	psz_flush_dirty_zone(zone);
 +	return 0;
-+
-+free_oldbuf:
-+	kfree(oldbuf);
++recover_fail:
++	pr_debug("recover %s[%u] failed\n", zone->name, i);
 +	return ret;
 +}
 +
  /**
   * psz_recovery() - recover data from storage
   * @cxt: the context of pstore/zone
-@@ -434,6 +544,10 @@ static inline int psz_recovery(struct psz_context *cxt)
+@@ -577,6 +610,10 @@ static inline int psz_recovery(struct psz_context *cxt)
  	if (ret)
  		goto recover_fail;
  
-+	ret = psz_recover_zone(cxt, cxt->ppsz);
++	ret = psz_recover_zones(cxt, cxt->fpszs, cxt->ftrace_max_cnt);
 +	if (ret)
 +		goto recover_fail;
 +
  	pr_debug("recover end!\n");
  	atomic_set(&cxt->recovered, 1);
  	return 0;
-@@ -448,9 +562,17 @@ static int psz_pstore_open(struct pstore_info *psi)
- 	struct psz_context *cxt = psi->data;
- 
+@@ -593,6 +630,7 @@ static int psz_pstore_open(struct pstore_info *psi)
  	cxt->kmsg_read_cnt = 0;
-+	cxt->pmsg_read_cnt = 0;
+ 	cxt->pmsg_read_cnt = 0;
+ 	cxt->console_read_cnt = 0;
++	cxt->ftrace_read_cnt = 0;
  	return 0;
  }
  
-+static inline bool psz_old_ok(struct pstore_zone *zone)
-+{
-+	if (zone && zone->oldbuf && atomic_read(&zone->oldbuf->datalen))
-+		return true;
-+	return false;
-+}
-+
- static inline bool psz_ok(struct pstore_zone *zone)
- {
- 	if (zone && zone->buffer && buffer_datalen(zone))
-@@ -475,6 +597,25 @@ static inline int psz_kmsg_erase(struct psz_context *cxt,
- 	return psz_zone_write(zone, FLUSH_META, NULL, 0, 0);
+@@ -659,6 +697,10 @@ static int psz_pstore_erase(struct pstore_record *record)
+ 		return psz_record_erase(cxt, cxt->ppsz);
+ 	case PSTORE_TYPE_CONSOLE:
+ 		return psz_record_erase(cxt, cxt->cpsz);
++	case PSTORE_TYPE_FTRACE:
++		if (record->id >= cxt->ftrace_max_cnt)
++			return -EINVAL;
++		return psz_record_erase(cxt, cxt->fpszs[record->id]);
+ 	default: return -EINVAL;
+ 	}
  }
- 
-+static inline int psz_record_erase(struct psz_context *cxt,
-+		struct pstore_zone *zone)
-+{
-+	if (unlikely(!psz_old_ok(zone)))
-+		return 0;
+@@ -801,6 +843,13 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+ 		return psz_record_write(cxt->cpsz, record);
+ 	case PSTORE_TYPE_PMSG:
+ 		return psz_record_write(cxt->ppsz, record);
++	case PSTORE_TYPE_FTRACE: {
++		int zonenum = smp_processor_id();
 +
-+	kfree(zone->oldbuf);
-+	zone->oldbuf = NULL;
-+	/*
-+	 * if there are new data in zone buffer, that means the old data
-+	 * are already invalid. It is no need to flush 0 (erase) to
-+	 * block device.
-+	 */
-+	if (!buffer_datalen(zone))
-+		return psz_zone_write(zone, FLUSH_META, NULL, 0, 0);
-+	psz_flush_dirty_zone(zone);
-+	return 0;
-+}
-+
- static int psz_pstore_erase(struct pstore_record *record)
- {
- 	struct psz_context *cxt = record->psi->data;
-@@ -484,6 +625,8 @@ static int psz_pstore_erase(struct pstore_record *record)
- 		if (record->id >= cxt->kmsg_max_cnt)
- 			return -EINVAL;
- 		return psz_kmsg_erase(cxt, cxt->kpszs[record->id], record);
-+	case PSTORE_TYPE_PMSG:
-+		return psz_record_erase(cxt, cxt->ppsz);
++		if (!cxt->fpszs)
++			return -ENOSPC;
++		return psz_record_write(cxt->fpszs[zonenum], record);
++	}
  	default:
  		return -EINVAL;
  	}
-@@ -557,6 +700,53 @@ static int notrace psz_kmsg_write(struct psz_context *cxt,
- 	return 0;
- }
- 
-+static int notrace psz_record_write(struct pstore_zone *zone,
-+		struct pstore_record *record)
-+{
-+	size_t start, rem;
-+	int cnt = record->size;
-+	bool is_full_data = false;
-+	char *buf = record->buf;
-+
-+	if (!zone || !record)
-+		return -ENOSPC;
-+
-+	if (atomic_read(&zone->buffer->datalen) >= zone->buffer_size)
-+		is_full_data = true;
-+
-+	if (unlikely(cnt > zone->buffer_size)) {
-+		buf += cnt - zone->buffer_size;
-+		cnt = zone->buffer_size;
-+	}
-+
-+	start = buffer_start(zone);
-+	rem = zone->buffer_size - start;
-+	if (unlikely(rem < cnt)) {
-+		psz_zone_write(zone, FLUSH_PART, buf, rem, start);
-+		buf += rem;
-+		cnt -= rem;
-+		start = 0;
-+		is_full_data = true;
-+	}
-+
-+	atomic_set(&zone->buffer->start, cnt + start);
-+	psz_zone_write(zone, FLUSH_PART, buf, cnt, start);
-+
-+	/**
-+	 * psz_zone_write will set datalen as start + cnt.
-+	 * It work if actual data length lesser than buffer size.
-+	 * If data length greater than buffer size, pmsg will rewrite to
-+	 * beginning of zone, which make buffer->datalen wrongly.
-+	 * So we should reset datalen as buffer size once actual data length
-+	 * greater than buffer size.
-+	 */
-+	if (is_full_data) {
-+		atomic_set(&zone->buffer->datalen, zone->buffer_size);
-+		psz_zone_write(zone, FLUSH_META, NULL, 0, 0);
-+	}
-+	return 0;
-+}
-+
- static int notrace psz_pstore_write(struct pstore_record *record)
- {
- 	struct psz_context *cxt = record->psi->data;
-@@ -568,6 +758,8 @@ static int notrace psz_pstore_write(struct pstore_record *record)
- 	switch (record->type) {
- 	case PSTORE_TYPE_DMESG:
- 		return psz_kmsg_write(cxt, record);
-+	case PSTORE_TYPE_PMSG:
-+		return psz_record_write(cxt->ppsz, record);
- 	default:
- 		return -EINVAL;
- 	}
-@@ -583,6 +775,13 @@ static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
+@@ -816,6 +865,14 @@ static struct pstore_zone *psz_read_next_zone(struct psz_context *cxt)
  			return zone;
  	}
  
-+	if (cxt->pmsg_read_cnt == 0) {
-+		cxt->pmsg_read_cnt++;
-+		zone = cxt->ppsz;
-+		if (psz_old_ok(zone))
-+			return zone;
-+	}
++	if (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt)
++		/*
++		 * No need psz_old_ok(). Let psz_ftrace_read() do so for
++		 * combination. psz_ftrace_read() should traverse over
++		 * all zones in case of some zone without data.
++		 */
++		return cxt->fpszs[cxt->ftrace_read_cnt++];
 +
- 	return NULL;
- }
- 
-@@ -633,7 +832,7 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
- 			return -ENOMEM;
- 	}
- 
--	size = psz_zone_read(zone, record->buf + hlen, size,
-+	size = psz_zone_read_buffer(zone, record->buf + hlen, size,
- 			sizeof(struct psz_kmsg_header));
- 	if (unlikely(size < 0)) {
- 		kfree(record->buf);
-@@ -643,6 +842,32 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
+ 	if (cxt->pmsg_read_cnt == 0) {
+ 		cxt->pmsg_read_cnt++;
+ 		zone = cxt->ppsz;
+@@ -890,6 +947,37 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone,
  	return size + hlen;
  }
  
-+static ssize_t psz_record_read(struct pstore_zone *zone,
++/* try to combine all ftrace zones */
++static ssize_t psz_ftrace_read(struct pstore_zone *zone,
 +		struct pstore_record *record)
 +{
-+	size_t len;
++	struct psz_context *cxt = record->psi->data;
 +	struct psz_buffer *buf;
++	int ret;
 +
 +	if (!zone || !record)
 +		return -ENOSPC;
++
++	if (!psz_old_ok(zone))
++		goto out;
 +
 +	buf = (struct psz_buffer *)zone->oldbuf;
 +	if (!buf)
 +		return -ENOMSG;
 +
-+	len = atomic_read(&buf->datalen);
-+	record->buf = kmalloc(len, GFP_KERNEL);
-+	if (!record->buf)
-+		return -ENOMEM;
++	ret = pstore_ftrace_combine_log(&record->buf, &record->size,
++			(char *)buf->data, atomic_read(&buf->datalen));
++	if (unlikely(ret))
++		return ret;
 +
-+	if (unlikely(psz_zone_read_oldbuf(zone, record->buf, len, 0))) {
-+		kfree(record->buf);
++out:
++	if (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt)
++		/* then, read next ftrace zone */
 +		return -ENOMSG;
-+	}
-+
-+	return len;
++	record->id = 0;
++	return record->size ? record->size : -ENOMSG;
 +}
 +
- static ssize_t psz_pstore_read(struct pstore_record *record)
+ static ssize_t psz_record_read(struct pstore_zone *zone,
+ 		struct pstore_record *record)
  {
- 	struct psz_context *cxt = record->psi->data;
-@@ -667,6 +892,9 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
+@@ -940,6 +1028,9 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
  		readop = psz_kmsg_read;
  		record->id = cxt->kmsg_read_cnt - 1;
  		break;
-+	case PSTORE_TYPE_PMSG:
-+		readop = psz_record_read;
++	case PSTORE_TYPE_FTRACE:
++		readop = psz_ftrace_read;
 +		break;
- 	default:
- 		goto next_zone;
- 	}
-@@ -722,6 +950,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
- {
- 	if (cxt->kpszs)
- 		psz_free_zones(&cxt->kpszs, &cxt->kmsg_max_cnt);
-+	if (cxt->ppsz)
-+		psz_free_zone(&cxt->ppsz);
+ 	case PSTORE_TYPE_CONSOLE:
+ 		fallthrough;
+ 	case PSTORE_TYPE_PMSG:
+@@ -1004,6 +1095,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
+ 		psz_free_zone(&cxt->ppsz);
+ 	if (cxt->cpsz)
+ 		psz_free_zone(&cxt->cpsz);
++	if (cxt->fpszs)
++		psz_free_zones(&cxt->fpszs, &cxt->ftrace_max_cnt);
  }
  
  static struct pstore_zone *psz_init_zone(enum pstore_type_id type,
-@@ -755,8 +985,10 @@ static struct pstore_zone *psz_init_zone(enum pstore_type_id type,
- 	zone->type = type;
- 	zone->buffer_size = size - sizeof(struct psz_buffer);
- 	zone->buffer->sig = type ^ PSZ_SIG;
-+	zone->oldbuf = NULL;
- 	atomic_set(&zone->dirty, 0);
- 	atomic_set(&zone->buffer->datalen, 0);
-+	atomic_set(&zone->buffer->start, 0);
- 
- 	*off += size;
- 
-@@ -811,19 +1043,28 @@ static int psz_alloc_zones(struct psz_context *cxt)
- 	struct pstore_zone_info *info = cxt->pstore_zone_info;
- 	loff_t off = 0;
- 	int err;
--	size_t size;
-+	size_t off_size = 0;
-+
-+	off_size += info->pmsg_size;
-+	cxt->ppsz = psz_init_zone(PSTORE_TYPE_PMSG, &off, info->pmsg_size);
-+	if (IS_ERR(cxt->ppsz)) {
-+		err = PTR_ERR(cxt->ppsz);
-+		cxt->ppsz = NULL;
-+		goto free_out;
-+	}
- 
--	size = info->total_size;
--	cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off, size,
-+	cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
-+			info->total_size - off_size,
- 			info->kmsg_size, &cxt->kmsg_max_cnt);
- 	if (IS_ERR(cxt->kpszs)) {
- 		err = PTR_ERR(cxt->kpszs);
- 		cxt->kpszs = NULL;
--		goto fail_out;
-+		goto free_out;
+@@ -1114,6 +1207,17 @@ static int psz_alloc_zones(struct psz_context *cxt)
+ 		goto free_out;
  	}
  
- 	return 0;
--fail_out:
-+free_out:
-+	psz_free_all_zones(cxt);
- 	return err;
- }
- 
-@@ -846,7 +1087,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
++	off_size += info->ftrace_size;
++	cxt->fpszs = psz_init_zones(PSTORE_TYPE_FTRACE, &off,
++			info->ftrace_size,
++			info->ftrace_size / nr_cpu_ids,
++			&cxt->ftrace_max_cnt);
++	if (IS_ERR(cxt->fpszs)) {
++		err = PTR_ERR(cxt->fpszs);
++		cxt->fpszs = NULL;
++		goto free_out;
++	}
++
+ 	cxt->kpszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
+ 			info->total_size - off_size,
+ 			info->kmsg_size, &cxt->kmsg_max_cnt);
+@@ -1148,7 +1252,8 @@ int register_pstore_zone(struct pstore_zone_info *info)
  		return -EINVAL;
  	}
  
--	if (!info->kmsg_size) {
-+	if (!info->kmsg_size && !info->pmsg_size) {
+-	if (!info->kmsg_size && !info->pmsg_size && !info->console_size) {
++	if (!info->kmsg_size && !info->pmsg_size && !info->console_size &&
++	    !info->ftrace_size) {
  		pr_warn("at least one record size must be non-zero\n");
  		return -EINVAL;
  	}
-@@ -868,6 +1109,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 
- 	check_size(total_size, 4096);
+@@ -1172,6 +1277,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
  	check_size(kmsg_size, SECTOR_SIZE);
-+	check_size(pmsg_size, SECTOR_SIZE);
+ 	check_size(pmsg_size, SECTOR_SIZE);
+ 	check_size(console_size, SECTOR_SIZE);
++	check_size(ftrace_size, SECTOR_SIZE);
  
  #undef check_size
  
-@@ -893,6 +1135,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 	pr_debug("register %s with properties:\n", info->name);
- 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
+@@ -1199,6 +1305,7 @@ int register_pstore_zone(struct pstore_zone_info *info)
  	pr_debug("\tkmsg size : %ld Bytes\n", info->kmsg_size);
-+	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
+ 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
+ 	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
++	pr_debug("\tftrace size : %ld Bytes\n", info->ftrace_size);
  
  	err = psz_alloc_zones(cxt);
  	if (err) {
-@@ -922,6 +1165,10 @@ int register_pstore_zone(struct pstore_zone_info *info)
- 			pr_cont(",panic_write");
- 		pr_cont(")");
+@@ -1236,6 +1343,10 @@ int register_pstore_zone(struct pstore_zone_info *info)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+ 		pr_cont(" console");
  	}
-+	if (info->pmsg_size) {
-+		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
-+		pr_cont(" pmsg");
++	if (info->ftrace_size) {
++		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
++		pr_cont(" ftrace");
 +	}
  	pr_cont("\n");
  
  	err = pstore_register(&cxt->pstore);
 diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
-index eb005d9ae40c..29c367a3bd80 100644
+index 904ee67f4ba2..6f16b0dd834a 100644
 --- a/include/linux/pstore_zone.h
 +++ b/include/linux/pstore_zone.h
-@@ -17,6 +17,7 @@ typedef ssize_t (*pstore_zone_write_op)(const char *, size_t, loff_t);
-  * @kmsg_size:	The size of oops/panic zone. Zero means disabled, otherwise,
-  *		it must be multiple of SECTOR_SIZE(512 Bytes).
+@@ -19,6 +19,7 @@ typedef ssize_t (*pstore_zone_write_op)(const char *, size_t, loff_t);
   * @max_reason: Maximum kmsg dump reason to store.
-+ * @pmsg_size:	The size of pmsg zone which is the same as @kmsg_size.
+  * @pmsg_size:	The size of pmsg zone which is the same as @kmsg_size.
+  * @console_size:The size of console zone which is the same as @kmsg_size.
++ * @ftrace_size:The size of ftrace zone which is the same as @kmsg_size.
   * @read:	The general read operation. Both of the function parameters
   *		@size and @offset are relative value to storage.
   *		On success, the number of bytes should be returned, others
-@@ -33,6 +34,7 @@ struct pstore_zone_info {
- 	unsigned long total_size;
- 	unsigned long kmsg_size;
+@@ -37,6 +38,7 @@ struct pstore_zone_info {
  	int max_reason;
-+	unsigned long pmsg_size;
+ 	unsigned long pmsg_size;
+ 	unsigned long console_size;
++	unsigned long ftrace_size;
  	pstore_zone_read_op read;
  	pstore_zone_write_op write;
  	pstore_zone_write_op panic_write;
