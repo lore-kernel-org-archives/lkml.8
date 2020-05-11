@@ -2,140 +2,153 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565E2C47255
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995F8C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1C3206F9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F512082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 11:06:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJW7vpaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgEKLF1 (ORCPT
+        id S1729405AbgEKLGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 07:05:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36522 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728136AbgEKLF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 07:05:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4EB16AC64;
-        Mon, 11 May 2020 11:05:27 +0000 (UTC)
-Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
- parameter
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-References: <20200427180433.7029-1-vbabka@suse.cz>
- <20200427180433.7029-6-vbabka@suse.cz>
- <20200427183913.GH11244@42.do-not-panic.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
-Date:   Mon, 11 May 2020 13:05:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 11 May 2020 07:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728638AbgEKLGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 07:06:53 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D9F1C061A0C;
+        Mon, 11 May 2020 04:06:53 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id o10so7529137ejn.10;
+        Mon, 11 May 2020 04:06:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8ybDrynh43aGAdYaMM8qDIpCRRMRzFAjnTRZJLgw9IY=;
+        b=TJW7vpazNVh5QwWeVsEe41nsOTWXavYTd4yBPZcjrxCazHfaHcKNLTWpRUI7BUCnlA
+         7OkrJFB06o1OEkbbPiMdsO2aK0j6jbbwz2lsZYKeN+SSbhuMWErKqufUfck/9qmWmh+/
+         qWA0QX5GX+V8CY6AXwqijN30tGG3Wi9veQSkweDn3tleaAV1YCplG6VtfNKxttXQvUzW
+         3iiHhceWVjvgQSb0nx96QoBT/bIuoBDy8z6BaBycusTzuyU6Ud4VmEs3z2d9T8Jt1ZAm
+         uTiFgjX5JB3Bf8pmPEeeOC6hlsToK/FWzKaBlwUd8nwVTl6sEF0QKB5FOoIXe8ZQSRSh
+         i1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ybDrynh43aGAdYaMM8qDIpCRRMRzFAjnTRZJLgw9IY=;
+        b=CqxYyIhxvnrZrJ/lKjN1CaKr3XCOb4Bbx4ps4aI4ribpA+nb5MogS795h+bfEhuJZo
+         azrQ16o9FTsp1r/9kCrKeRUXhQGAwXpYdcLNwp+mGhCNYts1bl3gYAaPoYwIyeWUAgxL
+         /iELJOtE7deVk0cV9fxNz0xLjybWhpoPPU6iHkNfv5DTqyJQaUVdxPP63K04PbNKtTV7
+         SJ5JrqIlAxCfHPMOXVkNIDI5mhBucPkuFh/eBlv++tV1VjNCfYbhgD4zzEHNlkPJS2EB
+         dHVmDr35Hhv2uREi3fl3aHBZvsLgGHE1sn89h4G2NPOUf6Stkelig+ohtUi++TnXSTXP
+         m+1w==
+X-Gm-Message-State: AGi0PubWmu/4HYc0YpTo4zke6rmD/V1mfY1VmK+3nixoK9dLy4woZKjE
+        jYWSrfS8EZRYG0IvI5LuT5yLsqY/vEgmQP/PIdnUVQ==
+X-Google-Smtp-Source: APiQypJxWhyHKDGTL92E/fjOEYy/Ja6gvJpBErwpcnHxTXlOfBtRbigEM+ciaG03gTeZWAsaW7qMbcbx8iGs/+nF89A=
+X-Received: by 2002:a17:906:d8c1:: with SMTP id re1mr6314698ejb.184.1589195211787;
+ Mon, 11 May 2020 04:06:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200427183913.GH11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200510164255.19322-1-olteanv@gmail.com>
+In-Reply-To: <20200510164255.19322-1-olteanv@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 11 May 2020 14:06:41 +0300
+Message-ID: <CA+h21hrK2_7F78momhR84tG4bqUFo2a1VVbpH=AxXGwejdgqPw@mail.gmail.com>
+Subject: Re: [PATCH net-next 00/15] Traffic support for dsa_8021q in
+ vlan_filtering=1 mode
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 10 May 2020 at 19:43, Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> From: Vladimir Oltean <vladimir.oltean@nxp.com>
+>
+> This series is an attempt to support as much as possible in terms of
+> traffic I/O from the network stack with the only dsa_8021q user thus
+> far, sja1105.
+>
+> The hardware doesn't support pushing a second VLAN tag to packets that
+> are already tagged, so our only option is to combine the dsa_8021q with
+> the user tag into a single tag and decode that on the CPU.
+>
+> The assumption is that there is a type of use cases for which 7 VLANs
+> per port are more than sufficient, and that there's another type of use
+> cases where the full 4096 entries are barely enough. Those use cases are
+> very different from one another, so I prefer trying to give both the
+> best experience by creating this best_effort_vlan_filtering knob to
+> select the mode in which they want to operate in.
+>
+> This series depends on "[v4,resend,net-next,0/4] Cross-chip bridging for
+> disjoint DSA trees", submitted here:
+> https://patchwork.ozlabs.org/project/netdev/cover/20200510163743.18032-1-olteanv@gmail.com/
+>
+> Russell King (1):
+>   net: dsa: provide an option for drivers to always receive bridge VLANs
+>
+> Vladimir Oltean (14):
+>   net: dsa: tag_8021q: introduce a vid_is_dsa_8021q helper
+>   net: dsa: sja1105: keep the VLAN awareness state in a driver variable
+>   net: dsa: sja1105: deny alterations of dsa_8021q VLANs from the bridge
+>   net: dsa: sja1105: save/restore VLANs using a delta commit method
+>   net: dsa: sja1105: allow VLAN configuration from the bridge in all
+>     states
+>   net: dsa: sja1105: exit sja1105_vlan_filtering when called multiple
+>     times
+>   net: dsa: sja1105: prepare tagger for handling DSA tags and VLAN
+>     simultaneously
+>   net: dsa: tag_8021q: support up to 8 VLANs per port using sub-VLANs
+>   net: dsa: tag_sja1105: implement sub-VLAN decoding
+>   net: dsa: sja1105: add a new best_effort_vlan_filtering devlink
+>     parameter
+>   net: dsa: sja1105: add packing ops for the Retagging Table
+>   net: dsa: sja1105: implement a common frame memory partitioning
+>     function
+>   net: dsa: sja1105: implement VLAN retagging for dsa_8021q sub-VLANs
+>   docs: net: dsa: sja1105: document the best_effort_vlan_filtering
+>     option
+>
+>  .../networking/devlink-params-sja1105.txt     |   27 +
+>  Documentation/networking/dsa/sja1105.rst      |  211 +++-
+>  drivers/net/dsa/sja1105/sja1105.h             |   29 +
+>  .../net/dsa/sja1105/sja1105_dynamic_config.c  |   33 +
+>  drivers/net/dsa/sja1105/sja1105_main.c        | 1072 +++++++++++++++--
+>  drivers/net/dsa/sja1105/sja1105_spi.c         |    6 +
+>  .../net/dsa/sja1105/sja1105_static_config.c   |   62 +-
+>  .../net/dsa/sja1105/sja1105_static_config.h   |   16 +
+>  drivers/net/dsa/sja1105/sja1105_vl.c          |   20 +-
+>  include/linux/dsa/8021q.h                     |   42 +-
+>  include/linux/dsa/sja1105.h                   |    5 +
+>  include/net/dsa.h                             |    1 +
+>  net/dsa/slave.c                               |   12 +-
+>  net/dsa/tag_8021q.c                           |  108 +-
+>  net/dsa/tag_sja1105.c                         |   38 +-
+>  15 files changed, 1443 insertions(+), 239 deletions(-)
+>  create mode 100644 Documentation/networking/devlink-params-sja1105.txt
+>
+> --
+> 2.17.1
+>
 
-On 4/27/20 8:39 PM, Luis Chamberlain wrote:
-> On Mon, Apr 27, 2020 at 08:04:33PM +0200, Vlastimil Babka wrote:
-> Nice, also we could just require
-> 
-> diff --git a/tools/testing/selftests/sysctl/config b/tools/testing/selftests/sysctl/config
-> index 6ca14800d755..34461cc99a2b 100644
-> --- a/tools/testing/selftests/sysctl/config
-> +++ b/tools/testing/selftests/sysctl/config
-> @@ -1 +1,3 @@
->  CONFIG_TEST_SYSCTL=y
-> +CONFIG_IKCONFIG=y
-> +CONFIG_IKCONFIG_PROC=y
-> 
-> tools/testing/selftests/firmware/fw_lib.sh then has a kconfig_has()
-> which can verify the exact config.
+Sorry to repost before receiving any feedback, but there are some
+small fixups I need to make.
 
-Hmm but it also has a (firmware area specific) fallback for case where
-IKCONFIG_PROC doesn't exist. So it's simpler to just keep checking the module
-dir, IMHO, as that would be the fallback. 
-
->> +
->> +	echo -n "Testing if $TARGET is set to 1 ..."
->> +	ORIG=$(cat "${TARGET}")
-> 
-> This would fail if someone uses this script to test an older kernel, and
-> the scripts in selftests are supposed to work with older kernels.
-
-Oh, I didn't know that it's supposed to.
-
-> One
-> way to address this would be to just see if the file exists first and
-> ignore the test if the $SYSCTL directory exists but the file $TARGET
-> does not.
-> 
-> For now we can just do this:
-> 
-> if [ ! -d $TARGET ]; then
-> 	echo "Skipping test for $TARGET as it is not present ..."
-> 	return 0
-> fi
-
-OK, just the -d test needs to be fixed :) Andrew can you please apply:
-
-----8<----
-From a999e993a89e521b152bbd4b1466f69e62879c30 Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 11 May 2020 12:59:49 +0200
-Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
- fix
-
-Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
-"This would fail if someone uses this script to test an older kernel, and
-the scripts in selftests are supposed to work with older kernels."
-
-Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- tools/testing/selftests/sysctl/sysctl.sh | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index ef6417b8067b..148704f465b5 100755
---- a/tools/testing/selftests/sysctl/sysctl.sh
-+++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -756,6 +756,11 @@ sysctl_test_0006()
- sysctl_test_0007()
- {
- 	TARGET="${SYSCTL}/boot_int"
-+	if [ ! -f $TARGET ]; then
-+		echo "Skipping test for $TARGET as it is not present ..."
-+		return 0
-+	fi
-+
- 	if [ -d $DIR ]; then
- 		echo "Boot param test only possible sysctl_test is built-in, not module:"
- 		cat $TEST_DIR/config >&2
--- 
-2.26.2
-
+Thanks,
+-Vladimir
