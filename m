@@ -2,183 +2,136 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DA1C54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE86C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F34207DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A56C206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 10:38:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kvjPeIRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgEKKhA (ORCPT
+        id S1729453AbgEKKiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 06:37:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:55856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgEKKhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 06:37:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCE101FB;
-        Mon, 11 May 2020 03:36:58 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917703F305;
-        Mon, 11 May 2020 03:36:56 -0700 (PDT)
-Date:   Mon, 11 May 2020 11:36:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v10 0/8] Add endpoint driver for R-Car PCIe controller
-Message-ID: <20200511103654.GD24149@e121166-lin.cambridge.arm.com>
-References: <1588854799-13710-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 11 May 2020 06:38:03 -0400
+Received: from www381.your-server.de ([78.46.137.84]:37078 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgEKKiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 06:38:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=E7nGXJbtt/k5x9QUqlVuoKuVtxO6ANKMbKDzRQDuE/U=; b=kvjPeIRqkktKS1wOItSxOcBzpN
+        SAlHDVlSLbcndI9YbOafxoj9cY1bD5gpv8CEvK1CsMVzFAQm9tyM3FeuKB3rfUsyqxdYpNbuD/eYS
+        NAQzJ+5qcu4CVimTpCGpUpMUeTIOAc6ue21HUKZiuj/9cqV0L3cz5+5UhiRPnpVFYASOaIw57cIrb
+        uUMY/HSLuAToVTVkuZ71CbkX/Pk4qna4fUvFyDLOlWzjVrY4bJOVhdmZXQhH9LwupptMJU0bOIAzw
+        ILGDQmi4Jif2mUkQL3mLRuzIeQNXHcnY2DhdikXb7MYDEgI5OnGFdBjfZW618X3wWVtCveG7UumIF
+        jH9m538Q==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jY5or-00013Q-A7; Mon, 11 May 2020 12:37:57 +0200
+Received: from [82.135.66.51] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jY5or-000Kt0-1x; Mon, 11 May 2020 12:37:57 +0200
+Subject: Re: [RFC PATCH 00/14] iio: buffer: add support for multiple buffers
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+References: <20200508135348.15229-1-alexandru.ardelean@analog.com>
+ <a9a47e84-b933-cca6-dcfb-d97a51c8bdd4@metafoo.de>
+ <20200510110958.29046a18@archlinux>
+ <8c5d9ef5ed4ea9037c5459daa2044d1cd7c5db7a.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <c88b17c3-a9d6-e755-04e8-bc9f225e2a3b@metafoo.de>
+Date:   Mon, 11 May 2020 12:37:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588854799-13710-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8c5d9ef5ed4ea9037c5459daa2044d1cd7c5db7a.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25808/Sun May 10 14:11:51 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:33:11PM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch series adds support for endpoint driver for R-Car PCIe controller on
-> R-Car/RZ-G2x SoC's, this also extends the epf framework to handle multiple windows
-> supported by the controller for mapping PCI address locally.
-> 
-> Note:
-> The rockchip/dwc endpoint drivers are build tested only and was tested on cadence
-> by Kishon (https://lkml.org/lkml/2020/5/6/1535)
-> 
-> Changes for v10:
-> * Rebased patches on top of pci/rcar branch on tree
->   https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
-> * Made pci_epc_get_matching_window() as static
-> * Included Ack's from Kishon for patches 4/8 and 5/8
-> * Included Reviewed-by tag from Shimoda-san for patches 4/8 and 5/8
-> 
-> Changes for v9:
-> * Rebased patches on top of v5.7.rc1
-> * Replaced mdelay(1) with usleep_range(1000, 1001) in rcar_pcie_ep_assert_intx()
-> * Added a check for max_functions read from DT to restrict with
->   RCAR_EPC_MAX_FUNCTIONS
-> * Replaced MSICAP0_MMENUM with MSICAP0_MMESE
-> * Retry ioremap for other windows on failure in pci_epc_mem_alloc_addr()
-> * Fixed looping for number windows in pci_epc_mem_exit()
-> * Set maximum to 1 for max-functions in DT binding (I have restored the acks
->   from  Rob and Shimoda-san)
-> * Sorted the entry in MAINTAINERS
-> 
-> Changes for v8:
-> * Dropped adding R8A774C0 (0x002d) pci-id in pci_ids.h
-> * Fixed typo in commit message for patch 2/8
-> * Reworded commit message for patch 5/8 as suggested by Bjorn
-> * Split up patch to add pci_epc_mem_init() interface to add page_size argument
->   as suggested by Bjorn.
-> 
-> Changes for v7:
-> * Fixed review comments pointed by Shimoda-san
->   1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
->      the example as its built with #{address,size}-cells = <1>. I have still
->      restored the Ack from Rob and Shimoda-san with these changes.
->   2] Split up the patches so that they can be picked up by respective subsystem
->      patches 1/4-9/11 are now part of this series.
->   3] Dropped altering a comment in pci-epc.h
->   4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
->      variable doesn't get overwritten in the loop.
->   5] Replaced i-=1 with i--
->   6] Replaced rcar with R-Car in patch subject and description.
->   7] Set MACCTLR in init() callback
-> 
-> Changes for v6:
-> 1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
->    scm/linux/kernel/git/lpieralisi/pci.git/
-> 2] Fixed review comments from Shimoda-san
->    a] Made sure defconfig changes were in separate patch
->    b] Created rcar_pcie_host/rcar_pcie_ep structures
->    c] Added pci-id for R8A774C0
->    d] Added entry in MAINTAINERS for dt-binding
->    e] Dropped unnecessary braces
-> 3] Added support for msi.
-> 
-> Changes for v5:
-> 1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
->    linux/kernel/git/helgaas/pci.git
-> 2] Fixed review comments reported by Kishon while fetching the matching
->    window in function pci_epc_get_matching_window()
-> 3] Fixed review comments reported by Bjorn
->    a] Split patch up first patch so that its easier to review and incremental
->    b] Fixed typos
-> 4] Included Reviewed tag from Rob for the dt-binding patch
-> 5] Fixed issue reported by Nathan for assigning variable to itself
-> 
-> Changes for v4:
-> 1] Fixed dtb_check error reported by Rob
-> 2] Fixed review comments reported by Kishon
->    a] Dropped pci_epc_find_best_fit_window()
->    b] Fixed initializing mem ptr in __pci_epc_mem_init()
->    c] Dropped map_size from pci_epc_mem_window structure
-> 
-> Changes for v3:
-> 1] Fixed review comments from Bjorn and Kishon.
-> 3] Converted to DT schema
-> 
-> Changes for v2:
-> 1] Fixed review comments from Biju for dt-bindings to include an example
->    for a tested platform.
-> 2] Fixed review comments from Kishon to extend the features of outbound
->    regions in epf framework.
-> 3] Added support to parse outbound-ranges in OF.
-> 
-> Lad Prabhakar (8):
->   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
->   PCI: rcar: Move shareable code to a common file
->   PCI: rcar: Fix calculating mask for PCIEPAMR register
->   PCI: endpoint: Pass page size as argument to pci_epc_mem_init()
->   PCI: endpoint: Add support to handle multiple base for mapping
->     outbound memory
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   PCI: rcar: Add endpoint mode support
->   MAINTAINERS: Add file patterns for rcar PCI device tree bindings
-> 
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 +
->  MAINTAINERS                                   |    1 +
->  drivers/pci/controller/Kconfig                |   18 +
->  drivers/pci/controller/Makefile               |    3 +-
->  .../pci/controller/cadence/pcie-cadence-ep.c  |    2 +-
->  .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
->  drivers/pci/controller/pcie-rcar-ep.c         |  563 ++++++++
->  drivers/pci/controller/pcie-rcar-host.c       | 1130 +++++++++++++++
->  drivers/pci/controller/pcie-rcar.c            | 1268 +----------------
->  drivers/pci/controller/pcie-rcar.h            |  140 ++
->  drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
->  drivers/pci/endpoint/pci-epc-mem.c            |  204 ++-
->  include/linux/pci-epc.h                       |   38 +-
->  13 files changed, 2150 insertions(+), 1312 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
- 
+On 5/11/20 12:33 PM, Ardelean, Alexandru wrote:
+> On Sun, 2020-05-10 at 11:09 +0100, Jonathan Cameron wrote:
+>> [External]
+>>
+>> On Sat, 9 May 2020 10:52:14 +0200
+>> Lars-Peter Clausen <lars@metafoo.de> wrote:
+>>
+>>> On 5/8/20 3:53 PM, Alexandru Ardelean wrote:
+>>>> [...]
+>>>> What I don't like, is that iio:device3 has iio:buffer3:0 (to 3).
+>>>> This is because the 'buffer->dev.parent = &indio_dev->dev'.
+>>>> But I do feel this is correct.
+>>>> So, now I don't know whether to leave it like that or symlink to shorter
+>>>> versions like 'iio:buffer3:Y' -> 'iio:device3/bufferY'.
+>>>> The reason for naming the IIO buffer devices to 'iio:bufferX:Y' is
+>>>> mostly to make the names unique. It would have looked weird to do
+>>>> '/dev/buffer1' if I would have named the buffer devices 'bufferX'.
+>>>>
+>>>> So, now I'm thinking of whether all this is acceptable.
+>>>> Or what is acceptable?
+>>>> Should I symlink 'iio:device3/iio:buffer3:0' -> 'iio:device3/buffer0'?
+>>>> What else should I consider moving forward?
+>>>> What means forward?
+>>>> Where did I leave my beer?
+>>> Looking at how the /dev/ devices are named I think we can provide a name
+>>> that is different from the dev_name() of the device. Have a look at
+>>> device_get_devnode() in drivers/base/core.c. We should be able to
+>>> provide the name for the chardev through the devnode() callback.
+>>>
+>>> While we are at this, do we want to move the new devices into an iio
+>>> subfolder? So iio/buffer0:0 instead of iio:buffer0:0?
+>> Possibly on the folder.  I can't for the life of me remember why I decided
+>> not to do that the first time around - I'll leave it at the
+>> mysterious "it may turn out to be harder than you'd think..."
+>> Hopefully not ;)
+> I was also thinking about the /dev/iio subfolder while doing this.
+> I can copy that from /dev/input
+> They seem to do it already.
+> I don't know how difficult it would be. But it looks like a good precedent.
 
-Applied to pci/rcar, thanks !
+All you have to do is return "iio/..." from the devnode() callback.
 
-Lorenzo
+>
+> My concern regarding going to use stuff from core [like device_get_devnode()] is
+> that it seems to bypass some layers of kernel.
+> If I do 'git grep device_get_devnode', I get:
+>
+> drivers/base/core.c:            name = device_get_devnode(dev, &mode, &uid,
+> &gid, &tmp);
+> drivers/base/core.c: * device_get_devnode - path of device node file
+> drivers/base/core.c:const char *device_get_devnode(struct device *dev,
+> drivers/base/devtmpfs.c:        req.name = device_get_devnode(dev, &req.mode,
+> &req.uid, &req.gid, &tmp);
+> drivers/base/devtmpfs.c:        req.name = device_get_devnode(dev, NULL, NULL,
+> NULL, &tmp);
+> include/linux/device.h:extern const char *device_get_devnode(struct device *dev,
+> (END)
+>
+> So, basically, most uses of device_get_devnode() are in core code, and I feel
+> that this may be sanctioned somewhere by some core people, if I do it.
+> I could be wrong, but if you disagree, I'll take your word for it.
+You are not supposed to use the function itself, you should implement 
+the devnode() callback for the IIO bus, which is then used by the core 
+device_get_devnode() function.
+
