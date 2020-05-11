@@ -2,107 +2,355 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A88AC54E8E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC52C54E8D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD682051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:03:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QiKdEKor"
+	by mail.kernel.org (Postfix) with ESMTP id B25F0206B9
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 18:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589220330;
+	bh=k9ngRnaXaDmOle/SacnZDdUB4VqFd/4Sfk2KUqW8Gnk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=MAvkrDwPOvmHfNi64lo87PTOTw+1acs9F923M/iwBQ+D0uq0t839ZqTD8KD6hiQSX
+	 R0FuKbwz0mGt1iIoyfftnCsXCcU1f6np7h3b+Sm+TpJU7a8b9mVOVipXd1dkL8506T
+	 +SBmrfLsX2BhAZ5GhawnaIKx8lxrOOq/r22ixl/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbgEKSDd (ORCPT
+        id S1730961AbgEKSF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 14:03:33 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33770 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgEKSDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 14:03:32 -0400
-Received: from [10.137.106.115] (unknown [131.107.174.243])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A459320B717B;
-        Mon, 11 May 2020 11:03:31 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A459320B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1589220212;
-        bh=rwCBjFjDRVRa/3cB9IsEzNvfLiKX6lRSr9M18CC7//4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QiKdEKorw3cyT1qWZiMET9W5veSrPG4eNvJe3qaXWcFMXz1t90fAPlv3CSYWjU6is
-         1U+rcd04LKlXY+H4saO7e/yVSmO+N7R04feR23EWhVyWDS+8htuwyPBoJbD80fxF69
-         MRo3aLdTplD7OzjW3HYeo901uWPxV5t777MZqC54=
-Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
- <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Message-ID: <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
-Date:   Mon, 11 May 2020 11:03:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 11 May 2020 14:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgEKSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 14:05:28 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC0E1206B9;
+        Mon, 11 May 2020 18:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589220327;
+        bh=k9ngRnaXaDmOle/SacnZDdUB4VqFd/4Sfk2KUqW8Gnk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Z/n5ZySKSA0ktCt+4WJhn+O2u59cMcsb1ugHe7cnu4u9PiTRJCi/x3Kct1vyxf3vX
+         62k6f4rhxDy29mVDDiDhAk/ruVr/XjcF+Bms9bzOapz9ltJoikEARYB2PM+glaxAYG
+         RGNsD6ObvmiI60KoGL8OZ8B2R4vM7SEg3vO681yE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A3CBB352271C; Mon, 11 May 2020 11:05:27 -0700 (PDT)
+Date:   Mon, 11 May 2020 11:05:27 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
+Message-ID: <20200511180527.GZ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 11, 2020 at 10:31:11AM +0800, Walter Wu wrote:
+> This feature will record first and last call_rcu() call stack and
+> print two call_rcu() call stack in KASAN report.
 
+Suppose that a given rcu_head structure is passed to call_rcu(), then
+the grace period elapses, the callback is invoked, and the enclosing
+data structure is freed.  But then that same region of memory is
+immediately reallocated as the same type of structure and again
+passed to call_rcu(), and that this cycle repeats several times.
 
-On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
+Would the first call stack forever be associated with the first
+call_rcu() in this series?  If so, wouldn't the last two usually
+be the most useful?  Or am I unclear on the use case?
 
-[...snip]
-
->>
->> Additionally, rules are evaluated top-to-bottom. As a result, any
->> revocation rules, or denies should be placed early in the file to ensure
->> that these rules are evaluated before a rule with "action=ALLOW" is hit.
->>
->> IPE policy is designed to be forward compatible and backwards compatible,
->> thus any failure to parse a rule will result in the line being ignored,
->> and a warning being emitted. If backwards compatibility is not required,
->> the kernel commandline parameter and sysctl, ipe.strict_parse can be
->> enabled, which will cause these warnings to be fatal.
+> When call_rcu() is called, we store the call_rcu() call stack into
+> slub alloc meta-data, so that KASAN report can print rcu stack.
 > 
-> Ignoring unknown command may lead to inconsistent beaviors. To achieve
-> forward compatibility, I think it would be better to never ignore
-> unknown rule but to give a way to userspace to known what is the current
-> kernel ABI. This could be done with a securityfs file listing the
-> current policy grammar.
+> It doesn't increase the cost of memory consumption. Because we don't
+> enlarge struct kasan_alloc_meta size.
+> - add two call_rcu() call stack into kasan_alloc_meta, size is 8 bytes.
+> - remove free track from kasan_alloc_meta, size is 8 bytes.
 > 
+> [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
+> [2]https://groups.google.com/forum/#!searchin/kasan-dev/better$20stack$20traces$20for$20rcu%7Csort:date/kasan-dev/KQsjT_88hDE/7rNUZprRBgAJ
+> 
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Josh Triplett <josh@joshtriplett.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> ---
+>  include/linux/kasan.h |  2 ++
+>  kernel/rcu/tree.c     |  3 +++
+>  lib/Kconfig.kasan     |  2 ++
+>  mm/kasan/common.c     |  4 ++--
+>  mm/kasan/generic.c    | 29 +++++++++++++++++++++++++++++
+>  mm/kasan/kasan.h      | 19 +++++++++++++++++++
+>  mm/kasan/report.c     | 21 +++++++++++++++++----
+>  7 files changed, 74 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index 31314ca7c635..23b7ee00572d 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -174,11 +174,13 @@ static inline size_t kasan_metadata_size(struct kmem_cache *cache) { return 0; }
+>  
+>  void kasan_cache_shrink(struct kmem_cache *cache);
+>  void kasan_cache_shutdown(struct kmem_cache *cache);
+> +void kasan_record_aux_stack(void *ptr);
+>  
+>  #else /* CONFIG_KASAN_GENERIC */
+>  
+>  static inline void kasan_cache_shrink(struct kmem_cache *cache) {}
+>  static inline void kasan_cache_shutdown(struct kmem_cache *cache) {}
+> +static inline void kasan_record_aux_stack(void *ptr) {}
+>  
+>  #endif /* CONFIG_KASAN_GENERIC */
+>  
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 06548e2ebb72..de872b6cc261 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -57,6 +57,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/sched/isolation.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/kasan.h>
+>  #include "../time/tick-internal.h"
+>  
+>  #include "tree.h"
+> @@ -2694,6 +2695,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  		trace_rcu_callback(rcu_state.name, head,
+>  				   rcu_segcblist_n_cbs(&rdp->cblist));
+>  
+> +	kasan_record_aux_stack(head);
 
-That's a fair point. From a manual perspective, I think this is fine.
-A human-user can interpret a grammar successfully on their own when new
-syntax is introduced.
+Just for the record, at this point we have not yet queued the callback.
+We have also not yet disabled interrupts.  Which might be OK, but I
+figured I should call out the possibility of moving this down a few
+lines to follow the local_irq_save().
 
- From a producing API perspective, I'd have to think about it a bit 
-more. Ideally, the grammar would be structured in such a way that the 
-userland
-interpreter of this grammar would not have to be updated once new syntax
-is introduced, avoiding the need to update the userland binary. To do so
-generically ("op=%s") is easy, but doesn't necessarily convey sufficient
-information (what happens when a new "op" token is introduced?). I think
-this may come down to regular expression representations of valid values
-for these tokens, which worries me as regular expressions are incredibly
-error-prone[1].
+If someone incorrectly invokes concurrently invokes call_rcu() on this
+same region of memory, possibly from an interrupt handler, we are OK
+corrupting the stack traces, right?
 
-I'll see what I can come up with regarding this.
+But what happens if a given structure has more than one rcu_head
+structure?  In that case, RCU would be just fine with it being
+concurrently passed to different call_rcu() invocations as long as the
+two invocations didn't both use the same rcu_head structure.  (In that
+case, they had best not be both freeing the object, and if even one of
+them is freeing the object, coordination is necessary.)
 
+If this is a problem, one approach would be to move the
+kasan_record_aux_stack(head) call to kfree_rcu().  After all, it is
+definitely illegal to pass the same memory to a pair of kfree_rcu()
+invocations!  ;-)
 
-[1] 
-https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/
+							Thanx, Paul
+
+> +
+>  	/* Go handle any RCU core processing required. */
+>  	if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
+>  	    unlikely(rcu_segcblist_is_offloaded(&rdp->cblist))) {
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 81f5464ea9e1..56a89291f1cc 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -58,6 +58,8 @@ config KASAN_GENERIC
+>  	  For better error detection enable CONFIG_STACKTRACE.
+>  	  Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
+>  	  (the resulting kernel does not boot).
+> +	  Currently CONFIG_KASAN_GENERIC will print first and last call_rcu()
+> +	  call stack. It doesn't increase the cost of memory consumption.
+>  
+>  config KASAN_SW_TAGS
+>  	bool "Software tag-based mode"
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 2906358e42f0..8bc618289bb1 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -41,7 +41,7 @@
+>  #include "kasan.h"
+>  #include "../slab.h"
+>  
+> -static inline depot_stack_handle_t save_stack(gfp_t flags)
+> +depot_stack_handle_t kasan_save_stack(gfp_t flags)
+>  {
+>  	unsigned long entries[KASAN_STACK_DEPTH];
+>  	unsigned int nr_entries;
+> @@ -54,7 +54,7 @@ static inline depot_stack_handle_t save_stack(gfp_t flags)
+>  static inline void set_track(struct kasan_track *track, gfp_t flags)
+>  {
+>  	track->pid = current->pid;
+> -	track->stack = save_stack(flags);
+> +	track->stack = kasan_save_stack(flags);
+>  }
+>  
+>  void kasan_enable_current(void)
+> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> index 56ff8885fe2e..b86880c338e2 100644
+> --- a/mm/kasan/generic.c
+> +++ b/mm/kasan/generic.c
+> @@ -325,3 +325,32 @@ DEFINE_ASAN_SET_SHADOW(f2);
+>  DEFINE_ASAN_SET_SHADOW(f3);
+>  DEFINE_ASAN_SET_SHADOW(f5);
+>  DEFINE_ASAN_SET_SHADOW(f8);
+> +
+> +void kasan_record_aux_stack(void *addr)
+> +{
+> +	struct page *page = kasan_addr_to_page(addr);
+> +	struct kmem_cache *cache;
+> +	struct kasan_alloc_meta *alloc_info;
+> +	void *object;
+> +
+> +	if (!(page && PageSlab(page)))
+> +		return;
+> +
+> +	cache = page->slab_cache;
+> +	object = nearest_obj(cache, page, addr);
+> +	alloc_info = get_alloc_info(cache, object);
+> +
+> +	if (!alloc_info->rcu_stack[0])
+> +		/* record first call_rcu() call stack */
+> +		alloc_info->rcu_stack[0] = kasan_save_stack(GFP_NOWAIT);
+> +	else
+> +		/* record last call_rcu() call stack */
+> +		alloc_info->rcu_stack[1] = kasan_save_stack(GFP_NOWAIT);
+> +}
+> +
+> +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
+> +						u8 idx)
+> +{
+> +	return container_of(&alloc_info->rcu_stack[idx],
+> +						struct kasan_track, stack);
+> +}
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index e8f37199d885..1cc1fb7b0de3 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -96,15 +96,28 @@ struct kasan_track {
+>  	depot_stack_handle_t stack;
+>  };
+>  
+> +#ifdef CONFIG_KASAN_GENERIC
+> +#define SIZEOF_PTR sizeof(void *)
+> +#define KASAN_NR_RCU_CALL_STACKS 2
+> +#else /* CONFIG_KASAN_GENERIC */
+>  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+>  #define KASAN_NR_FREE_STACKS 5
+>  #else
+>  #define KASAN_NR_FREE_STACKS 1
+>  #endif
+> +#endif /* CONFIG_KASAN_GENERIC */
+>  
+>  struct kasan_alloc_meta {
+>  	struct kasan_track alloc_track;
+> +#ifdef CONFIG_KASAN_GENERIC
+> +	/*
+> +	 * call_rcu() call stack is stored into struct kasan_alloc_meta.
+> +	 * The free stack is stored into freed object.
+> +	 */
+> +	depot_stack_handle_t rcu_stack[KASAN_NR_RCU_CALL_STACKS];
+> +#else
+>  	struct kasan_track free_track[KASAN_NR_FREE_STACKS];
+> +#endif
+>  #ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
+>  	u8 free_pointer_tag[KASAN_NR_FREE_STACKS];
+>  	u8 free_track_idx;
+> @@ -159,16 +172,22 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
+>  
+>  struct page *kasan_addr_to_page(const void *addr);
+>  
+> +depot_stack_handle_t kasan_save_stack(gfp_t flags);
+> +
+>  #if defined(CONFIG_KASAN_GENERIC) && \
+>  	(defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+>  void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
+>  void quarantine_reduce(void);
+>  void quarantine_remove_cache(struct kmem_cache *cache);
+> +struct kasan_track *kasan_get_aux_stack(struct kasan_alloc_meta *alloc_info,
+> +			u8 idx);
+>  #else
+>  static inline void quarantine_put(struct kasan_free_meta *info,
+>  				struct kmem_cache *cache) { }
+>  static inline void quarantine_reduce(void) { }
+>  static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
+> +static inline struct kasan_track *kasan_get_aux_stack(
+> +			struct kasan_alloc_meta *alloc_info, u8 idx) { return NULL; }
+>  #endif
+>  
+>  #ifdef CONFIG_KASAN_SW_TAGS
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 80f23c9da6b0..f16a1a210815 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -105,9 +105,13 @@ static void end_report(unsigned long *flags)
+>  	kasan_enable_current();
+>  }
+>  
+> -static void print_track(struct kasan_track *track, const char *prefix)
+> +static void print_track(struct kasan_track *track, const char *prefix,
+> +						bool is_callrcu)
+>  {
+> -	pr_err("%s by task %u:\n", prefix, track->pid);
+> +	if (is_callrcu)
+> +		pr_err("%s:\n", prefix);
+> +	else
+> +		pr_err("%s by task %u:\n", prefix, track->pid);
+>  	if (track->stack) {
+>  		unsigned long *entries;
+>  		unsigned int nr_entries;
+> @@ -187,11 +191,20 @@ static void describe_object(struct kmem_cache *cache, void *object,
+>  	if (cache->flags & SLAB_KASAN) {
+>  		struct kasan_track *free_track;
+>  
+> -		print_track(&alloc_info->alloc_track, "Allocated");
+> +		print_track(&alloc_info->alloc_track, "Allocated", false);
+>  		pr_err("\n");
+>  		free_track = kasan_get_free_track(cache, object, tag);
+> -		print_track(free_track, "Freed");
+> +		print_track(free_track, "Freed", false);
+>  		pr_err("\n");
+> +
+> +		if (IS_ENABLED(CONFIG_KASAN_GENERIC)) {
+> +			free_track = kasan_get_aux_stack(alloc_info, 0);
+> +			print_track(free_track, "First call_rcu() call stack", true);
+> +			pr_err("\n");
+> +			free_track = kasan_get_aux_stack(alloc_info, 1);
+> +			print_track(free_track, "Last call_rcu() call stack", true);
+> +			pr_err("\n");
+> +		}
+>  	}
+>  
+>  	describe_object_addr(cache, object, addr);
+> -- 
+I> 2.18.0
