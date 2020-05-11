@@ -2,312 +2,117 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0DBC54E8D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4BCC54E4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F62206D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YLEpzczb"
+	by mail.kernel.org (Postfix) with ESMTP id 67D9E206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589232747;
+	bh=z3P+ciZRlqvUI6Pqf8o4ovW9pXtoLRn9Wot/OO72TAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g+rmV22GU7YYblqZVsv0e1lJvo+a2ZScyXtkfE4mjlYX4EClrj06aNi0eS4Lex9+c
+	 fa+waKUp9Xe3ezi/G2iCzxcgkOBMWu9fOpNN45R3uNg3BApMBW1e5csRagpDhMw4ZQ
+	 fIEpVNiZGKc4igKPVWJ3FFzacwe/eOhIJSI7/yI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgEKVbl (ORCPT
+        id S1727799AbgEKVc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:31:41 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52040 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEKVbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 17:31:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BLH0vk142002;
-        Mon, 11 May 2020 21:31:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=huL3IFLcj3ydyiZXNJ4ber1yEInwSlzGJ9VkS6Dp42Q=;
- b=YLEpzczbTEmRIbH1kWrZsq8a5Fsy1f0VDLS7pBTLhvl0QOK6hLKfk/fRu86NSrYicmB+
- SjN12PFAiAURb9vZrA7aCC2b6Z2FoFloQYTV2XJJghNgkE03v23vliTC9g7wMEu1hpar
- J67OzQ/x0cdg5Re+qdFC4O7qMiFWK3/DtJ8pm2MsX+3l/GDdaxROp9vACmIR+catm6sb
- ICU9+2i3sjDZWZ+cmrKqrUbZVfdFvJE47EwHVbHP7WQcLjr1eJIFv0BVvEFViV2b4uAb
- EVqUUXtmu1LINNHcF447I5Sani9hZt9GQxzWmOg4fhpt2boSnbhm7PvCYUSwMPU99G0H Cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30x3gsfmdv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 21:31:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BLDtgq035616;
-        Mon, 11 May 2020 21:31:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30ydsp2y0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 21:31:27 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04BLVQcV005112;
-        Mon, 11 May 2020 21:31:26 GMT
-Received: from dhcp-10-159-239-226.vpn.oracle.com (/10.159.239.226)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 May 2020 14:31:25 -0700
-Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-To:     Hillf Danton <hdanton@sina.com>, Mark Bloch <markb@mellanox.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
- <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
- <20200508110302.17872-1-hdanton@sina.com>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <a1075c70-c03a-8d94-e58f-0ea7d008ed67@oracle.com>
-Date:   Mon, 11 May 2020 14:30:43 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Mon, 11 May 2020 17:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgEKVc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:32:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24876206D9;
+        Mon, 11 May 2020 21:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589232745;
+        bh=z3P+ciZRlqvUI6Pqf8o4ovW9pXtoLRn9Wot/OO72TAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OGUPDSMKjydMtSMfFaHrMblmqGwaDOmxz/dBFDSE1wrNvMN5tYxvuwczACX2mkq1U
+         V/DIDWiSDQk3Kn7fmFqsXbv7UXLfLf40W4nuYicxav4RWJmvvGUaGiotgM+OhdcNai
+         c2UgVM4iPCXEPSlPO14rPUyOkxgc0sF0R5XVi1Us=
+Date:   Mon, 11 May 2020 22:32:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511213223.GB23852@sirena.org.uk>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <20200511174414.GL8216@sirena.org.uk>
+ <20200511183247.y6cfss22pe67nouf@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200508110302.17872-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=13 mlxscore=0
- adultscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- malwarescore=0 adultscore=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 clxscore=1011 bulkscore=0 phishscore=0
- suspectscore=13 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110160
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Yylu36WmvOXNoKYn"
+Content-Disposition: inline
+In-Reply-To: <20200511183247.y6cfss22pe67nouf@mobilestation>
+X-Cookie: APL hackers do it in the quad.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
 
-Please find my comments inline -
+--Yylu36WmvOXNoKYn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 5/8/20 4:03 AM, Hillf Danton wrote:
-> On Thu, 7 May 2020 12:36:29 Mark Bloch wrote:
->> On 5/7/2020 11:34, Divya Indi wrote:
->>> This patch fixes commit -
->>> commit 3ebd2fd0d011 ("IB/sa: Put netlink request into the request list before sending")'
->>>
->>> Above commit adds the query to the request list before ib_nl_snd_msg.
->>>
->>> However, if there is a delay in sending out the request (For
->>> eg: Delay due to low memory situation) the timer to handle request timeout
->>> might kick in before the request is sent out to ibacm via netlink.
->>> ib_nl_request_timeout may release the query if it fails to send it to SA
->>> as well causing a use after free situation.
->>>
->>> Call Trace for the above race:
->>>
->>> [<ffffffffa02f43cb>] ? ib_pack+0x17b/0x240 [ib_core]
->>> [<ffffffffa032aef1>] ib_sa_path_rec_get+0x181/0x200 [ib_sa]
->>> [<ffffffffa0379db0>] rdma_resolve_route+0x3c0/0x8d0 [rdma_cm]
->>> [<ffffffffa0374450>] ? cma_bind_port+0xa0/0xa0 [rdma_cm]
->>> [<ffffffffa040f850>] ? rds_rdma_cm_event_handler_cmn+0x850/0x850
->>> [rds_rdma]
->>> [<ffffffffa040f22c>] rds_rdma_cm_event_handler_cmn+0x22c/0x850
->>> [rds_rdma]
->>> [<ffffffffa040f860>] rds_rdma_cm_event_handler+0x10/0x20 [rds_rdma]
->>> [<ffffffffa037778e>] addr_handler+0x9e/0x140 [rdma_cm]
->>> [<ffffffffa026cdb4>] process_req+0x134/0x190 [ib_addr]
->>> [<ffffffff810a02f9>] process_one_work+0x169/0x4a0
->>> [<ffffffff810a0b2b>] worker_thread+0x5b/0x560
->>> [<ffffffff810a0ad0>] ? flush_delayed_work+0x50/0x50
->>> [<ffffffff810a68fb>] kthread+0xcb/0xf0
->>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
->>> [<ffffffff816ec49a>] ? __schedule+0x24a/0x810
->>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
->>> [<ffffffff816f25a7>] ret_from_fork+0x47/0x90
->>> [<ffffffff810a6830>] ? kthread_create_on_node+0x180/0x180
->>> ....
->>> RIP  [<ffffffffa03296cd>] send_mad+0x33d/0x5d0 [ib_sa]
->>>
->>> To resolve this issue, we introduce a new flag IB_SA_NL_QUERY_SENT.
->>> This flag Indicates if the request has been sent out to ibacm yet.
->>>
->>> If this flag is not set for a query and the query times out, we add it
->>> back to the list with the original delay.
->>>
->>> To handle the case where a response is received before we could set this
->>> flag, the response handler waits for the flag to be
->>> set before proceeding with the query.
->>>
->>> Signed-off-by: Divya Indi <divya.indi@oracle.com>
->>> ---
->>>  drivers/infiniband/core/sa_query.c | 45 ++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 45 insertions(+)
->>>
->>> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
->>> index 30d4c12..ffbae2f 100644
->>> --- a/drivers/infiniband/core/sa_query.c
->>> +++ b/drivers/infiniband/core/sa_query.c
->>> @@ -59,6 +59,9 @@
->>>  #define IB_SA_LOCAL_SVC_TIMEOUT_MAX		200000
->>>  #define IB_SA_CPI_MAX_RETRY_CNT			3
->>>  #define IB_SA_CPI_RETRY_WAIT			1000 /*msecs */
->>> +
->>> +DECLARE_WAIT_QUEUE_HEAD(wait_queue);
->>> +
->>>  static int sa_local_svc_timeout_ms = IB_SA_LOCAL_SVC_TIMEOUT_DEFAULT;
->>>  
->>>  struct ib_sa_sm_ah {
->>> @@ -122,6 +125,7 @@ struct ib_sa_query {
->>>  #define IB_SA_ENABLE_LOCAL_SERVICE	0x00000001
->>>  #define IB_SA_CANCEL			0x00000002
->>>  #define IB_SA_QUERY_OPA			0x00000004
->>> +#define IB_SA_NL_QUERY_SENT		0x00000008
->>>  
->>>  struct ib_sa_service_query {
->>>  	void (*callback)(int, struct ib_sa_service_rec *, void *);
->>> @@ -746,6 +750,11 @@ static inline int ib_sa_query_cancelled(struct ib_sa_query *query)
->>>  	return (query->flags & IB_SA_CANCEL);
->>>  }
->>>  
->>> +static inline int ib_sa_nl_query_sent(struct ib_sa_query *query)
->>> +{
->>> +	return (query->flags & IB_SA_NL_QUERY_SENT);
->>> +}
->>> +
->>>  static void ib_nl_set_path_rec_attrs(struct sk_buff *skb,
->>>  				     struct ib_sa_query *query)
->>>  {
->>> @@ -889,6 +898,15 @@ static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
->>>  		spin_lock_irqsave(&ib_nl_request_lock, flags);
->>>  		list_del(&query->list);
->>>  		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
-> Here it also needs to do wakeup as sleeper might come while sending, no
-> matter the failure to send.
+On Mon, May 11, 2020 at 09:32:47PM +0300, Serge Semin wrote:
 
-We only sleep in the response handler. If we could not send a query, then
-response handler is not triggered and hence no one would be waiting on this query.
+> Thanks for the explanation. Max segment size being set to the DMA controller generic
+> device should work well. There is no need in setting the transfer and messages
+> size limitations. Besides I don't really see the
+> max_transfer_size/max_message_size callbacks utilized in the SPI core. These
+> functions are called in the spi-mem.c driver only. Do I miss something?
 
-Thanks,
-Divya
+We really should validate them in the core but really they're intended
+for client drivers (like spi-mem kind of is) to allow them to adapt the
+sizes of requests they're generating so the core never sees anything
+that's too big.  For the transfers we have a spi_split_transfers_maxsize()
+helper if anything wants to use it.  Fortunately there's not that many
+controllers with low enough limits to worry about so actual usage hasn't
+been that high.
 
->>> +	} else {
->>> +		query->flags |= IB_SA_NL_QUERY_SENT;
->>> +
->>> +		/*
->>> +		 * If response is received before this flag was set
->>> +		 * someone is waiting to process the response and release the
->>> +		 * query.
->>> +		 */
->>> +		wake_up(&wait_queue);
->>>  	}
->>>  
->>>  	return ret;
-> With minor changes added on top of your work it now looks like the diff
-> below (only including the wakeup part).
->
-> --- a/drivers/infiniband/core/sa_query.c
-> +++ b/drivers/infiniband/core/sa_query.c
-> @@ -863,6 +863,11 @@ static int ib_nl_send_msg(struct ib_sa_q
->  	return rdma_nl_multicast(&init_net, skb, RDMA_NL_GROUP_LS, gfp_mask);
->  }
->  
-> +static inline bool ib_sa_nl_query_sending(struct ib_sa_query *query)
-> +{
-> +	return query->flags & IB_SA_NL_QUERY_SENDING;
-> +}
-> +
->  static int ib_nl_make_request(struct ib_sa_query *query, gfp_t gfp_mask)
->  {
->  	unsigned long flags;
-> @@ -874,6 +879,8 @@ static int ib_nl_make_request(struct ib_
->  
->  	/* Put the request on the list first.*/
->  	spin_lock_irqsave(&ib_nl_request_lock, flags);
-> +	/* info others we're having work to do */
-> +	query->flags |= IB_SA_NL_QUERY_SENDING;
->  	delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
->  	query->timeout = delay + jiffies;
->  	list_add_tail(&query->list, &ib_nl_request_list);
-> @@ -883,13 +890,15 @@ static int ib_nl_make_request(struct ib_
->  	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->  
->  	ret = ib_nl_send_msg(query, gfp_mask);
-> +	/* safe to delete it with IB_SA_NL_QUERY_SENDING set */
-> +	spin_lock_irqsave(&ib_nl_request_lock, flags);
->  	if (ret) {
->  		ret = -EIO;
-> -		/* Remove the request */
-> -		spin_lock_irqsave(&ib_nl_request_lock, flags);
->  		list_del(&query->list);
-> -		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->  	}
-> +	query->flags &= ~IB_SA_NL_QUERY_SENDING;
-> +	wake_up(&wait_queue);
-> +	spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->  
->  	return ret;
->  }
->
->
->>> @@ -994,6 +1012,21 @@ static void ib_nl_request_timeout(struct work_struct *work)
->>>  		}
->>>  
->>>  		list_del(&query->list);
->>> +
->>> +		/*
->>> +		 * If IB_SA_NL_QUERY_SENT is not set, this query has not been
->>> +		 * sent to ibacm yet. Reset the timer.
->>> +		 */
->>> +		if (!ib_sa_nl_query_sent(query)) {
->>> +			delay = msecs_to_jiffies(sa_local_svc_timeout_ms);
->>> +			query->timeout = delay + jiffies;
->>> +			list_add_tail(&query->list, &ib_nl_request_list);
->>> +			/* Start the timeout if this is the only request */
->>> +			if (ib_nl_request_list.next == &query->list)
->>> +				queue_delayed_work(ib_nl_wq, &ib_nl_timed_work,
->>> +						delay);
->>> +			break;
->>> +		}
->>>  		ib_sa_disable_local_svc(query);
->>>  		/* Hold the lock to protect against query cancellation */
->>>  		if (ib_sa_query_cancelled(query))
->>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
->>>  
->>>  	send_buf = query->mad_buf;
->>>  
->>> +	/*
->>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
->>> +	 * processing this query. If flag is not set, query can be accessed in
->>> +	 * another context while setting the flag and processing the query will
->>> +	 * eventually release it causing a possible use-after-free.
->>> +	 */
->>> +	if (unlikely(!ib_sa_nl_query_sent(query))) {
->> Can't there be a race here where you check the flag (it isn't set)
->> and before you call wait_event() the flag is set and wake_up() is called
->> which means you will wait here forever? or worse, a timeout will happen
->> the query will be freed and them some other query will call wake_up()
->> and we have again a use-after-free.
->>
->>> +		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
->>> +		wait_event(wait_queue, ib_sa_nl_query_sent(query));
->> What if there are two queries sent to userspace, shouldn't you check and make sure
->> you got woken up by the right one setting the flag?
->>
->> Other than that, the entire solution makes it very complicated to reason with (flags set/checked without locking etc)
->> maybe we should just revert and fix it the other way?
->>
->> Mark 
->>
->>> +		spin_lock_irqsave(&ib_nl_request_lock, flags);
->>> +	}
->>> +
->>>  	if (!ib_nl_is_good_resolve_resp(nlh)) {
->>>  		/* if the result is a failure, send out the packet via IB */
->>>  		ib_sa_disable_local_svc(query);
->>>
+--Yylu36WmvOXNoKYn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65xGYACgkQJNaLcl1U
+h9CMpAf/T2v9WB98ZVIJ2WXZ3oWO8rPy0Y2A3XVDzHMHMF42Arr3PBNm1h5Oar7r
+MateSJ9BBaa0GomtFvuqaY+XcTMwDXzyqqaQjdIAwc0Qoq/lk1HHJIxc3W+sSHPh
+IvczXH7NChx0jqhs7OQL6G6A5SRxDUVAUvc7cO9wyIJTPzIknKenktHxejqcaayo
+nQNuA3tnXAnRHFIJ3IyoXZECF7cYwXUoYyru14CYJ1rF4I58VfPXDf5DqdbNj5x+
+5TCcmIo0G/ZNVVWFlGgHWrceHDwS1CvHAWRji7K6jKtcHHEVfGkwUCyhnSvNWxbv
+K4lVFhkDMPb/oKCkNovArUDFcrd8gA==
+=XNTS
+-----END PGP SIGNATURE-----
+
+--Yylu36WmvOXNoKYn--
