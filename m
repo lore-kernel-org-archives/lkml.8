@@ -2,144 +2,160 @@ Return-Path: <SRS0=ABJN=6Z=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FFEC54E4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EB3C47255
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B952078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C557A2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 May 2020 21:07:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GKJ5Eedj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbgEKVHU (ORCPT
+        id S1732031AbgEKVHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 17:07:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:65353 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731712AbgEKVHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 17:07:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55204 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731868AbgEKVHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 May 2020 17:07:18 -0400
-IronPort-SDR: 5Cxofg4mEOEmns46czyiERiqgXne+2oUSKyKxmhxwpeQPrght+cNc2Yitev84qGZRsLXLD6cir
- p2WlrIjDxHVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 14:07:16 -0700
-IronPort-SDR: 39DH4qP/WlsvGrVdm1ICLsquSpKO61GkMMPFBbRmsGsgekZQiDT+LvF/MGmb+6AlRCBqe1bfRA
- AKZIPFcZxMRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
-   d="scan'208";a="261891983"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 11 May 2020 14:07:11 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jYFdq-0063Fx-Ia; Tue, 12 May 2020 00:07:14 +0300
-Date:   Tue, 12 May 2020 00:07:14 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511210714.GO185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BL71iA061885;
+        Mon, 11 May 2020 21:07:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=IAJQLbVwVP5lVN0Y4tvhElORwcq/7GVBvYMoChGS9P0=;
+ b=GKJ5EedjP3Dlo0z6HOaxnd0AT0iQfG+koP9cVjxuwSqvWOIRFSTuE168QASjdwbGHHyE
+ sEuhck3jjNRMTswPwUxM62rY2TZOZQ6wUt6tphXOwyQihWVidpTSmCOWo7FlIkP7mFjB
+ llYCVeLJ1SWaWoGyN6ZsjiGIByIRxJkhsEXAegdY7TiTwvVjK+rHFsxh3wY1SDAEnLHH
+ VkiFDKN+/OB/AJD74jL5fMEwFF9SJASNeqLH2VnjRBiOhnvFpy8SRd9qtbYlRdf+1GvM
+ KMFLSkbRd4fqxykMNeOwIa2QjFNWqJmXvRSdTgzTvpQcCqSu2qYPKOMLfQfiboo1op+v LQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30x3mbqh5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 21:07:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BKwEpk068680;
+        Mon, 11 May 2020 21:07:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30x69rs11b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 21:07:07 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04BL76pk022354;
+        Mon, 11 May 2020 21:07:06 GMT
+Received: from dhcp-10-159-239-226.vpn.oracle.com (/10.159.239.226)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 May 2020 14:07:05 -0700
+Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+To:     "Wan, Kaike" <kaike.wan@intel.com>,
+        Mark Bloch <markb@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
+ <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
+ <7572e503-312c-26a8-c8c2-05515f1c4f84@mellanox.com>
+ <MW3PR11MB4665120FE43314C22A862324F4A50@MW3PR11MB4665.namprd11.prod.outlook.com>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <54a2c84e-1745-cae5-e0b5-4d63013aef32@oracle.com>
+Date:   Mon, 11 May 2020 14:06:25 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <MW3PR11MB4665120FE43314C22A862324F4A50@MW3PR11MB4665.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
+ spamscore=0 suspectscore=11 mlxscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110158
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 suspectscore=11 bulkscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
-> On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 11, 2020 at 4:48 PM Serge Semin
-> > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
-> > > >
-> > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
-> > > > > driver will split it into the max transaction chunks anyway.
-> > > >
-> > > > That sounds like you need to also impose a limit on the maximum message
-> > > > size as well then, with that you should be able to handle messages up
-> > > > to whatever that limit is.  There's code for that bit already, so long
-> > > > as the limit is not too low it should be fine for most devices and
-> > > > client drivers can see the limit so they can be updated to work with it
-> > > > if needed.
-> > >
-> > > Hmm, this might work. The problem will be with imposing such limitation through
-> > > the DW APB SSI driver. In order to do this I need to know:
-> > > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > > 2) Maximum DW DMA transfer block size.
-> > > Then I'll be able to use this information in the can_dma() callback to enable
-> > > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > > parameter, then setting it won't work, because it just limits the SG items size
-> > > not the total length of a single transfer.
-> > >
-> > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > driver. Andy?
-> > 
-> > I'm not sure I understand why do you need this being exported. Just
-> > always supply SG list out of single entry and define the length
-> > according to the maximum segment size (it's done IIRC in SPI core).
-> 
-> Finally I see your point. So you suggest to feed the DMA engine with SG list
-> entries one-by-one instead of sending all of them at once in a single
-> dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
-> session. Hm, this solution will work, but there is an issue. There is no
-> guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
-> number of items with the same sizes. It depends on the Tx/Rx buffers physical
-> address alignment and their offsets within the memory pages. Though this
-> problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
-> to implement a clever DMA IO loop, which would extract the DMA
-> addresses/lengths from the SG entries and perform the single-buffer DMA 
-> transactions with the DMA buffers of the same length.
-> 
-> Regarding noLLP being exported. Obviously I intended to solve the problem in a
-> generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
-> In order to do this we need to know whether the multi-block LLP feature is
-> unsupported by the DW DMA controller. We either make such info somehow exported
-> from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
-> could be ready to work around the problem; or just implement a flag-based quirk
-> in the DMA client driver, which would be enabled in the platform-specific basis
-> depending on the platform device actually detected (for instance, a specific
-> version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
+Hi,
 
-So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
-- 0: Auto (DMA driver handles any cases itself)
-- 1: Only single entry
-- 2: Up to two...
+Thanks for taking the time to review. Please find my comments inline -
 
+On 5/7/20 1:16 PM, Wan, Kaike wrote:
+>
+>> -----Original Message-----
+>> From: Mark Bloch <markb@mellanox.com>
+>> Sent: Thursday, May 07, 2020 3:36 PM
+>> To: Divya Indi <divya.indi@oracle.com>; linux-kernel@vger.kernel.org; linux-
+>> rdma@vger.kernel.org; Jason Gunthorpe <jgg@ziepe.ca>; Wan, Kaike
+>> <kaike.wan@intel.com>
+>> Cc: Gerd Rausch <gerd.rausch@oracle.com>; Håkon Bugge
+>> <haakon.bugge@oracle.com>; Srinivas Eeda <srinivas.eeda@oracle.com>;
+>> Rama Nichanamatlu <rama.nichanamatlu@oracle.com>; Doug Ledford
+>> <dledford@redhat.com>
+>> Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+>>
+>>
+>>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff
+>>> *skb,
+>>>
+>>>  	send_buf = query->mad_buf;
+>>>
+>>> +	/*
+>>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
+>>> +	 * processing this query. If flag is not set, query can be accessed in
+>>> +	 * another context while setting the flag and processing the query
+>> will
+>>> +	 * eventually release it causing a possible use-after-free.
+>>> +	 */
+>>> +	if (unlikely(!ib_sa_nl_query_sent(query))) {
+>> Can't there be a race here where you check the flag (it isn't set) and before
+>> you call wait_event() the flag is set and wake_up() is called which means you
+>> will wait here forever?
+> Should wait_event() catch that? That is,  if the flag is not set, wait_event() will sleep until the flag is set.
+>
+>  or worse, a timeout will happen the query will be
+>> freed and them some other query will call wake_up() and we have again a
+>> use-after-free.
+> The request has been deleted from the request list by this time and therefore the timeout should have no impact here.
+>
+>
+>>> +		spin_unlock_irqrestore(&ib_nl_request_lock, flags);
+>>> +		wait_event(wait_queue, ib_sa_nl_query_sent(query));
+>> What if there are two queries sent to userspace, shouldn't you check and
+>> make sure you got woken up by the right one setting the flag?
+> The wait_event() is conditioned on the specific query (ib_sa_nl_query_sent(query)), not on the wait_queue itself.
+>
+>> Other than that, the entire solution makes it very complicated to reason with
+>> (flags set/checked without locking etc) maybe we should just revert and fix it
+>> the other way?
+> The flag could certainly be set under the lock, which may reduce complications. 
 
--- 
-With Best Regards,
-Andy Shevchenko
+We could use a lock or use atomic operations. However, the reason for not doing so was that
+we have 1 writer and multiple readers of the IB_SA_NL_QUERY_SENT flag and the readers 
+wouldnt mind reading a stale value. 
 
+Would it still be better to have a lock for this flag? 
 
+Thanks,
+Divya
+
+>
+> Kaike
+>
