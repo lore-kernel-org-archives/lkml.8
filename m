@@ -2,102 +2,126 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8F8C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A39C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCAA20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DEE20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgELHOu (ORCPT
+        id S1728948AbgELHQm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:14:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:12386 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgELHOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:14:49 -0400
-IronPort-SDR: Sn1rb1n3vLxCNb9UADmbMOuYg/M3nYLXXWpAQcwmFMEzqqgUiCNLUy7AEkKhgTPbGph4PK/2De
- ZtmCn7dixPDg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 00:14:48 -0700
-IronPort-SDR: V1z1KjEy6HMCzIPAuWxnhTOX5UkYMr5RHKngLgpjWwKFS+gEstjCNqBLBBz+84D82120aO5YFZ
- 13X3gAzlINRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
-   d="scan'208";a="409198422"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga004.jf.intel.com with ESMTP; 12 May 2020 00:14:46 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm, swap: Use prandom_u32_max()
-References: <20200512064147.514493-1-ying.huang@intel.com>
-        <20200512065049.GN29153@dhcp22.suse.cz>
-Date:   Tue, 12 May 2020 15:14:46 +0800
-In-Reply-To: <20200512065049.GN29153@dhcp22.suse.cz> (Michal Hocko's message
-        of "Tue, 12 May 2020 08:50:49 +0200")
-Message-ID: <875zd1pqu1.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 12 May 2020 03:16:42 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47429 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgELHQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:16:42 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 2B8632000C;
+        Tue, 12 May 2020 07:16:38 +0000 (UTC)
+Date:   Tue, 12 May 2020 09:16:37 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
+Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
+        vigneshr@ti.com, sumit.semwal@linaro.org,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v3] mtd: rawnand: brcmnand: correctly verify erased
+ pages
+Message-ID: <20200512091637.198dd0c2@xps13>
+In-Reply-To: <20200512065111.716801-1-noltari@gmail.com>
+References: <20200505082055.2843847-1-noltari@gmail.com>
+        <20200512065111.716801-1-noltari@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@kernel.org> writes:
+Hi Álvaro,
 
-> On Tue 12-05-20 14:41:46, Huang Ying wrote:
->> To improve the code readability and get random number with higher
->> quality.
->
-> I understand the readability argument but why should prandom_u32_max
-> (which I was not aware of) provide a higher quality randomness?
+Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
+08:51:11 +0200:
 
-I am not expert on random number generator.  I have heard about that the
-randomness of the low order bits of some random number generator isn't
-good enough.  Anyway, by using the common implementation, the real
-random number generator expert can fix the possible issue once for all
-users.
+> The current code checks that the whole OOB area is erased.
+> This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
+> fail due to the usable OOB bytes not being 0xff.
+> Correct this by only checking that data and ECC bytes aren't 0xff.
+> 
+> Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  v3: Fix commit log and merge nand_check_erased_ecc_chunk calls.
+>  v2: Add Fixes tag
+> 
+>  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> index e4e3ceeac38f..80fe01f03516 100644
+> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> @@ -2018,8 +2018,9 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+>  static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+>  		  struct nand_chip *chip, void *buf, u64 addr)
+>  {
+> +	struct mtd_oob_region oobecc;
+>  	int i, sas;
+> -	void *oob = chip->oob_poi;
+> +	void *oob;
+>  	int bitflips = 0;
+>  	int page = addr >> chip->page_shift;
+>  	int ret;
+> @@ -2035,11 +2036,19 @@ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+>  	if (ret)
+>  		return ret;
+>  
+> -	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
+> +	for (i = 0; i < chip->ecc.steps; i++) {
+>  		ecc_chunk = buf + chip->ecc.size * i;
+> -		ret = nand_check_erased_ecc_chunk(ecc_chunk,
+> -						  chip->ecc.size,
+> -						  oob, sas, NULL, 0,
+> +
+> +		if (mtd->ooblayout->ecc(mtd, i, &oobecc)) {
 
->> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Minchan Kim <minchan@kernel.org>
->> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->> Cc: Hugh Dickins <hughd@google.com>
->
-> To the change itself
-> Acked-by: Michal Hocko <mhocko@suse.com>
+Please use the mtdcore.c's helpers
+(mtd_ooblayout_set/get_data/free/ecc/bytes).
 
-Thanks!
+Also, what are you trying to discriminate with the return code of the
+function? Shouldn't this function "always" work?
 
-Best Regards,
-Huang, Ying
+> +			oob = NULL;
+> +			oobecc.length = 0;
+> +		} else {
+> +			oob = chip->oob_poi + oobecc.offset;
+> +		}
+> +
+> +		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
+> +						  oob, oobecc.length,
+> +						  NULL, 0,
+>  						  chip->ecc.strength);
 
->> ---
->>  mm/swapfile.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/swapfile.c b/mm/swapfile.c
->> index a0a123e59ce6..2ec8b21201d6 100644
->> --- a/mm/swapfile.c
->> +++ b/mm/swapfile.c
->> @@ -3220,7 +3220,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->>  		 * select a random position to start with to help wear leveling
->>  		 * SSD
->>  		 */
->> -		p->cluster_next = 1 + (prandom_u32() % p->highest_bit);
->> +		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
->>  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
->>  
->>  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
->> -- 
->> 2.26.2
+As I told you, this helper takes "maid data" then "spare area" then
+"ecc bytes". The names are pretty important here as you want to avoid
+checking the spare OOB bytes on purpose, so maybe you could have more
+meaningful names and call "ecc" instead of "oob" the ecc region?
+ 
+>  		if (ret < 0)
+>  			return ret;
+
+
+Thanks,
+Miquèl
