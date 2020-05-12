@@ -2,127 +2,109 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04E7C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A35C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27C520736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8029F206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDNc3WJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgELNX5 (ORCPT
+        id S1730061AbgELNZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgELNXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:23:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17DC52075E;
-        Tue, 12 May 2020 13:23:49 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jYUsu-0006Oe-07; Tue, 12 May 2020 09:23:48 -0400
-Message-ID: <20200512132347.887995207@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Tue, 12 May 2020 09:23:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Tue, 12 May 2020 09:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELNZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:25:26 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F48C061A0C;
+        Tue, 12 May 2020 06:25:26 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c64so13445982qkf.12;
+        Tue, 12 May 2020 06:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PTFxC40Ec7wOMd+ERavExEghGhS6XBq7Wvj2fntglJ8=;
+        b=FDNc3WJa0vcrIlXtpcLbJPEaHig6WYKGXLTihc5rLW4Tn+74OO99gK4BHreesy1ChH
+         SC++AU7M8QcXLivZnsUyba7/CKQp5QHeH8x8ErzhuMiVTXM+aAxN7tbY2CtOUE+1jXWy
+         QU3jhaZOLsHZw1Suudr7VLD+FYipFu/z6+6zO3/Ub5WbDJ5BsRpXTUaLJ8s7H4Nmk2y2
+         sNHLjeYp/Z4VcDlAKwu3npXk/EXLKV+UdHeEYXbeaKJQOoblqk1Bz3iVz1W8SaTPJ6dm
+         xfvM09tdptP49PnjyL/56fp5zzMY/iAab+1OfbdRzHsoRzoe3uIZkVjVLGoBnh1gWDTn
+         BS8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PTFxC40Ec7wOMd+ERavExEghGhS6XBq7Wvj2fntglJ8=;
+        b=TKXE5KogGkgb+/RCvyXhJFX8+prQuB2CeJ/0VdgKB/kRH4aLViWKoog2Mq1JbOwvWF
+         eYYylj0Trgju/NjQqRZ0E4/CyZ0c325xe54mWOstlMvXySSRfKy6OtvqtwZ0mLqM5o/6
+         rfsizxkUxUp7SlDfoTWURMOrF3a2An9/NJ6S5CmbtqBj6MNrmR8cN8ROgTyL1EnFHsVa
+         UtnghJE7QLxbW6EDs3gSgG+c/vSeiytv1lfr859mPloWg4cILp/h+qW5/8Lr4KFuEG+g
+         Yp+E/XJvramc1AGmGTXH0a9a5VexO74p3D0KRzzbDj2dx9AkKZzqwbf6rW9CMAu3btSK
+         Nl0Q==
+X-Gm-Message-State: AGi0PuYQpien14tfHFZPQ+mEdiG5tlMu5qlaJJmS3wWkRQwl4iHt3oyB
+        L2hbrEQo5MeVmv1mR8dszzQ=
+X-Google-Smtp-Source: APiQypI+IJe+b1HpMdplJFp4nSZpTbaseSeCUJP03m5Kbkzx8bpdPe3PliatUtIW59Y6CcU0JB5hmg==
+X-Received: by 2002:a37:9ec4:: with SMTP id h187mr20924117qke.72.1589289925201;
+        Tue, 12 May 2020 06:25:25 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com ([2620:10d:c091:480::1:4fca])
+        by smtp.gmail.com with ESMTPSA id y4sm12033182qti.33.2020.05.12.06.25.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 06:25:24 -0700 (PDT)
+Date:   Tue, 12 May 2020 09:25:21 -0400
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [for-linus][PATCH 2/3] tracing: Wait for preempt irq delay thread to execute
-References: <20200512132317.343672858@goodmis.org>
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200512132521.GA28700@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428161355.6377-1-schatzberg.dan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Seems like discussion on this patch series has died down. There's been
+a concern raised that we could generalize infrastructure across loop,
+md, etc. This may be possible, in the future, but it isn't clear to me
+how this would look like. I'm inclined to fix the existing issue with
+loop devices now (this is a problem we hit at FB) and address
+consolidation with other cases if and when those are addressed.
 
-A bug report was posted that running the preempt irq delay module on a slow
-machine, and removing it quickly could lead to the thread created by the
-modlue to execute after the module is removed, and this could cause the
-kernel to crash. The fix for this was to call kthread_stop() after creating
-the thread to make sure it finishes before allowing the module to be
-removed.
-
-Now this caused the opposite problem on fast machines. What now happens is
-the kthread_stop() can cause the kthread never to execute and the test never
-to run. To fix this, add a completion and wait for the kthread to execute,
-then wait for it to end.
-
-This issue caused the ftracetest selftests to fail on the preemptirq tests.
-
-Link: https://lore.kernel.org/r/20200510114210.15d9e4af@oasis.local.home
-
-Cc: stable@vger.kernel.org
-Fixes: d16a8c31077e ("tracing: Wait for preempt irq delay thread to finish")
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/preemptirq_delay_test.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-index c4c86de63cf9..312d1a0ca3b6 100644
---- a/kernel/trace/preemptirq_delay_test.c
-+++ b/kernel/trace/preemptirq_delay_test.c
-@@ -16,6 +16,7 @@
- #include <linux/printk.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
-+#include <linux/completion.h>
- 
- static ulong delay = 100;
- static char test_mode[12] = "irq";
-@@ -28,6 +29,8 @@ MODULE_PARM_DESC(delay, "Period in microseconds (100 us default)");
- MODULE_PARM_DESC(test_mode, "Mode of the test such as preempt, irq, or alternate (default irq)");
- MODULE_PARM_DESC(burst_size, "The size of a burst (default 1)");
- 
-+static struct completion done;
-+
- #define MIN(x, y) ((x) < (y) ? (x) : (y))
- 
- static void busy_wait(ulong time)
-@@ -114,6 +117,8 @@ static int preemptirq_delay_run(void *data)
- 	for (i = 0; i < s; i++)
- 		(testfuncs[i])(i);
- 
-+	complete(&done);
-+
- 	set_current_state(TASK_INTERRUPTIBLE);
- 	while (!kthread_should_stop()) {
- 		schedule();
-@@ -128,15 +133,18 @@ static int preemptirq_delay_run(void *data)
- static int preemptirq_run_test(void)
- {
- 	struct task_struct *task;
--
- 	char task_name[50];
- 
-+	init_completion(&done);
-+
- 	snprintf(task_name, sizeof(task_name), "%s_test", test_mode);
- 	task =  kthread_run(preemptirq_delay_run, NULL, task_name);
- 	if (IS_ERR(task))
- 		return PTR_ERR(task);
--	if (task)
-+	if (task) {
-+		wait_for_completion(&done);
- 		kthread_stop(task);
-+	}
- 	return 0;
- }
- 
--- 
-2.26.2
-
-
+Jens, you've expressed interest in seeing this series go through the
+block tree so I'm interested in your perspective here. Barring any
+concrete implementation bugs, would you be okay merging this version?
