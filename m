@@ -2,98 +2,142 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CAACA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A031DC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7818206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C55206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oyaEp0TS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgELTuT (ORCPT
+        id S1731074AbgELTuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:50:19 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:43423 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgELTuS (ORCPT
+        Tue, 12 May 2020 15:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730889AbgELTuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:50:18 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MAgIQ-1jNYHp0ihE-00B6ut for <linux-kernel@vger.kernel.org>; Tue, 12 May
- 2020 21:50:17 +0200
-Received: by mail-qk1-f169.google.com with SMTP id i14so13838126qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:17 -0700 (PDT)
-X-Gm-Message-State: AOAM531Twh7mf9NUGMsI4X+/5DM9aVqw7zlhsLZQxovS1fASuLeGqap4
-        7N9TjLIIl3H2XVHhdPhQ51qd0ubXkAPSv1Nnyvc=
-X-Google-Smtp-Source: ABdhPJwKJd3U0klcU7IDRjkuleiIc4wPNOMiOc0saxTFEWTaSUun13tPHi7rCexv4xkXDUCA3EAbyG/iGjnOgQ+uULY=
-X-Received: by 2002:a37:bc7:: with SMTP id 190mr2657025qkl.286.1589313016016;
- Tue, 12 May 2020 12:50:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
- <20200414151748.GA5624@afzalpc> <CAK8P3a0JW9x-Wk9Ec3+zLjPHbWAvPQx8MF-xe-PnWUgEjRAuTg@mail.gmail.com>
- <20200415135407.GA6553@afzalpc> <20200503145017.GA5074@afzalpc>
- <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
- <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
- <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
- <20200512104758.GA12980@afzalpc>
-In-Reply-To: <20200512104758.GA12980@afzalpc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 12 May 2020 21:49:59 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
-Message-ID: <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
-Subject: Re: ARM: static kernel in vmalloc space
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:blbAoHz0+CqER1w53waskxa/mVPfQBIA/zs3Fq8lPgn02aAoN47
- NTjfMzxYskcWg4MRCwhReK/i5MnwJucBCAMw1LS4XmyVL/jTL8Gv2b+v72PG9EBbcPRbJ1c
- jf4fi8UJP+IbaETb9YkiAq1MNLtkAYcd5eclSWZTjBn7za/NjOiAVhxDpuH6IafuHNynY6m
- HN6ieMnUNrs7GtnG7QPEA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:d9K5INitm8A=:NzYMwt2C46/nI537H/luU9
- n5wh8nO6TfZhr22Q02qvXH23v/VHtUeQOY8aQBYiTC2uHBJJYEX61svXKadtaBhX2tNyOL3oa
- f7wWH8aotE1rk2JbJROv4V9PIJYMrv2K/MbtVNPXztgOkA4styc8xf7lEEQWLhZieKzZUcrP/
- YfU73qx2sfJHRZSs9FBceZVRPz1RyLBh2cTH3gexGbkJLS2GkagEade/uuiD7g/PYcWgAzO0l
- 1InMbU1BwFXp4qR7PaTfRCy1TdGnhzwnvBgd3vScqL+ZLPmiOJ+1uIiPVPFsMzT2qu757qEQe
- byiC9LonIq/gdwxH6nYMr0RueQA36JgMBkC6ovSpZfQBfmvrnS3nlSylsJ1PEyLtqpzNjZBaK
- moRE5Oj/5o4dfDqsFaNeno1ahTglqCKwPU0AUcF0B5yG3lLj9sLa43IPxEyS0/YPtteRJeBqR
- DJ5B8+Yr0louUgq+lz+l3Fruz+Dn5ph8FeC0X8b0R4dT/wfPopOpAKsIvItBaWOVpJ0wpL2fC
- k2cFxTwjRvI1R8+kQtHVV+mMeyabhiQtqB1n5WtTZObLF+Kluc3b23m62iKgK+Gq6Z1lhP5Iz
- OMmQBa8NH2cOId76aMNZ2zl4fI00hldwtr9W8Bj3iYK086IQavLGVRF9HRUJjfLZaMS+tpia1
- MC4vngH59l69JG4GoDx0wdIFVHQUWlc79KWL9YHMJf4ElHV8+g0HgwcwomtRGPv9yDVFpykMJ
- VLXNYOon3eLHzucYVp4b1wLZ6Qp9fBfyyOjJj7fQXlYvBDqcu311ADU/PZaLuQikWFXmLNocK
- fomf85JMPce6oHb4Pr5MJXPEWc6iknqd4tX60GvSkEaxONYZ7U=
+        Tue, 12 May 2020 15:50:35 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB86C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:35 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id y42so8757775qth.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=xgJD2hpD7vnQ87u1OXtovDwmBIQGx+H7T13YM90Cpj4=;
+        b=oyaEp0TSlc6Z4xfLcVeab/Erl0PVFTIiLxrS1Ytzffwb7DYHWL+ubEmhBiXDRrUBIC
+         H1QOtXiShfC8X6acnuo8Dn36jroIYhsqY4BZyvLYl6NKBU5hNoWL8MDPXcu7FV3d42Nq
+         Se6GLOoFSycCu1T4alpZMe1IpKS2JGuA6HBci3HN+f9KggDX9OEIIboOcSZRM6b+U5JE
+         zipMF4T5557mB9R8r1Ri+OEZ/1GoWP35n1s47+SvymHpt15L0Y85AC96FNwpMu8t1YoM
+         /eN/e3DcVqKyfS7/C8xZ/I+zzjQjKNAWXTtSHsK5yxqI321X00hi5LiBmvSu3v9NjqV9
+         e5eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=xgJD2hpD7vnQ87u1OXtovDwmBIQGx+H7T13YM90Cpj4=;
+        b=MaATr0wTOJwotQJpzqy4LkG2SXJMCiKFmCxykDt2ijSouxTWmGLKiVAUIfiovgBB36
+         WKUuopMIdUg+6yrWCtXk5idKb7oJNEuYTm0uvySPSPnQf7BPOc3/g6QMzQGYBExxorWs
+         i4YicCmDa72a39IiBJLgs0kiCZrmYURpirVeGD66yqUhu/dRmhC/ToW6vAQ6rmqCOyxO
+         1+Qa1RrEyerN8msEPGhuZvlWlr4bAFd6IL4IjSliOOZ/23/MnnD/+YhkK5AjH1kRouUT
+         S7g42zCFAOef4SvWh7k2xng5wO/4MSYxYwEO86WRwmVMMzx+lRKyezvJ41GvuLfLcKBB
+         rzNQ==
+X-Gm-Message-State: AOAM5319nb1oocII+RkOc+V/Wum+UK7ZE1zn2EZ9ryDXlgRX10vbbjjM
+        6w+PI2V0R68rLrkk45FsHYEa+wQTk9sTUg==
+X-Google-Smtp-Source: ABdhPJx5yoJNFKpaTlovyxOByL1Afc0w9oDOw9IvzDUjgB/Gn2teZhN+0b3/S5ZTlmXmIN8UWrfVww==
+X-Received: by 2002:ac8:6d0a:: with SMTP id o10mr4974425qtt.141.1589313034050;
+        Tue, 12 May 2020 12:50:34 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id o18sm64003qtb.7.2020.05.12.12.50.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 12:50:33 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Null-ptr-deref due to "vfs, fsinfo: Add an RCU safe per-ns mount
+ list"
+Message-Id: <31941725-BEB0-4839-945A-4952C2B5ADC7@lca.pw>
+Date:   Tue, 12 May 2020 15:50:32 -0400
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:48 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
->
-> On Mon, May 11, 2020 at 05:29:29PM +0200, Arnd Bergmann wrote:
->
-> > What do you currently do with the module address space?
->
-> In the current setup, module address space was untouched, i.e. virtual
-> address difference b/n text & module space is far greater than 32MB, at
-> least > (2+768+16)MB and modules can't be loaded unless ARM_MODULE_PLTS
-> is enabled (this was checked now)
->
-> > easiest way is to just always put modules into vmalloc space, as we already
-> > do with CONFIG_ARM_MODULE_PLTS when the special area gets full,
-> > but that could be optimized once the rest works.
->
-> Okay
+Reverted the linux-next commit ee8ad8190cb1 (=E2=80=9Cvfs, fsinfo: Add =
+an RCU safe per-ns mount list=E2=80=9D) fixed the null-ptr-deref.
 
-Any idea which bit you want to try next? Creating a raw_copy_{from,to}_user()
-based on get_user_pages()/kmap_atomic()/memcpy() is probably a good
-next thing to do. I think it can be done one page at a time with only
-checking for
-get_fs(), access_ok(), and page permissions, while get_user()/put_user()
-need to handle a few more corner cases.
+# runc run root
 
-        Arnd
+[ 1531.635242][ T4444] BUG: Kernel NULL pointer dereference on write at =
+0x00000000
+[ 1531.635285][ T4444] Faulting instruction address: 0xc0000000005689e0
+[ 1531.635299][ T4444] Oops: Kernel access of bad area, sig: 11 [#1]
+[ 1531.635310][ T4444] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+[ 1531.635331][ T4444] Modules linked in: kvm_hv kvm ip_tables x_tables =
+xfs sd_mod bnx2x tg3 ahci libahci mdio libphy libata firmware_class =
+dm_mirror dm_region_hash dm_log dm_mod
+[ 1531.635370][ T4444] CPU: 16 PID: 4444 Comm: runc:[2:INIT] Not tainted =
+5.7.0-rc5-next-20200512+ #9
+[ 1531.635383][ T4444] NIP:  c0000000005689e0 LR: c0000000005689b0 CTR: =
+0000000000000000
+[ 1531.635413][ T4444] REGS: c000001323aef980 TRAP: 0300   Not tainted  =
+(5.7.0-rc5-next-20200512+)
+[ 1531.635434][ T4444] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
+CR: 24424282  XER: 00000000
+[ 1531.635468][ T4444] CFAR: c0000000006f9eec DAR: 0000000000000000 =
+DSISR: 42000000 IRQMASK: 0=20
+[ 1531.635468][ T4444] GPR00: c000000000570000 c000001323aefc10 =
+c00000000168aa00 0000000000000001=20
+[ 1531.635468][ T4444] GPR04: c0000015934e9e98 c0000015934e9e98 =
+00000000283df117 fffffffe4386c189=20
+[ 1531.635468][ T4444] GPR08: c000001323aefc38 0000000000000000 =
+0000000000000000 0000000000000002=20
+[ 1531.635468][ T4444] GPR12: 0000000024402282 c000001fffff1800 =
+000000c000229990 000000000000000a=20
+[ 1531.635468][ T4444] GPR16: ffffffffffffffff 0000000000000000 =
+000000000000007a 000000012479c68c=20
+[ 1531.635468][ T4444] GPR20: 0000000000000000 000000c000000180 =
+0000000000000000 0000000000000000=20
+[ 1531.635468][ T4444] GPR24: 0000000000000000 c00000000516b870 =
+c00000000516b858 5deadbeef0000122=20
+[ 1531.635468][ T4444] GPR28: c000001323aefc38 c0000015934e9e00 =
+c0000015934e9ea8 c0000015934e9e98=20
+[ 1531.635652][ T4444] NIP [c0000000005689e0] umount_tree+0x250/0x470
+__write_once_size at include/linux/compiler.h:250
+(inlined by) __hlist_del at include/linux/list.h:811
+(inlined by) hlist_del_rcu at include/linux/rculist.h:487
+(inlined by) umount_tree at fs/namespace.c:1485
+[ 1531.635672][ T4444] LR [c0000000005689b0] umount_tree+0x220/0x470
+[ 1531.635682][ T4444] Call Trace:
+[ 1531.635709][ T4444] [c000001323aefca0] [c000000000570000] =
+do_mount+0xb70/0xc90
+[ 1531.635738][ T4444] [c000001323aefd70] [c0000000005706f8] =
+sys_mount+0x158/0x180
+[ 1531.635760][ T4444] [c000001323aefdc0] [c000000000038ac4] =
+system_call_exception+0x114/0x1e0
+[ 1531.635799][ T4444] [c000001323aefe20] [c00000000000c8f0] =
+system_call_common+0xf0/0x278
+[ 1531.635828][ T4444] Instruction dump:
+[ 1531.635836][ T4444] 60000000 2fa30000 419e0014 e93f0008 e95f0000 =
+f92a0008 f9490000 e93fffb8=20
+[ 1531.635860][ T4444] e95fffc0 fbff0000 fbff0008 2fa90000 <f92a0000> =
+419e0008 f9490008 e93f0058=20
+[ 1531.635885][ T4444] ---[ end trace f12075f6fac94362 ]---
+[ 1531.748352][ T4444]=20
+[ 1532.748433][ T4444] Kernel panic - not syncing: Fatal exception=
