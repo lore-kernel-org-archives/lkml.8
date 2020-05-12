@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5397DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ABAC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3386C206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD8120643
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgELOg7 (ORCPT
+        id S1730348AbgELOhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
+        Tue, 12 May 2020 10:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbgELOg6 (ORCPT
+        with ESMTP id S1730258AbgELOhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:36:58 -0400
+        Tue, 12 May 2020 10:37:00 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1FDBC061A0E;
-        Tue, 12 May 2020 07:36:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EDEC061A0E;
+        Tue, 12 May 2020 07:37:00 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1e-0005lm-2i; Tue, 12 May 2020 16:36:54 +0200
+        id 1jYW1f-0005mt-IR; Tue, 12 May 2020 16:36:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A495F1C0475;
-        Tue, 12 May 2020 16:36:53 +0200 (CEST)
-Date:   Tue, 12 May 2020 14:36:53 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D7C91C02FC;
+        Tue, 12 May 2020 16:36:55 +0200 (CEST)
+Date:   Tue, 12 May 2020 14:36:55 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] READ_ONCE: Use data_race() to avoid KCSAN
- instrumentation
+Subject: [tip: locking/kcsan] arm64: barrier: Use '__unqual_scalar_typeof' for
+ acquire/release macros
 Cc:     Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-18-will@kernel.org>
-References: <20200511204150.27858-18-will@kernel.org>
+In-Reply-To: <20200511204150.27858-15-will@kernel.org>
+References: <20200511204150.27858-15-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421358.390.2138794300247844367.tip-bot2@tip-bot2>
+Message-ID: <158929421507.390.1894315072790883073.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,112 +64,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     cdd28ad2d8110099e43527e96d059c5639809680
-Gitweb:        https://git.kernel.org/tip/cdd28ad2d8110099e43527e96d059c5639809680
+Commit-ID:     a9e777c275422371c86a3bdc8d81f4a21ec2a63c
+Gitweb:        https://git.kernel.org/tip/a9e777c275422371c86a3bdc8d81f4a21ec2a63c
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:49 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:46 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:17 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:16 +02:00
 
-READ_ONCE: Use data_race() to avoid KCSAN instrumentation
+arm64: barrier: Use '__unqual_scalar_typeof' for acquire/release macros
 
-Rather then open-code the disabling/enabling of KCSAN across the guts of
-{READ,WRITE}_ONCE(), defer to the data_race() macro instead.
+Passing volatile-qualified pointers to the arm64 implementations of the
+load-acquire/store-release macros results in a re-load from the stack
+and a bunch of associated stack-protector churn due to the temporary
+result variable inheriting the volatile semantics thanks to the use of
+'typeof()'.
+
+Define these temporary variables using 'unqual_scalar_typeof' to drop
+the volatile qualifier in the case that they are scalar types.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Marco Elver <elver@google.com>
-Link: https://lkml.kernel.org/r/20200511204150.27858-18-will@kernel.org
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: https://lkml.kernel.org/r/20200511204150.27858-15-will@kernel.org
 
 ---
- include/linux/compiler.h | 54 +++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 30 deletions(-)
+ arch/arm64/include/asm/barrier.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index cb2e3b3..741c93c 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -199,6 +199,26 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #include <linux/kasan-checks.h>
- #include <linux/kcsan-checks.h>
+diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+index 7d9cc5e..fb4c275 100644
+--- a/arch/arm64/include/asm/barrier.h
++++ b/arch/arm64/include/asm/barrier.h
+@@ -76,8 +76,8 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
+ #define __smp_store_release(p, v)					\
+ do {									\
+ 	typeof(p) __p = (p);						\
+-	union { typeof(*p) __val; char __c[1]; } __u =			\
+-		{ .__val = (__force typeof(*p)) (v) };			\
++	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u =	\
++		{ .__val = (__force __unqual_scalar_typeof(*p)) (v) };	\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	kasan_check_write(__p, sizeof(*p));				\
+ 	switch (sizeof(*p)) {						\
+@@ -110,7 +110,7 @@ do {									\
  
-+/**
-+ * data_race - mark an expression as containing intentional data races
-+ *
-+ * This data_race() macro is useful for situations in which data races
-+ * should be forgiven.  One example is diagnostic code that accesses
-+ * shared variables but is not a part of the core synchronization design.
-+ *
-+ * This macro *does not* affect normal code generation, but is a hint
-+ * to tooling that data races here are to be ignored.
-+ */
-+#define data_race(expr)							\
-+({									\
-+	__kcsan_disable_current();					\
-+	({								\
-+		__unqual_scalar_typeof(({ expr; })) __v = ({ expr; });	\
-+		__kcsan_enable_current();				\
-+		__v;							\
-+	});								\
-+})
-+
- /*
-  * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
-  * atomicity or dependency ordering guarantees. Note that this may result
-@@ -209,14 +229,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- #define __READ_ONCE_SCALAR(x)						\
+ #define __smp_load_acquire(p)						\
  ({									\
- 	typeof(x) *__xp = &(x);						\
-+	__unqual_scalar_typeof(x) __x = data_race(__READ_ONCE(*__xp));	\
- 	kcsan_check_atomic_read(__xp, sizeof(*__xp));			\
--	__kcsan_disable_current();					\
--	({								\
--		__unqual_scalar_typeof(x) __x = __READ_ONCE(*__xp);	\
--		__kcsan_enable_current();				\
--		smp_read_barrier_depends();				\
--		(typeof(x))__x;						\
--	});								\
-+	smp_read_barrier_depends();					\
-+	(typeof(x))__x;							\
+-	union { typeof(*p) __val; char __c[1]; } __u;			\
++	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
+ 	typeof(p) __p = (p);						\
+ 	compiletime_assert_atomic_type(*p);				\
+ 	kasan_check_read(__p, sizeof(*p));				\
+@@ -136,33 +136,33 @@ do {									\
+ 			: "Q" (*__p) : "memory");			\
+ 		break;							\
+ 	}								\
+-	__u.__val;							\
++	(typeof(*p))__u.__val;						\
  })
  
- #define READ_ONCE(x)							\
-@@ -234,9 +250,7 @@ do {									\
- do {									\
- 	typeof(x) *__xp = &(x);						\
- 	kcsan_check_atomic_write(__xp, sizeof(*__xp));			\
--	__kcsan_disable_current();					\
--	__WRITE_ONCE(*__xp, val);					\
--	__kcsan_enable_current();					\
-+	data_race(({ __WRITE_ONCE(*__xp, val); 0; }));			\
- } while (0)
+ #define smp_cond_load_relaxed(ptr, cond_expr)				\
+ ({									\
+ 	typeof(ptr) __PTR = (ptr);					\
+-	typeof(*ptr) VAL;						\
++	__unqual_scalar_typeof(*ptr) VAL;				\
+ 	for (;;) {							\
+ 		VAL = READ_ONCE(*__PTR);				\
+ 		if (cond_expr)						\
+ 			break;						\
+ 		__cmpwait_relaxed(__PTR, VAL);				\
+ 	}								\
+-	VAL;								\
++	(typeof(*ptr))VAL;						\
+ })
  
- #define WRITE_ONCE(x, val)						\
-@@ -304,26 +318,6 @@ unsigned long read_word_at_a_time(const void *addr)
- 	return *(unsigned long *)addr;
- }
+ #define smp_cond_load_acquire(ptr, cond_expr)				\
+ ({									\
+ 	typeof(ptr) __PTR = (ptr);					\
+-	typeof(*ptr) VAL;						\
++	__unqual_scalar_typeof(*ptr) VAL;				\
+ 	for (;;) {							\
+ 		VAL = smp_load_acquire(__PTR);				\
+ 		if (cond_expr)						\
+ 			break;						\
+ 		__cmpwait_relaxed(__PTR, VAL);				\
+ 	}								\
+-	VAL;								\
++	(typeof(*ptr))VAL;						\
+ })
  
--/**
-- * data_race - mark an expression as containing intentional data races
-- *
-- * This data_race() macro is useful for situations in which data races
-- * should be forgiven.  One example is diagnostic code that accesses
-- * shared variables but is not a part of the core synchronization design.
-- *
-- * This macro *does not* affect normal code generation, but is a hint
-- * to tooling that data races here are to be ignored.
-- */
--#define data_race(expr)							\
--({									\
--	__kcsan_disable_current();					\
--	({								\
--		__unqual_scalar_typeof(({ expr; })) __v = ({ expr; });	\
--		__kcsan_enable_current();				\
--		__v;							\
--	});								\
--})
--
- #endif /* __KERNEL__ */
- 
- /*
+ #include <asm-generic/barrier.h>
