@@ -2,218 +2,160 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B5EC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427CDC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E229120733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FA5206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6oC0ck1"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="nejanEoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgELHMR (ORCPT
+        id S1728933AbgELHOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgELHMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:12:16 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8496FC061A0C;
-        Tue, 12 May 2020 00:12:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f134so8333403wmf.1;
-        Tue, 12 May 2020 00:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Pno9i7+IGC6ncAgSbnR2o7fvAJ+JWlp/1VRSmEok2Yw=;
-        b=L6oC0ck1GXRkFvQwjkjuyakZ7R2BTTCSR0WyvgfJyjinrndC3FkuHzhxBBS7sEkB38
-         d7g+D9wM6VAZ37CcRBBO17HSRHmx38VtG4xG4TXYxdNait6v39e6s2OasB4ClOMYsENZ
-         CzKiF8/tQOHmApnCN9GLN3ZdncmL5EokgvhlGy/HLF6Sy2uJmprEsDFI4n5CjSBUPBn1
-         sV2WCOjIMeohEnYlkJTf/ys6cw8rsWoZcyyazOftC/uSFkE7revwbFfJybwILjFDBbnM
-         Vc25WUF5ie10c7ZK8mTVsfQhf1uiN2BNUJoH9bE5qq++9FT9LPYenwyw8kGwR7D/t0u6
-         ccEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Pno9i7+IGC6ncAgSbnR2o7fvAJ+JWlp/1VRSmEok2Yw=;
-        b=KPhpEcUAhzUi/LXXc1IAqfIzV/clSEEAfc6+gNRb+lnIjQaomucyoe997LtBcAwEWH
-         ku4Pwvls5vEjD+e52WvuRHvPKwIgq+8wsk4P/AZpQoAGjh+bxNMS/HREvUQuq2hKno6/
-         3Cob/OP0tNG5u+XmZvN76lOUEc73MdrSiMeptwo5NvF82MW5wHdY1uXmORhDj+ZxxuB9
-         ZfIPSsXVOSYNedv0lKJxR/riyFA/55mKT/tgoiIvcdTxjB8Ds1tGwmDQl8svJklE1qYf
-         dr4PZ37lxEP+3FzieSxM8NMGRpL6wfObe9jMfTK5gRf8SaczrOICvhNe2GKKU35GyMrJ
-         V+Aw==
-X-Gm-Message-State: AGi0PuYZ1m1WwEE5UYASsDf+BgOitkdcv/zep35ZN7ioqzpMl6eCpa1e
-        fcN1pztDLOR7eSloyGwkPO0=
-X-Google-Smtp-Source: APiQypKqL2rnVh8By9cXsbO/XdQ3RA0DE9rNJHbugYnnyv953wCCWk7UPhM+SjiWIRiHq+kRn9EGhA==
-X-Received: by 2002:a1c:9c0a:: with SMTP id f10mr35725886wme.139.1589267535101;
-        Tue, 12 May 2020 00:12:15 -0700 (PDT)
-Received: from macbook-pro-alvaro.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
-        by smtp.gmail.com with ESMTPSA id a133sm7978655wme.43.2020.05.12.00.12.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 00:12:14 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: brcmnand: improve hamming oob layout
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <20200512090844.21bcaf22@xps13>
-Date:   Tue, 12 May 2020 09:12:10 +0200
-Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
-        vigneshr@ti.com, sumit.semwal@linaro.org,
-        linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+        Tue, 12 May 2020 03:14:09 -0400
+Received: from mail-mw2nam12on2040.outbound.protection.outlook.com ([40.107.244.40]:51348
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727113AbgELHOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:14:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iULbymmpKXpOPETZaaJMqTU07DCrSvA5KDlB5nZ0kw+toKP7ZMnBqCPGmH2wpZ9vhzFusZBylN4Z4pRt/clD5RtPyYmFwOjQ63EuSD+1JlRObPycJeS7cRGCgUulodMKqoYPLyoLU0tZ8OH/Wt76q16JUkq0vCbhL+2tYuxVABe3wLG7VEqJlywBHK0vCk8tGtqxEeLvnPLoMVN7OpW6JTveuV1L5vXqH96nD0FbW1cXDa94QHF12m+iMP9O838fz2sMXITx6r99EAZz6Z4JQCDXDXFxAr0ID++jCNbk9jC8HKQ6arhAlkcQMsJx6vWVMy/SfbqBby8w/I2Isb7KPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPWdSXfnsfe2H+gOjKZguoOzM9XcQhYJWAYbyYnGYoY=;
+ b=QLRACDEuBJ6SIhLInAmTGlPOHuafrFvIb6+wwliI/VBn5/ZVCzdlCxVnIYjzDtbNQkbztecZLGHP4TkXVC39zJ1n/d6XSMKeue9gW2yCRaFB/DuNeQr8KOqbAdBmG8pggQxFcXpdFoC6X/5+suO9dhyB5Hpaz1R9aixPMdOxpuGIKmYvOOz1Q36/4UZO/5BRmzzthv/ImIqA5IZaGoxXRNbpcEPLnMR5Hy02TKgNd7Nr7/yuUitC+xt3fAU8xnva+EBKgrGX5bjGw58Thgl6NRwQoQEY75/EKFZY8zUiV3Li5drGMr20lBEiTCIIwALYPYBGHG+7Go0KrijaZSKDcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VPWdSXfnsfe2H+gOjKZguoOzM9XcQhYJWAYbyYnGYoY=;
+ b=nejanEoiRmtM6csyyL2WaA+BeWeFY9ak6Dcf2erGrj1KXRJV0r2+fZDNWPB72Ww+NgzFqBk2pFi2hy35wpvw2L/iznb7Ad6tcAB1eqUKjslWmN3KbvLqJ3eoSsGmqWJONEp0/WOZQSQicApEgNMbuxe4Kc+vGLg7SfOKWLn5IjM=
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
+ by BYAPR13MB2280.namprd13.prod.outlook.com (2603:10b6:a02:ca::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.12; Tue, 12 May
+ 2020 07:14:05 +0000
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Tue, 12 May 2020
+ 07:14:04 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+ VSC8541 ethernet-phy
+Thread-Topic: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+ VSC8541 ethernet-phy
+Thread-Index: AQHWHU6PhAi/mddOO0+ZyvrzPnD5f6ijytgAgABSCNA=
+Date:   Tue, 12 May 2020 07:14:04 +0000
+Message-ID: <BYAPR13MB261430FAAEB02E9926EEB93F99BE0@BYAPR13MB2614.namprd13.prod.outlook.com>
+References: <1588072608-7747-1-git-send-email-sagar.kadam@sifive.com>
+ <1588072608-7747-5-git-send-email-sagar.kadam@sifive.com>
+ <20200512021204.GA12999@bogus>
+In-Reply-To: <20200512021204.GA12999@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=sifive.com;
+x-originating-ip: [116.74.152.191]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 29e8fc81-1ff0-40e4-2685-08d7f6440dfb
+x-ms-traffictypediagnostic: BYAPR13MB2280:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR13MB2280C788C4F4D03555EDDB9099BE0@BYAPR13MB2280.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 0401647B7F
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(136003)(396003)(346002)(366004)(376002)(33430700001)(66946007)(52536014)(55236004)(2906002)(44832011)(5660300002)(6506007)(4326008)(186003)(53546011)(26005)(76116006)(66556008)(66476007)(9686003)(8676002)(64756008)(71200400001)(7696005)(33440700001)(66446008)(316002)(55016002)(6916009)(86362001)(33656002)(54906003)(478600001)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KeHNW28ghvY0b1Q9v7xqlJIDkdrbAlTTb9zMT0x2I0fPo3QAhrvugQJAPZWEleT5ukvONU9J3ZyNCMtR2h/d1Sn9zGvnHpTo65BD2M1stWj8MfMfotYhTFbzVL5OGATBYLioHL/anBFRFv23B8PJZdijiqxyH3SqBkQ+YH7lTTXmFYcjNPNXukvj744lrCVnbmVd7tXA2ZAcQ73iC6x6mnUxcybNZm8zOxes/ePp3/lCFmDGN/Dmd6VK/WDBjSjxvJDSC1vrs3J+Rfe7n06+32nGsk/NPF4I+ByTJefScYv+iRbh4/XBtpdBzf0NV5Y8Bc908LSHcbCz9nXRfZ5BYgUCJRCh8KU5Synw3TvYLSH344saDpMiizVFy64S8yoW0cpo2sihj6mxeKPwXUS3HQaEyiEfFdX3GmQkR6uqL0plpQJspgJfdQ4SzaGwKzClJJRgKsryPdbkgTyYpWAgR6v7aX3Tmz2FokCQGvwIVDGGEhIoZGCivvlwoonm1o7Ok3ay2dQFU6Zlm+uGbROo6g==
+x-ms-exchange-antispam-messagedata: 6VRxsUFD3q+6yg+vQDPIOaen684lEy7ZAEN+aFZHOfr2aXJyzm6H8Y+VOK19we/ek0+6IeBJSbei5Pe23SLYlNy3Ohbqwt+HU+kFDnP8U3STxuhDWhYtp1iLy8qnlj9OWmAmMrimhmIshMRQRRwEdpqTRFwJyH/TZfHDPjhWN7f1ZghwN93B/3dj65Tj0zMhMJAR4Q+Dpo91egNsiqfU2VVJk9y8s/aVwVIpHWOAIYLGlcnV+JbLnCzndpLbk6L3TcsVpn8YLb49HPqx0kxtjXKOxpYmYmsRsAwz0dI8L93v1Zzifk7hb/uN+WWaiID1dCTJf+lNeJKFuAlt9pwSHmluxd9MkDTdT4ZENvch5LuJXq+d1mO7V8Dd0yoGsRc0cBoNFwIqPkQ08zGoVDBTbgtb0LnJY9qSbYG75SJBE9L2YFJOGu9AWVVKgqc5Xq9rPZuddQGhKpzYdx5r7xVIatoE8lrfP8H7+ktH8J3OznUeeyMtdlmRndep7U+o/yxo
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <5377BB9D-35EB-4531-8E03-A7483D3134E4@gmail.com>
-References: <20200504185945.2776148-1-noltari@gmail.com>
- <20200512060023.684871-1-noltari@gmail.com>
- <20200512060023.684871-3-noltari@gmail.com> <20200512090844.21bcaf22@xps13>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+MIME-Version: 1.0
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29e8fc81-1ff0-40e4-2685-08d7f6440dfb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2020 07:14:04.7907
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ed2TfHun4hzMi6+3mNvordfTM/ICrV6IeWgcj3tHf9uNJFX/+VjPD2idZBpkZ9fzqNQrKNeaoza6Vj7XLuYOOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2280
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
+Hello Rob,
 
-I also had a hard time understanding your email.
-It was quite misleading.
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Tuesday, May 12, 2020 7:42 AM
+> To: Sagar Kadam <sagar.kadam@sifive.com>
+> Cc: linux-kernel@vger.kernel.org; linux-riscv@lists.infradead.org;
+> palmer@dabbelt.com; Paul Walmsley <paul.walmsley@sifive.com>;
+> atish.patra@wdc.com; devicetree@vger.kernel.org
+> Subject: Re: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
+> VSC8541 ethernet-phy
+>=20
+> [External Email] Do not click links or attachments unless you recognize t=
+he
+> sender and know the content is safe
+>=20
+> On Tue, Apr 28, 2020 at 04:16:48AM -0700, Sagar Shrikant Kadam wrote:
+> > Adding a OUI (Organizationally Unique Identifier) for VSC8541-01
+> > device to dt node requires a corresponding dt-binding entry as well
+> > so that checkpatch doesn't complain with a warning:
+> >
+> > DT compatible string "ethernet-phy-id0007.0771" appears un-documented
+> >
+> > Here extend the existing dt binding of VSC8531 device to include
+> > VSC8541 device example.
+>=20
+> Checkpatch.pl is just dumb here and can be ignored. We have the regex
+> that documents this compatible. We don't need every VID/PID listed.
+>
+Thank you for the information.=20
+We can then drop this patch to handle un-documented warning.
 
-> El 12 may 2020, a las 9:08, Miquel Raynal <miquel.raynal@bootlin.com> =
-escribi=C3=B3:
->=20
-> Hi =C3=81lvaro,
->=20
-> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Tue, 12 =
-May 2020
-> 08:00:23 +0200:
->=20
->> The current code generates 8 oob sections:
->> S1	1-5
->> ECC	6-8
->> S2	9-15
->> S3	16-21
->> ECC	22-24
->> S4	25-31
->> S5	32-37
->> ECC	38-40
->> S6	41-47
->> S7	48-53
->> ECC	54-56
->> S8	57-63
->>=20
->> Change it by merging continuous sections:
->> S1	1-5
->> ECC	6-8
->> S2	9-21
->> ECC	22-24
->> S3	25-37
->> ECC	38-40
->> S4	41-53
->> ECC	54-56
->> S5	57-63
->>=20
->> Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
->=20
-> Sorry for leading you the wrong way, actually this patch does not
-> deserve a Fixes tag.
-
-Do I need to resend this again?
-Looks like no matter what I do it=E2=80=99s always wrong...
-
->=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> v3: invert patch order
->> v2: keep original comment and fix correctly skip byte 6 for =
-small-page nand
->>=20
->> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 37 =
-++++++++++++------------
->> 1 file changed, 18 insertions(+), 19 deletions(-)
->>=20
->> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c =
-b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> index 1c1070111ebc..0a1d76fde37b 100644
->> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
->> @@ -1100,33 +1100,32 @@ static int =
-brcmnand_hamming_ooblayout_free(struct mtd_info *mtd, int section,
->> 	struct brcmnand_cfg *cfg =3D &host->hwcfg;
->> 	int sas =3D cfg->spare_area_size << cfg->sector_size_1k;
->> 	int sectors =3D cfg->page_size / (512 << cfg->sector_size_1k);
->> +	u32 next;
->>=20
->> -	if (section >=3D sectors * 2)
->> +	if (section > sectors)
->> 		return -ERANGE;
->>=20
->> -	oobregion->offset =3D (section / 2) * sas;
->> +	next =3D (section * sas);
->> +	if (section < sectors)
->> +		next +=3D 6;
->>=20
->> -	if (section & 1) {
->> -		oobregion->offset +=3D 9;
->> -		oobregion->length =3D 7;
->> +	if (section) {
->> +		oobregion->offset =3D ((section - 1) * sas) + 9;
->> 	} else {
->> -		oobregion->length =3D 6;
->> -
->> -		/* First sector of each page may have BBI */
->> -		if (!section) {
->> -			/*
->> -			 * Small-page NAND use byte 6 for BBI while =
-large-page
->> -			 * NAND use bytes 0 and 1.
->> -			 */
->> -			if (cfg->page_size > 512) {
->> -				oobregion->offset +=3D 2;
->> -				oobregion->length -=3D 2;
->> -			} else {
->> -				oobregion->length--;
->> -			}
->> +		/*
->> +		 * Small-page NAND use byte 6 for BBI while large-page
->> +		 * NAND use bytes 0 and 1.
->> +		 */
->> +		if (cfg->page_size > 512) {
->> +			oobregion->offset =3D 2;
->> +		} else {
->> +			oobregion->offset =3D 0;
->> +			next--;
->=20
-> This next-- seems very strange, can you explain?
-
-In this case next will be 6 (which is the first ECC byte).
-However, for small page NANDs byte 5 is reserved for BBT, so we want =
-next to be 5 only in this case.
-
->=20
->> 		}
->> 	}
->>=20
->> +	oobregion->length =3D next - oobregion->offset;
->> +
->> 	return 0;
->> }
->>=20
->=20
->=20
-> Thanks,
-> Miqu=C3=A8l
-
-Regards,
-=C3=81lvaro.=
+BR,
+Sagar Kadam
+=20
+> >
+> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > index 5ff37c6..774448a 100644
+> > --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > @@ -68,3 +68,6 @@ Example:
+> >                  vsc8531,led-0-mode   =3D <LINK_1000_ACTIVITY>;
+> >                  vsc8531,led-1-mode   =3D <LINK_100_ACTIVITY>;
+> >          };
+> > +        vsc8541_0: ethernet-phy@0 {
+> > +                compatible =3D "ethernet-phy-id0007.0771";
+> > +     };
+> > --
+> > 2.7.4
+> >
