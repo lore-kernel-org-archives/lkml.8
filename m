@@ -2,119 +2,173 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601A1C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE20C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49BEA20746
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3569520733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c0e0gszT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgELFry (ORCPT
+        id S1728182AbgELFvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:47:54 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:43038 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725776AbgELFry (ORCPT
+        Tue, 12 May 2020 01:51:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42771 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725868AbgELFvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:47:54 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.074523|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0724473-0.00134074-0.926212;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.HXEAwpL_1589262465;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HXEAwpL_1589262465)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Tue, 12 May 2020 13:47:46 +0800
-Subject: Re: [PATCH v8 01/11] pstore/zone: Introduce common layer to manage
- storage zones
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-References: <20200511233229.27745-1-keescook@chromium.org>
- <20200511233229.27745-2-keescook@chromium.org>
- <a9d47bf1-7498-1d07-a943-29dd0b0ef2e1@allwinnertech.com>
- <202005112212.2E75B83@keescook>
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Message-ID: <57efa2b5-d598-a600-5f74-8fd81299fc58@allwinnertech.com>
-Date:   Tue, 12 May 2020 13:47:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 12 May 2020 01:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589262696;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x/cVjxQ0JMstZElAHAVEHp9fs0uKy63dNO0knF8a+TY=;
+        b=c0e0gszTmEAGy9E/JO03kcAqQNvZ6w+JfvAfp7ganW9HFo304AMijRcVLjT5zec41M61kf
+        W2rLV4otmtCCzUCP5abhWe7BFfC33jYydUVU+gzqbpGilcQ5+NE0LPdpBRHXRo4XNFKLo4
+        ZFX/vuPTWKqs358vDhCQBER8Ak6IrwU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-zRaLtNK4OEuDBvfkmqU5wg-1; Tue, 12 May 2020 01:51:34 -0400
+X-MC-Unique: zRaLtNK4OEuDBvfkmqU5wg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62D808005B7;
+        Tue, 12 May 2020 05:51:33 +0000 (UTC)
+Received: from [10.72.13.96] (ovpn-13-96.pek2.redhat.com [10.72.13.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2838738F;
+        Tue, 12 May 2020 05:51:26 +0000 (UTC)
+Subject: Re: [PATCH] ifcvf: move IRQ request/free to status change handlers
+From:   Jason Wang <jasowang@redhat.com>
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1589181563-38400-1-git-send-email-lingshan.zhu@intel.com>
+ <22d9dcdb-e790-0a68-ba41-b9530b2bf9fd@redhat.com>
+ <0f822630-14ad-e0cd-4171-6213c30f0799@intel.com>
+ <24d5875e-6f44-ce43-74f0-e641e02f8f42@redhat.com>
+Message-ID: <47713210-e9d9-d185-6e2e-433e2c436de9@redhat.com>
+Date:   Tue, 12 May 2020 13:51:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <202005112212.2E75B83@keescook>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <24d5875e-6f44-ce43-74f0-e641e02f8f42@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Kees Cook,
 
-On 2020/5/12 PM 1:15, Kees Cook wrote:
-> On Tue, May 12, 2020 at 11:55:20AM +0800, WeiXiong Liao wrote:
->> On 2020/5/12 AM 7:32, Kees Cook wrote:
->>> [...]
->>> +struct psz_context {
->>> +	struct pstore_zone **kpszs;
->>> +	unsigned int kmsg_max_cnt;
->>> +	unsigned int kmsg_read_cnt;
->>> +	unsigned int kmsg_write_cnt;
->>> +	/*
->>> +	 * These counters should be calculated during recovery.
->>> +	 * It records the oops/panic times after crashes rather than boots.
->>> +	 */
->>> +	unsigned int oops_counter;
->>> +	unsigned int panic_counter;
->>
->> oops/panic_counter is designed to count the crash times since the
->> linux kernel was installed. pstore/zone lookup the max counter from all
->> valid kmsg zones when recovery and saves them to oops/panic_counter.
->> However, they are unable to get real number if we remove files. It's
->> not serious, we can fix it after this series.
-> 
-> Since the kernel was installed? I don't see a kernel version check in
-> here? Or do you mean "since ever", in that it's a rolling count?
-> 
+On 2020/5/12 上午11:38, Jason Wang wrote:
+>>>>
+>>>>   static int ifcvf_start_datapath(void *private)
+>>>>   {
+>>>>       struct ifcvf_hw *vf = ifcvf_private_to_vf(private);
+>>>> @@ -118,9 +172,12 @@ static void ifcvf_vdpa_set_status(struct 
+>>>> vdpa_device *vdpa_dev, u8 status)
+>>>>   {
+>>>>       struct ifcvf_adapter *adapter;
+>>>>       struct ifcvf_hw *vf;
+>>>> +    u8 status_old;
+>>>> +    int ret;
+>>>>         vf  = vdpa_to_vf(vdpa_dev);
+>>>>       adapter = dev_get_drvdata(vdpa_dev->dev.parent);
+>>>> +    status_old = ifcvf_get_status(vf);
+>>>>         if (status == 0) {
+>>>>           ifcvf_stop_datapath(adapter);
+>>>> @@ -128,7 +185,22 @@ static void ifcvf_vdpa_set_status(struct 
+>>>> vdpa_device *vdpa_dev, u8 status)
+>>>>           return;
+>>>>       }
+>>>>   -    if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
+>>>> +    if ((status_old & VIRTIO_CONFIG_S_DRIVER_OK) &&
+>>>> +        !(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
+>>>> +        ifcvf_stop_datapath(adapter);
+>>>> +        ifcvf_free_irq(adapter, IFCVF_MAX_QUEUE_PAIRS * 2);
+>>>> +    }
+>>>> +
+>>>> +    if ((status & VIRTIO_CONFIG_S_DRIVER_OK) &&
+>>>> +        !(status_old & VIRTIO_CONFIG_S_DRIVER_OK)) {
+>>>> +        ret = ifcvf_request_irq(adapter);
+>>>> +        if (ret) {
+>>>> +            status = ifcvf_get_status(vf);
+>>>> +            status |= VIRTIO_CONFIG_S_FAILED;
+>>>> +            ifcvf_set_status(vf, status);
+>>>> +            return;
+>>>> +        }
+>>>> +
+>>>
+>>>
+>>> Have a hard though on the logic here.
+>>>
+>>> This depends on the status setting from guest or userspace. Which 
+>>> means it can not deal with e.g when qemu or userspace is crashed? Do 
+>>> we need to care this or it's a over engineering?
+>>>
+>>> Thanks
+>> If qemu crash, I guess users may re-run qmeu / re-initialize the 
+>> device, according to the spec, there should be a reset routine.
+>> This code piece handles status change on DRIVER_OK flipping. I am not 
+>> sure I get your point, mind to give more hints?
+>
+>
+> The problem is if we don't launch new qemu instance, the interrupt 
+> will be still there?
 
-Yes, "since ever".
 
->> And since pstore supports "max_reason", should pstore/zone count for
->> other reason?
-> 
-> For now, no. I opted to try to keep this as simple as possible a port
-> from dump_oops to max_reason for now.
-> 
+Ok, we reset on vhost_vdpa_release() so the following is suspicious:
 
-OK.
+With the patch, we do:
 
->>> +static inline int psz_kmsg_erase(struct psz_context *cxt,
->>> +		struct pstore_zone *zone, struct pstore_record *record)
->>> +{
->>> +	struct psz_buffer *buffer = zone->buffer;
->>> +	struct psz_kmsg_header *hdr =
->>> +		(struct psz_kmsg_header *)buffer->data;
->>> +
->>> +	if (unlikely(!psz_ok(zone)))
->>> +		return 0;
->>> +	/* this zone is already updated, no need to erase */
->>> +	if (record->count != hdr->counter)
->>> +		return 0;
->>
->> These codes is to fix bug that user remove files on pstore filesystem
->> but kmsg zone is already updated and pstore/zone should not erase
->> zone. It work for oops and panic because the count number is increasing.
->> However, it's useless for other reason of kmsg. We can fix it after this
->> series.
-> 
-> Okay, sounds good.
-> 
+static void ifcvf_vdpa_set_status(struct vdpa_device *vdpa_dev, u8 status)
+{
+         struct ifcvf_adapter *adapter;
+         struct ifcvf_hw *vf;
+         u8 status_old;
+         int ret;
 
--- 
-WeiXiong Liao
+         vf  = vdpa_to_vf(vdpa_dev);
+         adapter = dev_get_drvdata(vdpa_dev->dev.parent);
+         status_old = ifcvf_get_status(vf);
+
+         if (status == 0) {
+                 ifcvf_stop_datapath(adapter);
+                 ifcvf_reset_vring(adapter);
+                 return;
+         }
+
+         if ((status_old & VIRTIO_CONFIG_S_DRIVER_OK) &&
+             !(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
+                 ifcvf_stop_datapath(adapter);
+                 ifcvf_free_irq(adapter, IFCVF_MAX_QUEUE_PAIRS * 2);
+         }
+
+...
+
+So the handling of status == 0 looks wrong.
+
+The OK -> !OK check should already cover the datapath stopping and irq 
+stuffs.
+
+We only need to deal with vring reset and only need to do it after we 
+stop the datapath/irq stuffs.
+
+Thanks
+
+
+
+>
+> Thanks 
+
