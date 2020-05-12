@@ -2,93 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40339CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3795BC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B6020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B7D206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589298350;
+	bh=UdH39dbGEYs/Fs/sV61v1NfDwdHNw73/lzebAGliuEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1CeXO/YI79vMjl3Fs5bLIzwcLClxo5P0eBWwNlzJd6itHbPvPVmyXrNMB5bCWjq1w
+	 L0To3Ua/Jpnj+CEN2mGI7mDReSRqNIWeceVdNNEDganY1LGtHxU+DHJXeo684ERcOC
+	 IZAX4rp6X0iHxT40+jizO/Sm/ayfMyPj4G+6ebGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgELPpn (ORCPT
+        id S1730505AbgELPpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:45:43 -0400
-Received: from relay.sw.ru ([185.231.240.75]:46382 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgELPpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:45:43 -0400
-Received: from vvs-ws.sw.ru ([172.16.24.21])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1jYX5p-00048f-8A; Tue, 12 May 2020 18:45:17 +0300
-Subject: Re: [PATCH] ipc/util.c: sysvipc_find_ipc() incorrectly updates
- position index
-To:     Jiri Slaby <jslaby@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Andreas Schwab <schwab@suse.de>
-References: <ad24ee52-21a8-3ff0-e968-63d315472b91@virtuozzo.com>
- <4921fe9b-9385-a2b4-1dc4-1099be6d2e39@virtuozzo.com>
- <20200507170242.6cbb88ae672deed67152e221@linux-foundation.org>
- <20200508033625.GO16070@bombadil.infradead.org>
- <e25e5a42-159c-6bad-4f14-d70461a78b72@virtuozzo.com>
- <c89b587a-b570-2a11-3001-d1c8444f3a2f@virtuozzo.com>
- <eb1efdee-6d9c-2f03-fb88-ffec0db61037@suse.cz>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <cf6990b5-1978-3f05-375a-e22db480e832@virtuozzo.com>
-Date:   Tue, 12 May 2020 18:45:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 11:45:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38605 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgELPps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:45:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m33so10871642otc.5;
+        Tue, 12 May 2020 08:45:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wjhqZR0KFtDODzXTbFPWHQLNPIl2BEjWfgjvJzwWtyM=;
+        b=DXdivuamiPck6uKR1utxJP9eYvBK8zO8w62MapXJMpjeEK+/xSvnLLZhBJ1QwKMdOf
+         VIjkP8q3P21ERM2InRTa580tE/HfLQwzi9jc22+fJ9jplwflr2EThPE1TJjfLvV4Imnf
+         dBmSP/q5m8pCi1wYjrclErYqgeHfbp5YtJwKa/2CB7gaxIi82KuIn9wqnki2AaOX/qIp
+         i+xaDUGNv6Dm1GEtMNrTLJE2X+6LJggN8rmAG43Upm91/5UFhERZNL2GEIfkvF138oea
+         ipBpwKNnv7XPehFzFp6rO6UAc9F0lPjyz2cAs8myU81/0fOKmvx3hv8EwS0DCDnqlssx
+         BLPA==
+X-Gm-Message-State: AGi0PuZOJJzMthXFSrTcvXuRZe69ZE6RMh+LxermEnfFV2ix3Ql3EahY
+        eWaqe/MCC10vjs//CHNdUg==
+X-Google-Smtp-Source: APiQypL6/T/FPzkcOYcltEodmiZvU7X6jDCHWnt/PGwkj5Xv0c65PIVAc4kQx2qq4cpuP4NKW2EpCw==
+X-Received: by 2002:a05:6830:1e25:: with SMTP id t5mr16362224otr.358.1589298347136;
+        Tue, 12 May 2020 08:45:47 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d61sm3517309otb.58.2020.05.12.08.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 08:45:45 -0700 (PDT)
+Received: (nullmailer pid 4011 invoked by uid 1000);
+        Tue, 12 May 2020 15:45:44 -0000
+Date:   Tue, 12 May 2020 10:45:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     ansuelsmth@gmail.com
+Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Stanimir Varbanov' <svarbanov@mm-sol.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF
+ params bindings
+Message-ID: <20200512154544.GA823@bogus>
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-9-ansuelsmth@gmail.com>
+ <20200507181044.GA15159@bogus>
+ <062301d624a6$8be610d0$a3b23270$@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <eb1efdee-6d9c-2f03-fb88-ffec0db61037@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <062301d624a6$8be610d0$a3b23270$@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/20 12:21 PM, Jiri Slaby wrote:
-> On 08. 05. 20, 12:01, Vasily Averin wrote:
->> On 5/8/20 9:07 AM, Vasily Averin wrote:
->>> On 5/8/20 6:36 AM, Matthew Wilcox wrote:
->>>> On Thu, May 07, 2020 at 05:02:42PM -0700, Andrew Morton wrote:
->>>>> Here's how I resolved things.  Please check?
->>>>>
->>>>> static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
->>>>> 					      loff_t *new_pos)
->>>>> {
->>>>> 	unsigned long index = pos;
->>>>> 	struct kern_ipc_perm *ipc;
->>>>>
->>>>> 	rcu_read_lock();
->>>>> 	ipc = xa_find(&ids->ipcs, &index, ULONG_MAX, XA_PRESENT);
->>>>> 	if (ipc)
->>>>> 		ipc_lock_object(ipc);
->>>>> 	else
->>>>> 		rcu_read_unlock();
->>>>> 	*new_pos = pos + 1;
->>>>> 	return ipc;
->>>>> }
->>>>
->>>> Surely that should be '*new_pos = index + 1'?  Or did I misunderstand
->>>> the reasoning behind the other patch?
->>>
->>> I'm not sure however it looks like xa_find() can return index < pos
->> it seems, I was wrong here.
->> So I'm agree with Matthew, '*new_pos = index + 1' should be used.
+On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com wrote:
+> > On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
+> > > It is now supported the editing of Tx De-Emphasis, Tx Swing and
+> > > Rx equalization params on ipq8064. Document this new optional params.
+> > >
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/qcom,pcie.txt     | 36 +++++++++++++++++++
+> > >  1 file changed, 36 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > > index 6efcef040741..8cc5aea8a1da 100644
+> > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > > @@ -254,6 +254,42 @@
+> > >  			- "perst-gpios"	PCIe endpoint reset signal line
+> > >  			- "wake-gpios"	PCIe endpoint wake signal line
+> > >
+> > > +- qcom,tx-deemph-gen1:
+> > > +	Usage: optional (available for ipq/apq8064)
+> > > +	Value type: <u32>
+> > > +	Definition: Gen1 De-emphasis value.
+> > > +		    For ipq806x should be set to 24.
+> > 
+> > Unless these need to be tuned per board, then the compatible string for
+> > ipq806x should imply all these settings.
+> > 
 > 
-> Any progress on this? 5.7-rc*, 5.4.40, and 5.6.12 are still affected.
+> It was requested by v2 to make this settings tunable. These don't change are
+> all the same for every ipq806x SoC. The original implementation had this 
+> value hardcoded for ipq806x. Should I restore this and drop this patch? 
 
-Andrew included fix to -mm tree and I hope he'll push it to mainline/stable soon.
-https://ozlabs.org/~akpm/mmots/broken-out/ipc-utilc-sysvipc_find_ipc-incorrectly-updates-position-index.patch
+Yes, please.
 
-> Wouldn't it be better to rebase (apply the originally submitted patch)
-> before the XA rewrite and push that one to Linus?
-I'm expecting thins too. 
-
-Thank you,
-	Vasily Averin
+Rob
