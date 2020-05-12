@@ -2,119 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9742C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3CBC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9FA20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81DD320575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321028;
-	bh=I8MDOfqh+s4ez23DZdor13L+ZXK6v9ZA+T1oqw22WSA=;
+	s=default; t=1589321141;
+	bh=j1vAY40L3awDVf4d2kZXDZQndql+swIvtvfOxztyeV0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mWWoaLMuIAnIvITH+Bne8RuGWg/DnnD5R1WRWaH6KKZkAYbaUYp2KnrzhuDY7t9IU
-	 cjeev62go7Q1CcF7xst6gWjJ62qbognl+SgoNzG7UhM4D50jnGIOCLw239wS6gn0sL
-	 2+wkB7H3IbFmwb/xmBxeH6caFMpqrfDxy7qHaapQ=
+	b=0uPEimI/GgqrEJt5PuxucuMq57YFxfvzdNW7c64S7pxwTC+gxafR8rPM20Fj1jrFS
+	 SIib1VzxJQr2bbXkQua1K7qtnJBsrrzedMDGncOB0ITJuJ+DVPAZs9nX5jFnhbxaBz
+	 77xcrrTu1efQPQmXQ9eUe/YhtvUD/3j+GdvVXaDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbgELWDp (ORCPT
+        id S1731435AbgELWFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:03:45 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:53276 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgELWDo (ORCPT
+        Tue, 12 May 2020 18:05:40 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46975 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgELWFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:03:44 -0400
-Received: by mail-pj1-f65.google.com with SMTP id hi11so10202018pjb.3;
-        Tue, 12 May 2020 15:03:43 -0700 (PDT)
+        Tue, 12 May 2020 18:05:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z25so11812214otq.13;
+        Tue, 12 May 2020 15:05:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jPas3FVTQ077tq4XLx1f6zCjNgfjXBxht/KPP+7OEug=;
-        b=az4dz60fUx0TGGjY0OrzgvIn5nL20WbvyWATzslSo72V9Xh97IG4zxDBaUFWstzD83
-         1cJAssqckTzhAJrErel+8Jy5DyzW1W+EHs6SWD/zvCpQmYoe43upNVCoRYFlUXxu/laS
-         Is4FhS9BzLfVBg5gKkA+WS/y8VQHD2eEITkyk9CVaPatEyRsmHwBluvFJsqxGaKIRKor
-         UVPiDusOgvr3IQXwqYS9QqdfNlhVYE6/LZy0l1zRgjL1Qge5g5UnmNltUJcOj2EIadNx
-         aYnCPDUqT3COouxtUA8A631HOJExzblSCrybWmvJalZnexGSuifiJhfImrPJhtJUBKLQ
-         fCdA==
-X-Gm-Message-State: AGi0PuaTP6oVnQzFYJJlsyhQWfZc2pCYQSdyDWzr3/1eW/7jJ4QieZ/r
-        UGk++10ynz+ne2w/ovCeJRU=
-X-Google-Smtp-Source: APiQypLRR8P3Hy27Aan2ceEueeRcL0xTQS/0wfLdqo/lGe83BBK2NFiFKG1bubvoAzbVD2Yk3HpUbQ==
-X-Received: by 2002:a17:902:c281:: with SMTP id i1mr21719181pld.85.1589321023383;
-        Tue, 12 May 2020 15:03:43 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o27sm681142pgd.18.2020.05.12.15.03.42
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1spzLK4cm4ekL4dQmE1+GWlhRjCGCTHWPWuSdcartNU=;
+        b=E9kSd8ITWbesdZd2DQf/v3P49EXiZCJIOyJbxI8ay3VPzivr50F1HRm5jvR5zCo38H
+         P+ErtMqTP3Aq/gvGPrtHxFPO6gH2bLMcTHIsFJaYYb1Cooh7TIhH1ut8ZA181cEN/N3r
+         gx4QgJl0B/3brrAyYnwY6PySNM9cW9ZlhbdJzKJSajQyfYykQW3J/QSiBGNbH007XOvn
+         XxxiXp+lhQ9MlEf2PiSfL9eXOSJQtobMhncj881XV9W5cArkvZoDmcLXiWdAcAq2zZXG
+         oMVOKzdBN/FiwRQo9qq4Nsvl0IRFHzLYva05KXbcsagVAdpYoWz/ie8wij1HeV14XxAt
+         YGOA==
+X-Gm-Message-State: AGi0PuYS3FTVmPta8kuxYNIY3RN5GtNcLI0976XWtkvITlS7bPob/2dX
+        Y0vA5SmnTcNIgTY57N3JpA==
+X-Google-Smtp-Source: APiQypJZNwnsVvEn4yecESFGLnDDq4EBQLMVQoLrm7Afo3/qUJ8VPojy/Bqb85BUsmx+ciYyevsr9A==
+X-Received: by 2002:a9d:7608:: with SMTP id k8mr4965628otl.233.1589321139244;
+        Tue, 12 May 2020 15:05:39 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 95sm3802450otf.72.2020.05.12.15.05.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:03:42 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 76A134063E; Tue, 12 May 2020 22:03:41 +0000 (UTC)
-Date:   Tue, 12 May 2020 22:03:41 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-Message-ID: <20200512220341.GE11244@42.do-not-panic.com>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <87y2pxs73w.fsf@x220.int.ebiederm.org>
- <20200512172413.GC11244@42.do-not-panic.com>
- <87k11hrqzc.fsf@x220.int.ebiederm.org>
+        Tue, 12 May 2020 15:05:38 -0700 (PDT)
+Received: (nullmailer pid 16849 invoked by uid 1000);
+        Tue, 12 May 2020 22:05:37 -0000
+Date:   Tue, 12 May 2020 17:05:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-clk@vger.kernel.org, aford@beaconembedded.com,
+        charles.stevens@logicpd.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/3] clk: vc5: Enable addition output configurations
+ of the Versaclock
+Message-ID: <20200512220537.GA14318@bogus>
+References: <20200502122126.188001-1-aford173@gmail.com>
+ <20200502122126.188001-2-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87k11hrqzc.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200502122126.188001-2-aford173@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
-> Luis Chamberlain <mcgrof@kernel.org> writes:
+On Sat, May 02, 2020 at 07:21:25AM -0500, Adam Ford wrote:
+> The existing driver is expecting the Versaclock to be pre-programmed,
+> and only sets the output frequency.  Unfortunately, not all devices
+> are pre-programmed, and the Versaclock chip has more options beyond
+> just the frequency.
 > 
-> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
-> >> Luis Chamberlain <mcgrof@kernel.org> writes:
-> >> 
-> >> > +static struct ctl_table fs_base_table[] = {
-> >> > +	{
-> >> > +		.procname	= "fs",
-> >> > +		.mode		= 0555,
-> >> > +		.child		= fs_table,
-> >> > +	},
-> >> > +	{ }
-> >> > +};
-> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
-> >> > > +static int __init fs_procsys_init(void)
-> >> > +{
-> >> > +	struct ctl_table_header *hdr;
-> >> > +
-> >> > +	hdr = register_sysctl_table(fs_base_table);
-> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
-> >> 	AKA
-> >>         hdr = register_sysctl("fs", fs_table);
-> >
-> > Ah, much cleaner thanks!
+> This patch enables the following additional features:
 > 
-> It is my hope you we can get rid of register_sysctl_table one of these
-> days.  It was the original interface but today it is just a
-> compatibility wrapper.
+>    - Programmable voltage: 1.8V, 2.5V, or 3.3V​
+>    - Slew Percentage of normal: 85%, 90%, or 100%
+>    - Output Type: LVPECL, CMOS, HCSL, or LVDS
 > 
-> I unfortunately ran out of steam last time before I finished converting
-> everything over.
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Let's give it one more go. I'll start with the fs stuff.
 
-  Luis
+> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/clk/versaclock.h
+> new file mode 100644
+> index 000000000000..c6a6a0946564
+> --- /dev/null
+> +++ b/include/dt-bindings/clk/versaclock.h
+
+Belongs in binding patch.
+
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/* This file defines field values used by the versaclock 6 family
+> + * for defining output type
+> + */
+> +
+> +#define VC5_LVPECL	0
+> +#define VC5_CMOS	1
+> +#define VC5_HCSL33	2
+> +#define VC5_LVDS	3
+> +#define VC5_CMOS2	4
+> +#define VC5_CMOSD	5
+> +#define VC5_HCSL25	6
+> -- 
+> 2.25.1
+> 
