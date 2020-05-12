@@ -2,158 +2,171 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B913C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1CCC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5BC206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF200206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QMRj3KeS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N9/eEWjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbgELWxD (ORCPT
+        id S1731528AbgELW4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        Tue, 12 May 2020 18:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbgELWxD (ORCPT
+        with ESMTP id S1728220AbgELW4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:53:03 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B440C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:53:03 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id 79so6793527iou.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:53:03 -0700 (PDT)
+        Tue, 12 May 2020 18:56:49 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365CFC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:56:49 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a5so10253372pjh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:56:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rbksr85X1t9NeTW2nK2Gw8Z3WTyso7gugVZpgKykZDw=;
-        b=QMRj3KeSy3swo2oLnAkMXF6O9qLOuI1O4A/Y5gC61yBgZeVtW9UbbdQ7RrMAQvFBqv
-         Srvk+f4ITY4C7BJFYwcibovAUP++bCVr+pTcnyKtOjQAUsQQ+6J/cDTodCVRDHADrGqG
-         rlPnwp1yiBZrnmX5p9dXiySdpxOMoOTdKgWoE=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=IXpIsoQged7M/ri/embTMdJh9eC3HGIEafUuSr0Sgp4=;
+        b=N9/eEWjx4KryymG7ZL/gSXanLr0DYNDcTqpqniqQuUXfGEZEOCiOVCUM31Rkg5hbPF
+         RYrLa1KR6sZdrXCo182VyfY9tc7Dc8vFc162i/vIcqYJQGy8FcEAaac5BV+8lc+P9xKZ
+         wBGT4FqmIHHPX2e1wzE8uLoPmiAHm59yHXR8U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rbksr85X1t9NeTW2nK2Gw8Z3WTyso7gugVZpgKykZDw=;
-        b=EO8z3ODstxGDY2hYAh5CO8ibkVXFtmgPoS1V69R1EHUlN/+WL576cxazQkU16Zij4V
-         g6W7OFteEemRz5eXrKfCe5f4vNhl4KJMIz3tv+X0btQK4O5h6MDbDSMP3SBWDFQMhHHk
-         psnpm1PnsLjv6+/nuTlZfEbucGiobS6wXVoretQb9eDUzXsgbkykAjutQM6UPnkJvRMS
-         7lf6W6oSTNwMhuvTIDp291yo9sA+v580DCBft9BS6eaLQhQfEXBEtFoEczDM/unj78NL
-         oTYuJG4veVZfjLS/hnliEhP2Y+QVvYvj2FvIaV3vGQvzPqU6V9vpJBghFoX0mW16OOvp
-         cOGw==
-X-Gm-Message-State: AGi0Pub4PYY0eyajPsVLBzaJqs4mrOqMy3YXexnv/1OnMW8uVi0u53C0
-        n018A4oFU7tG183SqPAWUXlIX3Rl+6ew/O5/gfFFlQ==
-X-Google-Smtp-Source: APiQypIhCDJ21tBkwqWH+vwILqA9HOMVsY2ZF1oAcrxSNyf6NfGGsxusSYew2fGc38GsAJ15okrtHB06h8dqDuygzpA=
-X-Received: by 2002:a5e:8411:: with SMTP id h17mr1790878ioj.1.1589323982360;
- Tue, 12 May 2020 15:53:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=IXpIsoQged7M/ri/embTMdJh9eC3HGIEafUuSr0Sgp4=;
+        b=oJ/ztDwd5czbEB4SnbD9kfPnNVBlSb+jeiJ+j7Bc3yBZM3ctPTiMYKz6rC9Pveq/dG
+         eFhvORT3Jst3sDlJpziyoitUQkiv3vnyJyfcdEmUvwUetDfqDaxDdYbrgglhtQufJmWQ
+         spww+W25USVDwNlI+nbDz+IFtaB6wCWYk45ysBgbSrgb1eil37gtgs5aB1E+5nOs2b7u
+         wzyg4jM+fkdi3YtempKIvqvbaFglgjvf8Io6nHP2a1fc3KeDLUWMVwQmOgbKHUhXeEsp
+         VTN5uGnzGIVLKV6+pSvH9yK3GjBb9QSc8zmBQ1pabWm2wyLNCNJ+xpOSeoF/JC5sLJgn
+         1xAw==
+X-Gm-Message-State: AGi0PubEtyJWYuWIc0CYgiyD9VRWGNY1gm3SYf6yU74tkxcL8Tp5tEZS
+        p5LN+E3G+cMPlOYycyS+jC3nTQ==
+X-Google-Smtp-Source: APiQypKzgC0TF704AZj7wxJgs6uVQ1eXdDqzXBGagWKY3u4jWSDcjnfhuh2eV/DDEm8B+zOSyJm0Nw==
+X-Received: by 2002:a17:90a:7788:: with SMTP id v8mr30342795pjk.111.1589324208728;
+        Tue, 12 May 2020 15:56:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u5sm11217857pgi.70.2020.05.12.15.56.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 15:56:47 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:56:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Heimes <christian@python.org>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] fs: Add support for an O_MAYEXEC flag on
+ openat2(2)
+Message-ID: <202005121555.0A446763@keescook>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-2-mic@digikod.net>
+ <202005121258.4213DC8A2@keescook>
+ <0c70debd-e79e-d514-06c6-4cd1e021fa8b@python.org>
 MIME-Version: 1.0
-References: <20200323015735.236279-1-joel@joelfernandes.org>
- <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com> <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
- <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com> <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
- <20200512163022.GI2869@paulmck-ThinkPad-P72> <20200512214342.GA89170@google.com>
- <d1809f12-77a3-65e4-7af2-bdd87c48ada7@gmail.com>
-In-Reply-To: <d1809f12-77a3-65e4-7af2-bdd87c48ada7@gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 12 May 2020 18:52:49 -0400
-Message-ID: <CAEXW_YQfUFQmfyj9NnkJKcSH7-15FjEbFDP=GoYRR9OCwyJOWw@mail.gmail.com>
-Subject: Re: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU
- pre-initialization test
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0c70debd-e79e-d514-06c6-4cd1e021fa8b@python.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 5:49 PM Akira Yokosawa <akiyks@gmail.com> wrote:
->
-> On Tue, 12 May 2020 17:43:42 -0400, Joel Fernandes wrote:
-> > On Tue, May 12, 2020 at 09:30:22AM -0700, Paul E. McKenney wrote:
-> >> On Tue, May 12, 2020 at 11:41:01AM -0400, Joel Fernandes wrote:
-> >>> On Tue, May 12, 2020 at 11:07 AM Akira Yokosawa <akiyks@gmail.com> wrote:
-> >>>>
-> >>>> From 7bb979aacd8788d174df8a56e9803ba9e5b7a381 Mon Sep 17 00:00:00 2001
-> >>>> From: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >>>> Date: Mon, 11 May 2020 22:06:46 -0400
-> >>>> Subject: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU pre-initialization test
-> >>>>
-> >>>> Since this test returned to tools/memory-model/, make sure that it is
-> >>>> at least referenced from Documentation/litmus-tests/'s README.
-> >>>>
-> >>>> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >>>> Co-developed-by: Akira Yokosawa <akiyks@gmail.com>
-> >>>> [Alan: grammar nit]
-> >>>> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> >>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> >>>> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> >>>> ---
-> >>>> I said in the earlier message:
-> >>>>
-> >>>>> The explanation under tools/memory-model/litmus-tests/README also need the same
-> >>>>> rewording.
-> >>>>
-> >>>> , but obviously I was confused. It is good as is.
-> >>>>
-> >>>> This is on top of my earlier patch series.
-> >>>>
-> >>>> Joel, Alan, does this work with you?
-> >>>
-> >>> Yes, thanks a lot for doing it. Paul are you Ok with it too?
+On Tue, May 12, 2020 at 11:40:35PM +0200, Christian Heimes wrote:
+> On 12/05/2020 23.05, Kees Cook wrote:
+> > On Tue, May 05, 2020 at 05:31:51PM +0200, Mickaël Salaün wrote:
+> >> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
+> >> additional restrictions depending on a security policy managed by the
+> >> kernel through a sysctl or implemented by an LSM thanks to the
+> >> inode_permission hook.  This new flag is ignored by open(2) and
+> >> openat(2).
 > >>
-> >> Looks good to me!
-> >>
-> >> Could one of you please send a patch series and instructions, which I
-> >> -think- will be of the form:
-> >>
-> >> o    Revert a5cca3485d92 ("Documentation: LKMM: Move
-> >>      MP+onceassign+derefonce to new litmus-tests/rcu/")
-> >>
-> >> o    Apply a series of patches.
-> >
-> > Rebased Akira's 3 and my 1 on top of your /dev branch with the ordering done as above:
->
-> Oh, I missed the reordering part in my PATCH RESEND series.
->
+> >> The underlying idea is to be able to restrict scripts interpretation
+> >> according to a policy defined by the system administrator.  For this to
+> >> be possible, script interpreters must use the O_MAYEXEC flag
+> >> appropriately.  To be fully effective, these interpreters also need to
+> >> handle the other ways to execute code: command line parameters (e.g.,
+> >> option -e for Perl), module loading (e.g., option -m for Python), stdin,
+> >> file sourcing, environment variables, configuration files, etc.
+> >> According to the threat model, it may be acceptable to allow some script
+> >> interpreters (e.g. Bash) to interpret commands from stdin, may it be a
+> >> TTY or a pipe, because it may not be enough to (directly) perform
+> >> syscalls.  Further documentation can be found in a following patch.
+> > 
+> > You touch on this lightly in the cover letter, but it seems there are
+> > plans for Python to restrict stdin parsing? Are there patches pending
+> > anywhere for other interpreters? (e.g. does CLIP OS have such patches?)
+> > 
+> > There's always a push-back against adding features that have external
+> > dependencies, and then those external dependencies can't happen without
+> > the kernel first adding a feature. :) I like getting these catch-22s
+> > broken, and I think the kernel is the right place to start, especially
+> > since the threat model (and implementation) is already proven out in
+> > CLIP OS, and now with IMA. So, while the interpreter side of this is
+> > still under development, this gives them the tool they need to get it
+> > done on the kernel side. So showing those pieces (as you've done) is
+> > great, and I think finding a little bit more detail here would be even
+> > better.
+> 
+> Hi,
+> 
+> Python core dev here.
+> 
+> Yes, there are plans to use feature for Python in combination with
+> additional restrictions. For backwards compatibility reasons we cannot
+> change the behavior of the default Python interpreter. I have plans to
+> provide a restricted Python binary that prohibits piping from stdin,
+> disables -c "some_code()", restricts import locations, and a couple of
+> other things. O_MAYEXEC flag makes it easier to block imports from
+> noexec filesystems.
+> 
+> My PoC [1] for a talk [2] last year is inspired by IMA appraisal and a
+> previous talk by Mickaël on O_MAYEXEC.
+> 
+> Christian
+> 
+> [1] https://github.com/zooba/spython/blob/master/linux_xattr/spython.c
+> [2]
+> https://speakerdeck.com/tiran/europython-2019-auditing-hooks-and-security-transparency-for-cpython
 
-That's Ok, I took care of it ;-) You passed me the ball, I hit it into the goal.
+Ah, fantastic; thank you! Yes, this will go a long way for helping
+demonstration to other folks that there are people who will be using
+this feature. :)
 
-> Paul, it's up to you which you pull/apply.
-
-Indeed! ;-)
-
- - Joel
-
-
->
->         Thanks, Akira
->
-> >
-> > Could you pull?
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch for-paul-dev)
-> >
-> > Thanks!
-> >
-> >  - Joel
-> >
+-- 
+Kees Cook
