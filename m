@@ -2,116 +2,243 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02375C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34132C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEED8206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9C420720
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="neN2wDg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbgELRKw (ORCPT
+        id S1729365AbgELRLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:10:52 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38922 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELRKv (ORCPT
+        Tue, 12 May 2020 13:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728941AbgELRLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:10:51 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 2BE132A2240
-Received: by earth.universe (Postfix, from userid 1000)
-        id C90F63C08C6; Tue, 12 May 2020 19:10:47 +0200 (CEST)
-Date:   Tue, 12 May 2020 19:10:47 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] power: supply: bq24190_charger: convert to use
- i2c_new_client_device()
-Message-ID: <20200512171047.gyk6zze46ow6i3yy@earth.universe>
-References: <20200326210954.12931-1-wsa+renesas@sang-engineering.com>
- <20200326210954.12931-2-wsa+renesas@sang-engineering.com>
- <20200512162723.GI13516@ninjato>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tefe22k3doyhs66g"
-Content-Disposition: inline
-In-Reply-To: <20200512162723.GI13516@ninjato>
+        Tue, 12 May 2020 13:11:19 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB45C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:11:18 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n14so14394992qke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=cCYa1ZUuTC13LtbQrvAYo1dPxTQq8AqzPdLUyVen7vw=;
+        b=neN2wDg8OLy8/cjt4I+i0qG3mqej9995PklqhJYbRQnfixUOcw1SXAQyrPVvQAnDp8
+         4ilTf0XCK+sY/l3O+hYgI2ONLuCPJlzEkqeiV1KTGBuY+MugI0RtPwVxWi2gd+FCV+dW
+         G4r++ynTknG9XkJtdPHrwBI+fSjSuLIj9320MR3XdwRRDjgUGBgHKEpk6H4CFv8N+QS8
+         BbPtcfyWye91qVj7QY7TBBKDlVRMLSfEDwX/Oe/fhsu9AM1RCdKtlvuYEJgnLTDs5n/h
+         the3fajBq2wPFALVW+P3YQ7pnm9B2U01fBa4x06Hqlf904yRQmVC8pRv0KBKPiACEPle
+         hrpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=cCYa1ZUuTC13LtbQrvAYo1dPxTQq8AqzPdLUyVen7vw=;
+        b=Vmsg1fSQzv0u0nqIT6gj/z6rdWqtOwMsZRXbhE40T4YeGVaR9Kksj/dzBvFln9FQHG
+         KTSxVnZ+C8F74H1Kvr9CEIB0ieVWAJuURAF6yWeSzjEbwau6whtJSHaUillYU79CcTBp
+         SaxPBsa1kpOrqk487fZ98qayAGwAY6MEK0R6pOG54HL0SiZ5y2A1ozjF26WRfvEXqvqn
+         XDOVQVOLjRWEUGb8r25G/AtgOhI/gfPY6Yms3Cjb+UTYwsLOM7qYr1eIMmE6aKkJOvHt
+         StITbEvVLdaGFaygu+UvpPHW53XQc/WnTbKVjXV+oiiOXMU3IWMPfv/amiLiJhOylm5N
+         7uJA==
+X-Gm-Message-State: AGi0PuZyA+oSzlHjwgpFr2ZjBvCdZ11UVLk1TkLh5Zk/vOZhAKquTow+
+        FoKLcAYbrJxTOGS1oOkoNnPoQg==
+X-Google-Smtp-Source: APiQypK5kOz5MhTQkd2zcr5owUtt5S2utQcFoj6QCv0Xrdw4VqEqsfLHOoV9RtokIlAybhsuaGkLHA==
+X-Received: by 2002:a37:6843:: with SMTP id d64mr21400457qkc.24.1589303477787;
+        Tue, 12 May 2020 10:11:17 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id t12sm11182754qkt.77.2020.05.12.10.11.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 10:11:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
+ mem_cgroup_charge() API
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
+Date:   Tue, 12 May 2020 13:11:15 -0400
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
+        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <76E2FF28-1CD8-4A96-B2E6-5EDF51F8E3AB@lca.pw>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200508183105.225460-13-hannes@cmpxchg.org>
+ <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tefe22k3doyhs66g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Wolfram,
-
-On Tue, May 12, 2020 at 06:27:23PM +0200, Wolfram Sang wrote:
-> On Thu, Mar 26, 2020 at 10:09:54PM +0100, Wolfram Sang wrote:
-> > Move away from the deprecated API in this comment.
-> >=20
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> On May 12, 2020, at 10:38 AM, Qian Cai <cai@lca.pw> wrote:
 >=20
-> Can we have this now so I can remove the old API in the next merge
-> window?
+>=20
+>=20
+>> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
+wrote:
+>>=20
+>> With the page->mapping requirement gone from memcg, we can charge =
+anon
+>> and file-thp pages in one single step, right after they're allocated.
+>>=20
+>> This removes two out of three API calls - especially the tricky =
+commit
+>> step that needed to happen at just the right time between when the
+>> page is "set up" and when it's "published" - somewhat vague and fluid
+>> concepts that varied by page type. All we need is a freshly allocated
+>> page and a memcg context to charge.
+>>=20
+>> v2: prevent double charges on pre-allocated hugepages in khugepaged
+>>=20
+>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>> ---
+>> include/linux/mm.h      |  4 +---
+>> kernel/events/uprobes.c | 11 +++--------
+>> mm/filemap.c            |  2 +-
+>> mm/huge_memory.c        |  9 +++------
+>> mm/khugepaged.c         | 35 ++++++++++-------------------------
+>> mm/memory.c             | 36 ++++++++++--------------------------
+>> mm/migrate.c            |  5 +----
+>> mm/swapfile.c           |  6 +-----
+>> mm/userfaultfd.c        |  5 +----
+>> 9 files changed, 31 insertions(+), 82 deletions(-)
+> []
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>=20
+>> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
+mm_struct *mm,
+>> out_up_write:
+>> 	up_write(&mm->mmap_sem);
+>> out_nolock:
+>> +	if (*hpage)
+>> +		mem_cgroup_uncharge(*hpage);
+>> 	trace_mm_collapse_huge_page(mm, isolated, result);
+>> 	return;
+>> out:
+>> -	mem_cgroup_cancel_charge(new_page, memcg);
+>> 	goto out_up_write;
+>> }
+> []
+>=20
+> Some memory pressure will crash this new code. It looks like somewhat =
+racy.
 
-Thanks for the ping. The patch is now queued into power-supply's
-for-next branch.
+Reverted the whole series fixed the crash, i.e.,
 
--- Sebastian
+git revert --no-edit 6070efb8e52b..c986ddf58a95
 
-> > ---
-> >  drivers/power/supply/bq24190_charger.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/sup=
-ply/bq24190_charger.c
-> > index 453d6332d43a..4540e913057f 100644
-> > --- a/drivers/power/supply/bq24190_charger.c
-> > +++ b/drivers/power/supply/bq24190_charger.c
-> > @@ -673,7 +673,7 @@ static int bq24190_register_reset(struct bq24190_de=
-v_info *bdi)
-> >  	 *   { .type =3D "bq24190", .addr =3D 0x6b, .properties =3D pe, .irq =
-=3D irq };
-> >  	 * struct i2c_adapter ad =3D { ... };
-> >  	 * i2c_add_adapter(&ad);
-> > -	 * i2c_new_device(&ad, &bi);
-> > +	 * i2c_new_client_device(&ad, &bi);
-> >  	 */
-> >  	if (device_property_read_bool(bdi->dev, "disable-reset"))
-> >  		return 0;
-> > --=20
-> > 2.20.1
-> >=20
+There is a minor conflict during reverting due to another linux-next =
+commit,
+
+2a6b525f0de1 (=E2=80=9Ckhugepaged: do not stop collapse if less than =
+half PTEs are referenced=E2=80=9D)
+
+which is trivial to resolve,
+
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@@ -1091,8 -1000,8 +1093,9 @@@ static void collapse_huge_page(struct m
+         * If it fails, we release mmap_sem and jump out_nolock.
+         * Continuing to collapse causes inconsistency.
+         */
+ -      if (!__collapse_huge_page_swapin(mm, vma, address, pmd, =
+referenced)) {
+ +      if (unmapped && !__collapse_huge_page_swapin(mm, vma, address,
+ +                                                   pmd, referenced)) {
++               mem_cgroup_cancel_charge(new_page, memcg, true);
+                up_read(&mm->mmap_sem);
+                goto out_nolock;
+        }
 
 
+>=20
+> if (!page->mem_cgroup)
+>=20
+> where page =3D=3D NULL in mem_cgroup_uncharge().
+>=20
+> [ 2244.414421][  T726] BUG: Kernel NULL pointer dereference on read at =
+0x0000002c
+> [ 2244.414454][  T726] Faulting instruction address: =
+0xc0000000004f7e44
+> [ 2244.414467][  T726] Oops: Kernel access of bad area, sig: 11 [#1]
+> [ 2244.414488][  T726] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+> [ 2244.414501][  T726] Modules linked in: brd ext4 crc16 mbcache jbd2 =
+loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 libahci =
+libphy mdio libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
+> [ 2244.414556][  T726] CPU: 11 PID: 726 Comm: khugepaged Not tainted =
+5.7.0-rc5-next-20200512+ #8
+> [ 2244.414579][  T726] NIP:  c0000000004f7e44 LR: c0000000004df95c =
+CTR: c0000000001c1400
+> [ 2244.414600][  T726] REGS: c000001a2398f6e0 TRAP: 0300   Not tainted =
+ (5.7.0-rc5-next-20200512+)
+> [ 2244.414630][  T726] MSR:  9000000000009033 =
+<SF,HV,EE,ME,IR,DR,RI,LE>  CR: 24000244  XER: 20040000
+> [ 2244.414656][  T726] CFAR: c0000000004df958 DAR: 000000000000002c =
+DSISR: 40000000 IRQMASK: 0=20
+> [ 2244.414656][  T726] GPR00: c0000000004df95c c000001a2398f970 =
+c00000000168a700 fffffffffffffff4=20
+> [ 2244.414656][  T726] GPR04: ffffffffffffffff c000000000bd0980 =
+0000000000000005 0000000000000080=20
+> [ 2244.414656][  T726] GPR08: 0000001ffc030000 0000000000000001 =
+0000000000000000 c00000000152bb58=20
+> [ 2244.414656][  T726] GPR12: 0000000024000222 c000001fffff5680 =
+c0000001d818ce00 c0000001d818cd00=20
+> [ 2244.414656][  T726] GPR16: 0000000000000000 c000001a2398fce0 =
+fe7fffffffffefff fffffffffffffe7f=20
+> [ 2244.414656][  T726] GPR20: c000201320aa53c8 000000000000001e =
+0000000000000017 c00020047636b868=20
+> [ 2244.414656][  T726] GPR24: 0000000000000000 0000000000000000 =
+c000000001756080 c000001a2398fce0=20
+> [ 2244.414656][  T726] GPR28: c000001a2398fa20 00007ffeeda00000 =
+c000200f28547928 c000200f28547880=20
+> [ 2244.414865][  T726] NIP [c0000000004f7e44] =
+mem_cgroup_uncharge+0x34/0xb0
+> mem_cgroup_uncharge at mm/memcontrol.c:6563
+> [ 2244.414895][  T726] LR [c0000000004df95c] =
+collapse_huge_page+0x24c/0x1000
+> collapse_huge_page at mm/khugepaged.c:1197
+> [ 2244.414924][  T726] Call Trace:
+> [ 2244.414940][  T726] [c000001a2398f970] [0000000000000001] 0x1 =
+(unreliable)
+> [ 2244.414970][  T726] [c000001a2398f9c0] [c0000000004df814] =
+collapse_huge_page+0x104/0x1000
+> collapse_huge_page at mm/khugepaged.c:1064 (discriminator 10)
+> [ 2244.414991][  T726] [c000001a2398faf0] [c0000000004e0f84] =
+khugepaged_scan_pmd+0x874/0xc70
+> [ 2244.415021][  T726] [c000001a2398fbf0] [c0000000004e2a90] =
+khugepaged+0x900/0x1920
+> [ 2244.415043][  T726] [c000001a2398fdb0] [c000000000155aa4] =
+kthread+0x1c4/0x1d0
+> [ 2244.415075][  T726] [c000001a2398fe20] [c00000000000cb28] =
+ret_from_kernel_thread+0x5c/0x74
+> [ 2244.415095][  T726] Instruction dump:
+> [ 2244.415113][  T726] 384228f0 7c0802a6 60000000 f821ffb1 e92d0c70 =
+f9210048 39200000 3d22ffec=20
+> [ 2244.415146][  T726] 3929f9f4 81290000 2f890000 409d0048 <e9230038> =
+2fa90000 419e003c 7c0802a6=20
+> [ 2244.415181][  T726] ---[ end trace 3488eb8818913a26 ]---
 
---tefe22k3doyhs66g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl662JEACgkQ2O7X88g7
-+pq+2A//VuwHDZl3QCyXTOsEqiULP9UPbP2WhUE2b/J8/JRSx8/UeDtan1n8CG7u
-JOGrFqxU3W+i7iy5xbY83FOtocw/4yocAAe50I9lJDqxwgns7nnfyMRGT28OHxEY
-haAhxTBn6yxL/Ve2mhoW3oJAiR5b/FZ1BGczxkBj0iyzQfgwhrqgbrapAVUNFvP9
-/Rc2WUkCQWEg/6Gr20vI7WQLtCnMINMN8VhU0W2d7YWLnSPC9OucWMiDSdocGLU8
-zrb9FhrkaAfqqCJgn/Ze/REdal874SIFi1hy7lepSoOw1irnOCQpczIsvLerjr3V
-Djpg2DHERhQsAKQAbPIugKbTUo98xylu6uxbCZCOTLCtfrMJb0mrwjA4b/C5gvlD
-EahQcOLLalQJx7gKdmgVdFWfebopbVENF8rcyMGt1BVE4ws7SczEAHKow5g0L06H
-aqVW6rgEF+fHfgaGpD6A2TIhv3EeFry1T9gcxaWZqX3M8aSqW7c1BV/y22/4tycK
-gqml5/HCfLAD9y2KpcED5y3mHZuTPKOh5U9h07cy99atMVK35NhFGadEkauNgoUH
-q09d8KoaqvWkofJf3o0I75OPetkHCpMx4zD1kYsS8gBhBWeSdaHv1/xyttW5jb6+
-+h1HxszputoLIM5HpC5kiNgjWg40WNhRGQpEo/26lMbOtLJ+830=
-=57sD
------END PGP SIGNATURE-----
-
---tefe22k3doyhs66g--
