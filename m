@@ -2,175 +2,104 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8977AC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BAC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CE720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185A02098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbgELG6f (ORCPT
+        id S1728870AbgELG73 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:58:35 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53308 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725814AbgELG6f (ORCPT
+        Tue, 12 May 2020 02:59:29 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50805 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgELG73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:58:35 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436289|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.118451-0.00916542-0.872384;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.HXGIgNF_1589266705;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.HXGIgNF_1589266705)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Tue, 12 May 2020 14:58:30 +0800
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH] mtd: offset align to block size bofore block operation
-Date:   Tue, 12 May 2020 14:58:35 +0800
-Message-Id: <1589266715-4168-1-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 12 May 2020 02:59:29 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A607E20006;
+        Tue, 12 May 2020 06:59:24 +0000 (UTC)
+Date:   Tue, 12 May 2020 08:59:22 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
+        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v4 04/10] mtd: rawnand: stm32_fmc2: cleanup
+Message-ID: <20200512085922.3fc3e4dd@xps13>
+In-Reply-To: <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+        <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
+        <20200511223900.030fe5f4@xps13>
+        <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The off parameter on mtdpsore_block_*() does not align to block size,
-which makes some bugs. For example, a block contains dmesg zones
-with number 0 to 3. When user remove all these files, mapped to
-these zones, mtdpstore is expected to check whether No.0 to No.3 is
-unused then erase this block. However it check No.3 to No.6 because
-it get wrongly beginning zonenum from misaligned off.
+Hi Christophe,
 
-Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
----
+Christophe Kerello <christophe.kerello@st.com> wrote on Tue, 12 May
+2020 08:49:54 +0200:
 
-This patch bases on series v8 of pstore/blk.
-Series Link: https://lore.kernel.org/lkml/20200511233229.27745-1-keescook@chromium.org/
+> Hi Miquel,
+> 
+> On 5/11/20 10:39 PM, Miquel Raynal wrote:
+> > 
+> > Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
+> > 11:11:13 +0200:
+> >   
+> >> This patch renames functions and local variables.
+> >> This cleanup is done to get all functions starting by stm32_fmc2_nfc
+> >> in the FMC2 raw NAND driver when all functions will start by
+> >> stm32_fmc2_ebi in the FMC2 EBI driver.
+> >>
+> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>  
+> > 
+> > Applied to nand/next as well but for an unknown reason I had to do it
+> > by hand because the patch would not apply.
+> > 
+> > Thanks,
+> > Miquèl
+> >   
+> This is strange, I can apply this patch on my tree without any conflicts.
+> There is a compilation issue line 1301.
+> 
+> @@ -1302,44 +1298,45 @@ static void stm32_fmc2_write_data(struct nand_chip *chip, const void *buf,
+> 
+>   	if (force_8bit && chip->options & NAND_BUSWIDTH_16)
+>   		/* Reconfigure bus width to 16-bit */
+> -		stm32_fmc2_set_buswidth_16(fmc2, true);
+> +		stm32_fmc2_nfc_set_buswidth_16(nfc, true);
+>   }
+> 
+> I will rebase on top of nand/next today to check that there is no issues with the driver.
 
- drivers/mtd/mtdpstore.c | 39 +++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+I had to do some changes manually, maibe I missed this one, but I don't
+remember touching this helper.
 
-diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-index 06084eff1004..a4fe6060b960 100644
---- a/drivers/mtd/mtdpstore.c
-+++ b/drivers/mtd/mtdpstore.c
-@@ -27,7 +27,10 @@ static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
- {
- 	int ret;
- 	struct mtd_info *mtd = cxt->mtd;
--	u64 blknum = div_u64(off, mtd->erasesize);
-+	u64 blknum;
-+
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	blknum = div_u64(off, mtd->erasesize);
- 
- 	if (test_bit(blknum, cxt->badmap))
- 		return true;
-@@ -46,8 +49,10 @@ static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
- 		loff_t off)
- {
- 	struct mtd_info *mtd = cxt->mtd;
--	u64 blknum = div_u64(off, mtd->erasesize);
-+	u64 blknum;
- 
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	blknum = div_u64(off, mtd->erasesize);
- 	return test_bit(blknum, cxt->badmap);
- }
- 
-@@ -75,9 +80,11 @@ static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
- 		loff_t off)
- {
- 	struct mtd_info *mtd = cxt->mtd;
--	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
--	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+	u32 zonecnt = mtd->erasesize / cxt->info.kmsg_size;
-+	u64 zonenum;
- 
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	zonenum = div_u64(off, cxt->info.kmsg_size);
- 	while (zonecnt > 0) {
- 		dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
- 		clear_bit(zonenum, cxt->usedmap);
-@@ -99,9 +106,12 @@ static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
- static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
- 		loff_t off)
- {
--	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
--	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u32 zonecnt = mtd->erasesize / cxt->info.kmsg_size;
-+	u64 zonenum;
- 
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	zonenum = div_u64(off, cxt->info.kmsg_size);
- 	while (zonecnt > 0) {
- 		if (test_bit(zonenum, cxt->usedmap))
- 			return true;
-@@ -138,9 +148,12 @@ static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
- static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
- 		loff_t off)
- {
--	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
--	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u32 zonecnt = mtd->erasesize / cxt->info.kmsg_size;
-+	u64 zonenum;
- 
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	zonenum = div_u64(off, cxt->info.kmsg_size);
- 	while (zonecnt > 0) {
- 		clear_bit(zonenum, cxt->rmmap);
- 		zonenum++;
-@@ -151,9 +164,12 @@ static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
- static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
- 		loff_t off)
- {
--	u64 zonenum = div_u64(off, cxt->info.kmsg_size);
--	u32 zonecnt = cxt->mtd->erasesize / cxt->info.kmsg_size;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u32 zonecnt = mtd->erasesize / cxt->info.kmsg_size;
-+	u64 zonenum;
- 
-+	off = ALIGN_DOWN(off, mtd->erasesize);
-+	zonenum = div_u64(off, cxt->info.kmsg_size);
- 	while (zonecnt > 0) {
- 		if (test_bit(zonenum, cxt->rmmap))
- 			return true;
-@@ -169,6 +185,7 @@ static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
- 	struct erase_info erase;
- 	int ret;
- 
-+	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
- 	dev_dbg(&mtd->dev, "try to erase off 0x%llx\n", off);
- 	erase.len = cxt->mtd->erasesize;
- 	erase.addr = off;
-@@ -205,7 +222,6 @@ static ssize_t mtdpstore_erase(size_t size, loff_t off)
- 	}
- 
- 	/* all zones are unused, erase it */
--	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
- 	return mtdpstore_erase_do(cxt, off);
- }
- 
-@@ -235,7 +251,6 @@ static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
- 	}
- 
- 	/* If there is no any empty zone, we have no way but to do erase */
--	off = ALIGN_DOWN(off, erasesize);
- 	while (blkcnt--) {
- 		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
- 
--- 
-1.9.1
+Anyway, I just dropped the two last patches of your series, please
+reba&se now on nand/next and just resend patches 4 and 5.
 
+Also, while at it, would you mind changing the commit title to
+something more meaningful? "cleanup" is a bit vague and not very
+accurate. Maybe something like "Cosmetic change to use nfc instead of
+fmc2 where relevant".
+
+Thanks,
+Miquèl
