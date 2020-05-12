@@ -2,83 +2,99 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1CEC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404EFCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6DC206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2B420731
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qz3xobuH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qKZiXMSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbgELTEB (ORCPT
+        id S1728309AbgELTIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:04:01 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36144 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELTEA (ORCPT
+        Tue, 12 May 2020 15:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELTID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:04:00 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CJ3spL029060;
-        Tue, 12 May 2020 14:03:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589310234;
-        bh=qcbTpSQDtrJd8P3InK+kcQIpK4vn56pKJLFbaxEiX4U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Qz3xobuHHP6zDA9LTYeq/ZP8Y6f3ZXsAm20QyrtRrbisC1Ph0xI/vPamOQXcmwnF7
-         TRsc9kqoo/bd1Hre7i8MR0AqkBeKIttPipNggrADjcXeMgM9laLw3rTo2A1fXOqRfD
-         RhDwkyDO7XCTsYIQwsKFAqwvENsXIm0P+WgzrfeQ=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CJ3snl125256
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 14:03:54 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
- May 2020 14:03:54 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 12 May 2020 14:03:54 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CJ3sNs008199;
-        Tue, 12 May 2020 14:03:54 -0500
-Subject: Re: [PATCH v25 00/16] Multicolor Framework v25
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200504211344.13221-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <eccbd882-b4f2-abc8-dddb-6c242d8ef0c0@ti.com>
-Date:   Tue, 12 May 2020 13:54:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 15:08:03 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C91C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RVdj44/VzSen6iR6rQOWCntv4FGd6/Yn4+ie5a9/Rko=; b=qKZiXMSgcjdtQ6CmvZLKE2h6sw
+        HHpe7Vgsdlq9c+mtnM9CFRMqxVnqgdOeWNVOwPVnF503dAs5Nag1VCtPV9NKrgnWlC0/3GoEXcdOd
+        WnDUmVQrHJ+01SxntoNQBTRcY26ZbJWiKcLFCP2v8+najyvWAzjUeEkisNB1QpBnUtcyq5OgQH+HA
+        nd7sY86AuC2JcsxzEANyGeJKmZHogaWD8kcu1hNHjX/uB7Gv30BUKfqTtZhm8FfMYlV3uLacmkXoR
+        7kDJI2LMLrq9sI8nvfHXBk58E0wnnnVHfsaRxLyk+zCxlsBOT1kOUzaBPLMUhCxrUwNm2B5exkFnO
+        9tnLKakg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYaFx-00013o-Pq; Tue, 12 May 2020 19:07:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4EFD8305EEF;
+        Tue, 12 May 2020 21:07:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3A13628B27272; Tue, 12 May 2020 21:07:55 +0200 (CEST)
+Date:   Tue, 12 May 2020 21:07:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Message-ID: <20200512190755.GL2957@hirez.programming.kicks-ass.net>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+ <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504211344.13221-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Tue, May 12, 2020 at 07:53:00PM +0200, Marco Elver wrote:
+> I just ran a bunch of KCSAN tests. While this series alone would have
+> passed the tests, there appears to be a problem with
+> __READ_ONCE/__WRITE_ONCE. I think they should already be using
+> 'data_race()', as otherwise we will get lots of false positives in
+> future.
+> 
+> I noticed this when testing -tip/locking/kcsan, which breaks
+> unfortunately, because I see a bunch of spurious data races with
+> arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
+> instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
+> From what I see, the intent was to not double-instrument,
+> unfortunately they are still double-instrumented because
+> __READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
+> actually). I don't think we can use __no_sanitize_or_inline for the
+> arch_ functions, because we really want them to be __always_inline
+> (also to avoid calls to these functions in uaccess regions, which
+> objtool would notice).
+> 
+> I think the easiest way to resolve this is to wrap the accesses in
+> __*_ONCE with data_race().
 
-On 5/4/20 4:13 PM, Dan Murphy wrote:
-> Hello
->
-> This is the multi color LED framework.   This framework presents clustered
-> colored LEDs into an array and allows the user space to adjust the brightness
-> of the cluster using a single file write.  The individual colored LEDs
-> intensities are controlled via a single file that is an array of LEDs
+But we can't... because I need arch_atomic_*() and __READ_ONCE() to not
+call out to _ANYTHING_.
 
-Please let me know if there are any issues with pulling this series in now
+Sadly, because the compilers are 'broken' that whole __no_sanitize thing
+didn't work, but I'll be moving a whole bunch of code into .c files with
+all the sanitizers killed dead. And we'll be validating it'll not be
+calling out to anything.
 
-Dan
-
+data_race() will include active calls to kcsan_{dis,en}able_current(),
+and this must not happen.
