@@ -2,126 +2,77 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF467C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5EAC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CECD720731
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C48020731
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWipj/rY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RDMoZgIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbgELXZJ (ORCPT
+        id S1731637AbgELX0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:25:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgELXZI (ORCPT
+        Tue, 12 May 2020 19:26:21 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22771 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725938AbgELX0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:25:08 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94FCC061A0C;
-        Tue, 12 May 2020 16:25:08 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id n11so6890378pgl.9;
-        Tue, 12 May 2020 16:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FpcFfkc/yG9vq9eXWklG8CGjwtKug3YGgFN39WyeyGc=;
-        b=pWipj/rYO4TE/WgccVGCKMhCO9dOQMqbFgFILxy9bPyfdAGU1AtXDDAPLFE5d8BWYI
-         y8h0guWLroeHHFvshFPgfDBEmOBlBrNj/JhqWtissEv8GDGrkVAGwfcj/J+til5ld39Q
-         thnBvYCXu26hayF9UigwA4E9gGpRbfhzbNfY/sY6qG4jAQD+dccELCfuxT/jEOuK3mGm
-         elBCMpGuoEH9Rv6OALCkus/pHOOWd8KbSHckTf5EJDK0m38v+T6292Y/4FG6gZAmN3QS
-         UamcfP8ImTECWAyv7V7C5ACDg9cHr4B4WH7xilGOx3JOD2eacTv87TnouwuuY5P6NUZ8
-         sDtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=FpcFfkc/yG9vq9eXWklG8CGjwtKug3YGgFN39WyeyGc=;
-        b=eucHbVcoeZKTHw4N+fONryzFzIJ6K58dJBWwPxnyam7yxTIFzkNIxc3krH9BHdQ3C3
-         mEiSt3HtAHvgHhy8CQRLMF9LGleckaGJuZPhjz4TyB94S/VnlvGnjBTGP30HtVd3RdW9
-         8uJ1yVemvKq0Zem/VSn/w8PoL+b9fME1NvckLqrhDLTaoQGIxtFhTAPatAc2EWwdnTAW
-         PUHRJEr4/OsGoU0yC/xtSnsxYOb9U/krmh2Hermfbb9DMQwpA8BB06Sx7/rd6+dqq3SP
-         VWKvzsWeLNq9wNqmAqy81cCqrTHFSYKlaB4HDuL6RiUJ79LmSh96Bqj/5e3SiEHFxdeN
-         fFog==
-X-Gm-Message-State: AOAM531TNah3Gyt+w30CfgUloAjh5yKJ5eE1U5myq86GIWCbM1RDq0l4
-        IsfvqFWaEX2A8IFF9EodjAk=
-X-Google-Smtp-Source: ABdhPJzLZlncWatTS+oNiA4vxd3oVeXcykQQb3eNLFClvMbGM8HbwrjGaxKq48Gne8Qhoh171ik1lA==
-X-Received: by 2002:a63:77c6:: with SMTP id s189mr12368295pgc.267.1589325908104;
-        Tue, 12 May 2020 16:25:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id m4sm94819pje.47.2020.05.12.16.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 16:25:07 -0700 (PDT)
-Date:   Tue, 12 May 2020 16:25:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
- enable-gpios
-Message-ID: <20200512232505.GF89269@dtor-ws>
-References: <20200512222205.1456300-1-megous@megous.com>
- <20200512222205.1456300-2-megous@megous.com>
- <20200512225212.GE89269@dtor-ws>
- <20200512230557.zvdgwhbqygc2fufv@core.my.home>
+        Tue, 12 May 2020 19:26:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589325980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nf5ipnL8n4hf1p58tjMDHcZBfdQ1O05mmKF1dowfL7w=;
+        b=RDMoZgIHn0IHFbGf5CMWPHIdPRK6TMxVxhhBw2Im92xqy9hSIjzM761IDN9mYVUHxA6N6J
+        4nB3L0ISA+ZxMUxAEOooHizNfDMV1Jy69WC2Qy2wDK5VUb4Qc8v/3xEST5ryj6zW+XIUPy
+        mOU7najTZcrJterBC8A3APQJaoB75T8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-AdvI7pp6PsSxAQTwcjoQnQ-1; Tue, 12 May 2020 19:26:16 -0400
+X-MC-Unique: AdvI7pp6PsSxAQTwcjoQnQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18E331841920;
+        Tue, 12 May 2020 23:26:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17C987529C;
+        Tue, 12 May 2020 23:26:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com>
+References: <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com> <20200512195712.690f02bb@canb.auug.org.au>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     dhowells@redhat.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the fsinfo tree
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200512230557.zvdgwhbqygc2fufv@core.my.home>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2960968.1589325972.1@warthog.procyon.org.uk>
+Date:   Wed, 13 May 2020 00:26:12 +0100
+Message-ID: <2960969.1589325972@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:05:57AM +0200, Ondřej Jirman wrote:
-> On Tue, May 12, 2020 at 03:52:12PM -0700, Dmitry Torokhov wrote:
-> > On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
-> > > It is possible to turn the motor on/off just by enabling/disabling
-> > > the vcc-supply.
-> > > 
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
-> > >  1 file changed, 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > > index 2384465eaa19..c700b640bd53 100644
-> > > --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > > @@ -24,7 +24,6 @@ properties:
-> > >  
-> > >  required:
-> > >    - compatible
-> > > -  - enable-gpios
-> > 
-> > Hmm we need at least one of the 2 (gpio and supply). Should we encode it
-> > in the binding?
-> 
-> Not sure how to encode either one or the other property being required, but
-> not both at once.
-> 
-> Maybe I can add a supply-vibrator compatible to the driver and binding and
-> make requirements dependent on the compatible?
+Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-Rob is our bindings overlord... I'll defer to him here.
+> BTW, why is '-static' needed here?
 
-Thanks.
+Sorry, that was a leftover.  I've been building it on one version of Fedora
+and running it on my test machine - which is a couple of versions behind.  I
+really need to do an update.  Anyway, I've removed it and -lm.
 
--- 
-Dmitry
+David
+
