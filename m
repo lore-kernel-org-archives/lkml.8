@@ -2,426 +2,135 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730D9C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7664C47077
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B66C20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CA720769
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NjNz2JcK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Krg+XAix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbgELVf3 (ORCPT
+        id S1731375AbgELVg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        Tue, 12 May 2020 17:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728313AbgELVf3 (ORCPT
+        by vger.kernel.org with ESMTP id S1728313AbgELVg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:35:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128A0C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:35:28 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y9so3372271plk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:35:28 -0700 (PDT)
+        Tue, 12 May 2020 17:36:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1175C061A0C;
+        Tue, 12 May 2020 14:36:27 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 9so1233251pgr.3;
+        Tue, 12 May 2020 14:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UHIy7taHTP2ZheR11p8v0OF246A9FnYkjnhTr2JNvNo=;
-        b=NjNz2JcKvj3IlSxDHxeZqSr2l7RCyM0gfGBKcOBPedQq9uxoLiOP4XRCixCn1Lb3Jg
-         wQVvut9+udrMXCnP9paEglDuDhBwaMSdI6lp3Cwmf8orHatM50gEFW3fHBTEXVgJPKpC
-         xFtsKR5D2jDNiO/KQhXN4fBsbwGb999FgCy+o=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=U6vUkzWvL2v9PNZQdqR96331DX3UQjvs2Ud55INrKsY=;
+        b=Krg+XAix0HNFwdS873MeiTfVECj9XWXdQFPovt/trzuHXSz1Qjh3ib6lUWAot9Vmk2
+         dlZAKbTyFIeoZ85o3YPZxuPEVuOpzNEVCzJL6l54idyRpURiJ3u25TI1fw5ael2DWXb0
+         42C0LO9gbaUvWouqYb5LJ67i8Nv3SQV8zaWbGVK6TRieUxwNFk9D3TKorhD8h1SFt9jW
+         Byy+NDDda0c849GLgfE9HYGhJyDz/6bRWzfUW8zUMMRq5zfooi4sJMEDXQ78i46KKvBC
+         30VeV4tTXuo84JlK4NPBwH6A2pQqdulFZDVq8fMJXMLg+pVsu6PwxZT8H+UmCHqRp+/v
+         5opQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UHIy7taHTP2ZheR11p8v0OF246A9FnYkjnhTr2JNvNo=;
-        b=WHQtUClFRTKVkpZf6dyiwEx/P11yojbMTAxgc+kMY53OGn/L2xtdvl6TF3gLKMGlI+
-         +GuKY/wZLkwtyCZ1s16pj43OO+P2cjAgwkRy1+cXjxC7d9xDZ/0vscwsw3947lkADRGH
-         U+6duFhNxyAg1/5yg8oybjQfrXDiILp3zMHTZaXqv/vH4REIMPi86aShssiQ+cXXHCzN
-         kHmzanEgkprG+v5wPYlFn9ngxZepQD+ulyFri3V6TMEca02nXK53PnmEQIlmHir16oZ9
-         9k2/CpdJmIa7ytVDUvHUgtXtkeEKJWo5VIMnJa7tV4g75OOh0RT826BYTUT5K983wrPM
-         zVtQ==
-X-Gm-Message-State: AOAM5330PJANqiCHt59cAOS/LGfrXeN13AJYsZFD7o7fgpa3UKkRFEbH
-        GUDCaFlSqq6KIkItcK8ctxuM2Q==
-X-Google-Smtp-Source: ABdhPJwFnQIi5GGGjodXJAIpDYbuZiIS0Bx9npuL9iFESjzLWlgVN/qnDL3xSGv+kN1jYyNpFRGyAg==
-X-Received: by 2002:a17:90a:1983:: with SMTP id 3mr2262836pji.48.1589319327396;
-        Tue, 12 May 2020 14:35:27 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id h26sm13027315pfk.35.2020.05.12.14.35.26
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=U6vUkzWvL2v9PNZQdqR96331DX3UQjvs2Ud55INrKsY=;
+        b=hKEBPIwVScOi38jPzhcGQ5gqHYm3G9GIAQzcZEFza9II+c9boOPmP/SxsHDb97Rz/f
+         U4ppRkNszQ20y3xWW8P7Me/qnSKLjKbyfi0jhhEySP6JlwRTKxGydmCSl3U39t732ipO
+         2T+5zwHspETqwxgLHkB766dzBctnbxQ66RRG2iumNLcvbpB6ORVDfc8zpbEaNXYAR2V0
+         5dqzfNy/D96/U8OLw9X6QdiaXPGNFyN4aFvt7Q9LIcdlqAuCzNUie/dbVbL6qXjTlRDa
+         xzjLbUvdHSeEO9Hm6DwZD4T23zQMOCNpGlSIV5i17e+KLcmy0V/DOk0c5GXTgMEOEjsz
+         l3KQ==
+X-Gm-Message-State: AGi0PuasovVTYggnWrxQsGlZn8m4LdIBQBL+ZB913BCUodyRZ2qhJZJF
+        uLalDkg+8htpBwtRa4fLO0M=
+X-Google-Smtp-Source: APiQypJXSjmUQiHjC8jmouuBKk1YDKTMhNUlGLGMylSMqjCjlw3xX30NZvdOd+SsuHjUUi3ERcYM1w==
+X-Received: by 2002:a63:68c3:: with SMTP id d186mr21496722pgc.269.1589319387360;
+        Tue, 12 May 2020 14:36:27 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id i18sm13578822pjx.33.2020.05.12.14.36.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 14:35:26 -0700 (PDT)
-Date:   Tue, 12 May 2020 14:35:24 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
- bandwidth
-Message-ID: <20200512213524.GI4525@google.com>
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-5-georgi.djakov@linaro.org>
+        Tue, 12 May 2020 14:36:26 -0700 (PDT)
+Subject: [PATCH RESEND 1/4] tools/memory-model: Fix reference to litmus test
+ in recipes.txt
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+ <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
+ <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
+ <20200512163022.GI2869@paulmck-ThinkPad-P72>
+ <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <d2b38542-5681-a118-768c-f5985a479b6e@gmail.com>
+Date:   Wed, 13 May 2020 06:36:21 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200512125327.1868-5-georgi.djakov@linaro.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:53:21PM +0300, Georgi Djakov wrote:
-> The OPP bindings now support bandwidth values, so add support to parse it
-> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
-> is part of the dev_pm_opp.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v8:
-> * Drop bandwidth requests and free memory in _opp_table_kref_release.
-> * Take into account the supply_count in struct size calculations.
-> * Free the temporary arrays for peak and average bandwidth.
-> * Fix the check for opp-level.
-> * Use dev_warn insted of dev_dbg.
-> * Rename _of_find_icc_paths to _of_find_icc_paths.
-> * Rename the variable count to supply_count.
-> 
->  drivers/opp/Kconfig    |   1 +
->  drivers/opp/core.c     |  27 +++++++--
->  drivers/opp/of.c       | 121 ++++++++++++++++++++++++++++++++++++++++-
->  drivers/opp/opp.h      |   9 +++
->  include/linux/pm_opp.h |  12 ++++
->  5 files changed, 164 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/opp/Kconfig b/drivers/opp/Kconfig
-> index 35dfc7e80f92..230d2b84436c 100644
-> --- a/drivers/opp/Kconfig
-> +++ b/drivers/opp/Kconfig
-> @@ -2,6 +2,7 @@
->  config PM_OPP
->  	bool
->  	select SRCU
-> +	depends on INTERCONNECT || !INTERCONNECT
->  	---help---
->  	  SOCs have a standard set of tuples consisting of frequency and
->  	  voltage pairs that the device will support per voltage domain. This
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index ce7e4103ec09..a3dd0bc9b9f6 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -999,6 +999,12 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  				ret);
->  	}
->  
-> +	/* Find interconnect path(s) for the device */
-> +	ret = _of_find_icc_paths(opp_table, dev);
-> +	if (ret)
-> +		dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
-> +			 __func__, ret);
-> +
->  	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
->  	INIT_LIST_HEAD(&opp_table->opp_list);
->  	kref_init(&opp_table->kref);
-> @@ -1057,6 +1063,7 @@ static void _opp_table_kref_release(struct kref *kref)
->  {
->  	struct opp_table *opp_table = container_of(kref, struct opp_table, kref);
->  	struct opp_device *opp_dev, *temp;
-> +	int i;
->  
->  	_of_clear_opp_table(opp_table);
->  
-> @@ -1064,6 +1071,12 @@ static void _opp_table_kref_release(struct kref *kref)
->  	if (!IS_ERR(opp_table->clk))
->  		clk_put(opp_table->clk);
->  
-> +	if (opp_table->paths) {
-> +		for (i = 0; i < opp_table->path_count; i++)
-> +			icc_put(opp_table->paths[i]);
-> +		kfree(opp_table->paths);
-> +	}
-> +
->  	WARN_ON(!list_empty(&opp_table->opp_list));
->  
->  	list_for_each_entry_safe(opp_dev, temp, &opp_table->dev_list, node) {
-> @@ -1243,19 +1256,22 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
->  {
->  	struct dev_pm_opp *opp;
-> -	int count, supply_size;
-> +	int supply_count, supply_size, icc_size;
->  
->  	/* Allocate space for at least one supply */
-> -	count = table->regulator_count > 0 ? table->regulator_count : 1;
-> -	supply_size = sizeof(*opp->supplies) * count;
-> +	supply_count = table->regulator_count > 0 ? table->regulator_count : 1;
-> +	supply_size = sizeof(*opp->supplies) * supply_count;
-> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
->  
->  	/* allocate new OPP node and supplies structures */
-> -	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
-> +	opp = kzalloc(sizeof(*opp) + supply_size + icc_size, GFP_KERNEL);
-> +
->  	if (!opp)
->  		return NULL;
->  
->  	/* Put the supplies at the end of the OPP structure as an empty array */
->  	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
-> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp->supplies + supply_count);
->  	INIT_LIST_HEAD(&opp->node);
->  
->  	return opp;
-> @@ -1290,6 +1306,9 @@ int _opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
->  {
->  	if (opp1->rate != opp2->rate)
->  		return opp1->rate < opp2->rate ? -1 : 1;
-> +	if (opp1->bandwidth && opp2->bandwidth &&
-> +	    opp1->bandwidth[0].peak != opp2->bandwidth[0].peak)
-> +		return opp1->bandwidth[0].peak < opp2->bandwidth[0].peak ? -1 : 1;
->  	if (opp1->level != opp2->level)
->  		return opp1->level < opp2->level ? -1 : 1;
->  	return 0;
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 5179f034751a..d139ad8c8f4f 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -332,6 +332,58 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
->  	return ret;
->  }
->  
-> +int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev)
-> +{
-> +	struct device_node *np;
-> +	int ret, i, count, num_paths;
-> +
-> +	np = of_node_get(dev->of_node);
-> +	if (!np)
-> +		return 0;
-> +
-> +	count = of_count_phandle_with_args(np, "interconnects",
-> +					   "#interconnect-cells");
-> +	of_node_put(np);
-> +	if (count < 0)
-> +		return 0;
-> +
-> +	/* two phandles when #interconnect-cells = <1> */
-> +	if (count % 2) {
-> +		dev_err(dev, "%s: Invalid interconnects values\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	num_paths = count / 2;
-> +	opp_table->paths = kcalloc(num_paths, sizeof(*opp_table->paths),
-> +				   GFP_KERNEL);
-> +	if (!opp_table->paths)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		opp_table->paths[i] = of_icc_get_by_index(dev, i);
-> +		if (IS_ERR(opp_table->paths[i])) {
-> +			ret = PTR_ERR(opp_table->paths[i]);
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "%s: Unable to get path%d: %d\n",
-> +					__func__, i, ret);
-> +			}
-> +			goto err;
-> +		}
-> +	}
-> +	opp_table->path_count = num_paths;
-> +
-> +	return 0;
-> +
-> +err:
-> +	while (i--)
-> +		icc_put(opp_table->paths[i]);
-> +
-> +	kfree(opp_table->paths);
-> +	opp_table->paths = NULL;
-> +
-> +	return ret;
-> +}
-> +
->  static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
->  			      struct device_node *np)
->  {
-> @@ -524,8 +576,11 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
->  static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
->  			 bool *rate_not_available)
->  {
-> +	struct property *peak, *avg;
-> +	u32 *peak_bw, *avg_bw;
->  	u64 rate;
-> -	int ret;
-> +	int ret, i, count;
-> +	bool found = false;
->  
->  	ret = of_property_read_u64(np, "opp-hz", &rate);
->  	if (!ret) {
-> @@ -535,10 +590,72 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
->  		 * bit guaranteed in clk API.
->  		 */
->  		new_opp->rate = (unsigned long)rate;
-> +		found = true;
->  	}
->  	*rate_not_available = !!ret;
->  
-> -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> +	peak = of_find_property(np, "opp-peak-kBps", NULL);
-> +	if (peak) {
-> +		/*
-> +		 * Bandwidth consists of peak and average (optional) values:
-> +		 * opp-peak-kBps = <path1_value path2_value>;
-> +		 * opp-avg-kBps = <path1_value path2_value>;
-> +		 */
-> +		count = peak->length / sizeof(u32);
-> +		peak_bw = kmalloc_array(count, sizeof(*peak_bw), GFP_KERNEL);
-> +		if (!peak_bw)
-> +			return -ENOMEM;
-> +
-> +		ret = of_property_read_u32_array(np, "opp-peak-kBps", peak_bw,
-> +						 count);
-> +		if (ret) {
-> +			pr_err("%s: Error parsing opp-peak-kBps: %d\n",
-> +			       __func__, ret);
-> +			goto free_peak_bw;
-> +		}
-> +
-> +		for (i = 0; i < count; i++)
-> +			new_opp->bandwidth[i].peak = kBps_to_icc(peak_bw[i]);
-> +
-> +		found = true;
-> +		kfree(peak_bw);
-> +	}
-> +
-> +	avg = of_find_property(np, "opp-avg-kBps", NULL);
-> +	if (peak && avg) {
-> +		count = avg->length / sizeof(u32);
-> +		avg_bw = kmalloc_array(count, sizeof(*avg_bw), GFP_KERNEL);
-> +		if (!avg_bw) {
-> +			ret = -ENOMEM;
-> +			goto free_peak_bw;
-> +		}
-> +
-> +		ret = of_property_read_u32_array(np, "opp-avg-kBps", avg_bw,
-> +						 count);
-> +		if (ret) {
-> +			pr_err("%s: Error parsing opp-avg-kBps: %d\n",
-> +			       __func__, ret);
-> +			goto free_avg_bw;
-> +		}
-> +
-> +		for (i = 0; i < count; i++)
-> +			new_opp->bandwidth[i].avg = kBps_to_icc(avg_bw[i]);
-> +
-> +		kfree(avg_bw);
-> +	}
-> +
-> +	if (!of_property_read_u32(np, "opp-level", &new_opp->level))
-> +		found = true;
-> +
-> +	if (found)
-> +		return 0;
-> +
-> +	return ret;
-> +
-> +free_avg_bw:
-> +	kfree(avg_bw);
-> +free_peak_bw:
-> +	kfree(peak_bw);
->  
->  	return ret;
->  }
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index bcadb1e328a4..17d45119d9bc 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -12,6 +12,7 @@
->  #define __DRIVER_OPP_H__
->  
->  #include <linux/device.h>
-> +#include <linux/interconnect.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/list.h>
-> @@ -59,6 +60,7 @@ extern struct list_head opp_tables;
->   * @rate:	Frequency in hertz
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
-> + * @bandwidth:	Interconnect bandwidth values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
->   *		frequency from any other OPP's frequency.
->   * @required_opps: List of OPPs that are required by this OPP.
-> @@ -81,6 +83,7 @@ struct dev_pm_opp {
->  	unsigned int level;
->  
->  	struct dev_pm_opp_supply *supplies;
-> +	struct dev_pm_opp_icc_bw *bandwidth;
->  
->  	unsigned long clock_latency_ns;
->  
-> @@ -146,6 +149,8 @@ enum opp_table_access {
->   * @regulator_count: Number of power supply regulators. Its value can be -1
->   * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
->   * property).
-> + * @paths: Interconnect path handles
-> + * @path_count: Number of interconnect paths
->   * @genpd_performance_state: Device's power domain support performance state.
->   * @is_genpd: Marks if the OPP table belongs to a genpd.
->   * @set_opp: Platform specific set_opp callback
-> @@ -189,6 +194,8 @@ struct opp_table {
->  	struct clk *clk;
->  	struct regulator **regulators;
->  	int regulator_count;
-> +	struct icc_path **paths;
-> +	unsigned int path_count;
->  	bool genpd_performance_state;
->  	bool is_genpd;
->  
-> @@ -224,12 +231,14 @@ void _of_clear_opp_table(struct opp_table *opp_table);
->  struct opp_table *_managed_opp(struct device *dev, int index);
->  void _of_opp_free_required_opps(struct opp_table *opp_table,
->  				struct dev_pm_opp *opp);
-> +int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev);
->  #else
->  static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
->  static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
->  static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
->  static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
->  					      struct dev_pm_opp *opp) {}
-> +static inline int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev) { return 0; }
->  #endif
->  
->  #ifdef CONFIG_DEBUG_FS
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 747861816f4f..cfceb0290401 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -41,6 +41,18 @@ struct dev_pm_opp_supply {
->  	unsigned long u_amp;
->  };
->  
-> +/**
-> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
-> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
-> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
-> + *
-> + * This structure stores the bandwidth values for a single interconnect path.
-> + */
-> +struct dev_pm_opp_icc_bw {
-> +	u32 avg;
-> +	u32 peak;
-> +};
-> +
->  /**
->   * struct dev_pm_opp_info - OPP freq/voltage/current values
->   * @rate:	Target clk rate in hz
+From f9aa6cde74b95cdaae67d484504c3dd69e8bc205 Mon Sep 17 00:00:00 2001
+From: Akira Yokosawa <akiyks@gmail.com>
+Date: Sun, 10 May 2020 13:37:14 +0900
+Subject: [PATCH RESEND 1/4] tools/memory-model: Fix reference to litmus test in recipes.txt
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+The name of litmus test doesn't match the one described below.
+Fix the name of litmus test.
+
+Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ tools/memory-model/Documentation/recipes.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/memory-model/Documentation/recipes.txt b/tools/memory-model/Documentation/recipes.txt
+index 7fe8d7aa3029..63c4adfed884 100644
+--- a/tools/memory-model/Documentation/recipes.txt
++++ b/tools/memory-model/Documentation/recipes.txt
+@@ -126,7 +126,7 @@ However, it is not necessarily the case that accesses ordered by
+ locking will be seen as ordered by CPUs not holding that lock.
+ Consider this example:
+ 
+-	/* See Z6.0+pooncerelease+poacquirerelease+fencembonceonce.litmus. */
++	/* See Z6.0+pooncelock+pooncelock+pombonce.litmus. */
+ 	void CPU0(void)
+ 	{
+ 		spin_lock(&mylock);
+-- 
+2.17.1
+
+
