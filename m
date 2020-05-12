@@ -2,109 +2,86 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8284C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8637C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9436220675
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A023206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fM1y7ppA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgELLd7 (ORCPT
+        id S1729582AbgELLgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:33:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48414 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbgELLd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:33:58 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 907665787C08C24FD799;
-        Tue, 12 May 2020 19:33:56 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 12 May 2020
- 19:33:46 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <john.garry@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>,
-        Xiang Chen <chenxiang66@hisilicon.com>
-Subject: [PATCH v2] scsi: hisi_sas: display proc_name in sysfs
-Date:   Tue, 12 May 2020 19:32:58 +0800
-Message-ID: <20200512113258.30781-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.3
+        Tue, 12 May 2020 07:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729541AbgELLgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:36:14 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E396FC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:36:13 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c21so5651374lfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oXz/yNpIRm2hDyqmY4LrwoICA7tFRRtqLeIZr1n4hgQ=;
+        b=fM1y7ppAF8YttAacroZbaXlkzyGSPLl+OgOaC5PI80aAlq//szCR6WCR+YmEseJHeM
+         RCovVooARtxTCuzJxE78pnLkF+rxy+KN66YghG//4UH7qw/lwT+jw8WAD+e1AWN9zLH3
+         4/QAM4K0LeAubfe6R6CvOYaR6KEh2FpZyZa/bSvfNA1T0j6wB4RR9mhr/yPym1VeLjaB
+         h29YNU2KunEbvBtnCIPwL62rA5gAq4lVMz3dQ5RwApP2OP5utjmpcGTqCxIFo6DRc3sV
+         qiqUsFfo4/dl+0q7sToUqEE+EPzz7qT1/LCzAY9MjPRlmZCzc3FN8v+PG4RQAy1phDxU
+         9N+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oXz/yNpIRm2hDyqmY4LrwoICA7tFRRtqLeIZr1n4hgQ=;
+        b=GlF9ouGvM6sNKWdOz6c87rMGx54zyxFWjavTcIGnunlPzbBCBZN34Fu4KJoPPuDeCk
+         VeP4+IrTHSyc6+rYM5lids28mX+gVGde84bjmTni/zKKc4YnrLjCFkGYwBW8cZOtXSgw
+         dP+T9AfPQbolRBkSBYE7Or51aqIyG8FjbPOObo0LOr+9K4bipdVYS3k2jJ7ipDb3/XaW
+         P2TE1uph3f30aVL+tvhv8dPjxV/MFi5Q8GhtLn6134wIJox5eoOUY5hlCXjoKZJDR+SI
+         1errC0wcrOy/jVQTkasg+QqPeJsIh9QOOgERPQcVmHykQ+A8smSanTEktSiDtcLI5VHB
+         vjLw==
+X-Gm-Message-State: AOAM533LgfXfzGIK3MJoEFyc/8ymM8TVOCOCIzVon2esq+OKlwoqumM5
+        Q7y04ABgnHH/tQ2ETY4gVCpe+tmHtoyUx6vjm8dgQw==
+X-Google-Smtp-Source: ABdhPJzU/NpqzyTWWkbOeLhtKKqfDcF5gMlrXxanCv0l4ELQ+8+totfdERv7xwcOZhjDKhUfZqv4J22pNOhf8IEToTg=
+X-Received: by 2002:ac2:5588:: with SMTP id v8mr13910730lfg.217.1589283372423;
+ Tue, 12 May 2020 04:36:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+References: <20200425203813.6442-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200425203813.6442-1-rikard.falkeborn@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 May 2020 13:36:01 +0200
+Message-ID: <CACRpkdY0D7sfOW-pvkH1ZeF1O06+TERyO45cc=vrYAN-=kTR1A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rk805: Constify rk805_gpio_cfgs
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Jianhong Chen <chenjh@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
-not initialized in scsi_host_template. It looks like:
+On Sat, Apr 25, 2020 at 10:38 PM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
 
-[root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
-(null)
+> Mark pin_cfg as const, allowing the compiler to put the struct in
+> .rodata instead of .data.
+>
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-While the other driver's entry looks like:
+Patch applied.
 
-linux-vnMQMU:~ # cat /sys/class/scsi_host/host0/proc_name
-megaraid_sas
-
-Cc: John Garry <john.garry@huawei.com>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: John Garry <john.garry@huawei.com>
----
-
- v2: change subject to "display proc_name in sysfs" and add "Acked-by" tag.
-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index fa25766502a2..c205bff20943 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -1757,6 +1757,7 @@ static struct device_attribute *host_attrs_v1_hw[] = {
- 
- static struct scsi_host_template sht_v1_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index e05faf315dcd..c725cffe141e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -3533,6 +3533,7 @@ static struct device_attribute *host_attrs_v2_hw[] = {
- 
- static struct scsi_host_template sht_v2_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 374885aa8d77..59b1421607dd 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3071,6 +3071,7 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 
- static struct scsi_host_template sht_v3_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
--- 
-2.21.3
-
+Yours,
+Linus Walleij
