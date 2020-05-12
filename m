@@ -2,69 +2,97 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C58CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51414CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2D120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589307013;
-	bh=61xlZrbWPX41z1uM+eXXyvV3cA4LQt15Qefbitoigw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dX2Wtq3X6xfiklwjLlaBIdK1WNAgNwyl8Z9TUdBaWbU4w6Csr4+SH1uVwJyKO/4be
-	 ShxRK+RSRgsGfFFNdIvrmyLPX3rVdBo4oFsbBA7fXusuMuvulGFH/yPo2t6RXbWL/+
-	 JLlgW4/QmDQQ3jNLf5OQjb8ZVYcuW/piSTAzo+HA=
+	by mail.kernel.org (Postfix) with ESMTP id 3021220673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:11:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tzPwkY/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgELSKM (ORCPT
+        id S1730749AbgELSLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELSKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:10:12 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 12 May 2020 14:11:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40550 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbgELSLB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 14:11:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589307060; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=OO3R9jYg4r1wAHoA8hhGY1+VCtV/dK//JXy3OK5Qw9E=; b=tzPwkY/XPLzqyg7YJGLwFv46i0MD3+1lZgFVTbJQZhJ5OfgS0ts52puYTqVDkM2G5Dx2E/WP
+ WtyhJZ7ceRcLwOYU1ZSl944SUtxA0rNoNwJOA8lZejsWiw7brx0YERkpf54qvlK2aVcPNdVQ
+ Jbf7jdCTPBVK1dz+pxAIg33cbME=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebae6b4.7ffa4cc7b810-smtp-out-n02;
+ Tue, 12 May 2020 18:11:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9100AC4478F; Tue, 12 May 2020 18:10:58 +0000 (UTC)
+Received: from [192.168.8.150] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90EBD20673;
-        Tue, 12 May 2020 18:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589307012;
-        bh=61xlZrbWPX41z1uM+eXXyvV3cA4LQt15Qefbitoigw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJHdGC9ygYypPUd1I+twur74mNYaZUQ5pYNNqdx9tjuuIEU2GYaDeDZZTRVkUQC50
-         uDfivLe3wue3jJ1Ew65GmFha1KGg+MnX3VHgfI1sqh/yCETzZXRjuAXDG0hYbcoujs
-         xrPLaO40i+XM3BsbP644u01c4jv06U8Kz0jAChGA=
-Date:   Tue, 12 May 2020 13:14:46 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Sage Weil <sage@redhat.com>,
-        Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rbd: Replace zero-length array with flexible-array
-Message-ID: <20200512181446.GJ4897@embeddedor>
-References: <20200507191932.GA15991@embeddedor>
- <CAOi1vP9GfENfy_D_iOeUrweUk2CTcz+2GXGg3M6y+bvQs_zqMw@mail.gmail.com>
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1684BC433F2;
+        Tue, 12 May 2020 18:10:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1684BC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v2 4/4] scsi: ufs-mediatek: customize WriteBooster flush
+ policy
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200509093716.21010-1-stanley.chu@mediatek.com>
+ <20200509093716.21010-5-stanley.chu@mediatek.com>
+ <635f91f6-3a27-ffdd-4021-67705d4063fc@codeaurora.org>
+ <yq1v9l115us.fsf@oracle.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <7d5f53eb-f642-3c8b-edf6-d4693ecb49a4@codeaurora.org>
+Date:   Tue, 12 May 2020 11:10:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOi1vP9GfENfy_D_iOeUrweUk2CTcz+2GXGg3M6y+bvQs_zqMw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <yq1v9l115us.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 09:54:12AM +0200, Ilya Dryomov wrote:
+On 5/12/2020 9:21 AM, Martin K. Petersen wrote:
 > 
-> Applied (folded into libceph patch).
+> Hi Asutosh!
+> 
+>> Patchset looks good to me.
+>>
+>> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> 
+> When you want to approve an entire series, please respond to the cover
+> letter email. Otherwise the kernel.org tooling will only record the tag
+> for the individual patch you are responding to. In this case only patch
+> 4 got tagged as reviewed in patchwork.
 > 
 
-Thanks, Ilya. 
+Hi Martin
+Sure - I'll keep this in mind.
 
---
-Gustavo
+Thanks,
+Asutosh
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
