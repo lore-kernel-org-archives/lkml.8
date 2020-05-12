@@ -4,93 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B783C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304AC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269192064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E2D206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321406;
-	bh=S5LEpoE4EGCMhygsrA6NhSTmKJAUL3qsYwt0M9WbgX8=;
+	s=default; t=1589321449;
+	bh=D3s/6Min8YqluMCtRz9aWH3YI8Ffjk4z/3wq6tgXPeE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y5cUXblPiEe0fG+G6BWsuJoiHToGfBtyNrdJucphFyz+TrkGuQZDPh6ABArOwfLWf
-	 volDI78ptFGOT/K+XCNIfOJ7b4gLEMcfYJd7KwA6V60s8cr5eecHVkeaX89mTBO3pk
-	 fbWTs2BO9XwMLlzrx+i7aNi5jzlAOsfFS2r/PNrI=
+	b=AtoYDM08QiES2mg10mLONr50S6t5G2AsMW169tpT6oztiXEKXVyeNCABL+T/31hot
+	 NjUjObHdyqs2fMJ1ZUlTjDCvY2o67Q1h7IX4nN0E0EU+0SjGQKd/MU18EbaytTTVlr
+	 QWldH7o6dEiyj7NY/8VAuR1FGcHkhINyaknKmuig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731515AbgELWKF (ORCPT
+        id S1728196AbgELWKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:10:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33143 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731171AbgELWKF (ORCPT
+        Tue, 12 May 2020 18:10:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36121 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgELWKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:10:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id o24so19690421oic.0;
-        Tue, 12 May 2020 15:10:04 -0700 (PDT)
+        Tue, 12 May 2020 18:10:48 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x7so18772085oic.3;
+        Tue, 12 May 2020 15:10:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q6CAAU7vleDGueuJGVvolBhXIu/csSl1xRiaOGj3440=;
-        b=i6t6SNmcnJlmGQ70z/g6b37BQoEpZJ39Y0bTbQfGDUwzZvdxJ/Wgo5PmbE/ST8yzFP
-         JIonDj16L2ovdSTxrIoDJ4wyJqEFT4VdeOcSaK//nrpJjx9UEl6N4GI5rTjs3d8JNsXZ
-         5OvuMfL+GdVdfNaoZeiaBqqbxoVMIa0ycc2VK6S3YMTeU67lyfPj4gbQnYtcABJUC9lX
-         a0ZEz2d7VhwPmC4mNdHJZwu58l1MFry/1dTH7JbIZT1tP0UhJfVNflP0ZsrDPVSFilbJ
-         hLUEOTE3lk2yIYjFfXDeLhcZLvcKsR2Gq4W8EeVrRedUp8kgxpsRw0MWb0NeVNb5Uhvq
-         P2iw==
-X-Gm-Message-State: AGi0PuaN4cCOIBowU+A40YJSfRHzROs8r3PHG61mQd2t4qBKX1XAlz7v
-        274M2Gyttd/57HX0sY8aVtqRgV8=
-X-Google-Smtp-Source: APiQypLw7zczZZ/cmpR/UVgqIUbJ0LI2bRfUOe7N1KLLVlXaHRfbsnNpK4kUSO++hz7BmofQdUffjw==
-X-Received: by 2002:a54:4510:: with SMTP id l16mr23819423oil.151.1589321403979;
-        Tue, 12 May 2020 15:10:03 -0700 (PDT)
+        bh=hLS7bp8T/22TjzypF5PGmB5dEY+3krp0hxJHV/JBg7g=;
+        b=asYoPteozYKAMBMUJJfd7+z2MHI5v5Xzidd4Nr3VbAXCWWLfA6pp34ia9J8fHJ3xPl
+         V79dua/bcLBJ3gMuzqidPmkyx/ykeqiUYoXr6Y8HOlb4ypuGoTcourx0u1jVF5NyitDx
+         xTETKzwOAzka2FTLPR+76SnAS2BhqEzlsipJzQgq3uzWsvBtSKApk6/23syNjJu3jzyg
+         HZC2iDNZNpeeCZPNbAaknAoRqmRU8V7Qb8gorFLHtO85P2xhOFHrBAYWwJlYtmis/tsh
+         sT3mokldhRy+EMeJ4t31oLDsAF4IruJRUXAVhyvDUt1tAgR8c92TqvgXRQCHeUA7yF5d
+         lQ+g==
+X-Gm-Message-State: AGi0PuY/GcneDx0wAGo287nvGJh/bRjP5o/u//263wrt3lRovoANiQkd
+        8yznj2iaGW5gRe2NYTQY/g==
+X-Google-Smtp-Source: APiQypKGf4qEmv6HKFeAwKeNvcyY2qEuJmES4jhc+TZ+TkY+0koHDMAcOv8WvrCsD+XIzcg0qyyu9w==
+X-Received: by 2002:aca:d9d7:: with SMTP id q206mr24081650oig.134.1589321447426;
+        Tue, 12 May 2020 15:10:47 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r10sm3769706otn.70.2020.05.12.15.10.02
+        by smtp.gmail.com with ESMTPSA id h9sm1222216oor.21.2020.05.12.15.10.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:10:03 -0700 (PDT)
-Received: (nullmailer pid 23234 invoked by uid 1000);
-        Tue, 12 May 2020 22:10:02 -0000
-Date:   Tue, 12 May 2020 17:10:02 -0500
+        Tue, 12 May 2020 15:10:46 -0700 (PDT)
+Received: (nullmailer pid 24273 invoked by uid 1000);
+        Tue, 12 May 2020 22:10:46 -0000
+Date:   Tue, 12 May 2020 17:10:46 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        netdev@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: net: renesas,ether: Sort compatible
- string in increasing number of the SoC
-Message-ID: <20200512221002.GA22502@bogus>
-References: <1588519279-13364-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     mani@kernel.org
+Cc:     mcoquelin.stm32@gmail.com, robh+dt@kernel.org,
+        alexandre.torgue@st.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 1/6] dt-bindings: Add vendor prefix for Shiratech
+ Solutions
+Message-ID: <20200512221046.GA24216@bogus>
+References: <20200503154215.23654-1-mani@kernel.org>
+ <20200503154215.23654-2-mani@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588519279-13364-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200503154215.23654-2-mani@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  3 May 2020 16:21:19 +0100, Lad Prabhakar wrote:
-> Sort the items in the compatible string list in increasing number of SoC.
+On Sun,  3 May 2020 21:12:10 +0530,  wrote:
+> From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> This commit adds devicetree vendor prefix for Shiratech solutions,
+> a SOM/embedded board manufacturing company.
+> 
+> https://www.shiratech-solutions.com/
+> 
+> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 > ---
->  Changes for v2:
->  * Included renesas,ether in subject instead of sh_eth.
->  * Included Reviewed-by tags.
-> 
->  Documentation/devicetree/bindings/net/renesas,ether.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-I already applied v1. 
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
