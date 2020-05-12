@@ -2,158 +2,159 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BD0C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04A2C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73075206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE9B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:09:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="c/AU81xd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgELHIu convert rfc822-to-8bit (ORCPT
+        id S1728903AbgELHJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:08:50 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40283 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgELHIu (ORCPT
+        Tue, 12 May 2020 03:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgELHJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:08:50 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id C58C6C000C;
-        Tue, 12 May 2020 07:08:45 +0000 (UTC)
-Date:   Tue, 12 May 2020 09:08:44 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
-        vigneshr@ti.com, sumit.semwal@linaro.org,
-        linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: brcmnand: improve hamming oob
- layout
-Message-ID: <20200512090844.21bcaf22@xps13>
-In-Reply-To: <20200512060023.684871-3-noltari@gmail.com>
-References: <20200504185945.2776148-1-noltari@gmail.com>
-        <20200512060023.684871-1-noltari@gmail.com>
-        <20200512060023.684871-3-noltari@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 May 2020 03:09:12 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B65BC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:09:12 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f134so8325319wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ne4G1hw7iuZLuKwIvm4TOsEkgQyVcIP6lOJe9NG9OX0=;
+        b=c/AU81xdLryWPyTaVh0+eW0JsKLbkkiWgEN20UkCWXLyadejFKrluqrbp8vt2dQyQX
+         Q75VgyKXGQuVcsPkfs60ki1+4JY/BvC3BK38fko2EvEXHYClK1B3oLQ/brM1S/ZydJr0
+         /i1t81irAJaH4BkX9o3oIZoq1eiUg5QUbtazxL/OqXBKPFrPWsIqlPNg0Db6a7wTkSji
+         eaQCMIiYzTmzCVSvqYKOwTeOuWZmLBO1b0+xVhEUl0tKJtE5k2wEyl9MnbPXLAUhpLSz
+         UlWsQmoTfk6f1C3So6RcyBMhQvFjTub6Ap8yp0Mk0DQDrZQgMLfsb7H1J+GrzJx99h6O
+         QbAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ne4G1hw7iuZLuKwIvm4TOsEkgQyVcIP6lOJe9NG9OX0=;
+        b=VKdhqBtMXKXYmJbVWYi0ESxeGh+ypdR/QFnAYc6KWsstRs8/9K/ZMySw7b5rbsBH6K
+         qIlVJ7jWrAwzuzF0egY9lRPYYfn6Z/2gTCmy5rZ6I4sKTeebQKKecnyIAm8ACenrqreZ
+         9zMWUur0qqNIXezmkGZ0Om4y4o8fXIxDuP4xLG6ikxEhbVRRh5+d6wCvJQDmPBMh4jIK
+         mC0i2hhDCn0Gk1Ve1b7Eg3jkupHg/pnsYqmSsmkDmAxYIpsgWFr+5L9wwq4mcfAr8vLL
+         hglb4m0ykK91A9mz4eCx11V0uV4XgsRA6NOOcOr8B46xSPCadKC533E8RZOl1c/9QQkH
+         qIgw==
+X-Gm-Message-State: AGi0PubTNHYTnnR8G2SgSrVhkxBGFtXsHHZIVjllzJYY4m/ZXf9mNLdi
+        9+rZDEvao3XdXaZFQ5FwMva8HQ==
+X-Google-Smtp-Source: APiQypL3S59Ppn7G1AX6lM0+lpoyv3dcIFbr+mUAxlZbBRTqgnNBSaJUmfVNj9b+buv6l1BlzJK5vg==
+X-Received: by 2002:a05:600c:2c0f:: with SMTP id q15mr38502498wmg.185.1589267350798;
+        Tue, 12 May 2020 00:09:10 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id i17sm30353895wml.23.2020.05.12.00.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 00:09:09 -0700 (PDT)
+References: <20200428210229.703309-1-martin.blumenstingl@googlemail.com> <20200428210229.703309-3-martin.blumenstingl@googlemail.com> <1jlfmdi9uw.fsf@starbuckisacylon.baylibre.com> <CAPDyKFoEh8qKYFONo1SHnvwhDwjUa5bMnnT1Kbu8=4rd=T-8Kg@mail.gmail.com> <1jh7x1i3hj.fsf@starbuckisacylon.baylibre.com> <CAPDyKFq_USCNNps3s4+C_1hriycrxtRMKJvnPFcP59CZmLXbGw@mail.gmail.com> <1j1rnygye6.fsf@starbuckisacylon.baylibre.com> <CAFBinCAPGwb4YKJvUSyvzSC7hpVO0z-Ju_pBWx-06QzYXc0orw@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list\:ARM\/Amlogic Meson..." 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        yinxin_1989@aliyun.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        lnykww@gmail.com, Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v6 2/2] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
+In-reply-to: <CAFBinCAPGwb4YKJvUSyvzSC7hpVO0z-Ju_pBWx-06QzYXc0orw@mail.gmail.com>
+Date:   Tue, 12 May 2020 09:09:08 +0200
+Message-ID: <1j1rnpfx4b.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Álvaro,
 
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
-08:00:23 +0200:
+On Sun 10 May 2020 at 22:52, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-> The current code generates 8 oob sections:
-> S1	1-5
-> ECC	6-8
-> S2	9-15
-> S3	16-21
-> ECC	22-24
-> S4	25-31
-> S5	32-37
-> ECC	38-40
-> S6	41-47
-> S7	48-53
-> ECC	54-56
-> S8	57-63
-> 
-> Change it by merging continuous sections:
-> S1	1-5
-> ECC	6-8
-> S2	9-21
-> ECC	22-24
-> S3	25-37
-> ECC	38-40
-> S4	41-53
-> ECC	54-56
-> S5	57-63
-> 
-> Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
+> Hi Jerome,
+>
+> On Tue, May 5, 2020 at 6:05 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> [...]
+>> > 2. Keep the existing approach, with devm_clk_get(). I am fine with
+>> > this as well, we can always switch to 1) later on.
+>>
+>> I have a problem with this approach.
+>> The dt-bindings would include "#clock-cells = <1>" for a device that
+>> does not actually provide and only needs it has a temporary work around.
+>> Those bindings are supposed to be stable ...
+> actually I don't see a problem here because this specific MMC
+> controller has a clock controller built into it.
 
-Sorry for leading you the wrong way, actually this patch does not
-deserve a Fixes tag.
+Clock controller is a bit exagerated. It's an MMC controller with a
+composite input clock and a couple of gates. A fairly common setup.
 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> ---
->  v3: invert patch order
->  v2: keep original comment and fix correctly skip byte 6 for small-page nand
-> 
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 37 ++++++++++++------------
->  1 file changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index 1c1070111ebc..0a1d76fde37b 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -1100,33 +1100,32 @@ static int brcmnand_hamming_ooblayout_free(struct mtd_info *mtd, int section,
->  	struct brcmnand_cfg *cfg = &host->hwcfg;
->  	int sas = cfg->spare_area_size << cfg->sector_size_1k;
->  	int sectors = cfg->page_size / (512 << cfg->sector_size_1k);
-> +	u32 next;
->  
-> -	if (section >= sectors * 2)
-> +	if (section > sectors)
->  		return -ERANGE;
->  
-> -	oobregion->offset = (section / 2) * sas;
-> +	next = (section * sas);
-> +	if (section < sectors)
-> +		next += 6;
->  
-> -	if (section & 1) {
-> -		oobregion->offset += 9;
-> -		oobregion->length = 7;
-> +	if (section) {
-> +		oobregion->offset = ((section - 1) * sas) + 9;
->  	} else {
-> -		oobregion->length = 6;
-> -
-> -		/* First sector of each page may have BBI */
-> -		if (!section) {
-> -			/*
-> -			 * Small-page NAND use byte 6 for BBI while large-page
-> -			 * NAND use bytes 0 and 1.
-> -			 */
-> -			if (cfg->page_size > 512) {
-> -				oobregion->offset += 2;
-> -				oobregion->length -= 2;
-> -			} else {
-> -				oobregion->length--;
-> -			}
-> +		/*
-> +		 * Small-page NAND use byte 6 for BBI while large-page
-> +		 * NAND use bytes 0 and 1.
-> +		 */
-> +		if (cfg->page_size > 512) {
-> +			oobregion->offset = 2;
-> +		} else {
-> +			oobregion->offset = 0;
-> +			next--;
+Also the property does not indicate a "clock controller" (or any number
+of clock hosted by the device) but the ability to provide clocks out of
+the device.
 
-This next-- seems very strange, can you explain?
+This device does not actually provide clock externally. Your provider
+is just meant to be used internally. It is a work around using DT for
+something missing in CCF.
 
->  		}
->  	}
->  
-> +	oobregion->length = next - oobregion->offset;
-> +
->  	return 0;
->  }
->  
+IHMO, it is not such a big deal but since the binding are supposed to be
+stable, I'm just pointing out that it is not great.
 
+> Rob also didn't see any problem with this when he reviewed the dt-bindings
 
-Thanks,
-Miquèl
+Again the bindings would be fine if the component was actually providing
+the clocks, AFAIU.
+
+>
+>> I have proposed 2 other short term solutions, let's see how it goes
+> since I was also curious how this turns out I first implemented your
+> suggestion to use a similar clk_hw registration style as
+> dwmac-meson8b.
+> That made the code easier to read - thank you for the suggestion!
+>
+> On top of that I switched from clk_hw_onecell_data to directly
+> accessing "clk_hw.clk".
+> Unfortunately the diffstat is not as great as I hoped, it saves 21
+> lines (11 in the driver code, 6 in the soc.dtsi, 5 in the dt-bindings)
+> Once devm_clk_hw_get_clk() is implemented 8 lines have to be added
+> again for error checking.
+> I attached the patch for the drivers/mmc/host/meson-mx-sdhc* parts if
+> you are curious (it'll apply only on top of my github branch, not on
+> this series).
+
+Diffstat was not my concern, TBH
+
+>
+> Please let me know if you want me to submit an updated series where I
+> directly access "clk_hw.clk"
+
+I'd be happy if you did
+
+> to get the "struct clk" or if I should
+> keep clk_hw_onecell_data.
+> If it's the former then I'll also add a TODO comment for the
+> conversion to devm_clk_hw_get_clk() so it's easy to find.
+>
+
+Perfect !
+
+>
+> Regards,
+> Martin
+
