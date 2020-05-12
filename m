@@ -6,62 +6,63 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB302CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6F7CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7A292312B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AD223126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589309706;
-	bh=o9R5f/2AmYKBTdwDgSz8+Yd+khsI/ycCqI0DPfgO/gM=;
+	s=default; t=1589309712;
+	bh=R95dA7xTUqIcm/Ci7IHPtCjj3/dX1JgGKNEj7n5xFa4=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=1T6fL7VVj7Uk0+ZFBwciliHSwxMcI7KIxx42apgCQ9QHHWN7VVIdSv650tTm5A9YP
-	 v6YeHXrX9bWhGDpnJbTV/I5KGfr1YinorR3VWoO76shKLRSdRIpwPILeS133VEae9q
-	 Pd5KXlJexNWb7yfZxmhSXZiTIgJlh7GGCj94UvRs=
+	b=AYbK4YXnJPfBssPRcD8bO6Ayp6eQnSA9bRvcD6DF3yPZCNvUpKiy6oIwhQ+J8DJ74
+	 I0Q+wu+242PyZ5m7mQdrcx1UuIIjUwoNJlLwfegJoOE/hIGtCMR28z2GPSJAik0lNr
+	 Gv+PwJA9lBq7W1sOS9XKy9DTLNLhAzLgfZusgNF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbgELSzF (ORCPT
+        id S1730940AbgELSzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 14:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbgELSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726055AbgELSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 14:55:04 -0400
-Subject: Re: [GIT PULL] GFS2 fixes for 5.7
+Subject: Re: [GIT PULL] tracing: Fixes for v5.7 from previous fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589309704;
-        bh=o9R5f/2AmYKBTdwDgSz8+Yd+khsI/ycCqI0DPfgO/gM=;
+        s=default; t=1589309703;
+        bh=R95dA7xTUqIcm/Ci7IHPtCjj3/dX1JgGKNEj7n5xFa4=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=gCXudLttv+6gTgv9TF9g2U8C+LWPtNnftQkXzbqcshsbqi+IQ5EcnPM+QamZ04INB
-         OxK1pxhMd0HIue0wjsQdjFdaojFhwvZsQD+XxddMuRkt3rmrqgC3GfzE8d0NKJyqUs
-         iNRcFZG5SF5S2+NqrSRUH2L8QYFW81jcFZQfy+pY=
+        b=BBREiI1Q440QfyG0xgg2+ylxxQbjGl28FI5J0ZtACjFC6mvMxR+MrkFRVLl0r8UHi
+         pBVEOr4dvn+pK9IQ2eyUIkanEBALORfNE3gmGmu9zQw0/X6RRriGH3SR+1n4cP9knm
+         QeNVTS64YW87qgb7YmKXsoZIUlvuDUgTNwItgQxA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200512145434.160164-1-agruenba@redhat.com>
-References: <20200512145434.160164-1-agruenba@redhat.com>
+In-Reply-To: <20200512104835.7a39586b@gandalf.local.home>
+References: <20200512104835.7a39586b@gandalf.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200512145434.160164-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
- tags/gfs2-v5.7-rc1.fixes
-X-PR-Tracked-Commit-Id: b14c94908b1b884276a6608dea3d0b1b510338b7
+X-PR-Tracked-Message-Id: <20200512104835.7a39586b@gandalf.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.7-rc4
+X-PR-Tracked-Commit-Id: 611d0a95d46b0977a530b4d538948c69d447b001
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e719340f46bd9413590121b140714728862ffe05
-Message-Id: <158930970419.9866.14834853183650860586.pr-tracker-bot@kernel.org>
-Date:   Tue, 12 May 2020 18:55:04 +0000
-To:     Andreas Gruenbacher <agruenba@redhat.com>
+X-PR-Merge-Commit-Id: 24085f70a6e1b0cb647ec92623284641d8270637
+Message-Id: <158930970384.9866.10665397189841124521.pr-tracker-bot@kernel.org>
+Date:   Tue, 12 May 2020 18:55:03 +0000
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 12 May 2020 16:54:34 +0200:
+The pull request you sent on Tue, 12 May 2020 10:48:35 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.7-rc1.fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.7-rc4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e719340f46bd9413590121b140714728862ffe05
+https://git.kernel.org/torvalds/c/24085f70a6e1b0cb647ec92623284641d8270637
 
 Thank you!
 
