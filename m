@@ -2,120 +2,135 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E724C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397EACA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3D3206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZRY+X0C"
+	by mail.kernel.org (Postfix) with ESMTP id 07434206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgELRrQ (ORCPT
+        id S1728262AbgELRuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:47:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46645 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725938AbgELRrP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:47:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589305634;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=aTDE0AT5JEjaYvlv8ybgmqDXB2+aHsj7B8GrIzk2ub4=;
-        b=aZRY+X0C/wf5xfF2cz2e0GADJgEF2TXBQ58gIE/4BQtKlhz2njEQV+ZrMKuidZPHaPk1qx
-        4MHZPVtgOQenwJRW6BXjNLU66Dubbar+T0TpQOop9/DtpUP1Fd1fnECtCFtJcAicfIP1+A
-        xiyvlzTt0wNc3m9/jaI9Zv7SQZ8IyUc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-HQyPs03eOOy3ZbfrLxDFjQ-1; Tue, 12 May 2020 13:47:09 -0400
-X-MC-Unique: HQyPs03eOOy3ZbfrLxDFjQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6011918FE860;
-        Tue, 12 May 2020 17:47:08 +0000 (UTC)
-Received: from optiplex-lnx.redhat.com (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 758925D9E5;
-        Tue, 12 May 2020 17:47:06 +0000 (UTC)
-From:   Rafael Aquini <aquini@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        mcgrof@kernel.org
-Cc:     keescook@chromium.org, akpm@linux-foundation.org,
-        yzaikin@google.com, tytso@mit.edu
-Subject: [PATCH] kernel: sysctl: ignore out-of-range taint bits introduced via kernel.tainted
-Date:   Tue, 12 May 2020 13:46:53 -0400
-Message-Id: <20200512174653.770506-1-aquini@redhat.com>
+        Tue, 12 May 2020 13:50:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45961 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbgELRuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:50:20 -0400
+IronPort-SDR: 9bS7boKHOc+lFdRIYgVQl3EgKF3NdTblUDA97kdjUoqMMOqsvMbALB3X2AFpfdFDr0NeDIy5wS
+ d9inPAu/YNYA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 10:50:18 -0700
+IronPort-SDR: tEtccoh4JXKIVce1OuW2ZgJkYA+zs0VHCZR1tN1NZpXRTMNTggBxK2k9kAMX+RoeIrSKL/j2iR
+ AaSuZDHX/mNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="265584793"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 12 May 2020 10:50:18 -0700
+Date:   Tue, 12 May 2020 10:50:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200512175017.GC12100@linux.intel.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
+ <20200512155339.GD138129@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512155339.GD138129@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sysctl knob allows users with SYS_ADMIN capability to
-taint the kernel with any arbitrary value, but this might
-produce an invalid flags bitset being committed to tainted_mask.
+On Tue, May 12, 2020 at 11:53:39AM -0400, Vivek Goyal wrote:
+> On Tue, May 12, 2020 at 05:40:10PM +0200, Vitaly Kuznetsov wrote:
+> > Vivek Goyal <vgoyal@redhat.com> writes:
+> > 
+> > > On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
+> > >> Currently, APF mechanism relies on the #PF abuse where the token is being
+> > >> passed through CR2. If we switch to using interrupts to deliver page-ready
+> > >> notifications we need a different way to pass the data. Extent the existing
+> > >> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
+> > >> notifications.
+> > >> 
+> > >> The newly introduced apf_put_user_ready() temporary puts both reason
+> > >> and token information, this will be changed to put token only when we
+> > >> switch to interrupt based notifications.
+> > >> 
+> > >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > >> ---
+> > >>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+> > >>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
+> > >>  2 files changed, 15 insertions(+), 5 deletions(-)
+> > >> 
+> > >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> > >> index 2a8e0b6b9805..e3602a1de136 100644
+> > >> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> > >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> > >> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
+> > >>  
+> > >>  struct kvm_vcpu_pv_apf_data {
+> > >>  	__u32 reason;
+> > >> -	__u8 pad[60];
+> > >> +	__u32 pageready_token;
+> > >
+> > > How about naming this just "token". That will allow me to deliver error
+> > > as well. pageready_token name seems to imply that this will always be
+> > > successful with page being ready.
+> > >
+> > > And reason will tell whether page could successfully be ready or
+> > > it was an error. And token will help us identify the task which
+> > > is waiting for the event.
+> > 
+> > I added 'pageready_' prefix to make it clear this is not used for 'page
+> > not present' notifications where we pass token through CR2. (BTW
+> > 'reason' also becomes a misnomer because we can only see
+> > 'KVM_PV_REASON_PAGE_NOT_PRESENT' there.)
+> 
+> Sure. I am just trying to keep names in such a way so that we could
+> deliver more events and not keep it too tightly coupled with only
+> two events (page not present, page ready).
+> 
+> > 
+> > I have no strong opinion, can definitely rename this to 'token' and add
+> > a line to the documentation to re-state that this is not used for type 1
+> > events.
+> 
+> I don't even know why are we calling "type 1" and "type 2" event. Calling
+> it KVM_PV_REASON_PAGE_NOT_PRESENT  and KVM_PV_REASON_PAGE_READY event
+> is much more intuitive. If somebody is confused about how event will
+> be delivered, that could be part of documentation. And "type1" and "type2"
+> does not say anything about delivery method anyway.
+> 
+> Also, type of event should not necessarily be tied to delivery method.
+> For example if we end up introducing say, "KVM_PV_REASON_PAGE_ERROR", then
+> I would think that event can be injected both using exception (#PF or #VE)
+> as well as interrupt (depending on state of system).
 
-This patch introduces a simple way for proc_taint() to ignore
-any eventual invalid bit coming from the user input before
-committing those bits to the kernel tainted_mask.
-
-Signed-off-by: Rafael Aquini <aquini@redhat.com>
----
- include/linux/kernel.h |  2 ++
- kernel/sysctl.c        | 14 +++++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 9b7a8d74a9d6..e8c22a9bbc95 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -597,6 +597,8 @@ extern enum system_states {
- #define TAINT_RANDSTRUCT		17
- #define TAINT_FLAGS_COUNT		18
- 
-+#define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
-+
- struct taint_flag {
- 	char c_true;	/* character printed when tainted */
- 	char c_false;	/* character printed when not tainted */
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8a176d8727a3..fb2d693fc08c 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2623,11 +2623,23 @@ static int proc_taint(struct ctl_table *table, int write,
- 		return err;
- 
- 	if (write) {
-+		int i;
-+
-+		/*
-+		 * Ignore user input that would cause the loop below
-+		 * to commit arbitrary and out of valid range TAINT flags.
-+		 */
-+		if (tmptaint > TAINT_FLAGS_MAX) {
-+			tmptaint &= TAINT_FLAGS_MAX;
-+			pr_warn_once("%s: out-of-range taint input ignored."
-+				     " tainted_mask adjusted to 0x%lx\n",
-+				     __func__, tmptaint);
-+		}
-+
- 		/*
- 		 * Poor man's atomic or. Not worth adding a primitive
- 		 * to everyone's atomic.h for this
- 		 */
--		int i;
- 		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
- 			if ((tmptaint >> i) & 1)
- 				add_taint(i, LOCKDEP_STILL_OK);
--- 
-2.25.4
-
+Why bother preserving backwards compatibility?  AIUI, both KVM and guest
+will support async #PF iff interrupt delivery is enabled.  Why not make
+the interrupt delivery approach KVM_ASYNC_PF_V2 and completely redefine the
+ABI?  E.g. to make it compatible with reflecting !PRESENT faults without a
+VM-Exit via Intel's EPT Violation #VE?
