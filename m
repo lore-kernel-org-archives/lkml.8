@@ -2,67 +2,65 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E81C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8058FC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD6C206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A29206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1XpMo8T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zawdNdom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgELMP4 (ORCPT
+        id S1729597AbgELMRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELMPz (ORCPT
+        Tue, 12 May 2020 08:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgELMRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:15:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C68BC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:15:54 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u20so3069578ljo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:15:53 -0700 (PDT)
+        Tue, 12 May 2020 08:17:07 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDCAC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:17:06 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id u4so10359542lfm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ccKOdwRe3iqeZSagNuE5XkunpZg3mt6JpF6qvoS7Ef8=;
-        b=g1XpMo8TF7t4f6zVYEweNwAI8Xk50lfP6d27IehOWdIvNoMqK6nyLV8t08ANmCaD4+
-         pvDi6YDCBzNKq89VZ1U8vtV0q4tHTotYLCtJQp4Y28cBgTLCrSNOdJLdqszeZEgE1eCf
-         LpqcMPXgpK93bH4dQ7OooyRkrQ4W3Qzu3FZNMue7Agpms7aFaqAWXLM59S0R5TW3lOUX
-         TB3UavKDUp03/Ze1R6KSY/BZXuDlLddJWmQcVU682QXLHTuLc1K3Yn9ZP1oZZ2BBuC/V
-         diBSq9EYcTzYLccxhU+/sQ4v5oy3HY2xJnHXGMKGzbflqu8te/RW8NrsZr9DEj0ZyKLv
-         mczQ==
+        bh=AHRgMLmA3AvBWPfR6NKWwxmRE4rkD36q1pi3BiamBuk=;
+        b=zawdNdom/gNdPx47D4yLAoF6P7G0lSQgL3HWoaTE5pIWlvLTLXvSgmJEAGLFAG5VGb
+         /G7eaYc6og9aU4x4M7FTxm81UsoCa/45aiA5gY4tGQ2nVbaTMFmxcXsBl/dejya1fspB
+         vuywN7waQfGB/WfPQNp9AS0c8Tc7UP5ZRUi0fdRxxFlktSSVW9rccOOp2fxxlHUfQf5D
+         nEBX/9KNhiLH7lvfPT1ZjdrrfBc5k88EY57RUm+E8RKZ36irVE8C+CnyzGAJd56EWpX/
+         jE8zVu3h1jj2JT28gOJMBYBIh8b5mcGCW6IcPVx93BDudEuaAtSIbnMBWyTet65NItej
+         Gh0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ccKOdwRe3iqeZSagNuE5XkunpZg3mt6JpF6qvoS7Ef8=;
-        b=ih8+jz+GpRD9lRRCwrDDvRa1i1o5N+UROsxtr6x2YXAsQbCeQstxXzGVoLF8JOUoZa
-         B1vo6bumJRqlir3EMAbVS0aBKVeOtdd/FK7yH+vH99va8QIsE1639E1qrg3MGhJP9Djb
-         bRHEdGzqh+Z/NFRUkPAr3xDU7O/okEnxS2zzd5IRSzjDf4VUx3Pyu+guWyUtfoFGhyNM
-         Sc9MrIoTBnD9JnGGu/nFqE6VBM53vji/wvYB1xLMrrebTpMomMKxttiv1fsS46mNXpXd
-         8u04nizbxoL2uL7eIs2uPOG3QWF5DKkA9cawaszdwflEe8ORaq+UJ4k9STtLN4WBU1ka
-         HT8w==
-X-Gm-Message-State: AOAM530NtWNSP7KKTLdoDXaPKQZ6SYR8VO8fY0O5UCCiPBz3T4lMaRIY
-        skEknpRMpGgzw5D/wDhlL3KBGSy98PZyGKqSZ2vHNA==
-X-Google-Smtp-Source: ABdhPJzzFcmf7nPjGcBG/Cdu0kwKO+w/24JLBkomICqKKfEEx8rLHtcWxInOvM6+OmT2C66Q9tBx42aLEAhCRR1J9qc=
-X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr13019356ljo.168.1589285752348;
- Tue, 12 May 2020 05:15:52 -0700 (PDT)
+        bh=AHRgMLmA3AvBWPfR6NKWwxmRE4rkD36q1pi3BiamBuk=;
+        b=LUuOb4FBibvhFK29jU8Znj1qdkAxxUaAx7ExrN+ZH0cNzn3lITGsYa0BMhSiKgkJDw
+         dvEmgQTD4kwF1aGATgWdo4hLQJxR/m8U7oqMksslr3Bam9+8dJZxhKqILLeJrM1d2bK3
+         lfG91rD0k7WKa1nnrDUYS05fpWMwIOP5g90aI+lL4BvG3Y9g+LLTBhf6f40Hu/mDixO2
+         y1x4EFelM6dpsnVaWp/JgkojOCAM7V1PzxkP3YDi3TKGkx7FKZ8dFb7f8f0IiWJsX3pT
+         3/k6JQwoICvA8VpG7V0xuSKVFlzvfuddOQNbjZH1lDnKi9s9fGZSY9rp4KKbXJx61ECu
+         AEyQ==
+X-Gm-Message-State: AOAM532dJajQ8peyhUTwVu+aGnFbfTD/awe6smianHCjPRPHcpP7vlXl
+        Rs7ebmD//RlHBKv9jdD5ZVY2euyNoETx3ZkMV4Bdxw==
+X-Google-Smtp-Source: ABdhPJznRAGEou4bDAZ+Qk/iOY8Hj6nqKR5DclT1eBmeTxgT/t1dvz+w7MKesU2FRotY9nN6kN31SK96tUzVsopvN4M=
+X-Received: by 2002:ac2:5588:: with SMTP id v8mr14010972lfg.217.1589285820682;
+ Tue, 12 May 2020 05:17:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200430143019.1704-1-brgl@bgdev.pl> <20200430143019.1704-2-brgl@bgdev.pl>
-In-Reply-To: <20200430143019.1704-2-brgl@bgdev.pl>
+References: <20200430143019.1704-1-brgl@bgdev.pl> <20200430143019.1704-3-brgl@bgdev.pl>
+In-Reply-To: <20200430143019.1704-3-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 14:15:41 +0200
-Message-ID: <CACRpkdb3LkeMKjg3Kh2YwCiJkBQy5X2v4eShb0WG9PivGLizzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] irq: make irq_domain_reset_irq_data() available
- even for non-V2 users
+Date:   Tue, 12 May 2020 14:16:49 +0200
+Message-ID: <CACRpkdbzyMY2uOZ4woKyv0otYyO9fK7zSsBaYHtCB6Z+Xtm7Mg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -74,7 +72,8 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         linux-iio <linux-iio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,14 +84,30 @@ On Thu, Apr 30, 2020 at 4:30 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> irq_domain_reset_irq_data() doesn't modify the parent data, so it can be
-> made available even if irq domain hierarchy is not being built. We'll
-> subsequently use it in irq_sim code.
+> The interrupt simulator API exposes a lot of custom data structures and
+> functions and doesn't reuse the interfaces already exposed by the irq
+> subsystem. This patch tries to address it.
+>
+> We hide all the simulator-related data structures from users and instead
+> rely on the well-known irq domain. When creating the interrupt simulator
+> the user receives a pointer to a newly created irq_domain and can use it
+> to create mappings for simulated interrupts.
+>
+> It is also possible to pass a handle to fwnode when creating the simulator
+> domain and retrieve it using irq_find_matching_fwnode().
+>
+> The irq_sim_fire() function now only takes the virtual interrupt number
+> as argument - there's no need anymore to pass it any data structure linked
+> to the simulator.
+>
+> We modify the two modules that use the simulator at the same time as
+> adding these changes in order to reduce the intermediate bloat that would
+> result when trying to migrate the drivers in separate patches.
 >
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
 
-Makes sense to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
