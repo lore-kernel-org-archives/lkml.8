@@ -2,137 +2,412 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E3DC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6A1C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4B620753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E930920784
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="P3miKNoW"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCCr3f1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731682AbgELX4P (ORCPT
+        id S1731711AbgELX4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:56:15 -0400
-Received: from mail-bn8nam12on2112.outbound.protection.outlook.com ([40.107.237.112]:54752
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbgELX4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:56:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DI374Tu4EBjxJWx0t71a/nyVlu2RMbhoCuZikt38c5MF90xXZ+hk+gN2qWY8I6zmAdjVZFAiZEiuRprNgVg0D4IxUgpCS4CAFqcO21ha3yXweriiThJRlkThA2m8pzn9HQ6glqkSYKl6A9zUFNflf9AxNLSvQ4MFqO5HR7w6mV8tOvJHahLGYQsvUsxWpOLLLWXf4MGWudLN/EReK5DT6IRYMDEwDUSSrr0QjvSahpXi3NWjK4Sy0WOjcOENDzL86QnJ/8CTFUQD+KKhG122nLRPkQDcePJJlt2Kj093olxXpJou+OMr1xQsg1xjcBbQTUvrlpMwP03qzFFmJ4NsCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wi+mvriKrHdXCtzGusI/raAWcPX1KK+A2npRlQxCM8M=;
- b=Dt67R9DoRsUir6yGFJavnkjAhTb41ld3k39f7+j+u2CNqZoHlOEAwZN4anKgBn6P0pwnaMvwHLmzLp/3WVD2pMk3gNPt1HNfPwLbKhy5NwgjgUC7BpBX84yHMk+LoWjOYLayF/hX+Q6LkdRr6VBxrtoOko5CC7lxaHako5wP8JeteofCuQQq/DClHbIXjpRVc1oAVEx7etPj7hBrmGbPndsoBmi/oLIUo8lvLWGSHnIaMdB+/eyqcLX8wHK8x4KdtvkGnkMaw+z0ORDV0adCDKZazpeQOnfj3QDwFd4dgvlTmhmZXWHXSyFW7Ie8HJMglN34prYChIYeNnhFipUGWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wi+mvriKrHdXCtzGusI/raAWcPX1KK+A2npRlQxCM8M=;
- b=P3miKNoWOi7shMOt1+zUz364qa5z1F5TTFfXDJRI7dfUJWfN6Tra9nfvaxskAkiU7TuC7EW0acBVhJfAyHFH/qArGsIaKxObLcE4yEiLumET14JbqlkHvsrhTujOPLmvzCY/6KMN9y7aIUYUpniouf2Tl25hU8IRyvo42l6LoTs=
-Authentication-Results: amperecomputing.com; dkim=none (message not signed)
- header.d=none;amperecomputing.com; dmarc=none action=none
- header.from=os.amperecomputing.com;
-Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
- BYAPR01MB4470.prod.exchangelabs.com (2603:10b6:a03:a3::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.34; Tue, 12 May 2020 23:56:09 +0000
-Received: from BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Tue, 12 May 2020
- 23:56:09 +0000
-From:   Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ACPI/IORT: Fix PMCG node always look for a single ID mapping.
-Date:   Tue, 12 May 2020 16:56:00 -0700
-Message-Id: <1589327760-5464-1-git-send-email-tuanphan@os.amperecomputing.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR11CA0108.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::49) To BYAPR01MB4598.prod.exchangelabs.com
- (2603:10b6:a03:8a::18)
+        Tue, 12 May 2020 19:56:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50920 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELX4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 19:56:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CNrDeF040345;
+        Tue, 12 May 2020 23:56:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Jijn7JpvMQRc6JyN6/NzB5vbFWimLi00HrJyQfm67yQ=;
+ b=nCCr3f1h9TZOrjGU+9bCiVVs2d9ntD334q2xKyrsfey6yIClBbiyeHBZ/NzOOxt4HVas
+ gJhBJSMLeicTzIJlKh/fHrObJQQRoPPGeZl3toXrUW19EiGyYf12ajF+DnHzm5svuni8
+ l5W2MnCvT/RRJ/hIaizNrrGZFtpnPBRdTxZrrew+jn/0JJc3LhczWRfDLM9Y+7DFK9TN
+ DZQ0Kx5rnKNgbXEnOfc8vog/vPI7IKxiGUIc3p4n14qsNiQHPnNQHyZo4NXMi1R6iLD3
+ g5RolEmoSyRRY4NVmfPtk3VuovhzkITqlOb215mo7m9qHUkYyLA7Jgp/yV0+4yCmAHix HQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 3100xwh9sa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 23:56:03 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CNsZTS095439;
+        Tue, 12 May 2020 23:56:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 3100ypdaf1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 May 2020 23:56:02 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04CNtx29007414;
+        Tue, 12 May 2020 23:56:00 GMT
+Received: from localhost (/10.159.139.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 May 2020 16:55:59 -0700
+Date:   Tue, 12 May 2020 16:55:57 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Chiristoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200512235557.GU6714@magnolia>
+References: <20200502092709.GA20328@nishad>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR11CA0108.namprd11.prod.outlook.com (2603:10b6:a03:f4::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.27 via Frontend Transport; Tue, 12 May 2020 23:56:08 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [4.28.12.214]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b9646e35-e9a3-4389-80c0-08d7f6d00aba
-X-MS-TrafficTypeDiagnostic: BYAPR01MB4470:|BYAPR01MB4470:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR01MB4470043D943312C8E874F4B5E0BE0@BYAPR01MB4470.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-Forefront-PRVS: 0401647B7F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VrkyULwcnOqwaBimedbvL37OHbB/q9N24Pw1qVyuk8lcuO55LciY+YyBlKtiFRTVs6Effp2fYaWAlEqjAzmqzsRBGCvofgrAEheRezATJCyr+XZm7e0ImD/vFDx/CYO/0yyYL0YrQPtooWuO259JqzApizo8sphSCFUG7KqutgT+topn/c8tzCrY/TiKCfmpuW8lBGCCwD/3Gmaje8UKwrGeuBBvW/wj+mPHUzq6arbE0PTh4qNGQYU8MKKPDy/LnIbN0Cp3NTaIeHmv8dGetykZ6CeSAjmvmxhyTxLIjTTvtGgNlbuB5ZgWSPGWFPlVaspYPojaFVUvpBUqo4yQFgUZg/aQy74gRHWNbF2XvsLF9GMnPR7r5U0i5meaZSeHl9kccadXvLoXaSSICrYTcFeeFlxqQmPkAaS3GjvlS5MdQ9t2Phw4Mlm3iDtLGUu/h9n4R6EUbIz3F/GCV4Ze4CWLlxQiv3tRnTUyiY2RbghJAYnVOqwjZMl10GspZvuG+or9TMLt02iaum7I9XE2ITeOWtniydTkh6sg0IJf7dw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39850400004)(366004)(376002)(396003)(346002)(33430700001)(8936002)(6506007)(86362001)(16526019)(186003)(52116002)(6666004)(26005)(8676002)(2906002)(33440700001)(66946007)(6512007)(6486002)(4326008)(54906003)(5660300002)(478600001)(316002)(109986005)(66556008)(956004)(2616005)(66476007)(266003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: OgpZQbnge20v7hxFuHhE4VSY8ZJWjqC+uDuHREnzYPBWElLjjtIQKR3Plb5T7wdzpgAIX+vMgsxpuvCpoJ2bvGIWFGtNYha3YILfSuZmkMa4Tkic5DutImvWZdZq9+R4W5yhZ4AQzJ/T+FT54XmsNjzmFJeFMxSVqe930iTjgvpzlTx6YsvPZBOZHAud7k/zzs203e6yMQalVDPVVOmvEMYRYvaMEuPHf3oTBPd7qEVxSA7GeiZIrmdBX7DXfD+q4mJt/n/CbujoEryCN4nsaVhJq1w/advs0jVXoTH4BFno5o2LJtJdmKPtPsrlUpole9uRT2nZ6wcVzI9uIyIarwKeTXj2ZejmdKTrrSpdjmChm4fLyGX8NDcvL+eMZ+GSEP8Mk8LnfrO60Qyx3IagE+1G2RFPGZfAZbI6FG7NkdDIIWOcPZ1JjKzYMaV8pri4gFCtdqjL2rHCjwaJ8ExCkts/NP/EpshYFZBLFU+ohws=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9646e35-e9a3-4389-80c0-08d7f6d00aba
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 23:56:09.2459
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BCZseUeoiUG1JMdsxqjzTA1PCHZwETxmCqg6q0fgGeQocgh46dRZPwgxp2wvAyt4Rw/Zfaoq6LFVGRndDoKSk4TzGdt9GWMCHDBpoZBk660OTCdYdQD3hAxZGr2hmyK8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4470
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200502092709.GA20328@nishad>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005120178
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 bulkscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005120178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PMCG node can have zero ID mapping if its overflow interrupt
-is wire based. The code to parse PMCG node can not assume it will
-have a single ID mapping.
+On Sat, May 02, 2020 at 02:57:14PM +0530, Nishad Kamdar wrote:
+> This patch corrects the SPDX License Identifier style in header files
+> related to XFS File System support. For C header files
+> Documentation/process/license-rules.rst mandates C-like comments.
+> (opposed to C source files where C++ style should be used).
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 
-Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
----
-Changes in v2:
-- Used pmcg node to detect wired base overflow interrupt.
- 
- drivers/acpi/arm64/iort.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Looks fine to me I guess,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1..11a4e8e 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- {
- 	struct acpi_iort_smmu_v3 *smmu;
-+	struct acpi_iort_pmcg *pmcg;
- 
- 	switch (node->type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
-@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- 
- 		return smmu->id_mapping_index;
- 	case ACPI_IORT_NODE_PMCG:
-+		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-+		if (pmcg->overflow_gsiv)
-+			return -EINVAL;
-+
- 		return 0;
- 	default:
- 		return -EINVAL;
--- 
-2.7.4
+--D
 
+> ---
+> Changes in v2:
+>  - use up all 73 chars in commit description
+> ---
+>  fs/xfs/kmem.h                      | 2 +-
+>  fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
+>  fs/xfs/libxfs/xfs_alloc.h          | 2 +-
+>  fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
+>  fs/xfs/libxfs/xfs_attr.h           | 2 +-
+>  fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
+>  fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
+>  fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
+>  fs/xfs/libxfs/xfs_bit.h            | 2 +-
+>  fs/xfs/libxfs/xfs_bmap.h           | 2 +-
+>  fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
+>  fs/xfs/libxfs/xfs_btree.h          | 2 +-
+>  fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
+>  fs/xfs/libxfs/xfs_da_format.h      | 2 +-
+>  fs/xfs/libxfs/xfs_defer.h          | 2 +-
+>  fs/xfs/libxfs/xfs_dir2.h           | 2 +-
+>  fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
+>  fs/xfs/libxfs/xfs_errortag.h       | 2 +-
+>  fs/xfs/libxfs/xfs_format.h         | 2 +-
+>  fs/xfs/libxfs/xfs_fs.h             | 2 +-
+>  fs/xfs/libxfs/xfs_health.h         | 2 +-
+>  fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
+>  fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
+>  fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
+>  fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
+>  fs/xfs/libxfs/xfs_log_format.h     | 2 +-
+>  fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
+>  fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
+>  fs/xfs/libxfs/xfs_refcount.h       | 2 +-
+>  fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
+>  fs/xfs/libxfs/xfs_rmap.h           | 2 +-
+>  fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
+>  fs/xfs/libxfs/xfs_sb.h             | 2 +-
+>  fs/xfs/libxfs/xfs_shared.h         | 2 +-
+>  fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
+>  fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
+>  fs/xfs/libxfs/xfs_types.h          | 2 +-
+>  fs/xfs/mrlock.h                    | 2 +-
+>  fs/xfs/scrub/bitmap.h              | 2 +-
+>  fs/xfs/scrub/btree.h               | 2 +-
+>  fs/xfs/scrub/common.h              | 2 +-
+>  fs/xfs/scrub/dabtree.h             | 2 +-
+>  fs/xfs/scrub/health.h              | 2 +-
+>  fs/xfs/scrub/repair.h              | 2 +-
+>  fs/xfs/scrub/scrub.h               | 2 +-
+>  fs/xfs/scrub/trace.h               | 2 +-
+>  fs/xfs/scrub/xfs_scrub.h           | 2 +-
+>  fs/xfs/xfs.h                       | 2 +-
+>  fs/xfs/xfs_acl.h                   | 2 +-
+>  fs/xfs/xfs_aops.h                  | 2 +-
+>  fs/xfs/xfs_bmap_item.h             | 2 +-
+>  fs/xfs/xfs_bmap_util.h             | 2 +-
+>  fs/xfs/xfs_buf.h                   | 2 +-
+>  fs/xfs/xfs_buf_item.h              | 2 +-
+>  fs/xfs/xfs_dquot.h                 | 2 +-
+>  fs/xfs/xfs_dquot_item.h            | 2 +-
+>  fs/xfs/xfs_error.h                 | 2 +-
+>  fs/xfs/xfs_export.h                | 2 +-
+>  fs/xfs/xfs_extent_busy.h           | 2 +-
+>  fs/xfs/xfs_extfree_item.h          | 2 +-
+>  fs/xfs/xfs_filestream.h            | 2 +-
+>  fs/xfs/xfs_fsmap.h                 | 2 +-
+>  fs/xfs/xfs_fsops.h                 | 2 +-
+>  fs/xfs/xfs_icache.h                | 2 +-
+>  fs/xfs/xfs_icreate_item.h          | 2 +-
+>  fs/xfs/xfs_inode.h                 | 2 +-
+>  fs/xfs/xfs_inode_item.h            | 2 +-
+>  fs/xfs/xfs_ioctl.h                 | 2 +-
+>  fs/xfs/xfs_ioctl32.h               | 2 +-
+>  fs/xfs/xfs_iomap.h                 | 2 +-
+>  fs/xfs/xfs_iops.h                  | 2 +-
+>  fs/xfs/xfs_itable.h                | 2 +-
+>  fs/xfs/xfs_linux.h                 | 2 +-
+>  fs/xfs/xfs_log.h                   | 2 +-
+>  fs/xfs/xfs_log_priv.h              | 2 +-
+>  fs/xfs/xfs_mount.h                 | 2 +-
+>  fs/xfs/xfs_mru_cache.h             | 2 +-
+>  fs/xfs/xfs_ondisk.h                | 2 +-
+>  fs/xfs/xfs_qm.h                    | 2 +-
+>  fs/xfs/xfs_quota.h                 | 2 +-
+>  fs/xfs/xfs_refcount_item.h         | 2 +-
+>  fs/xfs/xfs_reflink.h               | 2 +-
+>  fs/xfs/xfs_rmap_item.h             | 2 +-
+>  fs/xfs/xfs_rtalloc.h               | 2 +-
+>  fs/xfs/xfs_stats.h                 | 2 +-
+>  fs/xfs/xfs_super.h                 | 2 +-
+>  fs/xfs/xfs_symlink.h               | 2 +-
+>  fs/xfs/xfs_sysctl.h                | 2 +-
+>  fs/xfs/xfs_sysfs.h                 | 2 +-
+>  fs/xfs/xfs_trace.h                 | 2 +-
+>  fs/xfs/xfs_trans.h                 | 2 +-
+>  fs/xfs/xfs_trans_priv.h            | 2 +-
+>  92 files changed, 92 insertions(+), 92 deletions(-)
+> 
+> diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+> index 6143117770e9..fc87ea9f6843 100644
+> --- a/fs/xfs/kmem.h
+> +++ b/fs/xfs/kmem.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+> index c0352edc8e41..f3fd0ee9a7f7 100644
+> --- a/fs/xfs/libxfs/xfs_ag_resv.h
+> +++ b/fs/xfs/libxfs/xfs_ag_resv.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>  /*
+>   * Copyright (C) 2016 Oracle.  All Rights Reserved.
+>   * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
+> index a851bf77f17b..6c22b12176b8 100644
+> --- a/fs/xfs/libxfs/xfs_alloc.h
+> +++ b/fs/xfs/libxfs/xfs_alloc.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_alloc_btree.h b/fs/xfs/libxfs/xfs_alloc_btree.h
+> index 047f09f0be3c..a5b998e950fe 100644
+> --- a/fs/xfs/libxfs/xfs_alloc_btree.h
+> +++ b/fs/xfs/libxfs/xfs_alloc_btree.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+> index 0d2d05908537..db4717657ca1 100644
+> --- a/fs/xfs/libxfs/xfs_attr.h
+> +++ b/fs/xfs/libxfs/xfs_attr.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
+> index 6dd2d937a42a..5be6be309302 100644
+> --- a/fs/xfs/libxfs/xfs_attr_leaf.h
+> +++ b/fs/xfs/libxfs/xfs_attr_leaf.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
+>   * Copyright (c) 2013 Red Hat, Inc.
+> diff --git a/fs/xfs/libxfs/xfs_attr_remote.h b/fs/xfs/libxfs/xfs_attr_remote.h
+> index 6fb4572845ce..e1144f22b005 100644
+> --- a/fs/xfs/libxfs/xfs_attr_remote.h
+> +++ b/fs/xfs/libxfs/xfs_attr_remote.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2013 Red Hat, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_attr_sf.h b/fs/xfs/libxfs/xfs_attr_sf.h
+> index aafa4fe70624..bb004fb7944a 100644
+> --- a/fs/xfs/libxfs/xfs_attr_sf.h
+> +++ b/fs/xfs/libxfs/xfs_attr_sf.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_bit.h b/fs/xfs/libxfs/xfs_bit.h
+> index 99017b8df292..a04f266ae644 100644
+> --- a/fs/xfs/libxfs/xfs_bit.h
+> +++ b/fs/xfs/libxfs/xfs_bit.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+> index f3259ad5c22c..6028a3c825ba 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.h
+> +++ b/fs/xfs/libxfs/xfs_bmap.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2006 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_bmap_btree.h b/fs/xfs/libxfs/xfs_bmap_btree.h
+> index 29b407d053b4..72bf74c79fb9 100644
+> --- a/fs/xfs/libxfs/xfs_bmap_btree.h
+> +++ b/fs/xfs/libxfs/xfs_bmap_btree.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002-2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+> index 8626c5a81aad..10e50cbacacf 100644
+> --- a/fs/xfs/libxfs/xfs_btree.h
+> +++ b/fs/xfs/libxfs/xfs_btree.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+> index 53e503b6f186..6e25de6621e4 100644
+> --- a/fs/xfs/libxfs/xfs_da_btree.h
+> +++ b/fs/xfs/libxfs/xfs_da_btree.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+>   * Copyright (c) 2013 Red Hat, Inc.
+> diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+> index 08c0a4d98b89..059ac108b1b3 100644
+> --- a/fs/xfs/libxfs/xfs_da_format.h
+> +++ b/fs/xfs/libxfs/xfs_da_format.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+>   * Copyright (c) 2013 Red Hat, Inc.
+> diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
+> index 7c28d7608ac6..d119f0fda166 100644
+> --- a/fs/xfs/libxfs/xfs_defer.h
+> +++ b/fs/xfs/libxfs/xfs_defer.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>  /*
+>   * Copyright (C) 2016 Oracle.  All Rights Reserved.
+>   * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+> index 033777e282f2..e55378640b05 100644
+> --- a/fs/xfs/libxfs/xfs_dir2.h
+> +++ b/fs/xfs/libxfs/xfs_dir2.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
+> index 01ee0b926572..44c6a77cba05 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_priv.h
+> +++ b/fs/xfs/libxfs/xfs_dir2_priv.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
+> index 79e6c4fb1d8a..9c58ab8648f5 100644
+> --- a/fs/xfs/libxfs/xfs_errortag.h
+> +++ b/fs/xfs/libxfs/xfs_errortag.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>  /*
+>   * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
+>   * Copyright (C) 2017 Oracle.
+> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+> index 592f1c12ad36..f2228d9e317a 100644
+> --- a/fs/xfs/libxfs/xfs_format.h
+> +++ b/fs/xfs/libxfs/xfs_format.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+> index 245188e4f6d3..84bcffa87753 100644
+> --- a/fs/xfs/libxfs/xfs_fs.h
+> +++ b/fs/xfs/libxfs/xfs_fs.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: LGPL-2.1
+> +/* SPDX-License-Identifier: LGPL-2.1 */
+>  /*
+>   * Copyright (c) 1995-2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+> diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+> index 272005ac8c88..99e796256c5d 100644
+> --- a/fs/xfs/libxfs/xfs_health.h
+> +++ b/fs/xfs/libxfs/xfs_health.h
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>  /*
+>   * Copyright (C) 2019 Oracle.  All Rights Reserved.
+>   * Author: Darrick J. Wong <darrick.wong@oracle.com>
+> diff --git a/fs/xfs/l
