@@ -2,124 +2,158 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC638C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4063EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F69206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13147206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VGkzy6jY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgELNRA (ORCPT
+        id S1730108AbgELNRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:17:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48918 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgELNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:16:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12F75AC64;
-        Tue, 12 May 2020 13:17:00 +0000 (UTC)
-Date:   Tue, 12 May 2020 15:16:55 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <20200512131655.GE17734@linux-b0ei>
-References: <20200506211523.15077-1-keescook@chromium.org>
+        Tue, 12 May 2020 09:17:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31805 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728085AbgELNRQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:17:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589289434;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AfyFJp14Em5eun2MnpR0ECXxjVn+ZY1Q40CAO8H54Xk=;
+        b=VGkzy6jY8pEgBY0Y+LKs5hrMGVOh6EhRloJphCTNZ8QSamOmgbNwCCLL/AwK3H79QGRafP
+        4hMXQM0DrchQYDjoQ55kYuSxdMEvX6cEZmApgmGX0HpiRLRsPKIg3ACDnOdIgHLynBETvW
+        iQgQvmriokh2+7elAfvoePmPewUv+Xs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-JyLrBjopMn2UUB8-ic6Ftw-1; Tue, 12 May 2020 09:17:10 -0400
+X-MC-Unique: JyLrBjopMn2UUB8-ic6Ftw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A6A119200C2;
+        Tue, 12 May 2020 13:17:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 868FB60BF1;
+        Tue, 12 May 2020 13:17:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200511215101.302530-1-Jason@zx2c4.com>
+References: <20200511215101.302530-1-Jason@zx2c4.com> <CAHmME9oXiTmVuOYmG=K3ijWK+zP2yB9a2CFjbLx_5fkDiH30Tg@mail.gmail.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel-hardening@lists.openwall.com,
+        Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH v3] security/keys: rewrite big_key crypto to use library interface
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506211523.15077-1-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2620779.1589289425.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 12 May 2020 14:17:05 +0100
+Message-ID: <2620780.1589289425@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-05-06 14:15:17, Kees Cook wrote:
-> Hi!
-> 
-> This is my stab at rearranging a few things based on Pavel's series. Most
-> things remain the same; I just tweaked how defaults are arranged and
-> detected and expanded the wording in a few places. Pavel, how does this
-> v3 look to you?
-> 
-> Pavel's original cover letter:
-> 
-> pstore /mnt/console-ramoops-0 outputs only messages below the console
-> loglevel, and our console loglevel is set to 3 due to slowness of
-> serial console. Which means only errors and worse types of messages
-> are recorded. There is no way to have different log levels for
-> different consoles.
-> 
-> This patch series adds a new option to ramoops: max_reason that enables
-> it to collect kmdesg dumps for other reasons beside oops and panics.
+Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 
-I was a bit confused by the above explanation. It talks about two
-different numbering schemes:
+> -	/* no ->update(); don't add it without changing big_key_crypt() nonce =
+*/
+> +	/* no ->update(); don't add it without changing chacha20poly1305's non=
+ce
 
-   + console loglevels: emerg, alert, crit, err, warning, ...
-   + dump reason: panic, oops, emerg, restart, halt, poweroff
+Note that ->update() doesn't have to modify the contents of the key, but c=
+an
+just rather replace them entirely.  See attached.  The actual work is done=
+ in
+big_key_preparse(); all big_key_update() has to do is apply it and dispose=
+ of
+the old payload.
 
-This difference and also the jump from consoles to ramoops is far from
-obvious.
+David
+---
+commit 724e76c185d517f35ead4f72f9958850c9218f4d
+Author: David Howells <dhowells@redhat.com>
+Date:   Tue May 12 14:03:53 2020 +0100
 
-My understanding is the following:
+    keys: Implement update for the big_key type
+    =
 
-It is not possible to set loglevel per console. The global value must
-be set by the slowest one. This prevents seeing all messages even
-on fast consoles.
+    Implement the ->update op for the big_key type.
+    =
 
-Alternative solution is to dump all messages using ramoops. The
-problem is that it currently works only during Oops and panic
-situation. This is solved by this patchset.
+    Signed-off-by: David Howells <dhowells@redhat.com>
 
+diff --git a/include/keys/big_key-type.h b/include/keys/big_key-type.h
+index 3fee04f81439..988d90d77f53 100644
+--- a/include/keys/big_key-type.h
++++ b/include/keys/big_key-type.h
+@@ -18,5 +18,6 @@ extern void big_key_revoke(struct key *key);
+ extern void big_key_destroy(struct key *key);
+ extern void big_key_describe(const struct key *big_key, struct seq_file *=
+m);
+ extern long big_key_read(const struct key *key, char *buffer, size_t bufl=
+en);
++extern int big_key_update(struct key *key, struct key_preparsed_payload *=
+prep);
+ =
 
-OK, I personally see this as two separate problems:
+ #endif /* _KEYS_BIG_KEY_TYPE_H */
+diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+index d43f3daab2b8..dd708e8f13c0 100644
+--- a/security/keys/big_key.c
++++ b/security/keys/big_key.c
+@@ -47,7 +47,7 @@ struct key_type key_type_big_key =3D {
+ 	.destroy		=3D big_key_destroy,
+ 	.describe		=3D big_key_describe,
+ 	.read			=3D big_key_read,
+-	/* no ->update(); don't add it without changing chacha20poly1305's nonce=
+ */
++	.update			=3D big_key_update,
+ };
+ =
 
-   1. Missing support to set loglevel per console.
-   2. Missing support to dump messages for other reasons.
+ /*
+@@ -191,6 +191,23 @@ void big_key_destroy(struct key *key)
+ 	key->payload.data[big_key_data] =3D NULL;
+ }
+ =
 
-I would remove the paragraph about console log levels completely.
-It is your reason to use ramoops. But it is not reason to modify
-the logic about max_reason.
++/*
++ * Update a big key
++ */
++int big_key_update(struct key *key, struct key_preparsed_payload *prep)
++{
++	int ret;
++
++	ret =3D key_payload_reserve(key, prep->datalen);
++	if (ret < 0)
++		return ret;
++
++	if (key_is_positive(key))
++		big_key_destroy(key);
++
++	return generic_key_instantiate(key, prep);
++}
++
+ /*
+  * describe the big_key key
+  */
 
-
-Now, the max_reason logic makes sense only when all the values
-have some ordering. Is this the case?
-
-I see it as two distinct sets:
-
-   + panic, oops, emerg: describe how critical is an error situation
-   + restart, halt, poweroff: describe behavior when the system goes down
-
-Let's say that panic is more critical than oops. Is restart more
-critical than halt?
-
-If you want the dump during restart. Does it mean that you want it
-also during emergency situation?
-
-My fear is that this patchset is going to introduce user interface
-(max_reason) with a weird logic. IMHO, max_reason is confusing even
-in the code and we should not spread this to users.
-
-Is there any reason why the existing printk.always_kmsg_dump option
-is not enough for you?
-
-Best Regards,
-Petr
