@@ -2,83 +2,123 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1009CC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A00C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37FA206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C6020753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:57:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mBs0GJsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgELL4y (ORCPT
+        id S1729810AbgELL5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:56:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:53370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELL4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:56:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AEAD30E;
-        Tue, 12 May 2020 04:56:53 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECEF53F71E;
-        Tue, 12 May 2020 04:56:50 -0700 (PDT)
-Subject: Re: [PATCH v2] memory/samsung: reduce unnecessary mutex lock area
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        Bernard Zhao <bernard@vivo.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>
-References: <edf839ce-cc61-73dc-e017-b49648b94d1c@web.de>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <c910fa00-c27b-9854-9ab2-6f37c28b87f6@arm.com>
-Date:   Tue, 12 May 2020 12:56:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 May 2020 07:57:18 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:63192 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgELL5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:57:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1589284637; x=1620820637;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=TuErZGYEF/r+cILDRcbHLjrkMjcNpTWU7RttOJ6Gqis=;
+  b=mBs0GJsNyuzO/StSCI01xvHXeUhFVw4n+11n9+uxxnpLkZPMKdR+SsgS
+   27nyISLACZM7CDuqzoVPzd7MGPggeLmYZghlKFwX0tfDwfwKh1i38YO57
+   MTZOu9UaPOF29FE7YY9bPThNZYv8XKhoGYDYjQlK46y89dp5RvrlRDp/F
+   Q=;
+IronPort-SDR: VWl3qAAAXMla1WDe1JTw39mfWCZTOKYjyvjS9Ed/vVzmlphe9r23FiDhX2eydYmwDFUa0I5jXn
+ TC315Tp7TifQ==
+X-IronPort-AV: E=Sophos;i="5.73,383,1583193600"; 
+   d="scan'208";a="29889184"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 12 May 2020 11:57:13 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id 3AF73A2125;
+        Tue, 12 May 2020 11:57:10 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 12 May 2020 11:57:09 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 12 May 2020 11:56:54 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v8 5/8] mm/damon-test: Add kunit test case for regions age accounting
+Date:   Tue, 12 May 2020 13:53:40 +0200
+Message-ID: <20200512115343.27699-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200512115343.27699-1-sjpark@amazon.com>
+References: <20200512115343.27699-1-sjpark@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <edf839ce-cc61-73dc-e017-b49648b94d1c@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D17UWB003.ant.amazon.com (10.43.161.42) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: SeongJae Park <sjpark@amazon.de>
 
+After merges of regions, each region should know their last shape in
+proper way to measure the changes from the last modification and reset
+the age if the changes are significant.  This commit adds kunit test
+cases checking whether the regions are knowing their last shape properly
+after merges of regions.
 
-On 5/12/20 12:40 PM, Markus Elfring wrote:
->> Maybe dmc->df->lock seems not needed to protect "if (ret)
->> & dev_warn" branch. Maybe this change speed up the code a bit.
-> 
-> I suggest to improve also this commit message.
-> 
-> * Please reduce uncertainty.
-> 
-> * An imperative wording is probably preferred, isn't it?
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=152036d1379ffd6985262743dcf6b0f9c75f83a4#n151
-> 
-> * Will it be more appropriate to refer to the transformation “Reduce the lock scope”?
-> 
-> * Would you like to add the tag “Fixes” to the change description?
-> 
-> Regards,
-> Markus
-> 
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ mm/damon-test.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thank you Markus for providing to Bernard helpful suggestions.
+diff --git a/mm/damon-test.h b/mm/damon-test.h
+index 851c2062a480..c7a7f3b9b57f 100644
+--- a/mm/damon-test.h
++++ b/mm/damon-test.h
+@@ -551,6 +551,8 @@ static void damon_test_merge_regions_of(struct kunit *test)
+ 
+ 	unsigned long saddrs[] = {0, 114, 130, 156, 170};
+ 	unsigned long eaddrs[] = {112, 130, 156, 170, 230};
++	unsigned long lsa[] = {0, 114, 130, 156, 184};
++	unsigned long lea[] = {100, 122, 156, 170, 230};
+ 	int i;
+ 
+ 	t = damon_new_task(42);
+@@ -567,6 +569,9 @@ static void damon_test_merge_regions_of(struct kunit *test)
+ 		r = __nth_region_of(t, i);
+ 		KUNIT_EXPECT_EQ(test, r->vm_start, saddrs[i]);
+ 		KUNIT_EXPECT_EQ(test, r->vm_end, eaddrs[i]);
++		KUNIT_EXPECT_EQ(test, r->last_vm_start, lsa[i]);
++		KUNIT_EXPECT_EQ(test, r->last_vm_end, lea[i]);
++
+ 	}
+ 	damon_free_task(t);
+ }
+-- 
+2.17.1
 
-@Bernard please read the link above and send v3
-
-Something like: 'memory/samsung: reduce protected code area in IRQ
-handler' for the subject header would be better.
-Then in the message explain (without 'maybe') that it will speed-up a
-bit this IRQ processing and there is no need to protect return value or
-printing.
-
-Regards,
-Lukasz
