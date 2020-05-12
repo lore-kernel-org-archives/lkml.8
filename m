@@ -2,141 +2,127 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58874C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16D7C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7352071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876DA2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6meoNPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgELCOE (ORCPT
+        id S1728661AbgELCOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:14:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:44706 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgELCOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:14:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D777C1FB;
-        Mon, 11 May 2020 19:14:02 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.73.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DC573F71E;
-        Mon, 11 May 2020 19:14:00 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH] arm64/cpufeature: Add ID_AA64MMFR0_PARANGE_MASK
-Date:   Tue, 12 May 2020 07:43:26 +0530
-Message-Id: <1589249606-27177-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 11 May 2020 22:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgELCOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 22:14:33 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E3EC061A0C;
+        Mon, 11 May 2020 19:14:33 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id yc10so7772708ejb.12;
+        Mon, 11 May 2020 19:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6gJvFOJgRmCUuHQ9KCv0CAQBXJvMZ3ZEqpa1faKKd80=;
+        b=D6meoNPiM/kyzO8itLiSOkXRVo2//1y42iO0SvsJphtgJc+98LNMkQyuYCgzAGZueb
+         MCqVzNdD6z41HnSMAh6Nq4oQc+co5pwat8b0NK+qxYWE4hBAcuwkjPeFRL6eMIPtmsOc
+         CHgXW0JqigelR2oxmJ6ZpGfv7ABk4iGu5Le9PUPfojeEZpjHcpl+bBDOqejGvLFgHLNP
+         L64GyHrJFQ+dXLZeKuHP5qNfLXqcMotUKFo+0JjY+SeZ7aSKN+pky2j9aB2GCQxxYEOe
+         0KK7mN6qN0ZprKspu11gTihjR5yE0Nts47MfgiP2KZjQInixK+KnscSeSP26B5iI+rT+
+         KZKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6gJvFOJgRmCUuHQ9KCv0CAQBXJvMZ3ZEqpa1faKKd80=;
+        b=PP02KZSjYSsLQyDBObydjsD4RxD4avLhg+xX7eSrCLklg3p0JOXfC1XW1dJT9h0Z47
+         hMJgUbPpMSzp3753/hPBOyR7hH05+n7sTbRKAKV5DHumE4mVFlyzKQxgminFdxzjCmfL
+         nXOXWkzHPMfw4dJvKRsk0EfGil58gxfvrdu+Szg8358BOdbn3ag/ssDI5Id3iizHkQIs
+         3JjKjKN3fCKkMm8Q+8vEST5T4e/5HQLZmegIdoSMux9E0MvS8K6Sgfjw6wOMlZSitNXI
+         18e5WzoXI+8/hqzrWX2Fz5M4Nh0OXk6BysbFjnJyDB+dGd4GKxMBec3YX8LAzFF8JWfu
+         kTkA==
+X-Gm-Message-State: AGi0PuaCMZOkrL8cfhYjQtGuyQWSJCIK+GcQClHxXKlmgQmio/YtksSO
+        ImBtyLPZ0LRDn/o2o6nZyDRdHrf1rPEWWTQerUM=
+X-Google-Smtp-Source: APiQypKvoGJ05XwMC2ywwTCNcJ1snijF1Y8YHOxuAycdEcZGBHIMpEuM9QUFeK3xCS81J/YmfWca02XITf2P9jmfZVw=
+X-Received: by 2002:a17:907:2155:: with SMTP id rk21mr16482845ejb.163.1589249672229;
+ Mon, 11 May 2020 19:14:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
+ <20200511091142.208787-3-daniel.vetter@ffwll.ch> <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
+In-Reply-To: <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Tue, 12 May 2020 12:14:20 +1000
+Message-ID: <CAPM=9tyukFdDiM6-Mxd+ouXCt9Z4t6LRZwxq7DGoX9drrHnMdQ@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Olof Johansson <olof@lixom.net>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This replaces multiple open encoding (0x7) with ID_AA64MMFR0_PARANGE_MASK
-thus cleaning the clutter. It modifies an existing ID_AA64MMFR0 helper and
-introduces a new one i.e id_aa64mmfr0_iparange() and id_aa64mmfr0_parange()
-respectively.
+On Mon, 11 May 2020 at 19:37, Oded Gabbay <oded.gabbay@gmail.com> wrote:
+>
+> On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> >
+> > It's the default.
+> Thanks for catching that.
+>
+> >
+> > Also so much for "we're not going to tell the graphics people how to
+> > review their code", dma_fence is a pretty core piece of gpu driver
+> > infrastructure. And it's very much uapi relevant, including piles of
+> > corresponding userspace protocols and libraries for how to pass these
+> > around.
+> >
+> > Would be great if habanalabs would not use this (from a quick look
+> > it's not needed at all), since open source the userspace and playing
+> > by the usual rules isn't on the table. If that's not possible (because
+> > it's actually using the uapi part of dma_fence to interact with gpu
+> > drivers) then we have exactly what everyone promised we'd want to
+> > avoid.
+>
+> We don't use the uapi parts, we currently only using the fencing and
+> signaling ability of this module inside our kernel code. But maybe I
+> didn't understand what you request. You want us *not* to use this
+> well-written piece of kernel code because it is only used by graphics
+> drivers ?
+> I'm sorry but I don't get this argument, if this is indeed what you meant.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kvmarm@lists.cs.columbia.edu
+We would rather drivers using a feature that has requirements on
+correct userspace implementations of the feature have a userspace that
+is open source and auditable.
 
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This applies after (https://patchwork.kernel.org/patch/11541893/).
+Fencing is tricky, cross-device fencing is really tricky, and having
+the ability for a closed userspace component to mess up other people's
+drivers, think i915 shared with closed habana userspace and shared
+fences, decreases ability to debug things.
 
- arch/arm64/include/asm/cpufeature.h | 11 ++++++++++-
- arch/arm64/kernel/cpufeature.c      |  5 ++---
- arch/arm64/kvm/reset.c              |  9 +++++----
- 3 files changed, 17 insertions(+), 8 deletions(-)
+Ideally we wouldn't offer users known untested/broken scenarios, so
+yes we'd prefer that drivers that intend to expose a userspace fencing
+api around dma-fence would adhere to the rules of the gpu drivers.
 
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index 1291ad5a9ccb..320cfc5b6025 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -706,8 +706,17 @@ void arm64_set_ssbd_mitigation(bool state);
- 
- extern int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
- 
--static inline u32 id_aa64mmfr0_parange_to_phys_shift(int parange)
-+#define ID_AA64MMFR0_PARANGE_MASK 0x7
-+
-+static inline u32 id_aa64mmfr0_parange(u64 mmfr0)
- {
-+	return mmfr0 & ID_AA64MMFR0_PARANGE_MASK;
-+}
-+
-+static inline u32 id_aa64mmfr0_iparange(u64 mmfr0)
-+{
-+	int parange = id_aa64mmfr0_parange(mmfr0);
-+
- 	switch (parange) {
- 	case 0: return 32;
- 	case 1: return 36;
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 30917fe7942a..2c62f7c64a3c 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2185,7 +2185,7 @@ static void verify_sve_features(void)
- void verify_hyp_capabilities(void)
- {
- 	u64 safe_mmfr1, mmfr0, mmfr1;
--	int parange, ipa_max;
-+	int ipa_max;
- 	unsigned int safe_vmid_bits, vmid_bits;
- 
- 	safe_mmfr1 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
-@@ -2201,8 +2201,7 @@ void verify_hyp_capabilities(void)
- 	}
- 
- 	/* Verify IPA range */
--	parange = mmfr0 & 0x7;
--	ipa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
-+	ipa_max = id_aa64mmfr0_iparange(mmfr0);
- 	if (ipa_max < get_kvm_ipa_limit()) {
- 		pr_crit("CPU%d: IPA range mismatch\n", smp_processor_id());
- 		cpu_die_early();
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 841b492ff334..2e4da75d79ea 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -347,10 +347,10 @@ u32 get_kvm_ipa_limit(void)
- 
- void kvm_set_ipa_limit(void)
- {
--	unsigned int ipa_max, pa_max, va_max, parange;
-+	unsigned int ipa_max, pa_max, va_max;
- 
--	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 0x7;
--	pa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
-+	pa_max = id_aa64mmfr0_iparange(read_sanitised_ftr_reg
-+						(SYS_ID_AA64MMFR0_EL1));
- 
- 	/* Clamp the IPA limit to the PA size supported by the kernel */
- 	ipa_max = (pa_max > PHYS_MASK_SHIFT) ? PHYS_MASK_SHIFT : pa_max;
-@@ -411,7 +411,8 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
- 		phys_shift = KVM_PHYS_SHIFT;
- 	}
- 
--	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 7;
-+	parange = id_aa64mmfr0_parange(read_sanitised_ftr_reg
-+						(SYS_ID_AA64MMFR0_EL1));
- 	if (parange > ID_AA64MMFR0_PARANGE_MAX)
- 		parange = ID_AA64MMFR0_PARANGE_MAX;
- 	vtcr |= parange << VTCR_EL2_PS_SHIFT;
--- 
-2.20.1
+I'm not say you have to drop using dma-fence, but if you move towards
+cross-device stuff I believe other drivers would be correct in
+refusing to interact with fences from here.
 
+Dave.
