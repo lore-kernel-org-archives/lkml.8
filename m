@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D02C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021F9C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615F1208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E4020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589265460;
-	bh=XaJzdYSi4MgUFXsfxFcBr/AwcDZLznlRsdGp3exbcNM=;
+	s=default; t=1589265463;
+	bh=dtOykIWdlo6UzWclrcAiB6mjg5q5DPJDz1k6M/Lo4y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IrJr+wpdUp9shKQzWGcRMc2Cm5++1aJmh6nKlQJprxc+/3czmlm2ssk6K++RjqaSN
-	 O/bLXKiB5OKwxD57mBdoLEYgfolGuzV5roUR5U3cWsMDYRSICJb/XY9TAUhQl0Yg3v
-	 N/+UEd/PaGw4UM5gsL89Av0Ec+ac8eZ1HQnAE8PU=
+	b=vR1pGbFAeVToAYahbmc6MmafnXUKpUn5flhTqq7835IF+SEdCaBPEyXbrULvkR8MO
+	 cj/a/iQZg0r07/jFy4/gDDcGNHEKXbopSXkjVDZwXDYlAB2hnJfly2BYafRC1trQ5g
+	 PIDn9buV6zsvQ5vx+GOlpV3kvXIM3sh1g3yXNVrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgELGhj (ORCPT
+        id S1728858AbgELGhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41840 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 02:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgELGhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:37:39 -0400
+        id S1725536AbgELGhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:37:42 -0400
 Received: from localhost (unknown [213.57.247.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C24E20752;
-        Tue, 12 May 2020 06:37:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D46E20733;
+        Tue, 12 May 2020 06:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589265458;
-        bh=XaJzdYSi4MgUFXsfxFcBr/AwcDZLznlRsdGp3exbcNM=;
+        s=default; t=1589265462;
+        bh=dtOykIWdlo6UzWclrcAiB6mjg5q5DPJDz1k6M/Lo4y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XLI8Ef5wYzdiOUNT5ZDhMCz6RpIyQ/FIhTvFlehqtejKfgzBujoAANi1ywV5vIk8N
-         nV+tpEiDxm2wksUhZxNFg1Q6JcXBX9OlnNFfF5nbbU+PH8Il9oyDtgf7RUAo1LrUIq
-         DgK5hy83Lxi/GN0Uj2TYYbucRYwzlFuNSezb7Usk=
+        b=k6mn2kkbxT6O4BTldBDkMmCC6VUbI9c/qM3UDDIQ6MVHhxampn+SD9Hw0UrnOFtf4
+         vlm60XWZismBxKxRsXGzBmn+91HP5sVfdhsf9lokKiUNgNuuK9FGC9dAWfqICsPFL/
+         EyHGAL0tHlhZvy0roKLBQj/Ont3kpt9rdHjcgr3k=
 From:   Leon Romanovsky <leon@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <adech.fo@gmail.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, Michal Marek <mmarek@suse.cz>,
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Ingo Molnar <mingo@kernel.org>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next 1/2] kasan: fix compilation warnings due to missing function prototypes
-Date:   Tue, 12 May 2020 09:37:27 +0300
-Message-Id: <20200512063728.17785-2-leon@kernel.org>
+Subject: [PATCH rdma-next 2/2] kasan: add missing prototypes to fix compilation warnings
+Date:   Tue, 12 May 2020 09:37:28 +0300
+Message-Id: <20200512063728.17785-3-leon@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512063728.17785-1-leon@kernel.org>
 References: <20200512063728.17785-1-leon@kernel.org>
@@ -61,64 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Leon Romanovsky <leonro@mellanox.com>
 
-__asan_report_* function generates the following warnings while compiling
-kernel, add them to the internal header to be aligned with other __asan_*
-function prototypes.
+Use internal kasan header to declare missing prototypes to fix the
+following compilation warnings.
 
-mm/kasan/generic_report.c:130:6: warning: no previous prototype for '__asan_report_load1_noabort' [-Wmissing-prototypes]
-  130 | void __asan_report_load##size##_noabort(unsigned long addr) \
-      |      ^~~~~~~~~~~~~~~~~~
-mm/kasan/generic_report.c:143:1: note: in expansion of macro 'DEFINE_ASAN_REPORT_LOAD'
-  143 | DEFINE_ASAN_REPORT_LOAD(1);
-      | ^~~~~~~~~~~~~~~~~~~~~~~
+mm/kasan/report.c:457:6: warning: no previous prototype for 'report_enabled' [-Wmissing-prototypes]
+  457 | bool report_enabled(void)
+      |      ^~~~~~~~~~~~~~
+mm/kasan/report.c:482:6: warning: no previous prototype for '__kasan_report' [-Wmissing-prototypes]
+  482 | void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+      |      ^~~~~~~~~~~~~~
 
-<...>
-
-mm/kasan/generic_report.c:137:6: warning: no previous prototype for '__asan_report_store1_noabort' [-Wmissing-prototypes]
-  137 | void __asan_report_store##size##_noabort(unsigned long addr) \
-      |      ^~~~~~~~~~~~~~~~~~~
-mm/kasan/generic_report.c:148:1: note: in expansion of macro 'DEFINE_ASAN_REPORT_STORE'
-  148 | DEFINE_ASAN_REPORT_STORE(1);
-      | ^~~~~~~~~~~~~~~~~~~~~~~~
-
-Fixes: 0b24becc810d ("kasan: add kernel address sanitizer infrastructure")
+Fixes: 57b78a62e7f2 ("x86/uaccess, kasan: Fix KASAN vs SMAP")
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 ---
- mm/kasan/kasan.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ mm/kasan/common.c | 3 ---
+ mm/kasan/kasan.h  | 3 +++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index 2906358e42f0..cbb119224330 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -613,9 +613,6 @@ void kasan_free_shadow(const struct vm_struct *vm)
+ }
+ #endif
+
+-extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
+-extern bool report_enabled(void);
+-
+ bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+ {
+ 	unsigned long flags = user_access_save();
 diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index e8f37199d885..d428e588c700 100644
+index d428e588c700..02d54a1d0b2d 100644
 --- a/mm/kasan/kasan.h
 +++ b/mm/kasan/kasan.h
-@@ -230,15 +230,27 @@ void __asan_load16(unsigned long addr);
- void __asan_store16(unsigned long addr);
+@@ -153,6 +153,9 @@ bool check_memory_region(unsigned long addr, size_t size, bool write,
+ void *find_first_bad_addr(void *addr, size_t size);
+ const char *get_bug_type(struct kasan_access_info *info);
 
- void __asan_load1_noabort(unsigned long addr);
-+void __asan_report_load1_noabort(unsigned long addr);
- void __asan_store1_noabort(unsigned long addr);
-+void __asan_report_store1_noabort(unsigned long addr);
- void __asan_load2_noabort(unsigned long addr);
-+void __asan_report_load2_noabort(unsigned long addr);
- void __asan_store2_noabort(unsigned long addr);
-+void __asan_report_store2_noabort(unsigned long addr);
- void __asan_load4_noabort(unsigned long addr);
-+void __asan_report_load4_noabort(unsigned long addr);
- void __asan_store4_noabort(unsigned long addr);
-+void __asan_report_store4_noabort(unsigned long addr);
- void __asan_load8_noabort(unsigned long addr);
-+void __asan_report_load8_noabort(unsigned long addr);
- void __asan_store8_noabort(unsigned long addr);
-+void __asan_report_store8_noabort(unsigned long addr);
- void __asan_load16_noabort(unsigned long addr);
-+void __asan_report_load16_noabort(unsigned long addr);
- void __asan_store16_noabort(unsigned long addr);
-+void __asan_report_store16_noabort(unsigned long addr);
-+void __asan_report_load_n_noabort(unsigned long addr, size_t size);
-+void __asan_report_store_n_noabort(unsigned long addr, size_t size);
-
- void __asan_set_shadow_00(const void *addr, size_t size);
- void __asan_set_shadow_f1(const void *addr, size_t size);
++bool report_enabled(void);
++void __kasan_report(unsigned long addr, size_t size, bool is_write,
++		    unsigned long ip);
+ bool kasan_report(unsigned long addr, size_t size,
+ 		bool is_write, unsigned long ip);
+ void kasan_report_invalid_free(void *object, unsigned long ip);
 --
 2.26.2
 
