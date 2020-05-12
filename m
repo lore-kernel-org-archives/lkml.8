@@ -3,139 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D12C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BA0C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BAE206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A689206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgELORa (ORCPT
+        id S1730419AbgELORd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:17:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2956 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729336AbgELORa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:17:30 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CEBH1m009256;
-        Tue, 12 May 2020 10:17:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws5f45jh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 10:17:12 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04CEBVxM010678;
-        Tue, 12 May 2020 10:17:11 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws5f45gf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 10:17:11 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04CEGHW2001007;
-        Tue, 12 May 2020 14:17:09 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 30wm55en15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 14:17:09 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04CEH7du46203022
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 14:17:07 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAF424C064;
-        Tue, 12 May 2020 14:17:06 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC2FB4C046;
-        Tue, 12 May 2020 14:17:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.144.67])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 May 2020 14:17:05 +0000 (GMT)
-Message-ID: <1589293025.5098.53.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Tue, 12 May 2020 10:17:05 -0400
-In-Reply-To: <09ee169cfd70492cb526bcb30f99d693@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-         <1588957684.5146.70.camel@linux.ibm.com>
-         <414644a0be9e4af880452f4b5079aba1@huawei.com>
-         <1589233010.5091.49.camel@linux.ibm.com>
-         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 12 May 2020 10:17:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:55932 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729336AbgELORb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:17:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30DF230E;
+        Tue, 12 May 2020 07:17:31 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 032BB3F71E;
+        Tue, 12 May 2020 07:17:29 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:17:23 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, paulus@ozlabs.org,
+        benh@kernel.crashing.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/kvm: silence kmemleak false positives
+Message-ID: <20200512141723.GB14943@gaia>
+References: <87y2pybu38.fsf@mpe.ellerman.id.au>
+ <44807D44-98D9-431C-9266-08014C4B47F6@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_03:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 spamscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005120106
+In-Reply-To: <44807D44-98D9-431C-9266-08014C4B47F6@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-12 at 07:54 +0000, Roberto Sassu wrote:
-> > > > Roberto, EVM is only triggered by IMA, unless you've modified the
-> > > > kernel to do otherwise.
-> > >
-> > > EVM would deny xattr/attr operations even if IMA is disabled in the
-> > > kernel configuration. For example, evm_setxattr() returns the value
-> > > from evm_protect_xattr(). IMA is not involved there.
+On Mon, May 11, 2020 at 07:43:30AM -0400, Qian Cai wrote:
+> On May 11, 2020, at 7:15 AM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > There is kmemleak_alloc_phys(), which according to the docs can be used
+> > for tracking a phys address.
 > > 
-> > Commit ae1ba1676b88 ("EVM: Allow userland to permit modification of
-> > EVM-protected metadata") introduced EVM_ALLOW_METADATA_WRITES
-> > to allow writing the EVM portable and immutable file signatures.
+> > Did you try that?
 > 
-> According to Documentation/ABI/testing/evm:
+> Catalin, feel free to give your thoughts here.
 > 
-> Note that once a key has been loaded, it will no longer be
-> possible to enable metadata modification.
+> My understanding is that it seems the doc is a bit misleading.
+> kmemleak_alloc_phys() is to allocate kmemleak objects for a physical
+> address range, so  kmemleak could scan those memory pointers within
+> for possible referencing other memory. It was only used in memblock so
+> far, but those new memory allocations here contain no reference to
+> other memory.
+> 
+> In this case, we have already had kmemleak objects for those memory
+> allocation. It is just that other pointers reference those memory by
+> their physical address which is a known kmemleak limitation won’t be
+> able to track the the connection. Thus, we always use
+> kmemleak_ignore() to not reporting those as leaks and don’t scan those
+> because they do not contain other memory reference.
 
-Not any key, but the HMAC key.
- 
-2         Permit modification of EVM-protected metadata at
-          runtime. Not supported if HMAC validation and
-          creation is enabled.
+Indeed. I replied directly to Michael along the same lines.
 
-Each time the EVM protected file metadata is updated, the EVM HMAC is
-updated, assuming the existing EVM HMAC is valid.  Userspace should
-not have access to the HMAC key, so we only allow writing EVM
-signatures.
-
-The only difference between writing the original EVM signature and the
-new portable and immutable signature is the security.ima xattr
-requirement.  Since the new EVM signature does not include the
-filesystem specific data, something else needs to bind the file
-metadata to the file data.  Thus the IMA xattr requirement.
-
-Assuming that the new EVM signature is written last, as long as there
-is an IMA xattr, there shouldn't be a problem writing the new EVM
-signature.
-
-Mimi
+-- 
+Catalin
