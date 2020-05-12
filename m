@@ -2,38 +2,40 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF8DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710ADC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D522206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A4A206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgELLxa (ORCPT
+        id S1729713AbgELLxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:53:30 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52851 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729207AbgELLxa (ORCPT
+        Tue, 12 May 2020 07:53:34 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:44025 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729566AbgELLxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:53:30 -0400
+        Tue, 12 May 2020 07:53:32 -0400
 X-Originating-IP: 87.231.134.186
 Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3F43240004;
-        Tue, 12 May 2020 11:53:28 +0000 (UTC)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C59511BF213;
+        Tue, 12 May 2020 11:53:30 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
 Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH v2 0/3] TTY improve n_gsm support
-Date:   Tue, 12 May 2020 13:53:20 +0200
-Message-Id: <20200512115323.1447922-1-gregory.clement@bootlin.com>
+Subject: [PATCH v2 3/3] tty: n_gsm: Fix waking up upper tty layer when room available
+Date:   Tue, 12 May 2020 13:53:23 +0200
+Message-Id: <20200512115323.1447922-4-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512115323.1447922-1-gregory.clement@bootlin.com>
+References: <20200512115323.1447922-1-gregory.clement@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,42 +43,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-This series is the second version of patch improving n_gms support
-especially with TELIT LE910. However the fix should benefit to any
-modem supporting cmux.
-
-The first patch is just about improving debugging output.
-
-The second one removes a tty optimization which make the LE910 hang.
-
-The last one fixes an issue observed on the LE910 but should benefit
-to all the modem. We observed that pretty quickly the transfer done
-using the virtual tty were blocked. We found that it was due of a
-wakeup to the real tty. Without this fix, the real tty wait for
+Warn the upper layer when n_gms is ready to receive data
+again. Without this the associated virtual tty remains blocked
 indefinitely.
 
-Thanks to Jiri Slaby for the review.
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-Changelog:
- v1 -> v2:
- - don't replace the pr_info by pr_debug
- - remove the superfluous printk("\n");
- - use --follow option with git log to find the original commit to fix
- - use tty_port_tty_wakeup
- - use 'for' loop instead of 'while'
-
-Gregory
-
-Gregory CLEMENT (3):
-  tty: n_gsm: Improve debug output
-  tty: n_gsm: Fix SOF skipping
-  tty: n_gsm: Fix waking up upper tty layer when room available
-
- drivers/tty/n_gsm.c | 48 +++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index d8d196645500..69200bd411f7 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -663,7 +663,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+  *	FIXME: lock against link layer control transmissions
+  */
+ 
+-static void gsm_data_kick(struct gsm_mux *gsm)
++static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+@@ -695,6 +695,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
++
++		if (dlci) {
++			tty_port_tty_wakeup(&dlci->port);
++		} else {
++			int i = 0;
++
++			for (i = 0; i < NUM_DLCI; i++) {
++				struct gsm_dlci *dlci;
++
++				dlci = gsm->dlci[i];
++				if (dlci == NULL) {
++					i++;
++					continue;
++				}
++
++				tty_port_tty_wakeup(&dlci->port);
++			}
++		}
+ 	}
+ }
+ 
+@@ -746,7 +764,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
+ 	/* Add to the actual output queue */
+ 	list_add_tail(&msg->list, &gsm->tx_list);
+ 	gsm->tx_bytes += msg->len;
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, dlci);
+ }
+ 
+ /**
+@@ -1207,7 +1225,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
+ 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
+ 		/* Kick the link in case it is idling */
+ 		spin_lock_irqsave(&gsm->tx_lock, flags);
+-		gsm_data_kick(gsm);
++		gsm_data_kick(gsm, NULL);
+ 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
+ 		break;
+ 	case CMD_FCOFF:
+@@ -2529,7 +2547,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
+ 	/* Queue poll */
+ 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
+ 	spin_lock_irqsave(&gsm->tx_lock, flags);
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, NULL);
+ 	if (gsm->tx_bytes < TX_THRESH_LO) {
+ 		gsm_dlci_data_sweep(gsm);
+ 	}
 -- 
 2.26.2
 
