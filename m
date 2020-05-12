@@ -2,81 +2,177 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0522C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705D7C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66B7020740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAC720747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="MvD3LboV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJQkdNA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbgELViv (ORCPT
+        id S1731429AbgELVjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:38:51 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:56637 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgELViv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:38:51 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c74cb3a6;
-        Tue, 12 May 2020 21:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=QHZdxdAznvbCsAtmKjiWvIM9Rkw=; b=MvD3Lb
-        oVsAoirYLJSrJWid+5RlALnx2IRewi5D0XBFtensY47q3F11/1CtwFB5Eegu/rI1
-        Pid6Wx2EvUYjZPfmZGjw9K8P6wYoy6QkCFrPmSyueGYQT0ehJ+ObAbPUH/MO80YR
-        lgG2lkNpdMeTNMDZJrtZbEKLjK/ohUsVlltq0XSXirzYqVDik4HdhkLxhPByleUi
-        nIVklcGJio1YXP5DG4ogblcqJZJ0R7MUkdxyQhzMhK8vZhyd40aaYk8jf5X45I5k
-        3BNLQAauYx/2QdATKBVB+tr2WW5c6Ps2riW9WvCxzbdw/kouf6sYczcIznGhlmMf
-        v+IXNN0GTccJmRDQ==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f53c83df (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 12 May 2020 21:25:19 +0000 (UTC)
-Received: by mail-il1-f181.google.com with SMTP id i16so13931834ils.12;
-        Tue, 12 May 2020 14:38:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuY6o6lu3NBCAfLDr9gJXtIkUWEA4C1W+rxpmoLqJ0VIYWS/jhbf
-        3fwi8NXmonZdVSTK685BGcsurJDyP9L5vLDtA/0=
-X-Google-Smtp-Source: APiQypJzMvF0pm2HCVQ5PwdpsSCqC6FjWIGTFESdbJ/delouG0Mi5pZJuKDQJHB5ZYDpPpJ7fdbGT//MYh2mBmx/jhU=
-X-Received: by 2002:a92:8752:: with SMTP id d18mr6109118ilm.224.1589319528551;
- Tue, 12 May 2020 14:38:48 -0700 (PDT)
+        Tue, 12 May 2020 17:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729646AbgELVjN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:39:13 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66459C061A0C;
+        Tue, 12 May 2020 14:39:13 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l12so6776412pgr.10;
+        Tue, 12 May 2020 14:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HyK43tfuo+QGZbEC4deEKxgiv6iV0m2ya0qSqKqAJ3Y=;
+        b=hJQkdNA/h0Z2/CW+og490xBYWsoGiKpS5zv7m8MFiH/E+mdbzj0lbFaAW7yL0NrwiW
+         /ddQpsJyevWtaL+eygrIUhcJlPoJbqvKLYSPGTBabBwmXSBAHAJv32uR/p4ChM7xAqvM
+         P9kv5n34T0loteo+trVSCQ4qLVEOL0mNw6xnza5ho5uwElhTJaWLx+eTIvbRAwP5OK5m
+         jNPTUs1qq5MONgWxbt/LgQYdUVTzvpJFiOjWwqlGbP+Ii8fQh6BX2ry6IYQ/cpiXDRqs
+         uMiTJItf1jYi9qCZ+FQchvKoBus11EQq2Y5veVdUmUpQ7hIsduErgS9AZOmKPs8z5Xep
+         0Y6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HyK43tfuo+QGZbEC4deEKxgiv6iV0m2ya0qSqKqAJ3Y=;
+        b=tnkWu3/OxM8H3hOIvt9oi2dasaQ43n6OiaaqrTdr2tla0UrmTJAjT9n3Mgw31KyUvc
+         q9HV3CLW+e1Y1JcuDQWvgb2MZbqUG0QAssqoh6oC+rckIselVWNfvMWiQvVt1GYEOIgX
+         1bCpgWmOKcyKTOXUYA4RAan9Ik09UhOpH42fY67MtQj/bdo+gYzKJTjmHNx0pX0u7n8C
+         hsUrGxs3AawWvUIexSBxxMDlr34a21T5yKC4EtdbLD2CzGNF8Jfk8mjUMtUqauPXXlPs
+         vsR/H1IriqhIMl5+LX5LdX47KdoqixQztnxlyiys2cGbJaQ7HPpccCSqTk17ROHs4JnG
+         OECA==
+X-Gm-Message-State: AGi0PuZgzeFjumbqo2HsAZyesyKDDpb6EzYfvlECDTLol0KGq/EZLYIj
+        O1+cC6egIorq/S0MI2+C54Tl0LcE
+X-Google-Smtp-Source: APiQypLyntx8EGBJacRvgm7IGFso4KBY35yEQ77fTYe06WCVyrwwQxLlkKXckFIKjmPl1mohB6Dqbg==
+X-Received: by 2002:a63:1054:: with SMTP id 20mr19155904pgq.79.1589319552771;
+        Tue, 12 May 2020 14:39:12 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id gv24sm13584271pjb.6.2020.05.12.14.39.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 14:39:12 -0700 (PDT)
+Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README
+ into top-level one
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+ <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
+ <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
+ <20200512163022.GI2869@paulmck-ThinkPad-P72>
+ <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <6d162e69-5d2f-1fbf-1588-ab19c30e7311@gmail.com>
+Date:   Wed, 13 May 2020 06:39:03 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <CAHmME9oXiTmVuOYmG=K3ijWK+zP2yB9a2CFjbLx_5fkDiH30Tg@mail.gmail.com>
- <20200511215101.302530-1-Jason@zx2c4.com> <2620780.1589289425@warthog.procyon.org.uk>
-In-Reply-To: <2620780.1589289425@warthog.procyon.org.uk>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 12 May 2020 15:38:37 -0600
-X-Gmail-Original-Message-ID: <CAHmME9q-TxHo5o63rxHzKwV_kWV9u+MoxBQM5Yz3hODGCj7RhQ@mail.gmail.com>
-Message-ID: <CAHmME9q-TxHo5o63rxHzKwV_kWV9u+MoxBQM5Yz3hODGCj7RhQ@mail.gmail.com>
-Subject: Re: [PATCH v3] security/keys: rewrite big_key crypto to use library interface
-To:     David Howells <dhowells@redhat.com>
-Cc:     keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel-hardening@lists.openwall.com,
-        Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+From 96fa6680e3b990633ecbb6d11acf03a161b790bd Mon Sep 17 00:00:00 2001
+From: Akira Yokosawa <akiyks@gmail.com>
+Date: Sun, 10 May 2020 15:12:57 +0900
+Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README into top-level one
 
-So long as that ->update function:
-1. Deletes the old on-disk data.
-2. Deletes the old key from the inode.
-3. Generates a new key using get_random_bytes.
-4. Stores that new key in the inode.
-5. Encrypts the updated data afresh with the new key.
-6. Puts the updated data onto disk,
+Where Documentation/litmus-tests/README lists RCU litmus tests,
+Documentation/litmus-tests/atomic/README lists atomic litmus tests.
+For symmetry, merge the latter into former, with some context
+adjustment in the introduction.
 
-then this is fine with me, and feel free to have my Acked-by if you
-want. But if it doesn't do that -- i.e. if it tries to reuse the old
-key or similar -- then this isn't fine. But it sounds like from what
-you've described that things are actually fine, in which case, I guess
-it makes sense to apply your patch ontop of mine and commit these.
+Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ Documentation/litmus-tests/README        | 19 +++++++++++++++++++
+ Documentation/litmus-tests/atomic/README | 16 ----------------
+ 2 files changed, 19 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/litmus-tests/atomic/README
 
-Jason
+diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+index c4307ea9f996..ac0b270b456c 100644
+--- a/Documentation/litmus-tests/README
++++ b/Documentation/litmus-tests/README
+@@ -2,6 +2,25 @@
+ LITMUS TESTS
+ ============
+ 
++Each subdirectory contains litmus tests that are typical to describe the
++semantics of respective kernel APIs.
++For more information about how to "run" a litmus test or how to generate
++a kernel test module based on a litmus test, please see
++tools/memory-model/README.
++
++
++atomic (/atomic derectory)
++--------------------------
++
++Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
++    Test that an atomic RMW followed by a smp_mb__after_atomic() is
++    stronger than a normal acquire: both the read and write parts of
++    the RMW are ordered before the subsequential memory accesses.
++
++Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
++    Test that atomic_set() cannot break the atomicity of atomic RMWs.
++
++
+ RCU (/rcu directory)
+ --------------------
+ 
+diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
+deleted file mode 100644
+index 714cf93816ea..000000000000
+--- a/Documentation/litmus-tests/atomic/README
++++ /dev/null
+@@ -1,16 +0,0 @@
+-This directory contains litmus tests that are typical to describe the semantics
+-of our atomic APIs. For more information about how to "run" a litmus test or
+-how to generate a kernel test module based on a litmus test, please see
+-tools/memory-model/README.
+-
+-============
+-LITMUS TESTS
+-============
+-
+-Atomic-RMW+mb__after_atomic-is-stronger-than-acquire
+-	Test that an atomic RMW followed by a smp_mb__after_atomic() is
+-	stronger than a normal acquire: both the read and write parts of
+-	the RMW are ordered before the subsequential memory accesses.
+-
+-Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+-	Test that atomic_set() cannot break the atomicity of atomic RMWs.
+-- 
+2.17.1
+
+
