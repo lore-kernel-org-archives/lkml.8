@@ -2,87 +2,126 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9D0C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE294C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1B020661
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3DD206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrJcA4tP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgELLIo (ORCPT
+        id S1729495AbgELLJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:08:44 -0400
-Received: from mail-m17613.qiye.163.com ([59.111.176.13]:24008 "EHLO
-        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELLIn (ORCPT
+        Tue, 12 May 2020 07:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728371AbgELLJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:08:43 -0400
-Received: from ubuntu.localdomain (unknown [157.0.31.122])
-        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 06A8A482D55;
-        Tue, 12 May 2020 19:08:39 +0800 (CST)
-From:   Bernard Zhao <bernard@vivo.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
-Subject: [PATCH v2] memory/samsung: reduce unnecessary mutex lock area
-Date:   Tue, 12 May 2020 04:08:27 -0700
-Message-Id: <20200512110827.39475-1-bernard@vivo.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 12 May 2020 07:09:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C3BC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:09:34 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so14840524wra.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:09:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fy9idyc70uTPGwi0hCQ/5KZlcCaul8nvoI4462n1ra0=;
+        b=TrJcA4tPEnCNvX8Phd6XQGZTaAfine3hkq2zVl2YASihCxPBXeHCUnPXknnvHDvWgr
+         zqRfRBSOt37rqcRpea512qmzc08KSj6GB7IMY0e8CsunyWipd3A0eEQmpst4cAWQxDbF
+         XjX2NtvD+MwuPzvfCGgOAqHuMmQNuOCZrAU1kThegGr2e8MlAKRSTpHtmRbQtMM4fLrJ
+         ODTS58zc2qPkUEmsfSu9jsFIwvfAiic+Y1A9gXY90n2f/bClee5XwC6p6+fZox3i2MV2
+         OI2PGNbGvkM03iMr/r1S3Emh9f4Xo1ARpmzykoditG+RRgGvd00kUk0U5oXTwlTdMGuT
+         d/NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fy9idyc70uTPGwi0hCQ/5KZlcCaul8nvoI4462n1ra0=;
+        b=X08raAbq6d8i1ob5RN+m7W2aDg7Thf85EhhRVWfEB3ogOVO+BTdIzALjALv/yxxZvB
+         FfkYDGqtd0vIEtpmmI9dFfMau2fPBsDhDsWKpRqrDxCD+cJZvY6Dwpw5wedSbISeywIX
+         pGu2hCWdGCByvnk8F1b4aT/76ItpD3TEWeonzbAyM2t7l6JxhPSpbuUfFPEQSUcBvG2a
+         wF39vLac61m8Lr6CuIGKWpqFeskGEMzn0Jt3bREzr2jAlLi+wv0EM7cF8CRA3WSVPOMo
+         EMDFiGCuL5r+e/HGhZBeqtOwVOlijs502c0GTvMAvT0bsVRGL/qqhUf8c+c8PK2xXytE
+         Pu7Q==
+X-Gm-Message-State: AGi0PubHBPqCyonB+N8mrbt2WBTXn8V7mNUWhehtnm6asuKFQpOvLip0
+        KSa4g1Ie4FOwMxCeNyyKDiSkmA==
+X-Google-Smtp-Source: APiQypLmZnsKD+pIFGZAkIgCy7Zi2dVoDHMzZ+3vM0tJ7NUpMcHLS7DhnvRyPAU+zC4fxbOQxS/Qxw==
+X-Received: by 2002:a5d:4e8f:: with SMTP id e15mr24313702wru.91.1589281773106;
+        Tue, 12 May 2020 04:09:33 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id t2sm32089222wmt.15.2020.05.12.04.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 04:09:32 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v2] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
+Date:   Tue, 12 May 2020 12:09:30 +0100
+Message-Id: <20200512110930.2550-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VITEtCQkJDSkhLTEJDSFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nj46LCo*UTg8GTJWFAI1Sk1P
-        OjYKCRNVSlVKTkNCSUNKTElJSUNDVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
-        S1VISlVKSUlZV1kIAVlBSUlPTjcG
-X-HM-Tid: 0a720892839793bakuws06a8a482d55
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maybe dmc->df->lock seems not needed to protect "if (ret)
-& dev_warn" branch. Maybe this change speed up the code a bit.
+fastrpc_invoke_ctx can have refcount of 2 in error path where
+rpmsg_send() fails to send invoke message. decrement the refcount
+properly in the error path to fix this leak.
 
-Signed-off-by: Bernard Zhao <bernard@vivo.com>
-----
-Changes since v1:
-*change release lock before the if statement.
-*revert dmc->df->lock mutex lock to protect function
-exynos5_dmc_perf_events_check
-Link for V1:
-*https://lore.kernel.org/patchwork/patch/1238888/
+This also fixes below static checker warning:
+
+drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
+warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
+
+Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/memory/samsung/exynos5422-dmc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Changes since v1:
+	moved fastrpc_context_put to fastrpc_invoke_send()
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 22a43d662833..25196d6268e2 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -1346,15 +1346,13 @@ static irqreturn_t dmc_irq_thread(int irq, void *priv)
- 	struct exynos5_dmc *dmc = priv;
+ drivers/misc/fastrpc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 9065d3e71ff7..7939c55daceb 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -904,6 +904,7 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	struct fastrpc_channel_ctx *cctx;
+ 	struct fastrpc_user *fl = ctx->fl;
+ 	struct fastrpc_msg *msg = &ctx->msg;
++	int ret;
  
- 	mutex_lock(&dmc->df->lock);
--
- 	exynos5_dmc_perf_events_check(dmc);
--
- 	res = update_devfreq(dmc->df);
-+	mutex_unlock(&dmc->df->lock);
+ 	cctx = fl->cctx;
+ 	msg->pid = fl->tgid;
+@@ -919,7 +920,13 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
+ 	fastrpc_context_get(ctx);
+ 
+-	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
++	ret = rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
 +
- 	if (res)
- 		dev_warn(dmc->dev, "devfreq failed with %d\n", res);
- 
--	mutex_unlock(&dmc->df->lock);
--
- 	return IRQ_HANDLED;
++	if (ret)
++		fastrpc_context_put(ctx);
++
++	return ret;
++
  }
  
+ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
 -- 
-2.26.2
+2.21.0
 
