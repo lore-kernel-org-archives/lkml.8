@@ -2,209 +2,91 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4A5C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33103C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C1C20882
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030CB20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589262937;
+	bh=cfM9sMwZnMPp1UmvxSOxiuzoPLfwDW0xWn/fL+4S35g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HEggIY9vJwgdECKgUwb1PHucYY4C0EgFX6k3dZMKJhbhDfj/Y5I59xOzE9zYB2CEA
+	 5MejR4XNsWws4EUVqKmodS8Mk42uPiG6q3Vrea08bnaewCF0xgkja7DEa7Zo1oZIEF
+	 J9GAqvA/EAYQifzlipi6gSCoOpdCgwD9WTnsbhjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgELFyh (ORCPT
+        id S1727830AbgELFzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgELFyg (ORCPT
+        Tue, 12 May 2020 01:55:36 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:19213 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgELFzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:54:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E8CC061A0C;
-        Mon, 11 May 2020 22:54:34 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 44C582A021E
-Subject: Re: stable/linux-4.4.y bisection: baseline.login on
- at91-sama5d4_xplained
-References: <5eb8399a.1c69fb81.c5a60.8316@mx.google.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Message-ID: <2db7e52e-86ae-7c87-1782-8c0cafcbadd8@collabora.com>
-Date:   Tue, 12 May 2020 06:54:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 01:55:35 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 04C5tNiR004068
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:55:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04C5tNiR004068
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589262924;
+        bh=R1QyXhhfi6uyVISRMA353yWXmI83w82IGzf0lqkZ32g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YOi9zu/tAzeXRtqq4nr6XnAPOx019n+87/gbNmPG70ira4CC+pRfweZJ9djbiCZPK
+         VZufngkacRsVURSLzA/nCVZPjoiGHayewU7Fc9CdYMyAyAdY+tNN9HeWmUtwj0jT2I
+         bDASttsRnCLSwoUuGMAmEEI4H3tM78G4yrwGrZujzfqIHH+cqRm4cVIRMQjLAaD3Zj
+         00VZyOFRx1PPOd7sgqtCT6OguHHbao6Ade90TN0l6p+jOlnpiipCXU+2v6R+CgV7Bi
+         3+v4QXBbAUqZAQSWwPSYLE/klYd9BMaPlJJRFWL3S2NzsuawfgPo1Tr8PTFtIQ49qI
+         QqcZjgyyZECZw==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id s5so4319205uad.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 22:55:23 -0700 (PDT)
+X-Gm-Message-State: AOAM530cHdeBdeqhePhSPx5R88HeCOOF6MXoUnCBZYPAZs9Q9hnQBXTg
+        /Ht7OOmX85ysM7UH9TyuJbrsKdxQGEW8VSeN0co=
+X-Google-Smtp-Source: ABdhPJx6QiE8Lap+c9ItB/310joi8PjtYGhGB5b6X8mQGrfGWqo3dxH7g3ctBHE8D1Rp1QxbplEz2g/cB/p3dnllGZs=
+X-Received: by 2002:ab0:3245:: with SMTP id r5mr1774480uan.109.1589262922884;
+ Mon, 11 May 2020 22:55:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5eb8399a.1c69fb81.c5a60.8316@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200510020044.958018-1-masahiroy@kernel.org> <202005091914.4B8CACB91@keescook>
+In-Reply-To: <202005091914.4B8CACB91@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 12 May 2020 14:54:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAShqo4=YJ9AxqZqHU9t4Axnmn2AdY4sOTTM5TEXVXTNzA@mail.gmail.com>
+Message-ID: <CAK7LNAShqo4=YJ9AxqZqHU9t4Axnmn2AdY4sOTTM5TEXVXTNzA@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: remove always false $(if ...) in Makefile
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Emese Revfy <re.emese@gmail.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please see the bisection report below about a boot failure.
-
-Reports aren't automatically sent to the public while we're
-trialing new bisection features on kernelci.org but this one
-looks valid.
-
-It appears to be due to the fact that the network interface is
-failing to get brought up:
-
-[  114.385000] Waiting up to 10 more seconds for network.
-[  124.355000] Sending DHCP requests ...#
-..#
-.#
- timed out!
-[  212.355000] IP-Config: Reopening network devices...
-[  212.365000] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-#
+On Sun, May 10, 2020 at 11:14 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sun, May 10, 2020 at 11:00:44AM +0900, Masahiro Yamada wrote:
+> > This is the remnant of commit c17d6179ad5a ("gcc-plugins: remove unused
+> > GCC_PLUGIN_SUBDIR").
+> >
+> > $(if $(findstring /,$(p)),...) is always false because none of plugins
+> > contains '/' in the file name.
+> >
+> > Clean up the code.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
 
 
-I guess the board would boot fine without network if it didn't
-have ip=dhcp in the command line, so it's not strictly a kernel
-boot failure but still an ethernet issue.
-
-There wasn't any failure reported by kernelci on linux-4.9.y so
-maybe this patch was applied by mistake on linux-4.4.y but I
-haven't investigated enough to prove this.
-
-Thanks,
-Guillaume
+Applied to linux-kbuild.
 
 
-On 10/05/2020 18:27, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> stable/linux-4.4.y bisection: baseline.login on at91-sama5d4_xplained
-> 
-> Summary:
->   Start:      e157447efd85b Linux 4.4.223
->   Plain log:  https://storage.kernelci.org/stable/linux-4.4.y/v4.4.223/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama5d4_xplained.txt
->   HTML log:   https://storage.kernelci.org/stable/linux-4.4.y/v4.4.223/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama5d4_xplained.html
->   Result:     0d1951fa23ba0 net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       stable
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
->   Branch:     linux-4.4.y
->   Target:     at91-sama5d4_xplained
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig
->   Test case:  baseline.login
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd
-> Author: Florian Fainelli <f.fainelli@gmail.com>
-> Date:   Mon Jan 18 19:33:06 2016 -0800
-> 
->     net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
->     
->     commit d5c3d84657db57bd23ecd58b97f1c99dd42a7b80 upstream.
->     
->     Commit 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT") changed
->     a hunk in phy_state_machine() in the PHY_RUNNING case which was not
->     needed. The change essentially makes the PHY library treat PHY devices
->     with PHY_IGNORE_INTERRUPT to keep polling for the PHY device, even
->     though the intent is not to do it.
->     
->     Fix this by reverting that specific hunk, which makes the PHY state
->     machine wait for state changes, and stay in the PHY_RUNNING state for as
->     long as needed.
->     
->     Fixes: 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT")
->     Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index 7d2cf015c5e76..b242bec834f4b 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -912,10 +912,10 @@ void phy_state_machine(struct work_struct *work)
->  		phydev->adjust_link(phydev->attached_dev);
->  		break;
->  	case PHY_RUNNING:
-> -		/* Only register a CHANGE if we are polling or ignoring
-> -		 * interrupts and link changed since latest checking.
-> +		/* Only register a CHANGE if we are polling and link changed
-> +		 * since latest checking.
->  		 */
-> -		if (!phy_interrupt_is_valid(phydev)) {
-> +		if (phydev->irq == PHY_POLL) {
->  			old_link = phydev->link;
->  			err = phy_read_status(phydev);
->  			if (err)
-> @@ -1015,8 +1015,13 @@ void phy_state_machine(struct work_struct *work)
->  	dev_dbg(&phydev->dev, "PHY state change %s -> %s\n",
->  		phy_state_to_str(old_state), phy_state_to_str(phydev->state));
->  
-> -	queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
-> -			   PHY_STATE_TIME * HZ);
-> +	/* Only re-schedule a PHY state machine change if we are polling the
-> +	 * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
-> +	 * between states from phy_mac_interrupt()
-> +	 */
-> +	if (phydev->irq == PHY_POLL)
-> +		queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
-> +				   PHY_STATE_TIME * HZ);
->  }
->  
->  void phy_mac_interrupt(struct phy_device *phydev, int new_link)
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [b63f449e18b130fdc372b9717e72c19b83fc4876] Linux 4.4.222
-> git bisect good b63f449e18b130fdc372b9717e72c19b83fc4876
-> # bad: [e157447efd85bb2e6f8deaabbb62663bccd9bad2] Linux 4.4.223
-> git bisect bad e157447efd85bb2e6f8deaabbb62663bccd9bad2
-> # bad: [5733a9f4a3df384097c92c532aed34bc698a9acd] net: dsa: slave: fix of-node leak and phy priority
-> git bisect bad 5733a9f4a3df384097c92c532aed34bc698a9acd
-> # good: [1ce6993b857318a4b8c674b1bbaaf79aced34136] net/mlx5e: Fix blue flame quota logic
-> git bisect good 1ce6993b857318a4b8c674b1bbaaf79aced34136
-> # good: [c32532162f8ea4beed50a20cf4f9b205c75fe1b1] serial: samsung: Fix possible out of bounds access on non-DT platform
-> git bisect good c32532162f8ea4beed50a20cf4f9b205c75fe1b1
-> # good: [25e8aad6f491da6ae330148da09585371a3790f2] Revert "ACPI / LPSS: allow to use specific PM domain during ->probe()"
-> git bisect good 25e8aad6f491da6ae330148da09585371a3790f2
-> # good: [2f3e56e4b6020812350190f1cada230d790ce0e8] powerpc/tm: Fix stack pointer corruption in __tm_recheckpoint()
-> git bisect good 2f3e56e4b6020812350190f1cada230d790ce0e8
-> # bad: [0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd] net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> git bisect bad 0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd
-> # good: [4ebef63e925e37f5de2f9da8fc86a545e4e0b945] sctp: fix the transports round robin issue when init is retransmitted
-> git bisect good 4ebef63e925e37f5de2f9da8fc86a545e4e0b945
-> # good: [c175435fdf50c81ca2b6576f090cba31c3489209] NFC: nci: memory leak in nci_core_conn_create()
-> git bisect good c175435fdf50c81ca2b6576f090cba31c3489209
-> # first bad commit: [0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd] net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> -------------------------------------------------------------------------------
-> 
-
+-- 
+Best Regards
+Masahiro Yamada
