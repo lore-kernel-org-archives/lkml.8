@@ -2,91 +2,79 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20E9C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661C0C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3C0206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436742075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589278518;
+	bh=Vra807JstpipO5hypSeIatCfFsLHr5tWZYuOg0SwUgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NKGQzE3XPJsWpc5QKvNlhJyFYwR8CC4zwj4mTpORDOMgBDwuQAe2MxB9/mDftkmbp
+	 moD3NAi6MTLTRhk6y7mw48dSqrqkt4nByc97s7U3ocgK+DXgnfv6GM548GIceSeCvQ
+	 7DX5ZWllQlr8wHBnFoCQE7cySSglVym0AzHzNfOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgELKOI (ORCPT
+        id S1729364AbgELKPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:14:08 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2193 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbgELKOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:14:06 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id C703479D73E2140BD683;
-        Tue, 12 May 2020 11:14:04 +0100 (IST)
-Received: from [127.0.0.1] (10.210.169.134) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
- 2020 11:14:03 +0100
-Subject: Re: [PATCH RFC v3 00/12] perf pmu-events: Support event aliasing for
- system PMUs
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-CC:     "irogers@google.com" <irogers@google.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
+        Tue, 12 May 2020 06:15:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgELKPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:15:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D511920736;
+        Tue, 12 May 2020 10:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589278513;
+        bh=Vra807JstpipO5hypSeIatCfFsLHr5tWZYuOg0SwUgo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EYLii9PrIaxe/0yJIDq7clgcXzvBC3WivUeBpc06aYMyrv1lNPMvP+LDEq5wJ8U47
+         wKYAT8w1RFzsAjYFPtaq9B1HnTiHQIrGUSeOH1qxrTnXJOkLb/d9blhLRbcJR6pb/C
+         jLHDMivVnA/BYY6EnZ9mSb8uWWkux+8N8SVgIIPM=
+Date:   Tue, 12 May 2020 12:15:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrea.Ho@advantech.com.tw,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
- <DB8PR04MB6795D56E9EC43949E5F40465E6BE0@DB8PR04MB6795.eurprd04.prod.outlook.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2642e2a6-9e44-79c4-2bf5-498cedd897a4@huawei.com>
-Date:   Tue, 12 May 2020 11:13:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        voyandrea@gmail.com, amy.shih@advantech.com.tw,
+        oakley.ding@advantech.com.tw, HY.Lee@advantech.com.tw
+Subject: Re: [V3,1/1] Input/misc: add support for Advantech software defined
+ button
+Message-ID: <20200512101511.GA3991701@kroah.com>
+References: <20200512043149.10719-1-Andrea.Ho@advantech.com.tw>
+ <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <DB8PR04MB6795D56E9EC43949E5F40465E6BE0@DB8PR04MB6795.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.169.134]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> I have an aside question, do you have any idea? Thanks a lot!
+On Tue, May 12, 2020 at 12:08:08PM +0200, Arnd Bergmann wrote:
+> > +MODULE_LICENSE("GPL");
 > 
-> For DDR PMU, I want to add bandwidth usage metric, but it depends on DDR controller clock frequency.
-> For example, we have i.MX8MM LPDDR4 board which DDR controller clock is 800MHZ, and i.MX8MM DDR4 board which DDR controller is 600MHZ, but the SoC is the same.
+> These generally go at the bottom of the file.
 > 
-> So they can share all JSON metrics with identifier "i.mx8mm", except bandwidth metric. 
+> The license tag here does not match the one in the SPDX header, after
+> you changed the other one to v2-only.
 
-what is the bandwidth metric? how is it supposed to be calculated?
+Yes it does, they mean the same thing, see modules.h for the details if
+you are curious.
 
-If I add separate JOSN metrics files for identifier "i.mx8mm-lpddr4" and 
-identifier "i.mx8mm-ddr4", then it's going to be very redundant, since 
-most metrics are same just the identifier is different.
-> 
-> Do you know how perf tool handle such case?
+thanks,
 
-jirka is supporting user-defined metric here:
-https://lore.kernel.org/lkml/20200511205307.3107775-1-jolsa@kernel.org/
-
-So maybe you can use that somehow with separate scripts.
-
-Thanks,
-John
+greg k-h
