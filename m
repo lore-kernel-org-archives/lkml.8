@@ -2,491 +2,174 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D923AC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B26C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E5B2072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EE62072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NCEG82BG"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PhjodGlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgELF7o (ORCPT
+        id S1728392AbgELGAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:59:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39790 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728796AbgELF7m (ORCPT
+        Tue, 12 May 2020 02:00:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:58366 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgELGAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:59:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C5v2sv113189;
-        Tue, 12 May 2020 05:59:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=eKlXT6SV8ExVehScVkS65Re7NRVnE2ArusJ/wsmOHj4=;
- b=NCEG82BG3LPhaSOtgdZ4lQwuI1kPFsdNyKDlvO6Zt5SQTzW1NTzHXN5g3tGmQXCBMVMc
- PrCaGZwOVwEawlT8AEGCuhmSo7ezAwpAd8pC3LvZsZRP/Hae9is7gEGiRnyG4Z8GamKd
- 3k8sCbL1TtlSSVv97VZ21zyu/Qg+yLbA4wp7dmBcU8nrg9otLgmAmJ7aOhqNuQxt1bo8
- H8+8VCFNnZi9YqH+1olyxW8NjJbfG+YY3Yf8DliiFjcHqsLVwF3CC35qFKnQ0hdOGAc3
- 57NPF+fzfz5VU1fnT7Da5ZVTwuXF9WllX82nuH9B9h3qCsq99C9AdXxvd7eTN/rDXfnn HQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30x3mbrv9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 05:59:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C5sW7x191669;
-        Tue, 12 May 2020 05:57:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30xbgh7u3p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 05:57:21 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04C5vKQb013778;
-        Tue, 12 May 2020 05:57:20 GMT
-Received: from localhost.uk.oracle.com (/10.175.210.30)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 May 2020 22:57:19 -0700
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     ast@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org
-Cc:     joe@perches.com, linux@rasmusvillemoes.dk, arnaldo.melo@gmail.com,
-        yhs@fb.com, kafai@fb.com, songliubraving@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 bpf-next 5/7] printk: extend test_printf to test %pT BTF-based format specifier
-Date:   Tue, 12 May 2020 06:56:43 +0100
-Message-Id: <1589263005-7887-6-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120052
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005120052
+        Tue, 12 May 2020 02:00:15 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200512060012euoutp02fe3f0aa2941cdf2076dadd4186e361bc~OMnier4qq1391113911euoutp02H
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:00:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200512060012euoutp02fe3f0aa2941cdf2076dadd4186e361bc~OMnier4qq1391113911euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589263212;
+        bh=qBQCgSV1H4lTopc6ziFSzLrDrLyvon3nMDzQhcOB1zo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=PhjodGlCR1+kpWm+ivklqTp2ehTVO3ShhTH8tkshACTvWJE/cXK7x54LRvS7H7a4F
+         nMcvC4tef1TMpMhREqcKFBdWdi5cTdeS1p9mXl1RzQMC9OvFVfFpH/535/JlAF8PP7
+         1Mufoo1CgpEnqCU+1VySa/BO2KvENIpY46YGP1xU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200512060011eucas1p201e643e3f309a756e1167438d6f61038~OMniQnoZm1159611596eucas1p2t;
+        Tue, 12 May 2020 06:00:11 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 04.6D.60698.B6B3ABE5; Tue, 12
+        May 2020 07:00:11 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200512060011eucas1p14bdaf602bb62b3eb5344db379a2d04bb~OMnh46-lw1582015820eucas1p1o;
+        Tue, 12 May 2020 06:00:11 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200512060011eusmtrp1c8b01594ef47ac652fbf3019326febe6~OMnh4OPaN0862708627eusmtrp1d;
+        Tue, 12 May 2020 06:00:11 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-60-5eba3b6ba14f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 50.C8.08375.B6B3ABE5; Tue, 12
+        May 2020 07:00:11 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200512060010eusmtip19e27b1a0d995374720085eacdd1ccc13~OMnhQ1fKw1427614276eusmtip1k;
+        Tue, 12 May 2020 06:00:10 +0000 (GMT)
+Subject: Re: [PATCH net] net: broadcom: Imply BROADCOM_PHY for BCMGENET
+To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+Cc:     nsaenzjulienne@suse.de, wahrenst@gmx.net,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Gospodarek <gospo@broadcom.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d4ddf75c-3355-daee-b1d1-8db02675507a@samsung.com>
+Date:   Tue, 12 May 2020 08:00:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <51710a87-5a99-35ee-5bea-92a5801cec09@gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjlt3u997rauFsPPzQyFr20NNPqoiVZVhf8J4KgIquVF5W2KZuW
+        JYUvxMeINGp603wUbAm9Zs0UNFzhMmlaqyzzUSRWrik1pbKHbbtY/ne+853DOd+PH4XJ+/wC
+        qVRNBqfVKFUKQoxbOn50rzkW03Jw7bW6CKaquwBnpsYekkz1pXLEmG7V+zGOliqCKWu4TjAd
+        tQsZC28kGFe/AWcuVreSTKP5AsbYHhVjW+ay/NATgr1z7bWILXuyhm3mB0j2ivk+wTaaQtgx
+        u51kRwwPRGxjVzbrNi/eJd4v3pTEqVKPc9rw2MPiFMenD1h6vTyr/XYnkYOc0hLkTwEdBW/G
+        zxIlSEzJaROCuiEDLgwTCJpGbxJelZx2I+hvDZ1x5DrvkoLIiGDksQEThnEEpoGfmFc1j94J
+        g81GPy+eT28DQ2+Dz4HREyJwWwp9C4KOgBJXiS9CQseCPe+yz4zTy2CqVI978QI6EbquNCJB
+        I4POymEf709vBt7+wYcxOhiaXFWYgAOgb7hG5A0DepKEyVw9JvSOh9EbX3EBz4NR2x1SwIug
+        67weFwz5CN7Zr5PCoEfgyKtAgioG+u1TnqqUJ2IV3GwJF+g4sL7/KPLSQEvhlUsmlJBCucX7
+        LF5aAkWFckG9HHjbjX+x7T3PsHNIwc86jZ91Dj/rHP5/bi3CG1AAl6lTJ3O6SA13IkynVOsy
+        NclhR9PUZuT5cV1/bJP3UNuvI1ZEU0gxV1K0rvmg3E95XHdSbUVAYYr5koJUDyVJUp48xWnT
+        DmkzVZzOioIoXBEgiaz/lCink5UZ3DGOS+e0M1sR5R+Ygx6cysbHbMPRzm9am2L6y8afQXFR
+        g073RK80Ybc6f86LPG1noLyCJ3KCjDu2rn26d5pyLCmqZC9Jy2X7sjqbz7wNy8j+TP6W1ZDb
+        o0ZHTodaA9uozITvpuDnKrRyf2lIoSw9XnZAn78i2XI1pvTt0j3xL3tcq3OmNqyPLL4bbSlX
+        4LoUZUQIptUp/wKGcda/bQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xu7rZ1rviDI7tkLWYc76FxeLXuyPs
+        FnNnT2K0WLFhEavF5V1z2CwmrlrLZnFsgZjFtlnL2Sze3pnOYjFt7l52i82bpjJbHD/RyezA
+        4zHr/lk2jy0rbzJ5TDyr67Fz1l12j8Wb9rN5bF6h5fHu3Dl2j2fTDzN5bD5d7fF5k1wAV5Se
+        TVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexuWXz5kL
+        FglVHNx4kq2B8TVfFyMnh4SAiUTj663sILaQwFJGiZcXPSDiMhInpzWwQtjCEn+udbF1MXIB
+        1bxllDj5uQcsISzgLnFv53IwW0TAWWL69VXsIEXMAt+YJE7M7mOG6PjCKPH3/S0WkCo2AUOJ
+        rrcgozg5eAXsJM41zWMGsVkEVCV+dfeA1YgKxEqsvtbKCFEjKHFy5hOwOKeArcSsc8/BbGYB
+        M4l5mx8yQ9jyEtvfzoGyxSVuPZnPNIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiQ73i
+        xNzi0rx0veT83E2MwJjeduzn5h2MlzYGH2IU4GBU4uHtMNoZJ8SaWFZcmXuIUYKDWUmEtyUT
+        KMSbklhZlVqUH19UmpNafIjRFOi5icxSosn5wHSTVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZI
+        ID2xJDU7NbUgtQimj4mDU6qBsUXLM3vd7ClPBMS8th41+FwRULHla+ldxwcnjv+pWOL1meHW
+        1QVHvB992hxw79NfDf/Ls7QWPdZvfvhnI+/je9I5vI8nKjvuurpUjPl9024e94y/DIaZcmra
+        ExP/3UpI1/Df58Vxv08jg0/rlc8pm+xQdtOZfIbu68OUcj6JC099azdVfqmeqhJLcUaioRZz
+        UXEiAH+5i7T/AgAA
+X-CMS-MailID: 20200512060011eucas1p14bdaf602bb62b3eb5344db379a2d04bb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200508223228eucas1p252dd643b4bedf08126cf6af4788f9b01
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200508223228eucas1p252dd643b4bedf08126cf6af4788f9b01
+References: <CGME20200508223228eucas1p252dd643b4bedf08126cf6af4788f9b01@eucas1p2.samsung.com>
+        <20200508223216.6611-1-f.fainelli@gmail.com>
+        <350c88a9-eeaf-7859-d425-0ee4ca355ed3@samsung.com>
+        <51710a87-5a99-35ee-5bea-92a5801cec09@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests to verify basic type display and to iterate through all
-enums, structs, unions and typedefs ensuring expected behaviour
-occurs.  Since test_printf can be built as a module we need to
-export a BTF kind iterator function to allow us to iterate over
-all names of a particular BTF kind.
+Hi Florian,
 
-These changes add up to approximately 20,000 new tests covering
-all enum, struct, union and typedefs in vmlinux BTF.
+On 11.05.2020 20:19, Florian Fainelli wrote:
+> On 5/11/2020 12:21 AM, Marek Szyprowski wrote:
+>> On 09.05.2020 00:32, Florian Fainelli wrote:
+>>> The GENET controller on the Raspberry Pi 4 (2711) is typically
+>>> interfaced with an external Broadcom PHY via a RGMII electrical
+>>> interface. To make sure that delays are properly configured at the PHY
+>>> side, ensure that we get a chance to have the dedicated Broadcom PHY
+>>> driver (CONFIG_BROADCOM_PHY) enabled for this to happen.
+>>>
+>>> Fixes: 402482a6a78e ("net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed")
+>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>> ---
+>>> David,
+>>>
+>>> I would like Marek to indicate whether he is okay or not with this
+>>> change. Thanks!
+>> It is better. It fixes the default values for ARM 32bit
+>> bcm2835_defconfig and ARM 64bit defconfig, so you can add:
+>>
+>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>
+>> There is still an issue there. In case of ARM 64bit, when Genet driver
+>> is configured as a module, BROADCOM_PHY is also set to module. When I
+>> changed Genet to be built-in, BROADCOM_PHY stayed selected as module.
+> OK.
+>
+>> This case doesn't work, as Genet driver is loaded much earlier than the
+>> rootfs/initrd/etc is available, thus broadcom phy driver is not loaded
+>> at all. It looks that some kind of deferred probe is missing there.
+> In the absence of a specific PHY driver the Generic PHY driver gets used
+> instead. This is a valid situation as I described in my other email
+> because the boot loader/firmware could have left the PHY properly
+> configured with the expected RGMII delays and configuration such that
+> Linux does not need to be aware of anything. I suppose we could change
+> the GENET driver when running on the 2711 platform to reject the PHY
+> driver being "Generic PHY" on the premise that a specialized driver
+> should be used instead, but that seems a bit too restrictive IMHO.
+>
+> Do you prefer a "select BROADCOM_PHY if ARCH_BCM2835" then?
 
-Individual tests are also added for int, char, struct, enum
-and typedefs which verify output is as expected.
+Yes. It solves the issue after switching Genet to be built-in without 
+the need to change the CONFIG_BROADCOM_PHY.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- include/linux/btf.h |  10 ++
- kernel/bpf/btf.c    |  35 ++++++
- lib/test_printf.c   | 301 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 346 insertions(+)
-
-diff --git a/include/linux/btf.h b/include/linux/btf.h
-index 7b585ab..7fa8926 100644
---- a/include/linux/btf.h
-+++ b/include/linux/btf.h
-@@ -188,4 +188,14 @@ static inline const char *btf_name_by_offset(const struct btf *btf,
- }
- #endif
- 
-+/* Following function used for testing BTF-based printk-family support */
-+#ifdef CONFIG_BTF_PRINTF
-+const char *btf_vmlinux_next_type_name(u8 kind, s32 *id);
-+#else
-+static inline const char *btf_vmlinux_next_type_name(u8 kind, s32 *id)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_BTF_PRINTF */
-+
- #endif
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index edf6455..99471dc 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -5249,3 +5249,38 @@ u32 btf_id(const struct btf *btf)
- {
- 	return btf->id;
- }
-+
-+#ifdef CONFIG_BTF_PRINTF
-+/*
-+ * btf_vmlinux_next_type_name():  used in test_printf.c to
-+ * iterate over types for testing.
-+ * Exported as test_printf can be built as a module.
-+ *
-+ * @kind: BTF_KIND_* value
-+ * @id: pointer to last id; value/result argument. When next
-+ *      type name is found, we set *id to associated id.
-+ * Returns:
-+ *	Next type name, sets *id to associated id.
-+ */
-+const char *btf_vmlinux_next_type_name(u8 kind, s32 *id)
-+{
-+	const struct btf *btf = bpf_get_btf_vmlinux();
-+	const struct btf_type *t;
-+	const char *name;
-+
-+	if (!btf || !id)
-+		return NULL;
-+
-+	for ((*id)++; *id <= btf->nr_types; (*id)++) {
-+		t = btf->types[*id];
-+		if (BTF_INFO_KIND(t->info) != kind)
-+			continue;
-+		name = btf_name_by_offset(btf, t->name_off);
-+		if (name && strlen(name) > 0)
-+			return name;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(btf_vmlinux_next_type_name);
-+#endif /* CONFIG_BTF_PRINTF */
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 2d9f520..d37a3a2 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -23,6 +23,9 @@
- #include <linux/mm.h>
- 
- #include <linux/property.h>
-+#include <linux/bpf.h>
-+#include <linux/btf.h>
-+#include <linux/skbuff.h>
- 
- #include "../tools/testing/selftests/kselftest_module.h"
- 
-@@ -644,6 +647,303 @@ static void __init fwnode_pointer(void)
- #endif
- }
- 
-+#define	__TEST_BTF(fmt, type, ptr, expected)				       \
-+	test(expected, "%pT"fmt, ptr)
-+
-+#define TEST_BTF_C(type, var, ...)					       \
-+	do {								       \
-+		type var = __VA_ARGS__;					       \
-+		struct btf_ptr *ptr = BTF_PTR_TYPE(&var, type);		       \
-+		pr_debug("type %s: %pTc", #type, ptr);			       \
-+		__TEST_BTF("c", type, ptr, "(" #type ")" #__VA_ARGS__);	       \
-+	} while (0)
-+
-+#define TEST_BTF(fmt, type, var, expected, ...)				       \
-+	do {								       \
-+		type var = __VA_ARGS__;					       \
-+		struct btf_ptr *ptr = BTF_PTR_TYPE(&var, type);		       \
-+		pr_debug("type %s: %pT"fmt, #type, ptr);		       \
-+		__TEST_BTF(fmt, type, ptr, expected);			       \
-+	} while (0)
-+
-+#define	BTF_MAX_DATA_SIZE	65536
-+
-+static void __init
-+btf_print_kind(u8 kind, const char *kind_name, u8 fillval)
-+{
-+	const char *fmt1 = "%pT", *fmt2 = "%pTN", *fmt3 = "%pT0";
-+	const char *name, *fmt = fmt1;
-+	int res1, res2, res3, res4;
-+	char type_name[256];
-+	u8 *dummy_data;
-+	s32 id = 0;
-+	char *buf;
-+
-+	dummy_data = kzalloc(BTF_MAX_DATA_SIZE, GFP_KERNEL);
-+
-+	/* fill our dummy data with supplied fillval. */
-+	memset(dummy_data, fillval, BTF_MAX_DATA_SIZE);
-+
-+	buf = kzalloc(BTF_MAX_DATA_SIZE, GFP_KERNEL);
-+
-+	for (;;) {
-+		name = btf_vmlinux_next_type_name(kind, &id);
-+		if (!name)
-+			break;
-+
-+		total_tests++;
-+
-+		snprintf(type_name, sizeof(type_name), "%s%s",
-+			 kind_name, name);
-+
-+		res1 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt1,
-+				BTF_PTR_TYPE(dummy_data, type_name));
-+		res2 = snprintf(buf, 0, fmt1,
-+				BTF_PTR_TYPE(dummy_data, type_name));
-+		res3 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt2,
-+				BTF_PTR_TYPE(dummy_data, type_name));
-+		res4 = snprintf(buf, BTF_MAX_DATA_SIZE, fmt3,
-+				BTF_PTR_TYPE(dummy_data, type_name));
-+
-+		/*
-+		 * Ensure return value is > 0 and identical irrespective
-+		 * of whether we pass in a big enough buffer;
-+		 * also ensure that printing names always results in as
-+		 * long/longer buffer length.
-+		 */
-+		if (res1 <= 0 || res2 <= 0 || res3 <= 0 || res4 <= 0) {
-+			if (res3 <= 0)
-+				fmt = fmt2;
-+			if (res4 <= 0)
-+				fmt = fmt3;
-+
-+			pr_warn("snprintf(%s%s); %d <= 0 (fmt %s)",
-+				kind_name, name,
-+				res1 <= 0 ? res1 : res2 <= 0 ? res2 :
-+				res3 <= 0 ? res3 : res4, fmt);
-+			failed_tests++;
-+		} else if (res1 != res2) {
-+			pr_warn("snprintf(%s%s): %d (to buf) != %d (no buf)",
-+				kind_name, name, res1, res2);
-+			failed_tests++;
-+		} else if (res3 > res2) {
-+			pr_warn("snprintf(%s%s); %d (no names) > %d (names)",
-+				kind_name, name, res3, res2);
-+			failed_tests++;
-+		} else {
-+			pr_debug("Printed %s%s (%d bytes)",
-+				 kind_name, name, res1);
-+		}
-+	}
-+	kfree(dummy_data);
-+	kfree(buf);
-+}
-+
-+/*
-+ * For BTF it is the struct btf_ptr * ptr field, not the pointer itself
-+ * which gets displayed, so it is that we need to hash.
-+ */
-+static void __init
-+test_btf_hashed(const char *fmt, struct btf_ptr *p)
-+{
-+	char buf[PLAIN_BUF_SIZE];
-+	int ret;
-+
-+	ret = plain_hash_to_buffer(p->ptr, buf, PLAIN_BUF_SIZE);
-+	if (ret)
-+		return;
-+
-+	test(buf, fmt, p);
-+}
-+
-+#ifdef CONFIG_BTF_PRINTF
-+
-+static void __init btf_pointer_test_int(void)
-+{
-+	/* simple int */
-+	TEST_BTF_C(int, testint, 1234);
-+	TEST_BTF("cN", int, testint, "1234", 1234);
-+	/* zero value should be printed at toplevel */
-+	TEST_BTF("c", int, testint, "(int)0", 0);
-+	TEST_BTF("cN", int, testint, "0", 0);
-+	TEST_BTF("c0", int, testint, "(int)0", 0);
-+	TEST_BTF("cN0", int, testint, "0", 0);
-+	TEST_BTF_C(int, testint, -4567);
-+	TEST_BTF("cN", int, testint, "-4567", -4567);
-+}
-+
-+static void __init btf_pointer_test_char(void)
-+{
-+	/* simple char */
-+	TEST_BTF_C(char, testchar, 100);
-+	TEST_BTF("cN", char, testchar, "100", 100);
-+	/* zero value should be printed at toplevel */
-+	TEST_BTF("c", char, testchar, "(char)0", 0);
-+	TEST_BTF("cN", char, testchar, "0", 0);
-+	TEST_BTF("c0", char, testchar, "(char)0", 0);
-+	TEST_BTF("cN0", char, testchar, "0", 0);
-+}
-+
-+static void __init btf_pointer_test_typedef(void)
-+{
-+	/* simple typedef */
-+	TEST_BTF_C(phys_addr_t, testtype, 100);
-+	TEST_BTF("cN", phys_addr_t, testtype, "1", 1);
-+	/* zero value should be printed at toplevel */
-+	TEST_BTF("c", phys_addr_t, testtype, "(phys_addr_t)0", 0);
-+	TEST_BTF("cN", phys_addr_t, testtype, "0", 0);
-+	TEST_BTF("c0", phys_addr_t, testtype, "(phys_addr_t)0", 0);
-+	TEST_BTF("cN0", phys_addr_t, testtype, "0", 0);
-+
-+	/* typedef struct */
-+	TEST_BTF_C(atomic_t, testtype, {.counter = (int)1,});
-+	TEST_BTF("cN", atomic_t, testtype, "{1,}", {.counter = 1,});
-+	/* typedef with 0 value should be printed at toplevel */
-+	TEST_BTF("c", atomic_t, testtype, "(atomic_t){}", {.counter = 0,});
-+	TEST_BTF("cN", atomic_t, testtype, "{}", {.counter = 0,});
-+	TEST_BTF("c0", atomic_t, testtype, "(atomic_t){.counter = (int)0,}",
-+		 {.counter = 0,});
-+	TEST_BTF("cN0", atomic_t, testtype, "{0,}", {.counter = 0,});
-+
-+	/* typedef array */
-+	TEST_BTF("c", cpumask_t, testtype,
-+		 "(cpumask_t){.bits = (long unsigned int[])[1,],}",
-+		 { .bits = {1,}});
-+	TEST_BTF("cN", cpumask_t, testtype, "{[1,],}",
-+		 { .bits = {1,}});
-+	/* typedef with 0 value should be printed at toplevel */
-+	TEST_BTF("c", cpumask_t, testtype, "(cpumask_t){}", {{ 0 }});
-+}
-+
-+static void __init btf_pointer_test_enum(void)
-+{
-+	/* enum where enum value does (and does not) exist */
-+	TEST_BTF_C(enum bpf_cmd, testenum, BPF_MAP_CREATE);
-+	TEST_BTF("c", enum bpf_cmd, testenum, "(enum bpf_cmd)BPF_MAP_CREATE",
-+		 0);
-+	TEST_BTF("cN", enum bpf_cmd, testenum, "BPF_MAP_CREATE",
-+		 BPF_MAP_CREATE);
-+	TEST_BTF("cN0", enum bpf_cmd, testenum, "BPF_MAP_CREATE", 0);
-+
-+	TEST_BTF("c0", enum bpf_cmd, testenum, "(enum bpf_cmd)BPF_MAP_CREATE",
-+		 BPF_MAP_CREATE);
-+	TEST_BTF("cN0", enum bpf_cmd, testenum, "BPF_MAP_CREATE",
-+		 BPF_MAP_CREATE);
-+	TEST_BTF_C(enum bpf_cmd, testenum, 2000);
-+	TEST_BTF("cN", enum bpf_cmd, testenum, "2000", 2000);
-+}
-+
-+static void __init btf_pointer_test_struct(void)
-+{
-+	/* simple struct */
-+	TEST_BTF_C(struct btf_enum, teststruct,
-+		   {.name_off = (__u32)3,.val = (__s32)-1,});
-+	TEST_BTF("cN", struct btf_enum, teststruct, "{3,-1,}",
-+		 { .name_off = 3, .val = -1,});
-+	TEST_BTF("cN", struct btf_enum, teststruct, "{-1,}",
-+		 { .name_off = 0, .val = -1,});
-+	TEST_BTF("cN0", struct btf_enum, teststruct, "{0,-1,}",
-+		 { .name_off = 0, .val = -1,});
-+	/* empty struct should be printed */
-+	TEST_BTF("c", struct btf_enum, teststruct, "(struct btf_enum){}",
-+		 { .name_off = 0, .val = 0,});
-+	TEST_BTF("cN", struct btf_enum, teststruct, "{}",
-+		 { .name_off = 0, .val = 0,});
-+	TEST_BTF("c0", struct btf_enum, teststruct,
-+		 "(struct btf_enum){.name_off = (__u32)0,.val = (__s32)0,}",
-+		 { .name_off = 0, .val = 0,});
-+
-+	/* struct with pointers */
-+	TEST_BTF("cx", struct skb_shared_info, testptr,
-+		 "(struct skb_shared_info){.frag_list = (struct sk_buff *)0000000000000001,}",
-+		 { .frag_list = (struct sk_buff *)1 });
-+	/* NULL pointer should not be displayed */
-+	TEST_BTF("cx", struct skb_shared_info, testptr,
-+		 "(struct skb_shared_info){}",
-+		 { .frag_list = (struct sk_buff *)0 });
-+
-+	/* struct with char array */
-+	TEST_BTF("c", struct bpf_prog_info, teststruct,
-+		 "(struct bpf_prog_info){.name = (char[])['f','o','o',],}",
-+		 { .name = "foo",});
-+	TEST_BTF("cN", struct bpf_prog_info, teststruct,
-+		 "{['f','o','o',],}",
-+		 {.name = "foo",});
-+	/* leading null char means do not display string */
-+	TEST_BTF("c", struct bpf_prog_info, teststruct,
-+		 "(struct bpf_prog_info){}",
-+		 {.name = {'\0', 'f', 'o', 'o'}});
-+	/* handle non-printable characters */
-+	TEST_BTF("c", struct bpf_prog_info, teststruct,
-+		 "(struct bpf_prog_info){.name = (char[])[1,2,3,],}",
-+		 { .name = {1, 2, 3, 0}});
-+
-+	/* struct with non-char array */
-+	TEST_BTF("c", struct __sk_buff, teststruct,
-+		 "(struct __sk_buff){.cb = (__u32[])[1,2,3,4,5,],}",
-+		 { .cb = {1, 2, 3, 4, 5,},});
-+	TEST_BTF("cN", struct __sk_buff, teststruct,
-+		 "{[1,2,3,4,5,],}",
-+		 { .cb = { 1, 2, 3, 4, 5},});
-+	/* For non-char, arrays, show non-zero values only */
-+	TEST_BTF("c", struct __sk_buff, teststruct,
-+		 "(struct __sk_buff){.cb = (__u32[])[1,],}",
-+		 { .cb = { 0, 0, 1, 0, 0},});
-+
-+	/* struct with struct array */
-+	TEST_BTF("c", struct bpf_struct_ops, teststruct,
-+		 "(struct bpf_struct_ops){.func_models = (struct btf_func_model[])[(struct btf_func_model){.ret_size = (u8)1,.nr_args = (u8)2,.arg_size = (u8[])[3,4,5,],},],}",
-+		 { .func_models = {{ .ret_size = 1, .nr_args = 2,
-+				     .arg_size = { 3, 4, 5,},}}});
-+
-+	/* struct with bitfields */
-+	TEST_BTF_C(struct bpf_insn, testbitfield,
-+		   {.code = (__u8)1,.dst_reg = 0x2,.src_reg = 0x3,.off = (__s16)4,.imm = (__s32)5,});
-+	TEST_BTF("cN", struct bpf_insn, testbitfield, "{1,0x2,0x3,4,5,}",
-+		 {.code = 1, .dst_reg = 0x2, .src_reg = 0x3, .off = 4,
-+		  .imm = 5,});
-+
-+	/* struct with anon struct/unions */
-+	TEST_BTF("cx", struct sk_buff, test_anon,
-+		 "(struct sk_buff){(union){(struct){(union){.dev = (struct net_device *)0000000000000001,.dev_scratch = (long unsigned int)1,},},.rbnode = (struct rb_node){.rb_left = (struct rb_node *)0000000000000001,},},}",
-+		 { .dev_scratch = 1 });
-+}
-+
-+#endif /* CONFIG_BTF_PRINTF */
-+
-+static void __init
-+btf_pointer(void)
-+{
-+	struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
-+	u8 fillvals[2] = { 0x00, 0xff };
-+	int i;
-+
-+#ifdef CONFIG_BTF_PRINTF
-+	btf_pointer_test_int();
-+	btf_pointer_test_char();
-+	btf_pointer_test_typedef();
-+	btf_pointer_test_enum();
-+	btf_pointer_test_struct();
-+#endif /* CONFIG_BTF_PRINTF */
-+
-+	/*
-+	 * Iterate every instance of each kind, printing each associated type.
-+	 * This constitutes around 10k tests.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(fillvals); i++) {
-+		btf_print_kind(BTF_KIND_STRUCT, "struct ", fillvals[i]);
-+		btf_print_kind(BTF_KIND_UNION, "union ", fillvals[i]);
-+		btf_print_kind(BTF_KIND_ENUM, "enum ", fillvals[i]);
-+		btf_print_kind(BTF_KIND_TYPEDEF, "", fillvals[i]);
-+	}
-+
-+	/* verify unknown type falls back to hashed pointer display */
-+	test("(null)", "%pT", BTF_PTR_TYPE(NULL, "unknown_type"));
-+	test_btf_hashed("%pT", BTF_PTR_TYPE(skb, "unknown_type"));
-+
-+	kfree_skb(skb);
-+}
-+
- static void __init
- test_pointer(void)
- {
-@@ -668,6 +968,7 @@ static void __init fwnode_pointer(void)
- 	flags();
- 	errptr();
- 	fwnode_pointer();
-+	btf_pointer();
- }
- 
- static void __init selftest(void)
+Best regards
 -- 
-1.8.3.1
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
