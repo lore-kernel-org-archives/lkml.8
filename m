@@ -2,118 +2,179 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6906C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A2DC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9682B20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A88620740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbgELWTN (ORCPT
+        id S1731269AbgELWT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:19:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43552 "EHLO mx2.suse.de"
+        Tue, 12 May 2020 18:19:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24762 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbgELWTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:19:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3FA7AAB99;
-        Tue, 12 May 2020 22:19:14 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5CB98DA70B; Wed, 13 May 2020 00:18:20 +0200 (CEST)
-Date:   Wed, 13 May 2020 00:18:20 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] fs: btrfs: fix a data race in
- btrfs_block_rsv_release()
-Message-ID: <20200512221820.GF18421@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200509053431.3860-1-baijiaju1990@gmail.com>
+        id S1727971AbgELWT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 18:19:57 -0400
+IronPort-SDR: qyjSWlyXe1t1Tbkm8xryNComxnYK0CHoAKj4cT/XHE5AiJB8cuan8PpmVhBlN3XYojVzoTwnPm
+ yZpNdU001JVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 15:19:56 -0700
+IronPort-SDR: r/EX9iidPri4VMtGcYtY3NxjINclsCxrKSTSyd7mjKkkszBDbSbLxoilkge4HBRcXuoHfBgexA
+ vOvo96C+vCxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,385,1583222400"; 
+   d="scan'208";a="463707804"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 12 May 2020 15:19:55 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jYdFi-00071T-Q7; Wed, 13 May 2020 06:19:54 +0800
+Date:   Wed, 13 May 2020 06:19:31 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 7e32a9dac9926241d56851e1517c9391d39fb48e
+Message-ID: <5ebb20f3.54Rb52NgkyLdAjLG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509053431.3860-1-baijiaju1990@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 01:34:31PM +0800, Jia-Ju Bai wrote:
-> The functions btrfs_block_rsv_release() and
-> btrfs_update_delayed_refs_rsv() are concurrently executed at runtime in
-> the following call contexts:
-> 
-> Thread 1:
->   btrfs_file_write_iter()
->     btrfs_buffered_write()
->       btrfs_delalloc_release_extents()
->         btrfs_inode_rsv_release()
->           __btrfs_block_rsv_release()
-> 
-> Thread 2:
->   finish_ordered_fn()
->     btrfs_finish_ordered_io()
->       insert_reserved_file_extent()
->         __btrfs_drop_extents()
->           btrfs_free_extent()
->             btrfs_add_delayed_data_ref()
->               btrfs_update_delayed_refs_rsv()
-> 
-> In __btrfs_block_rsv_release():
->   else if (... && !delayed_rsv->full)
-> 
-> In btrfs_update_delayed_refs_rsv():
->   spin_lock(&delayed_rsv->lock);
->   delayed_rsv->size += num_bytes;
->   delayed_rsv->full = 0;
->   spin_unlock(&delayed_rsv->lock);
-> 
-> Thus a data race for delayed_rsv->full can occur.
-> This race was found and actually reproduced by our conccurency fuzzer.
-> 
-> To fix this race, the spinlock delayed_rsv->lock is used to
-> protect the access to delayed_rsv->full in btrfs_block_rsv_release().
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  fs/btrfs/block-rsv.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/block-rsv.c b/fs/btrfs/block-rsv.c
-> index 27efec8f7c5b..89c53a7137b4 100644
-> --- a/fs/btrfs/block-rsv.c
-> +++ b/fs/btrfs/block-rsv.c
-> @@ -277,6 +277,11 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
->  	struct btrfs_block_rsv *global_rsv = &fs_info->global_block_rsv;
->  	struct btrfs_block_rsv *delayed_rsv = &fs_info->delayed_refs_rsv;
->  	struct btrfs_block_rsv *target = NULL;
-> +	unsigned short full = 0;
-> +
-> +	spin_lock(&delayed_rsv->lock);
-> +	full = delayed_rsv->full;
-> +	spin_unlock(&delayed_rsv->lock);
->  
->  	/*
->  	 * If we are the delayed_rsv then push to the global rsv, otherwise dump
-> @@ -284,7 +289,7 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
->  	 */
->  	if (block_rsv == delayed_rsv)
->  		target = global_rsv;
-> -	else if (block_rsv != global_rsv && !delayed_rsv->full)
-> +	else if (block_rsv != global_rsv && !full)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 7e32a9dac9926241d56851e1517c9391d39fb48e  x86/cpu: Use INVPCID mnemonic in invpcid.h
 
-This has been reported as suspicous
-https://lore.kernel.org/linux-btrfs/CAAwBoOJDjei5Hnem155N_cJwiEkVwJYvgN-tQrwWbZQGhFU=cA@mail.gmail.com/
+elapsed time: 485m
 
-and there's an answer that this is racy but does not cause any
-unexpected behaviour.
+configs tested: 112
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+arm                  colibri_pxa300_defconfig
+c6x                        evmc6457_defconfig
+powerpc                     powernv_defconfig
+mips                 decstation_r4k_defconfig
+arm                       aspeed_g4_defconfig
+h8300                     edosk2674_defconfig
+sh                           se7751_defconfig
+i386                                defconfig
+arm                           tegra_defconfig
+sh                            hp6xx_defconfig
+arm64                            alldefconfig
+arm                        vexpress_defconfig
+m68k                        m5272c3_defconfig
+sh                             sh03_defconfig
+riscv                            allyesconfig
+arm                         lpc32xx_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200512
+i386                 randconfig-a005-20200512
+i386                 randconfig-a003-20200512
+i386                 randconfig-a001-20200512
+i386                 randconfig-a004-20200512
+i386                 randconfig-a002-20200512
+x86_64               randconfig-a016-20200512
+x86_64               randconfig-a012-20200512
+x86_64               randconfig-a015-20200512
+x86_64               randconfig-a013-20200512
+x86_64               randconfig-a014-20200512
+x86_64               randconfig-a011-20200512
+i386                 randconfig-a012-20200512
+i386                 randconfig-a016-20200512
+i386                 randconfig-a014-20200512
+i386                 randconfig-a011-20200512
+i386                 randconfig-a013-20200512
+i386                 randconfig-a015-20200512
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
