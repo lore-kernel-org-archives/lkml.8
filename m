@@ -2,314 +2,124 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C48C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B27C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A2620740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE02206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbIhMlki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbgELU2Y (ORCPT
+        id S1731141AbgELU3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:28:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54882 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELU2X (ORCPT
+        Tue, 12 May 2020 16:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725938AbgELU3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:28:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 260018030807;
-        Tue, 12 May 2020 20:28:17 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id awr37A3ij-QQ; Tue, 12 May 2020 23:28:15 +0300 (MSK)
-Date:   Tue, 12 May 2020 23:28:14 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        <linux-mips@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/17] dt-bindings: spi: Convert DW SPI binding to DT
- schema
-Message-ID: <20200512202814.e6havutfpzu2gdfc@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508132943.9826-2-Sergey.Semin@baikalelectronics.ru>
- <20200508193934.GY185537@smile.fi.intel.com>
+        Tue, 12 May 2020 16:29:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FA8C061A0C;
+        Tue, 12 May 2020 13:29:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l18so17487248wrn.6;
+        Tue, 12 May 2020 13:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hj9oLR6epPx2P7OTgcVV89Q5gnN8De7ZEoi4iCaFpls=;
+        b=PbIhMlkiv+0EJ1IWuEDTuu6sTgYOiQH+dgGbu8dShMqnJC8TqE5spRyGL7iH5wvcuw
+         IOFjlLOa6tM5bg/tf+9DFsP/WI0p3PRNhpA3Ln73pRrYUkzMNyT9uJwb3yU++rybhq44
+         Tse34Rejr7Nn7CDT42ynduXF8nFPzUpqrpDqfCskWNvNjGZZ7YSp9fgcR87vAq/KgYOk
+         l1ZuT6qMtOmdCj35pIsNdGfARo+E4daiRmb9jFE0NZ7fqQ4Et0Pxb4V2Eu/d+LFczSGj
+         mp7w6xg/kHZabilVSJPk29isNQLy2McYScGlW325nLskpwezYfbuxOQjI9DBpTsNAbd8
+         RW8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hj9oLR6epPx2P7OTgcVV89Q5gnN8De7ZEoi4iCaFpls=;
+        b=Z1Yv8m8VeuXtYUv3fGM+AlsRljSp+vTwYxEob0vwKjUUs21rNDWmygd0S9WLynTlkB
+         0dCj8usznYH8Q3/MpaowBo8L2O08x9CPzBM/pJIMg1uC0BkW4b5SbqW8rRjQhVzISXul
+         B/JvfEyWyZV256GLR2THwRhrDbJmp+khqWGgJseQeZCsbRsbX3TxUuz9qVX4qZmWmyl9
+         K0JPtJhlWzb4B8SsP1NmEj8K+RSQsnX53S/oVOPpjbrgdyuTAstchlswLjvVdCz6kwAd
+         6G4a316dlBuKOURphrgxuzTQLzVf3isrV4qMPW6ZUBwqOBtrh+KxDNx6UTJdWrsg5TEW
+         mu4w==
+X-Gm-Message-State: AGi0PuZnxUpWdfu/xVxJQw2oA9Wz8xbez6t4XWYKkYuy9xFnoa+deHiu
+        ep+N+j+TwDlbT5y2dqF7wFs4CeTx
+X-Google-Smtp-Source: APiQypLp1SW7rRRIFz0yl7+YFwI3Hvq6ReSgeUhLPwHtCaEHDZ7E1AmVj9RCFvmy5n6Zte6GMLhMhA==
+X-Received: by 2002:a5d:408b:: with SMTP id o11mr25401159wrp.97.1589315349701;
+        Tue, 12 May 2020 13:29:09 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z7sm24359351wrl.88.2020.05.12.13.29.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 13:29:08 -0700 (PDT)
+Subject: Re: stable/linux-4.4.y bisection: baseline.login on
+ at91-sama5d4_xplained
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <5eb8399a.1c69fb81.c5a60.8316@mx.google.com>
+ <2db7e52e-86ae-7c87-1782-8c0cafcbadd8@collabora.com>
+ <20200512111059.GA34497@piout.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <980597f7-5170-72f2-ec2f-efc64f5e27eb@gmail.com>
+Date:   Tue, 12 May 2020 13:29:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200508193934.GY185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200512111059.GA34497@piout.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
 
-On Fri, May 08, 2020 at 10:39:34PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 04:29:26PM +0300, Serge Semin wrote:
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with dt-schema. This commit replaces two DW SPI legacy
-> > bare text bindings with YAML file. As before the bindings file states
-> > that the corresponding dts node is supposed to be compatible either
-> > with generic DW APB SSI controller or with Microsemi/Amazon/Renesas
-> > vendors-specific controllers, to have registers, interrupts and clocks
-> > properties. Though in case of Microsemi version of the controller
-> > there must be two registers resources specified. Properties like
-> > clock-names, reg-io-width, cs-gpio, num-cs and SPI-specific sub-nodes
-> > are optional.
-> 
-> Can you incorporate work done here or agree with Wan how to proceed?
-> 
-> https://lore.kernel.org/linux-spi/20200505191910.GA2970@bogus/T/#md626b5f6f2294b0ebd70995d5ed0e67a360e000b
 
-Don't worry. I'll make sure the updates provided by Wan including the new IP
-support are preserved after rebasing this series on top of the spi/for-next.
+On 5/12/2020 4:10 AM, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 12/05/2020 06:54:29+0100, Guillaume Tucker wrote:
+>> Please see the bisection report below about a boot failure.
+>>
+>> Reports aren't automatically sent to the public while we're
+>> trialing new bisection features on kernelci.org but this one
+>> looks valid.
+>>
+>> It appears to be due to the fact that the network interface is
+>> failing to get brought up:
+>>
+>> [  114.385000] Waiting up to 10 more seconds for network.
+>> [  124.355000] Sending DHCP requests ...#
+>> ..#
+>> .#
+>>  timed out!
+>> [  212.355000] IP-Config: Reopening network devices...
+>> [  212.365000] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+>> #
+>>
+>>
+>> I guess the board would boot fine without network if it didn't
+>> have ip=dhcp in the command line, so it's not strictly a kernel
+>> boot failure but still an ethernet issue.
+>>
+> 
+> I think the resolution of this issue is
+> 99f81afc139c6edd14d77a91ee91685a414a1c66. If this is taken, then I think
+> f5aba91d7f186cba84af966a741a0346de603cd4 should also be backported.
 
--Sergey
-
-> 
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Allison Randal <allison@lohutok.net>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Gareth Williams <gareth.williams.jx@renesas.com>
-> > Cc: linux-mips@vger.kernel.org
-> > ---
-> >  .../bindings/spi/snps,dw-apb-ssi.txt          |  41 -------
-> >  .../bindings/spi/snps,dw-apb-ssi.yaml         | 113 ++++++++++++++++++
-> >  .../devicetree/bindings/spi/spi-dw.txt        |  24 ----
-> >  3 files changed, 113 insertions(+), 65 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> >  create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > deleted file mode 100644
-> > index 3ed08ee9feba..000000000000
-> > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > +++ /dev/null
-> > @@ -1,41 +0,0 @@
-> > -Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
-> > -
-> > -Required properties:
-> > -- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
-> > -  "jaguar2", or "amazon,alpine-dw-apb-ssi"
-> > -- reg : The register base for the controller. For "mscc,<soc>-spi", a second
-> > -  register set is required (named ICPU_CFG:SPI_MST)
-> > -- interrupts : One interrupt, used by the controller.
-> > -- #address-cells : <1>, as required by generic SPI binding.
-> > -- #size-cells : <0>, also as required by generic SPI binding.
-> > -- clocks : phandles for the clocks, see the description of clock-names below.
-> > -   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
-> > -   is optional. If a single clock is specified but no clock-name, it is the
-> > -   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
-> > -
-> > -Optional properties:
-> > -- clock-names : Contains the names of the clocks:
-> > -    "ssi_clk", for the core clock used to generate the external SPI clock.
-> > -    "pclk", the interface clock, required for register access. If a clock domain
-> > -     used to enable this clock then it should be named "pclk_clkdomain".
-> > -- cs-gpios : Specifies the gpio pins to be used for chipselects.
-> > -- num-cs : The number of chipselects. If omitted, this will default to 4.
-> > -- reg-io-width : The I/O register width (in bytes) implemented by this
-> > -  device.  Supported values are 2 or 4 (the default).
-> > -
-> > -Child nodes as per the generic SPI binding.
-> > -
-> > -Example:
-> > -
-> > -	spi@fff00000 {
-> > -		compatible = "snps,dw-apb-ssi";
-> > -		reg = <0xfff00000 0x1000>;
-> > -		interrupts = <0 154 4>;
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		clocks = <&spi_m_clk>;
-> > -		num-cs = <2>;
-> > -		cs-gpios = <&gpio0 13 0>,
-> > -			   <&gpio0 14 0>;
-> > -	};
-> > -
-> > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > new file mode 100644
-> > index 000000000000..e2f6d8aa6181
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > @@ -0,0 +1,113 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
-> > +
-> > +maintainers:
-> > +  - Mark Brown <broonie@kernel.org>
-> > +
-> > +allOf:
-> > +  - $ref: "spi-controller.yaml#"
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - mscc,ocelot-spi
-> > +              - mscc,jaguar2-spi
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          minItems: 2
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: Generic DW SPI controller
-> > +        const: snps,dw-apb-ssi
-> > +      - description: Microsemi Ocelot/Jaguar2 SoC SPI controller
-> > +        items:
-> > +          - enum:
-> > +              - mscc,ocelot-spi
-> > +              - mscc,jaguar2-spi
-> > +          - const: snps,dw-apb-ssi
-> > +      - description: Amazon Alpine SPI controller
-> > +        const: amazon,alpine-dw-apb-ssi
-> > +      - description: Renesas RZ/N1 SPI controlle.
-> > +        items:
-> > +          - const: renesas,rzn1-spi
-> > +          - const: snps,dw-apb-ssi
-> > +
-> > +  reg:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: DW APB SSI controller memory mapped registers
-> > +      - description: SPI MST region map
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: SPI Controller reference clock source
-> > +      - description: APB interface clock source
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: ssi_clk
-> > +      - const: pclk
-> > +
-> > +  reg-io-width:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: I/O register width (in bytes) implemented by this device
-> > +    default: 4
-> > +    enum: [ 2, 4 ]
-> > +
-> > +  num-cs:
-> > +    default: 4
-> > +    minimum: 1
-> > +    maximum: 4
-> > +
-> > +patternProperties:
-> > +  "^.*@[0-9a-f]+$":
-> > +    type: object
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 3
-> > +
-> > +      spi-rx-bus-width:
-> > +        const: 1
-> > +
-> > +      spi-tx-bus-width:
-> > +        const: 1
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +examples:
-> > +  - |
-> > +    spi@fff00000 {
-> > +      compatible = "snps,dw-apb-ssi";
-> > +      reg = <0xfff00000 0x1000>;
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      interrupts = <0 154 4>;
-> > +      clocks = <&spi_m_clk>;
-> > +      num-cs = <2>;
-> > +      cs-gpios = <&gpio0 13 0>,
-> > +                 <&gpio0 14 0>;
-> > +    };
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Documentation/devicetree/bindings/spi/spi-dw.txt
-> > deleted file mode 100644
-> > index 7b63ed601990..000000000000
-> > --- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-> > +++ /dev/null
-> > @@ -1,24 +0,0 @@
-> > -Synopsys DesignWare SPI master
-> > -
-> > -Required properties:
-> > -- compatible: should be "snps,designware-spi"
-> > -- #address-cells: see spi-bus.txt
-> > -- #size-cells: see spi-bus.txt
-> > -- reg: address and length of the spi master registers
-> > -- interrupts: should contain one interrupt
-> > -- clocks: spi clock phandle
-> > -- num-cs: see spi-bus.txt
-> > -
-> > -Optional properties:
-> > -- cs-gpios: see spi-bus.txt
-> > -
-> > -Example:
-> > -
-> > -spi: spi@4020a000 {
-> > -	compatible = "snps,designware-spi";
-> > -	interrupts = <11 1>;
-> > -	reg = <0x4020a000 0x1000>;
-> > -	clocks = <&pclk>;
-> > -	num-cs = <2>;
-> > -	cs-gpios = <&banka 0 0>;
-> > -};
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Agreed.
+-- 
+Florian
