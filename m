@@ -2,174 +2,189 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAADFC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFCC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F52A206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C49206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qid5Qezi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QAXD0bZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbgELP1f (ORCPT
+        id S1730626AbgELP2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
+        Tue, 12 May 2020 11:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgELP1f (ORCPT
+        with ESMTP id S1730457AbgELP2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:27:35 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA17C061A0C;
-        Tue, 12 May 2020 08:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=0o6dVNg9znzcukghDI8w+W/ZJ8g4B3rZRt84WXfDJ6c=; b=qid5QeziBRaVfqMBDyUCBGgDpI
-        /gF4sMtm3dRw8LjoA63J+wVFfLD3dsqePrw16fUSSYGDnVoBhu5KrEpY1j0bhTFF30jtZmGTLE9bM
-        p2w7JB6I9TvRiWBLg9FoZyzGvoseM/YkgM4KU+kxIGAVTvI4YLqHT+LcVxKMpWnBStdRVSqEukak7
-        mdJMblA9cqMezoVZqxuCN+PCIk2PhL3ZQQGztYGOCy9UeAjdbBic7tsoEKQqavyS7NszdHbK2FJIM
-        Uj+Y6CY+lZiFt01TbKVo9phwsXK4dseELaXRyYvpoNPZbiuVbV5BcoEz0W0pA3J8muluAtiYobjFe
-        39FlXhgw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYWob-0000js-Ob; Tue, 12 May 2020 15:27:34 +0000
-Subject: Re: mmotm 2020-05-11-15-43 uploaded (mm/memcontrol.c, huge pages)
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
-References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org>
- <3b612c3e-ce52-ba92-eb02-0fa7fd38819f@infradead.org>
- <20200512121750.GA397968@cmpxchg.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <bc0af588-3591-1372-ac44-27404ee79ff9@infradead.org>
-Date:   Tue, 12 May 2020 08:27:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 11:28:07 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53ACCC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:28:07 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id z80so8455485qka.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VTYHiGRZeak1+WyqS6xW7NgB9EbujjGNo0rvwUWxcQ4=;
+        b=QAXD0bZtkOdjlOb1PJu/i7RYbt9WYWPctvCLBdkulPtQH3wJBaPYW/7w0oEfl47K/w
+         yRfY3GOGYldyK3wwLE1FZ3aFek0UZvt57iOdzsmyjkJwSIt6cGxaaN89gSQkiobMJlFa
+         JIDWp52Q3/5fGYYA36Jjsm09dcApVGzzQ8PQ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VTYHiGRZeak1+WyqS6xW7NgB9EbujjGNo0rvwUWxcQ4=;
+        b=CaVmoQVt64qdvq7iS20DCmg400mJsqrAVRfBncIUjyCHSsIuF57DDxAc3Yd6zlv5r5
+         YQQsZXHQiYx0WFpa8LmDtAF6faK+zRzX30keQVpIU8yqJdHBoNEQMbL9l1ek2+i49VPP
+         0bI7aOPdb/VCDazlxi9c2mSC0tVOYhgkZp1DteR76GiCUQQV6I47PvGsyAAAwDBN7kOc
+         siAKsiJiaVsEUHy2uRmehZj4SUKggbb82DHKa/1W4rlXeJkFSp0sr7Z0u5YLxoRulXsl
+         e5zkF60vMUSSkn826ph6vf3dV6BjWaz0RQxNHP2wpcMlBB/kQCf58cVkQfxlmIrTohrY
+         8ZQA==
+X-Gm-Message-State: AGi0PuaCKsErlkHonn2kmDyIyyCGWjyAfU7bZfqFOHJ07X6Y9qalOCit
+        wioRYNqW/VmMTOZrw7pUWcAl4NdAGfk=
+X-Google-Smtp-Source: APiQypIm+2us2XNxg9dRpkHhWc3UasY4P3/TSvbgoNFNCrh4MMs3uAPFlH9Y0pX1UZM95uKOjG0MMg==
+X-Received: by 2002:a37:6892:: with SMTP id d140mr17937560qkc.447.1589297286265;
+        Tue, 12 May 2020 08:28:06 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id g20sm9859163qki.75.2020.05.12.08.28.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 08:28:05 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id i16so7163966ybq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:28:03 -0700 (PDT)
+X-Received: by 2002:ab0:45c7:: with SMTP id u65mr16628982uau.8.1589297282220;
+ Tue, 12 May 2020 08:28:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200512121750.GA397968@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200428211351.85055-1-dianders@chromium.org> <20200428141218.v3.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
+ <20200511145908.GA22040@willie-the-truck> <CAD=FV=W1F-B7SUwxebhhH2HS+fN4sYv4RHvvKud5a+00J0T=SA@mail.gmail.com>
+ <20200512073552.GA1538@willie-the-truck>
+In-Reply-To: <20200512073552.GA1538@willie-the-truck>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 12 May 2020 08:27:50 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WuKS7c4WNiLKm+bjRF8Rd7wM1y7THWzJhVhUyExNiiVg@mail.gmail.com>
+Message-ID: <CAD=FV=WuKS7c4WNiLKm+bjRF8Rd7wM1y7THWzJhVhUyExNiiVg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/11] arm64: Add call_break_hook() to early_brk64()
+ for early kgdb
+To:     Will Deacon <will@kernel.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-serial@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frank Rowand <frowand.list@gmail.com>, bp@alien8.de,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Dave Martin <Dave.Martin@arm.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        jinho lim <jordan.lim@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/20 5:17 AM, Johannes Weiner wrote:
+Hi,
 
-> 
-> ---
-> 
-> Randy reports:
-> 
->> on x86_64:
->>
->> In file included from ../arch/x86/include/asm/atomic.h:5:0,
->>                  from ../include/linux/atomic.h:7,
->>                  from ../include/linux/page_counter.h:5,
->>                  from ../mm/memcontrol.c:25:
->> ../mm/memcontrol.c: In function ‘memcg_stat_show’:
->> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_383’ declared with attribute error: BUILD_BUG failed
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>                                       ^
->> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
->>     prefix ## suffix();    \
->>     ^~~~~~
->> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->>   ^~~~~~~~~~~~~~~~~~~
->> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>                                      ^~~~~~~~~~~~~~~~~~
->> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>                      ^~~~~~~~~~~~~~~~
->> ../include/linux/huge_mm.h:319:28: note: in expansion of macro ‘BUILD_BUG’
->>  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
-> 
-> The THP page size macros are CONFIG_TRANSPARENT_HUGEPAGE only.
-> 
-> We already ifdef most THP-related code in memcg, but not these
-> particular stats. Memcg used to track the pages as they came in, and
-> PageTransHuge() + hpage_nr_pages() work when THP is not compiled in.
-> 
-> Switching to native vmstat counters, memcg doesn't see the pages, it
-> only gets a count of THPs. To translate that to bytes, it has to know
-> how big the THPs are - and that's only available for CONFIG_THP.
-> 
-> Add the necessary ifdefs. /proc/meminfo, smaps etc. also don't show
-> the THP counters when the feature is compiled out. The event counts
-> (THP_FAULT_ALLOC, THP_COLLAPSE_ALLOC) were already conditional also.
-> 
-> Style touchup: HPAGE_PMD_NR * PAGE_SIZE is silly. Use HPAGE_PMD_SIZE.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+On Tue, May 12, 2020 at 12:36 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Mon, May 11, 2020 at 03:45:02PM -0700, Doug Anderson wrote:
+> > On Mon, May 11, 2020 at 7:59 AM Will Deacon <will@kernel.org> wrote:
+> > > On Tue, Apr 28, 2020 at 02:13:45PM -0700, Douglas Anderson wrote:
+> > > > diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+> > > > index 48222a4760c2..59c353dfc8e9 100644
+> > > > --- a/arch/arm64/kernel/debug-monitors.c
+> > > > +++ b/arch/arm64/kernel/debug-monitors.c
+> > > > @@ -297,7 +297,7 @@ void unregister_kernel_break_hook(struct break_hook *hook)
+> > > >       unregister_debug_hook(&hook->node);
+> > > >  }
+> > > >
+> > > > -static int call_break_hook(struct pt_regs *regs, unsigned int esr)
+> > > > +int call_break_hook(struct pt_regs *regs, unsigned int esr)
+> > > >  {
+> > > >       struct break_hook *hook;
+> > > >       struct list_head *list;
+> > > > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> > > > index cf402be5c573..a8173f0c1774 100644
+> > > > --- a/arch/arm64/kernel/traps.c
+> > > > +++ b/arch/arm64/kernel/traps.c
+> > > > @@ -1044,6 +1044,9 @@ int __init early_brk64(unsigned long addr, unsigned int esr,
+> > > >       if ((comment & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
+> > > >               return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
+> > > >  #endif
+> > > > +     if (call_break_hook(regs, esr) == DBG_HOOK_HANDLED)
+> > > > +             return 0;
+> > >
+> > > I think this just means we're not running debug_traps_init() early enough,
+> > > and actually the KASAN early handler is unnecessary too.
+> > >
+> > > If we call debug_traps_init() directly from setup_arch() and drop the
+> > > arch_initcall(), can we then drop early_brk64 entirely?
+> >
+> > It seems to work in my testing.  ...but the worry I have is the
+> > comment right before trap_init().  It says:
+> >
+> > /* This registration must happen early, before debug_traps_init(). */
+>
+> I /think/ the reason for this is because debug_traps_init() replaces the
+> BRK vector, so if that runs before the break hooks have been registered
+> for e.g. BUG() then BUG() won't work during that window. Hmm, so dropping
+> early_brk64 is problematic after all. Damn.
+>
+> Is trap_init() early enough for you? If so, we could call debug_traps_init()
+> from traps_init() after registering the break hooks.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+"Early enough" is a subjective term, of course.  The earlier we can
+init, the earlier we can drop into the debugger.  ...but, of course,
+everyone thinks their feature is the most important and should be
+first, so let's see...
 
-Thanks.
+Certainly if we waited until trap_init() it wouldn't be early enough
+to set "ARCH_HAS_EARLY_DEBUG".  Setting that means that debugging is
+ready when early params are parsed and those happen at the start of
+setup_arch().  The call to trap_init() happens a bit later.
 
-> ---
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 738d071ba1ef..47c685088a2c 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1401,9 +1401,11 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
->  		       (u64)memcg_page_state(memcg, NR_WRITEBACK) *
->  		       PAGE_SIZE);
->  
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  	seq_buf_printf(&s, "anon_thp %llu\n",
->  		       (u64)memcg_page_state(memcg, NR_ANON_THPS) *
-> -		       HPAGE_PMD_NR * PAGE_SIZE);
-> +		       HPAGE_PMD_SIZE);
-> +#endif
->  
->  	for (i = 0; i < NR_LRU_LISTS; i++)
->  		seq_buf_printf(&s, "%s %llu\n", lru_list_name(i),
-> @@ -3752,7 +3754,9 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
->  static const unsigned int memcg1_stats[] = {
->  	NR_FILE_PAGES,
->  	NR_ANON_MAPPED,
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  	NR_ANON_THPS,
-> +#endif
->  	NR_SHMEM,
->  	NR_FILE_MAPPED,
->  	NR_FILE_DIRTY,
-> @@ -3763,7 +3767,9 @@ static const unsigned int memcg1_stats[] = {
->  static const char *const memcg1_stat_names[] = {
->  	"cache",
->  	"rss",
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  	"rss_huge",
-> +#endif
->  	"shmem",
->  	"mapped_file",
->  	"dirty",
-> @@ -3794,8 +3800,10 @@ static int memcg_stat_show(struct seq_file *m, void *v)
->  		if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
->  			continue;
->  		nr = memcg_page_state_local(memcg, memcg1_stats[i]);
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  		if (memcg1_stats[i] == NR_ANON_THPS)
->  			nr *= HPAGE_PMD_NR;
-> +#endif
->  		seq_printf(m, "%s %lu\n", memcg1_stat_names[i], nr * PAGE_SIZE);
->  	}
->  
-> 
+If we decide that we just don't care about getting
+"ARCH_HAS_EARLY_DEBUG" to work then the earliest we'll be able to
+break into the debugger (via kgdbwait) is dbg_late_init().  That
+_does_ happen after trap_init() so your solution would work.
+
+As a person who spends most of his time in driver land, it wouldn't be
+the end of the world to wait for dbg_late_init().  That's still much
+earlier than most code I'd ever debug.  ...and, bonus points is that
+if we hit a crash any time after earlyparams we _will_ still drop into
+the debugger.  It's only breakpoints that won't be available until
+dbg_late_init().
 
 
--- 
-~Randy
+tl;dr:
+
+* If we care about "kgdbwait" and breakpoints working as early as
+possible then we need my patch.
+
+* If we are OK w/ a slightly later "kgdbwait" then I think we can move
+debug_traps_init() to trap_init() and get rid of the early version.
+
+
+Please let me know which way you'd like to proceed.
+
+-Doug
