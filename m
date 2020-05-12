@@ -2,147 +2,94 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FF2C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02684C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A992082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C291720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mQ2QlGEj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d5skZfzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgELIPb (ORCPT
+        id S1729024AbgELISe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:15:31 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:51407 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgELIPb (ORCPT
+        Tue, 12 May 2020 04:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725823AbgELISd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:15:31 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200512081528epoutp018a8b53b410644949c7e86ab24c46f146~OOdpJ7BVO0040500405epoutp01x
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:15:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200512081528epoutp018a8b53b410644949c7e86ab24c46f146~OOdpJ7BVO0040500405epoutp01x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589271328;
-        bh=jqs4TDpEL0IlO57aJ40jD4Oits9vgvlarKqKQm2otXc=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=mQ2QlGEjlPsIkwhBxmbCyw97AEMt0UTmjul85KxpdUXamzYdPDsmvJzTZoSdBrpMG
-         fJE4q6KrQ0yhmEk84jzJCVvx8oaAgO9qmx3kSydGuWVRebZNZfDtQvpwb1bFl4EQbj
-         tnHsmeJxskzJ1r/0ESUxw1jTmj6ipJMeTGB4gDj8=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200512081528epcas1p4f836afdda116959fa63f36a82f687734~OOdpABKX_0091300913epcas1p4f;
-        Tue, 12 May 2020 08:15:28 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49LrG70DQmzMqYlv; Tue, 12 May
-        2020 08:15:27 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        63.0C.04658.E1B5ABE5; Tue, 12 May 2020 17:15:26 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff~OOdnmWTZ90981009810epcas1p3f;
-        Tue, 12 May 2020 08:15:26 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200512081526epsmtrp28ea5fcbac1db5848fd8fa4378ce32e4e~OOdnlaQkw0720107201epsmtrp2w;
-        Tue, 12 May 2020 08:15:26 +0000 (GMT)
-X-AuditID: b6c32a39-a99ff70000001232-9b-5eba5b1e5c09
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        15.41.18461.E1B5ABE5; Tue, 12 May 2020 17:15:26 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200512081526epsmtip2f4c2b54d873af0ab98097cd798ea5c7f~OOdna_rR20899708997epsmtip2d;
-        Tue, 12 May 2020 08:15:26 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-Cc:     "'Eric Sandeen'" <sandeen@sandeen.net>,
-        "'Goldwyn Rodrigues'" <rgoldwyn@suse.com>,
-        "'Hyunchul Lee'" <hyc.lee@gmail.com>,
-        "'Nicolas Boos'" <nicolas.boos@wanadoo.fr>
-Subject: exfatprogs-1.0.3 version released 
-Date:   Tue, 12 May 2020 17:15:26 +0900
-Message-ID: <000201d62835$7ddafe50$7990faf0$@samsung.com>
+        Tue, 12 May 2020 04:18:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D69C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fzXWi7XnwojoLXJd76cQwXCP7NYbm2GSHaGqNztZoLI=; b=d5skZfzU1mZbdJQzGej8iouOYG
+        ZFAIzQc053cmUAHN1y1vvB5aSF6pgwffK2OGdehEXnLFHE3G8F7rwQOMGd9cgXMmHdh3esRY2Cu4H
+        3h+NhCqR+/hHWCI/BTjHIaCScHZqKI8Af5mWqUad5usD09fFNlbNa50FUSxGk04kVzKdLVfEClNHr
+        S8Hc6nrFsBdvV6glHMjY1mwDkoy0BorSWxvu1v0hV5I4je57p7CQKa/VyDGOufppAPfZsOzv15qIx
+        M6VEJzq/p3FYURPl+JYZGXfJJgA7zMH3UfGApB+nQiF3TiMZMfVe6Jt0X0RigyZj2VaIYqBDyUu76
+        KcdHXExg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYQ7Q-0005b0-Dt; Tue, 12 May 2020 08:18:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A3333300261;
+        Tue, 12 May 2020 10:18:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8A8EF2037216B; Tue, 12 May 2020 10:18:26 +0200 (CEST)
+Date:   Tue, 12 May 2020 10:18:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
+        paulmck@kernel.org, mingo@kernel.org
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Message-ID: <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+References: <20200511204150.27858-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdYoKlFwERpUCPhIS8+ZusGyqDKKeA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXd2tiktjnPWw4JaB/rgarq5ZkfJCroNi7L6kBSph3nYRrux
-        M6UbYWRmdrfSXBajwKw+WEtKJR1NU0agUJqkVEoXc+K9cnazbUfJb//3eX//9/88PK8Ik9wS
-        yEQmq5NxWGkzKYjmP2mOVymX7m/IUvmHUqk3H0aF1LNGP5963VApoApaW/hU0Z8GnDrVqdgg
-        0NW73gl1tXf6ebqa2i6+btKzVDf5rgbPwPeZ1xoZOpdxyBmr3pZrshrSyG17sjdma5NVaqU6
-        hVpDyq20hUkjN23PUG4xmUMNkPJ82pwXKmXQLEsmrlvrsOU5GbnRxjrTSMaea7arVfYElraw
-        eVZDgt5mSVWrVEnaEJljNs6U+zF7teBQacd7XgEqxEtQlAiI1fDC3cIrQdEiCVGH4Of0LUH4
-        QkJMIAj2xnH6B4IPjw/NGU7enME4QyOCps4BnDsMIui/3s0LUwJCCX9/eyMvSQk9NA15URjC
-        iAcIAp8CESiWWAm/K77ww5pPrICyE8GIQUykQFWgVMjpGPBXfIowGLEMng5XYlwbcpj+XIVz
-        AQlQNv4V4xgp3DhTFGkPiGkhjLm9s4ZNMN49JeR0LATaame1DCZHGkPBopA+CuNzeDGCr1Np
-        nNbA25qHeBjBiHioaUjkysuh/tdNxMUuhJHv53DuFTEUF0k4ZAVceNXM4/QSKDk9Nhuqg3M9
-        F3mX0HLXvCFd84Z0zRvG9T/Yjfj30SLGzloMDKu2a+fv2oMif1ORUoda27f7ECFC5AJxcVJ9
-        lgSn89nDFh8CEUZKxYWmUEmcSx8+wjhs2Y48M8P6kDa0g8uYLE5vC/10qzNbrU3SaDTU6uQ1
-        yVoNuVh8rducJSEMtJM5yDB2xjHn44miZAWoDLM09n2RjgUPziybyMxRDXc89/hSffFF6R8L
-        3peKM2L27fjW+515lH57PTreHn2m3EeNbs3saTuw6ximCBik5Zvv9fEm3LK6dYGzV3ZrZX3G
-        4iWt+gV3H1/1KgausYHqnzvTTd5To82DXSXD9vr+oHfiPFSsKvTf2Js45Qm+JPmskVYrMAdL
-        /wN20rP4sQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSvK5c9K44g95ZMhbX7r9nt9iz9ySL
-        xeVdc9gsGo4dYbFo+7uL1aL1ipYDm8fOWXfZPbYsfsjksX7LVRaPz5vkPD7fXc8awBrFZZOS
-        mpNZllqkb5fAlfF/+knmghVsFZPO32NqYGxh7WLk5JAQMJFonvufuYuRi0NIYDejxMwFD6ES
-        0hLHTpwBSnAA2cIShw8XQ9Q8Z5S4OP8UWA2bgK7Evz/72UBsEYFkiX2v9zOCFDELrGWUuP/v
-        JzNIQlhAW+LPzGcsIDaLgKrEtMYfYA28ApYSy15NYoewBSVOznzCArKMWUBPom0jI0iYWUBe
-        YvvbOcwQ9yhI/Hy6jBVil57EtI8vmCFqRCRmd7YxT2AUnIVk0iyESbOQTJqFpGMBI8sqRsnU
-        guLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgeNDS3MG4fdUHvUOMTByMhxglOJiVRHhbMnfG
-        CfGmJFZWpRblxxeV5qQWH2KU5mBREue9UbgwTkggPbEkNTs1tSC1CCbLxMEp1cB04XJOoIf/
-        rinK27hYvEMiejKnFKxec3HK26//smUN7Is9rvSd/sRx95rdbT7n/bvSTRuaDnxyEA+8K9WS
-        ae933eHHvD8ftRy37JwjZR3J5aP19bXolH9MIsGlmXF3+K5VdZX1rHzK2++e1KH1vulijU6t
-        9rfa2H15B+c22Eb1vWd+pzrD7a5bB+fb1iLND1nbE31rZN7maSZfaj8kw6u0KOfgq9SG29V5
-        9S/X39kgP8n8dIzN4spn0deEo/ukH2ztkq459uCmwdf1fz9rNP+4n6zZqvc8Z92p193h+csc
-        je15axb+2bnq7eyAN7uTmCYIrW43uVoXwndpR+X6tTrrg/jyzd8eS2W4Fn2Qo0qJpTgj0VCL
-        uag4EQBbWgdF9gIAAA==
-X-CMS-MailID: 20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff
-References: <CGME20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff@epcas1p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511204150.27858-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folk,
+On Mon, May 11, 2020 at 09:41:32PM +0100, Will Deacon wrote:
+> Hi folks,
+> 
+> (trimmed CC list since v4 since this is largely just a rebase)
+> 
+> This is version five of the READ_ONCE() codegen improvement series that
+> I've previously posted here:
+> 
+> RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+> v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
+> v3:  https://lore.kernel.org/lkml/20200415165218.20251-1-will@kernel.org
+> v4:  https://lore.kernel.org/lkml/20200421151537.19241-1-will@kernel.org
+> 
+> The main change since v4 is that this is now based on top of the KCSAN
+> changes queued in -tip (locking/kcsan) and therefore contains the patches
+> necessary to avoid breaking sparc32 as well as some cleanups to
+> consolidate {READ,WRITE}_ONCE() and data_race().
+> 
+> Other changes include:
+> 
+>   * Treat 'char' as distinct from 'signed char' and 'unsigned char' for
+>     __builtin_types_compatible_p()
+> 
+>   * Add a compile-time assertion that the argument to READ_ONCE_NOCHECK()
+>     points at something the same size as 'unsigned long'
+> 
+> I'm happy for all of this to go via -tip, or I can take it via arm64.
 
-We have released exfatprogs-1.0.3 version.
-Any feedback is welcome!:)
+Looks good to me; Thanks!
 
-CHANGES :
- * Rename label.exfat to tune.exfat.
- * tune.exfat: change argument style(-l option for print level,
-   -L option for setting label)
- * mkfs.exfat: harmonize set volume label option with tune.exfat.
-
-NEW FEATURES :
- * Add man page.
-
-BUG FIXES :
- * Fix the reported build warnings/errors.
- * Add memset to clean garbage in allocation.
- * Fix wrong volume label array size.
- * Open a device using O_EXCL to avoid formatting it while it is mounted.
- * Fix incomplete "make dist" generated tarball.
-
-The git tree is at:
-      https://github.com/exfatprogs/exfatprogs
-
-The tarballs can be found at:
-      https://github.com/exfatprogs/exfatprogs/releases/download/1.0.3/exfatprogs-1.0.3.tar.gz
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
