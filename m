@@ -2,125 +2,100 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F870C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E39CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7628B206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DB6206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgELRBY (ORCPT
+        id S1728163AbgELRDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:01:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54412 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELRBY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:01:24 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 33F65803080B;
-        Tue, 12 May 2020 17:01:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IZmXehCXf_Nc; Tue, 12 May 2020 20:01:20 +0300 (MSK)
-Date:   Tue, 12 May 2020 20:01:18 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200512170118.3qbtpuphtwltb7nu@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
- <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
- <20200512123551.GX185537@smile.fi.intel.com>
+        Tue, 12 May 2020 13:03:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48286 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726031AbgELRDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:03:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B0C0BAC4D;
+        Tue, 12 May 2020 17:03:50 +0000 (UTC)
+Date:   Tue, 12 May 2020 09:58:24 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     akpm@linux-foundation.org, peterz@infradead.org,
+        paulmck@kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 1/2] kernel/sys: only rely on rcu for getpriority(2)
+Message-ID: <20200512165824.t6ktwllqlvkiingv@linux-p48b>
+References: <20200512000353.23653-1-dave@stgolabs.net>
+ <20200512000353.23653-2-dave@stgolabs.net>
+ <20200512150936.GA28621@redhat.com>
+ <20200512160915.n3plwrwwrlpfqyrs@linux-p48b>
+ <20200512164130.GC28621@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200512123551.GX185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200512164130.GC28621@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:35:51PM +0300, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > > > Maximum block size DW DMAC configuration corresponds to the max segment
-> > > > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > > > value specific to the probed DW DMA controller. It shall help the DMA
-> > > > clients to create size-optimized SG-list items for the controller. This in
-> > > > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > > > better DMA device performance.
-> 
-> > > Yeah, I have locally something like this and I didn't dare to upstream because
-> > > there is an issue. We have this information per DMA controller, while we
-> > > actually need this on per DMA channel basis.
-> > > 
-> > > Above will work only for synthesized DMA with all channels having same block
-> > > size. That's why above conditional is not needed anyway.
-> > 
-> > Hm, I don't really see why the conditional isn't needed and this won't work. As
-> > you can see in the loop above Initially I find a maximum of all channels maximum
-> > block sizes and use it then as a max segment size parameter for the whole device.
-> > If the DW DMA controller has the same max block size of all channels, then it
-> > will be found. If the channels've been synthesized with different block sizes,
-> > then the optimization will work for the one with greatest block size. The SG
-> > list entries of the channels with lesser max block size will be split up
-> > by the DW DMAC driver, which would have been done anyway without
-> > max_segment_size being set. Here we at least provide the optimization for the
-> > channels with greatest max block size.
-> > 
-> > I do understand that it would be good to have this parameter setup on per generic
-> > DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-> > such facility, so setting at least some justified value is a good idea.
-> > 
-> > > 
-> > > OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> > > that Intel Medfield has interesting settings, but I don't remember if DMA
-> > > channels are different inside the same controller).
-> > > 
-> > > Vineet, do you have any information that Synopsys customers synthesized DMA
-> > > controllers with different channel characteristics inside one DMA IP?
-> > 
-> > AFAICS the DW DMAC channels can be synthesized with different max block size.
-> > The IP core supports such configuration. So we can't assume that such DMAC
-> > release can't be found in a real hardware just because we've never seen one.
-> > No matter what Vineet will have to say in response to your question.
-> 
-> My point here that we probably can avoid complications till we have real
-> hardware where it's different. As I said I don't remember a such, except
-> *maybe* Intel Medfield, which is quite outdated and not supported for wider
-> audience anyway.
+On Tue, 12 May 2020, Oleg Nesterov wrote:
 
-I see your point. My position is different in this matter and explained in the
-previous emails. Let's see what Viresh and Vinod think of it.
+>On 05/12, Davidlohr Bueso wrote:
+>>
+>> On Tue, 12 May 2020, Oleg Nesterov wrote:
+>>
+>> >do_each_pid_task(PIDTYPE_PGID) can race with change_pid(PIDTYPE_PGID)
+>> >which moves the task from one hlist to another. Yes, it is safe in
+>> >that task_struct can't go away. But still this is not right because
+>> >do_each_pid_task() can scan the wrong (2nd) hlist.
+>>
+>> Hmm I didn't think about this case, I guess this is also busted in
+>> ioprio_get(2) then.
+>
+>agreed...
+>
+>> >
+>> >could you explain in details why do you think this PF_EXITING check
+>> >makes any sense?
+>>
+>> My logic was that if the task with the highest prio exited while we
+>> were iterating the list, it would not be necessarily seen with rcu
+>> and the syscall would return the highest prio of a task that exited;
+>> and checking against PF_EXITING was a way to ignore such scenarios
+>> as we were going to race with it anyway.
+>
+>Sorry, still can't understand. The PF_EXITING flag is not protected by
+>tasklist_lock or rcu_lock.
 
--Sergey
+Sorry for not making my idea clear, perhaps it's complete garbage.
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Right, but setting the flag is an indication that the tasklist_lock
+will be taken and removed from the list, and therefore we could
+optimistically avoid considering that task altogether instead of
+relying on the old copy of the list. It's not perfect, but it does
+reduce the window in which getpriority() can return a stale value(?).
+
+At least this is how I justify it. Otoh this also opens a window in
+where the lockless version can ignore highest prio task when the locked
+version would otherwise consider it. So it might not be worth it.
+
+>
+>OK, if nothing else. Suppose that a prgp has a single process P, this
+>proces has already exited but its parent didn't do wait().
+>
+>Currently getpriority() returns task_nice(P). With the PF_EXITING check
+>it will return -ESRCH. Hmm?
+
+Yes, that would need fixing but you don't seem to be buying the idea
+in the first place.
+
+Thanks,
+Davidlohr
