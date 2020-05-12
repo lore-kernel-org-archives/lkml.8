@@ -2,129 +2,144 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE95C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA9FC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81B320784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B1320740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="roj0ycig"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u6rM9zM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgELVL7 (ORCPT
+        id S1731482AbgELVMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
+        Tue, 12 May 2020 17:12:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731331AbgELVLX (ORCPT
+        by vger.kernel.org with ESMTP id S1728379AbgELVML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:11:23 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29553C061A0C;
-        Tue, 12 May 2020 14:11:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h17so8813625wrc.8;
-        Tue, 12 May 2020 14:11:23 -0700 (PDT)
+        Tue, 12 May 2020 17:12:11 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15E60C061A0C;
+        Tue, 12 May 2020 14:12:11 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w7so17720342wre.13;
+        Tue, 12 May 2020 14:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pjlQaP6Pg6Yvwq7DW912bqutMrQVbTNiK7xq5gHpuE0=;
-        b=roj0ycigj6tQpVmbhT3jMy7/bvzkqodh/XKde1bJcDq8Su5gcZDcm7zLr8gdt1bPAk
-         g6x90DldhUlWdT1PBS48kD5RXetpXcNc/eHbsfufeiGHipzX0E9wjr+TphFWQnr7SDpb
-         Xm7K9cF+fp2IDhkP9lNym+BixHnCNStlxvFAqVJFvw6emDyQ8VT5GEScIX+vwtIQCtX6
-         JNfzeR6qGKqrY4zUi2lMyQnWve+b2zgGtJkscILNbP+VxR1I2hFQO24nrHSt/G7eIapF
-         ApuothyXDI9r84McHgKdSCJGozqmmGcc+BRDGBYXZuFrvrWvu48XpMTyalcsBo2dctp2
-         Dytw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=maujQQsZqVOh5dXh+A73CS4R9OgbmTuwmPlNeQ2JBZk=;
+        b=u6rM9zM5ZIb7qd9/SfKbbTdPkeT7FIprdsz+fF/nff6zPcVgRHswByWxyWec1PgIUK
+         RNGFKhwWSiN9rObXRtIAS9zC9SkjzR0L5jdrUcz7Q42tH3lPIKxGMFaHt3fvIpy4v3XQ
+         BFc9NAnMMRqTN8QrkR8mg2oJGwVeglvDlViOl803ynnB7NqRdPem0a2XX7Y/uiqcDb3g
+         TwaKR2aVkK+q82VIut52ai7y3+iyrlIf2erEDIioFOavlUMCd5/c+6LnjHxzsyM0m9bH
+         QvpJqJ8Ci+FqH0II0wcrYfAyYE98lDE/BjoU2XGnUidI+3GmJEfiKcrf7a8pUMQ7Gwcc
+         PUFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pjlQaP6Pg6Yvwq7DW912bqutMrQVbTNiK7xq5gHpuE0=;
-        b=iIlZXY9EQvEKXyp9jPGiG28qVY+i15Iw7i3iZzSThwilNgM4bCzOX8JPp1ovUHouUx
-         IT88udKsezI/jcAQAvB0MMotVy5lP9WiJNW+SVertYR/UvD34NEaql3gPhXg0j3VSNsH
-         pUTHRy0sGxsm/xNkhDdbdV0PtU4I5xwmmYwWm3YJI2EcdiX0r+lDVFAcZ97ErlDjnO4y
-         31f8PaAreOkwFjhFIUfqSt7O3WdktwAGMWaY/vZsckBEO2EJjLKXt5b7EwCiP7MaUHrN
-         qPt0swicPizoWIMIU9Q1koNE5VDFSVspbLiURsQ8T/Yl5tdmTtKsfoRGMZoni9o0qzV7
-         BiXw==
-X-Gm-Message-State: AOAM530YbQ66vWSzuQJg++f5+7Sv/ttk7rsLiOCI+f+pW/7maFsVlnaG
-        AwIUvAiuEc28MgnpclGXr3I=
-X-Google-Smtp-Source: ABdhPJy8IBNIga3u76iZvWIyKVklYTAzmaNyRda+NSuJrgm3ui7QhnMf2uVqDc69Bo88OkngKLdAvg==
-X-Received: by 2002:a5d:4d81:: with SMTP id b1mr5282727wru.55.1589317881655;
-        Tue, 12 May 2020 14:11:21 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=maujQQsZqVOh5dXh+A73CS4R9OgbmTuwmPlNeQ2JBZk=;
+        b=iu4tUQ+6V728/t3tVHwrwaXeMfPcrdbkMa3jNchLYUk6EsPCF5DW6so3oAu59C8ZP6
+         1mEdcxWeZqO/abR3S7lKKB+AiuYjTNOs2Hj7Epa1awt2Sbp/HthdeQLL5frc1gvhFht3
+         kux7Bza15x9iiikueV6SmzY3oHs6zNk5IdSWMspCIKJsW9WuuaotRl9Z2CxIqte61dy5
+         criH4uKU1t0tp88y26qeoZleiFUkB138SuRvk9Xxuvikcit7IhL2kqO1npc8yASgRClP
+         uIX3CkGpIzNTLDU+5VySCLGeFiKQclB169u1vzf90HsSfMTu0x9x/oca3bFPynoJ0DdP
+         8uQg==
+X-Gm-Message-State: AGi0Pua/MBpNW4ICsxhSEtY8vCMD9+B5Uwup03smQJhvEclYZ8HwtJkn
+        AHTUTvhsfb4xZcIfeJ1ebL8=
+X-Google-Smtp-Source: APiQypJltmF4OjY1U4GlLKTpg/9mJ4tgnscsc4JAEAG7DNJPfL4rbJaBKdCe8DfoukVBk+j0f/YkKg==
+X-Received: by 2002:adf:810a:: with SMTP id 10mr28017247wrm.101.1589317929860;
+        Tue, 12 May 2020 14:12:09 -0700 (PDT)
+Received: from localhost (pD9E51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id q9sm9090273wmb.34.2020.05.12.14.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:11:21 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 5/8] net: stmmac: dwmac-meson8b: Add the PRG_ETH0_ADJ_* bits
-Date:   Tue, 12 May 2020 23:11:00 +0200
-Message-Id: <20200512211103.530674-6-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
-References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
+        Tue, 12 May 2020 14:12:08 -0700 (PDT)
+Date:   Tue, 12 May 2020 23:12:07 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
+        Thierry Reding <treding@nvidia.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: Re: linux-next: build failure after merge of the tegra tree
+Message-ID: <20200512211207.GD3864641@ulmo>
+References: <20200511085114.0cde64d9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fXStkuK2IQBfcDe+"
+Content-Disposition: inline
+In-Reply-To: <20200511085114.0cde64d9@canb.auug.org.au>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PRG_ETH0_ADJ_* are used for applying the RGMII RX delay. The public
-datasheets only have very limited description for these registers, but
-Jianxin Pan provided more detailed documentation from an (unnamed)
-Amlogic engineer. Add the PRG_ETH0_ADJ_* bits along with the improved
-description.
 
-Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--fXStkuK2IQBfcDe+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 1d7526ee09dd..70075628c58e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -48,6 +48,27 @@
- #define PRG_ETH0_INVERTED_RMII_CLK	BIT(11)
- #define PRG_ETH0_TX_AND_PHY_REF_CLK	BIT(12)
- 
-+/* Bypass (= 0, the signal from the GPIO input directly connects to the
-+ * internal sampling) or enable (= 1) the internal logic for RXEN and RXD[3:0]
-+ * timing tuning.
-+ */
-+#define PRG_ETH0_ADJ_ENABLE		BIT(13)
-+/* Controls whether the RXEN and RXD[3:0] signals should be aligned with the
-+ * input RX rising/falling edge and sent to the Ethernet internals. This sets
-+ * the automatically delay and skew automatically (internally).
-+ */
-+#define PRG_ETH0_ADJ_SETUP		BIT(14)
-+/* An internal counter based on the "timing-adjustment" clock. The counter is
-+ * cleared on both, the falling and rising edge of the RX_CLK. This selects the
-+ * delay (= the counter value) when to start sampling RXEN and RXD[3:0].
-+ */
-+#define PRG_ETH0_ADJ_DELAY		GENMASK(19, 15)
-+/* Adjusts the skew between each bit of RXEN and RXD[3:0]. If a signal has a
-+ * large input delay, the bit for that signal (RXEN = bit 0, RXD[3] = bit 1,
-+ * ...) can be configured to be 1 to compensate for a delay of about 1ns.
-+ */
-+#define PRG_ETH0_ADJ_SKEW		GENMASK(24, 20)
-+
- #define MUX_CLK_NUM_PARENTS		2
- 
- struct meson8b_dwmac;
--- 
-2.26.2
+On Mon, May 11, 2020 at 08:51:14AM +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> After merging the tegra tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> ERROR: modpost: "host1x_driver_register_full" [drivers/staging/media/tegr=
+a-video/tegra-video.ko] undefined!
+> ERROR: modpost: "host1x_device_exit" [drivers/staging/media/tegra-video/t=
+egra-video.ko] undefined!
+> ERROR: modpost: "host1x_client_unregister" [drivers/staging/media/tegra-v=
+ideo/tegra-video.ko] undefined!
+> ERROR: modpost: "host1x_driver_unregister" [drivers/staging/media/tegra-v=
+ideo/tegra-video.ko] undefined!
+> ERROR: modpost: "host1x_device_init" [drivers/staging/media/tegra-video/t=
+egra-video.ko] undefined!
+> ERROR: modpost: "host1x_syncpt_free" [drivers/staging/media/tegra-video/t=
+egra-video.ko] undefined!
+> ERROR: modpost: "host1x_syncpt_request" [drivers/staging/media/tegra-vide=
+o/tegra-video.ko] undefined!
+> ERROR: modpost: "host1x_client_register" [drivers/staging/media/tegra-vid=
+eo/tegra-video.ko] undefined!
+>=20
+> Caused by commit
+>=20
+>   423d10a99b30 ("media: tegra: Add Tegra210 Video input driver")
+>=20
+> I removed CONFIG_COMPILE_TEST for this driver for today.
 
+Thanks, I've now added a patch that drops the alternative dependency on
+COMPILE_TEST because TEGRA_HOST1X doesn't have stubs for any of these
+exported functions.
+
+Thierry
+
+--fXStkuK2IQBfcDe+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl67ESQACgkQ3SOs138+
+s6GybA/7BU14TQ4Z1NzCM/jESg1chlADWIIY9m/Ql7EsFHBHJleWeAVF0QEdVGgS
+j71Y1+T2NNtOThBeCjIbF4q9WPoJsQLG1R8vEAaHTqj6qND4lvtLXhcOqa3uKubl
+MCWY4FHqZyYc6W7y11PwiJr5C7kuMrKkz+F4Zyp7XHRllUFVukcBk4W38t+3XjcB
+FY62f/NGPjNP8yzkjRR/PHz1FdeeqKmXNr1z1Rrk1HWG+Q+BPBMUuwQAVBQ9as7W
+C4M3CobcHeaXimwo4Vi7magGpxAnWunUmycDlsIrXvLRtPBWoyfmUo/Y8DjZMWvP
+SA0XvTgsLEAZtBAwmKoRy16WK8S+ZBhP1VZnIkz/1vsfXjanCgBEBSaZNtOaKL72
+Cau22TBLMyU7mDQ5boy5PCmdkt9gbmVX74qb19Nfq7UXXRpMddpBqsbMoD9+/DGs
+usqcv/TSN6+MrI699gQj7MzlUPQjZxgjjs8pJlOJqVRrMWhbnDcA/9Cuy0kcUrbB
+s43SCI2tP8Fb4WQcwR17VCGsKBLfo+tw/QwFC9f2kzFTZC5sWmiqOqYyfzF3bgp6
+TYSgZ74MoeLaFvwmFFnHBEcrWp5ZIBx8zqRybsA8qXyGM9Xl/9nuW9ko+zSfAA30
+NRU233oMrsuemqLiM3OFk14x3f92qzkBnUFyRIyEouWGsaiczLk=
+=1Ja3
+-----END PGP SIGNATURE-----
+
+--fXStkuK2IQBfcDe+--
