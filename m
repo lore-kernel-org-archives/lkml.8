@@ -2,110 +2,75 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D27C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAEEC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA31D20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MbiVsmNq"
+	by mail.kernel.org (Postfix) with ESMTP id CD7BD20753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589324847;
+	bh=q70NZxHcRsNssy2yK4Oj0k72CRfKxZngvQV/WYT7HZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e4umwca+YjyPmClheqohiMKU35RzCM1T4lDHJ5KCpqUqJ5MvR2ZtIMbAhJLM1P7dk
+	 iQQ6bf4lvfUq8GmJZNIlPXGxrNoGeMz47v9KrxXeFrkTJMkS5IKMsW0vBDAhQ7hNQM
+	 HQh9lez9G1yxluODXonNNXIXUuntng2zqixva5qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731650AbgELXGA (ORCPT
+        id S1731570AbgELXH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:06:00 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42250 "EHLO vps.xff.cz"
+        Tue, 12 May 2020 19:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgELXF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:05:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589324757; bh=blZoiLTu+A/avnSXLStZACMQViZsw7dUh1Z6i4t2+kc=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=MbiVsmNqQbA3s6tCEZDKId9/06UVSeWvW3s2p5J+RiuGPnl2vmJ23ft11kWJu1pe3
-         9j9B+V77r87Y6tThPEuo6W7svzgEbvQaZcoaRMYtWwj9aHdsEfiTByqxM6d3r+D5xJ
-         fK5AiiQOLtJPtWhlb3tG0auFZF432GWb7dAZwNd4=
-Date:   Wed, 13 May 2020 01:05:57 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
- enable-gpios
-Message-ID: <20200512230557.zvdgwhbqygc2fufv@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>
-References: <20200512222205.1456300-1-megous@megous.com>
- <20200512222205.1456300-2-megous@megous.com>
- <20200512225212.GE89269@dtor-ws>
+        id S1726031AbgELXH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 19:07:26 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB1E20740;
+        Tue, 12 May 2020 23:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589324846;
+        bh=q70NZxHcRsNssy2yK4Oj0k72CRfKxZngvQV/WYT7HZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=x+xi096T+/ETKpnanwq+wLz663+KHQNMu0OzKd6/WYKdL1fENTVqpsXRpW4OdKmoi
+         6Vf05oKEamrY01jzGPwl/RDlnhbM+L9bIoFTD01F2ON3sgAqhz81/0zKYfsLHj/mT5
+         JgFjUUVfzoAhNQM3TeQnQ6UvU6aOnNy02BRkcyw4=
+Date:   Tue, 12 May 2020 18:12:00 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: mux: Replace zero-length array with flexible-array
+Message-ID: <20200512231200.GL4897@embeddedor>
+References: <20200507185329.GA14436@embeddedor>
+ <20200512104319.GH1393@ninjato>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512225212.GE89269@dtor-ws>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200512104319.GH1393@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:52:12PM -0700, Dmitry Torokhov wrote:
-> On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
-> > It is possible to turn the motor on/off just by enabling/disabling
-> > the vcc-supply.
+On Tue, May 12, 2020 at 12:43:19PM +0200, Wolfram Sang wrote:
 > > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > index 2384465eaa19..c700b640bd53 100644
-> > --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
-> > @@ -24,7 +24,6 @@ properties:
-> >  
-> >  required:
-> >    - compatible
-> > -  - enable-gpios
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Hmm we need at least one of the 2 (gpio and supply). Should we encode it
-> in the binding?
-
-Not sure how to encode either one or the other property being required, but
-not both at once.
-
-Maybe I can add a supply-vibrator compatible to the driver and binding and
-make requirements dependent on the compatible?
-
-> Also, in the dirver code, I guess we need to switch to have regulator
-> optional (so we are not given the dummy one) and bail if neither
-> regulator nor GPIO is found.
-
-Though nothing bad will happen in the driver if binding will lack both
-of these. The driver will just not control any HW, so at least it's
-failsafe as is.
-
-regards,
-	o.
-
-> Thanks.
+> Applied to for-next, thanks! Gustavo, let me know if you think it should
+> be in for-current.
 > 
-> -- 
-> Dmitry
+
+Hi Wolfram,
+
+If that's not much work for you, then it'd be great if you include
+it for 5.7. :)
+
+Thanks
+--
+Gustavo
