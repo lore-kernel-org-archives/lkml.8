@@ -7,90 +7,89 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64899C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEAAC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD2623126
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C14E0206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589323276;
-	bh=7fD4j0HDLDWy+l/bqAGdwrtTkG01AdAvJfWWFc9D0/A=;
+	s=default; t=1589323460;
+	bh=4F6QFsajeKzJn03KqzBxlJWS/kGOU/ReZu7YZTM9lFk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YFio3aYE2+nCJMDr/VF31rW9wo/6pmeInayVVbQFv+r0dg0VZU1eAb/8U74A03Rw8
-	 taqUJo2fQ9BHcyhVEqV+K5vhNjxrJb3AJOZGQ7wsgHv+MnVfLPmJlk99fwPGj9GjHV
-	 m6sjj9hf4Bs0j5ugzSeMexTYm4A+O4t9JwEF1yM8=
+	b=mWCvGQR6uMLFJcBr4uJLeN2oqDo4b/LYvYUiXbiqjExsgoANNVrSqlAObdkwRKJYC
+	 Ol7WOHIGJjts+D3mNmoMV4oBNzS3KrMxjmtRDHDRdCxE1eqLjdfdgYfoS0juoStr8c
+	 JDjvgE+i66cdtUkSbrMEmrKdrZD7kAhIFHW0XZBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbgELWlP (ORCPT
+        id S1728362AbgELWoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:41:15 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33944 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgELWlP (ORCPT
+        Tue, 12 May 2020 18:44:20 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39909 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELWoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:41:15 -0400
-Received: by mail-oi1-f195.google.com with SMTP id c12so18742456oic.1;
-        Tue, 12 May 2020 15:41:13 -0700 (PDT)
+        Tue, 12 May 2020 18:44:19 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m13so11902708otf.6;
+        Tue, 12 May 2020 15:44:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=cr8pEezfGzmQ0Mn3r2/CPVqAGMkNpCECgIt4va/Dbb0=;
-        b=mQBXNX70rsYyZz1H3yki/KE9uuoBxsrFX1ChwJQK8JMULs/qkPDxEpZzc3PQN/yHYA
-         dTD7hwGS+XDjKKytIpEHe7CVtR20dIMxIa4l8Dybxgnerlx+f2A6Eik6dhsop/snfp3L
-         vhniJa/zyOaFhTwAiw8kx5L52MlJdZAB3xaWTfWKk9OuLaqkOR6utA1tL8Un7FUOUelP
-         2B3d1yca7VTJ94Oc9bPXmnN329Lli4YalUfqrqE9h49g6Z3ybWnxnzknIXyDTB2H/zrR
-         eS0UKXVfW6jkL5YUUg1JP39Ue+oGMnRvGWsQvIP7i8TF/ciLcN07qb6M7wZg09iiyOWy
-         i+Zw==
-X-Gm-Message-State: AGi0PuYgK4TvagJjIRSNnEWf7R//54X0U43VFuAOtMM9Lge9Fgg0AAPJ
-        qE7GTPmoneHnXY6pC2ILSA==
-X-Google-Smtp-Source: APiQypJ2KQOzWEjBNgc6Ql69L7UqFeBqesWncTCUO9jKM4QP6iZAAHIdEhbt+VhqH5aV59DKlW73+g==
-X-Received: by 2002:aca:fdd5:: with SMTP id b204mr26424284oii.167.1589323273009;
-        Tue, 12 May 2020 15:41:13 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uumrDYsgwLaDX3HJhkdtaUmDr4MtGqDPU0CrAV2rD6U=;
+        b=fPoCX/hhbrhSy5yZwtpIiJfDR0sAPxnf2YxEkHYmaoyU1YSQZfPeBsOd8tKJ05VNE9
+         RX+oCe61gf27bCSA97qPM9et9p5dNza8B3xo1EqzxKT+oKmmpsg33vjbU0M1Wi1eb4jd
+         vnvTD3IM8g/LW7+2/9xLd3eHj9tnKcIP1xLS1k0UHq0kYXVWms2nLVQ4hjg0zxUvQRIk
+         REyWw1u6aqOp2OAJrOFFpLZTlMOAzgObCm1Vzeaw9+7BNZUYZDVklx8GsRjW327NeCD5
+         oAUOJ52MF8B6kD3ayJL1rZ7rInhdpDSV0yBsMCQavxGQNeFZIFudePdw2MO7wtkLLvUQ
+         mghA==
+X-Gm-Message-State: AGi0Pua8gq73Thaf5SN84lAb2TIrBy/u7gKrS9Aw0MGu+1ZWfBhVcGjs
+        cv9ZjIkQD6f8nqXkjOoT/g==
+X-Google-Smtp-Source: APiQypLudLaDx5Hvkugopv+ecKjUtr8tCweVHIWbZyoNgK4NPkO3hFmOEWUVAp12V5dMbReJH6+0XQ==
+X-Received: by 2002:a9d:69c9:: with SMTP id v9mr19153655oto.267.1589323458777;
+        Tue, 12 May 2020 15:44:18 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g30sm676838oiy.42.2020.05.12.15.41.12
+        by smtp.gmail.com with ESMTPSA id w3sm3779500otg.24.2020.05.12.15.44.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:41:12 -0700 (PDT)
-Received: (nullmailer pid 4283 invoked by uid 1000);
-        Tue, 12 May 2020 22:41:11 -0000
-Date:   Tue, 12 May 2020 17:41:11 -0500
+        Tue, 12 May 2020 15:44:18 -0700 (PDT)
+Received: (nullmailer pid 11405 invoked by uid 1000);
+        Tue, 12 May 2020 22:44:17 -0000
+Date:   Tue, 12 May 2020 17:44:17 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "Andrew F . Davis" <afd@ti.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, sre@kernel.org
-Subject: Re: [RESEND PATCH v3] dt-bindings: power: Convert bq27xxx dt to yaml
-Message-ID: <20200512224111.GA4211@bogus>
-References: <20200512191900.966-1-dmurphy@ti.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, jbrunet@baylibre.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yinxin_1989@aliyun.com,
+        lnykww@gmail.com, jianxin.pan@amlogic.com,
+        linux-arm-kernel@lists.infradead.org, linux.amoon@gmail.com
+Subject: Re: [PATCH v7 1/2] dt-bindings: mmc: Document the Amlogic Meson SDHC
+ MMC host controller
+Message-ID: <20200512224417.GA11220@bogus>
+References: <20200512204147.504087-1-martin.blumenstingl@googlemail.com>
+ <20200512204147.504087-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200512191900.966-1-dmurphy@ti.com>
+In-Reply-To: <20200512204147.504087-2-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 14:19:00 -0500, Dan Murphy wrote:
-> Convert the bq27xxx.txt to yaml format
+On Tue, 12 May 2020 22:41:46 +0200, Martin Blumenstingl wrote:
+> This documents the devicetree bindings for the SDHC MMC host controller
+> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
+> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
+> HS200 mode (up to 100MHz clock). It embeds an internal clock controller
+> which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
+> fed by four external input clocks (clkin[0-3]). "pclk" is the module
+> register clock, it has to be enabled to access the registers.
 > 
-> CC: Pali Rohár <pali@kernel.org>
-> CC: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
-> 
-> v3 - Added power supply reference to yaml, fixed the deprecated compatibles,
-> I did not change any compatibles as discussed in the list these should come in
-> separate patches - https://lore.kernel.org/patchwork/patch/1237912/
-> 
->  .../bindings/power/supply/bq27xxx.txt         | 56 ------------
->  .../bindings/power/supply/bq27xxx.yaml        | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
