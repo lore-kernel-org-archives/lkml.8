@@ -2,94 +2,164 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8699C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB7BC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0CC24927
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E14F23126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:26:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="mwlbZQAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732089AbgELWZq (ORCPT
+        id S1731434AbgELW0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55476 "EHLO
+        Tue, 12 May 2020 18:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731648AbgELWXJ (ORCPT
+        by vger.kernel.org with ESMTP id S1727971AbgELW0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:09 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39824C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:09 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jYdIF-0004iR-OS; Wed, 13 May 2020 00:22:32 +0200
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id CB971100BC4;
-        Wed, 13 May 2020 00:22:30 +0200 (CEST)
-Message-Id: <20200512213810.411884688@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:09 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 10/38] x86/entry/64: Simplify idtentry_body
-References: <20200512210059.056244513@linutronix.de>
+        Tue, 12 May 2020 18:26:51 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE74C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:26:51 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a21so15486892ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=t1GCnSY4uTkAcfm2Amgz7mdBr4uRw86tBEsv4bxmQzY=;
+        b=mwlbZQAfvfOzwB6ODiMJXWLYT1su4PF828fSWj2MzV2UAihilJRaooKhp4G2RSNKKL
+         8U03XKz4i6TmLdGyJiwS9bV8GU1CmYvqMj7wP1lE/fxakYbdbcv5QYS4uhdm00U2jXoJ
+         kDkEClnyf3wM520UyQjv/dEFBLuVwTRXkr6oaBmgLPYdryH7y2rMuVu9ABRJ2aTq7o5j
+         D70OH4dM+VI6M+ovdGggtM+Z1dGHbe9lGg0NYVqzcdxkUCSr1yR4apP37J5Lg7SnB1tw
+         2ptPSn5bwdHODa3LjzfS4p77gbHmSH+ReJKG7qafpjKUA6AEsskQ8am9RD6yrF9Gja2J
+         0OMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=t1GCnSY4uTkAcfm2Amgz7mdBr4uRw86tBEsv4bxmQzY=;
+        b=pG9SmBNf6aAiq5r+ymPvx86PgdAjTURs6PC/N50yExLabIGHWqHooCHEEZxlJPACHz
+         j3JIXxFDpePvNtulJ5UTXuxM8DjwtUYrMADbHsLFvhcfiSje2lf7BLHhq1eo0Xqeflg1
+         +0ymDr1qt2h6vX482BlxS6aDhYzXp05d3LAxGQklEN1U0eVd1VM/zusEoSJNKw2jRTb6
+         gn7839TbCjI+S0pvgmoM3FG4WCGDhel1Z4N97c3FSZkxQXjkp4/ItbLOOSCnZ8qx5B/D
+         5IxEjbEPXlOL9kKg9vPPJKkwUjykEpRapD+CDjrEBXUERvD4eFP9fMdhA5UOg2JBfWaJ
+         h78w==
+X-Gm-Message-State: AOAM53050q3pXkO9TeGhAGWeJxc7FmExpeMYWQauoUJpHiD1Wq5+b7pT
+        MPYE359+xs4vgUCuMO1rPGIaXEYRhb/VaQ==
+X-Google-Smtp-Source: ABdhPJwEduG0cPtm1XlGc9w4iKYmhxowK3sFh1H/aNyWh4z7t2H+0oB7q+2VOgPira1wZz5X0+1tdw==
+X-Received: by 2002:a2e:9cd:: with SMTP id 196mr14484595ljj.226.1589322409674;
+        Tue, 12 May 2020 15:26:49 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id c79sm14992881lfg.29.2020.05.12.15.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 15:26:48 -0700 (PDT)
+Date:   Wed, 13 May 2020 00:26:48 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 1/3] media: rcar-vin: Invalidate pipeline if
+ conversion is not possible on input formats
+Message-ID: <20200512222648.GD2542285@oden.dyn.berto.se>
+References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586945948-11026-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1586945948-11026-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All C functions which do not have an error code have been converted to the
-new IDTENTRY interface which does not expect an error code in the
-arguments. Spare the XORL.
+Hi Lad,
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Thanks for your work.
 
----
- arch/x86/entry/entry_64.S |    2 --
- 1 file changed, 2 deletions(-)
+On 2020-04-15 11:19:06 +0100, Lad Prabhakar wrote:
+> Up until now the VIN was capable to convert any of its supported input mbus
+> formats to any of it's supported output pixel formats. With the addition of
+> RAW formats this is no longer true.
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -532,8 +532,6 @@ SYM_CODE_END(spurious_entries_start)
- 	.if \has_error_code == 1
- 		movq	ORIG_RAX(%rsp), %rsi	/* get error code into 2nd argument*/
- 		movq	$-1, ORIG_RAX(%rsp)	/* no syscall to restart */
--	.else
--		xorl	%esi, %esi		/* Clear the error code */
- 	.endif
- 
- 	.if \vector == X86_TRAP_PF
+Add blank line.
 
+> This patch invalidates the pipeline by adding a check if given vin input
+> format can be converted to supported output pixel format.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+I like this patch I think there is a typo bellow and patch [1] have been 
+merged in the media-tree which unfortunately addes one more thing to do 
+in this patch. In rvin_enum_fmt_vid_cap() there is a TODO noted for what 
+needs to be done. In imagine the fix is simple and the end result would 
+look something like this.
+
+    switch (f->mbus_code) {
+    case 0:
+    case MEDIA_BUS_FMT_YUYV8_1X16:
+    case MEDIA_BUS_FMT_UYVY8_1X16:
+    case MEDIA_BUS_FMT_UYVY8_2X8:
+    case MEDIA_BUS_FMT_UYVY10_2X10:
+    case MEDIA_BUS_FMT_RGB888_1X24:
+        break;
+    case MEDIA_BUS_FMT_SRGGB8_1X8:
+        if (f->index)
+            return -EINVAL;
+
+        f->pixelformat = V4L2_PIX_FMT_SRGGB8;
+        return 0;
+    case default:
+        return -EINVAL;
+    }
+
+1. d5f74a1eff9aef3b ("media: rcar-vin: Make use of V4L2_CAP_IO_MC")
+
+> ---
+>  drivers/media/platform/rcar-vin/rcar-dma.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+> index 1a30cd036371..48bd9bfc3948 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> @@ -1109,13 +1109,17 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
+>  	case MEDIA_BUS_FMT_UYVY8_1X16:
+>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+>  	case MEDIA_BUS_FMT_UYVY10_2X10:
+> +		break;
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> -		vin->mbus_code = fmt.format.code;
+
+This is not right is it?
+
+Should you not add a case for MEDIA_BUS_FMT_SRGGB8_1X8 instead of taking 
+over MEDIA_BUS_FMT_RGB888_1X24?
+
+> +		if (vin->format.pixelformat != V4L2_PIX_FMT_SRGGB8)
+> +			return -EPIPE;
+>  		break;
+>  	default:
+>  		return -EPIPE;
+>  	}
+>  
+> +	vin->mbus_code = fmt.format.code;
+> +
+>  	switch (fmt.format.field) {
+>  	case V4L2_FIELD_TOP:
+>  	case V4L2_FIELD_BOTTOM:
+> -- 
+> 2.20.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
