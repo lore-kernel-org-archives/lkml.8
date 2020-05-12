@@ -2,96 +2,88 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA253C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102BCC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A050820575
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GIs92r1+"
+	by mail.kernel.org (Postfix) with ESMTP id D644D20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589321025;
+	bh=WF1ZOC7ddCOvDm9qPy5ZFh7ldSEKUGXz1ZFduTbexHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mc27qM8qmNkLZjEtJL6vxXiV+A9hxnVKVgkhux4Xo9v3IZ3M6j2B/CYXAkAec0Khd
+	 n72u9CU/PZ85WQO6GhvYJPNZPj/W2DgQvLSSi6hP566wbWVK7R91lCK1PYOOffBHUw
+	 1Zx/ACbhJ3hZTQfX8L/FtNGe8BpkGGFp/en6Lw+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbgELWDd (ORCPT
+        id S1731600AbgELWDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:03:33 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48311 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728313AbgELWDc (ORCPT
+        Tue, 12 May 2020 18:03:45 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:36227 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731370AbgELWDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:03:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589321011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ns5UOQMLizpSxZdFpRK9TbCkGBwHVENlcHczF4G1fL8=;
-        b=GIs92r1+5nz8mVeriRwhTQ1n+A77LC+5gqTWCUV2qS06lcAtvWY5j41Ow7cU4RqAtjpSJo
-        s8PROhhmLEN0KNpg0CpJlNxx1hDR8LQofSuKdqA/QNmelvtQC08whwWYEIgMuuDGlyVX7N
-        XbGtRAo42vjXrpKoYK26Qpd0X/pWj3c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-0MUo9GkKPLKCnl2yk28XwQ-1; Tue, 12 May 2020 18:03:28 -0400
-X-MC-Unique: 0MUo9GkKPLKCnl2yk28XwQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F194473;
-        Tue, 12 May 2020 22:03:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29D2953E3B;
-        Tue, 12 May 2020 22:03:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHmME9q-TxHo5o63rxHzKwV_kWV9u+MoxBQM5Yz3hODGCj7RhQ@mail.gmail.com>
-References: <CAHmME9q-TxHo5o63rxHzKwV_kWV9u+MoxBQM5Yz3hODGCj7RhQ@mail.gmail.com> <CAHmME9oXiTmVuOYmG=K3ijWK+zP2yB9a2CFjbLx_5fkDiH30Tg@mail.gmail.com> <20200511215101.302530-1-Jason@zx2c4.com> <2620780.1589289425@warthog.procyon.org.uk>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel-hardening@lists.openwall.com,
-        Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH v3] security/keys: rewrite big_key crypto to use library interface
+        Tue, 12 May 2020 18:03:44 -0400
+Received: by mail-oo1-f66.google.com with SMTP id z6so2147085ooz.3;
+        Tue, 12 May 2020 15:03:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jsnWB/RZuG/6JISv3zODzhF3cX24dCFlPTbEBhn7oxU=;
+        b=GbuakF+ugPaYSahW/kxfS8vYFTnOvfXMiplU9HM/EyrioEJh5ilPGlg8aqkJBYU0QY
+         cZTnHcYT8aXoyxmqnX0LvSdFAKatXPaWyNcAVgOFvNaX1VJwaWqAlclSt7lRmr+bX+gi
+         8A4Sgc8qQ2D9aoLwgnemI5WiOKzJB7tiUZGh4IeegP5V4wQAW/rgKHSvv3b/1RyQCcLe
+         /Kix+iQVcUuS9DPXhEm7/ZIak0o9Z0v0tWAxReEHOwAknYjsj5/mwTeO7mXqU20KLCA9
+         NjVp906erwAucnwdmv4pbapok3NpZdWWQ/W2EPh5WH7taqZy84GDs3CBk6srZ5SL74BD
+         G8ag==
+X-Gm-Message-State: AGi0PubLvtpqfjVmNMFaxVw6078GdbJgFRdF4QdWIAluQ7O/YIfiNSmJ
+        wNCZIJJDCwEbbKcDuTpzPQ==
+X-Google-Smtp-Source: APiQypLQGiX0rauKDDSSe0EY7yJ93FyTpXKE0zOptqWqXNeKHsfI9Bzl2DiMfh+5vOQd4k68p6Km5Q==
+X-Received: by 2002:a4a:6441:: with SMTP id d1mr19963201oof.10.1589321023626;
+        Tue, 12 May 2020 15:03:43 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j186sm5659962oia.31.2020.05.12.15.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 15:03:43 -0700 (PDT)
+Received: (nullmailer pid 14161 invoked by uid 1000);
+        Tue, 12 May 2020 22:03:42 -0000
+Date:   Tue, 12 May 2020 17:03:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        vkoul@kernel.org, narmstrong@baylibre.com, kishon@ti.com,
+        hexdump0815@googlemail.com, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] dt-bindings: phy: meson8b-usb2: Add compatible
+ string for Meson8m2
+Message-ID: <20200512220341.GA14126@bogus>
+References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
+ <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2858488.1589321003.1@warthog.procyon.org.uk>
-Date:   Tue, 12 May 2020 23:03:23 +0100
-Message-ID: <2858489.1589321003@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-
-> So long as that ->update function:
-> 1. Deletes the old on-disk data.
-> 2. Deletes the old key from the inode.
-> 3. Generates a new key using get_random_bytes.
-> 4. Stores that new key in the inode.
-> 5. Encrypts the updated data afresh with the new key.
-> 6. Puts the updated data onto disk,
+On Sat,  2 May 2020 13:47:48 +0200, Martin Blumenstingl wrote:
+> The USB2 PHY on Meson8m2 is identical to the one on Meson8b but
+> different to the one on Meson8. The only known difference is that Meson8
+> does not set the ACA_ENABLE bit while Meson8b and Meson8m2 do.
+> Add an explicit compatible string for Meson8m2 so those differences can
+> be taken care of.
 > 
-> then this is fine with me, and feel free to have my Acked-by if you
-> want. But if it doesn't do that -- i.e. if it tries to reuse the old
-> key or similar -- then this isn't fine. But it sounds like from what
-> you've described that things are actually fine, in which case, I guess
-> it makes sense to apply your patch ontop of mine and commit these.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml        | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Yep.  It calls big_key_destroy(), which clears away the old stuff just as when
-a key is being destroyed, then generic_key_instantiate() just as when a key is
-being set up.
-
-The key ID and the key metadata (ownership, perms, expiry) are maintained, but
-the payload is just completely replaced.
-
-David
-
+Acked-by: Rob Herring <robh@kernel.org>
