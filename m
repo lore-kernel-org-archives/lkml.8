@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C55C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDABAC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5703E20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFE712312A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgELWXK (ORCPT
+        id S1731687AbgELWXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
+        Tue, 12 May 2020 18:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727971AbgELWXF (ORCPT
+        by vger.kernel.org with ESMTP id S1731668AbgELWXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:05 -0400
+        Tue, 12 May 2020 18:23:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1659CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986D3C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:12 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdI7-0004c1-P6; Wed, 13 May 2020 00:22:24 +0200
+        id 1jYdI4-0004b4-3X; Wed, 13 May 2020 00:22:21 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4A9F91001FC;
-        Wed, 13 May 2020 00:22:23 +0200 (CEST)
-Message-Id: <20200512213809.784331304@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 8171A100605;
+        Wed, 13 May 2020 00:22:19 +0200 (CEST)
+Message-Id: <20200512213809.492016025@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:03 +0200
+Date:   Tue, 12 May 2020 23:01:00 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 04/38] x86: Make hardware latency tracing explicit
+Subject: [patch V5 01/38] x86/kvm/svm: Use uninstrumented wrmsrl() to restore GS
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,130 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hardware latency tracer calls into trace_sched_clock and ends up in
-various instrumentable functions which is problemeatic vs. the kprobe
-handling especially the text poke machinery. It's invoked from
-nmi_enter/exit(), i.e. non-instrumentable code.
+On guest exit MSR_GS_BASE contains whatever the guest wrote to it and the
+first action after returning from the ASM code is to set it to the host
+kernel value. This uses wrmsrl() which is interesting at least.
 
-Use nmi_enter/exit_notrace() instead. These variants do not invoke the
-hardware latency tracer which avoids chasing down complex callchains to
-make them non-instrumentable.
+wrmsrl() is either using native_write_msr() or the paravirt variant. The
+XEN_PV code is uninteresting as nested SVM in a XEN_PV guest does not work.
 
-The real interesting measurement is the actual NMI handler. Add an explicit
-invocation for the hardware latency tracer to it.
+But native_write_msr() can be placed out of line by the compiler especially
+when paravirtualization is enabled in the kernel configuration. The
+function is marked notrace, but still can be probed if
+CONFIG_KPROBE_EVENTS_ON_NOTRACE is enabled.
 
-#DB and #BP are uninteresting as they really should not be in use when
-analzying hardware induced latencies.
+That would be a fatal problem as kprobe events use per-CPU variables which
+are GS based and would be accessed with the guest GS. Depending on the GS
+value this would either explode in colorful ways or lead to completely
+undebugable data corruption.
 
-If #DF hits, hardware latency is definitely not interesting anymore and in
-case of a machine check the hardware latency is not the most troublesome
-issue either.
+Aside of that native_write_msr() contains a tracepoint which objtool
+complains about as it is invoked from the noinstr section.
+
+As this cannot run inside a XEN_PV guest there is no point in using
+wrmsrl(). Use native_wrmsrl() instead which is just a plain native WRMSR
+without tracing or anything else attached.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Juergen Gross <jgross@suse.com>
 ---
-V5: New patch
----
- arch/x86/kernel/cpu/mce/core.c |    4 ++--
- arch/x86/kernel/nmi.c          |    6 ++++--
- arch/x86/kernel/traps.c        |   10 +++++-----
- 3 files changed, 11 insertions(+), 9 deletions(-)
+ arch/x86/kvm/svm/svm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1916,7 +1916,7 @@ static __always_inline void exc_machine_
- 	    mce_check_crashing_cpu())
- 		return;
- 
--	nmi_enter();
-+	nmi_enter_notrace();
- 	/*
- 	 * The call targets are marked noinstr, but objtool can't figure
- 	 * that out because it's an indirect call. Annotate it.
-@@ -1924,7 +1924,7 @@ static __always_inline void exc_machine_
- 	instrumentation_begin();
- 	machine_check_vector(regs);
- 	instrumentation_end();
--	nmi_exit();
-+	nmi_exit_notrace();
- }
- 
- static __always_inline void exc_machine_check_user(struct pt_regs *regs)
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
- 	__this_cpu_write(last_nmi_rip, regs->ip);
- 
- 	instrumentation_begin();
-+	ftrace_nmi_enter();
- 
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
-@@ -420,6 +421,7 @@ static noinstr void default_do_nmi(struc
- 		unknown_nmi_error(reason, regs);
- 
- out:
-+	ftrace_nmi_exit();
- 	instrumentation_end();
- }
- 
-@@ -536,14 +538,14 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
- 	}
- #endif
- 
--	nmi_enter();
-+	nmi_enter_notrace();
- 
- 	inc_irq_stat(__nmi_count);
- 
- 	if (!ignore_nmis)
- 		default_do_nmi(regs);
- 
--	nmi_exit();
-+	nmi_exit_notrace();
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3306,7 +3306,7 @@ static noinstr void svm_vcpu_enter_exit(
+ 	__svm_vcpu_run(svm->vmcb_pa, (unsigned long *)&svm->vcpu.arch.regs);
  
  #ifdef CONFIG_X86_64
- 	if (unlikely(this_cpu_read(update_debug_stack))) {
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -378,7 +378,7 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
- 	}
- #endif
- 
--	nmi_enter();
-+	nmi_enter_notrace();
- 	instrumentation_begin();
- 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
- 
-@@ -624,11 +624,11 @@ DEFINE_IDTENTRY_RAW(exc_int3)
- 		instrumentation_end();
- 		idtentry_exit(regs);
- 	} else {
--		nmi_enter();
-+		nmi_enter_notrace();
- 		instrumentation_begin();
- 		do_int3(regs);
- 		instrumentation_end();
--		nmi_exit();
-+		nmi_exit_notrace();
- 	}
- }
- 
-@@ -827,7 +827,7 @@ static void noinstr handle_debug(struct
- static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 					     unsigned long dr6)
- {
--	nmi_enter();
-+	nmi_enter_notrace();
- 	/*
- 	 * The SDM says "The processor clears the BTF flag when it
- 	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
-@@ -849,7 +849,7 @@ static __always_inline void exc_debug_ke
- 	if (dr6)
- 		handle_debug(regs, dr6, false);
- 
--	nmi_exit();
-+	nmi_exit_notrace();
- }
- 
- static __always_inline void exc_debug_user(struct pt_regs *regs,
+-	wrmsrl(MSR_GS_BASE, svm->host.gs_base);
++	native_wrmsrl(MSR_GS_BASE, svm->host.gs_base);
+ #else
+ 	loadsegment(fs, svm->host.fs);
+ #ifndef CONFIG_X86_32_LAZY_GS
 
