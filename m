@@ -2,136 +2,217 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E92CC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0077EC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6464B206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C04206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gr42BgPt"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="NeMHfYNW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Hm/CfgBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgELItL (ORCPT
+        id S1729176AbgELIw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725776AbgELItL (ORCPT
+        Tue, 12 May 2020 04:52:28 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:33467 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728912AbgELIw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:49:11 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4DBC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:49:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x15so5469527pfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=t97yRHpmHo8412WgRauzgIXQjp1lspYvNliDKxac5o8=;
-        b=gr42BgPt6fH1p27tOaC1DScaH67NkLMkrYxnzMUkrwYYxLwiu82+rNiSSDGp3LwtAf
-         hbp0nI1k6l7eH5+YKzgzpxDEcKZlxPutlQxWNVN4Qucn/LIppB45rD9wuVYlDvTGoQJu
-         ndVN221ndSVWUvbDeG4Y79IeH2z6kM4dvFBw4QYVKWN6y+3AezfVpySHgx92JlXnhWlL
-         KszvYITck8HhhV+vrhuht1XSRcDsG+6irVnuQmdqhXe8UaUrmgPdHVBmnasfWeX8Y6gN
-         CuU8qoiZ7Kh3OwrURwe7lYJGIdVtdoTwCV5PANs0mlje4XGdNQ1JamoBm8AZ25pp/7Pa
-         pNig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t97yRHpmHo8412WgRauzgIXQjp1lspYvNliDKxac5o8=;
-        b=oJDzCJ2su4SY5wyp76zuKkKnW/NZXmNRf7+MPTvfWoxvxrKMqFZOiOSAXMP5VQP8A3
-         PHOTZR3O8p3LVMG1/9ZR2b6VDUj9d44qME3FNVPJC04q0qQrcDHU3nnBPwsBosrLUYHO
-         qFaqilibJosuuM0HXzH8O59x9pgYaGfIXwBDuj3mXDbpcuKU3KDGOzfYHVpDMeb409aZ
-         yGl5QLbZi86WKxX26zejlKnZJePl0dXVrP4aWBIR9sTVS+17CIvJ+PP/z2PlQloK8tI+
-         0O0mWEwuxti47sZhLdShgPR9S1HmVRErsznoxuCSWLIkTDX/y99+nxV395DUAb453Obb
-         0g/Q==
-X-Gm-Message-State: AGi0PuazaxSfAGCPUD+IwaA2GSWqkliHGeqL677pdsF8gPogpEDx7+Lb
-        tgb5zwbSBZFsbagyqVP6x3GPqw==
-X-Google-Smtp-Source: APiQypKCDzca+eCTQuciTT43aXbflnxzTa53g95PcTkGD9z0CskYBxnkXGY5zeFv+78SchqWqu8zcw==
-X-Received: by 2002:a62:e80e:: with SMTP id c14mr19361183pfi.83.1589273349558;
-        Tue, 12 May 2020 01:49:09 -0700 (PDT)
-Received: from localhost.localdomain ([117.196.230.85])
-        by smtp.gmail.com with ESMTPSA id 188sm11320866pfg.218.2020.05.12.01.49.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 01:49:08 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     daniel.thompson@linaro.org, jason.wessel@windriver.com,
-        dianders@chromium.org
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH] kgdb: Fix broken handling of printk() in NMI context
-Date:   Tue, 12 May 2020 14:18:34 +0530
-Message-Id: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 12 May 2020 04:52:27 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 29DC068A;
+        Tue, 12 May 2020 04:52:26 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 12 May 2020 04:52:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=E18WmbzeT1bm182Fg9GxvyijgHO
+        er2CSWp3rFmp48hg=; b=NeMHfYNWVOyVndoMO9YsJ5eKDle6RGbpRnk/zPEz9zb
+        5d833rpMCx0QlwU7w1iVY9IgfjNd2fgthZ8ijUyn0GWdFLTAvHuksgYLINiUKYQ7
+        0S3kisgsQ49PdzPfoBGense5OdMlTlqF6cEralGJMdiAT6F5DSm2SR1OaDQIZtKk
+        LOzjCURSVb4JKwUEJE6Nm/sLBRYKyNflW0uN3khznWEEJwMvNN3XwN/XJgjswBX4
+        D8pz0m4aZC9e7II5EQi5kuOJlk+AYu67f+0s7v9YyENWLhRRonUd+EWstOSRnSe0
+        b45ZYZEBKXTcamuEIzcC2BcZ1Sr37j1Ne4HfVuRDWOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=E18Wmb
+        zeT1bm182Fg9GxvyijgHOer2CSWp3rFmp48hg=; b=Hm/CfgBSbRg47TsYuwngZ1
+        +rRbH2/0X299dGg2Ni3eslDhLSpZtTPCCTPW04qDon/8kcv0e+oIppgnTkfpsWbF
+        vj7G0wXdFJx1DjV694F2M1BvPBo4rhW6hMJX3L17b6dY7vRWSvHFdHzY552lFf0R
+        f3o+Yr+xFsnfGbrYBfEifQPiBfQJIH9BRc4VnO4N6exX2pYbecAFjqwTGZ4f0sY4
+        zt/PfEoTC1ByjrMsKgK+OqY4u1aOxphv2FnfPLhT5rDQm8v66iwgUX6DhyLJkueR
+        NUJmfiz+XysWy4ZHxM0KjH0aG+/7YQlc6n0YfOJWxh68Fj8qoKeWeHwwb7XT6SmA
+        ==
+X-ME-Sender: <xms:yWO6Xm8fv_juZ2UHsPRafhdzxe8Yw_auOQ01u8-AXvtljiN7GA2POQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrledvgddtiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
+    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
+    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
+    rdgtohhm
+X-ME-Proxy: <xmx:yWO6Xms46CO1bFvDuGpCwzr2czQV0qcgLXzvfiqefcpaHuptr1oq0g>
+    <xmx:yWO6XsB_lLB0vca3_jVWAA_6oWnNhYV4pafSRtpl3AVGfP_VPOXREA>
+    <xmx:yWO6XudQ5CPQSxsskMANSJO8C1R-7gDYbD8hGMkdhJqqmixDhc1CzQ>
+    <xmx:yWO6Xm2djpTUmgCtbwznISTOQqzYxpTFH7u1O-0MwXk4rcMG1MLlMg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 09FF3328005A;
+        Tue, 12 May 2020 04:52:24 -0400 (EDT)
+Date:   Tue, 12 May 2020 10:52:21 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Charan Teja Reddy <charante@codeaurora.org>
+Cc:     sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
+Message-ID: <20200512085221.GB3557007@kroah.com>
+References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 42a0bb3f7138 ("printk/nmi: generic solution for safe printk
-in NMI"), kgdb entry in NMI context defaults to use safe NMI printk()
-which involves CPU specific buffers and deferred printk() until exit from
-NMI context.
+On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
+> The following race occurs while accessing the dmabuf object exported as
+> file:
+> P1				P2
+> dma_buf_release()          dmabuffs_dname()
+> 			   [say lsof reading /proc/<P1 pid>/fd/<num>]
+> 
+> 			   read dmabuf stored in dentry->d_fsdata
+> Free the dmabuf object
+> 			   Start accessing the dmabuf structure
+> 
+> In the above description, the dmabuf object freed in P1 is being
+> accessed from P2 which is resulting into the use-after-free. Below is
+> the dump stack reported.
+> 
+> We are reading the dmabuf object stored in the dentry->d_fsdata but
+> there is no binding between the dentry and the dmabuf which means that
+> the dmabuf can be freed while it is being read from ->d_fsdata and
+> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
+> with an extra refcount is not a viable solution as the exported dmabuf
+> is already under file's refcount and keeping the multiple refcounts on
+> the same object coordinated is not possible.
+> 
+> As we are reading the dmabuf in ->d_fsdata just to get the user passed
+> name, we can directly store the name in d_fsdata thus can avoid the
+> reading of dmabuf altogether.
+> 
+> Call Trace:
+>  kasan_report+0x12/0x20
+>  __asan_report_load8_noabort+0x14/0x20
+>  dmabuffs_dname+0x4f4/0x560
+>  tomoyo_realpath_from_path+0x165/0x660
+>  tomoyo_get_realpath
+>  tomoyo_check_open_permission+0x2a3/0x3e0
+>  tomoyo_file_open
+>  tomoyo_file_open+0xa9/0xd0
+>  security_file_open+0x71/0x300
+>  do_dentry_open+0x37a/0x1380
+>  vfs_open+0xa0/0xd0
+>  path_openat+0x12ee/0x3490
+>  do_filp_open+0x192/0x260
+>  do_sys_openat2+0x5eb/0x7e0
+>  do_sys_open+0xf2/0x180
+> 
+> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> Cc: <stable@vger.kernel.org> [5.3+]
+> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+> ---
+> 
+> Changes in v2: 
+> 
+> - Pass the user passed name in ->d_fsdata instead of dmabuf
+> - Improve the commit message
+> 
+> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
+> 
+>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index 01ce125..0071f7d 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/mount.h>
+>  #include <linux/pseudo_fs.h>
+> +#include <linux/dcache.h>
+>  
+>  #include <uapi/linux/dma-buf.h>
+>  #include <uapi/linux/magic.h>
+> @@ -40,15 +41,13 @@ struct dma_buf_list {
+>  
+>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+>  {
+> -	struct dma_buf *dmabuf;
+>  	char name[DMA_BUF_NAME_LEN];
+>  	size_t ret = 0;
+>  
+> -	dmabuf = dentry->d_fsdata;
+> -	dma_resv_lock(dmabuf->resv, NULL);
+> -	if (dmabuf->name)
+> -		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> -	dma_resv_unlock(dmabuf->resv);
+> +	spin_lock(&dentry->d_lock);
 
-But kgdb being a stop-the-world debugger, we don't want to defer printk()
-especially backtrace on corresponding CPUs. So instead switch to normal
-printk() mode in kgdb_cpu_enter() if entry is in NMI context.
+Are you sure this lock always protects d_fsdata?
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
+> +	if (dentry->d_fsdata)
+> +		ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
+> +	spin_unlock(&dentry->d_lock);
+>  
+>  	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+>  			     dentry->d_name.name, ret > 0 ? name : "");
 
-Similar change was posted earlier specific to arm64 here [1]. But after
-discussions it emerged out that this broken handling of printk() in NMI
-context should be a common problem that is relevant to other archs as well.
-So fix this handling in kgdb_cpu_enter() as there can be multiple entry
-points to kgdb in NMI context.
+If the above check fails the name will be what?  How could d_name.name
+be valid but d_fsdata not be valid?
 
-[1] https://lkml.org/lkml/2020/4/24/328
 
- kernel/debug/debug_core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
+>  static int dma_buf_release(struct inode *inode, struct file *file)
+>  {
+>  	struct dma_buf *dmabuf;
+> +	struct dentry *dentry = file->f_path.dentry;
+>  
+>  	if (!is_dma_buf_file(file))
+>  		return -EINVAL;
+>  
+>  	dmabuf = file->private_data;
+>  
+> +	spin_lock(&dentry->d_lock);
+> +	dentry->d_fsdata = NULL;
+> +	spin_unlock(&dentry->d_lock);
+>  	BUG_ON(dmabuf->vmapping_counter);
+>  
+>  	/*
+> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+>  	}
+>  	kfree(dmabuf->name);
+>  	dmabuf->name = name;
+> +	dmabuf->file->f_path.dentry->d_fsdata = name;
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 2b7c9b6..ab2933f 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -567,6 +567,15 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	kgdb_info[ks->cpu].enter_kgdb++;
- 	kgdb_info[ks->cpu].exception_state |= exception_state;
- 
-+	/*
-+	 * kgdb entry in NMI context defaults to use safe NMI printk() which
-+	 * involves CPU specific buffers and deferred printk() until exit from
-+	 * NMI context. But kgdb being a stop-the-world debugger, we don't want
-+	 * to defer printk(). So instead switch to normal printk() mode here.
-+	 */
-+	if (in_nmi())
-+		printk_nmi_exit();
-+
- 	if (exception_state == DCPU_WANT_MASTER)
- 		atomic_inc(&masters_in_kgdb);
- 	else
-@@ -635,6 +644,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 			atomic_dec(&slaves_in_kgdb);
- 			dbg_touch_watchdogs();
- 			local_irq_restore(flags);
-+			if (in_nmi())
-+				printk_nmi_enter();
- 			return 0;
- 		}
- 		cpu_relax();
-@@ -772,6 +783,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	raw_spin_unlock(&dbg_master_lock);
- 	dbg_touch_watchdogs();
- 	local_irq_restore(flags);
-+	if (in_nmi())
-+		printk_nmi_enter();
- 
- 	return kgdb_info[cpu].ret_state;
- }
--- 
-2.7.4
+You are just changing the use of d_fsdata from being a pointer to the
+dmabuf to being a pointer to the name string?  What's to keep that name
+string around and not have the same reference counting issues that the
+dmabuf structure itself has?  Who frees that string memory?
 
+thanks,
+
+greg k-h
