@@ -2,142 +2,216 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A031DC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ABCC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C55206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C90D20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oyaEp0TS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BGByk4t/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbgELTuf (ORCPT
+        id S1731004AbgELTzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
+        Tue, 12 May 2020 15:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730889AbgELTuf (ORCPT
+        with ESMTP id S1725950AbgELTzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:50:35 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB86C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:35 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id y42so8757775qth.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:34 -0700 (PDT)
+        Tue, 12 May 2020 15:55:45 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1073EC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:55:44 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id a5so8663976vsm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:55:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=xgJD2hpD7vnQ87u1OXtovDwmBIQGx+H7T13YM90Cpj4=;
-        b=oyaEp0TSlc6Z4xfLcVeab/Erl0PVFTIiLxrS1Ytzffwb7DYHWL+ubEmhBiXDRrUBIC
-         H1QOtXiShfC8X6acnuo8Dn36jroIYhsqY4BZyvLYl6NKBU5hNoWL8MDPXcu7FV3d42Nq
-         Se6GLOoFSycCu1T4alpZMe1IpKS2JGuA6HBci3HN+f9KggDX9OEIIboOcSZRM6b+U5JE
-         zipMF4T5557mB9R8r1Ri+OEZ/1GoWP35n1s47+SvymHpt15L0Y85AC96FNwpMu8t1YoM
-         /eN/e3DcVqKyfS7/C8xZ/I+zzjQjKNAWXTtSHsK5yxqI321X00hi5LiBmvSu3v9NjqV9
-         e5eg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=souGqEVdFUGfbVs6klo3kTV/o0WFTA0pV6SMGDZE5jU=;
+        b=BGByk4t/lgEtRVy7AtXqVevMTDz90sCHvuLDrt76134g9D/XItf0Ktm7vUPpyEWdwi
+         64DApzPuvJouI1yo+2vRRdSKpZdFDmGG2oTRKHPbFbZyBiJLkDrFaj/fzoyYXcNETbmG
+         q3eEQXEDH2DKbwb5Xffuev5oBuFRf934QYOjhcke0Mi5oyne/vHEpY5Ks7qT0Lg7zcMT
+         b0e1tttnIX3fK3KgNQ9DFs3S1FB2Gkehy1pqFjtJ6ekv0TzPSS2WGT6Xx+vIUb7lXKH0
+         Qo4rs067MNBl/CbM4MzosrXxY4CrZAn/jO3iycnbI4WFbyEYQnBQnaZ389icQNz0QWt5
+         Z38A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=xgJD2hpD7vnQ87u1OXtovDwmBIQGx+H7T13YM90Cpj4=;
-        b=MaATr0wTOJwotQJpzqy4LkG2SXJMCiKFmCxykDt2ijSouxTWmGLKiVAUIfiovgBB36
-         WKUuopMIdUg+6yrWCtXk5idKb7oJNEuYTm0uvySPSPnQf7BPOc3/g6QMzQGYBExxorWs
-         i4YicCmDa72a39IiBJLgs0kiCZrmYURpirVeGD66yqUhu/dRmhC/ToW6vAQ6rmqCOyxO
-         1+Qa1RrEyerN8msEPGhuZvlWlr4bAFd6IL4IjSliOOZ/23/MnnD/+YhkK5AjH1kRouUT
-         S7g42zCFAOef4SvWh7k2xng5wO/4MSYxYwEO86WRwmVMMzx+lRKyezvJ41GvuLfLcKBB
-         rzNQ==
-X-Gm-Message-State: AOAM5319nb1oocII+RkOc+V/Wum+UK7ZE1zn2EZ9ryDXlgRX10vbbjjM
-        6w+PI2V0R68rLrkk45FsHYEa+wQTk9sTUg==
-X-Google-Smtp-Source: ABdhPJx5yoJNFKpaTlovyxOByL1Afc0w9oDOw9IvzDUjgB/Gn2teZhN+0b3/S5ZTlmXmIN8UWrfVww==
-X-Received: by 2002:ac8:6d0a:: with SMTP id o10mr4974425qtt.141.1589313034050;
-        Tue, 12 May 2020 12:50:34 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o18sm64003qtb.7.2020.05.12.12.50.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 12:50:33 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Null-ptr-deref due to "vfs, fsinfo: Add an RCU safe per-ns mount
- list"
-Message-Id: <31941725-BEB0-4839-945A-4952C2B5ADC7@lca.pw>
-Date:   Tue, 12 May 2020 15:50:32 -0400
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=souGqEVdFUGfbVs6klo3kTV/o0WFTA0pV6SMGDZE5jU=;
+        b=Jyux/WacjfOzFuFxWkgiymJl1ZFjDCyQABVwq5P/4gZUxbd2WNWYyKred2D1VyQxJm
+         8aH5cOff0alWWDzFSW0wEeH4qDwqGMUSdNNImatCwujnPv+ErPU23vHHjDa4l/kSd226
+         lHosGwySUgyq4YaEXxWUCtO4d2F51IHEWakjunl3mFdMFf3SFkCrVDJeGPp3gWNnbKXi
+         yMD/VymBBLaNf7d6nJ0GyKF0i6NtQHbqCoeuem3wy1fInkNsOjm8ueiFNkOATyYsubiH
+         SujWXdh0bkDLCE2nocJxSnw8qWRDC04GeH8k6xIkbqf6WmdfBvsAs0l6bPrGT4/bfiuV
+         FLNg==
+X-Gm-Message-State: AGi0PuYejQbKfzNW12qr49bVpYRILg+CzO8WXFzvT4t6A8k20eiymlyU
+        PnFJgZ9fStQGD/CRIr5lUDDBL4ddTL6TRZMsoJD6Kw==
+X-Google-Smtp-Source: APiQypJALX0PEkw6GFYEO7ce5qnOamFXHlAc7QIRs/F4gM/2LXdipawuW0G4sPiNSihRRxaPNxzRlrtB0yEpIkUujs8=
+X-Received: by 2002:a67:dd98:: with SMTP id i24mr18420597vsk.239.1589313342705;
+ Tue, 12 May 2020 12:55:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200302193630.68771-1-minchan@kernel.org> <20200302193630.68771-6-minchan@kernel.org>
+ <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz> <20200311004251.GB87930@google.com>
+ <20200508183653.GB125527@google.com> <20200508160415.65ff359a9e312c613336587b@linux-foundation.org>
+ <20200509124817.xmrvsrq3mla6b76k@wittgenstein> <20200509231441.GC61301@google.com>
+In-Reply-To: <20200509231441.GC61301@google.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 12 May 2020 12:55:30 -0700
+Message-ID: <CAJuCfpFKYdfbG02vevRhWHhMhA4e_rRVNfCabcT0Pf_qNUgAnQ@mail.gmail.com>
+Subject: Re: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        Christian Brauner <christian@brauner.io>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reverted the linux-next commit ee8ad8190cb1 (=E2=80=9Cvfs, fsinfo: Add =
-an RCU safe per-ns mount list=E2=80=9D) fixed the null-ptr-deref.
+On Sat, May 9, 2020 at 4:14 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> Hi Christian,
+>
+> On Sat, May 09, 2020 at 02:48:17PM +0200, Christian Brauner wrote:
+> > On Fri, May 08, 2020 at 04:04:15PM -0700, Andrew Morton wrote:
+> > > On Fri, 8 May 2020 11:36:53 -0700 Minchan Kim <minchan@kernel.org> wrote:
+> > >
+> > > >
+> > > > ...
+> > > >
+> > > > Per Vlastimil's request, I changed "which and advise" with "idtype and
+> > > > advice" in function prototype of description.
+> > > > Could you replace the part in the description? Code is never changed.
+> > > >
+> > >
+> > > Done, but...
+> > >
+> > > >
+> > > > ...
+> > > >
+> > > > There is a demand[1] to support pid as well pidfd for process_madvise to
+> > > > reduce unnecessary syscall to get pidfd if the user has control of the
+> > > > target process(ie, they could guarantee the process is not gone or pid is
+> > > > not reused).
+> > > >
+> > > > This patch aims for supporting both options like waitid(2).  So, the
+> > > > syscall is currently,
+> > > >
+> > > >         int process_madvise(idtype_t idtype, id_t id, void *addr,
+> > > >                 size_t length, int advice, unsigned long flags);
+> > > >
+> > > > @which is actually idtype_t for userspace libray and currently, it
+> > > > supports P_PID and P_PIDFD.
+> > >
+> > > What does "@which is actually idtype_t for userspace libray" mean?  Can
+> > > you clarify and expand?
+> >
+> > If I may clarify, the only case where we've supported both pidfd and pid
+> > in the same system call is waitid() to avoid adding a dedicated system
+> > call for waiting and because waitid() already had this (imho insane)
+> > argument type switching. The idtype_t thing comes from waitid() and is
+> > located int sys/wait.h and is defined as
+> >
+> > "The type idtype_t is defined as an enumeration type whose possible
+> > values include at least the following:
+> >
+> > P_ALL
+> > P_PID
+> > P_PGID
+> > "
+> >
+> > int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+> > If idtype is P_PID, waitid() shall wait for the child with a process ID equal to (pid_t)id.
+> > If idtype is P_PGID, waitid() shall wait for any child with a process group ID equal to (pid_t)id.
+> > If idtype is P_ALL, waitid() shall wait for any children and id is ignored.
+> >
+> > I'm personally not a fan of this idtype_t thing and think this should
+> > just have been
+> > > >         int pidfd_madvise(int pidfd, void *addr,
+> > > >                 size_t length, int advice, unsigned long flags);
+> > and call it a day.
+>
+> That was the argument at that time, Daniel and I didn't want to have
+> pid along with pidfd even though Kirill strongly wanted to have it.
+> However you said " Overall, I don't particularly care how or if you
+> integrate pidfd here." at that time.
+>
+> https://lore.kernel.org/linux-mm/20200113104256.5ujbplyec2sk4onn@wittgenstein/
+>
+> I asked a question to Kirll at that time.
+>
+> "
+> > Sounds like that you want to support both options for every upcoming API
+> > which deals with pid. I'm not sure how it's critical for process_madvise
+> > API this case. In general, we sacrifice some performance for the nicer one
+> > and later, once it's reported as hurdle for some workload, we could fix it
+> > via introducing new flag. What I don't like at this moment is to make
+> > syscall complicated with potential scenarios without real workload.
+>
+> Yes, I suggest allowing both options for every new process api
+> "
+> https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+>
+> You didn't give the opinion at that time, either(I expected you will
+> make some voice then). What I could do to proceed work was separate it
+> as different patch like this one to get more attention in future.
+> And now it works.
+>
+> Let me clarify my side: I still don't like to introduce pid for new API
+> since we have pidfd. Since you just brought this issue again, I want to
+> hear *opinions* from others, again.
 
-# runc run root
 
-[ 1531.635242][ T4444] BUG: Kernel NULL pointer dereference on write at =
-0x00000000
-[ 1531.635285][ T4444] Faulting instruction address: 0xc0000000005689e0
-[ 1531.635299][ T4444] Oops: Kernel access of bad area, sig: 11 [#1]
-[ 1531.635310][ T4444] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
-DEBUG_PAGEALLOC NUMA PowerNV
-[ 1531.635331][ T4444] Modules linked in: kvm_hv kvm ip_tables x_tables =
-xfs sd_mod bnx2x tg3 ahci libahci mdio libphy libata firmware_class =
-dm_mirror dm_region_hash dm_log dm_mod
-[ 1531.635370][ T4444] CPU: 16 PID: 4444 Comm: runc:[2:INIT] Not tainted =
-5.7.0-rc5-next-20200512+ #9
-[ 1531.635383][ T4444] NIP:  c0000000005689e0 LR: c0000000005689b0 CTR: =
-0000000000000000
-[ 1531.635413][ T4444] REGS: c000001323aef980 TRAP: 0300   Not tainted  =
-(5.7.0-rc5-next-20200512+)
-[ 1531.635434][ T4444] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
-CR: 24424282  XER: 00000000
-[ 1531.635468][ T4444] CFAR: c0000000006f9eec DAR: 0000000000000000 =
-DSISR: 42000000 IRQMASK: 0=20
-[ 1531.635468][ T4444] GPR00: c000000000570000 c000001323aefc10 =
-c00000000168aa00 0000000000000001=20
-[ 1531.635468][ T4444] GPR04: c0000015934e9e98 c0000015934e9e98 =
-00000000283df117 fffffffe4386c189=20
-[ 1531.635468][ T4444] GPR08: c000001323aefc38 0000000000000000 =
-0000000000000000 0000000000000002=20
-[ 1531.635468][ T4444] GPR12: 0000000024402282 c000001fffff1800 =
-000000c000229990 000000000000000a=20
-[ 1531.635468][ T4444] GPR16: ffffffffffffffff 0000000000000000 =
-000000000000007a 000000012479c68c=20
-[ 1531.635468][ T4444] GPR20: 0000000000000000 000000c000000180 =
-0000000000000000 0000000000000000=20
-[ 1531.635468][ T4444] GPR24: 0000000000000000 c00000000516b870 =
-c00000000516b858 5deadbeef0000122=20
-[ 1531.635468][ T4444] GPR28: c000001323aefc38 c0000015934e9e00 =
-c0000015934e9ea8 c0000015934e9e98=20
-[ 1531.635652][ T4444] NIP [c0000000005689e0] umount_tree+0x250/0x470
-__write_once_size at include/linux/compiler.h:250
-(inlined by) __hlist_del at include/linux/list.h:811
-(inlined by) hlist_del_rcu at include/linux/rculist.h:487
-(inlined by) umount_tree at fs/namespace.c:1485
-[ 1531.635672][ T4444] LR [c0000000005689b0] umount_tree+0x220/0x470
-[ 1531.635682][ T4444] Call Trace:
-[ 1531.635709][ T4444] [c000001323aefca0] [c000000000570000] =
-do_mount+0xb70/0xc90
-[ 1531.635738][ T4444] [c000001323aefd70] [c0000000005706f8] =
-sys_mount+0x158/0x180
-[ 1531.635760][ T4444] [c000001323aefdc0] [c000000000038ac4] =
-system_call_exception+0x114/0x1e0
-[ 1531.635799][ T4444] [c000001323aefe20] [c00000000000c8f0] =
-system_call_common+0xf0/0x278
-[ 1531.635828][ T4444] Instruction dump:
-[ 1531.635836][ T4444] 60000000 2fa30000 419e0014 e93f0008 e95f0000 =
-f92a0008 f9490000 e93fffb8=20
-[ 1531.635860][ T4444] e95fffc0 fbff0000 fbff0008 2fa90000 <f92a0000> =
-419e0008 f9490008 e93f0058=20
-[ 1531.635885][ T4444] ---[ end trace f12075f6fac94362 ]---
-[ 1531.748352][ T4444]=20
-[ 1532.748433][ T4444] Kernel panic - not syncing: Fatal exception=
+IIRC Kirill's main complaint was that if we support only pidfds and
+userspace has a pid of the process then it would have to convert that
+pid into pidfd before calling process_madvise, which involves
+additional syscall(s). The overhead would be more tangible if there
+are multiple processes needing to be madvised.
+I'm not sure how often such a need arises to madvise multiple
+processes in a bulk like that and how critical is the overhead of
+obtaining pidfd. With pid reuse possibility pid-based API will still
+have the issue of possibly sending the request to a wrong process, so
+this pidfd obtaining overhead arguably makes the usage more robust and
+therefore is not a pure loss.
+
+I don't have a real strong opinion against supporting pid in this
+syscall but I think API maintainers should decide going forward
+whether new APIs should support pid along with pidfd or switch to
+pidfd only.
+Thanks!
+
+>
+> >
+> > Also, if I may ask, why is the flag argument "unsigned long"?
+> > That's pretty unorthodox. The expectation is that flag arguments are
+> > not word-size dependent and should usually use "unsigned int". All new
+> > system calls follow this pattern too.
+>
+> Nothing special in this flag: Let me change it as "unsigned int".
+> I will send the change once we have an agreement on "pidfd" argument.
+>
+> Thanks for the review, Christian!
