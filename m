@@ -2,199 +2,296 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D201CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D8CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33C820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EB320722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl5x0Swg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgELPuw (ORCPT
+        id S1730694AbgELPvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:50:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32094 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726388AbgELPuv (ORCPT
+        Tue, 12 May 2020 11:51:01 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40239 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730671AbgELPvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:50:51 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFZgS0193662;
-        Tue, 12 May 2020 11:50:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw55wxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 11:50:29 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04CFbG10007232;
-        Tue, 12 May 2020 11:50:28 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw55wx9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 11:50:28 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04CFoBnV004421;
-        Tue, 12 May 2020 15:50:27 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 30wm55esms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 15:50:26 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04CFnDnQ64225606
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 15:49:13 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3292A405C;
-        Tue, 12 May 2020 15:50:24 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C4B7A405F;
-        Tue, 12 May 2020 15:50:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.144.67])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 May 2020 15:50:23 +0000 (GMT)
-Message-ID: <1589298622.5098.67.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Tue, 12 May 2020 11:50:22 -0400
-In-Reply-To: <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-         <1588957684.5146.70.camel@linux.ibm.com>
-         <414644a0be9e4af880452f4b5079aba1@huawei.com>
-         <1589233010.5091.49.camel@linux.ibm.com>
-         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
-         <1589293025.5098.53.camel@linux.ibm.com>
-         <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_04:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- spamscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120115
+        Tue, 12 May 2020 11:51:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589298658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7gi6kZYZ50egtzLQVzSUEDOzwts0OWq/gx0o859o0Q4=;
+        b=cl5x0SwgTEI2SDeVnpLeWITv4zyIeuF9kHjIjPBnF4ffGVz7zehpLcA5TzEPQCAEEAG3IM
+        nKmeSN6Dlh/K/PnA//jhv4ICUpGG/vCjE0nmtiZha+vnWRnNMze+w3AECGSndUuIDmLpGG
+        84H1CNkXvUOWSHJ50WH1UjxbAby/63U=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-9xkFJo_tOICy_dbWF6UhAw-1; Tue, 12 May 2020 11:50:57 -0400
+X-MC-Unique: 9xkFJo_tOICy_dbWF6UhAw-1
+Received: by mail-wr1-f70.google.com with SMTP id z5so7083012wrt.17
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:50:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=7gi6kZYZ50egtzLQVzSUEDOzwts0OWq/gx0o859o0Q4=;
+        b=r4seCRZ+gOufgLRjjz+ErTYc2jXopGIL0OmGrvx/KX2wWqeD8Vz+VYvvxUhnrTIHbW
+         MfXN1iwqWUxaecNzZ/t+bawlHSdnaZDanojaVWXF+U9mLuSbHlA7Eb3UFZBG4L6DFw9D
+         m62uvz+SlFeCLhdIvRcM7tQ67VJbtsGJnSfzR96YSy381AQxu41w3dcoc7V5vzchhEz1
+         JGyA8CrC9qL/myi2f2gahbkmgNsIBDIXmp1cKasqe7wHMpzXWG4CcIYD2BX1G/PFNgmZ
+         DYpB/qojclV97bFt5W8Engt7ybrmqcaT6dDcNcoPdfsKtKOubNdcwK9XTdlpyPdryzq2
+         df5g==
+X-Gm-Message-State: AGi0PuZ5Iv7xUS08Akm4wN5pycFJeeIsbKNzKpBYcNR7zCTzmZQGCX5h
+        v1p9bJLW3gQltraF4eo4MSJx6sTuFrdYp54Xs6ll/N00tSsLTvlj+SRYIGGrjzyTfTBs6bAQDjk
+        CcwJn4OA8GIy7DnysNVwrlYgC
+X-Received: by 2002:a05:600c:295a:: with SMTP id n26mr41423857wmd.16.1589298655631;
+        Tue, 12 May 2020 08:50:55 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIhzwxU3CV/9sraEUzM4doFL8eHcxeWmlWToHs5tCU62DHAcBRhJ5AeY7spSDkw2c2/FqGH8w==
+X-Received: by 2002:a05:600c:295a:: with SMTP id n26mr41423819wmd.16.1589298655232;
+        Tue, 12 May 2020 08:50:55 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id b23sm29453744wmb.26.2020.05.12.08.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 08:50:54 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event delivery
+In-Reply-To: <20200512142411.GA138129@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com> <20200511164752.2158645-5-vkuznets@redhat.com> <20200512142411.GA138129@redhat.com>
+Date:   Tue, 12 May 2020 17:50:53 +0200
+Message-ID: <87lflxm9sy.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-12 at 15:31 +0000, Roberto Sassu wrote:
-> > From: owner-linux-security-module@vger.kernel.org [mailto:owner-linux-
-> > security-module@vger.kernel.org] On Behalf Of Mimi Zohar
-> > Sent: Tuesday, May 12, 2020 4:17 PM
-> > On Tue, 2020-05-12 at 07:54 +0000, Roberto Sassu wrote:
-> > > > > > Roberto, EVM is only triggered by IMA, unless you've modified the
-> > > > > > kernel to do otherwise.
-> > > > >
-> > > > > EVM would deny xattr/attr operations even if IMA is disabled in the
-> > > > > kernel configuration. For example, evm_setxattr() returns the value
-> > > > > from evm_protect_xattr(). IMA is not involved there.
-> > > >
-> > > > Commit ae1ba1676b88 ("EVM: Allow userland to permit modification of
-> > > > EVM-protected metadata")
-> > introduced EVM_ALLOW_METADATA_WRITES
-> > > > to allow writing the EVM portable and immutable file signatures.
-> > >
-> > > According to Documentation/ABI/testing/evm:
-> > >
-> > > Note that once a key has been loaded, it will no longer be
-> > > possible to enable metadata modification.
-> > 
-> > Not any key, but the HMAC key.
-> > 
-> > 2         Permit modification of EVM-protected metadata at
-> >           runtime. Not supported if HMAC validation and
-> >           creation is enabled.
-> 
-> #ifdef CONFIG_EVM_LOAD_X509
-> void __init evm_load_x509(void)
-> {
-> [...]
->         rc = integrity_load_x509(INTEGRITY_KEYRING_EVM, CONFIG_EVM_X509_PATH);
->         if (!rc)
->                 evm_initialized |= EVM_INIT_X509;
-> 
-> 
-> static ssize_t evm_write_key(struct file *file, const char __user *buf,
->                              size_t count, loff_t *ppos)
-> {
-> [...]
->         /* Don't allow a request to freshly enable metadata writes if
->          * keys are loaded.
->          */
->         if ((i & EVM_ALLOW_METADATA_WRITES) &&
->             ((evm_initialized & EVM_KEY_MASK) != 0) &&
->             !(evm_initialized & EVM_ALLOW_METADATA_WRITES))
->                 return -EPERM;
-> 
-> Should have been:
-> 
->         if ((i & EVM_ALLOW_METADATA_WRITES) &&
->             ((evm_initialized & EVM_INIT_HMAC) != 0) &&
->             !(evm_initialized & EVM_ALLOW_METADATA_WRITES))
->                 return -EPERM;
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Ok
+> On Mon, May 11, 2020 at 06:47:48PM +0200, Vitaly Kuznetsov wrote:
+>> Concerns were expressed around APF delivery via synthetic #PF exception as
+>> in some cases such delivery may collide with real page fault. For type 2
+>> (page ready) notifications we can easily switch to using an interrupt
+>> instead. Introduce new MSR_KVM_ASYNC_PF_INT mechanism and deprecate the
+>> legacy one.
+>> 
+>> One notable difference between the two mechanisms is that interrupt may not
+>> get handled immediately so whenever we would like to deliver next event
+>> (regardless of its type) we must be sure the guest had read and cleared
+>> previous event in the slot.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  Documentation/virt/kvm/msr.rst       | 91 +++++++++++++++++---------
+>>  arch/x86/include/asm/kvm_host.h      |  4 +-
+>>  arch/x86/include/uapi/asm/kvm_para.h |  6 ++
+>>  arch/x86/kvm/x86.c                   | 95 ++++++++++++++++++++--------
+>>  4 files changed, 140 insertions(+), 56 deletions(-)
+>> 
+>> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+>> index 33892036672d..f988a36f226a 100644
+>> --- a/Documentation/virt/kvm/msr.rst
+>> +++ b/Documentation/virt/kvm/msr.rst
+>> @@ -190,35 +190,54 @@ MSR_KVM_ASYNC_PF_EN:
+>>  	0x4b564d02
+>>  
+>>  data:
+>> -	Bits 63-6 hold 64-byte aligned physical address of a
+>> -	64 byte memory area which must be in guest RAM and must be
+>> -	zeroed. Bits 5-3 are reserved and should be zero. Bit 0 is 1
+>> -	when asynchronous page faults are enabled on the vcpu 0 when
+>> -	disabled. Bit 1 is 1 if asynchronous page faults can be injected
+>> -	when vcpu is in cpl == 0. Bit 2 is 1 if asynchronous page faults
+>> -	are delivered to L1 as #PF vmexits.  Bit 2 can be set only if
+>> -	KVM_FEATURE_ASYNC_PF_VMEXIT is present in CPUID.
+>> -
+>> -	First 4 byte of 64 byte memory location will be written to by
+>> -	the hypervisor at the time of asynchronous page fault (APF)
+>> -	injection to indicate type of asynchronous page fault. Value
+>> -	of 1 means that the page referred to by the page fault is not
+>> -	present. Value 2 means that the page is now available. Disabling
+>> -	interrupt inhibits APFs. Guest must not enable interrupt
+>> -	before the reason is read, or it may be overwritten by another
+>> -	APF. Since APF uses the same exception vector as regular page
+>> -	fault guest must reset the reason to 0 before it does
+>> -	something that can generate normal page fault.  If during page
+>> -	fault APF reason is 0 it means that this is regular page
+>> -	fault.
+>> -
+>> -	During delivery of type 1 APF cr2 contains a token that will
+>> -	be used to notify a guest when missing page becomes
+>> -	available. When page becomes available type 2 APF is sent with
+>> -	cr2 set to the token associated with the page. There is special
+>> -	kind of token 0xffffffff which tells vcpu that it should wake
+>> -	up all processes waiting for APFs and no individual type 2 APFs
+>> -	will be sent.
+>> +	Asynchronous page fault (APF) control MSR.
+>> +
+>> +	Bits 63-6 hold 64-byte aligned physical address of a 64 byte memory area
+>> +	which must be in guest RAM and must be zeroed. This memory is expected
+>> +	to hold a copy of the following structure::
+>> +
+>> +	  struct kvm_vcpu_pv_apf_data {
+>> +		__u32 reason;
+>> +		__u32 pageready_token;
+>> +		__u8 pad[56];
+>> +		__u32 enabled;
+>> +	  };
+>> +
+>> +	Bits 5-4 of the MSR are reserved and should be zero. Bit 0 is set to 1
+>> +	when asynchronous page faults are enabled on the vcpu, 0 when disabled.
+>> +	Bit 1 is 1 if asynchronous page faults can be injected when vcpu is in
+>> +	cpl == 0. Bit 2 is 1 if asynchronous page faults are delivered to L1 as
+>> +	#PF vmexits.  Bit 2 can be set only if KVM_FEATURE_ASYNC_PF_VMEXIT is
+>> +	present in CPUID. Bit 3 enables interrupt based delivery of type 2
+>> +	(page present) events.
+>
+> Hi Vitaly,
+>
+> "Bit 3 enables interrupt based delivery of type 2 events". So one has to
+> opt in to enable it. If this bit is 0, we will continue to deliver
+> page ready events using #PF? This probably will be needed to ensure
+> backward compatibility also.
+>
 
-> 
-> > Each time the EVM protected file metadata is updated, the EVM HMAC is
-> > updated, assuming the existing EVM HMAC is valid.  Userspace should
-> > not have access to the HMAC key, so we only allow writing EVM
-> > signatures.
-> > 
-> > The only difference between writing the original EVM signature and the
-> > new portable and immutable signature is the security.ima xattr
-> > requirement.  Since the new EVM signature does not include the
-> > filesystem specific data, something else needs to bind the file
-> > metadata to the file data.  Thus the IMA xattr requirement.
-> > 
-> > Assuming that the new EVM signature is written last, as long as there
-> > is an IMA xattr, there shouldn't be a problem writing the new EVM
-> > signature.
-> 
->         /* first need to know the sig type */
->         rc = vfs_getxattr_alloc(dentry, XATTR_NAME_EVM, (char **)&xattr_data, 0,
->                                 GFP_NOFS);
->         if (rc <= 0) {
->                 evm_status = INTEGRITY_FAIL;
->                 if (rc == -ENODATA) {
->                         rc = evm_find_protected_xattrs(dentry);
->                         if (rc > 0)
->                                 evm_status = INTEGRITY_NOLABEL;
->                         else if (rc == 0)
->                                 evm_status = INTEGRITY_NOXATTRS; /* new file */
-> 
-> If EVM_ALLOW_METADATA_WRITES is cleared, only the first xattr
-> can be written (status INTEGRITY_NOXATTRS is ok). After,
-> evm_find_protected_xattrs() returns rc > 0, so the status is
-> INTEGRITY_NOLABEL, which is not ignored by evm_protect_xattr().
+No, as Paolo suggested we don't enable the mechanism at all if bit3 is
+0. Legacy (unaware) guests will think that they've enabled the mechanism
+but it won't work, they won't see any APF notifications.
 
-With EVM HMAC enabled, as a result of writing the first protected
-xattr, an EVM HMAC should be calculated and written in
-evm_inode_post_setxattr().
+>> +
+>> +	First 4 byte of 64 byte memory location ('reason') will be written to
+>> +	by the hypervisor at the time APF type 1 (page not present) injection.
+>> +	The only possible values are '0' and '1'.
+>
+> What do "reason" values "0" and "1" signify?
+>
+> Previously this value could be 1 for PAGE_NOT_PRESENT and 2 for
+> PAGE_READY. So looks like we took away reason "PAGE_READY" because it will
+> be delivered using interrupts.
+>
+> But that seems like an opt in. If that's the case, then we should still
+> retain PAGE_READY reason. If we are getting rid of page_ready using
+> #PF, then interrupt based deliver should not be optional. What am I
+> missing.
 
-Mimi
+It is not optional now :-)
+
+>
+> Also previous text had following line.
+>
+> "Guest must not enable interrupt before the reason is read, or it may be
+>  overwritten by another APF".
+>
+> So this is not a requirement anymore?
+>
+
+It still stands for type 1 (page not present) events.
+
+>> Type 1 events are currently
+>> +	always delivered as synthetic #PF exception. During delivery of type 1
+>> +	APF CR2 register contains a token that will be used to notify the guest
+>> +	when missing page becomes available. Guest is supposed to write '0' to
+>> +	the location when it is done handling type 1 event so the next one can
+>> +	be delivered.
+>> +
+>> +	Note, since APF type 1 uses the same exception vector as regular page
+>> +	fault, guest must reset the reason to '0' before it does something that
+>> +	can generate normal page fault. If during a page fault APF reason is '0'
+>> +	it means that this is regular page fault.
+>> +
+>> +	Bytes 5-7 of 64 byte memory location ('pageready_token') will be written
+>> +	to by the hypervisor at the time of type 2 (page ready) event injection.
+>> +	The content of these bytes is a token which was previously delivered as
+>> +	type 1 event. The event indicates the page in now available. Guest is
+>> +	supposed to write '0' to the location when it is done handling type 2
+>> +	event so the next one can be delivered. MSR_KVM_ASYNC_PF_INT MSR
+>> +	specifying the interrupt vector for type 2 APF delivery needs to be
+>> +	written to before enabling APF mechanism in MSR_KVM_ASYNC_PF_EN.
+>
+> What is supposed to be value of "reason" field for type2 events. I
+> had liked previous values "KVM_PV_REASON_PAGE_READY" and
+> "KVM_PV_REASON_PAGE_NOT_PRESENT". Name itself made it plenty clear, what
+> it means. Also it allowed for easy extension where this protocol could
+> be extended to deliver other "reasons", like error.
+>
+> So if we are using a common structure "kvm_vcpu_pv_apf_data" to deliver
+> type1 and type2 events, to me it makes sense to retain existing
+> KVM_PV_REASON_PAGE_READY and KVM_PV_REASON_PAGE_NOT_PRESENT. Just that
+> in new scheme of things, KVM_PV_REASON_PAGE_NOT_PRESENT will be delivered
+> using #PF (and later possibly using #VE) and KVM_PV_REASON_PAGE_READY
+> will be delivered using interrupt.
+
+We use different fields for page-not-present and page-ready events so
+there is no intersection. If we start setting KVM_PV_REASON_PAGE_READY
+to 'reason' we may accidentally destroy a 'page-not-present' event.
+
+With this patchset we have two completely separate channels:
+1) Page-not-present goes through #PF and 'reason' in struct
+kvm_vcpu_pv_apf_data.
+2) Page-ready goes through interrupt and 'pageready_token' in the same
+kvm_vcpu_pv_apf_data.
+
+>
+>> +
+>> +	Note, previously, type 2 (page present) events were delivered via the
+>> +	same #PF exception as type 1 (page not present) events but this is
+>> +	now deprecated.
+>
+>> If bit 3 (interrupt based delivery) is not set APF events are not delivered.
+>
+> So all the old guests which were getting async pf will suddenly find
+> that async pf does not work anymore (after hypervisor update). And
+> some of them might report it as performance issue (if there were any
+> performance benefits to be had with async pf).
+
+We still do APF_HALT but generally yes, there might be some performance
+implications. My RFC was preserving #PF path but the suggestion was to
+retire it completely. (and I kinda like it because it makes a lot of
+code go away)
+
+>
+> [..]
+>>  
+>>  bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
+>>  {
+>> -	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
+>> +	if (!kvm_pv_async_pf_enabled(vcpu))
+>>  		return true;
+>
+> What does above mean. If async pf is not enabled, then it returns true,
+> implying one can inject async page present. But if async pf is not
+> enabled, there is no need to inject these events.
+
+AFAIU this is a protection agains guest suddenly disabling APF
+mechanism. What do we do with all the 'page ready' events after, we
+can't deliver them anymore. So we just eat them (hoping guest will
+unfreeze all processes on its own before disabling the mechanism).
+
+It is the existing logic, my patch doesn't change it.
+
+Thanks for the review!
+
+-- 
+Vitaly
+
