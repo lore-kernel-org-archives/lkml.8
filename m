@@ -2,147 +2,209 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB94C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FBCC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBA820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD83920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RTRXN6Up"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c/o7xP45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgELJU5 (ORCPT
+        id S1729315AbgELJVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
+        Tue, 12 May 2020 05:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729125AbgELJU4 (ORCPT
+        by vger.kernel.org with ESMTP id S1729193AbgELJVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:20:56 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A336BC05BD0A
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:20:55 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u15so12797945ljd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:20:55 -0700 (PDT)
+        Tue, 12 May 2020 05:21:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29E7C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:21:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i15so14393457wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hNH+m8omjPnk476jGLpu8Vt8kPOpg3agkUbWl32XtLw=;
-        b=RTRXN6UpK2F7NEYSZFbq/6CmZAZUEetFV4/nF5JiSYvyNI5g4nTSNhLFkFoHjZwByP
-         Zlg/5cua8es2+gXO0jg7lEsyOvayqu+1Hiy9tJXNKfbH9AVH8hYCjEcmgZTtRBulz2Nv
-         j6Mr9nFwWAwPdaQvT4mLPIwg+38zt89Y0MZnSr1WSC3bzYdVCOHwU9KexFMQP8ObqJiA
-         nBLhku7TpS+EYOBoPcY4ND81ZhxYJsgVdGS/XnsbZtHryPTOr7O9aoNvFmt04d5nNqBj
-         9UF8fA1bnUgTKmVgdIIWE7HfRRJy9I5vVOQGLLjoyfo8I+eVeGK3r5ReIXgumar2WDhx
-         uWLA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WSJ+GxsTuzqD8+IxmpWAkgNXtGw85Gobj3y/xeLlGVs=;
+        b=c/o7xP451p05+fbz2TZLhRj4Tx9fMnzXC7w9k+1fmEi2v4E6edj5mks2yFuwCAvnPp
+         TyWPeDv3I+NJk6fDLPEzr5a0Usrj1uDa9QV8rwbM0oMgtWc47RbytX55Vzw5l3YqwsLM
+         a4eICQXcaTVh8j9/OsIM2SPdyoZY/NloXhg0BvPe9X+La/wKffYh1XYR5/6f82jU90R2
+         /TD4bIb/voRBppIOHLNonM7o2IMRruu5UxC1AfSA+dKrszymKCPgTbzxB/TkRyJpaGLF
+         ywZ7hwkK1iBicuimPtD4sQsOFhKY2kI1FMvpET9K4CMjloQ7YWjCE86Sd62GJF3UMgo/
+         Zpfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hNH+m8omjPnk476jGLpu8Vt8kPOpg3agkUbWl32XtLw=;
-        b=aNugMwJQ8BoOkgBqpkY25AGJnGw1EjunFIKlFMsP7Y27lcjP/vhIZyO530OiwkYAS2
-         WPussnxB54EGp3IAI54ix2aT5pGW+Fly93ZQaZQf5hhdqzBqUR6jz1S/b/D3A3bg2Kct
-         QqBgAFgg1GiSqACNQEWZ+5opzHn/aj5qT+04U0YnWLexWjNn+LfEhGFddFB3oiunJVTZ
-         gWRffCnMWpkgYZWWWFJUaonEKmBn7HkACraX87WIeLSo/3zPvtmLi7B3RUCiAN39chvF
-         hFe48CAcUbJRTcmIjQsKxTZ6RMVbAsgLwv3CQdJ0UUim3M01GWJ0QNTQeDl243kPCz3b
-         yqpw==
-X-Gm-Message-State: AOAM533Sfq1+b7p/CU0+6b8KnLxKFI6aNmwQ2elzwg4y9cR62Iv99O7M
-        d5V/TXMwAxagqmN8jJK9/83yfx0if0Cc8l0eGXZBbg==
-X-Google-Smtp-Source: ABdhPJxY70vedCXTAc/sVhR66GczTIpt7w0KW9ze1vEeSXLFO3Eq/mp5nh3QrQuPhD0UQIwMuEug7EhXdEzryApWOnc=
-X-Received: by 2002:a05:651c:1b9:: with SMTP id c25mr9138973ljn.285.1589275253855;
- Tue, 12 May 2020 02:20:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 12 May 2020 14:50:42 +0530
-Message-ID: <CAFA6WYNgBQDBY+670fG38Yrg8tMg6U74TW12WON=9dVvsT0t6w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] Introduce TEE based Trusted Keys support
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>
-Cc:     dhowells@redhat.com, Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WSJ+GxsTuzqD8+IxmpWAkgNXtGw85Gobj3y/xeLlGVs=;
+        b=gyMGYxPIDi1hNE0lT/+qHfcew2nLeW6kbDWya15xBki/paScKl1rY9wIxrO8QCqEcq
+         NP0gQ37bgKJP+OboIG4v5WYuSjLHOCVHatVV2O9gf8dPfyLfzLoQ0bUELSjRHzOzMGO6
+         9trmZELFA8OVi4Z7hlq576G0VRF3qGWjKEW4vV8ql74D52XDK6DCzlwUDX/7Nl2oMzgf
+         Xo7Ud/aKTC4R8g5GMrTchuqyrFiDij2rZaWoCIZTJLni6Aj+ReRYpGRuWJEYju6Oarkl
+         C6C95tpctceJqqR1pWpupsXTHQfO1kLAUFdhaOVGD4MeqhzJYbGXNdHh3gyWEdYh0VUS
+         iGeQ==
+X-Gm-Message-State: AGi0Pua1DtQLDThm5m+efi75qk7iuerx/U8dALUzeNjE7wYcc+ylGv1a
+        sZZ/G8zt0CUx9L7WsAgUMK4ldw==
+X-Google-Smtp-Source: APiQypJzs8nFdQli4YVacxVDlFi3KZMkRuI5sjbQ+3MXmbG/9a6/E+gFH+A9GVHHr5dUP9sAv5OAfQ==
+X-Received: by 2002:a5d:444c:: with SMTP id x12mr20172504wrr.406.1589275266995;
+        Tue, 12 May 2020 02:21:06 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id 128sm24726511wme.39.2020.05.12.02.21.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 02:21:06 -0700 (PDT)
+Date:   Tue, 12 May 2020 10:21:02 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200512092102.GA16151@google.com>
+References: <20200507181012.29791-1-qperret@google.com>
+ <20200508081128.GM5298@hirez.programming.kicks-ass.net>
+ <20200508103721.GA3860390@kroah.com>
+ <20200508111612.GA252673@google.com>
+ <20200508113141.GB5298@hirez.programming.kicks-ass.net>
+ <20200508130507.GA10541@google.com>
+ <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
+ <20200511090049.GA229633@google.com>
+ <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 at 15:10, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Add support for TEE based trusted keys where TEE provides the functionality
-> to seal and unseal trusted keys using hardware unique key. Also, this is
-> an alternative in case platform doesn't possess a TPM device.
->
-> This patch-set has been tested with OP-TEE based early TA which can be
-> found here [1].
->
-> [1] https://github.com/OP-TEE/optee_os/pull/3838
+Hi Rafael,
 
-Fyi, this PR has been merged in OP-TEE OS as commit [1]. Looking
-forward to any further comments/feedback on this patch-set.
+On Monday 11 May 2020 at 17:26:26 (+0200), Rafael J. Wysocki wrote:
+> On Mon, May 11, 2020 at 11:00 AM Quentin Perret <qperret@google.com> wrote:
+> > The base idea is, anything that we know from experience is used by
+> > everybody can be built in, anything else will need investigation. And as
+> > you've understood, schedutil falls in that second category.
+> 
+> The fact that the vendor sets up a different governor by default
+> doesn't mean that there should be no way to switch over to schedutil
+> IMO.
 
-[1] https://github.com/OP-TEE/optee_os/commit/f86ab8e7e0de869dfa25ca05a37ee070d7e5b86b
+Well, there will always be the option to load the schedutil module ;-)
 
--Sumit
+<snip>
+> > the reason that dependency was added originally was
+> >    because sugov was the only place where util clamps where taken into
+> >    accounts. But that is no longer true -- we check them in the capacity
+> >    aware wake-up path as well, which is entirely independent from the
+> >    currently running governor;
+> 
+> But this is done under the assumption that the governor will also take
+> the clamps into account, isn't it?
 
->
-> Changes in v4:
-> 1. Pushed independent TEE features separately:
->   - Part of recent TEE PR: https://lkml.org/lkml/2020/5/4/1062
-> 2. Updated trusted-encrypted doc with TEE as a new trust source.
-> 3. Rebased onto latest tpmdd/master.
->
-> Changes in v3:
-> 1. Update patch #2 to support registration of multiple kernel pages.
-> 2. Incoporate dependency patch #4 in this patch-set:
->    https://patchwork.kernel.org/patch/11091435/
->
-> Changes in v2:
-> 1. Add reviewed-by tags for patch #1 and #2.
-> 2. Incorporate comments from Jens for patch #3.
-> 3. Switch to use generic trusted keys framework.
->
-> Sumit Garg (4):
->   KEYS: trusted: Add generic trusted keys framework
->   KEYS: trusted: Introduce TEE based Trusted Keys
->   doc: trusted-encrypted: updates with TEE as a new trust source
->   MAINTAINERS: Add entry for TEE based Trusted Keys
->
->  Documentation/security/keys/trusted-encrypted.rst | 203 ++++++++++---
->  MAINTAINERS                                       |   8 +
->  include/keys/trusted-type.h                       |  48 ++++
->  include/keys/trusted_tee.h                        |  66 +++++
->  include/keys/trusted_tpm.h                        |  15 -
->  security/keys/Kconfig                             |   3 +
->  security/keys/trusted-keys/Makefile               |   2 +
->  security/keys/trusted-keys/trusted_common.c       | 336 ++++++++++++++++++++++
->  security/keys/trusted-keys/trusted_tee.c          | 282 ++++++++++++++++++
->  security/keys/trusted-keys/trusted_tpm1.c         | 335 ++++-----------------
->  10 files changed, 974 insertions(+), 324 deletions(-)
->  create mode 100644 include/keys/trusted_tee.h
->  create mode 100644 security/keys/trusted-keys/trusted_common.c
->  create mode 100644 security/keys/trusted-keys/trusted_tee.c
->
-> --
-> 2.7.4
->
+Even if that was correct, it's not clear a compile-time dependency makes
+that assumption true, right?
+
+For governors and the like, if the option is =n, then you can hard-rely
+on it not being used. But if it is =y, you cannot assume anything
+what-so-ever. EAS does a run-time check for that exact reason -- a
+sole Kconfig dependency typically doesn't work for that.
+
+> Otherwise you can see your "low util" tasks running at high
+> frequencies and "high util" ones running slowly.  Surely, that's not
+> desirable?
+> 
+> IIUC, the task placement needs to be consistent with the governor's
+> decisions for things to work as expected.
+
+Sure, but, say, the 'performance' governor could give you some of that
+too. That is, you could use uclamp.min on some tasks to ensure they are
+biased to bigger CPUs, and just stick the frequency to max. I wouldn't
+be surprised to see setups like that on non-battery-powered devices for
+instance. And yes, there are non-battery-powered devices that use big
+little out there (TVs and such, often because the only SOCs matching
+their requirements are mobile SOCs).
+
+> >  - because of the above, it is (now) largely useless: a compile time
+> >    dependency doesn't guarantee we are actually running with schedutil
+> >    at all;
+> >  - it is artificial: there are no actual compilation dependencies
+> >    between sugov and uclamp, everything will compile just fine without
+> >    that 'depends on';
+> 
+> That actually is the case, but it doesn't mean that there is no
+> dependency in there.
+
+Sure, and the dependency did make sense when uclamp was first introduced.
+At the time, the clamp values where used _only_ in schedutil. So, it
+was fair to say "if schedutil is =n, there is no way the clamps will ever
+be useful to anything else, so the uclamp code can be safely compiled
+out". That is no longer true, and if you want to make uclamp work only
+with schedutil (which I would advise against for the above reason), then
+a Kconfig dependency doesn't seem to be the right tool for that anyway.
+
+> > Or maybe you were thinking of something else?
+> >
+> > > > That of course is only true if we can
+> > > > agree on a reasonable set of exported symbols, so I'll give others some
+> > > > time to complain and see if I can post a v2 addressing these issues!
+> > >
+> > > This isn't just about exported symbols, it is about what is regarded
+> > > as essential and what isn't.
+> >
+> > Right, the exported symbols are, IMO, quite interesting because they
+> > show how 'core' the governor is. But what exactly do you mean by
+> > 'essential' here? Essential in what sense?
+> 
+> IMO the question is how much value there is in making it possible to
+> avoid loading a particular piece of kernel code into memory.
+> 
+> You've demonstrated that it can be done with schedutil, but does that
+> matter that it needs to be done?
+> 
+> I thought that the original idea was to make it closely integrated
+> with the scheduler, so it could access the scheduler's data structures
+> (that we specifically didn't want to expose to the *other* governors)
+> and so as to avoid forgetting about any dependencies when making
+> changes to either the scheduler or schedutil.  Allowing it to be build
+> as a module would make make us have to worry about those things again,
+> so is it really worth it?
+
+Right, so, if there is a strong technical reason to keep schedutil a
+bool option (such as accessing data structures we really don't want to
+export), then sure, I'll have no choice but to accept it. Now, assuming
+that I fix the usage of 'runqueues', is there anything in particular
+that you think is wrong in the series?
+
+Note that if one day keeping schedutil modular becomes a blocker for a
+new feature, then we'll have the option to make it bool again. But is
+there something like that already?
+
+Thanks,
+Quentin
