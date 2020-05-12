@@ -2,179 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE5C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B03C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5718820769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E86820746
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSWdVSN2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="m7upY6SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgELGAj (ORCPT
+        id S1728183AbgELGEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
+        Tue, 12 May 2020 02:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728853AbgELGAd (ORCPT
+        by vger.kernel.org with ESMTP id S1726347AbgELGEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:00:33 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AEAC061A0E;
-        Mon, 11 May 2020 23:00:33 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w19so7081159wmc.1;
-        Mon, 11 May 2020 23:00:33 -0700 (PDT)
+        Tue, 12 May 2020 02:04:51 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334EAC05BD09
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:04:51 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id k18so3555049ion.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:04:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=i7Lx33UKkxslFdo8QHuCccIO/lqVvcYa4SP0ggmO3GI=;
-        b=MSWdVSN2PLhXKmWdXV4InAQUewuHIILW49yuj24ZsC0PAzddqf+XEl8mKq9OYMAHx9
-         WRPKn7ulJl19RDPCC0gGmokdlcFpcw9Utp3umxvAeJp6HPJewBiNhXS7H9CVkw18YvvF
-         WlcYCfIG1mazchF7psTM+hBBrrhENC07BIJatzDGloq7yZOCD7sGDeBXIOBlmICk+ox0
-         e1LHKyn09Nm79Dj3W+80eo71+FEQBVpZGU7HFmnKKh9mgA2grfZ/oAhzyN6eTHuijB3p
-         XUpag0snJKkOQpuhPOeEyDL6AY838LBXSBF1feLHar3QK8VOhYWoHHeaxc9cnG5ActsN
-         lF8A==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GmXNnj8j0/DuRakjHfxnYDbYR3/p1C2Z1WRm/EsJUCQ=;
+        b=m7upY6SSbbF74mMD/6Ct02MUFC+lcQkE0M2ZSEfUwz8/zFr2LXYe+zyjsa7QHwNxLU
+         E1xtIq6cls/6Xl5PC2oNnB9MLcngcGNCboLNlcaeqdA/QhxuPYlg6fSrcTJ1yt3PhSm8
+         p4nRLQKIhwwNJhMXFsKo8spE1CkbB7rxxDxOXRA7BfDWjuXaNdcoB7xzLfrvlvITzqGj
+         GRDhl86kJpFQABV/jgrZEMNArbKiAHRlWiOkJuHnOqoDLPX8y/BKcsiIq/fZA9FWsRgS
+         M6x3a8yUDx3NluBpbUUiWoIc4eo6aHzDUy3W/pNCYGkvOGYvjt9nct4K+D71V8iCXDLZ
+         4eXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i7Lx33UKkxslFdo8QHuCccIO/lqVvcYa4SP0ggmO3GI=;
-        b=hMHxr34NV/M1qcrWywzFQKRmKUQTXSTURN6Dzq9xaMWpTpRAltcTVbTmZHtc7xWsHA
-         x5mnE9IV43pKXZh+uXokWckMkWEFtq5LwZBouNI1mzWFj2jg5LJW3sSh2sgtVCQ1J6w5
-         8O5lzbQhkcEsGUbfDksYa3B5vU9KdLZ+JP41nlBEYwfy5eQeyorG3AIU4ZKXP50+6qlq
-         jM25WVxYaDPOcw1nyA373fgeuJQeeKFzWDsVm/CgOrNGh+gQFIs4HqlZv3KNTrUE5lz5
-         Ll91z+7qmFl3DzXeTZejsYg5d3C38jyJMZldqPRoWU5j5cVOjU4rhiTZB13+/liLlxJF
-         7XEA==
-X-Gm-Message-State: AGi0PuZ+cllmZEECbDeMoCYZazKK7b7QrvnjI4Rw6cm/rGcbFFtGhJNZ
-        YVPadnB/a+eL0YjeWZI4Z58=
-X-Google-Smtp-Source: APiQypLR46CdyNcJlUI6nV5xgk1vjwfU9n2fBxYWf/SpCFTUy+EEps+/pDPxhOqWbF8EwnSlai0XgQ==
-X-Received: by 2002:a1c:7fc6:: with SMTP id a189mr34970700wmd.27.1589263232092;
-        Mon, 11 May 2020 23:00:32 -0700 (PDT)
-Received: from skynet.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
-        by smtp.gmail.com with ESMTPSA id a13sm20539150wrv.67.2020.05.11.23.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 23:00:31 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 2/2] mtd: rawnand: brcmnand: improve hamming oob layout
-Date:   Tue, 12 May 2020 08:00:23 +0200
-Message-Id: <20200512060023.684871-3-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512060023.684871-1-noltari@gmail.com>
-References: <20200504185945.2776148-1-noltari@gmail.com>
- <20200512060023.684871-1-noltari@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GmXNnj8j0/DuRakjHfxnYDbYR3/p1C2Z1WRm/EsJUCQ=;
+        b=U/aX3Ats2hcNjzSDrNgXXymu9CM154CQ5DCLhi9uoSmSU8M+0d477OOmg5hJ0vbKmd
+         46DxBbS9W/4B4JUB+02Wg+FEVxgOgONrbqUlex7+BVlP1AK1mYSXnil1czCNGS1awMu1
+         u8wSUef2ccHjaXJ5EL3oUTGv7E4wnhj8GogSXcmf/8ze21dkLfaMVAca5EKETw1NWvO5
+         ngKHjECKqLZJ/pbMJ+D/coW6vFWpVsYVra3etA3WzM5cAXT7G8zTPePzCl89rLkJSlWO
+         SGLFZZDRqW4NAIk6w4l1W48e9tymdNduyDMJWbO8XEnP7vQnIaFMVKSiSYkTNYxk7VIb
+         q6EA==
+X-Gm-Message-State: AGi0PubPLkRh0M3vCLZCVj/KTSa9hvYVAx2SEcIYP64usfA3eU87z8W8
+        Ma64lEUXLFpsK7Rdlslg/XOx5ZcmcKOQpSbzCnJnxw==
+X-Google-Smtp-Source: APiQypJHsy1ID5UWXbduZedwCawN698UUwnJAsyuBfNBmcx4c7aVWyTBXfSDemrrZVvNV8ztJq5Z7EWAvNiviNgU3nE=
+X-Received: by 2002:a5d:91c6:: with SMTP id k6mr18867980ior.13.1589263490440;
+ Mon, 11 May 2020 23:04:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200511150759.18766-1-brgl@bgdev.pl> <20200511150759.18766-6-brgl@bgdev.pl>
+ <20200511.134117.1336222619714836904.davem@davemloft.net>
+In-Reply-To: <20200511.134117.1336222619714836904.davem@davemloft.net>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 12 May 2020 08:04:39 +0200
+Message-ID: <CAMRc=MdUCkgCo8UndDbhQRZt_tXJJjtR4uM2g05N5ti7Hw1f2w@mail.gmail.com>
+Subject: Re: [PATCH v2 05/14] net: core: provide priv_to_netdev()
+To:     David Miller <davem@davemloft.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code generates 8 oob sections:
-S1	1-5
-ECC	6-8
-S2	9-15
-S3	16-21
-ECC	22-24
-S4	25-31
-S5	32-37
-ECC	38-40
-S6	41-47
-S7	48-53
-ECC	54-56
-S8	57-63
+pon., 11 maj 2020 o 22:41 David Miller <davem@davemloft.net> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <brgl@bgdev.pl>
+> Date: Mon, 11 May 2020 17:07:50 +0200
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Appropriate amount of extra memory for private data is allocated at
+> > the end of struct net_device. We have a helper - netdev_priv() - that
+> > returns its address but we don't have the reverse: a function which
+> > given the address of the private data, returns the address of struct
+> > net_device.
+> >
+> > This has caused many drivers to store the pointer to net_device in
+> > the private data structure, which basically means storing the pointer
+> > to a structure in this very structure.
+> >
+> > This patch proposes to add priv_to_netdev() - a helper which converts
+> > the address of the private data to the address of the associated
+> > net_device.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Sorry, please don't do this.  We had this almost two decades ago and
+> explicitly removed it intentionally.
+>
+> Store the back pointer in your software state just like everyone else
+> does.
 
-Change it by merging continuous sections:
-S1	1-5
-ECC	6-8
-S2	9-21
-ECC	22-24
-S3	25-37
-ECC	38-40
-S4	41-53
-ECC	54-56
-S5	57-63
+I will if you insist but would you mind sharing some details on why it
+was removed? To me it still makes more sense than storing the pointer
+to a structure in *that* structure.
 
-Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v3: invert patch order
- v2: keep original comment and fix correctly skip byte 6 for small-page nand
-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 37 ++++++++++++------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 1c1070111ebc..0a1d76fde37b 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -1100,33 +1100,32 @@ static int brcmnand_hamming_ooblayout_free(struct mtd_info *mtd, int section,
- 	struct brcmnand_cfg *cfg = &host->hwcfg;
- 	int sas = cfg->spare_area_size << cfg->sector_size_1k;
- 	int sectors = cfg->page_size / (512 << cfg->sector_size_1k);
-+	u32 next;
- 
--	if (section >= sectors * 2)
-+	if (section > sectors)
- 		return -ERANGE;
- 
--	oobregion->offset = (section / 2) * sas;
-+	next = (section * sas);
-+	if (section < sectors)
-+		next += 6;
- 
--	if (section & 1) {
--		oobregion->offset += 9;
--		oobregion->length = 7;
-+	if (section) {
-+		oobregion->offset = ((section - 1) * sas) + 9;
- 	} else {
--		oobregion->length = 6;
--
--		/* First sector of each page may have BBI */
--		if (!section) {
--			/*
--			 * Small-page NAND use byte 6 for BBI while large-page
--			 * NAND use bytes 0 and 1.
--			 */
--			if (cfg->page_size > 512) {
--				oobregion->offset += 2;
--				oobregion->length -= 2;
--			} else {
--				oobregion->length--;
--			}
-+		/*
-+		 * Small-page NAND use byte 6 for BBI while large-page
-+		 * NAND use bytes 0 and 1.
-+		 */
-+		if (cfg->page_size > 512) {
-+			oobregion->offset = 2;
-+		} else {
-+			oobregion->offset = 0;
-+			next--;
- 		}
- 	}
- 
-+	oobregion->length = next - oobregion->offset;
-+
- 	return 0;
- }
- 
--- 
-2.26.2
-
+Bart
