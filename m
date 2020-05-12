@@ -2,208 +2,103 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209B9C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572A1CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B36206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1820B206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tUNXG2Rx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9e7eTKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgELP4y (ORCPT
+        id S1730249AbgELP5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:56:54 -0400
-Received: from mail-bn8nam12on2063.outbound.protection.outlook.com ([40.107.237.63]:53793
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727099AbgELP4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:56:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cLxkldQbAZ3OquT1j3BO0CJUKn/TEa4ruA7GCeMHXorAXzBcHgXY8IwxFg5+jxz+Pi8u5MEbG3tXFPXEqdQWw/W2hgrsW6qH1Bk7e6GDW6/Q40+G3tfY4S1HoNSOCk/B1kXR4Oe+3085Qfvz8LesvbmBPJ4rvZS7daotg9p1loWStvqMx+gE0VJhOaDzOk7Yr/Mvzrpk4cdPDlK12N7x0BwrW832he52moC9XvlqurU1ayGcwb7y5F6PKx9lOAdycAEvRyrBs3FRScsncBOuQIYoCobIYCQHeu3rHBP8IL30QVG9SKnQFTcWi5MvcQFF0vur/sPGIcxsyEQ+n3wlPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m76jCPLZqvFAvjX95FNc4uGTJgpMuzxOLhlUpWFTdOY=;
- b=CVD50e/fSaBmrquaawf9gSmzHavUqBcd9/+tNXNFYgblrUcKyeE87izCU7rYFJ+MObBGyzoMwVekbZJdNZ3I3cALgQdY/rh8duPKpu4ucA/1Va2fTWMOfAprEzDfB5WP5gMbnvl+nN4OPy6STcxvh4ociCP+vYtqlVQMcv5h9sLqhBjqm01pNpoM3P53u2GQkkw69NWUB6wMt2CO16Oah5GIrJ+2DgDAZpRBw9oLYt0/uuX8SAn8ibtc5y0n56gu3FoAk3nTo3QqrJZJWt2BdKDL73QgG5EE+0+JYdEsLQG9nylDUGA/XQ0MNr3Zga0PUMYK31Pbd8m9MNrQg88Rvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m76jCPLZqvFAvjX95FNc4uGTJgpMuzxOLhlUpWFTdOY=;
- b=tUNXG2RxqmlFMlEvnh+YZ4dIQWDDvgqHNCF4HrPqsbkxVjQUJgz+8KOfdQGUVCf7W7NhXIaRyCqxKLGpX12kXlN7s0Dg7uHQ72R5otRFXoB3u/u/xnnhceEk2d2jILBT8Np6CGru1pXtagj8y6Pv9VndWAMlbK55Ce9Q9aZL/oQ=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB3081.namprd12.prod.outlook.com (2603:10b6:5:38::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Tue, 12 May
- 2020 15:56:50 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.2979.033; Tue, 12 May 2020
- 15:56:50 +0000
-Subject: Re: [RFC 10/17] drm/amdgpu: s/GFP_KERNEL/GFP_ATOMIC in scheduler code
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-11-daniel.vetter@ffwll.ch>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <879b127e-2180-bc59-f522-252416a7ac01@amd.com>
-Date:   Tue, 12 May 2020 17:56:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200512085944.222637-11-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0034.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::21) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+        Tue, 12 May 2020 11:57:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31036 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726532AbgELP5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:57:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589299067;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TfDyrqYtNxdncU0wHn8hrX/BpS827dCs9/4XX4Yc/pE=;
+        b=H9e7eTKhhLb9XZFV2/+kAKgp9lilGs5iHRsbzrpNVOqnLqJt66N4mSzbbmhp5Ewui5xp18
+        +pweWK0M6j8yybpU8QIyVfcYA8+1CZ+PQUwsmo7oHmTrlr16OUkZV4LhVQS5n0oP8h3Umx
+        UgszTAmP2DPP4W6gU2qGtODzCIPjJSI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-8wLcPjIANCCtvNRBxty-WA-1; Tue, 12 May 2020 11:57:43 -0400
+X-MC-Unique: 8wLcPjIANCCtvNRBxty-WA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE770107ACF2;
+        Tue, 12 May 2020 15:57:41 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-4.phx2.redhat.com [10.3.114.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00AE71CA;
+        Tue, 12 May 2020 15:57:37 +0000 (UTC)
+Date:   Tue, 12 May 2020 11:57:36 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org, ouwen210@hotmail.com
+Subject: Re: [PATCH] sched/fair: enqueue_task_fair optimization
+Message-ID: <20200512155736.GB4256@lorien.usersys.redhat.com>
+References: <20200511192301.1009-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0034.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Tue, 12 May 2020 15:56:47 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 99439c64-eb47-4a93-8c70-08d7f68d14be
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3081:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3081CA6BC4F5CAE7736BDB4B83BE0@DM6PR12MB3081.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0401647B7F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ydIa+oJHoAiqPNjZr4kFe48iSUaYv5Lb7i8g4kn7vN/38nqf+vQzmrcIC05J32iMFPbFMscxvbjLlWhl/QVI7lhP1z6oDLWF/OFu7YoRrJYYW78i8YYAXcn9NR74Jc+MAYY0uILe5PwyzmMAp3zdUEd614fXTXafoDsK4UpCzLdzkOOiyHXkFl99GizfzjP9REwz+GgALlVqQZ2lchetP9GyPACHubiAxYeRamqPxMT6Plw7tWpPoSBPoFQsF3EFEKgA8W/FKNSbSYKystoFe0FzTvazOFrfbQmoPBdhrArClPwCefCGl2kYS+uTADP4vf+p5yUQn95qaqpb7XtuJ0c3ssCRthdcU/tz9xT9J78BXFxYEm+zrjbaxdjSw3s1vmI9eNdsPJ8VO0OcJHRwGHVTSg5Dl6mB/9+DIdQXZP+5EvVCmp87cPEjY9LvqVXH8k3dcnXFw02X9hHD1WCq/orkNMX32c/0EyNtBRpYLrfeq3cWdMFukgTNFCG4hhllt2G8QzT9X9fTteiqoqHDONMKv0MWc5jiRy2OUC2DQYjUVlyZ+rYRMnaJtTar9bOt
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(33430700001)(86362001)(66556008)(16526019)(5660300002)(66476007)(31696002)(54906003)(52116002)(316002)(66946007)(478600001)(6666004)(33440700001)(110136005)(2906002)(31686004)(36756003)(8676002)(186003)(7416002)(2616005)(6486002)(8936002)(4326008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: LrxnlV7hPQUPawhqdOBYuAHH/w0GjYZGu7iUKxEQVcWRaBJbL9TxZou1Qrkl54X9iDl3pFofC7wuoMfaEYJ6YdCJepbu21BLLugsyJ4FO4INwBTTh8ZlKR9osWo5PS9+Kxy1yDBTLOXCtQ2MpaJYY7M9K2wRRfJcU8tc7Va7tftol7LZ88EN8pz8ZEc4jprEi3ucu9iGZM3IXB4XbJoutO0fFid4iyDli0egucfRqc+MxYvBynSKE1tfOhfKlcKrMkAR5kGoR6GFexvINGRVXoGdgiqbm8oinXpR9Fl0DFU1w4797rTuwZmxH33Pj0MaHrtilgWq0fUR2TizpaEhyYmqEImxd5vH1kOk74eWrqDoj/UYl3ssOxec+dKGJdpAkaaKkhfeup+ZElNCI5rmTw3nTm5dAOObH91+uyanuUq/WN+JA3MpFD8t84b/rUA7gx/46KB70Jgq7AxylH7YvgQpOcDfkglylXFIRtSqjARv4wnxBHfYgnlKkPvNrgUAKlMs1jCdm1G5uvkClnFERxaSD/k4G/wAEq8qIJ75czX9JR/wGwO09ctApqbYkhOA
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99439c64-eb47-4a93-8c70-08d7f68d14be
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 15:56:49.9439
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lz5PA8s8e2i6SsSo4/rCGGe+q05HFhHV+zyK1nEBKpRRtm0qtWQaRFuK4ceKTC83
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511192301.1009-1-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hui what? Of hand that doesn't looks correct to me.
-
-Why the heck should this be an atomic context? If that's correct 
-allocating memory is the least of the problems we have.
-
-Regards,
-Christian.
-
-Am 12.05.20 um 10:59 schrieb Daniel Vetter:
-> My dma-fence lockdep annotations caught an inversion because we
-> allocate memory where we really shouldn't:
->
-> 	kmem_cache_alloc+0x2b/0x6d0
-> 	amdgpu_fence_emit+0x30/0x330 [amdgpu]
-> 	amdgpu_ib_schedule+0x306/0x550 [amdgpu]
-> 	amdgpu_job_run+0x10f/0x260 [amdgpu]
-> 	drm_sched_main+0x1b9/0x490 [gpu_sched]
-> 	kthread+0x12e/0x150
->
-> Trouble right now is that lockdep only validates against GFP_FS, which
-> would be good enough for shrinkers. But for mmu_notifiers we actually
-> need !GFP_ATOMIC, since they can be called from any page laundering,
-> even if GFP_NOFS or GFP_NOIO are set.
->
-> I guess we should improve the lockdep annotations for
-> fs_reclaim_acquire/release.
->
-> Ofc real fix is to properly preallocate this fence and stuff it into
-> the amdgpu job structure. But GFP_ATOMIC gets the lockdep splat out of
-> the way.
->
-> v2: Two more allocations in scheduler paths.
->
-> Frist one:
->
-> 	__kmalloc+0x58/0x720
-> 	amdgpu_vmid_grab+0x100/0xca0 [amdgpu]
-> 	amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-> 	drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-> 	drm_sched_main+0xf9/0x490 [gpu_sched]
->
-> Second one:
->
-> 	kmem_cache_alloc+0x2b/0x6d0
-> 	amdgpu_sync_fence+0x7e/0x110 [amdgpu]
-> 	amdgpu_vmid_grab+0x86b/0xca0 [amdgpu]
-> 	amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-> 	drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-> 	drm_sched_main+0xf9/0x490 [gpu_sched]
->
-> Cc: linux-media@vger.kernel.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Christian König <christian.koenig@amd.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+On Mon, May 11, 2020 at 09:23:01PM +0200 Vincent Guittot wrote:
+> enqueue_task_fair() jumps to enqueue_throttle when cfs_rq_of(se) is
+> throttled, which means that se can't be NULL and we can skip the test.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 2 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c   | 2 +-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c  | 2 +-
->   3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> index d878fe7fee51..055b47241bb1 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> @@ -143,7 +143,7 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
->   	uint32_t seq;
->   	int r;
->   
-> -	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
-> +	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_ATOMIC);
->   	if (fence == NULL)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> index fe92dcd94d4a..fdcd6659f5ad 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> @@ -208,7 +208,7 @@ static int amdgpu_vmid_grab_idle(struct amdgpu_vm *vm,
->   	if (ring->vmid_wait && !dma_fence_is_signaled(ring->vmid_wait))
->   		return amdgpu_sync_fence(sync, ring->vmid_wait, false);
->   
-> -	fences = kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_KERNEL);
-> +	fences = kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_ATOMIC);
->   	if (!fences)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> index b87ca171986a..330476cc0c86 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> @@ -168,7 +168,7 @@ int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f,
->   	if (amdgpu_sync_add_later(sync, f, explicit))
->   		return 0;
->   
-> -	e = kmem_cache_alloc(amdgpu_sync_slab, GFP_KERNEL);
-> +	e = kmem_cache_alloc(amdgpu_sync_slab, GFP_ATOMIC);
->   	if (!e)
->   		return -ENOMEM;
->   
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 4b73518aa25c..910bbbe50365 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5512,7 +5512,6 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>                         list_add_leaf_cfs_rq(cfs_rq);
+>  	}
+>  
+> -enqueue_throttle:
+>  	if (!se) {
+>  		add_nr_running(rq, 1);
+>  		/*
+> @@ -5534,6 +5533,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  
+>  	}
+>  
+> +enqueue_throttle:
+>  	if (cfs_bandwidth_used()) {
+>  		/*
+>  		 * When bandwidth control is enabled; the cfs_rq_throttled()
+> -- 
+> 2.17.1
+> 
+
+
+Reviewed-by: Phil Auld <pauld@redhat.com>
+
+-- 
 
