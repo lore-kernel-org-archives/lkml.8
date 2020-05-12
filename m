@@ -2,115 +2,153 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91181C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE8FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79936207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694AF20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k7fFkikt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgELGRg (ORCPT
+        id S1728055AbgELGVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:17:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726161AbgELGRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:17:36 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C68aZL046838;
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5b2ma9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04C6E9XA053090;
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5b2m9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04C6Ffbl029383;
-        Tue, 12 May 2020 06:16:57 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 30wm55jbtd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 06:16:57 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04C6GsnL56492162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 06:16:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76AD24C04E;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 309CF4C04A;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Date:   Tue, 12 May 2020 08:16:54 +0200
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        YueHaibing <yuehaibing@huawei.com>, mingo@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] s390: Remove two unused inline functions
-Message-ID: <20200512061653.GA33732@tuxmaker.boeblingen.de.ibm.com>
-References: <20200508140724.11324-1-yuehaibing@huawei.com>
- <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
- <20200511161756.7586afe6@gandalf.local.home>
- <cf344230-27b1-7302-36bb-55c25c6b5de4@de.ibm.com>
- <02b965de57774f393bb16d669164e0cef2497f2f.camel@perches.com>
+        Tue, 12 May 2020 02:21:48 -0400
+Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:17991
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725987AbgELGVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:21:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QJZYXqPAuIMOmbn9PJztlBePiuL//AI+v4i7/RpyNWgdUvMWZZMHVksTdJZI23MJQhLek2R7CLBHEjeMM7RPfWwI4nBbYLjrx4T6AbmYOBXx/O3wr/ecfy7/QSHvkHkq0v//o7UfUyk/cB4HbOd+g1vj9dmm8QXeBxaiDw3UGKBEisRzy7zdbfQCXdR1iknO02KNQwQGOffFh7Td31ff52B+GSTy4Ve/Bfaaz3s4d12g96P0P0UX15BX/9K+VbHeG+LSrTfZtWjdcnRAERv/InFrbkdhPXjhaYceHDsjLKrAFZkEQxm+T2sLAuz6q/eu+CaRglENi7Afn2HE79W7eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sY4CjL0ZoD2QW6Fj7smXlVexnWC/ZdoLnl4Tr04HNRg=;
+ b=lRnGH1ErHmYu1eu2OzAEjCWpE1GzZD87E2lB7lWPsb7/pg13u4Pl1oVemvvIVHaoLFLkeQMjY4KEueTPiZas3sRu/W+xQMDDAfLo0qAcNA2iJfWRr8wGs8tyHcMEVe3G0J+a8JAPG6e8uM17SrU4HuTVPNgKqHbjsZQa5NJ+ujlQzFm0hdVzkDza3Jam7BOGjACnZeauOggHt2W5CNUWDdygUWrJW4tjCpgIgdqINlC+XyryOjQtchJrBfbJCKNDBD6lmOZd152dXFwgIEJO+mUQST4RVaO1esFZALpCHdIbRYlmBgvcav5iM4sSdkUuXH+eijDuB/q2PxCuC47FsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sY4CjL0ZoD2QW6Fj7smXlVexnWC/ZdoLnl4Tr04HNRg=;
+ b=k7fFkikt+jr6CKOAFIFmuWKqt5BfHbax4JcVlyVS6QMZy90iMcbQhFFst/tdOeOt3iH9VpDlvhS0H6fOJFcg/9ivz/dwViDj5m+5L2Y6Ux0hKeGrkbMZcuqFUbvuDC8bsW1Pa5O9uoY9gG50f+3MY7Uj5Uaq2joG9B6bDShApDE=
+Received: from DB8PR04MB5785.eurprd04.prod.outlook.com (2603:10a6:10:b0::22)
+ by DB8PR04MB6748.eurprd04.prod.outlook.com (2603:10a6:10:10e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Tue, 12 May
+ 2020 06:21:43 +0000
+Received: from DB8PR04MB5785.eurprd04.prod.outlook.com
+ ([fe80::c898:9dfc:ce78:a315]) by DB8PR04MB5785.eurprd04.prod.outlook.com
+ ([fe80::c898:9dfc:ce78:a315%7]) with mapi id 15.20.2979.033; Tue, 12 May 2020
+ 06:21:42 +0000
+From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Po Liu <po.liu@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
+Subject: RE: [EXT] Re: [PATCH v1 net-next 1/3] net: dsa: felix: qos classified
+ based on pcp
+Thread-Topic: [EXT] Re: [PATCH v1 net-next 1/3] net: dsa: felix: qos
+ classified based on pcp
+Thread-Index: AQHWJ1fNsDBnHSNejkCTlseQS+vRMaiiixcAgAFn+uA=
+Date:   Tue, 12 May 2020 06:21:42 +0000
+Message-ID: <DB8PR04MB5785440D5F8A8AA3EB941A15F0BE0@DB8PR04MB5785.eurprd04.prod.outlook.com>
+References: <20200511054332.37690-1-xiaoliang.yang_1@nxp.com>
+ <20200511054332.37690-2-xiaoliang.yang_1@nxp.com>
+ <CA+h21hpennftjgTr_CK85drFUErQUqZkcFA+zPe0L25VAbe=FA@mail.gmail.com>
+In-Reply-To: <CA+h21hpennftjgTr_CK85drFUErQUqZkcFA+zPe0L25VAbe=FA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f94bc9ff-1aaf-4c43-0da5-08d7f63cbce6
+x-ms-traffictypediagnostic: DB8PR04MB6748:|DB8PR04MB6748:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB67488B7E608CA71E4E644083F0BE0@DB8PR04MB6748.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0401647B7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: a7nth+fgQ+BnNs/Uq3/FyQkxpp27HUlg/QPUtL58R6R7hPpWdSlCihEeBn6iiR7KHvBJMPAYL8fidG9a5D4I5i3reuA2TRcXAt+GdmZzdji8A6p8UIBc3dLEBJXsMeDaKePcQ1NJbwSvi+tB1SS5dNi2TnRUu1s7paXV8Oyu4asVVEVm69/oDrrWh/pvQkvKXTvVgTfZ+5ygWHRh6YsYkP2gZjV4ZbgdBuRLa55FFPZfoyv/oLAuDvxfVwV4+V+9SjDDEbTojZuSJ1BzqziVY+Hlq/EVeFb/D8fZKdnW4uGIqpNCstH0s2C3762h3Mx1i6k9tVtbCNfu7CMssm2ghdJ8XsemYUWzYNvAhGfWQvwFKIqFt+UXwZV2u25HmIj2cHwE+qzkPbx3yxV8FENXbsHcRIPuz9kpFj97MXO4rIlnujJV7SmqdlsHScgVxIbHvM29Oxedl0n+d1b0awrQP5mN1lEkNF2gNMijjUm7hVL7D2KUY/VtBvwBQKsGTFGaXQX4M9WEkEPpuVpV3TwH0Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB5785.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(33430700001)(55016002)(186003)(7416002)(54906003)(2906002)(8936002)(6916009)(9686003)(8676002)(86362001)(71200400001)(316002)(5660300002)(33440700001)(26005)(6506007)(4326008)(478600001)(66446008)(66946007)(52536014)(76116006)(7696005)(33656002)(64756008)(66476007)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 2H4ZLpKe8ErWBlV+AQQSBaGGXJuJXOLd3ufukRL8cq3PIL4V7PSFONv8hWMW93zBGl03i2zavd8dBIVA6lAWbaupyd7L5wNB5qBFGj3LSVOCQ+hhHbqQgDCY8zr5Xit9bueYdv3buk4JQiJaij6J2tpGKb9hsO/uuTmLs8HrtLF7dvGBeyH1Odj0nHPseQlrLrmixaD1igCMbpFG2Z8gZtuyFB44wvAmFqeeTy5BduAUpUkmcWunVQUeTxWvs2wK+pAkQB6A5ygHChMNj7QCm0O4HIpbfTdNVicSxWxJEZ9tTPLl94nhvj0PDVGq44xZPP80E/uC+0cfpJrqNKMBOo3rOjybnTADipOvAay9XETLhEETpKSt+JLOVaYf+45xvUWGxZiwCs/lE59q5GsKuP00a1sWyeetGuEbM726q9FXzi4qFhmwdBXiicDYbStK3+ybv1y4WZ7KkPStC+ihjSMxqIMNyl5A/OFUudi5ess=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02b965de57774f393bb16d669164e0cef2497f2f.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_01:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120049
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f94bc9ff-1aaf-4c43-0da5-08d7f63cbce6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2020 06:21:42.3298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mQDGzxJEAoWmGgkMLlDsPLn/Vnh0LxuT7UjAbVUTCWJB5CZaLKCXFkG5jqUsCP4tuNjy4NNjyokmWVoXyj4ApDunGKY14XxVIYA/N4eGr74=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6748
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
-
-On Mon, May 11, 2020 at 01:38:57PM -0700, Joe Perches wrote:
-
-> Awhile back, I posted a list of apparently unused static inline
-> functions in .h files treewide found by a script:
-> 
-> https://lore.kernel.org/lkml/4603e761a5f39f4d97375e1e08d20d720c526341.camel@perches.com/
-> 
-> Here are the s390 entries:
-> 
-> arch/s390/include/asm/atomic_ops.h:138:static inline long __atomic64_cmpxchg_bool(long *ptr, long old, long new)
-> arch/s390/include/asm/bitops.h:278:static inline void __set_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-> arch/s390/include/asm/bitops.h:283:static inline void __clear_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-> arch/s390/include/asm/cpu_mcf.h:106:static inline int kernel_cpumcf_begin(void)
-> arch/s390/include/asm/cpu_mcf.h:114:static inline void kernel_cpumcf_end(void)
-> arch/s390/include/asm/ftrace.h:64:static inline int is_ftrace_nop(struct ftrace_insn *insn)
-> arch/s390/include/asm/kvm_para.h:146:static inline long kvm_hypercall5(unsigned long nr, unsigned long p1,
-> arch/s390/include/asm/kvm_para.h:175:static inline long kvm_hypercall6(unsigned long nr, unsigned long p1,
-> arch/s390/include/asm/pci_dma.h:134:static inline void invalidate_table_entry(unsigned long *entry)
-> arch/s390/include/asm/pci_dma.h:176:static inline int entry_isprotected(unsigned long entry)
-> arch/s390/include/asm/timex.h:52:static inline void store_clock_comparator(__u64 *time)
-
-Thanks, i take a look and prepare a patch.
-
-Regards
-Sven
+SGkgVmxhZGltaXIsDQoNCk9uIE1vbiwgMTEgTWF5IDIwMjAgYXQgMDg6MTksIFZsYWRpbWlyIE9s
+dGVhbiA8dmxhZGltaXIub2x0ZWFuQG54cC5jb20+IHdyb3RlOg0KPiANCj4gVGhlIG5ldyBza2Jl
+ZGl0IHByaW9yaXR5IG9mZmxvYWQgYWN0aW9uIGxvb2tzIGludGVyZXN0aW5nIHRvIG1lLg0KPiBC
+dXQgaXQgYWxzbyByYWlzZXMgdGhlIHF1ZXN0aW9uIG9mIHdoYXQgdG8gZG8gaW4gdGhlIGRlZmF1
+bHQgY2FzZSB3aGVyZSBzdWNoIHJ1bGVzIGFyZSBub3QgaW5zdGFsbGVkLiBJIHRoaW5rIGl0IGlz
+IG9rIHRvIHN1cHBvcnQgYQ0KPiAxLXRvLTEgVkxBTiBQQ1AgdG8gVEMgbWFwcGluZyBieSBkZWZh
+dWx0PyBUaGlzIHNob3VsZCBhbHNvIGJlIG5lZWRlZCBmb3IgZmVhdHVyZXMgc3VjaCBhcyBQcmlv
+cml0eSBGbG93IENvbnRyb2wuDQoNCnNrYmVkaXQgcHJpb3JpdHkgb2ZmbG9hZCBzZWVtcyBvbmx5
+IHN1cHBvcnQgcG9ydCBiYXNlZCBwcm9yaXR5IHNldCBub3csIEkgaGF2ZW4ndCBmb3VuZCBob3cg
+dG8gc2V0IGEgcHJpb3JpdHkgZm9yIGVhY2ggcG9ydCBhbmQgUW9TLiBTbyBJIHNldCBhIDEtdG8t
+MSBWTEFOIFBDUCB0byBUQyBtYXBwaW5nIGJ5IGRlZmF1bHQuDQoNCj4gWGlhb2xpYW5nLCBqdXN0
+IGEgc21hbGwgY29tbWVudCBpbiBjYXNlIHlvdSBuZWVkIHRvIHJlc2VuZC4NCj4gVGhlIGZlbGl4
+LT5pbmZvIHN0cnVjdHVyZSBpcyBpbnRlbmRlZCB0byBob2xkIFNvQy1zcGVjaWZpYyBkYXRhIHRo
+YXQgDQo+IGlzIGxpa2VseSB0byBkaWZmZXIgYmV0d2VlbiBjaGlwcyAobGlrZSBmb3IgZXhhbXBs
+ZSBpZiB2c2M3NTExIHN1cHBvcnQgDQo+IGV2ZXIgYXBwZWFycyBpbiBmZWxpeCkuIEJ1dCBJIHNl
+ZSBBTkE6UE9SVDpRT1NfQ0ZHIGFuZCANCj4gQU5BOlBPUlQ6UU9TX1BDUF9ERUlfTUFQX0NGRyBh
+cmUgY29tbW9uIHJlZ2lzdGVycywgc28gYXJlIHRoZXJlIGFueSANCj4gc3BlY2lmaWMgcmVhc29u
+cyB3aHkgeW91IHB1dCB0aGlzIGluIGZlbGl4X3ZzYzk5NTkgYW5kIG5vdCBpbiB0aGUgDQo+IGNv
+bW1vbiBvY2Vsb3QgY29kZT8NCg0KQWxsIHJpZ2h0LCBJIGhhdmUgY2hlY2tlZCB0aGV5IGFyZSBj
+b21tb24gcmVnaXN0ZXJzLCBJIHdpbGwgbW92ZSBwb3J0X3Fvc19tYXBfaW5pdCgpIGZ1bmN0aW9u
+IHRvIGZlbGl4LmMuDQoNCj4gPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBGRUxJWF9OVU1fVEMg
+KiAyOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgb2NlbG90X3Jtd19peChvY2Vsb3QsDQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKEFOQV9QT1JUX1BDUF9ERUlfTUFQX0RQ
+X1BDUF9ERUlfVkFMICYgDQo+ID4gKyBpKSB8DQo+ID4gKwkJCQkJCQkJIEFOQV9QT1JUX1BDUF9E
+RUlfTUFQX1FPU19QQ1BfREVJX1ZBTChpKSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBBTkFfUE9SVF9QQ1BfREVJX01BUF9EUF9QQ1BfREVJX1ZBTCB8DQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgQU5BX1BPUlRfUENQX0RFSV9NQVBfUU9TX1BDUF9ERUlfVkFM
+X00sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQU5BX1BPUlRfUENQX0RFSV9N
+QVAsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydCwgaSk7DQo+IA0KPiBB
+TkFfUE9SVF9QQ1BfREVJX01BUF9EUF9QQ1BfREVJX1ZBTCBpcyAxIGJpdC4gQXJlIHlvdSBzdXJl
+IHRoaXMgc2hvdWxkIGJlICUgaSBhbmQgbm90ICUgMj8NCg0KQmVjYXVzZSBpbiBRT1NfUENQX0RF
+SV9NQVBfQ0ZHIHJlZ2lzdGVyLCBCSVQoMykgaXMgRFAgdmFsdWUsIEJJVCgyLCAwKSBpcyBRT1Mg
+dmFsdWUuIFFvUyBjbGFzcz1RT1NfUENQX0RFSV9NQVBfQ0ZHW2ldLlFPU19QQw0KUF9ERUlfVkFM
+LCBpPTgqREVJICsgUENQLCBzbyBEUCB2YWx1ZSBuZWVkIHRvIGJlIHNldCBCSVQoMykmaS4NCg0K
+UmVnYXJkcywNClhpYW9saWFuZyBZYW5nDQo=
