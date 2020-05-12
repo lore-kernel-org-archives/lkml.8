@@ -2,112 +2,126 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54216C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0E4C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C58920722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589245855;
-	bh=K5pQ0hFUamxU3xDLOrlg3dPizqeqv2tllzaHsV47Xww=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WdxNNLl2S5qp/XmxmX2rxU5RdkpppVxtX8PDPQTv4FvXF93vzac7L39/joDDRr53o
-	 bgJgtuVr7ODlZx2Ia/RWleub46swMBg2U8d1NG7o89PvYOmsqvkEpDXfS5UbxK2Vts
-	 zeICwU6SDKdRTKxLsgwaARKnlTQMZRQiDyVgP+tI=
+	by mail.kernel.org (Postfix) with ESMTP id CF14E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HHqbvgKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgELBKy (ORCPT
+        id S1728439AbgELBTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 21:10:54 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:36388 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgELBKx (ORCPT
+        Mon, 11 May 2020 21:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgELBTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 21:10:53 -0400
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 04C1AdSl006506
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:10:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 04C1AdSl006506
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589245839;
-        bh=K5pQ0hFUamxU3xDLOrlg3dPizqeqv2tllzaHsV47Xww=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pa9iDFGLBXYgPJqDz/QwTqmPG5oekFgMxEK5JyH6ksenZrZAEtEdhBLH+SXhb6Dsy
-         ygyfdGTlf7jEeHjtneblYz5GvSV13aqWmt9QUepF9Z3IQP3jhOBbZUPJSZ/z+7AU/o
-         yQbnvjj9D9+OyuykgLRk/ZO+o0nGRvVRhyu5FXGpTWtbzJ07lRa2huXYVrlE7ka0Pm
-         pmUFG+pfdHjskujX7BKkMCHfkE6le8qx+N7YEFf0IGDPoFuTc+88/bMS6yJM/RVRBj
-         OD5anqGert/7P/TIoy7CX+F3S4Y1jKFgtfmpSvWuipT35MNHFAd0ovnmO00q/i16Ba
-         ndjGtZGfWgujw==
-X-Nifty-SrcIP: [209.85.221.173]
-Received: by mail-vk1-f173.google.com with SMTP id j127so2882769vke.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 18:10:39 -0700 (PDT)
-X-Gm-Message-State: AOAM530kaPS9mYOZ/Rz6zIlPXoCUU4RM7J5xOalbgQkRdnbrDm+r1bqL
-        5r1KDsTCHk/RGMRsvR2FS9bBbJsq5AGkW9v4MYI=
-X-Google-Smtp-Source: ABdhPJzT8cfk4Vw/UMZidHhfEFfI760psS+Z6D1KRvKDkAo0qESubVlXCPpQbhHvfSsFAJQX0r87/SXSJIIPLQXK5Ns=
-X-Received: by 2002:a1f:9093:: with SMTP id s141mr3699393vkd.96.1589245838591;
- Mon, 11 May 2020 18:10:38 -0700 (PDT)
+        Mon, 11 May 2020 21:19:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B18AC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 18:19:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y25so5572904pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 18:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=J+bCb9UGvHNvD7qEIMwRcVNw6vMBwgY6JkQ/mVSuXPM=;
+        b=HHqbvgKE9OIBcQWiFwjmooBzTRVr5rJdSlqi/dH/f6DdlO22lNY75Z2r10ThMDJhs9
+         Jrd6InioiHaAREuFIPzLrxqjpUelM8+57DYjKYHjxrjgw2olirDNQxwblbxCjgOhTnLX
+         gRLJ0UZ4FH1OnQ1W8KcqNLXVWwz5VdhnE7MG4HjnvOXqHTgHpGsXuwhJ0Ooj4NM1Gmxy
+         M/9cfOXLm5rimArXEMhTz/7f89FAc4WlVY1770AEBjyHsjCLA4rYbhUh3d2Pw+Jn/kSl
+         uvPAV7EA6trOUARRVMtS6oraOJP57txdOOJTRW7Wyz/MONex3wKL1oFT811xK7jRL7Cu
+         pEPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=J+bCb9UGvHNvD7qEIMwRcVNw6vMBwgY6JkQ/mVSuXPM=;
+        b=NV3KvLXaVod5H7jr4BEnPa9AYPw+KYaneEBuoXVi9q7rpRp+W3s5NGpcveSmbT949d
+         lQZyjwp4iUPeQ+LRMjUA5kkpuweYJGMlV11CXuKFgAztaHL9oX0PQbhyiV/jbBv4zRGr
+         AEtQwI5SBKFW2hWfFIgZGh9efKtuWCp/Q3vdn0c2MwycoKRgsIztsthmkdhD0jbSzmGu
+         Wv528/WruDJchTuM2PuW1IhFelbpzeuAJuB3FffktB8dRZgObD1QgCfzkVhz/wmfzagJ
+         KCXShlKrWGNF3XHT4nmJWR2+aSCHS+qeNQ1pqXidbjcJFx2uVYanxgUUfu2Y3IN2kCL4
+         /5Ag==
+X-Gm-Message-State: AGi0PuaAUwpVgJw02RBZ/aAd9HszcgLG7uC4h9NEMSj9uDjvAn2mSgWw
+        w2iHlpSbVpKxSQg0cCe4GCGRQRjeE24=
+X-Google-Smtp-Source: APiQypI6vF9W57VGlLu6vZbyvBXckZs7IElIfyCYJHoEnb/eefz7Izvsiz/uSm30JBD7JaJnH/Faqg==
+X-Received: by 2002:a63:5955:: with SMTP id j21mr17671913pgm.70.1589246384684;
+        Mon, 11 May 2020 18:19:44 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p24sm10207951pff.92.2020.05.11.18.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 18:19:44 -0700 (PDT)
+Date:   Mon, 11 May 2020 18:18:10 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
+Message-ID: <20200512011810.GB57962@builder.lan>
+References: <20200511162927.2843-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <20200507224530.2993316-1-Jason@zx2c4.com> <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
- <CAHmME9pTZTa9AEUL0-ojTr7P-F7NYe8OR9=-GBPaQNpnSDrEiw@mail.gmail.com>
- <20200508113336.2vdfdnc6tqyx4pu6@butterfly.localdomain> <CAK8P3a0dJ0vNnktcoWFiPKB4NJbeyf7nvwWf0YLyeUyxT5pvQg@mail.gmail.com>
- <c774d7371a9599526090e63e85f61e69bddf4795.camel@perches.com> <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
-In-Reply-To: <9590a4674863448e8b13fee5086fcf73@AcuMS.aculab.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 12 May 2020 10:10:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQJR5JUc37QcYS2P=WOfDQmGyAh3nJ_m8qTQDnT6LOnyA@mail.gmail.com>
-Message-ID: <CAK7LNAQJR5JUc37QcYS2P=WOfDQmGyAh3nJ_m8qTQDnT6LOnyA@mail.gmail.com>
-Subject: Re: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511162927.2843-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 9:47 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Joe Perches
-> > Sent: 08 May 2020 16:06
-> > On Fri, 2020-05-08 at 13:49 +0200, Arnd Bergmann wrote:
-> > > Personally, I'm more interested in improving compile speed of the kernel
-> >
-> > Any opinion on precompiled header support?
->
-> When ever I've been anywhere near it it is always a disaster.
-> It may make sense for C++ where there is lots of complicated
-> code to parse in .h files. Parsing C headers is usually easier.
->
-> One this I have done that significantly speeds up .h file
-> processing is to take the long list of '-I directory' parameters
-> that are passed to the compiler and copy the first version
-> of each file into a separate 'object headers' directory.
-> This saves the compiler doing lots of 'failed opens'.
->
-> If each fragment makefile lists its 'public' headers make
-> can generate dependency rules that do the copies.
->
-> FWIW make is much faster if you delete all the builtin and
-> suffix rules and rely on explicit rules for each file.
+On Mon 11 May 09:29 PDT 2020, Srinivas Kandagatla wrote:
 
+> fastrpc_invoke_ctx can have refcount of 2 in error path where
+> rpmsg_send() fails to send invoke message. decrement the refcount
+> properly in the error path to fix this leak.
+> 
+> This also fixes below static checker warning:
+> 
+> drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
+> warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
+> 
+> Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/misc/fastrpc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 9065d3e71ff7..07065728e39f 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -949,8 +949,10 @@ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
+>  	dma_wmb();
+>  	/* Send invoke buffer to remote dsp */
+>  	err = fastrpc_invoke_send(fl->sctx, ctx, kernel, handle);
+> -	if (err)
+> +	if (err) {
+> +		fastrpc_context_put(ctx);
 
-Kbuild disables Make's builtin rules at least.
+So we refcount ctx once for the invoke function and once between send
+and callback. And this fastrpc_context_put() would counter the fact that
+rpmsg_send() failed, so we will not get the "remote's" put().
 
+I think that if you moved this call inside fastrpc_invoke_send() it's
+relationship to the failing rpmsg_send() would be obvious.
 
-# Do not use make's built-in rules and variables
-# (this increases performance and avoids hard-to-debug behaviour)
-MAKEFLAGS += -rR
+Regards,
+Bjorn
 
-
-
---
-Best Regards
-Masahiro Yamada
+>  		goto bail;
+> +	}
+>  
+>  	if (kernel) {
+>  		if (!wait_for_completion_timeout(&ctx->work, 10 * HZ))
+> -- 
+> 2.21.0
+> 
