@@ -2,100 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C18C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B4FC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C314D206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B3E20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hK5hE4xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731064AbgELUbs (ORCPT
+        id S1731132AbgELUb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:31:48 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:44327 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgELUbr (ORCPT
+        Tue, 12 May 2020 16:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725950AbgELUb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:31:47 -0400
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mr9Jw-1imwKd1034-00oBq5; Tue, 12 May 2020 22:31:45 +0200
-Received: by mail-qk1-f176.google.com with SMTP id b6so14003341qkh.11;
-        Tue, 12 May 2020 13:31:44 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYyxWOJrZuTfJ0dn4e/8vq/2feu86nzh6vZHk/Ypi+il7F2e/U6
-        dY81jpYiNcxCtVQ8feCcnRK71UGrj8SIyarvDgk=
-X-Google-Smtp-Source: APiQypIKCdaOu3b8S6gkZ0qkFU4jDbgQtG+5bVY9dwPACknqdZumuyRrjNjyLTc7jX4YOm7JuUqqed4oej1b5IUnPE8=
-X-Received: by 2002:a37:aa82:: with SMTP id t124mr21737354qke.3.1589315503943;
- Tue, 12 May 2020 13:31:43 -0700 (PDT)
+        Tue, 12 May 2020 16:31:57 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95ED4C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:31:57 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id r66so19448153oie.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ERRPuFMN2HOwCuK5VWexEJe+QDtucWJfwhL9QOSpukg=;
+        b=hK5hE4xj/RHYqXwzZ9VElO19qhoruIzjPwlshRn15zYs4ggKzCnGNClUZ86H5dmQCb
+         UkMmg02SXTxyWybVmPHsTc0t9D/09zvFcepjrnXoJg9SNRiqto8FIpI1zcHBsys1iFHW
+         oo70nS4eEiUOF4Qssvf97lOVxnkJ1FxKmS5IPT5JLi6xFFqhjw/DSmzHraxQqLVaW+9C
+         sHG5ZreZpNYBLAbjZ092XYOnqvkg80M2YkzfV6fNVtAAJ7iNNWSyzqWn/QNj5qA4Ogt2
+         xfBr++NO6oMqgSkdyRoFeAWWUfG7qSAVKI2FpwgxO7DCHcnzYuOp+QoB98JLjUSO8FEL
+         8Vxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ERRPuFMN2HOwCuK5VWexEJe+QDtucWJfwhL9QOSpukg=;
+        b=U6GIiYUSRmlnctFgkDd5HwW1ydHdMW3TpCYbURFaPRqX4fepTpN0gGCKovl/UEsrhx
+         loJ2/ydzVwUrYuzP2WXpw9YYQv9idtyABHEpmki31BIStrQ0Z51oJGjXQJOi5XqDyEg5
+         fr4gpma6ISICjpKtiWKMcAwVQRzngjYDc5JPkBhiKH1IBr29k9kPEmlbW6L6PkLMxq00
+         K1kHJvab872L75/UCHcSSHkfzEES3on4wkolmBPmvvGQIacrQlGVbSp3abl9R9xKLoIs
+         14JkexLQX7xRI3BMSQVOcOg9FBg6FT3F3g+6e9nM7Vl/9J/pmLDA32l32mA9z1rW7CkR
+         htuw==
+X-Gm-Message-State: AGi0PuaBTKPZyfP6eBliam1upCWqXf5pdTLD9NYDOfQ3+YlkGAuaq0T8
+        27bLYP6f6RHHKi2ZFqsbbtzQVrvfGyWkgAiylUXVRY5w
+X-Google-Smtp-Source: APiQypJ3JmKqNIoGmCcd3DTsSdSWvHXTq6dKWAoTdQxvccLpcOsmS0K5CabG8u+AD/Y9Gx5P0Q5CcYbP/ueMdE/PQJ4=
+X-Received: by 2002:aca:c646:: with SMTP id w67mr25418180oif.70.1589315515788;
+ Tue, 12 May 2020 13:31:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512144949.4f933eca@canb.auug.org.au> <20200512162205.GI5110@sirena.org.uk>
- <20200512163632.GA916@sol.localdomain> <20200512170801.GK5110@sirena.org.uk> <20200512200805.GA175421@gmail.com>
-In-Reply-To: <20200512200805.GA175421@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 12 May 2020 22:31:27 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2C-91vCNv8NV6ut8GDu2z9Yt6VwX+P2WggWnuCcMjcvg@mail.gmail.com>
-Message-ID: <CAK8P3a2C-91vCNv8NV6ut8GDu2z9Yt6VwX+P2WggWnuCcMjcvg@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the sound-asoc tree with the crypto tree
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200511204150.27858-1-will@kernel.org> <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+ <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com> <20200512190755.GL2957@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200512190755.GL2957@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 12 May 2020 22:31:44 +0200
+Message-ID: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Xo+MHz6hfyQZNbY1lyAhMEsaP9SY2L1bfFoJ4u+BE17weqcjyKP
- zVAB06kwTkaeHE+JMmUB1Gr9Z0AM/neUjR/rldED9X8b6mSGmDTqbiTUvCbe0x/BzT2ksgF
- fAfsBs1SdyU6WRx5xsw9YVtdHOQ0iSBQuAmy50gQeWCFvDZep59GOEac8qyWqxBFbLsTc6v
- YOMtmRpaCh1VW6rdf+Xtw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Eb2/49Fu2C0=:g19ZN4RbD8yATAxsYw5hBr
- QP1xMoW0s6m2DjnFO8I9dx99StVIfwQoX/gkJYLnptW+D9xJa3rb5BUJoPjsbDlQKNrAuhnjo
- tLv9aQ7qgiOgFIx5d1zNaU6TsuKnsVOL6F6pAjSmmeLAlSOVoVhm/tv5k+uPov+RucznNeiTh
- dEIRymZjiUpwKH8ssbebTJvjkUdbJl7M0pdPoeNsyfPid+gT/Ol5R4+ZxOdlOEpPJHZ+5cLz1
- yQXgIUZ1FQj4tqAySjxe+jsU2kHiyKCz/byrL0Y3quGTOHFHYU2bTJYT/q665QbgqHR3nFA6x
- fAwsH2N/+xjmhTey13L4wp9p2M1zBsaeN71unY365T3EV2ojEyiH9hpFVGNngaDQMyMzo1hgD
- EzRjHjfooISHJLEypxRb+GReUNswuaRNznwrJCzvb9BkQg42UFHM1T1qLUDHzkG8J+rlyuqUw
- ukOxceIjudICcOg1TyeUOvaIjjegTNaL5tW2qdAB1IqK2V/F7/B1Ij5HurEcaC+p1w59MTxJn
- Z1FbqQ6gwmCK8PyktDGSdzKseEOu77EH1SgdepfL5CKVfjJXvwBDLv3YteV8temrsPgvHv6WQ
- D4EV05Xfb82eCICkRUNuPadUsi973mVffFsH9nzgbsOhvO8kRfU3UPGPAjoVNFgq5u2DORyuG
- /7cBLZ8EZBeADDgAs5i/1BuEWzdNkQO0L6EWGfyRCR5oLUYPb384V00wspjCJ9E4XQKSnNiEM
- TMF9WmuP9ELEqxBZc3mUj66qIwhE9vWTsO3SyZSBD6J5wteiVxsqO/bI9J75sD1OxvvOdV0ug
- 4kpmi8NKxVKCy1DLFk1pG4EXuTmlRZXv8uNq563Boru7es4Qzg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:08 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> On Tue, May 12, 2020 at 06:08:01PM +0100, Mark Brown wrote:
+On Tue, 12 May 2020 at 21:08, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> For later: if SHASH_DESC_ON_STACK is causing problems, we really ought to find a
-> better solution, since lots of users are using this macro.  A version of
-> crypto_shash_tfm_digest() that falls back to heap allocation if the descsize is
-> too large would be possible, but that wouldn't fully solve the problem since
-> some users do incremental hashing.
+> On Tue, May 12, 2020 at 07:53:00PM +0200, Marco Elver wrote:
+> > I just ran a bunch of KCSAN tests. While this series alone would have
+> > passed the tests, there appears to be a problem with
+> > __READ_ONCE/__WRITE_ONCE. I think they should already be using
+> > 'data_race()', as otherwise we will get lots of false positives in
+> > future.
+> >
+> > I noticed this when testing -tip/locking/kcsan, which breaks
+> > unfortunately, because I see a bunch of spurious data races with
+> > arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
+> > instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
+> > From what I see, the intent was to not double-instrument,
+> > unfortunately they are still double-instrumented because
+> > __READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
+> > actually). I don't think we can use __no_sanitize_or_inline for the
+> > arch_ functions, because we really want them to be __always_inline
+> > (also to avoid calls to these functions in uaccess regions, which
+> > objtool would notice).
+> >
+> > I think the easiest way to resolve this is to wrap the accesses in
+> > __*_ONCE with data_race().
+>
+> But we can't... because I need arch_atomic_*() and __READ_ONCE() to not
+> call out to _ANYTHING_.
+>
+> Sadly, because the compilers are 'broken' that whole __no_sanitize thing
+> didn't work, but I'll be moving a whole bunch of code into .c files with
+> all the sanitizers killed dead. And we'll be validating it'll not be
+> calling out to anything.
+>
+> data_race() will include active calls to kcsan_{dis,en}able_current(),
+> and this must not happen.
 
-It's hard to know how many of the users of SHASH_DESC_ON_STACK() are
-likely to cause problems, as multiple factors are involved:
+Only if instrumentation is enabled for the compilation unit. If you
+have KCSAN_SANITIZE_foo.c := n, no calls are emitted not even to
+kcsan_{dis,en}able_current(). Does that help?
 
-- this one triggered the warning because it was on the stack of a function
-  that got inlined into another that has other large variables. Whether it
-  got inlined makes little difference to the stack usage, but does make a
-  difference to warning about it.
+By default, right now __READ_ONCE() will still generate a call due to
+instrumentation (call to __tsan_readX).
 
-- generally the structure is larger than we like it, especially on architectures
-  with 128 byte CRYPTO_MINALIGN like ARM. This actually got worse
-  because of b68a7ec1e9a3 ("crypto: hash - Remove VLA usage"), as
-  the stack usage is now always the maximum of all hashes where it used
-  to be specific to the hash that was actually used and could be smaller
-
-- the specific instance in calculate_sha256() feels a bit silly, as this
-  function allocates a tfm and a descriptor, runs the digest and then
-  frees both again. I don't know how common this pattern is, but
-  it seems a higher-level abstraction might be helpful anyway.
-
-      Arnd
+Thanks,
+-- Marco
