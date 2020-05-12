@@ -2,163 +2,234 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436CAC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9310C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC472082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799DF206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BlSv9wO9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfDT8qi4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgELIYT (ORCPT
+        id S1729172AbgELIYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37158 "EHLO
+        Tue, 12 May 2020 04:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726008AbgELIYS (ORCPT
+        by vger.kernel.org with ESMTP id S1725987AbgELIYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:24:18 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6097C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:24:16 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so20728005wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:24:16 -0700 (PDT)
+        Tue, 12 May 2020 04:24:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8A0C061A0C;
+        Tue, 12 May 2020 01:24:31 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id s9so10293394eju.1;
+        Tue, 12 May 2020 01:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ggr14XlgBh8EMUJAaXyLbn8TYhao1h67+MKW9QffqQA=;
-        b=BlSv9wO9EpU2bfDYWrkc6U/izllw0YDwVAaM8XXtWTZAGT3qHljt7t90do6W5z8yIM
-         7VNI4LfZWTiT9/N75dwSyGxJlwPjT4gykfTOEZyzilQXkF5vO+1ieeIivX5oykGVT6pD
-         fcfvWOj1Vm5aSP2uMZrsEYCLakxc5GPx0QyYqAG4jL24rgxnb+2s3cBeA9fGSpuT/I3N
-         y0lM2Pinz3TPoDSEznx0RNgbAU5A3B2TN2WgYYdifHPn24RRDdMuqfinuuJlMrTm8rt5
-         W2tZ6N0Aazs/f+Yyk+D2k4BU6Lrth+1f0OyFKzI4EEQGUFZRu7s7AItrLEEfRwe161BU
-         iIXg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WZmVui63+MZYLGPVMsrYodiyTMhn5xAQUNHMSEpC2WI=;
+        b=MfDT8qi45fn3WeCOk2o2t1xYrODuFq3GU+SCCBAWPM2h92+F0KrixpsWHdinUycHmp
+         cpvfFmAD+jhqDkkHYWt5Q8cpPEtpVISDTn+fL0txmPjkOFCBhOzA0wcA7xEM///jyCPo
+         uwm9RP8IhF+DrMIYEyho+wdOOP8Bp+dRlyrWozPG9P+y5mwanSSevRhmbr/Zcxm6ZCYM
+         FG5nskHyavZGHLuX2BeFh1x1xuTXz9NsnKLG/IzAwrXKQ1J3sgROOq4fgIy4zzVWqp3a
+         s3mfLkPWMs8+OTrvEBzEwmUog+hIMGUlfQuFbPgJKByrLRdTy95BMayQjTGNRuEujeOp
+         Ughw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ggr14XlgBh8EMUJAaXyLbn8TYhao1h67+MKW9QffqQA=;
-        b=V9i2Yequ9VttK6XLftdREGuX2dzm+BYO415biSShh5KfeHOXx4buYit5Zm2J4FDv/b
-         yGNkh9onD6fXHrjdEkXASQ3ZMY167amUiqkbheaSjB0OCySs+dRJ0cE622bfWrbth5q1
-         ft/yIp1CcIoCnYPv214BchGXblJ80kBp2Zi7tBS0++vdthwiSx3/duPtmcD8R6TXjtK2
-         KL8qMuqE2dpjhavR62Q7wBSiPdc+bDK8oRdDRei+Z6XHfJuA1UJdya9zOrwlS6hXtppt
-         Ly56Sy421DZu0WRWdilTQeuOoFaO1xymBF/iycyUuM7qkC43AVGa6gcZorBuKItycpzQ
-         SKFA==
-X-Gm-Message-State: AGi0PuZBbsYMQ2NaNeHS9xATff7/DTrRm3lQfBLyDHUDXGK1cH5wtGx+
-        MkpjswgMsRDa5w/wU2fQu689ZCPeZWQObg==
-X-Google-Smtp-Source: APiQypJ0DLBuWu1HvqfbYEN3n8HZFeHzl+W4A9F19tgwxnNvxKs0OG0tNRp7DYla2i/EalNuykPoWA==
-X-Received: by 2002:a1c:5988:: with SMTP id n130mr25724011wmb.187.1589271855004;
-        Tue, 12 May 2020 01:24:15 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:4460:3fd3:382:4a71? ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id x1sm12699020wrt.86.2020.05.12.01.24.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 01:24:14 -0700 (PDT)
-Subject: Re: [PATCH] ARM: oxnas: make ox820_boot_secondary static
-To:     Ma Feng <mafeng.ma@huawei.com>, linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
-        linux-kernel@vger.kernel.org
-References: <1589247973-29728-1-git-send-email-mafeng.ma@huawei.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <799e6df7-7698-f2a7-e8eb-fd491c1cad8f@baylibre.com>
-Date:   Tue, 12 May 2020 10:24:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WZmVui63+MZYLGPVMsrYodiyTMhn5xAQUNHMSEpC2WI=;
+        b=hyvqMms0FZyjNve0Nq1CoVGKho6lcS4K1Xu5m/NvT8voHNGE5OyJne0A82BhR3lrT4
+         fWn/A9qwou8VIaUoR/NJ+9cd2l33EatpakX3EqXk2Erk1rLpCaxMgknNh7OZPN5JXnIu
+         GHYY88jeOwD8ninR8n3XToBypGkLudw9b4aOI/+i7QO+2w/lEvMM5GO43sR2072Sj376
+         3P3Q5exbjDyYCFIg064rmewzKyOC+C6R4quxc851PeEUzaqoLMgiJqeqCMWGr8OBCAbt
+         DYbEur5kZX0gMRla3SgeshspIAYjUgh0TMQ+AA770A9P715391Fur+YTrJhuH+3RLceo
+         Z5wA==
+X-Gm-Message-State: AGi0PuZIAib1PLiZF8sCsCJ1C6eYGi01v2vKG/hZ270HgiHx9JuIcNsA
+        QZrdO3edrOeZ2K1lPh1DARdg6kgOJjU81y3SfQ8=
+X-Google-Smtp-Source: APiQypJ6waQrIqdkBNJiYUFTObsy0HOkI967DYuTmDn/95XvGxRe4QaE7sdEQou1ZWkFZkf4jCo6DOQgEKsAM3GPd/s=
+X-Received: by 2002:a17:906:2799:: with SMTP id j25mr8522291ejc.369.1589271870256;
+ Tue, 12 May 2020 01:24:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1589247973-29728-1-git-send-email-mafeng.ma@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200505082055.2843847-1-noltari@gmail.com> <20200512065111.716801-1-noltari@gmail.com>
+ <20200512091637.198dd0c2@xps13> <50E32C0E-7485-4180-A072-F7F1CFB45B06@gmail.com>
+ <20200512093451.4cde5384@xps13>
+In-Reply-To: <20200512093451.4cde5384@xps13>
+From:   =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date:   Tue, 12 May 2020 10:24:16 +0200
+Message-ID: <CAKR-sGe7OKYmjiPHK1eLO0P1nLoerMRm_OcUkt9Ay3GtFeTA=w@mail.gmail.com>
+Subject: Re: [PATCH v3] mtd: rawnand: brcmnand: correctly verify erased pages
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
+        Vignesh R <vigneshr@ti.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/2020 03:46, Ma Feng wrote:
-> Fix sparse warning:
-> 
-> arch/arm/mach-oxnas/platsmp.c:30:12: warning: symbol 'ox820_boot_secondary' was
-> not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
-> ---
->  arch/arm/mach-oxnas/platsmp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-oxnas/platsmp.c b/arch/arm/mach-oxnas/platsmp.c
-> index ab35275..f0a50b9 100644
-> --- a/arch/arm/mach-oxnas/platsmp.c
-> +++ b/arch/arm/mach-oxnas/platsmp.c
-> @@ -27,7 +27,8 @@ static void __iomem *gic_cpu_ctrl;
->  #define GIC_CPU_CTRL			0x00
->  #define GIC_CPU_CTRL_ENABLE		1
-> 
-> -int __init ox820_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +static int __init ox820_boot_secondary(unsigned int cpu,
-> +		struct task_struct *idle)
->  {
->  	/*
->  	 * Write the address of secondary startup into the
-> --
-> 2.7.4
-> 
+Hi Miqu=C3=A8l,
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+
+El mar., 12 may. 2020 a las 9:34, Miquel Raynal
+(<miquel.raynal@bootlin.com>) escribi=C3=B3:
+>
+> Hi =C3=81lvaro,
+>
+> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Tue, 12 May=
+ 2020
+> 09:24:32 +0200:
+>
+> > Hi Miqu=C3=A8l
+> >
+> > > El 12 may 2020, a las 9:16, Miquel Raynal <miquel.raynal@bootlin.com>=
+ escribi=C3=B3:
+> > >
+> > > Hi =C3=81lvaro,
+> > >
+> > > =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Tue, 12=
+ May 2020
+> > > 08:51:11 +0200:
+> > >
+> > >> The current code checks that the whole OOB area is erased.
+> > >> This is a problem when JFFS2 cleanmarkers are added to the OOB, sinc=
+e it will
+> > >> fail due to the usable OOB bytes not being 0xff.
+> > >> Correct this by only checking that data and ECC bytes aren't 0xff.
+> > >>
+> > >> Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitfl=
+ips")
+> > >> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> > >> ---
+> > >> v3: Fix commit log and merge nand_check_erased_ecc_chunk calls.
+> > >> v2: Add Fixes tag
+> > >>
+> > >> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 19 ++++++++++++++-----
+> > >> 1 file changed, 14 insertions(+), 5 deletions(-)
+> > >>
+> > >> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/=
+nand/raw/brcmnand/brcmnand.c
+> > >> index e4e3ceeac38f..80fe01f03516 100644
+> > >> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > >> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > >> @@ -2018,8 +2018,9 @@ static int brcmnand_read_by_pio(struct mtd_inf=
+o *mtd, struct nand_chip *chip,
+> > >> static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+> > >>              struct nand_chip *chip, void *buf, u64 addr)
+> > >> {
+> > >> +  struct mtd_oob_region oobecc;
+> > >>    int i, sas;
+> > >> -  void *oob =3D chip->oob_poi;
+> > >> +  void *oob;
+> > >>    int bitflips =3D 0;
+> > >>    int page =3D addr >> chip->page_shift;
+> > >>    int ret;
+> > >> @@ -2035,11 +2036,19 @@ static int brcmstb_nand_verify_erased_page(s=
+truct mtd_info *mtd,
+> > >>    if (ret)
+> > >>            return ret;
+> > >>
+> > >> -  for (i =3D 0; i < chip->ecc.steps; i++, oob +=3D sas) {
+> > >> +  for (i =3D 0; i < chip->ecc.steps; i++) {
+> > >>            ecc_chunk =3D buf + chip->ecc.size * i;
+> > >> -          ret =3D nand_check_erased_ecc_chunk(ecc_chunk,
+> > >> -                                            chip->ecc.size,
+> > >> -                                            oob, sas, NULL, 0,
+> > >> +
+> > >> +          if (mtd->ooblayout->ecc(mtd, i, &oobecc)) {
+> > >
+> > > Please use the mtdcore.c's helpers
+> > > (mtd_ooblayout_set/get_data/free/ecc/bytes).
+
+Ok, I will use mtd_ooblayout_ecc function.
+
+> > >
+> > > Also, what are you trying to discriminate with the return code of the
+> > > function? Shouldn't this function "always" work?
+> >
+> > Just making sure it doesn=E2=80=99t return an ERANGE in case chip->ecc.=
+size doesn=E2=80=99t match the sections from mtd->ooblayout->ecc, which sho=
+uldn=E2=80=99t happen, so I think we can remove that...
+>
+> The style we prefer for error checking is:
+>
+>         ret =3D function();
+>         if (ret)
+>                 do someting;
+>
+> instead of:
+>
+>         if (function())
+>
+> Anyway, I really don't know if it can happen or not. I suppose it does.
+> What I don't understand is your "oob =3D chip->oob_poi + oobecc.offset".
+> If you expect an error, then you should not update this pointer, right?
+
+After switching to mtd_ooblayout_ecc, error checking isn't needed anymore.
+
+>
+> Don't you need to use 2 * i instead of i here? Following your other
+> contribution, sections are distributed like "data/ecc/data/ecc/etc".
+
+No, we're checking ECC bytes in the OOB, not about usable bytes in the
+OOB area, which is what my other patch changes.
+
+>
+> >
+> > >
+> > >> +                  oob =3D NULL;
+> > >> +                  oobecc.length =3D 0;
+> > >> +          } else {
+> > >> +                  oob =3D chip->oob_poi + oobecc.offset;
+> > >> +          }
+> > >> +
+> > >> +          ret =3D nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.=
+size,
+> > >> +                                            oob, oobecc.length,
+> > >> +                                            NULL, 0,
+> > >>                                              chip->ecc.strength);
+> > >
+> > > As I told you, this helper takes "maid data" then "spare area" then
+> > > "ecc bytes". The names are pretty important here as you want to avoid
+> > > checking the spare OOB bytes on purpose, so maybe you could have more
+> > > meaningful names and call "ecc" instead of "oob" the ecc region?
+> >
+> > Actually I thought you meant the commit log, not the code itself...
+>
+> No problem ;) I meant both actually, And I think you should name the
+> oob pointer ecc_bytes.
+>
+> >
+> > >
+> > >>            if (ret < 0)
+> > >>                    return ret;
+> > >
+> > >
+> > > Thanks,
+> > > Miqu=C3=A8l
+> >
+> > Regards,
+> > =C3=81lvaro.
+> >
+>
+>
+>
+>
+> Thanks,
+> Miqu=C3=A8l
+
+Regards,
+=C3=81lvaro.
