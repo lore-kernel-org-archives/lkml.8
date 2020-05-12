@@ -2,62 +2,162 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965EBC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDB4C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BFF0206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8252070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:24:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq9+YAJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgELAWX (ORCPT
+        id S1728194AbgELAYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:22:23 -0400
-Received: from fieldses.org ([173.255.197.46]:55248 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgELAWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:22:23 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id EED9623E4; Mon, 11 May 2020 20:22:22 -0400 (EDT)
-Date:   Mon, 11 May 2020 20:22:22 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the nfsd tree
-Message-ID: <20200512002222.GB17212@fieldses.org>
-References: <20200508104720.5c7f72a5@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508104720.5c7f72a5@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Mon, 11 May 2020 20:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725855AbgELAYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 20:24:43 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2C0C061A0C;
+        Mon, 11 May 2020 17:24:42 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id r10so4835551pgv.8;
+        Mon, 11 May 2020 17:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NrIpz6vUz6TlKjzyo8M6MU8mPTVTm6PFboLLZ6IJLYg=;
+        b=Jq9+YAJNInoQ2XwX4U1q7T19pkx3rfiS49Cm2//kUVBs6wEhst83w17xDja+HiI0/0
+         myTV6r+DLRK9UXvdmDfFicL74ApeH0r9XUrGT1oxn0jFY/DXAYpMR0D0wkCAMBtGsTXh
+         EAemiBAZ9Nm/PzG7FWN+6aRzNNQhzN+6slD075dXKqLoJH3uWuHSI4VLTuwgtWkBTd2i
+         tOHAxkum5ExzicX8DA+8+ycWDbSVn3agEKoyT/+tvLfaE5SF33o4wOW2iKMuyHB73s4O
+         wT2PeyDqHBEUa+qGNZN5iM7Yjy4g2RG3uDOb4HMvn9GCEDqjiD8NhEyL1s7N/yZkdSGW
+         Y4sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NrIpz6vUz6TlKjzyo8M6MU8mPTVTm6PFboLLZ6IJLYg=;
+        b=kUmfAVYY87qu0nalywvT36w0aRi1t6c7TWwP4VMf1yGkZVE4fL1nXRKmQsa905VEXZ
+         +FVpVUEkkNAeeleVwsZBCnppQFnp2RR4PvPVv/OwBJw5MH0tK/8jA+nVJzGZiLPiFgOA
+         KSafq88JTLW2Z+qVll3PmTBtA/Bq3t5RDSwjFnOaRxpaUw+VwKWAOM6Y57YuP/XuylPI
+         bAot73e9fQB2InG1efggYnZFRR8CB+qVNRYKAOiqYsx6LQn/9+F5zlcchP7/DNejboWk
+         TaKjWHKmkX7iVSmlwAPkrpmuhYbW274sbCg8LGvfFTFX52x4iXpXkfy4jnwZx7uL3/Pt
+         uQTg==
+X-Gm-Message-State: AGi0PubN248+XRftGAA4cnsvB6W1EL1ynOPtjD3JWBgupqEH70wBlLcp
+        ir6soCSJMrAB/JsAWdQBvZQ=
+X-Google-Smtp-Source: APiQypJ1KWZIbeMmZE/wGde6uQxE3MJO0GQkpdGcGOAMJc6etfbidBN+AL+XeQVGbdVcm0Im0o3+ag==
+X-Received: by 2002:a63:3206:: with SMTP id y6mr16950589pgy.68.1589243082152;
+        Mon, 11 May 2020 17:24:42 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 23sm9062112pgm.18.2020.05.11.17.24.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 May 2020 17:24:41 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH net-next 0/4] Extend phylib implementation of pause support
+Date:   Mon, 11 May 2020 17:24:06 -0700
+Message-Id: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 10:47:20AM +1000, Stephen Rothwell wrote:
-> After merging the nfsd tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> kernel/trace/trace_hwlat.c:329:12: error: conflicting types for 'kthread_fn'
->   329 | static int kthread_fn(void *data)
->       |            ^~~~~~~~~~
-> In file included from kernel/trace/trace_hwlat.c:40:
-> include/linux/kthread.h:60:7: note: previous declaration of 'kthread_fn' was here
->    60 | void *kthread_fn(struct task_struct *k);
->       |       ^~~~~~~~~~
-> 
-> Caused by commit
-> 
->   7df082e85764 ("kthread: save thread function")
-> 
-> I have used the nfsd tree from next-20200507 for today.
+This commit set extends the implementation introduced by
+commit 5652b46e4e80 ("Merge branch 'Pause-updates-for-phylib-and-phylink'")
+to support the less problematic behavior alluded to by Russell King's
+comment in commit f904f15ea9b5 ("net: phylink: allow ethtool -A to
+change flow control advertisement").
 
-Whoops, I forgot to say thanks for this report.  I renamed the
-kthread_fn in my patches to kthread_func.
++	/*
++	 * See the comments for linkmode_set_pause(), wrt the deficiencies
++	 * with the current implementation.  A solution to this issue would
++	 * be:
++	 * ethtool  Local device
++	 *  rx  tx  Pause AsymDir
++	 *  0   0   0     0
++	 *  1   0   1     1
++	 *  0   1   0     1
++	 *  1   1   1     1
++	 * and then use the ethtool rx/tx enablement status to mask the
++	 * rx/tx pause resolution.
++	 */
 
---b.
+Specifically, the linkmode_set_pause() function is extended to support
+both the existing Pause/AsymPause mapping and the mapping specified by
+the IEEE standard (and Russell). A phy_set_pause() function is added to
+the phylib that can make use of this extension based on the value of
+the pause autoneg parameter. The bcmgenet driver adds support for the
+ethtool pauseparam ops based on these phylib services and uses "the
+ethtool rx/tx enablement status to mask the rx/tx pause resolution".
+
+The first commit in this set addresses a small deficiency in the 
+phy_validate_pause() function.
+
+The second extends linkmode_set_pause() with an autoneg parameter to
+allow selection of the desired mapping for advertisement.
+
+The third introduces the phy_set_pause() function based on the existing
+phy_set_asym_pause() implementation. One aberration here is the direct
+manipulation of the phy state machine to allow a new link up event to
+notify the MAC that the pause parameters may have changed. This is a
+convenience to simplify the MAC driver by allowing one implementation
+of the pause configuration logic to be located in its adjust_link
+callback. Otherwise, the MAC driver would need to handle configuring
+the pause parameters for an already active PHY link which would likely
+require additional synchronization logic to protect the logic from
+asynchronous changes in the PHY state.
+
+The logic in phy_set_asym_pause() that looks for a change in
+advertising is not particularly helpful here since now a change from
+tx=1 rx=1 to tx=0 rx=1 no longer changes the advertising if autoneg is
+enabled so phy_start_aneg() would not be called. I took the alternate
+approach of unconditionally calling phy_start_aneg() since it
+accommodates both manual and autoneg configured links. The "aberrant"
+logic allows manually configured and autonegotiated links that don't
+change their advertised parameters to receive an adjust_link call to
+act on pause parameters that have no effect on the PHY layer.
+
+It seemed excessive to bring the PHY down and back up when nogotiation
+is not necessary, but that could be an alternative approach. I am
+certainly open to any suggestions on how to improve that portion of
+the code if it is controversial and a consensus can be reached.
+
+The last commit is a reference implementation of pause support by the
+bcmgenet driver based on my preferences for the functionality. It is my
+desire that other network drivers prefer this behavior and the changes
+to the phylib will make it easier for them to support.
+
+Many thanks to Russell King and Andrew Lunn for their efforts to clean
+up and centralize support for pause and to document its shortcommings.
+
+Doug Berger (4):
+  net: ethernet: validate pause autoneg setting
+  net: add autoneg parameter to linkmode_set_pause
+  net: ethernet: introduce phy_set_pause
+  net: bcmgenet: add support for ethtool flow control
+
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |  54 +++++++++++++
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h |   4 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   |  38 +++++++--
+ drivers/net/phy/linkmode.c                     | 104 +++++++++++++++++++------
+ drivers/net/phy/phy_device.c                   |  37 ++++++++-
+ drivers/net/phy/phylink.c                      |   6 +-
+ include/linux/linkmode.h                       |   3 +-
+ include/linux/phy.h                            |   1 +
+ 8 files changed, 212 insertions(+), 35 deletions(-)
+
+-- 
+2.7.4
+
