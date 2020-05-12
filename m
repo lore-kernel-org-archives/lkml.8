@@ -2,146 +2,138 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27788C54E90
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4796C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0939B206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A5A206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iE1w5kIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbgELPbF (ORCPT
+        id S1730632AbgELPcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:31:05 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2199 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbgELPbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:31:04 -0400
-Received: from lhreml720-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 875C7694F362539982F7;
-        Tue, 12 May 2020 16:31:02 +0100 (IST)
-Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
- lhreml720-chm.china.huawei.com (10.201.108.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Tue, 12 May 2020 16:31:02 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 12 May 2020 17:31:01 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Tue, 12 May 2020 17:31:01 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "John Johansen" <john.johansen@canonical.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IIAAb0AAgAApg3CAADIngIAAzgGAgACHqACABHSroIAAjWsAgAC7FtCAAFxigIAAJvQA
-Date:   Tue, 12 May 2020 15:31:01 +0000
-Message-ID: <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-         <1588957684.5146.70.camel@linux.ibm.com>
-         <414644a0be9e4af880452f4b5079aba1@huawei.com>
-         <1589233010.5091.49.camel@linux.ibm.com>
-         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
- <1589293025.5098.53.camel@linux.ibm.com>
-In-Reply-To: <1589293025.5098.53.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.12.77]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 12 May 2020 11:32:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59055 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgELPcQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589297534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3znfxGl3Y8dtZtdYEiFhfu/pKUx/1DihfE1tclQt+xI=;
+        b=iE1w5kIFrZ8lziTDGQeWbNCfQZAvyEQvSSE/CVg3DLkOmNzmqRMAQl3iGLkRDsjGIaZ6lS
+        9f+o07Jw3d+Ch9B6IX/P/vVrj1B3FyS740jKAtZv+rfdKdKDJTMm+u6Aox6WX+FzMjKL3c
+        7OJ+QaqO0h7lqPyIAy6y6YbSTkpx3Fs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-_q3gu77AM26zTzK1ED8dgQ-1; Tue, 12 May 2020 11:32:13 -0400
+X-MC-Unique: _q3gu77AM26zTzK1ED8dgQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E5B419200C0;
+        Tue, 12 May 2020 15:32:11 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-85.rdu2.redhat.com [10.10.116.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E5FE6E9E0;
+        Tue, 12 May 2020 15:32:10 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id AE9CE220C05; Tue, 12 May 2020 11:32:09 -0400 (EDT)
+Date:   Tue, 12 May 2020 11:32:09 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8] KVM: x86: Interrupt-based mechanism for async_pf
+ 'page present' notifications
+Message-ID: <20200512153209.GC138129@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511164752.2158645-1-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBvd25lci1saW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnIFttYWls
-dG86b3duZXItbGludXgtDQo+IHNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmddIE9uIEJl
-aGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IFR1ZXNkYXksIE1heSAxMiwgMjAyMCA0OjE3IFBN
-DQo+IE9uIFR1ZSwgMjAyMC0wNS0xMiBhdCAwNzo1NCArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90
-ZToNCj4gPiA+ID4gPiBSb2JlcnRvLCBFVk0gaXMgb25seSB0cmlnZ2VyZWQgYnkgSU1BLCB1bmxl
-c3MgeW91J3ZlIG1vZGlmaWVkIHRoZQ0KPiA+ID4gPiA+IGtlcm5lbCB0byBkbyBvdGhlcndpc2Uu
-DQo+ID4gPiA+DQo+ID4gPiA+IEVWTSB3b3VsZCBkZW55IHhhdHRyL2F0dHIgb3BlcmF0aW9ucyBl
-dmVuIGlmIElNQSBpcyBkaXNhYmxlZCBpbiB0aGUNCj4gPiA+ID4ga2VybmVsIGNvbmZpZ3VyYXRp
-b24uIEZvciBleGFtcGxlLCBldm1fc2V0eGF0dHIoKSByZXR1cm5zIHRoZSB2YWx1ZQ0KPiA+ID4g
-PiBmcm9tIGV2bV9wcm90ZWN0X3hhdHRyKCkuIElNQSBpcyBub3QgaW52b2x2ZWQgdGhlcmUuDQo+
-ID4gPg0KPiA+ID4gQ29tbWl0wqBhZTFiYTE2NzZiODggKCJFVk06IEFsbG93IHVzZXJsYW5kIHRv
-IHBlcm1pdCBtb2RpZmljYXRpb24gb2YNCj4gPiA+IEVWTS1wcm90ZWN0ZWQgbWV0YWRhdGEiKQ0K
-PiBpbnRyb2R1Y2VkwqBFVk1fQUxMT1dfTUVUQURBVEFfV1JJVEVTDQo+ID4gPiB0byBhbGxvdyB3
-cml0aW5nIHRoZSBFVk0gcG9ydGFibGUgYW5kIGltbXV0YWJsZSBmaWxlIHNpZ25hdHVyZXMuDQo+
-ID4NCj4gPiBBY2NvcmRpbmcgdG8gRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9ldm06DQo+ID4N
-Cj4gPiBOb3RlIHRoYXQgb25jZSBhIGtleSBoYXMgYmVlbiBsb2FkZWQsIGl0IHdpbGwgbm8gbG9u
-Z2VyIGJlDQo+ID4gcG9zc2libGUgdG8gZW5hYmxlIG1ldGFkYXRhIG1vZGlmaWNhdGlvbi4NCj4g
-DQo+IE5vdCBhbnkga2V5LCBidXQgdGhlIEhNQUMga2V5Lg0KPiANCj4gMsKgwqDCoMKgwqDCoMKg
-wqDCoFBlcm1pdCBtb2RpZmljYXRpb24gb2YgRVZNLXByb3RlY3RlZCBtZXRhZGF0YSBhdA0KPiDC
-oCDCoCDCoCDCoCDCoCBydW50aW1lLiBOb3Qgc3VwcG9ydGVkIGlmIEhNQUMgdmFsaWRhdGlvbiBh
-bmQNCj4gwqAgwqAgwqAgwqAgwqAgY3JlYXRpb24gaXMgZW5hYmxlZC4NCg0KI2lmZGVmIENPTkZJ
-R19FVk1fTE9BRF9YNTA5DQp2b2lkIF9faW5pdCBldm1fbG9hZF94NTA5KHZvaWQpDQp7DQpbLi4u
-XQ0KICAgICAgICByYyA9IGludGVncml0eV9sb2FkX3g1MDkoSU5URUdSSVRZX0tFWVJJTkdfRVZN
-LCBDT05GSUdfRVZNX1g1MDlfUEFUSCk7DQogICAgICAgIGlmICghcmMpDQogICAgICAgICAgICAg
-ICAgZXZtX2luaXRpYWxpemVkIHw9IEVWTV9JTklUX1g1MDk7DQoNCg0Kc3RhdGljIHNzaXplX3Qg
-ZXZtX3dyaXRlX2tleShzdHJ1Y3QgZmlsZSAqZmlsZSwgY29uc3QgY2hhciBfX3VzZXIgKmJ1ZiwN
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZV90IGNvdW50LCBsb2ZmX3QgKnBwb3Mp
-DQp7DQpbLi4uXQ0KICAgICAgICAvKiBEb24ndCBhbGxvdyBhIHJlcXVlc3QgdG8gZnJlc2hseSBl
-bmFibGUgbWV0YWRhdGEgd3JpdGVzIGlmDQogICAgICAgICAqIGtleXMgYXJlIGxvYWRlZC4NCiAg
-ICAgICAgICovDQogICAgICAgIGlmICgoaSAmIEVWTV9BTExPV19NRVRBREFUQV9XUklURVMpICYm
-DQogICAgICAgICAgICAoKGV2bV9pbml0aWFsaXplZCAmIEVWTV9LRVlfTUFTSykgIT0gMCkgJiYN
-CiAgICAgICAgICAgICEoZXZtX2luaXRpYWxpemVkICYgRVZNX0FMTE9XX01FVEFEQVRBX1dSSVRF
-UykpDQogICAgICAgICAgICAgICAgcmV0dXJuIC1FUEVSTTsNCg0KU2hvdWxkIGhhdmUgYmVlbjoN
-Cg0KICAgICAgICBpZiAoKGkgJiBFVk1fQUxMT1dfTUVUQURBVEFfV1JJVEVTKSAmJg0KICAgICAg
-ICAgICAgKChldm1faW5pdGlhbGl6ZWQgJiBFVk1fSU5JVF9ITUFDKSAhPSAwKSAmJg0KICAgICAg
-ICAgICAgIShldm1faW5pdGlhbGl6ZWQgJiBFVk1fQUxMT1dfTUVUQURBVEFfV1JJVEVTKSkNCiAg
-ICAgICAgICAgICAgICByZXR1cm4gLUVQRVJNOw0KDQo+IEVhY2ggdGltZSB0aGUgRVZNIHByb3Rl
-Y3RlZCBmaWxlIG1ldGFkYXRhIGlzIHVwZGF0ZWQsIHRoZSBFVk0gSE1BQyBpcw0KPiB1cGRhdGVk
-LCBhc3N1bWluZyB0aGUgZXhpc3RpbmcgRVZNIEhNQUMgaXMgdmFsaWQuIMKgVXNlcnNwYWNlIHNo
-b3VsZA0KPiBub3QgaGF2ZSBhY2Nlc3MgdG8gdGhlIEhNQUMga2V5LCBzbyB3ZSBvbmx5IGFsbG93
-IHdyaXRpbmcgRVZNDQo+IHNpZ25hdHVyZXMuDQo+IA0KPiBUaGUgb25seSBkaWZmZXJlbmNlIGJl
-dHdlZW4gd3JpdGluZyB0aGUgb3JpZ2luYWwgRVZNIHNpZ25hdHVyZSBhbmQgdGhlDQo+IG5ldyBw
-b3J0YWJsZSBhbmQgaW1tdXRhYmxlIHNpZ25hdHVyZSBpcyB0aGUgc2VjdXJpdHkuaW1hIHhhdHRy
-DQo+IHJlcXVpcmVtZW50LiDCoFNpbmNlIHRoZSBuZXcgRVZNIHNpZ25hdHVyZSBkb2VzIG5vdCBp
-bmNsdWRlIHRoZQ0KPiBmaWxlc3lzdGVtIHNwZWNpZmljIGRhdGEsIHNvbWV0aGluZyBlbHNlIG5l
-ZWRzIHRvIGJpbmQgdGhlIGZpbGUNCj4gbWV0YWRhdGEgdG8gdGhlIGZpbGUgZGF0YS4gwqBUaHVz
-IHRoZSBJTUEgeGF0dHIgcmVxdWlyZW1lbnQuDQo+IA0KPiBBc3N1bWluZyB0aGF0IHRoZSBuZXcg
-RVZNIHNpZ25hdHVyZSBpcyB3cml0dGVuIGxhc3QsIGFzIGxvbmcgYXMgdGhlcmUNCj4gaXMgYW4g
-SU1BIHhhdHRyLCB0aGVyZSBzaG91bGRuJ3QgYmUgYSBwcm9ibGVtIHdyaXRpbmcgdGhlIG5ldyBF
-Vk0NCj4gc2lnbmF0dXJlLg0KDQogICAgICAgIC8qIGZpcnN0IG5lZWQgdG8ga25vdyB0aGUgc2ln
-IHR5cGUgKi8NCiAgICAgICAgcmMgPSB2ZnNfZ2V0eGF0dHJfYWxsb2MoZGVudHJ5LCBYQVRUUl9O
-QU1FX0VWTSwgKGNoYXIgKiopJnhhdHRyX2RhdGEsIDAsDQogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIEdGUF9OT0ZTKTsNCiAgICAgICAgaWYgKHJjIDw9IDApIHsNCiAgICAgICAgICAg
-ICAgICBldm1fc3RhdHVzID0gSU5URUdSSVRZX0ZBSUw7DQogICAgICAgICAgICAgICAgaWYgKHJj
-ID09IC1FTk9EQVRBKSB7DQogICAgICAgICAgICAgICAgICAgICAgICByYyA9IGV2bV9maW5kX3By
-b3RlY3RlZF94YXR0cnMoZGVudHJ5KTsNCiAgICAgICAgICAgICAgICAgICAgICAgIGlmIChyYyA+
-IDApDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV2bV9zdGF0dXMgPSBJTlRFR1JJ
-VFlfTk9MQUJFTDsNCiAgICAgICAgICAgICAgICAgICAgICAgIGVsc2UgaWYgKHJjID09IDApDQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV2bV9zdGF0dXMgPSBJTlRFR1JJVFlfTk9Y
-QVRUUlM7IC8qIG5ldyBmaWxlICovDQoNCklmIEVWTV9BTExPV19NRVRBREFUQV9XUklURVMgaXMg
-Y2xlYXJlZCwgb25seSB0aGUgZmlyc3QgeGF0dHINCmNhbiBiZSB3cml0dGVuIChzdGF0dXMgSU5U
-RUdSSVRZX05PWEFUVFJTIGlzIG9rKS4gQWZ0ZXIsDQpldm1fZmluZF9wcm90ZWN0ZWRfeGF0dHJz
-KCkgcmV0dXJucyByYyA+IDAsIHNvIHRoZSBzdGF0dXMgaXMNCklOVEVHUklUWV9OT0xBQkVMLCB3
-aGljaCBpcyBub3QgaWdub3JlZCBieSBldm1fcHJvdGVjdF94YXR0cigpLg0KDQpSb2JlcnRvDQoN
-CkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2lu
-ZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQo=
+Hi Vitaly,
+
+Are there any corresponding qemu patches as well to enable new
+functionality. Wanted to test it.
+
+Thanks
+Vivek
+
+On Mon, May 11, 2020 at 06:47:44PM +0200, Vitaly Kuznetsov wrote:
+> Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
+> it seems that re-using #PF exception for a PV mechanism wasn't a great
+> idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
+> not present' events and normal APIC interrupts for 'page ready' events.
+> This series does the later.
+> 
+> Changes since RFC:
+> - Using #PF for 'page ready' is deprecated and removed [Paolo Bonzini]
+> - 'reason' field in 'struct kvm_vcpu_pv_apf_data' is not used for 'page ready'
+>   notifications and 'pageready_token' is not used for 'page not present' events
+>   [Paolo Bonzini]
+> - Renamed MSR_KVM_ASYNC_PF2 -> MSR_KVM_ASYNC_PF_INT [Peter Xu]
+> - Drop 'enabled' field from MSR_KVM_ASYNC_PF_INT [Peter Xu]
+> - Other minor changes supporting the above.
+> 
+> Vitaly Kuznetsov (8):
+>   Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and
+>     "Page Ready" exceptions simultaneously"
+>   KVM: x86: extend struct kvm_vcpu_pv_apf_data with token info
+>   KVM: introduce kvm_read_guest_offset_cached()
+>   KVM: x86: interrupt based APF page-ready event delivery
+>   KVM: x86: acknowledgment mechanism for async pf page ready
+>     notifications
+>   KVM: x86: announce KVM_FEATURE_ASYNC_PF_INT
+>   KVM: x86: Switch KVM guest to using interrupts for page ready APF
+>     delivery
+>   KVM: x86: drop KVM_PV_REASON_PAGE_READY case from
+>     kvm_handle_page_fault()
+> 
+>  Documentation/virt/kvm/cpuid.rst     |   6 ++
+>  Documentation/virt/kvm/msr.rst       | 106 ++++++++++++++------
+>  arch/s390/include/asm/kvm_host.h     |   2 +
+>  arch/x86/entry/entry_32.S            |   5 +
+>  arch/x86/entry/entry_64.S            |   5 +
+>  arch/x86/include/asm/hardirq.h       |   3 +
+>  arch/x86/include/asm/irq_vectors.h   |   6 +-
+>  arch/x86/include/asm/kvm_host.h      |   7 +-
+>  arch/x86/include/asm/kvm_para.h      |   6 ++
+>  arch/x86/include/uapi/asm/kvm_para.h |  11 ++-
+>  arch/x86/kernel/irq.c                |   9 ++
+>  arch/x86/kernel/kvm.c                |  42 ++++++--
+>  arch/x86/kvm/cpuid.c                 |   3 +-
+>  arch/x86/kvm/mmu/mmu.c               |  10 +-
+>  arch/x86/kvm/x86.c                   | 142 ++++++++++++++++++---------
+>  include/linux/kvm_host.h             |   3 +
+>  include/uapi/linux/kvm.h             |   1 +
+>  virt/kvm/async_pf.c                  |  10 ++
+>  virt/kvm/kvm_main.c                  |  19 +++-
+>  19 files changed, 295 insertions(+), 101 deletions(-)
+> 
+> -- 
+> 2.25.4
+> 
+
