@@ -6,113 +6,66 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C103C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB75C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDAF206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5705206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgELIx1 (ORCPT
+        id S1729265AbgELIxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:53:27 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:40183 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgELIx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:53:27 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MwQKr-1jIGtF0fwL-00sMSI; Tue, 12 May 2020 10:53:24 +0200
-Received: by mail-qt1-f173.google.com with SMTP id p12so10353330qtn.13;
-        Tue, 12 May 2020 01:53:23 -0700 (PDT)
-X-Gm-Message-State: AOAM531bPCd4rdVuHj9hareAQ+sWVeoFnGbSSKt/Qqoic1oyLGstidxL
-        B+liFQWhzNautxUYYln/ijaQql0/njVmfGoQwmY=
-X-Google-Smtp-Source: ABdhPJwWUHzxIPWAEFI/R+fzRRP8GfBwzpV+uSg5FS1J1qHipihkFrx8cQ+iXHbuwJ1oVqBkUQyCdCMp11cRcLaKWHI=
-X-Received: by 2002:ac8:6914:: with SMTP id e20mr5088655qtr.7.1589273602661;
- Tue, 12 May 2020 01:53:22 -0700 (PDT)
+        Tue, 12 May 2020 04:53:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40914 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgELIxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:53:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 05E73ABC7;
+        Tue, 12 May 2020 08:53:52 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] RISC-V Fixes for 5.7-rc5
+References: <mhng-81c83c19-6f5d-4ed1-a0bb-26accf4b7d3a@palmerdabbelt-glaptop1>
+        <CAHk-=win0EVU_GuO=GuJu3Ck0WG1B3+ub-CjncM3B1G9x5d9cw@mail.gmail.com>
+        <mvmr1vqkhxb.fsf@suse.de>
+        <CAHk-=wj8Cks7L2H9ToNWEMmqECYEfX0uyCXpW1OsZ+NAooi2Cw@mail.gmail.com>
+X-Yow:  Two LITTLE black dots and one BIG black dot...nice 'n' FLUFFY!!
+Date:   Tue, 12 May 2020 10:53:49 +0200
+In-Reply-To: <CAHk-=wj8Cks7L2H9ToNWEMmqECYEfX0uyCXpW1OsZ+NAooi2Cw@mail.gmail.com>
+        (Linus Torvalds's message of "Mon, 11 May 2020 12:04:09 -0700")
+Message-ID: <mvmftc5jzz6.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-References: <20200508095914.20509-1-grygorii.strashko@ti.com>
- <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
- <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com> <CAK8P3a0-6vRpHJugnUFhNNAALmqx4CUW9ffTOojxu5a80tAQTw@mail.gmail.com>
- <b0e2bd21-f670-f05a-6e23-4c6c75a94868@ti.com>
-In-Reply-To: <b0e2bd21-f670-f05a-6e23-4c6c75a94868@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 12 May 2020 10:53:06 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1JPRcvWV3XNdei7A0rXwMBqkspttH7Yxp3EdDEhZbdRg@mail.gmail.com>
-Message-ID: <CAK8P3a1JPRcvWV3XNdei7A0rXwMBqkspttH7Yxp3EdDEhZbdRg@mail.gmail.com>
-Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
- TI_CPTS_MOD workaround
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:j7ItOmWztybeeC7TlwXbh9MOl7ZMS/SNL+gD3CmVVZFXGwIoZbu
- Eq31FERMstxwsfsK2dzmjYpfQUNQuG6gUDpnVUJDJ+ai+ze7cBwDwR8pRazQ8yQkQyOfWBI
- ghQEXMOaKzXLUXPkkE6o6IpHXkSMR2d+UB3ilWnWNrcjF3OR5kuWRx9ktjYDzTP38DVTrp3
- u5Em5105wUfH0UJsWlBYw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mOfhyPR4MWs=:5G7GdlwxKWs2bHTxO0kr5+
- 7LUq+o/2epAEue+YMqEw9Y97VJjUd0HVe8ykIvrHNS5vkmac/0MgE63rbhRavqT/LOWOWvVnY
- 9K+BK2RtrNSwufBFk8ptN/FrNBZdRZKUzORmv5koZYGBoe2EkoOR3pHlr7Oud2MEz4r8HtzwG
- DZoWUto1x1RnztdlJPqGxrGuxptBq/TuOWTH6fQr+udW2N3ndzyfMKmmrAAEE0zbkVz79lqFq
- e92DMpuhZ57e3vpx56NUsMkym7QtnX/bioAkY0Ug6C9TwXElGMUKuX6hoylvonnIyskkKqx2/
- 7dJpdp12tw3Go2ZsHsorN4MRcxh2dlxvUc6Td2wNRLYXIW9KPfOqmXp08v+RmgbwCKkX1nv4p
- 6SWwBt1aeLiIPF92/0Om18aw630dvCEihfcYoZSyitGNB4it8KvVVHGhZCekRCI/7+fEa48Nx
- nVfQvPcfgJQa9DF4TiBHgA/QR1zonPHeUaLIkAiTSaHUKyovOGh+y3inMKwXgpruF9fQSBDbD
- ldxGtSHS6H/AmSBInEOq0CvT4W8/T0CDdoQrvGGA0caqpB9rAQwRra0rxCMZwDfFSoaSmp0zT
- RVgBKWe8BVQF2CEAydsrWZUZ9rPZy7T/M6ESroRhLXU7sgr7/dSlConALTSwc8eGNV/KTS664
- aEWyLbze2MJmZo7/N6gc30rco0gbmt32E9poLppH6QShZ/pWP/9/vI0GsiaUDkXuny6VceuZf
- 5soVCbCFoA/zTfECxFHbc8WjZcyP+UcXRQFqefdM9fperETV0WmB9jB+aoD0zGD9lFDFkqZDb
- rLm+UynrPproOFYGKigoQvDtKhyDSccE3VoN/5dd1rxfRrxN24=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:35 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> Hi Arnd,
->
-> On 08/05/2020 14:25, Arnd Bergmann wrote:
-> > On Fri, May 8, 2020 at 1:14 PM Grygorii Strashko
-> > <grygorii.strashko@ti.com> wrote:
-> >> On 08/05/2020 13:10, Arnd Bergmann wrote:
-> >>> On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
-> >
-> >>>> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
-> >>>> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
-> >>>> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
-> >>>> functions) _is_ enabled. So we end up compiling calls to functions that
-> >>>> don't exist, resulting in the linker errors.
-> >>>>
-> >>>> This patch fixes build errors and restores previous behavior by:
-> >>>>    - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
-> >>>>    - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
-> >>>
-> >>> I don't understand what IS_REACHABLE() is needed for once all the other
-> >>> changes are in place. I'd hope we can avoid that. Do you still see
-> >>> failures without
-> >>> that or is it just a precaution. I can do some randconfig testing on your patch
-> >>> to see what else might be needed to avoid IS_REACHABLE().
-> >>
-> >> I've not changed this part of original patch, but seems you're right.
-> >>
-> >> I can drop it and resend, but, unfortunately, i do not have time today for full build testing.
-> >
-> > I have applied to patch locally to my randconfig tree, with the IS_REACHABLE()
-> > changes taken out.
-> >
->
-> What will be the conclusion here?
+On Mai 11 2020, Linus Torvalds wrote:
 
-I have seen no other problems with it, please leave out the the IS_REACHABLE()
-changes and just use the dependencies.
+> Why is glibc doing it in the first place? Is it some historical thing
+> that is simply irrelevant on RISC-V simply because RISC-V doesn't have
+> that kind of history, perhaps?
 
-       Arnd
+It is completely generic.  Even new architectures become old over time
+and accumulate cruft.  The idea is that if you configure glibc with
+--enable-kernel=VERSION, it assumes that all syscalls from kernel
+VERSION are guaranteed to exist, and drops the fallbacks for those
+syscalls, or uses them in the first place (if no useful fallback
+existed).  From time to time the absolute minimum supported kernel
+version is increased (this happend the last time in 2017, when x86 and
+x86_64 moved the mininum from 2.6.32 to 3.2, after all other
+architectures did that step in 2016), which allows removing the fallback
+code that becomes obsolete.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
