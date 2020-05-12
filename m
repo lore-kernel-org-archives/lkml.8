@@ -2,304 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D86C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E2DC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B980206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E30820736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="P000BKk6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aiysLsC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgELN0o (ORCPT
+        id S1730034AbgELN1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
+        Tue, 12 May 2020 09:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729962AbgELN0Y (ORCPT
+        with ESMTP id S1727783AbgELN1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:26:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A822AC05BD0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:23 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id v12so15338740wrp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:23 -0700 (PDT)
+        Tue, 12 May 2020 09:27:41 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A3FC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:27:41 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id s186so11647371qkd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AT7F3lHkleJYJf6ArphPWyOpM56JVM5mHZcAwbWvMm4=;
-        b=P000BKk6kRS6mG4RDIUXyBsNyG/eZJ7AQO5s0MGLc9hZqyfuiPOjkEgCUQeQlwCNfy
-         t6Z76E48EStqfJcHbnHe6tz3Utgo5shjjcnpO/SHkfyY4vridZiMlOTrsS1RAZZrGNZp
-         0B1YMyWuTVN4SKkzRaM4hCXScc08y1KDSPKqsA5vGcEAl4vMtQsEmIQDtFujzYt9KmoZ
-         gbnVilFHiuszaPdiUjb+dw69N5JowJREEUy/Q5PWVid0GpPDEsq0qZn9XPIaa9OCnuFE
-         HVVtV3d+IZzYqKGNdgoQZUO1jj3T7wklGo5tIteFSWPbStk2VFDQVPeEFwm4HEXcztIc
-         fM+A==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hgJlpCzVnBpL1XV2wP4C/UIOKzLGdGv6rDaqtuPF5W8=;
+        b=aiysLsC1PNn+V2AotzxI/8raxwtN08rq5kT8VhWiKLEA0WlCRDxxhaSiU8kLQFaulo
+         20LQ+/OFvMhpnP8itGDI0+F+LH/qISdQm0a/euoduVSNYwdvux3WQx86Aw1ijDztzQDo
+         jCiwoqcdfoUj5mJd33NSRdZMgRGafgCxAnifbRUl1Au/Lxl5tOvPwX1iyQ65VuvUvYr7
+         muZT6Huzx5cMSIaiWRgOYXZ6uXMbencGm4ZQEAat0lP4uJ3uv4mMTVELSXNiob804g98
+         4vBO7bvhSSP/IhkMDCmikOumjhY6tHdSbjozjtVDNdvAQFkegaSrKxCd1U6985uHJ8pz
+         /Cwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AT7F3lHkleJYJf6ArphPWyOpM56JVM5mHZcAwbWvMm4=;
-        b=m95v+z6LD+gIuas5jrQXfkHi6pG/43nQ5sOR52ZOkO62GzOvupDn9pzSCQPFKe+lm5
-         W5R/hkFaNQudDyGbNOdaAUsjgfOkXLeWNLjPjgPm/pWcv7NTAlH2ptjiE+pboRLU2d3k
-         OjHjqpH/5ntN+49utbj6huqE8FTExGJVfLm4JDggyJ79o2kQxAKHTDDWjSPFqbyxydCS
-         MUuT35/g29dTqhKZTX/deDVzXxbZRQvtMaMo7QLtLs6d4nI7oxgbBO/Aw6YfEUwMfbzb
-         V/ASQ2HuQQoWL4yzte2LUWxEakpSYl/CRqV8f+VIotTgfM1DJYW6ufq2TZx47hTcaZIm
-         cA9A==
-X-Gm-Message-State: AGi0PubNpZXaHfvXutYCyjc+IJZsNKt594QS9mE9Q0nml++9+sIUkJqr
-        q30zwusW8XCRnY5C+fD8ZeKjVQ==
-X-Google-Smtp-Source: APiQypJAIR/wl5WZ+wRSFmBEv8f8mUMSkzbG4Uh2oabJsHfJxmHHcdTv7uE1/2v38jv8ReO8P2yPPw==
-X-Received: by 2002:adf:dcc8:: with SMTP id x8mr10712073wrm.404.1589289982214;
-        Tue, 12 May 2020 06:26:22 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id g15sm14441844wro.71.2020.05.12.06.26.20
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hgJlpCzVnBpL1XV2wP4C/UIOKzLGdGv6rDaqtuPF5W8=;
+        b=B+WWe77q/F9Xtp/3AV+cnc2am9YD8jsQWm5AP6jkJ5wUaGfK6/ZK+7UiimW2TVrISK
+         NKQgXL1rOhKa7hRbC0fiwmCj/6+sHGL38yVPxLx2YNY2lbw515sk9tTKqKvDQRCfXwmV
+         9TUHP7YunxtcGCm0AkKcuyj8b+wC2/H1cl8uTYz4F2nBfbL17cYNTorMMTXxeCYcmzTS
+         R5Eq6zs39x37GePSJE7c8ihx/0AhPsSYoseokJvJII+dODmx0wDYn+3mt5/oM5m8dhGK
+         FAn50lxtqdl7IYRjwbXWgDjxfbUSP5VaqDQcOafZQ3gNACzj2SkHGakFBYeqVXftAnTc
+         On5Q==
+X-Gm-Message-State: AGi0PuYp0+WtZNzOfOAt9yOO02LoWP0phoxWw+OlD9e8EtX8O6Nl7U2S
+        /d1lROtQy3yD18gH42nAd5LO4+z+1PM=
+X-Google-Smtp-Source: APiQypImA70y63CVdkACbNHwYhfu+kd+8Xr84h0nX1J/9/L4fia6ubX3gGzRT3EOWlMGJk2PzCEoHw==
+X-Received: by 2002:a37:943:: with SMTP id 64mr20230522qkj.14.1589290060929;
+        Tue, 12 May 2020 06:27:40 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 23sm10994962qkk.11.2020.05.12.06.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:26:21 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     srinivas.kandagatla@linaro.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] thermal: add support for the MCU controlled FAN on Khadas boards
-Date:   Tue, 12 May 2020 15:26:10 +0200
-Message-Id: <20200512132613.31507-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200512132613.31507-1-narmstrong@baylibre.com>
-References: <20200512132613.31507-1-narmstrong@baylibre.com>
+        Tue, 12 May 2020 06:27:40 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8D33E40AFD; Tue, 12 May 2020 10:27:37 -0300 (-03)
+Date:   Tue, 12 May 2020 10:27:37 -0300
+To:     Sandipan Das <sandipan@linux.ibm.com>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, leo.yan@linaro.org,
+        jolsa@kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf powerpc: Don't ignore sym-handling.c file
+Message-ID: <20200512132737.GH28888@kernel.org>
+References: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+ <88066ce0-f586-b88d-75b5-2706684818d7@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88066ce0-f586-b88d-75b5-2706684818d7@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
-on-board microcontroller.
+Em Mon, May 11, 2020 at 11:45:09PM +0530, Sandipan Das escreveu:
+> 
+> On 09/05/20 4:51 pm, Ravi Bangoria wrote:
+> > Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+> > removed powerpc specific sym-handling.c file from Build. This wasn't
+> > caught by build CI because all functions in this file are declared
+> > as __weak in common code. Fix it.
+> > 
+> > Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+> > Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+> > Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > ---
+> >  tools/perf/arch/powerpc/util/Build | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+> > index e5c9504f8586..e86e210bf514 100644
+> > --- a/tools/perf/arch/powerpc/util/Build
+> > +++ b/tools/perf/arch/powerpc/util/Build
+> > @@ -2,6 +2,7 @@ perf-y += header.o
+> >  perf-y += kvm-stat.o
+> >  perf-y += perf_regs.o
+> >  perf-y += mem-events.o
+> > +perf-y += sym-handling.o
+> >  
+> >  perf-$(CONFIG_DWARF) += dwarf-regs.o
+> >  perf-$(CONFIG_DWARF) += skip-callchain-idx.o
+> > 
+> 
+> Thanks for fixing this!
+> 
+> Acked-by: Sandipan Das <sandipan@linux.ibm.com>
 
-This implements the FAN control as thermal devices and as cell of the Khadas
-MCU MFD driver.
+Leo, Naveen, can you comment on this?
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/thermal/Kconfig          |  10 ++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
- 3 files changed, 185 insertions(+)
- create mode 100644 drivers/thermal/khadas_mcu_fan.c
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 91af271e9bb0..72b3960cc5ac 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -490,4 +490,14 @@ config SPRD_THERMAL
- 	help
- 	  Support for the Spreadtrum thermal sensor driver in the Linux thermal
- 	  framework.
-+
-+config KHADAS_MCU_FAN_THERMAL
-+	tristate "Khadas MCU controller FAN cooling support"
-+	depends on OF || COMPILE_TEST
-+	select MFD_CORE
-+	select REGMAP
-+	help
-+	  If you say yes here you get support for the FAN controlled
-+	  by the Microcontroller found on the Khadas VIM boards.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 8c8ed7b79915..460428c2122c 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -60,3 +60,4 @@ obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
- obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
- obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
- obj-$(CONFIG_SPRD_THERMAL)	+= sprd_thermal.o
-+obj-$(CONFIG_KHADAS_MCU_FAN_THERMAL)	+= khadas_mcu_fan.o
-diff --git a/drivers/thermal/khadas_mcu_fan.c b/drivers/thermal/khadas_mcu_fan.c
-new file mode 100644
-index 000000000000..044d4aba8be2
---- /dev/null
-+++ b/drivers/thermal/khadas_mcu_fan.c
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Khadas MCU Controlled FAN driver
-+ *
-+ * Copyright (C) 2020 BayLibre SAS
-+ * Author(s): Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/khadas-mcu.h>
-+#include <linux/regmap.h>
-+#include <linux/sysfs.h>
-+#include <linux/thermal.h>
-+
-+#define MAX_LEVEL 3
-+
-+struct khadas_mcu_fan_ctx {
-+	struct khadas_mcu *mcu;
-+	unsigned int level;
-+	struct thermal_cooling_device *cdev;
-+};
-+
-+static int khadas_mcu_fan_set_level(struct khadas_mcu_fan_ctx *ctx,
-+				    unsigned int level)
-+{
-+	int ret;
-+
-+	ret = regmap_write(ctx->mcu->map, KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
-+			   level);
-+	if (ret)
-+		return ret;
-+
-+	ctx->level = level;
-+
-+	return 0;
-+}
-+
-+static int khadas_mcu_fan_get_max_state(struct thermal_cooling_device *cdev,
-+					unsigned long *state)
-+{
-+	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	*state = MAX_LEVEL;
-+
-+	return 0;
-+}
-+
-+static int khadas_mcu_fan_get_cur_state(struct thermal_cooling_device *cdev,
-+					unsigned long *state)
-+{
-+	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-+
-+	if (!ctx)
-+		return -EINVAL;
-+
-+	*state = ctx->level;
-+
-+	return 0;
-+}
-+
-+static int
-+khadas_mcu_fan_set_cur_state(struct thermal_cooling_device *cdev,
-+			     unsigned long state)
-+{
-+	struct khadas_mcu_fan_ctx *ctx = cdev->devdata;
-+
-+	if (!ctx || (state > MAX_LEVEL))
-+		return -EINVAL;
-+
-+	if (state == ctx->level)
-+		return 0;
-+
-+	return khadas_mcu_fan_set_level(ctx, state);
-+}
-+
-+static const struct thermal_cooling_device_ops khadas_mcu_fan_cooling_ops = {
-+	.get_max_state = khadas_mcu_fan_get_max_state,
-+	.get_cur_state = khadas_mcu_fan_get_cur_state,
-+	.set_cur_state = khadas_mcu_fan_set_cur_state,
-+};
-+
-+static int khadas_mcu_fan_probe(struct platform_device *pdev)
-+{
-+	struct khadas_mcu *mcu = dev_get_drvdata(pdev->dev.parent);
-+	struct thermal_cooling_device *cdev;
-+	struct device *dev = &pdev->dev;
-+	struct khadas_mcu_fan_ctx *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+	ctx->mcu = mcu;
-+	platform_set_drvdata(pdev, ctx);
-+
-+	cdev = devm_thermal_of_cooling_device_register(dev->parent,
-+			dev->parent->of_node, "khadas-mcu-fan", ctx,
-+			&khadas_mcu_fan_cooling_ops);
-+	if (IS_ERR(cdev)) {
-+		ret = PTR_ERR(cdev);
-+		dev_err(dev,
-+				"Failed to register khadas-mcu-fan as cooling device: %d\n",
-+				ret);
-+		return ret;
-+	}
-+	ctx->cdev = cdev;
-+	thermal_cdev_update(cdev);
-+
-+	return 0;
-+}
-+
-+static int khadas_mcu_fan_disable(struct device *dev)
-+{
-+	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-+	unsigned int level_save = ctx->level;
-+	int ret;
-+
-+	ret = khadas_mcu_fan_set_level(ctx, 0);
-+	if (ret)
-+		return ret;
-+
-+	ctx->level = level_save;
-+
-+	return 0;
-+}
-+
-+static void khadas_mcu_fan_shutdown(struct platform_device *pdev)
-+{
-+	khadas_mcu_fan_disable(&pdev->dev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int khadas_mcu_fan_suspend(struct device *dev)
-+{
-+	return khadas_mcu_fan_disable(dev);
-+}
-+
-+static int khadas_mcu_fan_resume(struct device *dev)
-+{
-+	struct khadas_mcu_fan_ctx *ctx = dev_get_drvdata(dev);
-+
-+	return khadas_mcu_fan_set_level(ctx, ctx->level);
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(khadas_mcu_fan_pm, khadas_mcu_fan_suspend,
-+			 khadas_mcu_fan_resume);
-+
-+static const struct platform_device_id khadas_mcu_fan_id_table[] = {
-+	{ .name = "khadas-mcu-fan-ctrl", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, khadas_mcu_fan_id_table);
-+
-+static struct platform_driver khadas_mcu_fan_driver = {
-+	.probe		= khadas_mcu_fan_probe,
-+	.shutdown	= khadas_mcu_fan_shutdown,
-+	.driver	= {
-+		.name		= "khadas-mcu-fan-ctrl",
-+		.pm		= &khadas_mcu_fan_pm,
-+	},
-+	.id_table	= khadas_mcu_fan_id_table,
-+};
-+
-+module_platform_driver(khadas_mcu_fan_driver);
-+
-+MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-+MODULE_DESCRIPTION("Khadas MCU FAN driver");
-+MODULE_LICENSE("GPL");
--- 
-2.22.0
-
+- Arnaldo
