@@ -2,143 +2,171 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437DC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00387C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C122072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE992072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfrRAg6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgELE6x (ORCPT
+        id S1728719AbgELE74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 00:58:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11099 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgELE6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 00:58:52 -0400
-IronPort-SDR: xqxKEFYtPAKOLXCgSCBLXlLCVROlXgXhgKjY7wDcwOLp8yFoGbZ5EkMzWLPhyZtVk3kBhV52jn
- kP6bzRKFGBKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 21:58:52 -0700
-IronPort-SDR: 5EJmq3tbR/B4coRN78BIC3r1y2gMm90yEVNXU5ahNh29m1gJFyxO5YFeCXgQ7I8rI+0Sm4pkBA
- YVTcgWpVUdVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
-   d="scan'208";a="286511600"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
-  by fmsmga004.fm.intel.com with ESMTP; 11 May 2020 21:58:49 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v10 08/11] KVM: x86/pmu: Add LBR feature emulation via
- guest LBR event
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wei.w.wang@intel.com,
-        ak@linux.intel.com
-References: <20200423081412.164863-1-like.xu@linux.intel.com>
- <20200423081412.164863-9-like.xu@linux.intel.com>
- <20200424121626.GB20730@hirez.programming.kicks-ass.net>
- <87abf620-d292-d997-c9be-9a5d2544f3fa@linux.intel.com>
- <20200508130931.GE5298@hirez.programming.kicks-ass.net>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <43e093a5-61fc-815e-bec8-2a11c27d08d1@intel.com>
-Date:   Tue, 12 May 2020 12:58:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200508130931.GE5298@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 12 May 2020 00:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725814AbgELE7z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 00:59:55 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B0DC061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 21:59:54 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id g4so11804002ybf.21
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 21:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=wTMtR6SinjsfSneLfEmzXkUvLzSb3s46ODVv49BzMq4=;
+        b=gfrRAg6HGRG/LTUkmM7Q9ttYyM+8mzucwFcrUkPcW3ZJHVWHiToeUeu1CcH4rvUCQJ
+         3mF7k9PPMUnt906rf2JagbXdLXzgtG/ypxsjndr+mzLfDWW0Kvcp12LqZUuEX0/TzJaV
+         pBTrnuyeK8FFXecWBj5iA5NWIY+vGYzpKjfc/rQLCb8FhAJqlanV3dAmtIUp0MubTC/G
+         ld484k0DS904lpBVTzeO83f9X+PsekabZ2DPshX1izSuRONCIIGmwzc8aRo0XKPAYfV7
+         3SxdUtfZf9kJRyrbM/my5DTXTbFjAUDHP1wIxX7lYX3ggbtfcNfNmQV1ETDmj/m90hmi
+         NdNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=wTMtR6SinjsfSneLfEmzXkUvLzSb3s46ODVv49BzMq4=;
+        b=XPTUAvKcBdIlyCaGcP/mLEydsGRG7USEPMbjW75a0zjzTN199tSGJGyreprQOYavn7
+         3HbvDLRW3dT0Eb5mGmEDGxLUqfawOxsBxvw70cbeQmjSUBzk5ZSr/g8+s+Fxa12NYUfo
+         WMSprkVN6BY3dJVlsam7n2JO72lpJOb7k1hV3280gsjbARA9Kh8Y+DgLjnLYmmEGcEwZ
+         8jfs9vy5r5s1AiHFgK8vYmfGWM1wv5BxIqG4SXaoTiaUkifRXpsBvrKIiwvobDliGn0r
+         Loq61gqULj0WLAVDAGjsj7u0NVysSSMmBM0CGZKkDcoWRZvgNAojCWKetdg/Se+zMKqA
+         cigQ==
+X-Gm-Message-State: AGi0PuZWLdbp6pqPqaHwiMSs7yvJoZuTDVw79+Hw2f0RBloQbjD7EZn+
+        cd25ebLlLT6AUTmeWhX6h8kyqp5inP+8
+X-Google-Smtp-Source: APiQypK4W8IIdmnhxjuRK4vWBSaU8V84q0u4mcblA5POpheyVAwREoSiRrBRXNdt9pMAvUHmRWvqZsPq0pJY
+X-Received: by 2002:a25:3207:: with SMTP id y7mr17701571yby.463.1589259593405;
+ Mon, 11 May 2020 21:59:53 -0700 (PDT)
+Date:   Tue, 12 May 2020 14:59:36 +1000
+In-Reply-To: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+Message-Id: <20200512145930.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+Mime-Version: 1.0
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH] perf record: Use an eventfd to wakeup when done
+From:   Anand K Mistry <amistry@google.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Anand K Mistry <amistry@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/8 21:09, Peter Zijlstra wrote:
-> On Mon, Apr 27, 2020 at 11:16:40AM +0800, Like Xu wrote:
->> On 2020/4/24 20:16, Peter Zijlstra wrote:
->>> And I suppose that is why you need that horrible:
->>> needs_guest_lbr_without_counter() thing to begin with.
->> Do you suggest to use event->attr.config check to replace
->> "needs_branch_stack(event) && is_kernel_event(event) &&
->> event->attr.exclude_host" check for guest LBR event ?
-> That's what the BTS thing does.
-Thanks, I'll apply it.
->
->>> Please allocate yourself an event from the pseudo event range:
->>> event==0x00. Currently we only have umask==3 for Fixed2 and umask==4
->>> for Fixed3, given you claim 58, which is effectively Fixed25,
->>> umask==0x1a might be appropriate.
->> OK, I assume that adding one more field ".config = 0x1a00" is
->> efficient enough for perf_event_attr to allocate guest LBR events.
-> Uh what? The code is already setting .config. You just have to change it
-> do another value.
-Thanks, I'll apply it.
->
->>> Also, I suppose we need to claim 0x0000 as an error, so that other
->>> people won't try this again.
->> Does the following fix address your concern on this ?
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 2405926e2dba..32d2a3f8c51f 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -498,6 +498,9 @@ int x86_pmu_max_precise(void)
->>
->>   int x86_pmu_hw_config(struct perf_event *event)
->>   {
->> +       if (!unlikely(event->attr.config & X86_ARCH_EVENT_MASK))
->> +               return -EINVAL;
->> +
->>          if (event->attr.precise_ip) {
->>                  int precise = x86_pmu_max_precise();
-> That wouldn't work right for AMD. But yes, something like that.
-Sure, I may figure it out and leave it in another thread.
->
->>> Also, what happens if you fail programming due to a conflicting cpu
->>> event? That pinned doesn't guarantee you'll get the event, it just means
->>> you'll error instead of getting RR.
->>>
->>> I didn't find any code checking the event state.
->>>
->> Error instead of RR is expected.
->>
->> If the KVM fails programming due to a conflicting cpu event
->> the LBR registers will not be passthrough to the guest,
->> and KVM would return zero for any guest LBR records accesses
->> until the next attempt to program the guest LBR event.
->>
->> Every time before cpu enters the non-root mode where irq is
->> disabled, the "event-> oncpu! =-1" check will be applied.
->> (more details in the comment around intel_pmu_availability_check())
->>
->> The guests administer is supposed to know the result of guest
->> LBR records is inaccurate if someone is using LBR to record
->> guest or hypervisor on the host side.
->>
->> Is this acceptable to you？
->>
->> If there is anything needs to be improved, please let me know.
-> It might be nice to emit a pr_warn() or something on the host when this
-> happens. Then at least the host admin can know he wrecked things for
-> which guest.
-Sure, I will use pr_warn () and indicate which guest it is.
+The setting and checking of 'done' contains a rare race where the signal
+handler setting 'done' is run after checking to break the loop, but
+before waiting in evlist__poll(). In this case, the main loop won't wake
+up until either another signal is sent, or the perf data fd causes a
+wake up.
 
-If you have more comments on the patchset, please let me know.
-If not, I'll spin the next version based on your current feedback.
+The following simple script can trigger this condition (but you might
+need to run it for several hours):
+for ((i = 0; i >= 0; i++)) ; do
+  echo "Loop $i"
+  delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
+  ./perf record -- sleep 30000000 >/dev/null&
+  pid=$!
+  sleep $delay
+  kill -TERM $pid
+  echo "PID $pid"
+  wait $pid
+done
 
-Thanks,
-Like Xu
+At some point, the loop will stall. Adding logging, even though perf has
+received the SIGTERM and set 'done = 1', perf will remain sleeping until
+a second signal is sent.
+
+Signed-off-by: Anand K Mistry <amistry@google.com>
+
+---
+
+ tools/perf/builtin-record.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe90469..099ecaa66732a2 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -53,6 +53,7 @@
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
++#include <sys/eventfd.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+ #include <sys/types.h>
+@@ -518,15 +519,28 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ 
+ static volatile int signr = -1;
+ static volatile int child_finished;
++static int done_fd = -1;
+ 
+ static void sig_handler(int sig)
+ {
++	u64 tmp = 1;
+ 	if (sig == SIGCHLD)
+ 		child_finished = 1;
+ 	else
+ 		signr = sig;
+ 
+ 	done = 1;
++
++	/*
++	 * It is possible for this signal handler to run after done is checked
++	 * in the main loop, but before the perf counter fds are polled. If this
++	 * happens, the poll() will continue to wait even though done is set,
++	 * and will only break out if either another signal is received, or the
++	 * counters are ready for read. To ensure the poll() doesn't sleep when
++	 * done is set, use an eventfd (done_fd) to wake up the poll().
++	 */
++	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
++		pr_err("failed to signal wakeup fd\n");
+ }
+ 
+ static void sigsegv_handler(int sig)
+@@ -1424,6 +1438,17 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	int fd;
+ 	float ratio = 0;
+ 
++	done_fd = eventfd(0, EFD_NONBLOCK);
++	if (done_fd < 0) {
++		pr_err("Failed to create wakeup eventfd, error: %m\n");
++		return -1;
++	}
++	err = evlist__add_pollfd(rec->evlist, done_fd);
++	if (err < 0) {
++		pr_err("Failed to add wakeup eventfd to poll list\n");
++		return -1;
++	}
++
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
+-- 
+2.26.2.645.ge9eca65c58-goog
 
