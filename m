@@ -2,159 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0D5CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AEC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 588CA206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pFpBECoq"
+	by mail.kernel.org (Postfix) with ESMTP id 3688B206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbgELPzC (ORCPT
+        id S1730636AbgELPzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgELPzC (ORCPT
+        Tue, 12 May 2020 11:55:31 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:47020 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgELPzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:55:02 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16588C061A0C;
-        Tue, 12 May 2020 08:55:02 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id 79so5317865iou.2;
-        Tue, 12 May 2020 08:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=10/vEoe7VBVk5KEfSmgUPG75Mc6zuT9zb1kXjVA8dKs=;
-        b=pFpBECoqEZGZuJmgrImz99Ao2hqlZMHq4Hlqed66WIrR13zPXHciKlFM2dPbemLcov
-         yEPHRrojVStub+Ciu68iHgksvz0yeoYP5RtYapE4G341MC9fgx+T/iyA3Hj/j3oj+M2d
-         RqDT32ttmrwxaDtFfsliwUU1wxEoeVuC1Frql7PMtMz5MHxy2Ajm3bF1JQc9TluIhuEB
-         7jmjN2W6WCW3dLnly2ZvApT7aiPX6o08xZSmEzeK8oSE3UYxwueb5RPMitjiL9UJqnah
-         4PXAZytMJbKhj+XK1WnqOK1U43/YAvtd6za3N3LLYmQaRX7s1D+KqkEVe35dcUnH7QBx
-         WSPw==
+        Tue, 12 May 2020 11:55:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v5so6910898lfp.13;
+        Tue, 12 May 2020 08:55:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=10/vEoe7VBVk5KEfSmgUPG75Mc6zuT9zb1kXjVA8dKs=;
-        b=G5KHet6CbEdboqiS/XtOOtEqooclNdA8bSPGyOOHDjLN+lMzDgIJfMlOfrbR4Gd8U+
-         an3pDHqSAubMH7aKHwf+HdVtRvE159GW8ZPpRszTMN/u2poKBWac2FPjsZ8iOjFhGUKQ
-         2LvAxecpY/xH7ct5FvHz6ldvhW3F368FnAT+94oU8t9xh5bfSxEsymaM9dXIgnej0AJ1
-         6CqklZFKXUbZYkJew9KiHiM5nSa63mKbu44Tb+e5G4m9Urt/yHYvGxKGJVBFGPK7DmL/
-         mWl/YOuKE7m25SuaczpZwrNP2Don+RCjVucqKLdwJ0tSBStHWDr1Xj0XRuiNEhT9rpD9
-         lvAw==
-X-Gm-Message-State: AGi0PuajkYiDXK76wVOlPybCVIVGCtDuNlNzbk3MXtKo4bOm0zPju9Pg
-        BDlgzQO7i3rPG2I2e3Ja8pomBaQmm/Cg0Hw41O8=
-X-Google-Smtp-Source: APiQypL4tTqanNPS6ku8FraQwgqCby47RTEW4wymxDqadJUYILPr9cb5jt1UJ3GerTcj7eRrgLbPrGP870RtDGs3ocI=
-X-Received: by 2002:a5d:88d3:: with SMTP id i19mr21645852iol.194.1589298901363;
- Tue, 12 May 2020 08:55:01 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=g48m6UATo6ittbc8zmiHd+nCnE4Z2O4SkQw3uHErgIM=;
+        b=BNDQwbeY1ZDB10lw58fYQ4j+WD2b1yT+ZA4XOFxYjR9B3XhQ/KQxqC6d3iJLvqX6dO
+         y2k3znKXusqknDB1c5AwQupy82nUEeH+Y0wnpE44Ci2IcLkDb7j9pBBOoZw9LMC9+8Xf
+         dhqZlIBoL2n2vQQ00Voc+SoFydTgnzjnJdfIGYBWfKpU4uV1pJMG9aWgS/cgY34yfHv3
+         tLNRFG8VEJPlxfg17WHT7b2sETzUsfDWdhu2F/JQ7VPRkYif4hXMSGu9crVBVHaV7kEt
+         SDS30T59mKs1DfvUWv4WPCibdC3uMGQHDiuRz7k/1CbKwzSnhipDI3pX0zYN/qFy3Dkq
+         XcQg==
+X-Gm-Message-State: AOAM532vvsOZxd7kTV5ONBf7xyEnfG1D5XPI6x5l/KTjUGRr1Ejn/VG2
+        ssrAqAiaCwR29Wl2RmZ1+3geYzlObjg=
+X-Google-Smtp-Source: ABdhPJxOEeaibVyQ+fGo2bsT6JSeBbnWrXQI8EIzb9lT3B22F/auyapxxqP13EU50WcufaUEdXJtOA==
+X-Received: by 2002:a05:6512:110d:: with SMTP id l13mr14160283lfg.93.1589298927759;
+        Tue, 12 May 2020 08:55:27 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.130.150])
+        by smtp.gmail.com with ESMTPSA id h6sm13584444ljj.29.2020.05.12.08.55.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 08:55:27 -0700 (PDT)
+Subject: Re: [GIT PULL] Floppy cleanups for next
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <8d8cb63b-e1ff-ddef-a6e9-8f7adb21be60@linux.com>
+ <51b29c15-39ea-b39e-55d8-ffb578661c44@kernel.dk>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <0c96d18a-3293-7c52-07b9-d59e3dd2058a@linux.com>
+Date:   Tue, 12 May 2020 18:55:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200508092247.132147-1-ubizjak@gmail.com> <158929264101.390.18239205970315804831.tip-bot2@tip-bot2>
- <CAFULd4bZLkME4kn9bmbOBMtd+ZpNnsH-w8a6tPdtmpV57WSHtw@mail.gmail.com> <20200512151522.GB6859@zn.tnic>
-In-Reply-To: <20200512151522.GB6859@zn.tnic>
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Tue, 12 May 2020 17:54:49 +0200
-Message-ID: <CAFULd4bP4SPZDafsp-sqH2GP1mWxfBiBRA9wp8UrmkPZnfManQ@mail.gmail.com>
-Subject: Re: [tip: x86/cpu] x86/cpu: Use INVPCID mnemonic in invpcid.h
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <51b29c15-39ea-b39e-55d8-ffb578661c44@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 5:15 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, May 12, 2020 at 04:26:37PM +0200, Uros Bizjak wrote:
-> > Actually, the order was correct for AT&T syntax in the original patch.
-> >
-> > The insn template for AT&T syntax goes:
-> >
-> > insn arg2, arg1, arg0
-> >
-> > where rightmost arguments are output operands.
-> >
-> > The operands in asm template go
-> >
-> > asm ("insn template" : output0, output1 : input0, input1 : clobbers)
-> >
-> > so, in effect:
-> >
-> > asm ("insn template" : arg0, arg1 : arg2, arg3: clobbers)
-> >
-> > As you can see, the operand order in insn tempate is reversed for AT&T
-> > syntax. I didn't notice the reversal of operands in your improvement.
->
-> Your version had:
->
-> +       asm volatile ("invpcid %1, %0"
-> +                     : : "r" (type), "m" (desc) : "memory");
->
-> with "type" being the 0th operand and "desc" being the 1st operand in
-> the input operands list.
 
-Correct.
 
-> The order of the operands after the "invpcid" mnemonic are the other way
-> around though: you first have %1 which is "desc" and then %0 which is
-> the type.
+On 5/12/20 6:23 PM, Jens Axboe wrote:
+> Denis, can you rebase on my for-5.8/drivers branch?
 
-Also correct. Because AT&T has right-to-left operand order, while asm
-statement has left-to-right operand order.
+Yes, of course. I will resend the pull request.
 
-> I simply swapped the arguments order in the input operands list, after
-> the second ':'
->
-> +       asm volatile("invpcid %[desc], %[type]"
-> +                    :: [desc] "m" (desc), [type] "r" (type) : "memory");
->
-> so that "desc" comes first and "type" second when reading from
-> left-to-right in both
-
-But this is not correct, AT&T insn template should have right-to-left order.
-
-> 1. *after* the "invpcid" mnemonic and
-> 2. in the input operands list, after the second ':'.
-
-This is not the case throughout the kernel source. Please see for
-example sync_bitops, where:
-
-    asm volatile("lock; " __ASM_SIZE(bts) " %1,%0"
-             : "+m" (ADDR)
-             : "Ir" (nr)
-             : "memory");
-
-(to support my claim, I tried to find instruction with two input
-operands; there are some in KVM, but these were also written by
-myself).
-
-> And since I'm using the symbolic operand names, then the order just
-> works because looking at a before-and-after thing doesn't show any
-> opcode differences:
-
-Symbolic operands are agnostic to the position in the asm clause, so
-it really doesn't matter much. It just doesn't feel right, when other
-cases follow different order.
-
-> $ diff -suprN /tmp/before /tmp/after
-> Files /tmp/before and /tmp/after are identical
-
-Sure, otherwise assembler would complain.
-
-> Makes sense?
-
-Well, I don't want to bikeshed around this anymore, so any way is good.
-
-Uros.
+Denis
