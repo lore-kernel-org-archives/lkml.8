@@ -2,217 +2,198 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18AFC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FCDC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA067206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFB020575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZpO+oii6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pg98rEQi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgELJIx (ORCPT
+        id S1728912AbgELJNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        Tue, 12 May 2020 05:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725776AbgELJIw (ORCPT
+        by vger.kernel.org with ESMTP id S1725776AbgELJNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:08:52 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CACC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:08:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id m12so15963706wmc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:08:51 -0700 (PDT)
+        Tue, 12 May 2020 05:13:18 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771A7C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:13:18 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id d22so3879408lfm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jzP01IXQ5eGzmClfzRrzEt9a5pXaL37GUGmE/8HDFqg=;
-        b=ZpO+oii6BJ0922ZWi/doBJJdNU8MgvEFRJGPPrgqvjItQyjxIAEt6nldriLjMMSi6E
-         cbddUHWC+jMAlDoWDHnFidnZzW7kAgZtRQn4SlOFf8XMusi/It2bVulVLr2VvFLt+29A
-         b6wKDwd90FXsjiUfeuJIVZ2kW6M1QNATTTUqo=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H5NxWnB44BHoFTIR9JnXXiSNJPnbv0oKAagOIOpcjIg=;
+        b=pg98rEQi9dz8iVjoQCSsE9HzyrjoVPvG8UfFtLCrLIB1an3j1kvOIh8NeQAIo3YTc2
+         9nVyyShC/pM1Mc1Mp0bj3xRokSkQ1HUL+HS+hgvs+/MoNFpV2LGsX/7zUpieOutmjwPp
+         D/kj5jDeM0THsBdKs7IPrldqZjcPEQ/l7e6ZJuQW5bkFoqaydZVfS717yy5yTUagjMvs
+         Dy0GoonxfUkj1t1reiOA8O2WQAFDod00DFeTiqsXihCRKrzXejXRa4Q9Gtnibdb3cAuQ
+         z2hu3MKxNq9UKchB++UDFLCTFPc3EJW2FRniFJlHKP3Yo1nCLcMVfPXzSS5YvVjWumKR
+         S5Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=jzP01IXQ5eGzmClfzRrzEt9a5pXaL37GUGmE/8HDFqg=;
-        b=ORi0WLB+IcG2FC7Jvb3IFlzAfmJqAg5NuNMSwtnJeXY+KAKYTnOf6NJUYxnQPC34s5
-         O4kYWBdO0Q7n+C3Z5Cv5SsydODGZGT86gWcwSzuxHeLHnukivrmviczZtDtyNISFJTPf
-         IKrgc0OhHIsAa2iSLvbD6rQ9gNFAguzzMSIkmtgAjZUtialwgfR2cobwNbKXxtypPV+D
-         /kOiurodO5OjHNBtQ2RZasobjQliE9qzNMhwyX+bnXo81bRYISDRm0Rhz3cqDG4r3AmR
-         ftBDk+wrdiXsab145Sn8RahtJPWHYRVWm+cNUsUIU9yvlAbLBpc03wNrzqXzu1k8/XmB
-         2FtQ==
-X-Gm-Message-State: AGi0PuYilAfkE9QCxYmrAR8N8niAW3+uGvxVgbJT4xVCfneOxEnmwEcd
-        9QU4od7FEujpau9K03L+yO6uwA==
-X-Google-Smtp-Source: APiQypIhpsRgAW4Qev4lJv2wjqsih/+HjYzRewf0be+k5nEHYH6mVDG9QApT/mcRCdYD95LJWrPJxQ==
-X-Received: by 2002:a1c:b604:: with SMTP id g4mr12839616wmf.103.1589274530333;
-        Tue, 12 May 2020 02:08:50 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z1sm30605053wmf.15.2020.05.12.02.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:08:49 -0700 (PDT)
-Date:   Tue, 12 May 2020 11:08:47 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
-Message-ID: <20200512090847.GF206103@phenom.ffwll.local>
-Mail-Followup-To: Chris Wilson <chris@chris-wilson.co.uk>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-3-daniel.vetter@ffwll.ch>
- <158927426244.15653.14406159524439944950@build.alporthouse.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H5NxWnB44BHoFTIR9JnXXiSNJPnbv0oKAagOIOpcjIg=;
+        b=pviQMv3hGopytrcJxYxcMkB15ivP5hYZGkGErR6R5TQYmZnm7rmDMG8tuEBqSYP1c7
+         8rj1ZJUGmNXGSPPPsxh11vtnfeCaVWlovl3K+ZrDWv3cfaOmW+A5x6W8e2lSTGlz4E3e
+         9n1L7PMnP1NAU17ILNPKzHdZ/Y0RLZRNTyKxHTj9yo41aNRAPmF64XdCVpIJ8s3NksNE
+         4Q1mT26TP75y6oPI2sPJ8IrXXDZiUCjfqG086WycX/IM0E8pkQwhepV4Xxoe5BOwawv9
+         1dsnTVaZrTFShhavQ/GY55G0ldOHIv8DkCQqcHdobtnISRZhXHcm0/8OSn9m293WYlIi
+         JODg==
+X-Gm-Message-State: AOAM533QQbQ2RQzFLQ9WNZ6VyDjGALs0Oo0WK/nl9wywHo1ZVg/pCkRe
+        +v/p3w7rvNc58o/ezUoxuf99dA3P4ljg00f/PHU=
+X-Google-Smtp-Source: ABdhPJzziA/kF+1nDgz2ztBeSseRDnDo7XcCF7/RMN/HvUjOwe2XANHmyliMhUoumxd9Q5AsfSoOZYwg4Xqu2ltVmA4=
+X-Received: by 2002:a19:c6c5:: with SMTP id w188mr13672563lff.65.1589274796910;
+ Tue, 12 May 2020 02:13:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <158927426244.15653.14406159524439944950@build.alporthouse.com>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+References: <20200509031919.9006-1-steves.lee@maximintegrated.com> <20200511110346.GE8216@sirena.org.uk>
+In-Reply-To: <20200511110346.GE8216@sirena.org.uk>
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+Date:   Tue, 12 May 2020 18:13:05 +0900
+Message-ID: <CABff4NQXs622x1X6ZvNABHNZoTMS57f4Y5sdo1Cng3JeTgboCw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: max98390: Added Amplifier Driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        ckeepax@opensource.cirrus.com, geert@linux-m68k.org,
+        rf@opensource.wolfsonmicro.com, shumingf@realtek.com,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        ryan.lee.maxim@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:04:22AM +0100, Chris Wilson wrote:
-> Quoting Daniel Vetter (2020-05-12 09:59:29)
-> > Design is similar to the lockdep annotations for workers, but with
-> > some twists:
-> > 
-> > - We use a read-lock for the execution/worker/completion side, so that
-> >   this explicit annotation can be more liberally sprinkled around.
-> >   With read locks lockdep isn't going to complain if the read-side
-> >   isn't nested the same way under all circumstances, so ABBA deadlocks
-> >   are ok. Which they are, since this is an annotation only.
-> > 
-> > - We're using non-recursive lockdep read lock mode, since in recursive
-> >   read lock mode lockdep does not catch read side hazards. And we
-> >   _very_ much want read side hazards to be caught. For full details of
-> >   this limitation see
-> > 
-> >   commit e91498589746065e3ae95d9a00b068e525eec34f
-> >   Author: Peter Zijlstra <peterz@infradead.org>
-> >   Date:   Wed Aug 23 13:13:11 2017 +0200
-> > 
-> >       locking/lockdep/selftests: Add mixed read-write ABBA tests
-> > 
-> > - To allow nesting of the read-side explicit annotations we explicitly
-> >   keep track of the nesting. lock_is_held() allows us to do that.
-> > 
-> > - The wait-side annotation is a write lock, and entirely done within
-> >   dma_fence_wait() for everyone by default.
-> > 
-> > - To be able to freely annotate helper functions I want to make it ok
-> >   to call dma_fence_begin/end_signalling from soft/hardirq context.
-> >   First attempt was using the hardirq locking context for the write
-> >   side in lockdep, but this forces all normal spinlocks nested within
-> >   dma_fence_begin/end_signalling to be spinlocks. That bollocks.
-> > 
-> >   The approach now is to simple check in_atomic(), and for these cases
-> >   entirely rely on the might_sleep() check in dma_fence_wait(). That
-> >   will catch any wrong nesting against spinlocks from soft/hardirq
-> >   contexts.
-> > 
-> > The idea here is that every code path that's critical for eventually
-> > signalling a dma_fence should be annotated with
-> > dma_fence_begin/end_signalling. The annotation ideally starts right
-> > after a dma_fence is published (added to a dma_resv, exposed as a
-> > sync_file fd, attached to a drm_syncobj fd, or anything else that
-> > makes the dma_fence visible to other kernel threads), up to and
-> > including the dma_fence_wait(). Examples are irq handlers, the
-> > scheduler rt threads, the tail of execbuf (after the corresponding
-> > fences are visible), any workers that end up signalling dma_fences and
-> > really anything else. Not annotated should be code paths that only
-> > complete fences opportunistically as the gpu progresses, like e.g.
-> > shrinker/eviction code.
-> > 
-> > The main class of deadlocks this is supposed to catch are:
-> > 
-> > Thread A:
-> > 
-> >         mutex_lock(A);
-> >         mutex_unlock(A);
-> > 
-> >         dma_fence_signal();
-> > 
-> > Thread B:
-> > 
-> >         mutex_lock(A);
-> >         dma_fence_wait();
-> >         mutex_unlock(A);
-> > 
-> > Thread B is blocked on A signalling the fence, but A never gets around
-> > to that because it cannot acquire the lock A.
-> > 
-> > Note that dma_fence_wait() is allowed to be nested within
-> > dma_fence_begin/end_signalling sections. To allow this to happen the
-> > read lock needs to be upgraded to a write lock, which means that any
-> > other lock is acquired between the dma_fence_begin_signalling() call and
-> > the call to dma_fence_wait(), and still held, this will result in an
-> > immediate lockdep complaint. The only other option would be to not
-> > annotate such calls, defeating the point. Therefore these annotations
-> > cannot be sprinkled over the code entirely mindless to avoid false
-> > positives.
-> > 
-> > v2: handle soft/hardirq ctx better against write side and dont forget
-> > EXPORT_SYMBOL, drivers can't use this otherwise.
-> > 
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian König <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > ---
-> >  drivers/dma-buf/dma-fence.c | 53 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/dma-fence.h   | 12 +++++++++
-> >  2 files changed, 65 insertions(+)
-> > 
-> > diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-> > index 6802125349fb..d5c0fd2efc70 100644
-> > --- a/drivers/dma-buf/dma-fence.c
-> > +++ b/drivers/dma-buf/dma-fence.c
-> > @@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
-> >  }
-> >  EXPORT_SYMBOL(dma_fence_context_alloc);
-> >  
-> > +#ifdef CONFIG_LOCKDEP
-> > +struct lockdep_map     dma_fence_lockdep_map = {
-> > +       .name = "dma_fence_map"
+On Mon, May 11, 2020 at 8:03 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Sat, May 09, 2020 at 12:19:19PM +0900, Steve Lee wrote:
+> > Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+>
+> This looks mostly good, a few smallish things below though:
+>
+> > +++ b/sound/soc/codecs/max98390.c
+> > @@ -0,0 +1,1039 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2020, Maxim Integrated.
+> > + */
+>
+> Please make the entire comment a C++ one so things look more
+> intentional.
+Thank you for feedback.
+Modified as requested.
+>
+> > +     dev_info(component->dev, "Tdm mode : %d\n",
+> > +                     max98390->tdm_mode);
+>
+> This is a bit noisy, please make it at most a dev_dbg().
+>
+> > +static const char * const max98390_analog_gain_text[] = {
+> > +     "Mute", "3dB", "6dB", "9dB", "12dB", "15dB", "18dB"};
+>
+> Use TLV data with regulator Volume controls for volumes, don't make them
+> enums.
+>
+Remove enums and use TLV.
+> > +static const char * const max98390_boost_voltage_text[] = {
+> > +     "6.5V", "6.625V", "6.75V", "6.875V", "7V", "7.125V", "7.25V", "7.375V",
+> > +     "7.5V", "7.625V", "7.75V", "7.875V", "8V", "8.125V", "8.25V", "8.375V",
+> > +     "8.5V", "8.625V", "8.75V", "8.875V", "9V", "9.125V", "9.25V", "9.375V",
+> > +     "9.5V", "9.625V", "9.75V", "9.875V", "10V"
 > > +};
-> 
-> Not another false global sharing lockmap.
-
-It's a global contract, it needs a global lockdep map. And yes a big
-reason for the motivation here is that i915-gem has a tremendous urge to
-just redefine all these global locks to fit to some local interpretation
-of what's going on.
-
-That doesn't make the resulting real&existing deadlocks go away.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>
+> Is this really something that should be configured at runtime rather
+> than through DT?
+Since this control is needed while running system according to system
+battery situation.
+I'd keep this mixer for further use.
+>
+> > +static const char * const max98390_current_limit_text[] = {
+> > +     "0.00A", "0.50A", "1.00A", "1.05A", "1.10A", "1.15A", "1.20A", "1.25A",
+> > +     "1.30A", "1.35A", "1.40A", "1.45A", "1.50A", "1.55A", "1.60A", "1.65A",
+>
+> This looks like it should be in DT too.
+Since this control  is needed while running system according to system
+battery situation.
+I'd keep this mixer for further use.
+>
+> > +static int max98390_dsm_calib_get(struct snd_kcontrol *kcontrol,
+> > +             struct snd_ctl_elem_value *ucontrol)
+> > +{
+> > +     struct snd_soc_component *component =
+> > +             snd_soc_kcontrol_component(kcontrol);
+> > +
+> > +     dev_warn(component->dev, "Get dsm_calib_get not supported\n");
+> > +
+> > +     return 0;
+> > +}
+>
+> Just don't implement the operation if you can't implement it.
+If this not exist as dummy operation and all mixer was not working and
+could not implement better idea.
+Could you consider it as with warn message ?
+>
+> > +     dev_info(component->dev,
+> > +             "max98390: param fw size %d\n",
+> > +             fw->size);
+>
+> This should probably be a dev_dbg() too.
+Modified as requested.
+>
+> > +     /* Amp Setting */
+> > +     regmap_write(max98390->regmap, MAX98390_CLK_MON, 0x6f);
+> > +     regmap_write(max98390->regmap, MAX98390_PCM_RX_EN_A, 0x03);
+> > +     regmap_write(max98390->regmap, MAX98390_R203D_SPK_GAIN, 0x05);
+> > +     regmap_write(max98390->regmap, MAX98390_MEAS_EN, 0x03);
+> > +     regmap_write(max98390->regmap, MAX98390_PWR_GATE_CTL, 0x2d);
+> > +     regmap_write(max98390->regmap, MAX98390_ENV_TRACK_VOUT_HEADROOM, 0x0e);
+> > +     regmap_write(max98390->regmap, MAX98390_BOOST_BYPASS1, 0x46);
+> > +     regmap_write(max98390->regmap, MAX98390_FET_SCALING3, 0x03);
+>
+> Are some of these things that might vary per system?  If so they
+> probably shouldn't be hard code but instead in DT.  Things like the
+> speaker gain jump out.
+I removed hard-coded Volume setting.
+>
+> > +static int max98390_suspend(struct device *dev)
+> > +{
+> > +     struct max98390_priv *max98390 = dev_get_drvdata(dev);
+> > +
+> > +     dev_info(dev, "%s:Enter\n", __func__);
+>
+> dev_dbg()
+Modified as requested.
+>
+> > +static int max98390_resume(struct device *dev)
+> > +{
+> > +     struct max98390_priv *max98390 = dev_get_drvdata(dev);
+> > +
+> > +     dev_info(dev, "%s:Enter\n", __func__);
+>
+> dev_dbg()
+Modified as requested.
+>
+> > +     dev_info(&i2c->dev, "ASoC: MAX98390 i2c probe\n");
+>
+> Just drop this.
+Removed.
+>
+> > +     ret = device_property_read_u32(&i2c->dev, "maxim,temperature_calib",
+> > +                                    &max98390->ambient_temp_value);
+>
+> Normally for DT that'd be maxim,temperature-calib.
+This is follow as coreboot in Chromium OS case.
+I'd follow this name unchanged.
