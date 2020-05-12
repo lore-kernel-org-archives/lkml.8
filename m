@@ -2,131 +2,94 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB121C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA9DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67CA20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1EE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LfIPGwGQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DStgMniB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgELNgU (ORCPT
+        id S1730132AbgELNgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:36:20 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729568AbgELNgS (ORCPT
+        Tue, 12 May 2020 09:36:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729568AbgELNgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:36:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589290577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Zhd4EclVoiE+Xr9KIfrEkpLY2xHNwgQDIDz5FfT0LGI=;
-        b=LfIPGwGQ+Zq1R8W+uYuU/3TRSivleNFfQyq3KLQP6uf5BeegdAUlI/WLPRhFSmwTU+KnUo
-        IzrK1UifZnPs/dWA2iWBj/zEmWUGGD/dR/T73cyJx7+H4BBQRMVuzX3KpCk56Z0J7015ZS
-        +t0Fvye1zvn+aiG1qblEbOJ5hY0y6+A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-OLYvPviWN6yOc43l2QVwWg-1; Tue, 12 May 2020 09:36:13 -0400
-X-MC-Unique: OLYvPviWN6yOc43l2QVwWg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D7C8106BF7E;
-        Tue, 12 May 2020 13:36:12 +0000 (UTC)
-Received: from krava (unknown [10.40.194.31])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1C8E553E3B;
-        Tue, 12 May 2020 13:36:09 +0000 (UTC)
-Date:   Tue, 12 May 2020 15:36:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
+        Tue, 12 May 2020 09:36:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABBAC061A0C;
+        Tue, 12 May 2020 06:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rMH+9QgUtTVvwUjMFs5R0kAMnSoYcqtdBp9bIG81UY8=; b=DStgMniB6mmhqq2+TCJtvFKba6
+        8jzL11QfzrdLwH+aW4ipFz6eHpZGYLeuVvZ4ip+kknFX4C0X/jT7C2ds7mbsAjc757W7RAFhts7lc
+        QlLgzrXlQ7CU1I1upcvPe0frQgORmA8tTcgf90GgFA3YUjrs9uKTTA51saW0Qsx1h8DalMS/Z1E32
+        l4WCjcj2kG86ripIglQm59Qot22JT45WiImx35jxW3awum6slfEPJLzonIvewi5DIuqfZKCpOg/p/
+        PXHgn/VFY2Fk4xqpO/LIgAB9p0I5DDpYwctAIeZ8T5KD6Jy/EiQ4ZHOHULBT6mkxchECcZ13o7K01
+        +Jr8CRRw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYV4T-0000yL-DU; Tue, 12 May 2020 13:35:45 +0000
+Date:   Tue, 12 May 2020 06:35:45 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH perf/urgent] perf tools: Fix is_bpf_image function logic
-Message-ID: <20200512133609.GA3158213@krava>
-References: <20200512122310.3154754-1-jolsa@kernel.org>
- <20200512133223.GI28888@kernel.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v5 0/4] Charge loop device i/o to issuing cgroup
+Message-ID: <20200512133545.GA26535@infradead.org>
+References: <20200428161355.6377-1-schatzberg.dan@gmail.com>
+ <20200512132521.GA28700@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512133223.GI28888@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200512132521.GA28700@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:32:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, May 12, 2020 at 02:23:10PM +0200, Jiri Olsa escreveu:
-> > Adrian reported that is_bpf_image is not working the way it was
-> > intended - passing on trampolines and dispatcher names. Instead
-> > it returned true for all the bpf names.
-> > 
-> > The reason even this logic worked properly is that all bpf objects,
-> > even trampolines and dispatcher, were assigned DSO_BINARY_TYPE__BPF_IMAGE
-> > binary_type.
-> > 
-> > The later for bpf_prog objects, the binary_type was fixed in bpf load event
-> > processing, which is executed after the ksymbol code.
-> > 
-> > Fixing the is_bpf_image logic, so it properly recognizes trampoline
-> > and dispatcher objects.
+On Tue, May 12, 2020 at 09:25:21AM -0400, Dan Schatzberg wrote:
+> Seems like discussion on this patch series has died down. There's been
+> a concern raised that we could generalize infrastructure across loop,
+> md, etc. This may be possible, in the future, but it isn't clear to me
+> how this would look like. I'm inclined to fix the existing issue with
+> loop devices now (this is a problem we hit at FB) and address
+> consolidation with other cases if and when those are addressed.
 > 
-> This is not applying on top of torvalds/master, not tip/perf/urgent, and
+> Jens, you've expressed interest in seeing this series go through the
+> block tree so I'm interested in your perspective here. Barring any
+> concrete implementation bugs, would you be okay merging this version?
 
-right.. it's on top of your's perf/core.. I can rebase on perf/urgent
-
-> you forgot to add the Fixes: line, lemme try to find this...
-
-oops, sorry
-
-Fixes: 3c29d4483e85 ("perf annotate: Add basic support for bpf_image")
-
-jirka
-
-> 
-> - Arnaldo
->  
-> > Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-> > Signed-off-by: Jiri Olsa <jolsa@redhat.com>
-> > ---
-> >  tools/perf/util/machine.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 8ed2135893bb..d5384807372b 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -738,8 +738,8 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
-> >  
-> >  static int is_bpf_image(const char *name)
-> >  {
-> > -	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) ||
-> > -	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1);
-> > +	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
-> > +	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
-> >  }
-> >  
-> >  static int machine__process_ksymbol_register(struct machine *machine,
-> > -- 
-> > 2.25.4
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-> 
-
+Independ of any higher level issues you need to sort out the spinlock
+mess I pointed out.
