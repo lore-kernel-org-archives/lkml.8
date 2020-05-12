@@ -2,125 +2,68 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CC1C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C24C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAC020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236A720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgELIoe (ORCPT
+        id S1729211AbgELIor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:44:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37344 "EHLO mx2.suse.de"
+        Tue, 12 May 2020 04:44:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37496 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELIoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:44:32 -0400
+        id S1725776AbgELIoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:44:46 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 08421AE57;
-        Tue, 12 May 2020 08:44:33 +0000 (UTC)
-Date:   Tue, 12 May 2020 10:44:29 +0200 (CEST)
-From:   Richard Biener <rguenther@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3
- for gcc >= 10
-In-Reply-To: <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2005121037491.4397@zhemvz.fhfr.qr>
-References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain> <20200511215720.303181-1-Jason@zx2c4.com> <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mx2.suse.de (Postfix) with ESMTP id A6006ABC7;
+        Tue, 12 May 2020 08:44:46 +0000 (UTC)
+Date:   Tue, 12 May 2020 10:44:42 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v7 07/18] printk: Introduce kmsg_dump_reason_str()
+Message-ID: <20200512084441.GD17734@linux-b0ei>
+References: <20200510202436.63222-1-keescook@chromium.org>
+ <20200510202436.63222-8-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1609908220-634017890-1589273070=:4397"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510202436.63222-8-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
----1609908220-634017890-1589273070=:4397
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-
-On Mon, 11 May 2020, Linus Torvalds wrote:
-
-> On Mon, May 11, 2020 at 2:57 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > GCC 10 appears to have changed -O2 in order to make compilation time
-> > faster when using -flto, seemingly at the expense of performance, in
-> > particular with regards to how the inliner works. Since -O3 these days
-> > shouldn't have the same set of bugs as 10 years ago, this commit
-> > defaults new kernel compiles to -O3 when using gcc >= 10.
+On Sun 2020-05-10 13:24:25, Kees Cook wrote:
+> The pstore subsystem already had a private version of this function.
+> With the coming addition of the pstore/zone driver, this needs to be
+> shared. As it really should live with printk, move it there instead.
 > 
-> I'm not convinced this is sensible.
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Note the real thing that changed for GCC 10 at -O2 is that -O2
-now includes -finline-functions which means GCC considers inlining
-of functions not marked with 'inline' at -O2.  To counter code-size
-growth and tune that back to previous levels the inlining limits
-in effect at -O2 have been lowered.
+I looked only at this printk part and it looks good to me ;-)
 
-Note this has been done based on analyzing larger C++ code and obviously
-not because the kernel would benefit (IIRC kernel folks like 'inline'
-to behave as written and thus rather may dislike the change to default to
--finline-functions).
+Acked-by: Petr Mladek <pmladek@suse.com>
 
-> -O3 historically does bad things with gcc. Including bad things for
-> performance. It traditionally makes code larger and often SLOWER.
-> 
-> And I don't mean slower to compile (although that's an issue). I mean
-> actually generating slower code.
-> 
-> Things like trying to unroll loops etc makes very little sense in the
-> kernel, where we very seldom have high loop counts for pretty much
-> anything.
-> 
-> There's a reason -O3 isn't even offered as an option.
-
-And I think that's completely sensible.  I would not recommend
-to use -O3 for the kernel.  Somehow feeding back profile data
-might help - though getting such data at all and with enough
-coverage is probably hard.
-
-As you said in the followup I wouldn't recommend tweaking GCCs
-defaults for the various --param affecting inlining.  The behavior
-with this is not consistent across releases.
-
-Richard.
-
-> Maybe things have changed, and maybe they've improved. But I'd like to
-> see actual numbers for something like this.
-> 
-> Not inlining as aggressively is not necessarily a bad thing. It can
-> be, of course. But I've actually also done gcc bugreports about gcc
-> inlining too much, and generating _worse_ code as a result (ie
-> inlinging things that were behind an "if (unlikely())" test, and
-> causing the likely path to grow a stack fram and stack spills as a
-> result).
-> 
-> So just "O3 inlines more" is not a valid argument.
-> 
->               Linus
-> 
-
--- 
-Richard Biener <rguenther@suse.de>
-SUSE Software Solutions Germany GmbH, Maxfeldstrasse 5, 90409 Nuernberg,
-Germany; GF: Felix Imendörffer; HRB 36809 (AG Nuernberg)
----1609908220-634017890-1589273070=:4397--
+Best Regards,
+Petr
