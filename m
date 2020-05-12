@@ -2,74 +2,109 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F25C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02D5C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8BDE207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3B220A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nv53ujrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgELHE4 convert rfc822-to-8bit (ORCPT
+        id S1729012AbgELHFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:04:56 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:41485 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgELHE4 (ORCPT
+        Tue, 12 May 2020 03:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgELHE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:04:56 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3431524000A;
-        Tue, 12 May 2020 07:04:52 +0000 (UTC)
-Date:   Tue, 12 May 2020 09:04:50 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: Re: linux-next: build failure after merge of the nand tree
-Message-ID: <20200512090450.499421bd@xps13>
-In-Reply-To: <20200512140840.0e102581@canb.auug.org.au>
-References: <20200512140840.0e102581@canb.auug.org.au>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 May 2020 03:04:59 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F991C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:04:59 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s11so2250372pgv.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JjsOdjpKMIcNbo6ami1hZItagyqlFnrIs1FP+NhqaMs=;
+        b=Nv53ujrcczOAPjDmYsX6nLdFyZ+wS9hhvf3CO4qs8dPFyA2RGLSn3s0GkG0fIm+9qn
+         JDAahRkemwNvi5VxsTbffXw4WMrzzhRhGGgABmX4/+xqoAkDjwtTMqTi/XQts2jUcPCE
+         XzF6uFNf4lHSAyG50ecxoWsm6c2rCBnfvW1Jm8I+rrS7x0U35xYRdajGwpqHS6Wv8bD/
+         Woqfrg5WH+Jq0bYj77ygzUtookxjcjEVQNDxxhBE19s+ehAdPJ5sLWqwXcwHC/IWN3Wi
+         5ciWg8DPoMyCP1WMPYS2t35EvMH9/k4NzQOLOrnHYJpnAbFYzx3kKBjIieq825Yn+3Cc
+         fwYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JjsOdjpKMIcNbo6ami1hZItagyqlFnrIs1FP+NhqaMs=;
+        b=Hi66S6/7GmAu8nrF9bB/lF1vtOu8Hannjepp3/kwOR3AH77S/iXeK3AsCzqRqhUB5e
+         WqA1dmo/Xo7XV71MZ2YcbUlu+I1njOwEHOd+G2U6h6+5v/bg7bp9HVES+Iqq1aZZ2Z45
+         IVmmK8D4PSRmEG2tfBidLtlW6Pijjvrzgsg3+CNsvq52srmxRtz2U8S40DSyoAIp4qNl
+         8qESSJc9PncOF1nxd2DrMp+2GxTA0bf4gIUu8c8b598/6G2T9tpsz92p0oqIuFMW6qyc
+         16oU5Mo4vvTSrHEnTH41cHiKXeIAd4t1AYde9DowWqz8nsdTcCRVkDBQuyTqR0CogNBK
+         LpYA==
+X-Gm-Message-State: AOAM531z0rg0ckb79bikx/I6uSWVobPocWpvyHcFkQ5ioxFdvrNXEGZH
+        2zdlkw5uHcEAT4kGK9lXRC279ICZPA==
+X-Google-Smtp-Source: ABdhPJy6ZXpI/dCp7GApF3CegXaGhJm4JkrJYjfoGGAUpAy3s9UzpdSNvF3nMu1KCtE7Av6UgOq8Fw==
+X-Received: by 2002:aa7:8c0a:: with SMTP id c10mr9439843pfd.177.1589267098521;
+        Tue, 12 May 2020 00:04:58 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
+        by smtp.gmail.com with ESMTPSA id 192sm10769811pfu.182.2020.05.12.00.04.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 May 2020 00:04:57 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:34:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v1 0/5] MHI Misc Fixes
+Message-ID: <20200512070451.GH4928@Mani-XPS-13-9360>
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Hemant,
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote on Tue, 12 May 2020
-14:08:40 +1000:
-
-> Hi all,
-> 
-> After merging the nand tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> drivers/mtd/nand/raw/stm32_fmc2_nand.c: In function 'stm32_fmc2_nfc_write_data':
-> drivers/mtd/nand/raw/stm32_fmc2_nand.c:1294:34: error: 'fmc2' undeclared (first use in this function)
->  1294 |   stm32_fmc2_nfc_set_buswidth_16(fmc2, true);
->       |                                  ^~~~
-> drivers/mtd/nand/raw/stm32_fmc2_nand.c:1294:34: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> Caused by commit
-> 
->   6c1c863ca431 ("mtd: rawnand: stm32_fmc2: cleanup")
-> 
-> I have used the nand tree from next-20200511 for today.
+On Mon, May 11, 2020 at 07:03:04PM -0700, Hemant Kumar wrote:
+> Patches are addressing MHI core driver bug fixes. Patches tested on
+> arm64 and x86 platforms.
 > 
 
-Thanks for the notice, we will fix it by tomorrow.
-
+This series looks good except one comment I left. Once that gets fixed, I'll
+club the v2 of this series with already applied series from Bhaumik and send
+to Greg as a feature one for 5.8 (provided I get the updated series within
+this week).
 
 Thanks,
-Miquèl
+Mani
+
+> Hemant Kumar (5):
+>   bus: mhi: core: Remove the system error worker thread
+>   bus: mhi: core: Handle disable transitions in state worker
+>   bus: mhi: core: Skip handling BHI irq if MHI reg access is not allowed
+>   bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
+>   bus: mhi: core: Handle write lock properly in mhi_pm_m0_transition
+> 
+>  drivers/bus/mhi/core/init.c     |  3 ++-
+>  drivers/bus/mhi/core/internal.h |  4 +++-
+>  drivers/bus/mhi/core/main.c     | 38 +++++++++++++++++++----------
+>  drivers/bus/mhi/core/pm.c       | 53 ++++++++++++++++++++++++-----------------
+>  include/linux/mhi.h             |  2 --
+>  5 files changed, 61 insertions(+), 39 deletions(-)
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
