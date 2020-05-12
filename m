@@ -7,60 +7,58 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FF4C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEDDC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA0B2082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABBB2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pKYqzLit"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QKzOe9x9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbgELI47 (ORCPT
+        id S1729323AbgELI5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:56:59 -0400
+        Tue, 12 May 2020 04:57:25 -0400
 Received: from mail26.static.mailgun.info ([104.130.122.26]:52626 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729237AbgELI46 (ORCPT
+        by vger.kernel.org with ESMTP id S1729266AbgELI5Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:56:58 -0400
+        Tue, 12 May 2020 04:57:24 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589273817; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1589273844; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=TE5Nfuk2oduoFVkWNHpOml0beSjopnpK1dfSsd9gDvI=;
- b=pKYqzLitfAtnF3w5BzRXTj+5nSi0jugks+lzhis1AOVwf2A2JUJO8ioGtQ0ITTLGEwFxAWqq
- QEhGf1SI7zc/e2Lgky5qQG33HnuhFu67Dh9HY06hDhKEAI9RXEXPj+Vx/3v3LLzp6KV5hJop
- r1I57nTS9WdX+ZDJXCrkj88+feE=
+ Content-Type: Sender; bh=DMtktCBHuFmI7IB/IC26FyahHzkN5D96bU1y5iktrYY=;
+ b=QKzOe9x96SsUdX+y2SwdJPL3tH9jRdDrwK6Iv7wrWWbZD93ezCtTrAjlaKhjKWU+utcacI5A
+ sDOFhfzglOoOLgZ5UvU51AFmElwrhNUOQ8ISAryj/4+y7dwKZF3WXIGoI43DTA7mIOXidZ2W
+ KfVcH19p1PWcqTQ8ZVXamlN0X8g=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba64d0.7f45f3618618-smtp-out-n04;
- Tue, 12 May 2020 08:56:48 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eba64ef.7fe56311aae8-smtp-out-n03;
+ Tue, 12 May 2020 08:57:19 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 85C80C433F2; Tue, 12 May 2020 08:56:47 +0000 (UTC)
+        id 18711C432C2; Tue, 12 May 2020 08:57:18 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6A8BC433CB;
-        Tue, 12 May 2020 08:56:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6A8BC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A323AC433CB;
+        Tue, 12 May 2020 08:57:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A323AC433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] qtnfmac: Replace zero-length array with flexible-array
+Subject: Re: [PATCH] rndis_wlan: Replace zero-length array with flexible-array
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200507191926.GA15970@embeddedor>
-References: <20200507191926.GA15970@embeddedor>
+In-Reply-To: <20200507192647.GA16710@embeddedor>
+References: <20200507192647.GA16710@embeddedor>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
+Cc:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
         linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200512085647.85C80C433F2@smtp.codeaurora.org>
-Date:   Tue, 12 May 2020 08:56:47 +0000 (UTC)
+Message-Id: <20200512085718.18711C432C2@smtp.codeaurora.org>
+Date:   Tue, 12 May 2020 08:57:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -104,13 +102,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-55bb8a2b01a3 qtnfmac: Replace zero-length array with flexible-array
+bd7db3021aa7 rndis_wlan: Replace zero-length array with flexible-array
 
 -- 
-https://patchwork.kernel.org/patch/11534767/
+https://patchwork.kernel.org/patch/11534803/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
