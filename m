@@ -2,91 +2,108 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A703DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAE3C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E48F20736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E54206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:16:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="OQg+dVZ/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nePcfkZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgELNOr (ORCPT
+        id S1730032AbgELNQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:14:47 -0400
-Received: from www.zeus03.de ([194.117.254.33]:53898 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELNOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:14:47 -0400
-X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 May 2020 09:14:46 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=bVnvR3rOZs7GQ5Rx/p20PMBOzRG4
-        5vFIXWPPh4D/qKA=; b=OQg+dVZ/hvYZcb9qtk8hkak52UNO4J1vCotQUy18WU0q
-        nZ63gSXb59JW8mL+J9qfkjH0ihXkzTYoQw48IYCxwqPBNzJMNoYWGlpuScyzKlSJ
-        9Mq7k8vHTvlcH0uPJkr3z5AsG5dtvvzY4mxgmGgbaJOXyYOtHtWgDmBVdb3scbM=
-Received: (qmail 2948160 invoked from network); 12 May 2020 15:08:04 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 15:08:04 +0200
-X-UD-Smtp-Session: l3s3148p1@ZV9lJ3Ol5MQgAwDPXw2aAE67cgFBY+HL
-Date:   Tue, 12 May 2020 15:08:03 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     peda@axentia.se, robh@kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] i2c: mux: demux-pinctrl: Fix an error handling path in
- 'i2c_demux_pinctrl_probe()'
-Message-ID: <20200512130802.GC13516@ninjato>
-References: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
+        Tue, 12 May 2020 09:16:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32940 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729901AbgELNQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:16:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CDG3Fg031930;
+        Tue, 12 May 2020 08:16:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589289363;
+        bh=BumWFgjzJj940R4kMpydKFBlGDtIoxERn96VgXdZ9bc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=nePcfkZ49UmdjEEneh+uNCxrM69Ja6+fA/vy6T309JixKwG2czg1QbwGHHf6NKMm4
+         M0SzhFtoMTpG3LXNSnwzGwaFD/BH/TXCaxWyNU1b3+30bJNNY9+P0zSIGW1gCZtp7T
+         BElGiiQbubKOqzFwvnBOwby3vmFjwUbr4Bq60Juk=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CDG3Hq014807
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 08:16:03 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 08:16:03 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 08:16:03 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CDFxab079268;
+        Tue, 12 May 2020 08:16:01 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+Date:   Tue, 12 May 2020 16:16:31 +0300
+Message-ID: <20200512131633.32668-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
-Content-Disposition: inline
-In-Reply-To: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In order to dai stream widgets to be created the stream_name must be set.
 
---nmemrqcdn5VTmUEE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ sound/soc/ti/davinci-mcasp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Wed, May 06, 2020 at 09:21:00PM +0200, Christophe JAILLET wrote:
-> A call to 'i2c_demux_deactivate_master()' is missing in the error handling
-> path, as already done in the remove function.
->=20
-> Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 7a7db743dc5b..15d84493466f 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1623,12 +1623,14 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.0",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback	= {
++			.stream_name = "IIS Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+ 			.formats	= DAVINCI_MCASP_PCM_FMTS,
+ 		},
+ 		.capture 	= {
++			.stream_name = "IIS Capture",
+ 			.channels_min 	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+@@ -1642,6 +1644,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.1",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback 	= {
++			.stream_name = "DIT Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 384,
+ 			.rates		= DAVINCI_MCASP_RATES,
+-- 
+Peter
 
-Applied to for-current, thanks! Peter, I hope you are okay with me
-applying patches for my strange driver directly.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-
---nmemrqcdn5VTmUEE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66n7IACgkQFA3kzBSg
-KbYd7w//QfbfCkh7Qi2tx9ZYq6DwTGtz92vvLnKEiVAe684hJqfbIT58KB6Y+xxs
-hvLU37hPtQHEylKHPjZKP4reKet/qhMBwa+izmicml37AYk/WT+bISP7bDz/cZm6
-9gR9FGV/236CcswGGLcru8Us9PnxWnajXTq/Zgfb0/WcGfD+cV5zc3EDlR4iTAs/
-wwJH7sLUoC6HTLWtEHDX9wRc35Baq1TqrHrecknGPctQgj2HNxickJrHJNclkEJ7
-ZqTs//75b7SXWE4eE2WG4PYY2m12NkAuzTwkWLTJdmuuINBtbfEpJsfuONd1CX1j
-PP/y25ssXKY5W0Qxq8/iR/Vb5rla2NtvOowCMjlWCTQmOkoaR1/wWJ12fDx4XOuj
-Ut+zNMSg6OnnnW56rMe8pe54PjYszVuC9wwZk9skcuFWRYOVU5Vi0zfTIXnO5WHO
-pBR6+BSHd04tndfm14qwNGIUa7DY4XwL07VlZVVHJ7vuzk8WyM65O2YuyfNh12O2
-6zOMrG+FLYnDH4yiusAgQVEE3utwknrxUm5y0YI7SMLOnhHpbc7UAnhWk0H+AKeW
-3jooXGPRT7BOSMLlRc6tvW3EEDJpjB6iUN8CNkc0yFSEFpGXS32YC1hTMcuNvcbG
-NXvY6NpeIWHNfXoWZgcrJzMwqcXxhR79oWSyEdn2E69AFUMPmOs=
-=Nlce
------END PGP SIGNATURE-----
-
---nmemrqcdn5VTmUEE--
