@@ -2,117 +2,123 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EB5C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5DDC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C40206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589242182;
-	bh=CW2lxxNB78vOsAuqPP3w+Kw6uLRkko3TRh5SLlqdqrk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SxYD6EWNz2Z/bEpkVojJ8sPVALNfw+mYsEewewX/k8sdAAHrO1Iw6Rinh3Ues1BTh
-	 snrJZMpJo9LwS82yaitLpEx8AQvOYTWgLM1uxQgHyU11uYxp8nzlRdXNhr8MAODP6M
-	 zwcp7KjfybEvQZOTWO5goRIDmdzYINXOuPfXRJGE=
+	by mail.kernel.org (Postfix) with ESMTP id C6D8E206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srSeBRdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgELAJl (ORCPT
+        id S1728347AbgELALG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45398 "EHLO
+        Mon, 11 May 2020 20:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728309AbgELAJk (ORCPT
+        by vger.kernel.org with ESMTP id S1725836AbgELALF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:09:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F16C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:09:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w10so846819ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:09:40 -0700 (PDT)
+        Mon, 11 May 2020 20:11:05 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC093C061A0C;
+        Mon, 11 May 2020 17:11:04 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id bs4so3312348edb.6;
+        Mon, 11 May 2020 17:11:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B+GIuNeS/zRhNXv8DWJcBs5sdIAbLbnMHoFTqitLrys=;
-        b=Ak93banedsJMiV/GLzQObSSQW5MNVGozwtSadLdbb2llutUOeMawnVzTXwPyZMhdn5
-         zotibDunSZiYNCo1pURopX//M2oItuHBRSCOe5QbWLnCSD0k+LJAL7kMlmILXXDpJpO1
-         SUoeWuk79IlnBSAlPr/pRc1vZh5tqtqot+UYY=
+        bh=hOqV8j9IN2A6jKf5ay59p7rGKbxBmKtpgqCRdoN7oBA=;
+        b=srSeBRdjN+wxeP8+BmcndQItu+zIv1Mc7N8BIpDur2MvTgLA2Ka3xn1owm1R8eJ68Z
+         AVCAnU3B5gnH9Cl1xQjp3TEMU/fgkuqDq9dfFcHwjxIbzZaUkTmMvinrP0RqvLAN6PuQ
+         cUXYA2CSfb6fxiz9uiniEWL36w2CzqzpKQkgxwTLQQ5aLx39/7poIM9Nb7a8Miw32Y/8
+         Dq+oNQMCQ1eknZIu63I/B/qfMEGB0+REtnKNFwS7dqIaNu2q9NLzKu5ux8vlvGSRAMUp
+         SyXmP+BYnt2VVTT7FvtPE7GxjstjQVz7xKhUC1EiXglSKHgf+pfHFPsBGRcK+SvYTyz6
+         Cubg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B+GIuNeS/zRhNXv8DWJcBs5sdIAbLbnMHoFTqitLrys=;
-        b=NjwXGFygqBj8ZxoCBI9IjisNDd/vmke4PfkW4iCK2w7K5r05UKJoV3XypgoolSrDdm
-         jBuxvbYTEkYSvJi4rqvno9tH09U2UilLjW4eTMcvJ4brxEtH6rYRlDCiu7mLJaTL7L8N
-         Tsyl76IRBKsVMqzJvnYSVZe1WhOIvI3Zui4s7SXE79o7wRlQRnHT5wjKRhPi9B7E+iC8
-         nUhqdVKWVadH+PAkkVBDHVsbdeR1IWZhNgCuGN0uMK6s12rXq8IYGb5Ty5yWiUEyX7wJ
-         Uxyt108QbyMa/XgC9W3PjrmyTT2RsmD/rKnYF6zTNtfyJewAlLfBWWXkdNRwm1BQg2G2
-         nmUw==
-X-Gm-Message-State: AOAM533EBqzo5SswSuMNd5FXA5PsUa2FMWPqsi92IJm3PJPPNf/aO+Dp
-        zwuDF0HnPi0Rm5+hcwkwzvniiWoAtlo=
-X-Google-Smtp-Source: ABdhPJyIvZ6NIGWzQxcs3GRLdcTvL7/kmQXEdQrFWObDgg/Hg/RIHs3Fnnfael+PgiPAavbDYwpEZg==
-X-Received: by 2002:a2e:8e68:: with SMTP id t8mr11580712ljk.93.1589242177934;
-        Mon, 11 May 2020 17:09:37 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id k22sm11381938ljj.85.2020.05.11.17.09.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 17:09:37 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id u15so11593970ljd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:09:36 -0700 (PDT)
-X-Received: by 2002:a2e:9a54:: with SMTP id k20mr12584970ljj.265.1589242176533;
- Mon, 11 May 2020 17:09:36 -0700 (PDT)
+        bh=hOqV8j9IN2A6jKf5ay59p7rGKbxBmKtpgqCRdoN7oBA=;
+        b=ZTLd05G+zX0Ltie56888SMniYI2heg/TZMCXauDnz3uVPgJHZi6XgsVtNL0gHNYwJ4
+         qWOx6flATgk8N+J74RxqORx3JJWrzmqy1JujVNEp+1ha+klkkDM7iyrDtXEHkWCgjssy
+         0KxwYhP56OyEhNNWwO3Sy0N/kjsqxmNMjPnN0QLN4TxkXH5UqSxX1kTeA3LoDhEiqUTg
+         q3aEHs9gD2Z/20VYFh9/FXE4MFEbWeLc3l5CYl6v+rWtzULW8lkQX1boBw6WbRCWV9tZ
+         wzA+KBzaAkshHhqp2oYXmq2pBPatVzpBtTf608h0NuJwZiJnVZ3R74gOSu6mIpGdNy+u
+         PDng==
+X-Gm-Message-State: AOAM531kmBrzy/fFUOj0TVfPXJbXk1Kz+zXyuQR8QNF9x/5++iGsJx7w
+        j0B/h7aK6UXkXzMo/DpTqcVt9zPrpLk5o9kKuPw=
+X-Google-Smtp-Source: ABdhPJwquuFuOo8MmTSLHwdLyGKmRZe+FAhOJHPLxJhQmp2kVt7BdWeIxELPK2fqEsxK7HnWvJAG9+SF1JMJnso3xDU=
+X-Received: by 2002:a05:6402:417:: with SMTP id q23mr1612226edv.139.1589242263466;
+ Mon, 11 May 2020 17:11:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain>
- <20200511215720.303181-1-Jason@zx2c4.com> <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-In-Reply-To: <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 May 2020 17:09:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wioWmE+Xy+RfVpc3q9EMh4NhqPVvWZp5=GqtoU6nZfxcA@mail.gmail.com>
-Message-ID: <CAHk-=wioWmE+Xy+RfVpc3q9EMh4NhqPVvWZp5=GqtoU6nZfxcA@mail.gmail.com>
-Subject: Re: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+References: <20200511054332.37690-1-xiaoliang.yang_1@nxp.com>
+ <20200511054332.37690-3-xiaoliang.yang_1@nxp.com> <20200511.165258.1371001598940636146.davem@davemloft.net>
+In-Reply-To: <20200511.165258.1371001598940636146.davem@davemloft.net>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 12 May 2020 03:10:52 +0300
+Message-ID: <CA+h21ho3NStn5BSBA1FjfRy6H0QTepGPyLT8xgCSB5af6PaHqg@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 2/3] net: dsa: felix: Configure Time-Aware
+ Scheduler via taprio offload
+To:     David Miller <davem@davemloft.net>
+Cc:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Ido Schimmel <idosch@idosch.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
+        Joergen Andreasen <joergen.andreasen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        linux-devel@linux.nxdi.nxp.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 5:04 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, 12 May 2020 at 02:54, David Miller <davem@davemloft.net> wrote:
 >
-> Not inlining as aggressively is not necessarily a bad thing. It can
-> be, of course. But I've actually also done gcc bugreports about gcc
-> inlining too much, and generating _worse_ code as a result (ie
-> inlinging things that were behind an "if (unlikely())" test, and
-> causing the likely path to grow a stack fram and stack spills as a
-> result).
+> From: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+> Date: Mon, 11 May 2020 13:43:31 +0800
+>
+> > @@ -710,7 +714,7 @@ static void felix_port_policer_del(struct dsa_switch *ds, int port)
+> >       ocelot_port_policer_del(ocelot, port);
+> >  }
+> >
+> > -static const struct dsa_switch_ops felix_switch_ops = {
+> > +static struct dsa_switch_ops felix_switch_ops = {
+> >       .get_tag_protocol       = felix_get_tag_protocol,
+> >       .setup                  = felix_setup,
+> >       .teardown               = felix_teardown,
+>
+> There has to be a better way to do this, removing const for operation
+> structs is very undesirable.
 
-In case people care, the bugzilla case I mentioned is this one:
-
-    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=49194
-
-with example code on why it's actively wrong to inline.
-
-Obviously, in the kernel, we can fix the obvious cases with "noinline"
-and "always_inline", but those take care of the outliers.  Having a
-compiler that does reasonably well by default is a good thing, and
-that very much includes *not* inlining mindlessly.
-
-                  Linus
+Actually I think this was at my suggestion, but now I agree that it is
+a bit undesirable.
+struct felix_info is on its toes in case vsc7511 or any other switch
+revision will be added to the felix driver. It is likely that those
+other chips will have hardware support for a different set of qdiscs.
+So we thought of populating the .port_setup_tc conditionally,
+depending on chip version (while also having DSA return -EOPNOTSUPP
+automatically when the function pointer is NULL). Otherwise an extra
+function call would be needed. But I think that keeping felix flexible
+for more hardware revisions is a concern to be had for another
+time/somebody else.
