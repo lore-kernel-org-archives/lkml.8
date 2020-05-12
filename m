@@ -2,289 +2,96 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016CC54E90
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D54BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB53720575
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3D5206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="G3K7uswl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ywl9SCvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbgELJEB (ORCPT
+        id S1729933AbgELJDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        Tue, 12 May 2020 05:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729240AbgELJAA (ORCPT
+        by vger.kernel.org with ESMTP id S1729917AbgELJDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:00:00 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77ECC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f134so8674448wmf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:59 -0700 (PDT)
+        Tue, 12 May 2020 05:03:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9C2C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:03:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w10so1998039ljo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I6zGk0sRXoiLMVlOrHdYKmGYdqgb8HIUHeWjfHU8LZ8=;
-        b=G3K7uswlmhW+rpia5CreMV57ZkKdKlwZ6FOlSyfm3Oe7LuGmiEiRHD/PML6gjh4GhM
-         OdvDdQt4u51YIl+RwDLbW7P8kjQMLKpQZcHKzE4dlQdQnOJqX7Su2t5BwmDsqLUnYibz
-         JMBsPiQPy7q4aI4KfXGjLvCIMnBefB60TFyyI=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=odTSOiCuFW0TklzckYCQG6DvBZsnxyimLAqm7OGXvHY=;
+        b=Ywl9SCvmKHiY3yhke36DIUNmXVxZ6RZr1xQLCdhcAt85loO8f5QwAB9C3nGM5nD4Qu
+         f0R75AM9wTccysNCrLcqDuC5lR4c3X6AOy1hH9gHjmegqRErxUkJkm5OmYYHSO4TvrhB
+         PH5idrhfg3BEv7YfjDO+igNoMGDfj2w2J31J7b9pU+c4YPcOITqFzGPcngUw1BfyvrBh
+         lM+A+9Q2E444kyAS72sbp8wFRpD5qlv2L/tSZUcCViXCKmjrAq7iWh5h8/mLzBtQOuok
+         YMY1uQHfvX5V0PQYVFda7s12RfxtqpZIoduOTEtDPVPNnnxoAO+ZLEcHtC9qf4rtGni3
+         OlVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I6zGk0sRXoiLMVlOrHdYKmGYdqgb8HIUHeWjfHU8LZ8=;
-        b=QTOm+66dMwRckHFA0pXs9DaxYeCWuMIISRT51KKFU6qof2r6dWXhJfsMzKsMvGFBWb
-         yvMdAVf2zdbcwkzMNgzAR9jsQjJazhqYE7V4WR2z/rfbLDF9Gbly1sKt1Pf5WSnFNxtm
-         KTU0POwlD26+JIzQkA0VWepuS28mdwRI7NKwQFakdodsqhJov9XTkyELk4lPW+3TVWpx
-         LTVZo8UUE3++iPEFzeuPxGftJLe/CY+98HJmESVaYrX1uKoOr5BXFbbkPlM7pSo8PjBq
-         IaUU3QwhdH8NyGdLvlSrIxjuhkmMwq2XCOeqAmL4lM98q/uvB8hMKrOUh+mQ1QVOntas
-         hCWg==
-X-Gm-Message-State: AGi0PubrvWeBE0OrT++1P3RZowNNVhAlyNC57+BPJRSuC77/e42s9PSH
-        DJujrAJs2TCCaugn8Pj2Mp7mCg==
-X-Google-Smtp-Source: APiQypLCYf7Wgh0Wtz0pUmQn/xpulX/EPJ0KyLgnUHWq+1CmCns3LkuSYY1ZCdFMCm+vHgIBfsEl0Q==
-X-Received: by 2002:a1c:3bc5:: with SMTP id i188mr25545127wma.90.1589273998427;
-        Tue, 12 May 2020 01:59:58 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.01.59.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 01:59:57 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [RFC 02/17] dma-fence: basic lockdep annotations
-Date:   Tue, 12 May 2020 10:59:29 +0200
-Message-Id: <20200512085944.222637-3-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=odTSOiCuFW0TklzckYCQG6DvBZsnxyimLAqm7OGXvHY=;
+        b=JFxmj8It1zdvAh/Yd/6XbAmuBh+K0UJc8uTWbsLJQlRwNNxp6j0Jc613wG8JJP8ZYl
+         CJn5crjtckNlwWLo2TdbC94uEPo9DJp4j+JeOpfn1ebfuhvMSkiahjF0k6OfB+XQY+zh
+         LPKdu+WRlrooeOGhsQuTWHjP+k8uHa/hkVTZkxeGk8UVkthP1a7Tu9QisdB/p0akumoG
+         5k5ajNsaBq/RSBWkw2iAjJDiBj+5TPnb0gBgUm/buhzRFYe8BM7mv5ftMf1UmJoB2bdH
+         wGoOU6r6Aw6drIHB/mZSD5tTgjUlqXIFU5HR1trAJfh0JCu/Yl8mH2uwuTxO52rjp54d
+         +hgg==
+X-Gm-Message-State: AOAM5319OwtI1avPgilSiR2eYMtDjJTcGYjNjuiHHONvOpi4PcX77S80
+        0rEIXxjOAIgDgfPu0AAki2j/7wzzhjaiuF0kjh2Dew==
+X-Google-Smtp-Source: ABdhPJx6/P82+0XHIa1NIY1LjcUbB3jwhI5ZVx5pNhIaNBB7mCBqt3/s4nMi5LWlq/CfR62xLIDpTHxQXgTayF6LqSY=
+X-Received: by 2002:a2e:81d5:: with SMTP id s21mr12786190ljg.258.1589274213796;
+ Tue, 12 May 2020 02:03:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <BN6PR04MB0660DD24B7B4418DCC2806FBA3A30@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <BN6PR04MB066041D27D2A70B6B00C4751A3A00@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <BN6PR04MB066041D27D2A70B6B00C4751A3A00@BN6PR04MB0660.namprd04.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 May 2020 11:03:22 +0200
+Message-ID: <CACRpkdZ-uuzjbHz9oXwjkTBO5ss1KcBN2Vth6N6h32zmgYhAUA@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: light: gp2ap002: Take runtime PM reference on
+ light read
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Design is similar to the lockdep annotations for workers, but with
-some twists:
+On Sun, May 10, 2020 at 5:58 PM Jonathan Bakker <xc-racer2@live.ca> wrote:
 
-- We use a read-lock for the execution/worker/completion side, so that
-  this explicit annotation can be more liberally sprinkled around.
-  With read locks lockdep isn't going to complain if the read-side
-  isn't nested the same way under all circumstances, so ABBA deadlocks
-  are ok. Which they are, since this is an annotation only.
+> The light sensor needs the regulators to be enabled which means
+> the runtime PM needs to be on.  This only happened when the
+> proximity part of the chip was enabled.
+>
+> As fallout from this change, only report changes to the prox
+> state in the interrupt handler when it is explicitly enabled.
+>
+> Fixes: 97d642e23037 ("iio: light: Add a driver for Sharp GP2AP002x00F")
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
 
-- We're using non-recursive lockdep read lock mode, since in recursive
-  read lock mode lockdep does not catch read side hazards. And we
-  _very_ much want read side hazards to be caught. For full details of
-  this limitation see
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-  commit e91498589746065e3ae95d9a00b068e525eec34f
-  Author: Peter Zijlstra <peterz@infradead.org>
-  Date:   Wed Aug 23 13:13:11 2017 +0200
+Sorry for missing this!
 
-      locking/lockdep/selftests: Add mixed read-write ABBA tests
-
-- To allow nesting of the read-side explicit annotations we explicitly
-  keep track of the nesting. lock_is_held() allows us to do that.
-
-- The wait-side annotation is a write lock, and entirely done within
-  dma_fence_wait() for everyone by default.
-
-- To be able to freely annotate helper functions I want to make it ok
-  to call dma_fence_begin/end_signalling from soft/hardirq context.
-  First attempt was using the hardirq locking context for the write
-  side in lockdep, but this forces all normal spinlocks nested within
-  dma_fence_begin/end_signalling to be spinlocks. That bollocks.
-
-  The approach now is to simple check in_atomic(), and for these cases
-  entirely rely on the might_sleep() check in dma_fence_wait(). That
-  will catch any wrong nesting against spinlocks from soft/hardirq
-  contexts.
-
-The idea here is that every code path that's critical for eventually
-signalling a dma_fence should be annotated with
-dma_fence_begin/end_signalling. The annotation ideally starts right
-after a dma_fence is published (added to a dma_resv, exposed as a
-sync_file fd, attached to a drm_syncobj fd, or anything else that
-makes the dma_fence visible to other kernel threads), up to and
-including the dma_fence_wait(). Examples are irq handlers, the
-scheduler rt threads, the tail of execbuf (after the corresponding
-fences are visible), any workers that end up signalling dma_fences and
-really anything else. Not annotated should be code paths that only
-complete fences opportunistically as the gpu progresses, like e.g.
-shrinker/eviction code.
-
-The main class of deadlocks this is supposed to catch are:
-
-Thread A:
-
-	mutex_lock(A);
-	mutex_unlock(A);
-
-	dma_fence_signal();
-
-Thread B:
-
-	mutex_lock(A);
-	dma_fence_wait();
-	mutex_unlock(A);
-
-Thread B is blocked on A signalling the fence, but A never gets around
-to that because it cannot acquire the lock A.
-
-Note that dma_fence_wait() is allowed to be nested within
-dma_fence_begin/end_signalling sections. To allow this to happen the
-read lock needs to be upgraded to a write lock, which means that any
-other lock is acquired between the dma_fence_begin_signalling() call and
-the call to dma_fence_wait(), and still held, this will result in an
-immediate lockdep complaint. The only other option would be to not
-annotate such calls, defeating the point. Therefore these annotations
-cannot be sprinkled over the code entirely mindless to avoid false
-positives.
-
-v2: handle soft/hardirq ctx better against write side and dont forget
-EXPORT_SYMBOL, drivers can't use this otherwise.
-
-Cc: linux-media@vger.kernel.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: linux-rdma@vger.kernel.org
-Cc: amd-gfx@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Christian König <christian.koenig@amd.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- drivers/dma-buf/dma-fence.c | 53 +++++++++++++++++++++++++++++++++++++
- include/linux/dma-fence.h   | 12 +++++++++
- 2 files changed, 65 insertions(+)
-
-diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 6802125349fb..d5c0fd2efc70 100644
---- a/drivers/dma-buf/dma-fence.c
-+++ b/drivers/dma-buf/dma-fence.c
-@@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
- }
- EXPORT_SYMBOL(dma_fence_context_alloc);
- 
-+#ifdef CONFIG_LOCKDEP
-+struct lockdep_map	dma_fence_lockdep_map = {
-+	.name = "dma_fence_map"
-+};
-+
-+bool dma_fence_begin_signalling(void)
-+{
-+	/* explicitly nesting ... */
-+	if (lock_is_held_type(&dma_fence_lockdep_map, 1))
-+		return true;
-+
-+	/* rely on might_sleep check for soft/hardirq locks */
-+	if (in_atomic())
-+		return true;
-+
-+	/* ... and non-recursive readlock */
-+	lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _RET_IP_);
-+
-+	return false;
-+}
-+EXPORT_SYMBOL(dma_fence_begin_signalling);
-+
-+void dma_fence_end_signalling(bool cookie)
-+{
-+	if (cookie)
-+		return;
-+
-+	lock_release(&dma_fence_lockdep_map, _RET_IP_);
-+}
-+EXPORT_SYMBOL(dma_fence_end_signalling);
-+
-+void __dma_fence_might_wait(void)
-+{
-+	bool tmp;
-+
-+	tmp = lock_is_held_type(&dma_fence_lockdep_map, 1);
-+	if (tmp)
-+		lock_release(&dma_fence_lockdep_map, _THIS_IP_);
-+	lock_map_acquire(&dma_fence_lockdep_map);
-+	lock_map_release(&dma_fence_lockdep_map);
-+	if (tmp)
-+		lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _THIS_IP_);
-+}
-+#endif
-+
-+
- /**
-  * dma_fence_signal_locked - signal completion of a fence
-  * @fence: the fence to signal
-@@ -170,14 +216,19 @@ int dma_fence_signal(struct dma_fence *fence)
- {
- 	unsigned long flags;
- 	int ret;
-+	bool tmp;
- 
- 	if (!fence)
- 		return -EINVAL;
- 
-+	tmp = dma_fence_begin_signalling();
-+
- 	spin_lock_irqsave(fence->lock, flags);
- 	ret = dma_fence_signal_locked(fence);
- 	spin_unlock_irqrestore(fence->lock, flags);
- 
-+	dma_fence_end_signalling(tmp);
-+
- 	return ret;
- }
- EXPORT_SYMBOL(dma_fence_signal);
-@@ -211,6 +262,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
- 	if (timeout > 0)
- 		might_sleep();
- 
-+	__dma_fence_might_wait();
-+
- 	trace_dma_fence_wait_start(fence);
- 	if (fence->ops->wait)
- 		ret = fence->ops->wait(fence, intr, timeout);
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index 3347c54f3a87..3f288f7db2ef 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -357,6 +357,18 @@ dma_fence_get_rcu_safe(struct dma_fence __rcu **fencep)
- 	} while (1);
- }
- 
-+#ifdef CONFIG_LOCKDEP
-+bool dma_fence_begin_signalling(void);
-+void dma_fence_end_signalling(bool cookie);
-+#else
-+static inline bool dma_fence_begin_signalling(void)
-+{
-+	return true;
-+}
-+static inline void dma_fence_end_signalling(bool cookie) {}
-+static inline void __dma_fence_might_wait(void) {}
-+#endif
-+
- int dma_fence_signal(struct dma_fence *fence);
- int dma_fence_signal_locked(struct dma_fence *fence);
- signed long dma_fence_default_wait(struct dma_fence *fence,
--- 
-2.26.2
-
+Yours,
+Linus Walleij
