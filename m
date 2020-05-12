@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF78C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBDBC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A14020659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4A920740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="juJF+3lb"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="LMZNpxE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgELVLe (ORCPT
+        id S1731410AbgELVLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:11:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44262 "EHLO
+        Tue, 12 May 2020 17:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728275AbgELVLZ (ORCPT
+        by vger.kernel.org with ESMTP id S1731320AbgELVLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:11:25 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FF3C061A0C;
-        Tue, 12 May 2020 14:11:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e26so23835959wmk.5;
-        Tue, 12 May 2020 14:11:25 -0700 (PDT)
+        Tue, 12 May 2020 17:11:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D571C061A0C;
+        Tue, 12 May 2020 14:11:20 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so3774122wrt.5;
+        Tue, 12 May 2020 14:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HwKE63xeunU+7jFifhH7Cu96Jgtp0mRWAcPlbA44y5E=;
-        b=juJF+3lb7lglsBfA48oWK2otHLd6Zv1VPqsqeH4y7PUUPFJY0U8jSd5BIu39d4bBPl
-         Ha6PuABEnMyT6qylAqav/xiblas1pBKWgHcgkgSO2AQY8ANt38qSwJqxU/odINnURDTJ
-         6ZMtR/XldqHZlqW5BwW5ZQAEtCMYwXfo8dYqQ0WiYWIyVa23Bg2LvCsBT8vwwCkEJPxc
-         cKmBiT7hmi3nV5FgJgTVUZ8Koblo0HEBysz2QWqz4RLGKfYPC98CRt4SCwR4wcPsRAGn
-         oEZzjQUyUIvsqz4qN8Esqvzvwp4mrPN50l/19Dtk6bzX7dkXzC8XXR/4PNSNQ+obkzKc
-         rCyg==
+        bh=/KGQVBeKYkVYbXvdSBspLFigDe6VZAF+Wx8YN9GDcNc=;
+        b=LMZNpxE32rk8g0yplUvy4mvxgaadGMPFKXvoJds2A1GV8eft9FrgFGhZRXfQkivZ4l
+         7LmM5yOK/Y6PoacpmcdrJCmxmueQlKLUzqEtvpAWg9ASeZEtUi9JPpk+Ni+1+PKYrpxP
+         nCa+xG3RCo+xdPw/05n6gX18g70QhUgBDwqt6zNgQlhRbMpf0esPPJai3Tl4PSvzmMWD
+         oVbfa+r3D5ysABf0T/td0xVDus7aC2gEujsc6/l/Vihcr9B2C9qwdsKm4Du5ilvPKc3X
+         0/+3HTGlA59ZolkeWdQMc//4lDo/phW7a1lvnjQaXrMg5yaL1dvPhQZ61Xb1XuOKo20z
+         yLeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HwKE63xeunU+7jFifhH7Cu96Jgtp0mRWAcPlbA44y5E=;
-        b=IwU3rHNoGh0zWbRqV/qPphS51G0w8qItca8ZjM5yFRGg4Nt1S/y4hQzoztLThX0Ayh
-         BxN1JSYu23dR+MvMXz/m+V4ZG3is07VELKpu+I745N8SqH002kq5gJUqfRjr8NwsIf8m
-         SPYgMyvRtx3ZOBJhl0xCBZZeEb8St8cBIa2Cl0DmVMd/pn0r2yCaSkU2KrI3kPjKYCI9
-         py9ippFYuyX5WeIU9nnReh7R3A0aLm/Uqh3ra17KEePA0RgZ649bl71KwEWqCIS9sjyn
-         eirbRjebW5S542KkNBe/cODw13PTYtZf8Ix9V8Sipn/RS8BFi1lh/9qoPEAaNeSm+5Er
-         BeTw==
-X-Gm-Message-State: AOAM530i5rNSEC+U1fJfqgtNFFP+A9FZh+aVOEeCA6mbwoZs/iV3cH8k
-        GIabzbXo83Ud/tzzdsPGwI8=
-X-Google-Smtp-Source: ABdhPJyXbvM6Skz8OIqLk5ZeLyL3PREBPCLQ6UyzGCBiK3jStYDaYt6yd9/iDrKNxjIYuojFg/W/Xw==
-X-Received: by 2002:a7b:c385:: with SMTP id s5mr4509808wmj.189.1589317883939;
-        Tue, 12 May 2020 14:11:23 -0700 (PDT)
+        bh=/KGQVBeKYkVYbXvdSBspLFigDe6VZAF+Wx8YN9GDcNc=;
+        b=ahgsxaoa+ZJsPVmEZh82VBdpndHe778rwtfKFoY0CST21tia2li59RJNLpoShaYGu2
+         FEaz3pz+RFu0y6xSA91DpPrfUrlmhkfB0zH+S3tsYfFK9+1UbyInWBOe6jW4QZV8Vn/f
+         DoaIrIgZjQ8LKiNYzmdmVqIfRqisCLN+2FaCwK251Yr96FcDL6PcOa7Zxuf1qiBAudGJ
+         K4dNkcf06tJb4y7WHn9nKwMkBJcCJazgggtqV06+s/zcabU+bbS5Xk2TwND8vUaoWIjv
+         MUGeR7V041+/QFtVv3DTCfqbzD02dgFZ3lsh40pXTxDbFl4nLprkNgRtU4I4Uz1//ToV
+         81Sw==
+X-Gm-Message-State: AGi0PuaXxtsV9zou5ZwR4ffVu21c1nU2zijBCw0h7qIrl2ODoJmpL4mT
+        mlbjE1pegzPbvYH6wtEYQ0E=
+X-Google-Smtp-Source: APiQypK7cfT9u0K0wRgKSWfrFo5+g3J3L9kW9wLiJwLr06ncTXRn0nQoT+QRUji8KiEu1VYA8lF92g==
+X-Received: by 2002:adf:fac5:: with SMTP id a5mr28720107wrs.210.1589317878732;
+        Tue, 12 May 2020 14:11:18 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.22
+        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:11:23 -0700 (PDT)
+        Tue, 12 May 2020 14:11:18 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 7/8] net: stmmac: dwmac-meson8b: Make the clock enabling code re-usable
-Date:   Tue, 12 May 2020 23:11:02 +0200
-Message-Id: <20200512211103.530674-8-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 2/8] dt-bindings: net: dwmac-meson: Document the "timing-adjustment" clock
+Date:   Tue, 12 May 2020 23:10:57 +0200
+Message-Id: <20200512211103.530674-3-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
 References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
@@ -80,63 +80,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The timing adjustment clock will need similar logic as the RGMII clock:
-It has to be enabled in the driver conditionally and when the driver is
-unloaded it should be disabled again. Extract the existing code for the
-RGMII clock into a new function so it can be re-used.
+The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
+requires an internal re-timing circuit whose input clock is called
+"timing adjustment clock". Document this clock input so the clock can be
+enabled as needed.
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 23 +++++++++++++++----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+Rob, there is a soft dependency for this patch on commit f22531438ff42c
+"dt-bindings: net: dwmac: increase 'maxItems' for 'clocks',
+'clock-names' properties" which is currently in your dt-next branch.
+That commit is needed to make the dt-bindings schema validation pass,
+because it increases the maximum number allowed clocks for anything
+that extends "snps,dwmac" from three to five (here I need four clocks).
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-index 41f3ef6bea66..d31f79c455de 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-@@ -266,6 +266,22 @@ static int meson_axg_set_phy_mode(struct meson8b_dwmac *dwmac)
- 	return 0;
- }
+
+ .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+index 66074314e57a..64c20c92c07d 100644
+--- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+@@ -40,18 +40,22 @@ allOf:
+     then:
+       properties:
+         clocks:
++          minItems: 3
++          maxItems: 4
+           items:
+             - description: GMAC main clock
+             - description: First parent clock of the internal mux
+             - description: Second parent clock of the internal mux
++            - description: The clock which drives the timing adjustment logic
  
-+static int meson8b_devm_clk_prepare_enable(struct meson8b_dwmac *dwmac,
-+					   struct clk *clk)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ret;
-+
-+	devm_add_action_or_reset(dwmac->dev,
-+				 (void(*)(void *))clk_disable_unprepare,
-+				 dwmac->rgmii_tx_clk);
-+
-+	return 0;
-+}
-+
- static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- {
- 	int ret;
-@@ -299,16 +315,13 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
- 			return ret;
- 		}
+         clock-names:
+           minItems: 3
+-          maxItems: 3
++          maxItems: 4
+           items:
+             - const: stmmaceth
+             - const: clkin0
+             - const: clkin1
++            - const: timing-adjustment
  
--		ret = clk_prepare_enable(dwmac->rgmii_tx_clk);
-+		ret = meson8b_devm_clk_prepare_enable(dwmac,
-+						      dwmac->rgmii_tx_clk);
- 		if (ret) {
- 			dev_err(dwmac->dev,
- 				"failed to enable the RGMII TX clock\n");
- 			return ret;
- 		}
--
--		devm_add_action_or_reset(dwmac->dev,
--					(void(*)(void *))clk_disable_unprepare,
--					dwmac->rgmii_tx_clk);
- 		break;
- 
- 	case PHY_INTERFACE_MODE_RMII:
+         amlogic,tx-delay-ns:
+           $ref: /schemas/types.yaml#definitions/uint32
+@@ -120,7 +124,7 @@ examples:
+          reg = <0xc9410000 0x10000>, <0xc8834540 0x8>;
+          interrupts = <8>;
+          interrupt-names = "macirq";
+-         clocks = <&clk_eth>, <&clkc_fclk_div2>, <&clk_mpll2>;
+-         clock-names = "stmmaceth", "clkin0", "clkin1";
++         clocks = <&clk_eth>, <&clk_fclk_div2>, <&clk_mpll2>, <&clk_fclk_div2>;
++         clock-names = "stmmaceth", "clkin0", "clkin1", "timing-adjustment";
+          phy-mode = "rgmii";
+     };
 -- 
 2.26.2
 
