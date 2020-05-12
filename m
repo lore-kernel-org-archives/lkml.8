@@ -2,307 +2,198 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9323BC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711F7C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F9120753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526CB20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UEfD8pEy"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NCtjCiXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbgELX5s (ORCPT
+        id S1731758AbgELX6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42056 "EHLO
+        Tue, 12 May 2020 19:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELX5r (ORCPT
+        with ESMTP id S1725938AbgELX6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:57:47 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB0CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:57:47 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p21so1078039pgm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:57:47 -0700 (PDT)
+        Tue, 12 May 2020 19:58:19 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82D8C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:58:17 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id t8so6912957qvw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/un83eq62ib7sMEBamqsTej2IdlfzhbBhP+Wn1rFlVw=;
-        b=UEfD8pEyXNO1N8kgnrJK8T/3rhVXgWPjLWlN+Y1j9OXH8AlHW2iBRg+mElxjb2A0pj
-         YfTrukk3ZWjZlQHoWFa90FUzcjYnuLz1T771TfwQvrP1PSda8JMpIDUzKCl9hbgNb/Fp
-         rlLSxVnU9nRzG8dbeuyBJL3wapz3qWZgC0TI0=
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yD3a12+euav5lEzQ2eD5g0W71Fdr+4HWLSF5wAq+Di4=;
+        b=NCtjCiXdpUxrD3bLzlXKjxlXGtB+pIewyDmhQ6NgTrKvEBiiAO3l064DUq0chV8UqU
+         3wB2OBgRQ9Iht75ymMDaei3StnLtfND5OXchaakbk/r7q/N8ILNzEior35O7K8va4vj+
+         BMOiB9k3rO9/RspupD8JjBww3kCaa3IQrVCaRw2F0BIkSgdnctCS9PhcekAiHzOzBLkr
+         nEry2gYpIjfwV5M6ajTLYZLme6Jsn+kCR4KMcN0MXVdjQ+LvwvTXQ0r55weM0847xzkz
+         Mheh2jC4iUU31tpYcrbMBSe8SsSJO3QT5fBSmT+HjN6JfSS/rHlRsDS7n8JNyjTZLX8L
+         ZRdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/un83eq62ib7sMEBamqsTej2IdlfzhbBhP+Wn1rFlVw=;
-        b=qxG+MuL3CpD3QLk30NjjcOW8H7FCJ2RXLQgC/CTYv8Lbu0WYACSoIvu/awCPR/QjPH
-         TcDQsZiKASpTBsxdhiFpFeMCDHJqu21KLt3uGVp8/YJF5IdJ6PlunF3eWy10Ws5d2VS/
-         vAKT0tCkqAXyvyOcVOBPv5aG1Cty1iTxyMcmvernH4mBOO16QveufKs9tYiT7g9wPRU0
-         x1ObglZFmM4GhV7OeHm6k12N2BfSS7CSjGUcGj7MgdhEWzbPCWKg1bIFIP7Ikk/cMnTO
-         hZYKhZojH8F3BaIkKCiEFI4IadceVL1TE32+2kbJ0YylKZ0PcGMAr4u47PzUCTE5w5zD
-         17sg==
-X-Gm-Message-State: AGi0PuafB6E+TYKRkjqvn7d8w6CTolJ4TKJXGSEqZkjQ41EKWOCs3OzX
-        1svJzz/r4U0qoWGuRib35IZRNg==
-X-Google-Smtp-Source: APiQypKLCiYnLwVN1YMsLc9KIENkyooXV7ldGuJb8isv4LBxYRuK4jAVvJZGE5SScqNhGl3zo3n87w==
-X-Received: by 2002:aa7:8b15:: with SMTP id f21mr23148055pfd.72.1589327866540;
-        Tue, 12 May 2020 16:57:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z60sm14218113pjj.14.2020.05.12.16.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 16:57:45 -0700 (PDT)
-Date:   Tue, 12 May 2020 16:57:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
-        sashal@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
- dump_oops
-Message-ID: <202005121652.7EC6FE3@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200506211523.15077-5-keescook@chromium.org>
- <20200512233504.GA118720@sequoia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512233504.GA118720@sequoia>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yD3a12+euav5lEzQ2eD5g0W71Fdr+4HWLSF5wAq+Di4=;
+        b=TpFYT8HCbDtgC2uPSgARjSVcDjiw+QPRhYtj0Dzf8CLZ+4lZwSa9Q816kxs7tEgP6v
+         b8nY0kWALn3zf6wLXKOfXw8SaBNpLzkirfc2jeaITqEzKuwM6ZcyVzxg5aPRf3o9ZkXc
+         Qw5nDZuOE+aZh2gx4ifuzjTOlG2gKcnb3iOIo/KoorqGBjCeqJ+AEKIscahBFnyf6okH
+         yuiEYP9t/Ad4qs8hviogVhaKTZUA9L3Lwi1gsxH1Sn+7pdzoh9Z6zdsfLwfQG3TNmMbC
+         AUX9FPh0cYw48rPhdCAtyJvcizSotCLgHXi9PQjRmpIGkqjDIMbA2Vk9rsFQG+T3pqrC
+         dGDQ==
+X-Gm-Message-State: AGi0PuY6acj71nbxq0+vSs5djz4VCvW0hptMDhhVb16T+QPPS/GkOZxS
+        +6zXKirTDP5gXKqGeGpX+0g5mg==
+X-Google-Smtp-Source: APiQypLQc2IzguaIlxfjV2xEQaPP5JANj3ncXax4B/oEnympCQO03p058pVnDRHNNYvdeA4bh4hL0w==
+X-Received: by 2002:ad4:42b1:: with SMTP id e17mr23319979qvr.149.1589327896644;
+        Tue, 12 May 2020 16:58:16 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j11sm11834028qkk.33.2020.05.12.16.58.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 16:58:15 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
+ mem_cgroup_charge() API
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200512215813.GA487759@cmpxchg.org>
+Date:   Tue, 12 May 2020 19:58:14 -0400
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
+        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com, Johannes Weiner <hannes@cmpxchg.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <25270BAD-CB7E-4E92-96BA-740690744DBA@lca.pw>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200508183105.225460-13-hannes@cmpxchg.org>
+ <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
+ <20200512215813.GA487759@cmpxchg.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:35:04PM -0500, Tyler Hicks wrote:
-> On 2020-05-06 14:15:21, Kees Cook wrote:
-> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > 
-> > Now that pstore_register() can correctly pass max_reason to the kmesg
-> > dump facility, introduce a new "max_reason" module parameter and
-> > "max-reason" Device Tree field.
-> > 
-> > The "dump_oops" module parameter and "dump-oops" Device
-> > Tree field are now considered deprecated, but are now automatically
-> > converted to their corresponding max_reason values when present, though
-> > the new max_reason setting has precedence.
-> > 
-> > For struct ramoops_platform_data, the "dump_oops" member is entirely
-> > replaced by a new "max_reason" member, with the only existing user
-> > updated in place.
-> > 
-> > Additionally remove the "reason" filter logic from ramoops_pstore_write(),
-> > as that is not specifically needed anymore, though technically
-> > this is a change in behavior for any ramoops users also setting the
-> > printk.always_kmsg_dump boot param, which will cause ramoops to behave as
-> > if max_reason was set to KMSG_DUMP_MAX.
-> > 
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > Link: https://lore.kernel.org/r/20200505154510.93506-4-pasha.tatashin@soleen.com
-> > Link: https://lore.kernel.org/r/20200505154510.93506-5-pasha.tatashin@soleen.com
-> > Co-developed-by: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  Documentation/admin-guide/ramoops.rst     | 14 +++++--
-> >  drivers/platform/chrome/chromeos_pstore.c |  2 +-
-> >  fs/pstore/ram.c                           | 51 +++++++++++++++--------
-> >  include/linux/pstore_ram.h                |  2 +-
-> >  4 files changed, 45 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
-> > index 6dbcc5481000..a60a96218ba9 100644
-> > --- a/Documentation/admin-guide/ramoops.rst
-> > +++ b/Documentation/admin-guide/ramoops.rst
-> > @@ -32,11 +32,17 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
-> >  memory are implementation defined, and won't work on many ARMs such as omaps.
-> >  
-> >  The memory area is divided into ``record_size`` chunks (also rounded down to
-> > -power of two) and each oops/panic writes a ``record_size`` chunk of
-> > +power of two) and each kmesg dump writes a ``record_size`` chunk of
-> >  information.
-> >  
-> > -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
-> > -variable while setting 0 in that variable dumps only the panics.
-> > +Limiting which kinds of kmsg dumps are stored can be controlled via
-> > +the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
-> > +``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
-> > +``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
-> > +``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
-> > +(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
-> > +``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
-> > +otherwise KMSG_DUMP_MAX.
-> >  
-> >  The module uses a counter to record multiple dumps but the counter gets reset
-> >  on restart (i.e. new dumps after the restart will overwrite old ones).
-> > @@ -90,7 +96,7 @@ Setting the ramoops parameters can be done in several different manners:
-> >          .mem_address            = <...>,
-> >          .mem_type               = <...>,
-> >          .record_size            = <...>,
-> > -        .dump_oops              = <...>,
-> > +        .max_reason             = <...>,
-> >          .ecc                    = <...>,
-> >    };
-> >  
-> > diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
-> > index d13770785fb5..fa51153688b4 100644
-> > --- a/drivers/platform/chrome/chromeos_pstore.c
-> > +++ b/drivers/platform/chrome/chromeos_pstore.c
-> > @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
-> >  	.record_size	= 0x40000,
-> >  	.console_size	= 0x20000,
-> >  	.ftrace_size	= 0x20000,
-> > -	.dump_oops	= 1,
-> > +	.max_reason	= KMSG_DUMP_OOPS,
-> >  };
-> >  
-> >  static struct platform_device chromeos_ramoops = {
-> > diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> > index c2f76b650f91..b8dac1d04e96 100644
-> > --- a/fs/pstore/ram.c
-> > +++ b/fs/pstore/ram.c
-> > @@ -57,10 +57,15 @@ module_param(mem_type, uint, 0600);
-> >  MODULE_PARM_DESC(mem_type,
-> >  		"set to 1 to try to use unbuffered memory (default 0)");
-> >  
-> > -static int dump_oops = 1;
-> > -module_param(dump_oops, int, 0600);
-> > +static int ramoops_dump_oops = -1;
-> > +module_param_named(dump_oops, ramoops_dump_oops, int, 0400);
-> >  MODULE_PARM_DESC(dump_oops,
-> > -		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
-> > +		 "set to 1 to dump oopses & panics, 0 to only dump panics (deprecated: use max_reason instead)");
-> > +
-> > +static int ramoops_max_reason = KMESG_DUMP_OOPS;
-> > +module_param_named(max_reason, ramoops_max_reason, int, 0400);
-> > +MODULE_PARM_DESC(max_reason,
-> > +		 "maximum reason for kmsg dump (default 2: Oops and Panic) ");
-> >  
-> >  static int ramoops_ecc;
-> >  module_param_named(ecc, ramoops_ecc, int, 0600);
-> > @@ -81,7 +86,6 @@ struct ramoops_context {
-> >  	size_t console_size;
-> >  	size_t ftrace_size;
-> >  	size_t pmsg_size;
-> > -	int dump_oops;
-> >  	u32 flags;
-> >  	struct persistent_ram_ecc_info ecc_info;
-> >  	unsigned int max_dump_cnt;
-> > @@ -382,16 +386,14 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
-> >  		return -EINVAL;
-> >  
-> >  	/*
-> > -	 * Out of the various dmesg dump types, ramoops is currently designed
-> > -	 * to only store crash logs, rather than storing general kernel logs.
-> > +	 * We could filter on record->reason here if we wanted to (which
-> > +	 * would duplicate what happened before the "max_reason" setting
-> > +	 * was added), but that would defeat the purpose of a system
-> > +	 * changing printk.always_kmsg_dump, so instead log everything that
-> > +	 * the kmsg dumper sends us, since it should be doing the filtering
-> > +	 * based on the combination of printk.always_kmsg_dump and our
-> > +	 * requested "max_reason".
-> >  	 */
-> > -	if (record->reason != KMSG_DUMP_OOPS &&
-> > -	    record->reason != KMSG_DUMP_PANIC)
-> > -		return -EINVAL;
-> > -
-> > -	/* Skip Oopes when configured to do so. */
-> > -	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
-> > -		return -EINVAL;
-> >  
-> >  	/*
-> >  	 * Explicitly only take the first part of any new crash.
-> > @@ -692,7 +694,14 @@ static int ramoops_parse_dt(struct platform_device *pdev,
-> >  	pdata->mem_size = resource_size(res);
-> >  	pdata->mem_address = res->start;
-> >  	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
-> > -	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
-> > +	/*
-> > +	 * Setting "no-dump-oops" is deprecated and will be ignored if
-> > +	 * "max_reason" is also specified.
-> > +	 */
-> > +	if (of_property_read_bool(of_node, "no-dump-oops"))
-> > +		pdata->max_reason = KMSG_DUMP_PANIC;
-> > +	else
-> > +		pdata->max_reason = KMSG_DUMP_OOPS;
-> >  
-> >  #define parse_size(name, field, default_value) {			\
-> >  		ret = ramoops_parse_dt_size(pdev, name, default_value,	\
-> > @@ -708,6 +717,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
-> >  	parse_size("pmsg-size", pdata->pmsg_size, 0);
-> >  	parse_size("ecc-size", pdata->ecc_info.ecc_size, 0);
-> >  	parse_size("flags", pdata->flags, 0);
-> > +	parse_size("max-reason", pdata->max_reason, pdata->max_reason);
-> >  
-> >  #undef parse_size
-> >  
-> > @@ -791,7 +801,6 @@ static int ramoops_probe(struct platform_device *pdev)
-> >  	cxt->console_size = pdata->console_size;
-> >  	cxt->ftrace_size = pdata->ftrace_size;
-> >  	cxt->pmsg_size = pdata->pmsg_size;
-> > -	cxt->dump_oops = pdata->dump_oops;
-> >  	cxt->flags = pdata->flags;
-> >  	cxt->ecc_info = pdata->ecc_info;
-> >  
-> > @@ -834,8 +843,10 @@ static int ramoops_probe(struct platform_device *pdev)
-> >  	 * the single region size is how to check.
-> >  	 */
-> >  	cxt->pstore.flags = 0;
-> > -	if (cxt->max_dump_cnt)
-> > +	if (cxt->max_dump_cnt) {
-> >  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
-> > +		cxt->pstore.max_reason = pdata->max_reason;
-> > +	}
-> >  	if (cxt->console_size)
-> >  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-> >  	if (cxt->max_ftrace_cnt)
-> > @@ -871,7 +882,7 @@ static int ramoops_probe(struct platform_device *pdev)
-> >  	mem_size = pdata->mem_size;
-> >  	mem_address = pdata->mem_address;
-> >  	record_size = pdata->record_size;
-> > -	dump_oops = pdata->dump_oops;
-> > +	ramoops_max_reason = pdata->max_reason;
-> >  	ramoops_console_size = pdata->console_size;
-> >  	ramoops_pmsg_size = pdata->pmsg_size;
-> >  	ramoops_ftrace_size = pdata->ftrace_size;
-> > @@ -954,7 +965,11 @@ static void __init ramoops_register_dummy(void)
-> >  	pdata.console_size = ramoops_console_size;
-> >  	pdata.ftrace_size = ramoops_ftrace_size;
-> >  	pdata.pmsg_size = ramoops_pmsg_size;
-> > -	pdata.dump_oops = dump_oops;
-> > +	/* Parse deprecated module param "dump_oops" into "max_reason". */
-> > +	if (ramoops_dump_oops != -1)
-> > +		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
-> > +						     : KMSG_DUMP_PANIC;
-> > +	pdata.max_reason = ramoops_max_reason;
-> 
-> This isn't quite right. We're conditionally assigning pdata.max_reason
-> and then immediately re-assigning it.
-> 
-> IIUC, we're just missing an else block and it should look like this:
-> 
-> 	/* Parse deprecated module param "dump_oops" into "max_reason". */
-> 	if (ramoops_dump_oops != -1)
-> 		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
-> 						     : KMSG_DUMP_PANIC;
-> 	else
-> 		pdata.max_reason = ramoops_max_reason;
 
-Oops, yes. ramoops_max_reason needs to also have an "unset" value so
-this can determine which was set... I'll get this fixed. Thanks for
-double-checking this!
 
--- 
-Kees Cook
+> On May 12, 2020, at 5:58 PM, Johannes Weiner <hannes@cmpxchg.org> =
+wrote:
+>=20
+> On Tue, May 12, 2020 at 10:38:54AM -0400, Qian Cai wrote:
+>>> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
+wrote:
+>>>=20
+>>> With the page->mapping requirement gone from memcg, we can charge =
+anon
+>>> and file-thp pages in one single step, right after they're =
+allocated.
+>>>=20
+>>> This removes two out of three API calls - especially the tricky =
+commit
+>>> step that needed to happen at just the right time between when the
+>>> page is "set up" and when it's "published" - somewhat vague and =
+fluid
+>>> concepts that varied by page type. All we need is a freshly =
+allocated
+>>> page and a memcg context to charge.
+>>>=20
+>>> v2: prevent double charges on pre-allocated hugepages in khugepaged
+>>>=20
+>>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+>>> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>>> ---
+>>> include/linux/mm.h      |  4 +---
+>>> kernel/events/uprobes.c | 11 +++--------
+>>> mm/filemap.c            |  2 +-
+>>> mm/huge_memory.c        |  9 +++------
+>>> mm/khugepaged.c         | 35 ++++++++++-------------------------
+>>> mm/memory.c             | 36 ++++++++++--------------------------
+>>> mm/migrate.c            |  5 +----
+>>> mm/swapfile.c           |  6 +-----
+>>> mm/userfaultfd.c        |  5 +----
+>>> 9 files changed, 31 insertions(+), 82 deletions(-)
+>> []
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>>=20
+>>> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
+mm_struct *mm,
+>>> out_up_write:
+>>> 	up_write(&mm->mmap_sem);
+>>> out_nolock:
+>>> +	if (*hpage)
+>>> +		mem_cgroup_uncharge(*hpage);
+>>> 	trace_mm_collapse_huge_page(mm, isolated, result);
+>>> 	return;
+>>> out:
+>>> -	mem_cgroup_cancel_charge(new_page, memcg);
+>>> 	goto out_up_write;
+>>> }
+>> []
+>>=20
+>> Some memory pressure will crash this new code. It looks like somewhat =
+racy.
+>>=20
+>> if (!page->mem_cgroup)
+>>=20
+>> where page =3D=3D NULL in mem_cgroup_uncharge().
+>=20
+> Thanks for the report, sorry about the inconvenience.
+>=20
+> Hm, the page is exclusive at this point, nobody else should be
+> touching it. After all, khugepaged might reuse the preallocated page
+> for another pmd if this one fails to collapse.
+>=20
+> Looking at the code, I think it's page itself that's garbage, not
+> page->mem_cgroup changing. If you have CONFIG_NUMA and the allocation
+> fails, *hpage could contain an ERR_PTR instead of being NULL.
+>=20
+> I think we need the following fixlet:
+
+Yes, I have NUMA here.
+
+Stephen, can you pick this up for first before Andrew has a chance to =
+push out the next mmotm hopefully contain this fix?
+
+https://lore.kernel.org/lkml/20200512215813.GA487759@cmpxchg.org/
+
+>=20
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index f2e0a5e5cfbb..f6161e17da26 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1193,7 +1193,7 @@ static void collapse_huge_page(struct mm_struct =
+*mm,
+> out_up_write:
+> 	up_write(&mm->mmap_sem);
+> out_nolock:
+> -	if (*hpage)
+> +	if (!IS_ERR_OR_NULL(*hpage))
+> 		mem_cgroup_uncharge(*hpage);
+> 	trace_mm_collapse_huge_page(mm, isolated, result);
+> 	return;
+> @@ -1928,7 +1928,7 @@ static void collapse_file(struct mm_struct *mm,
+> 	unlock_page(new_page);
+> out:
+> 	VM_BUG_ON(!list_empty(&pagelist));
+> -	if (*hpage)
+> +	if (!IS_ERR_OR_NULL(*hpage))
+> 		mem_cgroup_uncharge(*hpage);
+> 	/* TODO: tracepoints */
+> }
+
