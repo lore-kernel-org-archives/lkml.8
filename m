@@ -2,130 +2,207 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA220C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DEC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1E4C2312A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2326420740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bskdv2W4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbgELTpd (ORCPT
+        id S1731127AbgELTrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:45:33 -0400
-Received: from avon.wwwdotorg.org ([104.237.132.123]:44168 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgELTpc (ORCPT
+        Tue, 12 May 2020 15:47:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgELTrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:45:32 -0400
-Received: from [10.2.57.154] (searspoint.nvidia.com [216.228.112.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id C66151C044A;
-        Tue, 12 May 2020 13:45:29 -0600 (MDT)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at avon.wwwdotorg.org
-Subject: Re: [PATCH 2/4] dt-bindings: sram: add documentation for
- reserved-only flag
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     robh+dt@kernel.org, robin.murphy@arm.com,
-        devicetree@vger.kernel.org, talho@nvidia.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, afaerber@suse.de,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-References: <20200512144803.24344-1-ykaukab@suse.de>
- <20200512144803.24344-2-ykaukab@suse.de>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Autocrypt: addr=swarren@wwwdotorg.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
-Date:   Tue, 12 May 2020 13:45:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 15:47:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1441C061A0C;
+        Tue, 12 May 2020 12:47:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a4so11590656lfh.12;
+        Tue, 12 May 2020 12:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WjAjlpYE7fH5pN8t/yMbFuqxjvx54OxzSi4iAN7+wSY=;
+        b=bskdv2W4eahWyCznKY14CJaqMIlwg1JIs4kKKX9w4GzFWU7e5GH7ZXA1LwZHDIPzDT
+         n4snYo2v4TATLedeAxkTEdRcKvMT/CxWV3nd3GPFERWcvLQKolJsNKPU2MKqiWtdwdeO
+         XoXLDSo8xKC9uec54bfG3/D+hSLz/dbu+JhrUVaquJh8vthl42QxRpOIVIDvuA1ntvig
+         c/I4kqJXBFyt6uetmUKea55s5kCjd+EJzobnIOWqFKa30dhKGCRRKBbcmhlUL8BN16fa
+         tk/In/Hd9csTY3mtXo6f3pTZKG2DDMXEMa/KePTBMQrKEwXqZtzBLAYscY5foP+509Ev
+         W7CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WjAjlpYE7fH5pN8t/yMbFuqxjvx54OxzSi4iAN7+wSY=;
+        b=add6R0G5jjxLv3z4IdgBZV5dvi4cQg04oq+iWOdNK4kSycQqyMT/5mc9ZQt+RjJbMt
+         QDUnKkARvjifO2PeYZ0fMB4VpQCwqjhzn1FsfltyPc/QpH+HCxT6BAOzUPWAr8eZidZ7
+         bHwLRyJUGiT/NgpwK8oJbbq14jNKfr4fapTMyC0ZSnuh6JnVs14QDWAYt4nO3NtN4fa3
+         18tD0ieirJmNqOgT0hfeerW96ddUY6jc78S8oQsaTr6FhLHfMTjstzxjCPVLO6A2U0Fq
+         Mi9W7ue5yGDMyDuaIpmElA16DV/HzOrD05mgDbq92d+IUX+NHduzQxP3gF/3NV7wG7Vy
+         cWvg==
+X-Gm-Message-State: AOAM5331FsWfR6o2ZRKMiOdlgoMV9k+340cQk9sfheUzmS8TH20fd6CB
+        LuYu9AbCqwtO3p4rDasRjbc=
+X-Google-Smtp-Source: ABdhPJz6Agc6qFrTkJ/HFpA/zp3IZ9qUzNEsSTFeJF1MqVWcGIkxmnqj1kooNcNu8xzXwyR6SNTsIA==
+X-Received: by 2002:ac2:558e:: with SMTP id v14mr15473478lfg.138.1589312857125;
+        Tue, 12 May 2020 12:47:37 -0700 (PDT)
+Received: from mobilestation ([95.79.139.244])
+        by smtp.gmail.com with ESMTPSA id r12sm13097599ljc.12.2020.05.12.12.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 12:47:36 -0700 (PDT)
+Date:   Tue, 12 May 2020 22:47:34 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200512194734.j5xvm3khijpp5tkh@mobilestation>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+ <20200508114153.GK185537@smile.fi.intel.com>
+ <20200512140820.ssjv6pl7busqqi3t@mobilestation>
+ <20200512191208.GG185537@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512144803.24344-2-ykaukab@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512191208.GG185537@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/20 8:48 AM, Mian Yousaf Kaukab wrote:
-> Add documentation for the new optional flag added for SRAM driver.
+On Tue, May 12, 2020 at 10:12:08PM +0300, Andy Shevchenko wrote:
+> On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
+> > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
+> > > > IP core of the DW DMA controller may be synthesized with different
+> > > > max burst length of the transfers per each channel. According to Synopsis
+> > > > having the fixed maximum burst transactions length may provide some
+> > > > performance gain. At the same time setting up the source and destination
+> > > > multi size exceeding the max burst length limitation may cause a serious
+> > > > problems. In our case the system just hangs up. In order to fix this
+> > > > lets introduce the max burst length platform config of the DW DMA
+> > > > controller device and don't let the DMA channels configuration code
+> > > > exceed the burst length hardware limitation. Depending on the IP core
+> > > > configuration the maximum value can vary from channel to channel.
+> > > > It can be detected either in runtime from the DWC parameter registers
+> > > > or from the dedicated dts property.
+> > > 
+> > > I'm wondering what can be the scenario when your peripheral will ask something
+> > > which is not supported by DMA controller?
+> > 
+> > I may misunderstood your statement, because seeing your activity around my
+> > patchsets including the SPI patchset and sometimes very helpful comments,
+> > this question answer seems too obvious to see you asking it.
+> > 
+> > No need to go far for an example. See the DW APB SSI driver. Its DMA module
+> > specifies the burst length to be 16, while not all of ours channels supports it.
+> > Yes, originally it has been developed for the Intel Midfield SPI, but since I
+> > converted the driver into a generic code we can't use a fixed value. For instance
+> > in our hardware only two DMA channels of total 16 are capable of bursting up to
+> > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
+> > burst length. While there are two SPI interfaces, each of which need to have two
+> > DMA channels for communications. So I need four channels in total to allocate to
+> > provide the DMA capability for all interfaces. In order to set the SPI controller
+> > up with valid optimized parameters the max-burst-length is required. Otherwise we
+> > can end up with buffers overrun/underrun.
+> 
+> Right, and we come to the question which channel better to be used by SPI and
+> the rest devices. Without specific filter function you can easily get into a
+> case of inverted optimizations, when SPI got channels with burst = 4, while
+> it's needed 16, and other hardware otherwise. Performance wise it's worse
+> scenario which we may avoid in the first place, right?
 
-> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+If we start thinking like you said, we'll get stuck at a problem of which interfaces
+should get faster DMA channels and which one should be left with slowest. In general
+this task can't be solved, because without any application-specific requirement
+they all are equally valuable and deserve to have the best resources allocated.
+So we shouldn't assume that some interface is better or more valuable than
+another, therefore in generic DMA client code any filtering is redundant.
 
-> +  reserved-only:
-> +    description:
-> +      The flag indicating, that only SRAM reserved regions have to be remapped.
-> +      remapping type is selected depending upon no-memory-wc as usual.
-> +    type: boolean
+> 
+> > > Peripheral needs to supply a lot of configuration parameters specific to the
+> > > DMA controller in use (that's why we have struct dw_dma_slave).
+> > > So, seems to me the feasible approach is supply correct data in the first place.
+> > 
+> > How to supply a valid data if clients don't know the DMA controller limitations
+> > in general?
+> 
+> This is a good question. DMA controllers are quite different and having unified
+> capabilities structure for all is almost impossible task to fulfil. That's why
+> custom filter function(s) can help here. Based on compatible string you can
+> implement whatever customized quirks like two functions, for example, to try 16
+> burst size first and fallback to 4 if none was previously found.
 
-This feels a bit like a SW flag rather than a HW description, so I'm not
-sure it's appropriate to put it into DT.
+Right. As I said in the previous email it's up to the corresponding platforms to
+decide the criteria of the filtering including the max-burst length value.
+Even though the DW DMA channels resources aren't uniform on Baikal-T1 SoC I also
+won't do the filter-based channel allocation, because I can't predict the SoC
+application. Some of them may be used on a platform with active SPI interface
+utilization, some with specific requirements to UARTs and so on.
 
-Are there any cases where the SW should map all of the SRAM, i.e. where
-we wouldn't expect to set reserved-only? I'd expect reserved-only to be
-the default, and perhaps only, mode of operation for the SRAM driver. If
-we can't do that because some SW currently expects to be able to map
-arbitrary portions of the SRAM, shouldn't that SW be fixed to tell the
-SRAM driver which parts it's using, hence still allowing the driver to
-only map in-use portions?
+> 
+> > > If you have specific channels to acquire then you probably need to provide a
+> > > custom xlate / filter functions. Because above seems a bit hackish workaround
+> > > of dynamic channel allocation mechanism.
+> > 
+> > No, I don't have a specific channel to acquire and in general you may use any
+> > returned from the DMA subsystem (though some platforms may need a dedicated
+> > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
+> > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
+> > their DMA settings must properly and optimally configured. It can be only done
+> > if you know the DMA controller parameters like max burst length, max block-size,
+> > etc.
+> > 
+> > So no. The change proposed by this patch isn't workaround, but a useful feature,
+> > moreover expected to be supported by the generic DMA subsystem.
+> 
+> See above.
+> 
+> > > But let's see what we can do better. Since maximum is defined on the slave side
+> > > device, it probably needs to define minimum as well, otherwise it's possible
+> > > that some hardware can't cope underrun bursts.
+> > 
+> > There is no need to define minimum if such limit doesn't exists except a
+> > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
+> > added such capability into the generic DMA subsystem so far.
+> 
+> There is a contract between provider and consumer about DMA resource. That's
+> why both sides should participate in fulfilling it. Theoretically it may be a
+> hardware that doesn't support minimum burst available in DMA by a reason. For
+> such we would need minimum to be provided as well.
+
+I don't think 'theoretical' consideration counts when implementing something in
+kernel. That 'theoretical' may never happen, but you'll end up supporting a
+dummy functionality. Practicality is what kernel developers normally place
+before anything else.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
