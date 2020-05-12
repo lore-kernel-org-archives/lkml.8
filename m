@@ -2,131 +2,129 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D72C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C596BC54E90
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2106C20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9857206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgELJHa (ORCPT
+        id S1729266AbgELJIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:07:30 -0400
-Received: from gofer.mess.org ([88.97.38.141]:38709 "EHLO gofer.mess.org"
+        Tue, 12 May 2020 05:08:06 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40872 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgELJH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:07:29 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 09A1EC63B0; Tue, 12 May 2020 10:07:24 +0100 (BST)
-Date:   Tue, 12 May 2020 10:07:24 +0100
-From:   Sean Young <sean@mess.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 2/3] input: serio: allow more than one byte to be sent at
- once
-Message-ID: <20200512090724.GA31990@gofer.mess.org>
-References: <20200507135337.2343-1-sean@mess.org>
- <20200507135337.2343-2-sean@mess.org>
- <20200507202546.GM89269@dtor-ws>
- <20200507205918.GA13370@gofer.mess.org>
- <20200511065118.GA1293993@kroah.com>
+        id S1725889AbgELJIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 05:08:05 -0400
+IronPort-SDR: C6eIVAzKrKUdAjWa4LxTUXAN9hAYi/2yMG73h0gScD+45i5hE4+CukNgg1veYTv7oM348Y0Zf4
+ j/GaWXogP7tg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 02:08:05 -0700
+IronPort-SDR: tK8Y1hj8lywcychMAVWY2TQBVdiHUmt66zVihP/hHXEbPQEzpNav1j/mL8IDsfr+cdnbEG0t44
+ teUKiXogRV6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
+   d="scan'208";a="265443794"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 12 May 2020 02:08:01 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYQtQ-00694C-A8; Tue, 12 May 2020 12:08:04 +0300
+Date:   Tue, 12 May 2020 12:08:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200512090804.GR185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+ <20200508111242.GH185537@smile.fi.intel.com>
+ <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
+ <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511065118.GA1293993@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511213531.wnywlljiulvndx6s@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 08:51:18AM +0200, Greg KH wrote:
-> On Thu, May 07, 2020 at 09:59:18PM +0100, Sean Young wrote:
-> > On Thu, May 07, 2020 at 01:25:46PM -0700, Dmitry Torokhov wrote:
-> > > On Thu, May 07, 2020 at 02:53:36PM +0100, Sean Young wrote:
-> > > > serio drivers can only send one byte at a time. If the underlying tty
-> > > > is a usb serial port, then each byte will be put into separate usb
-> > > > urbs, which is not efficient.
+On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > > This array property is used to indicate the maximum burst transaction
+> > > > > length supported by each DMA channel.
 > > > > 
-> > > > Additionally, the Infrared Toy device refuses to transmit IR if the
-> > > > IR data is sent one byte at a time. IR data is formatted in u16 values,
-> > > > and the firmware expects complete u16 values in the packet.
+> > > > > +  snps,max-burst-len:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > > +    description: |
+> > > > > +      Maximum length of burst transactions supported by hardware.
+> > > > > +      It's an array property with one cell per channel in units of
+> > > > > +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
+> > > > > +    items:
+> > > > > +      maxItems: 8
+> > > > > +      items:
 > > > > 
-> > > > https://github.com/DangerousPrototypes/USB_IR_Toy/blob/master/Firmware-main/IRs.c#L240
+> > > > > +        enum: [4, 8, 16, 32, 64, 128, 256]
+> > > > 
+> > > > Isn't 1 allowed?
 > > > 
-> > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
-> > > idea how they expect to get 16.
+> > > Burst length of 1 unit is supported, but in accordance with Data Book the MAX
+> > > burst length is limited to be equal to a value from the set I submitted. So the
+> > > max value can be either 4, or 8, or 16 and so on.
 > > 
-> > serio is a layer on top several serial protocols, including ttys. ttys allow
-> > more than one byte to be written at a time, see struct tty_operations:
-> > 
-> >         int  (*write)(struct tty_struct * tty,
-> >                       const unsigned char *buf, int count);
-> > 
-> > ttys would be very inefficient if you could only write one byte at a time,
-> > and they are very serial.
-> > 
-> > This patch exposes the underlying tty write() functionality to serio. When
-> > the underlying tty is a usb serial port this makes for far fewer usb packets
-> > being used to send the same data, and fixes my driver problem, and it
-> > would reduce the number of calls in a few other cases too.
-> > 
-> > I'm happy to rework the patch if there are comments on the style or
-> > approach.
+> > Hmm... It seems you mistakenly took here DMAH_CHx_MAX_MULT_SIZE pre-silicon
+> > configuration parameter instead of runtime as described in Table 26:
+> > CTLx.SRC_MSIZE and DEST_MSIZE Decoding.
 > 
-> Why not just use the ir-usb.c driver for this device instead?
+> No. You misunderstood what I meant. We shouldn't use a runtime parameters values
+> here. Why would we?
 
-So this device is the infrared kind which rc-core (in drivers/media/rc/)
-supports, remotes and such things (not for serial IR). So by using a 
-rc-core driver, it can use kernel IR decoding, BPF decoding, lirc chardev
-and rc keymaps, etc.
+Because what we describe in the DTS is what user may do to the hardware. In
+some cases user might want to limit this to 1, how to achieve that?
 
-This device is a PIC18F2550 type device, which is a usb serial port
-microcontroller type with some firmware and IR diodes:
-	http://dangerousprototypes.com/docs/USB_IR_Toy_v2
+Rob, is there any clarification that schema describes only synthesized values?
+Or i.o.w. shall we allow user to setup whatever hardware supports at run time?
 
-serio supports a whole bunch of usb serial devices which can be attached
-via inputattach(1). Not all of these are input devices, for example there
-are two cec devices too.
+> Property "snps,max-burst-len" matches DMAH_CHx_MAX_MULT_SIZE
+> config parameter.
 
-Now, in many of these drivers, multiple bytes need to be written to the
-device in order to send it a command, for example in
-drivers/input/touchscreen/elo.c:
+Why? User should have a possibility to ask whatever hardware supports at run time.
 
-        for (i = 0; i < ELO10_PACKET_LEN; i++) {
-                csum += packet[i];
-                if (serio_write(elo->serio, packet[i]))
-                        goto out;
-        }
+> See a comment to the "SRC_MSIZE" and "DEST_MSIZE" fields of the
+> registers. You'll find out that their maximum value is determined by the
+> DMAH_CHx_MAX_MULT_SIZE parameter, which must belong to the set [4, 8, 16, 32, 64,
+> 128, 256]. So no matter how you synthesize the DW DMAC block you'll have at least
+> 4x max burst length supported.
 
-So if serio had an interface for sending a buffer, that would be less
-call overhead. In fact, if the underlying serio is a serial usb port,
-that would much more efficient on the usb layer too (one usb roundtrips in
-stead of ELO10_PACKET_LEN roundtrips), like so:
-
-	serio_write_buf(elo->serio, packet, ELO10_PACKET_LEN);
-
-So what I'm suggesting is extending the serio interface to allow sending
-a buffer of bytes. Of course serio isn't just usb serial ports. There quite
-a few instances of serio_register_port() in the kernel. Many of them
-can be extended to support sending a buffer rather than a single byte,
-if this makes sense. For example the ps2 serio port takes a mutex for every
-byte, so this could be more efficient by reducing it to one mutex lock
-per buffer.
-
-Now it would be nice to have a discussion about this rather than being
-dismissed with:
-
-> > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
-> > > idea how they expect to get 16.
-
-Which is just a tad insulting.
+That's true.
 
 
-Sean
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
