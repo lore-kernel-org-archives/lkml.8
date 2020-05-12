@@ -2,125 +2,118 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4271CC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5472FC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10ABC20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27CF72495A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o869Ee1y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mglqha6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgELJTj (ORCPT
+        id S1729269AbgELJTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46332 "EHLO
+        Tue, 12 May 2020 05:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgELJTi (ORCPT
+        by vger.kernel.org with ESMTP id S1726024AbgELJTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:19:38 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D42C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=shK7aR/ydkvsnOWisRj+Fa3yjOqgDfCAxCFNZzyL1cI=; b=o869Ee1yYenCiNHinXAuy9QNzi
-        lldL97dLFw0qZTq3V0fXhrmUqlagDm1p1AIshVARtquDckTVA0wQP7iB4yCG378ZAPsywIaBHUSZJ
-        T+ShFq5/eFnwZakFcwSCnODyZtanmjH+E0OAue+hxnDaaZIWcViz4cbRjT5GQM09lHuCoZsMjrr02
-        fAYPum/x81lFjLrwawzpHGpTs0H68pssEtREJ7eiAEDsaVO1OBtZqBfB7CyNXrj+goEG6YCQ/ZTKN
-        +j8JE8q6zjWXZR6hJIt/mGpdi9eMieDQhwTc+P/LcSuL5H0p2dDIwuXATb9tmyYfOc1c5/yek1dmq
-        t51VenSA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYR4L-0004k1-Er; Tue, 12 May 2020 09:19:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E8A75300261;
-        Tue, 12 May 2020 11:19:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CBCD3203AA832; Tue, 12 May 2020 11:19:18 +0200 (CEST)
-Date:   Tue, 12 May 2020 11:19:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] arm64: perf_event: Fix time offset prior to epoch
-Message-ID: <20200512091918.GH2978@hirez.programming.kicks-ass.net>
-References: <20200505135544.6003-1-leo.yan@linaro.org>
- <20200511092200.GF2957@hirez.programming.kicks-ass.net>
- <20200511092519.GA3001@hirez.programming.kicks-ass.net>
- <20200512063812.GA20352@leoy-ThinkPad-X240s>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512063812.GA20352@leoy-ThinkPad-X240s>
+        Tue, 12 May 2020 05:19:49 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD24C061A0C;
+        Tue, 12 May 2020 02:19:49 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t40so9093817pjb.3;
+        Tue, 12 May 2020 02:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
+        b=Mglqha6zf4yCyBuN1JhM/UvGpoJccJ0mz+FVC/tYpYCPTiXEuamRf/XY7WUy6QyNfI
+         LY1DNTH4E3eV3ddLsU6PxfXjmwgQkXShWdfg6VlQffwoJ/JJv/79gQrLI18ZDZYA9rdA
+         t765sebL8CNfI4SlkzDSYOliuKxlDN5vp9SwwNkYSQpQvc1S8u8BnKdikmDu+pjLxa3O
+         UonXJq41yRadaD4J7083xLeRG5fbyXy4/FML4a/8cjcSP8+dm7epzTVzNJVR9htmqmSv
+         fRLBlj4ZoL/IV6usCtprKQDBb9UpZCyWwecUCazD8CsARM0pGNB1bRki9TfcgNeIVTuF
+         GhmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
+        b=SWolA+qRmi/9GSEDNndtIdttpQnz7cH7+AfDO0vRJERgNya7JShW3G/j/audzq+/lz
+         laUdloVraTA7E+pqtHwFP5T7OEfqkMzVTOVlukQ0GYszvc7tpYbBxlv2u38ouWZwx9Np
+         w8Vvv7gXnjRlDhvsm3x1l+/kMeHoLsQbgFaMBi0kp9Z7a1p6BHjXu/m2+NS7+K4NO9We
+         ybVPOS8i6/LXbJA5clHk9NIGH+j3QAlGGXyeKTfBXip+pBQohqa3IKMgOF9YANmEHyPJ
+         cQribLkj1fpTDJ25no6tzR+nWQ73kYqK5rf5hT0bZiRUpu6YnK/voadN47K39u0ViE4o
+         QxUQ==
+X-Gm-Message-State: AGi0PuZKWnbIzW2qcrQmi8JBUoG2+dTlO5WGMvfqnoxGEgzGDR0zVvc1
+        w50/C0rgp+4g8log+Tr9IYo=
+X-Google-Smtp-Source: APiQypJ9gTfQbVWhwVvBIvaeS/BnzgA7vFw4SAoPPieKhgGQanQt+xg/c333SFLbyoeyvyjH3AqW4g==
+X-Received: by 2002:a17:90a:9295:: with SMTP id n21mr26444117pjo.195.1589275189436;
+        Tue, 12 May 2020 02:19:49 -0700 (PDT)
+Received: from localhost.localdomain ([2001:2d8:308:9c7a:d5fe:3ea6:5791:c8e8])
+        by smtp.gmail.com with ESMTPSA id b16sm11546944pfp.89.2020.05.12.02.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 02:19:48 -0700 (PDT)
+From:   Steve Lee <steves.lee.maxim@gmail.com>
+X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
+Subject: [V2 PATCH 1/2] dt-bindings: Added device tree binding for max98390
+Date:   Tue, 12 May 2020 18:18:46 +0900
+Message-Id: <20200512091846.31207-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:38:12PM +0800, Leo Yan wrote:
-> @@ -1165,28 +1166,26 @@ device_initcall(armv8_pmu_driver_init)
->  void arch_perf_update_userpage(struct perf_event *event,
->  			       struct perf_event_mmap_page *userpg, u64 now)
->  {
-> +	struct clock_read_data *rd;
-> +	unsigned int seq;
->  
->  	/*
->  	 * Internal timekeeping for enabled/running/stopped times
->  	 * is always computed with the sched_clock.
->  	 */
->  	userpg->cap_user_time = 1;
-> +	userpg->cap_user_time_zero = 1;
->  
-> +	do {
-> +		rd = sched_clock_read_begin(&seq);
-> +
-> +		userpg->time_mult = rd->mult;
-> +		userpg->time_shift = rd->shift;
-> +		userpg->time_zero = rd->epoch_ns;
-> +
-> +		userpg->time_zero -= (rd->epoch_cyc * rd->mult) >> rd->shift;
+Add documentation for DT binding of max98390 amplifier driver.
 
-Damn, I think this is broken vs the counter wrapping.
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+ .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
 
-So what the sched_clock code does is:
+diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
+new file mode 100644
+index 000000000000..0ddd4c6ae55e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max98390.txt
+@@ -0,0 +1,26 @@
++Maxim Integrated MAX98390 Speaker Amplifier
++
++This device supports I2C.
++
++Required properties:
++
++ - compatible : "maxim,max98390"
++
++ - reg : the I2C address of the device.
++
++Optional properties:
++
++- maxim,temperature_calib
++  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
++
++- maxim,r0_calib
++  u32. This is r0 calibration data which was measured in factory mode.
++
++Example:
++
++codec: max98390@38 {
++	compatible = "maxim,max98390";
++	reg = <0x38>;
++	maxim,temperature_calib = <1024>;
++	maxim,r0_calib = <100232>;
++};
+-- 
+2.17.1
 
-	cyc_to_ns((cyc - rd->epoch_cyc) & rd->sched_clock_mask, rd->mult, rd->shift)
-
-But because the perf interface assumes a simple linear relation, we
-can't express that properly.
-
-Now, your arm64 counter is 56 bits, so wrapping is rare, but still, we
-should probably fix that. And that probably needs an ABI extention
-*sigh*.
-
-> +
-> +	} while (sched_clock_read_retry(seq));
-> +
-> +	userpg->time_offset = userpg->time_zero - now;
->  }
