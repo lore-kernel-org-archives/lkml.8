@@ -2,214 +2,196 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9BFC47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B008AC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 490F92070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589251943;
-	bh=a61Umy7M6kHj5wgaBbb2sAVsz4OJ7Y948cNr917SORw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xJ3v3T6b8fByryY7NpeA1iQ3feGrBii8orEvceZ6EbmWLui5rIsUo16WkSqi4Q7FS
-	 9m/tkpEfZnbhaVhXDsHfuXkvunfV+sM6LAMU/jk4BckGh155Y9aPf3JW7KX1YqWh6K
-	 /835RZ0LTx39wC49UTU2rXhrnzrOfQfbOctpdMXM=
+	by mail.kernel.org (Postfix) with ESMTP id 8DD3A206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgELCwW (ORCPT
+        id S1728583AbgELDCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:52:22 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:49524 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgELCwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:52:22 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 04C2q4VB018851
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:52:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 04C2q4VB018851
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589251925;
-        bh=/dP1/+gVU934yq2ykxBJRp/L7Knp7DBZvFbITFJXeug=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H4eCgm9aPnNCyO/lE2noclXrw6/4Wc8eIb02C0d4UwQx8uV86rIrciTJ8v9KC/NWZ
-         h0z7KMbivSt008b4gmLyVTWEBW4u3F8npc3yIVFNTBxcJOOT9GRoxqAvuMLKnWZv8f
-         xA/q6cUF9P8KGUKZ4zAJ82Kdj5yh6pbGjYq5bm3XLXvwo3G8t5VidSXApKO3+1JlAe
-         CnZUFBHDB4eYzZf7TP6ELGSgXSJ/tNfgxrDI9svG4d0Cr5+HpWBZ5WVjgoPvJ1YFqF
-         xFGtz0lIj8dSN5eRJ/xlS9Z0G274zjVlLuEJYnl/U0zCULYgZM1l1Uz3gIyiDAjg7T
-         D2SBCa75Xf28w==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id z1so6959759vsn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 19:52:04 -0700 (PDT)
-X-Gm-Message-State: AOAM532zxtxJO0VNA60h7dN2J2OjTqAp2clCMH9lVVYjNSdHr+81kB7N
-        dmHV8dwRlVpc3ffX7SqzHGd27lgy4aBB9cDkQ30=
-X-Google-Smtp-Source: ABdhPJwOHvmc3TCk/eY55ytF1r9uMVxx5MgfvfLKamD3C4LDNNmyYuubhdGMLE2xOuvBW/i6rbPFgAN+TGVhadUX+GA=
-X-Received: by 2002:a67:d00e:: with SMTP id r14mr3160729vsi.215.1589251923295;
- Mon, 11 May 2020 19:52:03 -0700 (PDT)
+        Mon, 11 May 2020 23:02:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53041 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728115AbgELDCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 23:02:40 -0400
+IronPort-SDR: 4MUYzYtIuZ6g9ldfiyH23CIMEPJsbbShNv8XvxJp/GZTUxlGQLnu6++8lt5yIcN+/aN2RCt+r4
+ aTbR5nzmbROA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 20:02:38 -0700
+IronPort-SDR: i7GYBvH7NWY5BhrLrDKVlLB4CtNS91qsG4blQFRYPkdRiwakAQyVDqsrzKVqLZVZMgcS7fpRbr
+ aK0y2FXO+ZUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="409140692"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 11 May 2020 20:02:38 -0700
+Received: from [10.214.160.177] (vramuthx-MOBL1.gar.corp.intel.com [10.214.160.177])
+        by linux.intel.com (Postfix) with ESMTP id 88D37580646;
+        Mon, 11 May 2020 20:02:33 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: Add YAML for Nand Flash
+ Controller support
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
+        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+References: <20200507001537.4034-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200507001537.4034-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200511153712.GA25497@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <b500fb0b-7793-7f08-890c-c2424299af34@linux.intel.com>
+Date:   Tue, 12 May 2020 11:02:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200428070614.GB992660@kroah.com> <20200502052619.26457-1-xujialu@vimux.org>
- <20200502052619.26457-2-xujialu@vimux.org>
-In-Reply-To: <20200502052619.26457-2-xujialu@vimux.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 12 May 2020 11:51:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR-t1ToAGf-4FTa+2=ii+WcTD3aFjyZOADQT9rkagKyBw@mail.gmail.com>
-Message-ID: <CAK7LNAR-t1ToAGf-4FTa+2=ii+WcTD3aFjyZOADQT9rkagKyBw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] scripts: Support compiled source, improved precise
-To:     xujialu <xujialu@vimux.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200511153712.GA25497@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 2:27 PM xujialu <xujialu@vimux.org> wrote:
->
-> Original 'COMPILED_SOURCE=1 make cscope' collects nearly 30000 files
-> include too many unused files, this patch precisely collects source
-> files from *.cmd, in this case just 3000 files include dts and dtsi.
->
-> Usage:
->   1) COMPILED_SOURCE=1                           make {cscope,gtags}
->   2) COMPILED_SOURCE=1 KBUILD_ABS_SRCTREE=1      make {cscope,gtags}
->   3) COMPILED_SOURCE=1              ./scripts/tags.sh {cscope,gtags}
->   4) COMPILED_SOURCE=1 ABSPWD=$PWD/ ./scripts/tags.sh {cscope,gtags}
->
-> Signed-off-by: xujialu <xujialu@vimux.org>
-> ---
->  scripts/tags.sh | 36 ++++++++++++++++++++++--------------
->  1 file changed, 22 insertions(+), 14 deletions(-)
->
-> diff --git a/scripts/tags.sh b/scripts/tags.sh
-> index 4e18ae5282a6..941a5c61d343 100755
-> --- a/scripts/tags.sh
-> +++ b/scripts/tags.sh
-> @@ -89,22 +89,30 @@ all_sources()
->         find_other_sources '*.[chS]'
->  }
->
-> +# COMPILED_SOURCE=1                           make {cscope,gtags}
-> +# COMPILED_SOURCE=1 KBUILD_ABS_SRCTREE=1      make {cscope,gtags}
-> +# COMPILED_SOURCE=1              ./scripts/tags.sh {cscope,gtags}
-> +# COMPILED_SOURCE=1 ABSPWD=$PWD/ ./scripts/tags.sh {cscope,gtags}
+Hi Rob,
 
+   Thank you for the review comments and your time...
 
-These comment are misleading since this sounds like
-is is only usef for cscope, gtags.
+On 11/5/2020 11:37 pm, Rob Herring wrote:
+> On Thu, May 07, 2020 at 08:15:36AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add YAML file for dt-bindings to support NAND Flash Controller
+>> on Intel's Lightning Mountain SoC.
+> 
+> The $subject should some how reflect this is for this SoC.
+Noted, will update.
+> 
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 85 ++++++++++++++++++++++
+>>   1 file changed, 85 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> new file mode 100644
+>> index 000000000000..69b592ae62f4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>> @@ -0,0 +1,85 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel LGM SoC NAND Controller Device Tree Bindings
+>> +
+>> +allOf:
+>> +  - $ref: "nand-controller.yaml"
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-nand-controller
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  dmas:
+>> +    maxItems: 2
+>> +
+>> +  dma-names:
+>> +    enum:
+>> +      - rx
+>> +      - tx
+>> +
+>> +  pinctrl-names: true
+>> +
+>> +patternProperties:
+>> +  "^pinctrl-[0-9]+$": true
+> 
+> Don't need the pinctrl properties. The tooling adds them.
+ok, will drop.
+> 
+>> +
+>> +  "^nand@[a-f0-9]+$":
+>> +    type: object
+>> +    properties:
+>> +      reg:
+>> +        minimum: 0
+>> +        maximum: 7
+>> +
+>> +      nand-ecc-mode: true
+>> +
+>> +      nand-ecc-algo:
+>> +        const: hw
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - dmas
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/intel,lgm-clk.h>
+> 
+> Is this applied somewhere? It's missing in my check and will break the
+> build.
+You have already reviewed the below patch which has the file
+https://lkml.org/lkml/2020/4/17/31
 
+Regards
+Vadivel
 
-Please do not introduce a new variable ABSPWD, which is unneeded.
-This is a rare use-case, but if you want to run this script directly,
-you must set the variables described at line 9 properly.
-
-
-
-
-> +xtags_juggle_list()
-> +{
-> +       SRCTREE=$(realpath ${tree}.)
-> +
-> +       cd $(dirname $(find -name .config -print -quit).)
-
-
-Why is this needed?
-
-You are already in objtree
-when this script is being run.
-
-If you handle the objects built with O= option,
-you need to do 'make O=... gtags'.
-
-> +
-> +       realpath -e --relative-to=${SRCTREE} $(find -name "*.cmd" -exec \
-> +               grep -Poh '(?(?=^source_.* \K).*|(?=^  \K\S).*(?= \\))' {} \+ |
-> +               awk '!a[$0]++') include/generated/autoconf.h |
-> +       sed -e "/\.\./d" -e "s,^,${ABSPWD}${tree},"
-> +}
-
-Why is --relative-to=${SRCTREE} needed?
-
-You are dropping ${SRCTREE} and adding ${ABSPWD}${tree}.
-I do not understand what this is doing back-and-forth.
-
-
-
-Lastly, the file order is currently carefully crafted
-but this patch would make it random-ordered.
-
-I am afraid the following commit would be broken.
-
-
-
-
-commit f81b1be40c44b33b9706d64c117edd29e627ad12 (HEAD)
-Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Date:   Mon Feb 8 00:25:59 2010 +0100
-
-    tags: include headers before source files
-
-    Currently looking up a structure definition in TAGS / tags takes one to
-    one of multiple "static struct X" definitions in arch sources, which makes
-    it for many structs practically impossible to get to the required header.
-    This patch changes the order of sources being tagged to first scan
-    architecture includes, then the top-level include/ directory, and only
-    then the rest. It also takes into account, that many architectures have
-    more than one include directory, i.e., not only arch/$ARCH/include, but
-    also arch/$ARCH/mach-X/include etc.
-
-    Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-    Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
-    [mmarek@suse.cz: fix 'var+=text' bashism]
-    Signed-off-by: Michal Marek <mmarek@suse.cz>
-
-> +
->  all_compiled_sources()
->  {
-> -       for i in $(all_sources); do
-> -               case "$i" in
-> -                       *.[cS])
-> -                               j=${i/\.[cS]/\.o}
-> -                               j="${j#$tree}"
-> -                               if [ -e $j ]; then
-> -                                       echo $i
-> -                               fi
-> -                               ;;
-> -                       *)
-> -                               echo $i
-> -                               ;;
-> -               esac
-> -       done
-> +       # Consider 'git ls-files' features:
-> +       #   1) sort and uniq target files
-> +       #   2) limit target files by index
-> +       # git ls-files $(xtags_juggle_list)
-
-
-How is this related to this ?
-
-
-
-
-
-
-> +
-> +       xtags_juggle_list | sort -u
->  }
->
->  all_target_sources()
-> --
-> 2.20.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+> 
+>> +    nand-controller@e0f00000 {
+>> +      compatible = "intel,nand-controller";
+>> +      reg = <0xe0f00000 0x100>,
+>> +            <0xe1000000 0x300>,
+>> +            <0xe1400000 0x8000>,
+>> +            <0xe1c00000 0x1000>;
+>> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1";
+>> +      clocks = <&cgu0 LGM_GCLK_EBU>;
+>> +      dma-names = "tx", "rx";
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +      #clock-cells = <1>;
+>> +
+>> +      nand@0 {
+>> +        reg = <0>;
+>> +        nand-on-flash-bbt;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +      };
+>> +    };
+>> +
+>> +...
+>> -- 
+>> 2.11.0
+>>
