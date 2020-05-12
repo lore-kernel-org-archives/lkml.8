@@ -2,909 +2,521 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F13C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C18AC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7609220740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20C620740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="mi3DfTYh"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="dlaEVgbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbgELV36 (ORCPT
+        id S1731349AbgELVau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
+        Tue, 12 May 2020 17:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726885AbgELV35 (ORCPT
+        by vger.kernel.org with ESMTP id S1728362AbgELVat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:29:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E910C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:29:57 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id y22so2646631qki.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:29:56 -0700 (PDT)
+        Tue, 12 May 2020 17:30:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADEBC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:30:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so15355650ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cwo7sGLAUWVlyT2ASJWkZdlai5rolQi2wmMSTzQgOkw=;
-        b=mi3DfTYhyxoe0y2YRlEjrrEdxRQsRpsN3pC88dO5t1j3szFpiwJyyTpw5vkWTrn2lA
-         TA0B0g4vBfhrIt0EspdFl578xyS6T/lJHb8PaFO9JSsLKg+gSrPkxk/KVdY2GDFA3XaZ
-         RyOREr13Z3VOrjYBBzg9OJuzRgx3RUh+srlFLmCIHw8PNoTG6kN19YQUK4Xv+bP6RkfH
-         y/GTmqD9veBgtx7gWwkvxJI93leeZJuEKr78DqR3HOWhNL/akm46hXBk1n7PPBglXjlD
-         nqQUNYJipF3ny8Yufa2XBbvCewy1aXyH64jd8EitGx/XSR0MrlNR82QRJmbSLR/YtHhY
-         6yUg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=aTGCKGZm86Kijrj/D18vcRAcB+idnyHdQF2Y13ZLRZg=;
+        b=dlaEVgbut9223U6i/lcP9UNbWshfqDAx03zFZPd2nJTgCCKEW+kb/5hfO48RHpvsUC
+         AfclMI0gyO5zjm5SA4NbebZpprHCSjnLyoAsp6Er9Om6cmHXe4NbZht3w23auA6K2+9W
+         yr4tJe4wZCgGq3AfRDKHUcLI23GsWlGGmj2yAh+ksAwv7HDArmkqqubUUoXPR0PE1jgr
+         gwhrXtMEa9B5HA/ByUVGh8ifzDVtoHvtpJTirHclQQQvjUt6dmcmpiWNDF0oFDXHOJA6
+         kkFg9BEpThnUEIuPXvActPVYsYHjiWTKb2b8OrkKWL9+gZWJ4IbubclHyhkBNBJsI5mo
+         3eJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cwo7sGLAUWVlyT2ASJWkZdlai5rolQi2wmMSTzQgOkw=;
-        b=WI3xMWzDVXtuLTTIG7Mbv4JrQkthT5g4Ogt3D0jEqx0ZIZ6iuXRZbGy90/U0KbcNYM
-         Rg2wcLpgdM8SS/Q8YhpQAMgW0gcMsKqx/iwA8XMZA/xjifjceUv8PYb45sN1L1HgeDDJ
-         b/hlYKNSdkvGLEi6/U3fou9w6xcFiAL2/32gR/VOyOoYIV0kHrprowDeV1hJdmm3ixEz
-         iXm0vCGESf8h3AHPqLJGXeQiXluWaqNBhgVN6ik2KLQUzO4aXWsjCR1qXxMedZBJgz76
-         +O62WNqlFEMlOdnmGr18+1pN53xyT0VD0WdMfOSfcTJwNFuRcQtmVAOK8LRXnunC3pyh
-         BzCw==
-X-Gm-Message-State: AGi0PuZNYFCw8r4DG+i6DL/yPmX+lJru2KtZjnnsU4nhcdzZ291ZroUl
-        1qG9PoX1SXCZa8bPaPPSsoihdA==
-X-Google-Smtp-Source: APiQypJ4BOhUag/+vPv4HHuaZW5dwFJgOD47eHSHyTPj3lEQc51Uqe/oOT8Vgmhw5ciwfn9LD3mgog==
-X-Received: by 2002:a05:620a:110d:: with SMTP id o13mr23041659qkk.212.1589318995911;
-        Tue, 12 May 2020 14:29:55 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id d142sm12091929qkg.64.2020.05.12.14.29.54
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aTGCKGZm86Kijrj/D18vcRAcB+idnyHdQF2Y13ZLRZg=;
+        b=gM6rowZinY87zWhsuyK2XL6T4yWcpd+Lxh3+KezJHot7xfrfiR9x1z0tZXrEU8Y7JO
+         aE48JCYeKCfnfgqTOx1svY7PjCiqPLIeLivp9JeVSW+vfCqjCnNAIspaxNqjsHgvWcUh
+         raaXq3vgPZZ5HoyExmO5ekOpZCEQg/iFR141MuatVlNX1EdX3I9dE4S6BXCYvZsPS1m2
+         e+fAlCmfGgWbDV04GJqdK1vtJxLkrbIM9ENqFHhLTnfsTkidmhT06V0GawawVa3OH9iT
+         n+T9pVNm+OXgzAlKnqcTWsPJW0PlcO/PwaQXgmp4z7Ni7W/Zs9euJbVMeexucQ8t3HEW
+         i7Hg==
+X-Gm-Message-State: AOAM530YcAO79Vh2Xkam99MStVDY91cY3l8yL532j6bNUkUE9nz+QHGl
+        69IekxmetSm9BuftVWeuR1VaDA==
+X-Google-Smtp-Source: ABdhPJw/DT9ir4ZRx7wREHitF3hJSgAIHc9M1jD89sDYFWK2aVnOBniCQQ8rtDQzE53STJKNq2X8Eg==
+X-Received: by 2002:a2e:9984:: with SMTP id w4mr13201611lji.286.1589319047438;
+        Tue, 12 May 2020 14:30:47 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id o27sm16425139lfi.27.2020.05.12.14.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:29:55 -0700 (PDT)
-Date:   Tue, 12 May 2020 17:29:36 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, kernel-team@fb.com
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200512212936.GA450429@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
+        Tue, 12 May 2020 14:30:46 -0700 (PDT)
+Date:   Tue, 12 May 2020 23:30:45 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Michael Rodin <mrodin@de.adit-jv.com>
+Cc:     Suresh Udipi <sudipi@jp.adit-jv.com>, akiyama@nds-osk.co.jp,
+        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
+        hverkuil-cisco@xs4all.nl, jacopo+renesas@jmondi.org,
+        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        securitycheck@denso.co.jp
+Subject: Re: [PATCH v5] media: rcar-csi2: Correct the selection of hsfreqrange
+Message-ID: <20200512213045.GC2542285@oden.dyn.berto.se>
+References: <20200414115600.GB285053@oden.dyn.berto.se>
+ <1588226590-12880-1-git-send-email-sudipi@jp.adit-jv.com>
+ <20200504150122.GA8532@vmlxhi-121.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200211175507.178100-1-hannes@cmpxchg.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200504150122.GA8532@vmlxhi-121.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 12:55:07PM -0500, Johannes Weiner wrote:
-> The VFS inode shrinker is currently allowed to reclaim inodes with
-> populated page cache. As a result it can drop gigabytes of hot and
-> active page cache on the floor without consulting the VM (recorded as
-> "inodesteal" events in /proc/vmstat).
+Hi Michael and Suresh,
 
-I'm sending a rebased version of this patch.
+Thanks for your comments Michael.
 
-We've been running with this change in the Facebook fleet since
-February with no ill side effects observed.
+On 2020-05-04 17:01:22 +0200, Michael Rodin wrote:
+> Hello Suresh, Niklas,
+> 
+> I think that we should not change the structs for PHTW register configuration,
+> because there are no "max" values in the table "PHTW Set Values" from the
+> Renesas Hardware Manual. The patch looks just wrong. A major issue is also
+> that the Hardware Manual does not provide any algorithm, how to select the
+> right table entry for the configuration of PHTW and PHYPLL registers, so we
+> can not say for sure that the patch is correct. It is also not clear, what
+> are the "default" bit rates? It looks like they are made exactly for usage
+> in driver code:
+>  - both PHTW and PHYPLL tables have "default" values
+>  - only PHYPLL (HSFREQRANGE) tables have min/max values and it requires
+>    additional rounding in order to hardcode them in a driver
+> But these are just my speculations. If they are correct, then the only
+> exception, where the patch v2 failed, could be a typo in the Hardware Manual.
+> Otherwise patch v2 looks much better to me. I think, we should wait for more
+> details from Renesas before fixing this issue. 
 
-However, I just spent several hours chasing a mysterious reclaim
-problem that turned out to be this bug again on an unpatched system.
+I see your point.
 
-In the scenario I was debugging, the problem wasn't that we were
-losing cache, but that we were losing the non-resident information for
-previously evicted cache.
+As a middle ground as Suresh is having a real problem and the logic in 
+the driver is wrong and should be fixed. How about keeping the 
+definition of the struct rcsi2_mbps_reg as it is but updating all the 
+tables .mbps values from the default to the max value?
 
-I understood the file set enough to know it was thrashing like crazy,
-but it didn't register as refaults to the kernel. Without detecting
-the refaults, reclaim wouldn't start swapping to relieve the
-struggling cache (plenty of cold anon memory around). It also meant
-the IO delays of those refaults didn't contribute to memory pressure
-in psi, which made userspace blind to the situation as well.
+> 
+> On Thu, Apr 30, 2020 at 03:03:10PM +0900, Suresh Udipi wrote:
+> > hsfreqrange should be chosen based on the calculated mbps which
+> > is within the range as per table[1]. But current calculation
+> > always selects first value which is greater than or equal to the
+> > calculated mbps which may lead to chosing a wrong range in some cases.
+> > 
+> > For example for 360 mbps for H3/M3N
+> > Existing logic selects
+> > Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+> > 
+> > This hsfreqrange is out of range.
+> > 
+> > The logic is changed to select the first hsfreqrange whose max range[1] is
+> > greater than the calculated bit rate.
+> > 
+> > Calculated value 360Mbps : max range 380.625 mbps is selected
+> >  i.e Default 350Mbps  Range [320.625 -380.625 mpbs]
+> > 
+> > [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+> > 
+> > Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+> > 
+> > Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> > Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+> > ---
+> >  Changes in v2:
+> >   - Added the boundary check for the maximum bit rate.
+> > 
+> >   - Simplified the logic by remmoving range check
+> >     as only the closest default value covers most
+> >     of the use cases.
+> > 
+> >   - Aligning the commit message based on the above change
+> > 
+> > 
+> >  Changes in v3:
+> >     - Added max member from struct rcsi2_mbps_reg.
+> >       mbps varialbe cannot be removed from rcsi2_mbps_reg,
+> >       since this structure is reused for
+> >       phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
+> >       used.
+> > 
+> > 
+> >    -  Update the walk of the array in rcsi2_set_phypll() so that it finds
+> >       the first entry where the calculated bit rate is less than the max.
+> > 
+> >    - Support lower bit rates less than 80Mbps like 48Mbps
+> >      (Raspberry pi camera 640x480 connected to Kingfisher)
+> >      can also be supported by selecting the lowest default bit rate 80Mbps
+> >      as done before this fix
+> > 
+> >    - Alignement of the commit message based on above changes.
+> > 
+> >  Changes in v4:
+> >    - Remove unncessary braces.
+> >  
+> >  Changes in v5:
+> >    - Removed mbps variable in rcsi2_mbps_reg and aligned all 
+> >      tables accordingly
+> > 
+> >  drivers/media/platform/rcar-vin/rcar-csi2.c | 282 ++++++++++++++--------------
+> >  1 file changed, 141 insertions(+), 141 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > index faa9fb2..d45bf80 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > @@ -132,63 +132,63 @@ struct phtw_value {
+> >  };
+> >  
+> >  struct rcsi2_mbps_reg {
+> > -	u16 mbps;
+> >  	u16 reg;
+> > +	u16 max;
+> >  };
+> >  
+> >  static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
+> > -	{ .mbps =   80, .reg = 0x86 },
+> > -	{ .mbps =   90, .reg = 0x86 },
+> > -	{ .mbps =  100, .reg = 0x87 },
+> > -	{ .mbps =  110, .reg = 0x87 },
+> > -	{ .mbps =  120, .reg = 0x88 },
+> > -	{ .mbps =  130, .reg = 0x88 },
+> > -	{ .mbps =  140, .reg = 0x89 },
+> > -	{ .mbps =  150, .reg = 0x89 },
+> > -	{ .mbps =  160, .reg = 0x8a },
+> > -	{ .mbps =  170, .reg = 0x8a },
+> > -	{ .mbps =  180, .reg = 0x8b },
+> > -	{ .mbps =  190, .reg = 0x8b },
+> > -	{ .mbps =  205, .reg = 0x8c },
+> > -	{ .mbps =  220, .reg = 0x8d },
+> > -	{ .mbps =  235, .reg = 0x8e },
+> > -	{ .mbps =  250, .reg = 0x8e },
+> > +	{ .reg = 0x86, .max =  80  },
+> > +	{ .reg = 0x86, .max =  90  },
+> > +	{ .reg = 0x87, .max =  100 },
+> > +	{ .reg = 0x87, .max =  110 },
+> > +	{ .reg = 0x88, .max =  120 },
+> > +	{ .reg = 0x88, .max =  130 },
+> > +	{ .reg = 0x89, .max =  140 },
+> > +	{ .reg = 0x89, .max =  150 },
+> > +	{ .reg = 0x8a, .max =  160 },
+> > +	{ .reg = 0x8a, .max =  170 },
+> > +	{ .reg = 0x8b, .max =  180 },
+> > +	{ .reg = 0x8b, .max =  190 },
+> > +	{ .reg = 0x8c, .max =  205 },
+> > +	{ .reg = 0x8d, .max =  220 },
+> > +	{ .reg = 0x8e, .max =  235 },
+> > +	{ .reg = 0x8e, .max =  250 },
+> >  	{ /* sentinel */ },
+> >  };
+> >  
+> >  static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+> > -	{ .mbps =   80, .reg = 0x00 },
+> > -	{ .mbps =   90, .reg = 0x20 },
+> > -	{ .mbps =  100, .reg = 0x40 },
+> > -	{ .mbps =  110, .reg = 0x02 },
+> > -	{ .mbps =  130, .reg = 0x22 },
+> > -	{ .mbps =  140, .reg = 0x42 },
+> > -	{ .mbps =  150, .reg = 0x04 },
+> > -	{ .mbps =  170, .reg = 0x24 },
+> > -	{ .mbps =  180, .reg = 0x44 },
+> > -	{ .mbps =  200, .reg = 0x06 },
+> > -	{ .mbps =  220, .reg = 0x26 },
+> > -	{ .mbps =  240, .reg = 0x46 },
+> > -	{ .mbps =  250, .reg = 0x08 },
+> > -	{ .mbps =  270, .reg = 0x28 },
+> > -	{ .mbps =  300, .reg = 0x0a },
+> > -	{ .mbps =  330, .reg = 0x2a },
+> > -	{ .mbps =  360, .reg = 0x4a },
+> > -	{ .mbps =  400, .reg = 0x0c },
+> > -	{ .mbps =  450, .reg = 0x2c },
+> > -	{ .mbps =  500, .reg = 0x0e },
+> > -	{ .mbps =  550, .reg = 0x2e },
+> > -	{ .mbps =  600, .reg = 0x10 },
+> > -	{ .mbps =  650, .reg = 0x30 },
+> > -	{ .mbps =  700, .reg = 0x12 },
+> > -	{ .mbps =  750, .reg = 0x32 },
+> > -	{ .mbps =  800, .reg = 0x52 },
+> > -	{ .mbps =  850, .reg = 0x72 },
+> > -	{ .mbps =  900, .reg = 0x14 },
+> > -	{ .mbps =  950, .reg = 0x34 },
+> > -	{ .mbps = 1000, .reg = 0x54 },
+> > -	{ .mbps = 1050, .reg = 0x74 },
+> > -	{ .mbps = 1125, .reg = 0x16 },
+> > +	{ .reg = 0x00, .max = 80   },
+> > +	{ .reg = 0x20, .max = 90   },
+> > +	{ .reg = 0x40, .max = 100  },
+> > +	{ .reg = 0x02, .max = 110  },
+> > +	{ .reg = 0x22, .max = 130  },
+> > +	{ .reg = 0x42, .max = 140  },
+> > +	{ .reg = 0x04, .max = 150  },
+> > +	{ .reg = 0x24, .max = 170  },
+> > +	{ .reg = 0x44, .max = 180  },
+> > +	{ .reg = 0x06, .max = 200  },
+> > +	{ .reg = 0x26, .max = 220  },
+> > +	{ .reg = 0x46, .max = 240  },
+> > +	{ .reg = 0x08, .max = 250  },
+> > +	{ .reg = 0x28, .max = 270  },
+> > +	{ .reg = 0x0a, .max = 300  },
+> > +	{ .reg = 0x2a, .max = 330  },
+> > +	{ .reg = 0x4a, .max = 360  },
+> > +	{ .reg = 0x0c, .max = 400  },
+> > +	{ .reg = 0x2c, .max = 450  },
+> > +	{ .reg = 0x0e, .max = 500  },
+> > +	{ .reg = 0x2e, .max = 550  },
+> > +	{ .reg = 0x10, .max = 600  },
+> > +	{ .reg = 0x30, .max = 650  },
+> > +	{ .reg = 0x12, .max = 700  },
+> > +	{ .reg = 0x32, .max = 750  },
+> > +	{ .reg = 0x52, .max = 800  },
+> > +	{ .reg = 0x72, .max = 850  },
+> > +	{ .reg = 0x14, .max = 900  },
+> > +	{ .reg = 0x34, .max = 950  },
+> > +	{ .reg = 0x54, .max = 1000 },
+> > +	{ .reg = 0x74, .max = 1050 },
+> > +	{ .reg = 0x16, .max = 1125 },
+> >  	{ /* sentinel */ },
+> >  };
+> >  
+> > @@ -201,96 +201,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+> >  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+> >  
+> >  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+> > -	{ .mbps =   80, .reg = 0x00 },
+> > -	{ .mbps =   90, .reg = 0x10 },
+> > -	{ .mbps =  100, .reg = 0x20 },
+> > -	{ .mbps =  110, .reg = 0x30 },
+> > -	{ .mbps =  120, .reg = 0x01 },
+> > -	{ .mbps =  130, .reg = 0x11 },
+> > -	{ .mbps =  140, .reg = 0x21 },
+> > -	{ .mbps =  150, .reg = 0x31 },
+> > -	{ .mbps =  160, .reg = 0x02 },
+> > -	{ .mbps =  170, .reg = 0x12 },
+> > -	{ .mbps =  180, .reg = 0x22 },
+> > -	{ .mbps =  190, .reg = 0x32 },
+> > -	{ .mbps =  205, .reg = 0x03 },
+> > -	{ .mbps =  220, .reg = 0x13 },
+> > -	{ .mbps =  235, .reg = 0x23 },
+> > -	{ .mbps =  250, .reg = 0x33 },
+> > -	{ .mbps =  275, .reg = 0x04 },
+> > -	{ .mbps =  300, .reg = 0x14 },
+> > -	{ .mbps =  325, .reg = 0x25 },
+> > -	{ .mbps =  350, .reg = 0x35 },
+> > -	{ .mbps =  400, .reg = 0x05 },
+> > -	{ .mbps =  450, .reg = 0x16 },
+> > -	{ .mbps =  500, .reg = 0x26 },
+> > -	{ .mbps =  550, .reg = 0x37 },
+> > -	{ .mbps =  600, .reg = 0x07 },
+> > -	{ .mbps =  650, .reg = 0x18 },
+> > -	{ .mbps =  700, .reg = 0x28 },
+> > -	{ .mbps =  750, .reg = 0x39 },
+> > -	{ .mbps =  800, .reg = 0x09 },
+> > -	{ .mbps =  850, .reg = 0x19 },
+> > -	{ .mbps =  900, .reg = 0x29 },
+> > -	{ .mbps =  950, .reg = 0x3a },
+> > -	{ .mbps = 1000, .reg = 0x0a },
+> > -	{ .mbps = 1050, .reg = 0x1a },
+> > -	{ .mbps = 1100, .reg = 0x2a },
+> > -	{ .mbps = 1150, .reg = 0x3b },
+> > -	{ .mbps = 1200, .reg = 0x0b },
+> > -	{ .mbps = 1250, .reg = 0x1b },
+> > -	{ .mbps = 1300, .reg = 0x2b },
+> > -	{ .mbps = 1350, .reg = 0x3c },
+> > -	{ .mbps = 1400, .reg = 0x0c },
+> > -	{ .mbps = 1450, .reg = 0x1c },
+> > -	{ .mbps = 1500, .reg = 0x2c },
+> > +	{ .reg = 0x00, .max =   97 },
+> > +	{ .reg = 0x10, .max =  107 },
+> > +	{ .reg = 0x20, .max =  118 },
+> > +	{ .reg = 0x30, .max =  128 },
+> > +	{ .reg = 0x01, .max =  139 },
+> > +	{ .reg = 0x11, .max =  149 },
+> > +	{ .reg = 0x21, .max =  160 },
+> > +	{ .reg = 0x31, .max =  170 },
+> > +	{ .reg = 0x02, .max =  181 },
+> > +	{ .reg = 0x12, .max =  191 },
+> > +	{ .reg = 0x22, .max =  202 },
+> > +	{ .reg = 0x32, .max =  212 },
+> > +	{ .reg = 0x03, .max =  228 },
+> > +	{ .reg = 0x13, .max =  224 },
+> > +	{ .reg = 0x23, .max =  259 },
+> > +	{ .reg = 0x33, .max =  275 },
+> > +	{ .reg = 0x04, .max =  301 },
+> > +	{ .reg = 0x14, .max =  328 },
+> > +	{ .reg = 0x25, .max =  354 },
+> > +	{ .reg = 0x35, .max =  380 },
+> > +	{ .reg = 0x05, .max =  433 },
+> > +	{ .reg = 0x16, .max =  485 },
+> > +	{ .reg = 0x26, .max =  538 },
+> > +	{ .reg = 0x37, .max =  590 },
+> > +	{ .reg = 0x07, .max =  643 },
+> > +	{ .reg = 0x18, .max =  695 },
+> > +	{ .reg = 0x28, .max =  748 },
+> > +	{ .reg = 0x39, .max =  800 },
+> > +	{ .reg = 0x09, .max =  853 },
+> > +	{ .reg = 0x19, .max =  905 },
+> > +	{ .reg = 0x29, .max =  958 },
+> > +	{ .reg = 0x3a, .max = 1010 },
+> > +	{ .reg = 0x0a, .max = 1063 },
+> > +	{ .reg = 0x1a, .max = 1115 },
+> > +	{ .reg = 0x2a, .max = 1168 },
+> > +	{ .reg = 0x3b, .max = 1220 },
+> > +	{ .reg = 0x0b, .max = 1273 },
+> > +	{ .reg = 0x1b, .max = 1325 },
+> > +	{ .reg = 0x2b, .max = 1378 },
+> > +	{ .reg = 0x3c, .max = 1430 },
+> > +	{ .reg = 0x0c, .max = 1483 },
+> > +	{ .reg = 0x1c, .max = 1500 },
+> > +	{ .reg = 0x2c, .max = 1500 },
+> >  	{ /* sentinel */ },
+> >  };
+> >  
+> >  static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
+> > -	{ .mbps =   80,	.reg = 0x00 },
+> > -	{ .mbps =   90,	.reg = 0x10 },
+> > -	{ .mbps =  100,	.reg = 0x20 },
+> > -	{ .mbps =  110,	.reg = 0x30 },
+> > -	{ .mbps =  120,	.reg = 0x01 },
+> > -	{ .mbps =  130,	.reg = 0x11 },
+> > -	{ .mbps =  140,	.reg = 0x21 },
+> > -	{ .mbps =  150,	.reg = 0x31 },
+> > -	{ .mbps =  160,	.reg = 0x02 },
+> > -	{ .mbps =  170,	.reg = 0x12 },
+> > -	{ .mbps =  180,	.reg = 0x22 },
+> > -	{ .mbps =  190,	.reg = 0x32 },
+> > -	{ .mbps =  205,	.reg = 0x03 },
+> > -	{ .mbps =  220,	.reg = 0x13 },
+> > -	{ .mbps =  235,	.reg = 0x23 },
+> > -	{ .mbps =  250,	.reg = 0x33 },
+> > -	{ .mbps =  275,	.reg = 0x04 },
+> > -	{ .mbps =  300,	.reg = 0x14 },
+> > -	{ .mbps =  325,	.reg = 0x05 },
+> > -	{ .mbps =  350,	.reg = 0x15 },
+> > -	{ .mbps =  400,	.reg = 0x25 },
+> > -	{ .mbps =  450,	.reg = 0x06 },
+> > -	{ .mbps =  500,	.reg = 0x16 },
+> > -	{ .mbps =  550,	.reg = 0x07 },
+> > -	{ .mbps =  600,	.reg = 0x17 },
+> > -	{ .mbps =  650,	.reg = 0x08 },
+> > -	{ .mbps =  700,	.reg = 0x18 },
+> > -	{ .mbps =  750,	.reg = 0x09 },
+> > -	{ .mbps =  800,	.reg = 0x19 },
+> > -	{ .mbps =  850,	.reg = 0x29 },
+> > -	{ .mbps =  900,	.reg = 0x39 },
+> > -	{ .mbps =  950,	.reg = 0x0a },
+> > -	{ .mbps = 1000,	.reg = 0x1a },
+> > -	{ .mbps = 1050,	.reg = 0x2a },
+> > -	{ .mbps = 1100,	.reg = 0x3a },
+> > -	{ .mbps = 1150,	.reg = 0x0b },
+> > -	{ .mbps = 1200,	.reg = 0x1b },
+> > -	{ .mbps = 1250,	.reg = 0x2b },
+> > -	{ .mbps = 1300,	.reg = 0x3b },
+> > -	{ .mbps = 1350,	.reg = 0x0c },
+> > -	{ .mbps = 1400,	.reg = 0x1c },
+> > -	{ .mbps = 1450,	.reg = 0x2c },
+> > -	{ .mbps = 1500,	.reg = 0x3c },
+> > +	{ .reg = 0x00, .max =  110 },
+> > +	{ .reg = 0x10, .max =  120 },
+> > +	{ .reg = 0x20, .max =  131 },
+> > +	{ .reg = 0x30, .max =  141 },
+> > +	{ .reg = 0x01, .max =  152 },
+> > +	{ .reg = 0x11, .max =  162 },
+> > +	{ .reg = 0x21, .max =  173 },
+> > +	{ .reg = 0x31, .max =  183 },
+> > +	{ .reg = 0x02, .max =  194 },
+> > +	{ .reg = 0x12, .max =  204 },
+> > +	{ .reg = 0x22, .max =  215 },
+> > +	{ .reg = 0x32, .max =  225 },
+> > +	{ .reg = 0x03, .max =  241 },
+> > +	{ .reg = 0x13, .max =  257 },
+> > +	{ .reg = 0x23, .max =  273 },
+> > +	{ .reg = 0x33, .max =  275 },
+> > +	{ .reg = 0x04, .max =  301 },
+> > +	{ .reg = 0x14, .max =  328 },
+> > +	{ .reg = 0x05, .max =  354 },
+> > +	{ .reg = 0x15, .max =  393 },
+> > +	{ .reg = 0x25, .max =  446 },
+> > +	{ .reg = 0x06, .max =  498 },
+> > +	{ .reg = 0x16, .max =  551 },
+> > +	{ .reg = 0x07, .max =  603 },
+> > +	{ .reg = 0x17, .max =  656 },
+> > +	{ .reg = 0x08, .max =  708 },
+> > +	{ .reg = 0x18, .max =  761 },
+> > +	{ .reg = 0x09, .max =  813 },
+> > +	{ .reg = 0x19, .max =  866 },
+> > +	{ .reg = 0x29, .max =  918 },
+> > +	{ .reg = 0x39, .max =  971 },
+> > +	{ .reg = 0x0a, .max = 1023 },
+> > +	{ .reg = 0x1a, .max = 1076 },
+> > +	{ .reg = 0x2a, .max = 1128 },
+> > +	{ .reg = 0x3a, .max = 1181 },
+> > +	{ .reg = 0x0b, .max = 1233 },
+> > +	{ .reg = 0x1b, .max = 1286 },
+> > +	{ .reg = 0x2b, .max = 1338 },
+> > +	{ .reg = 0x3b, .max = 1391 },
+> > +	{ .reg = 0x0c, .max = 1443 },
+> > +	{ .reg = 0x1c, .max = 1496 },
+> > +	{ .reg = 0x2c, .max = 1500 },
+> > +	{ .reg = 0x3c, .max = 1500 },
+> >  	{ /* sentinel */ },
+> >  };
+> >  
+> > @@ -432,11 +432,11 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+> >  {
+> >  	const struct rcsi2_mbps_reg *hsfreq;
+> >  
+> > -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+> > -		if (hsfreq->mbps >= mbps)
+> > +	for (hsfreq = priv->info->hsfreqrange; hsfreq->max != 0; hsfreq++)
+> > +		if (hsfreq->max >= mbps)
+> >  			break;
+> >  
+> > -	if (!hsfreq->mbps) {
+> > +	if (!hsfreq->max) {
+> >  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> >  		return -ERANGE;
+> >  	}
+> > @@ -907,11 +907,11 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
+> >  {
+> >  	const struct rcsi2_mbps_reg *value;
+> >  
+> > -	for (value = values; value->mbps; value++)
+> > -		if (value->mbps >= mbps)
+> > +	for (value = values; value->max; value++)
+> > +		if (value->max >= mbps)
+> >  			break;
+> >  
+> > -	if (!value->mbps) {
+> > +	if (!value->max) {
+> >  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> >  		return -ERANGE;
+> >  	}
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Best Regards,
+> Michael
 
-The first aspect means we can get stuck in pathological thrashing, the
-second means userspace OOM detection breaks and we can leave servers
-(or Android devices, for that matter) hopelessly livelocked.
-
-New patch attached below. I hope we can get this fixed in 5.8, it's
-really quite a big hole in our cache management strategy.
-
----
-From 8db0b846ca0b7a136c0d3d8a1bee3d576990ba11 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Tue, 11 Feb 2020 12:55:07 -0500
-Subject: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-
-The VFS inode shrinker is currently allowed to reclaim cold inodes
-with populated page cache. This behavior goes back to CONFIG_HIGHMEM
-setups, which required the ability to drop page cache in large highem
-zones to free up struct inodes in comparatively tiny lowmem zones.
-
-However, it has significant side effects that are hard to justify on
-systems without highmem:
-
-- It can drop gigabytes of hot and active page cache on the floor
-without consulting the VM (recorded as "inodesteal" events in
-/proc/vmstat). Such an "aging inversion" between unreferenced inodes
-holding hot cache easily happens in practice: for example, a git tree
-whose objects are accessed frequently but no open file descriptors are
-maintained throughout.
-
-- It can als prematurely drop non-resident info stored inside the
-inodes, which can let massive cache thrashing go unnoticed. This in
-turn means we're making the wrong decisions in page reclaim and can
-get stuck in pathological thrashing. The thrashing also doesn't show
-up as memory pressure in psi, causing failure in the userspace OOM
-detection chain, which can leave a system (or Android device e.g.)
-stranded in a livelock.
-
-History
-
-As this keeps causing problems for people, there have been several
-attempts to address this.
-
-One recent attempt was to make the inode shrinker simply skip over
-inodes that still contain pages: a76cf1a474d7 ("mm: don't reclaim
-inodes with many attached pages").
-
-However, this change had to be reverted in 69056ee6a8a3 ("Revert "mm:
-don't reclaim inodes with many attached pages"") because it caused
-severe reclaim performance problems: Inodes that sit on the shrinker
-LRU are attracting reclaim pressure away from the page cache and
-toward the VFS. If we then permanently exempt sizable portions of this
-pool from actually getting reclaimed when looked at, this pressure
-accumulates as deferred shrinker work (a mechanism for *temporarily*
-unreclaimable objects) until it causes mayhem in the VFS cache pools.
-
-In the bug quoted in 69056ee6a8a3 in particular, the excessive
-pressure drove the XFS shrinker into dirty objects, where it caused
-synchronous, IO-bound stalls, even as there was plenty of clean page
-cache that should have been reclaimed instead.
-
-Another variant of this problem was recently observed, where the
-kernel violates cgroups' memory.low protection settings and reclaims
-page cache way beyond the configured thresholds. It was followed by a
-proposal of a modified form of the reverted commit above, that
-implements memory.low-sensitive shrinker skipping over populated
-inodes on the LRU [1]. However, this proposal continues to run the
-risk of attracting disproportionate reclaim pressure to a pool of
-still-used inodes, while not addressing the more generic reclaim
-inversion problem outside of a very specific cgroup application.
-
-[1] https://lore.kernel.org/linux-mm/1578499437-1664-1-git-send-email-laoar.shao@gmail.com/
-
-Solution
-
-This patch fixes the aging inversion described above on
-!CONFIG_HIGHMEM systems, without reintroducing the problems associated
-with excessive shrinker LRU rotations, by keeping populated inodes off
-the shrinker LRUs entirely.
-
-Currently, inodes are kept off the shrinker LRU as long as they have
-an elevated i_count, indicating an active user. Unfortunately, the
-page cache cannot simply hold an i_count reference, because unlink()
-*should* result in the inode being dropped and its cache invalidated.
-
-Instead, this patch makes iput_final() consult the state of the page
-cache and punt the LRU linking to the VM if the inode is still
-populated; the VM in turn checks the inode state when it depopulates
-the page cache, and adds the inode to the LRU if necessary.
-
-This is not unlike what we do for dirty inodes, which are moved off
-the LRU permanently until writeback completion puts them back on (iff
-still unused). We can reuse the same code -- inode_add_lru() - here.
-
-This is also not unlike page reclaim, where the lower VM layer has to
-negotiate state with the higher VFS layer. Follow existing precedence
-and handle the inversion as much as possible on the VM side:
-
-- introduce an I_PAGES flag that the VM maintains under the i_lock, so
-  that any inode code holding that lock can check the page cache state
-  without having to lock and inspect the struct address_space
-
-- introduce inode_pages_set() and inode_pages_clear() to maintain the
-  inode LRU state from the VM side, then update all cache mutators to
-  use them when populating the first cache entry or clearing the last
-
-With this, the concept of "inodesteal" - where the inode shrinker
-drops page cache - is relegated to CONFIG_HIGHMEM systems only. The VM
-is in charge of the cache, the shrinker in charge of struct inode.
-
-Footnotes
-
-- For debuggability, add vmstat counters that track the number of
-  times a new cache entry pulls a previously unused inode off the LRU
-  (pginoderescue), as well as how many times existing cache deferred
-  an LRU addition. Keep the pginodesteal/kswapd_inodesteal counters
-  for backwards compatibility, but they'll just show 0 now.
-
-- Fix /proc/sys/vm/drop_caches to drop shadow entries from the page
-  cache. Not doing so has always been a bit strange, but since most
-  people drop cache and metadata cache together, the inode shrinker
-  would have taken care of them before - no more, so do it VM-side.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- fs/block_dev.c                |   2 +-
- fs/dax.c                      |  14 +++++
- fs/drop_caches.c              |   2 +-
- fs/inode.c                    | 112 +++++++++++++++++++++++++++++++---
- fs/internal.h                 |   2 +-
- include/linux/fs.h            |  17 ++++++
- include/linux/pagemap.h       |   2 +-
- include/linux/vm_event_item.h |   3 +-
- mm/filemap.c                  |  37 ++++++++---
- mm/huge_memory.c              |   3 +-
- mm/truncate.c                 |  34 ++++++++---
- mm/vmscan.c                   |   6 +-
- mm/vmstat.c                   |   4 +-
- mm/workingset.c               |   4 ++
- 14 files changed, 208 insertions(+), 34 deletions(-)
-
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 4c26dcd9dba3..e0f73647c848 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -79,7 +79,7 @@ void kill_bdev(struct block_device *bdev)
- {
- 	struct address_space *mapping = bdev->bd_inode->i_mapping;
- 
--	if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-+	if (mapping_empty(mapping))
- 		return;
- 
- 	invalidate_bh_lrus();
-diff --git a/fs/dax.c b/fs/dax.c
-index 11b16729b86f..89d1245a96ce 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -478,9 +478,11 @@ static void *grab_mapping_entry(struct xa_state *xas,
- {
- 	unsigned long index = xas->xa_index;
- 	bool pmd_downgrade = false; /* splitting PMD entry into PTE entries? */
-+	int populated;
- 	void *entry;
- 
- retry:
-+	populated = 0;
- 	xas_lock_irq(xas);
- 	entry = get_unlocked_entry(xas, order);
- 
-@@ -526,6 +528,8 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-+		if (mapping_empty(mapping))
-+			populated = -1;
- 		entry = NULL;
- 		xas_set(xas, index);
- 	}
-@@ -541,11 +545,17 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 		dax_lock_entry(xas, entry);
- 		if (xas_error(xas))
- 			goto out_unlock;
-+		if (mapping_empty(mapping))
-+			populated++;
- 		mapping->nrexceptional++;
- 	}
- 
- out_unlock:
- 	xas_unlock_irq(xas);
-+	if (populated == -1)
-+		inode_pages_clear(mapping->inode);
-+	else if (populated == 1)
-+		inode_pages_set(mapping->inode);
- 	if (xas_nomem(xas, mapping_gfp_mask(mapping) & ~__GFP_HIGHMEM))
- 		goto retry;
- 	if (xas->xa_node == XA_ERROR(-ENOMEM))
-@@ -631,6 +641,7 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 					  pgoff_t index, bool trunc)
- {
- 	XA_STATE(xas, &mapping->i_pages, index);
-+	bool empty = false;
- 	int ret = 0;
- 	void *entry;
- 
-@@ -645,10 +656,13 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
-+	empty = mapping_empty(mapping);
- 	ret = 1;
- out:
- 	put_unlocked_entry(&xas, entry);
- 	xas_unlock_irq(&xas);
-+	if (empty)
-+		inode_pages_clear(mapping->host);
- 	return ret;
- }
- 
-diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-index f00fcc4a4f72..20e845ff43f2 100644
---- a/fs/drop_caches.c
-+++ b/fs/drop_caches.c
-@@ -27,7 +27,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
- 		 * we need to reschedule to avoid softlockups.
- 		 */
- 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
--		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
-+		    (mapping_empty(inode->i_mapping) && !need_resched())) {
- 			spin_unlock(&inode->i_lock);
- 			continue;
- 		}
-diff --git a/fs/inode.c b/fs/inode.c
-index 9fcec07a9d7c..9da373244db7 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -431,26 +431,101 @@ static void inode_lru_list_add(struct inode *inode)
- 		inode->i_state |= I_REFERENCED;
- }
- 
-+static void inode_lru_list_del(struct inode *inode)
-+{
-+	if (list_lru_del(&inode->i_sb->s_inode_lru, &inode->i_lru))
-+		this_cpu_dec(nr_unused);
-+}
-+
- /*
-  * Add inode to LRU if needed (inode is unused and clean).
-  *
-  * Needs inode->i_lock held.
-  */
--void inode_add_lru(struct inode *inode)
-+bool inode_add_lru(struct inode *inode)
- {
--	if (!(inode->i_state & (I_DIRTY_ALL | I_SYNC |
--				I_FREEING | I_WILL_FREE)) &&
--	    !atomic_read(&inode->i_count) && inode->i_sb->s_flags & SB_ACTIVE)
--		inode_lru_list_add(inode);
-+	if (inode->i_state &
-+	    (I_DIRTY_ALL | I_SYNC | I_FREEING | I_WILL_FREE | I_PAGES))
-+		return false;
-+	if (atomic_read(&inode->i_count))
-+		return false;
-+	if (!(inode->i_sb->s_flags & SB_ACTIVE))
-+		return false;
-+	inode_lru_list_add(inode);
-+	return true;
- }
- 
-+/*
-+ * Usually, inodes become reclaimable when they are no longer
-+ * referenced and their page cache has been reclaimed. The following
-+ * API allows the VM to communicate cache population state to the VFS.
-+ *
-+ * However, on CONFIG_HIGHMEM we can't wait for the page cache to go
-+ * away: cache pages allocated in a large highmem zone could pin
-+ * struct inode memory allocated in relatively small lowmem zones. So
-+ * when CONFIG_HIGHMEM is enabled, we tie cache to the inode lifetime.
-+ */
- 
--static void inode_lru_list_del(struct inode *inode)
-+#ifndef CONFIG_HIGHMEM
-+/**
-+ * inode_pages_set - mark the inode as holding page cache
-+ * @inode: the inode whose first cache page was just added
-+ *
-+ * Tell the VFS that this inode has populated page cache and must not
-+ * be reclaimed by the inode shrinker.
-+ *
-+ * The caller must hold the page lock of the just-added page: by
-+ * pinning the page, the page cache cannot become depopulated, and we
-+ * can safely set I_PAGES without a race check under the i_pages lock.
-+ *
-+ * This function acquires the i_lock.
-+ */
-+void inode_pages_set(struct inode *inode)
- {
-+	spin_lock(&inode->i_lock);
-+	if (!(inode->i_state & I_PAGES)) {
-+		inode->i_state |= I_PAGES;
-+		if (!list_empty(&inode->i_lru)) {
-+			count_vm_event(PGINODERESCUE);
-+			inode_lru_list_del(inode);
-+		}
-+	}
-+	spin_unlock(&inode->i_lock);
-+}
- 
--	if (list_lru_del(&inode->i_sb->s_inode_lru, &inode->i_lru))
--		this_cpu_dec(nr_unused);
-+/**
-+ * inode_pages_clear - mark the inode as not holding page cache
-+ * @inode: the inode whose last cache page was just removed
-+ *
-+ * Tell the VFS that the inode no longer holds page cache and that its
-+ * lifetime is to be handed over to the inode shrinker LRU.
-+ *
-+ * This function acquires the i_lock and the i_pages lock.
-+ */
-+void inode_pages_clear(struct inode *inode)
-+{
-+	struct address_space *mapping = &inode->i_data;
-+	bool add_to_lru = false;
-+	unsigned long flags;
-+
-+	spin_lock(&inode->i_lock);
-+
-+	xa_lock_irqsave(&mapping->i_pages, flags);
-+	if ((inode->i_state & I_PAGES) && mapping_empty(mapping)) {
-+		inode->i_state &= ~I_PAGES;
-+		add_to_lru = true;
-+	}
-+	xa_unlock_irqrestore(&mapping->i_pages, flags);
-+
-+	if (add_to_lru) {
-+		WARN_ON_ONCE(!list_empty(&inode->i_lru));
-+		if (inode_add_lru(inode))
-+			__count_vm_event(PGINODEDELAYED);
-+	}
-+
-+	spin_unlock(&inode->i_lock);
- }
-+#endif /* !CONFIG_HIGHMEM */
- 
- /**
-  * inode_sb_list_add - add inode to the superblock list of inodes
-@@ -743,6 +818,8 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
- 	if (!spin_trylock(&inode->i_lock))
- 		return LRU_SKIP;
- 
-+	WARN_ON_ONCE(inode->i_state & I_PAGES);
-+
- 	/*
- 	 * Referenced or dirty inodes are still in use. Give them another pass
- 	 * through the LRU as we canot reclaim them now.
-@@ -762,7 +839,18 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
- 		return LRU_ROTATE;
- 	}
- 
--	if (inode_has_buffers(inode) || inode->i_data.nrpages) {
-+	/*
-+	 * Usually, populated inodes shouldn't be on the shrinker LRU,
-+	 * but they can be briefly visible when a new page is added to
-+	 * an inode that was already linked but inode_pages_set()
-+	 * hasn't run yet to move them off.
-+	 *
-+	 * The other exception is on HIGHMEM systems: highmem cache
-+	 * can pin lowmem struct inodes, and we might be in dire
-+	 * straits in the lower zones. Purge cache to free the inode.
-+	 */
-+	if (inode_has_buffers(inode) || !mapping_empty(&inode->i_data)) {
-+#ifdef CONFIG_HIGHMEM
- 		__iget(inode);
- 		spin_unlock(&inode->i_lock);
- 		spin_unlock(lru_lock);
-@@ -779,6 +867,12 @@ static enum lru_status inode_lru_isolate(struct list_head *item,
- 		iput(inode);
- 		spin_lock(lru_lock);
- 		return LRU_RETRY;
-+#else
-+		list_lru_isolate(lru, &inode->i_lru);
-+		spin_unlock(&inode->i_lock);
-+		this_cpu_dec(nr_unused);
-+		return LRU_REMOVED;
-+#endif
- 	}
- 
- 	WARN_ON(inode->i_state & I_NEW);
-diff --git a/fs/internal.h b/fs/internal.h
-index aa5d45524e87..2ca77c0afb0b 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -137,7 +137,7 @@ extern int vfs_open(const struct path *, struct file *);
-  * inode.c
-  */
- extern long prune_icache_sb(struct super_block *sb, struct shrink_control *sc);
--extern void inode_add_lru(struct inode *inode);
-+extern bool inode_add_lru(struct inode *inode);
- extern int dentry_needs_remove_privs(struct dentry *dentry);
- 
- /*
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e4a1f28435fe..c3137ee87cb2 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -592,6 +592,11 @@ static inline void mapping_allow_writable(struct address_space *mapping)
- 	atomic_inc(&mapping->i_mmap_writable);
- }
- 
-+static inline bool mapping_empty(struct address_space *mapping)
-+{
-+	return mapping->nrpages + mapping->nrexceptional == 0;
-+}
-+
- /*
-  * Use sequence counter to get consistent i_size on 32-bit processors.
-  */
-@@ -2165,6 +2170,9 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
-  *
-  * I_CREATING		New object's inode in the middle of setting up.
-  *
-+ * I_PAGES		Inode is holding page cache that needs to get reclaimed
-+ *			first before the inode can go onto the shrinker LRU.
-+ *
-  * Q: What is the difference between I_WILL_FREE and I_FREEING?
-  */
- #define I_DIRTY_SYNC		(1 << 0)
-@@ -2187,6 +2195,7 @@ static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
- #define I_WB_SWITCH		(1 << 13)
- #define I_OVL_INUSE		(1 << 14)
- #define I_CREATING		(1 << 15)
-+#define I_PAGES			(1 << 16)
- 
- #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
- #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
-@@ -3124,6 +3133,14 @@ static inline void remove_inode_hash(struct inode *inode)
- 		__remove_inode_hash(inode);
- }
- 
-+#ifndef CONFIG_HIGHMEM
-+extern void inode_pages_set(struct inode *inode);
-+extern void inode_pages_clear(struct inode *inode);
-+#else
-+static inline void inode_pages_set(struct inode *inode) {}
-+static inline void inode_pages_clear(struct inode *inode) {}
-+#endif
-+
- extern void inode_sb_list_add(struct inode *inode);
- 
- #ifdef CONFIG_BLOCK
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index c6348c50136f..c3646b79489e 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -613,7 +613,7 @@ int add_to_page_cache_locked(struct page *page, struct address_space *mapping,
- int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
- 				pgoff_t index, gfp_t gfp_mask);
- extern void delete_from_page_cache(struct page *page);
--extern void __delete_from_page_cache(struct page *page, void *shadow);
-+extern bool __delete_from_page_cache(struct page *page, void *shadow);
- int replace_page_cache_page(struct page *old, struct page *new, gfp_t gfp_mask);
- void delete_from_page_cache_batch(struct address_space *mapping,
- 				  struct pagevec *pvec);
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index ffef0f279747..de362c9cda29 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -38,7 +38,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- #ifdef CONFIG_NUMA
- 		PGSCAN_ZONE_RECLAIM_FAILED,
- #endif
--		PGINODESTEAL, SLABS_SCANNED, KSWAPD_INODESTEAL,
-+		SLABS_SCANNED,
-+		PGINODESTEAL, KSWAPD_INODESTEAL, PGINODERESCUE, PGINODEDELAYED,
- 		KSWAPD_LOW_WMARK_HIT_QUICKLY, KSWAPD_HIGH_WMARK_HIT_QUICKLY,
- 		PAGEOUTRUN, PGROTATED,
- 		DROP_PAGECACHE, DROP_SLAB,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 792e22e1e3c0..9cc423dcb16c 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -116,8 +116,8 @@
-  *   ->tasklist_lock            (memory_failure, collect_procs_ao)
-  */
- 
--static void page_cache_delete(struct address_space *mapping,
--				   struct page *page, void *shadow)
-+static bool __must_check page_cache_delete(struct address_space *mapping,
-+					   struct page *page, void *shadow)
- {
- 	XA_STATE(xas, &mapping->i_pages, page->index);
- 	unsigned int nr = 1;
-@@ -151,6 +151,8 @@ static void page_cache_delete(struct address_space *mapping,
- 		smp_wmb();
- 	}
- 	mapping->nrpages -= nr;
-+
-+	return mapping_empty(mapping);
- }
- 
- static void unaccount_page_cache_page(struct address_space *mapping,
-@@ -227,15 +229,18 @@ static void unaccount_page_cache_page(struct address_space *mapping,
-  * Delete a page from the page cache and free it. Caller has to make
-  * sure the page is locked and that nobody else uses it - or that usage
-  * is safe.  The caller must hold the i_pages lock.
-+ *
-+ * If this returns true, the caller must call inode_pages_clear()
-+ * after dropping the i_pages lock.
-  */
--void __delete_from_page_cache(struct page *page, void *shadow)
-+bool __must_check __delete_from_page_cache(struct page *page, void *shadow)
- {
- 	struct address_space *mapping = page->mapping;
- 
- 	trace_mm_filemap_delete_from_page_cache(page);
- 
- 	unaccount_page_cache_page(mapping, page);
--	page_cache_delete(mapping, page, shadow);
-+	return page_cache_delete(mapping, page, shadow);
- }
- 
- static void page_cache_free_page(struct address_space *mapping,
-@@ -267,12 +272,16 @@ void delete_from_page_cache(struct page *page)
- {
- 	struct address_space *mapping = page_mapping(page);
- 	unsigned long flags;
-+	bool empty;
- 
- 	BUG_ON(!PageLocked(page));
- 	xa_lock_irqsave(&mapping->i_pages, flags);
--	__delete_from_page_cache(page, NULL);
-+	empty = __delete_from_page_cache(page, NULL);
- 	xa_unlock_irqrestore(&mapping->i_pages, flags);
- 
-+	if (empty)
-+		inode_pages_clear(mapping->host);
-+
- 	page_cache_free_page(mapping, page);
- }
- EXPORT_SYMBOL(delete_from_page_cache);
-@@ -291,8 +300,8 @@ EXPORT_SYMBOL(delete_from_page_cache);
-  *
-  * The function expects the i_pages lock to be held.
-  */
--static void page_cache_delete_batch(struct address_space *mapping,
--			     struct pagevec *pvec)
-+static bool __must_check page_cache_delete_batch(struct address_space *mapping,
-+						 struct pagevec *pvec)
- {
- 	XA_STATE(xas, &mapping->i_pages, pvec->pages[0]->index);
- 	int total_pages = 0;
-@@ -337,12 +346,15 @@ static void page_cache_delete_batch(struct address_space *mapping,
- 		total_pages++;
- 	}
- 	mapping->nrpages -= total_pages;
-+
-+	return mapping_empty(mapping);
- }
- 
- void delete_from_page_cache_batch(struct address_space *mapping,
- 				  struct pagevec *pvec)
- {
- 	int i;
-+	bool empty;
- 	unsigned long flags;
- 
- 	if (!pagevec_count(pvec))
-@@ -354,9 +366,12 @@ void delete_from_page_cache_batch(struct address_space *mapping,
- 
- 		unaccount_page_cache_page(mapping, pvec->pages[i]);
- 	}
--	page_cache_delete_batch(mapping, pvec);
-+	empty = page_cache_delete_batch(mapping, pvec);
- 	xa_unlock_irqrestore(&mapping->i_pages, flags);
- 
-+	if (empty)
-+		inode_pages_clear(mapping->host);
-+
- 	for (i = 0; i < pagevec_count(pvec); i++)
- 		page_cache_free_page(mapping, pvec->pages[i]);
- }
-@@ -833,6 +848,7 @@ static int __add_to_page_cache_locked(struct page *page,
- {
- 	XA_STATE(xas, &mapping->i_pages, offset);
- 	int huge = PageHuge(page);
-+	bool populated = false;
- 	int error;
- 	void *old;
- 
-@@ -859,6 +875,7 @@ static int __add_to_page_cache_locked(struct page *page,
- 		if (xas_error(&xas))
- 			goto unlock;
- 
-+		populated = mapping_empty(mapping);
- 		if (xa_is_value(old)) {
- 			mapping->nrexceptional--;
- 			if (shadowp)
-@@ -879,6 +896,10 @@ static int __add_to_page_cache_locked(struct page *page,
- 	}
- 
- 	trace_mm_filemap_add_to_page_cache(page);
-+
-+	if (populated)
-+		inode_pages_set(mapping->host);
-+
- 	return 0;
- error:
- 	page->mapping = NULL;
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 23763452b52a..fbe9a7297759 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2406,7 +2406,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		/* Some pages can be beyond i_size: drop them from page cache */
- 		if (head[i].index >= end) {
- 			ClearPageDirty(head + i);
--			__delete_from_page_cache(head + i, NULL);
-+			/* We know we're not removing the last page */
-+			(void)__delete_from_page_cache(head + i, NULL);
- 			if (IS_ENABLED(CONFIG_SHMEM) && PageSwapBacked(head))
- 				shmem_uncharge(head->mapping->host, 1);
- 			put_page(head + i);
-diff --git a/mm/truncate.c b/mm/truncate.c
-index dd9ebc1da356..8fb6c2f762bc 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -31,24 +31,31 @@
-  * itself locked.  These unlocked entries need verification under the tree
-  * lock.
-  */
--static inline void __clear_shadow_entry(struct address_space *mapping,
--				pgoff_t index, void *entry)
-+static bool __must_check __clear_shadow_entry(struct address_space *mapping,
-+					      pgoff_t index, void *entry)
- {
- 	XA_STATE(xas, &mapping->i_pages, index);
- 
- 	xas_set_update(&xas, workingset_update_node);
- 	if (xas_load(&xas) != entry)
--		return;
-+		return 0;
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
-+
-+	return mapping_empty(mapping);
- }
- 
- static void clear_shadow_entry(struct address_space *mapping, pgoff_t index,
- 			       void *entry)
- {
-+	bool empty;
-+
- 	xa_lock_irq(&mapping->i_pages);
--	__clear_shadow_entry(mapping, index, entry);
-+	empty = __clear_shadow_entry(mapping, index, entry);
- 	xa_unlock_irq(&mapping->i_pages);
-+
-+	if (empty)
-+		inode_pages_clear(mapping->host);
- }
- 
- /*
-@@ -61,7 +68,7 @@ static void truncate_exceptional_pvec_entries(struct address_space *mapping,
- 				pgoff_t end)
- {
- 	int i, j;
--	bool dax, lock;
-+	bool dax, lock, empty = false;
- 
- 	/* Handled by shmem itself */
- 	if (shmem_mapping(mapping))
-@@ -96,11 +103,16 @@ static void truncate_exceptional_pvec_entries(struct address_space *mapping,
- 			continue;
- 		}
- 
--		__clear_shadow_entry(mapping, index, page);
-+		if (__clear_shadow_entry(mapping, index, page))
-+			empty = true;
- 	}
- 
- 	if (lock)
- 		xa_unlock_irq(&mapping->i_pages);
-+
-+	if (empty)
-+		inode_pages_clear(mapping->host);
-+
- 	pvec->nr = j;
- }
- 
-@@ -300,7 +312,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 	pgoff_t		index;
- 	int		i;
- 
--	if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-+	if (mapping_empty(mapping))
- 		goto out;
- 
- 	/* Offsets within partial pages */
-@@ -636,6 +648,7 @@ static int
- invalidate_complete_page2(struct address_space *mapping, struct page *page)
- {
- 	unsigned long flags;
-+	bool empty;
- 
- 	if (page->mapping != mapping)
- 		return 0;
-@@ -648,9 +661,12 @@ invalidate_complete_page2(struct address_space *mapping, struct page *page)
- 		goto failed;
- 
- 	BUG_ON(page_has_private(page));
--	__delete_from_page_cache(page, NULL);
-+	empty = __delete_from_page_cache(page, NULL);
- 	xa_unlock_irqrestore(&mapping->i_pages, flags);
- 
-+	if (empty)
-+		inode_pages_clear(mapping->host);
-+
- 	if (mapping->a_ops->freepage)
- 		mapping->a_ops->freepage(page);
- 
-@@ -692,7 +708,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
- 	int ret2 = 0;
- 	int did_range_unmap = 0;
- 
--	if (mapping->nrpages == 0 && mapping->nrexceptional == 0)
-+	if (mapping_empty(mapping))
- 		goto out;
- 
- 	pagevec_init(&pvec);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index cc555903a332..2ae2df605006 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -901,6 +901,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 	} else {
- 		void (*freepage)(struct page *);
- 		void *shadow = NULL;
-+		int empty;
- 
- 		freepage = mapping->a_ops->freepage;
- 		/*
-@@ -922,9 +923,12 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 		if (reclaimed && page_is_file_lru(page) &&
- 		    !mapping_exiting(mapping) && !dax_mapping(mapping))
- 			shadow = workingset_eviction(page, target_memcg);
--		__delete_from_page_cache(page, shadow);
-+		empty = __delete_from_page_cache(page, shadow);
- 		xa_unlock_irqrestore(&mapping->i_pages, flags);
- 
-+		if (empty)
-+			inode_pages_clear(mapping->host);
-+
- 		if (freepage != NULL)
- 			freepage(page);
- 	}
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 35219271796f..0fdbec92265a 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1205,9 +1205,11 @@ const char * const vmstat_text[] = {
- #ifdef CONFIG_NUMA
- 	"zone_reclaim_failed",
- #endif
--	"pginodesteal",
- 	"slabs_scanned",
-+	"pginodesteal",
- 	"kswapd_inodesteal",
-+	"pginoderescue",
-+	"pginodedelayed",
- 	"kswapd_low_wmark_hit_quickly",
- 	"kswapd_high_wmark_hit_quickly",
- 	"pageoutrun",
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 474186b76ced..7ce9c74ebfdb 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -491,6 +491,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 	struct xa_node *node = container_of(item, struct xa_node, private_list);
- 	XA_STATE(xas, node->array, 0);
- 	struct address_space *mapping;
-+	bool empty = false;
- 	int ret;
- 
- 	/*
-@@ -529,6 +530,7 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 	if (WARN_ON_ONCE(node->count != node->nr_values))
- 		goto out_invalid;
- 	mapping->nrexceptional -= node->nr_values;
-+	empty = mapping_empty(mapping);
- 	xas.xa_node = xa_parent_locked(&mapping->i_pages, node);
- 	xas.xa_offset = node->offset;
- 	xas.xa_shift = node->shift + XA_CHUNK_SHIFT;
-@@ -542,6 +544,8 @@ static enum lru_status shadow_lru_isolate(struct list_head *item,
- 
- out_invalid:
- 	xa_unlock_irq(&mapping->i_pages);
-+	if (empty)
-+		inode_pages_clear(mapping->host);
- 	ret = LRU_REMOVED_RETRY;
- out:
- 	cond_resched();
 -- 
-2.26.2
-
+Regards,
+Niklas Söderlund
