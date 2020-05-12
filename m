@@ -2,128 +2,73 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E8C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C89CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE01720733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9391720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589306765;
-	bh=u6F9DLRbr9iVJIIz0f3H5qz89UqdlJ6qKaSYphCX6ak=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=HKBirGHEvg7iceLFywAf995jcboJNtkjdP50Ja0tc357T7bFPHUZsSEFS9W383/Fh
-	 y1gAFtXcs3sOQVY+okQU9TPqR6gLY5Y15s1D7M5X4P7t4h+2qGdgg7yXAzM6KnYv3t
-	 yEfLFTDQcxV0oOZtpF21OtbIYHWtxga2Iq416hJ0=
+	s=default; t=1589306810;
+	bh=FSuhoMdxsv0/TzoZBEjHyNleiPV8NffmxdAM5VCVxWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ikr1wi0zZofva+gee6EVrQxkAAkROxzIt5CDBQ8vdy4ke1C18ZZmrx97/uLvIIDpD
+	 ePNMl+7sQSRXBCoOsUmt07gk5X1OmJZLCcCML3M2VQxMvYSCSvPIs7bZqHs3Oqe2He
+	 OBy7a06Tecir1ioEBLw0Sw3VvjDDhV+0U+4sGyro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgELSGF (ORCPT
+        id S1730759AbgELSGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:06:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53030 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 14:06:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgELSGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:06:04 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        id S1726465AbgELSGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 14:06:49 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FD720720;
-        Tue, 12 May 2020 18:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 939E920673;
+        Tue, 12 May 2020 18:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589306764;
-        bh=u6F9DLRbr9iVJIIz0f3H5qz89UqdlJ6qKaSYphCX6ak=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2bwY1ea4D1zVQuZSsqjre852YXMAh6qn1U4AxMFwEpVakTIAx3F7MvxvEccTa7HqG
-         0ipEmFqpAqPt7kskzY3xT2LdKxbAyYWAoffOBznznFDRWntjKrn5FCidcUJekMvi62
-         ZyD3pQqwt6R9ROxTSRhmRqnp1uB+r7/ppVV7NQa0=
-Date:   Tue, 12 May 2020 13:06:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
-Message-ID: <20200512180602.GA273658@bjorn-Precision-5520>
+        s=default; t=1589306809;
+        bh=FSuhoMdxsv0/TzoZBEjHyNleiPV8NffmxdAM5VCVxWw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E+S93CRiWGAmMaWQoLzGhtLA6RofE+iU4btmBQPiip25uBYf45ZMB6ufRnaFA0YEe
+         Kz/3kVi6UKI5qP4+h+rUp7lwtt2k3XclFUoNm74klSYGVSXjQzWfaTe7jBEvtC0vMH
+         tSmiTDWe7mCmI+d3SYlKh3HTTrM8dRp4mxG/acR8=
+Date:   Tue, 12 May 2020 13:11:23 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs: Replace zero-length array with flexible-array
+Message-ID: <20200512181123.GH4897@embeddedor>
+References: <20200507192550.GA16683@embeddedor>
+ <158925392373.17325.7271834544265076683.b4-ty@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512074413.3557835-2-jiaxun.yang@flygoat.com>
+In-Reply-To: <158925392373.17325.7271834544265076683.b4-ty@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
-> This controller can be found on Loongson-2K SoC, Loongson-3
-> systems with RS780E/LS7A PCH.
+On Tue, May 12, 2020 at 03:28:31AM +0000, Martin K. Petersen wrote:
+> On Thu, 7 May 2020 14:25:50 -0500, Gustavo A. R. Silva wrote:
 > 
-> The RS780E part of code was previously located at
-> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
-> driver implementation.
+> Applied to 5.8/scsi-queue, thanks!
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> [1/1] scsi: ufs: Replace zero-length array with flexible-array
+>       https://git.kernel.org/mkp/scsi/c/ec38c0adc0a1
+> 
 
-> +static void system_bus_quirk(struct pci_dev *pdev)
-> +{
-> +	u16 tmp;
-> +
-> +	/* 
-> +	 * These devices are not sharing resouces with rest of devices
-> +	 * on host bus and firmware will ensure their BARs are placed
-> +	 * in safe ranges. Also there might be some config registers
-> +	 * in their config space so kernel shouldn't ignore them.
+Thanks, Martin.
 
-"Firmware ensuring BARs are placed in 'safe' ranges" is not a
-sufficient answer.  As I said before, Linux needs to know both the
-ADDRESS and the SIZE of whatever non-standard BARs these are.
-Otherwise, we're liable to assign that space to a different device.
-
-If you have to hard-code the size, so be it.  That would mean the
-hardware is completely broken, but at least we could make Linux deal
-with it.  If the hardware consumes address space we don't know about,
-we can't deal with that.
-
-> +	 */
-> +	pdev->mmio_always_on = 1;
-> +	pdev->non_compliant_bars = 1;
-> +}
-
-> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +			       int where)
-> +{
-> +	unsigned char busnum = bus->number;
-> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
-> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
-> +
-> +	/*
-> +	 * Do not read more than one device on the bus other than
-> +	 * the host bus 0.
-> +	 */
-
-If the hardware is restricted such that the root bus number must be
-zero, pleae say that explicitly here.  Otherwise, it just looks like
-a bug.
-
-> +	if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
-> +		PCI_SLOT(devfn) > 0)
-> +		return NULL;
-> +
-> +	/* CFG0 can only access standard space */
-> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
-> +		return cfg0_map(priv, busnum, devfn, where);
-> +
-> +	/* CFG1 can access extended space */
-> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
-> +		return cfg1_map(priv, busnum, devfn, where);
-> +
-> +	return NULL;
-> +}
+--
+Gustavo
