@@ -2,93 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6C3C47077
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC954C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9EE20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxYv4Egd"
+	by mail.kernel.org (Postfix) with ESMTP id C38D920753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgELU6E (ORCPT
+        id S1731208AbgELU7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgELU6E (ORCPT
+        Tue, 12 May 2020 16:59:51 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:51278 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELU7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:58:04 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E8CC061A0C;
-        Tue, 12 May 2020 13:58:04 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id r10so6248917pgv.8;
-        Tue, 12 May 2020 13:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lWVK1FACn+wJeq7qZs57K7YYeZ4F4zJ1GYHSxsOXWGk=;
-        b=XxYv4EgdYhWpw0E+DZAy+TFCn4kPxUHi9BuV1t0S20SZ1zMARKCijzip/6YwlOlHhu
-         2IR21zouEhI4LEc5AUZg7YMBLU+awaZRDEFG6RKNN9bNT0tj/m3+8hMgbgtcxP4quO52
-         hIMiNgcVNxyUYggenFryLZ/nc0ZVCT54XR9H8liUSyThujyd/cPWndotQXim8isiYS+h
-         M8e+OPnQAM6PFzuN6bZewy/NhQb35tjPbk+ztU9pOV67PaJfNWQ9GjcSPVM0VzqOYIFm
-         cgSS/ELDzJ3UtahLHHLftaNEULXtmnVGxNNMiiR7j0LzZF5Zp91z9aVsVbprIZLQtEPJ
-         Xfug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lWVK1FACn+wJeq7qZs57K7YYeZ4F4zJ1GYHSxsOXWGk=;
-        b=CbugjPtqqhSlCDTbv6zV9dlPZ+JMPuXfqMUeialXC50mvJBDr26Yn9UUBkMCfoO87g
-         p/MzlEuEOZbjMFPQDUoEnFcjlDo18G/ngyJ/IE8lCKAKdn5XM1RW0Ykndei96oBZbJES
-         qoZWw9vx9nDEqTEPnz0S1/XZE0KOJ4MbR+BfjK47UVPMaBnJEFzBExgxPrg8nXNgRN2C
-         tcJZLi7PnZxmQ/QFp6WFdYt5ggyWtkCr+6k+njWYyP23iuLObNRNmUsWE4jvQYe9mknr
-         Z8aABKMi6uPPBYElZDdTHAevEzkrSPb6i6Ca5sa0Tjm2aT/ccDGhNhb4FSmhithD+S21
-         WNHw==
-X-Gm-Message-State: AGi0PuY+/R65Vz7gzhOAJgX/aVKXAEyjGOOxlYhQfNK2qYhGI/uI7JJL
-        AGKAcJ4Uff/GSUljJ9d5AMhkS6d9td7UzZeLSsU=
-X-Google-Smtp-Source: APiQypKI8FjdbEyVTcX7DvwSpFyqkiOOhwS501KYvrM6PubS4UC3qvsJBHQOLo00aLXmZVhkXqmL3DHcCX0tCDyNWFs=
-X-Received: by 2002:a62:5ec7:: with SMTP id s190mr22127799pfb.130.1589317083846;
- Tue, 12 May 2020 13:58:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200512204009.4751-1-bernhardu@mailbox.org> <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
- <CAHp75Vfk+MU+XsPf4+upqzd7HyxBHgQBZ=BukUPxzd+8Bm9bOQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vfk+MU+XsPf4+upqzd7HyxBHgQBZ=BukUPxzd+8Bm9bOQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 May 2020 23:57:51 +0300
-Message-ID: <CAHp75Vc7A-L5UYZQQXYenZQG-GD1ZM7Pfi4dChHm2xy1BJB0Ow@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
- Yourbook C11B
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Otmar Meier <otmarjun.meier@nexgo.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 May 2020 16:59:51 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jYc2a-0007Ai-WC; Tue, 12 May 2020 21:02:17 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] ARM: dts: imx6qdl-gw560x: add lsm9ds1 iio imu/magn support
+Date:   Tue, 12 May 2020 13:59:37 -0700
+Message-Id: <1589317177-8703-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:51 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrot=
-e:
-> > On 5/12/20 10:40 PM, Bernhard =C3=9Cbelacker wrote:
+Add one node for the accel/gyro i2c device and another for the separate
+magnetometer device in the lsm9ds1.
 
-> I don't see it neither in our patchwork nor in Linux Input...
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw560x.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Okay, no worries, it came at last.
+diff --git a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+index e8e36df..69ca70d 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw560x.dtsi
+@@ -295,6 +295,15 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
++	magn@1c {
++		compatible = "st,lsm9ds1-magn";
++		reg = <0x1c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_mag>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <9 IRQ_TYPE_EDGE_RISING>;
++	};
++
+ 	tca8418: keypad@34 {
+ 		compatible = "ti,tca8418";
+ 		pinctrl-names = "default";
+@@ -389,6 +398,16 @@
+ 			};
+ 		};
+ 	};
++
++	imu@6a {
++		compatible = "st,lsm9ds1-imu";
++		reg = <0x6a>;
++		st,drdy-int-pin = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_imu>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
++	};
+ };
+ 
+ &i2c3 {
+@@ -609,6 +628,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_imu: imugrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT12__GPIO5_IO06	0x1b0b0
++		>;
++	};
++
+ 	pinctrl_keypad: keypadgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_DISP0_DAT17__GPIO5_IO11	0x0001b0b0 /* KEYPAD_IRQ# */
+@@ -616,6 +641,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_mag: maggrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT15__GPIO5_IO09	0x1b0b0
++		>;
++	};
++
+ 	pinctrl_pcie: pciegrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_DISP0_DAT10__GPIO4_IO31	0x1b0b0    /* PCI_RST# */
+-- 
+2.7.4
 
---=20
-With Best Regards,
-Andy Shevchenko
