@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0331EC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD9C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD47A2492C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABA923126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgELWXg (ORCPT
+        id S1731812AbgELWXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55542 "EHLO
+        Tue, 12 May 2020 18:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731734AbgELWXZ (ORCPT
+        by vger.kernel.org with ESMTP id S1731732AbgELWXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:23:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1133CC061A0F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C2C061A0E
         for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:25 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIQ-0004r6-Ik; Wed, 13 May 2020 00:22:43 +0200
+        id 1jYdIZ-0004zU-7V; Wed, 13 May 2020 00:22:52 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 170711001FC;
-        Wed, 13 May 2020 00:22:42 +0200 (CEST)
-Message-Id: <20200512213811.319747105@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C43041001FC;
+        Wed, 13 May 2020 00:22:50 +0200 (CEST)
+Message-Id: <20200512213812.056556486@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:18 +0200
+Date:   Tue, 12 May 2020 23:01:25 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 19/38] x86/irq: Convey vector as argument and not in ptregs
+Subject: [patch V5 26/38] x86/entry: Convert SMP system vectors to IDTENTRY_SYSVEC
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,392 +71,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device interrupts which go through do_IRQ() or the spurious interrupt
-handler have their separate entry code on 64 bit for no good reason.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Both 32 and 64 bit transport the vector number through ORIG_[RE]AX in
-pt_regs. Further the vector number is forced to fit into an u8 and is
-complemented and offset by 0x80 so it's in the signed character
-range. Otherwise GAS would expand the pushq to a 5 byte instruction for any
-vector > 0x7F.
+Convert SMP system vectors to IDTENTRY_SYSVEC
+  - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
+  - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
+  - Remove the ASM idtentries in 64bit
+  - Remove the BUILD_INTERRUPT entries in 32bit
+  - Remove the old prototypes
 
-Treat the vector number like an error code and hand it to the C function as
-argument. This allows to get rid of the extra entry code in a later step.
+No functional change.
 
-Simplify the error code push magic by implementing the pushq imm8 via a
-'.byte 0x6a, vector' sequence so GAS is not able to screw it up. As the
-pushq imm8 is sign extending the resulting error code needs to be truncated
-to 8 bits in C code.
-
-Originally-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Brian Gerst <brgerst@gmail.com>
----
-V2: Fix the pushq thinko (Brian)
----
- arch/x86/entry/calling.h          |    5 +++-
- arch/x86/entry/entry_32.S         |   33 +++----------------------------
- arch/x86/entry/entry_64.S         |   40 ++++++--------------------------------
- arch/x86/include/asm/entry_arch.h |    2 -
- arch/x86/include/asm/hw_irq.h     |    1 
- arch/x86/include/asm/idtentry.h   |   40 ++++++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/irq.h        |    2 -
- arch/x86/include/asm/traps.h      |    3 +-
- arch/x86/kernel/apic/apic.c       |   31 +++++++++++++++++++++++------
- arch/x86/kernel/idt.c             |    2 -
- arch/x86/kernel/irq.c             |   14 ++++++++-----
- 11 files changed, 95 insertions(+), 78 deletions(-)
 
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -341,7 +341,10 @@ For 32-bit we have the following convent
- #endif
- .endm
- 
--#endif /* CONFIG_X86_64 */
-+#else /* CONFIG_X86_64 */
-+# undef		UNWIND_HINT_IRET_REGS
-+# define	UNWIND_HINT_IRET_REGS
-+#endif /* !CONFIG_X86_64 */
- 
- .macro STACKLEAK_ERASE
- #ifdef CONFIG_GCC_PLUGIN_STACKLEAK
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1215,40 +1215,15 @@ SYM_FUNC_END(entry_INT80_32)
- #endif
- .endm
- 
--/*
-- * Build the entry stubs with some assembler magic.
-- * We pack 1 stub into every 8-byte block.
-- */
--	.align 8
--SYM_CODE_START(irq_entries_start)
--    vector=FIRST_EXTERNAL_VECTOR
--    .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
--	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
--    vector=vector+1
--	jmp	common_interrupt
--	.align	8
--    .endr
--SYM_CODE_END(irq_entries_start)
--
- #ifdef CONFIG_X86_LOCAL_APIC
--	.align 8
--SYM_CODE_START(spurious_entries_start)
--    vector=FIRST_SYSTEM_VECTOR
--    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
--	pushl	$(~vector+0x80)			/* Note: always in signed byte range */
--    vector=vector+1
--	jmp	common_spurious
--	.align	8
--    .endr
--SYM_CODE_END(spurious_entries_start)
--
- SYM_CODE_START_LOCAL(common_spurious)
- 	ASM_CLAC
--	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
- 	SAVE_ALL switch_stacks=1
- 	ENCODE_FRAME_POINTER
- 	TRACE_IRQS_OFF
- 	movl	%esp, %eax
-+	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
-+	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
- 	call	smp_spurious_interrupt
- 	jmp	ret_from_intr
- SYM_CODE_END(common_spurious)
-@@ -1261,12 +1236,12 @@ SYM_CODE_END(common_spurious)
- 	.p2align CONFIG_X86_L1_CACHE_SHIFT
- SYM_CODE_START_LOCAL(common_interrupt)
- 	ASM_CLAC
--	addl	$-0x80, (%esp)			/* Adjust vector into the [-256, -1] range */
--
- 	SAVE_ALL switch_stacks=1
- 	ENCODE_FRAME_POINTER
- 	TRACE_IRQS_OFF
- 	movl	%esp, %eax
-+	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
-+	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
- 	call	do_IRQ
- 	jmp	ret_from_intr
- SYM_CODE_END(common_interrupt)
+---
+ arch/x86/entry/entry_64.S         |    7 -------
+ arch/x86/include/asm/entry_arch.h |    4 ----
+ arch/x86/include/asm/hw_irq.h     |    5 -----
+ arch/x86/include/asm/idtentry.h   |    7 +++++++
+ arch/x86/include/asm/traps.h      |    2 --
+ arch/x86/kernel/apic/vector.c     |    5 ++---
+ arch/x86/kernel/idt.c             |   10 +++++-----
+ arch/x86/kernel/smp.c             |   18 +++++++-----------
+ 8 files changed, 21 insertions(+), 37 deletions(-)
+
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -358,34 +358,6 @@ SYM_CODE_START(ret_from_fork)
- SYM_CODE_END(ret_from_fork)
- .popsection
+@@ -956,11 +956,6 @@ apicinterrupt3 \num \sym \do_sym
+ POP_SECTION_IRQENTRY
+ .endm
  
--/*
-- * Build the entry stubs with some assembler magic.
-- * We pack 1 stub into every 8-byte block.
-- */
--	.align 8
--SYM_CODE_START(irq_entries_start)
--    vector=FIRST_EXTERNAL_VECTOR
--    .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
--	UNWIND_HINT_IRET_REGS
--	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
--	jmp	common_interrupt
--	.align	8
--	vector=vector+1
--    .endr
--SYM_CODE_END(irq_entries_start)
+-#ifdef CONFIG_SMP
+-apicinterrupt3 IRQ_MOVE_CLEANUP_VECTOR		irq_move_cleanup_interrupt	smp_irq_move_cleanup_interrupt
+-apicinterrupt3 REBOOT_VECTOR			reboot_interrupt		smp_reboot_interrupt
+-#endif
 -
--	.align 8
--SYM_CODE_START(spurious_entries_start)
--    vector=FIRST_SYSTEM_VECTOR
--    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
--	UNWIND_HINT_IRET_REGS
--	pushq	$(~vector+0x80)			/* Note: always in signed byte range */
--	jmp	common_spurious
--	.align	8
--	vector=vector+1
--    .endr
--SYM_CODE_END(spurious_entries_start)
--
- .macro DEBUG_ENTRY_ASSERT_IRQS_OFF
- #ifdef CONFIG_DEBUG_ENTRY
- 	pushq %rax
-@@ -755,13 +727,14 @@ SYM_CODE_END(interrupt_entry)
- /* Interrupt entry/exit. */
- 
- /*
-- * The interrupt stubs push (~vector+0x80) onto the stack and
-+ * The interrupt stubs push vector onto the stack and
-  * then jump to common_spurious/interrupt.
-  */
- SYM_CODE_START_LOCAL(common_spurious)
--	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
- 	call	interrupt_entry
- 	UNWIND_HINT_REGS indirect=1
-+	movq	ORIG_RAX(%rdi), %rsi		/* get vector from stack */
-+	movq	$-1, ORIG_RAX(%rdi)		/* no syscall to restart */
- 	call	smp_spurious_interrupt		/* rdi points to pt_regs */
- 	jmp	ret_from_intr
- SYM_CODE_END(common_spurious)
-@@ -770,10 +743,11 @@ SYM_CODE_END(common_spurious)
- /* common_interrupt is a hotpath. Align it */
- 	.p2align CONFIG_X86_L1_CACHE_SHIFT
- SYM_CODE_START_LOCAL(common_interrupt)
--	addq	$-0x80, (%rsp)			/* Adjust vector to [-256, -1] range */
- 	call	interrupt_entry
- 	UNWIND_HINT_REGS indirect=1
--	call	do_IRQ	/* rdi points to pt_regs */
-+	movq	ORIG_RAX(%rdi), %rsi		/* get vector from stack */
-+	movq	$-1, ORIG_RAX(%rdi)		/* no syscall to restart */
-+	call	do_IRQ				/* rdi points to pt_regs */
- 	/* 0(%rsp): old RSP */
- ret_from_intr:
- 	DISABLE_INTERRUPTS(CLBR_ANY)
-@@ -1022,7 +996,7 @@ apicinterrupt RESCHEDULE_VECTOR			resche
+ #ifdef CONFIG_X86_UV
+ apicinterrupt3 UV_BAU_MESSAGE			uv_bau_message_intr1		uv_bau_message_interrupt
+ #endif
+@@ -984,8 +979,6 @@ apicinterrupt THERMAL_APIC_VECTOR		therm
  #endif
  
- apicinterrupt ERROR_APIC_VECTOR			error_interrupt			smp_error_interrupt
--apicinterrupt SPURIOUS_APIC_VECTOR		spurious_interrupt		smp_spurious_interrupt
-+apicinterrupt SPURIOUS_APIC_VECTOR		spurious_apic_interrupt		smp_spurious_apic_interrupt
+ #ifdef CONFIG_SMP
+-apicinterrupt CALL_FUNCTION_SINGLE_VECTOR	call_function_single_interrupt	smp_call_function_single_interrupt
+-apicinterrupt CALL_FUNCTION_VECTOR		call_function_interrupt		smp_call_function_interrupt
+ apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
+ #endif
  
- #ifdef CONFIG_IRQ_WORK
- apicinterrupt IRQ_WORK_VECTOR			irq_work_interrupt		smp_irq_work_interrupt
 --- a/arch/x86/include/asm/entry_arch.h
 +++ b/arch/x86/include/asm/entry_arch.h
-@@ -35,7 +35,7 @@ BUILD_INTERRUPT(kvm_posted_intr_nested_i
+@@ -12,10 +12,6 @@
+  */
+ #ifdef CONFIG_SMP
+ BUILD_INTERRUPT(reschedule_interrupt,RESCHEDULE_VECTOR)
+-BUILD_INTERRUPT(call_function_interrupt,CALL_FUNCTION_VECTOR)
+-BUILD_INTERRUPT(call_function_single_interrupt,CALL_FUNCTION_SINGLE_VECTOR)
+-BUILD_INTERRUPT(irq_move_cleanup_interrupt, IRQ_MOVE_CLEANUP_VECTOR)
+-BUILD_INTERRUPT(reboot_interrupt, REBOOT_VECTOR)
+ #endif
  
- BUILD_INTERRUPT(apic_timer_interrupt,LOCAL_TIMER_VECTOR)
- BUILD_INTERRUPT(error_interrupt,ERROR_APIC_VECTOR)
--BUILD_INTERRUPT(spurious_interrupt,SPURIOUS_APIC_VECTOR)
-+BUILD_INTERRUPT(spurious_apic_interrupt,SPURIOUS_APIC_VECTOR)
- BUILD_INTERRUPT(x86_platform_ipi, X86_PLATFORM_IPI_VECTOR)
- 
- #ifdef CONFIG_IRQ_WORK
+ #ifdef CONFIG_HAVE_KVM
 --- a/arch/x86/include/asm/hw_irq.h
 +++ b/arch/x86/include/asm/hw_irq.h
-@@ -39,6 +39,7 @@ extern asmlinkage void irq_work_interrup
- extern asmlinkage void uv_bau_message_intr1(void);
- 
- extern asmlinkage void spurious_interrupt(void);
-+extern asmlinkage void spurious_apic_interrupt(void);
+@@ -38,14 +38,9 @@ extern asmlinkage void uv_bau_message_in
  extern asmlinkage void thermal_interrupt(void);
  extern asmlinkage void reschedule_interrupt(void);
  
+-extern asmlinkage void irq_move_cleanup_interrupt(void);
+-extern asmlinkage void reboot_interrupt(void);
+ extern asmlinkage void threshold_interrupt(void);
+ extern asmlinkage void deferred_error_interrupt(void);
+ 
+-extern asmlinkage void call_function_interrupt(void);
+-extern asmlinkage void call_function_single_interrupt(void);
+-
+ #ifdef	CONFIG_X86_LOCAL_APIC
+ struct irq_data;
+ struct pci_dev;
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -324,6 +324,46 @@ static __always_inline void __##func(str
- #define DECLARE_IDTENTRY_XEN(vector, func)				\
- 	idtentry vector asm_exc_xen##func exc_##func has_error_code=0
+@@ -575,6 +575,13 @@ DECLARE_IDTENTRY_SYSVEC(LOCAL_TIMER_VECT
+ DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI_VECTOR,	sysvec_x86_platform_ipi);
+ #endif
  
-+/*
-+ * ASM code to emit the common vector entry stubs where each stub is
-+ * packed into 8 bytes.
-+ *
-+ * Note, that the 'pushq imm8' is emitted via '.byte 0x6a, vector' because
-+ * GCC treats the local vector variable as unsigned int and would expand
-+ * all vectors above 0x7F to a 5 byte push. The original code did an
-+ * adjustment of the vector number to be in the signed byte range to avoid
-+ * this. While clever it's mindboggling counterintuitive and requires the
-+ * odd conversion back to a real vector number in the C entry points. Using
-+ * .byte achieves the same thing and the only fixup needed in the C entry
-+ * point is to mask off the bits above bit 7 because the push is sign
-+ * extending.
-+ */
-+	.align 8
-+SYM_CODE_START(irq_entries_start)
-+    vector=FIRST_EXTERNAL_VECTOR
-+    .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
-+	UNWIND_HINT_IRET_REGS
-+	.byte	0x6a, vector
-+	jmp	common_interrupt
-+	.align	8
-+    vector=vector+1
-+    .endr
-+SYM_CODE_END(irq_entries_start)
-+
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	.align 8
-+SYM_CODE_START(spurious_entries_start)
-+    vector=FIRST_SYSTEM_VECTOR
-+    .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
-+	UNWIND_HINT_IRET_REGS
-+	.byte	0x6a, vector
-+	jmp	common_spurious
-+	.align	8
-+    vector=vector+1
-+    .endr
-+SYM_CODE_END(spurious_entries_start)
++#ifdef CONFIG_SMP
++DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
++DECLARE_IDTENTRY_SYSVEC(REBOOT_VECTOR,			sysvec_reboot);
++DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
++DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VECTOR,		sysvec_call_function);
 +#endif
 +
- #endif /* __ASSEMBLY__ */
+ #undef X86_TRAP_OTHER
  
- /*
---- a/arch/x86/include/asm/irq.h
-+++ b/arch/x86/include/asm/irq.h
-@@ -36,7 +36,7 @@ extern void native_init_IRQ(void);
- 
- extern void handle_irq(struct irq_desc *desc, struct pt_regs *regs);
- 
--extern __visible void do_IRQ(struct pt_regs *regs);
-+extern __visible void do_IRQ(struct pt_regs *regs, unsigned long vector);
- 
- extern void init_ISA_irqs(void);
- 
+ #endif
 --- a/arch/x86/include/asm/traps.h
 +++ b/arch/x86/include/asm/traps.h
-@@ -41,8 +41,9 @@ asmlinkage void smp_deferred_error_inter
+@@ -40,8 +40,6 @@ asmlinkage void smp_threshold_interrupt(
+ asmlinkage void smp_deferred_error_interrupt(struct pt_regs *regs);
  #endif
  
- void smp_apic_timer_interrupt(struct pt_regs *regs);
--void smp_spurious_interrupt(struct pt_regs *regs);
- void smp_error_interrupt(struct pt_regs *regs);
-+void smp_spurious_apic_interrupt(struct pt_regs *regs);
-+void smp_spurious_interrupt(struct pt_regs *regs, unsigned long vector);
- asmlinkage void smp_irq_move_cleanup_interrupt(void);
- 
+-asmlinkage void smp_irq_move_cleanup_interrupt(void);
+-
  #ifdef CONFIG_VMAP_STACK
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2153,15 +2153,29 @@ void __init register_lapic_address(unsig
-  * Local APIC interrupts
-  */
- 
--/*
-- * This interrupt should _never_ happen with our APIC/SMP architecture
-+/**
-+ * smp_spurious_interrupt - Catch all for interrupts raised on unused vectors
-+ * @regs:	Pointer to pt_regs on stack
-+ * @error_code:	The vector number is in the lower 8 bits
-+ *
-+ * This is invoked from ASM entry code to catch all interrupts which
-+ * trigger on an entry which is routed to the common_spurious idtentry
-+ * point.
-+ *
-+ * Also called from smp_spurious_apic_interrupt().
-  */
--__visible void __irq_entry smp_spurious_interrupt(struct pt_regs *regs)
-+__visible void __irq_entry smp_spurious_interrupt(struct pt_regs *regs,
-+						  unsigned long vector)
- {
--	u8 vector = ~regs->orig_ax;
- 	u32 v;
- 
- 	entering_irq();
-+	/*
-+	 * The push in the entry ASM code which stores the vector number on
-+	 * the stack in the error code slot is sign expanding. Just use the
-+	 * lower 8 bits.
-+	 */
-+	vector &= 0xFF;
- 	trace_spurious_apic_entry(vector);
- 
- 	inc_irq_stat(irq_spurious_count);
-@@ -2182,11 +2196,11 @@ void __init register_lapic_address(unsig
- 	 */
- 	v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
- 	if (v & (1 << (vector & 0x1f))) {
--		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Acked\n",
-+		pr_info("Spurious interrupt (vector 0x%02lx) on CPU#%d. Acked\n",
- 			vector, smp_processor_id());
- 		ack_APIC_irq();
- 	} else {
--		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Not pending!\n",
-+		pr_info("Spurious interrupt (vector 0x%02lx) on CPU#%d. Not pending!\n",
- 			vector, smp_processor_id());
- 	}
- out:
-@@ -2194,6 +2208,11 @@ void __init register_lapic_address(unsig
- 	exiting_irq();
+ void __noreturn handle_stack_overflow(const char *message,
+ 				      struct pt_regs *regs,
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -861,13 +861,13 @@ static void free_moved_vector(struct api
+ 	apicd->move_in_progress = 0;
  }
  
-+__visible void smp_spurious_apic_interrupt(struct pt_regs *regs)
-+{
-+	smp_spurious_interrupt(regs, SPURIOUS_APIC_VECTOR);
-+}
-+
- /*
-  * This interrupt should never happen with our APIC/SMP architecture
-  */
+-asmlinkage __visible void __irq_entry smp_irq_move_cleanup_interrupt(void)
++DEFINE_IDTENTRY_SYSVEC(sysvec_irq_move_cleanup)
+ {
+ 	struct hlist_head *clhead = this_cpu_ptr(&cleanup_list);
+ 	struct apic_chip_data *apicd;
+ 	struct hlist_node *tmp;
+ 
+-	entering_ack_irq();
++	ack_APIC_irq();
+ 	/* Prevent vectors vanishing under us */
+ 	raw_spin_lock(&vector_lock);
+ 
+@@ -892,7 +892,6 @@ asmlinkage __visible void __irq_entry sm
+ 	}
+ 
+ 	raw_spin_unlock(&vector_lock);
+-	exiting_irq();
+ }
+ 
+ static void __send_cleanup_vector(struct apic_chip_data *apicd)
 --- a/arch/x86/kernel/idt.c
 +++ b/arch/x86/kernel/idt.c
-@@ -142,7 +142,7 @@ static const __initconst struct idt_data
- #ifdef CONFIG_X86_UV
- 	INTG(UV_BAU_MESSAGE,		uv_bau_message_intr1),
- #endif
--	INTG(SPURIOUS_APIC_VECTOR,	spurious_interrupt),
-+	INTG(SPURIOUS_APIC_VECTOR,	spurious_apic_interrupt),
- 	INTG(ERROR_APIC_VECTOR,		error_interrupt),
- #endif
- };
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -227,14 +227,18 @@ u64 arch_irq_stat(void)
-  * SMP cross-CPU interrupts have their own specific
-  * handlers).
+@@ -109,11 +109,11 @@ static const __initconst struct idt_data
   */
--__visible void __irq_entry do_IRQ(struct pt_regs *regs)
-+__visible void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long vector)
+ static const __initconst struct idt_data apic_idts[] = {
+ #ifdef CONFIG_SMP
+-	INTG(RESCHEDULE_VECTOR,		reschedule_interrupt),
+-	INTG(CALL_FUNCTION_VECTOR,	call_function_interrupt),
+-	INTG(CALL_FUNCTION_SINGLE_VECTOR, call_function_single_interrupt),
+-	INTG(IRQ_MOVE_CLEANUP_VECTOR,	irq_move_cleanup_interrupt),
+-	INTG(REBOOT_VECTOR,		reboot_interrupt),
++	INTG(RESCHEDULE_VECTOR,			reschedule_interrupt),
++	INTG(CALL_FUNCTION_VECTOR,		asm_sysvec_call_function),
++	INTG(CALL_FUNCTION_SINGLE_VECTOR,	asm_sysvec_call_function_single),
++	INTG(IRQ_MOVE_CLEANUP_VECTOR,		asm_sysvec_irq_move_cleanup),
++	INTG(REBOOT_VECTOR,			asm_sysvec_reboot),
+ #endif
+ 
+ #ifdef CONFIG_X86_THERMAL_VECTOR
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -27,6 +27,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/proto.h>
+ #include <asm/apic.h>
++#include <asm/idtentry.h>
+ #include <asm/nmi.h>
+ #include <asm/mce.h>
+ #include <asm/trace/irq_vectors.h>
+@@ -130,13 +131,11 @@ static int smp_stop_nmi_callback(unsigne
+ /*
+  * this function calls the 'stop' function on all other CPUs in the system.
+  */
+-
+-asmlinkage __visible void smp_reboot_interrupt(void)
++DEFINE_IDTENTRY_SYSVEC(sysvec_reboot)
  {
- 	struct pt_regs *old_regs = set_irq_regs(regs);
--	struct irq_desc * desc;
--	/* high bit used in ret_from_ code  */
--	unsigned vector = ~regs->orig_ax;
-+	struct irq_desc *desc;
+-	ipi_entering_ack_irq();
++	ack_APIC_irq();
+ 	cpu_emergency_vmxoff();
+ 	stop_this_cpu(NULL);
+-	irq_exit();
+ }
  
- 	entering_irq();
-+	/*
-+	 * The push in the entry ASM code which stores the vector number on
-+	 * the stack in the error code slot is sign expanding. Just use the
-+	 * lower 8 bits.
-+	 */
-+	vector &= 0xFF;
+ static int register_stop_handler(void)
+@@ -227,7 +226,6 @@ static void native_stop_other_cpus(int w
+ {
+ 	ack_APIC_irq();
+ 	inc_irq_stat(irq_resched_count);
+-	kvm_set_cpu_l1tf_flush_l1d();
  
- 	/* entering_irq() tells RCU that we're not quiescent.  Check it. */
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
-@@ -249,7 +253,7 @@ u64 arch_irq_stat(void)
- 		ack_APIC_irq();
+ 	if (trace_resched_ipi_enabled()) {
+ 		/*
+@@ -244,24 +242,22 @@ static void native_stop_other_cpus(int w
+ 	scheduler_ipi();
+ }
  
- 		if (desc == VECTOR_UNUSED) {
--			pr_emerg_ratelimited("%s: %d.%d No irq handler for vector\n",
-+			pr_emerg_ratelimited("%s: %d.%lu No irq handler for vector\n",
- 					     __func__, smp_processor_id(),
- 					     vector);
- 		} else {
+-__visible void __irq_entry smp_call_function_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
+ {
+-	ipi_entering_ack_irq();
++	ack_APIC_irq();
+ 	trace_call_function_entry(CALL_FUNCTION_VECTOR);
+ 	inc_irq_stat(irq_call_count);
+ 	generic_smp_call_function_interrupt();
+ 	trace_call_function_exit(CALL_FUNCTION_VECTOR);
+-	exiting_irq();
+ }
+ 
+-__visible void __irq_entry smp_call_function_single_interrupt(struct pt_regs *r)
++DEFINE_IDTENTRY_SYSVEC(sysvec_call_function_single)
+ {
+-	ipi_entering_ack_irq();
++	ack_APIC_irq();
+ 	trace_call_function_single_entry(CALL_FUNCTION_SINGLE_VECTOR);
+ 	inc_irq_stat(irq_call_count);
+ 	generic_smp_call_function_single_interrupt();
+ 	trace_call_function_single_exit(CALL_FUNCTION_SINGLE_VECTOR);
+-	exiting_irq();
+ }
+ 
+ static int __init nonmi_ipi_setup(char *str)
 
