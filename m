@@ -2,158 +2,107 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC29C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B102206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F58205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KZ+QEA3b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0W/K1xn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgENGDH (ORCPT
+        id S1725970AbgENGEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
+        Thu, 14 May 2020 02:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725806AbgENGDH (ORCPT
+        by vger.kernel.org with ESMTP id S1725794AbgENGEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:03:07 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB6C6C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:03:06 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y9so763069plk.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:03:06 -0700 (PDT)
+        Thu, 14 May 2020 02:04:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BD3C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:04:22 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mq3so12109199pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TPeI8RuAZy8pzAoL6foqpsMRTCi6RDeQb0PfZ8BZJ7U=;
-        b=KZ+QEA3bF0HYQ7RCcHSNf5tGen8Wqfu5/++/v5YjZ6caB3VB6B1Py20Hr2cfeDTv1o
-         6ldf2Eo8zZj56RIyUzjNHIiOWTOqMQRqB8x/LSZsvMQjKc6xAfpag7SDAKP9SMJRL4VK
-         VlnetIW4laPTdmw3XiNz68qsZXWLt4qPBYGYrcv+Zcwn/mtoJ6mKb3Nn/ZXVkbui8bPy
-         NPOkinb4i1Jqz5n0oC2NAbWGfQ555kOt+AYOa1zRP0qFiKnBSUGF3R0N3in+apbBwv2W
-         72XE/cBOw86Zz4GQuJOXdVpja2N26ut/rKp97xJVunWPCg+C11+rb/TG8glVIdOSsIan
-         f7mQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jIhLxFkEstOsX75pumvf5hU2eBHJHovEbl4Iz1TB1jM=;
+        b=L0W/K1xnR7MMQITjCNmLpKOXf7FvtySaQ3VbWxyy+zvlzITfyanCbXc9KlwTBBhvLw
+         t51+JQFvtipVmwE6S+b+MUn1JG1Kwlq+MEXyoDr5aMDnHjrVIzqGGdnC4hcRNs3bYxkT
+         60jUs75foj5zcp36N8W5Pw/Dr9XIjcNtcCgEoflNRTVNo6+yjeeeuuCsvxkRmUMbQor8
+         q2PZOaBLV5ovzv1btAdtbkLPA4MD8/hNc2n8XvNgJ0M2seZJ4YcTxPrNJME0AG/dVEka
+         TyU7HXt66Vxa70HfCFlsSs12EEdFV/y7hZGQzLQf33gB4v9gJpMAh5DB6CcDjecCoL5G
+         PGlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TPeI8RuAZy8pzAoL6foqpsMRTCi6RDeQb0PfZ8BZJ7U=;
-        b=syzjayFytgUFlGNksXBheoBHhVX+GHmChjFJAMIj6/345EjIsM8kyeH7C7Bugy3cGS
-         Q5itI5Jh/+R0DnkBZGB/SUAzYPCjc85jYJSzOSKze/yahm9u0BK4zGl54t+zmJRH/Onf
-         MQSDbX6wOcrefXPcRWFYKdDL29gXf1HM1kMbUq+MCfd94QKjilZgiW3Y3aeRydBO8hDI
-         s43GZS27TVbxj9BIDBtgnj+kVwBuFuPW43rUSLqwIUdLtDfE7XZ6u987++Sht5KlO8hS
-         SmrucN+UCLflPq4pVA7W2ANRp3M0wMmPOG7gF6zKH91/OarbHNufIi8Yx8ARV0kDJQQx
-         RBWA==
-X-Gm-Message-State: AGi0Pua09qAPYL8Q/0YLiMM3qDJPRnxmIVap9MljD9AEk+se7gMrLfsi
-        fvqQE3d3rTO873+Onfh2leo4EA==
-X-Google-Smtp-Source: APiQypKS0f2mmUEu7BEa8P6mPQkMckB+1UyKwXYrHoeDGxB2hTW6TJ6Z44jhprlTISi2/kMDG00Z5w==
-X-Received: by 2002:a17:90b:30cb:: with SMTP id hi11mr38401195pjb.103.1589436186242;
-        Wed, 13 May 2020 23:03:06 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id d10sm1202671pgo.10.2020.05.13.23.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 23:03:05 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        akpm@linux-foundation.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>
-Subject: [PATCH] riscv: perf: fix build error for dependency issue
-Date:   Thu, 14 May 2020 14:02:43 +0800
-Message-Id: <20200514060243.106976-1-zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jIhLxFkEstOsX75pumvf5hU2eBHJHovEbl4Iz1TB1jM=;
+        b=EPZEtu62iw0++fdctR4Qt2YBYJpqBFdjPOGLRKRMhZoGK7WbJyFfW+rW87CVN7BXLs
+         PKwuS1cVF0BA32JvTaDu7R7rOIhsbtQ+wPo+pg8vpUEeGvcUPQ8R7ogTKWhc1wMr7C2n
+         KjILFFJjBp4lWp9CR95op1Y4CEUz8rhOjWq9eTT5xg/7KMBpbFAlXqLmVJLW9q2nqKJm
+         EmPbIDXyyUXNAB6uVzreggvwA96cJ1Xvjyi9YvWDk5kWHArXbCFArVejSXWr4kS8c+vE
+         KaEZzzI3vvafjPhImyf4z84FEidvUFPUAuSmFHYcnYPKP5Xt2q510dOuFBRoMr7KNont
+         ZLPw==
+X-Gm-Message-State: AGi0PuZJkYrtEUpeAzsz6mKjgdsa7fWTU2cUF/7WNyykMc023aPciyK0
+        C7pPbO/J9ljEgDqhhl0WHqM=
+X-Google-Smtp-Source: APiQypIbm5vJB/18u0FHVukAqq/pAqHrSF7OX5evfSOxMv2SwznRLQtf/p9XqjdQHR8VtGHuxbTxFQ==
+X-Received: by 2002:a17:90a:104f:: with SMTP id y15mr40049008pjd.191.1589436261882;
+        Wed, 13 May 2020 23:04:21 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([124.156.176.138])
+        by smtp.gmail.com with ESMTPSA id m6sm17087974pjo.5.2020.05.13.23.04.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 23:04:21 -0700 (PDT)
+From:   Qingjie Xing <xqjcool@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org
+Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        Qingjie Xing <xqjcool@gmail.com>
+Subject: [PATCH] kernel/sched/wait.c: set timeout to 0 when kthread should stop
+Date:   Mon, 11 May 2020 23:50:21 -0400
+Message-Id: <1589255421-28264-1-git-send-email-xqjcool@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_RISCV_BASE_PMU can be selected or unselected, but in fact,
-CONFIG_RISCV_BASE_PMU must be always selected when selecting
-CONFIG_PERF_EVENTS on current perf implementation, otherwise, it
-would cause the build error when only selecting CONFIG_PERF_EVENTS.
-The build case is applied randconfig which generated by kbuild test.
+Using kthread_stop() to terminate a thread causes tcp_recvmsg()
+to enter a dead loop when the kernel thread uses tcp_recvmsg()
+to receive a message.
 
-This patch removes the unnecessary configuration and implementations.
-Eventually, the number of counters should be determinated at runtime,
-such as DTB, so we don't need to re-build kernel for various platform
-which has got different number of hpmcounters.
+tcp_recvmsg()-->sk_wait_data()-->sk_wait_event()-->wait_woken().
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+wait_woken() will directly return unchanged timeout value rather
+than be executed as normally.
+
+tcp_recvmsg () will continues to execute sk_wait_data(). So finally
+this situation will creat an endless loop that cannot be exited.
+
+Signed-off-by: Qingjie Xing <xqjcool@gmail.com>
 ---
- arch/riscv/Kconfig                  | 13 -------------
- arch/riscv/include/asm/perf_event.h | 16 +++-------------
- 2 files changed, 3 insertions(+), 26 deletions(-)
+ kernel/sched/wait.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 74f82cf4f781..7d5123576953 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -283,19 +283,6 @@ config RISCV_ISA_C
+diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+index ba059fb..a27bbbd 100644
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -431,6 +431,8 @@ long wait_woken(struct wait_queue_entry *wq_entry, unsigned mode, long timeout)
+ 	set_current_state(mode); /* A */
+ 	if (!(wq_entry->flags & WQ_FLAG_WOKEN) && !is_kthread_should_stop())
+ 		timeout = schedule_timeout(timeout);
++	if (is_kthread_should_stop())
++		timeout = 0;
+ 	__set_current_state(TASK_RUNNING);
  
- 	   If you don't know what to do here, say Y.
- 
--menu "supported PMU type"
--	depends on PERF_EVENTS
--
--config RISCV_BASE_PMU
--	bool "Base Performance Monitoring Unit"
--	def_bool y
--	help
--	  A base PMU that serves as a reference implementation and has limited
--	  feature of perf.  It can run on any RISC-V machines so serves as the
--	  fallback, but this option can also be disable to reduce kernel size.
--
--endmenu
--
- config FPU
- 	bool "FPU support"
- 	default y
-diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-index 0234048b12bc..8e5b1d81112c 100644
---- a/arch/riscv/include/asm/perf_event.h
-+++ b/arch/riscv/include/asm/perf_event.h
-@@ -16,15 +16,11 @@
- 
- /*
-  * The RISCV_MAX_COUNTERS parameter should be specified.
-+ * Currently, we only support base PMU, so just make
-+ * RISCV_MAX_COUNTERS be equal to RISCV_BASE_COUNTERS.
-  */
- 
--#ifdef CONFIG_RISCV_BASE_PMU
--#define RISCV_MAX_COUNTERS	2
--#endif
--
--#ifndef RISCV_MAX_COUNTERS
--#error "Please provide a valid RISCV_MAX_COUNTERS for the PMU."
--#endif
-+#define RISCV_MAX_COUNTERS RISCV_BASE_COUNTERS
- 
- /*
-  * These are the indexes of bits in counteren register *minus* 1,
-@@ -38,12 +34,6 @@
-  */
- #define RISCV_PMU_CYCLE		0
- #define RISCV_PMU_INSTRET	1
--#define RISCV_PMU_MHPMCOUNTER3	2
--#define RISCV_PMU_MHPMCOUNTER4	3
--#define RISCV_PMU_MHPMCOUNTER5	4
--#define RISCV_PMU_MHPMCOUNTER6	5
--#define RISCV_PMU_MHPMCOUNTER7	6
--#define RISCV_PMU_MHPMCOUNTER8	7
- 
- #define RISCV_OP_UNSUPP		(-EOPNOTSUPP)
- 
+ 	/*
 -- 
-2.26.2
+1.8.3.1
 
