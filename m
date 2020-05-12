@@ -2,91 +2,89 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC6DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B0BC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0226C20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589273138;
-	bh=HHIUAU+1SaQZGuj/kMFvsg276gIp0yMSTOdsnW2u5/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iUpMwoAqyT8mrS3ICAL4cNRH0FJ+jaFdTK2JS4h8yvwLUQmGPz6MKR+4p9nFU8U6s
-	 iW1nfD/iuyJEqSdvD5YiIaKJ8dwk0SRm1oNbLi5W60BRQu6O8LL2uyHXD1EavlhsrX
-	 ft9E/A4Y0KTsMIPvyYFWsMOIUCnUHhRqKvZf2e50=
+	by mail.kernel.org (Postfix) with ESMTP id 73AFE2072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgELIph (ORCPT
+        id S1729226AbgELIrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40776 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 04:47:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:49504 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:45:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2BEE206CC;
-        Tue, 12 May 2020 08:45:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589273136;
-        bh=HHIUAU+1SaQZGuj/kMFvsg276gIp0yMSTOdsnW2u5/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kp1CjhZx2evs7dpoOGovhGH3+KzVfWpMQIKjROna1SzcunxkhfKN/q4EJuNt652bf
-         qSQLSbIuWYOvrCEmfblr82+/hJoHBqePBcNEZcbn71U75ERldDAvaHEMDvQpaIye0N
-         LtbBSKL3m1z71mcv8hXp93UXZmC5Y1JxRj7gVjHM=
-Date:   Tue, 12 May 2020 10:45:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Charan Teja Kalla <charante@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
-        sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] dma-buf: fix use-after-free in dmabuffs_dname
-Message-ID: <20200512084534.GA3557007@kroah.com>
-References: <1588060442-28638-1-git-send-email-charante@codeaurora.org>
- <20200505100806.GA4177627@kroah.com>
- <8424b2ac-3ea6-6e5b-b99c-951a569f493d@codeaurora.org>
- <20200506090002.GA2619587@kroah.com>
- <3bc8dd81-f298-aea0-f218-2e2ef12ca603@codeaurora.org>
+        id S1725776AbgELIrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:47:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B14F21FB;
+        Tue, 12 May 2020 01:47:23 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A066F3F305;
+        Tue, 12 May 2020 01:47:21 -0700 (PDT)
+Subject: Re: [PATCH] memory/samsung: reduce unnecessary mutex lock area
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bernard Zhao <bernard@vivo.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+References: <20200508131338.32956-1-bernard@vivo.com>
+ <20200512065023.GA10741@kozik-lap>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <e762ce12-eff0-d3a5-f083-2b592921de59@arm.com>
+Date:   Tue, 12 May 2020 09:47:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3bc8dd81-f298-aea0-f218-2e2ef12ca603@codeaurora.org>
+In-Reply-To: <20200512065023.GA10741@kozik-lap>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:43:18AM +0530, Charan Teja Kalla wrote:
-> > Ok, but watch out, now you have 2 different reference counts for the
-> > same structure.  Keeping them coordinated is almost always an impossible
-> > task so you need to only rely on one.  If you can't use the file api,
-> > just drop all of the reference counting logic in there and only use the
-> > kref one.
+Hi Krzysztof,
+
+I am sorry, I was a bit busy recently.
+
+On 5/12/20 7:50 AM, Krzysztof Kozlowski wrote:
+> On Fri, May 08, 2020 at 06:13:38AM -0700, Bernard Zhao wrote:
+>> Maybe dmc->df->lock is unnecessary to protect function
+>> exynos5_dmc_perf_events_check(dmc). If we have to protect,
+>> dmc->lock is more better and more effective.
+>> Also, it seems not needed to protect "if (ret) & dev_warn"
+>> branch.
+>>
+>> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+>> ---
+>>   drivers/memory/samsung/exynos5422-dmc.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> I feel that changing the refcount logic now to dma-buf objects involve
-> changes in
+> I checked the concurrent accesses and it looks correct.
 > 
-> the core dma-buf framework. NO? Instead, how about passing the user passed
-> name directly
+> Lukasz, any review from your side?
+
+The lock from devfreq lock protects from a scenario when
+concurrent access from devfreq framework uses internal dmc fields 'load' 
+and 'total' (which are set to 'busy_time', 'total_time').
+The .get_dev_status can be called at any time (even due to thermal
+devfreq cooling action) and reads above fields.
+That's why the calculation of the new values inside dmc is protected.
+
+This patch should not be taken IMO. Maybe we can release lock before the
+if statement, just to speed-up.
+
+Regards,
+Lukasz
+
+
 > 
-> in the ->d_fsdata inplace of dmabuf object? Because we just need user passed
-> name in the
+> Best regards,
+> Krzysztof
 > 
-> dmabuffs_dname(). With this we can avoid the need for extra refcount on
-> dmabuf.
-
-Odd formatting :(
-
-> Posted patch-V2: https://lkml.org/lkml/2020/5/8/158
-
-Please just post links to lore.kernel.org, we have no control over
-lkml.org at all.
-
-I'll go review that patch now...
-
-greg k-h
