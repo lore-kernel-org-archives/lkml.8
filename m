@@ -2,126 +2,140 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0934C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0AC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C79692072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:54:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LRQGdBBV"
+	by mail.kernel.org (Postfix) with ESMTP id 6EF0D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgELIyK (ORCPT
+        id S1729301AbgELIyP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:54:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57929 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgELIyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:54:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 12 May 2020 04:54:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:32886 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbgELIyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:54:15 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Ls6l5JQLz9sRf;
-        Tue, 12 May 2020 18:54:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589273647;
-        bh=RuA63jA3VaXDJ5ibO1oOo+VHs+JqcJrlEg8P5O5rQfQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LRQGdBBVpG38hA8kjBZ7aeVl0BdcXPa17JngRDF2Gv687YjAROpmIVzIIRxbGbdWx
-         Ns1thA9DiOJzeOPvbfZJ7827r3jsF43/EEXqgtjYNkRy+y7ysnoD5pF0MQPztll+no
-         P9MaAlokwxPG/EocVee/z0WkMRfvhYzfQReIXquA/c6u4+ClsRH6lk9mQCCAdTUuCT
-         1n7nLDwN0rLEspnLoa1jTg4ZnQBSt7HapyUHeD9X7svisx80SF6Ae80qH9oHKwvjkI
-         KPXpWzuymQupQJ7CV6Y5R5FY6+wxBzO4CsIuhfoqEr5lwn2UIxHrlSuxgn6rxmQltR
-         0P4P3UFyvwhjQ==
-Date:   Tue, 12 May 2020 18:54:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warnings after merge of the notifications
- (was keys) tree
-Message-ID: <20200512185403.15297945@canb.auug.org.au>
-In-Reply-To: <20200504134750.2278a82d@canb.auug.org.au>
-References: <20200504134750.2278a82d@canb.auug.org.au>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3FA352A1F41;
+        Tue, 12 May 2020 09:54:12 +0100 (BST)
+Date:   Tue, 12 May 2020 10:54:09 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>,
+        richard@nod.at, vigneshr@ti.com, s.hauer@pengutronix.de,
+        masonccyang@mxic.com.tw, christophe.kerello@st.com,
+        stefan@agner.ch, piotrs@cadence.com, devik@eaxlabs.cz,
+        tglx@linutronix.de, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nand: raw: use write_oob_raw for MTD_OPS_AUTO_OOB mode
+Message-ID: <20200512105409.785febfe@collabora.com>
+In-Reply-To: <20200512104422.4c31f7e0@xps13>
+References: <20200504094253.2741109-1-noltari@gmail.com>
+        <20200504123237.5c128668@collabora.com>
+        <20200511182923.6a4961ab@xps13>
+        <6F41AA9B-71D6-47FA-BC12-24941F84DA71@gmail.com>
+        <20200512104422.4c31f7e0@xps13>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eSzriVy6M3Ng1NR63dfXzbk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eSzriVy6M3Ng1NR63dfXzbk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 12 May 2020 10:44:22 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Hi all,
+> Hello,
+> 
+> Richard, maybe you'll have an idea to fix the situation here?
+> 
+> Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
+> 10:36:25 +0200:
+> 
+> > Hi,
+> >   
+> > > El 11 may 2020, a las 18:29, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
+> > > 
+> > > Hello,
+> > > 
+> > > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 4 May
+> > > 2020 12:32:37 +0200:
+> > >     
+> > >> On Mon,  4 May 2020 11:42:53 +0200
+> > >> Álvaro Fernández Rojas <noltari@gmail.com> wrote:
+> > >>     
+> > >>> Some NAND controllers change the ECC bytes when OOB is written with ECC
+> > >>> enabled.
+> > >>> This is a problem in brcmnand, since adding JFFS2 cleanmarkers after the page
+> > >>> has been erased will change the ECC bytes to 0 and the controller will think
+> > >>> the block is bad.
+> > >>> It can be fixed by using write_oob_raw, which ensures ECC is disabled.
+> > >>> 
+> > >>> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> > >>> ---
+> > >>> drivers/mtd/nand/raw/nand_base.c | 2 +-
+> > >>> 1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>> 
+> > >>> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+> > >>> index c24e5e2ba130..755d25200520 100644
+> > >>> --- a/drivers/mtd/nand/raw/nand_base.c
+> > >>> +++ b/drivers/mtd/nand/raw/nand_base.c
+> > >>> @@ -488,7 +488,7 @@ static int nand_do_write_oob(struct nand_chip *chip, loff_t to,
+> > >>> 
+> > >>> 	nand_fill_oob(chip, ops->oobbuf, ops->ooblen, ops);
+> > >>> 
+> > >>> -	if (ops->mode == MTD_OPS_RAW)
+> > >>> +	if (ops->mode == MTD_OPS_AUTO_OOB || ops->mode == MTD_OPS_RAW)
+> > >>> 		status = chip->ecc.write_oob_raw(chip, page & chip->pagemask);      
+> > >> 
+> > >> The doc says:
+> > >> 
+> > >> @MTD_OPS_PLACE_OOB:  OOB data are placed at the given offset (default)
+> > >> @MTD_OPS_AUTO_OOB:   OOB data are automatically placed at the free areas
+> > >>                     which are defined by the internal ecclayout
+> > >> @MTD_OPS_RAW:        data are transferred as-is, with no error
+> > >> 		     correction; this mode implies %MTD_OPS_PLACE_OOB
+> > >> 
+> > >> To me, that means MTD_OPS_PLACE_OOB and MTD_OPS_AUTO_OOB do not imply
+> > >> MTD_OPS_RAW. Anyway those modes are just too vague. We really should
+> > >> separate the ECC-disabled/ECC-enabled concept (AKA raw vs non-raw mode)
+> > >> from the OOB placement scheme. IIRC, Miquel had a patchset doing that.
+> > >> 
+> > >> We also should have the concept of protected OOB-region vs
+> > >> unprotected-OOB-region if we want JFFS2 to work with controllers that
+> > >> protect part of the OOB region. Once we have that we can patch JFFS2
+> > >> to write things with "ECC-disabled"+"auto-OOB-placement-on-unprotected
+> > >> area".    
+> > > 
+> > > I see the problem but as Boris said the fix is not valid as-is.
+> > > Problem is: I don't have a better proposal yet.
+> > > 
+> > > Is forcing JFFS2 to write cleanmarkers in raw mode only an option?    
+> > 
+> > The doc says that for MTD_OPS_AUTO_OOB "the data is automatically placed at the free areas which are defined by the internal ecclayout”.
+> > So, if we’re placing this data in the free OOB area left by the ECC bytes it means that this automatically placed data won’t be error correctable, since it’s in the OOB, and the OOB data isn’t error corrected, right?  
+> 
+> No, free bytes sometimes are and sometimes are not covered by the ECC
+> engine. It depends on the controller.
+> 
+> > The problem is that "flash_erase -j” uses MTD_OPS_AUTO_OOB to write the OOB JFFS2 clean markers and if this is written with ECC enabled the NAND controller will change the ECC bytes to an invalid value (or at least brcmnand controller).
+> > 
+> > Another option could be adding another mode, something like MTD_OPS_AUTO_OOB_RAW and using it in mtd-utils and JFFS2.  
+> 
+> No, these modes already are completely wrong, I must resend my series
+> fixing them.
+> 
 
-On Mon, 4 May 2020 13:47:50 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> After merging the keys tree, today's linux-next build (x86_64
-> allmodconfig) produced these warnings:
->=20
-> scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' ins=
-tead
-> scripts/Makefile.lib:12: 'hostprogs-y' and 'hostprogs-m' are deprecated. =
-Please use 'hostprogs' instead
->=20
-> Introduced by commit
->=20
->   631ec151fd96 ("Add sample notification program")
->=20
-> interacting with commit
->=20
->   ee066c3ddf7b ("kbuild: warn if always, hostprogs-y, or hostprogs-m is u=
-sed")
->=20
-> from the kbuild tree.
-
-This is now Introduced by commit
-
-  b8c9527a31b0 ("Add sample notification program")
-
-from the notifications tree interacting with commit
-
-  a2db26b0ba3b ("kbuild: warn if always, hostprogs-y, or hostprogs-m is use=
-d")
-
-from the kbuild tree.
-
-It only produces these warnings now:
-
-scripts/Makefile.lib:8: 'always' is deprecated. Please use 'always-y' inste=
-ad
-scripts/Makefile.lib:12: 'hostprogs-y' is deprecated. Please use 'hostprogs=
-' instead
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/eSzriVy6M3Ng1NR63dfXzbk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66ZCsACgkQAVBC80lX
-0GwXDgf9FqgUumXeif9vC8RLdCpFUo7DwDSj5RPH/jJqf3tx9qEOxOk472E7Z463
-S9zw8HgVlrUa7VnGsXreWtOGlOehKaian4AWRlZ4y2hRryyAZtt6tgal+W9t3wU3
-O4qKDMpViDUoBeo1ioHPQ1agK8n9pTHa7RI9WUFHQMnDwSpyjTDcrXIc5NVTjOaw
-CYccEPxEBWrISBpR5l+tdR2Y6G0VH/olMx+ejGFtjhgvfr6GWcO9p3u1LIeYD9iv
-6uE3QTPotJ+vRPW4mtYaGxtrHRGq4IpdeDAd3PPIvfNZoQV0xgH1Vs8cu/w4Oa+k
-BraXoR3uj3MzLO9DO5+l0ScGTFQUYg==
-=t1rf
------END PGP SIGNATURE-----
-
---Sig_/eSzriVy6M3Ng1NR63dfXzbk--
+Totally agree with Miquel on that one: let's fix the
+write/read/ecc-layout semantics instead of adding more obscure modes.
