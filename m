@@ -2,79 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661C0C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3976BC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436742075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589278518;
-	bh=Vra807JstpipO5hypSeIatCfFsLHr5tWZYuOg0SwUgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NKGQzE3XPJsWpc5QKvNlhJyFYwR8CC4zwj4mTpORDOMgBDwuQAe2MxB9/mDftkmbp
-	 moD3NAi6MTLTRhk6y7mw48dSqrqkt4nByc97s7U3ocgK+DXgnfv6GM548GIceSeCvQ
-	 7DX5ZWllQlr8wHBnFoCQE7cySSglVym0AzHzNfOI=
+	by mail.kernel.org (Postfix) with ESMTP id 1898B20736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZmCrcjg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgELKPR (ORCPT
+        id S1729398AbgELKPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:15:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgELKPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:15:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D511920736;
-        Tue, 12 May 2020 10:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589278513;
-        bh=Vra807JstpipO5hypSeIatCfFsLHr5tWZYuOg0SwUgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EYLii9PrIaxe/0yJIDq7clgcXzvBC3WivUeBpc06aYMyrv1lNPMvP+LDEq5wJ8U47
-         wKYAT8w1RFzsAjYFPtaq9B1HnTiHQIrGUSeOH1qxrTnXJOkLb/d9blhLRbcJR6pb/C
-         jLHDMivVnA/BYY6EnZ9mSb8uWWkux+8N8SVgIIPM=
-Date:   Tue, 12 May 2020 12:15:11 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrea.Ho@advantech.com.tw,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        voyandrea@gmail.com, amy.shih@advantech.com.tw,
-        oakley.ding@advantech.com.tw, HY.Lee@advantech.com.tw
-Subject: Re: [V3,1/1] Input/misc: add support for Advantech software defined
- button
-Message-ID: <20200512101511.GA3991701@kroah.com>
-References: <20200512043149.10719-1-Andrea.Ho@advantech.com.tw>
- <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
+        Tue, 12 May 2020 06:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgELKPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:15:22 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1684FC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 03:15:22 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b188so12912297qkd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 03:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iPvMln8fETCvIb1O9zDTgMvwvAqRofofWlm0c6p2k1M=;
+        b=GZmCrcjgtcCm4s480qly1KJ1qHt6LNr4Iqs2eH8PDxX04Qxu6dMhKOGW1hLPe3zrEe
+         HCQ/K3D2cSoKKhNEZlK9rPNbzsz8y5vG/ieUSGjoJfwCdfjD/OQtWeN99+W+ZwqwNLPi
+         VweR6RdSPSguDgiGOrHfa7LLfrIfctHl7/Ps/VCjcQ1GM4+1CdQoI+fj31etUHtPw4ov
+         PdCKXYSfad49Vm/PAdXR6W4snDYYMeYTScbrv4dC9bQrLcgo9o9hJjGXew04FyUpJvO+
+         xLqPVvkFgTRtbZ6ju7q6drxXDMYVH2qcLoRELr8dBNWKA4X57yGeH+f8Qjd826AdiE9a
+         rOtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iPvMln8fETCvIb1O9zDTgMvwvAqRofofWlm0c6p2k1M=;
+        b=X0hwCteS0iqfuvCVhRGQfz9kDrkFbeVqYZ7PZx1LvphwYHGJn06uUZBzJaFBTtWwFn
+         gIzfWr/S1DPWl8HENKdncKsRZs8WpR0kWcJSuqAyDGytLaTc9thVVds1NsPk00Gaxx7W
+         pKmE3tEw5Bz7Wn05u20jQr7/uoi1LFrAOjZHiqKZezCS9GTEXNL8fy4MJLbU7sMFK6+4
+         wE1kmjFPom6X7PhxLcmGn7kK5K2Ebps06FNjO/TJKlJ9gl6zV9vLEVdvxJUFnRClRg7D
+         OACFpZaFIvpAEz5X97l4f/g7WGoK2Ca1l8k9J05IHrKKHsXc8jqi2L93OmUqHKq5a+K5
+         or7g==
+X-Gm-Message-State: AGi0PuYx5bSFMl1WblppIeXfwnwHzqlKVblfwwC2uBhrRpTP5CLPQirG
+        IGF4OUsc/D5A9wsLQzcgAuwk5knFXl09eXkUDeqDPQ==
+X-Google-Smtp-Source: APiQypJ+DqbeC1O5KOyrpWyqx704axL30zwPYq7143oUeeXsMkdaCiq01Ps1n85YwDuFFgsTbC2lJqCPXxOu54bj/Ws=
+X-Received: by 2002:a37:4b0c:: with SMTP id y12mr19417043qka.43.1589278520977;
+ Tue, 12 May 2020 03:15:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
+References: <000000000000dc82ac05a55f3005@google.com> <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
+In-Reply-To: <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 12 May 2020 12:15:09 +0200
+Message-ID: <CACT4Y+bjwR1KUkGxU9iRM+hOnMq7id5E=i84RYv41ygrv-KCEQ@mail.gmail.com>
+Subject: Re: INFO: task hung in do_read_cache_page (3)
+To:     Mike Christie <mchristi@redhat.com>
+Cc:     syzbot <syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Josef Bacik <josef@toxicpanda.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        william.kucharski@oracle.com, Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:08:08PM +0200, Arnd Bergmann wrote:
-> > +MODULE_LICENSE("GPL");
-> 
-> These generally go at the bottom of the file.
-> 
-> The license tag here does not match the one in the SPDX header, after
-> you changed the other one to v2-only.
+On Mon, May 11, 2020 at 7:31 PM Mike Christie <mchristi@redhat.com> wrote:
+>
+> On 5/11/20 8:19 AM, syzbot wrote:
+> > syzbot has bisected this bug to:
+> >
+> > commit 2da22da573481cc4837e246d0eee4d518b3f715e
+> > Author: Mike Christie <mchristi@redhat.com>
+> > Date:   Tue Aug 13 16:39:52 2019 +0000
+> >
+> >     nbd: fix zero cmd timeout handling v2
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d6ab14100000
+> > start commit:   e99332e7 gcc-10: mark more functions __init to avoid secti..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d6ab14100000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15d6ab14100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=518c54e255b5031adde4
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e45ec100000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164444a4100000
+> >
+> > Reported-by: syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com
+> > Fixes: 2da22da57348 ("nbd: fix zero cmd timeout handling v2")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> >
+>
+> How do you adjust/modify what is expected from the test or what is
+> reported as an error?
+>
+> The patch added back behavior that got removed. With the patch we expect
+> the hung task warnings, because we specifically want to hold onto
+> running commands for longer than 120/hung_task_timeout seconds
 
-Yes it does, they mean the same thing, see modules.h for the details if
-you are curious.
+Hi Mike,
 
-thanks,
-
-greg k-h
+All task hung messages are considered a kernel bug. So far this was
+always true as far as I can tell. Tasks that are blocked for any
+prolonged period should be killable.
