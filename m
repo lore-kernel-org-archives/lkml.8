@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB36CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E62EC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F702206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0F6206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4bWzWRC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGqAJ8cu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbgELRVF (ORCPT
+        id S1730878AbgELRVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:21:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36692 "EHLO
+        Tue, 12 May 2020 13:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730736AbgELRVA (ORCPT
+        with ESMTP id S1730819AbgELRVD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:21:00 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972C2C061A0C;
-        Tue, 12 May 2020 10:20:59 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l18so16501814wrn.6;
-        Tue, 12 May 2020 10:20:59 -0700 (PDT)
+        Tue, 12 May 2020 13:21:03 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8845DC061A0C;
+        Tue, 12 May 2020 10:21:03 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id n5so9499553wmd.0;
+        Tue, 12 May 2020 10:21:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BX83Lu4qLnmVXbh88hKtVkAgCVPkI30a8Y4WCAWySFU=;
-        b=d4bWzWRCNgFsI5GlBc6//qlZ04tyE9eIRmutoWNWlSz0pFS8vf7L4OZ0CsQHoIzvdu
-         bBFuWeXI291CW/P/HS6ev/V8Vl6QRt42A3SpUGjoeZnBqBNrbdnIGUH4ydkg+VuQwiB/
-         DM9B7L2oAMYMK/YnTvopibvddxMZnbJcmRbaOlFkmIebiTPZ+xeB1L5RXUKoYcIU7ijl
-         r0FAoLN/uhMhbwazrlHITVO5+xbhr+V0h/EWVn193tTKsNzGKOm3UZCc9uYxa7LDYQXF
-         qJpTG589fBosAWCxCsvOTwMuuMEjNSt/spXbudUs7tQRzxzAnoY75KKyAlf7NUjMA/yF
-         ZW4Q==
+        bh=3dJ3kw3lIwiObAdYMTIM/7GK3/zwAmfuzVqCDS8cJ9w=;
+        b=nGqAJ8cuJQbZQMEQQkpGBz0oLzlMgBruT89QlcoI2gEf2nra4gaZMVk+0XeeFTl7Zx
+         cxTscl3lUzK72WEh0bigFd7PdwEwevAQhCN61amb/ZVjiI04tnEjYL26uhcZZsumJHka
+         wOO+TnH+c2Xggu5ZvS6ji4lvhKbTB3PfO9yMJxzxOgA7hyerxrdfqy5nJceQlZ+vxdip
+         SEe1ZVbHTYWAJS35iYFl0SHtsIkKuxtG2LUiDah77pIQPgoG+NHKy75U69VmQgBZGjoZ
+         3VBg0+F5miNVU5GV60KO+P4R+45MjDcZROXLIx6BBOiVZugbErNWt/qJG94FonOq+tn7
+         29EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BX83Lu4qLnmVXbh88hKtVkAgCVPkI30a8Y4WCAWySFU=;
-        b=isLtNrefD/z/tknXfmZzakw8G+CJHHKoGTSemy88MFzelBZdW7Rhw0u4lTTxbq7R3y
-         iJgSetSk5kJ8BeYEGYMo0rUwwU5ZPBikfDc8v5xkSg5W8fF7Ak08OoYkIE4rM7/n9YyC
-         hmPrtcsBKLGz6cLVkoQrlX7zvngsXQ/oUmOe7FBKvmVEr0NBT+YGDDLdb8AdLHjWDeU9
-         37hneluoSW0IYTTbWtju8k85OMVp3ulm2IZ9Q9W4r4IKGVRiFJ81s7u6hOXQBxJgspqM
-         NbvCWdDJN9ZDAQot491zFfEBaAwc9tA+PMOg34dYpOAZE9mT0Vpi3L6ISYJiyXSsRav4
-         roXw==
-X-Gm-Message-State: AOAM530L2w5B5CUDFr1ZuaxQwnPo9q43t5+I2Ehaq/r0OmcE+hJwUvXa
-        Zq3Zdj+Q6ZbXf4826AgqUmilODny
-X-Google-Smtp-Source: ABdhPJzjoBrPQHp2g2SvAydXOQVu9KW8f1XATKHgu12RRa9HKXoAsb2b4Cu+5fDoH31Wbwr/Jz+79w==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr3371917wrq.41.1589304058264;
-        Tue, 12 May 2020 10:20:58 -0700 (PDT)
+        bh=3dJ3kw3lIwiObAdYMTIM/7GK3/zwAmfuzVqCDS8cJ9w=;
+        b=O0rqgR9afZMQ2OxWMYg6rfU//YUMQxZoF4Yfu7ZMPLdyO9hh9zHmZ0+4bmG/gfJHwv
+         Lw6woqvo7LOFIpHCQ7W6XmPquk+wTNjMA9Pdijcjpsp8XY8gPGbkk7nZDXIpwFPWBd4w
+         /4YjcpMlKfRP3B+a1c9rCJ86gCgydcDEqS0Qtqt4HozcC0kxN29hbBQMhFyXc5NCve6x
+         z0MHOvdwszQyDSjzfzltfjjF+Gak6d7aoeUhhAXLZzs+9THZLWQVWKcOzeE2bYQRpvdh
+         beh0p7GWXIBTWMH+q93Qiu7lW6zLny/4fd33YgpwY/pLldjJ9nWOcxwo5Y4aAq8MBHGN
+         f4kQ==
+X-Gm-Message-State: AGi0PuaCHWZXUxPFsT0X56jpEnvFSez+5Av3RROGH25DNFzrjuGNhdxM
+        5cKI6R+Voxkay8hiRH7y4+4=
+X-Google-Smtp-Source: APiQypLpxGJXOWpItUiR+7FGMYnNCnR8hQ+rqb5r8KwEJ0VI+MQ5thSrfEDXIp8jJ9NXqVz/0gkXsA==
+X-Received: by 2002:a1c:808c:: with SMTP id b134mr40228880wmd.131.1589304062092;
+        Tue, 12 May 2020 10:21:02 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.57
+        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.21.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 10:20:57 -0700 (PDT)
+        Tue, 12 May 2020 10:21:01 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 net-next 12/15] net: dsa: sja1105: add packing ops for the Retagging Table
-Date:   Tue, 12 May 2020 20:20:36 +0300
-Message-Id: <20200512172039.14136-13-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 15/15] docs: net: dsa: sja1105: document the best_effort_vlan_filtering option
+Date:   Tue, 12 May 2020 20:20:39 +0300
+Message-Id: <20200512172039.14136-16-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512172039.14136-1-olteanv@gmail.com>
 References: <20200512172039.14136-1-olteanv@gmail.com>
@@ -77,14 +77,6 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-The Retagging Table is an optional feature that allows the switch to
-match frames against a {ingress port, egress port, vid} rule and change
-their VLAN ID. The retagged frames are by default clones of the original
-ones (since the hardware-foreseen use case was to mirror traffic for
-debugging purposes and to tag it with a special VLAN for this purpose),
-but we can force the original frames to be dropped by removing the
-pre-retagging VLAN from the port membership list of the egress port.
-
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
@@ -94,284 +86,268 @@ None.
 Changes in v2:
 None.
 
- drivers/net/dsa/sja1105/sja1105.h             |  2 +
- .../net/dsa/sja1105/sja1105_dynamic_config.c  | 33 ++++++++++
- .../net/dsa/sja1105/sja1105_static_config.c   | 62 ++++++++++++++++++-
- .../net/dsa/sja1105/sja1105_static_config.h   | 15 +++++
- 4 files changed, 110 insertions(+), 2 deletions(-)
+ .../networking/devlink-params-sja1105.txt     |  27 +++
+ Documentation/networking/dsa/sja1105.rst      | 211 +++++++++++++++---
+ 2 files changed, 212 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/networking/devlink-params-sja1105.txt
 
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 1dcaecab0912..1ecdfd6be4c2 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -328,6 +328,8 @@ size_t sja1105et_l2_lookup_entry_packing(void *buf, void *entry_ptr,
- 					 enum packing_op op);
- size_t sja1105_vlan_lookup_entry_packing(void *buf, void *entry_ptr,
- 					 enum packing_op op);
-+size_t sja1105_retagging_entry_packing(void *buf, void *entry_ptr,
-+				       enum packing_op op);
- size_t sja1105pqrs_mac_config_entry_packing(void *buf, void *entry_ptr,
- 					    enum packing_op op);
- size_t sja1105pqrs_avb_params_entry_packing(void *buf, void *entry_ptr,
-diff --git a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-index bdee01811960..2a8fbd7fdedc 100644
---- a/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-+++ b/drivers/net/dsa/sja1105/sja1105_dynamic_config.c
-@@ -133,6 +133,9 @@
- #define SJA1105PQRS_SIZE_AVB_PARAMS_DYN_CMD			\
- 	(SJA1105_SIZE_DYN_CMD + SJA1105PQRS_SIZE_AVB_PARAMS_ENTRY)
+diff --git a/Documentation/networking/devlink-params-sja1105.txt b/Documentation/networking/devlink-params-sja1105.txt
+new file mode 100644
+index 000000000000..1d71742e270a
+--- /dev/null
++++ b/Documentation/networking/devlink-params-sja1105.txt
+@@ -0,0 +1,27 @@
++best_effort_vlan_filtering
++			[DEVICE, DRIVER-SPECIFIC]
++			Allow plain ETH_P_8021Q headers to be used as DSA tags.
++			Benefits:
++			- Can terminate untagged traffic over switch net
++			  devices even when enslaved to a bridge with
++			  vlan_filtering=1.
++			- Can terminate VLAN-tagged traffic over switch net
++			  devices even when enslaved to a bridge with
++			  vlan_filtering=1, with some constraints (no more than
++			  7 non-pvid VLANs per user port).
++			- Can do QoS based on VLAN PCP and VLAN membership
++			  admission control for autonomously forwarded frames
++			  (regardless of whether they can be terminated on the
++			  CPU or not).
++			Drawbacks:
++			- User cannot use VLANs in range 1024-3071. If the
++			  switch receives frames with such VIDs, it will
++			  misinterpret them as DSA tags.
++			- Switch uses Shared VLAN Learning (FDB lookup uses
++			  only DMAC as key).
++			- When VLANs span cross-chip topologies, the total
++			  number of permitted VLANs may be less than 7 per
++			  port, due to a maximum number of 32 VLAN retagging
++			  rules per switch.
++			Configuration mode: runtime
++			Type: bool.
+diff --git a/Documentation/networking/dsa/sja1105.rst b/Documentation/networking/dsa/sja1105.rst
+index 34581629dd3f..b6bbc17814fb 100644
+--- a/Documentation/networking/dsa/sja1105.rst
++++ b/Documentation/networking/dsa/sja1105.rst
+@@ -66,34 +66,193 @@ reprogrammed with the updated static configuration.
+ Traffic support
+ ===============
  
-+#define SJA1105_SIZE_RETAGGING_DYN_CMD				\
-+	(SJA1105_SIZE_DYN_CMD + SJA1105_SIZE_RETAGGING_ENTRY)
+-The switches do not support switch tagging in hardware. But they do support
+-customizing the TPID by which VLAN traffic is identified as such. The switch
+-driver is leveraging ``CONFIG_NET_DSA_TAG_8021Q`` by requesting that special
+-VLANs (with a custom TPID of ``ETH_P_EDSA`` instead of ``ETH_P_8021Q``) are
+-installed on its ports when not in ``vlan_filtering`` mode. This does not
+-interfere with the reception and transmission of real 802.1Q-tagged traffic,
+-because the switch does no longer parse those packets as VLAN after the TPID
+-change.
+-The TPID is restored when ``vlan_filtering`` is requested by the user through
+-the bridge layer, and general IP termination becomes no longer possible through
+-the switch netdevices in this mode.
+-
+-The switches have two programmable filters for link-local destination MACs.
++The switches do not have hardware support for DSA tags, except for "slow
++protocols" for switch control as STP and PTP. For these, the switches have two
++programmable filters for link-local destination MACs.
+ These are used to trap BPDUs and PTP traffic to the master netdevice, and are
+ further used to support STP and 1588 ordinary clock/boundary clock
+-functionality.
+-
+-The following traffic modes are supported over the switch netdevices:
+-
+-+--------------------+------------+------------------+------------------+
+-|                    | Standalone | Bridged with     | Bridged with     |
+-|                    | ports      | vlan_filtering 0 | vlan_filtering 1 |
+-+====================+============+==================+==================+
+-| Regular traffic    |     Yes    |       Yes        |  No (use master) |
+-+--------------------+------------+------------------+------------------+
+-| Management traffic |     Yes    |       Yes        |       Yes        |
+-| (BPDU, PTP)        |            |                  |                  |
+-+--------------------+------------+------------------+------------------+
++functionality. For frames trapped to the CPU, source port and switch ID
++information is encoded by the hardware into the frames.
 +
- #define SJA1105_MAX_DYN_CMD_SIZE				\
- 	SJA1105PQRS_SIZE_MAC_CONFIG_DYN_CMD
- 
-@@ -525,6 +528,20 @@ sja1105pqrs_avb_params_cmd_packing(void *buf, struct sja1105_dyn_cmd *cmd,
- 	sja1105_packing(p, &cmd->rdwrset, 29, 29, size, op);
- }
- 
-+static void
-+sja1105_retagging_cmd_packing(void *buf, struct sja1105_dyn_cmd *cmd,
-+			      enum packing_op op)
-+{
-+	u8 *p = buf + SJA1105_SIZE_RETAGGING_ENTRY;
-+	const int size = SJA1105_SIZE_DYN_CMD;
++But by leveraging ``CONFIG_NET_DSA_TAG_8021Q`` (a software-defined DSA tagging
++format based on VLANs), general-purpose traffic termination through the network
++stack can be supported under certain circumstances.
 +
-+	sja1105_packing(p, &cmd->valid,    31, 31, size, op);
-+	sja1105_packing(p, &cmd->errors,   30, 30, size, op);
-+	sja1105_packing(p, &cmd->valident, 29, 29, size, op);
-+	sja1105_packing(p, &cmd->rdwrset,  28, 28, size, op);
-+	sja1105_packing(p, &cmd->index,     5,  0, size, op);
-+}
++Depending on VLAN awareness state, the following operating modes are possible
++with the switch:
 +
- #define OP_READ		BIT(0)
- #define OP_WRITE	BIT(1)
- #define OP_DEL		BIT(2)
-@@ -606,6 +623,14 @@ struct sja1105_dynamic_table_ops sja1105et_dyn_ops[BLK_IDX_MAX_DYN] = {
- 		.packed_size = SJA1105ET_SIZE_GENERAL_PARAMS_DYN_CMD,
- 		.addr = 0x34,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.entry_packing = sja1105_retagging_entry_packing,
-+		.cmd_packing = sja1105_retagging_cmd_packing,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+		.access = (OP_WRITE | OP_DEL),
-+		.packed_size = SJA1105_SIZE_RETAGGING_DYN_CMD,
-+		.addr = 0x31,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {0},
- };
- 
-@@ -692,6 +717,14 @@ struct sja1105_dynamic_table_ops sja1105pqrs_dyn_ops[BLK_IDX_MAX_DYN] = {
- 		.packed_size = SJA1105ET_SIZE_GENERAL_PARAMS_DYN_CMD,
- 		.addr = 0x34,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.entry_packing = sja1105_retagging_entry_packing,
-+		.cmd_packing = sja1105_retagging_cmd_packing,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+		.access = (OP_READ | OP_WRITE | OP_DEL),
-+		.packed_size = SJA1105_SIZE_RETAGGING_DYN_CMD,
-+		.addr = 0x38,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {0},
- };
- 
-diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.c b/drivers/net/dsa/sja1105/sja1105_static_config.c
-index b68c9c92c248..780aca034cdc 100644
---- a/drivers/net/dsa/sja1105/sja1105_static_config.c
-+++ b/drivers/net/dsa/sja1105/sja1105_static_config.c
-@@ -541,6 +541,22 @@ static size_t sja1105_xmii_params_entry_packing(void *buf, void *entry_ptr,
- 	return size;
- }
- 
-+size_t sja1105_retagging_entry_packing(void *buf, void *entry_ptr,
-+				       enum packing_op op)
-+{
-+	struct sja1105_retagging_entry *entry = entry_ptr;
-+	const size_t size = SJA1105_SIZE_RETAGGING_ENTRY;
++- Mode 1 (VLAN-unaware): a port is in this mode when it is used as a standalone
++  net device, or when it is enslaved to a bridge with ``vlan_filtering=0``.
++- Mode 2 (fully VLAN-aware): a port is in this mode when it is enslaved to a
++  bridge with ``vlan_filtering=1``. Access to the entire VLAN range is given to
++  the user through ``bridge vlan`` commands, but general-purpose (anything
++  other than STP, PTP etc) traffic termination is not possible through the
++  switch net devices. The other packets can be still by user space processed
++  through the DSA master interface (similar to ``DSA_TAG_PROTO_NONE``).
++- Mode 3 (best-effort VLAN-aware): a port is in this mode when enslaved to a
++  bridge with ``vlan_filtering=1``, and the devlink property of its parent
++  switch named ``best_effort_vlan_filtering`` is set to ``true``. When
++  configured like this, the range of usable VIDs is reduced (0 to 1023 and 3072
++  to 4094), so is the number of usable VIDs (maximum of 7 non-pvid VLANs per
++  port*), and shared VLAN learning is performed (FDB lookup is done only by
++  DMAC, not also by VID).
 +
-+	sja1105_packing(buf, &entry->egr_port,       63, 59, size, op);
-+	sja1105_packing(buf, &entry->ing_port,       58, 54, size, op);
-+	sja1105_packing(buf, &entry->vlan_ing,       53, 42, size, op);
-+	sja1105_packing(buf, &entry->vlan_egr,       41, 30, size, op);
-+	sja1105_packing(buf, &entry->do_not_learn,   29, 29, size, op);
-+	sja1105_packing(buf, &entry->use_dest_ports, 28, 28, size, op);
-+	sja1105_packing(buf, &entry->destports,      27, 23, size, op);
-+	return size;
-+}
++To summarize, in each mode, the following types of traffic are supported over
++the switch net devices:
 +
- size_t sja1105_table_header_packing(void *buf, void *entry_ptr,
- 				    enum packing_op op)
- {
-@@ -603,6 +619,7 @@ static u64 blk_id_map[BLK_IDX_MAX] = {
- 	[BLK_IDX_L2_FORWARDING_PARAMS] = BLKID_L2_FORWARDING_PARAMS,
- 	[BLK_IDX_AVB_PARAMS] = BLKID_AVB_PARAMS,
- 	[BLK_IDX_GENERAL_PARAMS] = BLKID_GENERAL_PARAMS,
-+	[BLK_IDX_RETAGGING] = BLKID_RETAGGING,
- 	[BLK_IDX_XMII_PARAMS] = BLKID_XMII_PARAMS,
- };
- 
-@@ -646,7 +663,7 @@ static_config_check_memory_size(const struct sja1105_table *tables)
- {
- 	const struct sja1105_l2_forwarding_params_entry *l2_fwd_params;
- 	const struct sja1105_vl_forwarding_params_entry *vl_fwd_params;
--	int i, mem = 0;
-+	int i, max_mem, mem = 0;
- 
- 	l2_fwd_params = tables[BLK_IDX_L2_FORWARDING_PARAMS].entries;
- 
-@@ -659,7 +676,12 @@ static_config_check_memory_size(const struct sja1105_table *tables)
- 			mem += vl_fwd_params->partspc[i];
- 	}
- 
--	if (mem > SJA1105_MAX_FRAME_MEMORY)
-+	if (tables[BLK_IDX_RETAGGING].entry_count)
-+		max_mem = SJA1105_MAX_FRAME_MEMORY_RETAGGING;
-+	else
-+		max_mem = SJA1105_MAX_FRAME_MEMORY;
+++-------------+-----------+--------------+------------+
++|             |   Mode 1  |    Mode 2    |   Mode 3   |
+++=============+===========+==============+============+
++|   Regular   |    Yes    |      No      |     Yes    |
++|   traffic   |           | (use master) |            |
+++-------------+-----------+--------------+------------+
++| Management  |    Yes    |     Yes      |     Yes    |
++|   traffic   |           |              |            |
++| (BPDU, PTP) |           |              |            |
+++-------------+-----------+--------------+------------+
 +
-+	if (mem > max_mem)
- 		return SJA1105_OVERCOMMITTED_FRAME_MEMORY;
- 
- 	return SJA1105_CONFIG_OK;
-@@ -881,6 +903,12 @@ struct sja1105_table_ops sja1105e_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105ET_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-@@ -993,6 +1021,12 @@ struct sja1105_table_ops sja1105t_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105ET_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-@@ -1065,6 +1099,12 @@ struct sja1105_table_ops sja1105p_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-@@ -1177,6 +1217,12 @@ struct sja1105_table_ops sja1105q_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-@@ -1249,6 +1295,12 @@ struct sja1105_table_ops sja1105r_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-@@ -1361,6 +1413,12 @@ struct sja1105_table_ops sja1105s_table_ops[BLK_IDX_MAX] = {
- 		.packed_entry_size = SJA1105PQRS_SIZE_GENERAL_PARAMS_ENTRY,
- 		.max_entry_count = SJA1105_MAX_GENERAL_PARAMS_COUNT,
- 	},
-+	[BLK_IDX_RETAGGING] = {
-+		.packing = sja1105_retagging_entry_packing,
-+		.unpacked_entry_size = sizeof(struct sja1105_retagging_entry),
-+		.packed_entry_size = SJA1105_SIZE_RETAGGING_ENTRY,
-+		.max_entry_count = SJA1105_MAX_RETAGGING_COUNT,
-+	},
- 	[BLK_IDX_XMII_PARAMS] = {
- 		.packing = sja1105_xmii_params_entry_packing,
- 		.unpacked_entry_size = sizeof(struct sja1105_xmii_params_entry),
-diff --git a/drivers/net/dsa/sja1105/sja1105_static_config.h b/drivers/net/dsa/sja1105/sja1105_static_config.h
-index b569e3de3590..d96044d86b11 100644
---- a/drivers/net/dsa/sja1105/sja1105_static_config.h
-+++ b/drivers/net/dsa/sja1105/sja1105_static_config.h
-@@ -20,6 +20,7 @@
- #define SJA1105_SIZE_VLAN_LOOKUP_ENTRY			8
- #define SJA1105_SIZE_L2_FORWARDING_ENTRY		8
- #define SJA1105_SIZE_L2_FORWARDING_PARAMS_ENTRY		12
-+#define SJA1105_SIZE_RETAGGING_ENTRY			8
- #define SJA1105_SIZE_XMII_PARAMS_ENTRY			4
- #define SJA1105_SIZE_SCHEDULE_PARAMS_ENTRY		12
- #define SJA1105_SIZE_SCHEDULE_ENTRY_POINTS_PARAMS_ENTRY	4
-@@ -54,6 +55,7 @@ enum {
- 	BLKID_L2_FORWARDING_PARAMS			= 0x0E,
- 	BLKID_AVB_PARAMS				= 0x10,
- 	BLKID_GENERAL_PARAMS				= 0x11,
-+	BLKID_RETAGGING					= 0x12,
- 	BLKID_XMII_PARAMS				= 0x4E,
- };
- 
-@@ -75,6 +77,7 @@ enum sja1105_blk_idx {
- 	BLK_IDX_L2_FORWARDING_PARAMS,
- 	BLK_IDX_AVB_PARAMS,
- 	BLK_IDX_GENERAL_PARAMS,
-+	BLK_IDX_RETAGGING,
- 	BLK_IDX_XMII_PARAMS,
- 	BLK_IDX_MAX,
- 	/* Fake block indices that are only valid for dynamic access */
-@@ -99,10 +102,12 @@ enum sja1105_blk_idx {
- #define SJA1105_MAX_L2_LOOKUP_PARAMS_COUNT		1
- #define SJA1105_MAX_L2_FORWARDING_PARAMS_COUNT		1
- #define SJA1105_MAX_GENERAL_PARAMS_COUNT		1
-+#define SJA1105_MAX_RETAGGING_COUNT			32
- #define SJA1105_MAX_XMII_PARAMS_COUNT			1
- #define SJA1105_MAX_AVB_PARAMS_COUNT			1
- 
- #define SJA1105_MAX_FRAME_MEMORY			929
-+#define SJA1105_MAX_FRAME_MEMORY_RETAGGING		910
- 
- #define SJA1105E_DEVICE_ID				0x9C00000Cull
- #define SJA1105T_DEVICE_ID				0x9E00030Eull
-@@ -273,6 +278,16 @@ struct sja1105_mac_config_entry {
- 	u64 ingress;
- };
- 
-+struct sja1105_retagging_entry {
-+	u64 egr_port;
-+	u64 ing_port;
-+	u64 vlan_ing;
-+	u64 vlan_egr;
-+	u64 do_not_learn;
-+	u64 use_dest_ports;
-+	u64 destports;
-+};
++To configure the switch to operate in Mode 3, the following steps can be
++followed::
 +
- struct sja1105_xmii_params_entry {
- 	u64 phy_mac[5];
- 	u64 xmii_mode[5];
++  ip link add dev br0 type bridge
++  # swp2 operates in Mode 1 now
++  ip link set dev swp2 master br0
++  # swp2 temporarily moves to Mode 2
++  ip link set dev br0 type bridge vlan_filtering 1
++  [   61.204770] sja1105 spi0.1: Reset switch and programmed static config. Reason: VLAN filtering
++  [   61.239944] sja1105 spi0.1: Disabled switch tagging
++  # swp3 now operates in Mode 3
++  devlink dev param set spi/spi0.1 name best_effort_vlan_filtering value true cmode runtime
++  [   64.682927] sja1105 spi0.1: Reset switch and programmed static config. Reason: VLAN filtering
++  [   64.711925] sja1105 spi0.1: Enabled switch tagging
++  # Cannot use VLANs in range 1024-3071 while in Mode 3.
++  bridge vlan add dev swp2 vid 1025 untagged pvid
++  RTNETLINK answers: Operation not permitted
++  bridge vlan add dev swp2 vid 100
++  bridge vlan add dev swp2 vid 101 untagged
++  bridge vlan
++  port    vlan ids
++  swp5     1 PVID Egress Untagged
++
++  swp2     1 PVID Egress Untagged
++           100
++           101 Egress Untagged
++
++  swp3     1 PVID Egress Untagged
++
++  swp4     1 PVID Egress Untagged
++
++  br0      1 PVID Egress Untagged
++  bridge vlan add dev swp2 vid 102
++  bridge vlan add dev swp2 vid 103
++  bridge vlan add dev swp2 vid 104
++  bridge vlan add dev swp2 vid 105
++  bridge vlan add dev swp2 vid 106
++  bridge vlan add dev swp2 vid 107
++  # Cannot use mode than 7 VLANs per port while in Mode 3.
++  [ 3885.216832] sja1105 spi0.1: No more free subvlans
++
++\* "maximum of 7 non-pvid VLANs per port": Decoding VLAN-tagged packets on the
++CPU in mode 3 is possible through VLAN retagging of packets that go from the
++switch to the CPU. In cross-chip topologies, the port that goes to the CPU
++might also go to other switches. In that case, those other switches will see
++only a retagged packet (which only has meaning for the CPU). So if they are
++interested in this VLAN, they need to apply retagging in the reverse direction,
++to recover the original value from it. This consumes extra hardware resources
++for this switch. There is a maximum of 32 entries in the Retagging Table of
++each switch device.
++
++As an example, consider this cross-chip topology::
++
++  +-------------------------------------------------+
++  | Host SoC                                        |
++  |           +-------------------------+           |
++  |           | DSA master for embedded |           |
++  |           |   switch (non-sja1105)  |           |
++  |  +--------+-------------------------+--------+  |
++  |  |   embedded L2 switch                      |  |
++  |  |                                           |  |
++  |  |   +--------------+     +--------------+   |  |
++  |  |   |DSA master for|     |DSA master for|   |  |
++  |  |   |  SJA1105 1   |     |  SJA1105 2   |   |  |
++  +--+---+--------------+-----+--------------+---+--+
++
++  +-----------------------+ +-----------------------+
++  |   SJA1105 switch 1    | |   SJA1105 switch 2    |
++  +-----+-----+-----+-----+ +-----+-----+-----+-----+
++  |sw1p0|sw1p1|sw1p2|sw1p3| |sw2p0|sw2p1|sw2p2|sw2p3|
++  +-----+-----+-----+-----+ +-----+-----+-----+-----+
++
++To reach the CPU, SJA1105 switch 1 (spi/spi2.1) uses the same port as is uses
++to reach SJA1105 switch 2 (spi/spi2.2), which would be port 4 (not drawn).
++Similarly for SJA1105 switch 2.
++
++Also consider the following commands, that add VLAN 100 to every sja1105 user
++port::
++
++  devlink dev param set spi/spi2.1 name best_effort_vlan_filtering value true cmode runtime
++  devlink dev param set spi/spi2.2 name best_effort_vlan_filtering value true cmode runtime
++  ip link add dev br0 type bridge
++  for port in sw1p0 sw1p1 sw1p2 sw1p3 \
++              sw2p0 sw2p1 sw2p2 sw2p3; do
++      ip link set dev $port master br0
++  done
++  ip link set dev br0 type bridge vlan_filtering 1
++  for port in sw1p0 sw1p1 sw1p2 sw1p3 \
++              sw2p0 sw2p1 sw2p2; do
++      bridge vlan add dev $port vid 100
++  done
++  ip link add link br0 name br0.100 type vlan id 100 && ip link set dev br0.100 up
++  ip addr add 192.168.100.3/24 dev br0.100
++  bridge vlan add dev br0 vid 100 self
++
++  bridge vlan
++  port    vlan ids
++  sw1p0    1 PVID Egress Untagged
++           100
++
++  sw1p1    1 PVID Egress Untagged
++           100
++
++  sw1p2    1 PVID Egress Untagged
++           100
++
++  sw1p3    1 PVID Egress Untagged
++           100
++
++  sw2p0    1 PVID Egress Untagged
++           100
++
++  sw2p1    1 PVID Egress Untagged
++           100
++
++  sw2p2    1 PVID Egress Untagged
++           100
++
++  sw2p3    1 PVID Egress Untagged
++
++  br0      1 PVID Egress Untagged
++           100
++
++SJA1105 switch 1 consumes 1 retagging entry for each VLAN on each user port
++towards the CPU. It also consumes 1 retagging entry for each non-pvid VLAN that
++it is also interested in, which is configured on any port of any neighbor
++switch.
++
++In this case, SJA1105 switch 1 consumes a total of 11 retagging entries, as
++follows:
++- 8 retagging entries for VLANs 1 and 100 installed on its user ports
++  (``sw1p0`` - ``sw1p3``)
++- 3 retagging entries for VLAN 100 installed on the user ports of SJA1105
++  switch 2 (``sw2p0`` - ``sw2p2``), because it also has ports that are
++  interested in it. The VLAN 1 is a pvid on SJA1105 switch 2 and does not need
++  reverse retagging.
++
++SJA1105 switch 2 also consumes 11 retagging entries, but organized as follows:
++- 7 retagging entries for the bridge VLANs on its user ports (``sw2p0`` -
++  ``sw2p3``).
++- 4 retagging entries for VLAN 100 installed on the user ports of SJA1105
++  switch 1 (``sw1p0`` - ``sw1p3``).
+ 
+ Switching features
+ ==================
 -- 
 2.17.1
 
