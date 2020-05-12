@@ -2,104 +2,112 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CBFC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C35C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170D820733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAEB20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:34:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ILcH7UHC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaC+PLz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgELHdv (ORCPT
+        id S1729093AbgELHeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:33:51 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:31387 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729041AbgELHdq (ORCPT
+        Tue, 12 May 2020 03:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729008AbgELHdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:33:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589268826; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=/qP6S8+xrEXaQmMPK80tKynj9uy70EBGXOIBLdpDKLU=;
- b=ILcH7UHCLmT+MM11Qfs4gXb9sa1/W3NFUZ3rf9pKDkCWMNHhtfMiyi6hHQDlDkPrwqfU16BV
- UmcogmVvY09tXKdylHim+doKR+j85P1OpgSYH/kPYfS7VQaCuojElKY7DxKBwi3dtpTaBVAA
- 0hifwCd91x68WV/sRQsBLtbqXQA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba5158.7f3531b7c618-smtp-out-n01;
- Tue, 12 May 2020 07:33:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BE5A0C44793; Tue, 12 May 2020 07:33:42 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6106AC4478F;
-        Tue, 12 May 2020 07:33:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6106AC4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 May 2020 03:33:40 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73F0C061A0F;
+        Tue, 12 May 2020 00:33:39 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id m24so10962888wml.2;
+        Tue, 12 May 2020 00:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wKq0OblocqgUWBq4FWdZOwAZXIyc1/tnZx0SSOmf9GY=;
+        b=AaC+PLz40PrYk1QteaLXTxbS33yMEGk2kdK9ESxDU17sZXwVCgmJ/MhsfJT+PDC0GP
+         OJ90A9e3bNFgSaTkyjgkoJU50p/FofrEmIqAsMqPgyxEG4/Qp/SbxmFR7DNxs3OKZuUC
+         Bp4L78a8pijD3F7VtK4VzCKTo4DQn4Sd3v9gPX/Yf8gygv8nUtuSCxtvQzgwvf5PJ7Hx
+         dET4SQmz8nm7aUAiB+/Xr7XscRQ9F4JRD6ILitJAz7yUw+HSA7i4XruGCMHt+R+mxyio
+         JaGFxlHQbm0hGE8FINJl9W5pkPbB6nVLur3SYeefLaGZHkjQwLTSFcPp59Gp/3ufUvIO
+         ulFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wKq0OblocqgUWBq4FWdZOwAZXIyc1/tnZx0SSOmf9GY=;
+        b=LkHRi3Xvq7WNn2DSAnZecCZCefiFp/sZkc/pEPAVrVsJf+jz8ovLBBuTeqlHerCPPW
+         kxGqVQQNTYnXCYxnO7SFCMdsmYzlaPp0830kG0M2/YsmUO7fikwJamngfMNS4zB2io3w
+         YTq/znawTj1usrCRgwDA9Dlo/JhvYxNivgH5cffVqkOMcPAIXFzrxYQ7b3lmaTeRC6yl
+         p2LFr7KxG3/Fkeg00eO/RklmrBrjO3yvC0NyGJ0ZD7ET9jhrImBr8kZlSrTH6oyDjTFt
+         1WS92OxdR8nY/rUa8pkTdlfNF13GXyAfcqHmS9JRvtlzWGSFci91eG2AEpJxG8mFAjIt
+         UQcg==
+X-Gm-Message-State: AGi0PuYee+aAZPWieGhXGuCdZmPsNVJZz6PPS3OpToldAMDuz0AwDc1C
+        nrQ8P1R14ijtl6Fsv/hibsQ=
+X-Google-Smtp-Source: APiQypKpQU+sRBnu4YugVLYHjTcTRmLyX7V4CIuyHUXUHwnJzx9zFlbWQdFPuVC8uZJ2zsgvyvFG2w==
+X-Received: by 2002:a1c:108:: with SMTP id 8mr13028297wmb.148.1589268818521;
+        Tue, 12 May 2020 00:33:38 -0700 (PDT)
+Received: from skynet.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
+        by smtp.gmail.com with ESMTPSA id d9sm5961197wmd.10.2020.05.12.00.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 00:33:38 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2 4/5] dt: bindings: brcmnand: add v2.1 and v2.2 support
+Date:   Tue, 12 May 2020 09:33:28 +0200
+Message-Id: <20200512073329.742893-5-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512073329.742893-1-noltari@gmail.com>
+References: <20200510151406.2527856-1-noltari@gmail.com>
+ <20200512073329.742893-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH net-next 1/2] ath10k: fix gcc-10 zero-length-bounds
- warnings
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200509120707.188595-1-arnd@arndb.de>
-References: <20200509120707.188595-1-arnd@arndb.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        Kalle Valo <kvalo@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wen Gong <wgong@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200512073342.BE5A0C44793@smtp.codeaurora.org>
-Date:   Tue, 12 May 2020 07:33:42 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> wrote:
+Added brcm,brcmnand-v2.1 and brcm,brcmnand-v2.2 as possible compatible
+strings to support brcmnand controllers v2.1 and v2.2.
 
-> gcc-10 started warning about out-of-bounds access for zero-length
-> arrays:
-> 
-> In file included from drivers/net/wireless/ath/ath10k/core.h:18,
->                  from drivers/net/wireless/ath/ath10k/htt_rx.c:8:
-> drivers/net/wireless/ath/ath10k/htt_rx.c: In function 'ath10k_htt_rx_tx_fetch_ind':
-> drivers/net/wireless/ath/ath10k/htt.h:1683:17: warning: array subscript 65535 is outside the bounds of an interior zero-length array 'struct htt_tx_fetch_record[0]' [-Wzero-length-bounds]
->  1683 |  return (void *)&ind->records[le16_to_cpu(ind->num_records)];
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/ath/ath10k/htt.h:1676:29: note: while referencing 'records'
->  1676 |  struct htt_tx_fetch_record records[0];
->       |                             ^~~~~~~
-> 
-> Make records[] a flexible array member to allow this, moving it behind
-> the other zero-length member that is not accessed in a way that gcc
-> warns about.
-> 
-> Fixes: 22e6b3bc5d96 ("ath10k: add new htt definitions")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ v2: add new patch
 
-2 patches applied to ath-next branch of ath.git, thanks.
+ Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-9f12bebd512c ath10k: fix gcc-10 zero-length-bounds warnings
-32221df6765b ath10k: fix ath10k_pci struct layout
-
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index 05651a654c66..44335a4f8bfb 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -20,6 +20,8 @@ Required properties:
+                      "brcm,brcmnand" and an appropriate version compatibility
+                      string, like "brcm,brcmnand-v7.0"
+                      Possible values:
++                         brcm,brcmnand-v2.1
++                         brcm,brcmnand-v2.2
+                          brcm,brcmnand-v4.0
+                          brcm,brcmnand-v5.0
+                          brcm,brcmnand-v6.0
 -- 
-https://patchwork.kernel.org/patch/11538233/
+2.26.2
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
