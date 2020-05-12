@@ -2,118 +2,96 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5472FC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B5C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27CF72495A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mglqha6z"
+	by mail.kernel.org (Postfix) with ESMTP id 45FFE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgELJTu (ORCPT
+        id S1729274AbgELJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726024AbgELJTt (ORCPT
+        Tue, 12 May 2020 05:20:27 -0400
+Received: from m177129.mail.qiye.163.com ([123.58.177.129]:48816 "EHLO
+        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELJU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:19:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD24C061A0C;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so9093817pjb.3;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
-        b=Mglqha6zf4yCyBuN1JhM/UvGpoJccJ0mz+FVC/tYpYCPTiXEuamRf/XY7WUy6QyNfI
-         LY1DNTH4E3eV3ddLsU6PxfXjmwgQkXShWdfg6VlQffwoJ/JJv/79gQrLI18ZDZYA9rdA
-         t765sebL8CNfI4SlkzDSYOliuKxlDN5vp9SwwNkYSQpQvc1S8u8BnKdikmDu+pjLxa3O
-         UonXJq41yRadaD4J7083xLeRG5fbyXy4/FML4a/8cjcSP8+dm7epzTVzNJVR9htmqmSv
-         fRLBlj4ZoL/IV6usCtprKQDBb9UpZCyWwecUCazD8CsARM0pGNB1bRki9TfcgNeIVTuF
-         GhmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eljqxU5QjvaLul3lBAtBBOmNN4PsgBS7SMSl69Yllas=;
-        b=SWolA+qRmi/9GSEDNndtIdttpQnz7cH7+AfDO0vRJERgNya7JShW3G/j/audzq+/lz
-         laUdloVraTA7E+pqtHwFP5T7OEfqkMzVTOVlukQ0GYszvc7tpYbBxlv2u38ouWZwx9Np
-         w8Vvv7gXnjRlDhvsm3x1l+/kMeHoLsQbgFaMBi0kp9Z7a1p6BHjXu/m2+NS7+K4NO9We
-         ybVPOS8i6/LXbJA5clHk9NIGH+j3QAlGGXyeKTfBXip+pBQohqa3IKMgOF9YANmEHyPJ
-         cQribLkj1fpTDJ25no6tzR+nWQ73kYqK5rf5hT0bZiRUpu6YnK/voadN47K39u0ViE4o
-         QxUQ==
-X-Gm-Message-State: AGi0PuZKWnbIzW2qcrQmi8JBUoG2+dTlO5WGMvfqnoxGEgzGDR0zVvc1
-        w50/C0rgp+4g8log+Tr9IYo=
-X-Google-Smtp-Source: APiQypJ9gTfQbVWhwVvBIvaeS/BnzgA7vFw4SAoPPieKhgGQanQt+xg/c333SFLbyoeyvyjH3AqW4g==
-X-Received: by 2002:a17:90a:9295:: with SMTP id n21mr26444117pjo.195.1589275189436;
-        Tue, 12 May 2020 02:19:49 -0700 (PDT)
-Received: from localhost.localdomain ([2001:2d8:308:9c7a:d5fe:3ea6:5791:c8e8])
-        by smtp.gmail.com with ESMTPSA id b16sm11546944pfp.89.2020.05.12.02.19.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:19:48 -0700 (PDT)
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-X-Google-Original-From: Steve Lee <steves.lee@maximintegrated.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee@maximintegrated.com, steves.lee.maxim@gmail.com
-Subject: [V2 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-Date:   Tue, 12 May 2020 18:18:46 +0900
-Message-Id: <20200512091846.31207-1-steves.lee@maximintegrated.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 May 2020 05:20:27 -0400
+Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
+        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 641F05C3638;
+        Tue, 12 May 2020 17:19:50 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AP*ABgAXCELISG6y0r8HaKrn.3.1589275190376.Hmail.bernard@vivo.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, Kukjin Kim <kgene@kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        opensource.kernel@vivo.com
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gbWVtb3J5L3NhbXN1bmc6IHJlZHVjZSB1bm5lY2Vzc2FyeSBtdXRleCBsb2NrIGFyZWE=?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 157.0.31.122
+In-Reply-To: <CAJKOXPekrkyDf2TMCnX7Nvbdaj-JQwuyqrsurFM4moALqVx8Sw@mail.gmail.com>
+MIME-Version: 1.0
+Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 12 May 2020 17:19:50 +0800 (GMT+08:00)
+From:   Bernard <bernard@vivo.com>
+Date:   Tue, 12 May 2020 17:19:50 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVKQ0hLS0tLQ0xMSENLT1lXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTElJSk9LTkNCN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6K1E6ORw6Izg#NzIoPE0CSwlDMxowCRVVSFVKTkNCSUxOSkJLT0NDVTMWGhIXVRkeCRUaCR87
+        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTkhISjcG
+X-HM-Tid: 0a72082ee4906447kurs641f05c3638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for DT binding of max98390 amplifier driver.
-
-Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
----
- .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-new file mode 100644
-index 000000000000..0ddd4c6ae55e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/max98390.txt
-@@ -0,0 +1,26 @@
-+Maxim Integrated MAX98390 Speaker Amplifier
-+
-+This device supports I2C.
-+
-+Required properties:
-+
-+ - compatible : "maxim,max98390"
-+
-+ - reg : the I2C address of the device.
-+
-+Optional properties:
-+
-+- maxim,temperature_calib
-+  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-+
-+- maxim,r0_calib
-+  u32. This is r0 calibration data which was measured in factory mode.
-+
-+Example:
-+
-+codec: max98390@38 {
-+	compatible = "maxim,max98390";
-+	reg = <0x38>;
-+	maxim,temperature_calib = <1024>;
-+	maxim,r0_calib = <100232>;
-+};
--- 
-2.17.1
-
+CkZyb206IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KRGF0ZTogMjAyMC0w
+NS0xMiAxNzowNToyOApUbzogIEx1a2FzeiBMdWJhIDxsdWthc3oubHViYUBhcm0uY29tPgpDYzog
+IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4sS3VramluIEtpbSA8a2dlbmVAa2VybmVs
+Lm9yZz4sbGludXgtcG1Admdlci5rZXJuZWwub3JnLCJsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtl
+cm5lbC5vcmciIDxsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmc+LGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZywibGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyIg
+PGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+LG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29t
+ClN1YmplY3Q6IFJlOiBbUEFUQ0hdIG1lbW9yeS9zYW1zdW5nOiByZWR1Y2UgdW5uZWNlc3Nhcnkg
+bXV0ZXggbG9jayBhcmVhPk9uIFR1ZSwgMTIgTWF5IDIwMjAgYXQgMTA6NDcsIEx1a2FzeiBMdWJh
+IDxsdWthc3oubHViYUBhcm0uY29tPiB3cm90ZToKPj4KPj4gSGkgS3J6eXN6dG9mLAo+Pgo+PiBJ
+IGFtIHNvcnJ5LCBJIHdhcyBhIGJpdCBidXN5IHJlY2VudGx5Lgo+Pgo+PiBPbiA1LzEyLzIwIDc6
+NTAgQU0sIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6Cj4+ID4gT24gRnJpLCBNYXkgMDgsIDIw
+MjAgYXQgMDY6MTM6MzhBTSAtMDcwMCwgQmVybmFyZCBaaGFvIHdyb3RlOgo+PiA+PiBNYXliZSBk
+bWMtPmRmLT5sb2NrIGlzIHVubmVjZXNzYXJ5IHRvIHByb3RlY3QgZnVuY3Rpb24KPj4gPj4gZXh5
+bm9zNV9kbWNfcGVyZl9ldmVudHNfY2hlY2soZG1jKS4gSWYgd2UgaGF2ZSB0byBwcm90ZWN0LAo+
+PiA+PiBkbWMtPmxvY2sgaXMgbW9yZSBiZXR0ZXIgYW5kIG1vcmUgZWZmZWN0aXZlLgo+PiA+PiBB
+bHNvLCBpdCBzZWVtcyBub3QgbmVlZGVkIHRvIHByb3RlY3QgImlmIChyZXQpICYgZGV2X3dhcm4i
+Cj4+ID4+IGJyYW5jaC4KPj4gPj4KPj4gPj4gU2lnbmVkLW9mZi1ieTogQmVybmFyZCBaaGFvIDxi
+ZXJuYXJkQHZpdm8uY29tPgo+PiA+PiAtLS0KPj4gPj4gICBkcml2ZXJzL21lbW9yeS9zYW1zdW5n
+L2V4eW5vczU0MjItZG1jLmMgfCA2ICsrLS0tLQo+PiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+ID4KPj4gPiBJIGNoZWNrZWQgdGhlIGNvbmN1
+cnJlbnQgYWNjZXNzZXMgYW5kIGl0IGxvb2tzIGNvcnJlY3QuCj4+ID4KPj4gPiBMdWthc3osIGFu
+eSByZXZpZXcgZnJvbSB5b3VyIHNpZGU/Cj4+Cj4+IFRoZSBsb2NrIGZyb20gZGV2ZnJlcSBsb2Nr
+IHByb3RlY3RzIGZyb20gYSBzY2VuYXJpbyB3aGVuCj4+IGNvbmN1cnJlbnQgYWNjZXNzIGZyb20g
+ZGV2ZnJlcSBmcmFtZXdvcmsgdXNlcyBpbnRlcm5hbCBkbWMgZmllbGRzICdsb2FkJwo+PiBhbmQg
+J3RvdGFsJyAod2hpY2ggYXJlIHNldCB0byAnYnVzeV90aW1lJywgJ3RvdGFsX3RpbWUnKS4KPj4g
+VGhlIC5nZXRfZGV2X3N0YXR1cyBjYW4gYmUgY2FsbGVkIGF0IGFueSB0aW1lIChldmVuIGR1ZSB0
+byB0aGVybWFsCj4+IGRldmZyZXEgY29vbGluZyBhY3Rpb24pIGFuZCByZWFkcyBhYm92ZSBmaWVs
+ZHMuCj4+IFRoYXQncyB3aHkgdGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBuZXcgdmFsdWVzIGluc2lk
+ZSBkbWMgaXMgcHJvdGVjdGVkLgo+Cj5JIGxvb2tlZCBhdCB0aGlzIHBhdGggKGdldF9kZXZfc3Rh
+dHVzKSBhbmQgY3VycmVudGx5IGluIGRldmZyZXEgaXQKPndpbGwgYmUgb25seSBjYWxsZWQgZnJv
+bSB1cGRhdGVfZGV2ZnJlcSgpIC0+IGdldF90YXJnZXRfZnJlcSgpLi4uIGF0Cj5sZWFzdCB3aGVu
+IGxvb2tpbmcgYXQgZGV2ZnJlcSBjb3JlIGFuZCBnb3Zlcm5vcnMuIE9uIHRoZSBvdGhlciBoYW5k
+Cj55b3UgYXJlIHJpZ2h0IHRoYXQgdGhpcyBpcyBwdWJsaWMgZnVuY3Rpb24gYW5kIHRoaXMgY2Fs
+bCBzY2VuYXJpbwo+bWlnaHQgY2hhbmdlLiBJdCBjb3VsZCBiZSBjYWxsZWQgZGlyZWN0bHkgZnJv
+bSBvdGhlciBwYXRocyBzb29uZXIgb3IKPmxhdGVyLgo+Cj4+IFRoaXMgcGF0Y2ggc2hvdWxkIG5v
+dCBiZSB0YWtlbiBJTU8uIE1heWJlIHdlIGNhbiByZWxlYXNlIGxvY2sgYmVmb3JlIHRoZQo+PiBp
+ZiBzdGF0ZW1lbnQsIGp1c3QgdG8gc3BlZWQtdXAuCj4KPlllcC4KPgo+QmVybmFyZCwgeW91IGNh
+biBzZW5kIGp1c3QgdGhpcyBwYXJ0IG9mIHRoZSBwYXRjaC4KPgoKU3VyZSwgSSB3aWxsIHJlc3Vi
+bWl0IGEgcGF0Y2ggaW4gdjIuCgpCZXN0IHJlZ2FyZHMsCkJlcm5hcmQKCj5CZXN0IHJlZ2FyZHMs
+Cj5Lcnp5c3p0b2YKDQoNCg==
