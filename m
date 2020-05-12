@@ -2,137 +2,151 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41C8C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7647FC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D03206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fCfpVlps"
+	by mail.kernel.org (Postfix) with ESMTP id 4E4C6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589304667;
+	bh=No85bhKGDnXE3RujWoY9OPNvGoCJDkigbCNfGAGLfHU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NL/CukqfAC3a/+jq9LDMM342WuuQ0hlBpLhKmu2QzLMVvS41xPdYIE7mNXxIglqg5
+	 QunRj25dPlh9zBguUhhTJtdDziZ20nTA4USQTgkXDB1ou0duO9bmKBf/NY8S1koBXp
+	 TZB0P236JVzoFmXzvfUF8E6zNBnPsBUZxqm5F41E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgELRaw (ORCPT
+        id S1729505AbgELRbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgELRav (ORCPT
+        Tue, 12 May 2020 13:31:06 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:42105 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELRbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:30:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917FFC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:30:51 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so5658103plt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:30:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uwHdadffELF6O3Ox9C2J9UrmgnS3D4KFbraj16AD0PI=;
-        b=fCfpVlpsGcefVpnK833KEICYAiK6PPdm+7Hgo6P4xiIs1AthyUaTes1RRoyWsfR9i5
-         H/6RCPsfT3DzDeNiBbY6Y5M9mgBVDL22QcZ2U1CmFm2KueiDUE3vI1FmZH3Q0wlqzrTH
-         KrteQlpjsS14+Hx6q5m7GiiE3Y/+TfnARNv+9Oi1R6sCLHD5GtNe3VeJafdqLF/N8ZMX
-         wJW3S//w/5fkW/G7lZDeZRXG869TUAMDA97RGg+l3kU9olTViqTFXG//p/uyJdU3qv3T
-         ev7rHopoKPWCHVsVEg2TeavP9Ezgo4y8vNDKUTGu007zd733XFthSI9JYj8hX0V01wPv
-         mJjg==
+        Tue, 12 May 2020 13:31:06 -0400
+Received: by mail-oo1-f67.google.com with SMTP id a83so1071528oob.9;
+        Tue, 12 May 2020 10:31:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uwHdadffELF6O3Ox9C2J9UrmgnS3D4KFbraj16AD0PI=;
-        b=maWl+sDjKDzwBEXNNdOpz4tudyhNNyIEbuSnbdjFIG1rtNAlE6RbDl29UZnIunEyVG
-         L4XiEaGXSfP+OEOxfqm73bX6DalSMqZiN1Tdhr1zmd46+lZhXgOj/3+m/xlaUUg4fjgf
-         BdSa8mtvaSDBUziwfFmD9V/c6FlaUlHfcuho8bl/Xq9HoKbynyCT+Yz7fF4SDjq8Uw38
-         dVJtsNn0xFsXqTbLK3oUxFfFeK9VXaIHBZoEz1kT3ZHQUW98VxqYzVqBx0tDOiphHwS8
-         QlBzT4cnKyHoWC82ojWrmgGJ4PSSONrlgD4zdk+E++xSN9aMKUyfHL5hRhVPyMMQzsy6
-         Oq5g==
-X-Gm-Message-State: AGi0PubR2o85J6oZypaDWl3qVR2nBfczD1zMUYb9sD2Lr5hY83UNmwNK
-        nLJLqVJnbID1+9REMkTU9S56Sw==
-X-Google-Smtp-Source: APiQypJ1naeDJnJozrJ4B9Xp2/Gjh1uEfEb/1H/CK20riED1XpH9FpOX7zFR/K2HUX3er/fBTJ2MNw==
-X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr31396022pjb.190.1589304651035;
-        Tue, 12 May 2020 10:30:51 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l15sm13636543pjk.56.2020.05.12.10.30.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 10:30:50 -0700 (PDT)
-Date:   Tue, 12 May 2020 10:29:17 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v2] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
-Message-ID: <20200512172917.GG57962@builder.lan>
-References: <20200512110930.2550-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j1rDBr2LZPsItx6oTianrE8hsJBryJBqNpicNCJ+hAs=;
+        b=EhPKR/NRP0RukIDkdCDVe3PHbRB7rudpt1ez+EE+x6j8lqDdHDAWN4j0gDSdEa8xhp
+         5CCIT4b4rTnFCHxd2GpT09RqZ2FtTj9NqRaYkVSN1tcwJvUpMYQ+Ns9xutb6Ngb3W6CY
+         2ETqbsfQDW13qJQYFMFxm5/VqrVdRMC8i5jNRaFgTOzLX/9PsfUSnr4I4W3c43FyCFjX
+         be0JwPk88TyoUPOWkRZnig1vs/JpOsJrlp18KmU5/yPZJF0d/2BliB+WDn0rKfeUASqi
+         MiWevFYPZPMdJ/j2I4PVUSENJecK5gjby7Gh3jkwq7QtVJDzgTqLVMG0Vz+2+teR5QAs
+         h3SQ==
+X-Gm-Message-State: AGi0PuYzJ3vZgS4KoiX6B8rKUT3Xtfe/TtExxSRj35rPpRbDltZ38Hif
+        i7tUquX1Qf+pmwckJzpICk35EJSnhOwhWIs0KWY=
+X-Google-Smtp-Source: APiQypKndO1ilammFSxfSHkTTuvKf8k/4MMjBYODJ6DRYHfCIGjbXnCB2909MoBJph27lwy/hs1h5J+csCpw8WUFqGI=
+X-Received: by 2002:a4a:a286:: with SMTP id h6mr18757126ool.38.1589304663700;
+ Tue, 12 May 2020 10:31:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512110930.2550-1-srinivas.kandagatla@linaro.org>
+References: <20200508130507.GA10541@google.com> <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
+ <20200511090049.GA229633@google.com> <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+ <20200512092102.GA16151@google.com> <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
+ <20200512135813.GA101124@google.com> <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+ <20200512151120.GB101124@google.com> <CAJZ5v0inoge=nWQtv-rU_ReQUMZA5w-PZXuSpHHj1UHn-S7aSA@mail.gmail.com>
+ <20200512162630.GC101124@google.com>
+In-Reply-To: <20200512162630.GC101124@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 May 2020 19:30:52 +0200
+Message-ID: <CAJZ5v0ges4=e2HkHpVk4E1yF1VsBm9H5noqMz-MxX9DK_kt6Xg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12 May 04:09 PDT 2020, Srinivas Kandagatla wrote:
+On Tue, May 12, 2020 at 6:26 PM Quentin Perret <qperret@google.com> wrote:
+>
+> On Tuesday 12 May 2020 at 17:30:36 (+0200), Rafael J. Wysocki wrote:
+> > On Tue, May 12, 2020 at 5:11 PM Quentin Perret <qperret@google.com> wrote:
+> > > The end goal with GKI is the following: Google will release a single
+> > > binary kernel image (signed, etc etc) that all devices using a given
+> > > Android version will be required to use. That image is however going to
+> > > be only for the core of the kernel (no drivers or anything of the sort).
+> > > Vendors and OEMs, on their end, will be responsible to build and ship
+> > > GKI-compatible modules for their respective devices. So, Android devices
+> > > will eventually ship with a Google-issued GKI, plus a bunch of
+> > > vendor-provided modules loaded during boot.
+> >
+> > If that is the case, then I absolutely think that schedutil should be
+> > part of the GKI.
+> >
+> > Moreover, that would have been my opinion even if it had been modular
+> > in the first place.
+>
+> I definitely understand the feeling. Heck I contributed to schedutil, so
+> I'd love to see the entire world run it :-)
+>
+> But my personal preference doesn't seem to matter in this world, sadly.
+> The truth is, we cannot afford to be arbitrary in our decisions in GKI.
+> Switching governors and such is a fully supported feature upstream, and
+> it has been for a long time. Taking that away from partners is not the
+> goal, nor the intention, of GKI.
 
-> fastrpc_invoke_ctx can have refcount of 2 in error path where
-> rpmsg_send() fails to send invoke message. decrement the refcount
-> properly in the error path to fix this leak.
-> 
-> This also fixes below static checker warning:
-> 
-> drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
-> warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
-> 
-> Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+It still will be possible with schedutil built-in, however.
 
-Thanks, that looks better.
+> They will be able to choose whatever
+> governor they want, because there are no *objective* reasons to not let
+> them do that.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Which, again, is still possible with non-modular schedutil AFAICS.
 
-Regards,
-Bjorn
+I don't see any technical reason for making schedutil modular in the
+context of GKI other than to make the GKI image smaller, but I don't
+expect that to be significant enough.
 
-> ---
-> Changes since v1:
-> 	moved fastrpc_context_put to fastrpc_invoke_send()
-> 
->  drivers/misc/fastrpc.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> index 9065d3e71ff7..7939c55daceb 100644
-> --- a/drivers/misc/fastrpc.c
-> +++ b/drivers/misc/fastrpc.c
-> @@ -904,6 +904,7 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
->  	struct fastrpc_channel_ctx *cctx;
->  	struct fastrpc_user *fl = ctx->fl;
->  	struct fastrpc_msg *msg = &ctx->msg;
-> +	int ret;
->  
->  	cctx = fl->cctx;
->  	msg->pid = fl->tgid;
-> @@ -919,7 +920,13 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
->  	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
->  	fastrpc_context_get(ctx);
->  
-> -	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
-> +	ret = rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
-> +
-> +	if (ret)
-> +		fastrpc_context_put(ctx);
-> +
-> +	return ret;
-> +
->  }
->  
->  static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
-> -- 
-> 2.21.0
-> 
+Is there anything else I am missing?
+
+> > > This is a significant shift from the current model where vendors
+> > > completely own the kernel, and are largely free to use the kernel config
+> > > they want. Today, those who don't use schedutil are free to turn the
+> > > config off, for example.
+> >
+> > So why is this regarded as a good thing?
+>
+> You mean using something else than schedutil?
+
+I mean why allowing people to compile schedutil out is regarded as a good thing.
+
+> It is not seen as a good
+> thing at all, at least not by me. But we have the same problem as
+> upstream. We cannot remove the other governors or the governor API for a
+> simple reason: they have users :/
+
+I'm not saying about removing any of that.  I'm just trying to
+understand why you need schedutil to be modular so as to make those
+things possible.
+
+Cheers!
