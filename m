@@ -2,264 +2,112 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF792C47076
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1254FC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20C2206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A2B206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YE9ZEB/c"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="T3Vy3AZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgELQ1Q (ORCPT
+        id S1728334AbgELQ10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgELQ1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:27:16 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FADC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:27:15 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c124so18523059oib.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MJbloyb8GeFV+8WTKCZZjFvi4tHQNahuAS+Pb3o2Kyk=;
-        b=YE9ZEB/csOO/qgzFHHZkD+kfc7F2OXh03OJ8P+gb/y34vODSSeNOtlafjQf9mkvp75
-         nYqfWl2OARG5rd4Cmhx1dVe8jvVR9/6+KZO4hv32d0sr8zCzIS96b3PZebL6xAWi2l30
-         aueBQw0FW2Mn2/EdEJItXdMN2tEisjXtwIGy0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MJbloyb8GeFV+8WTKCZZjFvi4tHQNahuAS+Pb3o2Kyk=;
-        b=SWm/kYzg3wGcaWNAnHVn4+w4PuYVHbrG8Cej6GzMCRjRqo0qtcI/ANlGCjjkxRGXY8
-         C3Z6s48Z4OTub6VloXBxufCX92uf0zV8NwW4Si9cu42U/LlJZFJnljcb5DSi5i3mDFNg
-         cOyJ43/CpN+KfDY953voFRu3rgvBEV/quzcATaiHeG2GdKAVUDE/XCx2QicUSaaL7+mu
-         IZ4u+zWT9e1TDjRbvyceer+2JOrqm/IltrIFjYna2VTLVfdjUJxpssir1FRB+UYT3T7j
-         o6g6p6BENrct4FmY/uy99bzYHAntiVwCzP1BtEnUPMkemTVaU+mzc+QOMa0wnFPmSoYz
-         c9ng==
-X-Gm-Message-State: AGi0PuZw/qI+hB6ISy2MjqXnHIj0DJl3wzBIVuUxmLdi4EaqfIygHEz8
-        bsAbBiomLPlnxpn0aAkI3922aptJhuqlaGufyRAPyA==
-X-Google-Smtp-Source: APiQypJU803JZeffGdUiKfSFxC4qEhXBDbbj5VZjPE9IPYrJYd5IqjMvmHgdml9yeEAH/819ES+YujXGuMcW2zkufnY=
-X-Received: by 2002:aca:3b41:: with SMTP id i62mr5799116oia.101.1589300834676;
- Tue, 12 May 2020 09:27:14 -0700 (PDT)
+        Tue, 12 May 2020 12:27:26 -0400
+Received: from www.zeus03.de ([194.117.254.33]:41334 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726610AbgELQ1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:27:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=HOkGV9ZQq1hEjxBKXjNAGGrru8Hs
+        mXQHDos4mfRW9KI=; b=T3Vy3AZGIYU0yk4ZbnUQcLa/vLg21UrdmxMnZ/FTVyw4
+        2WgDdpym5hAhaED2RYGMAuHcexcEH1VoZnDtIW42Fyid46pOL7oudu4KvYRy4ray
+        PxEqwZ02dB9eMU4EQNEV28+MaH6RDzNNB1uNXHZSQYJWL+MiMYJXlKyJOlGm9Fk=
+Received: (qmail 3009713 invoked from network); 12 May 2020 18:27:23 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 18:27:23 +0200
+X-UD-Smtp-Session: l3s3148p1@+bc78HWlZsggAwDPXw2aAE67cgFBY+HL
+Date:   Tue, 12 May 2020 18:27:23 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] power: supply: bq24190_charger: convert to use
+ i2c_new_client_device()
+Message-ID: <20200512162723.GI13516@ninjato>
+References: <20200326210954.12931-1-wsa+renesas@sang-engineering.com>
+ <20200326210954.12931-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-11-daniel.vetter@ffwll.ch> <879b127e-2180-bc59-f522-252416a7ac01@amd.com>
- <CAKMK7uF1c3R7DTsvRaBfzRVAx03Z+AiUnqdAzP=mt4d=KsoEgg@mail.gmail.com>
-In-Reply-To: <CAKMK7uF1c3R7DTsvRaBfzRVAx03Z+AiUnqdAzP=mt4d=KsoEgg@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 12 May 2020 18:27:03 +0200
-Message-ID: <CAKMK7uGUBqcwo56p3f+8B=ntvuYZ8WtKaFxAPJ_D=H7qdDsGqQ@mail.gmail.com>
-Subject: Re: [RFC 10/17] drm/amdgpu: s/GFP_KERNEL/GFP_ATOMIC in scheduler code
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lqaZmxkhekPBfBzr"
+Content-Disposition: inline
+In-Reply-To: <20200326210954.12931-2-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 6:20 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrot=
-e:
->
-> On Tue, May 12, 2020 at 5:56 PM Christian K=C3=B6nig
-> <christian.koenig@amd.com> wrote:
-> >
-> > Hui what? Of hand that doesn't looks correct to me.
->
-> It's not GFP_ATOMIC, it's just that GFP_ATOMIC is the only shotgun we
-> have to avoid direct reclaim. And direct reclaim might need to call
-> into your mmu notifier, which might need to wait on a fence, which is
-> never going to happen because your scheduler is stuck.
->
-> Note that all the explanations for the deadlocks and stuff I'm trying
-> to hunt here are in the other patches, the driver ones are more
-> informational, so I left these here rather bare-bones to shut up
-> lockdep so I can get through the entire driver and all major areas
-> (scheduler, reset, modeset code).
->
-> Now you can do something like GFP_NOFS, but the only reasons that
-> works is because the direct reclaim annotations
-> (fs_reclaim_acquire/release) only validates against __GFP_FS, and not
-> against any of the other flags. We should probably add some lockdep
-> annotations so that __GFP_RECLAIM is annotated against the
-> __mmu_notifier_invalidate_range_start_map lockdep map I've recently
-> added for mmu notifiers. End result (assuming I'm not mixing anything
-> up here, this is all rather tricky stuff): GFP_ATOMIC is the only kind
-> of memory allocation you can do.
->
-> > Why the heck should this be an atomic context? If that's correct
-> > allocating memory is the least of the problems we have.
->
-> It's not about atomic, it's !__GFP_RECLAIM. Which more or less is
-> GFP_ATOMIC. Correct fix is probably GFP_ATOMIC + a mempool for the
-> scheduler fixes so that if you can't allocate them for some reason,
-> you at least know that your scheduler should eventually retire retire
-> some of them, which you can then pick up from the mempool to guarantee
-> forward progress.
->
-> But I really didn't dig into details of the code, this was just a quick h=
-ack.
->
-> So sleeping and taking all kinds of locks (but not all, e.g.
-> dma_resv_lock and drm_modeset_lock are no-go) is still totally ok.
-> Just think
->
-> #define GFP_NO_DIRECT_RECLAIM GFP_ATOMIC
 
-Maybe slightly different take that's easier to understand: You've
-already made the observation that anything holding adev->notifier_lock
-isn't allowed to allocate memory (well GFP_ATOMIC is ok, like here).
+--lqaZmxkhekPBfBzr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Only thing I'm adding is that the situation is a lot worse. Plus the
-lockdep annotations to help us catch these issues.
--Daniel
+On Thu, Mar 26, 2020 at 10:09:54PM +0100, Wolfram Sang wrote:
+> Move away from the deprecated API in this comment.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> Cheers, Daniel
->
-> >
-> > Regards,
-> > Christian.
-> >
-> > Am 12.05.20 um 10:59 schrieb Daniel Vetter:
-> > > My dma-fence lockdep annotations caught an inversion because we
-> > > allocate memory where we really shouldn't:
-> > >
-> > >       kmem_cache_alloc+0x2b/0x6d0
-> > >       amdgpu_fence_emit+0x30/0x330 [amdgpu]
-> > >       amdgpu_ib_schedule+0x306/0x550 [amdgpu]
-> > >       amdgpu_job_run+0x10f/0x260 [amdgpu]
-> > >       drm_sched_main+0x1b9/0x490 [gpu_sched]
-> > >       kthread+0x12e/0x150
-> > >
-> > > Trouble right now is that lockdep only validates against GFP_FS, whic=
-h
-> > > would be good enough for shrinkers. But for mmu_notifiers we actually
-> > > need !GFP_ATOMIC, since they can be called from any page laundering,
-> > > even if GFP_NOFS or GFP_NOIO are set.
-> > >
-> > > I guess we should improve the lockdep annotations for
-> > > fs_reclaim_acquire/release.
-> > >
-> > > Ofc real fix is to properly preallocate this fence and stuff it into
-> > > the amdgpu job structure. But GFP_ATOMIC gets the lockdep splat out o=
-f
-> > > the way.
-> > >
-> > > v2: Two more allocations in scheduler paths.
-> > >
-> > > Frist one:
-> > >
-> > >       __kmalloc+0x58/0x720
-> > >       amdgpu_vmid_grab+0x100/0xca0 [amdgpu]
-> > >       amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-> > >       drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-> > >       drm_sched_main+0xf9/0x490 [gpu_sched]
-> > >
-> > > Second one:
-> > >
-> > >       kmem_cache_alloc+0x2b/0x6d0
-> > >       amdgpu_sync_fence+0x7e/0x110 [amdgpu]
-> > >       amdgpu_vmid_grab+0x86b/0xca0 [amdgpu]
-> > >       amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-> > >       drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-> > >       drm_sched_main+0xf9/0x490 [gpu_sched]
-> > >
-> > > Cc: linux-media@vger.kernel.org
-> > > Cc: linaro-mm-sig@lists.linaro.org
-> > > Cc: linux-rdma@vger.kernel.org
-> > > Cc: amd-gfx@lists.freedesktop.org
-> > > Cc: intel-gfx@lists.freedesktop.org
-> > > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > ---
-> > >   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 2 +-
-> > >   drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c   | 2 +-
-> > >   drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c  | 2 +-
-> > >   3 files changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/=
-drm/amd/amdgpu/amdgpu_fence.c
-> > > index d878fe7fee51..055b47241bb1 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-> > > @@ -143,7 +143,7 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, s=
-truct dma_fence **f,
-> > >       uint32_t seq;
-> > >       int r;
-> > >
-> > > -     fence =3D kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
-> > > +     fence =3D kmem_cache_alloc(amdgpu_fence_slab, GFP_ATOMIC);
-> > >       if (fence =3D=3D NULL)
-> > >               return -ENOMEM;
-> > >
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c b/drivers/gpu/dr=
-m/amd/amdgpu/amdgpu_ids.c
-> > > index fe92dcd94d4a..fdcd6659f5ad 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> > > @@ -208,7 +208,7 @@ static int amdgpu_vmid_grab_idle(struct amdgpu_vm=
- *vm,
-> > >       if (ring->vmid_wait && !dma_fence_is_signaled(ring->vmid_wait))
-> > >               return amdgpu_sync_fence(sync, ring->vmid_wait, false);
-> > >
-> > > -     fences =3D kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_K=
-ERNEL);
-> > > +     fences =3D kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_A=
-TOMIC);
-> > >       if (!fences)
-> > >               return -ENOMEM;
-> > >
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c b/drivers/gpu/d=
-rm/amd/amdgpu/amdgpu_sync.c
-> > > index b87ca171986a..330476cc0c86 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> > > @@ -168,7 +168,7 @@ int amdgpu_sync_fence(struct amdgpu_sync *sync, s=
-truct dma_fence *f,
-> > >       if (amdgpu_sync_add_later(sync, f, explicit))
-> > >               return 0;
-> > >
-> > > -     e =3D kmem_cache_alloc(amdgpu_sync_slab, GFP_KERNEL);
-> > > +     e =3D kmem_cache_alloc(amdgpu_sync_slab, GFP_ATOMIC);
-> > >       if (!e)
-> > >               return -ENOMEM;
-> > >
-> >
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Can we have this now so I can remove the old API in the next merge
+window?
 
+> ---
+>  drivers/power/supply/bq24190_charger.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/suppl=
+y/bq24190_charger.c
+> index 453d6332d43a..4540e913057f 100644
+> --- a/drivers/power/supply/bq24190_charger.c
+> +++ b/drivers/power/supply/bq24190_charger.c
+> @@ -673,7 +673,7 @@ static int bq24190_register_reset(struct bq24190_dev_=
+info *bdi)
+>  	 *   { .type =3D "bq24190", .addr =3D 0x6b, .properties =3D pe, .irq =
+=3D irq };
+>  	 * struct i2c_adapter ad =3D { ... };
+>  	 * i2c_add_adapter(&ad);
+> -	 * i2c_new_device(&ad, &bi);
+> +	 * i2c_new_client_device(&ad, &bi);
+>  	 */
+>  	if (device_property_read_bool(bdi->dev, "disable-reset"))
+>  		return 0;
+> --=20
+> 2.20.1
+>=20
 
+--lqaZmxkhekPBfBzr
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66zmsACgkQFA3kzBSg
+KbakUw//aWhElrgSTmvOdYqp/rtKFOvF1FbnmBJVqHt/1xHGHw3DgFru2UQIo7gW
+6Q5ByT4uW9ZcwKWVKXalKLeRfBr/QY5H30s33GwFFgzY6ky+V3p/oNoQWtPN5xMT
++1TrA1qXB/LojQQqWPBte+PQucQJqo2FdzNDyknmOlBUtbiTFiXvfOwUrnceAXOM
+XVNi2xk1r8YN2NtDQA+ZW1Vxlck2R54qMZczBGxdfEFoy8nvQBdbSN3KqXyZU7FJ
+Grspvsthjd/4mq+F4ZrgJV0w8NREf8LyUu+E5SJtK8gIqjvZWjcnSMTbB4TgWhM0
+MO4KSqp454euHg4MVHW0xIO7g9p/pyxq6LP21oB5o5Mgb9bVkrDYfjSyJ//F9VUa
+eVDgnMTzvrPowJIL5Tde5GGA3hD71PwJf8EGu7pj3x0+0vDUmh+Zd9IGkSv9zlYz
++k5U3YYnb1pIdkG53IeJTH7Td5ALatxZfzwsMLXTyzwNzUcL9Q9zWQFOVi23xfXs
+nVaavHOHS1Sit+kSvNekKD881aRgMEjhnO7bAtdNoR97MeqF3AXrHeM+Qwmpcoh3
+4qhUxFENZ4kz1zc3D9Z0ZpH7oMx7yyMNgHwrmBJY6Iw43gY3wBrIzttsiCKQRGvI
+N6lv0xH5NzBs6xLxbkKx+CEwQy/lURzjC+xbY5pwnPID4mWBwdU=
+=XYzx
+-----END PGP SIGNATURE-----
+
+--lqaZmxkhekPBfBzr--
