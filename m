@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E4DCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20587C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D22F205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED99E205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kIVnjQK1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uQqY9MZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgELRUw (ORCPT
+        id S1730686AbgELRU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
+        Tue, 12 May 2020 13:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgELRUr (ORCPT
+        with ESMTP id S1726031AbgELRUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:20:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0E9C061A0F;
-        Tue, 12 May 2020 10:20:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so10608416wru.0;
-        Tue, 12 May 2020 10:20:47 -0700 (PDT)
+        Tue, 12 May 2020 13:20:52 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8796AC05BD0A;
+        Tue, 12 May 2020 10:20:52 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id n5so9498567wmd.0;
+        Tue, 12 May 2020 10:20:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/fw4EsIwrMwPtxEV+OIPK3/PfvmehVKJ2UDr9HB0vNI=;
-        b=kIVnjQK1z4KoJOv/wvc3wvJpkE7DT284Hjg4bSGoJwi24FrxFDtWCCJuCFEBKyd378
-         Au3D9MXEVcC/U03ctdME+oxgArPxqYdzLhKUOrG9bh3W+hK0WrrP54lHwx7QSBCE1jaP
-         dKaWVUcIzlLv8XS28rjFbApkRzFAD0d2KV97/VEr/owvhitMB31Ksu7f86Flit3j/xHP
-         nA5QdhQI11JTCpbaLMBO9n8fO3nJZ8Oq5WfMh1i0c4QIJRB3K/Wh6MHYVVb4OJD0pa/9
-         HsS4uZ4j4aZgswjE3LOlDs3eYPt5Qb/mzKFC1B1wqS6j4Ynd518+v8vlPy3qqq3arQLM
-         JjTg==
+        bh=nNWIB3SxMirDe17PObpmwBC9LW76uoACAX+jPiSmZbc=;
+        b=uQqY9MZlOmOu8JZLD/vXjkgQdCcIqdKZpAPHj9OIkzOpgWdMmEz7eTXVlmBqlcl/K8
+         DM7Pu2ZyvXLeOeHwdXKfO2CYimAOZyINoDoPeRcMm9ZrbyAh8Nbl/egnvBU4uODjcxV2
+         xX6VaGqrD07n0wzZ74Q+IUXyHV5HyiCxh19UaZr2G98SIqY0mOZ4oy77e+WHaQJH8xWb
+         9uj47VXf/SBmYx4xcCHJR2ncw2gYVW+E/f2A/ioKBGWI2/CgGVyry03hIU6qlMLIkZgG
+         c0c+mCgU82RAODjv0xmYrD3zi29Y0m28vZhdJ9goViDeqv3Zn3d6NcsKTVGt1hjvmfEx
+         ePkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/fw4EsIwrMwPtxEV+OIPK3/PfvmehVKJ2UDr9HB0vNI=;
-        b=KTO3QwcARnAR+Id9lAQd3jciKsEr7S05xxfjDv8ed/wk4JeOQbranvB5SZbJ+r8Pzq
-         sC78k47J/Oiq2tWdqsT+MqSl1h60FWwCOIwEuL9KkCO/L4rRwpZLUiah+n9pHm2r0L3K
-         OJzH3el1vaXr/h9d4ZCtgw25DeIen0M1Pqj8rRkWSDZXaCYOTkgj4p+Pf1m0VNKVzbGS
-         Eikhu91m0Ry+DrhDlRyMkL11jlO6D2fFfmRvqrEtnwLEESkqFdOj6ZspRh3kT4myrcKU
-         1ngdW2SmOuNqgSuezct1MQkPLd0uLvsQ9VXO4PsbnU+ToVgFD1QbxZRW9SCDqBu6ndR/
-         kC9w==
-X-Gm-Message-State: AGi0PuYAyUB9LlhECtXWzkw/Da+qEMbRXxiKgbAjpTciJmKHrqhKgRli
-        VfnHtJ7EDCMEQ+RFaeuRGk4=
-X-Google-Smtp-Source: APiQypKF8lYICldbP0tmbeo9fFtbiGgoUpGF7n+9fdt3ISeRr0mx+MI8NPBg7MSS/DqR25xv6fpO1A==
-X-Received: by 2002:adf:e751:: with SMTP id c17mr27603174wrn.351.1589304046278;
-        Tue, 12 May 2020 10:20:46 -0700 (PDT)
+        bh=nNWIB3SxMirDe17PObpmwBC9LW76uoACAX+jPiSmZbc=;
+        b=kqsCPMlK37wVBS7bIDyaih741hXOAeY8zrah+U5Ewj2wHypgQpx50SSnhRmsv8BdKV
+         bbGv5maZ6YxAoDG1HEwqC+21vUhYMKqdR/sjxmJ9Sdo2nRyW0VUU2gfN0Fqm/sjl3GDR
+         fk483+KrFTUK7DDau4S30U2PZIupkTn2BjKDqAKqSbMZ9vDfA+sd2R+MCpjGM0tlAkgT
+         bbrCFXBHjpObJMbups8Rd52q/sZ+YO2uLrLM7VrB1QAMGUOHyWHEPglO8Rv/XagL4Cm7
+         ACbxDcQ0O8DyUkbx/vhLct6Sy2m279WgvlmJ34ozrf09wFV/+rwa3XYORdYkJAkWXd5n
+         MiKQ==
+X-Gm-Message-State: AGi0PuZTBrPTKUpSsSO7ZbND5URpzq9trfp3slELJdNvNeW8nxyZrGcl
+        auxEBYxuJg/A8L+jYPFPMLShkHXd
+X-Google-Smtp-Source: APiQypISzprgoKGZXLf0wrvxMpSRa2eB3/56mjTbss0A6I98G9gn0eGVTbINv1g8thMXZy+W+2Mm9g==
+X-Received: by 2002:a05:600c:2219:: with SMTP id z25mr12085962wml.128.1589304051156;
+        Tue, 12 May 2020 10:20:51 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.45
+        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 10:20:45 -0700 (PDT)
+        Tue, 12 May 2020 10:20:50 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 net-next 02/15] net: dsa: tag_8021q: introduce a vid_is_dsa_8021q helper
-Date:   Tue, 12 May 2020 20:20:26 +0300
-Message-Id: <20200512172039.14136-3-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 06/15] net: dsa: sja1105: allow VLAN configuration from the bridge in all states
+Date:   Tue, 12 May 2020 20:20:30 +0300
+Message-Id: <20200512172039.14136-7-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512172039.14136-1-olteanv@gmail.com>
 References: <20200512172039.14136-1-olteanv@gmail.com>
@@ -77,66 +77,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This function returns a boolean denoting whether the VLAN passed as
-argument is part of the 1024-3071 range that the dsa_8021q tagging
-scheme uses.
+Let the DSA core call our .port_vlan_add methods every time the bridge
+layer requests so. We will deal internally with saving/restoring VLANs
+depending on our VLAN awareness state.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v3:
-None.
+Adapt to the second variable name change.
 
 Changes in v2:
-None.
+Adapt to variable name change.
 
- include/linux/dsa/8021q.h | 7 +++++++
- net/dsa/tag_8021q.c       | 7 +++++++
- 2 files changed, 14 insertions(+)
+ drivers/net/dsa/sja1105/sja1105_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/dsa/8021q.h b/include/linux/dsa/8021q.h
-index b8daaec0896e..ebc245ff838a 100644
---- a/include/linux/dsa/8021q.h
-+++ b/include/linux/dsa/8021q.h
-@@ -50,6 +50,8 @@ int dsa_8021q_rx_switch_id(u16 vid);
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index fb95130299b1..ca5a9baa0b2f 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -2350,6 +2350,8 @@ static int sja1105_setup(struct dsa_switch *ds)
  
- int dsa_8021q_rx_source_port(u16 vid);
+ 	ds->mtu_enforcement_ingress = true;
  
-+bool vid_is_dsa_8021q(u16 vid);
++	ds->configure_vlan_while_not_filtering = true;
 +
- #else
- 
- int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
-@@ -107,6 +109,11 @@ int dsa_8021q_rx_source_port(u16 vid)
- 	return 0;
- }
- 
-+bool vid_is_dsa_8021q(u16 vid)
-+{
-+	return false;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
- 
- #endif /* _NET_DSA_8021Q_H */
-diff --git a/net/dsa/tag_8021q.c b/net/dsa/tag_8021q.c
-index ff9c5bf64bda..4774ecd1f8fc 100644
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -93,6 +93,13 @@ int dsa_8021q_rx_source_port(u16 vid)
- }
- EXPORT_SYMBOL_GPL(dsa_8021q_rx_source_port);
- 
-+bool vid_is_dsa_8021q(u16 vid)
-+{
-+	return ((vid & DSA_8021Q_DIR_MASK) == DSA_8021Q_DIR_RX ||
-+		(vid & DSA_8021Q_DIR_MASK) == DSA_8021Q_DIR_TX);
-+}
-+EXPORT_SYMBOL_GPL(vid_is_dsa_8021q);
-+
- static int dsa_8021q_restore_pvid(struct dsa_switch *ds, int port)
- {
- 	struct bridge_vlan_info vinfo;
+ 	/* The DSA/switchdev model brings up switch ports in standalone mode by
+ 	 * default, and that means vlan_filtering is 0 since they're not under
+ 	 * a bridge, so it's safe to set up switch tagging at this time.
 -- 
 2.17.1
 
