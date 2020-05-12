@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADA8C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71FFC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6122492D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBE123126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgELWYN (ORCPT
+        id S1731923AbgELWYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        Tue, 12 May 2020 18:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731806AbgELWXh (ORCPT
+        by vger.kernel.org with ESMTP id S1731396AbgELWXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:23:37 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B39C061A0F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7683DC061A0E
         for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:37 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIl-00058n-R8; Wed, 13 May 2020 00:23:04 +0200
+        id 1jYdIN-0004nL-05; Wed, 13 May 2020 00:22:39 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4CD2D1006A1;
-        Wed, 13 May 2020 00:23:03 +0200 (CEST)
-Message-Id: <20200512213813.087919792@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1E783100BC4;
+        Wed, 13 May 2020 00:22:37 +0200 (CEST)
+Message-Id: <20200512213810.932706497@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:35 +0200
+Date:   Tue, 12 May 2020 23:01:14 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -52,13 +52,13 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Wei Liu <wei.liu@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-Subject: [patch V5 36/38] x86/entry/64: Remove TRACE_IRQS_*_DEBUG
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch V5 15/38] x86/entry: Change exit path of xen_failsafe_callback
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,99 +71,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+xen_failsafe_callback is invoked from XEN for two cases:
 
-Since INT3/#BP no longer runs on an IST, this workaround is no longer
-required.
+  1. Fault while reloading DS, ES, FS or GS
+  2. Fault while executing IRET
 
-Tested by running lockdep+ftrace as described in the initial commit:
+#1 retries the IRET after XEN has fixed up the segments.
+#2 injects a #GP which kills the task
 
-  5963e317b1e9 ("ftrace/x86: Do not change stacks in DEBUG when calling lockdep")
+For #1 there is no reason to go through the full exception return path
+because the tasks TIF state is still the same. So just going straight to
+the IRET path is good enough.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
 ---
- arch/x86/entry/entry_64.S |   48 ++--------------------------------------------
- 1 file changed, 3 insertions(+), 45 deletions(-)
+ arch/x86/entry/entry_32.S |    2 +-
+ arch/x86/entry/entry_64.S |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1352,7 +1352,7 @@ SYM_FUNC_START(xen_failsafe_callback)
+ 5:	pushl	$-1				/* orig_ax = -1 => not a system call */
+ 	SAVE_ALL
+ 	ENCODE_FRAME_POINTER
+-	jmp	ret_from_exception
++	jmp	handle_exception_return
+ 
+ .section .fixup, "ax"
+ 6:	xorl	%eax, %eax
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -68,44 +68,6 @@ SYM_CODE_END(native_usergs_sysret64)
- .endm
+@@ -1175,7 +1175,7 @@ SYM_CODE_START(xen_failsafe_callback)
+ 	pushq	$-1 /* orig_ax = -1 => not a system call */
+ 	PUSH_AND_CLEAR_REGS
+ 	ENCODE_FRAME_POINTER
+-	jmp	error_exit
++	jmp	error_return
+ SYM_CODE_END(xen_failsafe_callback)
+ #endif /* CONFIG_XEN_PV */
  
- /*
-- * When dynamic function tracer is enabled it will add a breakpoint
-- * to all locations that it is about to modify, sync CPUs, update
-- * all the code, sync CPUs, then remove the breakpoints. In this time
-- * if lockdep is enabled, it might jump back into the debug handler
-- * outside the updating of the IST protection. (TRACE_IRQS_ON/OFF).
-- *
-- * We need to change the IDT table before calling TRACE_IRQS_ON/OFF to
-- * make sure the stack pointer does not get reset back to the top
-- * of the debug stack, and instead just reuses the current stack.
-- */
--#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_TRACE_IRQFLAGS)
--
--.macro TRACE_IRQS_OFF_DEBUG
--	call	debug_stack_set_zero
--	TRACE_IRQS_OFF
--	call	debug_stack_reset
--.endm
--
--.macro TRACE_IRQS_ON_DEBUG
--	call	debug_stack_set_zero
--	TRACE_IRQS_ON
--	call	debug_stack_reset
--.endm
--
--.macro TRACE_IRQS_IRETQ_DEBUG
--	btl	$9, EFLAGS(%rsp)		/* interrupts off? */
--	jnc	1f
--	TRACE_IRQS_ON_DEBUG
--1:
--.endm
--
--#else
--# define TRACE_IRQS_OFF_DEBUG			TRACE_IRQS_OFF
--# define TRACE_IRQS_ON_DEBUG			TRACE_IRQS_ON
--# define TRACE_IRQS_IRETQ_DEBUG			TRACE_IRQS_IRETQ
--#endif
--
--/*
-  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
-  *
-  * This is the only entry point used for 64-bit system calls.  The
-@@ -500,11 +462,7 @@ SYM_CODE_START(\asmsym)
- 
- 	UNWIND_HINT_REGS
- 
--	.if \vector == X86_TRAP_DB
--		TRACE_IRQS_OFF_DEBUG
--	.else
--		TRACE_IRQS_OFF
--	.endif
-+	TRACE_IRQS_OFF
- 
- 	movq	%rsp, %rdi		/* pt_regs pointer */
- 
-@@ -924,7 +882,7 @@ SYM_CODE_END(paranoid_entry)
- SYM_CODE_START_LOCAL(paranoid_exit)
- 	UNWIND_HINT_REGS
- 	DISABLE_INTERRUPTS(CLBR_ANY)
--	TRACE_IRQS_OFF_DEBUG
-+	TRACE_IRQS_OFF
- 	testl	%ebx, %ebx			/* swapgs needed? */
- 	jnz	.Lparanoid_exit_no_swapgs
- 	TRACE_IRQS_IRETQ
-@@ -933,7 +891,7 @@ SYM_CODE_START_LOCAL(paranoid_exit)
- 	SWAPGS_UNSAFE_STACK
- 	jmp	restore_regs_and_return_to_kernel
- .Lparanoid_exit_no_swapgs:
--	TRACE_IRQS_IRETQ_DEBUG
-+	TRACE_IRQS_IRETQ
- 	/* Always restore stashed CR3 value (see paranoid_entry) */
- 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
- 	jmp restore_regs_and_return_to_kernel
 
