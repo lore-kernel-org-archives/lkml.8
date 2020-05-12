@@ -2,114 +2,123 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83032C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0469C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6054720674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF0D206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZ3kYYT0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgELK27 (ORCPT
+        id S1729480AbgELKaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:28:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57276 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgELK2t (ORCPT
+        Tue, 12 May 2020 06:30:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36303 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729405AbgELKaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:28:49 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jYS9X-0006TO-0M; Tue, 12 May 2020 10:28:47 +0000
-Date:   Tue, 12 May 2020 12:28:46 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the pidfd tree
-Message-ID: <20200512102846.alrmccyzou5rymnq@wittgenstein>
-References: <20200512201811.12480da0@canb.auug.org.au>
- <20200512102024.f7sycax5qzvxay7t@wittgenstein>
+        Tue, 12 May 2020 06:30:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589279404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qeMpxyuCBk1PKFh88yBlzyQNQ4vtmt44jKTGWUe0hIg=;
+        b=aZ3kYYT0Ex1Kpcnhyb1huyoGBQoVs3MdbyMWj1FcEb2eU7c5YrCjRppXry7K1+tKCuwzBF
+        cTObJwzYIoDKOzFl7k6iOccPhC2BI/w3RBAJgR+TppU6fjHJk6uR8T5NLJa9hjbFDAXhPw
+        OZa8WDLllT16Hm1Kx0CB520p/wY8loc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-BmrRBb8pO0yQS-nRqrmBhg-1; Tue, 12 May 2020 06:30:00 -0400
+X-MC-Unique: BmrRBb8pO0yQS-nRqrmBhg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6596835B40;
+        Tue, 12 May 2020 10:29:58 +0000 (UTC)
+Received: from krava (unknown [10.40.194.31])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7EF1C5D9DD;
+        Tue, 12 May 2020 10:29:52 +0000 (UTC)
+Date:   Tue, 12 May 2020 12:29:51 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
+        Andi Kleen <ak@linux.intel.com>, linuxarm@huawei.com,
+        LKML <linux-kernel@vger.kernel.org>, qiangqing.zhang@nxp.com,
+        robin.murphy@arm.com, zhangshaokun@hisilicon.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH RFC v3 02/12] perf jevents: Add support for system events
+ tables
+Message-ID: <20200512102951.GA3141346@krava>
+References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
+ <1588852671-61996-3-git-send-email-john.garry@huawei.com>
+ <20200511110137.GC2986380@krava>
+ <9f4ea413-325f-98b4-eb4c-e47aead4f455@huawei.com>
+ <CAP-5=fWHipkL6Uq1vMaz-51ETPWajofDXd6RTBMr00pcyooo_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512102024.f7sycax5qzvxay7t@wittgenstein>
+In-Reply-To: <CAP-5=fWHipkL6Uq1vMaz-51ETPWajofDXd6RTBMr00pcyooo_g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:20:24PM +0200, Christian Brauner wrote:
-> On Tue, May 12, 2020 at 08:18:11PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > After merging the pidfd tree, today's linux-next build (x86_64
-> > allnoconfig) failed like this:
-> > 
-> > fs/nsfs.c:232:6: error: redefinition of 'proc_ns_file'
-> >   232 | bool proc_ns_file(const struct file *file)
-> >       |      ^~~~~~~~~~~~
-> > In file included from fs/nsfs.c:6:
-> > include/linux/proc_fs.h:194:20: note: previous definition of 'proc_ns_file' was here
-> >   194 | static inline bool proc_ns_file(const struct file *file)
-> >       |                    ^~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   1e76b8ad203a ("nsproxy: attach to namespaces via pidfds")
-> > 
-> > I have applied the following hack for today:
+On Mon, May 11, 2020 at 09:21:00AM -0700, Ian Rogers wrote:
+
+SNIP
+
+> >  >> +           fprintf(outfp, "\n\t{\n\t\t.table = %s,\n\t},",
+> >  >> +                   sys_event_table->name);
+> >  >> +   }
+> >  >> +   fprintf(outfp, "\n\t{\n\t\t.table = 0\n\t},");
+> >  >
+> >  > this will add extra tabs:
+> >  >
+> >  >          {
+> >  >                  .table = 0
+> >  >          },
+> >  >
+> >  > while the rest of the file starts items without any indent
+> >  >
+> >
+> > I'll ensure the indent is the same.
+> >
+> > BTW, is there anything to be said for removing the empty map feature
+> > (and always breaking the perf build instead)? I guess that it was just
+> > an early feature for dealing with unstable JSONs.
 > 
-> Thanks for spotting this. I'll fix this now.
+> +1
+> I'd very much like it if JSON parse errors and the like didn't result
+> in an empty map but failed the build. I think ideally we could also
 
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index acfd5012db4e..592a6e47b235 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -70,7 +70,7 @@ struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
-                int (*show)(struct seq_file *, void *), void *data);
- #define proc_create_single(name, mode, parent, show) \
-        proc_create_single_data(name, mode, parent, show, NULL)
--
-+
- extern struct proc_dir_entry *proc_create_data(const char *, umode_t,
-                                               struct proc_dir_entry *,
-                                               const struct proc_ops *,
-@@ -104,7 +104,6 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
-                                                    proc_write_t write,
-                                                    void *data);
- extern struct pid *tgid_pidfd_to_pid(const struct file *file);
--extern bool proc_ns_file(const struct file *file);
+yep, that seems like good approach to me
 
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- /*
-@@ -160,11 +159,6 @@ static inline struct pid *tgid_pidfd_to_pid(const struct file *file)
-        return ERR_PTR(-EBADF);
- }
+> validate metric expressions using expr.y. If we include expr.y into
+> jevents then is there any need to parse the metric expression at
+> runtime? Could we just generate C code from jevents with a list of
+> events (aka ids) for programming and a dedicated print function for
+> each metric. The events would still be symbolic and checked at
+> runtime, but the expressions being C code could yield compile time
+> errors.
 
--static inline bool proc_ns_file(const struct file *file)
--{
--       return false;
--}
--
- #endif /* CONFIG_PROC_FS */
+nice idea.. not sure we are able to do that with just expr.y code,
+like to generate specific C code for metric, but I'd like to see
+patches for that ;-)
 
- struct net;
-@@ -185,4 +179,6 @@ static inline struct pid_namespace *proc_pid_ns(const struct inode *inode)
-        return inode->i_sb->s_fs_info;
- }
+but we would still need expr.y int perf code for custom user metrics,
+so it still needs to stay anyway
 
-+bool proc_ns_file(const struct file *file);
-+
- #endif /* _LINUX_PROC_FS_H */
+jirka
 
-should fix it cleanly.
-
-Thanks, I've added an allnoconfig to my local tests now!
-
-Christian
