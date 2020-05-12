@@ -2,296 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D8CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B4C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07EB320722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B4E20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl5x0Swg"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vQO8t08W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgELPvB (ORCPT
+        id S1730756AbgELPv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:51:01 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40239 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730671AbgELPvA (ORCPT
+        Tue, 12 May 2020 11:51:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbgELPv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:51:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589298658;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7gi6kZYZ50egtzLQVzSUEDOzwts0OWq/gx0o859o0Q4=;
-        b=cl5x0SwgTEI2SDeVnpLeWITv4zyIeuF9kHjIjPBnF4ffGVz7zehpLcA5TzEPQCAEEAG3IM
-        nKmeSN6Dlh/K/PnA//jhv4ICUpGG/vCjE0nmtiZha+vnWRnNMze+w3AECGSndUuIDmLpGG
-        84H1CNkXvUOWSHJ50WH1UjxbAby/63U=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-9xkFJo_tOICy_dbWF6UhAw-1; Tue, 12 May 2020 11:50:57 -0400
-X-MC-Unique: 9xkFJo_tOICy_dbWF6UhAw-1
-Received: by mail-wr1-f70.google.com with SMTP id z5so7083012wrt.17
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:50:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=7gi6kZYZ50egtzLQVzSUEDOzwts0OWq/gx0o859o0Q4=;
-        b=r4seCRZ+gOufgLRjjz+ErTYc2jXopGIL0OmGrvx/KX2wWqeD8Vz+VYvvxUhnrTIHbW
-         MfXN1iwqWUxaecNzZ/t+bawlHSdnaZDanojaVWXF+U9mLuSbHlA7Eb3UFZBG4L6DFw9D
-         m62uvz+SlFeCLhdIvRcM7tQ67VJbtsGJnSfzR96YSy381AQxu41w3dcoc7V5vzchhEz1
-         JGyA8CrC9qL/myi2f2gahbkmgNsIBDIXmp1cKasqe7wHMpzXWG4CcIYD2BX1G/PFNgmZ
-         DYpB/qojclV97bFt5W8Engt7ybrmqcaT6dDcNcoPdfsKtKOubNdcwK9XTdlpyPdryzq2
-         df5g==
-X-Gm-Message-State: AGi0PuZ5Iv7xUS08Akm4wN5pycFJeeIsbKNzKpBYcNR7zCTzmZQGCX5h
-        v1p9bJLW3gQltraF4eo4MSJx6sTuFrdYp54Xs6ll/N00tSsLTvlj+SRYIGGrjzyTfTBs6bAQDjk
-        CcwJn4OA8GIy7DnysNVwrlYgC
-X-Received: by 2002:a05:600c:295a:: with SMTP id n26mr41423857wmd.16.1589298655631;
-        Tue, 12 May 2020 08:50:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIhzwxU3CV/9sraEUzM4doFL8eHcxeWmlWToHs5tCU62DHAcBRhJ5AeY7spSDkw2c2/FqGH8w==
-X-Received: by 2002:a05:600c:295a:: with SMTP id n26mr41423819wmd.16.1589298655232;
-        Tue, 12 May 2020 08:50:55 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id b23sm29453744wmb.26.2020.05.12.08.50.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:50:54 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event delivery
-In-Reply-To: <20200512142411.GA138129@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com> <20200511164752.2158645-5-vkuznets@redhat.com> <20200512142411.GA138129@redhat.com>
-Date:   Tue, 12 May 2020 17:50:53 +0200
-Message-ID: <87lflxm9sy.fsf@vitty.brq.redhat.com>
+        Tue, 12 May 2020 11:51:28 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F475C061A0F;
+        Tue, 12 May 2020 08:51:28 -0700 (PDT)
+Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B3042304;
+        Tue, 12 May 2020 17:51:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589298684;
+        bh=mpszQGykHfgwUhnCRgKDFql++WspR5mgOFLQW4Jzs9g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vQO8t08Wa8tFztnRw16bS4jRVqaPd8jtrE9ZAZg7GqjC/QcV5bMomAw4IPRww+bPI
+         4mwKfNmN9Q+YiJQodkx3XQoTfu/cQ1l9KaKWol3kPlZSXMzhbbQoLxxXot2NrHcDn1
+         wh2HrBwrDMERk+rFtLJs4Ll2+kis6s0FirmwSGvw=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        sakari.ailus@iki.fi, Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH v9 0/4] MAX9286 GMSL Support (+RDACM20)
+Date:   Tue, 12 May 2020 16:51:01 +0100
+Message-Id: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+This series provides a pair of drivers for the GMSL cameras on the R-Car ADAS
+platforms.
 
-> On Mon, May 11, 2020 at 06:47:48PM +0200, Vitaly Kuznetsov wrote:
->> Concerns were expressed around APF delivery via synthetic #PF exception as
->> in some cases such delivery may collide with real page fault. For type 2
->> (page ready) notifications we can easily switch to using an interrupt
->> instead. Introduce new MSR_KVM_ASYNC_PF_INT mechanism and deprecate the
->> legacy one.
->> 
->> One notable difference between the two mechanisms is that interrupt may not
->> get handled immediately so whenever we would like to deliver next event
->> (regardless of its type) we must be sure the guest had read and cleared
->> previous event in the slot.
->> 
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  Documentation/virt/kvm/msr.rst       | 91 +++++++++++++++++---------
->>  arch/x86/include/asm/kvm_host.h      |  4 +-
->>  arch/x86/include/uapi/asm/kvm_para.h |  6 ++
->>  arch/x86/kvm/x86.c                   | 95 ++++++++++++++++++++--------
->>  4 files changed, 140 insertions(+), 56 deletions(-)
->> 
->> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
->> index 33892036672d..f988a36f226a 100644
->> --- a/Documentation/virt/kvm/msr.rst
->> +++ b/Documentation/virt/kvm/msr.rst
->> @@ -190,35 +190,54 @@ MSR_KVM_ASYNC_PF_EN:
->>  	0x4b564d02
->>  
->>  data:
->> -	Bits 63-6 hold 64-byte aligned physical address of a
->> -	64 byte memory area which must be in guest RAM and must be
->> -	zeroed. Bits 5-3 are reserved and should be zero. Bit 0 is 1
->> -	when asynchronous page faults are enabled on the vcpu 0 when
->> -	disabled. Bit 1 is 1 if asynchronous page faults can be injected
->> -	when vcpu is in cpl == 0. Bit 2 is 1 if asynchronous page faults
->> -	are delivered to L1 as #PF vmexits.  Bit 2 can be set only if
->> -	KVM_FEATURE_ASYNC_PF_VMEXIT is present in CPUID.
->> -
->> -	First 4 byte of 64 byte memory location will be written to by
->> -	the hypervisor at the time of asynchronous page fault (APF)
->> -	injection to indicate type of asynchronous page fault. Value
->> -	of 1 means that the page referred to by the page fault is not
->> -	present. Value 2 means that the page is now available. Disabling
->> -	interrupt inhibits APFs. Guest must not enable interrupt
->> -	before the reason is read, or it may be overwritten by another
->> -	APF. Since APF uses the same exception vector as regular page
->> -	fault guest must reset the reason to 0 before it does
->> -	something that can generate normal page fault.  If during page
->> -	fault APF reason is 0 it means that this is regular page
->> -	fault.
->> -
->> -	During delivery of type 1 APF cr2 contains a token that will
->> -	be used to notify a guest when missing page becomes
->> -	available. When page becomes available type 2 APF is sent with
->> -	cr2 set to the token associated with the page. There is special
->> -	kind of token 0xffffffff which tells vcpu that it should wake
->> -	up all processes waiting for APFs and no individual type 2 APFs
->> -	will be sent.
->> +	Asynchronous page fault (APF) control MSR.
->> +
->> +	Bits 63-6 hold 64-byte aligned physical address of a 64 byte memory area
->> +	which must be in guest RAM and must be zeroed. This memory is expected
->> +	to hold a copy of the following structure::
->> +
->> +	  struct kvm_vcpu_pv_apf_data {
->> +		__u32 reason;
->> +		__u32 pageready_token;
->> +		__u8 pad[56];
->> +		__u32 enabled;
->> +	  };
->> +
->> +	Bits 5-4 of the MSR are reserved and should be zero. Bit 0 is set to 1
->> +	when asynchronous page faults are enabled on the vcpu, 0 when disabled.
->> +	Bit 1 is 1 if asynchronous page faults can be injected when vcpu is in
->> +	cpl == 0. Bit 2 is 1 if asynchronous page faults are delivered to L1 as
->> +	#PF vmexits.  Bit 2 can be set only if KVM_FEATURE_ASYNC_PF_VMEXIT is
->> +	present in CPUID. Bit 3 enables interrupt based delivery of type 2
->> +	(page present) events.
->
-> Hi Vitaly,
->
-> "Bit 3 enables interrupt based delivery of type 2 events". So one has to
-> opt in to enable it. If this bit is 0, we will continue to deliver
-> page ready events using #PF? This probably will be needed to ensure
-> backward compatibility also.
->
+These drivers originate from Cogent Embedded, and have been refactored to split
+the MAX9286 away from the RDACM20 drivers which were once very tightly coupled.
 
-No, as Paolo suggested we don't enable the mechanism at all if bit3 is
-0. Legacy (unaware) guests will think that they've enabled the mechanism
-but it won't work, they won't see any APF notifications.
+The MAX9286 is capable of capturing up to 4 streams simultaneously, and while
+the V4L2-Multiplexed streams series is not available, this works purely on the
+assumption that the receiver will correctly map each of the 4 VCs to separate
+video nodes, as the RCar-VIN does.
 
->> +
->> +	First 4 byte of 64 byte memory location ('reason') will be written to
->> +	by the hypervisor at the time APF type 1 (page not present) injection.
->> +	The only possible values are '0' and '1'.
->
-> What do "reason" values "0" and "1" signify?
->
-> Previously this value could be 1 for PAGE_NOT_PRESENT and 2 for
-> PAGE_READY. So looks like we took away reason "PAGE_READY" because it will
-> be delivered using interrupts.
->
-> But that seems like an opt in. If that's the case, then we should still
-> retain PAGE_READY reason. If we are getting rid of page_ready using
-> #PF, then interrupt based deliver should not be optional. What am I
-> missing.
+This driver along with a camera driver for the RDACM20 and the
+associated platform support for the Renesas R-Car Salvator-X, and the Eagle-V3M
+can be found at:
 
-It is not optional now :-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/kbingham/rcar.git gmsl/v9
 
->
-> Also previous text had following line.
->
-> "Guest must not enable interrupt before the reason is read, or it may be
->  overwritten by another APF".
->
-> So this is not a requirement anymore?
->
+This latest v9 brings in a few minor comments from v8, and has been
+successfully tested to capture from all 4 inputs simultaneously.
 
-It still stands for type 1 (page not present) events.
+We're very much hoping that we can aim to get the max9286 into the next
+merge-window. Please let us know if there are any issues blocking this.
 
->> Type 1 events are currently
->> +	always delivered as synthetic #PF exception. During delivery of type 1
->> +	APF CR2 register contains a token that will be used to notify the guest
->> +	when missing page becomes available. Guest is supposed to write '0' to
->> +	the location when it is done handling type 1 event so the next one can
->> +	be delivered.
->> +
->> +	Note, since APF type 1 uses the same exception vector as regular page
->> +	fault, guest must reset the reason to '0' before it does something that
->> +	can generate normal page fault. If during a page fault APF reason is '0'
->> +	it means that this is regular page fault.
->> +
->> +	Bytes 5-7 of 64 byte memory location ('pageready_token') will be written
->> +	to by the hypervisor at the time of type 2 (page ready) event injection.
->> +	The content of these bytes is a token which was previously delivered as
->> +	type 1 event. The event indicates the page in now available. Guest is
->> +	supposed to write '0' to the location when it is done handling type 2
->> +	event so the next one can be delivered. MSR_KVM_ASYNC_PF_INT MSR
->> +	specifying the interrupt vector for type 2 APF delivery needs to be
->> +	written to before enabling APF mechanism in MSR_KVM_ASYNC_PF_EN.
->
-> What is supposed to be value of "reason" field for type2 events. I
-> had liked previous values "KVM_PV_REASON_PAGE_READY" and
-> "KVM_PV_REASON_PAGE_NOT_PRESENT". Name itself made it plenty clear, what
-> it means. Also it allowed for easy extension where this protocol could
-> be extended to deliver other "reasons", like error.
->
-> So if we are using a common structure "kvm_vcpu_pv_apf_data" to deliver
-> type1 and type2 events, to me it makes sense to retain existing
-> KVM_PV_REASON_PAGE_READY and KVM_PV_REASON_PAGE_NOT_PRESENT. Just that
-> in new scheme of things, KVM_PV_REASON_PAGE_NOT_PRESENT will be delivered
-> using #PF (and later possibly using #VE) and KVM_PV_REASON_PAGE_READY
-> will be delivered using interrupt.
+Jacopo Mondi (2):
+  dt-bindings: media: i2c: Add bindings for IMI RDACM2x
+  media: i2c: Add RDACM20 driver
 
-We use different fields for page-not-present and page-ready events so
-there is no intersection. If we start setting KVM_PV_REASON_PAGE_READY
-to 'reason' we may accidentally destroy a 'page-not-present' event.
+Kieran Bingham (1):
+  media: i2c: Add MAX9286 driver
 
-With this patchset we have two completely separate channels:
-1) Page-not-present goes through #PF and 'reason' in struct
-kvm_vcpu_pv_apf_data.
-2) Page-ready goes through interrupt and 'pageready_token' in the same
-kvm_vcpu_pv_apf_data.
+Laurent Pinchart (1):
+  dt-bindings: media: i2c: Add bindings for Maxim Integrated MAX9286
 
->
->> +
->> +	Note, previously, type 2 (page present) events were delivered via the
->> +	same #PF exception as type 1 (page not present) events but this is
->> +	now deprecated.
->
->> If bit 3 (interrupt based delivery) is not set APF events are not delivered.
->
-> So all the old guests which were getting async pf will suddenly find
-> that async pf does not work anymore (after hypervisor update). And
-> some of them might report it as performance issue (if there were any
-> performance benefits to be had with async pf).
-
-We still do APF_HALT but generally yes, there might be some performance
-implications. My RFC was preserving #PF path but the suggestion was to
-retire it completely. (and I kinda like it because it makes a lot of
-code go away)
-
->
-> [..]
->>  
->>  bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
->>  {
->> -	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
->> +	if (!kvm_pv_async_pf_enabled(vcpu))
->>  		return true;
->
-> What does above mean. If async pf is not enabled, then it returns true,
-> implying one can inject async page present. But if async pf is not
-> enabled, there is no need to inject these events.
-
-AFAIU this is a protection agains guest suddenly disabling APF
-mechanism. What do we do with all the 'page ready' events after, we
-can't deliver them anymore. So we just eat them (hoping guest will
-unfreeze all processes on its own before disabling the mechanism).
-
-It is the existing logic, my patch doesn't change it.
-
-Thanks for the review!
+ .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  |  159 ++
+ .../bindings/media/i2c/maxim,max9286.yaml     |  287 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ MAINTAINERS                                   |   22 +
+ drivers/media/i2c/Kconfig                     |   26 +
+ drivers/media/i2c/Makefile                    |    3 +
+ drivers/media/i2c/max9271.c                   |  341 +++++
+ drivers/media/i2c/max9271.h                   |  224 +++
+ drivers/media/i2c/max9286.c                   | 1332 +++++++++++++++++
+ drivers/media/i2c/rdacm20.c                   |  667 +++++++++
+ 10 files changed, 3063 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+ create mode 100644 drivers/media/i2c/max9271.c
+ create mode 100644 drivers/media/i2c/max9271.h
+ create mode 100644 drivers/media/i2c/max9286.c
+ create mode 100644 drivers/media/i2c/rdacm20.c
 
 -- 
-Vitaly
+2.25.1
 
