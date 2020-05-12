@@ -2,173 +2,152 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382E6C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A54C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1182920736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589259851;
-	bh=XzzxC9oxbkCX5FFHqkg4BlTu+wzPSYPETPZqapg1zek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kTtRzYHTfrd3cUCszHO/cHiOfsW5D4o2JHGIThFmAZyimI9RLVJHsUiDaS8wGKPSm
-	 oBy0yqRMAM+4lk9QMuGBLidkpMK47mxxLCWY7Bfq8YheXR1QFo6TbcL02R+6yrL63V
-	 ucsub+bXtyc2b/euHLwYsWxqbz1IfLTjw837NX6o=
+	by mail.kernel.org (Postfix) with ESMTP id 63B0520769
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mv1RFNN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgELFEK (ORCPT
+        id S1728710AbgELFG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:04:10 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34031 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgELFEJ (ORCPT
+        Tue, 12 May 2020 01:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725814AbgELFG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:04:09 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so5609916pgm.1;
-        Mon, 11 May 2020 22:04:07 -0700 (PDT)
+        Tue, 12 May 2020 01:06:27 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069F5C061A0C;
+        Mon, 11 May 2020 22:06:25 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t16so4863903plo.7;
+        Mon, 11 May 2020 22:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TuFwHRptP2jx0mxGuLs4rYfZbAlEVBTR8uJy3i2eUzA=;
+        b=mv1RFNN1DSCilavRnZQAhady427j3CVcCenk3mBQgCkNz8VbqqhDgoWvYIBJSbDBea
+         EvHCIRnnzwAIlHX5gIOG3bK7sUb6hHeDgXRrUrpyIDS5Ko+M+vrk/mNRqb/dzuVymkHL
+         Jt50jXWIRqaSrv9EVQebLW1/YoF5tXmRlyXNkzZVniwnJDcQBMt2A1F1OdL8kmG4JbF1
+         88A4BkeW6V67xZND0vCYXBR8ajSF13j+4HwDdF4Y3U80D7IEW7CHt914MJ2IzOI6f3hi
+         VMybEpxTo+Hu/ZQ0dxUnUYFfJxLXiiBg8sw3QjQ0kEKRY/7OhjUefrsa7lWMVH4tPKnr
+         aYmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cz5uJvmf44/0ZOLjV3CMvvxnEdKl05Nmr0md8L6llSk=;
-        b=iMasxPHYRmMaAURLuuX5IQxpVYJuztw8Z/5voFhj3nzGTk7kKQrmRXut6Arx2NcL3X
-         YdgyVhPybcS8ejkvMErj6FpCerxIJBcpW22K9lCwTl+dK88GVtut20gf5McLsiyYQPLX
-         Pw7ULT2OynGyd2T9wvS9P9HEvPh0PKsYEpdfTKir8NIdGm5Ql8yN1WFLS5e9dXL5wcrn
-         NXzTwsSalC6I2BFkg4QAhqa5bOU3yXQko75ZX6X5vJL9oQntJt0y43cXZumgyJMlQcYo
-         aSj68xANHKojxUFapdVXMH/3uTvDVOMYYQP2mB6bm+fy/ELyjKGn5mcYjqkYnaV4JF87
-         fZpg==
-X-Gm-Message-State: AGi0PubUA/NcFi2q3USv0/TnWR7t6Rvrl28xwUlz7jDHyhVI5Cix22QX
-        iDP60ga7wGa2b8rAV1FM6tY=
-X-Google-Smtp-Source: APiQypKM8AZUFXrolneHuvBY2Ff6Mgy4pOXL3DP2Q0nbnOPHZElOLuzNFzthXFSSXqVbvBukSvJxbg==
-X-Received: by 2002:a63:e809:: with SMTP id s9mr17773796pgh.191.1589259847387;
-        Mon, 11 May 2020 22:04:07 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y29sm11054188pfq.162.2020.05.11.22.04.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 22:04:06 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5DB2340E88; Tue, 12 May 2020 05:04:05 +0000 (UTC)
-Date:   Tue, 12 May 2020 05:04:05 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Tso Ted <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, keescook@chromium.org,
-        yzaikin@google.com
-Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
- kernel.tainted and taint the kernel with TAINT_USER on writes
-Message-ID: <20200512050405.GY11244@42.do-not-panic.com>
-References: <20200511215904.719257-1-aquini@redhat.com>
- <20200511231045.GV11244@42.do-not-panic.com>
- <20200511235914.GF367616@optiplex-lnx>
- <20200512001702.GW11244@42.do-not-panic.com>
- <20200512010313.GA725253@optiplex-lnx>
+        bh=TuFwHRptP2jx0mxGuLs4rYfZbAlEVBTR8uJy3i2eUzA=;
+        b=kjTD+qh/wo0PIC0Lzt2VpGdoMAMl7TKpBZIxaxn2+yc47SIoaSSZ0O4Vq+rYy6Uy75
+         nwACog+0v6fXMk/v2btfU48K0NjqyZY2cUQkqMIIgTmjIPjwo0b0kisdpICZSKrWYumW
+         5s4Wq+7xI+KJCLhUv3lvZxt2avuSIK4pTZ96VEbn545mcjhJ1ZxAkiI+r9gjnth35+IT
+         l5DHnDsdunp3g4nIdfwBbrVduOwMfDKEcc5BVtxzHZkUz5G67MqxJao+sli6NssJB255
+         GwRdptG8lNEJLvGaZlwPSG/wDYTTVDs+IIMP0uVT6aEkNnaYr0J83FogxUN1cC1kfxxn
+         iF6g==
+X-Gm-Message-State: AGi0PuZKAmi+QC18x5pzZMuCn5SdzwWq7rGXzIT/PQ5oXAKsTBGOWwMQ
+        ae7RMc47oYxJqF+LEBIG3A==
+X-Google-Smtp-Source: APiQypLJnFoYCp0H0Yhv8vaiQI3bTHwL/VtNXvGeqW5PDvBFLLVcrwBds2wgvhy1P7W1CxfsYEGNCA==
+X-Received: by 2002:a17:90a:589:: with SMTP id i9mr25748522pji.156.1589259985314;
+        Mon, 11 May 2020 22:06:25 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:cf2:a0bc:89fb:f860:f992:54ab])
+        by smtp.gmail.com with ESMTPSA id b9sm10616950pfp.12.2020.05.11.22.06.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 22:06:24 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Tue, 12 May 2020 10:36:16 +0530
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Qian Cai <cai@lca.pw>, Amol Grover <frextrite@gmail.com>,
+        syzbot <syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ ip6mr_get_table
+Message-ID: <20200512050616.GA9585@madhuparna-HP-Notebook>
+References: <00000000000003dc8f05a50b798e@google.com>
+ <CACT4Y+bzRtZdLSzHTp-kJZo4Qg7QctXNVEY9=kbAzfMck9XxAA@mail.gmail.com>
+ <DB6FF2E0-4605-40D1-B368-7D813518F6F7@lca.pw>
+ <20200507232402.GB2103@madhuparna-HP-Notebook>
+ <20200512112847.3b15d182@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512010313.GA725253@optiplex-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512112847.3b15d182@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:03:13PM -0400, Rafael Aquini wrote:
-> On Tue, May 12, 2020 at 12:17:03AM +0000, Luis Chamberlain wrote:
-> > On Mon, May 11, 2020 at 07:59:14PM -0400, Rafael Aquini wrote:
-> > > On Mon, May 11, 2020 at 11:10:45PM +0000, Luis Chamberlain wrote:
-> > > > On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
-> > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > > > index 8a176d8727a3..f0a4fb38ac62 100644
-> > > > > --- a/kernel/sysctl.c
-> > > > > +++ b/kernel/sysctl.c
-> > > > > @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
-> > > > >  		return err;
-> > > > >  
-> > > > >  	if (write) {
-> > > > > +		int i;
-> > > > > +
-> > > > > +		/*
-> > > > > +		 * Ignore user input that would make us committing
-> > > > > +		 * arbitrary invalid TAINT flags in the loop below.
-> > > > > +		 */
-> > > > > +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
-> > > > 
-> > > > This looks good but we don't pr_warn() of information lost on intention.
-> > > >
-> > > 
-> > > Are you thinking in sth like:
-> > > 
-> > > +               if (tmptaint > TAINT_FLAGS_MAX) {
-> > > +                       tmptaint &= TAINT_FLAGS_MAX;
-> > > +                       pr_warn("proc_taint: out-of-range invalid input ignored"
-> > > +                               " tainted_mask adjusted to 0x%x\n", tmptaint);
-> > > +               }
-> > > ?
-> > 
-> > Sure that would clarify this.
-> > 
-> > > > > +
-> > > > >  		/*
-> > > > >  		 * Poor man's atomic or. Not worth adding a primitive
-> > > > >  		 * to everyone's atomic.h for this
-> > > > >  		 */
-> > > > > -		int i;
-> > > > >  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
-> > > > >  			if ((tmptaint >> i) & 1)
-> > > > >  				add_taint(i, LOCKDEP_STILL_OK);
-> > > > >  		}
-> > > > > +
-> > > > > +		/*
-> > > > > +		 * Users with SYS_ADMIN capability can include any arbitrary
-> > > > > +		 * taint flag by writing to this interface. If that's the case,
-> > > > > +		 * we also need to mark the kernel "tainted by user".
-> > > > > +		 */
-> > > > > +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-> > > > 
-> > > > I'm in favor of this however I'd like to hear from Ted on if it meets
-> > > > the original intention. I would think he had a good reason not to add
-> > > > it here.
-> > > >
-> > > 
-> > > Fair enough. The impression I got by reading Ted's original commit
-> > > message is that the intent was to have TAINT_USER as the flag set 
-> > > via this interface, even though the code was allowing for any 
-> > > arbitrary value.
-> > 
-> > That wasn't my reading, it was that the user did something very odd
-> > with user input which we don't like as kernel developers, and it gives
-> > us a way to prove: hey you did something stupid, sorry but I cannot
-> > support your kernel panic.
-> > 
-> > > I think it's OK to let the user fiddle with
-> > > the flags, as it's been allowed since the introduction of
-> > > this interface, but we need to reflect that fact in the
-> > > tainting itself. Since TAINT_USER is not used anywhere,
-> > 
-> > I see users of TAINT_USER sprinkled around
+On Tue, May 12, 2020 at 11:28:47AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Fri, 8 May 2020 04:54:02 +0530 Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com> wrote:
 > >
+> > On Thu, May 07, 2020 at 08:50:55AM -0400, Qian Cai wrote:
+> > > 
+> > >   
+> > > > On May 7, 2020, at 5:32 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > 
+> > > > On Thu, May 7, 2020 at 11:26 AM syzbot
+> > > > <syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com> wrote:  
+> > > >> 
+> > > >> Hello,
+> > > >> 
+> > > >> syzbot found the following crash on:
+> > > >> 
+> > > >> HEAD commit:    6b43f715 Add linux-next specific files for 20200507
+> > > >> git tree:       linux-next
+> > > >> console output: https://syzkaller.appspot.com/x/log.txt?x=16f64370100000
+> > > >> kernel config:  https://syzkaller.appspot.com/x/.config?x=ef9b7a80b923f328
+> > > >> dashboard link: https://syzkaller.appspot.com/bug?extid=761cff389b454aa387d2
+> > > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > >> 
+> > > >> Unfortunately, I don't have any reproducer for this crash yet.
+> > > >> 
+> > > >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > >> Reported-by: syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com  
+> > > > 
+> > > > 
+> > > > +linux-next for linux-next boot breakage  
+> > > 
+> > > Amol, Madhuparna, Is either of you still working on this?
+> > >   
+> > > >> =============================
+> > > >> WARNING: suspicious RCU usage
+> > > >> 5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+> > > >> -----------------------------
+> > > >> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+> > > >>  
+> > I had some doubt in this one, I have already mailed the maintainers,
+> > waiting for their reply.
 > 
-> I meant in the original commit that introduced it
-> (commit 34f5a39899f3f3e815da64f48ddb72942d86c366). Sorry I
-> miscomunicated that.
-> 
-> In its current usage, it seems that the other places adding TAINT_USER
-> match with what is being proposed here: To signal when we have user 
-> fiddling with kernel / module parameters.
+> This is blocking syzbot testing of linux-next ... are we getting
+> anywhere?  Will a patch similar to the ipmr.c one help here?
+>
+Hi Stephen,
 
-drivers/base/regmap/regmap-debugfs.c requires *manual* code changes
-to compile / enable some knob. i915 complains about unsafe module
-params such as module_param_cb_unsafe() core_param_unsafe(). Then
-drivers/soundwire/cadence_master.c is for when a debugfs dangerous
-param was used.
+There are some discussions going on about the ipmr.c patch, I guess even
+ip6mr can be fixed in a similar way. Let me still confirm once.
 
-This still doesn't rule out the use of proc_taint() for testing taint,
-and that adding it may break some tests. So even though this would
-only affect some tests scripts, I can't say that adding this taint won't
-cause some headaches to someone. I wouldn't encourage its use on
-proc_taint() from what I can see so far.
+Thank you,
+Mahuparna
 
-  Luis
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
