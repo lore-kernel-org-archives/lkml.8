@@ -2,129 +2,122 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF76C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C467DC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB7F20769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:55:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sL2FkhX8"
+	by mail.kernel.org (Postfix) with ESMTP id A591820752
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgELGzN (ORCPT
+        id S1728952AbgELGzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725823AbgELGzN (ORCPT
+        Tue, 12 May 2020 02:55:20 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:47567 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgELGzR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:55:13 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EDCC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:55:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id v63so5924598pfb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:55:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=thG0NdAjl/JWYqpa7xMECyjYXc//YQa3pk594o/Fmy0=;
-        b=sL2FkhX8UO15y2kAB9YOFayWTQgfadxV+JnLDYuaUtuQruo+Ft+E+dGf9dmGePTcv4
-         tSm8DoukgPWphY5yZafHBXhjpMIcSu6iRIRnyCAf+51DjiGmBEg+0sGYn0jlnC0D0SmK
-         kxV3EoCqFpNJIOP8MSOd57mF76O5sVy63myXRjgkiD7hamjLldv/1sDN+lTIOtUvxY17
-         rAT25K9934EEoAdEeSa7qTKjUpgSyXFAWwm9HOc2X178YxSQhqkqBR6QJn+rTf9TgpVE
-         6vrVx94d4a0tlIgopJ34GxzcAgG/ONyK2+wExi22+vXMyQ719XZDVy9N2WfakX7bQHBK
-         Npjg==
+        Tue, 12 May 2020 02:55:17 -0400
+Received: by mail-io1-f72.google.com with SMTP id v23so11928025ioj.14
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:55:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=thG0NdAjl/JWYqpa7xMECyjYXc//YQa3pk594o/Fmy0=;
-        b=keqcl/1HqxN7JcuUvDJ5bUUFgfo+n8iZGQArEp60ziOI2SX6HfhYGJiaj213nXeOOR
-         uZD84enhtgGwwImZLL6m0rDBNtM2NK6c/Z+by36EydRI+rdANhDBl+NBqwI+OtoQgk3H
-         nHIWxvXQqoj7OwFVFjkZZ3X02z7nGRc5xn3N/nvoOgZPurnZTMOiSUS1H/Ec4Kp/TkQT
-         F+o645HKUdahGdg+PJgxfhEtstcFKAzIlECyUd9u21svHMIgH6Qr5VvnNRNHejEOFaij
-         AJo5HzWS3UBgSi3Sqoa9JPOhccoaVY6H1KdsLqEzaz6VwL9QpQz1on//F/GNJNQnCHay
-         Vh8A==
-X-Gm-Message-State: AGi0PuZ1ZQWs6+Gm8/+MOV2YCNdRUzAyDYynjKvE1CK2NOoyDD2eL1xt
-        v809/6Ncws4+Y8ns/4/K2klO
-X-Google-Smtp-Source: APiQypIwxrllsz0oRpxXUO8wWz8cLjRl8MQ2jCdKf2yGJpbDO0qUEcWyXtdwuSs8FUqqzflA7f+Jwg==
-X-Received: by 2002:a63:e843:: with SMTP id a3mr18433249pgk.383.1589266511099;
-        Mon, 11 May 2020 23:55:11 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
-        by smtp.gmail.com with ESMTPSA id w192sm11466011pff.126.2020.05.11.23.55.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 May 2020 23:55:10 -0700 (PDT)
-Date:   Tue, 12 May 2020 12:25:04 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org
-Subject: Re: [PATCH v1 4/5] bus: mhi: core: Do not process SYS_ERROR if RDDM
- is supported
-Message-ID: <20200512065504.GF4928@Mani-XPS-13-9360>
-References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
- <1589248989-23824-5-git-send-email-hemantk@codeaurora.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nYuxikRQd1y8JjIoZo7imSaZgwUVBRsszkZdjA7ikeA=;
+        b=Uwby7gX1ICqRy1g4Qmgd6cl0Zd4uEEEYPfM/BFaZE+R/VwHsG5ZoMQZQY3oorid1LO
+         mqrkquT5C3icmCQFVKPTcNR57SKVNvhWKPwaviGq8MKEgSrjIcdWel4GqilaiOjgeZ6y
+         fSdeFSDA1LjvicIf1hInzWcWFq/o0AOJMcy0Q5rhpsEkicWzJ+C2XarLABZ8co6N+xM6
+         xbhKyQpu7uR0fzVW/tFMQ9duJGEtf4ZjbTiTYwj1yaZDnPTay2DQmHHqPw3HsIsm9lQK
+         iRNefjuhtyQVpgCy3RuzFVnACplXOQb8xwDr7IvI3IAwwXdzwklaEkzsljxNYU1n1/Gt
+         Slyg==
+X-Gm-Message-State: AGi0PuYfZsxjx0108vgOP4RbquMAt+GKssF0MAcWZxEheAiMxJB5QDB/
+        1gJe51qz2EOrs/yWGA2fFVtCOXbIAWsLrq+XVW4RR1KXuSW6
+X-Google-Smtp-Source: APiQypJTfjl8Mevb0+zyALKxqVwVDOoXBPw6Xzhz5l0uVnLgmpdB6UQxigcW76BTbcAmcXQnzr5NoJqJxwVI8QHzZgBDc31kCc7p
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589248989-23824-5-git-send-email-hemantk@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a02:c6c5:: with SMTP id r5mr15913250jan.133.1589266516187;
+ Mon, 11 May 2020 23:55:16 -0700 (PDT)
+Date:   Mon, 11 May 2020 23:55:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000026a06e05a56df22f@google.com>
+Subject: general protection fault in nfsd_reply_cache_free_locked
+From:   syzbot <syzbot+a29df412692980277f9d@syzkaller.appspotmail.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 07:03:08PM -0700, Hemant Kumar wrote:
-> Devices that support RDDM do not require processing SYS_ERROR as it is
-> deemed redundant. Avoid SYS_ERROR processing if RDDM is supported by
-> the device.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Hello,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+syzbot found the following crash on:
 
-Thanks,
-Mani
+HEAD commit:    6e7f2eac Merge tag 'arm64-fixes' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14567034100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=a29df412692980277f9d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> ---
->  drivers/bus/mhi/core/main.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 467c0ba..1f622ce 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -397,9 +397,9 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
->  	}
->  	write_unlock_irq(&mhi_cntrl->pm_lock);
->  
-> -	/* If device in RDDM don't bother processing SYS error */
-> -	if (mhi_cntrl->ee == MHI_EE_RDDM) {
-> -		if (mhi_cntrl->ee != ee) {
-> +	 /* If device supports RDDM don't bother processing SYS error */
-> +	if (mhi_cntrl->rddm_image) {
-> +		if (mhi_cntrl->ee == MHI_EE_RDDM && mhi_cntrl->ee != ee) {
->  			mhi_cntrl->status_cb(mhi_cntrl, MHI_CB_EE_RDDM);
->  			wake_up_all(&mhi_cntrl->state_event);
->  		}
-> @@ -735,6 +735,11 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->  			{
->  				enum mhi_pm_state new_state;
->  
-> +				/* skip SYS_ERROR handling if RDDM supported */
-> +				if (mhi_cntrl->ee == MHI_EE_RDDM ||
-> +				    mhi_cntrl->rddm_image)
-> +					break;
-> +
->  				dev_dbg(dev, "System error detected\n");
->  				write_lock_irq(&mhi_cntrl->pm_lock);
->  				new_state = mhi_tryset_pm_state(mhi_cntrl,
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a29df412692980277f9d@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 PID: 27932 Comm: kworker/u4:4 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
+Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
+RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
+RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
+RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
+R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
+R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2c531000 CR3: 00000000685a2000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ nfsd_reply_cache_shutdown+0x150/0x350 fs/nfsd/nfscache.c:203
+ nfsd_exit_net+0x189/0x4c0 fs/nfsd/nfsctl.c:1504
+ ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+ cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
+ process_one_work+0x965/0x16a0 kernel/workqueue.c:2268
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2414
+ kthread+0x388/0x470 kernel/kthread.c:268
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Modules linked in:
+---[ end trace 54f06072fc6a1afa ]---
+RIP: 0010:nfsd_reply_cache_free_locked+0x2d/0x380 fs/nfsd/nfscache.c:122
+Code: 56 41 55 41 54 49 89 fc 55 48 89 f5 53 48 89 d3 e8 08 c0 2f ff 48 8d 7d 61 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 a7 02 00 00
+RSP: 0018:ffffc90008bb7b70 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888000026000 RCX: dffffc0000000000
+RDX: 0000000000000002 RSI: ffffffff82436ea8 RDI: 0000000000000011
+RBP: ffffffffffffffb0 R08: ffff888093792400 R09: fffffbfff185cf3e
+R10: ffffffff8c2e79ef R11: fffffbfff185cf3d R12: ffff888000100000
+R13: ffff888000100008 R14: 0000000000000000 R15: ffff888000100000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2c531000 CR3: 0000000094cfb000 CR4: 00000000001426f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
