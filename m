@@ -2,197 +2,135 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671EBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DFC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402AD2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A1B2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1IhbIyj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FacGXlpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgELQBe (ORCPT
+        id S1728690AbgELQCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:01:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54842 "EHLO
+        Tue, 12 May 2020 12:02:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52329 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726889AbgELQBe (ORCPT
+        with ESMTP id S1725987AbgELQCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:01:34 -0400
+        Tue, 12 May 2020 12:02:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589299292;
+        s=mimecast20190719; t=1589299320;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4myntAchWEpin/XtVoBTO15NuL8q/7dRSSUM/RxIEHk=;
-        b=g1IhbIyjGgNmyFIHmxl/5gOLhA0usa8cidK6eXuuRGiTdjfSqvfisi4hvR+vxuwaTLLl7Q
-        CahjlbaOMf+qMVb1T6/TtVET0aUVPhzF8KsePxN6ApXiRLu86h7XKWoRn4bECEbHKIkfrf
-        fJ2ePLL+8KQZM1YiqLw68I11ISyHWPE=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nL6n0gs44aSe+c4xP2RS6AmyhHuCE1lHHuLbFzSoNGo=;
+        b=FacGXlpVTipMCzw5E65rtqe8Cs412aCVT9+1x6ZyhwGaeF4J+CDpxmQpYFhDUGd5KTAnmd
+        M7lADnX1RG9DtF0el8rPIdqJ6xIDmLaye3K9L7AaQuFTHtEoR9Y3EeNM+RwP2D7za5xayx
+        lvG2pcaNoGBCzswl7E6E9o+xGs4h2rk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-MWSI24zBNwCNDxlHahR5lA-1; Tue, 12 May 2020 12:01:28 -0400
-X-MC-Unique: MWSI24zBNwCNDxlHahR5lA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-428-yGbGbgOGNEWr2HXPNBc0CA-1; Tue, 12 May 2020 12:01:58 -0400
+X-MC-Unique: yGbGbgOGNEWr2HXPNBc0CA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32943A0C11;
-        Tue, 12 May 2020 16:01:27 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E79F578B20;
-        Tue, 12 May 2020 16:01:24 +0000 (UTC)
-Date:   Tue, 12 May 2020 12:01:21 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Tso Ted <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, keescook@chromium.org,
-        yzaikin@google.com
-Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
- kernel.tainted and taint the kernel with TAINT_USER on writes
-Message-ID: <20200512160121.GH367616@optiplex-lnx>
-References: <20200511215904.719257-1-aquini@redhat.com>
- <20200511231045.GV11244@42.do-not-panic.com>
- <20200511235914.GF367616@optiplex-lnx>
- <20200512001702.GW11244@42.do-not-panic.com>
- <20200512010313.GA725253@optiplex-lnx>
- <20200512050405.GY11244@42.do-not-panic.com>
- <20200512144906.GG367616@optiplex-lnx>
- <20200512154654.GA11244@42.do-not-panic.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09855800687;
+        Tue, 12 May 2020 16:01:57 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A42EE60C05;
+        Tue, 12 May 2020 16:01:54 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment notifications
+Date:   Tue, 12 May 2020 18:01:53 +0200
+Message-Id: <20200512160153.134467-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200512154654.GA11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 03:46:54PM +0000, Luis Chamberlain wrote:
-> On Tue, May 12, 2020 at 10:49:06AM -0400, Rafael Aquini wrote:
-> > On Tue, May 12, 2020 at 05:04:05AM +0000, Luis Chamberlain wrote:
-> > > On Mon, May 11, 2020 at 09:03:13PM -0400, Rafael Aquini wrote:
-> > > > On Tue, May 12, 2020 at 12:17:03AM +0000, Luis Chamberlain wrote:
-> > > > > On Mon, May 11, 2020 at 07:59:14PM -0400, Rafael Aquini wrote:
-> > > > > > On Mon, May 11, 2020 at 11:10:45PM +0000, Luis Chamberlain wrote:
-> > > > > > > On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
-> > > > > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > > > > > > index 8a176d8727a3..f0a4fb38ac62 100644
-> > > > > > > > --- a/kernel/sysctl.c
-> > > > > > > > +++ b/kernel/sysctl.c
-> > > > > > > > @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
-> > > > > > > >  		return err;
-> > > > > > > >  
-> > > > > > > >  	if (write) {
-> > > > > > > > +		int i;
-> > > > > > > > +
-> > > > > > > > +		/*
-> > > > > > > > +		 * Ignore user input that would make us committing
-> > > > > > > > +		 * arbitrary invalid TAINT flags in the loop below.
-> > > > > > > > +		 */
-> > > > > > > > +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
-> > > > > > > 
-> > > > > > > This looks good but we don't pr_warn() of information lost on intention.
-> > > > > > >
-> > > > > > 
-> > > > > > Are you thinking in sth like:
-> > > > > > 
-> > > > > > +               if (tmptaint > TAINT_FLAGS_MAX) {
-> > > > > > +                       tmptaint &= TAINT_FLAGS_MAX;
-> > > > > > +                       pr_warn("proc_taint: out-of-range invalid input ignored"
-> > > > > > +                               " tainted_mask adjusted to 0x%x\n", tmptaint);
-> > > > > > +               }
-> > > > > > ?
-> > > > > 
-> > > > > Sure that would clarify this.
-> > > > > 
-> > > > > > > > +
-> > > > > > > >  		/*
-> > > > > > > >  		 * Poor man's atomic or. Not worth adding a primitive
-> > > > > > > >  		 * to everyone's atomic.h for this
-> > > > > > > >  		 */
-> > > > > > > > -		int i;
-> > > > > > > >  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
-> > > > > > > >  			if ((tmptaint >> i) & 1)
-> > > > > > > >  				add_taint(i, LOCKDEP_STILL_OK);
-> > > > > > > >  		}
-> > > > > > > > +
-> > > > > > > > +		/*
-> > > > > > > > +		 * Users with SYS_ADMIN capability can include any arbitrary
-> > > > > > > > +		 * taint flag by writing to this interface. If that's the case,
-> > > > > > > > +		 * we also need to mark the kernel "tainted by user".
-> > > > > > > > +		 */
-> > > > > > > > +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-> > > > > > > 
-> > > > > > > I'm in favor of this however I'd like to hear from Ted on if it meets
-> > > > > > > the original intention. I would think he had a good reason not to add
-> > > > > > > it here.
-> > > > > > >
-> > > > > > 
-> > > > > > Fair enough. The impression I got by reading Ted's original commit
-> > > > > > message is that the intent was to have TAINT_USER as the flag set 
-> > > > > > via this interface, even though the code was allowing for any 
-> > > > > > arbitrary value.
-> > > > > 
-> > > > > That wasn't my reading, it was that the user did something very odd
-> > > > > with user input which we don't like as kernel developers, and it gives
-> > > > > us a way to prove: hey you did something stupid, sorry but I cannot
-> > > > > support your kernel panic.
-> > > > > 
-> > > > > > I think it's OK to let the user fiddle with
-> > > > > > the flags, as it's been allowed since the introduction of
-> > > > > > this interface, but we need to reflect that fact in the
-> > > > > > tainting itself. Since TAINT_USER is not used anywhere,
-> > > > > 
-> > > > > I see users of TAINT_USER sprinkled around
-> > > > >
-> > > > 
-> > > > I meant in the original commit that introduced it
-> > > > (commit 34f5a39899f3f3e815da64f48ddb72942d86c366). Sorry I
-> > > > miscomunicated that.
-> > > > 
-> > > > In its current usage, it seems that the other places adding TAINT_USER
-> > > > match with what is being proposed here: To signal when we have user 
-> > > > fiddling with kernel / module parameters.
-> > > 
-> > > drivers/base/regmap/regmap-debugfs.c requires *manual* code changes
-> > > to compile / enable some knob. i915 complains about unsafe module
-> > > params such as module_param_cb_unsafe() core_param_unsafe(). Then
-> > > drivers/soundwire/cadence_master.c is for when a debugfs dangerous
-> > > param was used.
-> > > 
-> > > This still doesn't rule out the use of proc_taint() for testing taint,
-> > > and that adding it may break some tests. So even though this would
-> > > only affect some tests scripts, I can't say that adding this taint won't
-> > > cause some headaches to someone. I wouldn't encourage its use on
-> > > proc_taint() from what I can see so far.
-> > >
-> > 
-> > OK, I´ll repost without the hunk forcing the taint. If we eventually
-> > come to the conclusion that tainting in proc_taint() is the right thing
-> > to do, we can do that part of the change later.
-> 
-> Just add another taint, we have 64 bits and according to you we won't
-> ever run out. TAINT_CUSTOM or whatever.
->
+Errors during hibernation with reenlightenment notifications enabled were
+reported:
 
-I don't think this deserves a custom taint, and TAINT_USER should be the
-one to add here, as it clearly communicates what's being done at this
-point. If we cannot compromise on utilizing it, then lets just forget
-about forcing any other flag at this point. As per tracking which
-taint flags a user has forced via this interface, I do have another
-idea that I still have to iron out, but I'll propose it soon enough.
+ [   51.730435] PM: hibernation entry
+ [   51.737435] PM: Syncing filesystems ...
+ ...
+ [   54.102216] Disabling non-boot CPUs ...
+ [   54.106633] smpboot: CPU 1 is now offline
+ [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
+     write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
+     native_write_msr+0x4/0x20)
+ [   54.110006] Call Trace:
+ [   54.110006]  hv_cpu_die+0xd9/0xf0
+ ...
+
+Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
+other CPU when the CPU receiving them goes offline. Upon hibernation, there
+is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
+returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
+Disable the feature when cpumask_any_but() fails.
+
+Also, as we now disable reenlightenment notifications upon hibernation we
+need to restore them on resume. Check if hv_reenlightenment_cb was
+previously set and restore from hv_resume().
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index fd51bac11b46..acf76b466db6 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -226,10 +226,18 @@ static int hv_cpu_die(unsigned int cpu)
  
-> > Do you think we should use printk_ratelimited() in the ignore message,
-> > instead? 
-> 
-> No, that's for when there are many prints at the same time, you probably
-> want pr_warn_once().
-
-OK.
+ 	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+ 	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
+-		/* Reassign to some other online CPU */
++		/*
++		 * Reassign reenlightenment notifications to some other online
++		 * CPU or just disable the feature if there are no online CPUs
++		 * left (happens on hibernation).
++		 */
+ 		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+ 
+-		re_ctrl.target_vp = hv_vp_index[new_cpu];
++		if (new_cpu < nr_cpu_ids)
++			re_ctrl.target_vp = hv_vp_index[new_cpu];
++		else
++			re_ctrl.enabled = 0;
++
+ 		wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+ 	}
+ 
+@@ -293,6 +301,13 @@ static void hv_resume(void)
+ 
+ 	hv_hypercall_pg = hv_hypercall_pg_saved;
+ 	hv_hypercall_pg_saved = NULL;
++
++	/*
++	 * Reenlightenment notifications are disabled by hv_cpu_die(0),
++	 * reenable them here if hv_reenlightenment_cb was previously set.
++	 */
++	if (hv_reenlightenment_cb)
++		set_hv_tscchange_cb(hv_reenlightenment_cb);
+ }
+ 
+ /* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
+-- 
+2.25.4
 
