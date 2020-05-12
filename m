@@ -2,146 +2,141 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9B9C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C92C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430FC20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:39:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="nz+AJo7g"
+	by mail.kernel.org (Postfix) with ESMTP id 589A920575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589265658;
+	bh=bQMdQdnVPDvpxknl79QvpAcLjSL/PPXel8ZsZdUjAyo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Mcg3jdHXAuurytiEOiIw2Q+FZG/6z4bZHmezJq3SMuBrkndfMQGjsvF/7PEBy/Bri
+	 JkBJuD7mw1CvjnjJggv5JKV/p8phnkBAf7cLF2K/943UkyFDt7y+/6mlZZ4WL5ZCLb
+	 Pt5f4+TOQ0EdU3ODpRyfiwpH1y7YlFYhTqjTjOEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbgELGjG (ORCPT
+        id S1728793AbgELGk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:39:06 -0400
-Received: from mout.web.de ([217.72.192.78]:45575 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgELGjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:39:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1589265532;
-        bh=w1Yj9AltlGe368GUTzZ7ijrqNOUbDEF3Qjva24Q6WJI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=nz+AJo7gANfqQ31J3jz/XWNo62z7Fu+oc/qanZwCX12oqeuBgYWNdWz3SqD2yo8Rg
-         1k7cmO65A8QUBkwsqVZdXOv2A0S8JnnRgwkfLbJLbh6t7Lx/sCA/hHygILEtNgYzpL
-         jCaPoWagxPIQU9YFmkeAq69TWPG8oOgMGs+1/DKA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.36.232]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MmQcl-1iqqXF1ymP-00iUr7; Tue, 12
- May 2020 08:38:52 +0200
-Subject: Re: net/sonic: Fix some resource leaks in error handling paths
-To:     Finn Thain <fthain@telegraphics.com.au>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christophe Jaillet <christophe.jaillet@wanadoo.fr>
-References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
- <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
- <9d279f21-6172-5318-4e29-061277e82157@web.de>
- <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet>
- <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
- <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet>
- <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
- <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3fabce05-7da9-7daa-d92c-411369f35b4a@web.de>
-Date:   Tue, 12 May 2020 08:38:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 02:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgELGk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:40:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CDEC061A0C;
+        Mon, 11 May 2020 23:40:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u6so12261636ljl.6;
+        Mon, 11 May 2020 23:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=CvDFw3VxZkX78aA+MdfUy4a8VmJHp4z5s/fOMPEwqfQ=;
+        b=Bd33efnXE88VWqLM9bDrxn8uzAhETLqeNNnaUtoxd7tYE2HBkf4C3c1NamPswJcGD4
+         b40w77ZcdtFoJOJPA9M6JURDOFnFubs6oHOKKnAERMdmHnxcEaxr1L5jTPSzS+DKGF8B
+         HUzc7mnAnCZ9LcvcW3tOE7mT81ftX1kaG2+7+tKA5qC9oiWPED5qupwREMAF8HtfmN3z
+         stfFng5kQqvknayHKTO87Cit80dvR5RGogU6P88CHEDwPr03PZ5sGoxtAVA2RbyTcGAq
+         w9v5qFdLJW/qGLi+lAj8kl1WZCgP4nXJpDW1DC5wV7j1Pc6XAWhzkXOdLnMzL9zBvgaH
+         AZQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=CvDFw3VxZkX78aA+MdfUy4a8VmJHp4z5s/fOMPEwqfQ=;
+        b=H5hPy1jx6gnhQPlrU+4czF7Rwk1KK39ru1/zNGvP9cOGvJmmpHjtYyIX8t47OnqLkw
+         Vg5T0ackZv6UI5qbnZoR7xtkn4VxkrLhZ31smsaKXHv4TMEAqHVhhOQwUfYPf/HQETy5
+         DrtufyhmxgprAZQdKlARXAJycz4hKdwz8QxmKpaEwESD9x7qC6NvOXDM4iccpwItTxey
+         xGfPEvhGnvgQdmMoNZcIyAgp3UdW3Ewn5Bo2T+X25FxW2Vu/CpFMRVV3GXIuUoyamPdp
+         +UIdXj3hm5VE/99HpncJl6erGyRtuiwXPddleqVbjiDRV8/5IDVoHupEZWOsu/QlMA2r
+         LHaA==
+X-Gm-Message-State: AOAM530xDkdxVEsUHin0MLP6nFObK7LsxkZn1SN+ZnB0HE3DNcNsRDvg
+        PUNSTcpfkPT5u8s9d1x0a2E=
+X-Google-Smtp-Source: ABdhPJwMIxXKqZg9TJAoa+cxwCGsXoXtp+dvXK94pDmluoVg92qTksjGCWtkRhjO5mm2pvwfqHw7rQ==
+X-Received: by 2002:a2e:8944:: with SMTP id b4mr12748662ljk.84.1589265654887;
+        Mon, 11 May 2020 23:40:54 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r13sm9734148ljh.66.2020.05.11.23.40.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 23:40:53 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v2] usb: raw-gadget: fix gadget endpoint selection
+In-Reply-To: <20200509170843.GD2482887@kroah.com>
+References: <2f05fe9aa7e4bcb1bad3f6d11e48a411c901af68.1588197975.git.andreyknvl@google.com> <875zdabzs3.fsf@kernel.org> <CAAeHK+yxoYigM7uWC3cpKmCjgMLXQ1pT=MkJ7XQYCVRgZ-DdTQ@mail.gmail.com> <87zhahlenu.fsf@kernel.org> <20200509170843.GD2482887@kroah.com>
+Date:   Tue, 12 May 2020 09:40:49 +0300
+Message-ID: <87mu6d4pvy.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pCeNe6/ZfsXNuMeFLgFd8XMcEZxSQcMx/mz2KypmT/daBYHf1hP
- o7A+Bx1cIU4rOkWNctL8K9CsQvVtxwp1irXzPV5+/82p/Kif/ZZ4Ubpii1fmAlfc3g72cbr
- MWH7WpQ8Zhp+TVwx2aoLCCI99RTZ8PTg80pSFfecn26EWqAekzxDmaktaogRMndR+qmAkw8
- LDvUk2SP/VhdzLfaAC02Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J6PMyRMGBcA=:WWk3NSSMfuC5VNaFQndOFG
- NDkxHqV4ZDRvfS6e0ILqoSMqlGEDXod0UVyztw4ywHLOwrf5x1jiQDMMpylvtxgGuvgdC6CQb
- MtJQGXnjKgiJHVeiO8VJIA6UPtEHVsJ9TOknfEASGjjVLnUNEUb8JHfFFPY1yxtxjNqFbOb25
- 8qb4ZL6G11cprR954SEp44LBuzZosLBiMBk94PXWtIIH+7l53lvGILP6HpfQ8RVqdX59+Lron
- +/euH9v2VAlhDY34SSUn7JA9q+YgFTyQQVP9rCVC/PH1cVL9HeJrwsZpuJIe/g+TnzlmnNoH/
- dGGKqeuGXjXHkC93jMeQiXk+Hl6KDJPPvENt3JxydXVOs34ZYb1UoJB7Ex7sWTjVy4vyp0Ylz
- OP+nA0dzFK2059Opuh+0BYomACc3TG7zrPG/mLuAlEHKjh3yXcus+Wpgvm2MMFQ+NKT1oqAbM
- SKqB7JfvOsrRXFeGhYlmgtnNg8I7juDoliwQmdDXEzXjeaB6DlcvAyu763Omv4Jjiim8GlYA4
- 1wjfPWf48HFdF93WZ85BAMyW1nVdq5eTMkvW0wgivuEben3YfRvrdl86z7ETQZfqKd/o5jXv+
- k4vnxFnae7Cad+0onzTUF29X9vvFIJl7iIjzpSIQw/UNBli47+WAI7/cSk2WQIbt9KSeVuDbn
- fyGjmD7utooUo7Pt1GIQ3z2Vkmm971o1r4/27Ak3Gzszo0dn704Z+QG8xLdf/18+LRtbraJQx
- C6NE0fpxfdScNF1U9PHlyXnc/p9m4uRPcT37AWDR3zlxSTGogHTL91Y7HvuVtwsZd38dFfMI8
- fJlH6rMIaVsg3lrR8xWSK9FDnlFf5z3eVX4Er6IGCqFcmeOt9VVdDFtJu3xfmkJkOKqof/hqh
- NLfFKyP94Itfvasy0XGq5DbunMYLxKYru9XF/f5yVRv3u11DJhMqGMz0DX4Ld1HJcAMAGONUD
- ApSsIOy06EKhs31/2gJu4qXPFy2ariXfYq+1DkAObdvmchR+pe5+PuZAZLOlEm/43clLD9Fuy
- NzmdVx7l/4vzbHxeORCdCRrWOwyBIBYRReIzpG8pKdtP7STPs0Iy6e2CZbcI5hMM43zsz9YJU
- oJbiCGbrrsBv8760MgqEb6BAMKRq4ojeR3LdmiSk/sXJE2bN/EZFGCQCZMBwvBJ6UAN3c1iKG
- ilcq6LfjVgCzOR8+qEhIJ82qfAADwirTincqgHcQ4tBLZ3aoMaq+UHIiLeHleePG0UJ9T10eJ
- HZrGqwlmQiOviqODh
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Markus, if you were to write a patch to improve upon coding-style.rst,
-> who should review it?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-All involved contributors have got chances to provide constructive comment=
-s.
-I would be curious who will actually dare to contribute further ideas for =
-this area.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
+> On Sat, May 09, 2020 at 11:02:13AM +0300, Felipe Balbi wrote:
+>>=20
+>> Hi,
+>>=20
+>> Andrey Konovalov <andreyknvl@google.com> writes:
+>> >> here you're changing userspace ABI. Aren't we going to possibly break
+>> >> some existing applications?
+>> >
+>> > Hi Felipe,
+>> >
+>> >  I've been working on tests for Raw Gadget for the last few weeks [1],
+>> > which revealed a few problems with the interface. This isn't yet
+>> > included into any released kernel, so my hope that changing the ABI is
+>> > OK during the rc stage.
+>>=20
+>> Fair enough. If that's okay with Greg, it's okay with me, but then how
+>> do we include it into the -rc seen as it's not really a fix?
+>>=20
+>> Greg, are you okay with me including such large patches during the -rc?
+>> They essentially add new IOCTLs to the raw-gadget interface.
+>
+> Yes, as the driver only went in for -rc1, it's fine to add fixes like
+> this so late as we don't want to ship a -final with it in broken form.
 
-> If you are unable to write or review such a patch, how can you hope to
-> adjudicate compliance?
+Thanks, I'll prepare a pull request containing it.
 
-I can also try to achieve more improvements here to see how the available
-software documentation will evolve.
+cheers
 
-Regards,
-Markus
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl66RPEACgkQzL64meEa
+mQauvA//RClDtkgGG6+X7US8hr34DwyDpHe+viSSYdHCtCF0Wsjkd5q55u9PIwBu
+DHxZc7kOIwoMEWJaTyx8nb02zrMN1UeyEMzL6vhCuLKDXUn/SsmaujPh2whJlBBz
+zvp89pkxF/Sup2TwNQyA9KAaf5xmS5kUZAebXdOVxczicfa91pwYzY96NUp5OG32
+MNDZDVNlYzxxGbHvEdE9/azwGnPHwRBlWomvb/YnaUbwMG6+ZQicS9+bFxsp+TQx
+j4+1AzX1fj/YTS+fME3pUiFLsuOF2h6V3iLhm4RhFLJoZ8MQ2JqAtO7zd9PxjzUU
+ZSu3KyqQ3TswX/WGoSRBPw6gJX/RrP1Gmnu32okfXKsZeLl8XVbhDTHzTlyGQKB9
+NAakHCE7egZ4h1vK81aC4kVuvOBayPP6nbiAN1QNC6OeN2WXhvp2FXN8bd7/RDtp
+w4OEpWm3MGMAxlXic2GkJchUsYxEmQQ2rPE1xG/eGCc7vASbHjLOB28raH7EiDU+
+U0zJ8xpIpviX+Z07EWHeGWO99ENk45ZqRWu8L4jMPIhnc54NM7OBcDZTY3hhw2IH
+dQkL39KouhMFH8e2hGkHvn/vOBHNcCKE7Ofnb4mzxe8XB5zWEJVFja8iQy0XIt6p
+ql34MLf7ciYoAWHdWpbISmTcrCIlQAUgQHNf0EFTMeZwgCwvbNk=
+=3yqU
+-----END PGP SIGNATURE-----
+--=-=-=--
