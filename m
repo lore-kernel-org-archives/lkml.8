@@ -4,410 +4,305 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6A1C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9323BC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E930920784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F9120753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCCr3f1h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UEfD8pEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbgELX4T (ORCPT
+        id S1731737AbgELX5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:56:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50920 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELX4S (ORCPT
+        Tue, 12 May 2020 19:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELX5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:56:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CNrDeF040345;
-        Tue, 12 May 2020 23:56:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Jijn7JpvMQRc6JyN6/NzB5vbFWimLi00HrJyQfm67yQ=;
- b=nCCr3f1h9TZOrjGU+9bCiVVs2d9ntD334q2xKyrsfey6yIClBbiyeHBZ/NzOOxt4HVas
- gJhBJSMLeicTzIJlKh/fHrObJQQRoPPGeZl3toXrUW19EiGyYf12ajF+DnHzm5svuni8
- l5W2MnCvT/RRJ/hIaizNrrGZFtpnPBRdTxZrrew+jn/0JJc3LhczWRfDLM9Y+7DFK9TN
- DZQ0Kx5rnKNgbXEnOfc8vog/vPI7IKxiGUIc3p4n14qsNiQHPnNQHyZo4NXMi1R6iLD3
- g5RolEmoSyRRY4NVmfPtk3VuovhzkITqlOb215mo7m9qHUkYyLA7Jgp/yV0+4yCmAHix HQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 3100xwh9sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 23:56:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CNsZTS095439;
-        Tue, 12 May 2020 23:56:02 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 3100ypdaf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 23:56:02 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04CNtx29007414;
-        Tue, 12 May 2020 23:56:00 GMT
-Received: from localhost (/10.159.139.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 May 2020 16:55:59 -0700
-Date:   Tue, 12 May 2020 16:55:57 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     Chiristoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Joe Perches <joe@perches.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: Use the correct style for SPDX License Identifier
-Message-ID: <20200512235557.GU6714@magnolia>
-References: <20200502092709.GA20328@nishad>
+        Tue, 12 May 2020 19:57:47 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB0CC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:57:47 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p21so1078039pgm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/un83eq62ib7sMEBamqsTej2IdlfzhbBhP+Wn1rFlVw=;
+        b=UEfD8pEyXNO1N8kgnrJK8T/3rhVXgWPjLWlN+Y1j9OXH8AlHW2iBRg+mElxjb2A0pj
+         YfTrukk3ZWjZlQHoWFa90FUzcjYnuLz1T771TfwQvrP1PSda8JMpIDUzKCl9hbgNb/Fp
+         rlLSxVnU9nRzG8dbeuyBJL3wapz3qWZgC0TI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/un83eq62ib7sMEBamqsTej2IdlfzhbBhP+Wn1rFlVw=;
+        b=qxG+MuL3CpD3QLk30NjjcOW8H7FCJ2RXLQgC/CTYv8Lbu0WYACSoIvu/awCPR/QjPH
+         TcDQsZiKASpTBsxdhiFpFeMCDHJqu21KLt3uGVp8/YJF5IdJ6PlunF3eWy10Ws5d2VS/
+         vAKT0tCkqAXyvyOcVOBPv5aG1Cty1iTxyMcmvernH4mBOO16QveufKs9tYiT7g9wPRU0
+         x1ObglZFmM4GhV7OeHm6k12N2BfSS7CSjGUcGj7MgdhEWzbPCWKg1bIFIP7Ikk/cMnTO
+         hZYKhZojH8F3BaIkKCiEFI4IadceVL1TE32+2kbJ0YylKZ0PcGMAr4u47PzUCTE5w5zD
+         17sg==
+X-Gm-Message-State: AGi0PuafB6E+TYKRkjqvn7d8w6CTolJ4TKJXGSEqZkjQ41EKWOCs3OzX
+        1svJzz/r4U0qoWGuRib35IZRNg==
+X-Google-Smtp-Source: APiQypKLCiYnLwVN1YMsLc9KIENkyooXV7ldGuJb8isv4LBxYRuK4jAVvJZGE5SScqNhGl3zo3n87w==
+X-Received: by 2002:aa7:8b15:: with SMTP id f21mr23148055pfd.72.1589327866540;
+        Tue, 12 May 2020 16:57:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z60sm14218113pjj.14.2020.05.12.16.57.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 16:57:45 -0700 (PDT)
+Date:   Tue, 12 May 2020 16:57:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, jmorris@namei.org,
+        sashal@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] pstore/ram: Introduce max_reason and convert
+ dump_oops
+Message-ID: <202005121652.7EC6FE3@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200506211523.15077-5-keescook@chromium.org>
+ <20200512233504.GA118720@sequoia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502092709.GA20328@nishad>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005120178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 bulkscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005120178
+In-Reply-To: <20200512233504.GA118720@sequoia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 02:57:14PM +0530, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style in header files
-> related to XFS File System support. For C header files
-> Documentation/process/license-rules.rst mandates C-like comments.
-> (opposed to C source files where C++ style should be used).
+On Tue, May 12, 2020 at 06:35:04PM -0500, Tyler Hicks wrote:
+> On 2020-05-06 14:15:21, Kees Cook wrote:
+> > From: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > 
+> > Now that pstore_register() can correctly pass max_reason to the kmesg
+> > dump facility, introduce a new "max_reason" module parameter and
+> > "max-reason" Device Tree field.
+> > 
+> > The "dump_oops" module parameter and "dump-oops" Device
+> > Tree field are now considered deprecated, but are now automatically
+> > converted to their corresponding max_reason values when present, though
+> > the new max_reason setting has precedence.
+> > 
+> > For struct ramoops_platform_data, the "dump_oops" member is entirely
+> > replaced by a new "max_reason" member, with the only existing user
+> > updated in place.
+> > 
+> > Additionally remove the "reason" filter logic from ramoops_pstore_write(),
+> > as that is not specifically needed anymore, though technically
+> > this is a change in behavior for any ramoops users also setting the
+> > printk.always_kmsg_dump boot param, which will cause ramoops to behave as
+> > if max_reason was set to KMSG_DUMP_MAX.
+> > 
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > Link: https://lore.kernel.org/r/20200505154510.93506-4-pasha.tatashin@soleen.com
+> > Link: https://lore.kernel.org/r/20200505154510.93506-5-pasha.tatashin@soleen.com
+> > Co-developed-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  Documentation/admin-guide/ramoops.rst     | 14 +++++--
+> >  drivers/platform/chrome/chromeos_pstore.c |  2 +-
+> >  fs/pstore/ram.c                           | 51 +++++++++++++++--------
+> >  include/linux/pstore_ram.h                |  2 +-
+> >  4 files changed, 45 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> > index 6dbcc5481000..a60a96218ba9 100644
+> > --- a/Documentation/admin-guide/ramoops.rst
+> > +++ b/Documentation/admin-guide/ramoops.rst
+> > @@ -32,11 +32,17 @@ memory to be mapped strongly ordered, and atomic operations on strongly ordered
+> >  memory are implementation defined, and won't work on many ARMs such as omaps.
+> >  
+> >  The memory area is divided into ``record_size`` chunks (also rounded down to
+> > -power of two) and each oops/panic writes a ``record_size`` chunk of
+> > +power of two) and each kmesg dump writes a ``record_size`` chunk of
+> >  information.
+> >  
+> > -Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
+> > -variable while setting 0 in that variable dumps only the panics.
+> > +Limiting which kinds of kmsg dumps are stored can be controlled via
+> > +the ``max_reason`` value, as defined in include/linux/kmsg_dump.h's
+> > +``enum kmsg_dump_reason``. For example, to store both Oopses and Panics,
+> > +``max_reason`` should be set to 2 (KMSG_DUMP_OOPS), to store only Panics
+> > +``max_reason`` should be set to 1 (KMSG_DUMP_PANIC). Setting this to 0
+> > +(KMSG_DUMP_UNDEF), means the reason filtering will be controlled by the
+> > +``printk.always_kmsg_dump`` boot param: if unset, it'll be KMSG_DUMP_OOPS,
+> > +otherwise KMSG_DUMP_MAX.
+> >  
+> >  The module uses a counter to record multiple dumps but the counter gets reset
+> >  on restart (i.e. new dumps after the restart will overwrite old ones).
+> > @@ -90,7 +96,7 @@ Setting the ramoops parameters can be done in several different manners:
+> >          .mem_address            = <...>,
+> >          .mem_type               = <...>,
+> >          .record_size            = <...>,
+> > -        .dump_oops              = <...>,
+> > +        .max_reason             = <...>,
+> >          .ecc                    = <...>,
+> >    };
+> >  
+> > diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+> > index d13770785fb5..fa51153688b4 100644
+> > --- a/drivers/platform/chrome/chromeos_pstore.c
+> > +++ b/drivers/platform/chrome/chromeos_pstore.c
+> > @@ -57,7 +57,7 @@ static struct ramoops_platform_data chromeos_ramoops_data = {
+> >  	.record_size	= 0x40000,
+> >  	.console_size	= 0x20000,
+> >  	.ftrace_size	= 0x20000,
+> > -	.dump_oops	= 1,
+> > +	.max_reason	= KMSG_DUMP_OOPS,
+> >  };
+> >  
+> >  static struct platform_device chromeos_ramoops = {
+> > diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> > index c2f76b650f91..b8dac1d04e96 100644
+> > --- a/fs/pstore/ram.c
+> > +++ b/fs/pstore/ram.c
+> > @@ -57,10 +57,15 @@ module_param(mem_type, uint, 0600);
+> >  MODULE_PARM_DESC(mem_type,
+> >  		"set to 1 to try to use unbuffered memory (default 0)");
+> >  
+> > -static int dump_oops = 1;
+> > -module_param(dump_oops, int, 0600);
+> > +static int ramoops_dump_oops = -1;
+> > +module_param_named(dump_oops, ramoops_dump_oops, int, 0400);
+> >  MODULE_PARM_DESC(dump_oops,
+> > -		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
+> > +		 "set to 1 to dump oopses & panics, 0 to only dump panics (deprecated: use max_reason instead)");
+> > +
+> > +static int ramoops_max_reason = KMESG_DUMP_OOPS;
+> > +module_param_named(max_reason, ramoops_max_reason, int, 0400);
+> > +MODULE_PARM_DESC(max_reason,
+> > +		 "maximum reason for kmsg dump (default 2: Oops and Panic) ");
+> >  
+> >  static int ramoops_ecc;
+> >  module_param_named(ecc, ramoops_ecc, int, 0600);
+> > @@ -81,7 +86,6 @@ struct ramoops_context {
+> >  	size_t console_size;
+> >  	size_t ftrace_size;
+> >  	size_t pmsg_size;
+> > -	int dump_oops;
+> >  	u32 flags;
+> >  	struct persistent_ram_ecc_info ecc_info;
+> >  	unsigned int max_dump_cnt;
+> > @@ -382,16 +386,14 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
+> >  		return -EINVAL;
+> >  
+> >  	/*
+> > -	 * Out of the various dmesg dump types, ramoops is currently designed
+> > -	 * to only store crash logs, rather than storing general kernel logs.
+> > +	 * We could filter on record->reason here if we wanted to (which
+> > +	 * would duplicate what happened before the "max_reason" setting
+> > +	 * was added), but that would defeat the purpose of a system
+> > +	 * changing printk.always_kmsg_dump, so instead log everything that
+> > +	 * the kmsg dumper sends us, since it should be doing the filtering
+> > +	 * based on the combination of printk.always_kmsg_dump and our
+> > +	 * requested "max_reason".
+> >  	 */
+> > -	if (record->reason != KMSG_DUMP_OOPS &&
+> > -	    record->reason != KMSG_DUMP_PANIC)
+> > -		return -EINVAL;
+> > -
+> > -	/* Skip Oopes when configured to do so. */
+> > -	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
+> > -		return -EINVAL;
+> >  
+> >  	/*
+> >  	 * Explicitly only take the first part of any new crash.
+> > @@ -692,7 +694,14 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> >  	pdata->mem_size = resource_size(res);
+> >  	pdata->mem_address = res->start;
+> >  	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+> > -	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> > +	/*
+> > +	 * Setting "no-dump-oops" is deprecated and will be ignored if
+> > +	 * "max_reason" is also specified.
+> > +	 */
+> > +	if (of_property_read_bool(of_node, "no-dump-oops"))
+> > +		pdata->max_reason = KMSG_DUMP_PANIC;
+> > +	else
+> > +		pdata->max_reason = KMSG_DUMP_OOPS;
+> >  
+> >  #define parse_size(name, field, default_value) {			\
+> >  		ret = ramoops_parse_dt_size(pdev, name, default_value,	\
+> > @@ -708,6 +717,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> >  	parse_size("pmsg-size", pdata->pmsg_size, 0);
+> >  	parse_size("ecc-size", pdata->ecc_info.ecc_size, 0);
+> >  	parse_size("flags", pdata->flags, 0);
+> > +	parse_size("max-reason", pdata->max_reason, pdata->max_reason);
+> >  
+> >  #undef parse_size
+> >  
+> > @@ -791,7 +801,6 @@ static int ramoops_probe(struct platform_device *pdev)
+> >  	cxt->console_size = pdata->console_size;
+> >  	cxt->ftrace_size = pdata->ftrace_size;
+> >  	cxt->pmsg_size = pdata->pmsg_size;
+> > -	cxt->dump_oops = pdata->dump_oops;
+> >  	cxt->flags = pdata->flags;
+> >  	cxt->ecc_info = pdata->ecc_info;
+> >  
+> > @@ -834,8 +843,10 @@ static int ramoops_probe(struct platform_device *pdev)
+> >  	 * the single region size is how to check.
+> >  	 */
+> >  	cxt->pstore.flags = 0;
+> > -	if (cxt->max_dump_cnt)
+> > +	if (cxt->max_dump_cnt) {
+> >  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+> > +		cxt->pstore.max_reason = pdata->max_reason;
+> > +	}
+> >  	if (cxt->console_size)
+> >  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+> >  	if (cxt->max_ftrace_cnt)
+> > @@ -871,7 +882,7 @@ static int ramoops_probe(struct platform_device *pdev)
+> >  	mem_size = pdata->mem_size;
+> >  	mem_address = pdata->mem_address;
+> >  	record_size = pdata->record_size;
+> > -	dump_oops = pdata->dump_oops;
+> > +	ramoops_max_reason = pdata->max_reason;
+> >  	ramoops_console_size = pdata->console_size;
+> >  	ramoops_pmsg_size = pdata->pmsg_size;
+> >  	ramoops_ftrace_size = pdata->ftrace_size;
+> > @@ -954,7 +965,11 @@ static void __init ramoops_register_dummy(void)
+> >  	pdata.console_size = ramoops_console_size;
+> >  	pdata.ftrace_size = ramoops_ftrace_size;
+> >  	pdata.pmsg_size = ramoops_pmsg_size;
+> > -	pdata.dump_oops = dump_oops;
+> > +	/* Parse deprecated module param "dump_oops" into "max_reason". */
+> > +	if (ramoops_dump_oops != -1)
+> > +		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
+> > +						     : KMSG_DUMP_PANIC;
+> > +	pdata.max_reason = ramoops_max_reason;
 > 
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
+> This isn't quite right. We're conditionally assigning pdata.max_reason
+> and then immediately re-assigning it.
 > 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-
-Looks fine to me I guess,
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-
---D
-
-> ---
-> Changes in v2:
->  - use up all 73 chars in commit description
-> ---
->  fs/xfs/kmem.h                      | 2 +-
->  fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
->  fs/xfs/libxfs/xfs_alloc.h          | 2 +-
->  fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
->  fs/xfs/libxfs/xfs_attr.h           | 2 +-
->  fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
->  fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
->  fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
->  fs/xfs/libxfs/xfs_bit.h            | 2 +-
->  fs/xfs/libxfs/xfs_bmap.h           | 2 +-
->  fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
->  fs/xfs/libxfs/xfs_btree.h          | 2 +-
->  fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
->  fs/xfs/libxfs/xfs_da_format.h      | 2 +-
->  fs/xfs/libxfs/xfs_defer.h          | 2 +-
->  fs/xfs/libxfs/xfs_dir2.h           | 2 +-
->  fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
->  fs/xfs/libxfs/xfs_errortag.h       | 2 +-
->  fs/xfs/libxfs/xfs_format.h         | 2 +-
->  fs/xfs/libxfs/xfs_fs.h             | 2 +-
->  fs/xfs/libxfs/xfs_health.h         | 2 +-
->  fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
->  fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
->  fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
->  fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
->  fs/xfs/libxfs/xfs_log_format.h     | 2 +-
->  fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
->  fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
->  fs/xfs/libxfs/xfs_refcount.h       | 2 +-
->  fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
->  fs/xfs/libxfs/xfs_rmap.h           | 2 +-
->  fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
->  fs/xfs/libxfs/xfs_sb.h             | 2 +-
->  fs/xfs/libxfs/xfs_shared.h         | 2 +-
->  fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
->  fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
->  fs/xfs/libxfs/xfs_types.h          | 2 +-
->  fs/xfs/mrlock.h                    | 2 +-
->  fs/xfs/scrub/bitmap.h              | 2 +-
->  fs/xfs/scrub/btree.h               | 2 +-
->  fs/xfs/scrub/common.h              | 2 +-
->  fs/xfs/scrub/dabtree.h             | 2 +-
->  fs/xfs/scrub/health.h              | 2 +-
->  fs/xfs/scrub/repair.h              | 2 +-
->  fs/xfs/scrub/scrub.h               | 2 +-
->  fs/xfs/scrub/trace.h               | 2 +-
->  fs/xfs/scrub/xfs_scrub.h           | 2 +-
->  fs/xfs/xfs.h                       | 2 +-
->  fs/xfs/xfs_acl.h                   | 2 +-
->  fs/xfs/xfs_aops.h                  | 2 +-
->  fs/xfs/xfs_bmap_item.h             | 2 +-
->  fs/xfs/xfs_bmap_util.h             | 2 +-
->  fs/xfs/xfs_buf.h                   | 2 +-
->  fs/xfs/xfs_buf_item.h              | 2 +-
->  fs/xfs/xfs_dquot.h                 | 2 +-
->  fs/xfs/xfs_dquot_item.h            | 2 +-
->  fs/xfs/xfs_error.h                 | 2 +-
->  fs/xfs/xfs_export.h                | 2 +-
->  fs/xfs/xfs_extent_busy.h           | 2 +-
->  fs/xfs/xfs_extfree_item.h          | 2 +-
->  fs/xfs/xfs_filestream.h            | 2 +-
->  fs/xfs/xfs_fsmap.h                 | 2 +-
->  fs/xfs/xfs_fsops.h                 | 2 +-
->  fs/xfs/xfs_icache.h                | 2 +-
->  fs/xfs/xfs_icreate_item.h          | 2 +-
->  fs/xfs/xfs_inode.h                 | 2 +-
->  fs/xfs/xfs_inode_item.h            | 2 +-
->  fs/xfs/xfs_ioctl.h                 | 2 +-
->  fs/xfs/xfs_ioctl32.h               | 2 +-
->  fs/xfs/xfs_iomap.h                 | 2 +-
->  fs/xfs/xfs_iops.h                  | 2 +-
->  fs/xfs/xfs_itable.h                | 2 +-
->  fs/xfs/xfs_linux.h                 | 2 +-
->  fs/xfs/xfs_log.h                   | 2 +-
->  fs/xfs/xfs_log_priv.h              | 2 +-
->  fs/xfs/xfs_mount.h                 | 2 +-
->  fs/xfs/xfs_mru_cache.h             | 2 +-
->  fs/xfs/xfs_ondisk.h                | 2 +-
->  fs/xfs/xfs_qm.h                    | 2 +-
->  fs/xfs/xfs_quota.h                 | 2 +-
->  fs/xfs/xfs_refcount_item.h         | 2 +-
->  fs/xfs/xfs_reflink.h               | 2 +-
->  fs/xfs/xfs_rmap_item.h             | 2 +-
->  fs/xfs/xfs_rtalloc.h               | 2 +-
->  fs/xfs/xfs_stats.h                 | 2 +-
->  fs/xfs/xfs_super.h                 | 2 +-
->  fs/xfs/xfs_symlink.h               | 2 +-
->  fs/xfs/xfs_sysctl.h                | 2 +-
->  fs/xfs/xfs_sysfs.h                 | 2 +-
->  fs/xfs/xfs_trace.h                 | 2 +-
->  fs/xfs/xfs_trans.h                 | 2 +-
->  fs/xfs/xfs_trans_priv.h            | 2 +-
->  92 files changed, 92 insertions(+), 92 deletions(-)
+> IIUC, we're just missing an else block and it should look like this:
 > 
-> diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> index 6143117770e9..fc87ea9f6843 100644
-> --- a/fs/xfs/kmem.h
-> +++ b/fs/xfs/kmem.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
-> index c0352edc8e41..f3fd0ee9a7f7 100644
-> --- a/fs/xfs/libxfs/xfs_ag_resv.h
-> +++ b/fs/xfs/libxfs/xfs_ag_resv.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright (C) 2016 Oracle.  All Rights Reserved.
->   * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-> index a851bf77f17b..6c22b12176b8 100644
-> --- a/fs/xfs/libxfs/xfs_alloc.h
-> +++ b/fs/xfs/libxfs/xfs_alloc.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_alloc_btree.h b/fs/xfs/libxfs/xfs_alloc_btree.h
-> index 047f09f0be3c..a5b998e950fe 100644
-> --- a/fs/xfs/libxfs/xfs_alloc_btree.h
-> +++ b/fs/xfs/libxfs/xfs_alloc_btree.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-> index 0d2d05908537..db4717657ca1 100644
-> --- a/fs/xfs/libxfs/xfs_attr.h
-> +++ b/fs/xfs/libxfs/xfs_attr.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
-> index 6dd2d937a42a..5be6be309302 100644
-> --- a/fs/xfs/libxfs/xfs_attr_leaf.h
-> +++ b/fs/xfs/libxfs/xfs_attr_leaf.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
->   * Copyright (c) 2013 Red Hat, Inc.
-> diff --git a/fs/xfs/libxfs/xfs_attr_remote.h b/fs/xfs/libxfs/xfs_attr_remote.h
-> index 6fb4572845ce..e1144f22b005 100644
-> --- a/fs/xfs/libxfs/xfs_attr_remote.h
-> +++ b/fs/xfs/libxfs/xfs_attr_remote.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2013 Red Hat, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_attr_sf.h b/fs/xfs/libxfs/xfs_attr_sf.h
-> index aafa4fe70624..bb004fb7944a 100644
-> --- a/fs/xfs/libxfs/xfs_attr_sf.h
-> +++ b/fs/xfs/libxfs/xfs_attr_sf.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_bit.h b/fs/xfs/libxfs/xfs_bit.h
-> index 99017b8df292..a04f266ae644 100644
-> --- a/fs/xfs/libxfs/xfs_bit.h
-> +++ b/fs/xfs/libxfs/xfs_bit.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-> index f3259ad5c22c..6028a3c825ba 100644
-> --- a/fs/xfs/libxfs/xfs_bmap.h
-> +++ b/fs/xfs/libxfs/xfs_bmap.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2006 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_bmap_btree.h b/fs/xfs/libxfs/xfs_bmap_btree.h
-> index 29b407d053b4..72bf74c79fb9 100644
-> --- a/fs/xfs/libxfs/xfs_bmap_btree.h
-> +++ b/fs/xfs/libxfs/xfs_bmap_btree.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002-2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-> index 8626c5a81aad..10e50cbacacf 100644
-> --- a/fs/xfs/libxfs/xfs_btree.h
-> +++ b/fs/xfs/libxfs/xfs_btree.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-> index 53e503b6f186..6e25de6621e4 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.h
-> +++ b/fs/xfs/libxfs/xfs_da_btree.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
->   * Copyright (c) 2013 Red Hat, Inc.
-> diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
-> index 08c0a4d98b89..059ac108b1b3 100644
-> --- a/fs/xfs/libxfs/xfs_da_format.h
-> +++ b/fs/xfs/libxfs/xfs_da_format.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
->   * Copyright (c) 2013 Red Hat, Inc.
-> diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
-> index 7c28d7608ac6..d119f0fda166 100644
-> --- a/fs/xfs/libxfs/xfs_defer.h
-> +++ b/fs/xfs/libxfs/xfs_defer.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright (C) 2016 Oracle.  All Rights Reserved.
->   * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
-> index 033777e282f2..e55378640b05 100644
-> --- a/fs/xfs/libxfs/xfs_dir2.h
-> +++ b/fs/xfs/libxfs/xfs_dir2.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
-> index 01ee0b926572..44c6a77cba05 100644
-> --- a/fs/xfs/libxfs/xfs_dir2_priv.h
-> +++ b/fs/xfs/libxfs/xfs_dir2_priv.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-> index 79e6c4fb1d8a..9c58ab8648f5 100644
-> --- a/fs/xfs/libxfs/xfs_errortag.h
-> +++ b/fs/xfs/libxfs/xfs_errortag.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
->   * Copyright (C) 2017 Oracle.
-> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-> index 592f1c12ad36..f2228d9e317a 100644
-> --- a/fs/xfs/libxfs/xfs_format.h
-> +++ b/fs/xfs/libxfs/xfs_format.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Copyright (c) 2000-2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-> index 245188e4f6d3..84bcffa87753 100644
-> --- a/fs/xfs/libxfs/xfs_fs.h
-> +++ b/fs/xfs/libxfs/xfs_fs.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: LGPL-2.1
-> +/* SPDX-License-Identifier: LGPL-2.1 */
->  /*
->   * Copyright (c) 1995-2005 Silicon Graphics, Inc.
->   * All Rights Reserved.
-> diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-> index 272005ac8c88..99e796256c5d 100644
-> --- a/fs/xfs/libxfs/xfs_health.h
-> +++ b/fs/xfs/libxfs/xfs_health.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright (C) 2019 Oracle.  All Rights Reserved.
->   * Author: Darrick J. Wong <darrick.wong@oracle.com>
-> diff --git a/fs/xfs/l
+> 	/* Parse deprecated module param "dump_oops" into "max_reason". */
+> 	if (ramoops_dump_oops != -1)
+> 		pdata.max_reason = ramoops_dump_oops ? KMSG_DUMP_OOPS
+> 						     : KMSG_DUMP_PANIC;
+> 	else
+> 		pdata.max_reason = ramoops_max_reason;
+
+Oops, yes. ramoops_max_reason needs to also have an "unset" value so
+this can determine which was set... I'll get this fixed. Thanks for
+double-checking this!
+
+-- 
+Kees Cook
