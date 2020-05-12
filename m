@@ -2,180 +2,65 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F71C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C6C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E1120736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEP/hivc"
+	by mail.kernel.org (Postfix) with ESMTP id 01AAC206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgELOtS (ORCPT
+        id S1730304AbgELOuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:49:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30192 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbgELOtR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:49:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589294956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jx+puuCmllp6pyXQNaubWo+qtrpR0nODcwxMTtKrcSI=;
-        b=TEP/hivcoxT+LrYt8ru6wCChWSNSqJu8gNtaf3R1foIQH/lDp156xulyk3FYI/Qj3Gz8mK
-        gkDyAKQr7G6WCBrpmFC1yzK6tIfEdZLHFX+aF1wPLW9jiVAR2KZqsMM+Lo7Y0byx4Ds8O7
-        OZjsTEHe2OQtzqe2/T+IXoa5FWoWN8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-Mfu0zy3TOOmWSoFOm3Tffw-1; Tue, 12 May 2020 10:49:12 -0400
-X-MC-Unique: Mfu0zy3TOOmWSoFOm3Tffw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FEAC100A614;
-        Tue, 12 May 2020 14:49:11 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99BB462A28;
-        Tue, 12 May 2020 14:49:09 +0000 (UTC)
-Date:   Tue, 12 May 2020 10:49:06 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Tso Ted <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, keescook@chromium.org,
-        yzaikin@google.com
-Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
- kernel.tainted and taint the kernel with TAINT_USER on writes
-Message-ID: <20200512144906.GG367616@optiplex-lnx>
-References: <20200511215904.719257-1-aquini@redhat.com>
- <20200511231045.GV11244@42.do-not-panic.com>
- <20200511235914.GF367616@optiplex-lnx>
- <20200512001702.GW11244@42.do-not-panic.com>
- <20200512010313.GA725253@optiplex-lnx>
- <20200512050405.GY11244@42.do-not-panic.com>
+        Tue, 12 May 2020 10:50:07 -0400
+Received: from muru.com ([72.249.23.125]:54016 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726300AbgELOuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:50:07 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C1F088047;
+        Tue, 12 May 2020 14:50:55 +0000 (UTC)
+Date:   Tue, 12 May 2020 07:50:04 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+Message-ID: <20200512145004.GG37466@atomide.com>
+References: <20200512100230.17752-1-grygorii.strashko@ti.com>
+ <20200512142230.GF37466@atomide.com>
+ <9f86a9ef-c069-e69b-540a-2fd2731b8619@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200512050405.GY11244@42.do-not-panic.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <9f86a9ef-c069-e69b-540a-2fd2731b8619@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:04:05AM +0000, Luis Chamberlain wrote:
-> On Mon, May 11, 2020 at 09:03:13PM -0400, Rafael Aquini wrote:
-> > On Tue, May 12, 2020 at 12:17:03AM +0000, Luis Chamberlain wrote:
-> > > On Mon, May 11, 2020 at 07:59:14PM -0400, Rafael Aquini wrote:
-> > > > On Mon, May 11, 2020 at 11:10:45PM +0000, Luis Chamberlain wrote:
-> > > > > On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
-> > > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > > > > index 8a176d8727a3..f0a4fb38ac62 100644
-> > > > > > --- a/kernel/sysctl.c
-> > > > > > +++ b/kernel/sysctl.c
-> > > > > > @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
-> > > > > >  		return err;
-> > > > > >  
-> > > > > >  	if (write) {
-> > > > > > +		int i;
-> > > > > > +
-> > > > > > +		/*
-> > > > > > +		 * Ignore user input that would make us committing
-> > > > > > +		 * arbitrary invalid TAINT flags in the loop below.
-> > > > > > +		 */
-> > > > > > +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
-> > > > > 
-> > > > > This looks good but we don't pr_warn() of information lost on intention.
-> > > > >
-> > > > 
-> > > > Are you thinking in sth like:
-> > > > 
-> > > > +               if (tmptaint > TAINT_FLAGS_MAX) {
-> > > > +                       tmptaint &= TAINT_FLAGS_MAX;
-> > > > +                       pr_warn("proc_taint: out-of-range invalid input ignored"
-> > > > +                               " tainted_mask adjusted to 0x%x\n", tmptaint);
-> > > > +               }
-> > > > ?
-> > > 
-> > > Sure that would clarify this.
-> > > 
-> > > > > > +
-> > > > > >  		/*
-> > > > > >  		 * Poor man's atomic or. Not worth adding a primitive
-> > > > > >  		 * to everyone's atomic.h for this
-> > > > > >  		 */
-> > > > > > -		int i;
-> > > > > >  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
-> > > > > >  			if ((tmptaint >> i) & 1)
-> > > > > >  				add_taint(i, LOCKDEP_STILL_OK);
-> > > > > >  		}
-> > > > > > +
-> > > > > > +		/*
-> > > > > > +		 * Users with SYS_ADMIN capability can include any arbitrary
-> > > > > > +		 * taint flag by writing to this interface. If that's the case,
-> > > > > > +		 * we also need to mark the kernel "tainted by user".
-> > > > > > +		 */
-> > > > > > +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-> > > > > 
-> > > > > I'm in favor of this however I'd like to hear from Ted on if it meets
-> > > > > the original intention. I would think he had a good reason not to add
-> > > > > it here.
-> > > > >
-> > > > 
-> > > > Fair enough. The impression I got by reading Ted's original commit
-> > > > message is that the intent was to have TAINT_USER as the flag set 
-> > > > via this interface, even though the code was allowing for any 
-> > > > arbitrary value.
-> > > 
-> > > That wasn't my reading, it was that the user did something very odd
-> > > with user input which we don't like as kernel developers, and it gives
-> > > us a way to prove: hey you did something stupid, sorry but I cannot
-> > > support your kernel panic.
-> > > 
-> > > > I think it's OK to let the user fiddle with
-> > > > the flags, as it's been allowed since the introduction of
-> > > > this interface, but we need to reflect that fact in the
-> > > > tainting itself. Since TAINT_USER is not used anywhere,
-> > > 
-> > > I see users of TAINT_USER sprinkled around
-> > >
+* Grygorii Strashko <grygorii.strashko@ti.com> [200512 14:35]:
+> On 12/05/2020 17:22, Tony Lindgren wrote:
+> > However, there's at least one more issue left that shows up at least
+> > on ti81xx dra62x-j5eco-evm on v5.7-rc5 that has commit b46b2b7ba6e1
+> > ("ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode").
 > > 
-> > I meant in the original commit that introduced it
-> > (commit 34f5a39899f3f3e815da64f48ddb72942d86c366). Sorry I
-> > miscomunicated that.
+> > I think this is a different issue though, any ideas?
 > > 
-> > In its current usage, it seems that the other places adding TAINT_USER
-> > match with what is being proposed here: To signal when we have user 
-> > fiddling with kernel / module parameters.
 > 
-> drivers/base/regmap/regmap-debugfs.c requires *manual* code changes
-> to compile / enable some knob. i915 complains about unsafe module
-> params such as module_param_cb_unsafe() core_param_unsafe(). Then
-> drivers/soundwire/cadence_master.c is for when a debugfs dangerous
-> param was used.
-> 
-> This still doesn't rule out the use of proc_taint() for testing taint,
-> and that adding it may break some tests. So even though this would
-> only affect some tests scripts, I can't say that adding this taint won't
-> cause some headaches to someone. I wouldn't encourage its use on
-> proc_taint() from what I can see so far.
->
+> This seems like completely different issue.
 
-OK, I´ll repost without the hunk forcing the taint. If we eventually
-come to the conclusion that tainting in proc_taint() is the right thing
-to do, we can do that part of the change later.
+OK thanks for checking.
 
-Do you think we should use printk_ratelimited() in the ignore message,
-instead? 
+> Could we have separate thread started for this, pls?
 
-Cheers,
--- Rafael
+Sure. No objections to the $subject fix.
 
+Regards,
+
+Tony
