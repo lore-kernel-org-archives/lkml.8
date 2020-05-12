@@ -2,133 +2,148 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D70C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ED1C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B4C20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E502070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="atSBublT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KmA2zkfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgELBXA (ORCPT
+        id S1728418AbgELB3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 21:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56742 "EHLO
+        Mon, 11 May 2020 21:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgELBW7 (ORCPT
+        with ESMTP id S1725881AbgELB3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 21:22:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61382C05BD09
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 18:22:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d184so5580507pfd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 18:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rvNxntDeexCd7VZSGnVRoemTH38Jc+aBjHlUNupdABc=;
-        b=atSBublTcto3epYtRg/c05QtyAez9kHSmO/iI2vtHSUL852U5XYG6lL9rI91Sczfm9
-         hHwAb1SFlPi0hAdtbcwA1eW0j5JB6cb8JDfo7qB10p5i2XJzOBUS+e1SxSs1qoBlbnXv
-         /ihzDqNEJOFRSR4cE4JSeJQq+dbzFO51Zj3DYji0TapflR6qrRdRiUTXTGcbufd34olp
-         50dJVZamCy+Hd1GVFUYKJO32EnOKXBvZb29fprkErsxg0byPS4L6Mc1pD4mkbzriYUzd
-         ci/XuL+CfsDz/bcY4jThdLN0w2hIFdgtUoRfEHNws76lzJf0vzwm+t0Ho+bV1OWeZh3s
-         HhvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rvNxntDeexCd7VZSGnVRoemTH38Jc+aBjHlUNupdABc=;
-        b=LEc7/cxVBtyIQ4Pp+8CCyBlF+gqzRIMw6Od//M2mdZBEGG8CXAxpYkkbuV9kSb/ARC
-         cKCzKNjkaWXZMYlt9lF8cD3/PvMMLbTH5iFwy7TXSLgqhDmg/kl0wnLgtBc/lpIa8JBj
-         6Dg/5JNgy+FiSkgKG/M2jbBUuhkJK5fTArS8vIPzNjJSVfzxMpeaOPoGR1LEeG7qKAAH
-         23m0CVUwXWaBYKX6oGb7BIU0QYVloZpEHyMBZAItL5mYXyH04lqOFoxSC1js9ttEcQn6
-         hNT4mL5eYCTW2D7+a/pcGgr8+yiIQAgYlDh5MdaqlDiVXvuhKvJyof6mVIWHb3ENd6jS
-         esrA==
-X-Gm-Message-State: AGi0Puan01u7Yob8y1hdAZvxVSlNvxzNR6/pwDJumTIeqAO5TKfiPsET
-        HPE8g64nnCBswOj1s0Ya5CseCA==
-X-Google-Smtp-Source: APiQypLn6g4IZcdlvBjSJuJuDl2/3qY5ewye8c0iiWpzkOBNDc6PtG12DjCtqf0G3JBWZY21cS/tsg==
-X-Received: by 2002:a62:3644:: with SMTP id d65mr18205186pfa.186.1589246578672;
-        Mon, 11 May 2020 18:22:58 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w11sm10245851pfq.100.2020.05.11.18.22.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 18:22:57 -0700 (PDT)
-Date:   Mon, 11 May 2020 18:21:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org,
-        jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
-        linux-gpio@vger.kernel.org, swboyd@chromium.org,
-        jernej.skrabec@siol.net, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        robdclark@chromium.org, Andy Gross <agross@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on
- cheza
-Message-ID: <20200512012123.GC57962@builder.lan>
-References: <20200507213500.241695-1-dianders@chromium.org>
- <20200507143354.v5.6.I89df9b6094549b8149aa8b8347f7401c678055b0@changeid>
+        Mon, 11 May 2020 21:29:00 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D75C061A0C;
+        Mon, 11 May 2020 18:28:59 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LgDz1Fklz9sRY;
+        Tue, 12 May 2020 11:28:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589246936;
+        bh=cZ7uSDuRC7yPzQjiGIww2uB225Uwi2FbuHaPahXVHeU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KmA2zkfKhjqH9/hEezz+QaVI4yA2tLU3clV7tn3wcz6jYmh79gg5Ur0IJTFFyZw9u
+         +Z7kjHeRdBUfI2xvzDo93pCi2Cqn1WSQjnoheSW2Puk2u3sJhhbR8ZvXSWdAG04eH2
+         mR2hWLAGRWnplgNU0GaQoIxeG7bLAITaLpwtm9BoaTPs0sL13KdAijVWyd7HndHLJv
+         Lt7ClofWgPkK0fPUYxXc+yN6TDEAhuFIT/FTGNI/oSEvdy2hsRTY1zgAopsXnGibr7
+         fu45Tz6QU9Xzipv4gTWDfcjgiHVprX7VOqnBYRnEllGXMnl8GjGMh7FjKmxnznws0n
+         V/g7CbMlszMkA==
+Date:   Tue, 12 May 2020 11:28:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     Qian Cai <cai@lca.pw>, Amol Grover <frextrite@gmail.com>,
+        syzbot <syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ ip6mr_get_table
+Message-ID: <20200512112847.3b15d182@canb.auug.org.au>
+In-Reply-To: <20200507232402.GB2103@madhuparna-HP-Notebook>
+References: <00000000000003dc8f05a50b798e@google.com>
+        <CACT4Y+bzRtZdLSzHTp-kJZo4Qg7QctXNVEY9=kbAzfMck9XxAA@mail.gmail.com>
+        <DB6FF2E0-4605-40D1-B368-7D813518F6F7@lca.pw>
+        <20200507232402.GB2103@madhuparna-HP-Notebook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507143354.v5.6.I89df9b6094549b8149aa8b8347f7401c678055b0@changeid>
+Content-Type: multipart/signed; boundary="Sig_/aSUw77_wXehJb9dNGjnult=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 07 May 14:35 PDT 2020, Douglas Anderson wrote:
+--Sig_/aSUw77_wXehJb9dNGjnult=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> We don't have the HPD line hooked up to the bridge chip.  Add it as
-> suggested in the patch ("dt-bindings: drm/bridge: ti-sn65dsi86:
-> Document no-hpd").
-> 
-> NOTE: this patch isn't expected to have any effect but just keeps us
-> cleaner for the future.  Currently the driver in Linux just assumes
-> that nobody has HPD hooked up.  This change allows us to later
-> implement HPD support in the driver without messing up sdm845-cheza.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Hi all,
 
-Applied this patch for 5.8 in the Qualcomm SoC tree.
+On Fri, 8 May 2020 04:54:02 +0530 Madhuparna Bhowmik <madhuparnabhowmik10@g=
+mail.com> wrote:
+>
+> On Thu, May 07, 2020 at 08:50:55AM -0400, Qian Cai wrote:
+> >=20
+> >  =20
+> > > On May 7, 2020, at 5:32 AM, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >=20
+> > > On Thu, May 7, 2020 at 11:26 AM syzbot
+> > > <syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com> wrote: =20
+> > >>=20
+> > >> Hello,
+> > >>=20
+> > >> syzbot found the following crash on:
+> > >>=20
+> > >> HEAD commit:    6b43f715 Add linux-next specific files for 20200507
+> > >> git tree:       linux-next
+> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=3D16f64370=
+100000
+> > >> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Def9b7a80=
+b923f328
+> > >> dashboard link: https://syzkaller.appspot.com/bug?extid=3D761cff389b=
+454aa387d2
+> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >>=20
+> > >> Unfortunately, I don't have any reproducer for this crash yet.
+> > >>=20
+> > >> IMPORTANT: if you fix the bug, please add the following tag to the c=
+ommit:
+> > >> Reported-by: syzbot+761cff389b454aa387d2@syzkaller.appspotmail.com =
+=20
+> > >=20
+> > >=20
+> > > +linux-next for linux-next boot breakage =20
+> >=20
+> > Amol, Madhuparna, Is either of you still working on this?
+> >  =20
+> > >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> > >> WARNING: suspicious RCU usage
+> > >> 5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+> > >> -----------------------------
+> > >> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+> > >> =20
+> I had some doubt in this one, I have already mailed the maintainers,
+> waiting for their reply.
 
-Regards,
-Bjorn
+This is blocking syzbot testing of linux-next ... are we getting
+anywhere?  Will a patch similar to the ipmr.c one help here?
 
-> ---
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
-> 
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> index 9070be43a309..5938f8b2aa2f 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> @@ -548,6 +548,8 @@ sn65dsi86_bridge: bridge@2d {
->  		clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
->  		clock-names = "refclk";
->  
-> +		no-hpd;
-> +
->  		ports {
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aSUw77_wXehJb9dNGjnult=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl65+88ACgkQAVBC80lX
+0GzHWQf/XnheV9DMxwtwerW6eEwTsz/9mpHt4siZpPWZN1yI7yUKCiEraZyCHOXy
+lBcSA7ZJtejRjaaEj6HWjiYnt+dUQps+6vZsIhGiuIYDe6Y/XQurotRezy4llSCX
+ONc0lG13YeGkwZv87wlZFcKK7Jc215GIYWJy2E+nJMt+DncreP+SHkN5SqFVV4PX
+lvavvZgNG48sULJ+MDE+q8hhwuiZDCUSzAq5vTzyIgRFRyzkKBGIqS+m/FaLvces
+S3dY6YicHMRI52VC7FvtnSE1/VonKwtcUrsp3CHTSPqe5eCwLcz+O+YNW+ZRDln5
+NUEtEcseEAD60GYuUjDr14D196zQ9A==
+=zSAJ
+-----END PGP SIGNATURE-----
+
+--Sig_/aSUw77_wXehJb9dNGjnult=--
