@@ -2,120 +2,103 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2F0C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30259C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277E020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF7F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bN6Fi/WE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p7OTze74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgELD2k (ORCPT
+        id S1728768AbgELD2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 23:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727942AbgELD2j (ORCPT
+        Mon, 11 May 2020 23:28:50 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38622 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgELD2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 23:28:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 913D6C061A0C;
-        Mon, 11 May 2020 20:28:38 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x10so4783428plr.4;
-        Mon, 11 May 2020 20:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1d5OCkOtOnJ8OLVOeaxWfOYK4GSiBg86sv7BBdrALvU=;
-        b=bN6Fi/WEFa57u3XBvVIZ8uWR8bSVV+qc0T74MDyq+/8YXo0lZgkilfWWTne7KrpYA1
-         h8lbaSe0lI+1i1Kx6rud6na5o7ywImuH2I3SbBP+5tvbKS+vhQost8AdwmL+Iz3sj2Si
-         8V5Xoq1KLF6fLq74KEVrydk7opVY7WKjuMVPvkRxweGVfebPxcVsf4ZLBUDAh1YxhfMt
-         hgb+VfTQc2NTvuGuA+8jw5TmFzNhyc+tVHrc0QU8BAgx6hd5NEMS3Ls4orDnZnku0fUs
-         OoJ8yIqnti0haMc4Pe9Kige++LnV6bWxDrZuutzNfbTlRDUTTF4bg7ofRbUQjK9g8jgD
-         z/5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1d5OCkOtOnJ8OLVOeaxWfOYK4GSiBg86sv7BBdrALvU=;
-        b=tS6MjVSc+0F/12QvN8jbTKdK0fg2EDpXUmrm9jgpgN5FJC7HzkK/VkWN9WUhrYGEE6
-         HJ+9iN4bofxC+hEXWVO/i+M3DlRCmX/V/joEK7d8sN6vwvTXfybHuzyZmDIm0aVx0VL4
-         jeAQ1xJ7SqdlEKYRh+GJhhgeaZR+KJOXPBMmSYfzA+KxL/UjEAw/z7A20mRLtUT0g1BQ
-         k9t3bzB9MeLZKE2b9GFO8QZKObBggoYEPkRIJtjr0lXudVUDInHM9sgWbJvibGx5qlav
-         kH77fKZ6/0Tn4Bj7elK8FzKLKmQKVkvnouLCA7nvXy3blD/uEop63SUxU8keWMefjR+5
-         LYEg==
-X-Gm-Message-State: AGi0PuaGVfBp0T9cYz/NIig3rwiYNUbYmww5YLzvwUE9hP4Z0PdGzYs/
-        q0rYdYQsuFS2gfnLwKE49CIErVij
-X-Google-Smtp-Source: APiQypK8E7+Ha7ZfpUfXOwYXzk9w+LvPp9SdhPKYFtiBqpzCrnWym+QKpOUODxgsaHpCBcTY5yrlRQ==
-X-Received: by 2002:a17:902:eb54:: with SMTP id i20mr17902118pli.179.1589254117694;
-        Mon, 11 May 2020 20:28:37 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id k27sm9074952pgb.30.2020.05.11.20.28.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 20:28:37 -0700 (PDT)
-Subject: Re: [PATCH v2 net-next 04/15] net: dsa: sja1105: deny alterations of
- dsa_8021q VLANs from the bridge
-To:     Vladimir Oltean <olteanv@gmail.com>, andrew@lunn.ch,
-        vivien.didelot@gmail.com
-Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
-        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200511135338.20263-1-olteanv@gmail.com>
- <20200511135338.20263-5-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <967cf2a8-6f23-b241-bc60-b431091b3a9b@gmail.com>
-Date:   Mon, 11 May 2020 20:28:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Mon, 11 May 2020 23:28:49 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3RKxJ105296;
+        Tue, 12 May 2020 03:28:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=9vyTDBtmAZzufdi8K/i1nWRvrNIE3ofFmBBIEvSA+6U=;
+ b=p7OTze74rl+nofgA4ArDD/+Re4ZlfOMc8kbFoLmTgifvEPH8gIF+Vd0hOdffEFeqfAGZ
+ sK2pK6zSbotwh5ldbX7KQXAdv2szFP5/OwNs9pWulk04f6rbc6e61vHLOPP6pg64YNF3
+ Zgi+vYlaMQsy1/qbIP+i/Uxwb6TQ1/OKfkfIC+jPm7pMj7TdENodR+PrKehqgB8dQRTN
+ mHkEd0hE0+kipp8Kxw4rYfSPZMxGDytUPdZ+WA/QrOciKE/18UXwyM2NPaBIvZsX1XSb
+ 3y2E/8gBv9oGJJXBfOHJJjsAS5svJQzodNwpXvJL/WZRJsXrsovyRKtJnzc21O3/M/gZ Ew== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30x3gmghsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 03:28:46 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3Mnfj016267;
+        Tue, 12 May 2020 03:28:45 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 30xbggtkvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 May 2020 03:28:45 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04C3Sio9018971;
+        Tue, 12 May 2020 03:28:44 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 May 2020 20:28:43 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: libsas: Replace zero-length array with flexible-array
+Date:   Mon, 11 May 2020 23:28:30 -0400
+Message-Id: <158925392373.17325.6941458410294631284.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200507192147.GA16206@embeddedor>
+References: <20200507192147.GA16206@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200511135338.20263-5-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=678
+ spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005120029
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=720
+ clxscore=1011 spamscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 priorityscore=1501 mlxscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005120029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 7 May 2020 14:21:47 -0500, Gustavo A. R. Silva wrote:
 
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> [...]
 
-On 5/11/2020 6:53 AM, Vladimir Oltean wrote:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> At the moment, this can never happen. The 2 modes that we operate in do
-> not permit that:
-> 
->  - SJA1105_VLAN_UNAWARE: we are guarded from bridge VLANs added by the
->    user by the DSA core. We will later lift this restriction by setting
->    ds->vlan_bridge_vtu = true, and that is where we'll need it.
-> 
->  - SJA1105_VLAN_FILTERING_FULL: in this mode, dsa_8021q configuration is
->    disabled. So the user is free to add these VLANs in the 1024-3071
->    range.
-> 
-> The reason for the patch is that we'll introduce a third VLAN awareness
-> state, where both dsa_8021q as well as the bridge are going to call our
-> .port_vlan_add and .port_vlan_del methods.
-> 
-> For that, we need a good way to discriminate between the 2. The easiest
-> (and less intrusive way for upper layers) is to recognize the fact that
-> dsa_8021q configurations are always driven by our driver - we _know_
-> when a .port_vlan_add method will be called from dsa_8021q because _we_
-> initiated it.
-> 
-> So introduce an expect_dsa_8021q boolean which is only used, at the
-> moment, for blacklisting VLANs in range 1024-3071 in the modes when
-> dsa_8021q is active.>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Applied to 5.8/scsi-queue, thanks!
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+[1/1] scsi: libsas: Replace zero-length array with flexible-array
+      https://git.kernel.org/mkp/scsi/c/00b42b70ae52
+
 -- 
-Florian
+Martin K. Petersen	Oracle Linux Engineering
