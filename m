@@ -2,71 +2,112 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC6CC47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE7FC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2693620708
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183DC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589247699;
+	bh=h9/ZrKGcx7wVFHsrWJiyY9Z/dMX0iVbJhyGYNpYRtY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dP+TLs+IcFESt4tbDGwCbESACjX9C29+/dvtW/pGU/YIUh5/4hizDVnUffwmuaZGv
+	 XwtdlgshIu4SxTJl0i83p8nE0gVyPYRoOedLiGKKtzK2jNd2a/JUSbWOhqtCQOf6G8
+	 EqOgbtE51hp6JVlwHTsTVccnkDKgdh503neDnIsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgELBie (ORCPT
+        id S1728477AbgELBli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 21:38:34 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4333 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbgELBid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 21:38:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 70508F53A8D7A8A81B81;
-        Tue, 12 May 2020 09:38:28 +0800 (CST)
-Received: from ubuntu.huawei.com (10.175.100.98) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 12 May 2020 09:38:26 +0800
-From:   Ma Feng <mafeng.ma@huawei.com>
-To:     <narmstrong@baylibre.com>, <linux@armlinux.org.uk>
-CC:     <linux-arm-kernel@lists.infradead.org>, <linux-oxnas@groups.io>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: oxnas: make ox820_boot_secondary static
-Date:   Tue, 12 May 2020 09:46:13 +0800
-Message-ID: <1589247973-29728-1-git-send-email-mafeng.ma@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 11 May 2020 21:41:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35497 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgELBli (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 21:41:38 -0400
+Received: by mail-oi1-f196.google.com with SMTP id o7so16924736oif.2;
+        Mon, 11 May 2020 18:41:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qc7aeZe8qKrHeqqbdWlSzYUTH7CM0WkR8L80HDu2Jy4=;
+        b=F3tvvfc5oHR3pf9tKZh1o2xmhx5MfrrzBIZRwv9sl858GrcOAdeppNjVxb5SLfFHLV
+         G1sKOjjaz9ITRbK75l4D9jZzn24lPtQCqe+NPV1ZAZs6JFfPgciG9efcY87kormQSy/9
+         7TT9R6XfhKa26UKEExBCKnY2lu9iGeSiIrRtGJegzDaHFagG0gG0PcsWFcLBqGyCbpT1
+         y1X0PmAkVunDcT4odpQMWVd3KZi0nn9lyTzcN8tsfrxMfSWx0r857uC+jKNdOAG3i9Cb
+         GrzZDbr8CAF5gAaP76btA2mRXG9yHvwfzAp/3SaRMb5VFoBV+YDKRsmySvVhV6eI3QLa
+         YP4A==
+X-Gm-Message-State: AGi0PuZE1CqSCQUqy4BxiozB7y1BwFFWgreyOnxQrnBinDCVdQlKZiH0
+        VVPKB6S6dhRz6SCna4j3hg==
+X-Google-Smtp-Source: APiQypLtu39AJZfEb9cdImmCaZsDHwlqCT3WzgPF/Bxr7JVZSOElTYZZjaXHg/QrGCEcZAYMLJ4VYg==
+X-Received: by 2002:aca:a90e:: with SMTP id s14mr22266347oie.80.1589247696893;
+        Mon, 11 May 2020 18:41:36 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 130sm1697610oid.43.2020.05.11.18.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 18:41:36 -0700 (PDT)
+Received: (nullmailer pid 15739 invoked by uid 1000);
+        Tue, 12 May 2020 01:41:35 -0000
+Date:   Mon, 11 May 2020 20:41:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-clk@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock
+ Controller binding
+Message-ID: <20200512014135.GA15336@bogus>
+References: <20200511195534.1207927-1-lkundrak@v3.sk>
+ <20200511195534.1207927-2-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.100.98]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511195534.1207927-2-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Mon, 11 May 2020 21:55:33 +0200, Lubomir Rintel wrote:
+> This describes the bindings for a controller that generates master and bit
+> clocks for the I2S interface.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../clock/marvell,mmp2-audio-clock.yaml       | 73 +++++++++++++++++++
+>  .../dt-bindings/clock/marvell,mmp2-audio.h    |  8 ++
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
+> 
 
-arch/arm/mach-oxnas/platsmp.c:30:12: warning: symbol 'ox820_boot_secondary' was
-not declared. Should it be static?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
----
- arch/arm/mach-oxnas/platsmp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/arch/arm/mach-oxnas/platsmp.c b/arch/arm/mach-oxnas/platsmp.c
-index ab35275..f0a50b9 100644
---- a/arch/arm/mach-oxnas/platsmp.c
-+++ b/arch/arm/mach-oxnas/platsmp.c
-@@ -27,7 +27,8 @@ static void __iomem *gic_cpu_ctrl;
- #define GIC_CPU_CTRL			0x00
- #define GIC_CPU_CTRL_ENABLE		1
+Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dts:20:18: fatal error: dt-bindings/power/marvell,mmp2.h: No such file or directory
+         #include <dt-bindings/power/marvell,mmp2.h>
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
--int __init ox820_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+static int __init ox820_boot_secondary(unsigned int cpu,
-+		struct task_struct *idle)
- {
- 	/*
- 	 * Write the address of secondary startup into the
---
-2.7.4
+See https://patchwork.ozlabs.org/patch/1288040
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
