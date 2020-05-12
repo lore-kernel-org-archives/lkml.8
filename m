@@ -2,111 +2,152 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207F8C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F2C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEB520769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589318103;
-	bh=n320LhkZ6wxkYO1Y5MNF012NtzAe10rdOlykBinlwig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jar85Kh6M/oi6vPU/NfW2V3/RVFJhejGOUy2upg3SsgPFNS1My40mSoxMcoI42huW
-	 lzAmbnJd9PIEI3OOcibC4dHkiEHcG6nRaB2AAvWaq3k21ey6whrOe6R2CX2g1PXRWR
-	 TnnpyF6ReG6C5DAubyFEz48K8Dd7eNf/Vx7VjjeU=
+	by mail.kernel.org (Postfix) with ESMTP id 498F820659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhvUjbZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgELVPC (ORCPT
+        id S1731394AbgELVPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELVPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:15:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 12 May 2020 17:15:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24412 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731293AbgELVPP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:15:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589318113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KKbG/7NnQEY0XYYBh6yQ01fFVwnPr8GzaTotsTFKyPI=;
+        b=OhvUjbZPOmxI42zPYAmL5lCGF+KFQtKFTutvXpivzYqaGH7+b5CEMiyOZlD5NtRvTrM+2x
+        cdnyQhJ/3yqT9WCDemjevx7F2H+IwUJr0Y2fLdWITSvIflNEforEW2d1pzxxB3ENd7Jbmj
+        9hhctt9MdJQF8mcTOpTp57HWMatZ3Ow=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-5yuVjf3fMuSAd98SLS5sJQ-1; Tue, 12 May 2020 17:15:10 -0400
+X-MC-Unique: 5yuVjf3fMuSAd98SLS5sJQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB08205C9;
-        Tue, 12 May 2020 21:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589318101;
-        bh=n320LhkZ6wxkYO1Y5MNF012NtzAe10rdOlykBinlwig=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=niq+lIwyCb1vX/1DG0ZgmWcD2CGp8EgHUBOR8+Pp4zQH3MpTXGBwOTgVXExn2cCo+
-         E/CxIvJg0/v7cfuqfWO5nOrb9z8F95MPXl1ZEoCFYI35qG+ZwVdKmBu1IJLY90xu/7
-         QVCENAmb4gTvChf8qLfRrfiFuJGBJhqdBLHoKqq8=
-Date:   Tue, 12 May 2020 22:14:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7757F8005B7;
+        Tue, 12 May 2020 21:15:07 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-85.rdu2.redhat.com [10.10.116.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56DB6165F6;
+        Tue, 12 May 2020 21:15:06 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id DCC71220C05; Tue, 12 May 2020 17:15:05 -0400 (EDT)
+Date:   Tue, 12 May 2020 17:15:05 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200512211450.GA11062@willie-the-truck>
-References: <20200511204150.27858-1-will@kernel.org>
- <20200512081826.GE2978@hirez.programming.kicks-ass.net>
- <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
- <20200512190755.GL2957@hirez.programming.kicks-ass.net>
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200512211505.GB142860@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512190755.GL2957@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87o8qtmaat.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 09:07:55PM +0200, Peter Zijlstra wrote:
-> On Tue, May 12, 2020 at 07:53:00PM +0200, Marco Elver wrote:
-> > I just ran a bunch of KCSAN tests. While this series alone would have
-> > passed the tests, there appears to be a problem with
-> > __READ_ONCE/__WRITE_ONCE. I think they should already be using
-> > 'data_race()', as otherwise we will get lots of false positives in
-> > future.
-> > 
-> > I noticed this when testing -tip/locking/kcsan, which breaks
-> > unfortunately, because I see a bunch of spurious data races with
-> > arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
-> > instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
-> > From what I see, the intent was to not double-instrument,
-> > unfortunately they are still double-instrumented because
-> > __READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
-> > actually). I don't think we can use __no_sanitize_or_inline for the
-> > arch_ functions, because we really want them to be __always_inline
-> > (also to avoid calls to these functions in uaccess regions, which
-> > objtool would notice).
-> > 
-> > I think the easiest way to resolve this is to wrap the accesses in
-> > __*_ONCE with data_race().
+On Tue, May 12, 2020 at 05:40:10PM +0200, Vitaly Kuznetsov wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> But we can't... because I need arch_atomic_*() and __READ_ONCE() to not
-> call out to _ANYTHING_.
+> > On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
+> >> Currently, APF mechanism relies on the #PF abuse where the token is being
+> >> passed through CR2. If we switch to using interrupts to deliver page-ready
+> >> notifications we need a different way to pass the data. Extent the existing
+> >> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
+> >> notifications.
+> >> 
+> >> The newly introduced apf_put_user_ready() temporary puts both reason
+> >> and token information, this will be changed to put token only when we
+> >> switch to interrupt based notifications.
+> >> 
+> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >> ---
+> >>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+> >>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
+> >>  2 files changed, 15 insertions(+), 5 deletions(-)
+> >> 
+> >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> >> index 2a8e0b6b9805..e3602a1de136 100644
+> >> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> >> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
+> >>  
+> >>  struct kvm_vcpu_pv_apf_data {
+> >>  	__u32 reason;
+> >> -	__u8 pad[60];
+> >> +	__u32 pageready_token;
+> >
+> > How about naming this just "token". That will allow me to deliver error
+> > as well. pageready_token name seems to imply that this will always be
+> > successful with page being ready.
+> >
+> > And reason will tell whether page could successfully be ready or
+> > it was an error. And token will help us identify the task which
+> > is waiting for the event.
 > 
-> Sadly, because the compilers are 'broken' that whole __no_sanitize thing
-> didn't work, but I'll be moving a whole bunch of code into .c files with
-> all the sanitizers killed dead. And we'll be validating it'll not be
-> calling out to anything.
+> I added 'pageready_' prefix to make it clear this is not used for 'page
+> not present' notifications where we pass token through CR2. (BTW
+> 'reason' also becomes a misnomer because we can only see
+> 'KVM_PV_REASON_PAGE_NOT_PRESENT' there.)
 
-Hmm, I may have just run into this problem too. I'm using clang 11.0.1,
-but even if I do something like:
+"kvm_vcpu_pv_apf_data" being shared between two events at the same
+time is little concerning. At least there should be clear demarkation
+that which events will use which fields.
 
-unsigned long __no_sanitize_or_inline foo(unsigned long *p)
-{
-	return READ_ONCE_NOCHECK(*p);
-}
+I guess I could extend "reason" to also report KVM_PV_REASON_ERROR as
+long as I make error reporting opt in. That way new code is able to
+handle more values and old code will not receive it.
 
-then I /still/ get calls to __tcsan_func_{entry,exit} emitted by the
-compiler. Marco -- how do you turn this thing off?!
+For reporting errors with page ready events, I probably will have to
+use more padding bytes to report errors as I can't use reason field anymore.
 
-I'm also not particularly fond of treating __{READ,WRITE}ONCE() as "atomic",
-since they're allowed to tear and I think callers should probably either be
-using data_race() explicitly or disabling instrumentation (assuming that's
-possible).
+In your previous posting in one of the emails Paolo mentioned that data
+structures for #VE will be separate. If that's the case, then we will end
+up changing this protocol one more time. To me it feels that both #VE
+changes and these changes should go in together as part of async page fault
+redesign V2.
 
-Will
+> 
+> I have no strong opinion, can definitely rename this to 'token' and add
+> a line to the documentation to re-state that this is not used for type 1
+> events.
+
+Now I understand that both events could use this shared data at the same
+time. So prefixing toke with pageready makes it clear that it has to be
+used only with pageready event. So sounds better that way.
+
+Thanks
+Vivek
+
