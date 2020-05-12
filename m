@@ -2,129 +2,183 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ED1C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584BC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640B6206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589241919;
-	bh=kGIn1Cbp1w1N7HG+NQYCda26lWB/Qiug9WGsCjGHWtE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ksr0G8DhKQBwHuZbpdeUBuAK6wUWNeYLKVxcTGij84I/9vuH3ixRHWYkhc8VqeKcd
-	 FvJWREcwGxQRvB8CP3ISondVmF09ookE050w4ygHmBr8feSUT6Wm0OotCPItG6nJf4
-	 HiXtxxjzU/N01E7UCaVPVTl9Fj9Ns93R0GVex1W4=
+	by mail.kernel.org (Postfix) with ESMTP id CBF9E206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgELAFS (ORCPT
+        id S1728237AbgELAIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbgELAFR (ORCPT
+        Mon, 11 May 2020 20:08:20 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:42550 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgELAIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:05:17 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4EAFC061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:05:16 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id b26so9040249lfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g5Vj2zQnFxzww1DFlagDjlY/ke7T1Z1ZZyehhz3heRw=;
-        b=hcCGC2Hjo9nph3jrRydschmaR9AWBPPm9PAXs2M7D48jJzPcQ/KQADnqlDpnbnJWU2
-         FMk/VAczA3dIzQWm/k5t7DbIXUsXBEjJ+AkRztrSEyQksG0iw5ouUugZlBp6wOhhj8E8
-         Qjh8V3jCkhFfic+LUce/yQLpldSBlnv4B00B0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g5Vj2zQnFxzww1DFlagDjlY/ke7T1Z1ZZyehhz3heRw=;
-        b=XJbRPABeIDRyYsX3vw0jSy0qItu5LjR+LtThlL5JARjgiwlYxRegm7esdPZjq3MhwD
-         rZAX+eLF7e6kKwi+ebHr2WTIHh/7rOAl7lAdDMPEopZLBabMqFtmLG3ELWsoLlq/nL76
-         l+GNlAigQ5gDXSUbFeV8iseIQaC6VOVM50gWIelnxSgnT1vizn6N7svQVMwJaHYBLok3
-         ZGSJ6veqWcYjs5xGT+gbrb6h63UOHVYqUO43xHLNZdhSYUH0WmU3ngrk2dK67vnaIIbh
-         6HkeQ3omj0HDmwI+imO+qRaIX58s5LeTKXO5XG41sMIqVGyAeSxFV8BCBSoX/HKokq86
-         Tk3g==
-X-Gm-Message-State: AOAM533gP2TqPMdLLvuOm2AQedLTqslcGmz74zBWBv0TsbGziKxzxDPV
-        OtTBHS+xdkTMPUv0O9iw8IGnN7M5Xzc=
-X-Google-Smtp-Source: ABdhPJx2q8BsxYvBpo7wQhbAOG+L+m1SOZova/uYsuvJLVgPCWA+mpw6dO3g/Ej8OBHdOexNma5SDA==
-X-Received: by 2002:a05:6512:3b2:: with SMTP id v18mr12539634lfp.140.1589241913887;
-        Mon, 11 May 2020 17:05:13 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id s27sm11165246ljo.80.2020.05.11.17.05.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 17:05:12 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id u4so9028547lfm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 17:05:12 -0700 (PDT)
-X-Received: by 2002:ac2:5df9:: with SMTP id z25mr12792137lfq.125.1589241912072;
- Mon, 11 May 2020 17:05:12 -0700 (PDT)
+        Mon, 11 May 2020 20:08:19 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 3995529BDB;
+        Mon, 11 May 2020 20:08:16 -0400 (EDT)
+Date:   Tue, 12 May 2020 10:08:23 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: net/sonic: Fix some resource leaks in error handling paths
+In-Reply-To: <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
+Message-ID: <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de> <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet> <9d279f21-6172-5318-4e29-061277e82157@web.de> <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet> <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
+ <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet> <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
 MIME-Version: 1.0
-References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain> <20200511215720.303181-1-Jason@zx2c4.com>
-In-Reply-To: <20200511215720.303181-1-Jason@zx2c4.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 May 2020 17:04:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-Message-ID: <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
-Subject: Re: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for
- gcc >= 10
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; BOUNDARY="-1463811774-1457172623-1589239130=:8"
+Content-ID: <alpine.LNX.2.22.394.2005120920320.8@nippy.intranet>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 2:57 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> GCC 10 appears to have changed -O2 in order to make compilation time
-> faster when using -flto, seemingly at the expense of performance, in
-> particular with regards to how the inliner works. Since -O3 these days
-> shouldn't have the same set of bugs as 10 years ago, this commit
-> defaults new kernel compiles to -O3 when using gcc >= 10.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I'm not convinced this is sensible.
+---1463811774-1457172623-1589239130=:8
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <alpine.LNX.2.22.394.2005120920321.8@nippy.intranet>
 
--O3 historically does bad things with gcc. Including bad things for
-performance. It traditionally makes code larger and often SLOWER.
 
-And I don't mean slower to compile (although that's an issue). I mean
-actually generating slower code.
+On Mon, 11 May 2020, Markus Elfring wrote:
 
-Things like trying to unroll loops etc makes very little sense in the
-kernel, where we very seldom have high loop counts for pretty much
-anything.
+> > If you can't determine when the bug was introduced,
+>=20
+> I might be able to determine also this information.
+>=20
 
-There's a reason -O3 isn't even offered as an option.
+This is tantamount to an admission of duplicity.
 
-Maybe things have changed, and maybe they've improved. But I'd like to
-see actual numbers for something like this.
+>=20
+> > how can you criticise a patch for the lack of a Fixes tag?
+>=20
+> I dared to point two details out for the discussed patch.
+>=20
 
-Not inlining as aggressively is not necessarily a bad thing. It can
-be, of course. But I've actually also done gcc bugreports about gcc
-inlining too much, and generating _worse_ code as a result (ie
-inlinging things that were behind an "if (unlikely())" test, and
-causing the likely path to grow a stack fram and stack spills as a
-result).
+You deliberately chose those two details. You appear to be oblivious to=20
+your own motives.
 
-So just "O3 inlines more" is not a valid argument.
+>=20
+> >> To which commit would you like to refer to for the proposed=20
+> >> adjustment of the function =E2=80=9Cmac_sonic_platform_probe=E2=80=9D?
+> >
+> > That was my question to you. We seem to be talking past each other.
+>=20
+> We come along different views for this patch review. Who is going to add=
+=20
+> a possible reference for this issue?
+>=20
 
-              Linus
+Other opinions are not relevant: I was trying to communicate with you.
+
+>=20
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/coding-style.rst?id=3De99332e7b4cda6e60f5b5916cf994=
+3a79dbef902#n460
+>=20
+> >
+> > My preference is unimportant here.
+>=20
+> It is also relevant here because you added the tag =E2=80=9CReviewed-by=
+=E2=80=9D.=20
+> https://lore.kernel.org/patchwork/comment/1433193/=20
+> https://lkml.org/lkml/2020/5/8/1827
+>=20
+
+You have quoted my words out-of-context and twisted their meaning to suit=
+=20
+your purposes.
+
+>=20
+> > I presume that you mean to assert that Christophe's patch breaches the=
+=20
+> > style guide.
+>=20
+> I propose to take such a possibility into account.
+>=20
+
+This "possibility" was among the reasons why the patch was posted to a=20
+mailing list by its author. That possibility is a given. If you claim this=
+=20
+possibility as your motivation, you are being foolish or dishonest.
+
+>=20
+> > However, 'sonic_probe1' is the name of a function.
+>=20
+> The discussed source file does not contain such an identifier.=20
+> https://elixir.bootlin.com/linux/v5.7-rc5/source/drivers/net/ethernet/nat=
+semi/macsonic.c#L486=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/net/ethernet/natsemi/macsonic.c?id=3D2ef96a5bb12be62ef75b5828c0aab83=
+8ebb29cb8#n486
+>=20
+
+That's what I told you in my previous email. You're welcome.
+
+>=20
+> > This is not some sequence of GW-BASIC labels referred to in the style=
+=20
+> > guide.
+>=20
+> I recommend to read the current section =E2=80=9C7) Centralized exiting o=
+f=20
+> functions=E2=80=9D once more.
+>=20
+
+Again, you are proposing a bike shed of a different color.
+
+>=20
+> >> Can programming preferences evolve into the direction of =E2=80=9Csay =
+what=20
+> >> the goto does=E2=80=9D?
+> >
+> > I could agree that macsonic.c has no function resembling "probe1", and=
+=20
+> > that portion of the patch could be improved.
+>=20
+> I find this feedback interesting.
+>=20
+>=20
+> > Was that the opinion you were trying to express by way of rhetorical=20
+> > questions? I can't tell.
+>=20
+> Some known factors triggered my suggestion to consider the use of the=20
+> label =E2=80=9Cfree_dma=E2=80=9D.
+>=20
+
+If you cannot express or convey your "known factors" then they aren't=20
+useful.
+
+>=20
+> > Is it possible for a reviewer to effectively criticise C by use of=20
+> > English, when his C ability surpasses his English ability?
+>=20
+> We come along possibly usual communication challenges.
+>=20
+
+That looks like a machine translation. I can't make sense of it, sorry.
+
+> Regards,
+> Markus
+>=20
+
+Markus, if you were to write a patch to improve upon coding-style.rst, who=
+=20
+should review it?
+
+If you are unable to write or review such a patch, how can you hope to=20
+adjudicate compliance?
+---1463811774-1457172623-1589239130=:8--
