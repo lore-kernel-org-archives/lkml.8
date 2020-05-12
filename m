@@ -2,87 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C49DC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3325FC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D876420747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589323710;
-	bh=SfSO7QENcLztGvCGxj//ifkcHyHqNWEb1L+LM0/695o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KVnjNMd09E7PIklRQh06tLF/sKULcJZdZAwcMW+f910VnmJpv+u8FImlxjjppkRyG
-	 1hNs3Y1CZruE4Eu8t43RLI4H5aAV7y694S4potMqNPBAi1sMblZp26IMGKWIMZ+Rf4
-	 tItuSouwuLRNL127bNU921BzzVgj9MU5F0CYuQLc=
+	by mail.kernel.org (Postfix) with ESMTP id 12967206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+aCawby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbgELWsa (ORCPT
+        id S1731201AbgELWwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:48:30 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39223 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELWsa (ORCPT
+        Tue, 12 May 2020 18:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELWwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:48:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m13so11909775otf.6;
-        Tue, 12 May 2020 15:48:29 -0700 (PDT)
+        Tue, 12 May 2020 18:52:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF852C061A0C;
+        Tue, 12 May 2020 15:52:15 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so10116944pjd.1;
+        Tue, 12 May 2020 15:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L8tksuSDTqs67QtjinsHE4FheuuliIT8AjKoc4ucm54=;
+        b=A+aCawbyEMDcOaXESvLqmbZABWw9O6EP2s1AngbXLV2jFIlhagWHaNG/zKjJM2RhFx
+         zR4GIbUSqtZJSgejE1vf8+vegxIzPbGyVYxtbx7Sl6ZFU7jT0DgnrOAM/PpuOSJsUNex
+         ociJ4yn2NMIxKt+ipD9wQM7WQ8Z8Ygwn/nKw56/uOd2ygIegOMO5lGFdn6ZFbNuhwQeq
+         fqbZNZMncqohFrxIOZq7UENBmTJw+EzF/ChjImjT+PVEz6Zm2ogd4nnvSD5b3goCf5lm
+         bu6L9fnzBNIH9phxEleqG+Q4AJiTnHttCCBooCe3hgtQy5Dm9JgzUAi44UmBHKWlzh3N
+         qcwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JfommdF5aR26pvoOz0doQHmjh7MsV0X4kV8GfQPofGs=;
-        b=JoAH4UrxcAi0mWxmG8nf51SCq9vVZAU2cQ0O8pQgh9FRgQ+fsKOe+yd5AA9RNHDxo6
-         tZDWgriwXmfTnu/k8VoW77iNtKfQn668vYcldFRW3PTflJnqsAcvgXVIy3F5swlUQsvY
-         YRKwqyaHn3X38513LHurFbaZgYRp/0mkwY/jtL63I+YGXRtDMTWDi0THdxUKGmO04txr
-         pKzu6KWa/lAfrk8aK4DGvstJSraPeMgNIMHHuR8GWC/3/MGD3koqcfkwjeaVUkKYh3rW
-         tHB8U0Cv1mYBGPCW0bmS2Id112mTTiNX2JDDG+8u54bthIbhzckhJhKPGOU8D0b/JXmx
-         Vd+w==
-X-Gm-Message-State: AGi0PuZrPnFWgiv/UsCQNTZn3hUhylFVXIENI9RTKd7L9syEo61WxtLb
-        5On1BJxFfI8dBlyCZlMwxw==
-X-Google-Smtp-Source: APiQypJAfsKJMWuQSU+ktRpo3PU8ZTfcIbP+UZi1He62ca8nLhPfscQRLXOXF0BGkC5TXvCxXzMT+w==
-X-Received: by 2002:a9d:6442:: with SMTP id m2mr17934732otl.213.1589323708858;
-        Tue, 12 May 2020 15:48:28 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a29sm3840493otd.45.2020.05.12.15.48.27
+         :mime-version:content-disposition:in-reply-to;
+        bh=L8tksuSDTqs67QtjinsHE4FheuuliIT8AjKoc4ucm54=;
+        b=CPmvJJ/29L3lRda0Pa76z/h4gkAGYU46JhvBEHGFSzszKFYCZ4+nfuEO8NZ2MRB01g
+         HKRbOEQ+e+h4xuKU1AzDIT9fa/fRSxJpO2WOIRs3x6w2jyl477NsXnFYtkb6GYVC5cRT
+         f5pbdR6NE62NTkRcanOf/PY11MKY690tOJBNu/US7msVmie9gCrBx38IZjyOvLyxGAfn
+         yQxr5oUMgY3WMdKQfFLsNSHwVxyEFr5OzjYIENFxA25M16ErYDQ8jMMehpYpeVlXn1nk
+         hJ21zKawsl8PBl29zCDTrCv1bd9PsT6p8kzyjdANeTMV5lSFA+4JchOwif0lQ4MBx+3n
+         EylA==
+X-Gm-Message-State: AOAM531Rh9gFRLX5U9rwPTV4VaZDJW13VqQeHWK/0i1bAsICSxTxqhpS
+        6ZLZgLEC97dDqKLxVZQDioI=
+X-Google-Smtp-Source: ABdhPJwDUrxJZKSLp+Xr6kWbTqL3Ofq02Ayex445wtfRyI6/RGyZxIFRJC7Rb3atq+Syq8sFipfKUw==
+X-Received: by 2002:a17:90a:344c:: with SMTP id o70mr5619516pjb.23.1589323935225;
+        Tue, 12 May 2020 15:52:15 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id z1sm13623932pjn.43.2020.05.12.15.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:48:28 -0700 (PDT)
-Received: (nullmailer pid 18177 invoked by uid 1000);
-        Tue, 12 May 2020 22:48:27 -0000
-Date:   Tue, 12 May 2020 17:48:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Cc:     sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mturquette@baylibre.com, devicetree@vger.kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Subject: Re: [PATCH] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
-Message-ID: <20200512224827.GA18046@bogus>
-References: <1588573803-3823-1-git-send-email-sivaprak@codeaurora.org>
+        Tue, 12 May 2020 15:52:14 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:52:12 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
+ enable-gpios
+Message-ID: <20200512225212.GE89269@dtor-ws>
+References: <20200512222205.1456300-1-megous@megous.com>
+ <20200512222205.1456300-2-megous@megous.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588573803-3823-1-git-send-email-sivaprak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512222205.1456300-2-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 May 2020 12:00:03 +0530, Sivaprakash Murugesan wrote:
-> This patch adds schema for primary CPU PLL found on few Qualcomm
-> platforms.
+On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
+> It is possible to turn the motor on/off just by enabling/disabling
+> the vcc-supply.
 > 
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 ------------
->  .../devicetree/bindings/clock/qcom,a53pll.yaml     | 40 ++++++++++++++++++++++
->  2 files changed, 40 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+>  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
+>  1 file changed, 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> index 2384465eaa19..c700b640bd53 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> @@ -24,7 +24,6 @@ properties:
+>  
+>  required:
+>    - compatible
+> -  - enable-gpios
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hmm we need at least one of the 2 (gpio and supply). Should we encode it
+in the binding?
+
+Also, in the dirver code, I guess we need to switch to have regulator
+optional (so we are not given the dummy one) and bail if neither
+regulator nor GPIO is found.
+
+Thanks.
+
+-- 
+Dmitry
