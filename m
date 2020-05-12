@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65911C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F0C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4549523126
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615DB24930
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbgELWZc (ORCPT
+        id S1731677AbgELWXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
+        Tue, 12 May 2020 18:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731703AbgELWXV (ORCPT
+        by vger.kernel.org with ESMTP id S1731652AbgELWXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:21 -0400
+        Tue, 12 May 2020 18:23:10 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 101E0C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8694C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:09 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIH-0004kH-RR; Wed, 13 May 2020 00:22:35 +0200
+        id 1jYdIE-0004hY-4O; Wed, 13 May 2020 00:22:31 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 543C91001FC;
-        Wed, 13 May 2020 00:22:33 +0200 (CEST)
-Message-Id: <20200512213810.611305682@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 8D558100605;
+        Wed, 13 May 2020 00:22:29 +0200 (CEST)
+Message-Id: <20200512213810.320365524@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:11 +0200
+Date:   Tue, 12 May 2020 23:01:08 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 12/38] x86/entry: Provide idtentry_entry/exit_cond_rcu()
+Subject: [patch V5 09/38] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,235 +71,408 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pagefault handler cannot use the regular idtentry_enter() because that
-invokes rcu_irq_enter() if the pagefault was caused in the kernel. Not a
-problem per se, but kernel side page faults can schedule which is not
-possible without invoking rcu_irq_exit().
+Convert the XEN/PV hypercall to IDTENTRY:
 
-Adding rcu_irq_exit() and a matching rcu_irq_enter() into the actual
-pagefault handling code would be possible, but not pretty either.
+  - Emit the ASM stub with DECLARE_IDTENTRY
+  - Remove the ASM idtentry in 64bit
+  - Remove the open coded ASM entry code in 32bit
+  - Remove the old prototypes
 
-Provide idtentry_entry/exit_cond_rcu() which calls rcu_irq_enter() only
-when RCU is not watching. The conditional RCU enabling is a correctness
-issue: A kernel page fault which hits a RCU idle reason can neither
-schedule nor is it likely to survive. But avoiding RCU warnings or RCU side
-effects is at least increasing the chance for useful debug output.
+The handler stubs need to stay in ASM code as it needs corner case handling
+and adjustment of the stack pointer.
 
-The function is also useful for implementing lightweight reschedule IPI and
-KVM posted interrupt IPI entry handling later.
+Provide a new C function which invokes the entry/exit handling and calls
+into the XEN handler on the interrupt stack.
+
+The exit code is slightly different from the regular idtentry_exit() on
+non-preemptible kernels. If the hypercall is preemptible and need_resched()
+is set then XEN provides a preempt hypercall scheduling function. Add it as
+conditional path to __idtentry_exit() so the function can be reused.
+
+__idtentry_exit() is forced inlined so on the regular idtentry_exit() path
+the extra condition is optimized out by the compiler.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
 ---
-V5: Add comments about the rcu_exit conditional and make changelog readable.
+V5: Move DECLARE_PER_CPU(bool, xen_in_preemptible_hcall) out of ifdeffery
+    to avoid #ifdeffery in idtentry_exit().
+    Convert to the reworked stack switching helper
+    Fixed up the XEN callback initialization (Boris O.)
 ---
- arch/x86/entry/common.c         |  142 +++++++++++++++++++++++++++++++++++-----
- arch/x86/include/asm/idtentry.h |    3 
- 2 files changed, 128 insertions(+), 17 deletions(-)
+ arch/x86/entry/common.c         |   57 ++++++++++++++++++++++++++++++++++++++--
+ arch/x86/entry/entry_32.S       |   17 ++++++-----
+ arch/x86/entry/entry_64.S       |   22 ++++-----------
+ arch/x86/include/asm/idtentry.h |   13 +++++++++
+ arch/x86/xen/setup.c            |    4 ++
+ arch/x86/xen/smp_pv.c           |    3 +-
+ arch/x86/xen/xen-asm_32.S       |   12 ++++----
+ arch/x86/xen/xen-asm_64.S       |    2 -
+ arch/x86/xen/xen-ops.h          |    1 
+ drivers/xen/preempt.c           |    2 -
+ include/xen/xen-ops.h           |    7 +++-
+ 11 files changed, 103 insertions(+), 37 deletions(-)
 
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -515,6 +515,36 @@ SYSCALL_DEFINE0(ni_syscall)
- 	return -ENOSYS;
+@@ -27,6 +27,9 @@
+ #include <linux/syscalls.h>
+ #include <linux/uaccess.h>
+ 
++#include <xen/xen-ops.h>
++#include <xen/events.h>
++
+ #include <asm/desc.h>
+ #include <asm/traps.h>
+ #include <asm/vdso.h>
+@@ -35,6 +38,7 @@
+ #include <asm/nospec-branch.h>
+ #include <asm/io_bitmap.h>
+ #include <asm/syscall.h>
++#include <asm/irq_stack.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/syscalls.h>
+@@ -539,7 +543,8 @@ void noinstr idtentry_enter(struct pt_re
+ 	}
  }
  
-+static __always_inline bool __idtentry_enter(struct pt_regs *regs,
-+					     bool cond_rcu)
-+{
-+	if (user_mode(regs)) {
-+		enter_from_user_mode();
-+	} else {
-+		if (!cond_rcu || !__rcu_is_watching()) {
-+			/*
-+			 * If RCU is not watching then the same careful
-+			 * sequence vs. lockdep and tracing is required.
-+			 */
-+			lockdep_hardirqs_off(CALLER_ADDR0);
-+			rcu_irq_enter();
-+			instrumentation_begin();
-+			trace_hardirqs_off_prepare();
-+			instrumentation_end();
-+			return true;
-+		} else {
-+			/*
-+			 * If RCU is watching then the combo function
-+			 * can be used.
-+			 */
-+			instrumentation_begin();
-+			trace_hardirqs_off();
-+			instrumentation_end();
-+		}
-+	}
-+	return false;
-+}
-+
- /**
-  * idtentry_enter - Handle state tracking on idtentry
-  * @regs:	Pointer to pt_regs of interrupted context
-@@ -532,19 +562,60 @@ SYSCALL_DEFINE0(ni_syscall)
-  */
- void noinstr idtentry_enter(struct pt_regs *regs)
- {
--	if (user_mode(regs)) {
--		enter_from_user_mode();
--	} else {
--		lockdep_hardirqs_off(CALLER_ADDR0);
--		rcu_irq_enter();
--		instrumentation_begin();
--		trace_hardirqs_off_prepare();
--		instrumentation_end();
--	}
-+	__idtentry_enter(regs, false);
-+}
-+
-+/**
-+ * idtentry_enter_cond_rcu - Handle state tracking on idtentry with conditional
-+ *			     RCU handling
-+ * @regs:	Pointer to pt_regs of interrupted context
-+ *
-+ * Invokes:
-+ *  - lockdep irqflag state tracking as low level ASM entry disabled
-+ *    interrupts.
-+ *
-+ *  - Context tracking if the exception hit user mode.
-+ *
-+ *  - The hardirq tracer to keep the state consistent as low level ASM
-+ *    entry disabled interrupts.
-+ *
-+ * For kernel mode entries the conditional RCU handling is useful for two
-+ * purposes
-+ *
-+ * 1) Pagefaults: Kernel code can fault and sleep, e.g. on exec. This code
-+ *    is not in an RCU idle section. If rcu_irq_enter() would be invoked
-+ *    then nothing would invoke rcu_irq_exit() before scheduling.
-+ *
-+ *   If the kernel faults in a RCU idle section then all bets are off
-+ *   anyway but at least avoiding a subsequent issue vs. RCU is helpful for
-+ *   debugging.
-+ *
-+ * 2) Scheduler IPI: To avoid the overhead of a regular idtentry vs. RCU
-+ *    and irq_enter() the IPI can be made lightweight if the tracepoints
-+ *    are not enabled. While the IPI functionality itself does not require
-+ *    RCU (folding preempt count) it still calls out into instrumentable
-+ *    functions, e.g. ack_APIC_irq(). The scheduler IPI can hit RCU idle
-+ *    sections, so RCU needs to be adjusted. For the fast path case, e.g.
-+ *    KVM kicking a vCPU out of guest mode this can be avoided because the
-+ *    IPI is handled after KVM reestablished kernel context including RCU.
-+ *
-+ * For user mode entries enter_from_user_mode() must be invoked to
-+ * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
-+ * would not be possible.
-+ *
-+ * Returns: True if RCU has been adjusted on a kernel entry
-+ *	    False otherwise
-+ *
-+ * The return value must be fed into the rcu_exit argument of
-+ * idtentry_exit_cond_rcu().
-+ */
-+bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
-+{
-+	return __idtentry_enter(regs, true);
- }
- 
- static __always_inline void __idtentry_exit(struct pt_regs *regs,
--					    bool preempt_hcall)
-+					    bool preempt_hcall, bool rcu_exit)
+-static __always_inline void __idtentry_exit(struct pt_regs *regs)
++static __always_inline void __idtentry_exit(struct pt_regs *regs,
++					    bool preempt_hcall)
  {
  	lockdep_assert_irqs_disabled();
  
-@@ -570,7 +641,12 @@ static __always_inline void __idtentry_e
- 				if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
- 					WARN_ON_ONCE(!on_thread_stack());
- 				instrumentation_begin();
--				rcu_irq_exit_preempt();
-+				/*
-+				 * Conditional for idtentry_exit_cond_rcu(),
-+				 * unconditional for all other users.
-+				 */
-+				if (rcu_exit)
-+					rcu_irq_exit_preempt();
- 				if (need_resched())
- 					preempt_schedule_irq();
- 				/* Covers both tracing and lockdep */
-@@ -602,11 +678,22 @@ static __always_inline void __idtentry_e
- 		trace_hardirqs_on_prepare();
- 		lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 		instrumentation_end();
--		rcu_irq_exit();
-+		/*
-+		 * Conditional for idtentry_exit_cond_rcu(), unconditional
-+		 * for all other users.
-+		 */
-+		if (rcu_exit)
-+			rcu_irq_exit();
- 		lockdep_hardirqs_on(CALLER_ADDR0);
- 	} else {
--		/* IRQ flags state is correct already. Just tell RCU */
--		rcu_irq_exit();
-+		/*
-+		 * IRQ flags state is correct already. Just tell RCU.
-+		 *
-+		 * Conditional for idtentry_exit_cond_rcu(), unconditional
-+		 * for all other users.
-+		 */
-+		if (rcu_exit)
-+			rcu_irq_exit();
- 	}
- }
- 
-@@ -627,7 +714,28 @@ static __always_inline void __idtentry_e
+@@ -573,6 +578,16 @@ static __always_inline void __idtentry_e
+ 				instrumentation_end();
+ 				return;
+ 			}
++		} else if (IS_ENABLED(CONFIG_XEN_PV)) {
++			if (preempt_hcall) {
++				/* See CONFIG_PREEMPTION above */
++				instrumentation_begin();
++				rcu_irq_exit_preempt();
++				xen_maybe_preempt_hcall();
++				trace_hardirqs_on();
++				instrumentation_end();
++				return;
++			}
+ 		}
+ 		/*
+ 		 * If preemption is disabled then this needs to be done
+@@ -612,5 +627,43 @@ static __always_inline void __idtentry_e
   */
  void noinstr idtentry_exit(struct pt_regs *regs)
  {
--	__idtentry_exit(regs, false);
-+	__idtentry_exit(regs, false, true);
+-	__idtentry_exit(regs);
++	__idtentry_exit(regs, false);
 +}
 +
-+/**
-+ * idtentry_exit_cond_rcu - Handle return from exception with conditional RCU
-+ *			    handling
-+ * @regs:	Pointer to pt_regs (exception entry regs)
-+ * @rcu_exit:	Invoke rcu_irq_exit() if true
-+ *
-+ * Depending on the return target (kernel/user) this runs the necessary
-+ * preemption and work checks if possible and reguired and returns to
-+ * the caller with interrupts disabled and no further work pending.
-+ *
-+ * This is the last action before returning to the low level ASM code which
-+ * just needs to return to the appropriate context.
-+ *
-+ * Counterpart to idtentry_enter_cond_rcu(). The return value of the entry
-+ * function must be fed into the @rcu_exit argument.
-+ */
-+void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
++#ifdef CONFIG_XEN_PV
++static void __xen_pv_evtchn_do_upcall(void)
 +{
-+	__idtentry_exit(regs, false, rcu_exit);
++	irq_enter_rcu();
++	inc_irq_stat(irq_hv_callback_count);
++
++	xen_hvm_evtchn_do_upcall();
++
++	irq_exit_rcu();
++}
++
++__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
++{
++	struct pt_regs *old_regs;
++
++	idtentry_enter(regs);
++	old_regs = set_irq_regs(regs);
++
++	if (!irq_needs_irq_stack(regs)) {
++		instrumentation_begin();
++		__xen_pv_evtchn_do_upcall();
++		instrumentation_end();
++	} else {
++		run_on_irqstack(__xen_pv_evtchn_do_upcall, NULL);
++	}
++
++	set_irq_regs(old_regs);
++
++	if (IS_ENABLED(CONFIG_PREEMPTION)) {
++		__idtentry_exit(regs, false);
++	} else {
++		bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
++
++		__idtentry_exit(regs, inhcall && need_resched());
++	}
  }
++#endif /* CONFIG_XEN_PV */
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1298,7 +1298,10 @@ SYM_CODE_END(native_iret)
+ #endif
  
  #ifdef CONFIG_XEN_PV
-@@ -659,11 +767,11 @@ static void __xen_pv_evtchn_do_upcall(vo
- 	set_irq_regs(old_regs);
+-SYM_FUNC_START(xen_hypervisor_callback)
++/*
++ * See comment in entry_64.S for further explanation
++ */
++SYM_FUNC_START(exc_xen_hypervisor_callback)
+ 	/*
+ 	 * Check to see if we got the event in the critical
+ 	 * region in xen_iret_direct, after we've reenabled
+@@ -1315,14 +1318,11 @@ SYM_FUNC_START(xen_hypervisor_callback)
+ 	pushl	$-1				/* orig_ax = -1 => not a system call */
+ 	SAVE_ALL
+ 	ENCODE_FRAME_POINTER
+-	TRACE_IRQS_OFF
++
+ 	mov	%esp, %eax
+-	call	xen_evtchn_do_upcall
+-#ifndef CONFIG_PREEMPTION
+-	call	xen_maybe_preempt_hcall
+-#endif
+-	jmp	ret_from_intr
+-SYM_FUNC_END(xen_hypervisor_callback)
++	call	xen_pv_evtchn_do_upcall
++	jmp	handle_exception_return
++SYM_FUNC_END(exc_xen_hypervisor_callback)
  
- 	if (IS_ENABLED(CONFIG_PREEMPTION)) {
--		__idtentry_exit(regs, false);
-+		__idtentry_exit(regs, false, true);
- 	} else {
- 		bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
+ /*
+  * Hypervisor uses this for application faults while it executes.
+@@ -1464,6 +1464,7 @@ SYM_CODE_START_LOCAL_NOALIGN(handle_exce
+ 	movl	%esp, %eax			# pt_regs pointer
+ 	CALL_NOSPEC edi
  
--		__idtentry_exit(regs, inhcall && need_resched());
-+		__idtentry_exit(regs, inhcall && need_resched(), true);
- 	}
- }
- #endif /* CONFIG_XEN_PV */
++handle_exception_return:
+ #ifdef CONFIG_VM86
+ 	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
+ 	movb	PT_CS(%esp), %al
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1067,10 +1067,6 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
+ 
+ idtentry	X86_TRAP_PF		page_fault		do_page_fault			has_error_code=1
+ 
+-#ifdef CONFIG_XEN_PV
+-idtentry	512 /* dummy */		hypervisor_callback	xen_do_hypervisor_callback	has_error_code=0
+-#endif
+-
+ /*
+  * Reload gs selector with exception handling
+  * edi:  new selector
+@@ -1158,9 +1154,10 @@ SYM_FUNC_END(asm_call_on_stack)
+  * So, on entry to the handler we detect whether we interrupted an
+  * existing activation in its critical region -- if so, we pop the current
+  * activation and restart the handler using the previous one.
++ *
++ * C calling convention: exc_xen_hypervisor_callback(struct *pt_regs)
+  */
+-/* do_hypervisor_callback(struct *pt_regs) */
+-SYM_CODE_START_LOCAL(xen_do_hypervisor_callback)
++SYM_CODE_START_LOCAL(exc_xen_hypervisor_callback)
+ 
+ /*
+  * Since we don't modify %rdi, evtchn_do_upall(struct *pt_regs) will
+@@ -1170,15 +1167,10 @@ SYM_CODE_START_LOCAL(xen_do_hypervisor_c
+ 	movq	%rdi, %rsp			/* we don't return, adjust the stack frame */
+ 	UNWIND_HINT_REGS
+ 
+-	ENTER_IRQ_STACK old_rsp=%r10
+-	call	xen_evtchn_do_upcall
+-	LEAVE_IRQ_STACK
+-
+-#ifndef CONFIG_PREEMPTION
+-	call	xen_maybe_preempt_hcall
+-#endif
+-	jmp	error_exit
+-SYM_CODE_END(xen_do_hypervisor_callback)
++	call	xen_pv_evtchn_do_upcall
++
++	jmp	error_return
++SYM_CODE_END(exc_xen_hypervisor_callback)
+ 
+ /*
+  * Hypervisor uses this for application faults while it executes.
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -10,6 +10,9 @@
- void idtentry_enter(struct pt_regs *regs);
- void idtentry_exit(struct pt_regs *regs);
+@@ -332,6 +332,13 @@ static __always_inline void __##func(str
+  * This avoids duplicate defines and ensures that everything is consistent.
+  */
  
-+bool idtentry_enter_cond_rcu(struct pt_regs *regs);
-+void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
++/*
++ * Dummy trap number so the low level ASM macro vector number checks do not
++ * match which results in emitting plain IDTENTRY stubs without bells and
++ * whistels.
++ */
++#define X86_TRAP_OTHER		0xFFFF
 +
- /**
-  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
-  *		      No error code pushed by hardware
+ /* Simple exception entry points. No hardware error code */
+ DECLARE_IDTENTRY(X86_TRAP_DE,		exc_divide_error);
+ DECLARE_IDTENTRY(X86_TRAP_OF,		exc_overflow);
+@@ -373,4 +380,10 @@ DECLARE_IDTENTRY_XEN(X86_TRAP_DB,	debug)
+ DECLARE_IDTENTRY_DF(X86_TRAP_DF,	exc_double_fault);
+ #endif
+ 
++#ifdef CONFIG_XEN_PV
++DECLARE_IDTENTRY(X86_TRAP_OTHER,	exc_xen_hypervisor_callback);
++#endif
++
++#undef X86_TRAP_OTHER
++
+ #endif
+--- a/arch/x86/xen/setup.c
++++ b/arch/x86/xen/setup.c
+@@ -20,6 +20,7 @@
+ #include <asm/setup.h>
+ #include <asm/acpi.h>
+ #include <asm/numa.h>
++#include <asm/idtentry.h>
+ #include <asm/xen/hypervisor.h>
+ #include <asm/xen/hypercall.h>
+ 
+@@ -993,7 +994,8 @@ static void __init xen_pvmmu_arch_setup(
+ 	HYPERVISOR_vm_assist(VMASST_CMD_enable,
+ 			     VMASST_TYPE_pae_extended_cr3);
+ 
+-	if (register_callback(CALLBACKTYPE_event, xen_hypervisor_callback) ||
++	if (register_callback(CALLBACKTYPE_event,
++			      xen_asm_exc_xen_hypervisor_callback) ||
+ 	    register_callback(CALLBACKTYPE_failsafe, xen_failsafe_callback))
+ 		BUG();
+ 
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -27,6 +27,7 @@
+ #include <asm/paravirt.h>
+ #include <asm/desc.h>
+ #include <asm/pgtable.h>
++#include <asm/idtentry.h>
+ #include <asm/cpu.h>
+ 
+ #include <xen/interface/xen.h>
+@@ -347,7 +348,7 @@ cpu_initialize_context(unsigned int cpu,
+ 	ctxt->gs_base_kernel = per_cpu_offset(cpu);
+ #endif
+ 	ctxt->event_callback_eip    =
+-		(unsigned long)xen_hypervisor_callback;
++		(unsigned long)xen_asm_exc_xen_hypervisor_callback;
+ 	ctxt->failsafe_callback_eip =
+ 		(unsigned long)xen_failsafe_callback;
+ 	per_cpu(xen_cr3, cpu) = __pa(swapper_pg_dir);
+--- a/arch/x86/xen/xen-asm_32.S
++++ b/arch/x86/xen/xen-asm_32.S
+@@ -93,7 +93,7 @@ SYM_CODE_START(xen_iret)
+ 
+ 	/*
+ 	 * If there's something pending, mask events again so we can
+-	 * jump back into xen_hypervisor_callback. Otherwise do not
++	 * jump back into exc_xen_hypervisor_callback. Otherwise do not
+ 	 * touch XEN_vcpu_info_mask.
+ 	 */
+ 	jne 1f
+@@ -113,7 +113,7 @@ SYM_CODE_START(xen_iret)
+ 	 * Events are masked, so jumping out of the critical region is
+ 	 * OK.
+ 	 */
+-	je xen_hypervisor_callback
++	je asm_exc_xen_hypervisor_callback
+ 
+ 1:	iret
+ xen_iret_end_crit:
+@@ -127,7 +127,7 @@ SYM_CODE_END(xen_iret)
+ 	.globl xen_iret_start_crit, xen_iret_end_crit
+ 
+ /*
+- * This is called by xen_hypervisor_callback in entry_32.S when it sees
++ * This is called by exc_xen_hypervisor_callback in entry_32.S when it sees
+  * that the EIP at the time of interrupt was between
+  * xen_iret_start_crit and xen_iret_end_crit.
+  *
+@@ -144,7 +144,7 @@ SYM_CODE_END(xen_iret)
+  *	 eflags		}
+  *	 cs		}  nested exception info
+  *	 eip		}
+- *	 return address	: (into xen_hypervisor_callback)
++ *	 return address	: (into asm_exc_xen_hypervisor_callback)
+  *
+  * In order to deliver the nested exception properly, we need to discard the
+  * nested exception frame such that when we handle the exception, we do it
+@@ -152,7 +152,8 @@ SYM_CODE_END(xen_iret)
+  *
+  * The only caveat is that if the outer eax hasn't been restored yet (i.e.
+  * it's still on stack), we need to restore its value here.
+- */
++*/
++.pushsection .noinstr.text, "ax"
+ SYM_CODE_START(xen_iret_crit_fixup)
+ 	/*
+ 	 * Paranoia: Make sure we're really coming from kernel space.
+@@ -181,3 +182,4 @@ SYM_CODE_START(xen_iret_crit_fixup)
+ 2:
+ 	ret
+ SYM_CODE_END(xen_iret_crit_fixup)
++.popsection
+--- a/arch/x86/xen/xen-asm_64.S
++++ b/arch/x86/xen/xen-asm_64.S
+@@ -54,7 +54,7 @@ xen_pv_trap asm_exc_simd_coprocessor_err
+ #ifdef CONFIG_IA32_EMULATION
+ xen_pv_trap entry_INT80_compat
+ #endif
+-xen_pv_trap hypervisor_callback
++xen_pv_trap asm_exc_xen_hypervisor_callback
+ 
+ 	__INIT
+ SYM_CODE_START(xen_early_idt_handler_array)
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -8,7 +8,6 @@
+ #include <xen/xen-ops.h>
+ 
+ /* These are code, but not functions.  Defined in entry.S */
+-extern const char xen_hypervisor_callback[];
+ extern const char xen_failsafe_callback[];
+ 
+ void xen_sysenter_target(void);
+--- a/drivers/xen/preempt.c
++++ b/drivers/xen/preempt.c
+@@ -24,7 +24,7 @@
+ DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
+ EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
+ 
+-asmlinkage __visible void xen_maybe_preempt_hcall(void)
++void xen_maybe_preempt_hcall(void)
+ {
+ 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
+ 		     && need_resched())) {
+--- a/include/xen/xen-ops.h
++++ b/include/xen/xen-ops.h
+@@ -214,6 +214,7 @@ bool xen_running_on_version_or_later(uns
+ 
+ void xen_efi_runtime_setup(void);
+ 
++DECLARE_PER_CPU(bool, xen_in_preemptible_hcall);
+ 
+ #ifdef CONFIG_PREEMPTION
+ 
+@@ -225,9 +226,9 @@ static inline void xen_preemptible_hcall
+ {
+ }
+ 
+-#else
++static inline void xen_maybe_preempt_hcall(void) { }
+ 
+-DECLARE_PER_CPU(bool, xen_in_preemptible_hcall);
++#else
+ 
+ static inline void xen_preemptible_hcall_begin(void)
+ {
+@@ -239,6 +240,8 @@ static inline void xen_preemptible_hcall
+ 	__this_cpu_write(xen_in_preemptible_hcall, false);
+ }
+ 
++void xen_maybe_preempt_hcall(void);
++
+ #endif /* CONFIG_PREEMPTION */
+ 
+ #endif /* INCLUDE_XEN_OPS_H */
 
