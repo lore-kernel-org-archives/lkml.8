@@ -2,703 +2,145 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66FCC2D100
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AF8C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA3FF20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0433120731
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jkxjg0T2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgELVr3 (ORCPT
+        id S1731575AbgELVr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:47:29 -0400
-Received: from muru.com ([72.249.23.125]:54242 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbgELVr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:47:27 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id C23A1812F;
-        Tue, 12 May 2020 21:48:12 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCH 1/6] tty: n_gsm: Add support for serdev drivers
-Date:   Tue, 12 May 2020 14:47:08 -0700
-Message-Id: <20200512214713.40501-2-tony@atomide.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512214713.40501-1-tony@atomide.com>
-References: <20200512214713.40501-1-tony@atomide.com>
+        Tue, 12 May 2020 17:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731329AbgELVrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:47:55 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50DDC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:47:55 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id l73so949647pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:47:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Uv52gchuUhEIM8QP1BdGMzRp2+Ut2TatOyzveq7OlWs=;
+        b=jkxjg0T2haVmUpTShuETFu1Wq++3MwjgbyneltOHIfk8XQsJNKxt922t1Ytvkm8wYD
+         RuA4OJxZWBa/vXJiaIIZHvY9Y6cbdCyREuLDwkiTLEgkpxB1w1x5Blst/fjWuwf3ERc/
+         bjUma8IUpfYR5TD4vtu6DAmnX6ipRd9lYuxZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Uv52gchuUhEIM8QP1BdGMzRp2+Ut2TatOyzveq7OlWs=;
+        b=ZzieIi/Ymr+jolqk9gYl19xncwAH49OcpIXdsJ6PByJBxTZecioOylO92F+u0iJcP4
+         ISVQlghBjFEnGFt0NNPI7Y5Et2ndvKP0C8dEYZG4kXhGwwcQ1gZIR4e+wU6dQwzRKMlY
+         VeDX8+nEst2Nl7kS/ydLCKAdS7lOPX967ZoLqoThT5A0OEaw63fQCPi/0XiDfgzI+lEW
+         5RNLplRAFhlVw8/QHgAaHMibl5y5Nktz+xrsCVVAoajbZkweg1kzmaipakeUG/pwYYl1
+         wtekwd+P9xQKgZkENaytg0ryGGWt8/jJyMV4m88413OB4JEJEW5rMaeSNJV97ovpLx9J
+         jcEA==
+X-Gm-Message-State: AGi0Pua7JhPddKXRcirU6cEKIKCa8ufagEMNH4wdcbGajq5aOQTnSA1/
+        ilt2LtVBWldulglkgmWMXEzvYQ==
+X-Google-Smtp-Source: APiQypJrjYK11lvG/VkCX0mmTLzIKKq0JSP9JmFg20XkcRaUfiuly0oHj8otgh7EUG0Oi/xXtpM8GA==
+X-Received: by 2002:a17:90b:957:: with SMTP id dw23mr31666614pjb.101.1589320075184;
+        Tue, 12 May 2020 14:47:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 135sm12786295pfu.125.2020.05.12.14.47.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 14:47:54 -0700 (PDT)
+Date:   Tue, 12 May 2020 14:47:53 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
+        saravanak@google.com, sibis@codeaurora.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 08/10] cpufreq: dt: Validate all interconnect paths
+Message-ID: <20200512214753.GJ4525@google.com>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-9-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200512125327.1868-9-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can make use of serdev drivers to do simple device drivers for
-TS 27.010 chanels, and we can handle vendor specific protocols on top
-of TS 27.010 with serdev drivers.
+Hi Georgi,
 
-So far this has been tested with Motorola droid4 where there is a custom
-packet numbering protocol on top of TS 27.010 for the MDM6600 modem.
+On Tue, May 12, 2020 at 03:53:25PM +0300, Georgi Djakov wrote:
+> Currently when we check for the available resources, we assume that there
+> is only one interconnect path, but in fact it could be more than one. Do
+> some validation to determine the number of paths and verify if each one
+> of them is available.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v8:
+> * New patch.
+> 
+>  drivers/cpufreq/cpufreq-dt.c | 49 ++++++++++++++++++++++++++++++++----
+>  1 file changed, 44 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+> index 4ecef3257532..3dd28c2c1633 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -91,12 +91,54 @@ static const char *find_supply_name(struct device *dev)
+>  	return name;
+>  }
+>  
+> +static int find_icc_paths(struct device *dev)
+> +{
+> +	struct device_node *np;
+> +	struct icc_path **paths;
+> +	int i, count, num_paths;
+> +	int ret = 0;
+> +
+> +	np = of_node_get(dev->of_node);
+> +	if (!np)
+> +		return 0;
+> +
+> +	count = of_count_phandle_with_args(np, "interconnects",
+> +					   "#interconnect-cells");
+> +	of_node_put(np);
+> +	if (count < 0)
+> +		return 0;
+> +
+> +	/* two phandles when #interconnect-cells = <1> */
+> +	if (count % 2) {
+> +		dev_err(dev, "%s: Invalid interconnects values\n", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	num_paths = count / 2;
+> +	paths = kcalloc(num_paths, sizeof(*paths), GFP_KERNEL);
+> +	if (!paths)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_paths; i++) {
+> +		paths[i] = of_icc_get_by_index(dev, i);
+> +		ret = PTR_ERR_OR_ZERO(paths[i]);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	while (i--)
+> +		icc_put(paths[i]);
 
-I initially though about adding the serdev support into a separate file,
-but that will take some refactoring of n_gsm.c. And I'd like to have
-things working first. Then later on we might want to consider splitting
-n_gsm.c into three pieces for core, tty and serdev parts. And then maybe
-the serdev related parts can be just moved to live under something like
-drivers/tty/serdev/protocol/ngsm.c.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/tty/n_gsm.c        | 435 +++++++++++++++++++++++++++++++++++++
- include/linux/serdev-gsm.h | 154 +++++++++++++
- 2 files changed, 589 insertions(+)
- create mode 100644 include/linux/serdev-gsm.h
-
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -39,6 +39,7 @@
- #include <linux/file.h>
- #include <linux/uaccess.h>
- #include <linux/module.h>
-+#include <linux/serdev.h>
- #include <linux/timer.h>
- #include <linux/tty_flip.h>
- #include <linux/tty_driver.h>
-@@ -50,6 +51,7 @@
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/gsmmux.h>
-+#include <linux/serdev-gsm.h>
- 
- static int debug;
- module_param(debug, int, 0600);
-@@ -150,6 +152,7 @@ struct gsm_dlci {
- 	/* Data handling callback */
- 	void (*data)(struct gsm_dlci *dlci, const u8 *data, int len);
- 	void (*prev_data)(struct gsm_dlci *dlci, const u8 *data, int len);
-+	struct gsm_serdev_dlci *ops; /* serdev dlci ops, if used */
- 	struct net_device *net; /* network interface, if created */
- };
- 
-@@ -198,6 +201,7 @@ enum gsm_mux_state {
-  */
- 
- struct gsm_mux {
-+	struct gsm_serdev *gsd;		/* Serial device bus data */
- 	struct tty_struct *tty;		/* The tty our ldisc is bound to */
- 	spinlock_t lock;
- 	struct mutex mutex;
-@@ -2346,6 +2350,437 @@ static int gsm_config(struct gsm_mux *gsm, struct gsm_config *c)
- 	return 0;
- }
- 
-+#ifdef CONFIG_SERIAL_DEV_BUS
-+
-+/**
-+ * gsm_serdev_get_config - read ts 27.010 config
-+ * @gsd:	serdev-gsm instance
-+ * @c:		ts 27.010 config data
-+ *
-+ * See gsm_copy_config_values() for more information.
-+ */
-+int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c)
-+{
-+	struct gsm_mux *gsm;
-+
-+	if (!gsd || !gsd->gsm)
-+		return -ENODEV;
-+
-+	gsm = gsd->gsm;
-+
-+	if (!c)
-+		return -EINVAL;
-+
-+	gsm_copy_config_values(gsm, c);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_get_config);
-+
-+/**
-+ * gsm_serdev_set_config - set ts 27.010 config
-+ * @gsd:	serdev-gsm instance
-+ * @c:		ts 27.010 config data
-+ *
-+ * See gsm_config() for more information.
-+ */
-+int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c)
-+{
-+	struct gsm_mux *gsm;
-+
-+	if (!gsd || !gsd->serdev || !gsd->gsm)
-+		return -ENODEV;
-+
-+	gsm = gsd->gsm;
-+
-+	if (!c)
-+		return -EINVAL;
-+
-+	return gsm_config(gsm, c);
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_set_config);
-+
-+static struct gsm_dlci *gsd_dlci_get(struct gsm_serdev *gsd, int line,
-+				     bool allocate)
-+{
-+	struct gsm_mux *gsm;
-+	struct gsm_dlci *dlci;
-+
-+	if (!gsd || !gsd->gsm)
-+		return ERR_PTR(-ENODEV);
-+
-+	gsm = gsd->gsm;
-+
-+	if (line < 1 || line >= 63)
-+		return ERR_PTR(-EINVAL);
-+
-+	mutex_lock(&gsm->mutex);
-+
-+	if (gsm->dlci[line]) {
-+		dlci = gsm->dlci[line];
-+		goto unlock;
-+	} else if (!allocate) {
-+		dlci = ERR_PTR(-ENODEV);
-+		goto unlock;
-+	}
-+
-+	dlci = gsm_dlci_alloc(gsm, line);
-+	if (!dlci) {
-+		dlci = ERR_PTR(-ENOMEM);
-+		goto unlock;
-+	}
-+
-+	gsm->dlci[line] = dlci;
-+
-+unlock:
-+	mutex_unlock(&gsm->mutex);
-+
-+	return dlci;
-+}
-+
-+static int gsd_dlci_receive_buf(struct gsm_serdev_dlci *ops,
-+				const unsigned char *buf,
-+				size_t len)
-+{
-+	struct gsm_serdev *gsd = ops->gsd;
-+	struct gsm_dlci *dlci;
-+	struct tty_port *port;
-+
-+	dlci = gsd_dlci_get(gsd, ops->line, false);
-+	if (IS_ERR(dlci))
-+		return PTR_ERR(dlci);
-+
-+	port = &dlci->port;
-+	tty_insert_flip_string(port, buf, len);
-+	tty_flip_buffer_push(port);
-+
-+	return len;
-+}
-+
-+static void gsd_dlci_data(struct gsm_dlci *dlci, const u8 *buf, int len)
-+{
-+	struct gsm_mux *gsm = dlci->gsm;
-+	struct gsm_serdev *gsd = gsm->gsd;
-+
-+	if (!gsd || !dlci->ops)
-+		return;
-+
-+	switch (dlci->adaption) {
-+	case 0:
-+	case 1:
-+		if (dlci->ops->receive_buf)
-+			dlci->ops->receive_buf(dlci->ops, buf, len);
-+		break;
-+	default:
-+		pr_warn("dlci%i adaption %i not yet implemented\n",
-+			dlci->addr, dlci->adaption);
-+		break;
-+	}
-+}
-+
-+/**
-+ * gsm_serdev_write - write data to a ts 27.010 channel
-+ * @gsd:	serdev-gsm instance
-+ * @ops:	channel ops
-+ * @buf:	write buffer
-+ * @len:	buffer length
-+ */
-+int gsm_serdev_write(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops,
-+		     const u8 *buf, int len)
-+{
-+	struct gsm_mux *gsm;
-+	struct gsm_dlci *dlci;
-+	struct gsm_msg *msg;
-+	int h, size, total_size = 0;
-+	u8 *dp;
-+
-+	if (!gsd || !gsd->gsm)
-+		return -ENODEV;
-+
-+	gsm = gsd->gsm;
-+
-+	dlci = gsd_dlci_get(gsd, ops->line, false);
-+	if (IS_ERR(dlci))
-+		return PTR_ERR(dlci);
-+
-+	h = dlci->adaption - 1;
-+
-+	if (len > gsm->mtu)
-+		len = gsm->mtu;
-+
-+	size = len + h;
-+
-+	msg = gsm_data_alloc(gsm, dlci->addr, size, gsm->ftype);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	dp = msg->data;
-+	switch (dlci->adaption) {
-+	case 1:
-+		break;
-+	case 2:
-+		*dp++ = gsm_encode_modem(dlci);
-+		break;
-+	}
-+	memcpy(dp, buf, len);
-+	gsm_data_queue(dlci, msg);
-+	total_size += size;
-+
-+	return total_size;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_write);
-+
-+/**
-+ * gsm_serdev_data_kick - indicate more data can be transmitted
-+ * @gsd:	serdev-gsm instance
-+ *
-+ * See gsm_data_kick() for more information.
-+ */
-+void gsm_serdev_data_kick(struct gsm_serdev *gsd)
-+{
-+	struct gsm_mux *gsm;
-+	unsigned long flags;
-+
-+	if (!gsd || !gsd->gsm)
-+		return;
-+
-+	gsm = gsd->gsm;
-+
-+	spin_lock_irqsave(&gsm->tx_lock, flags);
-+	gsm_data_kick(gsm);
-+	spin_unlock_irqrestore(&gsm->tx_lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_data_kick);
-+
-+/**
-+ * gsm_serdev_register_dlci - register a ts 27.010 channel
-+ * @gsd:	serdev-gsm instance
-+ * @ops:	channel ops
-+ */
-+int gsm_serdev_register_dlci(struct gsm_serdev *gsd,
-+			     struct gsm_serdev_dlci *ops)
-+{
-+	struct gsm_dlci *dlci;
-+	struct gsm_mux *gsm;
-+	int retries;
-+
-+	if (!gsd || !gsd->gsm || !gsd->serdev)
-+		return -ENODEV;
-+
-+	gsm = gsd->gsm;
-+
-+	if (!ops || !ops->line)
-+		return -EINVAL;
-+
-+	dlci = gsd_dlci_get(gsd, ops->line, true);
-+	if (IS_ERR(dlci))
-+		return PTR_ERR(dlci);
-+
-+	if (dlci->state == DLCI_OPENING || dlci->state == DLCI_OPEN ||
-+	    dlci->state == DLCI_CLOSING)
-+		return -EBUSY;
-+
-+	mutex_lock(&dlci->mutex);
-+	ops->gsd = gsd;
-+	dlci->ops = ops;
-+	dlci->modem_rx = 0;
-+	dlci->prev_data = dlci->data;
-+	dlci->data = gsd_dlci_data;
-+	mutex_unlock(&dlci->mutex);
-+
-+	gsm_dlci_begin_open(dlci);
-+
-+	/*
-+	 * Allow some time for dlci to move to DLCI_OPEN state. Otherwise
-+	 * the serdev consumer driver can start sending data too early during
-+	 * the setup, and the response will be missed by gms_queue() if we
-+	 * still have DLCI_CLOSED state.
-+	 */
-+	for (retries = 10; retries > 0; retries--) {
-+		if (dlci->state == DLCI_OPEN)
-+			break;
-+		msleep(100);
-+	}
-+
-+	if (!retries)
-+		dev_dbg(&gsd->serdev->dev, "dlci%i not currently active\n",
-+			dlci->addr);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_register_dlci);
-+
-+/**
-+ * gsm_serdev_unregister_dlci - unregister a ts 27.010 channel
-+ * @gsd:	serdev-gsm instance
-+ * @ops:	channel ops
-+ */
-+void gsm_serdev_unregister_dlci(struct gsm_serdev *gsd,
-+				struct gsm_serdev_dlci *ops)
-+{
-+	struct gsm_mux *gsm;
-+	struct gsm_dlci *dlci;
-+
-+	if (!gsd || !gsd->gsm || !gsd->serdev)
-+		return;
-+
-+	gsm = gsd->gsm;
-+
-+	if (!ops || !ops->line)
-+		return;
-+
-+	dlci = gsd_dlci_get(gsd, ops->line, false);
-+	if (IS_ERR(dlci))
-+		return;
-+
-+	mutex_lock(&dlci->mutex);
-+	gsm_destroy_network(dlci);
-+	dlci->data = dlci->prev_data;
-+	dlci->ops->gsd = NULL;
-+	dlci->ops = NULL;
-+	mutex_unlock(&dlci->mutex);
-+
-+	gsm_dlci_begin_close(dlci);
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_unregister_dlci);
-+
-+static int gsm_serdev_output(struct gsm_mux *gsm, u8 *data, int len)
-+{
-+	struct serdev_device *serdev = gsm->gsd->serdev;
-+
-+	if (gsm->gsd->output)
-+		return gsm->gsd->output(gsm->gsd, data, len);
-+	else
-+		return serdev_device_write_buf(serdev, data, len);
-+}
-+
-+static int gsd_receive_buf(struct serdev_device *serdev, const u8 *data,
-+			   size_t count)
-+{
-+	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
-+	struct gsm_mux *gsm;
-+	const unsigned char *dp;
-+	int i;
-+
-+	if (WARN_ON(!gsd))
-+		return 0;
-+
-+	gsm = gsd->gsm;
-+
-+	if (debug & 4)
-+		print_hex_dump_bytes("gsd_receive_buf: ",
-+				     DUMP_PREFIX_OFFSET,
-+				     data, count);
-+
-+	for (i = count, dp = data; i; i--, dp++)
-+		gsm->receive(gsm, *dp);
-+
-+	return count;
-+}
-+
-+static void gsd_write_wakeup(struct serdev_device *serdev)
-+{
-+	serdev_device_write_wakeup(serdev);
-+}
-+
-+static struct serdev_device_ops gsd_client_ops = {
-+	.receive_buf = gsd_receive_buf,
-+	.write_wakeup = gsd_write_wakeup,
-+};
-+
-+int gsm_serdev_register_tty_port(struct gsm_serdev *gsd, int line)
-+{
-+	struct gsm_serdev_dlci *ops;
-+	unsigned int base;
-+	int error;
-+
-+	if (line < 1)
-+		return -EINVAL;
-+
-+	ops = kzalloc(sizeof(*ops), GFP_KERNEL);
-+	if (!ops)
-+		return -ENOMEM;
-+
-+	ops->line = line;
-+	ops->receive_buf = gsd_dlci_receive_buf;
-+
-+	error = gsm_serdev_register_dlci(gsd, ops);
-+	if (error) {
-+		kfree(ops);
-+
-+		return error;
-+	}
-+
-+	base = mux_num_to_base(gsd->gsm);
-+	tty_register_device(gsm_tty_driver, base + ops->line, NULL);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_register_tty_port);
-+
-+void gsm_serdev_unregister_tty_port(struct gsm_serdev *gsd, int line)
-+{
-+	struct gsm_dlci *dlci;
-+	unsigned int base;
-+
-+	if (line < 1)
-+		return;
-+
-+	dlci = gsd_dlci_get(gsd, line, false);
-+	if (IS_ERR(dlci))
-+		return;
-+
-+	base = mux_num_to_base(gsd->gsm);
-+	tty_unregister_device(gsm_tty_driver, base + line);
-+	gsm_serdev_unregister_dlci(gsd, dlci->ops);
-+	kfree(dlci->ops);
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_unregister_tty_port);
-+
-+int gsm_serdev_register_device(struct gsm_serdev *gsd)
-+{
-+	struct gsm_mux *gsm;
-+	int error;
-+
-+	if (WARN(!gsd || !gsd->serdev || !gsd->output,
-+		 "serdev and output must be initialized\n"))
-+		return -EINVAL;
-+
-+	serdev_device_set_client_ops(gsd->serdev, &gsd_client_ops);
-+
-+	gsm = gsm_alloc_mux();
-+	if (!gsm)
-+		return -ENOMEM;
-+
-+	gsm->encoding = 1;
-+	gsm->tty = NULL;
-+	gsm->gsd = gsd;
-+	gsm->output = gsm_serdev_output;
-+	gsd->gsm = gsm;
-+	mux_get(gsd->gsm);
-+
-+	error = gsm_activate_mux(gsd->gsm);
-+	if (error) {
-+		gsm_cleanup_mux(gsd->gsm);
-+		mux_put(gsd->gsm);
-+
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_register_device);
-+
-+void gsm_serdev_unregister_device(struct gsm_serdev *gsd)
-+{
-+	gsm_cleanup_mux(gsd->gsm);
-+	mux_put(gsd->gsm);
-+	gsd->gsm = NULL;
-+}
-+EXPORT_SYMBOL_GPL(gsm_serdev_unregister_device);
-+
-+#endif	/* CONFIG_SERIAL_DEV_BUS */
-+
- /**
-  *	gsmld_output		-	write to link
-  *	@gsm: our mux
-diff --git a/include/linux/serdev-gsm.h b/include/linux/serdev-gsm.h
-new file mode 100644
---- /dev/null
-+++ b/include/linux/serdev-gsm.h
-@@ -0,0 +1,154 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_SERDEV_GSM_H
-+#define _LINUX_SERDEV_GSM_H
-+
-+#include <linux/device.h>
-+#include <linux/serdev.h>
-+#include <linux/types.h>
-+
-+struct gsm_serdev_dlci;
-+struct gsm_config;
-+
-+/**
-+ * struct gsm_serdev - serdev-gsm instance
-+ * @serdev:		serdev instance
-+ * @gsm:		ts 27.010 n_gsm instance
-+ * @drvdata:		serdev-gsm consumer driver data
-+ * @output:		read data from ts 27.010 channel
-+ *
-+ * Currently only serdev and output must be initialized, the rest are
-+ * are initialized by gsm_serdev_register_dlci().
-+ */
-+struct gsm_serdev {
-+	struct serdev_device *serdev;
-+	struct gsm_mux *gsm;
-+	void *drvdata;
-+	int (*output)(struct gsm_serdev *gsd, u8 *data, int len);
-+};
-+
-+/**
-+ * struct gsm_serdev_dlci - serdev-gsm ts 27.010 channel data
-+ * @gsd:		serdev-gsm instance
-+ * @line:		ts 27.010 channel, control channel 0 is not available
-+ * @receive_buf:	function to handle data received for the channel
-+ * @drvdata:		dlci specific consumer driver data
-+ */
-+struct gsm_serdev_dlci {
-+	struct gsm_serdev *gsd;
-+	int line;
-+	int (*receive_buf)(struct gsm_serdev_dlci *ops,
-+			   const unsigned char *buf,
-+			   size_t len);
-+	void *drvdata;
-+};
-+
-+#if IS_ENABLED(CONFIG_N_GSM) && IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
-+
-+extern int gsm_serdev_register_device(struct gsm_serdev *gsd);
-+extern void gsm_serdev_unregister_device(struct gsm_serdev *gsd);
-+extern int gsm_serdev_register_tty_port(struct gsm_serdev *gsd, int line);
-+extern void gsm_serdev_unregister_tty_port(struct gsm_serdev *gsd, int line);
-+
-+static inline void *gsm_serdev_get_drvdata(struct device *dev)
-+{
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
-+
-+	if (gsd)
-+		return gsd->drvdata;
-+
-+	return NULL;
-+}
-+
-+static inline void gsm_serdev_set_drvdata(struct device *dev, void *drvdata)
-+{
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct gsm_serdev *gsd = serdev_device_get_drvdata(serdev);
-+
-+	if (gsd)
-+		gsd->drvdata = drvdata;
-+}
-+
-+extern int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c);
-+extern int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c);
-+extern int
-+gsm_serdev_register_dlci(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops);
-+extern void
-+gsm_serdev_unregister_dlci(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops);
-+extern int gsm_serdev_write(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops,
-+			    const u8 *buf, int len);
-+extern void gsm_serdev_data_kick(struct gsm_serdev *gsd);
-+
-+#else	/* CONFIG_SERIAL_DEV_BUS */
-+
-+static inline
-+int gsm_serdev_register_device(struct gsm_serdev *gsd)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void gsm_serdev_unregister_device(struct gsm_serdev *gsd)
-+{
-+}
-+
-+static inline int
-+gsm_serdev_register_tty_port(struct gsm_serdev *gsd, int line)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+void gsm_serdev_unregister_tty_port(struct gsm_serdev *gsd, int line)
-+{
-+}
-+
-+static inline void *gsm_serdev_get_drvdata(struct device *dev)
-+{
-+	return NULL;
-+}
-+
-+static inline
-+void gsm_serdev_set_drvdata(struct device *dev, void *drvdata)
-+{
-+}
-+
-+static inline
-+int gsm_serdev_get_config(struct gsm_serdev *gsd, struct gsm_config *c)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+int gsm_serdev_set_config(struct gsm_serdev *gsd, struct gsm_config *c)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+int gsm_serdev_register_dlci(struct gsm_serdev *gsd,
-+			     struct gsm_serdev_dlci *ops)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+void gsm_serdev_unregister_dlci(struct gsm_serdev *gsd,
-+				struct gsm_serdev_dlci *ops)
-+{
-+}
-+
-+static inline
-+int gsm_serdev_write(struct gsm_serdev *gsd, struct gsm_serdev_dlci *ops,
-+		     const u8 *buf, int len)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline
-+void gsm_serdev_data_kick(struct gsm_serdev *gsd)
-+{
-+}
-+
-+#endif	/* CONFIG_N_GSM && CONFIG_SERIAL_DEV_BUS */
-+#endif	/* _LINUX_SERDEV_GSM_H */
--- 
-2.26.2
+Since the function only does a validation and throws the paths away
+afterwards you don't really need the dynamic allocation and 'icc_put'
+loop. Just have a single 'struct icc_path' pointer and call icc_put()
+inside the for loop.
