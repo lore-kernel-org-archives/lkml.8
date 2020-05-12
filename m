@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5936C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95826C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7A9206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75360206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgELOht (ORCPT
+        id S1730522AbgELOhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:37:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39396 "EHLO
+        Tue, 12 May 2020 10:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730390AbgELOhH (ORCPT
+        with ESMTP id S1730375AbgELOhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:37:07 -0400
+        Tue, 12 May 2020 10:37:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BADC061A0C;
-        Tue, 12 May 2020 07:37:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71337C061A0C;
+        Tue, 12 May 2020 07:37:05 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1m-0005oT-Hm; Tue, 12 May 2020 16:37:02 +0200
+        id 1jYW1g-0005oD-RL; Tue, 12 May 2020 16:36:57 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28DED1C02FC;
-        Tue, 12 May 2020 16:36:57 +0200 (CEST)
-Date:   Tue, 12 May 2020 14:36:57 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 576A31C0481;
+        Tue, 12 May 2020 16:36:56 +0200 (CEST)
+Date:   Tue, 12 May 2020 14:36:56 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] arm64: csum: Disable KASAN for do_csum()
-Cc:     Will Deacon <will@kernel.org>,
+Subject: [tip: locking/kcsan] READ_ONCE: Enforce atomicity for
+ {READ,WRITE}_ONCE() memory accesses
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, x86 <x86@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-10-will@kernel.org>
-References: <20200511204150.27858-10-will@kernel.org>
+In-Reply-To: <20200511204150.27858-12-will@kernel.org>
+References: <20200511204150.27858-12-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421706.390.7180347611312601499.tip-bot2@tip-bot2>
+Message-ID: <158929421627.390.5707699650139698296.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,88 +64,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     5a7d7f5d57f61d650619b89c1b7d4adcf4fdecfe
-Gitweb:        https://git.kernel.org/tip/5a7d7f5d57f61d650619b89c1b7d4adcf4fdecfe
+Commit-ID:     2ab3a0a02905d9994746dc4692c010d47b2beb74
+Gitweb:        https://git.kernel.org/tip/2ab3a0a02905d9994746dc4692c010d47b2beb74
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:41 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:43 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:13 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:14 +02:00
 
-arm64: csum: Disable KASAN for do_csum()
+READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses
 
-do_csum() over-reads the source buffer and therefore abuses
-READ_ONCE_NOCHECK() on a 128-bit type to avoid tripping up KASAN. In
-preparation for READ_ONCE_NOCHECK() requiring an atomic access, and
-therefore failing to build when fed a '__uint128_t', annotate do_csum()
-explicitly with '__no_sanitize_address' and fall back to normal loads.
+{READ,WRITE}_ONCE() cannot guarantee atomicity for arbitrary data sizes.
+This can be surprising to callers that might incorrectly be expecting
+atomicity for accesses to aggregate structures, although there are other
+callers where tearing is actually permissable (e.g. if they are using
+something akin to sequence locking to protect the access).
 
+Linus sayeth:
+
+  | We could also look at being stricter for the normal READ/WRITE_ONCE(),
+  | and require that they are
+  |
+  | (a) regular integer types
+  |
+  | (b) fit in an atomic word
+  |
+  | We actually did (b) for a while, until we noticed that we do it on
+  | loff_t's etc and relaxed the rules. But maybe we could have a
+  | "non-atomic" version of READ/WRITE_ONCE() that is used for the
+  | questionable cases?
+
+The slight snag is that we also have to support 64-bit accesses on 32-bit
+architectures, as these appear to be widespread and tend to work out ok
+if either the architecture supports atomic 64-bit accesses (armv7) or if
+the variable being accessed represents a virtual address and therefore
+only requires 32-bit atomicity in practice.
+
+Take a step in that direction by introducing a variant of
+'compiletime_assert_atomic_type()' and use it to check the pointer
+argument to {READ,WRITE}_ONCE(). Expose __{READ,WRITE}_ONCE() variants
+which are allowed to tear and convert the one broken caller over to the
+new macros.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://lkml.kernel.org/r/20200511204150.27858-10-will@kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: https://lkml.kernel.org/r/20200511204150.27858-12-will@kernel.org
 
 ---
- arch/arm64/lib/csum.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/xen/time.c       |  2 +-
+ include/linux/compiler.h | 40 +++++++++++++++++++++++++++++++++++----
+ 2 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
-index 60eccae..78b87a6 100644
---- a/arch/arm64/lib/csum.c
-+++ b/arch/arm64/lib/csum.c
-@@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
- 	return tmp + (tmp >> 64);
- }
+diff --git a/drivers/xen/time.c b/drivers/xen/time.c
+index 0968859..108edbc 100644
+--- a/drivers/xen/time.c
++++ b/drivers/xen/time.c
+@@ -64,7 +64,7 @@ static void xen_get_runstate_snapshot_cpu_delta(
+ 	do {
+ 		state_time = get64(&state->state_entry_time);
+ 		rmb();	/* Hypervisor might update data. */
+-		*res = READ_ONCE(*state);
++		*res = __READ_ONCE(*state);
+ 		rmb();	/* Hypervisor might update data. */
+ 	} while (get64(&state->state_entry_time) != state_time ||
+ 		 (state_time & XEN_RUNSTATE_UPDATE));
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 1b4e64d..733605f 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -199,9 +199,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ #include <linux/kasan-checks.h>
+ #include <linux/kcsan-checks.h>
  
--unsigned int do_csum(const unsigned char *buff, int len)
+-#define __READ_ONCE(x)	(*(volatile typeof(x) *)&(x))
 +/*
-+ * We over-read the buffer and this makes KASAN unhappy. Instead, disable
-+ * instrumentation and call kasan explicitly.
++ * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
++ * atomicity or dependency ordering guarantees. Note that this may result
++ * in tears!
 + */
-+unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
- {
- 	unsigned int offset, shift, sum;
- 	const u64 *ptr;
-@@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	 * odd/even alignment, and means we can ignore it until the very end.
- 	 */
- 	shift = offset * 8;
--	data = READ_ONCE_NOCHECK(*ptr++);
-+	data = *ptr++;
- #ifdef __LITTLE_ENDIAN
- 	data = (data >> shift) << shift;
- #else
-@@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	while (unlikely(len > 64)) {
- 		__uint128_t tmp1, tmp2, tmp3, tmp4;
++#define __READ_ONCE(x)	(*(const volatile typeof(x) *)&(x))
  
--		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
--		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
--		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
--		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
-+		tmp1 = *(__uint128_t *)ptr;
-+		tmp2 = *(__uint128_t *)(ptr + 2);
-+		tmp3 = *(__uint128_t *)(ptr + 4);
-+		tmp4 = *(__uint128_t *)(ptr + 6);
+-#define READ_ONCE(x)							\
++#define __READ_ONCE_SCALAR(x)						\
+ ({									\
+ 	typeof(x) *__xp = &(x);						\
+ 	kcsan_check_atomic_read(__xp, sizeof(*__xp));			\
+@@ -214,15 +219,32 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	});								\
+ })
  
- 		len -= 64;
- 		ptr += 8;
-@@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 		__uint128_t tmp;
+-#define WRITE_ONCE(x, val)						\
++#define READ_ONCE(x)							\
++({									\
++	compiletime_assert_rwonce_type(x);				\
++	__READ_ONCE_SCALAR(x);						\
++})
++
++#define __WRITE_ONCE(x, val)						\
++do {									\
++	*(volatile typeof(x) *)&(x) = (val);				\
++} while (0)
++
++#define __WRITE_ONCE_SCALAR(x, val)					\
+ do {									\
+ 	typeof(x) *__xp = &(x);						\
+ 	kcsan_check_atomic_write(__xp, sizeof(*__xp));			\
+ 	__kcsan_disable_current();					\
+-	*(volatile typeof(x) *)__xp = (val);				\
++	__WRITE_ONCE(*__xp, val);					\
+ 	__kcsan_enable_current();					\
+ } while (0)
  
- 		sum64 = accumulate(sum64, data);
--		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
-+		tmp = *(__uint128_t *)ptr;
++#define WRITE_ONCE(x, val)						\
++do {									\
++	compiletime_assert_rwonce_type(x);				\
++	__WRITE_ONCE_SCALAR(x, val);					\
++} while (0)
++
+ #ifdef CONFIG_KASAN
+ /*
+  * We can't declare function 'inline' because __no_sanitize_address conflicts
+@@ -365,6 +387,16 @@ static inline void *offset_to_ptr(const int *off)
+ 	compiletime_assert(__native_word(t),				\
+ 		"Need native word sized stores/loads for atomicity.")
  
- 		len -= 16;
- 		ptr += 2;
-@@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
- 	}
- 	if (len > 0) {
- 		sum64 = accumulate(sum64, data);
--		data = READ_ONCE_NOCHECK(*ptr);
-+		data = *ptr;
- 		len -= 8;
- 	}
- 	/*
++/*
++ * Yes, this permits 64-bit accesses on 32-bit architectures. These will
++ * actually be atomic in many cases (namely x86), but for others we rely on
++ * the access being split into 2x32-bit accesses for a 32-bit quantity (e.g.
++ * a virtual address) and a strong prevailing wind.
++ */
++#define compiletime_assert_rwonce_type(t)					\
++	compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),	\
++		"Unsupported access size for {READ,WRITE}_ONCE().")
++
+ /* &a[0] degrades to a pointer: a different type from an array */
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+ 
