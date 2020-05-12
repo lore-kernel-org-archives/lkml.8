@@ -2,119 +2,224 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3CBC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43297C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81DD320575
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321141;
-	bh=j1vAY40L3awDVf4d2kZXDZQndql+swIvtvfOxztyeV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0uPEimI/GgqrEJt5PuxucuMq57YFxfvzdNW7c64S7pxwTC+gxafR8rPM20Fj1jrFS
-	 SIib1VzxJQr2bbXkQua1K7qtnJBsrrzedMDGncOB0ITJuJ+DVPAZs9nX5jFnhbxaBz
-	 77xcrrTu1efQPQmXQ9eUe/YhtvUD/3j+GdvVXaDo=
+	by mail.kernel.org (Postfix) with ESMTP id 225E8205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ak6uwLta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbgELWFk (ORCPT
+        id S1731341AbgELWIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:05:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46975 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgELWFk (ORCPT
+        Tue, 12 May 2020 18:08:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729646AbgELWIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:05:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z25so11812214otq.13;
-        Tue, 12 May 2020 15:05:39 -0700 (PDT)
+        Tue, 12 May 2020 18:08:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF4DC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:08:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f23so6147562pgj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iFFIXuiTeXewIPgNqaF+8qYTST/Jxb/I8bLtMUpHXN4=;
+        b=ak6uwLtay91XD2CW7lZ8NLeOJQgrgv95tuUp4U4vRUENgd6/n1/WiBQU2apbSefVjm
+         1jMqTBylXnNN+2fH1J0zpKT/0z3zQFFFnDA+igDw5Y/B2fFyW4bv7y4A1kmxiJWmvlHO
+         rOpG9qTgr2DExSMMdWvoNRlSegcf2Munuk9xwAsRSTGhVCfjw52QOBjy4aWCWwyB7B+F
+         ogXyYsVH7i4hqvsDKBQnu6n2i+5riC5jONdZZpTdQE/Sg+hr6em6joNel8nINseYvhoL
+         3/KYNSHH57T66an0XySXYml8nriEYyj5n+MEASzZAp/d/IKx7kPoIBtmtYn0FtOx6sqx
+         9Ixg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1spzLK4cm4ekL4dQmE1+GWlhRjCGCTHWPWuSdcartNU=;
-        b=E9kSd8ITWbesdZd2DQf/v3P49EXiZCJIOyJbxI8ay3VPzivr50F1HRm5jvR5zCo38H
-         P+ErtMqTP3Aq/gvGPrtHxFPO6gH2bLMcTHIsFJaYYb1Cooh7TIhH1ut8ZA181cEN/N3r
-         gx4QgJl0B/3brrAyYnwY6PySNM9cW9ZlhbdJzKJSajQyfYykQW3J/QSiBGNbH007XOvn
-         XxxiXp+lhQ9MlEf2PiSfL9eXOSJQtobMhncj881XV9W5cArkvZoDmcLXiWdAcAq2zZXG
-         oMVOKzdBN/FiwRQo9qq4Nsvl0IRFHzLYva05KXbcsagVAdpYoWz/ie8wij1HeV14XxAt
-         YGOA==
-X-Gm-Message-State: AGi0PuYS3FTVmPta8kuxYNIY3RN5GtNcLI0976XWtkvITlS7bPob/2dX
-        Y0vA5SmnTcNIgTY57N3JpA==
-X-Google-Smtp-Source: APiQypJZNwnsVvEn4yecESFGLnDDq4EBQLMVQoLrm7Afo3/qUJ8VPojy/Bqb85BUsmx+ciYyevsr9A==
-X-Received: by 2002:a9d:7608:: with SMTP id k8mr4965628otl.233.1589321139244;
-        Tue, 12 May 2020 15:05:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 95sm3802450otf.72.2020.05.12.15.05.38
+         :mime-version:content-disposition:in-reply-to;
+        bh=iFFIXuiTeXewIPgNqaF+8qYTST/Jxb/I8bLtMUpHXN4=;
+        b=sbFmrW4ihp1hAn8pBRMnvfsnyMuDN6eUse/HSzTB9B4KjCnnTuGrI0KXFzea/ySX09
+         rh9frT5NCEDmvYTmA7n/IYLWc35Ukb75MJ6qjSsrHoFSpPZ8XDvmQYf4KUDn3fiAk2G+
+         Kgsexo9rOwhHZSHUd5iF6u28aiEWy6KQzh/2VXSieMbUfPenJqkXTIRxqHQUGH/r9Jxh
+         B4QlFFr9azegqqZ6Ly3dE5874Nxp+uTHjkJPSV0JWqgUZQNcU8fsg+nAEU167f4zLvUh
+         zVaII827UjyM17bWGkKSWCr7jWvOeZPKqQyh085sKQozY/LouVm6j9x55ss8WkfrYTXS
+         jXVw==
+X-Gm-Message-State: AGi0Pua/ofPavG01fBxLmmhBIIvLhdHCz8LBNfmhxGfakGLY2EVzag1r
+        Ul9Zdb80FxQiyNFZzVyMk1azq2i7y90=
+X-Google-Smtp-Source: APiQypKiwsr7vUOvJvnkBAiGQVgAIz3i27sJLeKH4NIMgsZbIH0qAC8FL5MAyuE2v3EG/uLRz/2OrA==
+X-Received: by 2002:aa7:8bc8:: with SMTP id s8mr24067889pfd.252.1589321317694;
+        Tue, 12 May 2020 15:08:37 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l1sm13517594pjr.17.2020.05.12.15.08.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:05:38 -0700 (PDT)
-Received: (nullmailer pid 16849 invoked by uid 1000);
-        Tue, 12 May 2020 22:05:37 -0000
-Date:   Tue, 12 May 2020 17:05:37 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-clk@vger.kernel.org, aford@beaconembedded.com,
-        charles.stevens@logicpd.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/3] clk: vc5: Enable addition output configurations
- of the Versaclock
-Message-ID: <20200512220537.GA14318@bogus>
-References: <20200502122126.188001-1-aford173@gmail.com>
- <20200502122126.188001-2-aford173@gmail.com>
+        Tue, 12 May 2020 15:08:36 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:07:04 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     jassisinghbrar@gmail.com, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: mailbox: Add devicetree binding for
+ Qcom IPCC
+Message-ID: <20200512220704.GM2165@builder.lan>
+References: <20200508182703.29021-1-manivannan.sadhasivam@linaro.org>
+ <20200508182703.29021-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200502122126.188001-2-aford173@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508182703.29021-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 07:21:25AM -0500, Adam Ford wrote:
-> The existing driver is expecting the Versaclock to be pre-programmed,
-> and only sets the output frequency.  Unfortunately, not all devices
-> are pre-programmed, and the Versaclock chip has more options beyond
-> just the frequency.
-> 
-> This patch enables the following additional features:
-> 
->    - Programmable voltage: 1.8V, 2.5V, or 3.3V​
->    - Slew Percentage of normal: 85%, 90%, or 100%
->    - Output Type: LVPECL, CMOS, HCSL, or LVDS
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+On Fri 08 May 11:27 PDT 2020, Manivannan Sadhasivam wrote:
 
+> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
+> Controller (IPCC) block.
+> 
 
-> diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/clk/versaclock.h
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../bindings/mailbox/qcom-ipcc.yaml           | 77 +++++++++++++++++++
+>  include/dt-bindings/mailbox/qcom-ipcc.h       | 33 ++++++++
+>  2 files changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
+>  create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
 > new file mode 100644
-> index 000000000000..c6a6a0946564
+> index 000000000000..62e7bc8ceb0b
 > --- /dev/null
-> +++ b/include/dt-bindings/clk/versaclock.h
-
-Belongs in binding patch.
-
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/qcom-ipcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +/* This file defines field values used by the versaclock 6 family
-> + * for defining output type
+> +title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description:
+> +  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
+> +  to route interrupts across various subsystems. It involves a three-level
+> +  addressing scheme called protocol, client and signal. For example, consider an
+> +  entity on the Application Processor Subsystem (APSS) that wants to listen to
+> +  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
+> +  a case, the client would be Modem (client-id is 2) and the signal would be
+> +  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
+> +  protocol (protocol-id is 0). Refer include/dt-bindings/mailbox/qcom-ipcc.h
+> +  for the list of such IDs.
+> +
+> +properties:
+> +  compatible:
+> +    const: "qcom,ipcc"
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 3
+> +    description:
+> +      The first cell is the client-id, the second cell is the signal-id and the
+> +      third cell is the interrupt type.
+> +
+> +  "#mbox-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the client-id, and the second cell is the signal-id.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - "#mbox-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        #include <dt-bindings/mailbox/qcom-ipcc.h>
+> +
+> +        mailbox: qcom,ipcc@408000 {
+> +                compatible = "qcom,ipcc";
+> +                reg = <0x408000 0x1000>;
+> +                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <3>;
+> +                #mbox-cells = <2>;
+> +        };
+> +
+> +        smp2p-modem {
+> +                compatible = "qcom,smp2p";
+> +                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
+> +                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
+> +                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
+> +
+> +                /* Other SMP2P fields */
+> +        };
+> diff --git a/include/dt-bindings/mailbox/qcom-ipcc.h b/include/dt-bindings/mailbox/qcom-ipcc.h
+> new file mode 100644
+> index 000000000000..b8c04f6df57c
+> --- /dev/null
+> +++ b/include/dt-bindings/mailbox/qcom-ipcc.h
+> @@ -0,0 +1,33 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 > + */
 > +
-> +#define VC5_LVPECL	0
-> +#define VC5_CMOS	1
-> +#define VC5_HCSL33	2
-> +#define VC5_LVDS	3
-> +#define VC5_CMOS2	4
-> +#define VC5_CMOSD	5
-> +#define VC5_HCSL25	6
+> +#ifndef __DT_BINDINGS_MAILBOX_IPCC_H
+> +#define __DT_BINDINGS_MAILBOX_IPCC_H
+> +
+> +/* Signal IDs for MPROC protocol */
+> +#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
+> +#define IPCC_MPROC_SIGNAL_SMP2P		2
+> +#define IPCC_MPROC_SIGNAL_PING		3
+> +
+> +/* Client IDs */
+> +#define IPCC_CLIENT_AOP			0
+> +#define IPCC_CLIENT_TZ			1
+> +#define IPCC_CLIENT_MPSS		2
+> +#define IPCC_CLIENT_LPASS		3
+> +#define IPCC_CLIENT_SLPI		4
+> +#define IPCC_CLIENT_SDC			5
+> +#define IPCC_CLIENT_CDSP		6
+> +#define IPCC_CLIENT_NPU			7
+> +#define IPCC_CLIENT_APSS		8
+> +#define IPCC_CLIENT_GPU			9
+> +#define IPCC_CLIENT_CVP			10
+> +#define IPCC_CLIENT_CAM			11
+> +#define IPCC_CLIENT_VPU			12
+> +#define IPCC_CLIENT_PCIE0		13
+> +#define IPCC_CLIENT_PCIE1		14
+> +#define IPCC_CLIENT_PCIE2		15
+> +#define IPCC_CLIENT_SPSS		16
+> +
+> +#endif
 > -- 
-> 2.25.1
+> 2.17.1
 > 
