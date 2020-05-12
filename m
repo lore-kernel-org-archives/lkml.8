@@ -2,106 +2,105 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A847C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89871CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498A9206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WB1ARAwX"
+	by mail.kernel.org (Postfix) with ESMTP id 6E47620661
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgELQWV (ORCPT
+        id S1727869AbgELQXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:22:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34354 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgELQWU (ORCPT
+        Tue, 12 May 2020 12:23:49 -0400
+Received: from smtprelay0236.hostedemail.com ([216.40.44.236]:35566 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725851AbgELQXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:22:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CGCJmt015556;
-        Tue, 12 May 2020 16:21:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=OyaR5MxMU3PPoMjghDt25i0Hctx3uK2R6FlsBKH+A5c=;
- b=WB1ARAwXINLjYpP5h6QLVmPJVJzLCG084isZwoPbJDzgY7XckKnh9KRr0N2dzUF4zwrH
- K6lZ9py+qbqpK/5En0f0Cj6SB0+yAwk6XgsEcbFLawbFabrFeg/JXc/5PxYL1qD3DfDC
- mjgmAL9+kL+2D/J5sRRszQWKP6KRkEed95MiJXYDYezw0UujemgFOehTOXuhF6a9SysU
- WnqMO+Z2LNt9GxL/eWCqp0jO1xQLjsoUU45TgVeZEIggTeMPWurjlcoLQFBV0iqSud04
- I7kdy0AG0vbK5Y/WSRbIeyfpGRnAYLP+lM1PiWoSnSMFjigykDT4/yLnWWSMewI/bq+k LA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 30x3gmm2wc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 16:21:54 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CGINVq155386;
-        Tue, 12 May 2020 16:21:54 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30x69tjj1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 16:21:54 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04CGLp24001016;
-        Tue, 12 May 2020 16:21:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 12 May 2020 09:21:51 -0700
-To:     "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com, beanhuo@micron.com,
-        cang@codeaurora.org, matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v2 4/4] scsi: ufs-mediatek: customize WriteBooster flush
- policy
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200509093716.21010-1-stanley.chu@mediatek.com>
-        <20200509093716.21010-5-stanley.chu@mediatek.com>
-        <635f91f6-3a27-ffdd-4021-67705d4063fc@codeaurora.org>
-Date:   Tue, 12 May 2020 12:21:47 -0400
-In-Reply-To: <635f91f6-3a27-ffdd-4021-67705d4063fc@codeaurora.org> (Asutosh
-        Das's message of "Mon, 11 May 2020 19:19:42 -0700")
-Message-ID: <yq1v9l115us.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
+        Tue, 12 May 2020 12:23:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5274B180A9553;
+        Tue, 12 May 2020 16:23:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ice59_5b42530d4ca5b
+X-Filterd-Recvd-Size: 2966
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 12 May 2020 16:23:46 +0000 (UTC)
+Message-ID: <80146d5713f8579a92b4da1e2b7d7626999dd9be.camel@perches.com>
+Subject: Re: MAINTAINERS: Wrong ordering in VIRTIO BALLOON
+From:   Joe Perches <joe@perches.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 12 May 2020 09:23:45 -0700
+In-Reply-To: <bb2eea77-72df-6c53-5397-de057ffc9dd8@redhat.com>
+References: <alpine.DEB.2.21.2005120717260.3701@felia>
+         <bb2eea77-72df-6c53-5397-de057ffc9dd8@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
- spamscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005120124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
- clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120123
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-05-12 at 08:38 +0200, David Hildenbrand wrote:
+> On 12.05.20 07:21, Lukas Bulwahn wrote:
+> > Hi David,
+> > 
+> > with your commit 6d6b93b9afd8 ("MAINTAINERS: Add myself as virtio-balloon 
+> > co-maintainer"), visible on next-20200508, ./scripts/checkpatch.pl -f 
+> > MAINTAINERS complains:
+> > 
+> > WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
+> > #17982: FILE: MAINTAINERS:17982:
+> > +F:	include/uapi/linux/virtio_balloon.h
+> > +F:	include/linux/balloon_compaction.h
+> > 
+> > This is due to wrong ordering of the entries in your submission. If you 
+> > would like me to send you a patch fixing that, please just let me know.
+> > 
+> > It is a recent addition to checkpatch.pl to report ordering problems in 
+> > MAINTAINERS, so you might have not seen that at submission time.
+> 
+> Thanks for the notification Lukas,
+> 
+> b962ee8622d0 ("checkpatch: additional MAINTAINER section entry ordering
+> checks") is not in Linus' tree yet AFAIKS.
+> 
+> I can see that 3b50142d8528 ("MAINTAINERS: sort field names for all
+> entries") is upstream. I do wonder if we should just do another batch
+> update after the checkpatch patch is upstream instead, I guess more will
+> pile up?
+> 
+> @mst, joe, what do you prefer?
+> 
+> 1. I can resend the original patch.
+> 2. Lukas can send a fixup that we might want to squash.
+> 3. We wait until the checkpatch change goes upstream and to a final
+> batch update.
 
-Hi Asutosh!
+A fixup patch would work.
 
-> Patchset looks good to me.
->
-> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+I think if Linus every once in awhile just before an -rc1 runs
+scripts/parse-maintainers like:
 
-When you want to approve an entire series, please respond to the cover
-letter email. Otherwise the kernel.org tooling will only record the tag
-for the individual patch you are responding to. In this case only patch
-4 got tagged as reviewed in patchwork.
+commit 3b50142d8528 ("MAINTAINERS: sort field names for all entries")
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+then these sorts of individual patches would not matter much.
+
+This first time the script was run, I think there was just 1 patch
+conflict from -next to Linus' tree, and that scripted change was
+fairly large.
+
+As the changes will generally be smaller in the future, it's unlikely
+there will be a significant number of conflicts.
+
+
