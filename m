@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9695C54E96
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079F9C54E98
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6AC2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A5E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GdZJjNq2"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eo6XCFnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgELJAO (ORCPT
+        id S1729517AbgELJAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42776 "EHLO
+        Tue, 12 May 2020 05:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729408AbgELJAI (ORCPT
+        by vger.kernel.org with ESMTP id S1729454AbgELJAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:00:08 -0400
+        Tue, 12 May 2020 05:00:13 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62CFC05BD0B
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:08 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id y24so22394432wma.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1A3C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:13 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u16so22340925wmc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r5PRcG/JtprEwCOUf2/ZPMLqKS9RbW1APrGVc2im3Nw=;
-        b=GdZJjNq28F9KcRJyjlTagS8E3fkL1j9MVdiS32+c3J3oz4My0gpMGd7IrjrVwziyZj
-         3INpjpPYeyhbD4+NwUOkIx7M0B6lMTqDeQsZGgAtFaTLfzA0CcV9W86y8Gzd1CxGRleL
-         BXUlHw6StLiPmKsmxJLvaFWoCXKd6BPsYXKG0=
+        bh=u5gM1ohPbNVORxsODI5ngB8Z3LljD1/NzUrdRFpQw6k=;
+        b=eo6XCFnGqS3UTbV+XFLkZTkDoh8UHvgOyRRDESLFJ7MP+5Cj3/IxjzAl127GN5O9rY
+         VXDXGt6n7g7rCnvzywPZOWCjrMfNywQXd3+W+fn3un22WolNWV/n9WI+YAZlftq1Ve6F
+         gC89CnJ6agJOr1dSjp+3V/HsmrsJiwJEQFsVU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r5PRcG/JtprEwCOUf2/ZPMLqKS9RbW1APrGVc2im3Nw=;
-        b=ipyq013XYF14+Nxe1z+83+2cG2cmiNT6ySgKNwnTmFEjcBHqgLw5b9QxxhCJziivl8
-         CXtsTYndIrdHjv8ixrenqCO6TiiV+f5Yz+GEFtooo3JudC49ZT3aC9is4oGKM347vT3Z
-         Hh+HIdmNezkW3RfXPoxD2M15a/+3y4HtKW9f9tIUghuwQ9xmRP27RuWWGtpi8SgBqcFJ
-         PHbQdC9b8y7jsCzcjI88JvcMcXwOzeXorESB9p/EJK+vdw+AoZRX0Q2xg01bi962jjnk
-         aNecFQr6cmrSyHtCsFlSJnLqZLSkTMCeaQU+upmbhWmtemnzH/5RIKPjtTKYtFsgX2x4
-         rCwg==
-X-Gm-Message-State: AGi0PubCSriSfQdMgXRvJvebS/sh8ZtR2hJhItVVu4/UhDG4P1BATVdi
-        X87t64GkOxsxI3ShayVDo/N0gHCeHGg=
-X-Google-Smtp-Source: APiQypLn0gzMJwxb1G5NuhzTlxFQ4Fcx0V6C0P/n0rDCyjAZoEVClTf3ENM81ku64jmXd4+qf9UzyQ==
-X-Received: by 2002:a05:600c:2055:: with SMTP id p21mr13224168wmg.127.1589274007383;
-        Tue, 12 May 2020 02:00:07 -0700 (PDT)
+        bh=u5gM1ohPbNVORxsODI5ngB8Z3LljD1/NzUrdRFpQw6k=;
+        b=s/gUIQcF8wLj+0HMS84CjUAjjK633Zja5jd4ex8MhUUVGAGdPImfmjYS6Pii0kDrzJ
+         /op7lgVo8hRIEgkJw8KZ6xJ5Y7csBOnZpnK09Kv5RpkdVVPDJ//cdFiuBB53xGR5XcO1
+         gxb8+eI7MwPFPPfJ7lXW4FmRGHgcIqSzxuFnnXzrFqRVaxGsq85184tmczW6cCxooWUB
+         pDw4EFBSFHtdtqJajrQ1LVgVt6zxy0a0st9pET2txfsN4xx7Wnc/TdgI6cKm4PdQTOHU
+         3KtSpCETVdLFHrXzXGy8O4eKCxzLbMlB16mUh40cf1oanQkLhfXj9Zp9sHdTWecC6KcS
+         +UgA==
+X-Gm-Message-State: AGi0PuZpAuRHJva3KKDTLf3DkKHUUf6txrRLPBmv4mw+ysWBFDST7M0I
+        l7XQlD9UtbKMyxYmnQe2V4qI/Q==
+X-Google-Smtp-Source: APiQypLTNXsQ8HlHPlHfp2Mll6IbSc871xkl7AkjDoENjAiQEoiFF4u2nMFQth6vdD3XxA2bFR9BoQ==
+X-Received: by 2002:a1c:9e52:: with SMTP id h79mr35953921wme.84.1589274012210;
+        Tue, 12 May 2020 02:00:12 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.02.00.06
+        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.02.00.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:00:06 -0700 (PDT)
+        Tue, 12 May 2020 02:00:11 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -65,11 +65,10 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         intel-gfx@lists.freedesktop.org,
         Chris Wilson <chris@chris-wilson.co.uk>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [RFC 10/17] drm/amdgpu: s/GFP_KERNEL/GFP_ATOMIC in scheduler code
-Date:   Tue, 12 May 2020 10:59:37 +0200
-Message-Id: <20200512085944.222637-11-daniel.vetter@ffwll.ch>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [RFC 14/17] drm/amdgpu: use dma-fence annotations for gpu reset code
+Date:   Tue, 12 May 2020 10:59:41 +0200
+Message-Id: <20200512085944.222637-15-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
 References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
@@ -81,46 +80,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My dma-fence lockdep annotations caught an inversion because we
-allocate memory where we really shouldn't:
-
-	kmem_cache_alloc+0x2b/0x6d0
-	amdgpu_fence_emit+0x30/0x330 [amdgpu]
-	amdgpu_ib_schedule+0x306/0x550 [amdgpu]
-	amdgpu_job_run+0x10f/0x260 [amdgpu]
-	drm_sched_main+0x1b9/0x490 [gpu_sched]
-	kthread+0x12e/0x150
-
-Trouble right now is that lockdep only validates against GFP_FS, which
-would be good enough for shrinkers. But for mmu_notifiers we actually
-need !GFP_ATOMIC, since they can be called from any page laundering,
-even if GFP_NOFS or GFP_NOIO are set.
-
-I guess we should improve the lockdep annotations for
-fs_reclaim_acquire/release.
-
-Ofc real fix is to properly preallocate this fence and stuff it into
-the amdgpu job structure. But GFP_ATOMIC gets the lockdep splat out of
-the way.
-
-v2: Two more allocations in scheduler paths.
-
-Frist one:
-
-	__kmalloc+0x58/0x720
-	amdgpu_vmid_grab+0x100/0xca0 [amdgpu]
-	amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-	drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-	drm_sched_main+0xf9/0x490 [gpu_sched]
-
-Second one:
-
-	kmem_cache_alloc+0x2b/0x6d0
-	amdgpu_sync_fence+0x7e/0x110 [amdgpu]
-	amdgpu_vmid_grab+0x86b/0xca0 [amdgpu]
-	amdgpu_job_dependency+0xf9/0x120 [amdgpu]
-	drm_sched_entity_pop_job+0x3f/0x440 [gpu_sched]
-	drm_sched_main+0xf9/0x490 [gpu_sched]
+To improve coverage also annotate the gpu reset code itself, since
+that's called from other places than drm/scheduler (which is already
+annotated). Annotations nests, so this doesn't break anything, and
+allows easier testing.
 
 Cc: linux-media@vger.kernel.org
 Cc: linaro-mm-sig@lists.linaro.org
@@ -130,51 +93,60 @@ Cc: intel-gfx@lists.freedesktop.org
 Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Christian König <christian.koenig@amd.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c   | 2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-index d878fe7fee51..055b47241bb1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
-@@ -143,7 +143,7 @@ int amdgpu_fence_emit(struct amdgpu_ring *ring, struct dma_fence **f,
- 	uint32_t seq;
- 	int r;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index b038ddbb2ece..5560d045b2e0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -4140,6 +4140,9 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 	bool use_baco =
+ 		(amdgpu_asic_reset_method(adev) == AMD_RESET_METHOD_BACO) ?
+ 		true : false;
++	bool fence_cookie;
++
++	fence_cookie = dma_fence_begin_signalling();
  
--	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_KERNEL);
-+	fence = kmem_cache_alloc(amdgpu_fence_slab, GFP_ATOMIC);
- 	if (fence == NULL)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-index fe92dcd94d4a..fdcd6659f5ad 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-@@ -208,7 +208,7 @@ static int amdgpu_vmid_grab_idle(struct amdgpu_vm *vm,
- 	if (ring->vmid_wait && !dma_fence_is_signaled(ring->vmid_wait))
- 		return amdgpu_sync_fence(sync, ring->vmid_wait, false);
- 
--	fences = kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_KERNEL);
-+	fences = kmalloc_array(sizeof(void *), id_mgr->num_ids, GFP_ATOMIC);
- 	if (!fences)
- 		return -ENOMEM;
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-index b87ca171986a..330476cc0c86 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-@@ -168,7 +168,7 @@ int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f,
- 	if (amdgpu_sync_add_later(sync, f, explicit))
+ 	/*
+ 	 * Flush RAM to disk so that after reboot
+@@ -4168,6 +4171,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 		DRM_INFO("Bailing on TDR for s_job:%llx, hive: %llx as another already in progress",
+ 			  job ? job->base.id : -1, hive->hive_id);
+ 		mutex_unlock(&hive->hive_lock);
++		dma_fence_end_signalling(fence_cookie);
  		return 0;
+ 	}
  
--	e = kmem_cache_alloc(amdgpu_sync_slab, GFP_KERNEL);
-+	e = kmem_cache_alloc(amdgpu_sync_slab, GFP_ATOMIC);
- 	if (!e)
- 		return -ENOMEM;
+@@ -4178,8 +4182,10 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 	 */
+ 	INIT_LIST_HEAD(&device_list);
+ 	if (adev->gmc.xgmi.num_physical_nodes > 1) {
+-		if (!hive)
++		if (!hive) {
++			dma_fence_end_signalling(fence_cookie);
+ 			return -ENODEV;
++		}
+ 		if (!list_is_first(&adev->gmc.xgmi.head, &hive->device_list))
+ 			list_rotate_to_front(&adev->gmc.xgmi.head, &hive->device_list);
+ 		device_list_handle = &hive->device_list;
+@@ -4194,6 +4200,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 			DRM_INFO("Bailing on TDR for s_job:%llx, as another already in progress",
+ 				  job ? job->base.id : -1);
+ 			mutex_unlock(&hive->hive_lock);
++			dma_fence_end_signalling(fence_cookie);
+ 			return 0;
+ 		}
+ 
+@@ -4319,6 +4326,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 
+ 	if (r)
+ 		dev_info(adev->dev, "GPU reset end with ret = %d\n", r);
++	dma_fence_end_signalling(fence_cookie);
+ 	return r;
+ }
  
 -- 
 2.26.2
