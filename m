@@ -6,127 +6,128 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A544CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC77CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40EA5206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50754206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgELRAY (ORCPT
+        id S1728754AbgELRBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:00:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:58704 "EHLO foss.arm.com"
+        Tue, 12 May 2020 13:01:08 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41681 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbgELRAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:00:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88794D6E;
-        Tue, 12 May 2020 10:00:23 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [10.57.61.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FE453F305;
-        Tue, 12 May 2020 10:00:22 -0700 (PDT)
-Date:   Tue, 12 May 2020 18:00:20 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Jonathan.Cameron@Huawei.com, james.quinlan@broadcom.com,
-        lukasz.luba@arm.com, sudeep.holla@arm.com
-Subject: Re: [PATCH v7 1/9] firmware: arm_scmi: Add notification
- protocol-registration
-Message-ID: <20200512170020.GC17648@e119603-lin.cambridge.arm.com>
-References: <20200504163855.54548-1-cristian.marussi@arm.com>
- <20200504163855.54548-2-cristian.marussi@arm.com>
- <20200506152550.GA21779@arm.com>
- <20200511220403.GB17648@e119603-lin.cambridge.arm.com>
+        id S1725554AbgELRBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:01:08 -0400
+IronPort-SDR: YQWIaLTDdyz+jnwOs9Uek989OA9YKuqgHxhym/a/tR7sjgJ0sMYFhVcss6UHwNIJbt2FbbYYvV
+ i9y64EqtAmcA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 10:01:07 -0700
+IronPort-SDR: Db+r0AcSc4+ThFSgLvogNxTh85ziDyrWydS9TnmqFaUWvjWYYVYlI8AICp5miq0ISGU+OqX1/u
+ /dUoFeYTtoWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="297371105"
+Received: from bbian-mobl3.amr.corp.intel.com (HELO [10.254.96.32]) ([10.254.96.32])
+  by fmsmga002.fm.intel.com with ESMTP; 12 May 2020 10:01:05 -0700
+Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+ <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
+ <20200512033035.GV1375924@vkoul-mobl>
+ <84f09843-3245-5fa4-530f-c915b28e9bc5@linux.intel.com>
+ <20200512155927.GA4297@vkoul-mobl>
+ <79ee2b4a-c2e3-aba7-8b67-b1a01922d089@linux.intel.com>
+Message-ID: <86d45af8-93db-d284-64d4-efa22ccc0908@linux.intel.com>
+Date:   Tue, 12 May 2020 12:01:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511220403.GB17648@e119603-lin.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <79ee2b4a-c2e3-aba7-8b67-b1a01922d089@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 11:04:03PM +0100, Cristian Marussi wrote:
-> Hi Dave
-> 
-> thanks for the review first of all.
-> 
-[snip]
 
-> > I'm not sure about scmi_notification_exit() (see below).
-[snip]
-> > > +/**
-> > > + * scmi_notification_exit()  - Shutdown and clean Notification core
-> > > + * @handle: The handle identifying the platform instance to shutdown
-> > > + */
-> > > +void scmi_notification_exit(struct scmi_handle *handle)
-> > > +{
-> > > +	struct scmi_notify_instance *ni = handle->notify_priv;
-> > > +
-> > > +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> > > +		return;
-> > > +
-> > > +	atomic_set(&ni->enabled, 0);
-> > > +	/* Ensure atomic values are updated */
-> > > +	smp_mb__after_atomic();
-> > 
-> > If users can race with this, we're dead: the atomic by itself doesn't
-> > ensure that handle is not in use once we arrive here.  Should this
-> > be a refcount instead?
-> > 
-> > If users can't race with this, we probably don't protection here.
-> > 
-> > 
-> > I may be misunderstanding what this code is doing...
-> > 
-> 
-> First of all the enabled flag does not probably belong to this commit properly;
-> here is initialized but it is really fully used only in subsequent patches
-> (...so makes apparently little sense here... my bad...)
-> 
-> Anyway, in general SCMI protocols (beside notifications stuff) are initialized
-> as depicted above, BUT they are never deinitialized explicitly (there's no
-> equivalent scmi_protocol_deinit()) and also proto devices are never destroyed:
-> so there's no scmi_protocol_deregister_events() neither in this series, because
-> it would have been tricky to properly invoke it and would have not been consistent
-> with the original SCMI design.
-> 
-> On the other side since in protocol driver _remove() some general protos resources
-> are in fact freed anyway, for consistency I decided to free the devm notification
-> resources allocated with the above init() in scmi_notification_exit(): this should
-> happen only at system shutdown in fact when notification are no more of a concern.
-> 
-> So given there's no explicit deregister I had to ensure somehow that the wanna-be-freed
-> notif devm resources were safe to be released.
-> 
-> In this context the 'enabled' atomic flag is set to 0 @_exit to stop the dispatch of the
-> events (possibly still coming from the fw) from the ISR into the kfifo queues: once such
-> pkts flow is stopped I destroy_sync() (in a subsequent patch @_exit too) all the workqueues
-> fetching the events from the kfifos: this way I can be sure that all the notif resources
-> are no more used at all when I free all of them with devm_release() at the end.
-> 
-> All of this is an additional precaution against buggy fw not stopping sending events
-> even when asked to do so (by drivers when deregistering notif callbacks in their shutdown)
-> 
-> Give the above scenario on shutdown (which I never observed to tell the truth), and the fact
-> I'm freeing all devm res (including ni) at shutdown, it's now apparent ALSO that I cannot use
-> 'enabled' to keep stopped the flow in a safe way after its enclosing struct ni has been freed !
-> 
-> So I'll remove the 'enable' atomic_t too and rely equally on the bare !ni check to determine
-> if the notification are enabled and should be dispatched. So that in 
-> 
 
-...replying to my early self here (o_O)....I'd add that I've tested the above changes (removing
-initialized and enabled) triggering this _exit path by brutally unbinding the platform protocol
-driver and I can see the notifications flow stop and the queues emptied as expected without
-tragedy...the SCMI stack in general is not so happy though at that point, since it is not even
-supposed to be unloaded ever in fact...I wonder if this limit condition(unbind of a core SCMI
-driver which is not even modularizable in Kconfig) makes sense to be tested at all...
-(if not for testing this specific code path...)
+On 5/12/20 11:08 AM, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 5/12/20 10:59 AM, Vinod Koul wrote:
+>> On 12-05-20, 09:36, Pierre-Louis Bossart wrote:
+>>> On 5/11/20 10:30 PM, Vinod Koul wrote:
+>>>> On 11-05-20, 14:00, Pierre-Louis Bossart wrote:
+>>>>>>> +    md = &bus->md;
+>>>>>>> +    md->dev.bus = &sdw_bus_type;
+>>>>>>> +    md->dev.type = &sdw_master_type;
+>>>>>>> +    md->dev.parent = parent;
+>>>>>>> +    md->dev.of_node = parent->of_node;
+>>>>>>> +    md->dev.fwnode = fwnode;
+>>>>>>> +    md->dev.dma_mask = parent->dma_mask;
+>>>>>>> +
+>>>>>>> +    dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
+>>>>>>
+>>>>>> This give nice sdw-master-0. In DT this comes from reg property. I 
+>>>>>> dont
+>>>>>> seem to recall if the ACPI/Disco spec treats link_id as unique across
+>>>>>> the system, can you check that please, if not we would need to update
+>>>>>> this.
+>>>>> Table 3 in the Disco for Soundwire 1.0 spec: "all LinkID values are 
+>>>>> relative
+>>>>> to the immediate parent Device."
+>>>>>
+>>>>> There isn't any known implementation with more than one controller.
+>>>>
+>>>> But then it can come in "future" right. So lets try to make it future
+>>>> proof by not using the link_id (we can expose that as a sysfs if people
+>>>> want to know). So a global unique id needs to allocated (hint: idr or
+>>>> equivalent) and used as master_id
+>>>
+>>> Can you clarify if you are asking for a global ID for Intel/ACPI 
+>>> platforms,
+>>> or for DT as well? I can't figure out from the soundwire-controller.yaml
+>>> definitions if there is already a notion of unique ID.
+>>
+>> If ACPI was unique, then I was planning to update the definition below
+>> to include that. Given that it is not the case, let's make it agnostic to
+>> underlying firmware.
+> 
+> I am not sure I understand how this would be done.
+> 
+> The call sequence is
+> 
+> sdw_bus_master_add(bus)
+>      sdw_master_device_add(bus, parent, fw_node)
+> 
+> At the bus level, we don't have any information on which controller the 
+> bus is related to.
+> 
+> We'd need to add an argument to sdw_bus_master_add() and have the 
+> controller unique ID be allocated outside of the SoundWire core, hence 
+> my question on whether the DT definition should not be extended.
 
-Cheers
+And btw I don't think it makes sense to add a new definition for Intel. 
+We already have a notion of HDaudio bus->idx that's set to zero since we 
+don't have a case for multiple HDaudio controllers.
 
-Cristian
-
+if we ever do have more than once controller, then we should rely on 
+HDaudio bus->idx as the identifier and not create one specifically for 
+SoundWire - which means as I mentioned above passing an argument and not 
+defining a controller ID in the SoundWire core.
