@@ -2,255 +2,289 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907B0C54E99
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016CC54E90
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6998220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB53720575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="giUzeo9m"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="G3K7uswl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbgELJCd (ORCPT
+        id S1729946AbgELJEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:02:33 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40621 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729266AbgELJB0 (ORCPT
+        Tue, 12 May 2020 05:04:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729240AbgELJAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:01:26 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200512090122euoutp02c5afc8ba621d85e6e12ba3882ecb9b75~OPFujUK8a0453404534euoutp02Z
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:01:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200512090122euoutp02c5afc8ba621d85e6e12ba3882ecb9b75~OPFujUK8a0453404534euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589274082;
-        bh=rhSC5COL1h1Dz6o7DjtlJNgJPJH9AQ4ZjiBmMtRkd3U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=giUzeo9mJX3z5x1kokUQ7KWLG9aw40KKAUApQR+ZXe/OIgnVm7AkvqpIuNR84xhU2
-         dP74Ot6xQYZPYPq/iWtVnE43N6m1u1GeWOPu92F5P6jr21cABCvzOGFOvStrq3dLhO
-         NwGw8hm+HX8PPplOIdeni/OItSgoTP9uk8smcAvs=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200512090122eucas1p2afa115093b86d01f85269c56d6bc275a~OPFuPTLRf1372813728eucas1p2Y;
-        Tue, 12 May 2020 09:01:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id E7.67.61286.2E56ABE5; Tue, 12
-        May 2020 10:01:22 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200512090122eucas1p10cc3f42cb0452a8a279fcc8702e50a7a~OPFt1Hdzb3053030530eucas1p1u;
-        Tue, 12 May 2020 09:01:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200512090122eusmtrp1a0a85054f72ecc8fb8808473db1f0a0d~OPFt0YFlK0188101881eusmtrp1T;
-        Tue, 12 May 2020 09:01:21 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-97-5eba65e299dd
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E0.03.07950.1E56ABE5; Tue, 12
-        May 2020 10:01:21 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200512090121eusmtip1816550070391c915aab8c82555df8d5c~OPFtNMLkh0919809198eusmtip15;
-        Tue, 12 May 2020 09:01:21 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 25/38] drm: virtio: fix common struct sg_table related
- issues
-Date:   Tue, 12 May 2020 11:00:45 +0200
-Message-Id: <20200512090058.14910-25-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512090058.14910-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRzGfXe2szPb4jQlX0wSB0kGzUtSB5RRUXG+FNGXwMhaepqSN3ac
-        pRJ5KS9LwxtkmkcLwdR5m6ZppKnpvM7bMrVyXkotMiWnoZm1eWZ9+73P/3ne5//CiyHi5zxH
-        LDgsklKGyUMkqC23vnN94PAM1eTvMdcOiXR9N4eoya3iEX/qMxHCsLqEEqXlHRyiqMWHmJvo
-        RgiTYZpDaGdHecRI02OUqHjzkU+0Ln/iESX9DHpcRGoYDSBfrRVxyYa1KR5pvK/jkLXFd8j3
-        W7MImT1WAsiX43EoudT8FiUf1JUBckW7//wuP1vfQCokOIpSusuu2gY1D5nQiNWDt2rXc/hx
-        QO+iBgIM4t5wueoJamEx/gzA/IIoNbA1swnAnjaTdbACYNngnp1AYn4WhzWVAKgxGPisyZxI
-        rj5pYRT3hOpF9XbYHr8HYFe60BJA8AUOTPpdCywDO/wCNPblbpu4+AHIZCVsswiXwWJdOsq2
-        OcPy6teIhQVm3Vi4ybVcBPFOPpxM/sZhTafgVrwGYdkOftXV8Vl2gr3ZadZAIoDT+go+e0gD
-        cCQhF7AuH/hBv2Guw8z7ucGqJndWPgHbmWzEIkN8Nxxb3H4+Ysas+odWWQRTksSs2xXm6Sr/
-        1bYODlvXIWHfJLuzGO8AsDAxg58BnPP+lxUBUAYcKBUdqqBozzDqppSWh9KqMIU0IDxUC8yf
-        qXdL9+MFWB2+1gZwDEiEohSvRn8xTx5FR4e2AYghEnvR3WCzJAqUR8dQyvArSlUIRbeBfRhX
-        4iA68vTLZTGukEdSNygqglLuTDmYwDEOnOkaH5OBjQJ55sRSqkfsaGz4u6MTgphUFaZo6vAK
-        0M/o7U/b+F20q8zxdTu39/t8YUHSYL/Do1LmtnF5sPRSv7/3dW2LuOXX5grjyjS7KxlBfE98
-        lnJmYb5B4kFHTmdWnG2Q0kNbvk7CKReeUDaQ9rPRhSedsjEdq8Q+1yASLh0k9zyEKGn5X9XI
-        7FVIAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7oPU3fFGdzZaW7Re+4kk8XGGetZ
-        Lf5vm8hsceXrezaLlauPMlks2G9t8ezWSWaLL1ceMllsenyN1eLyrjlsFmuP3GW3OPjhCavF
-        8rPz2Bx4PdbMW8PosffbAhaP7d8esHrc7z7O5LF5Sb3H7X+PmT0m31jO6LH7ZgObx/t9V9k8
-        +rasYvT4vEkugDtKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
-        LLVI3y5BL2PfxS9sBV81Kjb/nMLewHhOsYuRk0NCwESiefYkpi5GLg4hgaWMEr/evWeCSMhI
-        nJzWwAphC0v8udbFBlH0iVFi0aWlYEVsAoYSXW8hEiICnYwS07o/soM4zAIfmCT+/f3HBlIl
-        LBAgsWvzErAOFgFViXmTmsDivAJ2EkuO97JBrJCXWL3hADOIzQkUvz//DwuILSRQKPHo6luW
-        CYx8CxgZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRGy7ZjP7fsYOx6F3yIUYCDUYmHt8No
-        Z5wQa2JZcWXuIUYJDmYlEd6WTKAQb0piZVVqUX58UWlOavEhRlOgoyYyS4km5wMjOa8k3tDU
-        0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2PuvOfei10T+12/er9qf/6k
-        XFNou0rr6U1MC11sAjNcDG9dezvtN6tOyd9rwjlHrn+cyKOYseYed2/zzwuFu5mbonZEXNr7
-        Q1KnN7Zk5YMfBnf299y/Eh3VlcDytTEojX1J1N+926+Zl7Ud2l38/tNj38NSDlYOdsfVrwid
-        sRPdfMbzQBKHmboSS3FGoqEWc1FxIgCn5n02rAIAAA==
-X-CMS-MailID: 20200512090122eucas1p10cc3f42cb0452a8a279fcc8702e50a7a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200512090122eucas1p10cc3f42cb0452a8a279fcc8702e50a7a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200512090122eucas1p10cc3f42cb0452a8a279fcc8702e50a7a
-References: <20200512085710.14688-1-m.szyprowski@samsung.com>
-        <20200512090058.14910-1-m.szyprowski@samsung.com>
-        <CGME20200512090122eucas1p10cc3f42cb0452a8a279fcc8702e50a7a@eucas1p1.samsung.com>
+        Tue, 12 May 2020 05:00:00 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77ECC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:59 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id f134so8674448wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=I6zGk0sRXoiLMVlOrHdYKmGYdqgb8HIUHeWjfHU8LZ8=;
+        b=G3K7uswlmhW+rpia5CreMV57ZkKdKlwZ6FOlSyfm3Oe7LuGmiEiRHD/PML6gjh4GhM
+         OdvDdQt4u51YIl+RwDLbW7P8kjQMLKpQZcHKzE4dlQdQnOJqX7Su2t5BwmDsqLUnYibz
+         JMBsPiQPy7q4aI4KfXGjLvCIMnBefB60TFyyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=I6zGk0sRXoiLMVlOrHdYKmGYdqgb8HIUHeWjfHU8LZ8=;
+        b=QTOm+66dMwRckHFA0pXs9DaxYeCWuMIISRT51KKFU6qof2r6dWXhJfsMzKsMvGFBWb
+         yvMdAVf2zdbcwkzMNgzAR9jsQjJazhqYE7V4WR2z/rfbLDF9Gbly1sKt1Pf5WSnFNxtm
+         KTU0POwlD26+JIzQkA0VWepuS28mdwRI7NKwQFakdodsqhJov9XTkyELk4lPW+3TVWpx
+         LTVZo8UUE3++iPEFzeuPxGftJLe/CY+98HJmESVaYrX1uKoOr5BXFbbkPlM7pSo8PjBq
+         IaUU3QwhdH8NyGdLvlSrIxjuhkmMwq2XCOeqAmL4lM98q/uvB8hMKrOUh+mQ1QVOntas
+         hCWg==
+X-Gm-Message-State: AGi0PubrvWeBE0OrT++1P3RZowNNVhAlyNC57+BPJRSuC77/e42s9PSH
+        DJujrAJs2TCCaugn8Pj2Mp7mCg==
+X-Google-Smtp-Source: APiQypLCYf7Wgh0Wtz0pUmQn/xpulX/EPJ0KyLgnUHWq+1CmCns3LkuSYY1ZCdFMCm+vHgIBfsEl0Q==
+X-Received: by 2002:a1c:3bc5:: with SMTP id i188mr25545127wma.90.1589273998427;
+        Tue, 12 May 2020 01:59:58 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.01.59.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 01:59:57 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [RFC 02/17] dma-fence: basic lockdep annotations
+Date:   Tue, 12 May 2020 10:59:29 +0200
+Message-Id: <20200512085944.222637-3-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
+Design is similar to the lockdep annotations for workers, but with
+some twists:
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
+- We use a read-lock for the execution/worker/completion side, so that
+  this explicit annotation can be more liberally sprinkled around.
+  With read locks lockdep isn't going to complain if the read-side
+  isn't nested the same way under all circumstances, so ABBA deadlocks
+  are ok. Which they are, since this is an annotation only.
 
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
+- We're using non-recursive lockdep read lock mode, since in recursive
+  read lock mode lockdep does not catch read side hazards. And we
+  _very_ much want read side hazards to be caught. For full details of
+  this limitation see
 
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
+  commit e91498589746065e3ae95d9a00b068e525eec34f
+  Author: Peter Zijlstra <peterz@infradead.org>
+  Date:   Wed Aug 23 13:13:11 2017 +0200
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+      locking/lockdep/selftests: Add mixed read-write ABBA tests
+
+- To allow nesting of the read-side explicit annotations we explicitly
+  keep track of the nesting. lock_is_held() allows us to do that.
+
+- The wait-side annotation is a write lock, and entirely done within
+  dma_fence_wait() for everyone by default.
+
+- To be able to freely annotate helper functions I want to make it ok
+  to call dma_fence_begin/end_signalling from soft/hardirq context.
+  First attempt was using the hardirq locking context for the write
+  side in lockdep, but this forces all normal spinlocks nested within
+  dma_fence_begin/end_signalling to be spinlocks. That bollocks.
+
+  The approach now is to simple check in_atomic(), and for these cases
+  entirely rely on the might_sleep() check in dma_fence_wait(). That
+  will catch any wrong nesting against spinlocks from soft/hardirq
+  contexts.
+
+The idea here is that every code path that's critical for eventually
+signalling a dma_fence should be annotated with
+dma_fence_begin/end_signalling. The annotation ideally starts right
+after a dma_fence is published (added to a dma_resv, exposed as a
+sync_file fd, attached to a drm_syncobj fd, or anything else that
+makes the dma_fence visible to other kernel threads), up to and
+including the dma_fence_wait(). Examples are irq handlers, the
+scheduler rt threads, the tail of execbuf (after the corresponding
+fences are visible), any workers that end up signalling dma_fences and
+really anything else. Not annotated should be code paths that only
+complete fences opportunistically as the gpu progresses, like e.g.
+shrinker/eviction code.
+
+The main class of deadlocks this is supposed to catch are:
+
+Thread A:
+
+	mutex_lock(A);
+	mutex_unlock(A);
+
+	dma_fence_signal();
+
+Thread B:
+
+	mutex_lock(A);
+	dma_fence_wait();
+	mutex_unlock(A);
+
+Thread B is blocked on A signalling the fence, but A never gets around
+to that because it cannot acquire the lock A.
+
+Note that dma_fence_wait() is allowed to be nested within
+dma_fence_begin/end_signalling sections. To allow this to happen the
+read lock needs to be upgraded to a write lock, which means that any
+other lock is acquired between the dma_fence_begin_signalling() call and
+the call to dma_fence_wait(), and still held, this will result in an
+immediate lockdep complaint. The only other option would be to not
+annotate such calls, defeating the point. Therefore these annotations
+cannot be sprinkled over the code entirely mindless to avoid false
+positives.
+
+v2: handle soft/hardirq ctx better against write side and dont forget
+EXPORT_SYMBOL, drivers can't use this otherwise.
+
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: linux-rdma@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
-For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
-vs. orig_nents misuse' thread:
-https://lore.kernel.org/dri-devel/20200512085710.14688-1-m.szyprowski@samsung.com/T/
----
- drivers/gpu/drm/virtio/virtgpu_object.c | 36 +++++++++++++++++++--------------
- drivers/gpu/drm/virtio/virtgpu_vq.c     | 12 +++++------
- 2 files changed, 26 insertions(+), 22 deletions(-)
+ drivers/dma-buf/dma-fence.c | 53 +++++++++++++++++++++++++++++++++++++
+ include/linux/dma-fence.h   | 12 +++++++++
+ 2 files changed, 65 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index 6ccbd01..399556f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -72,9 +72,8 @@ void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo)
+diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+index 6802125349fb..d5c0fd2efc70 100644
+--- a/drivers/dma-buf/dma-fence.c
++++ b/drivers/dma-buf/dma-fence.c
+@@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
+ }
+ EXPORT_SYMBOL(dma_fence_context_alloc);
  
- 		if (shmem->pages) {
- 			if (shmem->mapped) {
--				dma_unmap_sg(vgdev->vdev->dev.parent,
--					     shmem->pages->sgl, shmem->mapped,
--					     DMA_TO_DEVICE);
-+				dma_unmap_sgtable(vgdev->vdev->dev.parent,
-+					     shmem->pages, DMA_TO_DEVICE, 0);
- 				shmem->mapped = 0;
- 			}
- 
-@@ -157,13 +156,13 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 	}
- 
- 	if (use_dma_api) {
--		shmem->mapped = dma_map_sg(vgdev->vdev->dev.parent,
--					   shmem->pages->sgl,
--					   shmem->pages->nents,
--					   DMA_TO_DEVICE);
--		*nents = shmem->mapped;
-+		ret = dma_map_sgtable(vgdev->vdev->dev.parent,
-+				      shmem->pages, DMA_TO_DEVICE, 0);
-+		if (ret)
-+			return ret;
-+		*nents = shmem->mapped = shmem->pages->nents;
- 	} else {
--		*nents = shmem->pages->nents;
-+		*nents = shmem->pages->orig_nents;
- 	}
- 
- 	*ents = kmalloc_array(*nents, sizeof(struct virtio_gpu_mem_entry),
-@@ -173,13 +172,20 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 		return -ENOMEM;
- 	}
- 
--	for_each_sg(shmem->pages->sgl, sg, *nents, si) {
--		(*ents)[si].addr = cpu_to_le64(use_dma_api
--					       ? sg_dma_address(sg)
--					       : sg_phys(sg));
--		(*ents)[si].length = cpu_to_le32(sg->length);
--		(*ents)[si].padding = 0;
-+	if (use_dma_api) {
-+		for_each_sgtable_dma_sg(shmem->pages, sg, si) {
-+			(*ents)[si].addr = cpu_to_le64(sg_dma_address(sg));
-+			(*ents)[si].length = cpu_to_le32(sg_dma_len(sg));
-+			(*ents)[si].padding = 0;
-+		}
-+	} else {
-+		for_each_sgtable_sg(shmem->pages, sg, si) {
-+			(*ents)[si].addr = cpu_to_le64(sg_phys(sg));
-+			(*ents)[si].length = cpu_to_le32(sg->length);
-+			(*ents)[si].padding = 0;
-+		}
- 	}
++#ifdef CONFIG_LOCKDEP
++struct lockdep_map	dma_fence_lockdep_map = {
++	.name = "dma_fence_map"
++};
 +
- 	return 0;
++bool dma_fence_begin_signalling(void)
++{
++	/* explicitly nesting ... */
++	if (lock_is_held_type(&dma_fence_lockdep_map, 1))
++		return true;
++
++	/* rely on might_sleep check for soft/hardirq locks */
++	if (in_atomic())
++		return true;
++
++	/* ... and non-recursive readlock */
++	lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _RET_IP_);
++
++	return false;
++}
++EXPORT_SYMBOL(dma_fence_begin_signalling);
++
++void dma_fence_end_signalling(bool cookie)
++{
++	if (cookie)
++		return;
++
++	lock_release(&dma_fence_lockdep_map, _RET_IP_);
++}
++EXPORT_SYMBOL(dma_fence_end_signalling);
++
++void __dma_fence_might_wait(void)
++{
++	bool tmp;
++
++	tmp = lock_is_held_type(&dma_fence_lockdep_map, 1);
++	if (tmp)
++		lock_release(&dma_fence_lockdep_map, _THIS_IP_);
++	lock_map_acquire(&dma_fence_lockdep_map);
++	lock_map_release(&dma_fence_lockdep_map);
++	if (tmp)
++		lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _THIS_IP_);
++}
++#endif
++
++
+ /**
+  * dma_fence_signal_locked - signal completion of a fence
+  * @fence: the fence to signal
+@@ -170,14 +216,19 @@ int dma_fence_signal(struct dma_fence *fence)
+ {
+ 	unsigned long flags;
+ 	int ret;
++	bool tmp;
+ 
+ 	if (!fence)
+ 		return -EINVAL;
+ 
++	tmp = dma_fence_begin_signalling();
++
+ 	spin_lock_irqsave(fence->lock, flags);
+ 	ret = dma_fence_signal_locked(fence);
+ 	spin_unlock_irqrestore(fence->lock, flags);
+ 
++	dma_fence_end_signalling(tmp);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL(dma_fence_signal);
+@@ -211,6 +262,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
+ 	if (timeout > 0)
+ 		might_sleep();
+ 
++	__dma_fence_might_wait();
++
+ 	trace_dma_fence_wait_start(fence);
+ 	if (fence->ops->wait)
+ 		ret = fence->ops->wait(fence, intr, timeout);
+diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+index 3347c54f3a87..3f288f7db2ef 100644
+--- a/include/linux/dma-fence.h
++++ b/include/linux/dma-fence.h
+@@ -357,6 +357,18 @@ dma_fence_get_rcu_safe(struct dma_fence __rcu **fencep)
+ 	} while (1);
  }
  
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 9e663a5..e5765db 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -302,7 +302,7 @@ static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
- 		return NULL;
- 	}
- 
--	for_each_sg(sgt->sgl, sg, *sg_ents, i) {
-+	for_each_sgtable_sg(sgt, sg, i) {
- 		pg = vmalloc_to_page(data);
- 		if (!pg) {
- 			sg_free_table(sgt);
-@@ -603,9 +603,8 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
- 	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
- 
- 	if (use_dma_api)
--		dma_sync_sg_for_device(vgdev->vdev->dev.parent,
--				       shmem->pages->sgl, shmem->pages->nents,
--				       DMA_TO_DEVICE);
-+		dma_sync_sgtable_for_device(vgdev->vdev->dev.parent,
-+					    shmem->pages, DMA_TO_DEVICE);
- 
- 	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
- 	memset(cmd_p, 0, sizeof(*cmd_p));
-@@ -1019,9 +1018,8 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
- 	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
- 
- 	if (use_dma_api)
--		dma_sync_sg_for_device(vgdev->vdev->dev.parent,
--				       shmem->pages->sgl, shmem->pages->nents,
--				       DMA_TO_DEVICE);
-+		dma_sync_sgtable_for_device(vgdev->vdev->dev.parent,
-+					    shmem->pages, DMA_TO_DEVICE);
- 
- 	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
- 	memset(cmd_p, 0, sizeof(*cmd_p));
++#ifdef CONFIG_LOCKDEP
++bool dma_fence_begin_signalling(void);
++void dma_fence_end_signalling(bool cookie);
++#else
++static inline bool dma_fence_begin_signalling(void)
++{
++	return true;
++}
++static inline void dma_fence_end_signalling(bool cookie) {}
++static inline void __dma_fence_might_wait(void) {}
++#endif
++
+ int dma_fence_signal(struct dma_fence *fence);
+ int dma_fence_signal_locked(struct dma_fence *fence);
+ signed long dma_fence_default_wait(struct dma_fence *fence,
 -- 
-1.9.1
+2.26.2
 
