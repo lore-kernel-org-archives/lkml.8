@@ -2,97 +2,120 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22E5C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67BBC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF82E23126
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17B3206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OT7cqfnz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3tVDish"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbgELT7f (ORCPT
+        id S1731113AbgELUAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730950AbgELT7e (ORCPT
+        Tue, 12 May 2020 16:00:34 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54940 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728275AbgELUAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:59:34 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D45CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:59:34 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id i14so13869407qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sg2a6fyKRQRSKPyMiUgq/bNuu0wOUTmUYFCGZhrn034=;
-        b=OT7cqfnzqlQcrm3j3lZ8ug/HxoHDbCEOgPbhYZSq0oSzfbW9NTTuwi6FVDWBSVS0c8
-         ZFCOYNPc6rkkh8n2hg221SKSo5p7n1cfUPpaVPQnUO+YnriXHAeBHl5DJlmkpOHuFU15
-         3GCSoTfT2owPbi2c1KFKsyh04YfdJdgj8Gp7zvfVk8n1CQHnNRXF03Dh+rrhG0nz8HVD
-         3LNui8wk3HRf728C/0ByTSQ+jSG6lmA6O55Z3du3Li9onvFoO9rSB+twGwy2UhgPOwGy
-         TGEN0vtOiI4I6iQ+j0svwE9QSj/MZ4+W9c/iEO8ohFdsKUy6fOo5bXOlKCvkuSaAjBAP
-         OAdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sg2a6fyKRQRSKPyMiUgq/bNuu0wOUTmUYFCGZhrn034=;
-        b=oaCVR2ZP4e32m7RYlMOmFD0AJZlaBcOQCVt84iwqc7wrtnthyYTMsbl3i+W1/vZucg
-         erxKpg/yyYF1F4aX9JUL8RJ9b7+KF9e8PPLkRCl7Cti4XgmrpLzfUVY6UVsCwRSsFbgn
-         WC/RBZ5xx7+wFT/5IZxVmVZHiK2ZwcbdXnDGHPu3/OJUK72o2sBSLRTYfww37OIX6hhA
-         Wifo3VIAwVqcOUO4IMFaxopuZ4yXjnuNAGlgjgliTvSE+miez2LsRJW2iZjTLuMStLe/
-         xyCswddi+k8QWwKQ8he364+WWOAZ4fJsVNuLl8AJ4KKrpsxenshBypVFUNBv1qFmQz5P
-         QazQ==
-X-Gm-Message-State: AOAM533FBXWOR7UOAyK4GK6cvmHneoqFpkhwO+GMYlJXKmA64kcOlTaF
-        umHTa7B+LLzjeadb+UrrAOh7SA==
-X-Google-Smtp-Source: ABdhPJxbcK6lfd/Nxn8gQyx7XBGZvs9eg60XbAfVRNq5h29RM1mvRc3znjsSPHIdHHJ0/LVvCAjjrw==
-X-Received: by 2002:a37:6547:: with SMTP id z68mr9489696qkb.197.1589313573539;
-        Tue, 12 May 2020 12:59:33 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id h12sm9953357qtb.19.2020.05.12.12.59.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 12:59:33 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYb3s-0002Oo-KA; Tue, 12 May 2020 16:59:32 -0300
-Date:   Tue, 12 May 2020 16:59:32 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     jglisse@redhat.com, Ralph Campbell <rcampbell@nvidia.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] mm/hmm/test: fix error return code in
- hmm_dmirror_init()
-Message-ID: <20200512195932.GB9154@ziepe.ca>
-References: <20200509030234.14747-1-weiyongjun1@huawei.com>
+        Tue, 12 May 2020 16:00:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589313632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LvbGY8ZvCj9G+3gYhr3VTgORuP6wjyLO9gJ7K3lpE20=;
+        b=J3tVDishT7mHfWbSBE9/vhiD/k3FM0ADSBnRMXOdhEODn4pZT5WHS2hFXIZVqOniFaJUxs
+        hqjcqwJwI3cYU7807DNZP8r3ityZKaX6nz2E0nE4UaCYYDlThliVzmp7mZS7IgGG2KRWyP
+        lype4IMqtUW0fw/6LPN5nSIZt7jBtok=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-303-kRTDR0SrOPmN0VHAUC4PiA-1; Tue, 12 May 2020 16:00:30 -0400
+X-MC-Unique: kRTDR0SrOPmN0VHAUC4PiA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9EB97835B41;
+        Tue, 12 May 2020 20:00:28 +0000 (UTC)
+Received: from [10.10.65.2] (ovpn-65-2.rdu2.redhat.com [10.10.65.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 780425C1BB;
+        Tue, 12 May 2020 20:00:27 +0000 (UTC)
+Subject: Re: Failure to shutdown/reboot with intel_iommu=on
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
+        tglx@linutronix.de, x86@kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+References: <20200506144558.GA4019@taurus.defre.kleine-koenig.org>
+ <20200508150734.GP8135@suse.de>
+ <ff5eb4e2-89a3-57a5-c6d6-42bf743e5d16@redhat.com>
+ <20200512133429.GZ8135@suse.de>
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+Message-ID: <26b328dc-2161-fdaa-f533-bf0027c13efc@redhat.com>
+Date:   Tue, 12 May 2020 16:00:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509030234.14747-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200512133429.GZ8135@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 03:02:34AM +0000, Wei Yongjun wrote:
-> Fix to return negative error code -ENOMEM from the alloc_page() error
-> handling case instead of 0, as done elsewhere in this function.
+On 5/12/20 9:34 AM, Joerg Roedel wrote:
+> On Mon, May 11, 2020 at 09:43:11AM -0400, Lenny Szubowicz wrote:
+>> I suspect that you have TPM 2.x functionality enabled in the BIOS/firmware.
+>>
+>> Unless you are actually using the TPM, try setting it to TPM 1.2 mode.
+>> I've seen an incompatiblity on other Lenovo laptops between using the
+>> IOMMU, TPM 2.x implementation in firmware, and shutdown/suspend.
 > 
-> Fixes: 5d5e54be8a1e ("mm/hmm/test: add selftest driver for HMM")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  lib/test_hmm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Interesting, has this been debugged further into the TPM code?
+> 
+> 
+> 	Joerg
+> 
 
-Thank you, I squashed this into the original commit
+I believe the problem is in the Lenovo firmware and not in the kernel.
 
-Jason
+There are essentially two problems:
+  1. TPM 2.0 doesn't work when the IOMMU is enabled
+  2. Suspend/shutdown hangs when problem 1 is encountered on boot
+
+Lenovo's firmware implementation of TPM 2.0 functionality on some of their
+laptops uses DMA. When you ask the kernel to enable the IOMMU, this DMA
+access is correctly blocked by the IOMMU hardware. If you look at your
+dmesg log from when you have TPM 2.0 and the IOMMU enabled, there are
+TPM timeout messages that indicate the inability to initialize and use
+the TPM capability.
+
+The hang on shutdown or S3 suspend appears to be in firmware, i.e.
+after the kernel has transferred control back to the firmware.
+It makes no difference if the kernel actively shuts down the IOMMU
+before transferring control to the firmware on a suspend or shutdown.
+The hang still occurs.
+
+My guess is that the firmware wants to do some TPM related processing
+on shutdown and suspend and can't handle the TPM state that exists
+due to the startup failure. But that's just a guess. I don't know
+what the firmware is actually doing.
+
+Some Lenovo laptops provide an ACPI DMAR RMRR that identifies the memory
+range that the kernel should open up for permissable DMA access
+for this purpose. Unfortunately, the PCI device that performs these
+DMA operations is hidden from the kernel by the BIOS. Given that the
+associated PCI device is hidden, the Linux kernel does not act upon
+the associated DMAR RMRR.
+
+                        -Lenny.
+
+
