@@ -2,105 +2,145 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9720FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1827DCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77863206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CF7206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="crUTI9DB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jIfCDoTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgELQ5H (ORCPT
+        id S1728305AbgELQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
+        Tue, 12 May 2020 12:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgELQ5G (ORCPT
+        with ESMTP id S1725554AbgELQ6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:57:06 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9449C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:57:04 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id a9so11154666lfb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:57:04 -0700 (PDT)
+        Tue, 12 May 2020 12:58:31 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CA3C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:58:31 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k6so14784035iob.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:58:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=soB2T7jMfJPtP5H3MNhiTe8IwYHJSi7NbmavIdokrOw=;
-        b=crUTI9DBwo1cPu+KhFehaihTnypYtCw55ruTD7lVh8znQdy9XZk/8FGzr8uT3FK2iV
-         hRIiPsNa753rxUMiEk5p3b5zJ6y4SQ9lMrHEh4BNB0f0LNwzwPRwYUux8eaG4K48fgZE
-         QLAuHslKPqD8iz0uGuPmhKPpNIIpnqwyweDz4=
+        bh=mi+7tCnacK5Jy7mKSoTkTKMPF4P1Yw/xhRvgr46sMlM=;
+        b=jIfCDoTCAH5GwV1mXMIJOCVzQltbxfLSL2kwDM+VFo2O6YeTQGFH2BU78YfEwjsvrb
+         4rxQt2D+glH318nmIpf+5vcd2zwN545v0cLgOLi6VS0b/3fdjse1e1eetBOUlNitFvMg
+         6/33/8kPY0dpWTHlZDuto+NTZ+fBEp6yUvMImxkedmb163IhZUQyiQU34uGx/nKMtLFb
+         siNc0lCKAih382PVnwaTZQ2vQs3wx2ZpMxm0dAwZ3mY5WOraEYSw5IeNRpBV4dsChUef
+         lhJIz+VzlU/sapXsBVC1xkcTCaWjXf7bvNqFkP9mCToh5p+GVUeJMlyOE8huIHTdGXIy
+         Gzhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=soB2T7jMfJPtP5H3MNhiTe8IwYHJSi7NbmavIdokrOw=;
-        b=jMtqd6XfA5wCYFuaK/KCAXzrii8f+TmgqZ2HKzh9a9pFrGT6fA2BLHSqIujGRAxGaK
-         2s9cyKkI+elb7eV4qudY38mLYNIu6e7sO+nJIOoV1rZsdc56DJ88AZngIY2+kXDLg1fy
-         7L43e2rBDylf2XYHNyH8oVHsuUiJmBsi5tyqeDsfNAXHoct5YEhRqcZc5X8qJ78/bf9G
-         TnrPB39c0QU5El/wm2iNitddg9rhnKQzRDI7noLK+RAc0XapnDDuVteDIHo6Yp8Ght/P
-         ExDbvgtUzYWb0uIHOJ1EbTMMqi2orv0dRdQ+aCqahSkotwHfCuEeJh0ur5ylSnsOX5nb
-         8TNQ==
-X-Gm-Message-State: AOAM533nN87VdhNDr8IvAOsZjphGJm5rVpiJC+Ysmy/5Oe4JdGz85Yvp
-        DDTO3pgaG6W/qNHnnjNDW6foGIqA9aE=
-X-Google-Smtp-Source: ABdhPJxCQW/hoNzOsJ1uSjWUply7W3tVXkjKKFnNgOrXS7KgGirrpMilYgvIuhrMpw8/nIAIoKqMSQ==
-X-Received: by 2002:a19:4285:: with SMTP id p127mr14921755lfa.46.1589302622576;
-        Tue, 12 May 2020 09:57:02 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id k24sm277732ljg.92.2020.05.12.09.56.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 09:56:59 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id b26so11175604lfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:56:59 -0700 (PDT)
-X-Received: by 2002:a19:5518:: with SMTP id n24mr15139341lfe.61.1589302618801;
- Tue, 12 May 2020 09:56:58 -0700 (PDT)
+        bh=mi+7tCnacK5Jy7mKSoTkTKMPF4P1Yw/xhRvgr46sMlM=;
+        b=JSsflIP7n0isyL064kwubn79bi/RFU8EonHQ1mOzSQ4Y8COuPl6dLJOaZ3oDisbO3F
+         HxIV5rlCo3ln9GAnZs/uJOsc4kg00Ek8ADv0Z0iUdeuBspgq7RsQacDAkQHy6SAWB0qD
+         kdpjgwlsE0rRNughdhEK9bU2QwiIn0l4DEvpe5S6LFruX4GK4bCM4UWyDCG9Tx06YFms
+         8hvb0PNOydf5m+ofgkvDjtNp6NqIfQHp0osD9KrWdyOH+T9VYBWKjeagF9jxULg+I/U7
+         skcqE7nmPjZtxr4OCbTRsWTNH0c2XG9WICFZk1mXjju6s8AKv1jEePV3hgbt4ix+TBW0
+         BBUw==
+X-Gm-Message-State: AGi0PuYXk4CBE65UPOrnMu//muzkjB2DlMuZq9CXj/9PwPqBSEZhS4FB
+        WEVi6jwnNJ68/1qZcH/8kSN9qnBXGthHlxci+I7PwA==
+X-Google-Smtp-Source: APiQypKx5qJnwBpmI84ld8f5gXdVE2PTGwixpadOnUEFMdACgzu6Lq+nVSrPX/5KZQX86XCMmGCR6S8ABb1ycIYUz6A=
+X-Received: by 2002:a02:a60f:: with SMTP id c15mr11263022jam.24.1589302710267;
+ Tue, 12 May 2020 09:58:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190906185931.19288-1-navid.emamdoost@gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 12 May 2020 09:56:47 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
-Message-ID: <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
+References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
+ <158923999440.20128.4859351750654993810.stgit@naples-babu.amd.com>
+ <CALMp9eTs4hYpDK+KzXEzaAptcfor+9f7cM9Yd9kvd5v27sdFRw@mail.gmail.com> <2fb5fd86-5202-f61b-fd55-b3554c5826da@amd.com>
+In-Reply-To: <2fb5fd86-5202-f61b-fd55-b3554c5826da@amd.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 12 May 2020 09:58:19 -0700
+Message-ID: <CALMp9eRT69LWGE8dZVuLv2mxgc_R3W1SnPswHkhS8K0ZUX_B-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] KVM: x86: Move MPK feature detection to common code
+To:     Babu Moger <babu.moger@amd.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        mchehab+samsung@kernel.org, changbin.du@intel.com,
+        Nadav Amit <namit@vmware.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        yang.shi@linux.alibaba.com,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arjun Roy <arjunroy@google.com>, logang@deltatee.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        Juergen Gross <jgross@suse.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        pawan.kumar.gupta@linux.intel.com,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 11:59 AM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
+On Tue, May 12, 2020 at 8:12 AM Babu Moger <babu.moger@amd.com> wrote:
 >
-> In ath9k_wmi_cmd, the allocated network buffer needs to be released
-> if timeout happens. Otherwise memory will be leaked.
 >
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>
+> On 5/11/20 6:51 PM, Jim Mattson wrote:
+> > On Mon, May 11, 2020 at 4:33 PM Babu Moger <babu.moger@amd.com> wrote:
+> >>
+> >> Both Intel and AMD support (MPK) Memory Protection Key feature.
+> >> Move the feature detection from VMX to the common code. It should
+> >> work for both the platforms now.
+> >>
+> >> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> >> ---
+> >>  arch/x86/kvm/cpuid.c   |    4 +++-
+> >>  arch/x86/kvm/vmx/vmx.c |    4 ----
+> >>  2 files changed, 3 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> >> index 901cd1fdecd9..3da7d6ea7574 100644
+> >> --- a/arch/x86/kvm/cpuid.c
+> >> +++ b/arch/x86/kvm/cpuid.c
+> >> @@ -278,6 +278,8 @@ void kvm_set_cpu_caps(void)
+> >>  #ifdef CONFIG_X86_64
+> >>         unsigned int f_gbpages = F(GBPAGES);
+> >>         unsigned int f_lm = F(LM);
+> >> +       /* PKU is not yet implemented for shadow paging. */
+> >> +       unsigned int f_pku = tdp_enabled ? F(PKU) : 0;
+> >
+> > I think we still want to require that OSPKE be set on the host before
+> > exposing PKU to the guest.
+> >
+>
+> Ok I can add this check.
+>
+> +       unsigned int f_pku = tdp_enabled && F(OSPKE)? F(PKU) : 0;
 
-I wonder, did you actually test your patches? I ask, because it seems
-that all your patches are of the same mechanical variety (produced by
-some sort of research project?), and if I look around a bit, I see
-several mistakes and regressions noted on your other patches. And
-recently, I see someone reporting a 5.4 kernel regression, which looks
-a lot like it was caused by this patch:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=207703#c1
-
-I'll propose a revert, if there's no evidence this was actually tested
-or otherwise confirmed to fix a real bug.
-
-Brian
+That doesn't do what you think it does. F(OSPKE) is a non-zero
+constant, so that conjunct is always true.
