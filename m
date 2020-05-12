@@ -7,72 +7,74 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30259C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6C8C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF7F206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CA6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p7OTze74"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="atpeDeBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgELD2u (ORCPT
+        id S1728785AbgELD3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 23:28:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38622 "EHLO
+        Mon, 11 May 2020 23:29:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38856 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbgELD2t (ORCPT
+        with ESMTP id S1728769AbgELD3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 23:28:49 -0400
+        Mon, 11 May 2020 23:29:02 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3RKxJ105296;
-        Tue, 12 May 2020 03:28:46 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3RKad105301;
+        Tue, 12 May 2020 03:28:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=9vyTDBtmAZzufdi8K/i1nWRvrNIE3ofFmBBIEvSA+6U=;
- b=p7OTze74rl+nofgA4ArDD/+Re4ZlfOMc8kbFoLmTgifvEPH8gIF+Vd0hOdffEFeqfAGZ
- sK2pK6zSbotwh5ldbX7KQXAdv2szFP5/OwNs9pWulk04f6rbc6e61vHLOPP6pg64YNF3
- Zgi+vYlaMQsy1/qbIP+i/Uxwb6TQ1/OKfkfIC+jPm7pMj7TdENodR+PrKehqgB8dQRTN
- mHkEd0hE0+kipp8Kxw4rYfSPZMxGDytUPdZ+WA/QrOciKE/18UXwyM2NPaBIvZsX1XSb
- 3y2E/8gBv9oGJJXBfOHJJjsAS5svJQzodNwpXvJL/WZRJsXrsovyRKtJnzc21O3/M/gZ Ew== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 30x3gmghsc-1
+ bh=yjht21A+lbBhE+akid/fZHIqTGNw0vGZeU/Y9DdYpVI=;
+ b=atpeDeBF8hkcxJUneGki9pZ5Bej5uq6HCZKLAGomROlQig66HJ1JtVtBHmRO1uXgF/WF
+ rmxFn6tdD4MOYQ5JLvN/MejGjCe9wJTNYaoK4X4oZrj/nOXtK3Nc8my9BVoZ0lVMHwUD
+ 96CqHlAbVTgMBk60jKwgqbDIjqaeVieLTeEeBkpjd2Mf46//ERewS0oQez48H9O4BDGd
+ I6FSXs7onKB7xHQIttIILj9Ry4I3mc4uuhIpl3Cy8GEO6MMQyNKzkBpCveQpoEyv7vd0
+ nzI56c4/3hnrOcRfi27pWnbHACTWxQn75Fux/DYQIgHsWgmZopCHwOmY5NbSQDDdL8fZ +A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30x3gmghsq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 03:28:46 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3Mnfj016267;
-        Tue, 12 May 2020 03:28:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30xbggtkvv-1
+        Tue, 12 May 2020 03:28:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04C3NdcO074847;
+        Tue, 12 May 2020 03:28:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30x63nxa88-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 03:28:45 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04C3Sio9018971;
-        Tue, 12 May 2020 03:28:44 GMT
+        Tue, 12 May 2020 03:28:52 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04C3SqxP029053;
+        Tue, 12 May 2020 03:28:52 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 May 2020 20:28:43 -0700
+        with ESMTP ; Mon, 11 May 2020 20:28:51 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     suganath-prabu.subramani@broadcom.com,
+        Samuel Zou <zou_wei@huawei.com>, sathya.prakash@broadcom.com,
+        jejb@linux.ibm.com
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH] scsi: libsas: Replace zero-length array with flexible-array
-Date:   Mon, 11 May 2020 23:28:30 -0400
-Message-Id: <158925392373.17325.6941458410294631284.b4-ty@oracle.com>
+        MPT-FusionLinux.pdl@broadcom.com, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH -next] scsi: mpt3sas: Remove unused including <linux/version.h>
+Date:   Mon, 11 May 2020 23:28:36 -0400
+Message-Id: <158925392374.17325.9992848339412711658.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200507192147.GA16206@embeddedor>
-References: <20200507192147.GA16206@embeddedor>
+In-Reply-To: <1588938573-57847-1-git-send-email-zou_wei@huawei.com>
+References: <1588938573-57847-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=678
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120029
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120029
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=720
- clxscore=1011 spamscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
  malwarescore=0 priorityscore=1501 mlxscore=0 suspectscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005120029
@@ -81,24 +83,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 14:21:47 -0500, Gustavo A. R. Silva wrote:
+On Fri, 8 May 2020 19:49:33 +0800, Samuel Zou wrote:
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+> Fix the following versioncheck warning:
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> [...]
+> drivers/scsi/mpt3sas/mpt3sas_debugfs.c:16:1: unused including <linux/version.h>
 
 Applied to 5.8/scsi-queue, thanks!
 
-[1/1] scsi: libsas: Replace zero-length array with flexible-array
-      https://git.kernel.org/mkp/scsi/c/00b42b70ae52
+[1/1] scsi: mpt3sas: Remove unused including <linux/version.h>
+      https://git.kernel.org/mkp/scsi/c/b59293b469b9
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
