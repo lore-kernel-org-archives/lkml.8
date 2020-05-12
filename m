@@ -2,161 +2,148 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0965C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C14C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD2920740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kvOR1LBv"
+	by mail.kernel.org (Postfix) with ESMTP id DDC5F20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgELVJo (ORCPT
+        id S1731283AbgELVK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726324AbgELVJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:09:43 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C113BC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:09:43 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so6748599pgb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4SiIjIE0HqgktULUkxH4huGvPI4IR97vaLn7SaMgRvw=;
-        b=kvOR1LBvbXHsTdtL2TP6eGDZfFC1ooMf5iQTDsBYgNoJtSbpgX4ulckTUbNODBqoP7
-         riZzlWq93xqkYi3zXErNHAHy+/gZ9NrBfN7Gye2AF282HV8iGeljGnl6WQLR0VRh/DEO
-         vErb11z8cHI5SW+sUPYZCGttNjJuR7vSpITj4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4SiIjIE0HqgktULUkxH4huGvPI4IR97vaLn7SaMgRvw=;
-        b=W3Rqw8e5XEEuTkr5cVqIVqpRdczkVjJrFDiZXivFgWGdOpymg9g9oMcHCw/YAKgiwJ
-         2IwW0LHKafjlh/v+ZUFNfQBYmq0JX0jzdn+/WB3mk8sZWGmxqMRKBHssp1ZcBIVtvrSd
-         oiwiymGgXhK6n/GdLfjTFEBbjcWiQ15gphRUko6tWKwETPywuKTJsgi+0jv60XGdM9hp
-         W3wMkCnl3neXfijRzO4gZGIng40Uns3uzmh44APVRtwgvLN5ebDzSlcOf5gvl9l0R6+E
-         UzGpk5QM245hytnLrB6hoQr2qBtJvNiqkRjvRl+bhWUF9F94RhaOyspOiW9IaaylCduH
-         xIrQ==
-X-Gm-Message-State: AOAM532ZKNNBZuzcLYEz9Df3yBFEZqnBX8lcxJ/gGLS7tbcJS1cR53xy
-        h4rrkWtBCBDXZmowkVHD+VTgeQ==
-X-Google-Smtp-Source: ABdhPJxt840LEl+4pcP5gOb8tskJnRcbgXJ1+UHrDACNk2Ju97S34FmnGoVr6OI4La30DBmSgA2nPQ==
-X-Received: by 2002:a63:c04a:: with SMTP id z10mr8594229pgi.430.1589317783313;
-        Tue, 12 May 2020 14:09:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g17sm2433251pgg.43.2020.05.12.14.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:09:42 -0700 (PDT)
-Date:   Tue, 12 May 2020 14:09:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 2/6] fs: Add a MAY_EXECMOUNT flag to infer the noexec
- mount property
-Message-ID: <202005121407.A339D31A@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-3-mic@digikod.net>
+        Tue, 12 May 2020 17:10:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:20082 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726324AbgELVK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:10:56 -0400
+IronPort-SDR: NHbNQOOfFI1+ZAAMXkKHcu+SKYa6zi+v8/xL97dpvg8QnA7uPcGhWROU5BNNiFIG35PjtGGJ82
+ F6Ft2Wv2pbUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 14:10:55 -0700
+IronPort-SDR: ryy41q/cCF/rB0wFlMvt1vQzwChTsIBW/914zRGtLtlHuciZwNOl2FivjyGGl28QDa8o5hWmuW
+ 93zjV74AbCEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,385,1583222400"; 
+   d="scan'208";a="437241109"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga005.jf.intel.com with ESMTP; 12 May 2020 14:10:54 -0700
+Subject: Re: [PATCHv1] fpga: stratix10-soc: remove the pre-set reconfiguration
+ condition
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinguyen@kernel.org, Richard Gong <richard.gong@intel.com>
+References: <1589290051-30246-1-git-send-email-richard.gong@linux.intel.com>
+ <20200512153514.GA125665@epycbox.lan>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <5c23279d-17be-f33c-469c-461219027465@linux.intel.com>
+Date:   Tue, 12 May 2020 16:27:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505153156.925111-3-mic@digikod.net>
+In-Reply-To: <20200512153514.GA125665@epycbox.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:31:52PM +0200, Mickaël Salaün wrote:
-> This new MAY_EXECMOUNT flag enables to check if the underlying mount
-> point of an inode is marked as executable.  This is useful to implement
-> a security policy taking advantage of the noexec mount option.
-> 
-> This flag is set according to path_noexec(), which checks if a mount
-> point is mounted with MNT_NOEXEC or if the underlying superblock is
-> SB_I_NOEXEC.
-> 
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
-> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  fs/namei.c         | 2 ++
->  include/linux/fs.h | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index a320371899cf..33b6d372e74a 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2849,6 +2849,8 @@ static int may_open(const struct path *path, int acc_mode, int flag)
->  		break;
->  	}
->  
-> +	/* Pass the mount point executability. */
-> +	acc_mode |= path_noexec(path) ? 0 : MAY_EXECMOUNT;
->  	error = inode_permission(inode, MAY_OPEN | acc_mode);
->  	if (error)
->  		return error;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 313c934de9ee..79435fca6c3e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -103,6 +103,8 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
->  #define MAY_NOT_BLOCK		0x00000080
->  /* the inode is opened with O_MAYEXEC */
->  #define MAY_OPENEXEC		0x00000100
-> +/* the mount point is marked as executable */
-> +#define MAY_EXECMOUNT		0x00000200
->  
->  /*
->   * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
+Hi Moritz,
 
-I find this name unintuitive, but I cannot think of anything better,
-since I think my problem is that "MAY" doesn't map to the language I
-want to use to describe what this flag is indicating.
+On 5/12/20 10:35 AM, Moritz Fischer wrote:
+> Hi Richard,
+> 
+> On Tue, May 12, 2020 at 08:27:31AM -0500, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
+>>
+>> The reconfiguration mode is pre-set by driver as the full reconfiguration.
+>> As a result, user have to change code and recompile the drivers if he or
+>> she wants to perform a partial reconfiguration. Removing the pre-set
+>> reconfiguration condition so that user can select full or partial
+>> reconfiguration via overlay device tree without recompiling the drivers.
+>>
+>> Also add an error message if the configuration request is failure.
+>>
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
+>> ---
+>>   drivers/fpga/stratix10-soc.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+>> index 44b7c56..2da8a40 100644
+>> --- a/drivers/fpga/stratix10-soc.c
+>> +++ b/drivers/fpga/stratix10-soc.c
+>> @@ -182,12 +182,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>>   	uint i;
+>>   	int ret;
+>>   
+>> -	ctype.flags = 0;
+>>   	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+>>   		dev_dbg(dev, "Requesting partial reconfiguration.\n");
+>> -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
+>> +		ctype.flags = 1;
+> Have you considered:
+> 
+> ctype.flags = BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
+> 
+> instead (assuming 1, lines up with BIT(COMMAND_RECONFIG_FLAG_PARTIAL)?
+> 
+> If not: Can you define a constant?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+How about change below?
 
--- 
-Kees Cook
++#define RECONFIG_FLAG_FULL             0
++#define RECONFIG_FLAG_PARTIAL          1
++
+  /*
+   * struct s10_svc_buf
+   * buf:  virtual address of buf provided by service layer
+@@ -184,10 +187,10 @@ static int s10_ops_write_init(struct fpga_manager 
+*mgr,
+
+         if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+                 dev_dbg(dev, "Requesting partial reconfiguration.\n");
+-               ctype.flags = 1;
++               ctype.flags = RECONFIG_FLAG_PARTIAL;
+         } else {
+                 dev_dbg(dev, "Requesting full reconfiguration.\n");
+-               ctype.flags = 0;
++               ctype.flags = RECONFIG_FLAG_FULL;
+         }
+
+The protocol between kernel driver and the firmware:
+The reconfiguration flag for full or partial configuration. 0 is for 
+full (default mode) and 1 for partial reconfiguration.
+
+I will submit a new version.
+
+Regards,
+Richard
+
+>>   	} else {
+>>   		dev_dbg(dev, "Requesting full reconfiguration.\n");
+>> +		ctype.flags = 0;
+>>   	}
+>>   
+>>   	reinit_completion(&priv->status_return_completion);
+>> @@ -210,6 +210,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>>   
+>>   	ret = 0;
+>>   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+>> +		dev_err(dev, "RECONFIG_REQUEST failed\n");
+>>   		ret = -ETIMEDOUT;
+>>   		goto init_done;
+>>   	}
+>> -- 
+>> 2.7.4
+>>
+> 
+> Cheers,
+> Moritz
+> 
