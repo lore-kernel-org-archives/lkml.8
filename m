@@ -2,194 +2,99 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89650C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091E2C54E90
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624E1206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589295344;
-	bh=10Wbibz5MtplL9oNw/JJCifW7QqDUGxQxv2LMOfQXNA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zkKHblIjJiliLHhW3QpJlbC2nXBE+68CQqKJjRyAcvC0fLXuxGs93AmCGSYvsqjvE
-	 FDTQIyK3q/38N4zu9KAb3rSrEh35MNrKO+N5Bm3ECtSA9WZLsfIbAEtTNhFxQukhCb
-	 TvJ7FY4qvKDQ+agHTe5B+YMZQ7tSig8Ke9h059Z8=
+	by mail.kernel.org (Postfix) with ESMTP id E4A66206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730525AbgELOzn (ORCPT
+        id S1730533AbgELO4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:55:43 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43487 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727958AbgELOzn (ORCPT
+        Tue, 12 May 2020 10:56:16 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34703 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgELO4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:55:43 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i22so1854132oik.10;
-        Tue, 12 May 2020 07:55:42 -0700 (PDT)
+        Tue, 12 May 2020 10:56:15 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c12so17460328oic.1;
+        Tue, 12 May 2020 07:56:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fQ/KirqKw6BO2UGDgRcS3zleuiv+6S0ku0zLBHrcdQE=;
-        b=B+WTLvJgFm4p2L6t1i5L9KUz3yO2X6IBwts1XOY58mRbFk7msGAjkoIQvARexAlxGL
-         Jc1Rj7u2iBTgNnQbyECP/XrbwkRQNR8O2inCxwh61RH7hSr2/hbXN+yt5NVWL+JoUZfO
-         tpc5qAIqs8KQUDLTVDQUbDWMihk24ZQRZMKk6uneRKtSQrYdeYP4Gooqztt7v1xTzubf
-         JniJbjMy4IgXjGYG4O27/3mb2dUl0UxVsSzOLkBoiLYg3DFjXedHFkJBn87u1hjTt3KV
-         4/SFA4WX19lumBg9U33/HdjTa3D0CEpHenoxoymPoMg4CGkYjS8kVDGOswOc6SPutEUr
-         +fFQ==
-X-Gm-Message-State: AGi0PuYWP4QQ8pCSePK+6NiCp/be2450kBUCq7epXh9psGGffRPYZ9Op
-        5H1s9mT8SklswgQyjdCsrQ==
-X-Google-Smtp-Source: APiQypKGFg5K792meOQtyk/OqmaGeRZs+OjkzVpOC5F4wC2KYFUclFMd7QTJb3TdXvy6aRGZ9Dv7iw==
-X-Received: by 2002:aca:5513:: with SMTP id j19mr22756944oib.31.1589295342052;
-        Tue, 12 May 2020 07:55:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c84sm5382655oig.37.2020.05.12.07.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:55:40 -0700 (PDT)
-Received: (nullmailer pid 31636 invoked by uid 1000);
-        Tue, 12 May 2020 14:55:39 -0000
-Date:   Tue, 12 May 2020 09:55:39 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V4 2/5] dt-bindings: clock: Convert i.MX6SX clock to
- json-schema
-Message-ID: <20200512145539.GA25671@bogus>
-References: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
- <1588207921-20604-2-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a/N06xotf8iar1D4UgdTjomlZyumlZDa21O+nxsz7Gs=;
+        b=Bw5aMtaTY7Ai1hy3njXmlZXnmCGDgmdN/uvMraVZ6fQwIASR9Y5Qawssgs/8Mpcmh/
+         SRuGZaIKXlBrXQYAkjgBhsA8cD/JtTc1Ajt6/H22/zHebXoPQLQac9YRYSjNbu2hVu6I
+         K+WgJdcPhAgSKEhB1gB0gNVNcgOl4pOFWmS1948U5o0pbju6m7+oNESWi2ykxYg6o6+x
+         jKVTW5Gar7NU5gxKXhFg1wjXRlEkcDKs0D6VJQOiHQWa04WVOi8LWkXIRUsYfEZZByrA
+         sCPYeVuxkLQFHgWlI6nm1S3/6kU48aeY2mAbv4Xe0YC+9i7ho4wbml4gggj86G6iBS5h
+         86lw==
+X-Gm-Message-State: AGi0Pua6MeG6zKDwGy718FdSJwn7kQzinRNiAVftsrrEbCJCa8VmqcLz
+        8zbwRd7T/Pt3Pvx9XuxzUvmPUTxGIxYTo3mOXlAj1kOX
+X-Google-Smtp-Source: APiQypLPHII6upk6iNYoZD9pYfWhiPJxDNt/TH7BuAvFbVXWIAt/4KdUs8x3tA8y610NHj/T3IkbGJwtxVll7YHTVaA=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr23734306oig.54.1589295373790;
+ Tue, 12 May 2020 07:56:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588207921-20604-2-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200512145256.GA25121@bogus>
+In-Reply-To: <20200512145256.GA25121@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 May 2020 16:56:01 +0200
+Message-ID: <CAMuHMdXzeJdBqjshm5eEqTF05GZC1HS02=oJ2VG+B0r16=gkeQ@mail.gmail.com>
+Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 08:51:58AM +0800, Anson Huang wrote:
-> Convert the i.MX6SX clock binding to DT schema format using json-schema.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V3:
-> 	- update license to be with (GPL-2.0-only OR BSD-2-Clause);
-> 	- remove unnecessary minItem for interrupts;
-> 	- remove label in example.
-> ---
->  .../devicetree/bindings/clock/imx6sx-clock.txt     | 13 -----
->  .../devicetree/bindings/clock/imx6sx-clock.yaml    | 64 ++++++++++++++++++++++
->  2 files changed, 64 insertions(+), 13 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/imx6sx-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx6sx-clock.txt b/Documentation/devicetree/bindings/clock/imx6sx-clock.txt
-> deleted file mode 100644
-> index 22362b9..0000000
-> --- a/Documentation/devicetree/bindings/clock/imx6sx-clock.txt
-> +++ /dev/null
-> @@ -1,13 +0,0 @@
-> -* Clock bindings for Freescale i.MX6 SoloX
-> -
-> -Required properties:
-> -- compatible: Should be "fsl,imx6sx-ccm"
-> -- reg: Address and length of the register set
-> -- #clock-cells: Should be <1>
-> -- clocks: list of clock specifiers, must contain an entry for each required
-> -  entry in clock-names
-> -- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
-> -
-> -The clock consumer should specify the desired clock by having the clock
-> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sx-clock.h
-> -for the full list of i.MX6 SoloX clock IDs.
-> diff --git a/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-> new file mode 100644
-> index 0000000..2c7f625
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/imx6sx-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Clock bindings for Freescale i.MX6 SoloX
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx6sx-ccm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
+Hi Rob,
 
-Need to define what each one is:
+On Tue, May 12, 2020 at 4:53 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
+> > Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
+> > family. Add support for its GPIO controllers.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-interrupts:
-  items:
-    - description: ...
-    - description: ...
+Note that you've just applied 7f7d408e5a00d515 ("dt-bindings: gpio: rcar:
+Convert to json-schema"), so this no longer applies.
 
-And you should explain why this was added.
+Gr{oetje,eeting}s,
 
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: 32k osc
-> +      - description: 24m osc
-> +      - description: ipp_di0 clock input
-> +      - description: ipp_di1 clock input
-> +      - description: anaclk1 clock input
-> +      - description: anaclk2 clock input
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ckil
-> +      - const: osc
-> +      - const: ipp_di0
-> +      - const: ipp_di1
-> +      - const: anaclk1
-> +      - const: anaclk2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#clock-cells'
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  # Clock Control Module node:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    clock-controller@20c4000 {
-> +        compatible = "fsl,imx6sx-ccm";
-> +        reg = <0x020c4000 0x4000>;
-> +        interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +        #clock-cells = <1>;
-> +        clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>, <&anaclk1>, <&anaclk2>;
-> +        clock-names = "ckil", "osc", "ipp_di0", "ipp_di1", "anaclk1", "anaclk2";
-> +    };
-> -- 
-> 2.7.4
-> 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
