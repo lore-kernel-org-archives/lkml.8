@@ -2,99 +2,204 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D581C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5E5C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41B8B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A13A20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cXCNu1Mf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbgELOic (ORCPT
+        id S1730552AbgELOi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:38:32 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38398 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729461AbgELOib (ORCPT
+        Tue, 12 May 2020 10:38:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730200AbgELOi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:38:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m33so10671845otc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:38:31 -0700 (PDT)
+        Tue, 12 May 2020 10:38:57 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A096C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:38:57 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id ep1so6499055qvb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=L9o5Ql/wJ8VxyH0z8y3vpicAM4usviuC5KgT7eHgDMU=;
+        b=cXCNu1MfDx5eYFPd7c6gTg0i50xmDSoslbyxhoCoz93DQFAZu2wYP9sqvuzxCkeHG0
+         7mGaneCZdDJviKZScutXZGVwXaW/vlcmJfywyqgSEdqcp3+kzCrL05qHvVMuVLtabPg5
+         9n30gE7zVo1Tnh7OO709fzt32otHtPxKU2FD6dAf/sTgL+pAj9l7GhMjeCOvljecQC2f
+         GHMjLN1qGVLcK9qvd9ISMKns/4UANUR3cnSsvIJd5jhm/8zcSijtVxWOBtrIM9Bxz+zA
+         C0Ag5nECRh27eh1JQ4KSZcT/640melp2kVrWKTUCfU62A46JbosV1PPr9DaNDpIm8FsW
+         ZaeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GEOhIcgguE7QiBF5GVKHbgpK+UGFJ5iOOuHAZ/w1324=;
-        b=KtX/ou7eRZ+ekDivy9kigcpQaHsqtwigz9p0oOIbVs4llls342tWu1GKGow4YnXuGW
-         9nE8TiLYWOY0psnm6by/4rnN5JSE3t5ZGOPo15/t8NEj9hqSB+5HlWIzNisHk9+5RKLT
-         /B9f83zwp0/LuAd/4FzJjqpLcHzEPLBO2Ffna6eQTA3xyZ7kByFoSsHlGnJEgWRz58EZ
-         sc1azy1CkH8e48C/ovkkmaPUqW34wuYNYUasNS8wuJBTPDH4W9ALbJe+Ramr8uk3Z73G
-         xu+PDeZvxY9slFszIG+3+f3+AxsZ9vGwrb3g/lFSYlYslOxVNUzh6zWG5WpIeGR5LATM
-         YwBg==
-X-Gm-Message-State: AGi0Pua7d/mNJGee5fFM5A5FQhDNJjhMSzQ752plgWDFXnKn8mrVvqWr
-        R/ulOytmv4GGPGlZsNRj6gpORIDa7Fbp+JpqwSU=
-X-Google-Smtp-Source: APiQypJzwnULcupZhJ1hAK9PIxOmvUr3iNrQX67MIeBrouwfs6dTnTLKqRJrFgv8BW1Kx/8XD3O1Fy0luMGtioKgTOo=
-X-Received: by 2002:a9d:564:: with SMTP id 91mr17018452otw.250.1589294310970;
- Tue, 12 May 2020 07:38:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200512124238.28792-1-geert+renesas@glider.be> <20200512141200.GD3021@willie-the-truck>
-In-Reply-To: <20200512141200.GD3021@willie-the-truck>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 May 2020 16:38:19 +0200
-Message-ID: <CAMuHMdXM5GGXvxEemmLtcTU14nKgKVmO_yON+7+pLnUv2oExtQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: cpufeature: Add "or" to mitigations for multiple errata
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=L9o5Ql/wJ8VxyH0z8y3vpicAM4usviuC5KgT7eHgDMU=;
+        b=bpfUPt86iMcGg+miBCU7Rt7c3XCTyqW8I+HjzVfvJ3PV5CrnvLcAv4I1ypmnyxzLbv
+         3LuyFxi4b37hMdHHYXaVzRy3mGw2TqYzu4DQ2wUcUsknA1eNTU3a37H5v6uy8ND54qtc
+         I/GJzrX3Dq4/mhIRg4TZQpaeL32+CGM6uS4f9okDa95FlLTllTD90L2DT91GMgrOiI0+
+         seVi9I/RdZS/N6GXvVTrQjpLDs0XR8OjA/hkIZXQ38ft+UoOJREezXzAtJt2oOp0WDI2
+         mZ+vQQGcitIJuYuhxM9KeyL25bmbx/h0AIdQXFulMUIbBCvlNTzDQdEK4hY9aeLk4lo4
+         dnIA==
+X-Gm-Message-State: AGi0PuZPIT6ZDM4qMkJ0ZDP3ERsMAor+Qu6p+g9qS3QJK6nxiuM9axSe
+        +a/n+Rgn94b7XINPKgwPzGJ8+A==
+X-Google-Smtp-Source: APiQypLe98ffTpD+ModFHxmfVzzas7YPY7outMKiARGHM1PinDOJxc6XfXOdiPQPtUCSVF8z8TEg8g==
+X-Received: by 2002:a0c:eb09:: with SMTP id j9mr21513809qvp.196.1589294336641;
+        Tue, 12 May 2020 07:38:56 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id i3sm8524665qkf.39.2020.05.12.07.38.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 07:38:55 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
+ mem_cgroup_charge() API
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200508183105.225460-13-hannes@cmpxchg.org>
+Date:   Tue, 12 May 2020 10:38:54 -0400
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
+        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200508183105.225460-13-hannes@cmpxchg.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
 
-On Tue, May 12, 2020 at 4:12 PM Will Deacon <will@kernel.org> wrote:
-> On Tue, May 12, 2020 at 02:42:38PM +0200, Geert Uytterhoeven wrote:
-> > Several actions are not mitigations for a single erratum, but for
-> > multiple errata.  However, printing a line like
-> >
-> >     CPU features: detected: ARM errata 1165522, 1319367, 1530923
-> >
-> > may give the false impression that all three listed errata have been
-> > detected.  This can confuse the user, who may think his Cortex-A57 is
-> > suddenly affected by Cortex-A76 and Cortex-A55 errata.
-> >
-> > Add "or" to all descriptions for mitigations for multiple errata, to
-> > make it clear that only one or more of the errata printed are
-> > applicable, and not necessarily all of them.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  arch/arm64/kernel/cpu_errata.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> This seems to conflict with the other patch you sent to reorder the entries.
 
-My reordering applied to the Kconfig file.
-This patch applies fine to arm64/for-next/core.
+> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
+wrote:
+>=20
+> With the page->mapping requirement gone from memcg, we can charge anon
+> and file-thp pages in one single step, right after they're allocated.
+>=20
+> This removes two out of three API calls - especially the tricky commit
+> step that needed to happen at just the right time between when the
+> page is "set up" and when it's "published" - somewhat vague and fluid
+> concepts that varied by page type. All we need is a freshly allocated
+> page and a memcg context to charge.
+>=20
+> v2: prevent double charges on pre-allocated hugepages in khugepaged
+>=20
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> ---
+> include/linux/mm.h      |  4 +---
+> kernel/events/uprobes.c | 11 +++--------
+> mm/filemap.c            |  2 +-
+> mm/huge_memory.c        |  9 +++------
+> mm/khugepaged.c         | 35 ++++++++++-------------------------
+> mm/memory.c             | 36 ++++++++++--------------------------
+> mm/migrate.c            |  5 +----
+> mm/swapfile.c           |  6 +-----
+> mm/userfaultfd.c        |  5 +----
+> 9 files changed, 31 insertions(+), 82 deletions(-)
+[]
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>=20
+> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
+mm_struct *mm,
+> out_up_write:
+> 	up_write(&mm->mmap_sem);
+> out_nolock:
+> +	if (*hpage)
+> +		mem_cgroup_uncharge(*hpage);
+> 	trace_mm_collapse_huge_page(mm, isolated, result);
+> 	return;
+> out:
+> -	mem_cgroup_cancel_charge(new_page, memcg);
+> 	goto out_up_write;
+> }
+[]
 
-> Please can you send another version, based on the arm64 for-next/kconfig
-> branch?
+Some memory pressure will crash this new code. It looks like somewhat =
+racy.
 
-Then it will conflict with commit 02ab1f5018c3ad0b ("arm64: Unify
-WORKAROUND_SPECULATIVE_AT_{NVHE,VHE}") from for-next/kvm/errata?
+if (!page->mem_cgroup)
 
-Gr{oetje,eeting}s,
+where page =3D=3D NULL in mem_cgroup_uncharge().
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[ 2244.414421][  T726] BUG: Kernel NULL pointer dereference on read at =
+0x0000002c
+[ 2244.414454][  T726] Faulting instruction address: 0xc0000000004f7e44
+[ 2244.414467][  T726] Oops: Kernel access of bad area, sig: 11 [#1]
+[ 2244.414488][  T726] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+[ 2244.414501][  T726] Modules linked in: brd ext4 crc16 mbcache jbd2 =
+loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 libahci =
+libphy mdio libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
+[ 2244.414556][  T726] CPU: 11 PID: 726 Comm: khugepaged Not tainted =
+5.7.0-rc5-next-20200512+ #8
+[ 2244.414579][  T726] NIP:  c0000000004f7e44 LR: c0000000004df95c CTR: =
+c0000000001c1400
+[ 2244.414600][  T726] REGS: c000001a2398f6e0 TRAP: 0300   Not tainted  =
+(5.7.0-rc5-next-20200512+)
+[ 2244.414630][  T726] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
+CR: 24000244  XER: 20040000
+[ 2244.414656][  T726] CFAR: c0000000004df958 DAR: 000000000000002c =
+DSISR: 40000000 IRQMASK: 0=20
+[ 2244.414656][  T726] GPR00: c0000000004df95c c000001a2398f970 =
+c00000000168a700 fffffffffffffff4=20
+[ 2244.414656][  T726] GPR04: ffffffffffffffff c000000000bd0980 =
+0000000000000005 0000000000000080=20
+[ 2244.414656][  T726] GPR08: 0000001ffc030000 0000000000000001 =
+0000000000000000 c00000000152bb58=20
+[ 2244.414656][  T726] GPR12: 0000000024000222 c000001fffff5680 =
+c0000001d818ce00 c0000001d818cd00=20
+[ 2244.414656][  T726] GPR16: 0000000000000000 c000001a2398fce0 =
+fe7fffffffffefff fffffffffffffe7f=20
+[ 2244.414656][  T726] GPR20: c000201320aa53c8 000000000000001e =
+0000000000000017 c00020047636b868=20
+[ 2244.414656][  T726] GPR24: 0000000000000000 0000000000000000 =
+c000000001756080 c000001a2398fce0=20
+[ 2244.414656][  T726] GPR28: c000001a2398fa20 00007ffeeda00000 =
+c000200f28547928 c000200f28547880=20
+[ 2244.414865][  T726] NIP [c0000000004f7e44] =
+mem_cgroup_uncharge+0x34/0xb0
+mem_cgroup_uncharge at mm/memcontrol.c:6563
+[ 2244.414895][  T726] LR [c0000000004df95c] =
+collapse_huge_page+0x24c/0x1000
+collapse_huge_page at mm/khugepaged.c:1197
+[ 2244.414924][  T726] Call Trace:
+[ 2244.414940][  T726] [c000001a2398f970] [0000000000000001] 0x1 =
+(unreliable)
+[ 2244.414970][  T726] [c000001a2398f9c0] [c0000000004df814] =
+collapse_huge_page+0x104/0x1000
+collapse_huge_page at mm/khugepaged.c:1064 (discriminator 10)
+[ 2244.414991][  T726] [c000001a2398faf0] [c0000000004e0f84] =
+khugepaged_scan_pmd+0x874/0xc70
+[ 2244.415021][  T726] [c000001a2398fbf0] [c0000000004e2a90] =
+khugepaged+0x900/0x1920
+[ 2244.415043][  T726] [c000001a2398fdb0] [c000000000155aa4] =
+kthread+0x1c4/0x1d0
+[ 2244.415075][  T726] [c000001a2398fe20] [c00000000000cb28] =
+ret_from_kernel_thread+0x5c/0x74
+[ 2244.415095][  T726] Instruction dump:
+[ 2244.415113][  T726] 384228f0 7c0802a6 60000000 f821ffb1 e92d0c70 =
+f9210048 39200000 3d22ffec=20
+[ 2244.415146][  T726] 3929f9f4 81290000 2f890000 409d0048 <e9230038> =
+2fa90000 419e003c 7c0802a6=20
+[ 2244.415181][  T726] ---[ end trace 3488eb8818913a26 ]---=
