@@ -2,109 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060E9C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E952C54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D995D20753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXp5LWlO"
+	by mail.kernel.org (Postfix) with ESMTP id 6811020736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgELMfd (ORCPT
+        id S1729839AbgELMfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:35:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729693AbgELMfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:35:32 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA49C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:35:30 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u20so3138948ljo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4+869pZRfZJGBIoOGq9mbn83yXJ+3UvweYCO0bpzAwU=;
-        b=UXp5LWlOcqJH4Otgcn6q2A/q237JlCum+6BEJUbhK3WCudK1bkbQ749omybmNu/3GT
-         144x3LhV8t+xWMxbIoPgDMj+X3EI033ppEuEJhGDane5FEBqRYnOfLaVGLMsxYZvffi8
-         jl/3Mg4YWPlQowpVgZTm6stKpaLrns46uAFa8Mmq/asfIME0nHcs+9Zzez6daQdqXZ+q
-         MvqfSVB/ERfLsc/7464D8pTh8/uX3asXjb5DRGj/wmQFWpsdg3WeX7ex2JBAHeCQZ8mi
-         4phPCqUEkxDkgK59hWRd+l+E1LKLDdKILaREvTtkahvakxfN6ei+ZK7ZpUW3Qelm+UQH
-         ZQTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4+869pZRfZJGBIoOGq9mbn83yXJ+3UvweYCO0bpzAwU=;
-        b=Q2uJ0D3PnbpY5s391TqXiPg80ODJBhp8dKLpQEMEUwMvFXHrHbt61zqwXh1BRUl8gm
-         HfgvYzbOJzxdIJRI5yMRy3CWm5/3xnBHyYyHJXHsSW2mIBRiMmEJX1npEm/3s9fA0mHi
-         qn7iJWZd2Tk+4d+5ABu03Rk63YM4010t2dCO60fRWLk5j+SyS68zWVqPG+9FRf8cUIzw
-         0cyNMZS/pHZOuvhnXFRheEfMnYeXj60nVX/rXSlDwxgjCK5VCV8C5Fs8emMYBS+kTqyv
-         Q5x15o1sgmPEiA+QdpwttKAzkYIDQthCh3pzZBElX34QuEmYA3ksct9KoOlqSq/xquaO
-         ZO6A==
-X-Gm-Message-State: AOAM530ddY3Au+4HnjJeUnaicMyYNfeP9nQ4lka3dT/YfaMXFk2CnnED
-        3f37MKcfyZk8d26lFdVS9SnQLPdlpWKHJGcf1hLJEg==
-X-Google-Smtp-Source: ABdhPJwyAmzC6q+bZTHJQiILGIOYXc53TsNeXcXr1K8tekap2deRZGY7SbCRt6J66veik8VTCp6tr6H0vjULsNvGn30=
-X-Received: by 2002:a2e:8087:: with SMTP id i7mr12693709ljg.99.1589286928448;
- Tue, 12 May 2020 05:35:28 -0700 (PDT)
+        Tue, 12 May 2020 08:35:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2792 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELMfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 08:35:53 -0400
+IronPort-SDR: ZW9YklmNTR0YgwAp6NFA+PvUJVaiXkolqsMYXFZBVzYRyhHWLlBWg8UygSQoAHCY99oXsG8lqz
+ Utwl3/DlxHCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 05:35:52 -0700
+IronPort-SDR: LhFEIQ/w6qJjoAx9cR1EgbDS61a0cyLOb9Dv0WHWw9jPq/uobO/v5xW/xvgrKEOdoi800UDk0q
+ hkj+aStjuSfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
+   d="scan'208";a="251451800"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 12 May 2020 05:35:49 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYU8V-006Cdk-Rh; Tue, 12 May 2020 15:35:51 +0300
+Date:   Tue, 12 May 2020 15:35:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Message-ID: <20200512123551.GX185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+ <20200508112152.GI185537@smile.fi.intel.com>
+ <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
 MIME-Version: 1.0
-References: <20200501224042.141366-1-helgaas@kernel.org>
-In-Reply-To: <20200501224042.141366-1-helgaas@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 14:35:17 +0200
-Message-ID: <CACRpkdbkPX3cX9VDoGx9LMLPgDFxwVbWQuKuaSyED5Nek0ATRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] PCI: Check for platform_get_irq() failure consistently
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 12:41 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
+> > > Maximum block size DW DMAC configuration corresponds to the max segment
+> > > size DMA parameter in the DMA core subsystem notation. Lets set it with a
+> > > value specific to the probed DW DMA controller. It shall help the DMA
+> > > clients to create size-optimized SG-list items for the controller. This in
+> > > turn will cause less dw_desc allocations, less LLP reinitializations,
+> > > better DMA device performance.
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> All callers of platform_get_irq() and related functions interpret a
-> negative return value as an error.  A few also interpret zero as an error.
->
-> platform_get_irq() should return either a negative error number or a valid
-> non-zero IRQ, so there's no need to check for zero.
->
-> This series:
->
->   - Extends the platform_get_irq() function comment to say it returns a
->     non-zero IRQ number or a negative error number.
->
->   - Adds a WARN() if platform_get_irq() ever *does* return zero (this would
->     be a bug in the underlying arch code, and most callers are not prepared
->     for this).
->
->   - Updates drivers/pci/ to check consistently using "irq < 0".
->
-> This is based on Aman's series [1].  I propose to merge this via the PCI
-> tree, given acks from Greg and Thomas.
->
-> [1] https://lore.kernel.org/r/cover.1583952275.git.amanharitsh123@gmail.com
+> > Yeah, I have locally something like this and I didn't dare to upstream because
+> > there is an issue. We have this information per DMA controller, while we
+> > actually need this on per DMA channel basis.
+> > 
+> > Above will work only for synthesized DMA with all channels having same block
+> > size. That's why above conditional is not needed anyway.
+> 
+> Hm, I don't really see why the conditional isn't needed and this won't work. As
+> you can see in the loop above Initially I find a maximum of all channels maximum
+> block sizes and use it then as a max segment size parameter for the whole device.
+> If the DW DMA controller has the same max block size of all channels, then it
+> will be found. If the channels've been synthesized with different block sizes,
+> then the optimization will work for the one with greatest block size. The SG
+> list entries of the channels with lesser max block size will be split up
+> by the DW DMAC driver, which would have been done anyway without
+> max_segment_size being set. Here we at least provide the optimization for the
+> channels with greatest max block size.
+> 
+> I do understand that it would be good to have this parameter setup on per generic
+> DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
+> such facility, so setting at least some justified value is a good idea.
+> 
+> > 
+> > OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
+> > that Intel Medfield has interesting settings, but I don't remember if DMA
+> > channels are different inside the same controller).
+> > 
+> > Vineet, do you have any information that Synopsys customers synthesized DMA
+> > controllers with different channel characteristics inside one DMA IP?
+> 
+> AFAICS the DW DMAC channels can be synthesized with different max block size.
+> The IP core supports such configuration. So we can't assume that such DMAC
+> release can't be found in a real hardware just because we've never seen one.
+> No matter what Vineet will have to say in response to your question.
 
-Makes sense to me.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+My point here that we probably can avoid complications till we have real
+hardware where it's different. As I said I don't remember a such, except
+*maybe* Intel Medfield, which is quite outdated and not supported for wider
+audience anyway.
 
-for the series.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
