@@ -2,194 +2,182 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372C7CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACCA20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W3grnYeR"
+	by mail.kernel.org (Postfix) with ESMTP id 5E96620673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgELSp6 (ORCPT
+        id S1730838AbgELSql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgELSp5 (ORCPT
+        Tue, 12 May 2020 14:46:41 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:36668 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgELSqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:45:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E44EC05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:45:57 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g11so2523015plp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zZYcnqjCNMBDkiuBF30WgUKhKuqwDskkezv7osc3SDY=;
-        b=W3grnYeRkCxIK+83TB2Ok5SeVivN3G6KhcXRcwaZwzjvJiAfxUnI/aNrH59tvh0Mx3
-         iJ8DRMRdo+X5efhzmCT6wk/3wD16VELIlUIFf5jKMgJkkcJCCiaEiraYizM8GxIvAJpm
-         1mCiMMTV5qJvr02JSS4i8lmy7uMv1mh0AjdYY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zZYcnqjCNMBDkiuBF30WgUKhKuqwDskkezv7osc3SDY=;
-        b=F1pm8dUuvlbetnHpDqjvxE0J9QaD9nW3FexK2ess1SHnnWHTKaAFjv1+yLMcU/hohj
-         e6oaOUzQHq50HidXJDbggbIt2u1VDU/rpiXRKOkJAyHOdEslqHMwNJ3FBxQKFugXT61K
-         Y0Z/Nx2RhnuprWsdYf2qg5HpbM08uPOUz09eU4Gk+EKzW3aXzlYk+wPQZcGi2bPH5Pq3
-         YKzapPLYBg6ALkF7kjnnvwFp86yFeg/WE7L5Oc6peppqjgWqBiZtxX4KPn3H8225hWB5
-         X4e5OIi2/OCu0hSkfGlk9AaPisFBpPA1qOerLTeCdIza1uzY0+ta8jYafRf9yIyAYyNS
-         Uw8A==
-X-Gm-Message-State: AGi0PuZJy5fRfkS+2xJt8bHgPmv3dWS+299LNjbJejejmsRjs287zBN0
-        /lE0f2AwIiI0P15TjUfLgMzU3TBcFrk=
-X-Google-Smtp-Source: APiQypI6ohAa/WrLufnFCTk94UW9/+pjeT7ykwvlKnDw8ueWBgFKU29Es1jSMPsrXtFJCfxGDn7Jow==
-X-Received: by 2002:a17:90a:284e:: with SMTP id p14mr30042197pjf.10.1589309156921;
-        Tue, 12 May 2020 11:45:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d203sm12240380pfd.79.2020.05.12.11.45.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 11:45:55 -0700 (PDT)
-Date:   Tue, 12 May 2020 11:45:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 12 May 2020 14:46:40 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYZvH-0007rr-9u; Tue, 12 May 2020 12:46:35 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYZv7-0007UG-JY; Tue, 12 May 2020 12:46:35 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
         James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <202005121111.6BECC45@keescook>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200512131655.GE17734@linux-b0ei>
- <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
- <20200512155207.GF17734@linux-b0ei>
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <87eerszyim.fsf_-_@x220.int.ebiederm.org>
+        <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
+        <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
+        <87sgg6v8we.fsf@x220.int.ebiederm.org>
+        <202005111428.B094E3B76A@keescook>
+Date:   Tue, 12 May 2020 13:42:53 -0500
+In-Reply-To: <202005111428.B094E3B76A@keescook> (Kees Cook's message of "Mon,
+        11 May 2020 14:55:27 -0700")
+Message-ID: <874kslq9jm.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512155207.GF17734@linux-b0ei>
+Content-Type: text/plain
+X-XM-SPF: eid=1jYZv7-0007UG-JY;;;mid=<874kslq9jm.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19mzgJAcFNyQdQ94l+XWLB+0NtEuzgOx8c=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:52:07PM +0200, Petr Mladek wrote:
-> On Tue 2020-05-12 10:03:44, Pavel Tatashin wrote:
-> > > OK, I personally see this as two separate problems:
-> > >
-> > >    1. Missing support to set loglevel per console.
-> > >    2. Missing support to dump messages for other reasons.
-> > >
-> > > I would remove the paragraph about console log levels completely.
-> > 
-> > OK, I see your point, this paragraph can be removed, however, I think
-> > it makes it clear to understand the rationale for this change. As I
-> > understand, the per console loglevel has been proposed but were never
-> > accepted.
+Kees Cook <keescook@chromium.org> writes:
 
-I understood Pavel's rationale as an output from my questions in the v1
-series, that went like this, paraphrased:
+> On Mon, May 11, 2020 at 09:33:21AM -0500, Eric W. Biederman wrote:
+>> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>> 
+>> > On Sat, May 9, 2020 at 9:30 PM Tetsuo Handa
+>> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>> >>
+>> >> Wouldn't this change cause
+>> >>
+>> >>         if (fd_binary > 0)
+>> >>                 ksys_close(fd_binary);
+>> >>         bprm->interp_flags = 0;
+>> >>         bprm->interp_data = 0;
+>> >>
+>> >> not to be called when "Search for the interpreter" failed?
+>> >
+>> > Good catch. We seem to have some subtle magic wrt the fd_binary file
+>> > descriptor, which depends on the recursive behavior.
+>> 
+>> Yes.  I Tetsuo I really appreciate you noticing this.  This is exactly
+>> the kind of behavior I am trying to flush out and keep from being
+>> hidden.
+>> 
+>> > I'm not seeing how to fix it cleanly with the "turn it into a loop".
+>> > Basically, that binfmt_misc use-case isn't really a tail-call.
+>> 
+>> I have reservations about installing a new file descriptor before
+>> we process the close on exec logic and the related security modules
+>> closing file descriptors that your new credentials no longer give
+>> you access to logic.
+>
+> Hm, this does feel odd. In looking at this, it seems like this file
+> never gets close-on-exec set, and doesn't have its flags changed from
+> its original open:
+>                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+> only the UMH path through exec doesn't explicitly open a file by name
+> from what I can see, so we'll only have these flags.
+>
+>> I haven't yet figured out how opening a file descriptor during exec
+>> should fit into all of that.
+>> 
+>> What I do see is that interp_data is just a parameter that is smuggled
+>> into the call of search binary handler.  And the next binary handler
+>> needs to be binfmt_elf for it to make much sense, as only binfmt_elf
+>> (and binfmt_elf_fdpic) deals with BINPRM_FLAGS_EXECFD.
+>> 
+>> So I think what needs to happen is to rename bprm->interp_data to
+>> bprm->execfd, remove BINPRM_FLAGS_EXECFD and make closing that file
+>> descriptor free_bprm's responsiblity.
+>
+> Yeah, I would agree. As far as the close handling, I don't think there
+> is a difference here: it interp_data was closed on the binfmt_misc.c
+> error path, and in the new world it would be the exec error path -- both
+> would be under the original credentials.
+>
+>> I hope such a change will make it easier to see all of the pieces that
+>> are intereacting during exec.
+>
+> Right -- I'm not sure which piece should "consume" bprm->execfd though,
+> which I think is what you're asking next...
+>
+>> I am still asking: is the installation of that file descriptor useful if
+>> it is not exported passed to userspace as an AT_EXECFD note?
+>> 
+>> I will dig in and see what I can come up with.
+>
+> Should binfmt_misc do the install, or can the consuming binfmt do it?
+> i.e. when binfmt_elf sees bprm->execfd, does it perform the install
+> instead?
 
-Pavel: "I need to have other kmsg dump reasons available to pstore."
-Kees:  "Why can't you just use the pstore console dumper?"
-Pavel: "It's too much for the slow device; we only need to know about
-        specific events that are already provided by kmsg dump."
-Kees:  "Ah! Sounds good, max_reasons it is."
+I am still thinking about this one, but here is where I am at.  At a
+practical level passing the file descriptor of the script to interpreter
+seems like something we should encourage in the long term.  It removes
+races and it is cheaper because then the interpreter does not have to
+turn around and open the script itself.
 
-So, AIUI, loglevel remains orthogonal to this, and it's my fault for
-even causing to be be brought up. Please disregard! :)
 
-> > printk.always_kmsg_dump is not working for me because ramoops has its
-> > own filtering based on dump_oops boolean, and ignores everything but
-> > panics and conditionally oops.
-> > max_reason makes the ramoops internal logic cleaner compared to using dump_oops.
-> 
-> I see. Just to be sure. Is the main reason to add max_reason parameter
-> to keep complatibility of the deprecated dump_oops parameter? Or is
-> there any real use case for this granularity?
 
-In my mind it seemed like a nice mapping, so it was an easy port.
+Strictly speaking binfmt_misc should not need to close the file
+descriptor in binfmt_misc because we have already unshared the files
+struct and reset_files_struct should handle restoring it.
 
-> I wonder if anyone is actually using the ramoops.dump_oops parameter
-> in reality. I would personally make it deprecated and change the
-> default behavior to work according to printk.always_kmsg_dump parameter.
+Calling fd_install in binfmt_misc still seems wrong, as that exposes
+the new file descriptor to user space with the old creds.
 
-Yes. For things I'm aware of: ARM devices with very tiny persistent RAM
-were using ramoops and setting dump_oops to 0 (specifically, setting
-the DT "no-dump-oops" to 1), and larger Android and Chrome OS devices
-using ramoops were setting to dump_oops to 1[1].
+It is possible although unlikely for userspace to find the file
+descriptor without consulting AT_EXECFD so just to be conservative I
+think we should install the file descriptor in begin_new_exec even if
+the next interpreter does not support AT_EXECFD.
 
-The logic built into pstore recognizes a difference between panic and
-non-panic dumps as well, as the expectation is that there is little to
-no kernel infrastructure available for use during a panic kmsg.
 
-> IMHO, ramoops.dump_oops just increases complexity and should not have
-> been introduced at all. I would try hard to avoid introducing even bigger
-> complecity and mess.
+I am still working on how to handle recursive binfmts but I suspect it
+is just a matter of having an array of struct files in struct
+linux_binprm.
 
-I think dump_oops was the wrong implementation, but granularity control
-is still needed. It is an old parameter, and is baked into many device
-trees on systems, so I can't just drop it. (In fact, I've had to support
-some other DT compat issues[2] as well.)
 
-> I know that there is the "do not break existing userspace" rule. The
-> question is if there is any user and if it is worth it.
+Eric
 
-For dump_oops, yes, there is unfortunately.
 
-> > I agree, the reasons in kmsg_dump_reason do not order well  (I
-> > actually want to add another reason for kexec type reboots, and where
-> > do I put it?), so how about if we change the ordering list to
-> > bitfield/flags, and instead of max_reason provide: "reasons" bitset?
-> 
-> It looks too complicated. I would really try hard to avoid the
-> parameter at all.
 
-Here are the problems I see being solved by this:
 
-- lifting kmsg dump reason filtering out of the individual pstore
-  backends and making it part of the "infrastructure", so that
-  there is a central place to set expectations. Right now there
-  is a mix of explicit and implicit kmsg dump handling:
 
-  - arch/powerpc/kernel/nvram_64.c has a hard-coded list
-  - drivers/firmware/efi/efi-pstore.c doesn't expect anything but
-    OOPS and PANIC.
-  - drivers/mtd/mtdoops.c tries to filter using its own dump_oops
-    and doesn't expect anything but OOPS and PANIC.
-  - fs/pstore/ram.c: has a hard-coded list and uses its own
-    dump_oops.
-  - drivers/mtd/mtdpstore.c (under development[3]) expected only
-    OOPS and PANIC and had its own dump_oops.
 
-- providing a way for backends that can deal with all kmsg dump reasons
-  to do so without breaking existing default behavior (i.e. getting
-  Pavel what he's interested in).
 
-So, that said, I'm totally fine with a bit field. I just need a way to
-map the kmsg dump reasons onto the existing backend expectations and to
-have Pavel's needs addressed.
 
--Kees
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/chrome/chromeos_pstore.c?h=v5.6#n60
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/pstore/ram.c?h=v5.6#n708
-[3] https://lore.kernel.org/lkml/20200511233229.27745-11-keescook@chromium.org/
-
--- 
-Kees Cook
