@@ -2,69 +2,124 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2147ECA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB77EC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A8220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589306430;
-	bh=6ybMNosTnj9A54T0sdFcdYBIPDjIp0M+eT+TUICpV2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tjn2mUAXKZQjbp6Rl1EdsvxNsvw3+sUqv+NGdbMqofLePabUTq858AP45UF9KB3bF
-	 0CPJUX6lM1D5OPGfkryddBMfa+wIs5xrf2vDWul6NBf/lvNaekAIz3SywRuKzgApzK
-	 7jSqwxy1hCyzRFV75Rwi/WoZO3iS2RW4qMRumG+g=
+	by mail.kernel.org (Postfix) with ESMTP id 809A020673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JpAw+cFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgELSA3 (ORCPT
+        id S1730561AbgELSAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELSA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:00:28 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE5120673;
-        Tue, 12 May 2020 18:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589306428;
-        bh=6ybMNosTnj9A54T0sdFcdYBIPDjIp0M+eT+TUICpV2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tOsFO3YzqYyRmheH0sY74sFTrSLKlnO3Hn5fsEb1aAvpWlBC9MIn/3loRl2hS3v3P
-         Y9sbCZ77tH0JCDf/sFaSQalmSEMV0KUwRijxggCY64blFndf7HcHEFczCF8YMrePD2
-         avFvFVMQQnC1XmF54L2JirNk5aXQ+Bxey4fybnJg=
-Date:   Tue, 12 May 2020 13:05:02 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sparc64: Replace zero-length array with flexible-array
-Message-ID: <20200512180502.GC4897@embeddedor>
-References: <20200507192302.GA16402@embeddedor>
- <20200507.184916.273108688700388097.davem@davemloft.net>
+        Tue, 12 May 2020 14:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELSAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 14:00:34 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D989DC05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:00:32 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id i16so13249538ils.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cLEAYLVD6JreucQil+ujhm8FErflJCkoe7KXXK012mc=;
+        b=JpAw+cFGmfHBajujn/xovuM0dYlazaSRxJ4KOtDR8DxkxTDdhtE1+ux/9NOdXlkDvb
+         Yj5I98DG6givG6zWx5FND6O4IbR9RmMma41huxQDdrAFggw14jKpQ6A8aCQjY5lNRLaJ
+         TtOlnoUqEuX2PFLxUBkT45aJ2ipRGUiirEJKSQ8+dIFJ57Bmx6oE6c8Vhs02VfxbT7mR
+         JfL9SB7n3gHK8JbOhQmkzLxnr/v0qljAoDLqHHpHq57tY72JlfgJJ3aykj1tLeQtIDDf
+         OOfoPyKWJWz1awCXqduOmpzQDGDJriVLYqiGyOEOK2s0Ek0MioR+r97kcvvl5CTgCUBu
+         BnBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cLEAYLVD6JreucQil+ujhm8FErflJCkoe7KXXK012mc=;
+        b=TiLpguve1+LsD2AbwoY8anjTZsHwiUom/306aEOABtCuVeJJmO9wMLuBVjyv66uzMS
+         A7vGG53x/4w5hdCPKBsgGcpwQ3CF4uOKXZGLEzx0C4g2wDDfPrX80MmyLNSq7ia5SObR
+         6uwYGof5n1niT64uVfjARy9MwXOWOgR1Kv1Tq3fP7qMTVbGI0cz/AuBqfgdNl2qGarCe
+         HZLEEvf0N9jyWKpchplk/TZe2HEu1OBiUxk3hB4i4mC/XlkyH5qxW6nVrDam0tdr3yH8
+         kfaNcBB4T1noK4ze3/oRqWcVx8rzV2+t/FOxg90RpGzVp4wU+TuErqsHrc5iQOf+UUbg
+         jm0Q==
+X-Gm-Message-State: AGi0Puag03/b0ARMWW7IASTvWijXUfCdGRePl4C8g+5azAhwv54y3G8j
+        ZJVKXKN7U+nEYLFFY4x5dCfGyiMAQ53Yf4wDXS4SwQ==
+X-Google-Smtp-Source: APiQypImINfWk/azU+gh8VqSVBC+bjXOzMV58x6QAkL+twgu0FTJCnw6HhztAFigezzRtYkv2vWuAeZSEaiXI9PcO8g=
+X-Received: by 2002:a92:390f:: with SMTP id g15mr1559060ila.72.1589306432104;
+ Tue, 12 May 2020 11:00:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507.184916.273108688700388097.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200507053547.13707-1-calvin.johnson@oss.nxp.com>
+In-Reply-To: <20200507053547.13707-1-calvin.johnson@oss.nxp.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 12 May 2020 12:00:21 -0600
+Message-ID: <CANLsYkzeHpZygbQtz8Ed7dEaVMz362ftHQJ50DrBYR=+72NpJQ@mail.gmail.com>
+Subject: Re: [PATCH] coresight: cti: remove incorrect NULL return check
+To:     Calvin Johnson <calvin.johnson@oss.nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mike Leach <mike.leach@linaro.org>, linux.cj@gmail.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 06:49:16PM -0700, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Date: Thu, 7 May 2020 14:23:02 -0500
-> 
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Applied, thank you.
+Hi Greg,
 
-Thanks, Dave.
+On Wed, 6 May 2020 at 23:36, Calvin Johnson <calvin.johnson@oss.nxp.com> wrote:
+>
+> fwnode_find_reference() doesn't return NULL and hence that check
+> should be avoided.
+>
+> Signed-off-by: Calvin Johnson <calvin.johnson@oss.nxp.com>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
---
-Gustavo
+I just noticed you were not CC'ed on the original conversation Calvin
+and I had and as such you probably don't know what to do with this
+patch.  Please see if you can pick it up as a fix for 5.7.  If that is
+not possible I will queue it up for inclusion in the 5.8 cycle.
+
+Thanks,
+Mathieu
+
+> ---
+>
+>  drivers/hwtracing/coresight/coresight-cti-platform.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> index b44d83142b62..2fdaeec80ee5 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> @@ -120,7 +120,7 @@ static int cti_plat_create_v8_etm_connection(struct device *dev,
+>
+>         /* Can optionally have an etm node - return if not  */
+>         cs_fwnode = fwnode_find_reference(root_fwnode, CTI_DT_CSDEV_ASSOC, 0);
+> -       if (IS_ERR_OR_NULL(cs_fwnode))
+> +       if (IS_ERR(cs_fwnode))
+>                 return 0;
+>
+>         /* allocate memory */
+> @@ -393,7 +393,7 @@ static int cti_plat_create_connection(struct device *dev,
+>                 /* associated device ? */
+>                 cs_fwnode = fwnode_find_reference(fwnode,
+>                                                   CTI_DT_CSDEV_ASSOC, 0);
+> -               if (!IS_ERR_OR_NULL(cs_fwnode)) {
+> +               if (!IS_ERR(cs_fwnode)) {
+>                         assoc_name = cti_plat_get_csdev_or_node_name(cs_fwnode,
+>                                                                      &csdev);
+>                         fwnode_handle_put(cs_fwnode);
+> --
+> 2.17.1
+>
