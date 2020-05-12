@@ -2,143 +2,181 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6877FC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9264DC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDD220753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70478206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qQiCjD3T"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LYPD0EML"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgELTOG (ORCPT
+        id S1730899AbgELTTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54234 "EHLO
+        Tue, 12 May 2020 15:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELTOG (ORCPT
+        with ESMTP id S1725554AbgELTTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:14:06 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86C3C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:14:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id hi11so10001805pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:14:04 -0700 (PDT)
+        Tue, 12 May 2020 15:19:12 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A18DC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:19:12 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 145so6814677pfw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=8VAWJvEx809/evnC9HkWYNOh4uNvamJHZhEDIvsQGJg=;
-        b=qQiCjD3T9CULb/q9bhJP94W6BH8SG7q3MvKH6FepDbpRQlAn3VpAzhZpuxHI7npENn
-         2uNO9Aklh7RPnI1S6JqXoiLU8h1UwmAOmEuyJqiU1ZsTu1LgO8nFTmnkXCkNOt0pbrHK
-         eCeFWIWof5FkY8F8VZFfgqKU0e9xw91Rf6ZoH6okwk23XzpNVjfd/1vCWKmbMBfJK4IG
-         vZlXAygq1NujsZqDYozn1rE4UuEUMZhJM7twUGx94vkub58ZG5qOK9kzYzTIVJRfCqI2
-         /Ue0CZZawLXe64gwbcAB2sw+besbVKwK++z2Yb+A9+KJQRVRw9Mo0gWss81p52LHYjyp
-         1pCw==
+        bh=NTFtvW9Z7pWHfvK8fawdp7hae6YucW8EOFMduRCV3ZM=;
+        b=LYPD0EMLPWcRjpoJJOSPnayGtY5iiroLZNWvWRoFNMwZYTCjp3oUawMMewKUSMtG2R
+         qrJwi+t0+gZluRbMON0FXIrSa4BUQ5AkeJJsxZB0RUk9Rc+2dkcgbVfb+VeiB9ZCSReA
+         ZORFY2HVTm2u28VVFhRJaICAG5yw+BEhib++U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=8VAWJvEx809/evnC9HkWYNOh4uNvamJHZhEDIvsQGJg=;
-        b=QaJwHVDxm8hqTZONQMKmgvJVPRPvHzmLvRNp8aEO9qwDJqgmMld2asm0SXMvwqhgbS
-         Ux6G7Q5mMKyl9bdt1uCSQA+G8wyz6Sso2rKyjr6xdSBajnckB27jokXQjr0k2rMt2hr/
-         zl8CuCj8IHHVisA/AFLVtl2IDt/+6Sp3mzw80koiZgZPyGTG1g+xp3dYt4y/QrjPWIrX
-         ADm59ZIr7pMh2sv3EiQXy+QdMY+exe4p886+eJ2u/lrCWgwgnj5K1lnBd8Zbz/uP1Csd
-         QQaFowBZRVCSBnQysaHnDqBrpZ4j9GPLmEIt5fW+WZt3evMJYqqrWIKJTZlrjzgKOMN3
-         7cfg==
-X-Gm-Message-State: AGi0PuYpSAddfu0/T2+UirNoXtjjDMLDqKeZtESbEX9A704Nht5w+zwK
-        1PFDZP5KfifTwS5BGxm0EAoc9TallAA=
-X-Google-Smtp-Source: APiQypL3gnOLeOpwMtmrfVojAqfgL6kN/sk2+t5bsXUUapRJEqdvSSznjQ8hkJjSRzkKg9PIXpuxMg==
-X-Received: by 2002:a17:902:7e4b:: with SMTP id a11mr22170702pln.168.1589310844081;
-        Tue, 12 May 2020 12:14:04 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x12sm12219169pfo.62.2020.05.12.12.14.02
+        bh=NTFtvW9Z7pWHfvK8fawdp7hae6YucW8EOFMduRCV3ZM=;
+        b=Wk5WTVVQmkqLGEiAfv/iNacxXPSos9AFkON+X0SxYwTcVj91ebimiQDXAzkOpmWlA6
+         Fsz0IUSs7t6hkLt4FR70Ndyo1u7YpDi/FaDlwTolLOpDKpvlW+vd/eR8yKEkCgNZiFnb
+         THtJ4Bt49LNCgr6GbYv5wMm4xwALJmrxyhHmCzLIUYBCpLQlkABKbFySbHw4qwJq3W5C
+         QTP41ULhoGwRNWMpkh0a9c0RNE7fU10TIOBuqF2VtZvYWNELggDKsupj2hsPH8dCNr98
+         DbEX704d81NFk2fGtd8HenROAdoe5f0H1zICQaq/iJBkL3R6rLETzBqoumeZL8JpqWYs
+         Wh8A==
+X-Gm-Message-State: AGi0PuaQvx4In9lDZpa5f2wIJt+wqtKFsYsQZuftTXhNyDfUpBpy0P+i
+        72Ft65fudmiya/2krmWTyCMB2Q==
+X-Google-Smtp-Source: APiQypJYSPGb/vm2e7JVL672lR8HWUaeJEC0T9D2V0BWqJ254UQ5es/Lp06OSWAnhHJEse3mY7fuWw==
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr21792580pfb.130.1589311151493;
+        Tue, 12 May 2020 12:19:11 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id s15sm1532655pgv.5.2020.05.12.12.19.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 12:14:03 -0700 (PDT)
-Date:   Tue, 12 May 2020 12:12:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        linux-kernel@vger.kernel.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, sidgup@codeaurora.org
-Subject: Re: [PATCH] remoteproc: core: Prevent system suspend during
- remoteproc recovery
-Message-ID: <20200512191230.GB16107@builder.lan>
-References: <1588183482-21146-1-git-send-email-rishabhb@codeaurora.org>
+        Tue, 12 May 2020 12:19:10 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:19:10 -0700
+From:   Prashant Malani <pmalani@chromium.org>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
+ SBU/HSL orientation
+Message-ID: <20200512191910.GD136540@google.com>
+References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
+ <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+ <20200507224041.GA247416@google.com>
+ <20200508111840.GG645261@kuha.fi.intel.com>
+ <20200511133202.GA2085641@kuha.fi.intel.com>
+ <20200511175719.GA136540@google.com>
+ <20200512142251.GD2085641@kuha.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588183482-21146-1-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <20200512142251.GD2085641@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 29 Apr 11:04 PDT 2020, Rishabh Bhatnagar wrote:
+Hi Heikki,
 
-> The system might go into suspend during recovery of any remoteproc.
-> This will interrupt the recovery process in between increasing the
-> recovery time. Make the platform device as wakeup capable and
-> use pm_stay_wake/pm_relax APIs to avoid system from going into
-> suspend during recovery.
+On Tue, May 12, 2020 at 05:22:51PM +0300, Heikki Krogerus wrote:
+> Hi Prashant,
 > 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
-
-Please don't forget to add a version to $subject and provide a Changelog
-here next time you're respinning something.
-
-I've picked this up now.
-
-Thanks,
-Bjorn
-
->  drivers/remoteproc/qcom_q6v5_pas.c   | 2 ++
->  drivers/remoteproc/remoteproc_core.c | 5 +++++
->  2 files changed, 7 insertions(+)
+> On Mon, May 11, 2020 at 10:57:19AM -0700, Prashant Malani wrote:
+> > Hi Heikki,
+> > 
+> > Thanks a lot for looking into this. Kindly see my response inline:
+> > 
+> > On Mon, May 11, 2020 at 04:32:02PM +0300, Heikki Krogerus wrote:
+> > > On Fri, May 08, 2020 at 02:18:44PM +0300, Heikki Krogerus wrote:
+> > > > Hi Prashant,
+> > > > 
+> > > > On Thu, May 07, 2020 at 03:40:41PM -0700, Prashant Malani wrote:
+> > > > > > +static int sbu_orientation(struct pmc_usb_port *port)
+> > > > > > +{
+> > > > > > +	if (port->sbu_orientation)
+> > > > > > +		return port->sbu_orientation - 1;
+> > > > > > +
+> > > > > > +	return port->orientation - 1;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int hsl_orientation(struct pmc_usb_port *port)
+> > > > > > +{
+> > > > > > +	if (port->hsl_orientation)
+> > > > > > +		return port->hsl_orientation - 1;
+> > > > > > +
+> > > > > > +	return port->orientation - 1;
+> > > > > > +}
+> > > > > > +
+> > > > > >  static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
+> > > > > >  {
+> > > > > >  	u8 response[4];
+> > > > > > @@ -151,8 +170,9 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+> > > > > >  
+> > > > > >  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
+> > > > > >  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
+> > > > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
+> > > > > > +
+> > > > > > +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > > > 
+> > > > > I'm curious to know what would happen when sbu-orientation == "normal".
+> > > > > That means |port->sbu_orientation| == 1.
+> > > > > 
+> > > > > It sounds like what should happen is the AUX_SHIFT orientation
+> > > > > setting should follow what |port->orientation| is, but here it
+> > > > > looks like it will always be set to |port->sbu_orientation - 1|, i.e 0,
+> > > > > even if port->orientation == TYPEC_ORIENTATION_REVERSE, i.e 2, meaning
+> > > > > it should be set to 1 ?
+> > > > 
+> > > > I'll double check this, and get back to you..
+> > > 
+> > > This is not exactly an answer to your question, but it seems that
+> > > those bits are only valid if "Alternate-Direct" message is used.
+> > > Currently the driver does not support that message.
+> > Could you kindly provide some detail on when "Alternate-Direct" would be
+> > preferred to the current method?
 > 
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index edf9d0e..e608578 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -398,6 +398,8 @@ static int adsp_probe(struct platform_device *pdev)
->  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
->  	platform_set_drvdata(pdev, adsp);
->  
-> +	device_wakeup_enable(adsp->dev);
-> +
->  	ret = adsp_alloc_memory_region(adsp);
->  	if (ret)
->  		goto free_rproc;
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e..6a1cb98 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
->  
->  	if (!rproc->recovery_disabled)
->  		rproc_trigger_recovery(rproc);
-> +
-> +	pm_relax(rproc->dev.parent);
->  }
->  
->  /**
-> @@ -2208,6 +2210,9 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
->  		return;
->  	}
->  
-> +	/* Prevent suspend while the remoteproc is being recovered */
-> +	pm_stay_awake(rproc->dev.parent);
-> +
->  	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
->  		rproc->name, rproc_crash_to_string(type));
->  
+> Alternate Mode Direct request is supposed to be used if an alternate
+> mode is entered directly from disconnected state.
+
+Ack.
+> 
+> > Also, is there anything on the PMC side which is preventing the use of
+> > "Alternate-Direct" messages? It seems like the state transition diagram
+> > there would be simpler, although I'm likely missing significant details
+> > here.
+> 
+> So we actually should use the "direct" request if we are in
+> disconnected state to enter alt modes if I understood correctly. But
+> otherwise we should use the normal Alternate Mode request and not the
+> Alternate Mode "direct" request. And I'm afraid I don't know why.
+
+SG.
+> 
+> > > I think the correct thing to do now is to remove the two lines from
+> > > the driver where those bits (ORI-HSL and ORI-Aux) are set.
+> > I see. How would orientation then be handled in a retimer configuration
+> > where AUX/SBU is flipped by the retimer itself?
+> 
+> Note that if we send a separate "connection" request first, then we
+> already tell the HSL and SBU orientation as part of the payload of
+> that request. That is why there is no need to tell about the HSL and
+> SBU orientation with the normal Alternate Mode Request.
+> 
+> So we have already handled the HSL and SBU orientation by the time
+> this function is called.
+
+Thanks for the explanation. I assume the HSL and SBU bit setting lines
+will be removed from pmc_usb_mux_tbt() too?
+
+Best regards,
+> 
+> 
+> thanks,
+> 
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> heikki
