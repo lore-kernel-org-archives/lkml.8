@@ -2,113 +2,96 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C98C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78261C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A63206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589287088;
-	bh=uDlo9Exmm/b6xQKP3G5CHPi7Uy1tLbtDYkh/Nhxo4Qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GjdZrABor5OmoWSiHZt1iG/Imi6AJNZSColRQR9wgL81VIX9mN5Q/IOjjNWbFoJ3y
-	 0XbWVBKdlxrpd79TlTtMxxe78j012e4WlktnCBk/DS5CirrJw0frTtSrkTS1G92bHQ
-	 Nu9m0R2P4tbYvt6uvw3W1Prud1xpKeDLQeIpBNqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 54F26206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgELMiH (ORCPT
+        id S1729678AbgELMim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 08:38:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29143 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:38:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3F78206DD;
-        Tue, 12 May 2020 12:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589287085;
-        bh=uDlo9Exmm/b6xQKP3G5CHPi7Uy1tLbtDYkh/Nhxo4Qg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B2thKUjM4ZPlMFVHhrRTOjlAH+a9pqbcg6ruG6LJ9xJo2/xDmqEWdgQPysdu5T/S5
-         5j+UiuF2ruXWMcM/esh0PG8xkSDzqz5nhYgaz3Jfl3MzDCzO+nX+Loo6ZJf+kd+gUM
-         pbPga4aOzFmFVxGdhMXY+7uiywOg5b0wYCR2SQZI=
-Date:   Tue, 12 May 2020 13:38:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
+        id S1726891AbgELMim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 08:38:42 -0400
+IronPort-SDR: VkWmPzneX9LNlzsLsx8GQeQd3rKF1ORl72YYX8j04ijjXT13G4NUUbuY7ZB8n5WD7TVCeuf/b6
+ 0IWLU0De3VzQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 05:38:41 -0700
+IronPort-SDR: pjLjBdE9D2a4APL55HZwnwPVi9BgWVq/KAIUuq5ZJlncezMc2fiRyJtto+cb2MGsL2bfk5r8Pf
+ kv0Qg0HksgfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
+   d="scan'208";a="262108558"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 12 May 2020 05:38:37 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYUBE-006CfE-IT; Tue, 12 May 2020 15:38:40 +0300
+Date:   Tue, 12 May 2020 15:38:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
-Message-ID: <20200512123801.GG5110@sirena.org.uk>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
- <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
- <20200501102158.GA5276@sirena.org.uk>
- <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
- <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com>
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200512123840.GY185537@smile.fi.intel.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+ <20200508111242.GH185537@smile.fi.intel.com>
+ <20200511200528.nfkc2zkh3bvupn7l@mobilestation>
+ <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qoTlaiD+Y2fIM3Ll"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com>
-X-Cookie: The only perfect science is hind-sight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512114946.x777yb6bhe22ccn5@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
 
---qoTlaiD+Y2fIM3Ll
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Tue, May 12, 2020 at 10:48:41AM +0800, Shengjiu Wang wrote:
-> On Wed, May 6, 2020 at 10:33 AM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
-> > On Fri, May 1, 2020 at 6:23 PM Mark Brown <broonie@kernel.org> wrote:
+I leave it to Rob and Vinod.
+It won't break our case, so, feel free with your approach.
 
-> > > > EDMA requires the period size to be multiple of maxburst. Otherwise
-> > > > the remaining bytes are not transferred and thus noise is produced.
+P.S. Perhaps at some point we need to
+1) convert properties to be u32 (it will simplify things);
+2) convert legacy ones to proper format ('-' instead of '_', vendor prefix added);
+3) parse them in core with device property API.
 
-> > > If this constraint comes from the DMA controller then normally you'd
-> > > expect the DMA controller integration to be enforcing this - is there no
-> > > information in the DMA API that lets us know that this constraint is
-> > > there?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> > No, I can't find one API for this.
-> > Do you have a recommendation?
 
-> could you please recommend which DMA API can I use?
-
-Not off-hand, you'd probably need to extend the API to export the
-information.
-
---qoTlaiD+Y2fIM3Ll
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66mKkACgkQJNaLcl1U
-h9D3bwf+L1SDbZMmf3kj5H/WHV+WYYcxZvjpF2rx3puuQVDabgoA6GJxeqw/Y+E1
-5yyW83wYPDD8fGV58m6XOxoLG3dkr5XC1+TFhPz5R1GuBOnLZ46HiG5C05SbEzZm
-LAMKfH73aIsLtKrRk54PhzI2A2NBfO19TVVxWw4qP00k/xe2AuNQXOBNFq8vW+6a
-UfgCJuvJFyizBVuid1eYBz4QTgKf/xbrQEfQAPWI72jFFgs8vzHCbPICl62acbOy
-ibciDr6vghSxDewz9DyynJ0Q0SminczxTQ8e4xACqE6yz10Jh6WU07ihBjJndIlR
-/ttLTH02Vy9Ail0rfr1jNuHIRa9U7w==
-=SUbH
------END PGP SIGNATURE-----
-
---qoTlaiD+Y2fIM3Ll--
