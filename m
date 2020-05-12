@@ -2,91 +2,104 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59FEC54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16243C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B78E02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ro3Un3et"
+	by mail.kernel.org (Postfix) with ESMTP id E5EC6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgELP3o (ORCPT
+        id S1730471AbgELPaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:29:44 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:44804 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgELP3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:29:44 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFIgm8000977;
-        Tue, 12 May 2020 10:29:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=eHJfT1MWX4xSQro+aagNAch/LHPwF75iGKAQv5HLG80=;
- b=Ro3Un3etve/t07nGyLxvxTBucmDOAIjBOOWkMWxKBV+Jk9j0UtmceFkwaXWEdY5WsGf8
- rGmdXJqQl26uZETP0Ekb+sDIV9jrxHsHNUCDluVF8lW/jQ8HImLBSj0naSIMfHwdkkus
- H362wirFcfjzeHVw8R08NFt+381+c/ybS/fGewo79bmP6itNMevx9qdgo2pdLZwAqVtn
- eTkQMKUg2OfYCkGq+xP5iUjlPgPvKV209Eq8n/QVdsWWYZu3UJbETlfFa30SdgLZTNOs
- RdIzuDg+q6cLbPdS3J6pqkxZFsFt7MmgzdB8s0QyDdAF0CmNOPeDIxK23J04YFLX9L6u lg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30wsx3msur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 12 May 2020 10:29:39 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
- 2020 16:29:37 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Tue, 12 May 2020 16:29:37 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 185F42C5;
-        Tue, 12 May 2020 15:29:37 +0000 (UTC)
-Date:   Tue, 12 May 2020 15:29:37 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
-        <lee.jones@linaro.org>, <linus.walleij@linaro.org>,
-        <broonie@kernel.org>
-CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v2 1/7] regulator: arizona-regulator: Move binding over
- to dtschema
-Message-ID: <20200512152937.GE71940@ediswmail.ad.cirrus.com>
-References: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
+        Tue, 12 May 2020 11:30:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27052 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgELPaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:30:23 -0400
+IronPort-SDR: 3b5vhqxJ0WuCgOoGVJD8tXx/IJNWxyYF/vL4KUDI/tyEar6YN7gCHM9wMW6hMBDD4TB7gIacLL
+ bDSdSPSOxxRg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 08:30:23 -0700
+IronPort-SDR: ZK3Se/fAkNFyJF7QxFxocRhwMaC21XL7PjjHBRWOuKhXYlwUSsgU9zriRl+JD5WOMbFHC3V6Jr
+ FnvElm6Y+HgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="409336630"
+Received: from bmtannen-mobl.amr.corp.intel.com (HELO [10.255.228.231]) ([10.255.228.231])
+  by orsmga004.jf.intel.com with ESMTP; 12 May 2020 08:30:21 -0700
+Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
+ <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
+ <20200511063227.GS1375924@vkoul-mobl>
+ <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
+ <20200512033035.GV1375924@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <84f09843-3245-5fa4-530f-c915b28e9bc5@linux.intel.com>
+Date:   Tue, 12 May 2020 09:36:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200506155758.14643-1-ckeepax@opensource.cirrus.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- mlxscore=0 adultscore=0 priorityscore=1501 suspectscore=0 phishscore=0
- mlxlogscore=696 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005120116
+In-Reply-To: <20200512033035.GV1375924@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 04:57:52PM +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
 
-Will update this series to match comments on my Lochnagar series
-as well.
 
-Thanks,
-Charles
+On 5/11/20 10:30 PM, Vinod Koul wrote:
+> On 11-05-20, 14:00, Pierre-Louis Bossart wrote:
+>>>> +	md = &bus->md;
+>>>> +	md->dev.bus = &sdw_bus_type;
+>>>> +	md->dev.type = &sdw_master_type;
+>>>> +	md->dev.parent = parent;
+>>>> +	md->dev.of_node = parent->of_node;
+>>>> +	md->dev.fwnode = fwnode;
+>>>> +	md->dev.dma_mask = parent->dma_mask;
+>>>> +
+>>>> +	dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
+>>>
+>>> This give nice sdw-master-0. In DT this comes from reg property. I dont
+>>> seem to recall if the ACPI/Disco spec treats link_id as unique across
+>>> the system, can you check that please, if not we would need to update
+>>> this.
+>> Table 3 in the Disco for Soundwire 1.0 spec: "all LinkID values are relative
+>> to the immediate parent Device."
+>>
+>> There isn't any known implementation with more than one controller.
+> 
+> But then it can come in "future" right. So lets try to make it future
+> proof by not using the link_id (we can expose that as a sysfs if people
+> want to know). So a global unique id needs to allocated (hint: idr or
+> equivalent) and used as master_id
+
+Can you clarify if you are asking for a global ID for Intel/ACPI 
+platforms, or for DT as well? I can't figure out from the 
+soundwire-controller.yaml definitions if there is already a notion of 
+unique ID.
+
+properties:
+   $nodename:
+     pattern: "^soundwire(@.*)?$"
+
+    soundwire@c2d0000 {
+         #address-cells = <2>;
+         #size-cells = <0>;
+         reg = <0x0c2d0000 0x2000>;
