@@ -2,133 +2,80 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C33C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FE2C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C2720733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589265729;
-	bh=/twyJJ9dZnGQh92dBReEWJHuGeydxSxiQp7BLmW7c7o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SMu2G656ohr3BPL28Bv9y89U9sfF/K0S7XyiFyHfM7jWGyi2bcKaOJ/mYpYRR1GKk
-	 2Im1CDQqjrFHZclSkUKjzvKJysS44iMEwAZCMyHMfqhpWc9R9uLqSsHAnzWfbueGzi
-	 jzVLXzYZ75mrwRWfWybVll0TCQ3KY6BzhWrivsdE=
+	by mail.kernel.org (Postfix) with ESMTP id 191D120575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgELGmJ (ORCPT
+        id S1728864AbgELGmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:42:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45632 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 02:42:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40946 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgELGmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:42:08 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE03B20575;
-        Tue, 12 May 2020 06:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589265728;
-        bh=/twyJJ9dZnGQh92dBReEWJHuGeydxSxiQp7BLmW7c7o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=taEzXckUt0vlcJ9f68oz31J364YSwNW5+KCBizpQ4D4/vsC34fDLCcLBk7STZEc/F
-         HyNU4ON4ZTdftIASirnYBNZHzkM0WcuNsi5YP3/kUJbMLARc3piOna09c6+XrbeLTM
-         gahpFbWGga3D8ejRHtplh60Zq23alEdJbzz/+yWk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] devfreq: Use lockdep asserts instead of manual checks for locked mutex
-Date:   Tue, 12 May 2020 08:41:58 +0200
-Message-Id: <20200512064158.7957-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1725536AbgELGmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:42:44 -0400
+IronPort-SDR: UCfaLSUeia/RFp2I8nygP95OmvnPplJjDIHsT2TegA/p3wy8cy8jFsVelvntbtiEyYAeQJ6yvl
+ hoA9ytvJPHzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 23:42:44 -0700
+IronPort-SDR: 1tiEiWhxupsymV5zFEjn4Lx/KOB/N5fKsP5Dv6VPZaVYK01KcefeemHtX/AAofvKteE/wX5Igv
+ fGBE7U9tTxrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
+   d="scan'208";a="371468310"
+Received: from liming1-mobl1.ccr.corp.intel.com (HELO yhuang-mobile.ccr.corp.intel.com) ([10.254.212.233])
+  by fmsmga001.fm.intel.com with ESMTP; 11 May 2020 23:42:42 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: [PATCH] mm, swap: Use prandom_u32_max()
+Date:   Tue, 12 May 2020 14:41:46 +0800
+Message-Id: <20200512064147.514493-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of warning when mutex_is_locked(), just use the lockdep
-framework.  The code is smaller and checks could be disabled for
-production environments (it is useful only during development).
+To improve the code readability and get random number with higher
+quality.
 
-Put asserts at beginning of function, even before validating arguments.
-
-The behavior of update_devfreq() is now changed because lockdep assert
-will only print a warning, not return with EINVAL.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Hugh Dickins <hughd@google.com>
 ---
- drivers/devfreq/devfreq.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ mm/swapfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index ef3d2bc3d1ac..52b9c3e141f3 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -60,12 +60,12 @@ static struct devfreq *find_device_devfreq(struct device *dev)
- {
- 	struct devfreq *tmp_devfreq;
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index a0a123e59ce6..2ec8b21201d6 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3220,7 +3220,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 		 * select a random position to start with to help wear leveling
+ 		 * SSD
+ 		 */
+-		p->cluster_next = 1 + (prandom_u32() % p->highest_bit);
++		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
+ 		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
  
-+	lockdep_assert_held(&devfreq_list_lock);
-+
- 	if (IS_ERR_OR_NULL(dev)) {
- 		pr_err("DEVFREQ: %s: Invalid parameters\n", __func__);
- 		return ERR_PTR(-EINVAL);
- 	}
--	WARN(!mutex_is_locked(&devfreq_list_lock),
--	     "devfreq_list_lock must be locked.");
- 
- 	list_for_each_entry(tmp_devfreq, &devfreq_list, node) {
- 		if (tmp_devfreq->dev.parent == dev)
-@@ -258,12 +258,12 @@ static struct devfreq_governor *find_devfreq_governor(const char *name)
- {
- 	struct devfreq_governor *tmp_governor;
- 
-+	lockdep_assert_held(&devfreq_list_lock);
-+
- 	if (IS_ERR_OR_NULL(name)) {
- 		pr_err("DEVFREQ: %s: Invalid parameters\n", __func__);
- 		return ERR_PTR(-EINVAL);
- 	}
--	WARN(!mutex_is_locked(&devfreq_list_lock),
--	     "devfreq_list_lock must be locked.");
- 
- 	list_for_each_entry(tmp_governor, &devfreq_governor_list, node) {
- 		if (!strncmp(tmp_governor->name, name, DEVFREQ_NAME_LEN))
-@@ -289,12 +289,12 @@ static struct devfreq_governor *try_then_request_governor(const char *name)
- 	struct devfreq_governor *governor;
- 	int err = 0;
- 
-+	lockdep_assert_held(&devfreq_list_lock);
-+
- 	if (IS_ERR_OR_NULL(name)) {
- 		pr_err("DEVFREQ: %s: Invalid parameters\n", __func__);
- 		return ERR_PTR(-EINVAL);
- 	}
--	WARN(!mutex_is_locked(&devfreq_list_lock),
--	     "devfreq_list_lock must be locked.");
- 
- 	governor = find_devfreq_governor(name);
- 	if (IS_ERR(governor)) {
-@@ -392,10 +392,7 @@ int update_devfreq(struct devfreq *devfreq)
- 	int err = 0;
- 	u32 flags = 0;
- 
--	if (!mutex_is_locked(&devfreq->lock)) {
--		WARN(true, "devfreq->lock must be locked by the caller.\n");
--		return -EINVAL;
--	}
-+	lockdep_assert_held(&devfreq->lock);
- 
- 	if (!devfreq->governor)
- 		return -EINVAL;
+ 		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
 -- 
-2.17.1
+2.26.2
 
