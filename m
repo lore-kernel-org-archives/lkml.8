@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E4C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C55C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39952494B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5703E20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731507AbgELWXI (ORCPT
+        id S1731651AbgELWXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
+        Tue, 12 May 2020 18:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731281AbgELWXF (ORCPT
+        by vger.kernel.org with ESMTP id S1727971AbgELWXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:23:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B379AC061A0E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1659CC061A0C
         for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:05 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIA-0004ef-Df; Wed, 13 May 2020 00:22:27 +0200
+        id 1jYdI7-0004c1-P6; Wed, 13 May 2020 00:22:24 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id C4E071006A1;
-        Wed, 13 May 2020 00:22:25 +0200 (CEST)
-Message-Id: <20200512213809.997307469@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4A9F91001FC;
+        Wed, 13 May 2020 00:22:23 +0200 (CEST)
+Message-Id: <20200512213809.784331304@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:05 +0200
+Date:   Tue, 12 May 2020 23:01:03 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 06/38] x86/entry: Provide helpers for execute on irqstack
+Subject: [patch V5 04/38] x86: Make hardware latency tracing explicit
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,132 +71,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device interrupt handlers and system vector handlers are executed on the
-interrupt stack. The stack switch happens in the low level assembly entry
-code. This conflicts with the efforts to consolidate the exit code in C to
-ensure correctness vs. RCU and tracing.
+The hardware latency tracer calls into trace_sched_clock and ends up in
+various instrumentable functions which is problemeatic vs. the kprobe
+handling especially the text poke machinery. It's invoked from
+nmi_enter/exit(), i.e. non-instrumentable code.
 
-As there is no way to move #DB away from IST due to the MOV SS issue, the
-requirements vs. #DB and NMI for switching to the interrupt stack do not
-exist anymore. The only requirement is that interrupts are disabled.
+Use nmi_enter/exit_notrace() instead. These variants do not invoke the
+hardware latency tracer which avoids chasing down complex callchains to
+make them non-instrumentable.
 
-That allows to move the stack switching to C code which simplifies the
-entry/exit handling further because it allows to switch stacks after
-handling the entry and on exit before handling RCU, return to usermode and
-kernel preemption in the same way as for regular exceptions.
+The real interesting measurement is the actual NMI handler. Add an explicit
+invocation for the hardware latency tracer to it.
 
-The initial attempt of having the stack switching in inline ASM caused too
-much headache vs. objtool and the unwinder. After analysing the use cases
-it was agreed on that having the stack switch in ASM for the price of an
-indirect call is acceptable as the main users are indirect call heavy
-anyway and the few system vectors which are empty shells (scheduler IPI and
-KVM posted interrupt vectors) can run from the regular stack.
+#DB and #BP are uninteresting as they really should not be in use when
+analzying hardware induced latencies.
 
-Provide helper functions to check whether the interrupt stack is already
-active and whether stack switching is required.
-
-64 bit only for now. 32 bit has a variant of that already. Once this is
-cleaned up the two implementations might be consolidated as a cleanup on
-top.
+If #DF hits, hardware latency is definitely not interesting anymore and in
+case of a machine check the hardware latency is not the most troublesome
+issue either.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200507161020.783541450@infradead.org
 ---
-V5: Moved the actual switch to ASM code
+V5: New patch
 ---
- arch/x86/entry/entry_64.S        |   39 ++++++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/irq_stack.h |   40 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+ arch/x86/kernel/cpu/mce/core.c |    4 ++--
+ arch/x86/kernel/nmi.c          |    6 ++++--
+ arch/x86/kernel/traps.c        |   10 +++++-----
+ 3 files changed, 11 insertions(+), 9 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1106,6 +1106,45 @@ SYM_CODE_START_LOCAL_NOALIGN(.Lbad_gs)
- SYM_CODE_END(.Lbad_gs)
- 	.previous
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1916,7 +1916,7 @@ static __always_inline void exc_machine_
+ 	    mce_check_crashing_cpu())
+ 		return;
  
-+/*
-+ * rdi: New stack pointer points to the top word of the stack
-+ * rsi: Function pointer
-+ * rdx: Function argument (can be NULL if none)
-+ */
-+SYM_FUNC_START(asm_call_on_stack)
-+	/*
-+	 * Save the frame pointer unconditionally. This allows the ORC
-+	 * unwinder to handle the stack switch.
-+	 */
-+	pushq		%rbp
-+	mov		%rsp, %rbp
-+
-+	/*
-+	 * The unwinder relies on the word at the top of the new stack
-+	 * page linking back to the previous RSP.
-+	 */
-+	mov		%rsp, (%rdi)
-+	mov		%rdi, %rsp
-+	/* Move the argument to the right place */
-+	mov		%rdx, %rdi
-+
-+1:
-+	.pushsection .discard.instr_begin
-+	.long 1b - .
-+	.popsection
-+
-+	CALL_NOSPEC	rsi
-+
-+2:
-+	.pushsection .discard.instr_end
-+	.long 2b - .
-+	.popsection
-+
-+	/* Restore the previous stack pointer from RBP. */
-+	leaveq
-+	ret
-+SYM_FUNC_END(asm_call_on_stack)
-+
- /* Call softirq on interrupt stack. Interrupts are off. */
- .pushsection .text, "ax"
- SYM_FUNC_START(do_softirq_own_stack)
---- /dev/null
-+++ b/arch/x86/include/asm/irq_stack.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_IRQ_STACK_H
-+#define _ASM_X86_IRQ_STACK_H
-+
-+#include <linux/ptrace.h>
-+
-+#include <asm/processor.h>
-+
-+#ifdef CONFIG_X86_64
-+static __always_inline bool irqstack_active(void)
-+{
-+	return __this_cpu_read(irq_count) != -1;
-+}
-+
-+void asm_call_on_stack(void *sp, void *func, void *arg);
-+
-+static __always_inline void run_on_irqstack(void *func, void *arg)
-+{
-+	void *tos = __this_cpu_read(hardirq_stack_ptr);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	__this_cpu_add(irq_count, 1);
-+	asm_call_on_stack(tos - 8, func, arg);
-+	__this_cpu_sub(irq_count, 1);
-+}
-+
-+#else /* CONFIG_X86_64 */
-+static inline bool irqstack_active(void) { return false; }
-+static inline void run_on_irqstack(void *func, void *arg) { }
-+#endif /* !CONFIG_X86_64 */
-+
-+static __always_inline bool irq_needs_irq_stack(struct pt_regs *regs)
-+{
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		return false;
-+	return !user_mode(regs) && !irqstack_active();
-+}
-+
-+#endif
+-	nmi_enter();
++	nmi_enter_notrace();
+ 	/*
+ 	 * The call targets are marked noinstr, but objtool can't figure
+ 	 * that out because it's an indirect call. Annotate it.
+@@ -1924,7 +1924,7 @@ static __always_inline void exc_machine_
+ 	instrumentation_begin();
+ 	machine_check_vector(regs);
+ 	instrumentation_end();
+-	nmi_exit();
++	nmi_exit_notrace();
+ }
+ 
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
+ 	__this_cpu_write(last_nmi_rip, regs->ip);
+ 
+ 	instrumentation_begin();
++	ftrace_nmi_enter();
+ 
+ 	handled = nmi_handle(NMI_LOCAL, regs);
+ 	__this_cpu_add(nmi_stats.normal, handled);
+@@ -420,6 +421,7 @@ static noinstr void default_do_nmi(struc
+ 		unknown_nmi_error(reason, regs);
+ 
+ out:
++	ftrace_nmi_exit();
+ 	instrumentation_end();
+ }
+ 
+@@ -536,14 +538,14 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
+ 	}
+ #endif
+ 
+-	nmi_enter();
++	nmi_enter_notrace();
+ 
+ 	inc_irq_stat(__nmi_count);
+ 
+ 	if (!ignore_nmis)
+ 		default_do_nmi(regs);
+ 
+-	nmi_exit();
++	nmi_exit_notrace();
+ 
+ #ifdef CONFIG_X86_64
+ 	if (unlikely(this_cpu_read(update_debug_stack))) {
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -378,7 +378,7 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+ 	}
+ #endif
+ 
+-	nmi_enter();
++	nmi_enter_notrace();
+ 	instrumentation_begin();
+ 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
+ 
+@@ -624,11 +624,11 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 		instrumentation_end();
+ 		idtentry_exit(regs);
+ 	} else {
+-		nmi_enter();
++		nmi_enter_notrace();
+ 		instrumentation_begin();
+ 		do_int3(regs);
+ 		instrumentation_end();
+-		nmi_exit();
++		nmi_exit_notrace();
+ 	}
+ }
+ 
+@@ -827,7 +827,7 @@ static void noinstr handle_debug(struct
+ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 					     unsigned long dr6)
+ {
+-	nmi_enter();
++	nmi_enter_notrace();
+ 	/*
+ 	 * The SDM says "The processor clears the BTF flag when it
+ 	 * generates a debug exception."  Clear TIF_BLOCKSTEP to keep
+@@ -849,7 +849,7 @@ static __always_inline void exc_debug_ke
+ 	if (dr6)
+ 		handle_debug(regs, dr6, false);
+ 
+-	nmi_exit();
++	nmi_exit_notrace();
+ }
+ 
+ static __always_inline void exc_debug_user(struct pt_regs *regs,
 
