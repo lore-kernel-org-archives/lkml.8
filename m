@@ -2,95 +2,118 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC3C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6906C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16A8E20740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321856;
-	bh=geoTLqJUggcj7F/SYCuIavxRQlZy8SJmi+Go4slwAdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XVihTWEDazKZE7AkV0CrJD0w5xg5D/z0GsSJfE4hZPlUNE7KxSlzw3ZZF1YkJd2Z5
-	 4UQ/4dWENih/4xoC4ZSStSb/TZd5B1M7FiU8cnFndhG6DwnNXp4TPQqKJtrXoiE6Le
-	 QEpgGloQzSMcT1STBQ6ySl7d1if4tMa3yX2Hm+E0=
+	by mail.kernel.org (Postfix) with ESMTP id 9682B20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgELWRf (ORCPT
+        id S1731065AbgELWTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:17:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45138 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgELWRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:17:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e20so11850260otk.12;
-        Tue, 12 May 2020 15:17:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mrQ851hnunrgTqto6+wIGdOsYmYlqTuTWO4ADOavgjQ=;
-        b=bqr2Jv4gDlam72irY4ekm0BowPQHXAOVJsr+NE3tN7Zc95TUuuIhWoLPAk0dc4XBsH
-         75/d4f31rwvoWzUFOQPF9eVFh+O10WhZqttFDh27Fen8DrrR/T0VrHfmPxmKuJ4hWLsP
-         SrQ9/N0OxYilKHEQj0DLBHLy7XIrhL1reUANXqRcmGaDkOVJgMSUYR0xrr+6LNBAXCsi
-         8WAswiDZcK9q9/CcfdX1mEhhBudtdWxBeHlCtbY44lLGXOUJMOUR2Q/YCJLZGH5kNan+
-         GcBV2OB3AOh0iIM0I8NQEDKN1DSItzguKR3//ULRx9r4siKZ9ALkBlGJzQZivesiFeQM
-         dMBw==
-X-Gm-Message-State: AGi0PuZ9jn1XXUMr7r2pOcKKWBNHs9QlgJpfoynLhD1w3yk/ILHNDPCX
-        T8L8tre6QFx0Z15/6ZzM6A==
-X-Google-Smtp-Source: APiQypK+0HPJSRVk7oY5OGHm2Knyk+zbvGQGlsq2M4ejPQuqlB3/puDbsR9Qg1uci4g29yQQUydSlg==
-X-Received: by 2002:a05:6830:1302:: with SMTP id p2mr18665519otq.183.1589321852427;
-        Tue, 12 May 2020 15:17:32 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w73sm5598138oie.34.2020.05.12.15.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:17:31 -0700 (PDT)
-Received: (nullmailer pid 2344 invoked by uid 1000);
-        Tue, 12 May 2020 22:17:30 -0000
-Date:   Tue, 12 May 2020 17:17:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org,
-        dmaengine@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 01/10] dt-bindings: pinctrl: sh-pfc: Document r8a7742
- PFC support
-Message-ID: <20200512221730.GA2213@bogus>
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 12 May 2020 18:19:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43552 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728314AbgELWTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 18:19:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3FA7AAB99;
+        Tue, 12 May 2020 22:19:14 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 5CB98DA70B; Wed, 13 May 2020 00:18:20 +0200 (CEST)
+Date:   Wed, 13 May 2020 00:18:20 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] fs: btrfs: fix a data race in
+ btrfs_block_rsv_release()
+Message-ID: <20200512221820.GF18421@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200509053431.3860-1-baijiaju1990@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588542414-14826-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200509053431.3860-1-baijiaju1990@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  3 May 2020 22:46:45 +0100, Lad Prabhakar wrote:
-> Document PFC support for the RZ/G1H (R8A7742) SoC.
+On Sat, May 09, 2020 at 01:34:31PM +0800, Jia-Ju Bai wrote:
+> The functions btrfs_block_rsv_release() and
+> btrfs_update_delayed_refs_rsv() are concurrently executed at runtime in
+> the following call contexts:
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Thread 1:
+>   btrfs_file_write_iter()
+>     btrfs_buffered_write()
+>       btrfs_delalloc_release_extents()
+>         btrfs_inode_rsv_release()
+>           __btrfs_block_rsv_release()
+> 
+> Thread 2:
+>   finish_ordered_fn()
+>     btrfs_finish_ordered_io()
+>       insert_reserved_file_extent()
+>         __btrfs_drop_extents()
+>           btrfs_free_extent()
+>             btrfs_add_delayed_data_ref()
+>               btrfs_update_delayed_refs_rsv()
+> 
+> In __btrfs_block_rsv_release():
+>   else if (... && !delayed_rsv->full)
+> 
+> In btrfs_update_delayed_refs_rsv():
+>   spin_lock(&delayed_rsv->lock);
+>   delayed_rsv->size += num_bytes;
+>   delayed_rsv->full = 0;
+>   spin_unlock(&delayed_rsv->lock);
+> 
+> Thus a data race for delayed_rsv->full can occur.
+> This race was found and actually reproduced by our conccurency fuzzer.
+> 
+> To fix this race, the spinlock delayed_rsv->lock is used to
+> protect the access to delayed_rsv->full in btrfs_block_rsv_release().
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 > ---
->  .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt          | 1 +
->  1 file changed, 1 insertion(+)
+>  fs/btrfs/block-rsv.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
+> diff --git a/fs/btrfs/block-rsv.c b/fs/btrfs/block-rsv.c
+> index 27efec8f7c5b..89c53a7137b4 100644
+> --- a/fs/btrfs/block-rsv.c
+> +++ b/fs/btrfs/block-rsv.c
+> @@ -277,6 +277,11 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
+>  	struct btrfs_block_rsv *global_rsv = &fs_info->global_block_rsv;
+>  	struct btrfs_block_rsv *delayed_rsv = &fs_info->delayed_refs_rsv;
+>  	struct btrfs_block_rsv *target = NULL;
+> +	unsigned short full = 0;
+> +
+> +	spin_lock(&delayed_rsv->lock);
+> +	full = delayed_rsv->full;
+> +	spin_unlock(&delayed_rsv->lock);
+>  
+>  	/*
+>  	 * If we are the delayed_rsv then push to the global rsv, otherwise dump
+> @@ -284,7 +289,7 @@ u64 btrfs_block_rsv_release(struct btrfs_fs_info *fs_info,
+>  	 */
+>  	if (block_rsv == delayed_rsv)
+>  		target = global_rsv;
+> -	else if (block_rsv != global_rsv && !delayed_rsv->full)
+> +	else if (block_rsv != global_rsv && !full)
 
-Acked-by: Rob Herring <robh@kernel.org>
+This has been reported as suspicous
+https://lore.kernel.org/linux-btrfs/CAAwBoOJDjei5Hnem155N_cJwiEkVwJYvgN-tQrwWbZQGhFU=cA@mail.gmail.com/
+
+and there's an answer that this is racy but does not cause any
+unexpected behaviour.
