@@ -2,121 +2,181 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61DFC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCB4C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82365206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a0JZ00v/"
+	by mail.kernel.org (Postfix) with ESMTP id 60073206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgELOy5 (ORCPT
+        id S1730380AbgELOzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:54:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48225 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725929AbgELOy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:54:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589295296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ayS808bLgmNMdF8Jk/2gP5FgQYDM/m50c1GF+CBCNaA=;
-        b=a0JZ00v/v/fhWh2rNcv78AEFqsLw7aOFBtkZqlr4hD/eW5GmS+LgOGdLmTxTq7t3x6Q/k9
-        hCnDwwsFyzEWyE2+dIDwgDYxDQKu6+HaHJj3iCmECn7SZfa0zpDNZQqQ/LbcG9ljShZIpP
-        1krIoqGEbB23KbyWVxpH1EvjlYguqbE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-angpt5usPPCy0Cv76CkZiw-1; Tue, 12 May 2020 10:54:54 -0400
-X-MC-Unique: angpt5usPPCy0Cv76CkZiw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 295F01906808;
-        Tue, 12 May 2020 14:54:38 +0000 (UTC)
-Received: from max.home.com (unknown [10.40.192.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5E205D9DD;
-        Tue, 12 May 2020 14:54:36 +0000 (UTC)
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] GFS2 fixes for 5.7
-Date:   Tue, 12 May 2020 16:54:34 +0200
-Message-Id: <20200512145434.160164-1-agruenba@redhat.com>
+        Tue, 12 May 2020 10:55:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29538 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbgELOzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:55:09 -0400
+IronPort-SDR: RQOjAsQsZ6enswCI8hngDKcMaDoJJxmXjEv5zrZNgqsgRkJHuozTBMiUJf0CXr1cho/m6achLa
+ oZwms69XDMtA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 07:55:08 -0700
+IronPort-SDR: u5C/sAfYhDNXD5BocBi1vuwMEfZssiUXSaTFAq3X9E1o4nQp94e4NxlxZy89ojyJXgKVHTU56O
+ 6wp7k5ATjw2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="371587795"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga001.fm.intel.com with ESMTP; 12 May 2020 07:55:07 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v4 00/10] Support XSAVES supervisor states
+Date:   Tue, 12 May 2020 07:54:34 -0700
+Message-Id: <20200512145444.15483-1-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Changes in v4:
 
-could you please pull the following fixes for gfs2?
+Cleanup commit logs.
 
-Thanks a lot,
-Andreas
+----
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Changes in v3:
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+This version addresses the overhead of an extra XSAVES in
+__fpu__restore_sig() with additional patches:
 
-are available in the Git repository at:
+    Patch #8: Introduce copy_supervisor_to_kernel(), which does a
+              supervisor-state-only XSAVES and then relocates the contents
+              to the standard location.
+    Patch #9: Preserve supervisor states for __fpu__restore_sig() slow path.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.7-rc1.fixes
+Other small changes are noted in each patch's commit log.
 
-for you to fetch changes up to b14c94908b1b884276a6608dea3d0b1b510338b7:
+----
 
-  Revert "gfs2: Don't demote a glock until its revokes are written" (2020-05-08 15:01:25 -0500)
+Changes in v2:
 
-----------------------------------------------------------------
-Various gfs2 fixes
+- Split out small changes to:
+    https://lkml.kernel.org/r/20191212210855.19260-1-yu-cheng.yu@intel.com/
 
-Fixes for bugs prior to v5.7-rc1:
-- Fix random block reads when reading fragmented journals (v5.2).
-- Fix a possible random memory access in gfs2_walk_metadata (v5.3).
+- Fix an issue in patch #4, where fpu__clear_user_states() drops
+  supervisor xstates.
 
-Fixes for v5.7-rc1:
-- Fix several overlooked gfs2_qa_get / gfs2_qa_put imbalances.
-- Fix several bugs in the new filesystem withdraw logic.
+- Add three patches:
+    Patch #6: Update sanitize_restored_xstate() for supervisor xstates.
+    Patch #7: Update copy_kernel_to_xregs_err() to use XRSTORS when
+              supervisor xstates are present.
+    Patch #8: Update __fpu__restore_sig() to preserve supervisor xstates.
 
-----------------------------------------------------------------
-Andreas Gruenbacher (3):
-      gfs2: Another gfs2_walk_metadata fix
-      gfs2: More gfs2_find_jhead fixes
-      gfs2: Grab glock reference sooner in gfs2_add_revoke
+Also make some small changes in response to comments.  More details are in
+each patch's commit log.
 
-Bob Peterson (11):
-      gfs2: fix withdraw sequence deadlock
-      gfs2: Fix error exit in do_xmote
-      gfs2: Fix BUG during unmount after file system withdraw
-      gfs2: Fix use-after-free in gfs2_logd after withdraw
-      gfs2: Fix problems regarding gfs2_qa_get and _put
-      gfs2: Change BUG_ON to an assert_withdraw in gfs2_quota_change
-      gfs2: remove check for quotas on in gfs2_quota_check
-      gfs2: move privileged user check to gfs2_quota_lock_check
-      gfs2: don't call quota_unhold if quotas are not locked
-      gfs2: If go_sync returns error, withdraw but skip invalidate
-      Revert "gfs2: Don't demote a glock until its revokes are written"
+----
 
- fs/gfs2/bmap.c    | 16 +++++++++-------
- fs/gfs2/glock.c   |  6 ++----
- fs/gfs2/inode.c   |  7 ++++---
- fs/gfs2/log.c     | 11 ++++++++---
- fs/gfs2/lops.c    | 19 ++++++++++++-------
- fs/gfs2/meta_io.c |  2 +-
- fs/gfs2/quota.c   | 13 +++++--------
- fs/gfs2/quota.h   |  3 ++-
- fs/gfs2/super.c   |  1 -
- fs/gfs2/util.c    | 10 ++++++----
- 10 files changed, 49 insertions(+), 39 deletions(-)
+There are two types of XSAVE-managed states (xstates): user and supervisor.
+This series introduces the supervisor xstate support in preparation for new
+features that will make use of supervisor xstates.
+
+This series has been separated for ease of review from the series that add
+supervisor xstate features [3].
+
+In current and near future generations of Intel processors there are three
+classes of objects that can be managed as supervisor xstates:
+
+- Processor Trace (PT):
+    Linux already supports PT, but PT xstates are not saved to the FPU
+    context and not context-switched by the kernel.  There are no plans to
+    integrate PT into XSAVES supervisor states.
+
+- ENQCMD Process Address Space ID (MSR_IA32_PASID):
+    ENQCMD is a new instruction and will be introduced shortly in a
+    separate series [2].
+
+- Control-flow Enforcement Technology (CET):
+    CET is being reviewed on the LKML [1] [3].
+
+Supervisor xstates can be accessed only from the kernel (PL-0) with XSAVES/
+XRSTORS instructions.  They cannot be accessed with other XSAVE*/XRSTOR*
+instructions.  MSR_IA32_XSS sets enabled supervisor xstates, while XCR0
+sets enabled user xstates.
+
+This series separates the two xstate types by declaring new macros for each
+type.  The kernel finds all available features during system initialization
+and stores them in xfeatures_mask_all.  It then retrieves perspective
+xstate type with xfeatures_mask_supervisor()/xfeatures_mask_user() for
+handling signals and PTRACE.
+
+[1] Detailed information on supervisor xstates can be found in "Intel 64
+    and IA-32 Architectures Software Developer's Manual":
+
+    https://software.intel.com/en-us/download/intel-64-and-ia-32-
+    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+
+[2] Detailed information on the ENQCMD instruction and MSR_IA32_PASID can
+    be found in "Intel Architecture Instruction Set Extensions and Future
+    Features Programming Reference":
+
+    https://software.intel.com/sites/default/files/managed/c5/15/
+    architecture-instruction-set-extensions-programming-reference.pdf
+
+[3] CET patches:
+
+    https://lkml.kernel.org/r/20200205181935.3712-1-yu-cheng.yu@intel.com/
+    https://lkml.kernel.org/r/20200205182308.4028-1-yu-cheng.yu@intel.com/
+
+Fenghua Yu (3):
+  x86/fpu/xstate: Rename validate_xstate_header() to
+    validate_user_xstate_header()
+  x86/fpu/xstate: Define new macros for supervisor and user xstates
+  x86/fpu/xstate: Define new functions for clearing fpregs and xstates
+
+Yu-cheng Yu (7):
+  x86/fpu/xstate: Separate user and supervisor xfeatures mask
+  x86/fpu/xstate: Introduce XSAVES supervisor states
+  x86/fpu/xstate: Update sanitize_restored_xstate() for supervisor
+    xstates
+  x86/fpu/xstate: Update copy_kernel_to_xregs_err() for XSAVES
+    supervisor states
+  x86/fpu: Introduce copy_supervisor_to_kernel()
+  x86/fpu/xstate: Preserve supervisor states for slow path of
+    __fpu__restore_sig()
+  x86/fpu/xstate: Restore supervisor states for signal return
+
+ arch/x86/include/asm/fpu/internal.h |  10 +-
+ arch/x86/include/asm/fpu/xstate.h   |  52 +++++---
+ arch/x86/kernel/fpu/core.c          |  49 ++++---
+ arch/x86/kernel/fpu/init.c          |   3 +-
+ arch/x86/kernel/fpu/regset.c        |   2 +-
+ arch/x86/kernel/fpu/signal.c        | 144 +++++++++++++-------
+ arch/x86/kernel/fpu/xstate.c        | 199 +++++++++++++++++++++-------
+ arch/x86/kernel/process.c           |   2 +-
+ arch/x86/kernel/signal.c            |   2 +-
+ 9 files changed, 334 insertions(+), 129 deletions(-)
+
+-- 
+2.21.0
 
