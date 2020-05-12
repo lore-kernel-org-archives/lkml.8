@@ -2,106 +2,147 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BB9C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98915C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF0120673
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA4020673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ccmZgk3p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uc4IEDrg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbgELPHF (ORCPT
+        id S1730974AbgELPHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:07:05 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:59786 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726610AbgELPHC (ORCPT
+        Tue, 12 May 2020 11:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730516AbgELPHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:07:02 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CF1em8023749;
-        Tue, 12 May 2020 10:06:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=D95AZ6qA+hhDwF46fVfOwPe7tq0kH/15sfSGGHy9jgU=;
- b=ccmZgk3pRYxdkno8BKHE8OcQdAoymYQY3W6ZE7F/fujlj20yQPrwh4pP2dtjiJkXcutE
- x+GxD06zsgc6CaVgBMTIOvF/Z6/XxdenPHp/+kRBpi6AO33AokRqx2+LpmiIvr6QOXYy
- XBB2m8pf6cYvpRCP0W9crGdAHax63YcmEK+YB4huDNu+PXAc91G22eljg2qrEAbUS3Q+
- NksC13mFuPm+kHLn6A6FQw71M7XKBvVZ2FsPiM/+vA0tfR1Vo/vY3cp1/x0bS+1zD3o6
- F812NA1qNYa4cERbBZqJ1cDHMwgm236TKA1n4VQCYvE1Ghzc6tM9C/rErlJRKhJ+5gs5 Yw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30wrxq5009-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 12 May 2020 10:06:37 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
- 2020 16:06:36 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Tue, 12 May 2020 16:06:36 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 73E972C6;
-        Tue, 12 May 2020 15:06:36 +0000 (UTC)
-Date:   Tue, 12 May 2020 15:06:36 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <lee.jones@linaro.org>, <broonie@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
-        <linux@roeck-us.net>, <linus.walleij@linaro.org>,
-        <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v2 5/5] mfd: lochnagar: Move binding over to dtschema
-Message-ID: <20200512150636.GD71940@ediswmail.ad.cirrus.com>
-References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
- <20200504154757.17519-5-ckeepax@opensource.cirrus.com>
- <20200512134949.GA14057@bogus>
+        Tue, 12 May 2020 11:07:10 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B463C061A0C;
+        Tue, 12 May 2020 08:07:10 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t7so5506144plr.0;
+        Tue, 12 May 2020 08:07:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0TU9phia50Kr8gEoVpaq8VxyNOROUqRKj1SwNNfGXzs=;
+        b=Uc4IEDrgeYoxV1CSYknk2emJMTMTKXaxReu0E7u/OI4G8D6QWf3lyX28PWWz4tp/Wz
+         BPwi0f7zhZ6dj8M9UpaQqMtOPaUbmZrSlrTDV9KHAoQChtrP5/NbRJUgXOGM1OntaLDp
+         3eSLRoAZBK+x+4Gn/4KVsITawEdevyMFGSgvY1ah8KGb3aBiY3/8Qol2JYeN755x/dY4
+         4RAGK2cTxNuBeLWmjTYB160VlXUn0kgGRZS2HYRqriAF1dM87FvgSkOewuVKqcxjuUwC
+         JU1NVWdFvOWOJtKFYAkP84LXxnjc4FgBXuFgTiMPGLNWFBfEIo2MtJwvxacme32Rh1VS
+         2xsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0TU9phia50Kr8gEoVpaq8VxyNOROUqRKj1SwNNfGXzs=;
+        b=JMbmeH4WJzdCU70jvSSTK8i9EWMRGpkRftDqL/Lii6cynmk/tY3GivWmltY0LCG6Ed
+         z0p5xZKMMnRqZhw5p2xp9/2a/+r+KLss8Izl1VQI+AYD8MYeWQRqfvLEadsLmwXo5cwQ
+         tzqrwJ1lSCyvi6/pvxRFU76y8NOlOFT8LTCjMxhF6RDsCWUsMbT7dG2MbVAaEwWMeM0P
+         VHYQagtQvGv8EZYpChkT+fAa2fybaaQOjJa18zaAiyzRswprMoiJMPSc+3oos+0y6V2C
+         9shblCBdxIAWAXRxB5YVJK1FYUGRox/z5eAKvHEstvvlYvUDNj0+SkqoCfQHC802YVna
+         Qzcg==
+X-Gm-Message-State: AGi0PuYHD60ekn2iovcqpO6UywzbwKAU/pQLVti2XRsWXtcPMGGvf87S
+        /TJmjxq6ts6ZZPaHw4Zbytw=
+X-Google-Smtp-Source: APiQypL/zzTYzH5hzP0Vw5PITnoYT7iA7U4N+8HllUIc6DhQQEx3VzprkUVrCNMQFbC/3uDm+k/GKA==
+X-Received: by 2002:a17:90a:3a81:: with SMTP id b1mr28365385pjc.184.1589296029623;
+        Tue, 12 May 2020 08:07:09 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id j13sm13353615pje.1.2020.05.12.08.07.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 08:07:09 -0700 (PDT)
+Subject: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU
+ pre-initialization test
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
+Date:   Wed, 13 May 2020 00:07:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200512134949.GA14057@bogus>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 suspectscore=0 spamscore=0 clxscore=1015
- malwarescore=0 mlxscore=0 mlxlogscore=986 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005120114
+In-Reply-To: <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:49:49AM -0500, Rob Herring wrote:
-> On Mon, May 04, 2020 at 04:47:57PM +0100, Charles Keepax wrote:
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > 
-> > Changes since v1:
-> >  - Removed contains on the compatible
-> >  - Moved all sub-nodes into here directly only using $ref for properties
-> >  - As the regulator binding only contained subnodes that file is now deleted
-> >  - Removed some pointless descriptions
-> > 
-> > A little nervous about the amount of clock and regulator stuff this
-> > pulls into the MFD file, any comments on that welcome? Would it be worth
-> > looking into something along the lines of the definitions stuff to keep
-> > some of that out in the clock and regulator bindings?
-> 
-> It's fine like this. Other than my comments on patch 3, looks fine. 
-> Respin and I'll apply.
-> 
+From 7bb979aacd8788d174df8a56e9803ba9e5b7a381 Mon Sep 17 00:00:00 2001
+From: Joel Fernandes (Google) <joel@joelfernandes.org>
+Date: Mon, 11 May 2020 22:06:46 -0400
+Subject: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU pre-initialization test
 
-Groovy thanks for the reviews.
+Since this test returned to tools/memory-model/, make sure that it is
+at least referenced from Documentation/litmus-tests/'s README.
 
-Thanks,
-Charles
+Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Co-developed-by: Akira Yokosawa <akiyks@gmail.com>
+[Alan: grammar nit]
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+---
+I said in the earlier message:
+
+> The explanation under tools/memory-model/litmus-tests/README also need the same
+> rewording.
+
+, but obviously I was confused. It is good as is.
+
+This is on top of my earlier patch series.
+
+Joel, Alan, does this work with you?
+
+        Thanks, Akira
+--
+ Documentation/litmus-tests/README | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+index ac0b270b456c..b79e640214b9 100644
+--- a/Documentation/litmus-tests/README
++++ b/Documentation/litmus-tests/README
+@@ -24,6 +24,10 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+ RCU (/rcu directory)
+ --------------------
+ 
++MP+onceassign+derefonce.litmus (under tools/memory-model/litmus-tests/)
++    Demonstrates the use of rcu_assign_pointer() and rcu_dereference() to
++    ensure that an RCU reader will not see pre-initialization garbage.
++
+ RCU+sync+read.litmus
+ RCU+sync+free.litmus
+     Both the above litmus tests demonstrate the RCU grace period guarantee
+-- 
+2.17.1
+
+
