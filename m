@@ -2,156 +2,107 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1E8C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2CFC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B90120720
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bxWexyj5"
+	by mail.kernel.org (Postfix) with ESMTP id BD1A2206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgELKaK (ORCPT
+        id S1729488AbgELKaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:30:10 -0400
-Received: from mail-eopbgr00071.outbound.protection.outlook.com ([40.107.0.71]:46478
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Tue, 12 May 2020 06:30:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4396 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726193AbgELKaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:30:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PbFpY+B3aCq7tyksv8zLzhYOwYKUBAXjbNrYWgbC8c6avvCBzyn990UXJHnfJUuvmsQTJfjK4q/dNSpomaZ+iiewUjPbkW1PZy5U25x2Sfzn0dmqIptmu1gad1kg+CMDPBUH8MB47R1v1957Ox7lv0BSWdRvpt2Ji/A9HYbSzvi/jZ0Vgdtk5dJbBUfZDOEtl021Qhj/9pDacHdprk2bIf7qRKXuIbfo64eWklEnI1T6ABSOPGRCUI5FgUKal7/s69ALfiYbDohNbLNNlR+hl2+r4HE0W5iTQgp0X6FCdcjv9aQtRtLTIE34kRx8ID0M19/X6F+nJ1lwreBFaFGzvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j9WYZk+gvL9A7wxSZmG+Mx2TFBtY+xTgLQtiFlAtAYQ=;
- b=cnXZprGoJU/RD+8GhvSNiR96dYkVgBzpRwNKIIGb5QSDOBvM+snsou93FmQzCFsYysfLrAbb5nUo9Y1vK5P2LLXRt9DhpoIB+bw/esvPsjFOAtOLbjcVQnsBdpCDH8foHHEz8woPHofzWsWoeWbmxZae44fiswvrIFTnLl5gpUpUdfjjRE3ZlRNhxnvksNJBm1kvOfl3gaPlmfUw1qBgKTsNrZX+4ivsApy64GMeK3PU8uYBUN0ORn7KP9JxxW+0X/c5UUfOcX6lLR8Rr4Bl0mO3LFCxkPwRG8jiW1GhcaR2C/OVmjDFTndHtcGe6inXM79sEX2jrGP9khSRavJrZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j9WYZk+gvL9A7wxSZmG+Mx2TFBtY+xTgLQtiFlAtAYQ=;
- b=bxWexyj5kNzQ45EAa0ghIznsmrnhcRizF74n99/MalxGyvugZ5X4LjDJ/dFNke6Y4KUN2nKn59kSM305LY1eCtQFDAidZ05JO2grVss1O7VcWwQBCnBBOOnlyiUkbZv731Pg0NpTUlkOZsqOwOCT3iG7NNVRYpkYvwnbeBMsZhw=
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
- by DB8PR04MB6505.eurprd04.prod.outlook.com (2603:10a6:10:10d::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Tue, 12 May
- 2020 10:30:00 +0000
-Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e]) by DB8PR04MB6795.eurprd04.prod.outlook.com
- ([fe80::2924:94ba:2206:216e%6]) with mapi id 15.20.2979.033; Tue, 12 May 2020
- 10:30:00 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     John Garry <john.garry@huawei.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-CC:     "irogers@google.com" <irogers@google.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH RFC v3 00/12] perf pmu-events: Support event aliasing for
- system PMUs
-Thread-Topic: [PATCH RFC v3 00/12] perf pmu-events: Support event aliasing for
- system PMUs
-Thread-Index: AQHWJGgyaiXsow/hjEO3MgQOuZnxW6ikFvuwgAAsFYCAAAJPMA==
-Date:   Tue, 12 May 2020 10:30:00 +0000
-Message-ID: <DB8PR04MB67951EB0C491D94052A6CCA2E6BE0@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <1588852671-61996-1-git-send-email-john.garry@huawei.com>
- <DB8PR04MB6795D56E9EC43949E5F40465E6BE0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <2642e2a6-9e44-79c4-2bf5-498cedd897a4@huawei.com>
-In-Reply-To: <2642e2a6-9e44-79c4-2bf5-498cedd897a4@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 28d614cd-d472-474b-eb32-08d7f65f6d0e
-x-ms-traffictypediagnostic: DB8PR04MB6505:
-x-microsoft-antispam-prvs: <DB8PR04MB65054EF889377D4AF916F08CE6BE0@DB8PR04MB6505.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0401647B7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FAYryRduiAnI3PpTDUmnA7d5otdSSMCm6BTmLFFyBwA0EI3yRNwIZcNaWiPxC3yEOVFTUdSIZWVvRcVHaDNQaER9V79aRRioRvzOD0Zd/hu87PQE6hbS+JN8zHKQ4Gq09MynE6mPxwlVZgOAo/XKtzMFe4OfKNbniBS4FglTyuXAK3/+VbYSD8j1xQqHlAKvQdzaBbSf6Z2xFkJf864A7z6HEVVH7NYGdF6ow08T2FInNh6/63mmo4bwx4eXzXMM5ddRBG5wIm15Q2ic+KqctA8qtbXZ1zm4wjYaOPGVTrEszr0GFtYEZw75Yxv1+YvB0GW9l+mU6/ndP3hN7mjfPNpbScPjuIt1d5iRQ+4y7nkxzwXwrM+EP0oP9Lee2h9v97HgdNWr4OeiTg6R+vNbrO03nXPjj48HzbmLl1Oq2Hi+R0cwh7I0B7sedqWB9dRpMYlZTIlUfP8van1AKk54GCC5XkNE3eTon1eGtNRaZYLtpwLjuOl6WijFVLF8pciWHVzMeYbO0T2YdqKZfrl97X4d2HGTKU21G6uPTCRzPLf8ecc8BdbruwsPeRg4bdsvCRN3ifzDvP9qgIzoag5hxiKfTHnTPPJ+7Jj249JAd3I=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(396003)(39860400002)(33430700001)(33656002)(8936002)(53546011)(76116006)(45080400002)(4326008)(66476007)(66556008)(66446008)(66946007)(5660300002)(8676002)(64756008)(71200400001)(52536014)(55016002)(7696005)(966005)(9686003)(26005)(83080400001)(33440700001)(186003)(86362001)(478600001)(316002)(2906002)(7416002)(110136005)(54906003)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UDV5Bmr7nIvINW5OBgm7lv21xml6N01nUga/d/FaHea8zLDWQ5Wq7TRTmI1sgNtI5VoYWrP+OtCGwBB99v3Mx8ZgL/shZqUu84rXLZd3YrKQ16xyTn/1gKPK9837thQJbji4lyY1meYJVjUrMME9koEm3PFS3LxMG7L82OtveigzvucZO1kFST8N+L09bb0jaPP/1CjhMJm/JaajdBi2a4c9pJsSYTZXAiskt0k0WrbO340XFgfJhArNqlzudj/U/92hq5Aod/1Q/8RB9okw4i5YRfcefHzb5hV1dsKly2+GLgZm2R4Mg/Fa4tbhQE4ryWFjaHbmSmlUeNQ50/t157EB20twrHr5kUuDdUR+LgVJX3wvK/JG77sTs3+Dt/eQCu7zTx7pZ8FORvyUpxg1FgSo+OKZoEpEdSqNWsp6YmCUiSGhVoKlCoDJGO8+cY7W9yuQFw88CukDcl0HWpj3cT8PzFWMm4+37UbcyHj9goxi+w6eNUOkg/QN9bwhbgUr
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        id S1729349AbgELKaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:30:24 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D25D48F8059F1425D55C;
+        Tue, 12 May 2020 18:30:21 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.7) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 12 May 2020
+ 18:30:14 +0800
+Subject: Re: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
+To:     John Garry <john.garry@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Xiang Chen <chenxiang66@hisilicon.com>
+References: <20200512063318.13825-1-yanaijie@huawei.com>
+ <66c3318d-e8fa-9ff4-c7f4-ebe23925b807@huawei.com>
+ <dacd7cbe-3d84-2b35-e63a-af6179aa5221@huawei.com>
+ <920c5d36-5637-1fba-034b-8ea3d41c131c@huawei.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <1043f72a-7f4c-eb5c-eeb2-227f5321fed5@huawei.com>
+Date:   Tue, 12 May 2020 18:30:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28d614cd-d472-474b-eb32-08d7f65f6d0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2020 10:30:00.5845
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QGWUYVWo+HU3VFQBi35jm/PCZRKkZLUvxPRV2rkUs4cUNwm7z6hD2FHbS2xcgnwpgxmxjutiLVT5xGPVCAEHWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6505
+In-Reply-To: <920c5d36-5637-1fba-034b-8ea3d41c131c@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.7]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
-Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMMTqNdTCMTLI1SAxODoxMw0KPiBUbzogSm9h
-a2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IHBldGVyekBpbmZyYWRlYWQub3Jn
-Ow0KPiBtaW5nb0ByZWRoYXQuY29tOyBhY21lQGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiBhbGV4YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tOyBqb2xzYUByZWRoYXQu
-Y29tOw0KPiBuYW1oeXVuZ0BrZXJuZWwub3JnDQo+IENjOiBpcm9nZXJzQGdvb2dsZS5jb207IGFr
-QGxpbnV4LmludGVsLmNvbTsgcm9iaW4ubXVycGh5QGFybS5jb207DQo+IExpbnV4YXJtIDxsaW51
-eGFybUBodWF3ZWkuY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gWmhhbmdz
-aGFva3VuIDx6aGFuZ3NoYW9rdW5AaGlzaWxpY29uLmNvbT47IHdpbGxAa2VybmVsLm9yZzsNCj4g
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggUkZDIHYzIDAwLzEyXSBwZXJmIHBtdS1ldmVudHM6IFN1cHBvcnQgZXZlbnQgYWxpYXNpbmcg
-Zm9yDQo+IHN5c3RlbSBQTVVzDQo+IA0KPiANCj4gPiBJIGhhdmUgYW4gYXNpZGUgcXVlc3Rpb24s
-IGRvIHlvdSBoYXZlIGFueSBpZGVhPyBUaGFua3MgYSBsb3QhDQo+ID4NCj4gPiBGb3IgRERSIFBN
-VSwgSSB3YW50IHRvIGFkZCBiYW5kd2lkdGggdXNhZ2UgbWV0cmljLCBidXQgaXQgZGVwZW5kcyBv
-biBERFINCj4gY29udHJvbGxlciBjbG9jayBmcmVxdWVuY3kuDQo+ID4gRm9yIGV4YW1wbGUsIHdl
-IGhhdmUgaS5NWDhNTSBMUEREUjQgYm9hcmQgd2hpY2ggRERSIGNvbnRyb2xsZXIgY2xvY2sgaXMN
-Cj4gODAwTUhaLCBhbmQgaS5NWDhNTSBERFI0IGJvYXJkIHdoaWNoIEREUiBjb250cm9sbGVyIGlz
-IDYwME1IWiwgYnV0IHRoZQ0KPiBTb0MgaXMgdGhlIHNhbWUuDQo+ID4NCj4gPiBTbyB0aGV5IGNh
-biBzaGFyZSBhbGwgSlNPTiBtZXRyaWNzIHdpdGggaWRlbnRpZmllciAiaS5teDhtbSIsIGV4Y2Vw
-dA0KPiBiYW5kd2lkdGggbWV0cmljLg0KPg0KPiB3aGF0IGlzIHRoZSBiYW5kd2lkdGggbWV0cmlj
-PyBob3cgaXMgaXQgc3VwcG9zZWQgdG8gYmUgY2FsY3VsYXRlZD8NCg0KU29tZXRoaW5nIGxpa2Ug
-YmVsb3cgdG8gY2FsY3VsYXRlIGJhbmR3aWR0aCB1c2FnZToNCg0KaS5NWDhNTSBMUEREUjQgYm9h
-cmQ6ICAoKHJlYWQtY3ljbGVzICsgd3JpdGUtY3ljbGVzKSAqIDQgKiA0IC8gZHVyYXRpb25fdGlt
-ZSkgLyAoODAwICogMTAwMDAwMCAqIDQgKiA0KQ0KaS5NWDhNTSBERFI0IGJvYXJkOiAgKChyZWFk
-LWN5Y2xlcyArIHdyaXRlLWN5Y2xlcykgKiA0ICogNCAvIGR1cmF0aW9uX3RpbWUpIC8gKDYwMCAq
-IDEwMDAwMDAgKiA0ICogNCkNCg0KU28gdGhpcyBzaG91bGQgbm90IGJlIFNvYyBzcGVjaWZpYywg
-aXQgaXMgYm9hcmQgc3BlY2lmaWMsIEkgZG9uJ3Qga25vdyBob3cgdG8gaW1wbGVtZW50IGl0IGZy
-b20gbWV0cmljLg0KDQo+IElmIEkgYWRkIHNlcGFyYXRlIEpPU04gbWV0cmljcyBmaWxlcyBmb3Ig
-aWRlbnRpZmllciAiaS5teDhtbS1scGRkcjQiIGFuZA0KPiBpZGVudGlmaWVyICJpLm14OG1tLWRk
-cjQiLCB0aGVuIGl0J3MgZ29pbmcgdG8gYmUgdmVyeSByZWR1bmRhbnQsIHNpbmNlIG1vc3QNCj4g
-bWV0cmljcyBhcmUgc2FtZSBqdXN0IHRoZSBpZGVudGlmaWVyIGlzIGRpZmZlcmVudC4NCj4gPg0K
-PiA+IERvIHlvdSBrbm93IGhvdyBwZXJmIHRvb2wgaGFuZGxlIHN1Y2ggY2FzZT8NCj4gDQo+IGpp
-cmthIGlzIHN1cHBvcnRpbmcgdXNlci1kZWZpbmVkIG1ldHJpYyBoZXJlOg0KPiBodHRwczovL2V1
-cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZs
-b3JlLmtlcg0KPiBuZWwub3JnJTJGbGttbCUyRjIwMjAwNTExMjA1MzA3LjMxMDc3NzUtMS1qb2xz
-YSU0MGtlcm5lbC5vcmclMkYmYW1wOw0KPiBkYXRhPTAyJTdDMDElN0NxaWFuZ3Fpbmcuemhhbmcl
-NDBueHAuY29tJTdDYmJkMjZkNzM3Y2Y0NDg5NmVkMzYwDQo+IDhkN2Y2NWQzM2FkJTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzI0OA0KPiA3NTI0NjQ5MjIz
-ODQmYW1wO3NkYXRhPXdHcVE0JTJCNnJlakpZckRqMFN6ZUdKbjA5cjY2MFFJek92UnkwREN3DQo+
-IEVHVlElM0QmYW1wO3Jlc2VydmVkPTANCj4gDQo+IFNvIG1heWJlIHlvdSBjYW4gdXNlIHRoYXQg
-c29tZWhvdyB3aXRoIHNlcGFyYXRlIHNjcmlwdHMuDQoNClRoYW5rcyBmb3IgeW91ciBoaW50LCBJ
-IHdpbGwgcmVzZWFyY2ggaXQgdG8gc2VlIGlmIGl0IGlzIHBvc3NpYmxlLg0KDQpCZXN0IFJlZ2Fy
-ZHMsDQpKb2FraW0gWmhhbmcNCj4gVGhhbmtzLA0KPiBKb2huDQo=
+
+
+在 2020/5/12 18:00, John Garry 写道:
+> On 12/05/2020 10:35, Jason Yan wrote:
+>>
+>>
+>> 在 2020/5/12 16:23, John Garry 写道:
+>>> On 12/05/2020 07:33, Jason Yan wrote:
+>>>> The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
+>>>> not initialized in scsi_host_template. It looks like:
+>>>>
+>>>> [root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
+>>>> (null)
+>>>>
+>>>
+>>> hmmm.. it would be good to tell us what this buys us, apart from the 
+>>> proc_name file.
+>>>
+>>
+>> When there is more than one storage cards(or controllers) in the 
+>> system, I'm tring to find out which host is belong to which card. And 
+>> then I found this in scsi_host in sysfs but the output is '(null)' 
+>> which is odd.
+> 
+> "dmesg | grep host" would give this info, like:
+> 
+> root@(none)$ dmesg | grep host0
+> [    8.877245] scsi host0: hisi_sas_v2_hw
+> 
+
+NO, if long time after the system boot, dmesg cannot get this 
+infomation. It is flushed by other logs.
+
+>>
+>>> I mean, if we had the sht show_info method implemented, then it could 
+>>> be useful (which is even marked as obsolete now).
+>>>
+>>
+>> I found this is interesting while in the sysfs filesystem we have a 
+>> procfs stuff in it.
+> 
+> It's only the name of the procfs entry, if it exists.
+> 
+> And, since .show_info is obsolete, I don't see why .proc_name is not 
+> also obsolete.
+> 
+>> I was planned to rename this entry to 'name' and use the struct member 
+>> 'name' directly in struct scsi_host_template. But this may break 
+>> userspace applications.
+>>
+> 
+> Thanks,
+> John
+> 
+> .
+
