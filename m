@@ -2,144 +2,101 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC655C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F69BC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4093206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D5E206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ht5EkaJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731024AbgELTUp convert rfc822-to-8bit (ORCPT
+        id S1731039AbgELTUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:20:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48070 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELTUo (ORCPT
+        Tue, 12 May 2020 15:20:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELTUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:20:44 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jYaS8-0002XR-Ms; Tue, 12 May 2020 19:20:33 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id ED86367BB3; Tue, 12 May 2020 12:20:30 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id E8090AC1DB;
-        Tue, 12 May 2020 12:20:30 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        liudongdong 00290354 <liudongdong3@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for non-hotplug capable devices
-In-reply-to: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <18609.1588812972@famine> <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Comments: In-reply-to sathyanarayanan.kuppuswamy@linux.intel.com
-   message dated "Wed, 06 May 2020 20:32:59 -0700."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Tue, 12 May 2020 15:20:53 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C176C061A0C;
+        Tue, 12 May 2020 12:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Je0OOI8W2XkKcoCxSyh+zMTlf+5a9Fs/Gjgp620o+BE=; b=ht5EkaJzpB5XXcEZM05NDoEYVf
+        x5vYKSLqFbuLN1zYCz2qUThj0DifHdUb6cIaES4ZJ+Dg0hFTz2sP0ZEoszCSJm0Bo9LtgQOVWVaCc
+        /YEI7prZF1Q4TKVAveydU+Ij8elXaWyn3IjPGRbL2xO53XpJlzCmAzKg+uyu7qmrZ+dNRkTviyJ02
+        rjY9wrzAoTQOTQCW5vUsZTkiprVqEoRWhVXvrQemd7Ln5BY5rgjzvquuJPtxALi4cuc6b3ZUn9S8y
+        IUwW+ypEVPZJxB410UuRQ4CbSxGyBMBzMz1vhhm99pdWVLSxy9TvFStTQLWtml0xR5feWhG+dZdss
+        9P1oDHYw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYaSS-0001Kw-Sh; Tue, 12 May 2020 19:20:52 +0000
+Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse
+ support
+To:     Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org, saiprakash.ranjan@codeaurora.org,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-3-git-send-email-rbokka@codeaurora.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ceb55c31-ae49-213a-6d12-7c55cb78b60d@infradead.org>
+Date:   Tue, 12 May 2020 12:20:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9907.1589311230.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Tue, 12 May 2020 12:20:30 -0700
-Message-ID: <9908.1589311230@famine>
+In-Reply-To: <1589307480-27508-3-git-send-email-rbokka@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+On 5/12/20 11:17 AM, Ravi Kumar Bokka wrote:
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index d7b7f6d..c9345c5 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -121,6 +121,16 @@ config QCOM_QFPROM
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called nvmem_qfprom.
+>  
+> +config QTI_QFPROM_EFUSE
+> +	tristate "QTI_QFPROM_EFUSE Support"
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Say y here to enable QFPROM-Efuse support. This driver provides access
 
->From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
->If there are non-hotplug capable devices connected to a given
->port, then during the fatal error recovery(triggered by DPC or
->AER), after calling reset_link() function, we cannot rely on
->hotplug handler to detach and re-enumerate the device drivers
->in the affected bus. Instead, we will have to let the error
->recovery handler call report_slot_reset() for all devices in
->the bus to notify about the reset operation. Although this is
->only required for non hot-plug capable devices, doing it for
->hotplug capable devices should not affect the functionality.
+	                                                                  access to
 
-	Yicong,
+> +          QTI qfprom efuse via nvmem interface.
+> +
+> +          This driver can also be built as a module. If so, the module
+> +          will be called nvmem_qfprom-efuse.
 
-	Does the patch below also resolve the issue for you, as with
-your changed version of my original patch?
+The last 3 non-blank lines should be indented with one tab + 2 spaces
+instead of lots of spaces.
 
-	-J
+> +
+>  config NVMEM_SPMI_SDAM
+>  	tristate "SPMI SDAM Support"
+>  	depends on SPMI
 
->Along with above issue, this fix also applicable to following
->issue.
->
->Commit 6d2c89441571 ("PCI/ERR: Update error status after
->reset_link()") added support to store status of reset_link()
->call. Although this fixed the error recovery issue observed if
->the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->result from report_frozen_detected. This can cause a failure to
->recover if _NEED_RESET is returned by report_frozen_detected and
->report_slot_reset is not invoked.
->
->Such an event can be induced for testing purposes by reducing the
->Max_Payload_Size of a PCIe bridge to less than that of a device
->downstream from the bridge, and then initiating I/O through the
->device, resulting in oversize transactions.  In the presence of DPC,
->this results in a containment event and attempted reset and recovery
->via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->invoked, and the device does not recover.
->
->[original patch is from jay.vosburgh@canonical.com]
->[original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->---
-> drivers/pci/pcie/err.c | 19 +++++++++++++++----
-> 1 file changed, 15 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->index 14bb8f54723e..db80e1ecb2dc 100644
->--- a/drivers/pci/pcie/err.c
->+++ b/drivers/pci/pcie/err.c
->@@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> 	pci_dbg(dev, "broadcast error_detected message\n");
-> 	if (state == pci_channel_io_frozen) {
-> 		pci_walk_bus(bus, report_frozen_detected, &status);
->-		status = reset_link(dev);
->-		if (status != PCI_ERS_RESULT_RECOVERED) {
->+		status = PCI_ERS_RESULT_NEED_RESET;
->+	} else {
->+		pci_walk_bus(bus, report_normal_detected, &status);
->+	}
->+
->+	if (status == PCI_ERS_RESULT_NEED_RESET) {
->+		if (reset_link) {
->+			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->+				status = PCI_ERS_RESULT_DISCONNECT;
->+		} else {
->+			if (pci_bus_error_reset(dev))
->+				status = PCI_ERS_RESULT_DISCONNECT;
->+		}
->+
->+		if (status == PCI_ERS_RESULT_DISCONNECT) {
-> 			pci_warn(dev, "link reset failed\n");
-> 			goto failed;
-> 		}
->-	} else {
->-		pci_walk_bus(bus, report_normal_detected, &status);
-> 	}
-> 
-> 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->-- 
->2.17.1
->
 
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+-- 
+~Randy
+
