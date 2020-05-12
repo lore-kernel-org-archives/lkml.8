@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70617C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5936C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7ED20746
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7A9206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgELOhG (ORCPT
+        id S1730511AbgELOht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
+        Tue, 12 May 2020 10:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgELOhE (ORCPT
+        with ESMTP id S1730390AbgELOhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:37:04 -0400
+        Tue, 12 May 2020 10:37:07 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED014C061A0C;
-        Tue, 12 May 2020 07:37:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BADC061A0C;
+        Tue, 12 May 2020 07:37:06 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1j-0005qi-OX; Tue, 12 May 2020 16:36:59 +0200
+        id 1jYW1m-0005oT-Hm; Tue, 12 May 2020 16:37:02 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 414251C04E3;
-        Tue, 12 May 2020 16:36:59 +0200 (CEST)
-Date:   Tue, 12 May 2020 14:36:59 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28DED1C02FC;
+        Tue, 12 May 2020 16:36:57 +0200 (CEST)
+Date:   Tue, 12 May 2020 14:36:57 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] compiler/gcc: Raise minimum GCC version for
- kernel builds to 4.8
+Subject: [tip: locking/kcsan] arm64: csum: Disable KASAN for do_csum()
 Cc:     Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, x86 <x86@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-6-will@kernel.org>
-References: <20200511204150.27858-6-will@kernel.org>
+In-Reply-To: <20200511204150.27858-10-will@kernel.org>
+References: <20200511204150.27858-10-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421918.390.4879623959521174170.tip-bot2@tip-bot2>
+Message-ID: <158929421706.390.7180347611312601499.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,168 +62,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     62e13ab29e79d93a65fab5874e9c25ed4b3cec61
-Gitweb:        https://git.kernel.org/tip/62e13ab29e79d93a65fab5874e9c25ed4b3cec61
+Commit-ID:     5a7d7f5d57f61d650619b89c1b7d4adcf4fdecfe
+Gitweb:        https://git.kernel.org/tip/5a7d7f5d57f61d650619b89c1b7d4adcf4fdecfe
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:37 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:41 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:10 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:13 +02:00
 
-compiler/gcc: Raise minimum GCC version for kernel builds to 4.8
+arm64: csum: Disable KASAN for do_csum()
 
-It is very rare to see versions of GCC prior to 4.8 being used to build
-the mainline kernel. These old compilers are also known to have codegen
-issues which can lead to silent miscompilation:
-
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-
-Raise the minimum GCC version to 4.8 for building the kernel and remove
-some tautological Kconfig dependencies as a consequence.
+do_csum() over-reads the source buffer and therefore abuses
+READ_ONCE_NOCHECK() on a 128-bit type to avoid tripping up KASAN. In
+preparation for READ_ONCE_NOCHECK() requiring an atomic access, and
+therefore failing to build when fed a '__uint128_t', annotate do_csum()
+explicitly with '__no_sanitize_address' and fall back to normal loads.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lkml.kernel.org/r/20200511204150.27858-6-will@kernel.org
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://lkml.kernel.org/r/20200511204150.27858-10-will@kernel.org
 
 ---
- Documentation/process/changes.rst |  2 +-
- arch/arm/crypto/Kconfig           | 12 ++++++------
- crypto/Kconfig                    |  1 -
- include/linux/compiler-gcc.h      |  5 ++---
- init/Kconfig                      |  1 -
- scripts/gcc-plugins/Kconfig       |  2 +-
- 6 files changed, 10 insertions(+), 13 deletions(-)
+ arch/arm64/lib/csum.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-index 91c5ff8..5cfb54c 100644
---- a/Documentation/process/changes.rst
-+++ b/Documentation/process/changes.rst
-@@ -29,7 +29,7 @@ you probably needn't concern yourself with pcmciautils.
- ====================== ===============  ========================================
-         Program        Minimal version       Command to check the version
- ====================== ===============  ========================================
--GNU C                  4.6              gcc --version
-+GNU C                  4.8              gcc --version
- GNU make               3.81             make --version
- binutils               2.23             ld -v
- flex                   2.5.35           flex --version
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index 2674de6..c9bf2df 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -30,7 +30,7 @@ config CRYPTO_SHA1_ARM_NEON
+diff --git a/arch/arm64/lib/csum.c b/arch/arm64/lib/csum.c
+index 60eccae..78b87a6 100644
+--- a/arch/arm64/lib/csum.c
++++ b/arch/arm64/lib/csum.c
+@@ -14,7 +14,11 @@ static u64 accumulate(u64 sum, u64 data)
+ 	return tmp + (tmp >> 64);
+ }
  
- config CRYPTO_SHA1_ARM_CE
- 	tristate "SHA1 digest algorithm (ARM v8 Crypto Extensions)"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_SHA1_ARM
- 	select CRYPTO_HASH
- 	help
-@@ -39,7 +39,7 @@ config CRYPTO_SHA1_ARM_CE
+-unsigned int do_csum(const unsigned char *buff, int len)
++/*
++ * We over-read the buffer and this makes KASAN unhappy. Instead, disable
++ * instrumentation and call kasan explicitly.
++ */
++unsigned int __no_sanitize_address do_csum(const unsigned char *buff, int len)
+ {
+ 	unsigned int offset, shift, sum;
+ 	const u64 *ptr;
+@@ -42,7 +46,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	 * odd/even alignment, and means we can ignore it until the very end.
+ 	 */
+ 	shift = offset * 8;
+-	data = READ_ONCE_NOCHECK(*ptr++);
++	data = *ptr++;
+ #ifdef __LITTLE_ENDIAN
+ 	data = (data >> shift) << shift;
+ #else
+@@ -58,10 +62,10 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	while (unlikely(len > 64)) {
+ 		__uint128_t tmp1, tmp2, tmp3, tmp4;
  
- config CRYPTO_SHA2_ARM_CE
- 	tristate "SHA-224/256 digest algorithm (ARM v8 Crypto Extensions)"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_SHA256_ARM
- 	select CRYPTO_HASH
- 	help
-@@ -96,7 +96,7 @@ config CRYPTO_AES_ARM_BS
+-		tmp1 = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
+-		tmp2 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 2));
+-		tmp3 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 4));
+-		tmp4 = READ_ONCE_NOCHECK(*(__uint128_t *)(ptr + 6));
++		tmp1 = *(__uint128_t *)ptr;
++		tmp2 = *(__uint128_t *)(ptr + 2);
++		tmp3 = *(__uint128_t *)(ptr + 4);
++		tmp4 = *(__uint128_t *)(ptr + 6);
  
- config CRYPTO_AES_ARM_CE
- 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_AES
- 	select CRYPTO_SIMD
-@@ -106,7 +106,7 @@ config CRYPTO_AES_ARM_CE
+ 		len -= 64;
+ 		ptr += 8;
+@@ -85,7 +89,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 		__uint128_t tmp;
  
- config CRYPTO_GHASH_ARM_CE
- 	tristate "PMULL-accelerated GHASH using NEON/ARMv8 Crypto Extensions"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	select CRYPTO_HASH
- 	select CRYPTO_CRYPTD
- 	select CRYPTO_GF128MUL
-@@ -118,13 +118,13 @@ config CRYPTO_GHASH_ARM_CE
+ 		sum64 = accumulate(sum64, data);
+-		tmp = READ_ONCE_NOCHECK(*(__uint128_t *)ptr);
++		tmp = *(__uint128_t *)ptr;
  
- config CRYPTO_CRCT10DIF_ARM_CE
- 	tristate "CRCT10DIF digest algorithm using PMULL instructions"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	depends on CRC_T10DIF
- 	select CRYPTO_HASH
- 
- config CRYPTO_CRC32_ARM_CE
- 	tristate "CRC32(C) digest algorithm using CRC and/or PMULL instructions"
--	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
-+	depends on KERNEL_MODE_NEON
- 	depends on CRC32
- 	select CRYPTO_HASH
- 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index c24a474..34a8c5b 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -316,7 +316,6 @@ config CRYPTO_AEGIS128
- config CRYPTO_AEGIS128_SIMD
- 	bool "Support SIMD acceleration for AEGIS-128"
- 	depends on CRYPTO_AEGIS128 && ((ARM || ARM64) && KERNEL_MODE_NEON)
--	depends on !ARM || CC_IS_CLANG || GCC_VERSION >= 40800
- 	default y
- 
- config CRYPTO_AEGIS128_AESNI_SSE2
-diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-index cf294fa..7dd4e03 100644
---- a/include/linux/compiler-gcc.h
-+++ b/include/linux/compiler-gcc.h
-@@ -10,7 +10,8 @@
- 		     + __GNUC_MINOR__ * 100	\
- 		     + __GNUC_PATCHLEVEL__)
- 
--#if GCC_VERSION < 40600
-+/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 */
-+#if GCC_VERSION < 40800
- # error Sorry, your compiler is too old - please upgrade it.
- #endif
- 
-@@ -126,9 +127,7 @@
- #if defined(CONFIG_ARCH_USE_BUILTIN_BSWAP) && !defined(__CHECKER__)
- #define __HAVE_BUILTIN_BSWAP32__
- #define __HAVE_BUILTIN_BSWAP64__
--#if GCC_VERSION >= 40800
- #define __HAVE_BUILTIN_BSWAP16__
--#endif
- #endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP && !__CHECKER__ */
- 
- #if GCC_VERSION >= 70000
-diff --git a/init/Kconfig b/init/Kconfig
-index 9e22ee8..035d38a 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1285,7 +1285,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
- 	bool "Dead code and data elimination (EXPERIMENTAL)"
- 	depends on HAVE_LD_DEAD_CODE_DATA_ELIMINATION
- 	depends on EXPERT
--	depends on !(FUNCTION_TRACER && CC_IS_GCC && GCC_VERSION < 40800)
- 	depends on $(cc-option,-ffunction-sections -fdata-sections)
- 	depends on $(ld-option,--gc-sections)
- 	help
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index 013ba3a..ce0b99f 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -8,7 +8,7 @@ config HAVE_GCC_PLUGINS
- menuconfig GCC_PLUGINS
- 	bool "GCC plugins"
- 	depends on HAVE_GCC_PLUGINS
--	depends on CC_IS_GCC && GCC_VERSION >= 40800
-+	depends on CC_IS_GCC
- 	depends on $(success,$(srctree)/scripts/gcc-plugin.sh $(CC))
- 	default y
- 	help
+ 		len -= 16;
+ 		ptr += 2;
+@@ -100,7 +104,7 @@ unsigned int do_csum(const unsigned char *buff, int len)
+ 	}
+ 	if (len > 0) {
+ 		sum64 = accumulate(sum64, data);
+-		data = READ_ONCE_NOCHECK(*ptr);
++		data = *ptr;
+ 		len -= 8;
+ 	}
+ 	/*
