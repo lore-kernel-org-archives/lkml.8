@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E585C54E91
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2916AC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6D7206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F492206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgELOhR (ORCPT
+        id S1730454AbgELOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39414 "EHLO
+        Tue, 12 May 2020 10:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbgELOhL (ORCPT
+        with ESMTP id S1730421AbgELOhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:37:11 -0400
+        Tue, 12 May 2020 10:37:13 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114A9C061A0C;
-        Tue, 12 May 2020 07:37:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DD0C061A0C;
+        Tue, 12 May 2020 07:37:13 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1l-0005rB-GI; Tue, 12 May 2020 16:37:01 +0200
+        id 1jYW1o-0005rt-BD; Tue, 12 May 2020 16:37:04 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9EEEE1C0475;
-        Tue, 12 May 2020 16:36:59 +0200 (CEST)
-Date:   Tue, 12 May 2020 14:36:59 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D826A1C06E5;
+        Tue, 12 May 2020 16:37:00 +0200 (CEST)
+Date:   Tue, 12 May 2020 14:37:00 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] sparc32: mm: Reduce allocation size for PMD and
- PTE tables
+Subject: [tip: locking/kcsan] sparc32: mm: Fix argument checking in
+ __srmmu_get_nocache()
 Cc:     Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         "David S. Miller" <davem@davemloft.net>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-5-will@kernel.org>
-References: <20200511204150.27858-5-will@kernel.org>
+In-Reply-To: <20200511204150.27858-2-will@kernel.org>
+References: <20200511204150.27858-2-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421957.390.11444097482281141942.tip-bot2@tip-bot2>
+Message-ID: <158929422079.390.2344803808606534510.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,41 +62,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     2443600dc98fdc91661b2e24184f279d1198f8cc
-Gitweb:        https://git.kernel.org/tip/2443600dc98fdc91661b2e24184f279d1198f8cc
+Commit-ID:     f790d0205fd5bd646bbc219211903a2aa164da97
+Gitweb:        https://git.kernel.org/tip/f790d0205fd5bd646bbc219211903a2aa164da97
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:36 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:33 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:09 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:08 +02:00
 
-sparc32: mm: Reduce allocation size for PMD and PTE tables
+sparc32: mm: Fix argument checking in __srmmu_get_nocache()
 
-Now that the page table allocator can free page table allocations
-smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
-to avoid needlessly wasting memory.
+The 'size' argument to __srmmu_get_nocache() is a number of bytes not
+a shift value, so fix up the sanity checking to treat it properly.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: "David S. Miller" <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/20200511204150.27858-5-will@kernel.org
+Link: https://lkml.kernel.org/r/20200511204150.27858-2-will@kernel.org
 
 ---
- arch/sparc/include/asm/pgtsrmmu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sparc/mm/srmmu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/sparc/include/asm/pgtsrmmu.h b/arch/sparc/include/asm/pgtsrmmu.h
-index 58ea8e8..7708d01 100644
---- a/arch/sparc/include/asm/pgtsrmmu.h
-+++ b/arch/sparc/include/asm/pgtsrmmu.h
-@@ -17,8 +17,8 @@
- /* Number of contexts is implementation-dependent; 64k is the most we support */
- #define SRMMU_MAX_CONTEXTS	65536
+diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+index b7c94de..cb9ded8 100644
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -175,18 +175,18 @@ pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
+  */
+ static void *__srmmu_get_nocache(int size, int align)
+ {
+-	int offset;
++	int offset, minsz = 1 << SRMMU_NOCACHE_BITMAP_SHIFT;
+ 	unsigned long addr;
  
--#define SRMMU_PTE_TABLE_SIZE		(PAGE_SIZE)
--#define SRMMU_PMD_TABLE_SIZE		(PAGE_SIZE)
-+#define SRMMU_PTE_TABLE_SIZE		(PTRS_PER_PTE*4)
-+#define SRMMU_PMD_TABLE_SIZE		(PTRS_PER_PMD*4)
- #define SRMMU_PGD_TABLE_SIZE		(PTRS_PER_PGD*4)
+-	if (size < SRMMU_NOCACHE_BITMAP_SHIFT) {
++	if (size < minsz) {
+ 		printk(KERN_ERR "Size 0x%x too small for nocache request\n",
+ 		       size);
+-		size = SRMMU_NOCACHE_BITMAP_SHIFT;
++		size = minsz;
+ 	}
+-	if (size & (SRMMU_NOCACHE_BITMAP_SHIFT - 1)) {
+-		printk(KERN_ERR "Size 0x%x unaligned int nocache request\n",
++	if (size & (minsz - 1)) {
++		printk(KERN_ERR "Size 0x%x unaligned in nocache request\n",
+ 		       size);
+-		size += SRMMU_NOCACHE_BITMAP_SHIFT - 1;
++		size += minsz - 1;
+ 	}
+ 	BUG_ON(align > SRMMU_NOCACHE_ALIGN_MAX);
  
- /* Definition of the values in the ET field of PTD's and PTE's */
