@@ -2,112 +2,160 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE7FC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD04AC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183DC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589247699;
-	bh=h9/ZrKGcx7wVFHsrWJiyY9Z/dMX0iVbJhyGYNpYRtY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dP+TLs+IcFESt4tbDGwCbESACjX9C29+/dvtW/pGU/YIUh5/4hizDVnUffwmuaZGv
-	 XwtdlgshIu4SxTJl0i83p8nE0gVyPYRoOedLiGKKtzK2jNd2a/JUSbWOhqtCQOf6G8
-	 EqOgbtE51hp6JVlwHTsTVccnkDKgdh503neDnIsE=
+	by mail.kernel.org (Postfix) with ESMTP id A52D2206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgELBli (ORCPT
+        id S1728507AbgELBlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 21:41:38 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35497 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgELBli (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 21:41:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o7so16924736oif.2;
-        Mon, 11 May 2020 18:41:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qc7aeZe8qKrHeqqbdWlSzYUTH7CM0WkR8L80HDu2Jy4=;
-        b=F3tvvfc5oHR3pf9tKZh1o2xmhx5MfrrzBIZRwv9sl858GrcOAdeppNjVxb5SLfFHLV
-         G1sKOjjaz9ITRbK75l4D9jZzn24lPtQCqe+NPV1ZAZs6JFfPgciG9efcY87kormQSy/9
-         7TT9R6XfhKa26UKEExBCKnY2lu9iGeSiIrRtGJegzDaHFagG0gG0PcsWFcLBqGyCbpT1
-         y1X0PmAkVunDcT4odpQMWVd3KZi0nn9lyTzcN8tsfrxMfSWx0r857uC+jKNdOAG3i9Cb
-         GrzZDbr8CAF5gAaP76btA2mRXG9yHvwfzAp/3SaRMb5VFoBV+YDKRsmySvVhV6eI3QLa
-         YP4A==
-X-Gm-Message-State: AGi0PuZE1CqSCQUqy4BxiozB7y1BwFFWgreyOnxQrnBinDCVdQlKZiH0
-        VVPKB6S6dhRz6SCna4j3hg==
-X-Google-Smtp-Source: APiQypLtu39AJZfEb9cdImmCaZsDHwlqCT3WzgPF/Bxr7JVZSOElTYZZjaXHg/QrGCEcZAYMLJ4VYg==
-X-Received: by 2002:aca:a90e:: with SMTP id s14mr22266347oie.80.1589247696893;
-        Mon, 11 May 2020 18:41:36 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 130sm1697610oid.43.2020.05.11.18.41.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 18:41:36 -0700 (PDT)
-Received: (nullmailer pid 15739 invoked by uid 1000);
-        Tue, 12 May 2020 01:41:35 -0000
-Date:   Mon, 11 May 2020 20:41:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-clk@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock
- Controller binding
-Message-ID: <20200512014135.GA15336@bogus>
-References: <20200511195534.1207927-1-lkundrak@v3.sk>
- <20200511195534.1207927-2-lkundrak@v3.sk>
+        Mon, 11 May 2020 21:41:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:9229 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgELBlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 21:41:51 -0400
+IronPort-SDR: exlohjUI850FVKrEPwdfA9SVXRUXE/iIcjK6epf52DKSSyvsiQ3lSowllvIdR1m/2Ya/eDOkGL
+ RlVpMKP49jdg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 18:41:51 -0700
+IronPort-SDR: wnh2eKpbeDdDj9ggrOoM0lv7opNBNP7149lSboourFsKOItRoVF61HxP51QwoBbiI+wsxPro+z
+ tyl2wAZaleog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,381,1583222400"; 
+   d="scan'208";a="463593457"
+Received: from schittir-mobl.amr.corp.intel.com (HELO ellie) ([10.212.37.169])
+  by fmsmga006.fm.intel.com with ESMTP; 11 May 2020 18:41:49 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
+        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
+        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
+        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
+        linux-devel@linux.nxdi.nxp.com
+Subject: Re: [PATCH v1 net-next 3/3] net: dsa: felix: add support Credit Based Shaper(CBS) for hardware offload
+In-Reply-To: <20200511054332.37690-4-xiaoliang.yang_1@nxp.com>
+References: <20200511054332.37690-1-xiaoliang.yang_1@nxp.com> <20200511054332.37690-4-xiaoliang.yang_1@nxp.com>
+Date:   Mon, 11 May 2020 18:41:49 -0700
+Message-ID: <873686rkte.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511195534.1207927-2-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 21:55:33 +0200, Lubomir Rintel wrote:
-> This describes the bindings for a controller that generates master and bit
-> clocks for the I2S interface.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Xiaoliang Yang <xiaoliang.yang_1@nxp.com> writes:
+
+> VSC9959 hardware support the Credit Based Shaper(CBS) which part
+> of the IEEE-802.1Qav. This patch support sch_cbs set for VSC9959.
+>
+> Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 > ---
->  .../clock/marvell,mmp2-audio-clock.yaml       | 73 +++++++++++++++++++
->  .../dt-bindings/clock/marvell,mmp2-audio.h    |  8 ++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
-> 
+>  drivers/net/dsa/ocelot/felix_vsc9959.c | 52 +++++++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+> index ccbd875c7a47..d8d1657ee8ba 100644
+> --- a/drivers/net/dsa/ocelot/felix_vsc9959.c
+> +++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+> @@ -208,7 +208,7 @@ static const u32 vsc9959_qsys_regmap[] = {
+>  	REG(QSYS_QMAXSDU_CFG_6,			0x00f62c),
+>  	REG(QSYS_QMAXSDU_CFG_7,			0x00f648),
+>  	REG(QSYS_PREEMPTION_CFG,		0x00f664),
+> -	REG_RESERVED(QSYS_CIR_CFG),
+> +	REG(QSYS_CIR_CFG,			0x000000),
+>  	REG(QSYS_EIR_CFG,			0x000004),
+>  	REG(QSYS_SE_CFG,			0x000008),
+>  	REG(QSYS_SE_DWRR_CFG,			0x00000c),
+> @@ -1354,6 +1354,54 @@ static int vsc9959_qos_port_tas_set(struct ocelot *ocelot, int port,
+>  	return ret;
+>  }
+>  
+> +int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
+> +			     struct tc_cbs_qopt_offload *cbs_qopt)
+> +{
+> +	struct ocelot *ocelot = ds->priv;
+> +	int port_ix = port * 8 + cbs_qopt->queue;
+> +	u32 cbs = 0;
+> +	u32 cir = 0;
+> +
+> +	if (cbs_qopt->queue >= ds->num_tx_queues)
+> +		return -EINVAL;
+> +
+> +	if (!cbs_qopt->enable) {
+> +		ocelot_write_gix(ocelot, QSYS_CIR_CFG_CIR_RATE(0) |
+> +				 QSYS_CIR_CFG_CIR_BURST(0),
+> +				 QSYS_CIR_CFG, port_ix);
+> +
+> +		ocelot_rmw_gix(ocelot, 0, QSYS_SE_CFG_SE_AVB_ENA,
+> +			       QSYS_SE_CFG, port_ix);
+> +
+> +		return 0;
+> +	}
+> +
+> +	/* Rate unit is 100 kbps */
+> +	cir = DIV_ROUND_UP(cbs_qopt->idleslope, 100);
+> +	cir = (cir ? cir : 1);
+> +	cir = min_t(u32, GENMASK(14, 0), cir);
 
+Please rename 'cir' to "rate" or "idleslope".
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Also consider using clamp_t here and below (I just found out about it).
 
-Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dts:20:18: fatal error: dt-bindings/power/marvell,mmp2.h: No such file or directory
-         #include <dt-bindings/power/marvell,mmp2.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+> +	/* Burst unit is 4kB */
+> +	cbs = DIV_ROUND_UP(cbs_qopt->hicredit, 4096);
+> +	/* Avoid using zero burst size */
+> +	cbs = (cbs ? cbs : 1);
+> +	cbs = min_t(u32, GENMASK(5, 0), cbs);
 
-See https://patchwork.ozlabs.org/patch/1288040
+And please(!) rename 'cbs' to "burst" or "hicredit". Re-using the name
+"cbs" with a completely different meaning here is confusing.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+> +	ocelot_write_gix(ocelot,
+> +			 QSYS_CIR_CFG_CIR_RATE(cir) |
+> +			 QSYS_CIR_CFG_CIR_BURST(cbs),
+> +			 QSYS_CIR_CFG,
+> +			 port_ix);
+> +
+> +	ocelot_rmw_gix(ocelot,
+> +		       QSYS_SE_CFG_SE_FRM_MODE(0) |
+> +		       QSYS_SE_CFG_SE_AVB_ENA,
+> +		       QSYS_SE_CFG_SE_AVB_ENA |
+> +		       QSYS_SE_CFG_SE_FRM_MODE_M,
+> +		       QSYS_SE_CFG,
+> +		       port_ix);
+> +
+> +	return 0;
+> +}
+> +
+>  static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
+>  				 enum tc_setup_type type,
+>  				 void *type_data)
+> @@ -1363,6 +1411,8 @@ static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
+>  	switch (type) {
+>  	case TC_SETUP_QDISC_TAPRIO:
+>  		return vsc9959_qos_port_tas_set(ocelot, port, type_data);
+> +	case TC_SETUP_QDISC_CBS:
+> +		return vsc9959_qos_port_cbs_set(ds, port, type_data);
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> -- 
+> 2.17.1
+>
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+-- 
+Vinicius
