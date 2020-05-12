@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8E9C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E65C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD5E1206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE27206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="hdviXVlc"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="a4BlImxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbgELPY0 (ORCPT
+        id S1730720AbgELPYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:24:26 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:21244 "EHLO
+        Tue, 12 May 2020 11:24:31 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:51240 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730490AbgELPYY (ORCPT
+        by vger.kernel.org with ESMTP id S1730307AbgELPYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:24:24 -0400
+        Tue, 12 May 2020 11:24:31 -0400
 Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFIae6000767;
-        Tue, 12 May 2020 10:24:01 -0500
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFIae8000767;
+        Tue, 12 May 2020 10:24:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=bkgjsNmkiBbiZiJR0ssbt/x+we0l9n828C2NvUEpA48=;
- b=hdviXVlcm3vxwSK0+gbi/yTRW3YmHyw0LFoU3qRDa/hV9AvKdGrGpazhqQhwMHJc/Plg
- yBU7FaadO9bzUFUAPgjPjWMpMyIHrTiPVd75Q6zlUo+h7jJ8oIyHkhm4SR1eb/nj1svu
- fqXNYOg/jN0kSGA4MEVIGiCuHox5N737JrWg88we8dbwJmPUxPBexvFtoBsAY9rsNSvE
- puOCgCPX807/oTip14DCIrnHj9BPVfTZsjtdQCqgYvjok+dNVBbHHXf0Eo08C1il2L84
- 5Gjr/VeXdbggU7AzkyepCSPL8n3EX8bu8BVMLUjBsZyX0I3EIaEOpag2OyTURMdOOY9a Xw== 
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=znkYGqikt4uCQqKF1xCSyK7K1dZagaEj9xbPM9AicIM=;
+ b=a4BlImxgiqWN4CCoTd0c6k9gsHngqc2n/RqnBSOv2TIuSqQKq60fPvQSlSEpRHoVSazS
+ 9Nsu0zPpQw4Z3s3z3Ib/IX9D/MJIeb5r1zDtfbyYb+c2NixMIMb7b7y8+BQAfxmQZjKj
+ rKhRwErp1Chkgf3kQsEmKo3M3OrEsxR689pxKel3lSDI5Dun76iD7WrHQSTQdefMZ0Mx
+ ZnOuJmvaHa23DsDYrI5VyeG3UQWkThTDyVFDsmQKNRwmWgbKHuy2IqJCWXmbNqcaXwGA
+ C/3g0+Fi2j5PjueXkAaUnFbEv2x4B8QELmGjz4Q4S4If1QKDslWV/Vhq3MdO+nDoFM1O wQ== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30wsx3msj8-1
+        by mx0a-001ae601.pphosted.com with ESMTP id 30wsx3msj8-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 12 May 2020 10:24:01 -0500
+        Tue, 12 May 2020 10:24:02 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
@@ -48,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Tue, 12 May 2020 16:23:59 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 1F0B62C5;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 512E444A;
         Tue, 12 May 2020 15:23:59 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
@@ -56,10 +57,12 @@ To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
         <linux@roeck-us.net>, <linus.walleij@linaro.org>
 CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH v3 1/5] hwmon: lochnagar: Move binding over to dtschema
-Date:   Tue, 12 May 2020 16:23:54 +0100
-Message-ID: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v3 4/5] clk: lochnagar: Move binding over to dtschema
+Date:   Tue, 12 May 2020 16:23:57 +0100
+Message-ID: <20200512152359.11839-4-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-SPF-Result: fail
@@ -83,18 +86,18 @@ No changes since v2.
 Thanks,
 Charles
 
- .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ----------------
- .../bindings/hwmon/cirrus,lochnagar.yaml           | 35 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
- create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
+ .../devicetree/bindings/clock/cirrus,lochnagar.txt | 94 ----------------------
+ .../bindings/clock/cirrus,lochnagar.yaml           | 78 ++++++++++++++++++
+ 2 files changed, 78 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
 
-diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 deleted file mode 100644
-index ffb79ccf51ee3..0000000000000
---- a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+index 52a064c789eec..0000000000000
+--- a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
 +++ /dev/null
-@@ -1,26 +0,0 @@
+@@ -1,94 +0,0 @@
 -Cirrus Logic Lochnagar Audio Development Board
 -
 -Lochnagar is an evaluation and development board for Cirrus Logic
@@ -105,32 +108,100 @@ index ffb79ccf51ee3..0000000000000
 -controlled through the Lochnagar, allowing the device under test
 -to be used in a variety of possible use cases.
 -
--This binding document describes the binding for the hardware monitor
--portion of the driver.
+-This binding document describes the binding for the clock portion of
+-the driver.
+-
+-Also see these documents for generic binding information:
+-  [1] Clock : ../clock/clock-bindings.txt
+-
+-And these for relevant defines:
+-  [2] include/dt-bindings/clock/lochnagar.h
 -
 -This binding must be part of the Lochnagar MFD binding:
--  [4] ../mfd/cirrus,lochnagar.txt
+-  [3] ../mfd/cirrus,lochnagar.txt
 -
 -Required properties:
 -
 -  - compatible : One of the following strings:
--                 "cirrus,lochnagar2-hwmon"
+-                 "cirrus,lochnagar1-clk"
+-                 "cirrus,lochnagar2-clk"
+-
+-  - #clock-cells : Must be 1. The first cell indicates the clock
+-    number, see [2] for available clocks and [1].
+-
+-Optional properties:
+-
+-  - clocks : Must contain an entry for each clock in clock-names.
+-  - clock-names : May contain entries for each of the following
+-    clocks:
+-     - ln-cdc-clkout : Output clock from CODEC card.
+-     - ln-dsp-clkout : Output clock from DSP card.
+-     - ln-gf-mclk1,ln-gf-mclk2,ln-gf-mclk3,ln-gf-mclk4 : Optional
+-       input audio clocks from host system.
+-     - ln-psia1-mclk, ln-psia2-mclk : Optional input audio clocks from
+-       external connector.
+-     - ln-spdif-mclk : Optional input audio clock from SPDIF.
+-     - ln-spdif-clkout : Optional input audio clock from SPDIF.
+-     - ln-adat-mclk : Optional input audio clock from ADAT.
+-     - ln-pmic-32k : On board fixed clock.
+-     - ln-clk-12m : On board fixed clock.
+-     - ln-clk-11m : On board fixed clock.
+-     - ln-clk-24m : On board fixed clock.
+-     - ln-clk-22m : On board fixed clock.
+-     - ln-clk-8m : On board fixed clock.
+-     - ln-usb-clk-24m : On board fixed clock.
+-     - ln-usb-clk-12m : On board fixed clock.
+-
+-  - assigned-clocks : A list of Lochnagar clocks to be reparented, see
+-    [2] for available clocks.
+-  - assigned-clock-parents : Parents to be assigned to the clocks
+-    listed in "assigned-clocks".
+-
+-Optional nodes:
+-
+-  - fixed-clock nodes may be registered for the following on board clocks:
+-     - ln-pmic-32k : 32768 Hz
+-     - ln-clk-12m : 12288000 Hz
+-     - ln-clk-11m : 11298600 Hz
+-     - ln-clk-24m : 24576000 Hz
+-     - ln-clk-22m : 22579200 Hz
+-     - ln-clk-8m : 8192000 Hz
+-     - ln-usb-clk-24m : 24576000 Hz
+-     - ln-usb-clk-12m : 12288000 Hz
 -
 -Example:
 -
--lochnagar-hwmon {
--	compatible = "cirrus,lochnagar2-hwmon";
+-lochnagar {
+-	lochnagar-clk {
+-		compatible = "cirrus,lochnagar2-clk";
+-
+-		#clock-cells = <1>;
+-
+-		clocks = <&clk-audio>, <&clk_pmic>;
+-		clock-names = "ln-gf-mclk2", "ln-pmic-32k";
+-
+-		assigned-clocks = <&lochnagar-clk LOCHNAGAR_CDC_MCLK1>,
+-				  <&lochnagar-clk LOCHNAGAR_CDC_MCLK2>;
+-		assigned-clock-parents = <&clk-audio>,
+-					 <&clk-pmic>;
+-	};
+-
+-	clk-pmic: clk-pmic {
+-		compatible = "fixed-clock";
+-		clock-cells = <0>;
+-		clock-frequency = <32768>;
+-	};
 -};
-diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
+diff --git a/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
 new file mode 100644
-index 0000000000000..cc00b97a7dace
+index 0000000000000..59de125647ecb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
-@@ -0,0 +1,35 @@
++++ b/Documentation/devicetree/bindings/clock/cirrus,lochnagar.yaml
+@@ -0,0 +1,78 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/hwmon/cirrus,lochnagar.yaml#
++$id: http://devicetree.org/schemas/clock/cirrus,lochnagar.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
 +title: Cirrus Logic Lochnagar Audio Development Board
@@ -147,21 +218,64 @@ index 0000000000000..cc00b97a7dace
 +  the Lochnagar, allowing the device under test to be used in a variety of
 +  possible use cases.
 +
-+  This binding document describes the binding for the hardware monitor
-+  portion of the driver.
++  This binding document describes the binding for the clock portion of the
++  driver.
++
++  Also see these documents for generic binding information:
++    [1] Clock : ../clock/clock-bindings.txt
++
++  And these for relevant defines:
++    [2] include/dt-bindings/clock/lochnagar.h
 +
 +  This binding must be part of the Lochnagar MFD binding:
-+    [1] ../mfd/cirrus,lochnagar.yaml
++    [3] ../mfd/cirrus,lochnagar.yaml
 +
 +properties:
 +  compatible:
 +    enum:
-+      - cirrus,lochnagar2-hwmon
++      - cirrus,lochnagar1-clk
++      - cirrus,lochnagar2-clk
++
++  '#clock-cells':
++    description:
++      The first cell indicates the clock number, see [2] for available
++      clocks and [1].
++    const: 1
++
++  clock-names:
++    items:
++      enum:
++        - ln-cdc-clkout # Output clock from CODEC card.
++        - ln-dsp-clkout # Output clock from DSP card.
++        - ln-gf-mclk1 # Optional input clock from host system.
++        - ln-gf-mclk2 # Optional input clock from host system.
++        - ln-gf-mclk3 # Optional input clock from host system.
++        - ln-gf-mclk4 # Optional input clock from host system.
++        - ln-psia1-mclk # Optional input clock from external connector.
++        - ln-psia2-mclk # Optional input clock from external connector.
++        - ln-spdif-mclk # Optional input clock from SPDIF.
++        - ln-spdif-clkout # Optional input clock from SPDIF.
++        - ln-adat-mclk # Optional input clock from ADAT.
++        - ln-pmic-32k # On board fixed clock.
++        - ln-clk-12m # On board fixed clock.
++        - ln-clk-11m # On board fixed clock.
++        - ln-clk-24m # On board fixed clock.
++        - ln-clk-22m # On board fixed clock.
++        - ln-clk-8m # On board fixed clock.
++        - ln-usb-clk-24m # On board fixed clock.
++        - ln-usb-clk-12m # On board fixed clock.
++    minItems: 1
++    maxItems: 19
++
++  clocks: true
++  assigned-clocks: true
++  assigned-clock-parents: true
++
++additionalProperties: false
 +
 +required:
 +  - compatible
-+
-+additionalProperties: false
++  - '#clock-cells'
 -- 
 2.11.0
 
