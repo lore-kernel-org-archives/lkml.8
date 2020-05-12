@@ -2,214 +2,165 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CBFC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F53C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF0920736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AF320643
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgELHw1 (ORCPT
+        id S1728985AbgELHyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:52:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12484 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725813AbgELHw1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:52:27 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C7eIHE082371;
-        Tue, 12 May 2020 03:52:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw4smra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 03:52:11 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04C7fE7R084258;
-        Tue, 12 May 2020 03:52:10 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30wrw4smqm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 03:52:10 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04C7egZ8007660;
-        Tue, 12 May 2020 07:52:08 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 30wm55e03e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 07:52:08 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04C7q67b28311748
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 07:52:06 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D1CFA405B;
-        Tue, 12 May 2020 07:52:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DD3AA405C;
-        Tue, 12 May 2020 07:52:02 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.122.162])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 May 2020 07:52:01 +0000 (GMT)
-Subject: Re: [RFC 2/4] sched/core: Set nr_lat_sensitive counter at various
- scheduler entry/exit points
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, qais.yousef@arm.com,
-        chris.hyser@oracle.com, valentin.schneider@arm.com,
-        rjw@rjwysocki.net
-References: <20200507133723.18325-1-parth@linux.ibm.com>
- <20200507133723.18325-3-parth@linux.ibm.com>
- <20200508083308.GI19464@codeaurora.org>
- <73506bba-7bcb-fd40-6866-d5d88d436fbf@linux.ibm.com>
- <20200509023915.GN19464@codeaurora.org>
-From:   Parth Shah <parth@linux.ibm.com>
-Message-ID: <4d05f8c0-250b-bc1e-360f-18dfa197064c@linux.ibm.com>
-Date:   Tue, 12 May 2020 13:21:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200509023915.GN19464@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 12 May 2020 03:54:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2190 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726067AbgELHyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:54:46 -0400
+Received: from lhreml707-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 22CA67EF6883194331E5;
+        Tue, 12 May 2020 08:54:43 +0100 (IST)
+Received: from fraeml705-chm.china.huawei.com (10.206.15.54) by
+ lhreml707-chm.china.huawei.com (10.201.108.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 12 May 2020 08:54:42 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 12 May 2020 09:54:42 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Tue, 12 May 2020 09:54:42 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "John Johansen" <john.johansen@canonical.com>,
+        "matthewgarrett@google.com" <matthewgarrett@google.com>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IIAAb0AAgAApg3CAADIngIAAzgGAgACHqACABHSroIAAjWsAgAC7FtA=
+Date:   Tue, 12 May 2020 07:54:42 +0000
+Message-ID: <09ee169cfd70492cb526bcb30f99d693@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+         <1588864628.5685.78.camel@linux.ibm.com>
+         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+         <1588884313.5685.110.camel@linux.ibm.com>
+         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
+         <1588957684.5146.70.camel@linux.ibm.com>
+         <414644a0be9e4af880452f4b5079aba1@huawei.com>
+ <1589233010.5091.49.camel@linux.ibm.com>
+In-Reply-To: <1589233010.5091.49.camel@linux.ibm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_02:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- spamscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120063
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.12.77]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/9/20 8:09 AM, Pavan Kondeti wrote:
-> On Fri, May 08, 2020 at 04:45:16PM +0530, Parth Shah wrote:
->> Hi Pavan,
->>
->> Thanks for going through this patch-set.
->>
->> On 5/8/20 2:03 PM, Pavan Kondeti wrote:
->>> Hi Parth,
->>>
->>> On Thu, May 07, 2020 at 07:07:21PM +0530, Parth Shah wrote:
->>>> Monitor tasks at:
->>>> 1. wake_up_new_task() - forked tasks
->>>>
->>>> 2. set_task_cpu() - task migrations, Load balancer
->>>>
->>>> 3. __sched_setscheduler() - set/unset latency_nice value
->>>> Increment the nr_lat_sensitive count on the CPU with task marked with
->>>> latency_nice == -20.
->>>> Similarly, decrement the nr_lat_sensitive counter upon re-marking the task
->>>> with >-20 latency_nice task.
->>>>
->>>> 4. finish_task_switch() - dying task
->>>>
->>>
->>>
->>>> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->>>> ---
->>>>  kernel/sched/core.c  | 30 ++++++++++++++++++++++++++++--
->>>>  kernel/sched/sched.h |  5 +++++
->>>>  2 files changed, 33 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->>>> index 2d8b76f41d61..ad396c36eba6 100644
->>>> --- a/kernel/sched/core.c
->>>> +++ b/kernel/sched/core.c
->>>> @@ -1744,6 +1744,11 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
->>>>  	trace_sched_migrate_task(p, new_cpu);
->>>>  
->>>>  	if (task_cpu(p) != new_cpu) {
->>>> +		if (task_is_lat_sensitive(p)) {
->>>> +			per_cpu(nr_lat_sensitive, task_cpu(p))--;
->>>> +			per_cpu(nr_lat_sensitive, new_cpu)++;
->>>> +		}
->>>> +
->>>
->>> Since we can come here without rq locks, there is a possibility
->>> of a race and incorrect updates can happen. Since the counters
->>> are used to prevent C-states, we don't want that to happen.
->>
->> I did tried using task_lock(p) wherever we do change refcount and when
->> latency_nice value is set. There I was using nr_lat_sensitive with atomic_t
->> type.
->>
->> After lots of thinking to optimize it and thinking that we anyways hold rq
->> lock, I thought of not using any lock here and see if scheduler community
->> has well known solution for this :-)
->>
->> But in brief, using atomic_t nr_lat_sensitive and task_lock(p) when changin
->> refcount should solve problem, right?
->>
->> If you or anyone have solution for this kind of pattern, then that surely
->> will be helpful.
->>
-> I am not sure if task_lock() can help here, because we are operating the
-> counter on per CPU basis here. May be cmpxchg based loop works here to make
-> sure that increment/decrement operation happens atomically here.
-> 
->>>
->>>>  		if (p->sched_class->migrate_task_rq)
->>>>  			p->sched_class->migrate_task_rq(p, new_cpu);
->>>>  		p->se.nr_migrations++;
-> 
-> [...]
-> 
->>>> @@ -4732,8 +4749,17 @@ static void __setscheduler_params(struct task_struct *p,
->>>>  	p->normal_prio = normal_prio(p);
->>>>  	set_load_weight(p, true);
->>>>  
->>>> -	if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE)
->>>> +	if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE) {
->>>> +		if (p->state != TASK_DEAD &&
->>>> +		    attr->sched_latency_nice != p->latency_nice) {
->>>> +			if (attr->sched_latency_nice == MIN_LATENCY_NICE)
->>>> +				per_cpu(nr_lat_sensitive, task_cpu(p))++;
->>>> +			else if (task_is_lat_sensitive(p))
->>>> +				per_cpu(nr_lat_sensitive, task_cpu(p))--;
->>>> +		}
->>>> +
->>>>  		p->latency_nice = attr->sched_latency_nice;
->>>> +	}
->>>>  }
->>>
->>> There is a potential race here due to which we can mess up the refcount.
->>>
->>> - A latency sensitive task is marked TASK_DEAD
->>> <snip>
->>> - sched_setattr() called on the task to clear the latency nice. Since
->>> we check the task state here, we skip the decrement.
->>> - The task is finally context switched out and we skip the decrement again
->>> since it is not a latency senstivie task.
->>
->> if task is already marked TASK_DEAD then we should have already decremented
->> its refcount in finish_task_switch().
->> am I missing something?
-> 
-> There is a window (context switch and dropping rq lock) between
-> marking a task DEAD (in do_task_dead()) and dropping the ref counter
-> (in finish_task_switch()) during which we can run into here and skip
-> the checking because task is marked as DEAD.
-> 
-
-Yeah, TASK_DEAD seems to be genuine race conditions. At every other places
-we do hold task_rq_lock() except when the task is dying. There is a window
-between do_task_dead() and finish_task_switch() which may create race
-condition, so if marking TASK_DEAD is protected under task_rq_lock() then
-this can be prevented. I will have to look at it more thoroughly at the
-code and figure out a way to protect the refcount under such circumstances.
-
-
-Thanks,
-Parth
+PiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDog
+TW9uZGF5LCBNYXkgMTEsIDIwMjAgMTE6MzcgUE0NCj4gT24gTW9uLCAyMDIwLTA1LTExIGF0IDE0
+OjEzICswMDAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4gRnJvbTogTWltaSBab2hhciBb
+bWFpbHRvOnpvaGFyQGxpbnV4LmlibS5jb21dDQo+ID4gPiBTZW50OiBGcmlkYXksIE1heSA4LCAy
+MDIwIDc6MDggUE0NCj4gPiA+IE9uIEZyaSwgMjAyMC0wNS0wOCBhdCAxMDoyMCArMDAwMCwgUm9i
+ZXJ0byBTYXNzdSB3cm90ZToNCj4gPiA+ID4gPiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9o
+YXJAbGludXguaWJtLmNvbV0NCj4gPiA+ID4gPiBPbiBUaHUsIDIwMjAtMDUtMDcgYXQgMTY6NDcg
+KzAwMDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPg0KPiA+ID4gPHNuaXA+DQo+ID4gPg0K
+PiA+ID4gPiA+ID4gPiB0aGUgZmlsZSBtZXRhZGF0YSB0byB0aGUgZmlsZSBkYXRhLiDCoFRoZSBJ
+TUEgYW5kIEVWTSBwb2xpY2llcw0KPiByZWFsbHkNCj4gPiA+ID4gPiA+ID4gbmVlZCB0byBiZSBp
+biBzeW5jLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IEl0IHdvdWxkIGJlIG5pY2UsIGJ1dCBh
+dCB0aGUgbW9tZW50IEVWTSBjb25zaWRlcnMgYWxzbyBmaWxlcyB0aGF0DQo+IGFyZQ0KPiA+ID4g
+PiA+ID4gbm90IHNlbGVjdGVkIGJ5IHRoZSBJTUEgcG9saWN5LiBBbiBleGFtcGxlIG9mIHdoeSB0
+aGlzIGlzIGENCj4gcHJvYmxlbSBpcw0KPiA+ID4gPiA+ID4gdGhlIGF1ZGl0IHNlcnZpY2UgdGhh
+dCBmYWlscyB0byBzdGFydCB3aGVuIGl0IHRyaWVzIHRvIGFkanVzdCB0aGUNCj4gPiA+IHBlcm1p
+c3Npb25zDQo+ID4gPiA+ID4gPiBvZiB0aGUgbG9nIGZpbGVzLiBUaG9zZSBmaWxlcyBkb24ndCBo
+YXZlIHNlY3VyaXR5LmV2bSBiZWNhdXNlIHRoZXkNCj4gYXJlDQo+ID4gPiA+ID4gPiBub3QgYXBw
+cmFpc2VkIGJ5IElNQSwgYnV0IEVWTSBkZW5pZXMgdGhlIG9wZXJhdGlvbi4NCj4gPiA+ID4gPg0K
+PiA+ID4gPiA+IE5vLCB0aGlzIGlzIGEgdGltaW5nIGlzc3VlIGFzIHRvIHdoZXRoZXIgb3Igbm90
+IHRoZSBidWlsdGluIHBvbGljeSBvcg0KPiA+ID4gPiA+IGEgY3VzdG9tIHBvbGljeSBoYXMgYmVl
+biBsb2FkZWQuIMKgQSBjdXN0b20gcG9saWN5IGNvdWxkIGV4Y2x1ZGUgdGhlDQo+ID4gPiA+ID4g
+bG9nIGZpbGVzIGJhc2VkIG9uIExTTSBsYWJlbHMsIGJ1dCB0aGV5IGFyZSBpbmNsdWRlZCBpbiB0
+aGUgYnVpbHRpbg0KPiA+ID4gPiA+IHBvbGljeS4NCj4gPiA+ID4NCj4gPiA+ID4gWWVzLCBJIHdh
+cyByZWZlcnJpbmcgdG8gYSBjdXN0b20gcG9saWN5LiBJbiB0aGlzIGNhc2UsIEVWTSB3aWxsIG5v
+dCBhZGFwdA0KPiA+ID4gPiB0byB0aGUgY3VzdG9tIHBvbGljeSBidXQgc3RpbGwgdmVyaWZpZXMg
+YWxsIGZpbGVzLiBJZiBhY2Nlc3MgY29udHJvbCBpcyBkb25lDQo+ID4gPiA+IGV4Y2x1c2l2ZWx5
+IGJ5IElNQSBhdCB0aGUgdGltZSBldm1fdmVyaWZ5eGF0dHIoKSBpcyBjYWxsZWQsIHdlIHdvdWxk
+bid0DQo+ID4gPiA+IG5lZWQgdG8gYWRkIHNlY3VyaXR5LmV2bSB0byBhbGwgZmlsZXMuDQo+ID4g
+Pg0KPiA+ID4gUm9iZXJ0bywgRVZNIGlzIG9ubHkgdHJpZ2dlcmVkIGJ5IElNQSwgdW5sZXNzIHlv
+dSd2ZSBtb2RpZmllZCB0aGUNCj4gPiA+IGtlcm5lbCB0byBkbyBvdGhlcndpc2UuDQo+ID4NCj4g
+PiBFVk0gd291bGQgZGVueSB4YXR0ci9hdHRyIG9wZXJhdGlvbnMgZXZlbiBpZiBJTUEgaXMgZGlz
+YWJsZWQgaW4gdGhlDQo+ID4ga2VybmVsIGNvbmZpZ3VyYXRpb24uIEZvciBleGFtcGxlLCBldm1f
+c2V0eGF0dHIoKSByZXR1cm5zIHRoZSB2YWx1ZQ0KPiA+IGZyb20gZXZtX3Byb3RlY3RfeGF0dHIo
+KS4gSU1BIGlzIG5vdCBpbnZvbHZlZCB0aGVyZS4NCj4gDQo+IENvbW1pdMKgYWUxYmExNjc2Yjg4
+ICgiRVZNOiBBbGxvdyB1c2VybGFuZCB0byBwZXJtaXQgbW9kaWZpY2F0aW9uIG9mDQo+IEVWTS1w
+cm90ZWN0ZWQgbWV0YWRhdGEiKSBpbnRyb2R1Y2VkwqBFVk1fQUxMT1dfTUVUQURBVEFfV1JJVEVT
+DQo+IHRvIGFsbG93DQo+IHdyaXRpbmcgdGhlIEVWTSBwb3J0YWJsZSBhbmQgaW1tdXRhYmxlIGZp
+bGUgc2lnbmF0dXJlcy4NCg0KQWNjb3JkaW5nIHRvIERvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcv
+ZXZtOg0KDQpOb3RlIHRoYXQgb25jZSBhIGtleSBoYXMgYmVlbiBsb2FkZWQsIGl0IHdpbGwgbm8g
+bG9uZ2VyIGJlDQpwb3NzaWJsZSB0byBlbmFibGUgbWV0YWRhdGEgbW9kaWZpY2F0aW9uLg0KDQpX
+ZSBsb2FkIHRoZSBFVk0ga2V5IGZyb20gL2V0Yy9rZXlzL3g1MDlfZXZtLmRlciwgZHVyaW5nIGtl
+cm5lbA0KaW5pdGlhbGl6YXRpb24sIHdoaWNoIGV4Y2x1ZGVzIHRoZSBwb3NzaWJpbGl0eSBvZiB1
+c2luZyB0aGF0IGZsYWcuIERlZmVycmluZw0KdGhlIGxvYWRpbmcgb2YgdGhlIGtleSBpcyBub3Qg
+cG9zc2libGUgaWYgdGhhdCBrZXkgaXMgdXNlZCBmb3IgYXBwcmFpc2FsIGFuZA0KZW5mb3JjZW1l
+bnQgaXMgZW5hYmxlZCBmcm9tIHRoZSBiZWdpbm5pbmcuDQoNCkFsc28sIG9uY2UgdGhlIGZsYWcg
+aXMgY2xlYXJlZCBwb3J0YWJsZSBzaWduYXR1cmVzIGNhbm5vdCBiZSBpbnN0YWxsZWQNCnVudGls
+IHJlYm9vdC4gVGhpcyBzZWVtcyBhIGJpZyBsaW1pdGF0aW9uIGVzcGVjaWFsbHkgd2hlbiBzb2Z0
+d2FyZQ0KdXBkYXRlcyBhcmUgaW5zdGFsbGVkIG9uIGEgcnVubmluZyBzeXN0ZW0uDQoNCj4gPiA+
+IEknbSBub3QgaW50ZXJlc3RlZCBpbiBhIGNvbXBsaWNhdGVkIHNvbHV0aW9uLCBqdXN0IG9uZSB0
+aGF0IGFkZHJlc3Nlcw0KPiA+ID4gdGhlIG5ldyBFVk0gaW1tdXRhYmxlIGFuZCBwb3J0YWJsZSBz
+aWduYXR1cmUuIMKgSXQgbWlnaHQgcmVxdWlyZSBFVk0NCj4gPiA+IEhNQUMsIElNQSBkaWZmZXJl
+bnRpYXRpbmcgYmV0d2VlbiBhIG5ldyBmaWxlIGFuZCBhbiBleGlzdGluZyBmaWxlLCBvcjpxDQo+
+IA0KPiA+ID4gaXQgbWlnaHQgcmVxdWlyZSB3cml0aW5nIHRoZSBuZXcgRVZNIHNpZ25hdHVyZSBs
+YXN0LCBhZnRlciBhbGwgdGhlDQo+ID4gPiBvdGhlciB4YXR0cnMgb3IgbWV0YWRhdGEgYXJlIHVw
+ZGF0ZWQuIMKgUGxlYXNlIG5vdGhpbmcgdGhhdCBjaGFuZ2VzDQo+ID4gPiBleGlzdGluZyBleHBl
+Y3RhdGlvbnMuDQo+ID4NCj4gPiBPay4gSW50cm9kdWNpbmcgdGhlIG5ldyBzdGF0dXMgSU5URUdS
+SVRZX0ZBSUxfSU1NVVRBQkxFLCBhcyBJDQo+ID4gbWVudGlvbmVkIGluICdbUEFUQ0hdIGltYTog
+QWxsb3cgaW1hc2lnIHJlcXVpcmVtZW50IHRvIGJlIHNhdGlzZmllZCBieQ0KPiA+IEVWTSBwb3J0
+YWJsZSBzaWduYXR1cmVzJyBzZWVtcyB0byBoYXZlIGFuIGFkZGl0aW9uYWwgYmVuZWZpdC4gV2UN
+Cj4gPiBjb3VsZCBpbnRyb2R1Y2UgYW4gYWRkaXRpb25hbCBleGNlcHRpb24gaW4gZXZtX3Byb3Rl
+Y3RfeGF0dHIoKSwgb3RoZXINCj4gPiB0aGFuIElOVEVHUklUWV9OT1hBVFRSUywgYXMgd2Uga25v
+dyB0aGF0IHhhdHRyL2F0dHIgdXBkYXRlIHdvbid0DQo+ID4gY2F1c2UgSE1BQyB1cGRhdGUuDQo+
+IA0KPiBSZWZlciB0byBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL2V2bSBkZXNjcmliZXMgb24g
+aG93IHRvIHBlcm1pdA0KPiB3cml0aW5nIHRoZSBzZWN1cml0eS5ldm0gc2lnbmF0dXJlcy4NCg0K
+SXQgZG9lc24ndCBzZWVtIHRoZXJlIGlzIGEgc29sdXRpb24gZm9yIGFkZGluZyBwb3J0YWJsZSBz
+aWduYXR1cmVzIGF0DQpydW4tdGltZS4NCg0KPiA+IEhvd2V2ZXIsIGl0IHdvbid0IHdvcmsgdW5s
+ZXNzIHRoZSBJTUEgcG9saWN5IHNheXMgdGhhdCB0aGUgZmlsZSBzaG91bGQNCj4gPiBiZSBhcHBy
+YWlzZWQgd2hlbiB0aGUgbWtub2QoKSBzeXN0ZW0gY2FsbCBpcyBleGVjdXRlZC4gT3RoZXJ3aXNl
+LA0KPiA+IGludGVncml0eV9paW50X2NhY2hlIGlzIG5vdCBjcmVhdGVkIGZvciB0aGUgZmlsZSBh
+bmQgdGhlIElNQV9ORVdfRklMRQ0KPiA+IGZsYWcgaXMgbm90IHNldC4NCj4gPg0KPiA+IEdyYW50
+aW5nIGFuIGV4Y2VwdGlvbiBmb3IgSU5URUdSSVRZX0ZBSUxfSU1NVVRBQkxFIHNvbHZlcyB0aGUg
+Y2FzZQ0KPiA+IHdoZXJlIHNlY3VyaXR5LmV2bSBpcyB0aGUgZmlyc3QgeGF0dHIgc2V0LiBJZiBh
+IHByb3RlY3RlZCB4YXR0ciBpcyB0aGUgZmlyc3QgdG8NCj4gPiBiZSBhZGRlZCwgdGhlbiB3ZSBh
+bHNvIGhhdmUgdG8gaGFuZGxlIHRoZSBJTlRFR1JJVFlfTk9MQUJFTCBlcnJvci4NCj4gPiBJdCBz
+aG91bGQgYmUgZmluZSB0byBhZGQgYW4gZXhjZXB0aW9uIGZvciB0aGlzIGVycm9yIGlmIHRoZSBI
+TUFDIGtleSBpcyBub3QNCj4gPiBsb2FkZWQuDQo+ID4NCj4gPiBUaGlzIHN0aWxsIGRvZXMgbm90
+IHNvbHZlIGFsbCBwcm9ibGVtcy4gSU5URUdSSVRZX05PTEFCRUwgY2Fubm90IGJlDQo+ID4gaWdu
+b3JlZCBpZiB0aGUgSE1BQyBrZXkgaXMgbG9hZGVkLCB3aGljaCBtZWFucyB0aGF0IGFsbCBmaWxl
+cyBuZWVkIHRvIGJlDQo+ID4gcHJvdGVjdGVkIGJ5IEVWTSB0byBhdm9pZCBpc3N1ZXMgbGlrZSB0
+aGUgb25lIEkgZGVzY3JpYmVkIChhdWRpdGQpLg0KPiANCj4gVGhlIGFwcGxpY2F0aW9uIHN0aWxs
+IG5lZWRzIHRvIGRlZmVyIHdyaXRpbmcgdGhlIEVWTSBwb3J0YWJsZSBhbmQNCj4gaW1tdXRhYmxl
+IGZpbGUgc2lnbmF0dXJlcyB1bnRpbCBhZnRlciBhbGwgdGhlIG90aGVyIHhhdHRycyBhcmUgd3Jp
+dHRlbg0KPiBvdGhlcndpc2UgaXQgd29uJ3QgdmFsaWRhdGUuDQoNCkVWTSB3b24ndCBhbGxvdyB0
+aGF0IGJlY2F1c2UgYXQgdGhlIHNlY29uZCBzZXR4YXR0cigpIGl0IHdpbGwgZmluZCB0aGF0DQpz
+ZWN1cml0eS5ldm0gaXMgbWlzc2luZy4NCg0KUm9iZXJ0bw0KDQpIVUFXRUkgVEVDSE5PTE9HSUVT
+IER1ZXNzZWxkb3JmIEdtYkgsIEhSQiA1NjA2Mw0KTWFuYWdpbmcgRGlyZWN0b3I6IExpIFBlbmcs
+IExpIEppYW4sIFNoaSBZYW5saQ0K
