@@ -2,31 +2,32 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BABBC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A30C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E24DD23129
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B6720747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="a4sGfe8T"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SO6+Q+T4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbgELWWM (ORCPT
+        id S1731625AbgELWWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:22:12 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41428 "EHLO vps.xff.cz"
+        Tue, 12 May 2020 18:22:13 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41466 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgELWWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:22:11 -0400
+        id S1731048AbgELWWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 18:22:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589322129; bh=aksRVakqDSRMDiBOMsQEeb7cYe+KvVtawuT/m/LsMLw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=a4sGfe8TiOA9m6P1f52uIRd1Qz/6l7BIRj5HysqqXJ/uUZ2TSZAJsfW1P+lycE2Ft
-         oy+lRYEB1O8ngnLh69vYyEWq8VVZOwEbBQJzZZiu6YF8mE8gKUHUwAu0AgAGChf906
-         fPkKqov5gQFGHhdeukkosiS5Z4GHnT6xrh4SxQBY=
+        t=1589322129; bh=8NnK5CsraaZezbyEm3ALbCdiOU7kYIlUQyLKmB3n8RA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=SO6+Q+T41K4T2JL05TZZ2IY/e+nGZgKFEXLbxmq9QBlFYcu5A7X8teO00J4r4Tw2U
+         wS6ZXVfwNFYJ1j+H58opUYdoszBJijDY3fkwh22g1xi3N0quarcGWyHpL3Wy1+Rn3G
+         /0+dNsie3axkhfAn8fV8ZjFo/1jrPmHs7umY8phQ=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -38,9 +39,11 @@ Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 0/4] Add support for vibrator motor for TBS A711 Tablet
-Date:   Wed, 13 May 2020 00:22:01 +0200
-Message-Id: <20200512222205.1456300-1-megous@megous.com>
+Subject: [PATCH v2 2/4] input: gpio-vibra: Allow to use vcc-supply alone to control the vibrator
+Date:   Wed, 13 May 2020 00:22:03 +0200
+Message-Id: <20200512222205.1456300-3-megous@megous.com>
+In-Reply-To: <20200512222205.1456300-1-megous@megous.com>
+References: <20200512222205.1456300-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,39 +51,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tablet has a vibrator motor. This patch series exposes it via
-input subsystem (EV_FF).
+Make enable-gpio optional to allow using this driver with
+boards that have vibrator connected to a power supply without
+intermediate gpio based enable circuitry.
 
-I'd like to ask input maintainers to take the patches 1 and 2.
-Patches 3 and 4 should go via the sunxi tree.
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ drivers/input/misc/gpio-vibra.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The change to the vibrator driver is meant to enable toggling the
-vibrator motor just via a power supply itself. There's not additional
-gpio driven switch on this tablet between the power supply for the
-motor and the motor.
-
-Please take a look.
-
-Changes in v2:
-- Added DT ack tag
-- Add more information to the commit log (re use of LDO for the power)
-
-
-thank you and regards,
-  Ondrej Jirman
-
-Ondrej Jirman (4):
-  dt-bindings: input: gpio-vibrator: Don't require enable-gpios
-  input: gpio-vibra: Allow to use vcc-supply alone to control the
-    vibrator
-  ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
-  ARM: dts: sun8i-a83t-tbs-a711: Increase voltage on the vibrator
-
- .../devicetree/bindings/input/gpio-vibrator.yaml         | 1 -
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts                | 9 +++++++--
- drivers/input/misc/gpio-vibra.c                          | 3 ++-
- 3 files changed, 9 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+index f79f75595dd7..f11877f04b43 100644
+--- a/drivers/input/misc/gpio-vibra.c
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -121,7 +121,8 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	vibrator->gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
++						 GPIOD_OUT_LOW);
+ 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
+ 	if (err) {
+ 		if (err != -EPROBE_DEFER)
 -- 
 2.26.2
 
