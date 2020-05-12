@@ -2,143 +2,182 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF17CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A17CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1ED206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2545206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfXGFXMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgELRT7 (ORCPT
+        id S1730082AbgELRUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:19:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:58868 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgELRT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:19:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56A841FB;
-        Tue, 12 May 2020 10:19:58 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.55])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC1E3F305;
-        Tue, 12 May 2020 10:19:55 -0700 (PDT)
-Date:   Tue, 12 May 2020 18:19:49 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Jonathan.Cameron@Huawei.com,
-        james.quinlan@broadcom.com, lukasz.luba@arm.com
-Subject: Re: [PATCH v7 1/9] firmware: arm_scmi: Add notification
- protocol-registration
-Message-ID: <20200512171949.GA23943@bogus>
-References: <20200504163855.54548-1-cristian.marussi@arm.com>
- <20200504163855.54548-2-cristian.marussi@arm.com>
- <20200506152550.GA21779@arm.com>
- <20200511220403.GB17648@e119603-lin.cambridge.arm.com>
- <20200512170020.GC17648@e119603-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512170020.GC17648@e119603-lin.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 12 May 2020 13:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbgELRUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:20:45 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B217C061A0C;
+        Tue, 12 May 2020 10:20:45 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z72so14791035wmc.2;
+        Tue, 12 May 2020 10:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UJ/ZO7NVjTI8/N9JusANSsKU0IfkbbuVbjw6eJjkZ2Y=;
+        b=OfXGFXMrMj5oF3yTTiW06ie8qAkkpkyzl75ZaExFkMZs07ZuWcqLHK8+jim5gfQVyZ
+         cKDMkcLx1VVR3KrCBuWHPB6b3ydeOi3rRUdHO+sfM35bimMI0d3A7tnfnLbnF1BmvqPx
+         DlXAaxVCbFJtX4aUDY9gRo18c8pB/bR0aQFMsETsaV9NeEdGJ7ydSYNz0BdgA0uLqxVF
+         0DGV//rM3K3P1gnKw/rzECnCX/tXCxihAHr0Cp44kqW7qsp1FZ5NODFhxSI+vCrMoFfJ
+         sHnAKoALgHMedP1mFUzsENdea9OIZ1MiC6J2LgDWgSa9bDohZ4Tb997w/Ullv+qYyTAg
+         39Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UJ/ZO7NVjTI8/N9JusANSsKU0IfkbbuVbjw6eJjkZ2Y=;
+        b=oBIwl6j/SVaBVcELn4+i7NERje/pSv0z9m+QXgiiUljHuFeV8tyXSaSCTpm7BVjwR+
+         KGkiRpMWbqBcqp9PNOo+KhnFjvv38XsirMkvhwB6++EZN6WQ/TAprRXpqsZhkNj2V4RT
+         /iBcneT/18dAmfPxLN3hkST2Cn4dxNyDoSgGcnowDF+sPG9xZkAR2Q/DPPDz7TQihavg
+         WK9VbEpIAOaZyjfxYWqZNM+O5Vb4IzQDODj8dJsfWqMufG4sGHqdyMB0u+WR9W4TpKcl
+         WYQnA/+6nUUMOfs6mOwFAtF0PjlcfJz9VITa8kDBLv5Vx6o/OCq0jOQ5/r73Rgky3Sqn
+         kVEA==
+X-Gm-Message-State: AGi0PuYTPVcUe8nBf2LyOy9IWlqznyfk4PPp3Y+P3eanQluhzqTBfLmh
+        /iDinq5lwXSn7hmH1/cXPJ8=
+X-Google-Smtp-Source: APiQypInQX09sXD0NPZjPv55LEMtUhZoO3s3CO58PIIS5jRjJp7B4IKuSzD8Tj+kwzb4TBDu+AVyUA==
+X-Received: by 2002:a7b:c046:: with SMTP id u6mr8501942wmc.57.1589304043804;
+        Tue, 12 May 2020 10:20:43 -0700 (PDT)
+Received: from localhost.localdomain ([86.121.118.29])
+        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 10:20:43 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
+Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
+        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 net-next 00/15] Traffic support for dsa_8021q in vlan_filtering=1 mode
+Date:   Tue, 12 May 2020 20:20:24 +0300
+Message-Id: <20200512172039.14136-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:00:20PM +0100, Cristian Marussi wrote:
-> On Mon, May 11, 2020 at 11:04:03PM +0100, Cristian Marussi wrote:
-> > Hi Dave
-> >
-> > thanks for the review first of all.
-> >
-> [snip]
->
-> > > I'm not sure about scmi_notification_exit() (see below).
-> [snip]
-> > > > +/**
-> > > > + * scmi_notification_exit()  - Shutdown and clean Notification core
-> > > > + * @handle: The handle identifying the platform instance to shutdown
-> > > > + */
-> > > > +void scmi_notification_exit(struct scmi_handle *handle)
-> > > > +{
-> > > > +	struct scmi_notify_instance *ni = handle->notify_priv;
-> > > > +
-> > > > +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
-> > > > +		return;
-> > > > +
-> > > > +	atomic_set(&ni->enabled, 0);
-> > > > +	/* Ensure atomic values are updated */
-> > > > +	smp_mb__after_atomic();
-> > >
-> > > If users can race with this, we're dead: the atomic by itself doesn't
-> > > ensure that handle is not in use once we arrive here.  Should this
-> > > be a refcount instead?
-> > >
-> > > If users can't race with this, we probably don't protection here.
-> > >
-> > >
-> > > I may be misunderstanding what this code is doing...
-> > >
-> >
-> > First of all the enabled flag does not probably belong to this commit properly;
-> > here is initialized but it is really fully used only in subsequent patches
-> > (...so makes apparently little sense here... my bad...)
-> >
-> > Anyway, in general SCMI protocols (beside notifications stuff) are initialized
-> > as depicted above, BUT they are never deinitialized explicitly (there's no
-> > equivalent scmi_protocol_deinit()) and also proto devices are never destroyed:
-> > so there's no scmi_protocol_deregister_events() neither in this series, because
-> > it would have been tricky to properly invoke it and would have not been consistent
-> > with the original SCMI design.
-> >
-> > On the other side since in protocol driver _remove() some general protos resources
-> > are in fact freed anyway, for consistency I decided to free the devm notification
-> > resources allocated with the above init() in scmi_notification_exit(): this should
-> > happen only at system shutdown in fact when notification are no more of a concern.
-> >
-> > So given there's no explicit deregister I had to ensure somehow that the wanna-be-freed
-> > notif devm resources were safe to be released.
-> >
-> > In this context the 'enabled' atomic flag is set to 0 @_exit to stop the dispatch of the
-> > events (possibly still coming from the fw) from the ISR into the kfifo queues: once such
-> > pkts flow is stopped I destroy_sync() (in a subsequent patch @_exit too) all the workqueues
-> > fetching the events from the kfifos: this way I can be sure that all the notif resources
-> > are no more used at all when I free all of them with devm_release() at the end.
-> >
-> > All of this is an additional precaution against buggy fw not stopping sending events
-> > even when asked to do so (by drivers when deregistering notif callbacks in their shutdown)
-> >
-> > Give the above scenario on shutdown (which I never observed to tell the truth), and the fact
-> > I'm freeing all devm res (including ni) at shutdown, it's now apparent ALSO that I cannot use
-> > 'enabled' to keep stopped the flow in a safe way after its enclosing struct ni has been freed !
-> >
-> > So I'll remove the 'enable' atomic_t too and rely equally on the bare !ni check to determine
-> > if the notification are enabled and should be dispatched. So that in
-> >
->
-> ...replying to my early self here (o_O)....I'd add that I've tested the above changes (removing
-> initialized and enabled) triggering this _exit path by brutally unbinding the platform protocol
-> driver and I can see the notifications flow stop and the queues emptied as expected without
-> tragedy...the SCMI stack in general is not so happy though at that point, since it is not even
-> supposed to be unloaded ever in fact...I wonder if this limit condition(unbind of a core SCMI
-> driver which is not even modularizable in Kconfig) makes sense to be tested at all...
-> (if not for testing this specific code path...)
->
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-We may need this eventually, I just kept initial implementation simple.
-The scmi_drivers should be module and loading/unloading should be stable
-and must work today.
+This series is an attempt to support as much as possible in terms of
+traffic I/O from the network stack with the only dsa_8021q user thus
+far, sja1105.
 
-Looking at the driver again, I am wondering why haven't I added
-scmi_device_destroy in scmi_remove. We should be able to add that.
+The hardware doesn't support pushing a second VLAN tag to packets that
+are already tagged, so our only option is to combine the dsa_8021q with
+the user tag into a single tag and decode that on the CPU.
 
-Lastly we can see how to make protocol registration and unregistration
-as a module.
+The assumption is that there is a type of use cases for which 7 VLANs
+per port are more than sufficient, and that there's another type of use
+cases where the full 4096 entries are barely enough. Those use cases are
+very different from one another, so I prefer trying to give both the
+best experience by creating this best_effort_vlan_filtering knob to
+select the mode in which they want to operate in.
 
---
-Regards,
-Sudeep
+v2 was submitted here:
+https://patchwork.ozlabs.org/project/netdev/cover/20200511135338.20263-1-olteanv@gmail.com/
+
+v1 was submitted here:
+https://patchwork.ozlabs.org/project/netdev/cover/20200510164255.19322-1-olteanv@gmail.com/
+
+Changes in v3:
+Patch 01/15:
+- Rename again to configure_vlan_while_not_filtering, and add a helper
+  function for skipping VLAN configuration.
+Patch 03/15:
+- Remove sja1105_can_use_vlan_as_tags from driver code.
+Patch 06/15:
+- Adapt sja1105 driver to the second variable name change.
+Patch 08/15:
+- Provide an implementation of sja1105_can_use_vlan_as_tags as part of
+  the tagger and not as part of the switch driver. So we have to look at
+  the skb only, and not at the VLAN awareness state.
+
+Changes in v2:
+Patch 01/15:
+- Rename variable from vlan_bridge_vtu to configure_vlans_while_disabled.
+Patch 03/15:
+- Be much more thorough, and make sure that things like virtual links
+  and FDB operations still work properly.
+Patch 05/15:
+- Free the vlan lists on teardown.
+- Simplify sja1105_classify_vlan: only look at priv->expect_dsa_8021q.
+- Keep vid 1 in the list of dsa_8021q VLANs, to make sure that untagged
+  packets transmitted from the stack, like PTP, continue to work in
+  VLAN-unaware mode.
+Patch 06/15:
+- Adapt to vlan_bridge_vtu variable name change.
+Patch 11/15:
+- In sja1105_best_effort_vlan_filtering_set, get the vlan_filtering
+  value of each port instead of just one time for port 0. Normally this
+  shouldn't matter, but it avoids issues when port 0 is disabled in
+  device tree.
+Patch 14/14:
+- Only do anything in sja1105_build_subvlans and in
+  sja1105_build_crosschip_subvlans when operating in
+  SJA1105_VLAN_BEST_EFFORT state. This avoids installing VLAN retagging
+  rules in unaware mode, which would cost us a penalty in terms of
+  usable frame memory.
+
+Russell King (1):
+  net: dsa: provide an option for drivers to always receive bridge VLANs
+
+Vladimir Oltean (14):
+  net: dsa: tag_8021q: introduce a vid_is_dsa_8021q helper
+  net: dsa: sja1105: keep the VLAN awareness state in a driver variable
+  net: dsa: sja1105: deny alterations of dsa_8021q VLANs from the bridge
+  net: dsa: sja1105: save/restore VLANs using a delta commit method
+  net: dsa: sja1105: allow VLAN configuration from the bridge in all
+    states
+  net: dsa: sja1105: exit sja1105_vlan_filtering when called multiple
+    times
+  net: dsa: sja1105: prepare tagger for handling DSA tags and VLAN
+    simultaneously
+  net: dsa: tag_8021q: support up to 8 VLANs per port using sub-VLANs
+  net: dsa: tag_sja1105: implement sub-VLAN decoding
+  net: dsa: sja1105: add a new best_effort_vlan_filtering devlink
+    parameter
+  net: dsa: sja1105: add packing ops for the Retagging Table
+  net: dsa: sja1105: implement a common frame memory partitioning
+    function
+  net: dsa: sja1105: implement VLAN retagging for dsa_8021q sub-VLANs
+  docs: net: dsa: sja1105: document the best_effort_vlan_filtering
+    option
+
+ .../networking/devlink-params-sja1105.txt     |   27 +
+ Documentation/networking/dsa/sja1105.rst      |  211 +++-
+ drivers/net/dsa/sja1105/sja1105.h             |   29 +
+ .../net/dsa/sja1105/sja1105_dynamic_config.c  |   33 +
+ drivers/net/dsa/sja1105/sja1105_main.c        | 1120 +++++++++++++++--
+ drivers/net/dsa/sja1105/sja1105_spi.c         |    6 +
+ .../net/dsa/sja1105/sja1105_static_config.c   |   62 +-
+ .../net/dsa/sja1105/sja1105_static_config.h   |   16 +
+ drivers/net/dsa/sja1105/sja1105_vl.c          |   44 +-
+ include/linux/dsa/8021q.h                     |   42 +-
+ include/linux/dsa/sja1105.h                   |    3 +
+ include/net/dsa.h                             |    7 +
+ net/dsa/dsa_priv.h                            |    1 +
+ net/dsa/port.c                                |   14 +
+ net/dsa/slave.c                               |    8 +-
+ net/dsa/tag_8021q.c                           |  108 +-
+ net/dsa/tag_sja1105.c                         |   51 +-
+ 17 files changed, 1522 insertions(+), 260 deletions(-)
+ create mode 100644 Documentation/networking/devlink-params-sja1105.txt
+
+-- 
+2.17.1
+
