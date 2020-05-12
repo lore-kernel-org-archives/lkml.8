@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FABC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDCAC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F5724936
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7337824927
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbgELWZI (ORCPT
+        id S1732055AbgELWZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
+        Tue, 12 May 2020 18:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731320AbgELWXd (ORCPT
+        by vger.kernel.org with ESMTP id S1731775AbgELWXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:33 -0400
+        Tue, 12 May 2020 18:23:32 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D8AC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B4CC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:32 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIf-00054n-Hb; Wed, 13 May 2020 00:22:59 +0200
+        id 1jYdIi-00055I-3A; Wed, 13 May 2020 00:23:01 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 027561006A1;
-        Wed, 13 May 2020 00:22:57 +0200 (CEST)
-Message-Id: <20200512213812.569940685@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 847EA1006FB;
+        Wed, 13 May 2020 00:22:59 +0200 (CEST)
+Message-Id: <20200512213812.782687559@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:30 +0200
+Date:   Tue, 12 May 2020 23:01:32 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,8 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 31/38] x86/entry: Convert reschedule interrupt to
- IDTENTRY_SYSVEC_SIMPLE
+Subject: [patch V5 33/38] x86/entry/64: Remove IRQ stack switching ASM
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -72,202 +71,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The scheduler IPI does not need the full interrupt entry handling logic
-when the entry is from kernel mode.
-
-Even if tracing is enabled the only requirement is that RCU is watching and
-preempt_count has the hardirq bit on.
-
-The NOHZ tick state does not have to be adjusted. If the tick is not
-running then the CPU is in idle and the idle exit will restore the
-tick. Softinterrupts are not raised here, so handling them on return is not
-required either.
-
-User mode entry must go through the regular entry path as it will invoke
-the scheduler on return so context tracking needs to be in the correct
-state.
-
-Use IDTENTRY_SYSVEC_SIMPLE and remove the tracepoint static key
-conditional which is incomplete vs. tracing anyway because e.g.
-ack_APIC_irq() calls out into instrumentable code.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S                |    4 ----
- arch/x86/include/asm/entry_arch.h        |    3 ---
- arch/x86/include/asm/hw_irq.h            |    3 ---
- arch/x86/include/asm/idtentry.h          |    1 +
- arch/x86/include/asm/trace/common.h      |    4 ----
- arch/x86/include/asm/trace/irq_vectors.h |   17 +----------------
- arch/x86/kernel/idt.c                    |    2 +-
- arch/x86/kernel/smp.c                    |   19 ++++---------------
- arch/x86/kernel/tracepoint.c             |   17 -----------------
- 9 files changed, 7 insertions(+), 63 deletions(-)
+ arch/x86/entry/entry_64.S |   96 ----------------------------------------------
+ 1 file changed, 96 deletions(-)
 
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -956,10 +956,6 @@ apicinterrupt3 \num \sym \do_sym
- POP_SECTION_IRQENTRY
+@@ -370,102 +370,6 @@ SYM_CODE_END(ret_from_fork)
+ #endif
  .endm
  
--#ifdef CONFIG_SMP
--apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
+-/*
+- * Enters the IRQ stack if we're not already using it.  NMI-safe.  Clobbers
+- * flags and puts old RSP into old_rsp, and leaves all other GPRs alone.
+- * Requires kernel GSBASE.
+- *
+- * The invariant is that, if irq_count != -1, then the IRQ stack is in use.
+- */
+-.macro ENTER_IRQ_STACK regs=1 old_rsp save_ret=0
+-	DEBUG_ENTRY_ASSERT_IRQS_OFF
+-
+-	.if \save_ret
+-	/*
+-	 * If save_ret is set, the original stack contains one additional
+-	 * entry -- the return address. Therefore, move the address one
+-	 * entry below %rsp to \old_rsp.
+-	 */
+-	leaq	8(%rsp), \old_rsp
+-	.else
+-	movq	%rsp, \old_rsp
+-	.endif
+-
+-	.if \regs
+-	UNWIND_HINT_REGS base=\old_rsp
+-	.endif
+-
+-	incl	PER_CPU_VAR(irq_count)
+-	jnz	.Lirq_stack_push_old_rsp_\@
+-
+-	/*
+-	 * Right now, if we just incremented irq_count to zero, we've
+-	 * claimed the IRQ stack but we haven't switched to it yet.
+-	 *
+-	 * If anything is added that can interrupt us here without using IST,
+-	 * it must be *extremely* careful to limit its stack usage.  This
+-	 * could include kprobes and a hypothetical future IST-less #DB
+-	 * handler.
+-	 *
+-	 * The OOPS unwinder relies on the word at the top of the IRQ
+-	 * stack linking back to the previous RSP for the entire time we're
+-	 * on the IRQ stack.  For this to work reliably, we need to write
+-	 * it before we actually move ourselves to the IRQ stack.
+-	 */
+-
+-	movq	\old_rsp, PER_CPU_VAR(irq_stack_backing_store + IRQ_STACK_SIZE - 8)
+-	movq	PER_CPU_VAR(hardirq_stack_ptr), %rsp
+-
+-#ifdef CONFIG_DEBUG_ENTRY
+-	/*
+-	 * If the first movq above becomes wrong due to IRQ stack layout
+-	 * changes, the only way we'll notice is if we try to unwind right
+-	 * here.  Assert that we set up the stack right to catch this type
+-	 * of bug quickly.
+-	 */
+-	cmpq	-8(%rsp), \old_rsp
+-	je	.Lirq_stack_okay\@
+-	ud2
+-	.Lirq_stack_okay\@:
 -#endif
 -
- /*
-  * Reload gs selector with exception handling
-  * edi:  new selector
---- a/arch/x86/include/asm/entry_arch.h
-+++ b/arch/x86/include/asm/entry_arch.h
-@@ -10,6 +10,3 @@
-  * is no hardware IRQ pin equivalent for them, they are triggered
-  * through the ICC by us (IPIs)
-  */
--#ifdef CONFIG_SMP
--BUILD_INTERRUPT(reschedule_interrupt,RESCHEDULE_VECTOR)
--#endif
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -28,9 +28,6 @@
- #include <asm/irq.h>
- #include <asm/sections.h>
- 
--/* Interrupt handlers registered during init_IRQ */
--extern asmlinkage void reschedule_interrupt(void);
+-.Lirq_stack_push_old_rsp_\@:
+-	pushq	\old_rsp
 -
- #ifdef	CONFIG_X86_LOCAL_APIC
- struct irq_data;
- struct pci_dev;
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -576,6 +576,7 @@ DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI
- #endif
- 
- #ifdef CONFIG_SMP
-+DECLARE_IDTENTRY(RESCHEDULE_VECTOR,			sysvec_reschedule_ipi);
- DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
- DECLARE_IDTENTRY_SYSVEC(REBOOT_VECTOR,			sysvec_reboot);
- DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
---- a/arch/x86/include/asm/trace/common.h
-+++ b/arch/x86/include/asm/trace/common.h
-@@ -5,12 +5,8 @@
- DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
- #define trace_pagefault_enabled()			\
- 	static_branch_unlikely(&trace_pagefault_key)
--DECLARE_STATIC_KEY_FALSE(trace_resched_ipi_key);
--#define trace_resched_ipi_enabled()			\
--	static_branch_unlikely(&trace_resched_ipi_key)
- #else
- static inline bool trace_pagefault_enabled(void) { return false; }
--static inline bool trace_resched_ipi_enabled(void) { return false; }
- #endif
- 
- #endif
---- a/arch/x86/include/asm/trace/irq_vectors.h
-+++ b/arch/x86/include/asm/trace/irq_vectors.h
-@@ -10,9 +10,6 @@
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 
--extern int trace_resched_ipi_reg(void);
--extern void trace_resched_ipi_unreg(void);
+-	.if \regs
+-	UNWIND_HINT_REGS indirect=1
+-	.endif
 -
- DECLARE_EVENT_CLASS(x86_irq_vector,
- 
- 	TP_PROTO(int vector),
-@@ -37,18 +34,6 @@ DEFINE_EVENT_FN(x86_irq_vector, name##_e
- 	TP_PROTO(int vector),			\
- 	TP_ARGS(vector), NULL, NULL);
- 
--#define DEFINE_RESCHED_IPI_EVENT(name)		\
--DEFINE_EVENT_FN(x86_irq_vector, name##_entry,	\
--	TP_PROTO(int vector),			\
--	TP_ARGS(vector),			\
--	trace_resched_ipi_reg,			\
--	trace_resched_ipi_unreg);		\
--DEFINE_EVENT_FN(x86_irq_vector, name##_exit,	\
--	TP_PROTO(int vector),			\
--	TP_ARGS(vector),			\
--	trace_resched_ipi_reg,			\
--	trace_resched_ipi_unreg);
+-	.if \save_ret
+-	/*
+-	 * Push the return address to the stack. This return address can
+-	 * be found at the "real" original RSP, which was offset by 8 at
+-	 * the beginning of this macro.
+-	 */
+-	pushq	-8(\old_rsp)
+-	.endif
+-.endm
 -
- /*
-  * local_timer - called when entering/exiting a local timer interrupt
-  * vector handler
-@@ -99,7 +84,7 @@ TRACE_EVENT_PERF_PERM(irq_work_exit, is_
- /*
-  * reschedule - called when entering/exiting a reschedule vector handler
-  */
--DEFINE_RESCHED_IPI_EVENT(reschedule);
-+DEFINE_IRQ_VECTOR_EVENT(reschedule);
- 
- /*
-  * call_function - called when entering/exiting a call function interrupt
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -109,7 +109,7 @@ static const __initconst struct idt_data
-  */
- static const __initconst struct idt_data apic_idts[] = {
- #ifdef CONFIG_SMP
--	INTG(RESCHEDULE_VECTOR,			reschedule_interrupt),
-+	INTG(RESCHEDULE_VECTOR,			asm_sysvec_reschedule_ipi),
- 	INTG(CALL_FUNCTION_VECTOR,		asm_sysvec_call_function),
- 	INTG(CALL_FUNCTION_SINGLE_VECTOR,	asm_sysvec_call_function_single),
- 	INTG(IRQ_MOVE_CLEANUP_VECTOR,		asm_sysvec_irq_move_cleanup),
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -220,26 +220,15 @@ static void native_stop_other_cpus(int w
- 
- /*
-  * Reschedule call back. KVM uses this interrupt to force a cpu out of
-- * guest mode
-+ * guest mode.
-  */
--__visible void __irq_entry smp_reschedule_interrupt(struct pt_regs *regs)
-+DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_reschedule_ipi)
- {
- 	ack_APIC_irq();
-+	trace_reschedule_entry(RESCHEDULE_VECTOR);
- 	inc_irq_stat(irq_resched_count);
+-/*
+- * Undoes ENTER_IRQ_STACK.
+- */
+-.macro LEAVE_IRQ_STACK regs=1
+-	DEBUG_ENTRY_ASSERT_IRQS_OFF
+-	/* We need to be off the IRQ stack before decrementing irq_count. */
+-	popq	%rsp
 -
--	if (trace_resched_ipi_enabled()) {
--		/*
--		 * scheduler_ipi() might call irq_enter() as well, but
--		 * nested calls are fine.
--		 */
--		irq_enter();
--		trace_reschedule_entry(RESCHEDULE_VECTOR);
--		scheduler_ipi();
--		trace_reschedule_exit(RESCHEDULE_VECTOR);
--		irq_exit();
--		return;
--	}
- 	scheduler_ipi();
-+	trace_reschedule_exit(RESCHEDULE_VECTOR);
- }
- 
- DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
---- a/arch/x86/kernel/tracepoint.c
-+++ b/arch/x86/kernel/tracepoint.c
-@@ -25,20 +25,3 @@ void trace_pagefault_unreg(void)
- {
- 	static_branch_dec(&trace_pagefault_key);
- }
+-	.if \regs
+-	UNWIND_HINT_REGS
+-	.endif
 -
--#ifdef CONFIG_SMP
+-	/*
+-	 * As in ENTER_IRQ_STACK, irq_count == 0, we are still claiming
+-	 * the irq stack but we're not on it.
+-	 */
 -
--DEFINE_STATIC_KEY_FALSE(trace_resched_ipi_key);
+-	decl	PER_CPU_VAR(irq_count)
+-.endm
 -
--int trace_resched_ipi_reg(void)
--{
--	static_branch_inc(&trace_resched_ipi_key);
--	return 0;
--}
--
--void trace_resched_ipi_unreg(void)
--{
--	static_branch_dec(&trace_resched_ipi_key);
--}
--
--#endif
+ /**
+  * idtentry_body - Macro to emit code calling the C function
+  * @cfunc:		C function to be called
 
