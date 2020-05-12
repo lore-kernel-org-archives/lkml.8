@@ -2,87 +2,95 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A936C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C3BC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A342206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05173206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgELQwP (ORCPT
+        id S1726872AbgELQz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:52:15 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:43770 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgELQwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:52:14 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 04CGpPiZ024098;
-        Tue, 12 May 2020 11:51:25 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 04CGpOTZ024097;
-        Tue, 12 May 2020 11:51:24 -0500
-Date:   Tue, 12 May 2020 11:51:24 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     "Hui, Chunyang" <sanqian.hcy@antfin.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200512165124.GA24058@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <20200512115551.GA84010@sanqian-dev-0.10.0>
+        Tue, 12 May 2020 12:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgELQz0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:55:26 -0400
+Received: from eggs.gnu.org (eggs.gnu.org [IPv6:2001:470:142:3::10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FA7C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:55:26 -0700 (PDT)
+Received: from fencepost.gnu.org ([2001:470:142:3::e]:45184)
+        by eggs.gnu.org with esmtp (Exim 4.90_1)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYYBe-0002bG-7Z; Tue, 12 May 2020 12:55:22 -0400
+Received: from pool-98-118-0-140.bstnma.fios.verizon.net ([98.118.0.140]:55126 helo=pdslaptop.home)
+        by fencepost.gnu.org with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.82)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYYBc-0005EL-AV; Tue, 12 May 2020 12:55:20 -0400
+Message-ID: <d743bd7bec25c939d7419a3512239b43b990af5a.camel@gnu.org>
+Subject: Re: I disabled more compiler warnings..
+From:   Paul Smith <psmith@gnu.org>
+Reply-To: psmith@gnu.org
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>
+Cc:     'Arnd Bergmann' <arnd@arndb.de>,
+        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Date:   Tue, 12 May 2020 12:55:19 -0400
+In-Reply-To: <464ab7c2d9e144718e4a3135a41f3056@AcuMS.aculab.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+         <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+         <CAHk-=whLY8dXE6qMuPNE+Tjc6uXy+W2jACyWLxtRUH6GU2=PAA@mail.gmail.com>
+         <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+         <90909f30775744b89d1a0c40265779d9@AcuMS.aculab.com>
+         <5564c992dfeb40adbc3e6f6a29e43d2e@AcuMS.aculab.com>
+         <73dace5aca21bee09ce12aa8dcfd50daa2cd6051.camel@gnu.org>
+         <464ab7c2d9e144718e4a3135a41f3056@AcuMS.aculab.com>
+Organization: GNU's Not UNIX!
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512115551.GA84010@sanqian-dev-0.10.0>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Tue, 12 May 2020 11:51:25 -0500 (CDT)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 07:55:58PM +0800, Hui, Chunyang wrote:
+On Tue, 2020-05-12 at 15:04 +0000, David Laight wrote:
+> I think there were some sub-makes that were started with make
+> instead of $(MAKE) so ended up creating a new job pipe.
 
-> > You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
-> > 
-> > 	cat /proc/cpuinfo  | grep sgx
-> 
-> Tested-by: Chunyang Hui <sanqian.hcy@antfin.com>
+Oh, yes, that will do it.
 
-> Occlum project (https://github.com/occlum/occlum) is a libOS built
-> on top of Intel SGX feature. We ran Occlum tests using patch v29 on
-> SGX hardware with the Flexible Launch Control (FLC) feature and
-> didn't find any problems.  As Occlum core developers, we would like
-> these patches to be merged soon.
+> Doesn't it do blocking reads with SIGCHLD enabled?
 
-Do you use the Intel PSW or your own?
+No, because it's racy (by itself).
 
-Are you using the standard ECALL interface or did the tests run with
-the new VDSO entry and exception handler?
+> (or hopefully ppoll() to avoid the race)
 
-Have a good day.
+GNU make uses pselect(), on systems that support it.  On systems that
+don't support pselect() it uses a trick I described in another email:
+we dup() the FD, read() on the dup, then in the SIGCHLD handler we
+close() the dup.
 
-Dr. Greg
+> Another option is for the 'parent' make to return (or not acquire)
+> a job token for $(MAKE) commands.
 
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      Autonomously self-defensive
-Enjellic Systems Development, LLC     IOT platforms and edge devices.
-4206 N. 19th Ave.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"I had far rather walk, as I do, in daily terror of eternity, than feel
- that this was only a children's game in which all of the contestants
- would get equally worthless prizes in the end."
-                                -- T. S. Elliot
+It just feels cleaner to me to have the parent simply always take the
+token, and leave it up to the child to put it back if appropriate,
+rather than the parent putting it back.
+
+Having the parent not acquire a token at all won't work; without
+limiting sub-makes it means you might have 100's of them running at the
+same time, even with -j2 or whatever.
+
+> Or, require the sub-make acquire a token in order to exit.
+> Then it can free the token when every job terminates.
+
+I'm not sure I follow that?
+
