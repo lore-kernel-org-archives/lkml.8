@@ -2,225 +2,278 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D56C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076DDC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECF3206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:22:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kknHu2ly"
+	by mail.kernel.org (Postfix) with ESMTP id DB31B205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589304257;
+	bh=tV/BTO5B+BY+PshLAmQ7B91UMcVKDB9DdgS7ybhNBEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gEXBpkCJYTAjBN3d29WhkIY4Rbwm/oCFqdxPq1AVrXR6fRbxgjcW6kl9fLV0NHNMv
+	 rUMdUrfOLvk53mSexnIqWKABTIv88EnTgMnDg8nrZAX5S9cQPUGkfjvDoLMMv9gcje
+	 ypVSq4berAVqstD4ZeLKEYtOqcATywO7vMXaie5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgELRV7 (ORCPT
+        id S1729377AbgELRYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730083AbgELRUu (ORCPT
+        Tue, 12 May 2020 13:24:17 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44992 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELRYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:20:50 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17273C061A0F;
-        Tue, 12 May 2020 10:20:50 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u16so24382579wmc.5;
-        Tue, 12 May 2020 10:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=warlZGTIPMwehfuGjs+Vv9+pHPijyWAt9aqiIbqlDWU=;
-        b=kknHu2ly3jZYotglJiCtoz235CN76SOZz2BE1ZhwljnFRxFTBGl9XeiHBg7mUxwYAV
-         aHEqfdJkyleQr+lGnpRbtc++LC7VOKKIWRvER9RK7rqWRwg7SwnbU2rkPRbG6vdh9cO3
-         Tn/2/uSfx0On9gAdswqeIGb5ce+pXk8M+lhWWs4vZLKg92LUx5oYrzbxN9N5ynLop/YB
-         5XJG9kBAL3kSZIYiNghuAoYswZYi1o8ZM5cnTES6gE1XjQ4GfBCOhshaHZD+4+Aesr9u
-         80tqMYPtBPDzvGrAwZqxol/eTSawkeZyAAL3N5npwdqMD5NGSAfyDOZPyCkHAh4lVZnz
-         aHng==
+        Tue, 12 May 2020 13:24:17 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b8so6427431pgi.11;
+        Tue, 12 May 2020 10:24:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=warlZGTIPMwehfuGjs+Vv9+pHPijyWAt9aqiIbqlDWU=;
-        b=bYwKNVJhbk9csmQG1JxGNsF5LZWsjcxrNJFHNHzgJAF8mHPm/PHk3AaeHFekGaWD+4
-         GV9Xg4VQuNWl/vnlRmlBxD71gBi7IMayykJ3NO+HvMCIx2IGT5TYbIlZA3wIXqDcGtUI
-         qyrcOVLr9uJZNcJ4pOLapbU6nfe4T6Pq1RitShzDD3rbMrPiFTM0eSl29gz3iyCHsjQM
-         0EzvISpiShseEOmh7SGDL5q8UBmdsGQ7vaO+8BlOv26kOPDFXRyeHhDPXuaa6+J0u4kD
-         SPmZVcIAMBqTL78T23znAhgrhaAXlbLcpVJq5gxG1odX0BMTsbncs9UEQUKWQegPBDyF
-         H3fg==
-X-Gm-Message-State: AGi0PubQzNpPUgYN4Zx9lGYaFSKaQs/ej83yAEapOVsRv5yKfyyNnI4o
-        UnJc2meGsl5v9W3dS6ZtxLc=
-X-Google-Smtp-Source: APiQypLdUdmJEmszv1MEtcREIePjv65EJ0j8BbazM4zDQQ5/hYRfYN1TQTcQJ68ikzcgZf78vwQ/vA==
-X-Received: by 2002:a1c:8148:: with SMTP id c69mr29085328wmd.144.1589304048741;
-        Tue, 12 May 2020 10:20:48 -0700 (PDT)
-Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dcdkn+8Y5yBPrArGp86XHP6unAj0YxcB3Hd+tWo8Yjg=;
+        b=IyjfHZy6iytVpBvgLxBu072vH0d1L/jvIlljXyM5J2Fnrns208X/aD7S0olWEo0nFR
+         8HV9UoseOb1WqV5J0TwRWzz5k3WN58yLoWWGpclpaplpWgyKgeyK04FC7JJAsFSKOdPT
+         FdJbCCXLD9DBj0p3YxniN3n16sFflv11BPh2ljXx9741gH+JYmGjDpsQ3cfdqrBQf571
+         tVV7j+syG9lcJuSMG8VS8k9Xh8UPv7PpPSH+3JbdkPvFqJ8XR9TrHd1s8gAgwjibg5Ta
+         13Fh2xcmY6IzxB6drxQ6nG6TzjdAmg7ydb86Y5nlGSGI5WaW6WggEaEYFJA+kgfauKq0
+         2uuQ==
+X-Gm-Message-State: AGi0PuYols8eOL4d7mdvAvjrQkXL1l//+t6uD5TzTuBtgAXFyBDS684C
+        x45rwd/+0GWNYh9m7434frg=
+X-Google-Smtp-Source: APiQypJnFxLzvcTaWa+2Y6oDWm5iEONX7kM4uSNpvwOfnQtK9cQpf+fXrVwOMIbTchbliL/bJ9uDGw==
+X-Received: by 2002:a63:d501:: with SMTP id c1mr19999745pgg.186.1589304255599;
+        Tue, 12 May 2020 10:24:15 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id p9sm3871513pgb.19.2020.05.12.10.24.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 10:20:48 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
-Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
-        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 net-next 04/15] net: dsa: sja1105: deny alterations of dsa_8021q VLANs from the bridge
-Date:   Tue, 12 May 2020 20:20:28 +0300
-Message-Id: <20200512172039.14136-5-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512172039.14136-1-olteanv@gmail.com>
-References: <20200512172039.14136-1-olteanv@gmail.com>
+        Tue, 12 May 2020 10:24:14 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 7A68B4063E; Tue, 12 May 2020 17:24:13 +0000 (UTC)
+Date:   Tue, 12 May 2020 17:24:13 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+Message-ID: <20200512172413.GC11244@42.do-not-panic.com>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+ <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+ <20200512003305.GX11244@42.do-not-panic.com>
+ <87y2pxs73w.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2pxs73w.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+> Luis Chamberlain <mcgrof@kernel.org> writes:
+> 
+> > On Mon, May 11, 2020 at 09:55:16AM +0800, Xiaoming Ni wrote:
+> >> On 2020/5/11 9:11, Stephen Rothwell wrote:
+> >> > Hi all,
+> >> > 
+> >> > Today's linux-next merge of the vfs tree got a conflict in:
+> >> > 
+> >> >    kernel/sysctl.c
+> >> > 
+> >> > between commit:
+> >> > 
+> >> >    b6522fa409cf ("parisc: add sysctl file interface panic_on_stackoverflow")
+> >> > 
+> >> > from the parisc-hd tree and commit:
+> >> > 
+> >> >    f461d2dcd511 ("sysctl: avoid forward declarations")
+> >> > 
+> >> > from the vfs tree.
+> >> > 
+> >> > I fixed it up (see below) and can carry the fix as necessary. This
+> >> > is now fixed as far as linux-next is concerned, but any non trivial
+> >> > conflicts should be mentioned to your upstream maintainer when your tree
+> >> > is submitted for merging.  You may also want to consider cooperating
+> >> > with the maintainer of the conflicting tree to minimise any particularly
+> >> > complex conflicts.
+> >> > 
+> >> 
+> >> 
+> >> Kernel/sysctl.c contains more than 190 interface files, and there are a
+> >> large number of config macro controls. When modifying the sysctl interface
+> >> directly in kernel/sysctl.c , conflicts are very easy to occur.
+> >> 
+> >> At the same time, the register_sysctl_table() provided by the system can
+> >> easily add the sysctl interface, and there is no conflict of kernel/sysctl.c
+> >> .
+> >> 
+> >> Should we add instructions in the patch guide (coding-style.rst
+> >> submitting-patches.rst):
+> >> Preferentially use register_sysctl_table() to add a new sysctl interface,
+> >> centralize feature codes, and avoid directly modifying kernel/sysctl.c ?
+> >
+> > Yes, however I don't think folks know how to do this well. So I think we
+> > just have to do at least start ourselves, and then reflect some of this
+> > in the docs.  The reason that this can be not easy is that we need to
+> > ensure that at an init level we haven't busted dependencies on setting
+> > this. We also just don't have docs on how to do this well.
+> >
+> >> In addition, is it necessary to transfer the architecture-related sysctl
+> >> interface to arch/xxx/kernel/sysctl.c ?
+> 
+> 
+> >
+> > Well here's an initial attempt to start with fs stuff in a very
+> > conservative way. What do folks think?
+> 
+> I don't see how any of that deals with the current conflict in -next.
 
-At the moment, this can never happen. The 2 modes that we operate in do
-not permit that:
+The point is to cleanup the kitchen sink full of knobs everyone from
+different subsystem has put in place for random things so to reduce
+the amount of edits on the file, so to then avoid the possibility
+of merge conflicts.
 
- - SJA1105_VLAN_UNAWARE: we are guarded from bridge VLANs added by the
-   user by the DSA core. We will later lift this restriction by setting
-   ds->vlan_bridge_vtu = true, and that is where we'll need it.
+> You are putting the fs sysctls in the wrong place.  The should live
+> in fs/ not in fs/proc/.
 
- - SJA1105_VLAN_FILTERING_FULL: in this mode, dsa_8021q configuration is
-   disabled. So the user is free to add these VLANs in the 1024-3071
-   range.
+That's an easy fix, sure, I'll do that.
 
-The reason for the patch is that we'll introduce a third VLAN awareness
-state, where both dsa_8021q as well as the bridge are going to call our
-.port_vlan_add and .port_vlan_del methods.
+> Otherwise you are pretty much repeating
+> the problem the problem of poorly located code in another location.
 
-For that, we need a good way to discriminate between the 2. The easiest
-(and less intrusive way for upper layers) is to recognize the fact that
-dsa_8021q configurations are always driven by our driver - we _know_
-when a .port_vlan_add method will be called from dsa_8021q because _we_
-initiated it.
+Sure, alright, well I'll chug on with trying to clean up the kitchen
+sink. We can decide where we put items during review.
 
-So introduce an expect_dsa_8021q boolean which is only used, at the
-moment, for blacklisting VLANs in range 1024-3071 in the modes when
-dsa_8021q is active.
+> >  fs/proc/Makefile          |  1 +
+> >  fs/proc/fs_sysctl_table.c | 97 +++++++++++++++++++++++++++++++++++++++
+> >  kernel/sysctl.c           | 48 -------------------
+> >  3 files changed, 98 insertions(+), 48 deletions(-)
+> >  create mode 100644 fs/proc/fs_sysctl_table.c
+> >
+> > diff --git a/fs/proc/Makefile b/fs/proc/Makefile
+> > index bd08616ed8ba..8bf419b2ac7d 100644
+> > --- a/fs/proc/Makefile
+> > +++ b/fs/proc/Makefile
+> > @@ -28,6 +28,7 @@ proc-y	+= namespaces.o
+> >  proc-y	+= self.o
+> >  proc-y	+= thread_self.o
+> >  proc-$(CONFIG_PROC_SYSCTL)	+= proc_sysctl.o
+> > +proc-$(CONFIG_SYSCTL)		+= fs_sysctl_table.o
+> >  proc-$(CONFIG_NET)		+= proc_net.o
+> >  proc-$(CONFIG_PROC_KCORE)	+= kcore.o
+> >  proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
+> > diff --git a/fs/proc/fs_sysctl_table.c b/fs/proc/fs_sysctl_table.c
+> > new file mode 100644
+> > index 000000000000..f56a49989872
+> > --- /dev/null
+> > +++ b/fs/proc/fs_sysctl_table.c
+> > @@ -0,0 +1,97 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * /proc/sys/fs sysctl table
+> > + */
+> > +#include <linux/init.h>
+> > +#include <linux/sysctl.h>
+> > +#include <linux/poll.h>
+> > +#include <linux/proc_fs.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/security.h>
+> > +#include <linux/sched.h>
+> > +#include <linux/cred.h>
+> > +#include <linux/namei.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/module.h>
+> > +#include <linux/bpf-cgroup.h>
+> > +#include <linux/mount.h>
+> > +#include <linux/dnotify.h>
+> > +#include <linux/pipe_fs_i.h>
+> > +#include <linux/aio.h>
+> > +#include <linux/inotify.h>
+> > +#include <linux/kmemleak.h>
+> > +#include <linux/binfmts.h>
+> > +
+> > +static unsigned long zero_ul;
+> > +static unsigned long long_max = LONG_MAX;
+> > +
+> > +static struct ctl_table fs_table[] = {
+> > +	{
+> > +		.procname	= "inode-nr",
+> > +		.data		= &inodes_stat,
+> > +		.maxlen		= 2*sizeof(long),
+> > +		.mode		= 0444,
+> > +		.proc_handler	= proc_nr_inodes,
+> > +	},
+> > +	{
+> > +		.procname	= "inode-state",
+> > +		.data		= &inodes_stat,
+> > +		.maxlen		= 7*sizeof(long),
+> > +		.mode		= 0444,
+> > +		.proc_handler	= proc_nr_inodes,
+> > +	},
+> > +	{
+> > +		.procname	= "file-nr",
+> > +		.data		= &files_stat,
+> > +		.maxlen		= sizeof(files_stat),
+> > +		.mode		= 0444,
+> > +		.proc_handler	= proc_nr_files,
+> > +	},
+> > +	{
+> > +		.procname	= "file-max",
+> > +		.data		= &files_stat.max_files,
+> > +		.maxlen		= sizeof(files_stat.max_files),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= proc_doulongvec_minmax,
+> > +		.extra1		= &zero_ul,
+> > +		.extra2		= &long_max,
+> > +	},
+> > +	{
+> > +		.procname	= "nr_open",
+> > +		.data		= &sysctl_nr_open,
+> > +		.maxlen		= sizeof(unsigned int),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= proc_dointvec_minmax,
+> > +		.extra1		= &sysctl_nr_open_min,
+> > +		.extra2		= &sysctl_nr_open_max,
+> > +	},
+> > +	{
+> > +		.procname	= "dentry-state",
+> > +		.data		= &dentry_stat,
+> > +		.maxlen		= 6*sizeof(long),
+> > +		.mode		= 0444,
+> > +		.proc_handler	= proc_nr_dentry,
+> > +	},
+> > +	{ }
+> > +};
+> > +
+> > +static struct ctl_table fs_base_table[] = {
+> > +	{
+> > +		.procname	= "fs",
+> > +		.mode		= 0555,
+> > +		.child		= fs_table,
+> > +	},
+> > +	{ }
+> > +};
+>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+> > > +static int __init fs_procsys_init(void)
+> > +{
+> > +	struct ctl_table_header *hdr;
+> > +
+> > +	hdr = register_sysctl_table(fs_base_table);
+>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+> 	AKA
+>         hdr = register_sysctl("fs", fs_table);
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Changes in v3:
-None.
+Ah, much cleaner thanks!
 
-Changes in v2:
-None.
-
- drivers/net/dsa/sja1105/sja1105.h      |  1 +
- drivers/net/dsa/sja1105/sja1105_main.c | 31 +++++++++++++++++++++++++-
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
-index 5b2b275d01a7..667056d0c819 100644
---- a/drivers/net/dsa/sja1105/sja1105.h
-+++ b/drivers/net/dsa/sja1105/sja1105.h
-@@ -198,6 +198,7 @@ struct sja1105_private {
- 	 * the switch doesn't confuse them with one another.
- 	 */
- 	struct mutex mgmt_lock;
-+	bool expect_dsa_8021q;
- 	enum sja1105_vlan_state vlan_state;
- 	struct sja1105_tagger_data tagger_data;
- 	struct sja1105_ptp_data ptp_data;
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index e7b675909288..8e68adba9144 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1811,15 +1811,19 @@ static int sja1105_crosschip_bridge_join(struct dsa_switch *ds,
- 		if (dsa_to_port(ds, port)->bridge_dev != br)
- 			continue;
- 
-+		other_priv->expect_dsa_8021q = true;
- 		rc = dsa_8021q_crosschip_bridge_join(ds, port, other_ds,
- 						     other_port, br,
- 						     &priv->crosschip_links);
-+		other_priv->expect_dsa_8021q = false;
- 		if (rc)
- 			return rc;
- 
-+		priv->expect_dsa_8021q = true;
- 		rc = dsa_8021q_crosschip_bridge_join(other_ds, other_port, ds,
- 						     port, br,
- 						     &other_priv->crosschip_links);
-+		priv->expect_dsa_8021q = false;
- 		if (rc)
- 			return rc;
- 	}
-@@ -1846,12 +1850,16 @@ static void sja1105_crosschip_bridge_leave(struct dsa_switch *ds,
- 		if (dsa_to_port(ds, port)->bridge_dev != br)
- 			continue;
- 
-+		other_priv->expect_dsa_8021q = true;
- 		dsa_8021q_crosschip_bridge_leave(ds, port, other_ds, other_port,
- 						 br, &priv->crosschip_links);
-+		other_priv->expect_dsa_8021q = false;
- 
-+		priv->expect_dsa_8021q = true;
- 		dsa_8021q_crosschip_bridge_leave(other_ds, other_port, ds,
- 						 port, br,
- 						 &other_priv->crosschip_links);
-+		priv->expect_dsa_8021q = false;
- 	}
- }
- 
-@@ -1862,8 +1870,10 @@ static int sja1105_replay_crosschip_vlans(struct dsa_switch *ds, bool enabled)
- 	int rc;
- 
- 	list_for_each_entry(c, &priv->crosschip_links, list) {
-+		priv->expect_dsa_8021q = true;
- 		rc = dsa_8021q_crosschip_link_apply(ds, c->port, c->other_ds,
- 						    c->other_port, enabled);
-+		priv->expect_dsa_8021q = false;
- 		if (rc)
- 			break;
- 	}
-@@ -1873,10 +1883,13 @@ static int sja1105_replay_crosschip_vlans(struct dsa_switch *ds, bool enabled)
- 
- static int sja1105_setup_8021q_tagging(struct dsa_switch *ds, bool enabled)
- {
-+	struct sja1105_private *priv = ds->priv;
- 	int rc, i;
- 
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
-+		priv->expect_dsa_8021q = true;
- 		rc = dsa_port_setup_8021q_tagging(ds, i, enabled);
-+		priv->expect_dsa_8021q = false;
- 		if (rc < 0) {
- 			dev_err(ds->dev, "Failed to setup VLAN tagging for port %d: %d\n",
- 				i, rc);
-@@ -1901,10 +1914,26 @@ sja1105_get_tag_protocol(struct dsa_switch *ds, int port,
- 	return DSA_TAG_PROTO_SJA1105;
- }
- 
--/* This callback needs to be present */
- static int sja1105_vlan_prepare(struct dsa_switch *ds, int port,
- 				const struct switchdev_obj_port_vlan *vlan)
- {
-+	struct sja1105_private *priv = ds->priv;
-+	u16 vid;
-+
-+	if (priv->vlan_state == SJA1105_VLAN_FILTERING_FULL)
-+		return 0;
-+
-+	/* If the user wants best-effort VLAN filtering (aka vlan_filtering
-+	 * bridge plus tagging), be sure to at least deny alterations to the
-+	 * configuration done by dsa_8021q.
-+	 */
-+	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
-+		if (!priv->expect_dsa_8021q && vid_is_dsa_8021q(vid)) {
-+			dev_err(ds->dev, "Range 1024-3071 reserved for dsa_8021q operation\n");
-+			return -EBUSY;
-+		}
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.17.1
-
+  Luis
