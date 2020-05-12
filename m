@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9D8C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2548FC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E730120784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE8520747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589316350;
-	bh=kyCv3peq7BasHiAHGKeYVkunRvQB8jDKelimwrNQ4FA=;
+	s=default; t=1589316353;
+	bh=NmG8SVoFCnlyWQ7xE7+NWsL3AT5FUgQLIAtoK3zjpqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chjndV8p1bAaiY55sLqaiBjBd+PGiELJtNlLIdpb8GFJFYc+9kxbWDM+ZFuFkHM5V
-	 n4/SGQ93r15h+nZE7Ab0QP6c6uBPAy+Eld4kOg4LTBoCFN7PGJM+xqzylTum2v5fxn
-	 rocXuLrIFao4vCW/F0tg9H6uSuyckfalF9mj+m88=
+	b=s5cyet1ZvDvr3CmnIh7kQMbrY1A0IepbwD0IZQ/DR1w88r/AwCGuqbhzwqrU2dq1O
+	 ekoJ5lo4jEPl0DlPA2EeJ33mlgh09DG7cvbwXG+doBxbkF7fb2Z4NPqzz12kfPRWsG
+	 C9EdshJzRiZyl8WgMCBqaFNPq04jR8JD3Mc/NtEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbgELUpt (ORCPT
+        id S1731235AbgELUpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:45:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33713 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbgELUpr (ORCPT
+        Tue, 12 May 2020 16:45:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33714 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731195AbgELUpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:45:47 -0400
-Received: by mail-ot1-f67.google.com with SMTP id v17so3720863ote.0;
-        Tue, 12 May 2020 13:45:46 -0700 (PDT)
+        Tue, 12 May 2020 16:45:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id v17so3720943ote.0;
+        Tue, 12 May 2020 13:45:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VJvdTJ4jQBHWyFFbREMP+Lv+gPEpGjqcWga31H9+mpg=;
-        b=ImCxQMsxnureHe5CwGf5mpPuX9v/ZN5Bqv3eeqwFoPBnu0LSiaKCy7pQnT8XipM6H+
-         xfmikl4kYD2B5hcStuAVKT+eupiXGNj73xQu+dlJzYPlGTLkfG19a9ZG+EAVto3dj++w
-         ZGf2lpZ6cilWlRX0hUBi1egPmneq38ZwsXrT8MeJDn4uH/aQIzUwwgI/OR7dSQnfdB5T
-         i/95SG62mNPz9sq4WEGdagI+j7PmMpwUIKPLMAD9IRWOovFfp56/aqMKsqSD5i9ZM4BC
-         wfyltEfG/lTBgyx16jg9k1zWHba/a4GLnXCvlQvw1jww8ckKqpnJMR5QzLsg/0nlcJoL
-         DjLg==
-X-Gm-Message-State: AGi0PuZGomrNbggTaSX9Ei/pA0eC6WoDA/Lj5dO2BPbVimBuod7V7JQV
-        yyNrQTMFZwehQP2fxm7yu1nmh9g=
-X-Google-Smtp-Source: APiQypJ8NoEp+WU4AqvLu3ChtOsWB5L3IyPkRqNshS1uxkH//6r9AWldVT02FIkl3//22JLPnrv+fQ==
-X-Received: by 2002:a9d:6151:: with SMTP id c17mr5223055otk.219.1589316345959;
-        Tue, 12 May 2020 13:45:45 -0700 (PDT)
+        bh=ROTQQRmdcUsStwRKkfy6Q00GnOxE+nfhmcwjzr4lDeg=;
+        b=PSfQn1GsFdfwL/0nn8vxHeBKvMQ2Sbs53Kqok4p4VuaafUo2CxSrYLCC2INpmcfR1t
+         lTMkZ/N99N52YFqDI/tVs5RA9CsTkAw9K0s8cF9pWIxutO4f+1+y2rOad/C2BfKgIE9h
+         Afkpjj7z3OJDxWNeEKAWuJ8gIKQ+6nbhJ8EYB9xB8AIXLMfc1ju3DDDAgw6oS9RpGRkf
+         MjlL6rBrtU7yffupoMNs232Mdg6wArVkAIZcB2wmvvt05C1NPbvaA8f6shdw+Mdo+pnE
+         LtdLjOxJ3dGdNJlyyx+h6c5g2cLnrEdvHM52uY+Md59YvKBS4tXCGyvqx8eyiQfDx66O
+         dCCg==
+X-Gm-Message-State: AGi0PuaOtEd62yIgJPmLYBx6t7wgshDDkoRY1gbGVVXPHgBJE5anw4Mk
+        w2w3t9yFqAwivQuqhBURKTj6V2k=
+X-Google-Smtp-Source: APiQypJ1PDF2eDVooFvjNgsHr+joxMhIx8+O1j7KXhZ9mhhvKW9kguaFARgq2V5ZkR7s7mNGKgdPkg==
+X-Received: by 2002:a05:6830:1241:: with SMTP id s1mr18607355otp.119.1589316348414;
+        Tue, 12 May 2020 13:45:48 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id k8sm3943792ood.24.2020.05.12.13.45.45
+        by smtp.googlemail.com with ESMTPSA id k8sm3943792ood.24.2020.05.12.13.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:45:45 -0700 (PDT)
+        Tue, 12 May 2020 13:45:48 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
 Cc:     linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 2/5] dt-bindings: usb: ehci: Add missing 2nd register region
-Date:   Tue, 12 May 2020 15:45:40 -0500
-Message-Id: <20200512204543.22090-2-robh@kernel.org>
+        Mark Brown <broonie@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 4/5] dt-bindings: ufs: ti: Add missing 'additionalProperties: false'
+Date:   Tue, 12 May 2020 15:45:42 -0500
+Message-Id: <20200512204543.22090-4-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200512204543.22090-1-robh@kernel.org>
 References: <20200512204543.22090-1-robh@kernel.org>
@@ -69,57 +70,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'ibm,usb-ehci-440epx' compatible has a 2nd 'reg' region, but the
-schema says there is only 1 region. Fix this.
+The ti,j721e-ufs schema is missing an 'additionalProperties: false'. Add
+that and and the missing assigned-clock properties.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Please ack, dependency for patch 5.
+ Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- .../devicetree/bindings/usb/generic-ehci.yaml | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-index 848eea59bc00..37a818d72a74 100644
---- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-@@ -6,19 +6,30 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: USB EHCI Controller Device Tree Bindings
- 
--allOf:
--  - $ref: "usb-hcd.yaml"
--
- maintainers:
-   - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- 
-+allOf:
-+  - $ref: "usb-hcd.yaml"
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: ibm,usb-ehci-440epx
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 1
-+
- properties:
-   compatible:
-     contains:
-       const: generic-ehci
- 
-   reg:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 2
- 
-   interrupts:
+diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+index b503b1a918a5..4d13e6bc1c50 100644
+--- a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
++++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+@@ -25,6 +25,12 @@ properties:
+   power-domains:
      maxItems: 1
+ 
++  assigned-clocks:
++    maxItems: 1
++
++  assigned-clock-parents:
++    maxItems: 1
++
+   "#address-cells":
+     const: 2
+ 
+@@ -47,6 +53,8 @@ patternProperties:
+       Documentation/devicetree/bindings/ufs/cdns,ufshc.txt for binding
+       documentation of child node
+ 
++additionalProperties: false
++
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
 -- 
 2.20.1
 
