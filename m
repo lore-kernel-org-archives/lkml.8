@@ -2,103 +2,160 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787FAC47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70CDC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0B02071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF2920722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTUTR10H"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F7E1vzNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgELCKP (ORCPT
+        id S1728557AbgELCLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbgELCKP (ORCPT
+        Mon, 11 May 2020 22:11:13 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62051 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727892AbgELCLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:10:15 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC30C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 19:10:15 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id b8so6194532ybn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 19:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zcq/C2mPvyaxNF2lVsVAAK7HuZoD0vL2Lekk73ttM9c=;
-        b=QTUTR10HRSLC/TmGuicNIvhxEmKHNlDigJZyRKIMl5gsEAteM0iWF2eGAR9PHoTKdk
-         At3sV9vTEbhZ8oRwK/8/kCkUgmTNEE1Repq8YEpp93GaLiWSyTmfOzhDkJz0KlCT55JN
-         bsVpDPvwP32JFAJl9iu8vSl5V6tSmUurImMPDwvROdzbHw9ELGxiq0ZF6ucA3herDxcs
-         WdOWxLlkcB3zq4eaI1iWNmf3/S2ZT5nUyhO59z7zVvp+IXyTabwffYP4Zt6ZelvPvVIe
-         nqaNU/M2Q7apIJRecgFESPxwZzKAh4utAi8TGLCalSX5LLlpvewah/jzj4b6sJ0yGDs6
-         ucuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zcq/C2mPvyaxNF2lVsVAAK7HuZoD0vL2Lekk73ttM9c=;
-        b=N5TjXKAMLfVAbhi4SRDqKJRxsavfXX4283cgCoH/z8PVgr6wq4ZNWhHjnG0ED1cUvH
-         oaBfmlCEfNA4cJOxoA5IPH0jVeDDq97DaUtytxIbid32SX2SRsNwFnJuBBrBehrI9TWd
-         HtFp6RgBe+CZkPOWHC8Lfx9Zz23ovhJIawetVZCEfFcNcB55F5ddH5XXBqrR3Nxbkq9k
-         oGjJsxvzzJ5eEzKxJjpOrkCfVe/tsJKAA1wDroYmoeMEdp3k2u7wlWxzZSBuAUA/Y21o
-         /Cae+cjI5+cx5u69yr9j5wophF8wCEs2Se+0b7x1E3C1FcSzfMTNqh+dJ+sKfcKqKnYI
-         L13w==
-X-Gm-Message-State: AGi0PuZsFdwegChaykTPbOYMH2wGdSNTbRVMFMC0LAoIIdJ4cwYvS3YG
-        wTsBwnG8NTReSiIZz68L2P19kKjebR7TDvFFbmc=
-X-Google-Smtp-Source: APiQypJrvsmTHW860BhtnJ2gO7lfm9Dv5dNGo6aH4Lk4s07qsm3DIExyEcz8w8paVk2wwZrwAOzwCSLAi48y0m9hQv8=
-X-Received: by 2002:a25:9d82:: with SMTP id v2mr29859246ybp.268.1589249414325;
- Mon, 11 May 2020 19:10:14 -0700 (PDT)
+        Mon, 11 May 2020 22:11:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589249472; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=QNYQNyInAghRaEYuVraZ7NwiX9YVEOfA+XK0Ft46+dA=; b=F7E1vzNeq1EDks6H/NYHw79BIrCRiXvavwU9XvuysOxeznS9ze6/MIbk8esqtKawEovIQoZs
+ Q8dUHuzAy92t/dW/XXCuz6wELbdTYOBuSFqjRRhp+RkrDLLxIFI/I23OpI60JxDfLZq57NLh
+ +JtQRAn3OrS5dQDiovHpFb68Jxc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eba05bb.7f2dc19e9c38-smtp-out-n03;
+ Tue, 12 May 2020 02:11:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DDD58C433BA; Tue, 12 May 2020 02:11:06 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1CE62C433CB;
+        Tue, 12 May 2020 02:10:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1CE62C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Tue, 12 May 2020 07:40:56 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200512021056.GA31725@codeaurora.org>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
 MIME-Version: 1.0
-References: <20200511224148.598468-1-lyude@redhat.com> <20200511224148.598468-4-lyude@redhat.com>
- <CAKb7UvjQfw9UvxCdcu1k3t0dnq7PdQJrw5CtWhB42=uiW9-4dA@mail.gmail.com>
-In-Reply-To: <CAKb7UvjQfw9UvxCdcu1k3t0dnq7PdQJrw5CtWhB42=uiW9-4dA@mail.gmail.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Tue, 12 May 2020 12:10:03 +1000
-Message-ID: <CACAvsv7V4wHhCKVaA7F-GiF-cN21E-z82JBp=pnePgWj-Kcq0A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] drm/nouveau/kms/gv100-: Add support for interlaced modes
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Lyude Paul <lyude@redhat.com>, David Airlie <airlied@linux.ie>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511154053.7822-1-qais.yousef@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 09:06, Ilia Mirkin <imirkin@alum.mit.edu> wrote:
->
-> On Mon, May 11, 2020 at 6:42 PM Lyude Paul <lyude@redhat.com> wrote:
-> > diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> > index 43bcbb6d73c4..6dae00da5d7e 100644
-> > --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-> > +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> > @@ -1065,7 +1065,7 @@ nouveau_connector_mode_valid(struct drm_connector *connector,
-> >                 return get_slave_funcs(encoder)->mode_valid(encoder, mode);
-> >         case DCB_OUTPUT_DP:
-> >                 if (mode->flags & DRM_MODE_FLAG_INTERLACE &&
-> > -                   !nv_encoder->dp.caps.interlace)
-> > +                   !nv_encoder->caps.dp_interlace)
-> >                         return MODE_NO_INTERLACE;
-> >
-> >                 max_clock  = nv_encoder->dp.link_nr;
->
-> You probably meant for this hunk to go into an earlier patch.
-I fixed this and merged the series.
+On Mon, May 11, 2020 at 04:40:52PM +0100, Qais Yousef wrote:
+> RT tasks by default run at the highest capacity/performance level. When
+> uclamp is selected this default behavior is retained by enforcing the
+> requested uclamp.min (p->uclamp_req[UCLAMP_MIN]) of the RT tasks to be
+> uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
+> value.
+> 
+> This is also referred to as 'the default boost value of RT tasks'.
+> 
+> See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
+> 
+> On battery powered devices, it is desired to control this default
+> (currently hardcoded) behavior at runtime to reduce energy consumed by
+> RT tasks.
+> 
+> For example, a mobile device manufacturer where big.LITTLE architecture
+> is dominant, the performance of the little cores varies across SoCs, and
+> on high end ones the big cores could be too power hungry.
+> 
+> Given the diversity of SoCs, the new knob allows manufactures to tune
+> the best performance/power for RT tasks for the particular hardware they
+> run on.
+> 
+> They could opt to further tune the value when the user selects
+> a different power saving mode or when the device is actively charging.
+> 
+> The runtime aspect of it further helps in creating a single kernel image
+> that can be run on multiple devices that require different tuning.
+> 
+> Keep in mind that a lot of RT tasks in the system are created by the
+> kernel. On Android for instance I can see over 50 RT tasks, only
+> a handful of which created by the Android framework.
+> 
+> To control the default behavior globally by system admins and device
+> integrators, introduce the new sysctl_sched_uclamp_util_min_rt_default
+> to change the default boost value of the RT tasks.
+> 
+> I anticipate this to be mostly in the form of modifying the init script
+> of a particular device.
+> 
+> Whenever the new default changes, it'd be applied lazily on the next
+> opportunity the scheduler needs to calculate the effective uclamp.min
+> value for the task, assuming that it still uses the system default value
+> and not a user applied one.
+> 
+> Tested on Juno-r2 in combination with the RT capacity awareness [1].
+> By default an RT task will go to the highest capacity CPU and run at the
+> maximum frequency, which is particularly energy inefficient on high end
+> mobile devices because the biggest core[s] are 'huge' and power hungry.
+> 
+> With this patch the RT task can be controlled to run anywhere by
+> default, and doesn't cause the frequency to be maximum all the time.
+> Yet any task that really needs to be boosted can easily escape this
+> default behavior by modifying its requested uclamp.min value
+> (p->uclamp_req[UCLAMP_MIN]) via sched_setattr() syscall.
+> 
+> [1] 804d402fb6f6: ("sched/rt: Make RT capacity-aware")
+> 
 
-Ben.
->
->   -ilia
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I have tested this patch on SDM845 running V5.7-rc4 and it works as expected.
+
+Default: i.e /proc/sys/kernel/sched_util_clamp_min_rt_default = 1024.
+
+RT task runs on BIG cluster every time at max frequency. Both effective
+and requested uclamp.min are set to 1024
+
+With /proc/sys/kernel/sched_util_clamp_min_rt_default = 128
+
+RT task runs on Little cluster (max capacity is 404) and frequency scaling
+happens as per the change in utilization. Both effective and requested
+uclamp are set to 128.
+
+Feel free to add
+
+Tested-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+
+Thanks,
+Pavan
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
