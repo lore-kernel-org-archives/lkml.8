@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6CC54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB4CC54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 302FA206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C7F206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aLmG0GtP"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EI0gZjxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgELL5z (ORCPT
+        id S1729831AbgELL6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:57:55 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:20582 "EHLO
+        Tue, 12 May 2020 07:58:08 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:20647 "EHLO
         smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgELL5x (ORCPT
+        with ESMTP id S1729207AbgELL6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:57:53 -0400
+        Tue, 12 May 2020 07:58:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589284671; x=1620820671;
+  t=1589284687; x=1620820687;
   h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=2X8wFIWH/OCpC0vaKTuVO5YbgUHRk3YRMtNScH+nXL8=;
-  b=aLmG0GtPFuSmL+s0PNoNhiqJ06in7wTrhXqsSlYD1drl0i+mUv4fKpAp
-   jXY2tn3KFWK4kG3Te+4JHDDsNfrnD1cLNFyje6WBR8sNdNdTnPT3FnPBu
-   SbqOsCBZM0399imFwnoYHm05B2ZNvvpXweROVU+WCUEfeqR62IBwKQefa
-   Y=;
-IronPort-SDR: yux5I2/JuC3CcNHdpK47BBH7J2xE3L4SBt/G9noTmCHV0e7GWhPxHK69SKXct7kDhVGtyYJPY7
- Aj0WF+GH27VA==
+   references:mime-version:content-transfer-encoding;
+  bh=fVTDlJRsj7WFzWh2TofOuuLmKGmvfqIkitYBNw6RneU=;
+  b=EI0gZjxKQWRi6qi03nYy3Gfbjtf6YzQUFz2EEFpvBaNEsLZCAgaQG1v7
+   QsuyeBzCZvTdp2wh8qMQJfVhxOKWkYpjGKewmBzjwHigSqP/5IA/lTAbF
+   A83aeXPUbjFJHGK9Lmas/mosgmJoB0HAaTFWnA9ws02mPSz6L9+5RKH+A
+   M=;
+IronPort-SDR: +rFfzpSQ9silIKThJIsIokiEyFGt29J10p61d5JbNIi06DGUbgqZXFZ1kzDEtQlrcBNxSv6nzx
+ 2A3YzyMaD50A==
 X-IronPort-AV: E=Sophos;i="5.73,383,1583193600"; 
-   d="scan'208";a="34490103"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 May 2020 11:57:50 +0000
+   d="scan'208";a="34490141"
+Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.34])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 May 2020 11:58:07 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 9525EA22A2;
-        Tue, 12 May 2020 11:57:47 +0000 (UTC)
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id E87EBA1C12;
+        Tue, 12 May 2020 11:58:03 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 12 May 2020 11:57:47 +0000
+ id 15.0.1497.2; Tue, 12 May 2020 11:58:03 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 12 May 2020 11:57:31 +0000
+ id 15.0.1497.2; Tue, 12 May 2020 11:57:48 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -66,14 +66,15 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
         <linux-damon@amazon.com>, <linux-mm@kvack.org>,
         <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v8 7/8] damon/tools: Support more human friendly 'schemes' control
-Date:   Tue, 12 May 2020 13:53:42 +0200
-Message-ID: <20200512115343.27699-8-sjpark@amazon.com>
+Subject: [RFC v8 8/8] Documentation/admin-guide/mm: Document DAMON-based operation schemes
+Date:   Tue, 12 May 2020 13:53:43 +0200
+Message-ID: <20200512115343.27699-9-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512115343.27699-1-sjpark@amazon.com>
 References: <20200512115343.27699-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.43.160.100]
 X-ClientProxiedBy: EX13D17UWB003.ant.amazon.com (10.43.161.42) To
  EX13D31EUA001.ant.amazon.com (10.43.165.15)
@@ -84,35 +85,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit implements 'schemes' subcommand of the damon userspace tool.
-It can be used to describe and apply the data access monitoring-based
-operation schemes in more human friendly fashion.
+This commit documents DAMON-based operation schemes in the DAMON
+document.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/damon/_convert_damos.py | 127 ++++++++++++++++++++++++++++++
- tools/damon/_damon.py         | 143 ++++++++++++++++++++++++++++++++++
- tools/damon/damo              |   7 ++
- tools/damon/record.py         | 135 +++-----------------------------
- tools/damon/schemes.py        | 105 +++++++++++++++++++++++++
- 5 files changed, 394 insertions(+), 123 deletions(-)
- create mode 100755 tools/damon/_convert_damos.py
- create mode 100644 tools/damon/_damon.py
- create mode 100644 tools/damon/schemes.py
+ .../admin-guide/mm/data_access_monitor.rst    | 100 +++++++++++++++++-
+ 1 file changed, 98 insertions(+), 2 deletions(-)
 
-diff --git a/tools/damon/_convert_damos.py b/tools/damon/_convert_damos.py
-new file mode 100755
-index 000000000000..709d0991899c
---- /dev/null
-+++ b/tools/damon/_convert_damos.py
-@@ -0,0 +1,127 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
+index 915956aa1065..d4a48bc63400 100644
+--- a/Documentation/admin-guide/mm/data_access_monitor.rst
++++ b/Documentation/admin-guide/mm/data_access_monitor.rst
+@@ -182,8 +182,8 @@ only for each of a user-specified time interval (``regions update interval``).
+ ``debugfs`` Interface
+ =====================
+ 
+-DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
+-under its debugfs directory, ``<debugfs>/damon/``.
++DAMON exports five files, ``attrs``, ``pids``, ``record``, ``schemes`` and
++``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+ 
+ Attributes
+ ----------
+@@ -227,6 +227,46 @@ be 4 KiB and the result to be saved in ``/damon.data``::
+     # cat record
+     4096 /damon.data
+ 
++Schemes
++-------
 +
-+"""
-+Change human readable data access monitoring-based operation schemes to the low
-+level input for the '<debugfs>/damon/schemes' file.  Below is an example of the
-+schemes written in the human readable format:
++For usual DAMON-based data access awared memory management optimizations, users
++would simply want the system to apply a memory management action to a memory
++region of a specific size having a specific access frequency for a specific
++time.  DAMON receives such formalized operation schemes from user and applies
++those to the target processes.
++
++Users can get and set the schemes by reading from and writing to ``schemes``
++debugfs file.  To the file, each of the schemes should represented in each line
++in below form:
++
++    min-size max-size min-acc max-acc min-age max-age action
++
++Bytes for size of regions (``min-size`` and ``max-size``), number of monitored
++accesses per aggregate interval for access frequency (``min-acc`` and
++``max-acc``), number of aggregate intervals for age of regions (``min-age`` and
++``max-age``), and predefined integer for memory management actions should be
++used.  ``madvise()`` system call with specific hint are currently available.
++The numbers and their representing memory hint are as below::
++
++    0   MADV_WILLNEED
++    1   MADV_COLD
++    2   MADV_PAGEOUT
++    3   MADV_HUGEPAGE
++    4   MADV_NOHUGEPAGE
++
++You can disable schemes by simply writing empty string to the file.  For
++example, below commands applies a scheme saying “If a memory region larger than
++4 KiB (4096 0) is showing less than 5 accesses per aggregate interval (0 5) for
++more than 5 aggregate interval (5 0), page out the region (2)”, check the
++entered scheme again, and finally remove the scheme.::
++
++    # cd <debugfs>/damon
++    # echo "4096 0 0 5 5 0 2" > schemes
++    # cat schemes
++    4096 0 0 5 5 0 2
++    # echo > schemes
++
+ Turning On/Off
+ --------------
+ 
+@@ -426,3 +466,59 @@ made.
+ 
+ Users can specify the resolution of the distribution (``--range``).  It also
+ supports 'gnuplot' based simple visualization (``--plot``) of the distribution.
++
++
++DAMON-based Operation Schemes
++-----------------------------
++
++The ``schemes`` subcommand applies given data access pattern based operation
++schemes to the given target processes.  The target processes are described
++using the command to spawn the processes or pid of running processes, as
++similar to that of ``record`` subcommand.  Meanwhile, the operation schemes
++should be saved in a text file using below format and passed to ``schemes``
++subcommand via ``--schemes`` option.
++
++    min-size max-size min-acc max-acc min-age max-age action
++
++The format also supports comments, several units for size and age of regions,
++and human readable action names.  Currently supported operation actions are
++WILLNEED, COLD, PAGEOUT, HUGEPAGE, and NOHUGEPAGE.  Each of the actions works
++as same to that of madvise() system call.  Below is an example schemes file.
++Please also note that 0 for max values means infinite.::
 +
 +    # format is:
 +    # <min/max size> <min/max frequency (0-99)> <min/max age> <action>
@@ -143,592 +208,13 @@ index 000000000000..709d0991899c
 +    # more than 100ms, avoid the region using huge pages (call madvise() with
 +    # MADV_NOHUGEPAGE).
 +    2M      null    0       25      100ms   0s nohugepage
-+"""
 +
-+import argparse
++For example, you can make a running process named 'foo' to use THP for memory
++regions keeping 2MB or larger size and having very high access frequency for
++more than 100 milliseconds using below commands::
 +
-+unit_to_bytes = {'B': 1, 'K': 1024, 'M': 1024 * 1024, 'G': 1024 * 1024 * 1024,
-+        'T': 1024 * 1024 * 1024 * 1024}
-+
-+def text_to_bytes(txt):
-+    if txt == 'null':
-+        return 0
-+    unit = txt[-1]
-+    number = int(txt[:-1])
-+    return number * unit_to_bytes[unit]
-+
-+unit_to_usecs = {'us': 1, 'ms': 1000, 's': 1000 * 1000, 'm': 60 * 1000 * 1000,
-+        'h': 60 * 60 * 1000 * 1000, 'd': 24 * 60 * 60 * 1000 * 1000}
-+
-+def text_to_us(txt):
-+    if txt == 'null':
-+        return 0
-+    unit = txt[-2:]
-+    if unit in ['us', 'ms']:
-+        number = int(txt[:-2])
-+    else:
-+        unit = txt[-1]
-+        number = int(txt[:-1])
-+    return number * unit_to_usecs[unit]
-+
-+damos_action_to_int = {'DAMOS_WILLNEED': 0, 'DAMOS_COLD': 1,
-+        'DAMOS_PAGEOUT': 2, 'DAMOS_HUGEPAGE': 3, 'DAMOS_NOHUGEPAGE': 4}
-+
-+def text_to_damos_action(txt):
-+    return damos_action_to_int['DAMOS_' + txt.upper()]
-+
-+def text_to_nr_accesses(txt, max_nr_accesses):
-+    if txt == 'null':
-+        return 0
-+    return int(int(txt) * max_nr_accesses / 100)
-+
-+def debugfs_scheme(line, sample_interval, aggr_interval):
-+    fields = line.split()
-+    if len(fields) != 7:
-+        print('wrong input line: %s' % line)
-+        exit(1)
-+
-+    limit_nr_accesses = aggr_interval / sample_interval
-+    try:
-+        min_sz = text_to_bytes(fields[0])
-+        max_sz = text_to_bytes(fields[1])
-+        min_nr_accesses = text_to_nr_accesses(fields[2], limit_nr_accesses)
-+        max_nr_accesses = text_to_nr_accesses(fields[3], limit_nr_accesses)
-+        min_age = text_to_us(fields[4]) / aggr_interval
-+        max_age = text_to_us(fields[5]) / aggr_interval
-+        action = text_to_damos_action(fields[6])
-+    except:
-+        print('wrong input field')
-+        raise
-+    return '%d\t%d\t%d\t%d\t%d\t%d\t%d' % (min_sz, max_sz, min_nr_accesses,
-+            max_nr_accesses, min_age, max_age, action)
-+
-+def convert(schemes_file, sample_interval, aggr_interval):
-+    lines = []
-+    with open(schemes_file, 'r') as f:
-+        for line in f:
-+            if line.startswith('#'):
-+                continue
-+            line = line.strip()
-+            if line == '':
-+                continue
-+            lines.append(debugfs_scheme(line, sample_interval, aggr_interval))
-+    return '\n'.join(lines)
-+
-+def main():
-+    parser = argparse.ArgumentParser()
-+    parser.add_argument('input', metavar='<file>',
-+            help='input file describing the schemes')
-+    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-+            default=5000, help='sampling interval (us)')
-+    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-+            default=100000, help='aggregation interval (us)')
-+    args = parser.parse_args()
-+
-+    schemes_file = args.input
-+    sample_interval = args.sample
-+    aggr_interval = args.aggr
-+
-+    print(convert(schemes_file, sample_interval, aggr_interval))
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-new file mode 100644
-index 000000000000..0a703ec7471a
---- /dev/null
-+++ b/tools/damon/_damon.py
-@@ -0,0 +1,143 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"""
-+Contains core functions for DAMON debugfs control.
-+"""
-+
-+import os
-+import subprocess
-+
-+debugfs_attrs = None
-+debugfs_record = None
-+debugfs_schemes = None
-+debugfs_pids = None
-+debugfs_monitor_on = None
-+
-+def set_target_pid(pid):
-+    return subprocess.call('echo %s > %s' % (pid, debugfs_pids), shell=True,
-+            executable='/bin/bash')
-+
-+def turn_damon(on_off):
-+    return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-+            shell=True, executable="/bin/bash")
-+
-+def is_damon_running():
-+    with open(debugfs_monitor_on, 'r') as f:
-+        return f.read().strip() == 'on'
-+
-+class Attrs:
-+    sample_interval = None
-+    aggr_interval = None
-+    regions_update_interval = None
-+    min_nr_regions = None
-+    max_nr_regions = None
-+    rbuf_len = None
-+    rfile_path = None
-+    schemes = None
-+
-+    def __init__(self, s, a, r, n, x, l, f, c):
-+        self.sample_interval = s
-+        self.aggr_interval = a
-+        self.regions_update_interval = r
-+        self.min_nr_regions = n
-+        self.max_nr_regions = x
-+        self.rbuf_len = l
-+        self.rfile_path = f
-+        self.schemes = c
-+
-+    def __str__(self):
-+        return "%s %s %s %s %s %s %s\n%s" % (self.sample_interval,
-+                self.aggr_interval, self.regions_update_interval,
-+                self.min_nr_regions, self.max_nr_regions, self.rbuf_len,
-+                self.rfile_path, self.schemes)
-+
-+    def attr_str(self):
-+        return "%s %s %s %s %s " % (self.sample_interval, self.aggr_interval,
-+                self.regions_update_interval, self.min_nr_regions,
-+                self.max_nr_regions)
-+
-+    def record_str(self):
-+        return '%s %s ' % (self.rbuf_len, self.rfile_path)
-+
-+    def apply(self):
-+        ret = subprocess.call('echo %s > %s' % (self.attr_str(), debugfs_attrs),
-+                shell=True, executable='/bin/bash')
-+        if ret:
-+            return ret
-+        ret = subprocess.call('echo %s > %s' % (self.record_str(),
-+            debugfs_record), shell=True, executable='/bin/bash')
-+        if ret:
-+            return ret
-+        return subprocess.call('echo %s > %s' % (
-+            self.schemes.replace('\n', ' '), debugfs_schemes), shell=True,
-+            executable='/bin/bash')
-+
-+def current_attrs():
-+    with open(debugfs_attrs, 'r') as f:
-+        attrs = f.read().split()
-+    attrs = [int(x) for x in attrs]
-+
-+    with open(debugfs_record, 'r') as f:
-+        rattrs = f.read().split()
-+    attrs.append(int(rattrs[0]))
-+    attrs.append(rattrs[1])
-+
-+    with open(debugfs_schemes, 'r') as f:
-+        schemes = f.read()
-+    attrs.append(schemes)
-+
-+    return Attrs(*attrs)
-+
-+def chk_update_debugfs(debugfs):
-+    global debugfs_attrs
-+    global debugfs_record
-+    global debugfs_schemes
-+    global debugfs_pids
-+    global debugfs_monitor_on
-+
-+    debugfs_damon = os.path.join(debugfs, 'damon')
-+    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-+    debugfs_record = os.path.join(debugfs_damon, 'record')
-+    debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-+    debugfs_pids = os.path.join(debugfs_damon, 'pids')
-+    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
-+
-+    if not os.path.isdir(debugfs_damon):
-+        print("damon debugfs dir (%s) not found", debugfs_damon)
-+        exit(1)
-+
-+    for f in [debugfs_attrs, debugfs_record, debugfs_schemes, debugfs_pids,
-+            debugfs_monitor_on]:
-+        if not os.path.isfile(f):
-+            print("damon debugfs file (%s) not found" % f)
-+            exit(1)
-+
-+def cmd_args_to_attrs(args):
-+    "Generate attributes with specified arguments"
-+    sample_interval = args.sample
-+    aggr_interval = args.aggr
-+    regions_update_interval = args.updr
-+    min_nr_regions = args.minr
-+    max_nr_regions = args.maxr
-+    rbuf_len = args.rbuf
-+    if not os.path.isabs(args.out):
-+        args.out = os.path.join(os.getcwd(), args.out)
-+    rfile_path = args.out
-+    schemes = args.schemes
-+    return Attrs(sample_interval, aggr_interval, regions_update_interval,
-+            min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
-+
-+def set_attrs_argparser(parser):
-+    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-+            default='/sys/kernel/debug', help='debugfs mounted path')
-+    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-+            default=5000, help='sampling interval')
-+    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-+            default=100000, help='aggregate interval')
-+    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
-+            default=1000000, help='regions update interval')
-+    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
-+            default=10, help='minimal number of regions')
-+    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-+            default=1000, help='maximum number of regions')
-diff --git a/tools/damon/damo b/tools/damon/damo
-index 58e1099ae5fc..ce7180069bef 100755
---- a/tools/damon/damo
-+++ b/tools/damon/damo
-@@ -5,6 +5,7 @@ import argparse
- 
- import record
- import report
-+import schemes
- 
- class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
-     def _format_action(self, action):
-@@ -25,6 +26,10 @@ parser_record = subparser.add_parser('record',
-         help='record data accesses of the given target processes')
- record.set_argparser(parser_record)
- 
-+parser_schemes = subparser.add_parser('schemes',
-+        help='apply operation schemes to the given target process')
-+schemes.set_argparser(parser_schemes)
-+
- parser_report = subparser.add_parser('report',
-         help='report the recorded data accesses in the specified form')
- report.set_argparser(parser_report)
-@@ -33,5 +38,7 @@ args = parser.parse_args()
- 
- if args.command == 'record':
-     record.main(args)
-+elif args.command == 'schemes':
-+    schemes.main(args)
- elif args.command == 'report':
-     report.main(args)
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index a547d479a103..3bbf7b8359da 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -6,28 +6,12 @@ Record data access patterns of the target process.
- """
- 
- import argparse
--import copy
- import os
- import signal
- import subprocess
- import time
- 
--debugfs_attrs = None
--debugfs_record = None
--debugfs_pids = None
--debugfs_monitor_on = None
--
--def set_target_pid(pid):
--    return subprocess.call('echo %s > %s' % (pid, debugfs_pids), shell=True,
--            executable='/bin/bash')
--
--def turn_damon(on_off):
--    return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
--            shell=True, executable="/bin/bash")
--
--def is_damon_running():
--    with open(debugfs_monitor_on, 'r') as f:
--        return f.read().strip() == 'on'
-+import _damon
- 
- def do_record(target, is_target_cmd, attrs, old_attrs):
-     if os.path.isfile(attrs.rfile_path):
-@@ -36,93 +20,29 @@ def do_record(target, is_target_cmd, attrs, old_attrs):
-     if attrs.apply():
-         print('attributes (%s) failed to be applied' % attrs)
-         cleanup_exit(old_attrs, -1)
--    print('# damon attrs: %s' % attrs)
-+    print('# damon attrs: %s %s' % (attrs.attr_str(), attrs.record_str()))
-     if is_target_cmd:
-         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-         target = p.pid
--    if set_target_pid(target):
-+    if _damon.set_target_pid(target):
-         print('pid setting (%s) failed' % target)
-         cleanup_exit(old_attrs, -2)
--    if turn_damon('on'):
-+    if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-         cleanup_exit(old_attrs, -3)
-     if is_target_cmd:
-         p.wait()
-     while True:
-         # damon will turn it off by itself if the target tasks are terminated.
--        if not is_damon_running():
-+        if not _damon.is_damon_running():
-             break
-         time.sleep(1)
- 
-     cleanup_exit(old_attrs, 0)
- 
--class Attrs:
--    sample_interval = None
--    aggr_interval = None
--    regions_update_interval = None
--    min_nr_regions = None
--    max_nr_regions = None
--    rbuf_len = None
--    rfile_path = None
--
--    def __init__(self, s, a, r, n, x, l, f):
--        self.sample_interval = s
--        self.aggr_interval = a
--        self.regions_update_interval = r
--        self.min_nr_regions = n
--        self.max_nr_regions = x
--        self.rbuf_len = l
--        self.rfile_path = f
--
--    def __str__(self):
--        return "%s %s %s %s %s %s %s" % (self.sample_interval, self.aggr_interval,
--                self.regions_update_interval, self.min_nr_regions,
--                self.max_nr_regions, self.rbuf_len, self.rfile_path)
--
--    def attr_str(self):
--        return "%s %s %s %s %s " % (self.sample_interval, self.aggr_interval,
--                self.regions_update_interval, self.min_nr_regions,
--                self.max_nr_regions)
--
--    def record_str(self):
--        return '%s %s ' % (self.rbuf_len, self.rfile_path)
--
--    def apply(self):
--        ret = subprocess.call('echo %s > %s' % (self.attr_str(), debugfs_attrs),
--                shell=True, executable='/bin/bash')
--        if ret:
--            return ret
--        return subprocess.call('echo %s > %s' % (self.record_str(),
--            debugfs_record), shell=True, executable='/bin/bash')
--
--def current_attrs():
--    with open(debugfs_attrs, 'r') as f:
--        attrs = f.read().split()
--    attrs = [int(x) for x in attrs]
--
--    with open(debugfs_record, 'r') as f:
--        rattrs = f.read().split()
--    attrs.append(int(rattrs[0]))
--    attrs.append(rattrs[1])
--    return Attrs(*attrs)
--
--def cmd_args_to_attrs(args):
--    "Generate attributes with specified arguments"
--    sample_interval = args.sample
--    aggr_interval = args.aggr
--    regions_update_interval = args.updr
--    min_nr_regions = args.minr
--    max_nr_regions = args.maxr
--    rbuf_len = args.rbuf
--    if not os.path.isabs(args.out):
--        args.out = os.path.join(os.getcwd(), args.out)
--    rfile_path = args.out
--    return Attrs(sample_interval, aggr_interval, regions_update_interval,
--            min_nr_regions, max_nr_regions, rbuf_len, rfile_path)
--
- def cleanup_exit(orig_attrs, exit_code):
--    if is_damon_running():
--        if turn_damon('off'):
-+    if _damon.is_damon_running():
-+        if _damon.turn_damon('off'):
-             print('failed to turn damon off!')
-     if orig_attrs:
-         if orig_attrs.apply():
-@@ -133,51 +53,19 @@ def sighandler(signum, frame):
-     print('\nsignal %s received' % signum)
-     cleanup_exit(orig_attrs, signum)
- 
--def chk_update_debugfs(debugfs):
--    global debugfs_attrs
--    global debugfs_record
--    global debugfs_pids
--    global debugfs_monitor_on
--
--    debugfs_damon = os.path.join(debugfs, 'damon')
--    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
--    debugfs_record = os.path.join(debugfs_damon, 'record')
--    debugfs_pids = os.path.join(debugfs_damon, 'pids')
--    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
--
--    if not os.path.isdir(debugfs_damon):
--        print("damon debugfs dir (%s) not found", debugfs_damon)
--        exit(1)
--
--    for f in [debugfs_attrs, debugfs_record, debugfs_pids, debugfs_monitor_on]:
--        if not os.path.isfile(f):
--            print("damon debugfs file (%s) not found" % f)
--            exit(1)
--
- def chk_permission():
-     if os.geteuid() != 0:
-         print("Run as root")
-         exit(1)
- 
- def set_argparser(parser):
-+    _damon.set_attrs_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
--    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
--            default=5000, help='sampling interval')
--    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
--            default=100000, help='aggregate interval')
--    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
--            default=1000000, help='regions update interval')
--    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
--            default=10, help='minimal number of regions')
--    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
--            default=1000, help='maximum number of regions')
-     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-             default=1024*1024, help='length of record result buffer')
-     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-             default='damon.data', help='output file path')
--    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
--            default='/sys/kernel/debug', help='debugfs mounted path')
- 
- def main(args=None):
-     global orig_attrs
-@@ -187,13 +75,14 @@ def main(args=None):
-         args = parser.parse_args()
- 
-     chk_permission()
--    chk_update_debugfs(args.debugfs)
-+    _damon.chk_update_debugfs(args.debugfs)
- 
-     signal.signal(signal.SIGINT, sighandler)
-     signal.signal(signal.SIGTERM, sighandler)
--    orig_attrs = current_attrs()
-+    orig_attrs = _damon.current_attrs()
- 
--    new_attrs = cmd_args_to_attrs(args)
-+    args.schemes = ''
-+    new_attrs = _damon.cmd_args_to_attrs(args)
-     target = args.target
- 
-     target_fields = target.split()
-diff --git a/tools/damon/schemes.py b/tools/damon/schemes.py
-new file mode 100644
-index 000000000000..ca1551fe5696
---- /dev/null
-+++ b/tools/damon/schemes.py
-@@ -0,0 +1,105 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"""
-+Apply given operation schemes to the target process.
-+"""
-+
-+import argparse
-+import os
-+import signal
-+import subprocess
-+import time
-+
-+import _convert_damos
-+import _damon
-+
-+def run_damon(target, is_target_cmd, attrs, old_attrs):
-+    if os.path.isfile(attrs.rfile_path):
-+        os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
-+
-+    if attrs.apply():
-+        print('attributes (%s) failed to be applied' % attrs)
-+        cleanup_exit(old_attrs, -1)
-+    print('# damon attrs: %s %s' % (attrs.attr_str(), attrs.record_str()))
-+    for line in attrs.schemes.split('\n'):
-+        print('# scheme: %s' % line)
-+    if is_target_cmd:
-+        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-+        target = p.pid
-+    if _damon.set_target_pid(target):
-+        print('pid setting (%s) failed' % target)
-+        cleanup_exit(old_attrs, -2)
-+    if _damon.turn_damon('on'):
-+        print('could not turn on damon' % target)
-+        cleanup_exit(old_attrs, -3)
-+    if is_target_cmd:
-+        p.wait()
-+    while True:
-+        # damon will turn it off by itself if the target tasks are terminated.
-+        if not _damon.is_damon_running():
-+            break
-+        time.sleep(1)
-+
-+    cleanup_exit(old_attrs, 0)
-+
-+def cleanup_exit(orig_attrs, exit_code):
-+    if _damon.is_damon_running():
-+        if _damon.turn_damon('off'):
-+            print('failed to turn damon off!')
-+    if orig_attrs:
-+        if orig_attrs.apply():
-+            print('original attributes (%s) restoration failed!' % orig_attrs)
-+    exit(exit_code)
-+
-+def sighandler(signum, frame):
-+    print('\nsignal %s received' % signum)
-+    cleanup_exit(orig_attrs, signum)
-+
-+def chk_permission():
-+    if os.geteuid() != 0:
-+        print("Run as root")
-+        exit(1)
-+
-+def set_argparser(parser):
-+    _damon.set_attrs_argparser(parser)
-+    parser.add_argument('target', type=str, metavar='<target>',
-+            help='the target command or the pid to record')
-+    parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
-+            default='damon.schemes',
-+            help='data access monitoring-based operation schemes')
-+
-+def main(args=None):
-+    global orig_attrs
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    chk_permission()
-+    _damon.chk_update_debugfs(args.debugfs)
-+
-+    signal.signal(signal.SIGINT, sighandler)
-+    signal.signal(signal.SIGTERM, sighandler)
-+    orig_attrs = _damon.current_attrs()
-+
-+    args.rbuf = 0
-+    args.out = 'null'
-+    args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
-+    new_attrs = _damon.cmd_args_to_attrs(args)
-+    target = args.target
-+
-+    target_fields = target.split()
-+    if not subprocess.call('which %s > /dev/null' % target_fields[0],
-+            shell=True, executable='/bin/bash'):
-+        run_damon(target, True, new_attrs, orig_attrs)
-+    else:
-+        try:
-+            pid = int(target)
-+        except:
-+            print('target \'%s\' is neither a command, nor a pid' % target)
-+            exit(1)
-+        run_damon(target, False, new_attrs, orig_attrs)
-+
-+if __name__ == '__main__':
-+    main()
++    $ echo "2M null 90 99 100ms 0s hugepage" > my_thp_scheme
++    $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 -- 
 2.17.1
 
