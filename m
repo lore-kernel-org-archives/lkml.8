@@ -2,111 +2,104 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DA4C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177F2C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A9424930
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589312597;
-	bh=beE77q25hW/1loatIJdzB1aoxh+2mFYu7Ra5+rAp95o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L52SfTjs1G2HLgNMJU006E0lBTqhoGqre0oyY40FMPnVIzDjrs9jYe0wJEsaUGlzq
-	 XDfptfI/l7VUwGw8SPvMa2dM8yU4U53UKNQYc3uxQoKhArEsunHkyzalq040mVXc1y
-	 p26HquvNb6auGasaitF2yRpFtHVmfPsDogNg9vag=
+	by mail.kernel.org (Postfix) with ESMTP id E476A206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:44:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PXb1v9IS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgELTnQ (ORCPT
+        id S1731082AbgELTo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
+        Tue, 12 May 2020 15:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731047AbgELTnL (ORCPT
+        with ESMTP id S1728081AbgELTo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:43:11 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A652CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:43:11 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w6so13655727ilg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:43:11 -0700 (PDT)
+        Tue, 12 May 2020 15:44:28 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F74C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:44:28 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id u35so3653632pgk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5f4RJYDHuVh6PmC6voPvbMaVVDseoYYhjdA/uiY/cuE=;
-        b=dDiHF6QcMxQj56/4jqPt4rp/TqSru+DYb5YBX3ju2WcjAsD10UHXWv9eb12IepmgEW
-         HSipt/qwzbvnX8XXGO4VQkcFHihJfgqksvGWHtpRW7GbV7Y96UrZ/KWBoGTMTyx51U7S
-         HfvA/sHFw2IKN+p76Lc+RXjMrhy5RLIJulFb4=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DBhE+bHXP5zrV91t92AV1x7apzTWyzN424aYc5YNfWg=;
+        b=PXb1v9IS/OL5cX7Bsw8OKUXEAAg3UGRT+IO9saYbsZLXygtycRHvu1AmhWYJuN5SnN
+         HMv2wzHcr7yAYKt4zrainQLFXtdP3FUj0XgbE24JTleE5ovZKHgPTv9fRRNS2lsADErm
+         9FFpr88LUFS4jkmqQRpZPl9/IwzQSn+YH2YEE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5f4RJYDHuVh6PmC6voPvbMaVVDseoYYhjdA/uiY/cuE=;
-        b=V0JEkekaXDEt9tpdZncbGlzeIFWtvtg/0zr894zRNbIZ9gUtmKKcscAov3O1sdmgIn
-         QvQpBYC3qI34Z4A+DUcRNU1B4f16ykA8IVE8ceJykmqGYAzmRtozLq4DhI8C889P/ghB
-         h1WwlFUKOgdMG9yhJlf8MbMESjIy2Y3+wiNj3Kw3NE29enNfWgMGxIcnii/zQsJ1zcF7
-         N2Aivxwb97UVFowZIzPGmMXc76KGVlmt+CXq38UKe1QXPrPDYDNIpqq8IC5tAZ/SSbqg
-         Pa2mwRLA72XaMvxOQ5Z2cyk8xuf+hKMQVs1WVUpi/9Qqy63I076Pn/JcKWQlQSHJccOP
-         7law==
-X-Gm-Message-State: AGi0PubkhAGE0y7dulmu8E60I21veyxjJU+5MHUudEXLhCGtSs0WZ1M2
-        wmPS3kScDaSLjryGbJVwrOt03g==
-X-Google-Smtp-Source: APiQypIV9anjY93T29+evCtA4VrmEbcf4OSTA50DnDtX7FtsaM8yY0lwTkE+9nA9jpVE3b3YvOfPVA==
-X-Received: by 2002:a05:6e02:c74:: with SMTP id f20mr23535878ilj.86.1589312590842;
-        Tue, 12 May 2020 12:43:10 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id f5sm6177781iok.4.2020.05.12.12.43.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DBhE+bHXP5zrV91t92AV1x7apzTWyzN424aYc5YNfWg=;
+        b=Q7utJkscrwzXdP4umEOWuukagCEN2iU9Tmxc383hl+/w5C8wthjMJr2IqghqGWhXxg
+         rNBTGU44JbkJp4mO0bKHCiKQGv9yqcSRCyj/cjOSbwNhbLloVllqKhWassO0zHO9JCee
+         lD/1NgwUjwJB6CgssjOzlG0KQphxiOAVsEGapBm6smiKKv1ymngppwNCl2NW7jgAk/ya
+         tAsuUq9n6x6SKXYYINTCrzn+qLJ2ZxSP5cQYEFN5xYuRQi8Mj+OT9jgTxYxwXzxG03Z2
+         y64qixaJCk6rDw7ZaE+acZQ0LU3YMvZ1XuzHIcb+igh8g1vBTF8hO+HN4OA5PUZN9SXa
+         Kn6A==
+X-Gm-Message-State: AOAM53331c25/HMaybAG10fMyasi4bhecefSX9oD+F4eGRm7SRf4oY0q
+        +IBwJT0JW2cpNtGJUpbiOF+KHg==
+X-Google-Smtp-Source: ABdhPJwpe3nOv6RiywTAma2C9/wcHumGJ8VS3qWE7oUMdxQmXUNg5rmOFCYxnJjbkKS69HE+a0AWZg==
+X-Received: by 2002:aa7:8ad0:: with SMTP id b16mr3033296pfd.129.1589312668034;
+        Tue, 12 May 2020 12:44:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id fu12sm13524369pjb.20.2020.05.12.12.44.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 12:43:10 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     viro@zeniv.linux.org.uk, axboe@kernel.dk, zohar@linux.vnet.ibm.com,
-        mcgrof@kernel.org, keescook@chromium.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in kernel_read_file_from_fd()
-Date:   Tue, 12 May 2020 13:43:05 -0600
-Message-Id: <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1589311577.git.skhan@linuxfoundation.org>
-References: <cover.1589311577.git.skhan@linuxfoundation.org>
+        Tue, 12 May 2020 12:44:27 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:44:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rob Herring <robh@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v7 07/18] printk: Introduce kmsg_dump_reason_str()
+Message-ID: <202005121244.874D7C52@keescook>
+References: <20200510202436.63222-1-keescook@chromium.org>
+ <20200510202436.63222-8-keescook@chromium.org>
+ <20200512084441.GD17734@linux-b0ei>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512084441.GD17734@linux-b0ei>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kernel_read_file_from_fd() to avoid fdput() after a failed fdget().
-fdput() doesn't do fput() on this file since FDPUT_FPUT isn't set
-in fd.flags. Fix it anyway since failed fdget() doesn't require
-a fdput().
+On Tue, May 12, 2020 at 10:44:42AM +0200, Petr Mladek wrote:
+> On Sun 2020-05-10 13:24:25, Kees Cook wrote:
+> > The pstore subsystem already had a private version of this function.
+> > With the coming addition of the pstore/zone driver, this needs to be
+> > shared. As it really should live with printk, move it there instead.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> I looked only at this printk part and it looks good to me ;-)
+> 
+> Acked-by: Petr Mladek <pmladek@suse.com>
 
-This was introduced in a commit that added kernel_read_file_from_fd() as
-a wrapper for the VFS common kernel_read_file().
+Excellent; thanks!
 
-Fixes: b844f0ecbc56 ("vfs: define kernel_copy_file_from_fd()")
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- fs/exec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 06b4c550af5d..ea24bdce939d 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
- 		goto out;
- 
- 	ret = kernel_read_file(f.file, buf, size, max_size, id);
--out:
- 	fdput(f);
-+out:
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
 -- 
-2.25.1
-
+Kees Cook
