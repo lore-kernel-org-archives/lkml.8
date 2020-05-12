@@ -2,110 +2,172 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C7C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF9AC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F48C206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E8C206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+5xeZhp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Em3hcfUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbgELN7J (ORCPT
+        id S1730155AbgELOAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgELN7J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:59:09 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B95BC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:59:09 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l12so6185998pgr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/rSnXf/LR2mEg6YBHE96iKMOvPT6rw9BrJsNQPuqh+I=;
-        b=G+5xeZhp79EgQEfRC9B4mRED7ZcB4fv3ORF2m5YjrWT3/S6x8H6qYt9BnXCNyUmmSy
-         AX1Im/G5JxV87HD1/1Pg5cJ8zIAx5F2ZGksW/fuhZL+H5Ht+jNLbKOv2ZBPywRtyMqxw
-         grOaa6Qz15snhJAWd4a5gSqNyjCydNDwWmkcPTm2ICselBSGwYa929/D326T12lyHHiC
-         XNlHB8NL5PwdkVpa+EIowRf0hHNgTPRwoCqRQmncRbiOQVakZkdS5ykXretlVymSd3cY
-         0IwQ6NEL+VvymgiLExSfF+O6jfCvaQsbilc8XnCdvL5vTFDOZ9oYmGu9yjmB177QYWqh
-         cPGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/rSnXf/LR2mEg6YBHE96iKMOvPT6rw9BrJsNQPuqh+I=;
-        b=ebpHS/Wl8qezq1c92VPSINUoYF02XtMT/hIBTFB4eS3lcgMR5kcqLLsYSgaBkrsDOm
-         02S4QaZRs4/NQ0d3sclNTVi3FV/hdI1ABEhmavY29PO3W3aCbcYXrqVjXmvmj9mZGTPg
-         Bh+pd/2LaXKotHB1UJWxt4FUyjMBi1FXNW+4EgiwIyoRRwJhyKOxKEgYxhaqAGa5RqhB
-         ueNBkkTQge6ujKAFQOJZYkUVNJi8lCvZ3y7J/X24Hxs7YlS9xodvSKojtHgqJFgvGdFb
-         LIY0HsIUx2Sw5cdeOsSRfu1P1/Z35CaC741yTNUl28HwuI6KLmg+oFbhzJHfn59YCX2T
-         KM9A==
-X-Gm-Message-State: AOAM533mUlQHglr/pQBtd9h4EhgU4nc5/3HS4xTaKXsykOS+KSpZM8ai
-        lmZwwcibT0FImhWSwsKqe/srRQ==
-X-Google-Smtp-Source: ABdhPJymlc4g8AwytnuWMBdPjQzNPQw9vQwsIPI1BvYOSYxy4P8yAcJCciDAB/7ihk/wxDV9wyzBsw==
-X-Received: by 2002:a62:f24e:: with SMTP id y14mr3404268pfl.116.1589291948432;
-        Tue, 12 May 2020 06:59:08 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id l3sm2177892pju.38.2020.05.12.06.59.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 06:59:07 -0700 (PDT)
-Date:   Tue, 12 May 2020 21:59:10 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, sandipan@linux.ibm.com, jolsa@kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf powerpc: Don't ignore sym-handling.c file
-Message-ID: <20200512135910.GB20352@leoy-ThinkPad-X240s>
-References: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+        Tue, 12 May 2020 10:00:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55756 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbgELOAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=aG8W5Jf1V02pUS4e7tl1sPpoUwpC/b0viIniB50OTZQ=; b=Em3hcfUwgMSn2+fIn+oBTWeCPK
+        DRffGV1KPhq+8QYubH7oLB0fb9yZCY9+C3/zHbzexC9nb7SqRPbEd6O1e1MpQVrRnjlBR1RGUrykC
+        SfHq7DIhjq2shpwKk82xHcZM8vpMY6100g7ZS8dKF/NScKsyEf2yEs3hMPPxbo9AAgYY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYVSD-001zW5-8Z; Tue, 12 May 2020 16:00:17 +0200
+Date:   Tue, 12 May 2020 16:00:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Yonglong Liu <liuyonglong@huawei.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxarm@huawei.com, Salil Mehta <salil.mehta@huawei.com>
+Subject: Re: [question] net: phy: rtl8211f: link speed shows 1000Mb/s but
+ actual link speed in phy is 100Mb/s
+Message-ID: <20200512140017.GK409897@lunn.ch>
+References: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 04:51:13PM +0530, Ravi Bangoria wrote:
-> Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
-> removed powerpc specific sym-handling.c file from Build. This wasn't
-> caught by build CI because all functions in this file are declared
-> as __weak in common code. Fix it.
+On Tue, May 12, 2020 at 08:48:21PM +0800, Yonglong Liu wrote:
+> I use two devices, both support 1000M speed, they are directly connected
+> with a network cable. Two devices enable autoneg, and then do the following
+> test repeatedly:
+> 	ifconfig eth5 down
+> 	ifconfig eth5 up
+> 	sleep $((RANDOM%6))
+> 	ifconfig eth5 down
+> 	ifconfig eth5 up
+> 	sleep 10
 > 
-> Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
-> Reported-by: Sandipan Das <sandipan@linux.ibm.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  tools/perf/arch/powerpc/util/Build | 1 +
->  1 file changed, 1 insertion(+)
+> With low probability, one device A link up with 100Mb/s, the other B link up with
+> 1000Mb/s(the actual link speed read from phy is 100Mb/s), and the network can
+> not work.
 > 
-> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-> index e5c9504f8586..e86e210bf514 100644
-> --- a/tools/perf/arch/powerpc/util/Build
-> +++ b/tools/perf/arch/powerpc/util/Build
-> @@ -2,6 +2,7 @@ perf-y += header.o
->  perf-y += kvm-stat.o
->  perf-y += perf_regs.o
->  perf-y += mem-events.o
-> +perf-y += sym-handling.o
-
-My bad, thanks for fixing.  FWIW:
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
->  perf-$(CONFIG_DWARF) += dwarf-regs.o
->  perf-$(CONFIG_DWARF) += skip-callchain-idx.o
-> -- 
-> 2.21.1
+> device A:
+> Settings for eth5:
+>         Supported ports: [ TP ]
+>         Supported link modes:   10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Supported pause frame use: Symmetric Receive-only
+>         Supports auto-negotiation: Yes
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Advertised pause frame use: Symmetric
+>         Advertised auto-negotiation: Yes
+>         Advertised FEC modes: Not reported
+>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
+>                                              100baseT/Half 100baseT/Full
+>         Link partner advertised pause frame use: Symmetric
+>         Link partner advertised auto-negotiation: Yes
+>         Link partner advertised FEC modes: Not reported
+>         Speed: 100Mb/s
+>         Duplex: Full
+>         Port: MII
+>         PHYAD: 3
+>         Transceiver: internal
+>         Auto-negotiation: on
+>         Current message level: 0x00000036 (54)
+>                                probe link ifdown ifup
+>         Link detected: yes
 > 
+> The regs value read from mdio are:
+> reg 9 = 0x200
+> reg a = 0
+> 
+> device B:
+> Settings for eth5:
+>         Supported ports: [ TP ]
+>         Supported link modes:   10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Supported pause frame use: Symmetric Receive-only
+>         Supports auto-negotiation: Yes
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Advertised pause frame use: Symmetric
+>         Advertised auto-negotiation: Yes
+>         Advertised FEC modes: Not reported
+>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
+>                                              100baseT/Half 100baseT/Full
+>                                              1000baseT/Full
+>         Link partner advertised pause frame use: Symmetric
+>         Link partner advertised auto-negotiation: Yes
+>         Link partner advertised FEC modes: Not reported
+>         Speed: 1000Mb/s
+>         Duplex: Full
+>         Port: MII
+>         PHYAD: 3
+>         Transceiver: internal
+>         Auto-negotiation: on
+>         Current message level: 0x00000036 (54)
+>                                probe link ifdown ifup
+>         Link detected: yes
+> 
+> The regs value read from mdio are:
+> reg 9 = 0
+> reg a = 0x800
+> 
+> I had talk to the FAE of rtl8211f, they said if negotiation failed with 1000Mb/s,
+> rtl8211f will change reg 9 to 0, than try to negotiation with 100Mb/s.
+> 
+> The problem happened as:
+> ifconfig eth5 up -> phy_start -> phy_start_aneg -> phy_modify_changed(MII_CTRL1000)
+> (this time both A and B, reg 9 = 0x200) -> wait for link up -> (B: reg 9 changed to 0)
+> -> link up.
+
+This sounds like downshift, but not correctly working. 1Gbps requires
+that 4 pairs in the cable work. If a 1Gbps link is negotiated, but
+then does not establish because one of the pairs is broken, some PHYs
+will try to 'downshift'. They drop down to 100Mbps, which only
+requires two pairs of the cable to work. To do this, the PHY should
+change what it is advertising, to no longer advertise 1G, just 100M
+and 10M. The link partner should then try to use 100Mbps and
+hopefully, a link is established.
+
+Looking at the ethtool, you can see device A is reporting device B is
+only advertising upto 100Mbps. Yet it is locally using 1G. That is
+broken. So i would say device A has the problem. Are both PHYs
+rtl8211f?
+
+> I think this is the bug of the rtl8211f itself, any one have an idea
+> to avoid this bug?
+
+Are you 100% sure your cable and board layout is good? Is it trying
+downshift because something is broken? Fix the cable/connector and the
+reason to downshift goes away. But it does not solve the problem if a
+customer has a broken cable. So you might want to deliberately cut a
+pair in the cable so it becomes 100% reproducable and try to debug it
+further. See if you can find out why auto-neg is not working
+correctly.
+
+	Andrew
