@@ -2,149 +2,146 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF3C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E545BCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC89D206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C458E206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRF1fDAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgELPwM (ORCPT
+        id S1730959AbgELPxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:52:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48686 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgELPwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:52:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 68419ABD1;
-        Tue, 12 May 2020 15:52:12 +0000 (UTC)
-Date:   Tue, 12 May 2020 17:52:07 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
-Message-ID: <20200512155207.GF17734@linux-b0ei>
-References: <20200506211523.15077-1-keescook@chromium.org>
- <20200512131655.GE17734@linux-b0ei>
- <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+        Tue, 12 May 2020 11:53:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48573 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730636AbgELPxs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:53:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589298827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=12YTEk/sqwvmTK3Y5qvGAKQ+4UZ0obOPFvJEZJMJP34=;
+        b=QRF1fDAVnlVE7dSlrv3s8I7kAUWj+2Yrd5KUXbMzH0ozdQOo+HBTxi+P2+V35MKNEf74v6
+        5ynvW7bgyY19B+4v03qoYqrN148mAiaFuT0ZJ/sRxKIQA6o1vytpRXSolUHKA2LNQ9KlSd
+        L0sElGqefJxOeMeamxYHMLCogjKNlNY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-WzQueWbcNdqkDSzcwG8RIg-1; Tue, 12 May 2020 11:53:42 -0400
+X-MC-Unique: WzQueWbcNdqkDSzcwG8RIg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C038107ACF2;
+        Tue, 12 May 2020 15:53:40 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-85.rdu2.redhat.com [10.10.116.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7F885C1B2;
+        Tue, 12 May 2020 15:53:39 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 76964220C05; Tue, 12 May 2020 11:53:39 -0400 (EDT)
+Date:   Tue, 12 May 2020 11:53:39 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200512155339.GD138129@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
+ <20200512152709.GB138129@redhat.com>
+ <87o8qtmaat.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87o8qtmaat.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-05-12 10:03:44, Pavel Tatashin wrote:
-> > OK, I personally see this as two separate problems:
-> >
-> >    1. Missing support to set loglevel per console.
-> >    2. Missing support to dump messages for other reasons.
-> >
-> > I would remove the paragraph about console log levels completely.
+On Tue, May 12, 2020 at 05:40:10PM +0200, Vitaly Kuznetsov wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> OK, I see your point, this paragraph can be removed, however, I think
-> it makes it clear to understand the rationale for this change. As I
-> understand, the per console loglevel has been proposed but were never
-> accepted.
-
-The proposal was not accepted because there were more requirements:
-
-   + add console device into sysfs so that it can be modified there
-   + make a reasonable backward compatible behavior
-
-I guess that the sysfs interface discouraged the author to continue
-on it.
-
-Note that console loglevel handling is very complicated. There are
-already four variables, see console_printk array in
-kernel/printk/printk.c. Per console loglevel would make it even
-more complicated.
-
-It is a nighmare. And introducing max_reason parameter goes the same way.
-
-> > Now, the max_reason logic makes sense only when all the values
-> > have some ordering. Is this the case?
+> > On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
+> >> Currently, APF mechanism relies on the #PF abuse where the token is being
+> >> passed through CR2. If we switch to using interrupts to deliver page-ready
+> >> notifications we need a different way to pass the data. Extent the existing
+> >> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
+> >> notifications.
+> >> 
+> >> The newly introduced apf_put_user_ready() temporary puts both reason
+> >> and token information, this will be changed to put token only when we
+> >> switch to interrupt based notifications.
+> >> 
+> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >> ---
+> >>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+> >>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
+> >>  2 files changed, 15 insertions(+), 5 deletions(-)
+> >> 
+> >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> >> index 2a8e0b6b9805..e3602a1de136 100644
+> >> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> >> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
+> >>  
+> >>  struct kvm_vcpu_pv_apf_data {
+> >>  	__u32 reason;
+> >> -	__u8 pad[60];
+> >> +	__u32 pageready_token;
 > >
-> > I see it as two distinct sets:
+> > How about naming this just "token". That will allow me to deliver error
+> > as well. pageready_token name seems to imply that this will always be
+> > successful with page being ready.
 > >
-> >    + panic, oops, emerg: describe how critical is an error situation
-> >    + restart, halt, poweroff: describe behavior when the system goes down
-> >
-> > Let's say that panic is more critical than oops. Is restart more
-> > critical than halt?
-> >
-> > If you want the dump during restart. Does it mean that you want it
-> > also during emergency situation?
-> >
-> > My fear is that this patchset is going to introduce user interface
-> > (max_reason) with a weird logic. IMHO, max_reason is confusing even
-> > in the code and we should not spread this to users.
-> >
-> > Is there any reason why the existing printk.always_kmsg_dump option
-> > is not enough for you?
+> > And reason will tell whether page could successfully be ready or
+> > it was an error. And token will help us identify the task which
+> > is waiting for the event.
 > 
-> printk.always_kmsg_dump is not working for me because ramoops has its
-> own filtering based on dump_oops boolean, and ignores everything but
-> panics and conditionally oops.
-> max_reason makes the ramoops internal logic cleaner compared to using dump_oops.
+> I added 'pageready_' prefix to make it clear this is not used for 'page
+> not present' notifications where we pass token through CR2. (BTW
+> 'reason' also becomes a misnomer because we can only see
+> 'KVM_PV_REASON_PAGE_NOT_PRESENT' there.)
 
-I see. Just to be sure. Is the main reason to add max_reason parameter
-to keep complatibility of the deprecated dump_oops parameter? Or is
-there any real use case for this granularity?
+Sure. I am just trying to keep names in such a way so that we could
+deliver more events and not keep it too tightly coupled with only
+two events (page not present, page ready).
 
-I made some arecheology. ramoops.dump_oops parameter was added in 2010 by the
-initial commit 56d611a04fb2db77334e ("char drivers: RAM oops/panic
-logger."
+> 
+> I have no strong opinion, can definitely rename this to 'token' and add
+> a line to the documentation to re-state that this is not used for type 1
+> events.
 
-Note that the initial implementation printed Oops reason only when
-dump_oops was set. It printed all other reasons otherwise. It seems
-that there were only the two reasons at that time.
+I don't even know why are we calling "type 1" and "type 2" event. Calling
+it KVM_PV_REASON_PAGE_NOT_PRESENT  and KVM_PV_REASON_PAGE_READY event
+is much more intuitive. If somebody is confused about how event will
+be delivered, that could be part of documentation. And "type1" and "type2"
+does not say anything about delivery method anyway.
 
-Now, printk.always_kmsg_dump parameter was added later in 2012 by
-the commit c22ab332902333f8376601 ("kmsg_dump: don't run on non-error
-paths by default").
+Also, type of event should not necessarily be tied to delivery method.
+For example if we end up introducing say, "KVM_PV_REASON_PAGE_ERROR", then
+I would think that event can be injected both using exception (#PF or #VE)
+as well as interrupt (depending on state of system).
 
-IMHO, the later commit actually fixed the default behavior of ramoops.
+Thanks
+Vivek
 
-I wonder if anyone is actually using the ramoops.dump_oops parameter
-in reality. I would personally make it deprecated and change the
-default behavior to work according to printk.always_kmsg_dump parameter.
-
-IMHO, ramoops.dump_oops just increases complexity and should not have
-been introduced at all. I would try hard to avoid introducing even bigger
-complecity and mess.
-
-I know that there is the "do not break existing userspace" rule. The
-question is if there is any user and if it is worth it.
-
-> I agree, the reasons in kmsg_dump_reason do not order well  (I
-> actually want to add another reason for kexec type reboots, and where
-> do I put it?), so how about if we change the ordering list to
-> bitfield/flags, and instead of max_reason provide: "reasons" bitset?
-
-It looks too complicated. I would really try hard to avoid the
-parameter at all.
-
-Best Regards,
-Petr
