@@ -2,114 +2,86 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774D4C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766F1C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEE5206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484C9206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589294750;
+	bh=DoH/X5aDtvSMxDWJGqC48xOlxwJOdg4XriiP8/OQL7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vPgUReZleIvjzOimCZJLBGTLW3TAw4PYena97Vc9QObzT95QkvZsimgYHL9MuYqCu
+	 RZ88g5hJuMBQpO0u+yLCEPXkXOaDmP2wrESmvXOI7RnLkgzTR8Lr8/jZ7UZQ3Q/w0C
+	 weOEQHF5D4IWqBm6pjgOyG7ZxuEZSdSpkE2ykj4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgELOpO (ORCPT
+        id S1730275AbgELOpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgELOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:45:12 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64CB206A3;
-        Tue, 12 May 2020 14:45:03 +0000 (UTC)
-Subject: Re: [PATCH 16/31] m68knommu: use asm-generic/cacheflush.h
-To:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Roman Zippel <zippel@linux-m68k.org>
-Cc:     Jessica Yu <jeyu@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-hexagon@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200510075510.987823-1-hch@lst.de>
- <20200510075510.987823-17-hch@lst.de>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <fb98853b-c02a-a682-443e-2ae62d0502d9@linux-m68k.org>
-Date:   Wed, 13 May 2020 00:44:59 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 10:45:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46815 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbgELOpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:45:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z25so10651878otq.13;
+        Tue, 12 May 2020 07:45:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XYysbw64UkCclCYgM2OGMnJLATIny63RyaD7MCp3KWY=;
+        b=QJYGF8tW9ZukY2gkx2g2/RVwvADh1GrD8UlVhHy9LUc7fsbWpnNK0ihQX6k7bg+PuO
+         174b3w3NGSByrKgL3Fo2/e4TbTsn3TpZ93BduCVqIgQNbsE8ixyh0zsrwsUjDr8Waao+
+         qFobxbwQcJ0HH/YHBSG0XgRL9XxicntETEkbl64ipopQKoarYwOteQcLPk87QrzJOmE4
+         rSQCLvbG8H1pb9Evuu7Vj0lxG6q8nJCFpPiMfLrfnKTDAoJmgRx+hssLP4wlhLBaeMEg
+         cYcfyk35eOq10G9rjP9HJkQmoAdpA1irgdoW3L49Uj3QuIur9zRIbXhJyQnrheV4RGlD
+         tUcg==
+X-Gm-Message-State: AGi0PuZQ+4IM7chEewjs9C14+GmwAWJjCA6aXIUx7pEN90MplfjYb5+C
+        ekqYLPZFOSHW6UDw2DVXyQ==
+X-Google-Smtp-Source: APiQypLRGe0NVHMWRSwEojjjgvnlc6nzTgMEhuo7RsnCK7kq1DAeK9fk+yuKCGhkNMIq7L2fX3NANQ==
+X-Received: by 2002:a9d:7a98:: with SMTP id l24mr17726019otn.79.1589294748487;
+        Tue, 12 May 2020 07:45:48 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x186sm1026630ooa.4.2020.05.12.07.45.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 07:45:47 -0700 (PDT)
+Received: (nullmailer pid 8681 invoked by uid 1000);
+        Tue, 12 May 2020 14:45:46 -0000
+Date:   Tue, 12 May 2020 09:45:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Saravanan Sekar <saravanan@linumiz.com>
+Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, jic23@kernel.org,
+        broonie@kernel.org, lars@metafoo.de, lgirdwood@gmail.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: add document bindings for
+ wsen-itds accel sensor
+Message-ID: <20200512144546.GA7376@bogus>
+References: <20200429133943.18298-1-saravanan@linumiz.com>
+ <20200429133943.18298-2-saravanan@linumiz.com>
 MIME-Version: 1.0
-In-Reply-To: <20200510075510.987823-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429133943.18298-2-saravanan@linumiz.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-On 10/5/20 5:54 pm, Christoph Hellwig wrote:
-> m68knommu needs almost no cache flushing routines of its own.  Rely on
-> asm-generic/cacheflush.h for the defaults.
+On Wed, 29 Apr 2020 15:39:40 +0200, Saravanan Sekar wrote:
+> Add device tree binding information for wsen-itds accel sensor driver.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Acked-by: Greg Ungerer <gerg@linux-m68k.org>
-
-Regards
-Greg
-
-
+> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
 > ---
->   arch/m68k/include/asm/cacheflush_no.h | 19 ++-----------------
->   1 file changed, 2 insertions(+), 17 deletions(-)
+>  .../bindings/iio/accel/we,wsen-itds.yaml      | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/we,wsen-itds.yaml
 > 
-> diff --git a/arch/m68k/include/asm/cacheflush_no.h b/arch/m68k/include/asm/cacheflush_no.h
-> index 11e9a9dcbfb24..2731f07e7be8c 100644
-> --- a/arch/m68k/include/asm/cacheflush_no.h
-> +++ b/arch/m68k/include/asm/cacheflush_no.h
-> @@ -9,25 +9,8 @@
->   #include <asm/mcfsim.h>
->   
->   #define flush_cache_all()			__flush_cache_all()
-> -#define flush_cache_mm(mm)			do { } while (0)
-> -#define flush_cache_dup_mm(mm)			do { } while (0)
-> -#define flush_cache_range(vma, start, end)	do { } while (0)
-> -#define flush_cache_page(vma, vmaddr)		do { } while (0)
->   #define flush_dcache_range(start, len)		__flush_dcache_all()
-> -#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
-> -#define flush_dcache_page(page)			do { } while (0)
-> -#define flush_dcache_mmap_lock(mapping)		do { } while (0)
-> -#define flush_dcache_mmap_unlock(mapping)	do { } while (0)
->   #define flush_icache_range(start, len)		__flush_icache_all()
-> -#define flush_icache_page(vma,pg)		do { } while (0)
-> -#define flush_icache_user_range(vma,pg,adr,len)	do { } while (0)
-> -#define flush_cache_vmap(start, end)		do { } while (0)
-> -#define flush_cache_vunmap(start, end)		do { } while (0)
-> -
-> -#define copy_to_user_page(vma, page, vaddr, dst, src, len) \
-> -	memcpy(dst, src, len)
-> -#define copy_from_user_page(vma, page, vaddr, dst, src, len) \
-> -	memcpy(dst, src, len)
->   
->   void mcf_cache_push(void);
->   
-> @@ -98,4 +81,6 @@ static inline void cache_clear(unsigned long paddr, int len)
->   	__clear_cache_all();
->   }
->   
-> +#include <asm-generic/cacheflush.h>
-> +
->   #endif /* _M68KNOMMU_CACHEFLUSH_H */
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
