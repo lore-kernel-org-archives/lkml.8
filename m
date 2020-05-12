@@ -3,101 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F1C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7685C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8C32206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA7A206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KTiDZr5b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H6BELK16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgELONf (ORCPT
+        id S1730335AbgELOOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:13:35 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2330 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730282AbgELONY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:13:24 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CEC6Nl020352;
-        Tue, 12 May 2020 16:12:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=/cK62abs1ZOEPd483Fs6vDPdjcVo6tdi3F8yjd7dwk0=;
- b=KTiDZr5bXPQ1ht4Sn0aTqssoSiATVAB6OvUCqHuvtHDJWH/2ga4oo/VQn6vj/L8sIbUx
- E4Honl7oWMa8wczDu+Httq4wd6aiUXW7acBRNFc/ZyyeVwlpmfo5QSrhvhRfgkXr1zHD
- GPJow8LcS3EWe4JrFtdfwI/9xYuQaRtPnnTT2NFLqVyuaYs7VnSf/0Je0tDOsEEae20l
- WI0TLo0dqictsY16T419hWRkJRqiRWswe8q/B0z3GBUVLpmaBbmd0MbeCbNY/l1dxwo/
- lQYob5ZuDSCPkUQsCIMW2lfNetp0Lqy3//gfqPgIYZXveiFUb7HBjo7hSBvWvRNn2NvC 3A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30whn9gw5a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 16:12:06 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D5E810002A;
-        Tue, 12 May 2020 16:11:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F2EB22AA608;
-        Tue, 12 May 2020 16:11:55 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 May 2020 16:11:55
- +0200
-From:   Nicolas Toromanoff <nicolas.toromanoff@st.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     Nicolas Toromanoff <nicolas.toromanoff@st.com>,
-        <linux-crypto@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/5] STM32 CRC update
-Date:   Tue, 12 May 2020 16:11:08 +0200
-Message-ID: <20200512141113.18972-1-nicolas.toromanoff@st.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 May 2020 10:14:17 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60201 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729756AbgELOOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:14:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49M0D64dCtz9sSg;
+        Wed, 13 May 2020 00:14:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589292854;
+        bh=1cWnbL5AnU1SFC0c6TK6Gmn0CFWs8l55Kduttq/IPBc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H6BELK16xMJ2pPpr+UvXaiBbKGmOhUn7bxK76Gg57Dkar9kEWyLwnyW/P1b2MQAqh
+         yNkxrWhpzf3ryB5QqKNp0h3xLHb0PT9A1xbi79LQ6HQCjJ04doU9MZH/dyrTx7v729
+         FOJsspgpTqgCvUud/mLNhM0leHidjocdVxqTrssRI4ERTOVlYi+0lf3nJbE+TPt72w
+         /VEVe+wgNKvMDeHJ020KnVEOtDX+uMu7hxmm5h5UhyHZh6D2G8Z4nLBhDdYVvmGnyw
+         kOOkvLnF9QJiOwym262pZMHjGHCH1SXjaejvx2Q4Zd8j0DdU1ZDnhk2VapNsF0V0uA
+         rudi+ySeklhZQ==
+Date:   Wed, 13 May 2020 00:14:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the fsinfo tree
+Message-ID: <20200513001412.12598111@canb.auug.org.au>
+In-Reply-To: <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com>
+References: <20200512195712.690f02bb@canb.auug.org.au>
+        <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_04:2020-05-11,2020-05-12 signatures=0
+Content-Type: multipart/signed; boundary="Sig_/_l.XWYgKS2wyJTKroYQkitq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set of patches update the STM32 CRC driver.
-It contains bug fix.
+--Sig_/_l.XWYgKS2wyJTKroYQkitq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-First fixes issue if we enable STM32 CRC32 hardware accelerator with
-ext4 (with metadata-chksum enable) and other fs that use same direct
-access to update crc32 API without previous init.
-Second fixes some issues raise by the extra self-test.
-Third fixes wrong hw usage if there is multiple IP on the SOC.
-Forth fixes "sleep while atomic" in tcrypt test, and some other places
-(ext4)
-Last fixes concurrent accesses. As state is saved in the hardware cell
-and not in stack as other CRC32 drivers, we need to create atomic
-section to protect concurrent CRC32 calculus.
+Hi Masahiro,
 
-This patch series applies to cryptodev/master.
+On Tue, 12 May 2020 23:00:13 +0900 Masahiro Yamada <masahiroy@kernel.org> w=
+rote:
+>
+> I also failed to build it, but the error message
+> was different.
+>=20
+> The following worked for me at least.
+> (Ubuntu 20.04).
+>=20
+> diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
+> index 97e54c8be358..539fb3a56af3 100644
+> --- a/samples/vfs/Makefile
+> +++ b/samples/vfs/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -userprogs :=3D test-fsmount test-mntinfo test-statx
+> +userprogs :=3D test-fsinfo test-fsmount test-mntinfo test-statx
+>  always-y :=3D $(userprogs)
+>=20
+>  userccflags +=3D -I usr/include
+>=20
+> -test-fsinfo-userldflags +=3D -static -lm
+> +test-fsinfo-userldflags :=3D -static
+> +test-fsinfo-userldlibs :=3D -lm
 
-Nicolas Toromanoff (5):
-  crypto: stm32/crc: fix ext4 chksum BUG_ON()
-  crypto: stm32/crc: fix run-time self test issue.
-  crypto: stm32/crc: fix multi-instance
-  crypto: stm32/crc: don't sleep in runtime pm
-  crypto: stm32/crc: protect from concurrent accesses
+Thanks, I will change the merge resolution to that.
+--=20
+Cheers,
+Stephen Rothwell
 
- drivers/crypto/stm32/stm32-crc32.c | 230 ++++++++++++++++++++---------
- 1 file changed, 161 insertions(+), 69 deletions(-)
+--Sig_/_l.XWYgKS2wyJTKroYQkitq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66rzQACgkQAVBC80lX
+0GzpAwf8CjORtl+idsPwU7zqDqXLTgf4EKM4io4mY2wFnrtp3L7Xvg8ZqI5K2HkK
+J3WUhxRvEwWHnSjBf1UW5rM45oNBsBzA848Ju8Ei0kv/GM1jWtsYrAvK0vPh8gI9
+zo6M/ACAq+rDvyb8ZCSherYUkbtgwV9jBhNp2xb3iTNQkto1WiEc3NcOPI9ojysd
+a+01MC2QeYLhmVbcMQwXC98D9iGgtwWEjJtCGSAKR9+I/iIFJvoORlG77azABIZv
+EHWtgosIsp4OhmWujsFlpJHm+cd9TL0A+imgu+wazPpLrdNIBUuAes5141LOXKbd
+aZAwLQk+kQtExSy8z1dkfi50hDoDHg==
+=5fez
+-----END PGP SIGNATURE-----
+
+--Sig_/_l.XWYgKS2wyJTKroYQkitq--
