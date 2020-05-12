@@ -2,120 +2,215 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B58C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5639CC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A9020722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32503206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O/qLDBHj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mFE+2NY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgELONB (ORCPT
+        id S1730280AbgELONV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgELONA (ORCPT
+        Tue, 12 May 2020 10:13:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37438 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728283AbgELONV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:13:00 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E41C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:13:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so9453378pjd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ci7zKqD3gUAa4Ry13dacSM6dlpd7qZR1mlqQSLUNRDM=;
-        b=O/qLDBHjTmJNZ4W1E9Qf7I7qcg6eamfI+POItL7/mej0hX6DhjCfNdMtun9tUeSSL5
-         3uEIkG+olE6RavA7Nz6gumINI0osXMpGfmZrF7Gi3IpxFqn7Fw4dAjRCi9HFxVoMkh0s
-         WW74dtEp/Xndy66Sv0QFQVHgnWj8v9lY6LMdjDuz3qftrnH2zIE5CPU270kQ2uTCRX+E
-         TJHyVDv+EQNnGK9lX1K0yW+sxwyYPbL1DvuYShy+ufo09thN1vq59owk018ZJp0wC/5T
-         gX5sU79An1C83AYAqkLxM8me/QqZMV9bcCKGoV6CF38FfIl/iXAXND6KrmrxHiFjV2YQ
-         A14A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ci7zKqD3gUAa4Ry13dacSM6dlpd7qZR1mlqQSLUNRDM=;
-        b=SrkKnXJ35tNFuTEBkcTAYQDxAlvRB2dL3D+v6+OuwEOpPmmAK8S2A0/Ot7AmhmwSEn
-         tajeqbQRYrVtfLm3hXq4URzHG/VoSqf9e/uQ0+Z9wrNajn3sZjIiGDGiR22szccrjer1
-         eRA2DnLvQyFbqOxA6QRDR6qbkqYVtsJV0THEk6RKysFH1YFyf9kqdd3pvtugcfunkdD5
-         b1w+osapUrFR3O7rGpgPFFziRS3ZQhrRYqcjByog9Hnv/X2EOf3jKAxhtHWtuM684bgN
-         2Dk0jW5AbUGIQZeHZnHf3UUU4o8UILITObS+upH09puUUgVIF8pzmU9PWK3mcAtO1AoU
-         XkzQ==
-X-Gm-Message-State: AGi0PuY3rCNW8a3xq5RsdKsBy0cpgGpTOmEJahhDfRZVoLixLKLjzUQQ
-        sAb5NfdLncytLazZ5tzBSPgR
-X-Google-Smtp-Source: APiQypJezn/TnyFOdcX7SBPrI3c2aWKI1uXvAlkdhblYFd0FY2muiujKh7MlqChB350C0ASDPTLqiA==
-X-Received: by 2002:a17:90b:34c:: with SMTP id fh12mr26385247pjb.134.1589292779836;
-        Tue, 12 May 2020 07:12:59 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
-        by smtp.gmail.com with ESMTPSA id 141sm12422236pfz.171.2020.05.12.07.12.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 07:12:59 -0700 (PDT)
-Date:   Tue, 12 May 2020 19:42:35 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        adamboardman@gmail.com
-Subject: Re: [PATCH 0/4] Add I2C controller support for MT6797 SoC
-Message-ID: <20200512141235.GG5526@Mani-XPS-13-9360>
-References: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
+        Tue, 12 May 2020 10:13:21 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CE7CJ8017098;
+        Tue, 12 May 2020 16:11:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=vusmNKIE7/y2LAj08wjyAKfANz0EujBPUQM+EpHV0Cc=;
+ b=mFE+2NY4rFSRzZvF5mlssD5BVySbXlvZcy6kiq73CE3/LEGYibjcPfdKRqXJWpP8UI+I
+ 0bZuNPkDNiv5mbFcNAemZeimOFV1fFDJDvLmzGTORCfR1fcwwnKDS93c69TXfp19KIEM
+ 99yActVsn+cQz9umENPvPhK1NNdti7oD/1HQNo34lCbEHLPqfCIjNVSY+k83VRLdUbOL
+ TzNzxPPXT1tVCoRx+RZhTjw/2J5bsLXLQn3uFlWkd3WO+e1pSbaw9cauehJqu+zb2ce8
+ a3GZrNCqGko8iq9gm8Ue7azEmsKELqNOunVIBL+2NwHLnL5ZfkIk+d1GLhvGpzmH02JG jw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30wkdh0hx3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 May 2020 16:11:59 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4A97F100038;
+        Tue, 12 May 2020 16:11:59 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E0C52BAE54;
+        Tue, 12 May 2020 16:11:59 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 May 2020 16:11:58
+ +0200
+From:   Nicolas Toromanoff <nicolas.toromanoff@st.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     Nicolas Toromanoff <nicolas.toromanoff@st.com>,
+        <linux-crypto@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 5/5] crypto: stm32/crc: protect from concurrent accesses
+Date:   Tue, 12 May 2020 16:11:13 +0200
+Message-ID: <20200512141113.18972-6-nicolas.toromanoff@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222162444.11590-1-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-12_04:2020-05-11,2020-05-12 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Protect STM32 CRC device from concurrent accesses.
 
-On Sat, Feb 22, 2020 at 09:54:40PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This patchset adds I2C controller support for Mediatek MT6797 SoC. There
-> are a total of 8 I2C controllers in this SoC (2 being shared) and they are
-> same as the controllers present in MT6577 SoC. Hence, the driver support is
-> added with DT fallback method.
-> 
-> As per the datasheet, there are controllers with _imm prefix like i2c2_imm
-> and i2c3_imm. These appears to be in different memory regions but sharing
-> the same pins with i2c2 and i2c3 respectively. Since there is no clear
-> evidence of what they really are, I've adapted the numbering/naming scheme
-> from the downstream code by Mediatek.
-> 
-> This patchset has been tested on 96Boards X20 development board.
-> 
+As we create a spinlocked section that increase with buffer size,
+we provide a module parameter to release the pressure by splitting
+critical section in chunks.
 
-Looks like this series has slipped through the cracks...
+Size of each chunk is defined in burst_size module parameter.
+By default burst_size=0, i.e. don't split incoming buffer.
 
-Thanks,
-Mani
+Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+---
+ drivers/crypto/stm32/stm32-crc32.c | 47 ++++++++++++++++++++++++++++--
+ 1 file changed, 45 insertions(+), 2 deletions(-)
 
-> Thanks,
-> Mani
-> 
-> Manivannan Sadhasivam (4):
->   dt-bindings: i2c: Document I2C controller binding for MT6797 SoC
->   arm64: dts: mediatek: Add I2C support for MT6797 SoC
->   arm64: dts: mediatek: Enable I2C support for 96Boards X20 Development
->     board
->   arm64: dts: mediatek: Switch to SPDX license identifier for MT6797 SoC
-> 
->  .../devicetree/bindings/i2c/i2c-mt65xx.txt    |   1 +
->  .../boot/dts/mediatek/mt6797-x20-dev.dts      |  49 ++++
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi      | 229 +++++++++++++++++-
->  3 files changed, 271 insertions(+), 8 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
+index 413415c216ef..3ba41148c2a4 100644
+--- a/drivers/crypto/stm32/stm32-crc32.c
++++ b/drivers/crypto/stm32/stm32-crc32.c
+@@ -35,11 +35,16 @@
+ 
+ #define CRC_AUTOSUSPEND_DELAY	50
+ 
++static unsigned int burst_size;
++module_param(burst_size, uint, 0644);
++MODULE_PARM_DESC(burst_size, "Select burst byte size (0 unlimited)");
++
+ struct stm32_crc {
+ 	struct list_head list;
+ 	struct device    *dev;
+ 	void __iomem     *regs;
+ 	struct clk       *clk;
++	spinlock_t       lock;
+ };
+ 
+ struct stm32_crc_list {
+@@ -109,6 +114,7 @@ static int stm32_crc_init(struct shash_desc *desc)
+ 	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+ 	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
++	unsigned long flags;
+ 
+ 	crc = stm32_crc_get_next_crc();
+ 	if (!crc)
+@@ -116,6 +122,8 @@ static int stm32_crc_init(struct shash_desc *desc)
+ 
+ 	pm_runtime_get_sync(crc->dev);
+ 
++	spin_lock_irqsave(&crc->lock, flags);
++
+ 	/* Reset, set key, poly and configure in bit reverse mode */
+ 	writel_relaxed(bitrev32(mctx->key), crc->regs + CRC_INIT);
+ 	writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
+@@ -125,18 +133,21 @@ static int stm32_crc_init(struct shash_desc *desc)
+ 	/* Store partial result */
+ 	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+ 
++	spin_unlock_irqrestore(&crc->lock, flags);
++
+ 	pm_runtime_mark_last_busy(crc->dev);
+ 	pm_runtime_put_autosuspend(crc->dev);
+ 
+ 	return 0;
+ }
+ 
+-static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+-			    unsigned int length)
++static int burst_update(struct shash_desc *desc, const u8 *d8,
++			size_t length)
+ {
+ 	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+ 	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
+ 	struct stm32_crc *crc;
++	unsigned long flags;
+ 
+ 	crc = stm32_crc_get_next_crc();
+ 	if (!crc)
+@@ -144,6 +155,8 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 
+ 	pm_runtime_get_sync(crc->dev);
+ 
++	spin_lock_irqsave(&crc->lock, flags);
++
+ 	/*
+ 	 * Restore previously calculated CRC for this context as init value
+ 	 * Restore polynomial configuration
+@@ -182,12 +195,40 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+ 	/* Store partial result */
+ 	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
+ 
++	spin_unlock_irqrestore(&crc->lock, flags);
++
+ 	pm_runtime_mark_last_busy(crc->dev);
+ 	pm_runtime_put_autosuspend(crc->dev);
+ 
+ 	return 0;
+ }
+ 
++static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
++			    unsigned int length)
++{
++	const unsigned int burst_sz = burst_size;
++	unsigned int rem_sz;
++	const u8 *cur;
++	size_t size;
++	int ret;
++
++	if (!burst_sz)
++		return burst_update(desc, d8, length);
++
++	/* Digest first bytes not 32bit aligned at first pass in the loop */
++	size = min(length,
++		   burst_sz + (unsigned int)d8 - ALIGN_DOWN((unsigned int)d8,
++							    sizeof(u32)));
++	for (rem_sz = length, cur = d8; rem_sz;
++	     rem_sz -= size, cur += size, size = min(rem_sz, burst_sz)) {
++		ret = burst_update(desc, cur, size);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int stm32_crc_final(struct shash_desc *desc, u8 *out)
+ {
+ 	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
+@@ -300,6 +341,8 @@ static int stm32_crc_probe(struct platform_device *pdev)
+ 	pm_runtime_irq_safe(dev);
+ 	pm_runtime_enable(dev);
+ 
++	spin_lock_init(&crc->lock);
++
+ 	platform_set_drvdata(pdev, crc);
+ 
+ 	spin_lock(&crc_list.lock);
+-- 
+2.17.1
+
