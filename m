@@ -2,45 +2,47 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A115C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE29C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8DE8206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD4A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DMnMoXL9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p+AO0Yp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgELCd0 (ORCPT
+        id S1728592AbgELCd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:33:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21517 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727942AbgELCd0 (ORCPT
+        Mon, 11 May 2020 22:33:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:24980 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728559AbgELCd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:33:26 -0400
+        Mon, 11 May 2020 22:33:27 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589250805; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Gbr4Wkuy19BTnIwtPfWPtF/ww5i3nDtSAgM8uj6hhSc=; b=DMnMoXL9WABRoGOtRpqpgkpwbE5ay39OEjZ616fXasQ+mcoiY2Be04Y6Iw0mJ1EELW2ZGK/F
- dX8ULRTLWq+E/1RamYMW/XBzOyVmxy0CC1Xrw1tSVVDX1WC5dnxRIaqexttwzlgjwPf2IJqc
- ka2VZrzGFNU47M1jlJNe2B7nxUE=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1589250806; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=pBuTcqNKTPCo/Jfx1CZ1DBivyl6rTguL5IkTaBeu1U8=; b=p+AO0Yp6P4R7eOJDvF+pwVT7Wvm2KpAsB3Dvw1b7/OMXx2APWkpAhTmjk8QQE2G8+yYlPHo9
+ dj6FP0hByHt7Sn6LlvlRRdLxqfUypRJYwST9cNMyd2rp7m7HO+9mcuB6STX49CBpUi17ZAFQ
+ CARhjZttY/vnZowh9CR/zTtGAfI=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba0af5.7f9e883e93e8-smtp-out-n04;
- Tue, 12 May 2020 02:33:25 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eba0af6.7f63efe75110-smtp-out-n03;
+ Tue, 12 May 2020 02:33:26 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 18F44C432C2; Tue, 12 May 2020 02:33:24 +0000 (UTC)
+        id 44C31C432C2; Tue, 12 May 2020 02:33:25 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EF04C433F2;
-        Tue, 12 May 2020 02:33:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5EF04C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9C287C43636;
+        Tue, 12 May 2020 02:33:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9C287C43636
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -48,46 +50,43 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v1 0/6] Introduce features and debugfs/sysfs entries for MHI
-Date:   Mon, 11 May 2020 19:33:10 -0700
-Message-Id: <1589250796-32020-1-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v1 3/6] bus: mhi: core: Introduce helper function to check device state
+Date:   Mon, 11 May 2020 19:33:13 -0700
+Message-Id: <1589250796-32020-4-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589250796-32020-1-git-send-email-bbhatt@codeaurora.org>
+References: <1589250796-32020-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce independent bus and device voting mechanism for clients and save
-hardware information from BHI.
-Allow reading and modifying some MHI variables for debug, test, and
-information purposes using debugfs.
-Read values for device specific hardware information to be used by OEMs in
-factory testing such as serial number and PK hash using sysfs.
+Introduce a helper function to determine whether the device is in a
+powered ON state and resides in one of the active MHI states. This will
+allow for some use cases in reading debugfs entries.
 
-This set of patches was tested on arm64 and x86.
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/bus/mhi/core/internal.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Bhaumik Bhatt (6):
-  bus: mhi: core: Introduce independent voting mechanism
-  bus: mhi: core: Use generic name field for an MHI device
-  bus: mhi: core: Introduce helper function to check device state
-  bus: mhi: core: Introduce debugfs entries and counters for MHI
-  bus: mhi: core: Read and save device hardware information from BHI
-  bus: mhi: core: Introduce sysfs entries for MHI
-
- Documentation/ABI/stable/sysfs-bus-mhi |  25 ++
- drivers/bus/mhi/Kconfig                |   8 +
- drivers/bus/mhi/core/Makefile          |   5 +-
- drivers/bus/mhi/core/boot.c            |  17 +-
- drivers/bus/mhi/core/debugfs.c         | 431 +++++++++++++++++++++++++++++++++
- drivers/bus/mhi/core/init.c            |  80 +++++-
- drivers/bus/mhi/core/internal.h        |  29 +++
- drivers/bus/mhi/core/main.c            |   6 +-
- drivers/bus/mhi/core/pm.c              |  79 ++++--
- include/linux/mhi.h                    |  39 ++-
- 10 files changed, 672 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
- create mode 100644 drivers/bus/mhi/core/debugfs.c
-
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index b1f640b..2f18be7 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -599,6 +599,11 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
+ int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl);
+ int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+ 		 enum mhi_cmd_type cmd);
++static inline bool mhi_is_active(struct mhi_controller *mhi_cntrl)
++{
++	return (mhi_cntrl->dev_state >= MHI_STATE_M0 &&
++		mhi_cntrl->dev_state <= MHI_STATE_M3_FAST);
++}
+ 
+ /* Register access methods */
+ void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
