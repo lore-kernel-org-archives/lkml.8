@@ -2,88 +2,91 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5C6C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2CDC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBF22075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA9C20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uzxHI4cI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgELJjC (ORCPT
+        id S1729311AbgELJjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:39:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43596 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgELJjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:39:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4CE94AF8D;
-        Tue, 12 May 2020 09:39:03 +0000 (UTC)
-To:     Steven Price <steven.price@arm.com>
-Cc:     the arch/x86 maintainers <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-From:   Jan Beulich <jbeulich@suse.com>
-Subject: your "x86: mm: convert dump_pagetables to use walk_page_range" change
-Message-ID: <d573dc7e-e742-84de-473d-f971142fa319@suse.com>
-Date:   Tue, 12 May 2020 11:39:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 05:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725889AbgELJjX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 05:39:23 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AE2C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id m12so16067143wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zgpqu0nvlNXje4P44wgJ/fTYplh7IoX+pXP6R2kTyUM=;
+        b=uzxHI4cI4r7ueJkfpnBdL3JzpvoW11LDPGiW6NfK1U9s8c2/BhOFPdFJjMwZ6ryp+U
+         1tU+DHdfOsMJQle6OpB0KoaUQHeyVEdbxV0BUVeHnfQVrsbYAS/6IzYrgTESjFYX4pqQ
+         5/Dsf8ikXsKJcV491ahTN25F6sw2KPdozOs6+pO2ITbRI9Mm52K3zL744WjWTdvJG0hV
+         YejSR9syq8/27XceTE9AdEzoCBtZW5B5g3cHdVmxzu8Rc0QoC/j25fJBFHt0A6NhSWOP
+         IgHs7vrjfl1oPq0ouyWYrdBtpp+skiLEC3zJlbzZj0/f59jQ7iWsW5pKVjNBuR8ZmxVA
+         UrPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zgpqu0nvlNXje4P44wgJ/fTYplh7IoX+pXP6R2kTyUM=;
+        b=p/zfELfHh6UxG+k0+KZCb9nmiJHlbzpIm+EgeIu4x8SdjWu9lrZdPAKYinQXOBJUMo
+         NqEjEU0f4/fX4gzjR3o1nDGdp4k+qn7GD/Fh583Z2tlPYTZD3mqiqCErX0bpMnJp79kc
+         yzmT4bNStNCfO7tSsZtNfJkKeeM+UseXXwb6DHmXVqDuogFcOZJaNVspDBPegU2dhgUo
+         dgoAgzGe7Gi6qnTOcxJsbmQi+PRbnbh1Wt+egOqiurRBHyPLYFm3etL1cana0luWQPG7
+         7kcQu5+uuNJVFgGszA6vXoOqQSceMGhaLOO9v8mzDNkTf66LnZMS9z2xGUUC66VBUtYP
+         dBiA==
+X-Gm-Message-State: AGi0PuZoDEbt9EVuLU1+5ulQnruw/Fa/CgMiV2h8WgMNCbA9KJytHk+C
+        IP8D2POyFbPfxcihWAFgOmHnwQ==
+X-Google-Smtp-Source: APiQypKf2iz/NXq0roCfN6pjhAVz0wejgec/5x0siuuEH16JGsJRfDvKR1I8FJOnJ4nNNidj130K1Q==
+X-Received: by 2002:a1c:1c6:: with SMTP id 189mr5058963wmb.47.1589276361349;
+        Tue, 12 May 2020 02:39:21 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id 81sm14037092wme.16.2020.05.12.02.39.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 02:39:20 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/2] arm64: dts: meson-sm1: add thermal nodes
+Date:   Tue, 12 May 2020 11:39:14 +0200
+Message-Id: <20200512093916.19676-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven,
+SM1 Thermal is missing and broken since the G12A/G12B thermal enablement,
+fix this here by moving the g12b thermal nodes to meson-g12b.dtsi
+and adding the proper sm1 thermal nodes.
 
-in the description of this change you say:
+Neil Armstrong (2):
+  arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
+  arm64: dts: meson-sm1: add cpu thermal nodes
 
-"The effective permissions are passed down the chain using new fields in
- struct pg_state."
+ arch/arm64/boot/dts/amlogic/meson-g12.dtsi  | 23 --------------------
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 22 +++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi  | 24 +++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 23 deletions(-)
 
-I don't see how this works, and I suppose this part of the change is
-(part of) the reason why a W+X warning has magically disappeared in
-5.6.x (compared to 5.5.x) when running a 32-bit kernel under Xen.
+-- 
+2.22.0
 
-Quoting the relevant piece of code:
-
-	if (level > 0) {
-		new_eff = effective_prot(st->prot_levels[level - 1],
-					 new_prot);
-	} else {
-		new_eff = new_prot;
-	}
-
-	if (level >= 0)
-		st->prot_levels[level] = new_eff;
-
-The generic framework calls note_page() only for leaf pages or holes
-afaics. The protections for a leaf page found at a level other than
-the numerically highest one have no meaning at all for a mapping at
-a later address mapped with a numerically higher level mapping.
-Instead it's the non-leaf page tables for that specific address
-which determine the effective protection for any particular mapping.
-
-To take an example, suppose the first present leaf page is found
-at level 4. st->prot_levels[] will be all zero at this time, from
-which it follows that new_eff will be zero then, too.
-
-I don't think the intended effect can be achieved without either
-retaining the original behavior of passing the effective protection
-into note_page(), or calling note_page() also for non-leaf pages
-(indicating to it which case it is, and adjusting it accordingly).
-
-Am I overlooking something?
-
-Additionally I'd like to note that note_page()'s "unsigned long val"
-parameter isn't wide enough for 32-bit PAE PTEs, and hence the NX
-flag will always be seen as clear in new_prot in such configs.
-
-Jan
