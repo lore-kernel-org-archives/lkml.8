@@ -2,98 +2,70 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047EAC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7FBC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C558120769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="K+ijg0oJ"
+	by mail.kernel.org (Postfix) with ESMTP id 25FB620753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgELUF2 (ORCPT
+        id S1731124AbgELUGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
+        Tue, 12 May 2020 16:06:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731049AbgELUF1 (ORCPT
+        with ESMTP id S1725938AbgELUGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:05:27 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE01C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:05:27 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id i14so13890554qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XYlu2eXcEyn79K9mTtWYUS4m2Il40SbRimfBXKFX27M=;
-        b=K+ijg0oJH3pv2Az/ECO8+z9We7WNKV4Voe4Un+9P5f/I0xlNzZbZdLDRM6cbfWK8RT
-         b0APuGzu0ul8VR7Xp9RRHiRoZK7p4taVlC/wQf9BZyHRZj1aZjkruJ5vfLkG68gOstHV
-         FgIu/awKE/e5eO69XJ/hKc5iFbSvaznKNWWYXPls8liTGeJHNaTcjRNaBg9+wnfbFNRt
-         YpBAFKESo57V7Z9bNw3LWSgcZWl7TlBcm9twfR1QhdRNrR86m+Q884nfDQ525Fb2BwXz
-         TYWI9D8PJGsqqO54RacVN6WTSZJ0rOmr/3GnOTiQwIM4+CP+AePpXluipkSQJhL2GVkR
-         K9vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XYlu2eXcEyn79K9mTtWYUS4m2Il40SbRimfBXKFX27M=;
-        b=poqRTjWtVtTwH76RqffURC2yohAbN7/qG4lJhcK39fGDI+O+fwMtrrize5dyYx2ZVj
-         fs7hH618m7wbSH/p516Oog75srLdhhYhXt0qOypiUAsgXprKvWtlbjUP3E5NgQ3aADXk
-         8q7QJIvC/s/shFYanFERDWQzb6NcjFBfDm5KEQC8gDkPGXqwTYLsWuMAqwvOKBT/aIbJ
-         +MchcRyM/NE+RDecl6Y8KVPQU0hr3s7pNa+hwCw0vtjv/kUBKTEMPOaNO1g88Kb6vDRE
-         zxvzfIS4dAKkVOYi8Dm3C65AZgYxdkJp6ww+ASuUxl6wh2jZCrMrOZiam8hMgWT+ra4Q
-         C2pg==
-X-Gm-Message-State: AGi0PuZ6JEWDPcfJMCPrpOGHgjFo1MwKa7+ikKe63EM+UP/Pyb3yk5hY
-        R+M0th9uC3sCCjBGDXOJ7V/JkQ==
-X-Google-Smtp-Source: APiQypKmO+CbRnFPnWotv8sLpGTJhVbqzh1Y92d94um0xVgF995XQU3sHoppXt4OgsAO8ae2sbWjoA==
-X-Received: by 2002:a37:4cd:: with SMTP id 196mr16812079qke.455.1589313926666;
-        Tue, 12 May 2020 13:05:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id g66sm8786521qkb.122.2020.05.12.13.05.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 13:05:26 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYb9Z-00040y-Or; Tue, 12 May 2020 17:05:25 -0300
-Date:   Tue, 12 May 2020 17:05:25 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: Re: [PATCH rdma-rc 0/2] Fixes to IB_EVENT_DEVICE_FATAL logic
-Message-ID: <20200512200525.GA15389@ziepe.ca>
-References: <20200507063348.98713-1-leon@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507063348.98713-1-leon@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 12 May 2020 16:06:34 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169B6C061A0C;
+        Tue, 12 May 2020 13:06:34 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477:9e51:a893:b0fe:602a])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD94212837894;
+        Tue, 12 May 2020 13:06:33 -0700 (PDT)
+Date:   Tue, 12 May 2020 13:06:33 -0700 (PDT)
+Message-Id: <20200512.130633.293867428547074800.davem@davemloft.net>
+To:     christian.brauner@ubuntu.com
+Cc:     arnd@arndb.de, guoren@kernel.org, linux-csky@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 0/3] sparc: port to copy_thread_tls() and struct
+ kernel_clone_args
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200512171527.570109-1-christian.brauner@ubuntu.com>
+References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 May 2020 13:06:33 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 09:33:46AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Hi,
-> 
-> Two changes, pretty straightforward.
-> 
-> Thanks
-> 
-> Jason Gunthorpe (2):
->   RDMA/uverbs: Do not discard the IB_EVENT_DEVICE_FATAL event
->   RDMA/uverbs: Move IB_EVENT_DEVICE_FATAL to destroy_uobj
+From: Christian Brauner <christian.brauner@ubuntu.com>
+Date: Tue, 12 May 2020 19:15:24 +0200
 
-Applied to for-rc
+> I've tested this series with qemu-system-sparc64 and a Debian Sid image
+> and it comes up no problem (Here's a little recording
+> https://asciinema.org/a/329510 ).
 
-Jason
+Can you show how you put this environment together and also what
+compilation tools you used?  Looks great.
+
+> This is the sparc specific bit and _if_ you agree with the changes here
+> it'd be nice if I could get your review, and if technically correct,
+> your ack so I can fold this into a larger series and move on to the next
+> arch.
+
+With the delay slot instruction indentation fixed:
+
+Acked-by: David S. Miller <davem@davemloft.net>
+
+Thank you.
