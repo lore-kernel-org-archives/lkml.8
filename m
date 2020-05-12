@@ -2,152 +2,145 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D322BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF133C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEF20205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA012206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:29:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EcH7WTMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgELR2D (ORCPT
+        id S1728276AbgELR33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:28:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:18465 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgELR2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:28:02 -0400
-IronPort-SDR: fpHXy++5fyEYManVvpGTOvRbms5B132QQYeHksVALRsYKAPAtdl9JrL5jY2AE0zf1S0AN0bscG
- Q9cL+qevXM1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 10:28:01 -0700
-IronPort-SDR: mp2rj3uAt55q5WHrbIIQcB7PSgrbm7VVL6xmMNNGZCJTIYRl4kjU9B0QvhTmrAe0iSL43+VyQa
- Syy0RXQ0J4oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="463834390"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 12 May 2020 10:28:01 -0700
-Date:   Tue, 12 May 2020 10:28:01 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Babu Moger <babu.moger@amd.com>, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        mchehab+samsung@kernel.org, changbin.du@intel.com,
-        Nadav Amit <namit@vmware.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        yang.shi@linux.alibaba.com,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arjun Roy <arjunroy@google.com>, logang@deltatee.com,
+        Tue, 12 May 2020 13:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELR32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:29:28 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F66C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=hV4BDdW+iFVPmUkxPoN7ZR0971mJPrSTzPY2RD+WQVs=; b=EcH7WTMK6MGNVVbLI8orxTjYLd
+        bOPL4TbPTU+kuyf05NAc+x0XosCEPquLD9Pb7P7srgyyZpAJXVkIgcrFtZUkMEPvqato+AiZwgTci
+        yhuynginxhTo9OhW18ZWGkkF2kYr/BZATQLN0fk6mIl3qW3s7hYf0yXHJdlJpCzjAqp11pwlLYXQf
+        SAuPzEocMTp4F93kOSGbmglOAya4nrq+uzNkwJMpQ8M1BEUlTIRzXTOk7lC2u5DX7ji/jb5C0GoNA
+        r6ONsm5c4eoLsa4zKirmpcGjvfmtxFIaOB/8LFPkin4PcGglJFjtLZjJFfHnlPzi5xN7YSKHz0c7C
+        ThRBaqXg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYYiZ-0001PE-OP; Tue, 12 May 2020 17:29:23 +0000
+Subject: Re: [PATCH] drm: vmwgfx: include linux/highmem.h
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
         Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com,
-        Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        pawan.kumar.gupta@linux.intel.com,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] KVM: x86: Move MPK feature detection to common
- code
-Message-ID: <20200512172800.GB12100@linux.intel.com>
-References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
- <158923999440.20128.4859351750654993810.stgit@naples-babu.amd.com>
- <CALMp9eTs4hYpDK+KzXEzaAptcfor+9f7cM9Yd9kvd5v27sdFRw@mail.gmail.com>
- <2fb5fd86-5202-f61b-fd55-b3554c5826da@amd.com>
- <CALMp9eRT69LWGE8dZVuLv2mxgc_R3W1SnPswHkhS8K0ZUX_B-Q@mail.gmail.com>
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huang Rui <ray.huang@amd.com>, Ingo Molnar <mingo@redhat.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200508220150.649044-1-arnd@arndb.de>
+ <20200509131434.27ddccb9@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9c694077-1a65-3883-d082-017586098aaf@infradead.org>
+Date:   Tue, 12 May 2020 10:29:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eRT69LWGE8dZVuLv2mxgc_R3W1SnPswHkhS8K0ZUX_B-Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200509131434.27ddccb9@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 09:58:19AM -0700, Jim Mattson wrote:
-> On Tue, May 12, 2020 at 8:12 AM Babu Moger <babu.moger@amd.com> wrote:
-> >
-> >
-> >
-> > On 5/11/20 6:51 PM, Jim Mattson wrote:
-> > > On Mon, May 11, 2020 at 4:33 PM Babu Moger <babu.moger@amd.com> wrote:
-> > >>
-> > >> Both Intel and AMD support (MPK) Memory Protection Key feature.
-> > >> Move the feature detection from VMX to the common code. It should
-> > >> work for both the platforms now.
-> > >>
-> > >> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> > >> ---
-> > >>  arch/x86/kvm/cpuid.c   |    4 +++-
-> > >>  arch/x86/kvm/vmx/vmx.c |    4 ----
-> > >>  2 files changed, 3 insertions(+), 5 deletions(-)
-> > >>
-> > >> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > >> index 901cd1fdecd9..3da7d6ea7574 100644
-> > >> --- a/arch/x86/kvm/cpuid.c
-> > >> +++ b/arch/x86/kvm/cpuid.c
-> > >> @@ -278,6 +278,8 @@ void kvm_set_cpu_caps(void)
-> > >>  #ifdef CONFIG_X86_64
-> > >>         unsigned int f_gbpages = F(GBPAGES);
-> > >>         unsigned int f_lm = F(LM);
-> > >> +       /* PKU is not yet implemented for shadow paging. */
-> > >> +       unsigned int f_pku = tdp_enabled ? F(PKU) : 0;
-> > >
-> > > I think we still want to require that OSPKE be set on the host before
-> > > exposing PKU to the guest.
-> > >
-> >
-> > Ok I can add this check.
-> >
-> > +       unsigned int f_pku = tdp_enabled && F(OSPKE)? F(PKU) : 0;
+On 5/8/20 8:14 PM, Stephen Rothwell wrote:
+> Hi Arnd,
 > 
-> That doesn't do what you think it does. F(OSPKE) is a non-zero
-> constant, so that conjunct is always true.
+> On Sat,  9 May 2020 00:01:31 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> In order to call kmap_atomic() etc, we need to include linux/highmem.h:
+>>
+>> drivers/gpu/drm/vmwgfx/vmwgfx_blit.c: In function 'vmw_bo_cpu_blit_line':
+>> drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:377:4: error: implicit declaration of function 'kunmap_atomic'; did you mean 'in_atomic'? [-Werror=implicit-function-declaration]
+>>   377 |    kunmap_atomic(d->src_addr);
+>>       |    ^~~~~~~~~~~~~
+>>       |    in_atomic
+>> drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:391:5: error: implicit declaration of function 'kmap_atomic_prot' [-Werror=implicit-function-declaration]
+>>   391 |     kmap_atomic_prot(d->dst_pages[dst_page],
+>>       |     ^~~~~~~~~~~~~~~~
+>> drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:390:16: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>>   390 |    d->dst_addr =
+>>       |                ^
+>> drivers/gpu/drm/vmwgfx/vmwgfx_blit.c:403:16: warning: assignment to 'u8 *' {aka 'unsigned char *'} from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>>   403 |    d->src_addr =
+>>       |                ^
+>>
+>> Fixes: 46385a895322 ("drm: remove drm specific kmap_atomic code")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  drivers/gpu/drm/vmwgfx/vmwgfx_blit.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+>> index 94d456a1d1a9..1629427d5734 100644
+>> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+>> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
+>> @@ -27,6 +27,7 @@
+>>   **************************************************************************/
+>>  
+>>  #include "vmwgfx_drv.h"
+>> +#include <linux/highmem.h>
+>>  
+>>  /*
+>>   * Template that implements find_first_diff() for a generic
+>> -- 
+>> 2.26.0
+>>
+> 
+> Added to linux-next for Monday (in case Andrew doesn't get around to it).
+> 
 
-My vote would be to omit f_pku and adjust the cap directly, e.g.
+Hi,
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 6828be99b9083..998c902df9e57 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -326,7 +326,7 @@ void kvm_set_cpu_caps(void)
-        );
+What happened with this patch?
+I am seeing the same build problems in linux-next of 20200512.
 
-        kvm_cpu_cap_mask(CPUID_7_ECX,
--               F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
-+               F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
-                F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
-                F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-                F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/
-@@ -334,6 +334,8 @@ void kvm_set_cpu_caps(void)
-        /* Set LA57 based on hardware capability. */
-        if (cpuid_ecx(7) & F(LA57))
-                kvm_cpu_cap_set(X86_FEATURE_LA57);
-+       if (!tdp_enabled || !boot_cpu_has(OSPKE))
-+               kvm_cpu_cap_clear(X86_FEATURE_PKU);
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-        kvm_cpu_cap_mask(CPUID_7_EDX,
-                F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+
+thanks.
+-- 
+~Randy
+
