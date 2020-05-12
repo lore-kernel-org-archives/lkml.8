@@ -2,152 +2,110 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F2C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F7CC47076
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498F820659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhvUjbZP"
+	by mail.kernel.org (Postfix) with ESMTP id CB95F20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589318122;
+	bh=h/sNaaOBNEIhDG5F88sE/lVoo2pnusKIDpAt5Nj16bU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2q+3BbvrJco0VoPsj4FeEdHXXV9yJLMDDaZz+c4mb8+n0cHAse+vSjij6SFrTir3G
+	 08Fyu5nYW3Hh4YX5WOsyaiCyElKAGHw65ZwJ4VhM3ZOznOX6d3+Ry3FnNC/y2sSSX5
+	 Z8m76B8PQMiFyrjdpRWIBkmWRGMvxhoD2QKQ2sAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbgELVPP (ORCPT
+        id S1731425AbgELVPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:15:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24412 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731293AbgELVPP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:15:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589318113;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KKbG/7NnQEY0XYYBh6yQ01fFVwnPr8GzaTotsTFKyPI=;
-        b=OhvUjbZPOmxI42zPYAmL5lCGF+KFQtKFTutvXpivzYqaGH7+b5CEMiyOZlD5NtRvTrM+2x
-        cdnyQhJ/3yqT9WCDemjevx7F2H+IwUJr0Y2fLdWITSvIflNEforEW2d1pzxxB3ENd7Jbmj
-        9hhctt9MdJQF8mcTOpTp57HWMatZ3Ow=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-5yuVjf3fMuSAd98SLS5sJQ-1; Tue, 12 May 2020 17:15:10 -0400
-X-MC-Unique: 5yuVjf3fMuSAd98SLS5sJQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 12 May 2020 17:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731048AbgELVPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:15:21 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7757F8005B7;
-        Tue, 12 May 2020 21:15:07 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-116-85.rdu2.redhat.com [10.10.116.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56DB6165F6;
-        Tue, 12 May 2020 21:15:06 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DCC71220C05; Tue, 12 May 2020 17:15:05 -0400 (EDT)
-Date:   Tue, 12 May 2020 17:15:05 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-Message-ID: <20200512211505.GB142860@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-3-vkuznets@redhat.com>
- <20200512152709.GB138129@redhat.com>
- <87o8qtmaat.fsf@vitty.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E292205C9;
+        Tue, 12 May 2020 21:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589318120;
+        bh=h/sNaaOBNEIhDG5F88sE/lVoo2pnusKIDpAt5Nj16bU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=15ccKmPYwu9UCPoRG67pADblyZ343olE5H31aaftayRfho+H9r4IYa/rTbJdBV7WC
+         OTQe9SpA57tTMSlJTWp4pP3rMrftlBuiYD7omQb7t+We2XOU+MxoZE8cNtjEbnGJvD
+         IRtmMWUCDGYkEQEEjd4r4AhFBhhQZIxAlEREc2ZY=
+Date:   Tue, 12 May 2020 17:15:19 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: stable/linux-4.4.y bisection: baseline.login on
+ at91-sama5d4_xplained
+Message-ID: <20200512211519.GB29995@sasha-vm>
+References: <5eb8399a.1c69fb81.c5a60.8316@mx.google.com>
+ <2db7e52e-86ae-7c87-1782-8c0cafcbadd8@collabora.com>
+ <20200512111059.GA34497@piout.net>
+ <980597f7-5170-72f2-ec2f-efc64f5e27eb@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <87o8qtmaat.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <980597f7-5170-72f2-ec2f-efc64f5e27eb@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:40:10PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
-> >> Currently, APF mechanism relies on the #PF abuse where the token is being
-> >> passed through CR2. If we switch to using interrupts to deliver page-ready
-> >> notifications we need a different way to pass the data. Extent the existing
-> >> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
-> >> notifications.
-> >> 
-> >> The newly introduced apf_put_user_ready() temporary puts both reason
-> >> and token information, this will be changed to put token only when we
-> >> switch to interrupt based notifications.
-> >> 
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> ---
-> >>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
-> >>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
-> >>  2 files changed, 15 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> >> index 2a8e0b6b9805..e3602a1de136 100644
-> >> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> >> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
-> >>  
-> >>  struct kvm_vcpu_pv_apf_data {
-> >>  	__u32 reason;
-> >> -	__u8 pad[60];
-> >> +	__u32 pageready_token;
-> >
-> > How about naming this just "token". That will allow me to deliver error
-> > as well. pageready_token name seems to imply that this will always be
-> > successful with page being ready.
-> >
-> > And reason will tell whether page could successfully be ready or
-> > it was an error. And token will help us identify the task which
-> > is waiting for the event.
-> 
-> I added 'pageready_' prefix to make it clear this is not used for 'page
-> not present' notifications where we pass token through CR2. (BTW
-> 'reason' also becomes a misnomer because we can only see
-> 'KVM_PV_REASON_PAGE_NOT_PRESENT' there.)
+On Tue, May 12, 2020 at 01:29:06PM -0700, Florian Fainelli wrote:
+>
+>
+>On 5/12/2020 4:10 AM, Alexandre Belloni wrote:
+>> Hi,
+>>
+>> On 12/05/2020 06:54:29+0100, Guillaume Tucker wrote:
+>>> Please see the bisection report below about a boot failure.
+>>>
+>>> Reports aren't automatically sent to the public while we're
+>>> trialing new bisection features on kernelci.org but this one
+>>> looks valid.
+>>>
+>>> It appears to be due to the fact that the network interface is
+>>> failing to get brought up:
+>>>
+>>> [  114.385000] Waiting up to 10 more seconds for network.
+>>> [  124.355000] Sending DHCP requests ...#
+>>> ..#
+>>> .#
+>>>  timed out!
+>>> [  212.355000] IP-Config: Reopening network devices...
+>>> [  212.365000] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+>>> #
+>>>
+>>>
+>>> I guess the board would boot fine without network if it didn't
+>>> have ip=dhcp in the command line, so it's not strictly a kernel
+>>> boot failure but still an ethernet issue.
+>>>
+>>
+>> I think the resolution of this issue is
+>> 99f81afc139c6edd14d77a91ee91685a414a1c66. If this is taken, then I think
+>> f5aba91d7f186cba84af966a741a0346de603cd4 should also be backported.
+>
+>Agreed.
 
-"kvm_vcpu_pv_apf_data" being shared between two events at the same
-time is little concerning. At least there should be clear demarkation
-that which events will use which fields.
+Okay, I've queued both for 4.4, thanks!
 
-I guess I could extend "reason" to also report KVM_PV_REASON_ERROR as
-long as I make error reporting opt in. That way new code is able to
-handle more values and old code will not receive it.
+f5aba91d7f1 had a little conflict with missing 2b2427d06426 ("phy:
+micrel: Add ethtool statistics counters") but I've worked around that.
 
-For reporting errors with page ready events, I probably will have to
-use more padding bytes to report errors as I can't use reason field anymore.
-
-In your previous posting in one of the emails Paolo mentioned that data
-structures for #VE will be separate. If that's the case, then we will end
-up changing this protocol one more time. To me it feels that both #VE
-changes and these changes should go in together as part of async page fault
-redesign V2.
-
-> 
-> I have no strong opinion, can definitely rename this to 'token' and add
-> a line to the documentation to re-state that this is not used for type 1
-> events.
-
-Now I understand that both events could use this shared data at the same
-time. So prefixing toke with pageready makes it clear that it has to be
-used only with pageready event. So sounds better that way.
-
-Thanks
-Vivek
-
+-- 
+Thanks,
+Sasha
