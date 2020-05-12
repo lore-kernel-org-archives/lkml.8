@@ -2,298 +2,164 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC0CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E058CC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAD9206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE86206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GO/9fqV/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPOOtwFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgELRp2 (ORCPT
+        id S1730648AbgELRqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40460 "EHLO
+        Tue, 12 May 2020 13:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgELRp2 (ORCPT
+        with ESMTP id S1727902AbgELRqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:45:28 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D023C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:45:28 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id 79so5786170iou.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:45:28 -0700 (PDT)
+        Tue, 12 May 2020 13:46:21 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A67FC05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:46:21 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g1so8762636ljk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0X26TA8cwVFFjycH5LEhoOrNEf8K7lUwh3RROd1srbY=;
-        b=GO/9fqV/7AdNi6C3uilGdoN+UAnG4BaysPzFZN1eQkn3KtnIfJIzmLfOnHCmhwGtnN
-         KxBue154ZrewQUodWb1AGTGvDRcHwJ95QTt+p4vDZuhjFauMz+zP61dMgzUA9Dg9V4nw
-         Qno6lQUtQJi9iinLR7+GqATU8m/KTDYwH78xWwCavGQ+vF5s75fKq7TJSI13V56hv9xM
-         To1QcHIKqSAqN/8KcK0hKTKKlX4xVlyPN2Iho9SVapbjSa73T5spFRfISSYNZoLrTVmv
-         niGuHPl32KlV3ndhP+tNlqdIQ8dRRcqi90944S8JIrAx7l4IuNFpptJe1+EMW3ASfF2R
-         NGBw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eM3d9+X8qc+maq3xHLG+4/ZyWmIqPWOHJVw4bbgd4dI=;
+        b=mPOOtwFsulK5G0i5RhYFqAvNWhC/T6DJA759xEXJmp6KsVEltE0McGlfDhQI1R4YnY
+         Lo5T1uWodooEUROwHaLWm4O/Dtm+LpYRa6mEBrWolZf7mpH/Ad0jmANc73rBrXzqI0Ab
+         s6U6KZ/xMU5wFGlBgJHXOjdbaQs77y+qi/NAAcFhgStVAF8KFxcOdmP3mS0F+hoZKKXq
+         QwY1MD6aiDLWqnvnIRHObpmkIxS17sVypqOAVnc7rtcgX3JehYDY7ecmM8uDvezv3wum
+         YplRhA0GEtbN2+uM3or7sJBpIHH5fNyCcQd0GlIRlwUQhKRc4IrAM5OJ3/zV2Y54XzKP
+         VqCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0X26TA8cwVFFjycH5LEhoOrNEf8K7lUwh3RROd1srbY=;
-        b=o8MiMILze41F4S5hk+SHHyRLifHCd2ePJhb3rnJpL3+OtZxl57/PQnrzjstXododlT
-         s5kpYG2rWaQspU42wzX95GACmoOVToI4S2WVRBZ58L8iJrMb/Pnl5ok+PdaP9+ltIcQQ
-         t5jIUTWieNi3pwRxwlHCqE4c4SbsBX3KEwcNkTQNvGi5CkM/ti3qidopY5vT26UFsTWD
-         LF/q6gMTHoDUvUkOYZs9eiTdyO+NHzJAhnBeoUIHqW+EGrIr3ciR7fH9FxFmAMyNlQ1S
-         X9Se3SU+Fn4NsgijewmqA4rPkIK0CmwGuKZS/lmSTKXg3Tyk3Tf8fynQZJkMKkW+TvaB
-         WFAA==
-X-Gm-Message-State: AGi0PuZbe4/dOpzZ5pWzi35qeiApDUetp60v78kcvMO15WwZKkFKh2Xm
-        S56Ku139NAKaFd8/MKXgBcEuj1TP45DzAW4JQ8Xqhw==
-X-Google-Smtp-Source: APiQypIm2OO2aTHgMdtx8bRw93J4LYxtMuPIXmw8A3uJsS7gmc9aIKqS8cbX9JDui9ubVi9kWlbG7P31eyiI5Cr0kcc=
-X-Received: by 2002:a05:6602:158b:: with SMTP id e11mr21789847iow.148.1589305527225;
- Tue, 12 May 2020 10:45:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eM3d9+X8qc+maq3xHLG+4/ZyWmIqPWOHJVw4bbgd4dI=;
+        b=czohtafUZnCtpAe7/tZm0XykBOG3nO/k0nILksSWPiJQRaHFK1VTCpDyn93CZmBkKX
+         5sZIOeR+5s4KKnVA4iWQTnv05aFGrX2A+n+eBvxxzKfgM1nxX5YN1kUYLKFPFd8Ge1tw
+         QTMR7CLrSdi/yx+qdZv0lpzkrsM3LWO+AczRpzAaAqIL7OVJZhdZMGsz99VL6yqL+XUZ
+         0h1CWz1uz438hCnSfRtagRPIckUIJ52LvvjZf4QB1zfQMIQamYRK91R4sPIoo7Unnrkx
+         KCNoNGUef5+XPi/KTXHzelJVrgBb++TWZA5ZEKOtOMxbiytThFss4be6RSJXktg8GmnE
+         6mtQ==
+X-Gm-Message-State: AOAM5302xUrGqUyKS3ouVC+7MMDbr7a6/Hie5ZNQS7esamtSbAsAZgOx
+        oaja7TTWMKlvebKjGNtqDx5P4Q==
+X-Google-Smtp-Source: ABdhPJxe6zvUEPFFz0dqINaJgmeuMHAEr7mJ+7IgakKU3xZk6kThk3wqIJvV4ddNyR33OAYNHPPERQ==
+X-Received: by 2002:a2e:87d0:: with SMTP id v16mr13791192ljj.137.1589305579480;
+        Tue, 12 May 2020 10:46:19 -0700 (PDT)
+Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
+        by smtp.gmail.com with ESMTPSA id 5sm17972lju.87.2020.05.12.10.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 10:46:18 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] security: fix the default value of secid_to_secctx hook
+Date:   Tue, 12 May 2020 19:46:07 +0200
+Message-Id: <20200512174607.9630-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com> <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com> <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org> <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org> <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org> <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org> <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
- <eee1b9a90266eed9a9c75401f0679777@codeaurora.org> <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
- <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org> <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
- <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org> <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
-In-Reply-To: <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 12 May 2020 11:45:15 -0600
-Message-ID: <CANLsYkzHoiTuBM-pmPHcnkvvwBmQW4PPc69Jrt75SjF1dQPFUg@mail.gmail.com>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 05:49, Mike Leach <mike.leach@linaro.org> wrote:
->
-> HI,
->
-> On Mon, 11 May 2020 at 15:41, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
-> >
-> > Hi Suzuki,
-> >
-> > On 2020-05-11 20:00, Suzuki K Poulose wrote:
-> > > On 05/11/2020 03:16 PM, Sai Prakash Ranjan wrote:
-> > >> Hi Mike,
-> > >>
-> > >> On 2020-05-11 16:44, Mike Leach wrote:
-> > >> [...]
-> > >>
-> I have reviewed the replicator driver, and compared to all the other CS d=
-rivers.
-> This driver appears to be the only one that sets hardware values in
-> probe() and expects them to remain in place on enable, and uses that
-> state for programming decisions later, despite telling the PM
-> infrastructure that it is clear to suspend the device.
->
-> Now we have a system where the replicator hardware is behaving
-> differently under the driver, but is it behaving unreasonably?
-> > >>>>
-> > >>>> I checked with the debug team and there is a limitation with
-> > >>>> the replicator(swao_replicator) in the AOSS group where it
-> > >>>> loses the idfilter register context when the clock is disabled.
-> > >>>> This is not just in SC7180 SoC but also reported on some latest
-> > >>>> upcoming QCOM SoCs as well and will need to be taken care in
-> > >>>> order to enable coresight on these chipsets.
-> > >>>>
-> > >>>> Here's what's happening -  After the replicator is initialized,
-> > >>>> the clock is disabled in amba_pm_runtime_suspend() as a part of
-> > >>>> pm runtime workqueue with the assumption that there will be no
-> > >>>> loss of context after the replicator is initialized. But it doesn'=
-t
-> > >>>> hold good with the replicators with these unfortunate limitation
-> > >>>> and the idfilter register context is lost.
-> > >>>>
-> > >>>> [    5.889406] amba_pm_runtime_suspend devname=3D6b06000.replicato=
-r
-> > >>>> ret=3D0
-> > >>>> [    5.914516] Workqueue: pm pm_runtime_work
-> > >>>> [    5.918648] Call trace:
-> > >>>> [    5.921185]  dump_backtrace+0x0/0x1d0
-> > >>>> [    5.924958]  show_stack+0x2c/0x38
-> > >>>> [    5.928382]  dump_stack+0xc0/0x104
-> > >>>> [    5.931896]  amba_pm_runtime_suspend+0xd8/0xe0
-> > >>>> [    5.936469]  __rpm_callback+0xe0/0x140
-> > >>>> [    5.940332]  rpm_callback+0x38/0x98
-> > >>>> [    5.943926]  rpm_suspend+0xec/0x618
-> > >>>> [    5.947522]  rpm_idle+0x5c/0x3f8
-> > >>>> [    5.950851]  pm_runtime_work+0xa8/0xc0
-> > >>>> [    5.954718]  process_one_work+0x1f8/0x4c0
-> > >>>> [    5.958848]  worker_thread+0x50/0x468
-> > >>>> [    5.962623]  kthread+0x12c/0x158
-> > >>>> [    5.965957]  ret_from_fork+0x10/0x1c
-> > >>>>
-> > >>>> This is a platform/SoC specific replicator issue, so we can either
-> > >>>> introduce some DT property for replicators to identify which
-> > >>>> replicator
-> > >>>> has this limitation, check in replicator_enable() and reset the
-> > >>>> registers
-> > >>>> or have something like below diff to check the idfilter registers =
-in
-> > >>>> replicator_enable() and then reset with clear comment specifying
-> > >>>> it=E2=80=99s
-> > >>>> the
-> > >>>> hardware limitation on some QCOM SoCs. Please let me know your
-> > >>>> thoughts
-> > >>>> on
-> > >>>> this?
-> > >>>>
-> > >>
-> > >> Sorry for hurrying up and sending the patch -
-> > >> https://lore.kernel.org/patchwork/patch/1239923/.
-> > >> I will send v2 based on further feedbacks here or there.
-> > >>
-> > >>>
-> > >>> 1) does this replicator part have a unique ID that differs from the
-> > >>> standard ARM designed replicators?
-> > >>> If so perhaps link the modification into this. (even if the part no
-> > >>> in
-> > >>> PIDR0/1 is the same the UCI should be different for a different
-> > >>> implementation)
-> > >>>
-> I have reviewed the replicator driver, and compared to all the other CS d=
-rivers.
-> This driver appears to be the only one that sets hardware values in
-> probe() and expects them to remain in place on enable, and uses that
-> state for programming decisions later, despite telling the PM
-> infrastructure that it is clear to suspend the device.
->
-> Now we have a system where the replicator hardware is behaving
-> differently under the driver, but is it behaving unreasonably?
-> > >>
-> > >> pid=3D0x2bb909 for both replicators. So part number is same.
-> > >> UCI will be different for different implementation(QCOM maybe
-> > >> different from ARM),
-> > >> but will it be different for different replicators under the same
-> > >> impl(i.e., on QCOM).
-> > >
-> > > May be use PIDR4.DES_2 to match the Implementor and apply the work
-> > > around for all QCOM replicators ?
-> > >
-> > > To me that sounds the best option.
-> > >
-> >
->
-> I agree, if it can be established that the register values that make
-> up UCI (pid0-4, devarch, devtype, PID:CLASS=3D=3D0x9), can correctly
-> identify the parts then a flag can be set in the probe() function and
-> acted on during the enable() function.
->
-> > Ok we can do this as well, but just for my understanding, why do we nee=
-d
-> > to reset replicators
-> > in replicator_probe() and not in replicator_enable()? Are we accessing
-> > anything before
-> > we enable replicators?
-> >
->
-> This was a design decision made by the original driver writer. A
-> normal AMBA device should not lose context due to clock removal (see
-> drivers/amba/bus.c), so resetting in probe means this operation is
-> done only once, rather than add overhead in the enable() function,and
-> later decisions can be made according to the state of the registers
-> set.
->
-> As you have pointed out, for this replicator implementation  the
-> context is unfortunately not retained when clocks are removed - so an
-> alternative method is required.
->
-> perhaps something like:-
->
-> probe()
-> ...
-> if (match_id_non_persistent_state_regs(ID))
->     drvdata->check_filter_val_on_enable;
-> ....
->
-> and a re-write of enable:-
->
-> enable()
-> ...
-> CS_UNLOCK()
-> id0val =3D read(IDFILTER0);
-> id1val =3D read(IDFILTER1);
->
-> /* some replicator designs lose context when AMBA clocks are removed -
-> check for this */
-> if (drvdata->check_filter_val_on_enable && (id0val =3D=3D id1val =3D=3D 0=
-x0))
->    id0val =3D id1val =3D 0xff;
->
-> if(id0xal =3D=3D id1val =3D=3D 0xff)
->    rc =3D  claim_device()
->
-> if (!rc)
->    switch (outport)
->       case 0: id0val  =3D 0x0; break
->       case 1: id1va; =3D 0x0; break;
->      default: rc =3D -EINVAL;
->
-> if (!rc)
->    write(id0val);
->    write(id1val);
-> CS_LOCK()
-> return rc;
-> ....
->
-> Given that the access to the enable() function is predicated on a
-> reference count per active port, there is also a case for dropping the
-> check_filter_val_on_enable flag completely - once one port is active,
-> then the device will remain enabled until both ports are inactive.
-> This still allows for future development of selective filtering per
-> port.
->
-> One other point here - there is a case as I mentioned above for moving
-> to a stored value model for the driver - as this is the only coresight
-> driver that appears to set state in the probe() function rather than
-> write all on enable.
+security_secid_to_secctx is called by the bpf_lsm hook and a successful
+return value (i.e 0) implies that the parameter will be consumed by the
+LSM framework. The current behaviour return success when the pointer
+isn't initialized when CONFIG_BPF_LSM is enabled, with the default
+return from kernel/bpf/bpf_lsm.c.
 
-I favour that option.  Looking at the funnel driver we may have the
-same issue with the port configuration, but we can have a look at that
-if/when it becomes an issue.
+This is the internal error:
 
-> This however would necessitate a more comprehensive re-write.
+[ 1229.341488][ T2659] usercopy: Kernel memory exposure attempt detected from null address (offset 0, size 280)!
+[ 1229.374977][ T2659] ------------[ cut here ]------------
+[ 1229.376813][ T2659] kernel BUG at mm/usercopy.c:99!
+[ 1229.378398][ T2659] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[ 1229.380348][ T2659] Modules linked in:
+[ 1229.381654][ T2659] CPU: 0 PID: 2659 Comm: systemd-journal Tainted: G    B   W         5.7.0-rc5-next-20200511-00019-g864e0c6319b8-dirty #13
+[ 1229.385429][ T2659] Hardware name: linux,dummy-virt (DT)
+[ 1229.387143][ T2659] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
+[ 1229.389165][ T2659] pc : usercopy_abort+0xc8/0xcc
+[ 1229.390705][ T2659] lr : usercopy_abort+0xc8/0xcc
+[ 1229.392225][ T2659] sp : ffff000064247450
+[ 1229.393533][ T2659] x29: ffff000064247460 x28: 0000000000000000
+[ 1229.395449][ T2659] x27: 0000000000000118 x26: 0000000000000000
+[ 1229.397384][ T2659] x25: ffffa000127049e0 x24: ffffa000127049e0
+[ 1229.399306][ T2659] x23: ffffa000127048e0 x22: ffffa000127048a0
+[ 1229.401241][ T2659] x21: ffffa00012704b80 x20: ffffa000127049e0
+[ 1229.403163][ T2659] x19: ffffa00012704820 x18: 0000000000000000
+[ 1229.405094][ T2659] x17: 0000000000000000 x16: 0000000000000000
+[ 1229.407008][ T2659] x15: 0000000000000000 x14: 003d090000000000
+[ 1229.408942][ T2659] x13: ffff80000d5b25b2 x12: 1fffe0000d5b25b1
+[ 1229.410859][ T2659] x11: 1fffe0000d5b25b1 x10: ffff80000d5b25b1
+[ 1229.412791][ T2659] x9 : ffffa0001034bee0 x8 : ffff00006ad92d8f
+[ 1229.414707][ T2659] x7 : 0000000000000000 x6 : ffffa00015eacb20
+[ 1229.416642][ T2659] x5 : ffff0000693c8040 x4 : 0000000000000000
+[ 1229.418558][ T2659] x3 : ffffa0001034befc x2 : d57a7483a01c6300
+[ 1229.420610][ T2659] x1 : 0000000000000000 x0 : 0000000000000059
+[ 1229.422526][ T2659] Call trace:
+[ 1229.423631][ T2659]  usercopy_abort+0xc8/0xcc
+[ 1229.425091][ T2659]  __check_object_size+0xdc/0x7d4
+[ 1229.426729][ T2659]  put_cmsg+0xa30/0xa90
+[ 1229.428132][ T2659]  unix_dgram_recvmsg+0x80c/0x930
+[ 1229.429731][ T2659]  sock_recvmsg+0x9c/0xc0
+[ 1229.431123][ T2659]  ____sys_recvmsg+0x1cc/0x5f8
+[ 1229.432663][ T2659]  ___sys_recvmsg+0x100/0x160
+[ 1229.434151][ T2659]  __sys_recvmsg+0x110/0x1a8
+[ 1229.435623][ T2659]  __arm64_sys_recvmsg+0x58/0x70
+[ 1229.437218][ T2659]  el0_svc_common.constprop.1+0x29c/0x340
+[ 1229.438994][ T2659]  do_el0_svc+0xe8/0x108
+[ 1229.440587][ T2659]  el0_svc+0x74/0x88
+[ 1229.441917][ T2659]  el0_sync_handler+0xe4/0x8b4
+[ 1229.443464][ T2659]  el0_sync+0x17c/0x180
+[ 1229.444920][ T2659] Code: aa1703e2 aa1603e1 910a8260 97ecc860 (d4210000)
+[ 1229.447070][ T2659] ---[ end trace 400497d91baeaf51 ]---
+[ 1229.448791][ T2659] Kernel panic - not syncing: Fatal exception
+[ 1229.450692][ T2659] Kernel Offset: disabled
+[ 1229.452061][ T2659] CPU features: 0x240002,20002004
+[ 1229.453647][ T2659] Memory Limit: none
+[ 1229.455015][ T2659] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-Maybe a little more effort but overall a better approach.
+Rework the so the default return value is -EOPNOTSUPP.
 
-Thanks,
-Mathieu
+There are likely other callbacks such as security_inode_getsecctx() that
+may have the same problem, and that someone that understand the code
+better needs to audit them.
 
->
-> Regards
->
-> Mike
->
->
-> > Thanks,
-> > Sai
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> > member
-> > of Code Aurora Forum, hosted by The Linux Foundation
-> --
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Manchester Design Centre. UK
+Thank you Arnd for helping me figure out what went wrong.
+
+CC: Arnd Bergmann <arnd@arndb.de>
+Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ include/linux/lsm_hook_defs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index b9e73d736e13..31eb3381e54b 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -243,7 +243,7 @@ LSM_HOOK(int, -EINVAL, getprocattr, struct task_struct *p, char *name,
+ 	 char **value)
+ LSM_HOOK(int, -EINVAL, setprocattr, const char *name, void *value, size_t size)
+ LSM_HOOK(int, 0, ismaclabel, const char *name)
+-LSM_HOOK(int, 0, secid_to_secctx, u32 secid, char **secdata,
++LSM_HOOK(int, -EOPNOTSUPP, secid_to_secctx, u32 secid, char **secdata,
+ 	 u32 *seclen)
+ LSM_HOOK(int, 0, secctx_to_secid, const char *secdata, u32 seclen, u32 *secid)
+ LSM_HOOK(void, LSM_RET_VOID, release_secctx, char *secdata, u32 seclen)
+-- 
+2.20.1
+
