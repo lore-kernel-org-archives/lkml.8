@@ -7,98 +7,85 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29AEC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DBBC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C74BD206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228FC206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589297859;
-	bh=59cWjsJmqwrPrpWRr+PyhVPdugsPTOOknpFbnpzC0vE=;
+	s=default; t=1589297874;
+	bh=BnVpJ83sGPt824Z2p9ksnOj7VrfrKdvzC1X7RwfBzz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=evWpKJK6E/dliNYWoh+Od3HrjAjLE+GPXSyChOLFM8trfnQB1JdpusvHE/ifuhbHE
-	 BZ2KZSWFU6YZiqrMUU9kHCiya9D9XnP4gTDSnKdUkkczHcQOSM7qbG5ZnfUJw8CS3a
-	 IqmlORBo5cJs/aVMz1krLQSwa5kIuiZe/0DFoOLM=
+	b=BX456fVsBSff2LPJUN4iorGrobiSrkfDDHHiZQ918JgJr99JleNZsZal2Sku+dI5c
+	 qeC5eA4Jg039yL8GOU3U9eux+jqno2qfz/ModFfvgYF31o/rcKSxuQ4H84QV7MDTKR
+	 OR7yVS+iXro14DraEK3fVHBwGJ8wITjcjxtL3pzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbgELPhj (ORCPT
+        id S1730871AbgELPhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:37:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34017 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgELPhi (ORCPT
+        Tue, 12 May 2020 11:37:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45782 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbgELPhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:37:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id c12so17589927oic.1;
-        Tue, 12 May 2020 08:37:37 -0700 (PDT)
+        Tue, 12 May 2020 11:37:52 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e20so10819530otk.12;
+        Tue, 12 May 2020 08:37:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PCyVx6YxchGHNw6iJ+ojabd2z3U8e+KigXbn5+BW+HM=;
-        b=J03VJ5/SPvSQt6f1Fe4ytraUMBwkvGTlYPlMlAa5Ku37lufCQmN6H9RrgpCqvoV4wf
-         R8hK3NienpuGlXrKdRmn3Of/7EY7UaST8nLpdrMDc62u9fT4841pzHzFeVWro+OpG6VP
-         Sj1XDF0V3IFRoSrSsHGr/wUZe7lLfZVHkn4CfUuYKtl4yJoyCPUdsT59nktftw50o8zI
-         K6g1+f2rlsL70j4HUOAJt4uM230h66WTurd6LPbm69hBWtuapq3uH28NwrlD/feNZUHM
-         fO0KXmT6JD7YXl8OlbyY44TjOZQ3qv9A5n5BmIswye6NnCz8mdFbT9xM6K+miQc0Ntvv
-         o8bg==
-X-Gm-Message-State: AGi0PuaRsrfhYd/8KL/c4ezFtEXxS6/muTe+tGilr1MA4Aq+xGn6vDwG
-        vcnPRKpcoKaTn99Ng3kxUA==
-X-Google-Smtp-Source: APiQypKNT+mcx7T9+iUMFNsVArR3hQ4oj99NzmMx2VYonYzt1n3FPZS5ZEefObr7Lq8RTsR/f9TlMA==
-X-Received: by 2002:aca:7504:: with SMTP id q4mr23486434oic.31.1589297856746;
-        Tue, 12 May 2020 08:37:36 -0700 (PDT)
+        bh=zHYiE//KG7sYXg64AbmwY8PpXkOO57mwt3IeZH0kDgI=;
+        b=uZ4lN6si6itnhwYMyQfa8sfYoD/0xbapa23BzeKRnf/8TpRUqJmMM7JVcWBb6OCXHz
+         ovv/0B94ymp/UdqBOoyCiJ4Dkq4y5So6Vc79lbVi8bW3YZU6TDAoXLK65Jjey7xEjgAN
+         p/U1nY04i8E5ZTEgTNOqp7bvcO1Uc0R19hUqJmWOwoSq10R961vI4NX77HTDZhSR5VDO
+         fo8RYuD6uH9+Vdd1KMPoXzt2MqUXYt4yp73BcWnZJegR6dsrWGRMeTZDkXOxLQP0JQ4j
+         tCqm6DfurhMVspWdTMbVF5m/y2JU8OY3hCieVWQbpBvuJoXbsqi/exRdga6nw8yeCbnL
+         4goQ==
+X-Gm-Message-State: AGi0PuZuQyC5bOYUY3SOxWbClqVxVgvSrd9MIHO67ai62tr0PP7QJ6xB
+        Nyap5yb5XeC5zn/IwOrKiQ==
+X-Google-Smtp-Source: APiQypKGiqazmKa1llrIVH5iI9hlhiwrjndF3SjPLhcd9EbAnc9f9RBnfa/Ps9rE2pQdkek8vTqmUQ==
+X-Received: by 2002:a05:6830:1082:: with SMTP id y2mr16684544oto.123.1589297871719;
+        Tue, 12 May 2020 08:37:51 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i81sm424098oif.26.2020.05.12.08.37.34
+        by smtp.gmail.com with ESMTPSA id t20sm3501710ott.51.2020.05.12.08.37.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:37:35 -0700 (PDT)
-Received: (nullmailer pid 24510 invoked by uid 1000);
-        Tue, 12 May 2020 15:37:34 -0000
-Date:   Tue, 12 May 2020 10:37:34 -0500
+        Tue, 12 May 2020 08:37:50 -0700 (PDT)
+Received: (nullmailer pid 24997 invoked by uid 1000);
+        Tue, 12 May 2020 15:37:49 -0000
+Date:   Tue, 12 May 2020 10:37:49 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Johan Hovold <johan@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for
- serdev-ngsm
-Message-ID: <20200512153734.GA24449@bogus>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430174615.41185-3-tony@atomide.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        linux-remoteproc@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: pas: Add SM8250
+ remoteprocs
+Message-ID: <20200512153749.GA24921@bogus>
+References: <20200430180051.3795305-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430174615.41185-3-tony@atomide.com>
+In-Reply-To: <20200430180051.3795305-1-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 10:46:11 -0700, Tony Lindgren wrote:
-> Add a binding document for a generic serdev-ngsm driver that can be
-> used to bring up TS 27.010 line discipline with Linux n_gsm support
-> on a serial port.
+On Thu, 30 Apr 2020 11:00:50 -0700, Bjorn Andersson wrote:
+> Add the SM8250 audio, compute and sensor remoteprocs to the PAS DT
+> binding.
 > 
-> As the Motorola Mapphone modems require some custom handling, they
-> are handled with a separate compatible.
-> 
-> Let's also add vendor string for ETSI as we're using a ETSI 3GPP
-> TS 27.010 standard.
-> 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../bindings/serdev/serdev-ngsm.yaml          | 64 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> 
+> Changes since v1:
+> - Changed adsp power-domains to lcx and added missing lmx
+> 
+>  .../devicetree/bindings/remoteproc/qcom,adsp.txt         | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
