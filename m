@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ABAC54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B657AC54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD8120643
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9265F2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgELOhE (ORCPT
+        id S1728283AbgELOhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
+        Tue, 12 May 2020 10:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgELOhA (ORCPT
+        with ESMTP id S1730381AbgELOhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:37:00 -0400
+        Tue, 12 May 2020 10:37:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EDEC061A0E;
-        Tue, 12 May 2020 07:37:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D777DC061A0C;
+        Tue, 12 May 2020 07:37:05 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1f-0005mt-IR; Tue, 12 May 2020 16:36:55 +0200
+        id 1jYW1g-0005nm-Be; Tue, 12 May 2020 16:36:56 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D7C91C02FC;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EB8141C02FC;
         Tue, 12 May 2020 16:36:55 +0200 (CEST)
 Date:   Tue, 12 May 2020 14:36:55 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] arm64: barrier: Use '__unqual_scalar_typeof' for
- acquire/release macros
-Cc:     Will Deacon <will@kernel.org>,
+Subject: [tip: locking/kcsan] READ_ONCE: Drop pointer qualifiers when reading
+ from scalar types
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         Arnd Bergmann <arnd@arndb.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-15-will@kernel.org>
-References: <20200511204150.27858-15-will@kernel.org>
+In-Reply-To: <20200511204150.27858-13-will@kernel.org>
+References: <20200511204150.27858-13-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421507.390.1894315072790883073.tip-bot2@tip-bot2>
+Message-ID: <158929421588.390.634536033679985583.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,96 +64,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     a9e777c275422371c86a3bdc8d81f4a21ec2a63c
-Gitweb:        https://git.kernel.org/tip/a9e777c275422371c86a3bdc8d81f4a21ec2a63c
+Commit-ID:     7b364f0949ae2dd205d5e9afa4b82ee17030d928
+Gitweb:        https://git.kernel.org/tip/7b364f0949ae2dd205d5e9afa4b82ee17030d928
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:46 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:44 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:16 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:14 +02:00
 
-arm64: barrier: Use '__unqual_scalar_typeof' for acquire/release macros
+READ_ONCE: Drop pointer qualifiers when reading from scalar types
 
-Passing volatile-qualified pointers to the arm64 implementations of the
-load-acquire/store-release macros results in a re-load from the stack
-and a bunch of associated stack-protector churn due to the temporary
-result variable inheriting the volatile semantics thanks to the use of
-'typeof()'.
+Passing a volatile-qualified pointer to READ_ONCE() is an absolute
+trainwreck for code generation: the use of 'typeof()' to define a
+temporary variable inside the macro means that the final evaluation in
+macro scope ends up forcing a read back from the stack. When stack
+protector is enabled (the default for arm64, at least), this causes
+the compiler to vomit up all sorts of junk.
 
-Define these temporary variables using 'unqual_scalar_typeof' to drop
-the volatile qualifier in the case that they are scalar types.
+Unfortunately, dropping pointer qualifiers inside the macro poses quite
+a challenge, especially since the pointed-to type is permitted to be an
+aggregate, and this is relied upon by mm/ code accessing things like
+'pmd_t'. Based on numerous hacks and discussions on the mailing list,
+this is the best I've managed to come up with.
 
+Introduce '__unqual_scalar_typeof()' which takes an expression and, if
+the expression is an optionally qualified 8, 16, 32 or 64-bit scalar
+type, evaluates to the unqualified type. Other input types, including
+aggregates, remain unchanged. Hopefully READ_ONCE() on volatile aggregate
+pointers isn't something we do on a fast-path.
+
+Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Link: https://lkml.kernel.org/r/20200511204150.27858-15-will@kernel.org
+Link: https://lkml.kernel.org/r/20200511204150.27858-13-will@kernel.org
 
 ---
- arch/arm64/include/asm/barrier.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/linux/compiler.h       |  6 +++---
+ include/linux/compiler_types.h | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-index 7d9cc5e..fb4c275 100644
---- a/arch/arm64/include/asm/barrier.h
-+++ b/arch/arm64/include/asm/barrier.h
-@@ -76,8 +76,8 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
- #define __smp_store_release(p, v)					\
- do {									\
- 	typeof(p) __p = (p);						\
--	union { typeof(*p) __val; char __c[1]; } __u =			\
--		{ .__val = (__force typeof(*p)) (v) };			\
-+	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u =	\
-+		{ .__val = (__force __unqual_scalar_typeof(*p)) (v) };	\
- 	compiletime_assert_atomic_type(*p);				\
- 	kasan_check_write(__p, sizeof(*p));				\
- 	switch (sizeof(*p)) {						\
-@@ -110,7 +110,7 @@ do {									\
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 733605f..548294e 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -204,7 +204,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+  * atomicity or dependency ordering guarantees. Note that this may result
+  * in tears!
+  */
+-#define __READ_ONCE(x)	(*(const volatile typeof(x) *)&(x))
++#define __READ_ONCE(x)	(*(const volatile __unqual_scalar_typeof(x) *)&(x))
  
- #define __smp_load_acquire(p)						\
+ #define __READ_ONCE_SCALAR(x)						\
  ({									\
--	union { typeof(*p) __val; char __c[1]; } __u;			\
-+	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
- 	typeof(p) __p = (p);						\
- 	compiletime_assert_atomic_type(*p);				\
- 	kasan_check_read(__p, sizeof(*p));				\
-@@ -136,33 +136,33 @@ do {									\
- 			: "Q" (*__p) : "memory");			\
- 		break;							\
- 	}								\
--	__u.__val;							\
-+	(typeof(*p))__u.__val;						\
+@@ -212,10 +212,10 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ 	kcsan_check_atomic_read(__xp, sizeof(*__xp));			\
+ 	__kcsan_disable_current();					\
+ 	({								\
+-		typeof(x) __x = __READ_ONCE(*__xp);			\
++		__unqual_scalar_typeof(x) __x = __READ_ONCE(*__xp);	\
+ 		__kcsan_enable_current();				\
+ 		smp_read_barrier_depends();				\
+-		__x;							\
++		(typeof(x))__x;						\
+ 	});								\
  })
  
- #define smp_cond_load_relaxed(ptr, cond_expr)				\
- ({									\
- 	typeof(ptr) __PTR = (ptr);					\
--	typeof(*ptr) VAL;						\
-+	__unqual_scalar_typeof(*ptr) VAL;				\
- 	for (;;) {							\
- 		VAL = READ_ONCE(*__PTR);				\
- 		if (cond_expr)						\
- 			break;						\
- 		__cmpwait_relaxed(__PTR, VAL);				\
- 	}								\
--	VAL;								\
-+	(typeof(*ptr))VAL;						\
- })
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index e970f97..6ed0612 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -210,6 +210,32 @@ struct ftrace_likely_data {
+ /* Are two types/vars the same type (ignoring qualifiers)? */
+ #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
  
- #define smp_cond_load_acquire(ptr, cond_expr)				\
- ({									\
- 	typeof(ptr) __PTR = (ptr);					\
--	typeof(*ptr) VAL;						\
-+	__unqual_scalar_typeof(*ptr) VAL;				\
- 	for (;;) {							\
- 		VAL = smp_load_acquire(__PTR);				\
- 		if (cond_expr)						\
- 			break;						\
- 		__cmpwait_relaxed(__PTR, VAL);				\
- 	}								\
--	VAL;								\
-+	(typeof(*ptr))VAL;						\
- })
- 
- #include <asm-generic/barrier.h>
++/*
++ * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
++ *			       non-scalar types unchanged.
++ *
++ * We build this out of a couple of helper macros in a vain attempt to
++ * help you keep your lunch down while reading it.
++ */
++#define __pick_scalar_type(x, type, otherwise)					\
++	__builtin_choose_expr(__same_type(x, type), (type)0, otherwise)
++
++/*
++ * 'char' is not type-compatible with either 'signed char' or 'unsigned char',
++ * so we include the naked type here as well as the signed/unsigned variants.
++ */
++#define __pick_integer_type(x, type, otherwise)					\
++	__pick_scalar_type(x, type,						\
++		__pick_scalar_type(x, unsigned type,				\
++			__pick_scalar_type(x, signed type, otherwise)))
++
++#define __unqual_scalar_typeof(x) typeof(					\
++	__pick_integer_type(x, char,						\
++		__pick_integer_type(x, short,					\
++			__pick_integer_type(x, int,				\
++				__pick_integer_type(x, long,			\
++					__pick_integer_type(x, long long, x))))))
++
+ /* Is this type a native word size -- useful for atomic operations */
+ #define __native_word(t) \
+ 	(sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
