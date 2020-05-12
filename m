@@ -2,182 +2,100 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C51C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D771EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633C3206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EE2206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbgELMmP (ORCPT
+        id S1729821AbgELMmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:42:15 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53368 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELMmP (ORCPT
+        Tue, 12 May 2020 08:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgELMmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:42:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B0FAC803080B;
-        Tue, 12 May 2020 12:42:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PTikmzJM42z6; Tue, 12 May 2020 15:42:07 +0300 (MSK)
-Date:   Tue, 12 May 2020 15:42:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200512124206.l3uv5hg2zimi24dq@mobilestation>
-References: <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
- <20200511210800.GP185537@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200511210800.GP185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Tue, 12 May 2020 08:42:45 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CCBC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:42:44 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:81a0:190c:7969:2334])
+        by xavier.telenet-ops.be with bizsmtp
+        id doii2200N5045R201oiiCN; Tue, 12 May 2020 14:42:42 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYUF8-0006sJ-DA; Tue, 12 May 2020 14:42:42 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYUF8-0007V9-BE; Tue, 12 May 2020 14:42:42 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] arm64: cpufeature: Add "or" to mitigations for multiple errata
+Date:   Tue, 12 May 2020 14:42:38 +0200
+Message-Id: <20200512124238.28792-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vinod,
+Several actions are not mitigations for a single erratum, but for
+multiple errata.  However, printing a line like
 
-Could you join the discussion for a little bit?
+    CPU features: detected: ARM errata 1165522, 1319367, 1530923
 
-In order to properly fix the problem discussed in this topic, we need to
-introduce an additional capability exported by DMA channel handlers on per-channel
-basis. It must be a number, which would indicate an upper limitation of the SG list
-entries amount.
-Something like this would do it:
-struct dma_slave_caps {
-...
-	unsigned int max_sg_nents;
-...
-};
-As Andy suggested it's value should be interpreted as:
-0          - unlimited number of entries,
-1:MAX_UINT - actual limit to the number of entries.
+may give the false impression that all three listed errata have been
+detected.  This can confuse the user, who may think his Cortex-A57 is
+suddenly affected by Cortex-A76 and Cortex-A55 errata.
 
-In addition to that seeing the dma_get_slave_caps() method provide the caps only
-by getting them from the DMA device descriptor, while we need to have an info on
-per-channel basis, it would be good to introduce a new DMA-device callback like:
-struct dma_device {
-...
-	int (*device_caps)(struct dma_chan *chan,
-			   struct dma_slave_caps *caps);
-...
-};
-So the DMA driver could override the generic DMA device capabilities with the
-values specific to the DMA channels. Such functionality will be also helpful for
-the max-burst-len parameter introduced by this patchset, since depending on the
-IP-core synthesis parameters it may be channel-specific.
+Add "or" to all descriptions for mitigations for multiple errata, to
+make it clear that only one or more of the errata printed are
+applicable, and not necessarily all of them.
 
-Alternatively we could just introduce a new fields to the dma_chan structure and
-retrieve the new caps values from them in the dma_get_slave_caps() method.
-Though the solution with callback I like better.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/kernel/cpu_errata.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-What is your opinion about this? What solution you'd prefer?
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 95006a7910262288..b0ce6bf14f6a92c8 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -778,7 +778,7 @@ static const struct midr_range erratum_speculative_at_list[] = {
+ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
+ 	{
+-		.desc = "ARM errata 826319, 827319, 824069, 819472",
++		.desc = "ARM errata 826319, 827319, 824069, or 819472",
+ 		.capability = ARM64_WORKAROUND_CLEAN_CACHE,
+ 		ERRATA_MIDR_RANGE_LIST(workaround_clean_cache),
+ 		.cpu_enable = cpu_enable_cache_maint_trap,
+@@ -860,7 +860,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #endif
+ #ifdef CONFIG_ARM64_WORKAROUND_REPEAT_TLBI
+ 	{
+-		.desc = "Qualcomm erratum 1009, ARM erratum 1286807",
++		.desc = "Qualcomm erratum 1009, or ARM erratum 1286807",
+ 		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = cpucap_multi_entry_cap_matches,
+@@ -903,7 +903,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #endif
+ #ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT
+ 	{
+-		.desc = "ARM errata 1165522, 1319367, 1530923",
++		.desc = "ARM errata 1165522, 1319367, or 1530923",
+ 		.capability = ARM64_WORKAROUND_SPECULATIVE_AT,
+ 		ERRATA_MIDR_RANGE_LIST(erratum_speculative_at_list),
+ 	},
+-- 
+2.17.1
 
-On Tue, May 12, 2020 at 12:08:00AM +0300, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 12:07:14AM +0300, Andy Shevchenko wrote:
-> > On Mon, May 11, 2020 at 10:32:55PM +0300, Serge Semin wrote:
-> > > On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, May 11, 2020 at 4:48 PM Serge Semin
-> > > > <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > > >
-> > > > > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
-> > > > > > On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
-> > > > > >
-> > > > > > > Alas linearizing the SPI messages won't help in this case because the DW DMA
-> > > > > > > driver will split it into the max transaction chunks anyway.
-> > > > > >
-> > > > > > That sounds like you need to also impose a limit on the maximum message
-> > > > > > size as well then, with that you should be able to handle messages up
-> > > > > > to whatever that limit is.  There's code for that bit already, so long
-> > > > > > as the limit is not too low it should be fine for most devices and
-> > > > > > client drivers can see the limit so they can be updated to work with it
-> > > > > > if needed.
-> > > > >
-> > > > > Hmm, this might work. The problem will be with imposing such limitation through
-> > > > > the DW APB SSI driver. In order to do this I need to know:
-> > > > > 1) Whether multi-block LLP is supported by the DW DMA controller.
-> > > > > 2) Maximum DW DMA transfer block size.
-> > > > > Then I'll be able to use this information in the can_dma() callback to enable
-> > > > > the DMA xfers only for the safe transfers. Did you mean something like this when
-> > > > > you said "There's code for that bit already" ? If you meant the max_dma_len
-> > > > > parameter, then setting it won't work, because it just limits the SG items size
-> > > > > not the total length of a single transfer.
-> > > > >
-> > > > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > > > driver. Andy?
-> > > > 
-> > > > I'm not sure I understand why do you need this being exported. Just
-> > > > always supply SG list out of single entry and define the length
-> > > > according to the maximum segment size (it's done IIRC in SPI core).
-> > > 
-> > > Finally I see your point. So you suggest to feed the DMA engine with SG list
-> > > entries one-by-one instead of sending all of them at once in a single
-> > > dmaengine_prep_slave_sg() -> dmaengine_submit() -> dma_async_issue_pending()
-> > > session. Hm, this solution will work, but there is an issue. There is no
-> > > guarantee, that Tx and Rx SG lists are symmetric, consisting of the same
-> > > number of items with the same sizes. It depends on the Tx/Rx buffers physical
-> > > address alignment and their offsets within the memory pages. Though this
-> > > problem can be solved by making the Tx and Rx SG lists symmetric. I'll have
-> > > to implement a clever DMA IO loop, which would extract the DMA
-> > > addresses/lengths from the SG entries and perform the single-buffer DMA 
-> > > transactions with the DMA buffers of the same length.
-> > > 
-> > > Regarding noLLP being exported. Obviously I intended to solve the problem in a
-> > > generic way since the problem is common for noLLP DW APB SSI/DW DMAC combination.
-> > > In order to do this we need to know whether the multi-block LLP feature is
-> > > unsupported by the DW DMA controller. We either make such info somehow exported
-> > > from the DW DMA driver, so the DMA clients (like Dw APB SSI controller driver)
-> > > could be ready to work around the problem; or just implement a flag-based quirk
-> > > in the DMA client driver, which would be enabled in the platform-specific basis
-> > > depending on the platform device actually detected (for instance, a specific
-> > > version of the DW APB SSI IP). AFAICS You'd prefer the later option. 
-> > 
-> > So, we may extend the struct of DMA parameters to tell the consumer amount of entries (each of which is no longer than maximum segment size) it can afford:
-> > - 0: Auto (DMA driver handles any cases itself)
-> > - 1: Only single entry
-> > - 2: Up to two...
-> 
-> It will left implementation details (or i.o.w. obstacles or limitation) why DMA
-> can't do otherwise.
-
-Sounds good. Thanks for assistance.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
