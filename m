@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5976DC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B28C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372E2206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5268F2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y2B0A32P"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YI54zt1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgELJj2 (ORCPT
+        id S1729371AbgELJja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49406 "EHLO
+        Tue, 12 May 2020 05:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729325AbgELJj0 (ORCPT
+        by vger.kernel.org with ESMTP id S1729344AbgELJj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:39:26 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F45C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:24 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so569544wrt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:24 -0700 (PDT)
+        Tue, 12 May 2020 05:39:27 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2579BC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:26 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e16so14505265wra.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rLSzS4IRRTC22sAo/0YCE5/fM6LeScWipcURZcTuUlk=;
-        b=y2B0A32PUd58AQ/WKXzX5pDORK4KvHRz/yZKB1FLLnYF9nhSva0hElj+TsiNjT1/ad
-         rRgQu2MmCufUtCt5ve4SnEmVg6CfKQ3CgB5Hd5hTjkjXxX+GAoF73IQw3+ZxSfelF4hd
-         ccjl4Yx1ifiMwE6fQ9rJgZDzVObLxaRmYDm5EgcPk1GtIgKEFQ1NOA0wDFWYqgoiUM2w
-         F2LlkR9n7JihUEFu55Biu16I/OFvF64tB4gqNxBWbjn6J5MJW/OGEAJrZN3chha8BcNE
-         hc78aZ+F4/knVF5E4LWMuPhoPpV5kUBbPfuPorXquIF9+CS8S89lJvEZCXgFd7slT9V6
-         N61w==
+        bh=exntrZVDrpNC4LfoF62zE8ED3Dungiic5pvW3+dqcrE=;
+        b=YI54zt1AshCXbR/9J2FQ3jVLetO9S//XLD3qA1usyzaunxBpK5g6XQVzQvE3dRcAoj
+         Nzbsch3Yzon5rMLclMlvOZbTrlyn2AENSVtwzVsKA5aigV+aSt2PagG0vq75UflInWjO
+         VyA2LMJ9bSn5/eEQxYGfcEh7EFRFcUh8rRyJlCp5tR4UdNOUwx25toWUgyeyxs19TXEh
+         cQnXabZm+r2RMlGcIjEL0fK5m9xTDItuCLJy3u6qwJuWqPsj2gjUIJ/zBrhq9qp+D3kC
+         DPpHNHurfHQDE2szd/rsSYRpn2u+SRxeXhVqrkzcPRN/eDk1IC6aOhLkisA6foT2SxOR
+         88ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rLSzS4IRRTC22sAo/0YCE5/fM6LeScWipcURZcTuUlk=;
-        b=PafV9vg0d+PwhRJqZdnhrWygWHJxfaOqAbvU63g69OcRPZylfgd5je269VISH7JiMY
-         Xth76RRILAdmwd5JsGz9ck9W7SfpczHVJGplm3vSZG5TulyOvZhzmPJERl8L/v6tmyrV
-         lrTBXvmmbCiSZYyJdpTdQuZSSoNNtlr9XGR8XIywkwHTMeTWEyhcFw+JpzdvA0y2r40p
-         Zee3NHUilC7Qndm7/xH7Rrs/fACr5NFoDno9LD9zmHIoyeIs5Ttp09/EMPneQBEdoQsb
-         Hi1cMdn63QkYlgTSmd2yMOoukpZVVc18qmOG5EVDrh4yr3iWwiYpmH/o/1Gzk4Sog9+L
-         YHaw==
-X-Gm-Message-State: AGi0PuanK2iNKJ6OYdAZTcHCak6DNtcltLFy2LHa/45/tolxWjpFQgdh
-        AdeBoJWQe91GMdfTEAtKRNl8KA==
-X-Google-Smtp-Source: APiQypKKQHEGoCykK41hPOsxclt/B7topaIHxJVk5eWKIkntIUzG/53aJNNsA05ov3iD0HzY1V8+2g==
-X-Received: by 2002:a5d:6ca7:: with SMTP id a7mr23970573wra.391.1589276363221;
-        Tue, 12 May 2020 02:39:23 -0700 (PDT)
+        bh=exntrZVDrpNC4LfoF62zE8ED3Dungiic5pvW3+dqcrE=;
+        b=iF080sL5/cgI2+SLT581khTPKFTT+3VyrCvu5xFX9ZfQowRM2H7UcQvQN1YfeK6htf
+         nInYtxZ2fXoOxsqolvvxZWlyxrYaEncl249TSpMMUt0ose72QPo/fYj1QA8MOHIUXVxQ
+         X/r4iCWFCV4goaUgTKpCq7vUm589I1OC8Neex+s1FaRzebe79OY5ww2g1howx4BgvSCG
+         kq/ZkJM6pZ/qdglGChHpcBeB1IA//kQLhzxkvXDSSfDQLsMz8dZqqjIv9G68cXbwu3f/
+         ZU1mLjkB/rA09rPdNJrHMkQfofsDpm2CKo81Wiu1E9yJb/9OJUN60OvSeE5Lq3Q2XPmf
+         4NyQ==
+X-Gm-Message-State: AGi0PualeifbXbHUh/eLffZ43gnHpAVJTH3h3o/xIrZ/kEtiPOdMYc2l
+        XFZvaFaw+jEKJ0AN4Qk6xzmqQdHmtBHk/g==
+X-Google-Smtp-Source: APiQypICdYm6q0coCTYrsv14gsmy5w38/NkkWNMU1pnmoJaS64rsgzMhP/NsIK7fGIEASWdkxrRSyQ==
+X-Received: by 2002:a5d:42c9:: with SMTP id t9mr24850040wrr.246.1589276364767;
+        Tue, 12 May 2020 02:39:24 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id 81sm14037092wme.16.2020.05.12.02.39.22
+        by smtp.gmail.com with ESMTPSA id 81sm14037092wme.16.2020.05.12.02.39.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:39:22 -0700 (PDT)
+        Tue, 12 May 2020 02:39:24 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/2] arm64: dts: meson-g12b: move G12B thermal nodes to meson-g12b.dtsi
-Date:   Tue, 12 May 2020 11:39:15 +0200
-Message-Id: <20200512093916.19676-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/2] arm64: dts: meson-sm1: add cpu thermal nodes
+Date:   Tue, 12 May 2020 11:39:16 +0200
+Message-Id: <20200512093916.19676-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200512093916.19676-1-narmstrong@baylibre.com>
 References: <20200512093916.19676-1-narmstrong@baylibre.com>
@@ -77,55 +77,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The G12B thermal nodes should be in the meson-g12b.dtsi file.
+Add thermal nodes for the Amlogic SM1 SoCs based on the G12A and G12B
+thermal nodes.
 
-Fixes: 195f140318a9 ("arm64: dts: meson: g12b: add cooling properties")
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12.dtsi  | 23 ---------------------
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 22 ++++++++++++++++++++
- 2 files changed, 22 insertions(+), 23 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-index 783e5a397f86..e932205badea 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-@@ -355,29 +355,6 @@
- 	};
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+index d4ec735fb1a5..71317f5aada1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+@@ -56,6 +56,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
  
--&cpu_thermal {
--	cooling-maps {
--		map0 {
--			trip = <&cpu_passive>;
--			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--		};
--		map1 {
--			trip = <&cpu_hot>;
--			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--		};
--	};
--};
--
- &ethmac {
- 	power-domains = <&pwrc PWRC_G12A_ETH_ID>;
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-index 6dbc3968045b..9b8548e5f6e5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-@@ -113,3 +113,25 @@
- 	compatible = "amlogic,g12b-clkc";
+ 		cpu1: cpu@1 {
+@@ -64,6 +65,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -72,6 +74,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -80,6 +83,7 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		l2: l2-cache0 {
+@@ -466,6 +470,26 @@
+ 	compatible = "amlogic,sm1-clkc";
  };
  
 +&cpu_thermal {
@@ -133,23 +130,24 @@ index 6dbc3968045b..9b8548e5f6e5 100644
 +		map0 {
 +			trip = <&cpu_passive>;
 +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
++
 +		map1 {
 +			trip = <&cpu_hot>;
 +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +	};
 +};
++
+ &ethmac {
+ 	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
+ };
 -- 
 2.22.0
 
