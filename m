@@ -2,109 +2,141 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B31C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DD9C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2225C20769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589266255;
-	bh=YoY5axcAKndaHvfi5URiqrWyh4PRHWdm8XpDzzV9a6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XjR0j2iBdcWXP/MIC9g+eIQLXBwg022LKj6hlxqxfkLbnWfoyFtk4ZXWUkTrVkm5t
-	 ajDPUMICoofazom574ILdUxYNuAqQLF3U6UNI+T33rr4cFNqzBYEG47CKufhWKj4v1
-	 xUBCxgAL5u014b1zzeextiEF8qPj3cH0tRY+LKNg=
+	by mail.kernel.org (Postfix) with ESMTP id C2F6720752
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYYn2rm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgELGuy (ORCPT
+        id S1728955AbgELGvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:50:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:47027 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgELGuy (ORCPT
+        Tue, 12 May 2020 02:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgELGvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:50:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w7so13900762wre.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:50:52 -0700 (PDT)
+        Tue, 12 May 2020 02:51:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2CE3C061A0C;
+        Mon, 11 May 2020 23:51:15 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y24so21992336wma.4;
+        Mon, 11 May 2020 23:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PzqUJAgwkfPwZqY9huLuJ57Jz2DxDsPXmmqSEmn6iEQ=;
+        b=jYYn2rm9tXXBGEfdfNQxs0IaQPLDPbZSznuhX3K3+inFDcNXl0KqQtlWqLM9/BjpNP
+         kVv7wd8np8uF/tWqF7LnPYZiT9kKEfwIdiBsKmde+aZznx/vHd5yLgXEiJ8u98GMTMm/
+         Gsv4kEFmvrb1jC/i9LQB3C+LyUCfjfqEwgt12dDtMEOnNbO0QMLxQwIa2COQGzigJXAe
+         4CaHT90CiQBrTZ2ua2AHa+d8Mi+GHAtvKm9bHHumm3st3Gi8TwvFOWQJTogShROTWwN9
+         OmVGoAxdexdjEQoAoQEigGrj3xKbHKGvBoDQU53JtJj2qNesFI9pkKokCm7CWUhcF4NW
+         GQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+XD8Y6tEmtTs7vMbjo81XnVFNhe7jSdvdt/s8YEjaHg=;
-        b=fJ4NgJBitmlM4bWZgBKXY58JYV0LpHe72G28608gKXHv42HNY2LvuVq49YBxk8JuZy
-         UxOEfglC3y9j6CcG7D3nAK0APAVtkzUdIWHhhssRIAPyLVHv6J0K8nIb9uNiyWzoxZ7Q
-         OpkjVyST//lR8b0p+8kSGUg8dnlBriM3ckIRyTAUyfXC7r6J9C3Y+tY5+LAHLKPxc5Kh
-         YD/37Agqr16mVAjaCDu1E1u5nRMf+29WzhgDUdc305w8bRhtCYKYPaGIosoTUJVM3NfR
-         lWhIkjPe5qoKpiA58MPUGL2XFHrqQB2z/lC0FmHPriL87ssXLzAMHrFjOH7r18r/v15n
-         usaA==
-X-Gm-Message-State: AOAM532ldc29Qtt9581utA0brE3Yo/XtyhUE1U2r4jW0518OqqJKR1Xe
-        khOZF+js2OO5ACJaPHSZCRQ=
-X-Google-Smtp-Source: ABdhPJyFGZYUUdE1D+dABJILUqbs/VUgmZJNuPKdPWmELcviQhZMyMcGBy49OvSxvATewfewlQBtvQ==
-X-Received: by 2002:a05:6000:1187:: with SMTP id g7mr961988wrx.54.1589266252064;
-        Mon, 11 May 2020 23:50:52 -0700 (PDT)
-Received: from localhost (ip-37-188-140-86.eurotel.cz. [37.188.140.86])
-        by smtp.gmail.com with ESMTPSA id 81sm13287230wme.16.2020.05.11.23.50.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PzqUJAgwkfPwZqY9huLuJ57Jz2DxDsPXmmqSEmn6iEQ=;
+        b=PRRpqQRHdTXg+LpL8hkkd1ya4OPrzV6h31q422IpRhu4Gh1mzelUKGAmGPR1Ke7YqL
+         r0WJfJyjmU0iE27M2Ph5Z9CbG8w5fWUQO2hGFHw8ojx8r4SJGX/4qk32GvxdGXaZNPL6
+         smito80wpiS6RqgzdYwwUzKLo+PSjWgv26ujnT+VoAW+gxAcjqTWU7yiI/TSdao8ruVw
+         25WxhuBFbtzMgt67wgCznMrjlONg5Nz1G40oQEuI5ciBfVQOGPp4bHsT+nqfxyoqpgeP
+         fDyWZmfzvpD9R26f29ibv3kb3ldzEp7FrXqkXUOzLbUXXOpjRcXJv0FAWF+dec3m9eOk
+         ONkg==
+X-Gm-Message-State: AGi0PuZxP89QPhIrrVOvRUBbMq91Cm4rdqgj3r5V8w4o4N+v/ZyrxoCD
+        rBXVtJ26Ma3J+1g/WVbJuM4=
+X-Google-Smtp-Source: APiQypJvYf4NALaAkFyguhqo82x6QEXVkcwJJetASyREMrQ2k+rzJEeg2imq5+2NaLIPszqT4KSHyA==
+X-Received: by 2002:a7b:cf23:: with SMTP id m3mr34648915wmg.36.1589266274574;
+        Mon, 11 May 2020 23:51:14 -0700 (PDT)
+Received: from skynet.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
+        by smtp.gmail.com with ESMTPSA id n25sm30740119wmk.9.2020.05.11.23.51.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 23:50:50 -0700 (PDT)
-Date:   Tue, 12 May 2020 08:50:49 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Huang Ying <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm, swap: Use prandom_u32_max()
-Message-ID: <20200512065049.GN29153@dhcp22.suse.cz>
-References: <20200512064147.514493-1-ying.huang@intel.com>
+        Mon, 11 May 2020 23:51:14 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v3] mtd: rawnand: brcmnand: correctly verify erased pages
+Date:   Tue, 12 May 2020 08:51:11 +0200
+Message-Id: <20200512065111.716801-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200505082055.2843847-1-noltari@gmail.com>
+References: <20200505082055.2843847-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512064147.514493-1-ying.huang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-05-20 14:41:46, Huang Ying wrote:
-> To improve the code readability and get random number with higher
-> quality.
+The current code checks that the whole OOB area is erased.
+This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
+fail due to the usable OOB bytes not being 0xff.
+Correct this by only checking that data and ECC bytes aren't 0xff.
 
-I understand the readability argument but why should prandom_u32_max
-(which I was not aware of) provide a higher quality randomness?
+Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page bitflips")
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ v3: Fix commit log and merge nand_check_erased_ecc_chunk calls.
+ v2: Add Fixes tag
 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-To the change itself
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/swapfile.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index a0a123e59ce6..2ec8b21201d6 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3220,7 +3220,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->  		 * select a random position to start with to help wear leveling
->  		 * SSD
->  		 */
-> -		p->cluster_next = 1 + (prandom_u32() % p->highest_bit);
-> +		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
->  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
->  
->  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
-> -- 
-> 2.26.2
-
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index e4e3ceeac38f..80fe01f03516 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2018,8 +2018,9 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 		  struct nand_chip *chip, void *buf, u64 addr)
+ {
++	struct mtd_oob_region oobecc;
+ 	int i, sas;
+-	void *oob = chip->oob_poi;
++	void *oob;
+ 	int bitflips = 0;
+ 	int page = addr >> chip->page_shift;
+ 	int ret;
+@@ -2035,11 +2036,19 @@ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
++	for (i = 0; i < chip->ecc.steps; i++) {
+ 		ecc_chunk = buf + chip->ecc.size * i;
+-		ret = nand_check_erased_ecc_chunk(ecc_chunk,
+-						  chip->ecc.size,
+-						  oob, sas, NULL, 0,
++
++		if (mtd->ooblayout->ecc(mtd, i, &oobecc)) {
++			oob = NULL;
++			oobecc.length = 0;
++		} else {
++			oob = chip->oob_poi + oobecc.offset;
++		}
++
++		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
++						  oob, oobecc.length,
++						  NULL, 0,
+ 						  chip->ecc.strength);
+ 		if (ret < 0)
+ 			return ret;
 -- 
-Michal Hocko
-SUSE Labs
+2.26.2
+
