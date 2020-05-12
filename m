@@ -2,127 +2,115 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24C5C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D6BC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4DE206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31884206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="SSYc5hDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbgELOkb (ORCPT
+        id S1730190AbgELOlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:40:31 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:58513 "EHLO mx1.molgen.mpg.de"
+        Tue, 12 May 2020 10:41:04 -0400
+Received: from mail-eopbgr60123.outbound.protection.outlook.com ([40.107.6.123]:13141
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727118AbgELOkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:40:31 -0400
-Received: from [192.168.0.7] (ip5f5af0be.dynamic.kabel-deutschland.de [95.90.240.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id F2B432002EE1D;
-        Tue, 12 May 2020 16:40:29 +0200 (CEST)
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [for-linus][PATCH 3/3] bootconfig: Fix to prevent warning message
- if no bootconfig option
-To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-References: <20200512132317.343672858@goodmis.org>
- <20200512132348.029291894@goodmis.org>
-Message-ID: <a236ad2c-ee39-f2c3-9f07-a1ed6c9bfe22@molgen.mpg.de>
-Date:   Tue, 12 May 2020 16:40:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726055AbgELOlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:41:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P/0UGDXqqixPOJn20EQcFzI3+uwxGunk9G3bKamRb2pDGxSeHJuJyspqisfI5UYysi03yEV9Nei7hOLbidJ1EUsHBEDpmdqr9TDdYYI5kanVlrFzIprzQeiu/IvRtF9INq1xgyDEGt+M6sIi/34pe4cHONby3i0JYE3GNLOfSXvax1RqaHD+K8JemwYYpCly7RUwg2NHwVMbg4/rdYnx/pqGA561MArwP+7UaIWRpIxl9YuJFB7nM9RAuJjRU7HbNEPJl5bpUs8CUJ+T5AtXRBidtF+nXc8PZATYak5VeTuxx2cP7LBfIT5VraiXC3pELy3PcqQVIhLCOL8dWUNrOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XAZM/PV5fhmZJC/fhqPCjYhOsuARpNS7JrSmXcMsqWQ=;
+ b=lu7zKYOsnNjLrKrn97dHbZcclPiUOiaoJLTHRGnLhiYrg3Qi52hZWtvCu3FOx3yyeVbuIqA0089e5eIII5gy1Glxbkgq7Lwr8Kt+JIOvHrVbkjx5osqY6bdWQivMeN61ZvYJNn/1JsDP4ugybDggceSSJ2OSVvaJ7z+MiltE7Bl9PGOfEFyKsjA/Lqi5YlMXfGns/hqdPBCatF6J2jBBbKSex06VxIO5WJk8UGVpwJKT/ZhCR4NH4J8fRzn0R9U5OF/kjwi8TY/tRAg8Hz0ISyGmVu/FcEsudbH52oR6JfEMSThIZaGar4oL6j7V2VvcHUHM3vdLRJlLyyeGqdmGkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XAZM/PV5fhmZJC/fhqPCjYhOsuARpNS7JrSmXcMsqWQ=;
+ b=SSYc5hDZwCMbdFzkfnHssAvBqzfl8qLk9zkH3ZSwZHkrQP9e2pMwsUHJh5OQOvnyWs9BNUuLLM9oLKvhPnNrz0Vk+MOOLaeLdFphclnN6hMEFJ+djOmNfJpQTWz8e6ISnBk/ZUOEFT36hPK3lV6lt5JOtyAi03TmeQC7R5giP+w=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5452.eurprd02.prod.outlook.com (2603:10a6:10:e3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Tue, 12 May
+ 2020 14:41:00 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::38:8a98:465a:1a0a]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::38:8a98:465a:1a0a%7]) with mapi id 15.20.2979.033; Tue, 12 May 2020
+ 14:41:00 +0000
+Subject: Re: [PATCH] i2c: mux: demux-pinctrl: Fix an error handling path in
+ 'i2c_demux_pinctrl_probe()'
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     robh@kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
+ <20200512130802.GC13516@ninjato>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <3e1f4c56-c590-8121-7129-9ebbf4db773d@axentia.se>
+Date:   Tue, 12 May 2020 16:40:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200512130802.GC13516@ninjato>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: sv-SE
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR0501CA0025.eurprd05.prod.outlook.com
+ (2603:10a6:3:1a::35) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
 MIME-Version: 1.0
-In-Reply-To: <20200512132348.029291894@goodmis.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.13.3] (213.112.138.116) by HE1PR0501CA0025.eurprd05.prod.outlook.com (2603:10a6:3:1a::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend Transport; Tue, 12 May 2020 14:40:59 +0000
+X-Originating-IP: [213.112.138.116]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5904adcc-5d05-48c6-98d1-08d7f6827cfe
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5452:
+X-Microsoft-Antispam-PRVS: <DB8PR02MB54528EA548F04E4119E00DF6BCBE0@DB8PR02MB5452.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0401647B7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7t9CFHVxrGaE9UuABFPdaUJQxtT0g5HXwqqPAO1TEwhAgzO3SKGwniSCjP1VOFaawXOYPoRb44wiQ3RrTw/LYZgn39BbotrMhLLYl/JTzYTQL/pR27jHmZbhOzykCvsLBXdgmaGPLL3KdLB3D8E2gAV8RHrqJHby9P4LaGEEKnVCDblE6bSSKvUMHnTk/Fj2hUekzjhsm+pfGUZ7XOJu6hABwGa8u0ngCd6N4sPbe+hovyo3f8fO2+Af2xULEZrFuJGbPgM6XaMvL+zgTa/lM6Q7HvXMrq/sJejEJ7XpN2naETu/h+70ENaVWKoljoWq++3beNFXQ0Ixye3FnpUs2ELEuKOA+EhkZboaLzRhynExnAIHcFOxyEhpdKh467xw8qHxXzvnycPATY4iIfH3bHuK05avinJPfWyDuV7QQtaIH/CxiGSyFJjCL1npDBv9lZCss6+Zy6dCH8k1nx0JLnzzYuI8yT1ETgMhmEwU4NwHpwvd5l3BJ8qixkR3PLBDplHScebP+B9m4LMPX1RMYSBMt43B0PLJoEEpwrnGnw2O2luu20AM+7zIOJYQrqFw
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(136003)(366004)(346002)(376002)(33430700001)(33440700001)(956004)(4744005)(8936002)(31686004)(6486002)(316002)(16576012)(5660300002)(2906002)(110136005)(16526019)(66476007)(86362001)(52116002)(36916002)(26005)(2616005)(66556008)(31696002)(508600001)(4326008)(8676002)(36756003)(53546011)(186003)(66946007)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: a5hAuNjkLSuP/6gmi0meGfsZ2gzcKanbN4c4AuYvS75R5FO37Nc3H2B8fO5SEzaM6rqnBBAHPUWVN6rRRZBxJbBPIhahqylP9RvBhMyeIBSH7Wy28XmS9mfEXboptzSlKyNRc3Ghr2IZRNnv6z5jSsBNVrBTJd00YN1L8QftRCJrfVHFtWUDifkyooZGS7xPJM/1LPuFa3CUYZbGNruULSn5ImMZfYUvfW5QFCqAcpUUfD9T3rzJJV/S7CJUgUQI+mkRhpmgX8I6TtNiRKzvo3mWQ/TpjwW7D40Ok2E3ydeSdoRk6bC8kfj1YkYu1oDyS3D5qpWA6UqkCvakTwCIQpohGVCXAty4/RNUkKkn40L+Ror/VDR7aWVMq4I2kSQOsmZKR1/GmptVciqCSRDdCU9DPatMtpCsV4Gscreqf0WKAQA7r8FqA8judwasxTlmNCTD7pD+vkKi8V3aB5hrHqEJS4ma0nHZGHMGjDVkwek=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5904adcc-5d05-48c6-98d1-08d7f6827cfe
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 14:41:00.3283
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AoyiZajFrwgx0yWGVYJFVFJl5xN9yYChm7Fkt8o11ApaN04397fvxXz6DdAUA39L
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5452
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Steven,
-
-
-Am 12.05.20 um 15:23 schrieb Steven Rostedt:
-> From: Masami Hiramatsu <mhiramat@kernel.org>
+On 2020-05-12 15:08, Wolfram Sang wrote:
+> On Wed, May 06, 2020 at 09:21:00PM +0200, Christophe JAILLET wrote:
+>> A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+>> path, as already done in the remove function.
+>>
+>> Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > 
-> Commit de462e5f1071 ("bootconfig: Fix to remove bootconfig
-> data from initrd while boot") causes a cosmetic regression
-> on dmesg, which warns "no bootconfig data" message without
-> bootconfig cmdline option.
-> 
-> Fix setup_boot_config() by moving no bootconfig check after
-> commandline option check.
-> 
-> Link: http://lkml.kernel.org/r/9b1ba335-071d-c983-89a4-2677b522dcc8@molgen.mpg.de
-> Link: http://lkml.kernel.org/r/158916116468.21787.14558782332170588206.stgit@devnote2
+> Applied to for-current, thanks! Peter, I hope you are okay with me
+> applying patches for my strange driver directly.
 
-It’d be great if you could update your script to include HTTPS URLs. 
-That would save one redirect.
+Absolutely, you have always "owned" that one. I prefer to stay out :-)
 
-```
-$ curl -I 
-http://lkml.kernel.org/r/9b1ba335-071d-c983-89a4-2677b522dcc8@molgen.mpg.de
-HTTP/1.1 301 Moved Permanently
-[ prevent LKML HTML mail detection ]
-```
-
-> Fixes: de462e5f1071 ("bootconfig: Fix to remove bootconfig data from initrd while boot")
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->   init/main.c | 10 ++++++----
->   1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/init/main.c b/init/main.c
-> index 1a5da2c2660c..5803ecb411ab 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -400,9 +400,8 @@ static void __init setup_boot_config(const char *cmdline)
->   	char *data, *copy;
->   	int ret;
->   
-> +	/* Cut out the bootconfig data even if we have no bootconfig option */
->   	data = get_boot_config_from_initrd(&size, &csum);
-> -	if (!data)
-> -		goto not_found;
->   
->   	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
->   	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-> @@ -411,6 +410,11 @@ static void __init setup_boot_config(const char *cmdline)
->   	if (!bootconfig_found)
->   		return;
->   
-> +	if (!data) {
-> +		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
-> +		return;
-> +	}
-> +
->   	if (size >= XBC_DATA_MAX) {
->   		pr_err("bootconfig size %d greater than max size %d\n",
->   			size, XBC_DATA_MAX);
-> @@ -446,8 +450,6 @@ static void __init setup_boot_config(const char *cmdline)
->   		extra_init_args = xbc_make_cmdline("init");
->   	}
->   	return;
-> -not_found:
-> -	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
->   }
->   
->   #else
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
+Cheers,
+Peter
