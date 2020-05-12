@@ -2,109 +2,102 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282D3C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FCAC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074812070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMw1Usw/"
+	by mail.kernel.org (Postfix) with ESMTP id AB9DA20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgELAYq (ORCPT
+        id S1728402AbgELA0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725855AbgELAYp (ORCPT
+        Mon, 11 May 2020 20:26:16 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:40554 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725881AbgELA0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:24:45 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF447C061A0C;
-        Mon, 11 May 2020 17:24:43 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 18so5510695pfv.8;
-        Mon, 11 May 2020 17:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eVclBX6+5fCKIGgk1HaUSZXFlkJh8mEaraU9hXmaBPk=;
-        b=uMw1Usw/k6sAinab71ozPjX5Pkkzix7+DzgcywQffEWoFaxJu7w8W+aPbZSk7cNXTo
-         QiaCoSMme9CIxttN+zXHbqpvEFWvzy41SElxz8/iORwpUU+meTepKE0+vGRg/qRlpI6f
-         DCX2Wxj/2ljHlaeTwiY2UeF8t535ZMIM9pCf6NL9DsGS43FcSJ4vPzAfyjLXkEfcKQZk
-         Xj2nCEdBre26B0aQ2d3WsvtQIBleKHa+I+PStXuE5L4IjeHKV5IhvXFrQ0yWO1Ht7LKp
-         AB7nHKG/26/ACEleM8mpEqkr+VRwjbjNMEsMDxrcYokeMrN3c8eNoGRIBPrB8UieQPKd
-         0S4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=eVclBX6+5fCKIGgk1HaUSZXFlkJh8mEaraU9hXmaBPk=;
-        b=M/OkAMA75QEx9rYZ1+G+4oPpzXHdFOx//gJ3l6TaFJcFt2QVeZfT8FxhOWdjFgIKTt
-         6RMA9dhL18k6LynS5gXQb1jhfwKB9OPqYqyxoi2St2tg+mijNRKuSe1T0ubIY1ZM/5RV
-         O2n66N2mglS2Mw8Ug0k/8/1eolZE13PQ0yJQuBTzvUPUGH43Eh9vhfqdDrHxpi5HZhPq
-         lxuRQ9rU4GPEL82gnYuQkd6QLj9z/mIjWaL5V2ennFSA0GijFISQxRsl8ELHzAVjRZSX
-         kQYmVL98/iQKuVVvtj5yK2WMWv6zV0YGvgRZ52aDKOAQqJGxPLcJ8AtydqqvMneeUf3t
-         2LOQ==
-X-Gm-Message-State: AGi0PuaX21oa7NsKYptPDeHy9jSmeN6NRvOfMEEFtir3urKUfm877/IH
-        XU1fqfa10iOF8YKhP9kFzlc=
-X-Google-Smtp-Source: APiQypJE9LAcoziIOBmBgsA/rXH0ftU8YSEfyLcHvzr9+2jiIYG+AJxI6nA9RjMWXAliUBoVsSxFmA==
-X-Received: by 2002:a62:3303:: with SMTP id z3mr17354140pfz.88.1589243083347;
-        Mon, 11 May 2020 17:24:43 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 23sm9062112pgm.18.2020.05.11.17.24.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 May 2020 17:24:42 -0700 (PDT)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 1/4] net: ethernet: validate pause autoneg setting
-Date:   Mon, 11 May 2020 17:24:07 -0700
-Message-Id: <1589243050-18217-2-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
-References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
+        Mon, 11 May 2020 20:26:16 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9795A634C87;
+        Tue, 12 May 2020 03:25:18 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jYIjW-0001lF-GJ; Tue, 12 May 2020 03:25:18 +0300
+Date:   Tue, 12 May 2020 03:25:18 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Maxime Ripard <maxime@cerno.tech>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>, Ben Kao <ben.kao@intel.com>
+Subject: Re: [PATCH v8 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200512002518.GX867@valkosipuli.retiisi.org.uk>
+References: <20200511110350.11565-1-robert.foss@linaro.org>
+ <20200511110350.11565-3-robert.foss@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511110350.11565-3-robert.foss@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A comment in uapi/linux/ethtool.h states "Drivers should reject a
-non-zero setting of @autoneg when autoneogotiation is disabled (or
-not supported) for the link".
+Hi Robert,
 
-That check should be added to phy_validate_pause() to consolidate
-the code where possible.
+On Mon, May 11, 2020 at 01:03:49PM +0200, Robert Foss wrote:
+> Add match table, enable ov8856_probe() to support
+> both ACPI and DT modes.
+> 
+> ACPI and DT modes are primarily distinguished from
+> by checking for ACPI mode and by having resource like
+> be NULL.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
 
-Fixes: 22b7d29926b5 ("net: ethernet: Add helper to determine if pause configuration is supported")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/phy/phy_device.c | 3 +++
- 1 file changed, 3 insertions(+)
+Applied with this small diff --- please check with checkpatch.pl on the
+next time. Thanks!
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index c3a107cf578e..5a9618ba232e 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2624,6 +2624,9 @@ EXPORT_SYMBOL(phy_set_asym_pause);
- bool phy_validate_pause(struct phy_device *phydev,
- 			struct ethtool_pauseparam *pp)
- {
-+	if (pp->autoneg && !phydev->autoneg)
-+		return false;
-+
- 	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
- 			       phydev->supported) && pp->rx_pause)
- 		return false;
+diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+index 1657e03d9a9d..4ca27675cc5a 100644
+--- a/drivers/media/i2c/ov8856.c
++++ b/drivers/media/i2c/ov8856.c
+@@ -1226,8 +1226,7 @@ static int ov8856_get_hwcfg(struct ov8856 *ov8856, struct device *dev)
+ 	if (!fwnode)
+ 		return -ENXIO;
+ 
+-	ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+-		&xvclk_rate);
++	ret = fwnode_property_read_u32(fwnode, "clock-frequency", &xvclk_rate);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1244,10 +1243,11 @@ static int ov8856_get_hwcfg(struct ov8856 *ov8856, struct device *dev)
+ 	}
+ 
+ 	if (xvclk_rate != OV8856_XVCLK_19_2)
+-		dev_warn(dev, "external clock rate %d is unsupported", xvclk_rate);
++		dev_warn(dev, "external clock rate %u is unsupported",
++			 xvclk_rate);
+ 
+ 	ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+-		GPIOD_OUT_LOW);
++						     GPIOD_OUT_LOW);
+ 	if (IS_ERR(ov8856->reset_gpio))
+ 		return PTR_ERR(ov8856->reset_gpio);
+ 
 -- 
-2.7.4
+Kind regards,
 
+Sakari Ailus
