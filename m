@@ -2,82 +2,109 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09884C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908E4C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2A4A20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF3C20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589258037;
+	bh=4ZPnIEKQA/I4S5ANyzUSbfPc/c0ZfX+x54b9Jk7Ih8o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iZfVOAKHg5xLTNRIFNmVd6fWmuggBv92sGbGNDdqTFMUEGrW39uKNUUlZHK5iZG4d
+	 xIirS5laJDdqauQX67T+XwXPhQek8SN/HgCYb38q+zz2HhqrKoe17gcFXO1NIbbRsX
+	 nU1E0BS4valS8JN1mJLF5WwF82WTFdaXtMX79KIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgELEYX (ORCPT
+        id S1726301AbgELEdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 00:24:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50014 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbgELEYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 00:24:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A3E99AEDF;
-        Tue, 12 May 2020 04:24:23 +0000 (UTC)
-Subject: Re: [PATCH] xen/pvcalls-back: test for errors when calling
- backend_connect()
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        stable@vger.kernel.org
-References: <20200511074231.19794-1-jgross@suse.com>
- <alpine.DEB.2.21.2005111440210.26167@sstabellini-ThinkPad-T480s>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <17512c98-b309-7b83-8c9c-cc8d43a495a2@suse.com>
-Date:   Tue, 12 May 2020 06:24:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 00:33:55 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:44719 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgELEdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 00:33:54 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 04C4XULu017049;
+        Tue, 12 May 2020 13:33:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04C4XULu017049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589258011;
+        bh=X8E0BsdNnAH/9f9mif8AeRKsq9/U3UOw8vdDnh73hZY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HRm5iDvRudny47jZEW6nbjZBC8jYyl7bJm3WsIC0Q8L55tqycPTJH1Be/490UFFVG
+         WGQuw91fwUYY3X0/2OUBWUU97I3OCedIcI08hUC7N77sCB3EHg6YH1tM2lB1Y0efEn
+         dWn370dTKNZk45nC9sGyuxvpVKeg7FysonvvQhRvNtwgXvJCSt6TbfqqimK0mbzA55
+         bM/CnBonuloavBRJRDzd8YzPDosfD80LWwhfRbMMEtsDYGcUq0ZNV3B4gPjyzHK5wc
+         sdX0aEpL8SmMHjvi7KBmtr9OEufdaZldWuRs0S8SntqUQtc2mgLCeG5pxuvfQOK0zT
+         oUEVm1LtQI8gQ==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id u12so7085212vsq.0;
+        Mon, 11 May 2020 21:33:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYIuQ+zjY84paQpNNeXAf1UOWFLBd2RWSnnxPGCum+3hTnxXzd3
+        Mv3Dk4UuUOt9i5KRb0h6NjN8uAPIARrsrrbqqdU=
+X-Google-Smtp-Source: APiQypJQeAVBO+ffqsKm/b2wDSRazG3qjUmDMskUkK7DV6vGnFqjWmE17wnRfjZnMEcFqpB5W4EIPEmqRnN5imXL0lk=
+X-Received: by 2002:a05:6102:3c7:: with SMTP id n7mr13487692vsq.179.1589258009534;
+ Mon, 11 May 2020 21:33:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2005111440210.26167@sstabellini-ThinkPad-T480s>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200509073915.860588-1-masahiroy@kernel.org> <CAADnVQJvJWwziwDj0ZgPc02iHNNk8EJetDqNZ6SoWq045C-gXQ@mail.gmail.com>
+In-Reply-To: <CAADnVQJvJWwziwDj0ZgPc02iHNNk8EJetDqNZ6SoWq045C-gXQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 12 May 2020 13:32:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARg96EfyZTHdDDToGqwhaokaG-PQCOyCHL1id14YxY3-A@mail.gmail.com>
+Message-ID: <CAK7LNARg96EfyZTHdDDToGqwhaokaG-PQCOyCHL1id14YxY3-A@mail.gmail.com>
+Subject: Re: [PATCH] bpfilter: check if $(CC) can static link in Kconfig
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Network Development <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.05.20 23:41, Stefano Stabellini wrote:
-> On Mon, 11 May 2020, Juergen Gross wrote:
->> backend_connect() can fail, so switch the device to connected only if
->> no error occurred.
->>
->> Fixes: 0a9c75c2c7258f2 ("xen/pvcalls: xenbus state handling")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Juergen Gross <jgross@suse.com>
-> 
-> Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-> 
-> 
->> ---
->>   drivers/xen/pvcalls-back.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
->> index cf4ce3e9358d..41a18ece029a 100644
->> --- a/drivers/xen/pvcalls-back.c
->> +++ b/drivers/xen/pvcalls-back.c
->> @@ -1088,7 +1088,8 @@ static void set_backend_state(struct xenbus_device *dev,
->>   		case XenbusStateInitialised:
->>   			switch (state) {
->>   			case XenbusStateConnected:
->> -				backend_connect(dev);
->> +				if (backend_connect(dev))
->> +					return;
-> 
-> Do you think it would make sense to WARN?
+On Sun, May 10, 2020 at 10:04 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Sat, May 9, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Fedora, linking static libraries requires the glibc-static RPM
+> > package, which is not part of the glibc-devel package.
+> >
+> > CONFIG_CC_CAN_LINK does not check the capability of static linking,
+> > so you can enable CONFIG_BPFILTER_UMH, then fail to build.
+> >
+> >   HOSTLD  net/bpfilter/bpfilter_umh
+> > /usr/bin/ld: cannot find -lc
+> > collect2: error: ld returned 1 exit status
+> >
+> > Add CONFIG_CC_CAN_LINK_STATIC, and make CONFIG_BPFILTER_UMH depend
+> > on it.
+> >
+> > Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+> Thanks!
+> Acked-by: Alexei Starovoitov <ast@kernel.org>
 
-There already should be an error message (either due to a failed
-grant mapping or a failed memory allocation).
+Applied to linux-kbuild
+with Alexei's Ack.
 
 
-Juergen
+-- 
+Best Regards
+Masahiro Yamada
