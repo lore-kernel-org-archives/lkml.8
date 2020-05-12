@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA32C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0ABAC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23A652492C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA82624927
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbgELWXs (ORCPT
+        id S1731880AbgELWXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55600 "EHLO
+        Tue, 12 May 2020 18:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731785AbgELWXe (ORCPT
+        by vger.kernel.org with ESMTP id S1731819AbgELWXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:34 -0400
+        Tue, 12 May 2020 18:23:40 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F83EC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96463C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:40 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIl-00057q-5N; Wed, 13 May 2020 00:23:03 +0200
+        id 1jYdIn-0005A6-6W; Wed, 13 May 2020 00:23:07 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0DEC5100BC4;
-        Wed, 13 May 2020 00:23:02 +0200 (CEST)
-Message-Id: <20200512213812.981538552@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 8C0AF1001FC;
+        Wed, 13 May 2020 00:23:04 +0200 (CEST)
+Message-Id: <20200512213813.179185140@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:34 +0200
+Date:   Tue, 12 May 2020 23:01:36 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 35/38] x86/entry/32: Remove redundant irq disable code
+Subject: [patch V5 37/38] x86/entry: Move paranoid irq tracing out of ASM code
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,114 +71,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
-All exceptions/interrupts return with interrupts disabled now. No point in
-doing this in ASM again.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- arch/x86/entry/entry_32.S |   76 ----------------------------------------------
- 1 file changed, 76 deletions(-)
+ arch/x86/entry/entry_64.S |   13 -------------
+ arch/x86/kernel/nmi.c     |    3 +++
+ 2 files changed, 3 insertions(+), 13 deletions(-)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -51,34 +51,6 @@
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -16,7 +16,6 @@
+  *
+  * Some macro usage:
+  * - SYM_FUNC_START/END:Define functions in the symbol table.
+- * - TRACE_IRQ_*:	Trace hardirq state for lock debugging.
+  * - idtentry:		Define exception entry points.
+  */
+ #include <linux/linkage.h>
+@@ -107,11 +106,6 @@ SYM_CODE_END(native_usergs_sysret64)
  
- 	.section .entry.text, "ax"
- 
--/*
-- * We use macros for low-level operations which need to be overridden
-- * for paravirtualization.  The following will never clobber any registers:
-- *   INTERRUPT_RETURN (aka. "iret")
-- *   GET_CR0_INTO_EAX (aka. "movl %cr0, %eax")
-- *   ENABLE_INTERRUPTS_SYSEXIT (aka "sti; sysexit").
-- *
-- * For DISABLE_INTERRUPTS/ENABLE_INTERRUPTS (aka "cli"/"sti"), you must
-- * specify what registers can be overwritten (CLBR_NONE, CLBR_EAX/EDX/ECX/ANY).
-- * Allowing a register to be clobbered can shrink the paravirt replacement
-- * enough to patch inline, increasing performance.
-- */
--
--#ifdef CONFIG_PREEMPTION
--# define preempt_stop(clobbers)	DISABLE_INTERRUPTS(clobbers); TRACE_IRQS_OFF
--#else
--# define preempt_stop(clobbers)
--#endif
--
--.macro TRACE_IRQS_IRET
--#ifdef CONFIG_TRACE_IRQFLAGS
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)     # interrupts off?
--	jz	1f
--	TRACE_IRQS_ON
--1:
--#endif
--.endm
--
- #define PTI_SWITCH_MASK         (1 << PAGE_SHIFT)
- 
- /*
-@@ -881,38 +853,6 @@ SYM_CODE_START(ret_from_fork)
- SYM_CODE_END(ret_from_fork)
- .popsection
- 
--/*
-- * Return to user mode is not as complex as all this looks,
-- * but we want the default path for a system call return to
-- * go as quickly as possible which is why some of this is
-- * less clear than it otherwise should be.
-- */
--
--	# userspace resumption stub bypassing syscall exit tracing
--SYM_CODE_START_LOCAL(ret_from_exception)
--	preempt_stop(CLBR_ANY)
--ret_from_intr:
--#ifdef CONFIG_VM86
--	movl	PT_EFLAGS(%esp), %eax		# mix EFLAGS and CS
--	movb	PT_CS(%esp), %al
--	andl	$(X86_EFLAGS_VM | SEGMENT_RPL_MASK), %eax
--#else
+ SYM_CODE_START(entry_SYSCALL_64)
+ 	UNWIND_HINT_EMPTY
 -	/*
--	 * We can be coming here from child spawned by kernel_thread().
+-	 * Interrupts are off on entry.
+-	 * We do not frame this tiny irq-off block with TRACE_IRQS_OFF/ON,
+-	 * it is too small to ever cause noticeable irq latency.
 -	 */
--	movl	PT_CS(%esp), %eax
--	andl	$SEGMENT_RPL_MASK, %eax
--#endif
--	cmpl	$USER_RPL, %eax
--	jb	restore_all_kernel		# not returning to v8086 or userspace
+ 
+ 	swapgs
+ 	/* tss.sp2 is scratch space. */
+@@ -462,8 +456,6 @@ SYM_CODE_START(\asmsym)
+ 
+ 	UNWIND_HINT_REGS
+ 
+-	TRACE_IRQS_OFF
 -
+ 	movq	%rsp, %rdi		/* pt_regs pointer */
+ 
+ 	.if \vector == X86_TRAP_DB
+@@ -881,17 +873,13 @@ SYM_CODE_END(paranoid_entry)
+  */
+ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	UNWIND_HINT_REGS
 -	DISABLE_INTERRUPTS(CLBR_ANY)
 -	TRACE_IRQS_OFF
--	movl	%esp, %eax
--	call	prepare_exit_to_usermode
--	jmp	restore_all_switch_stack
--SYM_CODE_END(ret_from_exception)
--
- SYM_ENTRY(__begin_SYSENTER_singlestep_region, SYM_L_GLOBAL, SYM_A_NONE)
- /*
-  * All code from here through __end_SYSENTER_singlestep_region is subject
-@@ -1147,22 +1087,6 @@ SYM_FUNC_START(entry_INT80_32)
- 	 */
- 	INTERRUPT_RETURN
+ 	testl	%ebx, %ebx			/* swapgs needed? */
+ 	jnz	.Lparanoid_exit_no_swapgs
+-	TRACE_IRQS_IRETQ
+ 	/* Always restore stashed CR3 value (see paranoid_entry) */
+ 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
+ 	SWAPGS_UNSAFE_STACK
+ 	jmp	restore_regs_and_return_to_kernel
+ .Lparanoid_exit_no_swapgs:
+-	TRACE_IRQS_IRETQ
+ 	/* Always restore stashed CR3 value (see paranoid_entry) */
+ 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
+ 	jmp restore_regs_and_return_to_kernel
+@@ -1292,7 +1280,6 @@ SYM_CODE_START(asm_exc_nmi)
+ 	call	paranoid_entry
+ 	UNWIND_HINT_REGS
  
--restore_all_kernel:
--#ifdef CONFIG_PREEMPTION
--	DISABLE_INTERRUPTS(CLBR_ANY)
--	cmpl	$0, PER_CPU_VAR(__preempt_count)
--	jnz	.Lno_preempt
--	testl	$X86_EFLAGS_IF, PT_EFLAGS(%esp)	# interrupts off (exception path) ?
--	jz	.Lno_preempt
--	call	preempt_schedule_irq
--.Lno_preempt:
--#endif
--	TRACE_IRQS_IRET
--	PARANOID_EXIT_TO_KERNEL_MODE
--	BUG_IF_WRONG_CR3
--	RESTORE_REGS 4
--	jmp	.Lirq_return
--
- .section .fixup, "ax"
- SYM_CODE_START(asm_exc_iret_error)
- 	pushl	$0				# no error code
+-	/* paranoidentry exc_nmi(), 0; without TRACE_IRQS_OFF */
+ 	movq	%rsp, %rdi
+ 	movq	$-1, %rsi
+ 	call	exc_nmi
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
+ 	__this_cpu_write(last_nmi_rip, regs->ip);
+ 
+ 	instrumentation_begin();
++	trace_hardirqs_off_prepare();
+ 	ftrace_nmi_enter();
+ 
+ 	handled = nmi_handle(NMI_LOCAL, regs);
+@@ -422,6 +423,8 @@ static noinstr void default_do_nmi(struc
+ 
+ out:
+ 	ftrace_nmi_exit();
++	if (regs->flags & X86_EFLAGS_IF)
++		trace_hardirqs_on_prepare();
+ 	instrumentation_end();
+ }
+ 
 
