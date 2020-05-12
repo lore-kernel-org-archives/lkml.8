@@ -2,120 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229E8C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02375C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00ED920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589303286;
-	bh=2QmFbWq2uNOkAZcEsYngCFmvRkluxWT6h1Txnq064TU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=phZwTJsxQRTwRg5/Vim0nONNWOX3diZAjd62MA82bgdUZadtATIf0+8fhgsxRRMak
-	 5gC2Lbaiif4AVncNx7ZK2yXvlPji8dDhpIhSwpoAzwO04TCmVU2u//gF5H9eK09B7/
-	 YjLrxLCf06WTtAfXuo5KyAW2v2ku4wbNS5cwiA08=
+	by mail.kernel.org (Postfix) with ESMTP id CEED8206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgELRIF (ORCPT
+        id S1728934AbgELRKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:08:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELRIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:08:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6E9C206D3;
-        Tue, 12 May 2020 17:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589303284;
-        bh=2QmFbWq2uNOkAZcEsYngCFmvRkluxWT6h1Txnq064TU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJOMwmKHR3DIKhtyxBZ2ku4ztCB2onMmzAEym1RjctuRaab86+Nm066N9GYgigTQI
-         ugc0zc112X+K6xZaZQ+jS1c6E0o3pJQeh4s2vSRbEMYR38L7k0Zn6hpAA8SqXzTTPS
-         TXL9YajlSQcc4uTOUzKPPf9Y605txZCOFYsr/ci4=
-Date:   Tue, 12 May 2020 18:08:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: linux-next: manual merge of the sound-asoc tree with the crypto
- tree
-Message-ID: <20200512170801.GK5110@sirena.org.uk>
-References: <20200512144949.4f933eca@canb.auug.org.au>
- <20200512162205.GI5110@sirena.org.uk>
- <20200512163632.GA916@sol.localdomain>
+        Tue, 12 May 2020 13:10:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38922 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELRKv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:10:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 2BE132A2240
+Received: by earth.universe (Postfix, from userid 1000)
+        id C90F63C08C6; Tue, 12 May 2020 19:10:47 +0200 (CEST)
+Date:   Tue, 12 May 2020 19:10:47 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] power: supply: bq24190_charger: convert to use
+ i2c_new_client_device()
+Message-ID: <20200512171047.gyk6zze46ow6i3yy@earth.universe>
+References: <20200326210954.12931-1-wsa+renesas@sang-engineering.com>
+ <20200326210954.12931-2-wsa+renesas@sang-engineering.com>
+ <20200512162723.GI13516@ninjato>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="huBJOJF9BsF479P6"
+        protocol="application/pgp-signature"; boundary="tefe22k3doyhs66g"
 Content-Disposition: inline
-In-Reply-To: <20200512163632.GA916@sol.localdomain>
-X-Cookie: The only perfect science is hind-sight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512162723.GI13516@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---huBJOJF9BsF479P6
+--tefe22k3doyhs66g
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 12, 2020 at 09:36:32AM -0700, Eric Biggers wrote:
-> On Tue, May 12, 2020 at 05:22:05PM +0100, Mark Brown wrote:
+Hi Wolfram,
 
-> > > from the crypto tree and commit:
+On Tue, May 12, 2020 at 06:27:23PM +0200, Wolfram Sang wrote:
+> On Thu, Mar 26, 2020 at 10:09:54PM +0100, Wolfram Sang wrote:
+> > Move away from the deprecated API in this comment.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> Can we have this now so I can remove the old API in the next merge
+> window?
 
-> > >   a1304cba816e ("ASoC: cros_ec_codec: allocate shash_desc dynamically")
+Thanks for the ping. The patch is now queued into power-supply's
+for-next branch.
 
-> > > from the sound-asoc tree.
+-- Sebastian
 
-> I Cc'ed it to the people listed in MAINTAINERS for "CHROMEOS EC CODEC DRIVER".
-> I guess wasn't enough and I should have added alsa-devel@alsa-project.org too?
+> > ---
+> >  drivers/power/supply/bq24190_charger.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/sup=
+ply/bq24190_charger.c
+> > index 453d6332d43a..4540e913057f 100644
+> > --- a/drivers/power/supply/bq24190_charger.c
+> > +++ b/drivers/power/supply/bq24190_charger.c
+> > @@ -673,7 +673,7 @@ static int bq24190_register_reset(struct bq24190_de=
+v_info *bdi)
+> >  	 *   { .type =3D "bq24190", .addr =3D 0x6b, .properties =3D pe, .irq =
+=3D irq };
+> >  	 * struct i2c_adapter ad =3D { ... };
+> >  	 * i2c_add_adapter(&ad);
+> > -	 * i2c_new_device(&ad, &bi);
+> > +	 * i2c_new_client_device(&ad, &bi);
+> >  	 */
+> >  	if (device_property_read_bool(bdi->dev, "disable-reset"))
+> >  		return 0;
+> > --=20
+> > 2.20.1
+> >=20
 
-Yeah, you generally need to make sure the subsystem maintainers are
-included as well as individual driver maintainers.
 
-> > That doesn't seem ideal - Eric, Herbert can we get a branch with the
-> > crypto patches in them to pull into the ASoC tree or something?
 
-> We should just drop one of the patches.
-
-> If you just want to eliminate the compiler warning about stack usage in
-> wov_hotword_model_put(), then my patch in cryptodev would be better, as it moves
-> the stack allocation into another function in another file.
-
-> Alternatively, if you actually need to reduce the total stack usage (across all
-> functions), then the kmalloc() patch in sound-asoc would be better.
-
-Well, reducing the stack usage overall seems nicer overall - heads off
-future problems if the struct grows or something, and if we still end up
-allocating just as much on the stack then we'll have trouble at runtime
-anyway - does that make sense?
-
---huBJOJF9BsF479P6
+--tefe22k3doyhs66g
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl661/EACgkQJNaLcl1U
-h9DHTgf/fjky/uO1ZdltNrDpfN10a5OgwnU790zt7ycl2WSaOceAZV8BAFxTpBE9
-nO5h9bTsm8rRRw2o/Bfce2+W7eVOIY+3IzUwZVxTplxhvl1u62nKu8nFa/3Lqaof
-mQbG3W2PqJbFrweB4FcL5Im7HFxQv/Al87h289DYH+sa/HpSvk///i2ui8lAR0Hj
-sjVLzylUYiJfkKhG5ylk9GfSH4NwhnGvQALlPWpG8ltIggaBeiKTrqLUD+TZ1pZX
-9c9o96KZsTHnIFhsDpMk/1uZp1UprNLamyzLw6nFBcgzdBysnmLuSqo3sLIc47Pj
-+kBR9tCllPwCOpSQDwk3PDGE3xxpYg==
-=5UKG
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl662JEACgkQ2O7X88g7
++pq+2A//VuwHDZl3QCyXTOsEqiULP9UPbP2WhUE2b/J8/JRSx8/UeDtan1n8CG7u
+JOGrFqxU3W+i7iy5xbY83FOtocw/4yocAAe50I9lJDqxwgns7nnfyMRGT28OHxEY
+haAhxTBn6yxL/Ve2mhoW3oJAiR5b/FZ1BGczxkBj0iyzQfgwhrqgbrapAVUNFvP9
+/Rc2WUkCQWEg/6Gr20vI7WQLtCnMINMN8VhU0W2d7YWLnSPC9OucWMiDSdocGLU8
+zrb9FhrkaAfqqCJgn/Ze/REdal874SIFi1hy7lepSoOw1irnOCQpczIsvLerjr3V
+Djpg2DHERhQsAKQAbPIugKbTUo98xylu6uxbCZCOTLCtfrMJb0mrwjA4b/C5gvlD
+EahQcOLLalQJx7gKdmgVdFWfebopbVENF8rcyMGt1BVE4ws7SczEAHKow5g0L06H
+aqVW6rgEF+fHfgaGpD6A2TIhv3EeFry1T9gcxaWZqX3M8aSqW7c1BV/y22/4tycK
+gqml5/HCfLAD9y2KpcED5y3mHZuTPKOh5U9h07cy99atMVK35NhFGadEkauNgoUH
+q09d8KoaqvWkofJf3o0I75OPetkHCpMx4zD1kYsS8gBhBWeSdaHv1/xyttW5jb6+
++h1HxszputoLIM5HpC5kiNgjWg40WNhRGQpEo/26lMbOtLJ+830=
+=57sD
 -----END PGP SIGNATURE-----
 
---huBJOJF9BsF479P6--
+--tefe22k3doyhs66g--
