@@ -2,345 +2,153 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24CC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05669C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233B8208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9BB208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F643G+sj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hHWXn+bg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgELGiQ (ORCPT
+        id S1728893AbgELGiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgELGiP (ORCPT
+        Tue, 12 May 2020 02:38:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52976 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728873AbgELGiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:38:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59226C061A0C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:38:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w65so5896776pfc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QVp/H5vK1lwJMxz1Tuv0jzbRm/AB7w7GAQub55XuNrw=;
-        b=F643G+sjdAIO+h9mo6OtW2S6CZd1iA+QN5WBdXV9zGRi5tcZGajhOCcQQVRcmJ5li5
-         Upg9aNEunWw0GJvdpqPombkvyK6QZKAZ+55GNGPnati7XhCn23EoHJjiXyAlNCf974BB
-         OZPjBzImZIerq+3dZ+PeS1GzDJDWZdazz9E1Rp2cXQAu39Cfsn4UywyA6SMK8Ex8NwcW
-         ZPJ5NiRyVfmS2ySSijsFByBkwLRUHvxSHIh7VmgEnd4uaJJBECx2BVHYRmcv7A+5CgRC
-         pW+UEFGCePiJtArRz2vfLGLjQeYY6mVDne5HYIgP7MkM5jU9S8tXEDieG3gToLYBkO7n
-         0CJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QVp/H5vK1lwJMxz1Tuv0jzbRm/AB7w7GAQub55XuNrw=;
-        b=ZHfobsroySHgc61NrNbhl4DqO1Fpc5CplqsKv987aWRilhjL5IPCMMZ7JszLORbA49
-         8PcGzUmDfiIBwSoUVXrAImlxd0HhjhqfNiCBxZQRHmYRE4nJTI1kvXmUbs3Y1SRXfVXK
-         ioMUImF9ZzkwuCJB34yfd7pG3T8bUUW4D0epnBowN6ilt8QvVdnCoBsEOlZFyBH3J0eD
-         4GFIzU9W+YxhtzRz8LuKQmi7auG+3MCa5Qa4QFYn1aSEIThCUf1unrqy3omPUyR9zeQL
-         y2lHKm3hmN0InKBtRw5GskfewLXAO71FbSqjJb3sez8yowMcEPRSQueU+CniAUnd6iKG
-         OKpA==
-X-Gm-Message-State: AGi0PuZToZEA+0DxU14t6t0/pNHQGRU90LedVVy4EemJPoK0S1dBzstt
-        nN36YfuXkmBFstikapJUV0db0A==
-X-Google-Smtp-Source: APiQypLBuU+nD5LrMumbJLMS2ysqhuVlJ2lIgqjQzMgV49TwuzjyR/HNPSYuk0vSKvzrb8DhgKEhUQ==
-X-Received: by 2002:a63:5250:: with SMTP id s16mr12868185pgl.115.1589265494672;
-        Mon, 11 May 2020 23:38:14 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id v127sm10885941pfv.77.2020.05.11.23.38.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 May 2020 23:38:13 -0700 (PDT)
-Date:   Tue, 12 May 2020 14:38:12 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/3] arm64: perf_event: Fix time offset prior to epoch
-Message-ID: <20200512063812.GA20352@leoy-ThinkPad-X240s>
-References: <20200505135544.6003-1-leo.yan@linaro.org>
- <20200511092200.GF2957@hirez.programming.kicks-ass.net>
- <20200511092519.GA3001@hirez.programming.kicks-ass.net>
+        Tue, 12 May 2020 02:38:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589265502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=2Yx2KVQWJiBe9bIHEVfkQtMdQnDiDw3qcsD5Sz8ek6U=;
+        b=hHWXn+bgBNnR1ukAWcinfKdQ+m3qyewB80wD48PQ+MRXtdl49yKCBtyzde732wJCx1+Cq8
+        SNv74XSyFY+TwEsEBkoGnxex1S7P5JyuexNP7mxvekqzMM4CEFhqtPSR1VpIHuSe3d2TuQ
+        9IWf77Y18xVE0C48G/dJTyltIzagE5g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-5-md-jqOBsO3uJSsKCMHIXDQ-1; Tue, 12 May 2020 02:38:17 -0400
+X-MC-Unique: md-jqOBsO3uJSsKCMHIXDQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 524F3460;
+        Tue, 12 May 2020 06:38:16 +0000 (UTC)
+Received: from [10.36.113.77] (ovpn-113-77.ams2.redhat.com [10.36.113.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EDB27D8CE;
+        Tue, 12 May 2020 06:38:12 +0000 (UTC)
+Subject: Re: MAINTAINERS: Wrong ordering in VIRTIO BALLOON
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <alpine.DEB.2.21.2005120717260.3701@felia>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <bb2eea77-72df-6c53-5397-de057ffc9dd8@redhat.com>
+Date:   Tue, 12 May 2020 08:38:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511092519.GA3001@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.DEB.2.21.2005120717260.3701@felia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On Mon, May 11, 2020 at 11:25:19AM +0200, Peter Zijlstra wrote:
-> On Mon, May 11, 2020 at 11:22:00AM +0200, Peter Zijlstra wrote:
+On 12.05.20 07:21, Lukas Bulwahn wrote:
+> Hi David,
 > 
-> > (_completely_ untested)
-> > 
-> > ---
-> >  arch/arm64/kernel/perf_event.c | 27 ++++++++++++++++++---------
-> >  include/linux/sched_clock.h    | 28 ++++++++++++++++++++++++++++
-> >  kernel/time/sched_clock.c      | 41 +++++++++++++----------------------------
-> >  3 files changed, 59 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> > index 4d7879484cec..81a49a916660 100644
-> > --- a/arch/arm64/kernel/perf_event.c
-> > +++ b/arch/arm64/kernel/perf_event.c
-> > @@ -1165,28 +1165,37 @@ device_initcall(armv8_pmu_driver_init)
-> >  void arch_perf_update_userpage(struct perf_event *event,
-> >  			       struct perf_event_mmap_page *userpg, u64 now)
-> >  {
-> > -	u32 freq;
-> > -	u32 shift;
-> > +	struct clock_read_data *rd;
-> > +	unsigned int seq;
-> >  
-> >  	/*
-> >  	 * Internal timekeeping for enabled/running/stopped times
-> >  	 * is always computed with the sched_clock.
-> >  	 */
-> > -	freq = arch_timer_get_rate();
-> >  	userpg->cap_user_time = 1;
-> > +	userpg->cap_user_time_zero = 1;
-> > +
-> > +	do {
-> > +		rd = sched_clock_read_begin(&seq);
-> > +
-> > +		userpg->time_mult = rd->mult;
-> > +		userpg->time_shift = rd->shift;
-> > +		userpg->time_offset = rd->epoch_ns;
+> with your commit 6d6b93b9afd8 ("MAINTAINERS: Add myself as virtio-balloon 
+> co-maintainer"), visible on next-20200508, ./scripts/checkpatch.pl -f 
+> MAINTAINERS complains:
 > 
-> 			^^^^^^^ wants to be time_zero
+> WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
+> #17982: FILE: MAINTAINERS:17982:
+> +F:	include/uapi/linux/virtio_balloon.h
+> +F:	include/linux/balloon_compaction.h
 > 
-> > +
-> > +		userpg->time_zero -= (rd->epoch_cyc * rd->shift) >> rd->shift;
-> > +
-> > +	} while (sched_clock_read_retry(seq));
-> > +
-> > +	userpg->time_offset = userpf->time_zero - now;
-> >  
-> > -	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
-> > -			NSEC_PER_SEC, 0);
+> This is due to wrong ordering of the entries in your submission. If you 
+> would like me to send you a patch fixing that, please just let me know.
 > 
-> And that ^^^ was complete crap.
-> 
-> >  	/*
-> >  	 * time_shift is not expected to be greater than 31 due to
-> >  	 * the original published conversion algorithm shifting a
-> >  	 * 32-bit value (now specifies a 64-bit value) - refer
-> >  	 * perf_event_mmap_page documentation in perf_event.h.
-> >  	 */
-> > -	if (shift == 32) {
-> > -		shift = 31;
-> > +	if (userpg->time_shift == 32) {
-> > +		userpg->time_shift = 31;
-> >  		userpg->time_mult >>= 1;
-> >  	}
-> > -	userpg->time_shift = (u16)shift;
-> > -	userpg->time_offset = -now;
-> >  }
+> It is a recent addition to checkpatch.pl to report ordering problems in 
+> MAINTAINERS, so you might have not seen that at submission time.
 
-I have verified this change, it works as expected on my Arm64 board.
-Also paste the updated code which makes building success with minor
-fixing.
+Thanks for the notification Lukas,
 
-I am not sure how to proceed, will you merge this?  Or you want me to
-send out formal patches (or only for the Arm64 part)?
+b962ee8622d0 ("checkpatch: additional MAINTAINER section entry ordering
+checks") is not in Linus' tree yet AFAIKS.
 
-P.s. it's shame I still missed you guys suggestion in prvious thread
-even though you have provide enough ifno, and thank you for the helping!
+I can see that 3b50142d8528 ("MAINTAINERS: sort field names for all
+entries") is upstream. I do wonder if we should just do another batch
+update after the checkpatch patch is upstream instead, I guess more will
+pile up?
 
----8<---
+@mst, joe, what do you prefer?
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 4d7879484cec..5a34e9264c5b 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -19,6 +19,7 @@
- #include <linux/of.h>
- #include <linux/perf/arm_pmu.h>
- #include <linux/platform_device.h>
-+#include <linux/sched_clock.h>
- #include <linux/smp.h>
- 
- /* ARMv8 Cortex-A53 specific event types. */
-@@ -1165,28 +1166,26 @@ device_initcall(armv8_pmu_driver_init)
- void arch_perf_update_userpage(struct perf_event *event,
- 			       struct perf_event_mmap_page *userpg, u64 now)
- {
--	u32 freq;
--	u32 shift;
-+	struct clock_read_data *rd;
-+	unsigned int seq;
- 
- 	/*
- 	 * Internal timekeeping for enabled/running/stopped times
- 	 * is always computed with the sched_clock.
- 	 */
--	freq = arch_timer_get_rate();
- 	userpg->cap_user_time = 1;
-+	userpg->cap_user_time_zero = 1;
- 
--	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
--			NSEC_PER_SEC, 0);
--	/*
--	 * time_shift is not expected to be greater than 31 due to
--	 * the original published conversion algorithm shifting a
--	 * 32-bit value (now specifies a 64-bit value) - refer
--	 * perf_event_mmap_page documentation in perf_event.h.
--	 */
--	if (shift == 32) {
--		shift = 31;
--		userpg->time_mult >>= 1;
--	}
--	userpg->time_shift = (u16)shift;
--	userpg->time_offset = -now;
-+	do {
-+		rd = sched_clock_read_begin(&seq);
-+
-+		userpg->time_mult = rd->mult;
-+		userpg->time_shift = rd->shift;
-+		userpg->time_zero = rd->epoch_ns;
-+
-+		userpg->time_zero -= (rd->epoch_cyc * rd->mult) >> rd->shift;
-+
-+	} while (sched_clock_read_retry(seq));
-+
-+	userpg->time_offset = userpg->time_zero - now;
- }
-diff --git a/include/linux/sched_clock.h b/include/linux/sched_clock.h
-index 0bb04a96a6d4..528718e4ed52 100644
---- a/include/linux/sched_clock.h
-+++ b/include/linux/sched_clock.h
-@@ -6,6 +6,34 @@
- #define LINUX_SCHED_CLOCK
- 
- #ifdef CONFIG_GENERIC_SCHED_CLOCK
-+/**
-+ * struct clock_read_data - data required to read from sched_clock()
-+ *
-+ * @epoch_ns:		sched_clock() value at last update
-+ * @epoch_cyc:		Clock cycle value at last update.
-+ * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-+ *			clocks.
-+ * @read_sched_clock:	Current clock source (or dummy source when suspended).
-+ * @mult:		Multipler for scaled math conversion.
-+ * @shift:		Shift value for scaled math conversion.
-+ *
-+ * Care must be taken when updating this structure; it is read by
-+ * some very hot code paths. It occupies <=40 bytes and, when combined
-+ * with the seqcount used to synchronize access, comfortably fits into
-+ * a 64 byte cache line.
-+ */
-+struct clock_read_data {
-+	u64 epoch_ns;
-+	u64 epoch_cyc;
-+	u64 sched_clock_mask;
-+	u64 (*read_sched_clock)(void);
-+	u32 mult;
-+	u32 shift;
-+};
-+
-+extern struct clock_read_data *sched_clock_read_begin(unsigned int *seq);
-+extern int sched_clock_read_retry(unsigned int seq);
-+
- extern void generic_sched_clock_init(void);
- 
- extern void sched_clock_register(u64 (*read)(void), int bits,
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index fa3f800d7d76..0acaadc3156c 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -19,31 +19,6 @@
- 
- #include "timekeeping.h"
- 
--/**
-- * struct clock_read_data - data required to read from sched_clock()
-- *
-- * @epoch_ns:		sched_clock() value at last update
-- * @epoch_cyc:		Clock cycle value at last update.
-- * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-- *			clocks.
-- * @read_sched_clock:	Current clock source (or dummy source when suspended).
-- * @mult:		Multipler for scaled math conversion.
-- * @shift:		Shift value for scaled math conversion.
-- *
-- * Care must be taken when updating this structure; it is read by
-- * some very hot code paths. It occupies <=40 bytes and, when combined
-- * with the seqcount used to synchronize access, comfortably fits into
-- * a 64 byte cache line.
-- */
--struct clock_read_data {
--	u64 epoch_ns;
--	u64 epoch_cyc;
--	u64 sched_clock_mask;
--	u64 (*read_sched_clock)(void);
--	u32 mult;
--	u32 shift;
--};
--
- /**
-  * struct clock_data - all data needed for sched_clock() (including
-  *                     registration of a new clock source)
-@@ -93,6 +68,17 @@ static inline u64 notrace cyc_to_ns(u64 cyc, u32 mult, u32 shift)
- 	return (cyc * mult) >> shift;
- }
- 
-+struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
-+{
-+	*seq = raw_read_seqcount(&cd.seq);
-+	return cd.read_data + (*seq & 1);
-+}
-+
-+int sched_clock_read_retry(unsigned int seq)
-+{
-+	return read_seqcount_retry(&cd.seq, seq);
-+}
-+
- unsigned long long notrace sched_clock(void)
- {
- 	u64 cyc, res;
-@@ -100,13 +86,12 @@ unsigned long long notrace sched_clock(void)
- 	struct clock_read_data *rd;
- 
- 	do {
--		seq = raw_read_seqcount(&cd.seq);
--		rd = cd.read_data + (seq & 1);
-+		rd = sched_clock_read_begin(&seq);
- 
- 		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
- 		      rd->sched_clock_mask;
- 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
--	} while (read_seqcount_retry(&cd.seq, seq));
-+	} while (sched_clock_read_retry(seq));
- 
- 	return res;
- }
+1. I can resend the original patch.
+2. Lukas can send a fixup that we might want to squash.
+3. We wait until the checkpatch change goes upstream and to a final
+batch update.
+
+-- 
+Thanks,
+
+David / dhildenb
+
