@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDCAC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFA2C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7337824927
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFF924927
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbgELWZM (ORCPT
+        id S1731748AbgELWX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
+        Tue, 12 May 2020 18:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731775AbgELWXc (ORCPT
+        by vger.kernel.org with ESMTP id S1731369AbgELWXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:32 -0400
+        Tue, 12 May 2020 18:23:25 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B4CC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878F5C05BD0A
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:25 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIi-00055I-3A; Wed, 13 May 2020 00:23:01 +0200
+        id 1jYdIU-0004tu-AX; Wed, 13 May 2020 00:22:47 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 847EA1006FB;
-        Wed, 13 May 2020 00:22:59 +0200 (CEST)
-Message-Id: <20200512213812.782687559@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id CCBB6100605;
+        Wed, 13 May 2020 00:22:45 +0200 (CEST)
+Message-Id: <20200512213811.638045748@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:32 +0200
+Date:   Tue, 12 May 2020 23:01:21 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 33/38] x86/entry/64: Remove IRQ stack switching ASM
+Subject: [patch V5 22/38] x86/entry: Use idtentry for interrupts
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,114 +71,308 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Replace the extra interrupt handling code and reuse the existing idtentry
+machinery. This moves the irq stack switching on 64 bit from ASM to C code;
+32bit already does the stack switching in C.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_64.S |   96 ----------------------------------------------
- 1 file changed, 96 deletions(-)
+ arch/x86/entry/entry_32.S       |   31 -------------------------------
+ arch/x86/entry/entry_64.S       |   31 +++----------------------------
+ arch/x86/include/asm/hw_irq.h   |    1 -
+ arch/x86/include/asm/idtentry.h |   10 ++++++++--
+ arch/x86/include/asm/irq.h      |    2 --
+ arch/x86/include/asm/traps.h    |    1 -
+ arch/x86/kernel/apic/apic.c     |   23 ++++++++---------------
+ arch/x86/kernel/apic/msi.c      |    3 ++-
+ arch/x86/kernel/irq.c           |   27 +++++++--------------------
+ 9 files changed, 28 insertions(+), 101 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -370,102 +370,6 @@ SYM_CODE_END(ret_from_fork)
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1229,37 +1229,6 @@ SYM_FUNC_END(entry_INT80_32)
  #endif
  .endm
  
--/*
-- * Enters the IRQ stack if we're not already using it.  NMI-safe.  Clobbers
-- * flags and puts old RSP into old_rsp, and leaves all other GPRs alone.
-- * Requires kernel GSBASE.
-- *
-- * The invariant is that, if irq_count != -1, then the IRQ stack is in use.
-- */
--.macro ENTER_IRQ_STACK regs=1 old_rsp save_ret=0
--	DEBUG_ENTRY_ASSERT_IRQS_OFF
--
--	.if \save_ret
--	/*
--	 * If save_ret is set, the original stack contains one additional
--	 * entry -- the return address. Therefore, move the address one
--	 * entry below %rsp to \old_rsp.
--	 */
--	leaq	8(%rsp), \old_rsp
--	.else
--	movq	%rsp, \old_rsp
--	.endif
--
--	.if \regs
--	UNWIND_HINT_REGS base=\old_rsp
--	.endif
--
--	incl	PER_CPU_VAR(irq_count)
--	jnz	.Lirq_stack_push_old_rsp_\@
--
--	/*
--	 * Right now, if we just incremented irq_count to zero, we've
--	 * claimed the IRQ stack but we haven't switched to it yet.
--	 *
--	 * If anything is added that can interrupt us here without using IST,
--	 * it must be *extremely* careful to limit its stack usage.  This
--	 * could include kprobes and a hypothetical future IST-less #DB
--	 * handler.
--	 *
--	 * The OOPS unwinder relies on the word at the top of the IRQ
--	 * stack linking back to the previous RSP for the entire time we're
--	 * on the IRQ stack.  For this to work reliably, we need to write
--	 * it before we actually move ourselves to the IRQ stack.
--	 */
--
--	movq	\old_rsp, PER_CPU_VAR(irq_stack_backing_store + IRQ_STACK_SIZE - 8)
--	movq	PER_CPU_VAR(hardirq_stack_ptr), %rsp
--
--#ifdef CONFIG_DEBUG_ENTRY
--	/*
--	 * If the first movq above becomes wrong due to IRQ stack layout
--	 * changes, the only way we'll notice is if we try to unwind right
--	 * here.  Assert that we set up the stack right to catch this type
--	 * of bug quickly.
--	 */
--	cmpq	-8(%rsp), \old_rsp
--	je	.Lirq_stack_okay\@
--	ud2
--	.Lirq_stack_okay\@:
+-#ifdef CONFIG_X86_LOCAL_APIC
+-SYM_CODE_START_LOCAL(common_spurious)
+-	ASM_CLAC
+-	SAVE_ALL switch_stacks=1
+-	ENCODE_FRAME_POINTER
+-	TRACE_IRQS_OFF
+-	movl	%esp, %eax
+-	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
+-	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
+-	call	smp_spurious_interrupt
+-	jmp	ret_from_intr
+-SYM_CODE_END(common_spurious)
 -#endif
 -
--.Lirq_stack_push_old_rsp_\@:
--	pushq	\old_rsp
+-/*
+- * the CPU automatically disables interrupts when executing an IRQ vector,
+- * so IRQ-flags tracing has to follow that:
+- */
+-	.p2align CONFIG_X86_L1_CACHE_SHIFT
+-SYM_CODE_START_LOCAL(common_interrupt)
+-	ASM_CLAC
+-	SAVE_ALL switch_stacks=1
+-	ENCODE_FRAME_POINTER
+-	TRACE_IRQS_OFF
+-	movl	%esp, %eax
+-	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
+-	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
+-	call	do_IRQ
+-	jmp	ret_from_intr
+-SYM_CODE_END(common_interrupt)
 -
--	.if \regs
--	UNWIND_HINT_REGS indirect=1
--	.endif
+ #define BUILD_INTERRUPT3(name, nr, fn)			\
+ SYM_FUNC_START(name)					\
+ 	ASM_CLAC;					\
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -737,32 +737,7 @@ SYM_CODE_START(interrupt_entry)
+ SYM_CODE_END(interrupt_entry)
+ _ASM_NOKPROBE(interrupt_entry)
+ 
 -
--	.if \save_ret
--	/*
--	 * Push the return address to the stack. This return address can
--	 * be found at the "real" original RSP, which was offset by 8 at
--	 * the beginning of this macro.
--	 */
--	pushq	-8(\old_rsp)
--	.endif
--.endm
+-/* Interrupt entry/exit. */
 -
 -/*
-- * Undoes ENTER_IRQ_STACK.
+- * The interrupt stubs push vector onto the stack and
+- * then jump to common_spurious/interrupt.
 - */
--.macro LEAVE_IRQ_STACK regs=1
--	DEBUG_ENTRY_ASSERT_IRQS_OFF
--	/* We need to be off the IRQ stack before decrementing irq_count. */
--	popq	%rsp
+-SYM_CODE_START_LOCAL(common_spurious)
+-	call	interrupt_entry
+-	UNWIND_HINT_REGS indirect=1
+-	movq	ORIG_RAX(%rdi), %rsi		/* get vector from stack */
+-	movq	$-1, ORIG_RAX(%rdi)		/* no syscall to restart */
+-	call	smp_spurious_interrupt		/* rdi points to pt_regs */
+-	jmp	ret_from_intr
+-SYM_CODE_END(common_spurious)
+-_ASM_NOKPROBE(common_spurious)
 -
--	.if \regs
--	UNWIND_HINT_REGS
--	.endif
+-/* common_interrupt is a hotpath. Align it */
+-	.p2align CONFIG_X86_L1_CACHE_SHIFT
+-SYM_CODE_START_LOCAL(common_interrupt)
+-	call	interrupt_entry
+-	UNWIND_HINT_REGS indirect=1
+-	movq	ORIG_RAX(%rdi), %rsi		/* get vector from stack */
+-	movq	$-1, ORIG_RAX(%rdi)		/* no syscall to restart */
+-	call	do_IRQ				/* rdi points to pt_regs */
+-	/* 0(%rsp): old RSP */
++SYM_CODE_START_LOCAL(common_interrupt_return)
+ ret_from_intr:
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
+ 	TRACE_IRQS_OFF
+@@ -945,8 +920,8 @@ SYM_INNER_LABEL(native_irq_return_iret,
+ 	 */
+ 	jmp	native_irq_return_iret
+ #endif
+-SYM_CODE_END(common_interrupt)
+-_ASM_NOKPROBE(common_interrupt)
++SYM_CODE_END(common_interrupt_return)
++_ASM_NOKPROBE(common_interrupt_return)
+ 
+ /*
+  * APIC interrupts.
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -38,7 +38,6 @@ extern asmlinkage void error_interrupt(v
+ extern asmlinkage void irq_work_interrupt(void);
+ extern asmlinkage void uv_bau_message_intr1(void);
+ 
+-extern asmlinkage void spurious_interrupt(void);
+ extern asmlinkage void spurious_apic_interrupt(void);
+ extern asmlinkage void thermal_interrupt(void);
+ extern asmlinkage void reschedule_interrupt(void);
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -391,7 +391,7 @@ SYM_CODE_START(irq_entries_start)
+     .rept (FIRST_SYSTEM_VECTOR - FIRST_EXTERNAL_VECTOR)
+ 	UNWIND_HINT_IRET_REGS
+ 	.byte	0x6a, vector
+-	jmp	common_interrupt
++	jmp	asm_common_interrupt
+ 	.align	8
+     vector=vector+1
+     .endr
+@@ -404,7 +404,7 @@ SYM_CODE_START(spurious_entries_start)
+     .rept (NR_VECTORS - FIRST_SYSTEM_VECTOR)
+ 	UNWIND_HINT_IRET_REGS
+ 	.byte	0x6a, vector
+-	jmp	common_spurious
++	jmp	asm_spurious_interrupt
+ 	.align	8
+     vector=vector+1
+     .endr
+@@ -475,6 +475,12 @@ DECLARE_IDTENTRY_DF(X86_TRAP_DF,	exc_dou
+ DECLARE_IDTENTRY(X86_TRAP_OTHER,	exc_xen_hypervisor_callback);
+ #endif
+ 
++/* Device interrupts common/spurious */
++DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	common_interrupt);
++#ifdef CONFIG_X86_LOCAL_APIC
++DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	spurious_interrupt);
++#endif
++
+ #undef X86_TRAP_OTHER
+ 
+ #endif
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -36,8 +36,6 @@ extern void native_init_IRQ(void);
+ 
+ extern void handle_irq(struct irq_desc *desc, struct pt_regs *regs);
+ 
+-extern __visible void do_IRQ(struct pt_regs *regs, unsigned long vector);
 -
--	/*
--	 * As in ENTER_IRQ_STACK, irq_count == 0, we are still claiming
--	 * the irq stack but we're not on it.
--	 */
--
--	decl	PER_CPU_VAR(irq_count)
--.endm
--
+ extern void init_ISA_irqs(void);
+ 
+ extern void __init init_IRQ(void);
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -43,7 +43,6 @@ asmlinkage void smp_deferred_error_inter
+ void smp_apic_timer_interrupt(struct pt_regs *regs);
+ void smp_error_interrupt(struct pt_regs *regs);
+ void smp_spurious_apic_interrupt(struct pt_regs *regs);
+-void smp_spurious_interrupt(struct pt_regs *regs, unsigned long vector);
+ asmlinkage void smp_irq_move_cleanup_interrupt(void);
+ 
+ #ifdef CONFIG_VMAP_STACK
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2154,9 +2154,9 @@ void __init register_lapic_address(unsig
+  */
+ 
  /**
-  * idtentry_body - Macro to emit code calling the C function
-  * @cfunc:		C function to be called
+- * smp_spurious_interrupt - Catch all for interrupts raised on unused vectors
++ * spurious_interrupt - Catch all for interrupts raised on unused vectors
+  * @regs:	Pointer to pt_regs on stack
+- * @error_code:	The vector number is in the lower 8 bits
++ * @vector:	The vector number
+  *
+  * This is invoked from ASM entry code to catch all interrupts which
+  * trigger on an entry which is routed to the common_spurious idtentry
+@@ -2164,18 +2164,10 @@ void __init register_lapic_address(unsig
+  *
+  * Also called from smp_spurious_apic_interrupt().
+  */
+-__visible void __irq_entry smp_spurious_interrupt(struct pt_regs *regs,
+-						  unsigned long vector)
++DEFINE_IDTENTRY_IRQ(spurious_interrupt)
+ {
+ 	u32 v;
+ 
+-	entering_irq();
+-	/*
+-	 * The push in the entry ASM code which stores the vector number on
+-	 * the stack in the error code slot is sign expanding. Just use the
+-	 * lower 8 bits.
+-	 */
+-	vector &= 0xFF;
+ 	trace_spurious_apic_entry(vector);
+ 
+ 	inc_irq_stat(irq_spurious_count);
+@@ -2196,21 +2188,22 @@ void __init register_lapic_address(unsig
+ 	 */
+ 	v = apic_read(APIC_ISR + ((vector & ~0x1f) >> 1));
+ 	if (v & (1 << (vector & 0x1f))) {
+-		pr_info("Spurious interrupt (vector 0x%02lx) on CPU#%d. Acked\n",
++		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Acked\n",
+ 			vector, smp_processor_id());
+ 		ack_APIC_irq();
+ 	} else {
+-		pr_info("Spurious interrupt (vector 0x%02lx) on CPU#%d. Not pending!\n",
++		pr_info("Spurious interrupt (vector 0x%02x) on CPU#%d. Not pending!\n",
+ 			vector, smp_processor_id());
+ 	}
+ out:
+ 	trace_spurious_apic_exit(vector);
+-	exiting_irq();
+ }
+ 
+ __visible void smp_spurious_apic_interrupt(struct pt_regs *regs)
+ {
+-	smp_spurious_interrupt(regs, SPURIOUS_APIC_VECTOR);
++	entering_irq();
++	__spurious_interrupt(regs, SPURIOUS_APIC_VECTOR);
++	exiting_irq();
+ }
+ 
+ /*
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -115,7 +115,8 @@ msi_set_affinity(struct irq_data *irqd,
+ 	 * denote it as spurious which is no harm as this is a rare event
+ 	 * and interrupt handlers have to cope with spurious interrupts
+ 	 * anyway. If the vector is unused, then it is marked so it won't
+-	 * trigger the 'No irq handler for vector' warning in do_IRQ().
++	 * trigger the 'No irq handler for vector' warning in
++	 * common_interrupt().
+ 	 *
+ 	 * This requires to hold vector lock to prevent concurrent updates to
+ 	 * the affected vector.
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -19,6 +19,7 @@
+ #include <asm/mce.h>
+ #include <asm/hw_irq.h>
+ #include <asm/desc.h>
++#include <asm/traps.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/irq_vectors.h>
+@@ -223,37 +224,25 @@ u64 arch_irq_stat(void)
+ 
+ 
+ /*
+- * do_IRQ handles all normal device IRQ's (the special
+- * SMP cross-CPU interrupts have their own specific
+- * handlers).
++ * common_interrupt() handles all normal device IRQ's (the special SMP
++ * cross-CPU interrupts have their own entry points).
+  */
+-__visible void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long vector)
++DEFINE_IDTENTRY_IRQ(common_interrupt)
+ {
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	struct irq_desc *desc;
+ 
+-	entering_irq();
+-	/*
+-	 * The push in the entry ASM code which stores the vector number on
+-	 * the stack in the error code slot is sign expanding. Just use the
+-	 * lower 8 bits.
+-	 */
+-	vector &= 0xFF;
+-
+-	/* entering_irq() tells RCU that we're not quiescent.  Check it. */
++	/* entry code tells RCU that we're not quiescent.  Check it. */
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+ 
+ 	desc = __this_cpu_read(vector_irq[vector]);
+ 	if (likely(!IS_ERR_OR_NULL(desc))) {
+-		if (IS_ENABLED(CONFIG_X86_32))
+-			handle_irq(desc, regs);
+-		else
+-			generic_handle_irq_desc(desc);
++		handle_irq(desc, regs);
+ 	} else {
+ 		ack_APIC_irq();
+ 
+ 		if (desc == VECTOR_UNUSED) {
+-			pr_emerg_ratelimited("%s: %d.%lu No irq handler for vector\n",
++			pr_emerg_ratelimited("%s: %d.%u No irq handler for vector\n",
+ 					     __func__, smp_processor_id(),
+ 					     vector);
+ 		} else {
+@@ -261,8 +250,6 @@ u64 arch_irq_stat(void)
+ 		}
+ 	}
+ 
+-	exiting_irq();
+-
+ 	set_irq_regs(old_regs);
+ }
+ 
 
