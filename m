@@ -2,158 +2,172 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DFEC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46028C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B72FA20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5B320731
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EKNj4UhW"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="J7i0tWVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgELV5c (ORCPT
+        id S1731521AbgELV6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51478 "EHLO
+        Tue, 12 May 2020 17:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731419AbgELV5b (ORCPT
+        by vger.kernel.org with ESMTP id S1731190AbgELV6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:57:31 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9853C05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:57:29 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ms17so10070855pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:57:29 -0700 (PDT)
+        Tue, 12 May 2020 17:58:34 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71EBC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:58:33 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id h26so12518562qtu.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e7QDP26KIcvXxlMBDMenIfkDI5g81klinZXY+V/2a0c=;
-        b=EKNj4UhWvYLYC+esrF6wIPSlTbES/pi+t5+UQ0FZzqy/47ARXRNq0vx4AjTCa/AKXt
-         6Xuy4ZU/p0Wwaf1GllvqRSgZfR+YY+Hc4i5fEDhbCj0JsbqDndK+ZVWdwzHmfT5O9IEG
-         BGnWj2ANI1p6ggTHcQmlDREvxqMxzq37T3E0s=
+         :content-disposition:in-reply-to;
+        bh=BUXw4M2hrKKLto70sS86x2vpRsYSrXGGkvx6yBoOXGU=;
+        b=J7i0tWVrKdNsAqbFJgrcX4F2LRmnhOb5p8uZbJCl613epPJb948twCNi5eKTP7s33F
+         o+ykWiTZ6bi0oA2jOKopphddfzhgvVTq6r+AmJQsHgKOxqkyo9BTD1/7K5TiLSrMvKx3
+         ks+yOuI09tX3K6d7xao/Wp6lhGaQOWKNb9W4Szmqn5UszApw18rY+G/q9yH/9rWoR7CW
+         T1BUYX12TPAODZ61FqPb14HTaO5TGHRU1aTEHLy57UFWKSIL30FYwQNvyBUMh80oKs0q
+         nsK6OMzbEcVf0RP+E0grzKwaTMUdz9YCrOvKmQ65HRXV0v7pVvObcHn3HluUVebhwQFf
+         79Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e7QDP26KIcvXxlMBDMenIfkDI5g81klinZXY+V/2a0c=;
-        b=QXP+Mh+G//VD9HDvbqTvhrDsRQEnwIsRHmXUzHCMnaAnxyjIx8mBahxTboWgiANBYL
-         3oOaAlxQEyUhiFmHN/XByO+amJ3+VvNxVMJJI1IcynlqV9Mxh8IrUZwOpOnCZvB8bhn5
-         tVM2WLo247hiM3DZRa4Od7uVT9TZpOjtzj4agORXRPRSyzcI+EIoMDapGv13e1frSJ2f
-         9hoHbnOHNmkE6hHKkOZ+OZSb1qo0DodhZ8fiPOkQydhDvBsgIyT6ywr3I+Lv4/Y4jp0E
-         nEnhPj/bSpccG9aWJGWtPwNK8undgQ+mjn4Grr4zPjAzkHwx+T/tvtaajqaC2g1RXQub
-         qFRg==
-X-Gm-Message-State: AGi0PuYBl9K3qIDUtp5pRZAHsyhwFiLt8IZn9W6P2SYseVL4GBdzhCkv
-        9B5Uy9nWFYhfkP3LmTN5oNWqWA==
-X-Google-Smtp-Source: APiQypIiqN1d23Fkal6XnfP7M0OVBHWWKQI6z1c+Lxm1tB4W6iJPBSoHHobQonUpZ1R5kSF3kW/fRg==
-X-Received: by 2002:a17:902:ac87:: with SMTP id h7mr20712377plr.119.1589320649149;
-        Tue, 12 May 2020 14:57:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 184sm13196569pfy.144.2020.05.12.14.57.27
+         :mime-version:content-disposition:in-reply-to;
+        bh=BUXw4M2hrKKLto70sS86x2vpRsYSrXGGkvx6yBoOXGU=;
+        b=JrPGt9rtn+7epTBKS04UjPDK/PV0azI7yL78B0cQnjhQz+d0bbgQQ1inzuG2gxTbD7
+         eO+GcPoxjZJC+1vOnVDJpQnqhmjuOtRW8OX9h7p8EqN8SiFc5xEsftz7L74fHB+b+6wK
+         4NObCS0zA8goAWhVXsOFiG/xPis0Lbww+S10uDPbJJG7oxqFMbp8a9FMMnW4iRwxe8sr
+         sHM0UjVtlROy7iIefn0FtG/qjA3fRdXtjjRagph84APEqpOcGnivmbuH40JOVhp5gaTV
+         JLSvnIE2id0UKYSar1gQbS82L59mtM/QfpxKZ0O0OQTAIVRxCdLfnzXp+ZTvaGP56hVA
+         mCHw==
+X-Gm-Message-State: AGi0PuYKsfiy8FOntWkm1iAMVQMLk8CT2RFzQVxlpt6do/ZcDiWLtbKh
+        oQGPOMLX3yF1HWybhfgGbjVsGg==
+X-Google-Smtp-Source: APiQypJZIQGRoahrJO1OYKdMjJZJmITijIFVTA02HWCUKw8r3wra+jbdycYr2pGDA3Ctsgw1p0GtaQ==
+X-Received: by 2002:ac8:73c1:: with SMTP id v1mr10049652qtp.320.1589320713006;
+        Tue, 12 May 2020 14:58:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id v44sm10409623qtk.79.2020.05.12.14.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:57:28 -0700 (PDT)
-Date:   Tue, 12 May 2020 14:57:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] selftest/openat2: Add tests for O_MAYEXEC
- enforcing
-Message-ID: <202005121452.4DED41A@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-5-mic@digikod.net>
+        Tue, 12 May 2020 14:58:32 -0700 (PDT)
+Date:   Tue, 12 May 2020 17:58:13 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
+        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
+ mem_cgroup_charge() API
+Message-ID: <20200512215813.GA487759@cmpxchg.org>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200508183105.225460-13-hannes@cmpxchg.org>
+ <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505153156.925111-5-mic@digikod.net>
+In-Reply-To: <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:31:54PM +0200, Mickaël Salaün wrote:
-> Test propagation of noexec mount points or file executability through
-> files open with or without O_MAYEXEC, thanks to the
-> fs.open_mayexec_enforce sysctl.
+On Tue, May 12, 2020 at 10:38:54AM -0400, Qian Cai wrote:
+> > On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> > 
+> > With the page->mapping requirement gone from memcg, we can charge anon
+> > and file-thp pages in one single step, right after they're allocated.
+> > 
+> > This removes two out of three API calls - especially the tricky commit
+> > step that needed to happen at just the right time between when the
+> > page is "set up" and when it's "published" - somewhat vague and fluid
+> > concepts that varied by page type. All we need is a freshly allocated
+> > page and a memcg context to charge.
+> > 
+> > v2: prevent double charges on pre-allocated hugepages in khugepaged
+> > 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > ---
+> > include/linux/mm.h      |  4 +---
+> > kernel/events/uprobes.c | 11 +++--------
+> > mm/filemap.c            |  2 +-
+> > mm/huge_memory.c        |  9 +++------
+> > mm/khugepaged.c         | 35 ++++++++++-------------------------
+> > mm/memory.c             | 36 ++++++++++--------------------------
+> > mm/migrate.c            |  5 +----
+> > mm/swapfile.c           |  6 +-----
+> > mm/userfaultfd.c        |  5 +----
+> > 9 files changed, 31 insertions(+), 82 deletions(-)
+> []
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > 
+> > @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct mm_struct *mm,
+> > out_up_write:
+> > 	up_write(&mm->mmap_sem);
+> > out_nolock:
+> > +	if (*hpage)
+> > +		mem_cgroup_uncharge(*hpage);
+> > 	trace_mm_collapse_huge_page(mm, isolated, result);
+> > 	return;
+> > out:
+> > -	mem_cgroup_cancel_charge(new_page, memcg);
+> > 	goto out_up_write;
+> > }
+> []
 > 
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Shuah Khan <shuah@kernel.org>
+> Some memory pressure will crash this new code. It looks like somewhat racy.
+> 
+> if (!page->mem_cgroup)
+> 
+> where page == NULL in mem_cgroup_uncharge().
 
-Yay tests! :) Notes below...
+Thanks for the report, sorry about the inconvenience.
 
-> diff --git a/tools/testing/selftests/openat2/Makefile b/tools/testing/selftests/openat2/Makefile
-> index 4b93b1417b86..cb98bdb4d5b1 100644
-> --- a/tools/testing/selftests/openat2/Makefile
-> +++ b/tools/testing/selftests/openat2/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0-or-later
->  
->  CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined
-> -TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test
-> +LDLIBS += -lcap
-> +TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test omayexec_test
+Hm, the page is exclusive at this point, nobody else should be
+touching it. After all, khugepaged might reuse the preallocated page
+for another pmd if this one fails to collapse.
 
-I realize the others have _test in their name, but that feels intensely
-redundant to me. :)
+Looking at the code, I think it's page itself that's garbage, not
+page->mem_cgroup changing. If you have CONFIG_NUMA and the allocation
+fails, *hpage could contain an ERR_PTR instead of being NULL.
 
-> [...]
-> diff --git a/tools/testing/selftests/openat2/omayexec_test.c b/tools/testing/selftests/openat2/omayexec_test.c
-> new file mode 100644
-> index 000000000000..7052c852daf8
-> --- /dev/null
-> +++ b/tools/testing/selftests/openat2/omayexec_test.c
-> [...]
-> +FIXTURE_DATA(mount_exec_file_exec) { };
+I think we need the following fixlet:
 
-For each of these, Please use "FIXTURE" not "FIXTURE_DATA". See:
-1ae81d78a8b2 ("selftests/seccomp: Adjust test fixture counts")
-
-> +FIXTURE_SETUP(mount_exec_file_exec)
-> +{
-> +	create_workspace(_metadata, 1, 1);
-
-Maybe save the system's original sysctl in create_workspace() instead
-of always restoring it to 0 in delete_workspace()?
-
-Otherwise, looks good!
-
--- 
-Kees Cook
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index f2e0a5e5cfbb..f6161e17da26 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1193,7 +1193,7 @@ static void collapse_huge_page(struct mm_struct *mm,
+ out_up_write:
+ 	up_write(&mm->mmap_sem);
+ out_nolock:
+-	if (*hpage)
++	if (!IS_ERR_OR_NULL(*hpage))
+ 		mem_cgroup_uncharge(*hpage);
+ 	trace_mm_collapse_huge_page(mm, isolated, result);
+ 	return;
+@@ -1928,7 +1928,7 @@ static void collapse_file(struct mm_struct *mm,
+ 	unlock_page(new_page);
+ out:
+ 	VM_BUG_ON(!list_empty(&pagelist));
+-	if (*hpage)
++	if (!IS_ERR_OR_NULL(*hpage))
+ 		mem_cgroup_uncharge(*hpage);
+ 	/* TODO: tracepoints */
+ }
