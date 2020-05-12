@@ -2,147 +2,91 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37210C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A703DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EE2206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E48F20736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HhvGzsjg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="OQg+dVZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgELNOd (ORCPT
+        id S1730017AbgELNOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728283AbgELNOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:14:33 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B8EC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:14:32 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k12so21655435wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ucIamOxWoiikiTT7OyOk1rVSeBavTDD4mVIWBfGQ0Tg=;
-        b=HhvGzsjgUcWS4ZqZpMHWKZ6oPMKgpOt/PCYx6PHdLARn1pl00Negjb8wMAe4LiENqa
-         cvvCgPgIgXvxRAOJUDj7etyWlGa4OaRWWDV3azcbY99r6J2ubJUpENBOJpwniqb2C8wv
-         0T6b/pFIazBufnzGCG7SFiHa4hg9iyktA2jRg/eSZ6txf1VRN9UDdShnlx9ifd7nqnYc
-         ymhZ7gkbtUU4kI8m2cZ0ZfpW7dwvxgFxrXVHMd5aUz2s/IVMQAJpMtz3YeYYGrY3sCFh
-         nAhUHWwBFUJaNOLcLRK1kHGfPj8bp2NROzB3CUiGno1WahODSUDWnWKNz2QwOKGnLnaF
-         I1cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ucIamOxWoiikiTT7OyOk1rVSeBavTDD4mVIWBfGQ0Tg=;
-        b=tiEd889gTFgqqengsWAs3hft57mJ87tKa0Am2WzPG0Gngvf99dWgQPOb0RjVCLOx5J
-         KyyJSGGan3YdpnCbx/lN2VIi487MqgsgGBGHpjjVAiP7zaxIy/EogRKYpHPr9p4mcSxk
-         cAFOM2BmSdi03VaiSOI4qJrhMh9lDusaHX0Ov241kG+NTz+gtu0VWHWY6/H9gULWfb3d
-         HibmvDlLrJECyXrRz8MDWTmi1jnPnJuv/TbAYca2kyPM8Ad22ZltfNe0TSU7jaLks6Om
-         N5bwplqFM+O1UNwdkUAHJmGWJ46LC46OxqFZk0nzZa6FyteAzjUhc8XOWX9/1wKA/8IX
-         5Xpw==
-X-Gm-Message-State: AGi0PuY7526taxO1P14XShOqmlw0DJxWzCff3f8SPv7xoqTxucFL7cTH
-        2zaBh7iVIm9WNK06EMNG42xQUUE7qInHwQ==
-X-Google-Smtp-Source: APiQypJLgHGkWpi4Lcz/tiolMUMUWnpODhX3I8i/kPzrgclwoULRyPhWPJAIGGotuugAy+3zWXhlQQ==
-X-Received: by 2002:a1c:9e51:: with SMTP id h78mr39840046wme.177.1589289271434;
-        Tue, 12 May 2020 06:14:31 -0700 (PDT)
-Received: from lmecxl0524.home (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
-        by smtp.gmail.com with ESMTPSA id p9sm16480524wrj.29.2020.05.12.06.14.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:14:30 -0700 (PDT)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        fabrice.gasnier@st.com, alexandre.torgue@st.com,
-        mcoquelin.stm32@gmail.com, robh+dt@kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Etienne Carriere <etienne.carriere@st.com>
-Subject: [PATCH v2] dt-bindings: nvmem: stm32: new property for data access
-Date:   Tue, 12 May 2020 15:13:34 +0200
-Message-Id: <20200512131334.1750-1-etienne.carriere@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 May 2020 09:14:47 -0400
+Received: from www.zeus03.de ([194.117.254.33]:53898 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELNOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:14:47 -0400
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 May 2020 09:14:46 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=bVnvR3rOZs7GQ5Rx/p20PMBOzRG4
+        5vFIXWPPh4D/qKA=; b=OQg+dVZ/hvYZcb9qtk8hkak52UNO4J1vCotQUy18WU0q
+        nZ63gSXb59JW8mL+J9qfkjH0ihXkzTYoQw48IYCxwqPBNzJMNoYWGlpuScyzKlSJ
+        9Mq7k8vHTvlcH0uPJkr3z5AsG5dtvvzY4mxgmGgbaJOXyYOtHtWgDmBVdb3scbM=
+Received: (qmail 2948160 invoked from network); 12 May 2020 15:08:04 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 15:08:04 +0200
+X-UD-Smtp-Session: l3s3148p1@ZV9lJ3Ol5MQgAwDPXw2aAE67cgFBY+HL
+Date:   Tue, 12 May 2020 15:08:03 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     peda@axentia.se, robh@kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] i2c: mux: demux-pinctrl: Fix an error handling path in
+ 'i2c_demux_pinctrl_probe()'
+Message-ID: <20200512130802.GC13516@ninjato>
+References: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nmemrqcdn5VTmUEE"
+Content-Disposition: inline
+In-Reply-To: <20200506192100.194821-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Etienne Carriere <etienne.carriere@st.com>
 
-Introduce boolean property st,non-secure-otp for OTP data located
-in a factory programmed area that only secure firmware can access
-by default and that shall be reachable from the non-secure world.
+--nmemrqcdn5VTmUEE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This change also allows additional properties for NVMEM nodes that
-were forbidden prior this change.
+On Wed, May 06, 2020 at 09:21:00PM +0200, Christophe JAILLET wrote:
+> A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+> path, as already done in the remove function.
+>=20
+> Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
----
-Changes since v1:
-  Change nvmem.yaml to allow additional properties in NVMEM nodes.
+Applied to for-current, thanks! Peter, I hope you are okay with me
+applying patches for my strange driver directly.
 
-Link to v1:
-  https://lore.kernel.org/patchwork/patch/1239028/
 
- .../devicetree/bindings/nvmem/nvmem.yaml        |  2 --
- .../bindings/nvmem/st,stm32-romem.yaml          | 17 +++++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+--nmemrqcdn5VTmUEE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-index 65980224d550..b459f9dba6c9 100644
---- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-@@ -67,8 +67,6 @@ patternProperties:
-     required:
-       - reg
- 
--    additionalProperties: false
--
- examples:
-   - |
-       #include <dt-bindings/gpio/gpio.h>
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-index d84deb4774a4..c11c99f085d7 100644
---- a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-@@ -24,6 +24,18 @@ properties:
-       - st,stm32f4-otp
-       - st,stm32mp15-bsec
- 
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      st,non-secure-otp:
-+        description: |
-+          This property explicits a factory programmed area that both secure
-+          and non-secure worlds can access. It is needed when, by default, the
-+          related area can only be reached by the secure world.
-+        type: boolean
-+
- required:
-   - "#address-cells"
-   - "#size-cells"
-@@ -41,6 +53,11 @@ examples:
-       calib@22c {
-         reg = <0x22c 0x2>;
-       };
-+
-+      mac_addr@e4 {
-+        reg = <0xe4 0x8>;
-+        st,non-secure-otp;
-+      };
-     };
- 
- ...
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66n7IACgkQFA3kzBSg
+KbYd7w//QfbfCkh7Qi2tx9ZYq6DwTGtz92vvLnKEiVAe684hJqfbIT58KB6Y+xxs
+hvLU37hPtQHEylKHPjZKP4reKet/qhMBwa+izmicml37AYk/WT+bISP7bDz/cZm6
+9gR9FGV/236CcswGGLcru8Us9PnxWnajXTq/Zgfb0/WcGfD+cV5zc3EDlR4iTAs/
+wwJH7sLUoC6HTLWtEHDX9wRc35Baq1TqrHrecknGPctQgj2HNxickJrHJNclkEJ7
+ZqTs//75b7SXWE4eE2WG4PYY2m12NkAuzTwkWLTJdmuuINBtbfEpJsfuONd1CX1j
+PP/y25ssXKY5W0Qxq8/iR/Vb5rla2NtvOowCMjlWCTQmOkoaR1/wWJ12fDx4XOuj
+Ut+zNMSg6OnnnW56rMe8pe54PjYszVuC9wwZk9skcuFWRYOVU5Vi0zfTIXnO5WHO
+pBR6+BSHd04tndfm14qwNGIUa7DY4XwL07VlZVVHJ7vuzk8WyM65O2YuyfNh12O2
+6zOMrG+FLYnDH4yiusAgQVEE3utwknrxUm5y0YI7SMLOnhHpbc7UAnhWk0H+AKeW
+3jooXGPRT7BOSMLlRc6tvW3EEDJpjB6iUN8CNkc0yFSEFpGXS32YC1hTMcuNvcbG
+NXvY6NpeIWHNfXoWZgcrJzMwqcXxhR79oWSyEdn2E69AFUMPmOs=
+=Nlce
+-----END PGP SIGNATURE-----
+
+--nmemrqcdn5VTmUEE--
