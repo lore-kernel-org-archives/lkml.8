@@ -2,123 +2,194 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876C3CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372C7CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2DE20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACCA20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyFWPT+W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W3grnYeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgELSnt (ORCPT
+        id S1729962AbgELSp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49554 "EHLO
+        Tue, 12 May 2020 14:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELSns (ORCPT
+        with ESMTP id S1725987AbgELSp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:43:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC38C061A0C;
-        Tue, 12 May 2020 11:43:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u16so24834085wmc.5;
-        Tue, 12 May 2020 11:43:48 -0700 (PDT)
+        Tue, 12 May 2020 14:45:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E44EC05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:45:57 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id g11so2523015plp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G6qmfcxPjUk1PAIF6WXdpSW8GsCiEbgK0TItUolFwFs=;
-        b=YyFWPT+W59qjFtGUWHs8+M5E8cUKWVlHvcMyvGBJLWwuO8J1SaRBZFPHK0hrffGwqW
-         n+ZH3L/qoTu+OKupXn7eiC4O/AaQ4GZY8kcn++DLzG9K4qylOcxHGZY4RPKUpgfNP7sS
-         01PZVr466ASNSWOd29VQZojxA6W+DXZeP0zI3LE5EsEIsKZxwRpEwe8oh97aHAbnngxK
-         UtNnThVMUeI0MxRuubCP3K3ly/mQgp1mMC6vkqFnAsQg0uvXudncbmI2h6MiD48V6GAU
-         uTi6MHa19jzTYioFLvPiU4iUr8oIwkakg4O1z8RiHoIgLvxipKS12zSEewgM6+weqd2A
-         rzlw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zZYcnqjCNMBDkiuBF30WgUKhKuqwDskkezv7osc3SDY=;
+        b=W3grnYeRkCxIK+83TB2Ok5SeVivN3G6KhcXRcwaZwzjvJiAfxUnI/aNrH59tvh0Mx3
+         iJ8DRMRdo+X5efhzmCT6wk/3wD16VELIlUIFf5jKMgJkkcJCCiaEiraYizM8GxIvAJpm
+         1mCiMMTV5qJvr02JSS4i8lmy7uMv1mh0AjdYY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G6qmfcxPjUk1PAIF6WXdpSW8GsCiEbgK0TItUolFwFs=;
-        b=B71Q6TZ1YdPqIB3fbBD1u8RbnqpC36/0BU2i1kzYYTflzXMmZ7U183a7ssBLhq736m
-         LeJTS0oL43tlNYMjdpnWugTvMczXJPfK38bEuAZX4TP88KA4VOZb8FDDsXPmMXj65/r7
-         RMIaC0o2Ss6q4B0ZHNxTCwoPShuB5ThMeNJMxxZKkvqw7Au9z7XvHtL4JEBMRhAxOC6m
-         FC4R59LO6byYRpTKrQnzhRieJV81XurHjZrd74VE3ufb/1DvJadY24OzHCvUF8umLJlG
-         Idi4Ro1Tf8Na8OUQNCimHN9y/hDUjlvZsPkCZCYJjFpJBcgMqtjDcxlNZe7iU+PAt1R8
-         Tg1Q==
-X-Gm-Message-State: AGi0PuZg0OVmsJTkIH2nLwHwziAxN9mbgA9XNo9xrp9OhPAc9XAVloCP
-        7mNIp9GbZKhAG4uK7D2JU1JVzF7E
-X-Google-Smtp-Source: APiQypKLG+QPMpg9r4umkuQ/roOkNtuH2MZUIQ+y2wfaEtp9hgi29bWSg7F4vPXlGZMfP+tcvMvrBQ==
-X-Received: by 2002:a1c:8094:: with SMTP id b142mr26171974wmd.61.1589309027074;
-        Tue, 12 May 2020 11:43:47 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:5200:d932:d3d0:91da:45c2? (p200300EA8F285200D932D3D091DA45C2.dip0.t-ipconnect.de. [2003:ea:8f28:5200:d932:d3d0:91da:45c2])
-        by smtp.googlemail.com with ESMTPSA id n7sm14995650wro.94.2020.05.12.11.43.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 11:43:46 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
- rtl8211f
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200512184601.40b1758a@xhacker.debian>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
-Date:   Tue, 12 May 2020 20:43:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zZYcnqjCNMBDkiuBF30WgUKhKuqwDskkezv7osc3SDY=;
+        b=F1pm8dUuvlbetnHpDqjvxE0J9QaD9nW3FexK2ess1SHnnWHTKaAFjv1+yLMcU/hohj
+         e6oaOUzQHq50HidXJDbggbIt2u1VDU/rpiXRKOkJAyHOdEslqHMwNJ3FBxQKFugXT61K
+         Y0Z/Nx2RhnuprWsdYf2qg5HpbM08uPOUz09eU4Gk+EKzW3aXzlYk+wPQZcGi2bPH5Pq3
+         YKzapPLYBg6ALkF7kjnnvwFp86yFeg/WE7L5Oc6peppqjgWqBiZtxX4KPn3H8225hWB5
+         X4e5OIi2/OCu0hSkfGlk9AaPisFBpPA1qOerLTeCdIza1uzY0+ta8jYafRf9yIyAYyNS
+         Uw8A==
+X-Gm-Message-State: AGi0PuZJy5fRfkS+2xJt8bHgPmv3dWS+299LNjbJejejmsRjs287zBN0
+        /lE0f2AwIiI0P15TjUfLgMzU3TBcFrk=
+X-Google-Smtp-Source: APiQypI6ohAa/WrLufnFCTk94UW9/+pjeT7ykwvlKnDw8ueWBgFKU29Es1jSMPsrXtFJCfxGDn7Jow==
+X-Received: by 2002:a17:90a:284e:: with SMTP id p14mr30042197pjf.10.1589309156921;
+        Tue, 12 May 2020 11:45:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d203sm12240380pfd.79.2020.05.12.11.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 11:45:55 -0700 (PDT)
+Date:   Tue, 12 May 2020 11:45:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+Message-ID: <202005121111.6BECC45@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200512131655.GE17734@linux-b0ei>
+ <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+ <20200512155207.GF17734@linux-b0ei>
 MIME-Version: 1.0
-In-Reply-To: <20200512184601.40b1758a@xhacker.debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512155207.GF17734@linux-b0ei>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.05.2020 12:46, Jisheng Zhang wrote:
-> The PHY Register Accessible Interrupt is enabled by default, so
-> there's such an interrupt during init. In PHY POLL mode case, the
-> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
-> calling rtl8211f_ack_interrupt().
+On Tue, May 12, 2020 at 05:52:07PM +0200, Petr Mladek wrote:
+> On Tue 2020-05-12 10:03:44, Pavel Tatashin wrote:
+> > > OK, I personally see this as two separate problems:
+> > >
+> > >    1. Missing support to set loglevel per console.
+> > >    2. Missing support to dump messages for other reasons.
+> > >
+> > > I would remove the paragraph about console log levels completely.
+> > 
+> > OK, I see your point, this paragraph can be removed, however, I think
+> > it makes it clear to understand the rationale for this change. As I
+> > understand, the per console loglevel has been proposed but were never
+> > accepted.
 
-As you say "it's not good" w/o elaborating a little bit more on it:
-Do you face any actual issue? Or do you just think that it's not nice?
-I'm asking because you don't provide a Fixes tag and you don't
-annotate your patch as net or net-next.
-Once you provide more details we would also get an idea whether a
-change would have to be made to phylib, because what you describe
-doesn't seem to be specific to this one PHY model.
+I understood Pavel's rationale as an output from my questions in the v1
+series, that went like this, paraphrased:
 
-> 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  drivers/net/phy/realtek.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-> index 2d99e9de6ee1..398607268a3c 100644
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -179,6 +179,10 @@ static int rtl8211f_config_init(struct phy_device *phydev)
->  	u16 val_txdly, val_rxdly;
->  	int ret;
->  
-> +	ret = rtl8211f_ack_interrupt(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	switch (phydev->interface) {
->  	case PHY_INTERFACE_MODE_RGMII:
->  		val_txdly = 0;
-> 
+Pavel: "I need to have other kmsg dump reasons available to pstore."
+Kees:  "Why can't you just use the pstore console dumper?"
+Pavel: "It's too much for the slow device; we only need to know about
+        specific events that are already provided by kmsg dump."
+Kees:  "Ah! Sounds good, max_reasons it is."
 
+So, AIUI, loglevel remains orthogonal to this, and it's my fault for
+even causing to be be brought up. Please disregard! :)
+
+> > printk.always_kmsg_dump is not working for me because ramoops has its
+> > own filtering based on dump_oops boolean, and ignores everything but
+> > panics and conditionally oops.
+> > max_reason makes the ramoops internal logic cleaner compared to using dump_oops.
+> 
+> I see. Just to be sure. Is the main reason to add max_reason parameter
+> to keep complatibility of the deprecated dump_oops parameter? Or is
+> there any real use case for this granularity?
+
+In my mind it seemed like a nice mapping, so it was an easy port.
+
+> I wonder if anyone is actually using the ramoops.dump_oops parameter
+> in reality. I would personally make it deprecated and change the
+> default behavior to work according to printk.always_kmsg_dump parameter.
+
+Yes. For things I'm aware of: ARM devices with very tiny persistent RAM
+were using ramoops and setting dump_oops to 0 (specifically, setting
+the DT "no-dump-oops" to 1), and larger Android and Chrome OS devices
+using ramoops were setting to dump_oops to 1[1].
+
+The logic built into pstore recognizes a difference between panic and
+non-panic dumps as well, as the expectation is that there is little to
+no kernel infrastructure available for use during a panic kmsg.
+
+> IMHO, ramoops.dump_oops just increases complexity and should not have
+> been introduced at all. I would try hard to avoid introducing even bigger
+> complecity and mess.
+
+I think dump_oops was the wrong implementation, but granularity control
+is still needed. It is an old parameter, and is baked into many device
+trees on systems, so I can't just drop it. (In fact, I've had to support
+some other DT compat issues[2] as well.)
+
+> I know that there is the "do not break existing userspace" rule. The
+> question is if there is any user and if it is worth it.
+
+For dump_oops, yes, there is unfortunately.
+
+> > I agree, the reasons in kmsg_dump_reason do not order well  (I
+> > actually want to add another reason for kexec type reboots, and where
+> > do I put it?), so how about if we change the ordering list to
+> > bitfield/flags, and instead of max_reason provide: "reasons" bitset?
+> 
+> It looks too complicated. I would really try hard to avoid the
+> parameter at all.
+
+Here are the problems I see being solved by this:
+
+- lifting kmsg dump reason filtering out of the individual pstore
+  backends and making it part of the "infrastructure", so that
+  there is a central place to set expectations. Right now there
+  is a mix of explicit and implicit kmsg dump handling:
+
+  - arch/powerpc/kernel/nvram_64.c has a hard-coded list
+  - drivers/firmware/efi/efi-pstore.c doesn't expect anything but
+    OOPS and PANIC.
+  - drivers/mtd/mtdoops.c tries to filter using its own dump_oops
+    and doesn't expect anything but OOPS and PANIC.
+  - fs/pstore/ram.c: has a hard-coded list and uses its own
+    dump_oops.
+  - drivers/mtd/mtdpstore.c (under development[3]) expected only
+    OOPS and PANIC and had its own dump_oops.
+
+- providing a way for backends that can deal with all kmsg dump reasons
+  to do so without breaking existing default behavior (i.e. getting
+  Pavel what he's interested in).
+
+So, that said, I'm totally fine with a bit field. I just need a way to
+map the kmsg dump reasons onto the existing backend expectations and to
+have Pavel's needs addressed.
+
+-Kees
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/chrome/chromeos_pstore.c?h=v5.6#n60
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/pstore/ram.c?h=v5.6#n708
+[3] https://lore.kernel.org/lkml/20200511233229.27745-11-keescook@chromium.org/
+
+-- 
+Kees Cook
