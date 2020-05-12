@@ -2,76 +2,98 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F40C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047EAC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 540A120784
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C558120769
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="K+ijg0oJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbgELUFL (ORCPT
+        id S1731147AbgELUF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
+        Tue, 12 May 2020 16:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731077AbgELUFK (ORCPT
+        with ESMTP id S1731049AbgELUF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:05:10 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C101BC061A0C;
-        Tue, 12 May 2020 13:04:58 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477:9e51:a893:b0fe:602a])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2328412836EE4;
-        Tue, 12 May 2020 13:04:58 -0700 (PDT)
-Date:   Tue, 12 May 2020 13:04:57 -0700 (PDT)
-Message-Id: <20200512.130457.1412393753257936462.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     arnd@arndb.de, guoren@kernel.org, linux-csky@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 1/3] sparc64: enable HAVE_COPY_THREAD_TLS
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200512171527.570109-2-christian.brauner@ubuntu.com>
-References: <20200512171527.570109-1-christian.brauner@ubuntu.com>
-        <20200512171527.570109-2-christian.brauner@ubuntu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 May 2020 13:04:58 -0700 (PDT)
+        Tue, 12 May 2020 16:05:27 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE01C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:05:27 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id i14so13890554qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XYlu2eXcEyn79K9mTtWYUS4m2Il40SbRimfBXKFX27M=;
+        b=K+ijg0oJH3pv2Az/ECO8+z9We7WNKV4Voe4Un+9P5f/I0xlNzZbZdLDRM6cbfWK8RT
+         b0APuGzu0ul8VR7Xp9RRHiRoZK7p4taVlC/wQf9BZyHRZj1aZjkruJ5vfLkG68gOstHV
+         FgIu/awKE/e5eO69XJ/hKc5iFbSvaznKNWWYXPls8liTGeJHNaTcjRNaBg9+wnfbFNRt
+         YpBAFKESo57V7Z9bNw3LWSgcZWl7TlBcm9twfR1QhdRNrR86m+Q884nfDQ525Fb2BwXz
+         TYWI9D8PJGsqqO54RacVN6WTSZJ0rOmr/3GnOTiQwIM4+CP+AePpXluipkSQJhL2GVkR
+         K9vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XYlu2eXcEyn79K9mTtWYUS4m2Il40SbRimfBXKFX27M=;
+        b=poqRTjWtVtTwH76RqffURC2yohAbN7/qG4lJhcK39fGDI+O+fwMtrrize5dyYx2ZVj
+         fs7hH618m7wbSH/p516Oog75srLdhhYhXt0qOypiUAsgXprKvWtlbjUP3E5NgQ3aADXk
+         8q7QJIvC/s/shFYanFERDWQzb6NcjFBfDm5KEQC8gDkPGXqwTYLsWuMAqwvOKBT/aIbJ
+         +MchcRyM/NE+RDecl6Y8KVPQU0hr3s7pNa+hwCw0vtjv/kUBKTEMPOaNO1g88Kb6vDRE
+         zxvzfIS4dAKkVOYi8Dm3C65AZgYxdkJp6ww+ASuUxl6wh2jZCrMrOZiam8hMgWT+ra4Q
+         C2pg==
+X-Gm-Message-State: AGi0PuZ6JEWDPcfJMCPrpOGHgjFo1MwKa7+ikKe63EM+UP/Pyb3yk5hY
+        R+M0th9uC3sCCjBGDXOJ7V/JkQ==
+X-Google-Smtp-Source: APiQypKmO+CbRnFPnWotv8sLpGTJhVbqzh1Y92d94um0xVgF995XQU3sHoppXt4OgsAO8ae2sbWjoA==
+X-Received: by 2002:a37:4cd:: with SMTP id 196mr16812079qke.455.1589313926666;
+        Tue, 12 May 2020 13:05:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g66sm8786521qkb.122.2020.05.12.13.05.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 May 2020 13:05:26 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jYb9Z-00040y-Or; Tue, 12 May 2020 17:05:25 -0300
+Date:   Tue, 12 May 2020 17:05:25 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Yishai Hadas <yishaih@mellanox.com>
+Subject: Re: [PATCH rdma-rc 0/2] Fixes to IB_EVENT_DEVICE_FATAL logic
+Message-ID: <20200512200525.GA15389@ziepe.ca>
+References: <20200507063348.98713-1-leon@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507063348.98713-1-leon@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Tue, 12 May 2020 19:15:25 +0200
+On Thu, May 07, 2020 at 09:33:46AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Hi,
+> 
+> Two changes, pretty straightforward.
+> 
+> Thanks
+> 
+> Jason Gunthorpe (2):
+>   RDMA/uverbs: Do not discard the IB_EVENT_DEVICE_FATAL event
+>   RDMA/uverbs: Move IB_EVENT_DEVICE_FATAL to destroy_uobj
 
-> +sys_vfork:
-> +	flushw
-> +	ba,pt	%xcc, sparc_vfork
-> +	add	%sp, PTREGS_OFF, %o0
+Applied to for-rc
 
-Please follow the convention of indenting an extra space before
-instructions in the delay slot of branch instructions.
-
-> +	ba,pt	%xcc, sparc_fork
-> +	add	%sp, PTREGS_OFF, %o0
-
-Likewise.
-
->  sys_clone:
->  	flushw
-> -	movrz	%o1, %fp, %o1
-> -	mov	0, %o3
-> -	ba,pt	%xcc, sparc_do_fork
-> -	 add	%sp, PTREGS_OFF, %o2
-> +	ba,pt	%xcc, sparc_clone
-> +	add	%sp, PTREGS_OFF, %o0
-
-Likewise.
+Jason
