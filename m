@@ -2,182 +2,176 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E375C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47A1C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0610820659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWqISwwR"
+	by mail.kernel.org (Postfix) with ESMTP id 7F5DD20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbgELVGD (ORCPT
+        id S1729029AbgELVIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:06:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726324AbgELVGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:06:01 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BC1C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:06:01 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d184so6987142pfd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=j5G1rGAozMzMgyU1JqMyrq0LCgr5U8CbIe+eoAehnBE=;
-        b=fWqISwwRV1Cp0p3hEIqz2JPs/e51xAIhgluD2cuw0MLbuwAWZiAixmlmK1amD62n0U
-         zEQ5N4AJ8vz2XOrZ+RhHCzUw5fVQcoBhK7chafzRSx6BalK67W842qUqQqIuEGuNgMus
-         4D8mn/v3Y3cMZJodmDA2PR3tRpAyvxPruVwsA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=j5G1rGAozMzMgyU1JqMyrq0LCgr5U8CbIe+eoAehnBE=;
-        b=gl9Jk0KckaonId1zoEQCugHeeXCvofCmFg3B8hd4cGq8qqGBRM042GMOgjKoNFlmbE
-         0MU+v31XkhKRYDlbLu0Jj97pdiPoVPg3VUgUFii28o/Grz2mGCmMMjsGwLyuhHxJwPBQ
-         YUacZI4krguKtzQO7SpS+BXhUEhxuHMglyQZJE+86o3v8yCGbzKpgBH7/0qhB5S5+oZT
-         Q2kmgjaVahlbzf/6stE868sGxhNjRf0uAaxBn9N9xr01ruq7CqhhMQWLVlY/csuFuv7e
-         XJS4rUshLqpYSWr7iobWRwf9rSqaW982omVtGc6bETidIAfKLS5e2y4f6H0iN97ctT6k
-         m7Bg==
-X-Gm-Message-State: AGi0PuZ5hCnCUhNNqmOOh8fKOsxxfFnvlQl5Jo1AhJnLgubv5zSp8OWu
-        5IJ1t2WFyayxMa0pJ0CHiAMfwg==
-X-Google-Smtp-Source: APiQypKxymAGHHHmKkMira04oLA2EHbqSrasctJGjgDtYRDvErfuyi2FNoZWH/riiCdh9qC4B+d6Ug==
-X-Received: by 2002:a63:111e:: with SMTP id g30mr20764600pgl.446.1589317561085;
-        Tue, 12 May 2020 14:06:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p9sm4128699pgb.19.2020.05.12.14.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:05:59 -0700 (PDT)
-Date:   Tue, 12 May 2020 14:05:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Tue, 12 May 2020 17:08:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39584 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726324AbgELVIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:08:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7EB6CB02C;
+        Tue, 12 May 2020 21:08:19 +0000 (UTC)
+Date:   Tue, 12 May 2020 23:08:12 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
         Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] fs: Add support for an O_MAYEXEC flag on
- openat2(2)
-Message-ID: <202005121258.4213DC8A2@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-2-mic@digikod.net>
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 23/75] x86/boot/compressed/64: Setup GHCB Based VC
+ Exception handler
+Message-ID: <20200512210812.GF8135@suse.de>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-24-joro@8bytes.org>
+ <20200512181157.GD6859@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200505153156.925111-2-mic@digikod.net>
+In-Reply-To: <20200512181157.GD6859@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 05:31:51PM +0200, Mickaël Salaün wrote:
-> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
-> additional restrictions depending on a security policy managed by the
-> kernel through a sysctl or implemented by an LSM thanks to the
-> inode_permission hook.  This new flag is ignored by open(2) and
-> openat(2).
+On Tue, May 12, 2020 at 08:11:57PM +0200, Borislav Petkov wrote:
+> > +# sev-es.c inludes generated $(objtree)/arch/x86/lib/inat-tables.c
 > 
-> The underlying idea is to be able to restrict scripts interpretation
-> according to a policy defined by the system administrator.  For this to
-> be possible, script interpreters must use the O_MAYEXEC flag
-> appropriately.  To be fully effective, these interpreters also need to
-> handle the other ways to execute code: command line parameters (e.g.,
-> option -e for Perl), module loading (e.g., option -m for Python), stdin,
-> file sourcing, environment variables, configuration files, etc.
-> According to the threat model, it may be acceptable to allow some script
-> interpreters (e.g. Bash) to interpret commands from stdin, may it be a
-> TTY or a pipe, because it may not be enough to (directly) perform
-> syscalls.  Further documentation can be found in a following patch.
-
-You touch on this lightly in the cover letter, but it seems there are
-plans for Python to restrict stdin parsing? Are there patches pending
-anywhere for other interpreters? (e.g. does CLIP OS have such patches?)
-
-There's always a push-back against adding features that have external
-dependencies, and then those external dependencies can't happen without
-the kernel first adding a feature. :) I like getting these catch-22s
-broken, and I think the kernel is the right place to start, especially
-since the threat model (and implementation) is already proven out in
-CLIP OS, and now with IMA. So, while the interpreter side of this is
-still under development, this gives them the tool they need to get it
-done on the kernel side. So showing those pieces (as you've done) is
-great, and I think finding a little bit more detail here would be even
-better.
-
-> A simple security policy implementation, configured through a dedicated
-> sysctl, is available in a following patch.
+> 	      "includes"
 > 
-> This is an updated subset of the patch initially written by Vincent
-> Strubel for CLIP OS 4:
-> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
-> This patch has been used for more than 11 years with customized script
-> interpreters.  Some examples (with the original name O_MAYEXEC) can be
-> found here:
-> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+> > +CFLAGS_sev-es.o += -I$(objtree)/arch/x86/lib/
 > 
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+> Does it?
+> 
+> I see
+> 
+> #include "../../lib/inat.c"
+> #include "../../lib/insn.c"
+> 
+> only and with the above CFLAGS-line removed, it builds still.
+> 
+> Leftover from earlier?
 
-nit: this needs to be reordered. It's expected that the final SoB
-matches the sender. If you're trying to show co-authorship, please
-see:
+No, this is a recent addition, otherwise this breaks out-of-tree builds
+(make O=/some/path ...) because inat-tables.c (included from inat.c) is
+generated during build and ends up in the $(objtree).
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+> > +	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE, 1);
+> > +	insn_get_length(&ctxt->insn);
+> > +
+> > +	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
+> 
+> Why are we checking whether the immediate? insn_get_length() sets
+> insn->length unconditionally while insn_get_immediate() can error out
+> and not set ->got... ?
 
-Based on what I've inferred about author ordering, I think you want:
+Because the immediate is the last part of the instruction which is
+decoded (even if there is no immediate). The .got field is set when
+either the immediate was decoded successfully or, in case the
+instruction has no immediate, when the rest of the instruction was
+decoded successfully. So testing immediate.got is the indicator whether
+decoding was successful.
 
-Co-developed-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
-Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
-Co-developed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-Co-developed-by: Mickaël Salaün <mic@digikod.net>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> 
+> > +
+> > +	return ret;
+> > +}
+> 
+> ...
+> 
+> > +static bool sev_es_setup_ghcb(void)
+> > +{
+> > +	if (!sev_es_negotiate_protocol())
+> > +		sev_es_terminate(GHCB_SEV_ES_REASON_PROTOCOL_UNSUPPORTED);
+> > +
+> > +	if (set_page_decrypted((unsigned long)&boot_ghcb_page))
+> > +		return false;
+> > +
+> > +	/* Page is now mapped decrypted, clear it */
+> > +	memset(&boot_ghcb_page, 0, sizeof(boot_ghcb_page));
+> > +
+> > +	boot_ghcb = &boot_ghcb_page;
+> > +
+> > +	/* Initialize lookup tables for the instruction decoder */
+> > +	inat_init_tables();
+> 
+> Yeah, that call doesn't logically belong in this function AFAICT as this
+> function should setup the GHCB only. You can move it to the caller.
 
-> Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
+Probably better rename the function, it also does the sev-es protocol
+version negotiation and all other related setup tasks. Maybe
+sev_es_setup() is a better name?
 
-Everything else appears good to me, but Al and Aleksa know VFS internals
-way better. :)
+> > +	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
+> > +		error("Can't map GHCB page encrypted");
+> 
+> Is that error() call enough?
+> 
+> Shouldn't we BUG_ON() here or mark that page Reserved or so, so that
+> nothing uses it during the system lifetime and thus avoid the strange
+> cache effects?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+If the above call fails its the end of the systems lifetime, because we
+can't continue to boot an SEV-ES guest when we have no GHCB.
 
--- 
-Kees Cook
+BUG_ON() and friends are also not available in the pre-decompression
+boot stage.
+
+> 
+> ...
+> 
+> > +static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+> > +					  struct es_em_ctxt *ctxt,
+> > +					  u64 exit_code, u64 exit_info_1,
+> > +					  u64 exit_info_2)
+> > +{
+> > +	enum es_result ret;
+> > +
+> > +	/* Fill in protocol and format specifiers */
+> > +	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
+> > +	ghcb->ghcb_usage       = GHCB_DEFAULT_USAGE;
+> > +
+> > +	ghcb_set_sw_exit_code(ghcb, exit_code);
+> > +	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
+> > +	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
+> > +
+> > +	sev_es_wr_ghcb_msr(__pa(ghcb));
+> > +	VMGEXIT();
+> > +
+> > +	if ((ghcb->save.sw_exit_info_1 & 0xffffffff) == 1) {
+> 					^^^^^^^^^^^
+> 
+> (1UL << 32) - 1
+> 
+> I guess.
+
+Or lower_32_bits(), probably. I'll change it.
+
+Thanks,
+
+	Joerg
+
