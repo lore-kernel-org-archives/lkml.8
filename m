@@ -4,66 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3312BC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A57C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C105206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2690206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgELCef (ORCPT
+        id S1728716AbgELCfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:34:35 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60578 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728658AbgELCee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:34:34 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 76467200E51;
-        Tue, 12 May 2020 04:34:30 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A68B5200E53;
-        Tue, 12 May 2020 04:34:26 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 85D2B402B7;
-        Tue, 12 May 2020 10:34:21 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/2] ARM: dts: imx51: Add src node interrupt
-Date:   Tue, 12 May 2020 10:25:06 +0800
-Message-Id: <1589250307-29662-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 11 May 2020 22:35:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4394 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727892AbgELCfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 22:35:13 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3F0AFF321171ACDED613;
+        Tue, 12 May 2020 10:35:11 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 12 May 2020 10:35:05 +0800
+From:   Samuel Zou <zou_wei@huawei.com>
+To:     <khilman@kernel.org>, <tony@atomide.com>, <linux@armlinux.org.uk>
+CC:     <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Samuel Zou <zou_wei@huawei.com>
+Subject: [PATCH -next] ARM: OMAP2+: pm33xx-core: Make am43xx_get_rtc_base_addr static
+Date:   Tue, 12 May 2020 10:41:11 +0800
+Message-ID: <1589251271-106359-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interrupt is a required property according to SRC binding, add
-it for SRC node.
+Fix the following sparse warning:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+arch/arm/mach-omap2/pm33xx-core.c:270:14: warning: symbol 'am43xx_get_rtc_base_addr' was not declared.
+
+The am43xx_get_rtc_base_addr has only call site within pm33xx-core.c
+It should be static
+
+Fixes: 8c5a916f4c88 ("ARM: OMAP2+: sleep33/43xx: Add RTC-Mode support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Samuel Zou <zou_wei@huawei.com>
 ---
- arch/arm/boot/dts/imx51.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-omap2/pm33xx-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 92fbb90..3f1e913 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -442,6 +442,7 @@
- 			src: src@73fd0000 {
- 				compatible = "fsl,imx51-src";
- 				reg = <0x73fd0000 0x4000>;
-+				interrupts = <75>;
- 				#reset-cells = <1>;
- 			};
+diff --git a/arch/arm/mach-omap2/pm33xx-core.c b/arch/arm/mach-omap2/pm33xx-core.c
+index 5455fc9..58236c7 100644
+--- a/arch/arm/mach-omap2/pm33xx-core.c
++++ b/arch/arm/mach-omap2/pm33xx-core.c
+@@ -267,7 +267,7 @@ static struct am33xx_pm_sram_addr *amx3_get_sram_addrs(void)
+ 		return NULL;
+ }
+ 
+-void __iomem *am43xx_get_rtc_base_addr(void)
++static void __iomem *am43xx_get_rtc_base_addr(void)
+ {
+ 	rtc_oh = omap_hwmod_lookup("rtc");
  
 -- 
-2.7.4
+2.6.2
 
