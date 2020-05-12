@@ -2,236 +2,62 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9080C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02BDC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44BB206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EC6206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgELIE2 (ORCPT
+        id S1729086AbgELIFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:04:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:16642 "EHLO mga09.intel.com"
+        Tue, 12 May 2020 04:05:23 -0400
+Received: from elvis.franken.de ([193.175.24.41]:49606 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgELIE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:04:28 -0400
-IronPort-SDR: R5SmQ3kmTPq6HPPgtP2oO9PIyWC4dIGuFOk5vjf2nlX7XbwizYxIMoY+5K0xXPqIa0tgMno0Pu
- y+fAsEzkExug==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 01:04:27 -0700
-IronPort-SDR: j2VzWrkRB3i7RK2vI6S/dogEsgbXubtrfoZ0GW9bCf5uuIeUBkwMutmeeCOX9hckYFWHZd8zvI
- tFt2Tv4mP3uA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
-   d="scan'208";a="371486433"
-Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.192.105])
-  by fmsmga001.fm.intel.com with ESMTP; 12 May 2020 01:04:24 -0700
-From:   Zhu Lingshan <lingshan.zhu@intel.com>
-To:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        jasowang@redhat.com
-Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH V2] ifcvf: move IRQ request/free to status change handlers
-Date:   Tue, 12 May 2020 16:00:44 +0800
-Message-Id: <1589270444-3669-1-git-send-email-lingshan.zhu@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1727783AbgELIFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:05:22 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jYPuh-0007gk-00; Tue, 12 May 2020 10:05:19 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id B6A7BC0479; Tue, 12 May 2020 10:05:09 +0200 (CEST)
+Date:   Tue, 12 May 2020 10:05:09 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH v5 0/5] Allow ld.lld to link the MIPS VDSO
+Message-ID: <20200512080509.GA9433@alpha.franken.de>
+References: <20200423171807.29713-1-natechancellor@gmail.com>
+ <20200428221419.2530697-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428221419.2530697-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit move IRQ request and free operations from probe()
-to VIRTIO status change handler to comply with VIRTIO spec.
+On Tue, Apr 28, 2020 at 03:14:14PM -0700, Nathan Chancellor wrote:
+> [..]
+> Please let me know if there are any issues!
 
-VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
-The device MUST NOT consume buffers or send any used buffer
-notifications to the driver before DRIVER_OK.
+I found no issues in my tests. Is this the final state ? If yes, I'm
+going to apply it to mips-next.
 
-Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
----
-changes from V1:
-remove ifcvf_stop_datapath() in status == 0 handler, we don't need to do this
-twice; handle status == 0 after DRIVER_OK -> !DRIVER_OK handler (Jason Wang)
+Thomas.
 
- drivers/vdpa/ifcvf/ifcvf_main.c | 120 ++++++++++++++++++++++++----------------
- 1 file changed, 73 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index abf6a061..d529ed6 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -28,6 +28,60 @@ static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+static void ifcvf_free_irq_vectors(void *data)
-+{
-+	pci_free_irq_vectors(data);
-+}
-+
-+static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
-+{
-+	struct pci_dev *pdev = adapter->pdev;
-+	struct ifcvf_hw *vf = &adapter->vf;
-+	int i;
-+
-+
-+	for (i = 0; i < queues; i++)
-+		devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
-+
-+	ifcvf_free_irq_vectors(pdev);
-+}
-+
-+static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
-+{
-+	struct pci_dev *pdev = adapter->pdev;
-+	struct ifcvf_hw *vf = &adapter->vf;
-+	int vector, i, ret, irq;
-+
-+	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
-+				    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		IFCVF_ERR(pdev, "Failed to alloc IRQ vectors\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
-+			 pci_name(pdev), i);
-+		vector = i + IFCVF_MSI_QUEUE_OFF;
-+		irq = pci_irq_vector(pdev, vector);
-+		ret = devm_request_irq(&pdev->dev, irq,
-+				       ifcvf_intr_handler, 0,
-+				       vf->vring[i].msix_name,
-+				       &vf->vring[i]);
-+		if (ret) {
-+			IFCVF_ERR(pdev,
-+				  "Failed to request irq for vq %d\n", i);
-+			ifcvf_free_irq(adapter, i);
-+
-+			return ret;
-+		}
-+
-+		vf->vring[i].irq = irq;
-+	}
-+
-+	return 0;
-+}
-+
- static int ifcvf_start_datapath(void *private)
- {
- 	struct ifcvf_hw *vf = ifcvf_private_to_vf(private);
-@@ -118,17 +172,34 @@ static void ifcvf_vdpa_set_status(struct vdpa_device *vdpa_dev, u8 status)
- {
- 	struct ifcvf_adapter *adapter;
- 	struct ifcvf_hw *vf;
-+	u8 status_old;
-+	int ret;
- 
- 	vf  = vdpa_to_vf(vdpa_dev);
- 	adapter = dev_get_drvdata(vdpa_dev->dev.parent);
-+	status_old = ifcvf_get_status(vf);
- 
--	if (status == 0) {
-+	if ((status_old & VIRTIO_CONFIG_S_DRIVER_OK) &&
-+	    !(status & VIRTIO_CONFIG_S_DRIVER_OK)) {
- 		ifcvf_stop_datapath(adapter);
-+		ifcvf_free_irq(adapter, IFCVF_MAX_QUEUE_PAIRS * 2);
-+	}
-+
-+	if (status == 0) {
- 		ifcvf_reset_vring(adapter);
- 		return;
- 	}
- 
--	if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
-+	if ((status & VIRTIO_CONFIG_S_DRIVER_OK) &&
-+	    !(status_old & VIRTIO_CONFIG_S_DRIVER_OK)) {
-+		ret = ifcvf_request_irq(adapter);
-+		if (ret) {
-+			status = ifcvf_get_status(vf);
-+			status |= VIRTIO_CONFIG_S_FAILED;
-+			ifcvf_set_status(vf, status);
-+			return;
-+		}
-+
- 		if (ifcvf_start_datapath(adapter) < 0)
- 			IFCVF_ERR(adapter->pdev,
- 				  "Failed to set ifcvf vdpa  status %u\n",
-@@ -284,38 +355,6 @@ static void ifcvf_vdpa_set_config_cb(struct vdpa_device *vdpa_dev,
- 	.set_config_cb  = ifcvf_vdpa_set_config_cb,
- };
- 
--static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
--{
--	struct pci_dev *pdev = adapter->pdev;
--	struct ifcvf_hw *vf = &adapter->vf;
--	int vector, i, ret, irq;
--
--
--	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
--		snprintf(vf->vring[i].msix_name, 256, "ifcvf[%s]-%d\n",
--			 pci_name(pdev), i);
--		vector = i + IFCVF_MSI_QUEUE_OFF;
--		irq = pci_irq_vector(pdev, vector);
--		ret = devm_request_irq(&pdev->dev, irq,
--				       ifcvf_intr_handler, 0,
--				       vf->vring[i].msix_name,
--				       &vf->vring[i]);
--		if (ret) {
--			IFCVF_ERR(pdev,
--				  "Failed to request irq for vq %d\n", i);
--			return ret;
--		}
--		vf->vring[i].irq = irq;
--	}
--
--	return 0;
--}
--
--static void ifcvf_free_irq_vectors(void *data)
--{
--	pci_free_irq_vectors(data);
--}
--
- static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct device *dev = &pdev->dev;
-@@ -349,13 +388,6 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return ret;
- 	}
- 
--	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
--				    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
--	if (ret < 0) {
--		IFCVF_ERR(pdev, "Failed to alloc irq vectors\n");
--		return ret;
--	}
--
- 	ret = devm_add_action_or_reset(dev, ifcvf_free_irq_vectors, pdev);
- 	if (ret) {
- 		IFCVF_ERR(pdev,
-@@ -379,12 +411,6 @@ static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	adapter->pdev = pdev;
- 	adapter->vdpa.dma_dev = &pdev->dev;
- 
--	ret = ifcvf_request_irq(adapter);
--	if (ret) {
--		IFCVF_ERR(pdev, "Failed to request MSI-X irq\n");
--		goto err;
--	}
--
- 	ret = ifcvf_init_hw(vf, pdev);
- 	if (ret) {
- 		IFCVF_ERR(pdev, "Failed to init IFCVF hw\n");
 -- 
-1.8.3.1
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
