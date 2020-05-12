@@ -2,51 +2,71 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C92C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCB1C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B7E206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EC6206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GtGpcsoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgELCSk (ORCPT
+        id S1728596AbgELCUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:18:40 -0400
-Received: from mx.socionext.com ([202.248.49.38]:44388 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgELCSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:18:39 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 12 May 2020 11:18:38 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4E8B9180BB6;
-        Tue, 12 May 2020 11:18:38 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 12 May 2020 11:18:38 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id EDACE1A01BB;
-        Tue, 12 May 2020 11:18:37 +0900 (JST)
-Received: from [10.213.31.213] (unknown [10.213.31.213])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 67C7D120133;
-        Tue, 12 May 2020 11:18:37 +0900 (JST)
-Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
- <20200512020126.GA22178@bogus>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <600b83e2-8063-b8ca-5406-7bf854c45ab3@socionext.com>
-Date:   Tue, 12 May 2020 11:18:36 +0900
+        Mon, 11 May 2020 22:20:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:37710 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728301AbgELCUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 22:20:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589250005; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=k2YIPX12MuXHG4Ed0EuQtB9gnhkLejakrxn5AILaJgM=; b=GtGpcsocr7MWZoYWhISm1A/+I/SpgoVCvPBXktE34LdydoG5Gt40xMKT41EX5oFbDqZd04Zv
+ 7qDnXO/N3ojEtzbwV/FxFRlBDWdnrGm4h1bUChc1AWhv3OuQqn/5ZiDlQL5EjD9hztgkt4SJ
+ 3GmnFf4SL/F+lKZrkCN76m9GLQQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5eba07c377c5b4a9096c17d8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 12 May 2020 02:19:47
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8B23EC44788; Tue, 12 May 2020 02:19:45 +0000 (UTC)
+Received: from [192.168.8.150] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DE55C433CB;
+        Tue, 12 May 2020 02:19:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DE55C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v2 4/4] scsi: ufs-mediatek: customize WriteBooster flush
+ policy
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200509093716.21010-1-stanley.chu@mediatek.com>
+ <20200509093716.21010-5-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <635f91f6-3a27-ffdd-4021-67705d4063fc@codeaurora.org>
+Date:   Mon, 11 May 2020 19:19:42 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200512020126.GA22178@bogus>
+In-Reply-To: <20200509093716.21010-5-stanley.chu@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,33 +75,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 2020/05/12 11:01, Rob Herring wrote:
-> On Tue, Apr 28, 2020 at 03:31:22PM +0900, Kunihiko Hayashi wrote:
->> Convert the UniPhier AVE4 controller binding to DT schema format.
->> This changes phy-handle property to required.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
-
-(snip)
-
->> +  phy-mode:
->> +    $ref: ethernet-controller.yaml#/properties/phy-mode
->> +
->> +  phy-handle:
->> +    $ref: ethernet-controller.yaml#/properties/phy-handle
+On 5/9/2020 2:37 AM, Stanley Chu wrote:
+> Change the WriteBooster policy to keep VCC on during
+> runtime suspend if available WriteBooster buffer is less
+> than 80%.
 > 
-> No need for these $ref, the 1st reference did this. Just:
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>   drivers/scsi/ufs/ufs-mediatek.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> phy-mode: true
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 56620f7d88ce..94e97701f456 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -271,6 +271,7 @@ static int ufs_mtk_init(struct ufs_hba *hba)
+>   
+>   	/* Enable WriteBooster */
+>   	hba->caps |= UFSHCD_CAP_WB_EN;
+> +	hba->vps->wb_flush_threshold = UFS_WB_BUF_REMAIN_PERCENT(80);
+>   
+>   	/*
+>   	 * ufshcd_vops_init() is invoked after
+> 
 
-Okay, "phy-handle" also replaces with "true".
-I'll fix it in v2.
+Patchset looks good to me.
 
-Thank you,
-  
----
-Best Regards
-Kunihiko Hayashi
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
