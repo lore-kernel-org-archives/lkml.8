@@ -2,107 +2,210 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57380C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC58C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF4920746
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:49:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Lwx37RbR"
+	by mail.kernel.org (Postfix) with ESMTP id 1BAF12072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgELEty (ORCPT
+        id S1728445AbgELEzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 00:49:54 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40779 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELEty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 00:49:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Llhv1FMcz9sSw;
-        Tue, 12 May 2020 14:49:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589258991;
-        bh=Ws73gRqk8k3hUblHMVJ0pejNCzPVOUjEReDogTs5DwA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Lwx37RbRBm0UaZHlnfUgu1u9KLEm+2LsDsxGnUq5HlkkJkVwB2rSEW0hsxHxuFflq
-         AYBuoA+KacCmR1Jo4WJ0a8AHHF1Fbap3O50nmfRn093A8RxZdaeW7VaOv/DAUblqbi
-         jJ3ypKFYAHzSPE7e2DwTk30zE+2O55nrXM0/N02B/VU9wYirnpXp/+YPf2PrY1JcgP
-         K2UlGEwC5uASbtbeay2LeFhOQxRmQZ30X79hr0WJBZjebhq6H5KCR/m2+4rQCLNre7
-         Jr1ksLmNxrXgj1O/RqIGM+iXbbTELiS+y03ZVwktERUmBxwJg1/h4Mpoma3azOXhSP
-         E2zChFLX4zbNw==
-Date:   Tue, 12 May 2020 14:49:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: linux-next: manual merge of the sound-asoc tree with the crypto
- tree
-Message-ID: <20200512144949.4f933eca@canb.auug.org.au>
+        Tue, 12 May 2020 00:55:35 -0400
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:48958 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgELEzf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 00:55:35 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 04C4tBCB028612; Tue, 12 May 2020 13:55:11 +0900
+X-Iguazu-Qid: 34trcFcTSdIJNcGUFe
+X-Iguazu-QSIG: v=2; s=0; t=1589259311; q=34trcFcTSdIJNcGUFe; m=lDCzbs4o132H/rv9S8n0JfYb3mfEtVjfQUawIKZ1uaI=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1510) id 04C4t9oB017332;
+        Tue, 12 May 2020 13:55:10 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 04C4t9HT029314;
+        Tue, 12 May 2020 13:55:09 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 04C4t8Au032254;
+        Tue, 12 May 2020 13:55:09 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>, linux-acpi@vger.kernel.org,
+        linux-efi@vger.kernel.org
+Subject: [Patch v2] efi: cper: Add support for printing Firmware Error Record Reference
+Date:   Tue, 12 May 2020 13:55:02 +0900
+X-TSB-HOP: ON
+Message-Id: <20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wm7wZpNQ4L0+owAPFPq0zDT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wm7wZpNQ4L0+owAPFPq0zDT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+While debugging a boot failure, the following unknown error record was
+seen in the boot logs.
 
-Hi all,
+    <...>
+    BERT: Error records from previous boot:
+    [Hardware Error]: event severity: fatal
+    [Hardware Error]:  Error 0, type: fatal
+    [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
+    [Hardware Error]:   section length: 0x290
+    [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
+    [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
+    [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
+    [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
+    <...>
 
-Today's linux-next merge of the sound-asoc tree got a conflict in:
+On further investigation, it was found that the error record with
+UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
+UEFI Specification at least since v2.4 and has recently had additional
+fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
 
-  sound/soc/codecs/cros_ec_codec.c
+Add support for parsing and printing the defined fields to give users
+a chance to figure out what went wrong.
 
-between commit:
+Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: James Morse <james.morse@arm.com>
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-efi@vger.kernel.org
+---
+Hi Ard,
 
-  85fc78b80f15 ("ASoC: cros_ec_codec: use crypto_shash_tfm_digest()")
+I've updated the patch based on your feedback.
 
-from the crypto tree and commit:
+As you noted, some aspects of the spec make it a bit tricky to support
+all revisions in a nice way (e.g., size check) but this version should
+fix existing issues.
 
-  a1304cba816e ("ASoC: cros_ec_codec: allocate shash_desc dynamically")
+Thanks,
+Punit
 
-from the sound-asoc tree.
+v1[0] -> v2:
+* Simplified error record structure definition
+* Fixed size check
+* Added comment to clarify offset calculation for dumped data
+* Style fixes for multiline if blocks
 
-I fixed it up (I just used the former) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
+[0] https://lkml.kernel.org/lkml/20200427085242.2380614-1-punit1.agrawal@toshiba.co.jp/
+---
+ drivers/firmware/efi/cper.c | 62 +++++++++++++++++++++++++++++++++++++
+ include/linux/cper.h        |  9 ++++++
+ 2 files changed, 71 insertions(+)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 9d2512913d25..f564e15fbc7e 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -407,6 +407,58 @@ static void cper_print_pcie(const char *pfx, const struct cper_sec_pcie *pcie,
+ 	}
+ }
+ 
++static const char * const fw_err_rec_type_strs[] = {
++	"IPF SAL Error Record",
++	"SOC Firmware Error Record Type1 (Legacy CrashLog Support)",
++	"SOC Firmware Error Record Type2",
++};
++
++static void cper_print_fw_err(const char *pfx,
++			      struct acpi_hest_generic_data *gdata,
++			      const struct cper_sec_fw_err_rec_ref *fw_err)
++{
++	void *buf = acpi_hest_get_payload(gdata);
++	u32 offset, length = gdata->error_data_length;
++
++	printk("%s""Firmware Error Record Type: %s\n", pfx,
++	       fw_err->record_type < ARRAY_SIZE(fw_err_rec_type_strs) ?
++	       fw_err_rec_type_strs[fw_err->record_type] : "unknown");
++	printk("%s""Revision: %d\n", pfx, fw_err->revision);
++
++	/* Record Type based on UEFI 2.7 */
++	if (fw_err->revision == 0) {
++		printk("%s""Record Identifier: %08llx\n", pfx,
++		       fw_err->record_identifier);
++	} else if (fw_err->revision == 2) {
++		printk("%s""Record Identifier: %pUl\n", pfx,
++		       &fw_err->record_identifier_guid);
++	}
++
++	/*
++	 * The FW error record may contain trailing data beyond the
++	 * structure defined by the specification. As the fields
++	 * defined (and hence the offset of any trailing data) vary
++	 * with the revision, set the offset to account for this
++	 * variation.
++	 */
++	if (fw_err->revision == 0) {
++		/* record_identifier_guid not defined */
++		offset = offsetof(struct cper_sec_fw_err_rec_ref,
++				  record_identifier_guid);
++	} else if (fw_err->revision == 1) {
++		/* record_identifier not defined */
++		offset = offsetof(struct cper_sec_fw_err_rec_ref,
++				  record_identifier);
++	} else {
++		offset = sizeof(*fw_err);
++	}
++
++	buf += offset;
++	length -= offset;
++
++	print_hex_dump(pfx, "", DUMP_PREFIX_OFFSET, 16, 4, buf, length, true);
++}
++
+ static void cper_print_tstamp(const char *pfx,
+ 				   struct acpi_hest_generic_data_v300 *gdata)
+ {
+@@ -494,6 +546,16 @@ cper_estatus_print_section(const char *pfx, struct acpi_hest_generic_data *gdata
+ 		else
+ 			goto err_section_too_small;
+ #endif
++	} else if (guid_equal(sec_type, &CPER_SEC_FW_ERR_REC_REF)) {
++		struct cper_sec_fw_err_rec_ref *fw_err = acpi_hest_get_payload(gdata);
++
++		printk("%ssection_type: Firmware Error Record Reference\n",
++		       newpfx);
++		/* The minimal FW Error Record contains 16 bytes */
++		if (gdata->error_data_length >= SZ_16)
++			cper_print_fw_err(newpfx, gdata, fw_err);
++		else
++			goto err_section_too_small;
+ 	} else {
+ 		const void *err = acpi_hest_get_payload(gdata);
+ 
+diff --git a/include/linux/cper.h b/include/linux/cper.h
+index 4f005d95ce88..8537e9282a65 100644
+--- a/include/linux/cper.h
++++ b/include/linux/cper.h
+@@ -521,6 +521,15 @@ struct cper_sec_pcie {
+ 	u8	aer_info[96];
+ };
+ 
++/* Firmware Error Record Reference, UEFI v2.7 sec N.2.10  */
++struct cper_sec_fw_err_rec_ref {
++	u8 record_type;
++	u8 revision;
++	u8 reserved[6];
++	u64 record_identifier;
++	guid_t record_identifier_guid;
++};
++
+ /* Reset to default packing */
+ #pragma pack()
+ 
+-- 
+2.26.2
 
---Sig_/wm7wZpNQ4L0+owAPFPq0zDT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66Ku0ACgkQAVBC80lX
-0Gxzqwf/dQ+FY+fXxCus0ESPCvc01iLjsa6Xcf3mapY2UtVwbCh9B02c/vH38356
-sxAKGOguUQunXWRULUeEZ9UhEEopY7Y36Kqp4IvdVW5Mt8xE2Nbhb1a24i8VYMWF
-nuYGIxMhI5FmNd8qkw0kj97TjV0K1gV3/TQqtdYgzbH56hCQI6+2CUh3mtaLf9Ad
-y4b69Qb6JzRbL4k/unmsFSvNIDyqXn5+jbbvp/fIo7CyJX/ZmWt5cx2mNhN71dYv
-tbt3t6gffPYQHowPtOF+L7eKLUNwvB0JBtGY47AbXWgKpXoREfO9IZQUPr5oimYE
-4GE5DlIA7CCzwtlZ4bZC0ix9Msdd2A==
-=Pdn2
------END PGP SIGNATURE-----
-
---Sig_/wm7wZpNQ4L0+owAPFPq0zDT--
