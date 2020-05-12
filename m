@@ -2,120 +2,107 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0B6C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047CAC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D78E20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589292552;
-	bh=XlLg66om9qePZXeASi6fwsBTwuJ8dfQeSI2ucy4Tfaw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xU++5i2Q8jdoiP7paBYBBlf6t1iISfgC/aZKM32MSSHtC4bSPb8qeKySGL3hEJf4t
-	 kcX3r4QDZ2ZmeB7X2duvZBxKYssXqxL4K7LyhN/68/6M87R47Der/OF8ASUK6hvlml
-	 tkpbjL1O9E2kgLeK112ENebxYZHGq7CMxPOylOeo=
+	by mail.kernel.org (Postfix) with ESMTP id D6E03206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgELOJL (ORCPT
+        id S1730173AbgELOKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:09:11 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43257 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgELOJK (ORCPT
+        Tue, 12 May 2020 10:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729570AbgELOKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:09:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a68so2069586otb.10;
-        Tue, 12 May 2020 07:09:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XlLg66om9qePZXeASi6fwsBTwuJ8dfQeSI2ucy4Tfaw=;
-        b=i9SaClcqX8A0nYi/p1xB3lptVwUFTpWevNUsQwd2d2M4MvDWFweIyh/QEZIUpUmiQQ
-         O6RQcNqFwDc9nG2JLtjIEcQSTwZGHtekKXOz37LH9VXKBZoJV0gxnyxIExW6ABCJkJHb
-         jYmh+DelMCS0UdilEcr2DSlY4HaQX+n4q5fZTA3C5gDjAVg/ZzFscZjJc4RSm34Oj0G+
-         mWz0mYyTVLg5r2KgqF8Ze4LCWqJXJRYq15ghnDD4r1FATqDasDTvCeTWfdTqfS3yDPN4
-         UotzLWAVoJMkXdDsFSlEEnUX/0+8vc/mKM7PzxF3aqIqJp9rsko9wcvqFdPmBJEAYV5I
-         VT9g==
-X-Gm-Message-State: AGi0Pubvq3rpq9Tlky6liYyQksOqOmNRE7F4Gh1BgHQ8/70nQtmno4Hv
-        Yv7MLvVRXUPvEu1QlHEQkwMY9nWjjoXuKzXuGWo=
-X-Google-Smtp-Source: APiQypLSjiwX7PHp/boQvrrT9A2LLBsxN4GgnX7T8BCX5CQ4Qti5EIdMckwEZSBnSBOrvY/RjAqINo6HDSkgtHeujTs=
-X-Received: by 2002:a9d:6356:: with SMTP id y22mr3701328otk.167.1589292548150;
- Tue, 12 May 2020 07:09:08 -0700 (PDT)
+        Tue, 12 May 2020 10:10:47 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC448C061A0C;
+        Tue, 12 May 2020 07:10:47 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jYVcH-0005CN-HL; Tue, 12 May 2020 16:10:41 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1EE261C02FC;
+        Tue, 12 May 2020 16:10:41 +0200 (CEST)
+Date:   Tue, 12 May 2020 14:10:41 -0000
+From:   "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Use INVPCID mnemonic in invpcid.h
+Cc:     Uros Bizjak <ubizjak@gmail.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200508092247.132147-1-ubizjak@gmail.com>
+References: <20200508092247.132147-1-ubizjak@gmail.com>
 MIME-Version: 1.0
-References: <20200508081128.GM5298@hirez.programming.kicks-ass.net>
- <20200508103721.GA3860390@kroah.com> <20200508111612.GA252673@google.com>
- <20200508113141.GB5298@hirez.programming.kicks-ass.net> <20200508130507.GA10541@google.com>
- <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
- <20200511090049.GA229633@google.com> <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
- <20200512092102.GA16151@google.com> <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
- <20200512135813.GA101124@google.com>
-In-Reply-To: <20200512135813.GA101124@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 12 May 2020 16:08:56 +0200
-Message-ID: <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
-Subject: Re: [PATCH 00/14] Modularize schedutil
-To:     Quentin Perret <qperret@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158929264101.390.18239205970315804831.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 3:58 PM Quentin Perret <qperret@google.com> wrote:
->
-> On Tuesday 12 May 2020 at 12:25:17 (+0200), Rafael J. Wysocki wrote:
-> > Still, IMO it would be fair to say that if uclamps are used, schedutil
-> > is very likely to be preferred.
-> >
-> > Kconfig can be made select schedutil when enabling uclamps or similar
-> > to express that preference.
->
-> Right, fair enough. Making schedutil default to y when uclamp is
-> compiled in should do the trick (and avoid using 'select'). Would that
-> work for you?
+The following commit has been merged into the x86/cpu branch of tip:
 
-I think so.
+Commit-ID:     7e32a9dac9926241d56851e1517c9391d39fb48e
+Gitweb:        https://git.kernel.org/tip/7e32a9dac9926241d56851e1517c9391d39fb48e
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Fri, 08 May 2020 11:22:47 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 12 May 2020 16:05:30 +02:00
 
-> > What you are proposing is basically to add complexity and the reason
-> > for doing that seems to be convenience (and that's not the users'
-> > convenience for that matter) which is not really super-convincing.
->
-> Forcing our users to build in their products something they don't want
-> to use tends to be a very real problem for what we're trying to achieve,
-> so it's certainly not just convenience from our perspective. I can
-> understand that yours might be different, though.
+x86/cpu: Use INVPCID mnemonic in invpcid.h
 
-I would like to understand the nature of the problem here.
+The current minimum required version of binutils is 2.23, which supports
+the INVPCID instruction mnemonic. Replace the byte-wise specification of
+INVPCID with the proper mnemonic.
 
-If some piece of kernel code is modular, it still needs to be build.
-The difference is when and how it gets loaded, so can you possibly
-elaborate here?
+ [ bp: Add symbolic operand names for increased readability and flip
+   their order like the insn expects them for the AT&T syntax. ]
 
-Cheers!
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200508092247.132147-1-ubizjak@gmail.com
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/invpcid.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/invpcid.h b/arch/x86/include/asm/invpcid.h
+index 989cfa8..734482a 100644
+--- a/arch/x86/include/asm/invpcid.h
++++ b/arch/x86/include/asm/invpcid.h
+@@ -12,12 +12,9 @@ static inline void __invpcid(unsigned long pcid, unsigned long addr,
+ 	 * stale TLB entries and, especially if we're flushing global
+ 	 * mappings, we don't want the compiler to reorder any subsequent
+ 	 * memory accesses before the TLB flush.
+-	 *
+-	 * The hex opcode is invpcid (%ecx), %eax in 32-bit mode and
+-	 * invpcid (%rcx), %rax in long mode.
+ 	 */
+-	asm volatile (".byte 0x66, 0x0f, 0x38, 0x82, 0x01"
+-		      : : "m" (desc), "a" (type), "c" (&desc) : "memory");
++	asm volatile("invpcid %[desc], %[type]"
++		     :: [desc] "m" (desc), [type] "r" (type) : "memory");
+ }
+ 
+ #define INVPCID_TYPE_INDIV_ADDR		0
