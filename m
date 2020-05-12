@@ -2,215 +2,148 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B75C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29953C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9584520752
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589266377;
-	bh=RyhOZvlt5kZ+dTlX1Lv7q9k77uq8oD0kyVIa/Ynd+tw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=muG7FivDKAsPzXAkv1IjITB9LIzx1ERuZmp/qay3LwmpaZtrEVj8OS+RSFhkjV/Hq
-	 B6LPST+tbjocsn0rTN2Zuhg1usDl5CGkmUoHVodNQxXO5KJTgdurULzrNnTiGp1P28
-	 t+s+WsIO1T//cZ+yr/jqVWn0mHKLmzNssx+IPmGU=
+	by mail.kernel.org (Postfix) with ESMTP id 0156B20752
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fmvWvZgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgELGw5 (ORCPT
+        id S1728923AbgELGx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:52:57 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:64357 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgELGw4 (ORCPT
+        Tue, 12 May 2020 02:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726187AbgELGx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:52:56 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 04C6qeQt027831;
-        Tue, 12 May 2020 15:52:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 04C6qeQt027831
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1589266362;
-        bh=UwPvBry7yPGOUilCJDkKrbKYyu1A4n8MuWA4AkJQmPc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uOyUjH4Lk6Bz11TLsUUQeyavZZNYpk9WP+oUZjYw9IzNsPKYVxy0T28akwEZasKcY
-         7heuEiz5sbqoaYXxHP1hUQ56FCd/eyvpxbKRFwdHn/D+bdb1unws11xIK3WkA95ZD4
-         4vsqylaQBd4pp3iToF5CcQbcIHzJ58oi96aTz4TDgydslMNW96eU8PYwUJKvE22D0h
-         pH/6UecfPDadhnrEN9S7dvChDe3PkNX7Wlpahao66CjiXJ/3RFxgaPCn5cLDCGtBlB
-         OIKpLNtF4ghm3YBb8/Zlp6gmrKim94rEI3Oq8elJ4pKgAto4TkPh1loapJFCCLbLL/
-         WWb9RwgaXkdYQ==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id z1so7197186vsn.11;
-        Mon, 11 May 2020 23:52:41 -0700 (PDT)
-X-Gm-Message-State: AGi0PubrEpFYgJZQ8+hxu27bNYOmh5hoYiqqE7Xa4peQyzSvKqFaeYLP
-        cT1NAZokzm3im4jsVoK4I9RdY+XbI5GxIZFqVmg=
-X-Google-Smtp-Source: APiQypLzAPXzg3s/5sjYf+Hirmk79ZX4a6xnYpJCL0XPD4t0LmJvQFEJnZnz7nJs3j+jeZqtpikBb584Tc2r25yU5QQ=
-X-Received: by 2002:a67:db0d:: with SMTP id z13mr14479268vsj.155.1589266360272;
- Mon, 11 May 2020 23:52:40 -0700 (PDT)
+        Tue, 12 May 2020 02:53:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FFDC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:53:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id s20so4990533plp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wyNaJ3zN4Vkp26MdzcthIVdng2NufArv0F1CXYz6F90=;
+        b=fmvWvZgbgLMar4pR1vmLZAtNWuAKGDNiThvpBT8BeYvKCG+/zU0Dxw6mDEEAz3ndcs
+         1yhQlafBLMcvEqRlYnE0fpQa+Jz9jAWnTtvSPP007//HMIhEfwypWvAYJyaPVPP60smb
+         s8GubIMYXMXKb6D1yvyDQ0QbEVEbMy8fM8BiJWC7opUuA9hPFmzw50VoM+UhspjjxkVB
+         0DQ8LrbTuJl/LyJxaLQg6xLDAc797YJVBNCdVBqNLpFlnlgcRpmDoFgZ8kjATzG8egGR
+         1Rk2xncKIwHkeyGrq6L7XLXLvUDxhTP1tb9pu/ZQ5qQVcify7A6RqiKELb51aVhsju4l
+         zfhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wyNaJ3zN4Vkp26MdzcthIVdng2NufArv0F1CXYz6F90=;
+        b=dx6APqoHyNSS54X1uj8jJY5Yk/fNDro140EY8HuG7jwX2/DkmlYeYuIpR6Uh2zvZ/v
+         GFy5QnfHyuJvL8Yc/HqmWb0qG+R+4WLYNXtjKRdLCoVMtt7OLu+ZV6cgsB75+HqvqP/l
+         DwN8a65YB/NpbfR0PaNsI+EuMuGBe1BBxdLLq0OeGkNjk9c9mk0qum0IIopltFhtBFn3
+         OzLkBjWpULd5lzkiOiHpXgMhySLcEiEHXwAvD8R8z7l7H3TDQazvG8Bi0jgsQaA3RQ1k
+         T3OOW7IAMJLTX/205NSjkYJ3pdbCclrBy2F0SRUtgGIxIGNq7Axs/0mWqUiu8X7wOmzx
+         v1aQ==
+X-Gm-Message-State: AGi0PuZtQlJIu0EVPZDi8Cd982tWVnGE8UyGLoxLPi/O+YU2PB8EbeKb
+        i2HrL2xwHing2QjPeHt6EFYU
+X-Google-Smtp-Source: APiQypLd4Q8FRQeSS4aja8UQ+rcrF6uwdIZBUbTxU4Ll1+49mUWasLX1xXwdr42uvVfHoS4giHEaMg==
+X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr18607769plp.117.1589266435964;
+        Mon, 11 May 2020 23:53:55 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
+        by smtp.gmail.com with ESMTPSA id g74sm11157775pfb.69.2020.05.11.23.53.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 23:53:55 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:23:49 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v1 3/5] bus: mhi: core: Skip handling BHI irq if MHI reg
+ access is not allowed
+Message-ID: <20200512065349.GE4928@Mani-XPS-13-9360>
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+ <1589248989-23824-4-git-send-email-hemantk@codeaurora.org>
 MIME-Version: 1.0
-References: <20200510010603.3896-1-changbin.du@gmail.com>
-In-Reply-To: <20200510010603.3896-1-changbin.du@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 12 May 2020 15:52:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARH_1nQRExVSCcJ=Twuze5AosG3z2GcA7zwnF6Vi52GWA@mail.gmail.com>
-Message-ID: <CAK7LNARH_1nQRExVSCcJ=Twuze5AosG3z2GcA7zwnF6Vi52GWA@mail.gmail.com>
-Subject: Re: [PATCH v5] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589248989-23824-4-git-send-email-hemantk@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 10:06 AM Changbin Du <changbin.du@gmail.com> wrote:
->
-> Sometimes it is useful to preserve batches of configs when making
-> localmodconfig. For example, I usually don't want any usb and fs
-> modules to be disabled. Now we can do it by:
->
->  $ make LMC_KEEP="drivers/usb:fs" localmodconfig
->
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
->
+On Mon, May 11, 2020 at 07:03:07PM -0700, Hemant Kumar wrote:
+> Driver continues handling of BHI interrupt even if MHI register access
+> is not allowed. By doing so it calls the status call back and performs
+> early notification for the MHI client. This is not needed when MHI
+> register access is not allowed. Hence skip the handling in this case and
+> return. Also add debug log to print device state, local EE and device EE
+> when reg access is valid.
+> 
+> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 > ---
-> v4: fix typo.
-> v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-> v2: fix typo in documentation. (Randy Dunlap)
-> ---
->  Documentation/admin-guide/README.rst |  8 +++++++-
->  scripts/kconfig/Makefile             |  1 +
->  scripts/kconfig/streamline_config.pl | 21 +++++++++++++++++++++
->  3 files changed, 29 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> index cc6151fc0845..407aa206bb70 100644
-> --- a/Documentation/admin-guide/README.rst
-> +++ b/Documentation/admin-guide/README.rst
-> @@ -209,10 +209,16 @@ Configuring the kernel
->                             store the lsmod of that machine into a file
->                             and pass it in as a LSMOD parameter.
->
-> +                           Also, you can preserve modules in certain folders
-> +                           or kconfig files by specifying their paths in
-> +                           parameter LMC_KEEP.
-> +
->                     target$ lsmod > /tmp/mylsmod
->                     target$ scp /tmp/mylsmod host:/tmp
->
-> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> +                   host$ make LSMOD=/tmp/mylsmod \
-> +                           LMC_KEEP="drivers/usb:drivers/gpu:fs" \
-> +                           localmodconfig
->
->                             The above also works when cross compiling.
->
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index c9d0a4a8efb3..e0abbf5805f5 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -123,6 +123,7 @@ help:
->         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
->         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
->         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
-> +       @echo  '                    except those preserved by LMC_KEEP environment variable'
->         @echo  '  localyesconfig  - Update current config converting local mods to core'
-
-Just a nitpicking.
-
-I was just about to apply this patch,
-then noticed this.
-
-This works for localyesconfig as well as
-localmodconfig.
-
-Do you want to add the note to localyesconfig too?
-
-
-LMC_ is an acronym of LOCAL_MOD_CONFIG_.
-Maybe it is OK because
-we mostly use localmodconfig,
-using localyesconfig is somewhat rare, I guess.
-
-
-Just a reminder, if you want to send v6
-or if you want me to pick this up as-is.
-
-Thanks.
-
-
-
-
-
-
->         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
->         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> index e2f8504f5a2d..19857d18d814 100755
-> --- a/scripts/kconfig/streamline_config.pl
-> +++ b/scripts/kconfig/streamline_config.pl
-> @@ -143,6 +143,7 @@ my %depends;
->  my %selects;
->  my %prompts;
->  my %objects;
-> +my %config2kfile;
->  my $var;
->  my $iflevel = 0;
->  my @ifdeps;
-> @@ -201,6 +202,7 @@ sub read_kconfig {
->         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
->             $state = "NEW";
->             $config = $2;
-> +           $config2kfile{"CONFIG_$config"} = $kconfig;
->
->             # Add depends for 'if' nesting
->             for (my $i = 0; $i < $iflevel; $i++) {
-> @@ -591,6 +593,20 @@ while ($repeat) {
+>  drivers/bus/mhi/core/main.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index 9ec9b36..467c0ba 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -369,22 +369,29 @@ irqreturn_t mhi_irq_handler(int irq_number, void *dev)
+>  	return IRQ_HANDLED;
 >  }
->
->  my %setconfigs;
-> +my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
+>  
+> -irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
+> +irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+>  {
+> -	struct mhi_controller *mhi_cntrl = dev;
+> +	struct mhi_controller *mhi_cntrl = priv;
+> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>  	enum mhi_state state = MHI_STATE_MAX;
+>  	enum mhi_pm_state pm_state = 0;
+>  	enum mhi_ee_type ee = 0;
+>  
+>  	write_lock_irq(&mhi_cntrl->pm_lock);
+> -	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+> -		state = mhi_get_mhi_state(mhi_cntrl);
+> -		ee = mhi_cntrl->ee;
+> -		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+> +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+> +		write_unlock_irq(&mhi_cntrl->pm_lock);
+
+write_lock is only used for protecting 'mhi_cntrl->ee' but here we are not
+updating it if reg access is not valid. So there is no reason to hold this lock.
+
+> +		goto exit_intvec;
+>  	}
+>  
+> +	state = mhi_get_mhi_state(mhi_cntrl);
+> +	ee = mhi_cntrl->ee;
+> +	mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+
+But it is needed here.
+
+Thanks,
+Mani
+
+> +	dev_dbg(dev, "local ee:%s device ee:%s dev_state:%s\n",
+> +		TO_MHI_EXEC_STR(mhi_cntrl->ee), TO_MHI_EXEC_STR(ee),
+> +		TO_MHI_STATE_STR(state));
 > +
-> +sub in_preserved_kconfigs {
-> +    my $kconfig = $config2kfile{$_[0]};
-> +    if (!defined($kconfig)) {
-> +        return 0;
-> +    }
-> +    foreach my $excl (@preserved_kconfigs) {
-> +        if($kconfig =~ /^$excl/) {
-> +            return 1;
-> +        }
-> +    }
-> +    return 0;
-> +}
->
->  # Finally, read the .config file and turn off any module enabled that
->  # we could not find a reason to keep enabled.
-> @@ -644,6 +660,11 @@ foreach my $line (@config_file) {
->      }
->
->      if (/^(CONFIG.*)=(m|y)/) {
-> +        if (in_preserved_kconfigs($1)) {
-> +            dprint "Preserve config $1";
-> +            print;
-> +            next;
-> +        }
->         if (defined($configs{$1})) {
->             if ($localyesconfig) {
->                 $setconfigs{$1} = 'y';
-> --
-> 2.25.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+>  	if (state == MHI_STATE_SYS_ERR) {
+> -		dev_dbg(&mhi_cntrl->mhi_dev->dev, "System error detected\n");
+> +		dev_dbg(dev, "System error detected\n");
+>  		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+>  					       MHI_PM_SYS_ERR_DETECT);
+>  	}
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
