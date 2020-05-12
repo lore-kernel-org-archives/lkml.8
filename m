@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92741C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB7EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F37206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194F7206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbhHhuyO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sO7XfySX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgELMyX (ORCPT
+        id S1730048AbgELMyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51556 "EHLO
+        Tue, 12 May 2020 08:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730012AbgELMyR (ORCPT
+        by vger.kernel.org with ESMTP id S1729919AbgELMyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:54:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D43C05BD0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:13 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id v12so15191388wrp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:13 -0700 (PDT)
+        Tue, 12 May 2020 08:54:12 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 160B1C05BD0A
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:11 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id m24so12022405wml.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DiGkcP4eFfexy4SQNg7ufjBEY09YfamROxya/IRuOvI=;
-        b=lbhHhuyOPtBdd3q/gIrXbLMkzPLkug63EWPG7QItNwgksACc7MSj/9kF1UPQ8MLJqh
-         unxRTRIW1DyZxi2DdzBndiS1VPS62K39G9g8zOpKDjNfZbU47NFi6qoTXe1K9wkyrUS/
-         DlJJxWVA3GKMxyWwBnDpZwuudkuOYYk762HkMYAvvUaso/D+8paTno94nFhGa/kn3FlL
-         NcfHo42OmU9PCgj51w+Axe4g/w5EGoa69wsjmd0tSFkBF9ZCZpqaNqiD/+xJ8DDYSxbT
-         XzMtZEv2QGvk8VdHoxSUgZOr9n5N6drn6eUY8W0MFprKVglnYkSkBnDkYDwm0998PhHQ
-         uxlg==
+        bh=ajq1/CzNblXv+RM50/78rYUghtc/wnGS+X5x8yODyro=;
+        b=sO7XfySXe80lnwqkM0HWalZ/ES2oFzxHC7xem4vOYv+YNGQ6ZdL81IDKCWGRDYfo0K
+         AIuWbCIrg5La5wCRDU2tJVS4DgFc4wCRbB6qfTOAeTyqMYZlg2VZaW+copxuN+tcappx
+         IuMRgLabKURL8TLvRpsSTyWAzjpVwbUMLwc0VPYo7NzOqGT1qcj5lQ6VT/ZlAltjSLbe
+         FSBTGWNX19PpIanyCGJPjsAd/QKzg+8cSl7cg13/lrwi54mXTWI8SfsQ8zpneQZZBtdi
+         5FpDn2wm5oPgJImqxZQYO6p3LvBY/IvBBd3lsGCb7YLa0bMxREUTf1p5wqFbjpk6DEsd
+         rjMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DiGkcP4eFfexy4SQNg7ufjBEY09YfamROxya/IRuOvI=;
-        b=F4NS+HdAjGHqz1AWX2MFrIDIDqA4+G0A3fI4OypNn4Xyu5ixA2gAdEa7PRDPUbFcdR
-         AC3R3hKhHf+TUCLeb1IbPc2eFuQQ+s6eVbWIKHbm7dBT0fvOofGWAtLmM2BwpQpSLBPn
-         2guIt7L3rCMIsfaK1Nu0UG+ItN+P1HQBVoRsuxSZ84kSnUqsbzthL+gSja8jczfj2Px+
-         AyohiHErjhLs4Yg1usKvRXa072MiFUeYsdz0saDonrYn3Re+EOKrjiELlqiETx7b45qi
-         ryEcLFmOAC3tkA8aF34r5q8aZZduF7st8BjiuI6QmnhK1VfnffCP5ue6w7cPe34E18XF
-         NjbQ==
-X-Gm-Message-State: AOAM530atUacr8lYByxF4h/XtVEZMl2B+e9zfG2pyAwlAwvhkEbAJEIM
-        2IUMJI3izxCbCu9cZPUC5PmYhg==
-X-Google-Smtp-Source: ABdhPJxcybAIvGXBrRlxlNGIKrgxSDZXtYzJGmC8jFI2UV/YzTeoWr1beziqnC7jrJDlyfrzn/I/bQ==
-X-Received: by 2002:a5d:4491:: with SMTP id j17mr2147301wrq.41.1589288052058;
-        Tue, 12 May 2020 05:54:12 -0700 (PDT)
+        bh=ajq1/CzNblXv+RM50/78rYUghtc/wnGS+X5x8yODyro=;
+        b=qd7D7e2rStWf048uxfNMqXEVamH19uobyMX12/ID5dbsrxxOh2DTF72FTXYMIhmd3W
+         aJIBHL8H07hxJ1vyqz6uSVK0Kpa2ueQa5gvJn1MWMj8diQ8CZKx6z8eiDDvuBNHPJdZS
+         OpEdd3coFC2t7NSwq256OdJE2o2ngncJam75hX4Cl0iTD782CLqVhZuVMDq+/ZmDWTlb
+         WyVGtrTPghkTg3hQp2XB1uKp2VcZObRq86mu8R2+9DGtpgTIIMOneF18sf9OlPT+RVnr
+         bBfcf8mWx8tZZcooEz8z4UNsSMuKYkug40FSOZ2DD/yUkPQ38/89CSMMmgZF0OQ6p7QJ
+         uB0A==
+X-Gm-Message-State: AGi0PuY19dl+yH1smJz1lZWaNsEpNhfcqc1f17o/fBZNYwSebVoGsWQf
+        12r7Drq9g85IYjyxSDwhm8wuuw==
+X-Google-Smtp-Source: APiQypI9T2ok8lrlawVLg9C+vh31VJV/7SAheVI1C66BCWNhBoiMINsaNb/Pq91MS1pb1eZXRFnVwg==
+X-Received: by 2002:a05:600c:21d6:: with SMTP id x22mr39074416wmj.95.1589288049805;
+        Tue, 12 May 2020 05:54:09 -0700 (PDT)
 Received: from localhost.localdomain (212-39-89-66.ip.btc-net.bg. [212.39.89.66])
-        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.54.09
+        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.54.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 05:54:11 -0700 (PDT)
+        Tue, 12 May 2020 05:54:09 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         saravanak@google.com, sibis@codeaurora.org, mka@chromium.org
@@ -67,9 +67,9 @@ Cc:     robh+dt@kernel.org, rnayak@codeaurora.org,
         jcrouse@codeaurora.org, evgreen@chromium.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
-Date:   Tue, 12 May 2020 15:53:26 +0300
-Message-Id: <20200512125327.1868-10-georgi.djakov@linaro.org>
+Subject: [PATCH v8 08/10] cpufreq: dt: Validate all interconnect paths
+Date:   Tue, 12 May 2020 15:53:25 +0300
+Message-Id: <20200512125327.1868-9-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512125327.1868-1-georgi.djakov@linaro.org>
 References: <20200512125327.1868-1-georgi.djakov@linaro.org>
@@ -80,34 +80,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+Currently when we check for the available resources, we assume that there
+is only one interconnect path, but in fact it could be more than one. Do
+some validation to determine the number of paths and verify if each one
+of them is available.
 
-Add interconnect-tags bindings to enable passing of optional
-tag information to the interconnect framework.
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
 v8:
-* New patch, picked from here:
-  https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+* New patch.
 
- .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/cpufreq/cpufreq-dt.c | 49 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 6f5d23a605b7..c1a226a934e5 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
- 			 * dma-mem: Path from the device to the main memory of
- 			            the system
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 4ecef3257532..3dd28c2c1633 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -91,12 +91,54 @@ static const char *find_supply_name(struct device *dev)
+ 	return name;
+ }
  
-+interconnect-tags : List of interconnect path tags sorted in the same order as the
-+		    interconnects property. Consumers can append a specific tag to
-+		    the path and pass this information to the interconnect framework
-+		    to do aggregation based on the attached tag.
++static int find_icc_paths(struct device *dev)
++{
++	struct device_node *np;
++	struct icc_path **paths;
++	int i, count, num_paths;
++	int ret = 0;
 +
- Example:
++	np = of_node_get(dev->of_node);
++	if (!np)
++		return 0;
++
++	count = of_count_phandle_with_args(np, "interconnects",
++					   "#interconnect-cells");
++	of_node_put(np);
++	if (count < 0)
++		return 0;
++
++	/* two phandles when #interconnect-cells = <1> */
++	if (count % 2) {
++		dev_err(dev, "%s: Invalid interconnects values\n", __func__);
++		return -EINVAL;
++	}
++
++	num_paths = count / 2;
++	paths = kcalloc(num_paths, sizeof(*paths), GFP_KERNEL);
++	if (!paths)
++		return -ENOMEM;
++
++	for (i = 0; i < num_paths; i++) {
++		paths[i] = of_icc_get_by_index(dev, i);
++		ret = PTR_ERR_OR_ZERO(paths[i]);
++		if (ret)
++			break;
++	}
++
++	while (i--)
++		icc_put(paths[i]);
++
++	kfree(paths);
++
++	return ret;
++}
++
+ static int resources_available(void)
+ {
+ 	struct device *cpu_dev;
+ 	struct regulator *cpu_reg;
+ 	struct clk *cpu_clk;
+-	struct icc_path *cpu_path;
+ 	int ret = 0;
+ 	const char *name;
  
- 	sdhci@7864000 {
+@@ -123,8 +165,7 @@ static int resources_available(void)
+ 
+ 	clk_put(cpu_clk);
+ 
+-	cpu_path = of_icc_get(cpu_dev, NULL);
+-	ret = PTR_ERR_OR_ZERO(cpu_path);
++	ret = find_icc_paths(cpu_dev);
+ 	if (ret) {
+ 		if (ret == -EPROBE_DEFER)
+ 			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
+@@ -134,8 +175,6 @@ static int resources_available(void)
+ 		return ret;
+ 	}
+ 
+-	icc_put(cpu_path);
+-
+ 	name = find_supply_name(cpu_dev);
+ 	/* Platform doesn't require regulator */
+ 	if (!name)
