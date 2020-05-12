@@ -2,176 +2,111 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47A1C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1236EC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5DD20740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C1920740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:09:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqKa0iCL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgELVIU (ORCPT
+        id S1731153AbgELVJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:08:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39584 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgELVIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:08:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7EB6CB02C;
-        Tue, 12 May 2020 21:08:19 +0000 (UTC)
-Date:   Tue, 12 May 2020 23:08:12 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 23/75] x86/boot/compressed/64: Setup GHCB Based VC
- Exception handler
-Message-ID: <20200512210812.GF8135@suse.de>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-24-joro@8bytes.org>
- <20200512181157.GD6859@zn.tnic>
+        Tue, 12 May 2020 17:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726324AbgELVJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:09:22 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4386EC061A0C;
+        Tue, 12 May 2020 14:09:21 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id w6so13901732ilg.1;
+        Tue, 12 May 2020 14:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YA8zNP4b5D3ILHHzh+PoKh6Aq9QfuIQ/xBD90HQx3wM=;
+        b=kqKa0iCLug4Ge+sm7fKli2nz0vkdO+EuZS+hztljWSLCTd7ktmaXvBKx8Ej81F5Q50
+         AMJvhXN4CmbAoihmr6CO4xLbbWJS22UQ15ahaAIuUWiSbsYFZSHEMlxF9TgRn51FSrjh
+         rsSUMrjL7Dxnn4/2Ti6nV8XkG/wR+lzMsO3INwDkhYzG0qH7pV1GSfMTQ9bEKPsTUemm
+         aUNVkyHYCnd84UUIiTf5hHx8aXwSIPh7UNnPNSoIvQesreI7glfl5YH3kOhRe/pFLK1M
+         iibxp2VtIt9A0vu9j68bB1TOBlrKDMCPnZ4JquL2G4j1nZruY96PrUQkeL8Kgd+mOtH/
+         iC0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YA8zNP4b5D3ILHHzh+PoKh6Aq9QfuIQ/xBD90HQx3wM=;
+        b=RjjcZ93yZxvnl7+SqBsWPBnBSeZqKnbXd/X4gScRZ4sYs02IHGDHlsIydyiaHesiIX
+         3M9QAjLDpGkgL3HmLndhRaXKeEaUu/25igngtfYrzrBGLJdVCqvJp9VvOw/vrbI4qZ9M
+         cXoCcZpw7f3lbJvJ5cFjG9CGvanT60a5jk/sEqeY3SclVx+qQfca5pSJLo37H17t7h94
+         7haOytnn8O64Or+AMfuwdAP61rjGmN2AwMWngxAsJMmaihVqLIvacOuy++qWXVkwYUcn
+         ZwG/tZ7OZHKjZsNa7CkEm420FMtuTnI+JLe+oP1IWHar4dG2lgqBbcmXfX7XNYaJ/PVM
+         tnBQ==
+X-Gm-Message-State: AGi0PuZfQnQ7VJw1E9XEbhBdNKexRD6RhAEuN+BACQa0+DmdOYQFVzaS
+        P4cL0WAeybIXuI1CXXAy/VEgcdHRJ07Z5kdJea0=
+X-Google-Smtp-Source: APiQypIWzLFfm9ywTEcxOxyz1qFQvElK5xmP5/DecFMolM7jE40MUushb26pwgZUzyMX/wxkLEO6bN4B5/09tPX0ypY=
+X-Received: by 2002:a92:7a07:: with SMTP id v7mr24375024ilc.238.1589317760606;
+ Tue, 12 May 2020 14:09:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512181157.GD6859@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+ <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid> <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+In-Reply-To: <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 00:09:07 +0300
+Message-ID: <CAHp75VewDvjDJjvKgQ_5v_=Kxp6B1js0J+PrsfP-WC+qa=ogtQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
+To:     Joe Perches <joe@perches.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:11:57PM +0200, Borislav Petkov wrote:
-> > +# sev-es.c inludes generated $(objtree)/arch/x86/lib/inat-tables.c
-> 
-> 	      "includes"
-> 
-> > +CFLAGS_sev-es.o += -I$(objtree)/arch/x86/lib/
-> 
-> Does it?
-> 
-> I see
-> 
-> #include "../../lib/inat.c"
-> #include "../../lib/insn.c"
-> 
-> only and with the above CFLAGS-line removed, it builds still.
-> 
-> Leftover from earlier?
+On Wed, Apr 29, 2020 at 3:40 AM Joe Perches <joe@perches.com> wrote:
+> On Tue, 2020-04-28 at 17:23 -0700, Douglas Anderson wrote:
 
-No, this is a recent addition, otherwise this breaks out-of-tree builds
-(make O=/some/path ...) because inat-tables.c (included from inat.c) is
-generated during build and ends up in the $(objtree).
+...
 
-> > +	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE, 1);
-> > +	insn_get_length(&ctxt->insn);
-> > +
-> > +	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
-> 
-> Why are we checking whether the immediate? insn_get_length() sets
-> insn->length unconditionally while insn_get_immediate() can error out
-> and not set ->got... ?
+> +       int     (*request)(struct gpio_chip *gc, unsigned int offset);
+> +       void    (*free)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*get_direction)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*direction_input)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*direction_output)(struct gpio_chip *gc,
+> +                                   unsigned int offset, int value);
 
-Because the immediate is the last part of the instruction which is
-decoded (even if there is no immediate). The .got field is set when
-either the immediate was decoded successfully or, in case the
-instruction has no immediate, when the rest of the instruction was
-decoded successfully. So testing immediate.got is the indicator whether
-decoding was successful.
+Here...
 
-> 
-> > +
-> > +	return ret;
-> > +}
-> 
-> ...
-> 
-> > +static bool sev_es_setup_ghcb(void)
-> > +{
-> > +	if (!sev_es_negotiate_protocol())
-> > +		sev_es_terminate(GHCB_SEV_ES_REASON_PROTOCOL_UNSUPPORTED);
-> > +
-> > +	if (set_page_decrypted((unsigned long)&boot_ghcb_page))
-> > +		return false;
-> > +
-> > +	/* Page is now mapped decrypted, clear it */
-> > +	memset(&boot_ghcb_page, 0, sizeof(boot_ghcb_page));
-> > +
-> > +	boot_ghcb = &boot_ghcb_page;
-> > +
-> > +	/* Initialize lookup tables for the instruction decoder */
-> > +	inat_init_tables();
-> 
-> Yeah, that call doesn't logically belong in this function AFAICT as this
-> function should setup the GHCB only. You can move it to the caller.
+> +       int     (*get)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*get_multiple)(struct gpio_chip *gc,
+> +                               unsigned long *mask, unsigned long *bits);
+> +       void    (*set)(struct gpio_chip *gc, unsigned int offset, int value);
+> +       void    (*set_multiple)(struct gpio_chip *gc,
+> +                               unsigned long *mask, unsigned long *bits);
+> +       int     (*set_config)(struct gpio_chip *gc,
+> +                             unsigned int offset, unsigned long config);
 
-Probably better rename the function, it also does the sev-es protocol
-version negotiation and all other related setup tasks. Maybe
-sev_es_setup() is a better name?
+...and here perhaps offset to move to previous line despite checkpatch warnings.
 
-> > +	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
-> > +		error("Can't map GHCB page encrypted");
-> 
-> Is that error() call enough?
-> 
-> Shouldn't we BUG_ON() here or mark that page Reserved or so, so that
-> nothing uses it during the system lifetime and thus avoid the strange
-> cache effects?
+> +       int     (*to_irq)(struct gpio_chip *gc, unsigned int offset);
+> +       void    (*dbg_show)(struct seq_file *s, struct gpio_chip *gc);
+> +       int     (*init_valid_mask)(struct gpio_chip *gc,
+> +                                  unsigned long *valid_mask,
+> +                                  unsigned int ngpios);
+> +       int     (*add_pin_ranges)(struct gpio_chip *gc);
 
-If the above call fails its the end of the systems lifetime, because we
-can't continue to boot an SEV-ES guest when we have no GHCB.
-
-BUG_ON() and friends are also not available in the pre-decompression
-boot stage.
-
-> 
-> ...
-> 
-> > +static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
-> > +					  struct es_em_ctxt *ctxt,
-> > +					  u64 exit_code, u64 exit_info_1,
-> > +					  u64 exit_info_2)
-> > +{
-> > +	enum es_result ret;
-> > +
-> > +	/* Fill in protocol and format specifiers */
-> > +	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
-> > +	ghcb->ghcb_usage       = GHCB_DEFAULT_USAGE;
-> > +
-> > +	ghcb_set_sw_exit_code(ghcb, exit_code);
-> > +	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
-> > +	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
-> > +
-> > +	sev_es_wr_ghcb_msr(__pa(ghcb));
-> > +	VMGEXIT();
-> > +
-> > +	if ((ghcb->save.sw_exit_info_1 & 0xffffffff) == 1) {
-> 					^^^^^^^^^^^
-> 
-> (1UL << 32) - 1
-> 
-> I guess.
-
-Or lower_32_bits(), probably. I'll change it.
-
-Thanks,
-
-	Joerg
-
+-- 
+With Best Regards,
+Andy Shevchenko
