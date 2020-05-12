@@ -2,172 +2,202 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8917C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0AEC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BA22075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vbge21sb"
+	by mail.kernel.org (Postfix) with ESMTP id 47AB020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgELLha (ORCPT
+        id S1729564AbgELLix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgELLh2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:37:28 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3044C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:37:26 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id o8so2139155vkd.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j3KKWLl8HkCXQ+MjcPLWxrbD4LKOdKANjNPpG/Ugus0=;
-        b=Vbge21sbZsurEnSDxiksRTO9LZRl3h2o3BB6q1sAGyp/DOuqkK9GiqIwfc1pn2rKaQ
-         +FOZP1b81+/JyMT6ifVCGu6OuMY8LeGnbZMahPjvjNxM8MiDlDifwD608MPe8WxX2RcB
-         tEiqz96bDFDg0Hp/zaEQhF9th2wdMK/Dw15F4sxHzJVApsdZJP8RoHkvv2IJOmd54QWs
-         DF6a8YPJC1TSjX/ZCfJVpcSSvVsW5ZniqxI3vPjuCEuakvdiRcbFRgJALcargyo7JKye
-         E1z4azcfHOLWj19CKF53Dniupqfd0fYW3VRrKj9vEz91uXYLPR3j7bHxv1KYNEHIX8Qk
-         MJCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j3KKWLl8HkCXQ+MjcPLWxrbD4LKOdKANjNPpG/Ugus0=;
-        b=o1WRLpkTYFRRIQ5UEj+yj4yinPYoeEVHYS1u7AG6y+vmZ+PL1J5Bjy/sxxb0ATQHrZ
-         +BDyX5rAyyoKxw+JfvYENieek54CPZZBJUhurk/qqv4O/W7GrcJqYy21J+rTh3925qyS
-         sPt0PucqRSMroko+OixIqQkec+wc1LGKj3J9g2rRBXSOMq8johLre09YlEKfrz63FeOO
-         WFEJ3vFQABG7QvVdOTfQadK9VWJewPbbaw/f4kLzPAIkpVnCdG3ucuQ+XSFVwM2QHToS
-         uE+1GDDT4qYTfUDnXMjEPpjzW5iW0otm/M6Yu1UdYx7RLcLgGrrKS9nICeI5caSH3iW1
-         Xzdg==
-X-Gm-Message-State: AGi0PuYf34vSbZBON8BAgwx/nwhbEXQgnep0mc50jWvuyJbAif/kppga
-        m3LPO0YoE/hUI/LmKp9UxWIetwrUe+Vd4CzoxCY=
-X-Google-Smtp-Source: APiQypIQM2/qGTsyEbGNVjZeO6kaUSKCSi0gcRXR6wsSfcpJVHlkk5f8mQh/QXyXnkH5Y0GCjhYJfKkFAWpoM6ISnAE=
-X-Received: by 2002:a1f:2f91:: with SMTP id v139mr15017877vkv.22.1589283445902;
- Tue, 12 May 2020 04:37:25 -0700 (PDT)
+        Tue, 12 May 2020 07:38:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:53022 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728085AbgELLix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:38:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D48E30E;
+        Tue, 12 May 2020 04:38:52 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D9103F71E;
+        Tue, 12 May 2020 04:38:42 -0700 (PDT)
+Subject: Re: [PATCH v7 04/15] PM / EM: add support for other devices than CPUs
+ in Energy Model
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-5-lukasz.luba@arm.com>
+ <20200511134319.GA29112@google.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <270f3e37-8de8-2841-dca3-8d70089f7317@arm.com>
+Date:   Tue, 12 May 2020 12:38:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200511115524.22602-1-Rodrigo.Siqueira@amd.com> <20200511115524.22602-3-Rodrigo.Siqueira@amd.com>
-In-Reply-To: <20200511115524.22602-3-Rodrigo.Siqueira@amd.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 12 May 2020 12:34:47 +0100
-Message-ID: <CACvgo53KfLkTg4UvT5E+afX+z4FjMcpdctD5=v32WJs6TS5s5g@mail.gmail.com>
-Subject: Re: [PATCH V4 2/3] drm/vkms: Compute CRC without change input data
-To:     Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200511134319.GA29112@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rodrigo,
 
-On Mon, 11 May 2020 at 12:55, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com> wrote:
->
-> From: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
->
-> The compute_crc() function is responsible for calculating the
-> framebuffer CRC value; due to the XRGB format, this function has to
-> ignore the alpha channel during the CRC computation. Therefore,
-> compute_crc() set zero to the alpha channel directly in the input
-> framebuffer, which is not a problem since this function receives a copy
-> of the original buffer. However, if we want to use this function in a
-> context without a buffer copy, it will change the initial value. This
-> patch makes compute_crc() calculate the CRC value without modifying the
-> input framebuffer.
->
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index 258e659ecfba..686d25e7b01d 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -9,33 +9,40 @@
->
->  #include "vkms_drv.h"
->
-> +static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
-> +                                const struct vkms_composer *composer)
-> +{
-> +       int src_offset = composer->offset + (y * composer->pitch)
-> +                                         + (x * composer->cpp);
-> +
-> +       return *(u32 *)&buffer[src_offset];
-> +}
-> +
->  /**
->   * compute_crc - Compute CRC value on output frame
->   *
-> - * @vaddr_out: address to final framebuffer
-> + * @vaddr: address to final framebuffer
->   * @composer: framebuffer's metadata
->   *
->   * returns CRC value computed using crc32 on the visible portion of
->   * the final framebuffer at vaddr_out
->   */
-> -static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
-> +static uint32_t compute_crc(const u8 *vaddr,
-> +                           const struct vkms_composer *composer)
->  {
-> -       int i, j, src_offset;
-> +       int x, y;
->         int x_src = composer->src.x1 >> 16;
->         int y_src = composer->src.y1 >> 16;
->         int h_src = drm_rect_height(&composer->src) >> 16;
->         int w_src = drm_rect_width(&composer->src) >> 16;
-> -       u32 crc = 0;
-> +       u32 crc = 0, pixel = 0;
->
-> -       for (i = y_src; i < y_src + h_src; ++i) {
-> -               for (j = x_src; j < x_src + w_src; ++j) {
-> -                       src_offset = composer->offset
-> -                                    + (i * composer->pitch)
-> -                                    + (j * composer->cpp);
-> +       for (y = y_src; y < y_src + h_src; ++y) {
-> +               for (x = x_src; x < x_src + w_src; ++x) {
->                         /* XRGB format ignores Alpha channel */
-> -                       memset(vaddr_out + src_offset + 24, 0,  8);
-> -                       crc = crc32_le(crc, vaddr_out + src_offset,
-> -                                      sizeof(u32));
-> +                       pixel = get_pixel_from_buffer(x, y, vaddr, composer);
-> +                       bitmap_clear((void *)&pixel, 0, 8);
-> +                       crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
->                 }
->         }
->
-IMHO using something like the following makes the code far simpler and clearer.
 
-offset = composer->offset + (y_src * composer->pitch) + (x_src * composer->cpp);
+On 5/11/20 2:43 PM, Quentin Perret wrote:
+> Hey Lukasz,
+> 
+> On Monday 11 May 2020 at 12:19:01 (+0100), Lukasz Luba wrote:
+> <snip>
+>> @@ -27,12 +29,15 @@ struct em_perf_state {
+>>    * em_perf_domain - Performance domain
+>>    * @table:		List of performance states, in ascending order
+>>    * @nr_perf_states:	Number of performance states
+>> - * @cpus:		Cpumask covering the CPUs of the domain
+>> + * @cpus:		Cpumask covering the CPUs of the domain. It's here
+>> + *			for performance reasons to avoid potential cache
+>> + *			misses during energy calculations in the scheduler
+> 
+> And because that saves a pointer, and simplifies allocating/freeing that
+> memory region :)
 
-for (i = 0; i < h_src; i++, offset += composer->pitch) {
-   for (j = 0; j < w_src; j++, offset += composer->cpp) {
-      pixel = get_pixel_from_buffer(vaddr, offset);
-      crc = crc32_le(crc, &pixel, sizeof(u32); // cast should not be needed
-   }
-}
+True, I will add this also:
+'and simplifies allocating/freeing that memory region'
 
-With the bitmap_clear() and related comment moved into get_pixel_from_buffer().
+> 
+> <snip>
+>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+>> index 5b8a1566526a..9cc7f2973600 100644
+>> --- a/kernel/power/energy_model.c
+>> +++ b/kernel/power/energy_model.c
+>> @@ -2,8 +2,9 @@
+>>   /*
+>>    * Energy Model of CPUs
+> 
+> Should this comment change too?
 
--Emil
+Yes, indeed. I will adjust it.
+
+> 
+> <snip>
+>> -static void em_debug_create_pd(struct em_perf_domain *pd, int cpu)
+>> +static void em_debug_create_pd(struct device *dev)
+>>   {
+>>   	struct dentry *d;
+>> -	char name[8];
+>>   	int i;
+>>   
+>> -	snprintf(name, sizeof(name), "pd%d", cpu);
+>> -
+>>   	/* Create the directory of the performance domain */
+>> -	d = debugfs_create_dir(name, rootdir);
+>> +	d = debugfs_create_dir(dev_name(dev), rootdir);
+> 
+> So what will be the name for the perf domain of CPUs now? cpuX?
+
+yeap, it will be 'cpu0', 'cpu4', etc...
+
+> 
+> <snip>
+>> @@ -142,8 +149,8 @@ em_create_pd(struct device *dev, int nr_states, struct em_data_callback *cb,
+>>   		 */
+>>   		opp_eff = freq / power;
+>>   		if (opp_eff >= prev_opp_eff)
+>> -			pr_warn("pd%d: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
+>> -					cpu, i, i - 1);
+>> +			dev_dbg(dev, "EM: hertz/watts ratio non-monotonically decreasing: em_perf_state %d >= em_perf_state%d\n",
+>> +					i, i - 1);
+> 
+> It feels like changing from warn to debug doesn't really belong to this
+> patch no?
+
+I thought that these prints are not worth to introduce another patch.
+This warning is a bit tricky, because we (SW eng) basically are not able
+to tweak OPPs, we can only remove them to calm down this warning.
+
+There are platforms, with dozen of OPPs, seeing this. Warnings triggers 
+the automated tests scripts, which are sensitive to dmesg log level and
+cause developers to spent time and investigate the issue.
+
+Then, what if these OPPs are needed because the thermal was tested OK
+with some OPPs which unfortunately are triggering also this warning.
+They cannot remove these OPPS, but the warning would stay. We might see
+this also for GPUs.
+
+I decided to change it into dbg, due to the reason above.
+
+> 
+> <snip>
+>> @@ -216,47 +274,50 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
+>>   	 */
+>>   	mutex_lock(&em_pd_mutex);
+>>   
+>> -	for_each_cpu(cpu, span) {
+>> -		/* Make sure we don't register again an existing domain. */
+>> -		if (READ_ONCE(per_cpu(em_data, cpu))) {
+>> -			ret = -EEXIST;
+>> -			goto unlock;
+>> -		}
+>> +	if (dev->em_pd) {
+>> +		ret = -EEXIST;
+>> +		goto unlock;
+>> +	}
+>>   
+>> -		/*
+>> -		 * All CPUs of a domain must have the same micro-architecture
+>> -		 * since they all share the same table.
+>> -		 */
+>> -		cap = arch_scale_cpu_capacity(cpu);
+>> -		if (prev_cap && prev_cap != cap) {
+>> -			pr_err("CPUs of %*pbl must have the same capacity\n",
+>> -							cpumask_pr_args(span));
+>> +	if (_is_cpu_device(dev)) {
+> 
+> Something like
+> 
+> 	if (!_is_cpu_device(dev))
+> 		goto device;
+> 
+> would limit the diff a bit, but that may just be personal taste.
+
+Possible
+
+> 
+> But appart from these nits, the patch LGTM.
+
+Thank you for the review.
+
+I will wait for Daniel's (because he suggested the em_pd inside
+device struct) comments and if there is no other issues I will just
+resend the patch with adjusted comment fields in response.
+
+Regards,
+Lukasz
+
+> 
+> Thanks,
+> Quentin
+> 
