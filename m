@@ -2,125 +2,113 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E952C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C98C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6811020736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A63206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589287088;
+	bh=uDlo9Exmm/b6xQKP3G5CHPi7Uy1tLbtDYkh/Nhxo4Qg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GjdZrABor5OmoWSiHZt1iG/Imi6AJNZSColRQR9wgL81VIX9mN5Q/IOjjNWbFoJ3y
+	 0XbWVBKdlxrpd79TlTtMxxe78j012e4WlktnCBk/DS5CirrJw0frTtSrkTS1G92bHQ
+	 Nu9m0R2P4tbYvt6uvw3W1Prud1xpKeDLQeIpBNqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgELMfx (ORCPT
+        id S1729446AbgELMiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:35:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2792 "EHLO mga14.intel.com"
+        Tue, 12 May 2020 08:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELMfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:35:53 -0400
-IronPort-SDR: ZW9YklmNTR0YgwAp6NFA+PvUJVaiXkolqsMYXFZBVzYRyhHWLlBWg8UygSQoAHCY99oXsG8lqz
- Utwl3/DlxHCg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 05:35:52 -0700
-IronPort-SDR: LhFEIQ/w6qJjoAx9cR1EgbDS61a0cyLOb9Dv0WHWw9jPq/uobO/v5xW/xvgrKEOdoi800UDk0q
- hkj+aStjuSfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
-   d="scan'208";a="251451800"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 12 May 2020 05:35:49 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jYU8V-006Cdk-Rh; Tue, 12 May 2020 15:35:51 +0300
-Date:   Tue, 12 May 2020 15:35:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200512123551.GX185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
- <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
+        id S1726891AbgELMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 08:38:06 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3F78206DD;
+        Tue, 12 May 2020 12:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589287085;
+        bh=uDlo9Exmm/b6xQKP3G5CHPi7Uy1tLbtDYkh/Nhxo4Qg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B2thKUjM4ZPlMFVHhrRTOjlAH+a9pqbcg6ruG6LJ9xJo2/xDmqEWdgQPysdu5T/S5
+         5j+UiuF2ruXWMcM/esh0PG8xkSDzqz5nhYgaz3Jfl3MzDCzO+nX+Loo6ZJf+kd+gUM
+         pbPga4aOzFmFVxGdhMXY+7uiywOg5b0wYCR2SQZI=
+Date:   Tue, 12 May 2020 13:38:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
+Message-ID: <20200512123801.GG5110@sirena.org.uk>
+References: <cover.1588320655.git.shengjiu.wang@nxp.com>
+ <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
+ <20200501102158.GA5276@sirena.org.uk>
+ <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
+ <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qoTlaiD+Y2fIM3Ll"
 Content-Disposition: inline
-In-Reply-To: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com>
+X-Cookie: The only perfect science is hind-sight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 12:16:22AM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > > Maximum block size DW DMAC configuration corresponds to the max segment
-> > > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > > value specific to the probed DW DMA controller. It shall help the DMA
-> > > clients to create size-optimized SG-list items for the controller. This in
-> > > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > > better DMA device performance.
 
-> > Yeah, I have locally something like this and I didn't dare to upstream because
-> > there is an issue. We have this information per DMA controller, while we
-> > actually need this on per DMA channel basis.
-> > 
-> > Above will work only for synthesized DMA with all channels having same block
-> > size. That's why above conditional is not needed anyway.
-> 
-> Hm, I don't really see why the conditional isn't needed and this won't work. As
-> you can see in the loop above Initially I find a maximum of all channels maximum
-> block sizes and use it then as a max segment size parameter for the whole device.
-> If the DW DMA controller has the same max block size of all channels, then it
-> will be found. If the channels've been synthesized with different block sizes,
-> then the optimization will work for the one with greatest block size. The SG
-> list entries of the channels with lesser max block size will be split up
-> by the DW DMAC driver, which would have been done anyway without
-> max_segment_size being set. Here we at least provide the optimization for the
-> channels with greatest max block size.
-> 
-> I do understand that it would be good to have this parameter setup on per generic
-> DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-> such facility, so setting at least some justified value is a good idea.
-> 
-> > 
-> > OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> > that Intel Medfield has interesting settings, but I don't remember if DMA
-> > channels are different inside the same controller).
-> > 
-> > Vineet, do you have any information that Synopsys customers synthesized DMA
-> > controllers with different channel characteristics inside one DMA IP?
-> 
-> AFAICS the DW DMAC channels can be synthesized with different max block size.
-> The IP core supports such configuration. So we can't assume that such DMAC
-> release can't be found in a real hardware just because we've never seen one.
-> No matter what Vineet will have to say in response to your question.
+--qoTlaiD+Y2fIM3Ll
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-My point here that we probably can avoid complications till we have real
-hardware where it's different. As I said I don't remember a such, except
-*maybe* Intel Medfield, which is quite outdated and not supported for wider
-audience anyway.
+On Tue, May 12, 2020 at 10:48:41AM +0800, Shengjiu Wang wrote:
+> On Wed, May 6, 2020 at 10:33 AM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
+> > On Fri, May 1, 2020 at 6:23 PM Mark Brown <broonie@kernel.org> wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > > > EDMA requires the period size to be multiple of maxburst. Otherwise
+> > > > the remaining bytes are not transferred and thus noise is produced.
 
+> > > If this constraint comes from the DMA controller then normally you'd
+> > > expect the DMA controller integration to be enforcing this - is there no
+> > > information in the DMA API that lets us know that this constraint is
+> > > there?
 
+> > No, I can't find one API for this.
+> > Do you have a recommendation?
+
+> could you please recommend which DMA API can I use?
+
+Not off-hand, you'd probably need to extend the API to export the
+information.
+
+--qoTlaiD+Y2fIM3Ll
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66mKkACgkQJNaLcl1U
+h9D3bwf+L1SDbZMmf3kj5H/WHV+WYYcxZvjpF2rx3puuQVDabgoA6GJxeqw/Y+E1
+5yyW83wYPDD8fGV58m6XOxoLG3dkr5XC1+TFhPz5R1GuBOnLZ46HiG5C05SbEzZm
+LAMKfH73aIsLtKrRk54PhzI2A2NBfO19TVVxWw4qP00k/xe2AuNQXOBNFq8vW+6a
+UfgCJuvJFyizBVuid1eYBz4QTgKf/xbrQEfQAPWI72jFFgs8vzHCbPICl62acbOy
+ibciDr6vghSxDewz9DyynJ0Q0SminczxTQ8e4xACqE6yz10Jh6WU07ihBjJndIlR
+/ttLTH02Vy9Ail0rfr1jNuHIRa9U7w==
+=SUbH
+-----END PGP SIGNATURE-----
+
+--qoTlaiD+Y2fIM3Ll--
