@@ -2,105 +2,161 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07237C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A67C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D66D0206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7E3206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SMFHrd/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgELPZH (ORCPT
+        id S1730491AbgELPZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:25:07 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:34215 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726891AbgELPZG (ORCPT
+        Tue, 12 May 2020 11:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgELPZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:25:06 -0400
-Received: (qmail 2205 invoked by uid 500); 12 May 2020 11:25:05 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 May 2020 11:25:05 -0400
-Date:   Tue, 12 May 2020 11:25:05 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Akira Yokosawa <akiyks@gmail.com>
-cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <vpillai@digitalocean.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU
- pre-initialization test
-In-Reply-To: <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2005121124290.26505-100000@netrider.rowland.org>
+        Tue, 12 May 2020 11:25:57 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A52C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:25:57 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f15so5517642plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ysPVkuHZlCUDLCDE0RocFDeyRDVDk+f9kkbHh/cU8L8=;
+        b=SMFHrd/lar/hEBAOFQiHXSSR9U39NLtLwd7jgj65HZbx+DND5mcsZdCrqpNpniEP3P
+         oyuGuCVF7ribEdlPYF00NdD2r+l7LNsV78OsP7/SfHBiFE2/e/8frUOQcVsYdRox8tpa
+         7Uq1C2SLmyZvVIRXJi6rujafwAzj5UU+ySlwuVQFnODiN5L1M4I/84Xgh5qoxKk2emEX
+         qCPi25bAkS1UG0IC4BUmEL1srDooTyTbAZfoQaivNmN4RIJkbX08dqO1szYxPdSD3sWw
+         jwH8ybyyumhCIQ4oP/77Fb2tkuDcXkd7QCu/rkkQNMa72B9c1s9LWeD5eWGC+DyF/ac1
+         X2WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ysPVkuHZlCUDLCDE0RocFDeyRDVDk+f9kkbHh/cU8L8=;
+        b=HKw3hnY+7povhMD8sMzBpAL4+Ar5vl1FJeGP9PhmdeH48Ft7vhElYpOCE6x9FPc7pu
+         Mw0A98TdK/R7Ts+J1kMZCR7pdQF0hMYHXHSNrW+TBR6bwIhquIIAqF0w6UzOetXDSJhf
+         QAsjZts3CascKd4mCLRIHgYJ8UjfZ7zsUg7VHOfS4ITy0MfcEtMNXmU/AiROrInCWv/f
+         vyLte0sfasZhoxPfupmJfBRM+LLzdP3UF2MV7qa79+uyak+mXCqaNqrvxgGvtIcf2BQe
+         JMvf96VpRqVor8oQlHQGPrmpaD6p4uN7uIlrDQylA6J0tD/vkFy3cgxs/+zRmqb8BDCP
+         NNvw==
+X-Gm-Message-State: AGi0PuYvPLuYH2sDs9Hy9llp4bh/bgEviFOU1TuYSaad24o6+xxmNMgk
+        pZyfVehSaAKQHIqQT2OuhZHo6Q==
+X-Google-Smtp-Source: APiQypK3E7+DWqeR2cJL9DOnF5yoBfvT80a4z4PSZb3tzs/mNAE8JtKcT7rzJkFetE4WIQRL5hafOA==
+X-Received: by 2002:a17:90b:3110:: with SMTP id gc16mr29078739pjb.155.1589297156794;
+        Tue, 12 May 2020 08:25:56 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:25cc:e52:aad5:83c2? ([2605:e000:100e:8c61:25cc:e52:aad5:83c2])
+        by smtp.gmail.com with ESMTPSA id y6sm13015257pjw.15.2020.05.12.08.25.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 08:25:55 -0700 (PDT)
+Subject: Re: INFO: rcu detected stall in io_uring_release
+To:     syzbot <syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com>,
+        asml.silence@gmail.com, dan.carpenter@oracle.com, hdanton@sina.com,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <000000000000d845e305a56a0f24@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cfc56198-26ce-24da-70c0-05eb6094f0e5@kernel.dk>
+Date:   Tue, 12 May 2020 09:25:54 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <000000000000d845e305a56a0f24@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020, Akira Yokosawa wrote:
+On 5/11/20 8:17 PM, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    ac935d22 Add linux-next specific files for 20200415
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13a38f0a100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bc498783097e9019
+> dashboard link: https://syzkaller.appspot.com/bug?extid=66243bb7126c410cefe6
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=179b3b32100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+66243bb7126c410cefe6@syzkaller.appspotmail.com
+> 
+> rcu: INFO: rcu_preempt self-detected stall on CPU
+> rcu: 	0-....: (10533 ticks this GP) idle=aea/1/0x4000000000000002 softirq=10553/10555 fqs=5249 
+> 	(t=10501 jiffies g=12777 q=556)
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 8729 Comm: syz-executor.3 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+>  nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
+>  trigger_single_cpu_backtrace include/linux/nmi.h:165 [inline]
+>  rcu_dump_cpu_stacks+0x19b/0x1e5 kernel/rcu/tree_stall.h:254
+>  print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
+>  check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
+>  rcu_pending kernel/rcu/tree.c:3225 [inline]
+>  rcu_sched_clock_irq.cold+0x55d/0xd00 kernel/rcu/tree.c:2296
+>  update_process_times+0x25/0x60 kernel/time/timer.c:1727
+>  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+>  tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1320
+>  __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+>  __hrtimer_run_queues+0x5ca/0xed0 kernel/time/hrtimer.c:1584
+>  hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1646
+>  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1113 [inline]
+>  smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1138
+>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>  </IRQ>
+> RIP: 0010:io_ring_ctx_wait_and_kill+0x98/0x5a0 fs/io_uring.c:7301
+> Code: 01 00 00 4d 89 f4 48 b8 00 00 00 00 00 fc ff df 4c 89 ed 49 c1 ec 03 48 c1 ed 03 49 01 c4 48 01 c5 eb 1c e8 ba 65 9d ff f3 90 <41> 80 3c 24 00 0f 85 53 04 00 00 48 83 bb 10 01 00 00 00 74 21 e8
+> RSP: 0018:ffffc900054d7a50 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+> RAX: ffff888097c14400 RBX: ffff8880963a0000 RCX: 1ffff92000a9af37
+> RDX: 0000000000000000 RSI: ffffffff81d5ced6 RDI: ffff8880963a0300
+> RBP: ffffed1012c7402c R08: 0000000000000001 R09: ffffed1012c74061
+> R10: ffff8880963a0307 R11: ffffed1012c74060 R12: ffffed1012c74022
+> R13: ffff8880963a0160 R14: ffff8880963a0110 R15: ffffffff81d5d3e0
+>  io_uring_release+0x3e/0x50 fs/io_uring.c:7324
+>  __fput+0x33e/0x880 fs/file_table.c:280
+>  task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+>  exit_task_work include/linux/task_work.h:22 [inline]
+>  do_exit+0xb53/0x2e10 kernel/exit.c:795
+>  do_group_exit+0x125/0x340 kernel/exit.c:893
+>  get_signal+0x47b/0x24e0 kernel/signal.c:2735
+>  do_signal+0x81/0x2240 arch/x86/kernel/signal.c:784
+>  exit_to_usermode_loop+0x26c/0x360 arch/x86/entry/common.c:161
+>  prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+>  syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+>  do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c829
+> Code: Bad RIP value.
+> RSP: 002b:00007fdd2a37fc78 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+> RAX: 0000000000000003 RBX: 00000000004e0ce0 RCX: 000000000045c829
+> RDX: 0000000000000000 RSI: 0000000020000580 RDI: 00000000000000f1
+> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 0000000000000204 R14: 00000000004c425f R15: 00007fdd2a3806d4
 
-> From 7bb979aacd8788d174df8a56e9803ba9e5b7a381 Mon Sep 17 00:00:00 2001
-> From: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Date: Mon, 11 May 2020 22:06:46 -0400
-> Subject: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU pre-initialization test
-> 
-> Since this test returned to tools/memory-model/, make sure that it is
-> at least referenced from Documentation/litmus-tests/'s README.
-> 
-> Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Co-developed-by: Akira Yokosawa <akiyks@gmail.com>
-> [Alan: grammar nit]
-> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> ---
-> I said in the earlier message:
-> 
-> > The explanation under tools/memory-model/litmus-tests/README also need the same
-> > rewording.
-> 
-> , but obviously I was confused. It is good as is.
-> 
-> This is on top of my earlier patch series.
-> 
-> Joel, Alan, does this work with you?
-> 
->         Thanks, Akira
-> --
->  Documentation/litmus-tests/README | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-> index ac0b270b456c..b79e640214b9 100644
-> --- a/Documentation/litmus-tests/README
-> +++ b/Documentation/litmus-tests/README
-> @@ -24,6 +24,10 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
->  RCU (/rcu directory)
->  --------------------
->  
-> +MP+onceassign+derefonce.litmus (under tools/memory-model/litmus-tests/)
-> +    Demonstrates the use of rcu_assign_pointer() and rcu_dereference() to
-> +    ensure that an RCU reader will not see pre-initialization garbage.
-> +
->  RCU+sync+read.litmus
->  RCU+sync+free.litmus
->      Both the above litmus tests demonstrate the RCU grace period guarantee
+#syz fix: io_uring: use cond_resched() in io_ring_ctx_wait_and_kill()
 
-That's fine with me.
 
-Alan
+-- 
+Jens Axboe
 
