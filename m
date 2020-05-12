@@ -2,91 +2,100 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564C7C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F226C47076
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D81206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CyEh6KIP"
+	by mail.kernel.org (Postfix) with ESMTP id 39BCD206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgELRmp (ORCPT
+        id S1729320AbgELRoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:42:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56900 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbgELRmY (ORCPT
+        Tue, 12 May 2020 13:44:37 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:42680 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELRoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:42:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589305344; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=pBuTcqNKTPCo/Jfx1CZ1DBivyl6rTguL5IkTaBeu1U8=; b=CyEh6KIP6KUtFMtTfKyTZaNMbGCIAKsSGRsXygLj4nXUdVvf0+6kAkg22To0JwBl0j7tjf6I
- 9mZ3rg+c+9FqzhgUB1E36nYRcjNN/thm5Oo2vojSKUOwTniHGYQjfTbc+Iso2qNNyvgX18AG
- 8L4bHvC2QoRZHb8OR4UYcJhYDmU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebadfff.7f505697e768-smtp-out-n05;
- Tue, 12 May 2020 17:42:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6CBABC44795; Tue, 12 May 2020 17:42:22 +0000 (UTC)
-Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60E56C44788;
-        Tue, 12 May 2020 17:42:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60E56C44788
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org, jhugo@codeaurora.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v2 3/6] bus: mhi: core: Introduce helper function to check device state
-Date:   Tue, 12 May 2020 10:42:11 -0700
-Message-Id: <1589305334-19466-4-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589305334-19466-1-git-send-email-bbhatt@codeaurora.org>
-References: <1589305334-19466-1-git-send-email-bbhatt@codeaurora.org>
+        Tue, 12 May 2020 13:44:37 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYYxA-0006HM-VP; Tue, 12 May 2020 11:44:28 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYYxA-0006YR-5x; Tue, 12 May 2020 11:44:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+        <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+        <20200512003305.GX11244@42.do-not-panic.com>
+        <87y2pxs73w.fsf@x220.int.ebiederm.org>
+        <20200512172413.GC11244@42.do-not-panic.com>
+Date:   Tue, 12 May 2020 12:40:55 -0500
+In-Reply-To: <20200512172413.GC11244@42.do-not-panic.com> (Luis Chamberlain's
+        message of "Tue, 12 May 2020 17:24:13 +0000")
+Message-ID: <87k11hrqzc.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jYYxA-0006YR-5x;;;mid=<87k11hrqzc.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18BZ+GM7YxDSNtI/wYtLPC80aezvVDUzig=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a helper function to determine whether the device is in a
-powered ON state and resides in one of the active MHI states. This will
-allow for some use cases in reading debugfs entries.
+Luis Chamberlain <mcgrof@kernel.org> writes:
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- drivers/bus/mhi/core/internal.h | 5 +++++
- 1 file changed, 5 insertions(+)
+> On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+>> Luis Chamberlain <mcgrof@kernel.org> writes:
+>> 
+>> > +static struct ctl_table fs_base_table[] = {
+>> > +	{
+>> > +		.procname	= "fs",
+>> > +		.mode		= 0555,
+>> > +		.child		= fs_table,
+>> > +	},
+>> > +	{ }
+>> > +};
+>>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+>> > > +static int __init fs_procsys_init(void)
+>> > +{
+>> > +	struct ctl_table_header *hdr;
+>> > +
+>> > +	hdr = register_sysctl_table(fs_base_table);
+>>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+>> 	AKA
+>>         hdr = register_sysctl("fs", fs_table);
+>
+> Ah, much cleaner thanks!
 
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index b1f640b..2f18be7 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -599,6 +599,11 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
- int __mhi_device_get_sync(struct mhi_controller *mhi_cntrl);
- int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
- 		 enum mhi_cmd_type cmd);
-+static inline bool mhi_is_active(struct mhi_controller *mhi_cntrl)
-+{
-+	return (mhi_cntrl->dev_state >= MHI_STATE_M0 &&
-+		mhi_cntrl->dev_state <= MHI_STATE_M3_FAST);
-+}
- 
- /* Register access methods */
- void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It is my hope you we can get rid of register_sysctl_table one of these
+days.  It was the original interface but today it is just a
+compatibility wrapper.
+
+I unfortunately ran out of steam last time before I finished converting
+everything over.
+
+Eric
