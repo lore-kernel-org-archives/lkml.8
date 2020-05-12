@@ -2,65 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C6C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE37C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01AAC206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD38206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589295099;
+	bh=C5d0JLZENPKxVweoYpXLfLqPAaShBlkGQI6u8YyNKZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CKgI9RbtWY5dv8WFmA1ooEUZLRD1/mNkXjSbOQduyNGmFHjE/m5SZKA0Dl4G9ylMD
+	 lMzK2xOHOBmabEOWIY5qt3GNp98seNfjJVvBDZv5HJbG0Fujb5bwuXe84MGXNKtQnh
+	 Cf9zA7GDvwu4X9MNNBtNOSwX1rCAcaecs0AIrE+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgELOuH (ORCPT
+        id S1730329AbgELOvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:50:07 -0400
-Received: from muru.com ([72.249.23.125]:54016 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgELOuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:50:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C1F088047;
-        Tue, 12 May 2020 14:50:55 +0000 (UTC)
-Date:   Tue, 12 May 2020 07:50:04 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
-Message-ID: <20200512145004.GG37466@atomide.com>
-References: <20200512100230.17752-1-grygorii.strashko@ti.com>
- <20200512142230.GF37466@atomide.com>
- <9f86a9ef-c069-e69b-540a-2fd2731b8619@ti.com>
+        Tue, 12 May 2020 10:51:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33440 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgELOvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:51:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v17so2745633ote.0;
+        Tue, 12 May 2020 07:51:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+FFTVIdRJUiPRt6W0nlVnf55I2F6cDb0ZOrP06HUV2I=;
+        b=tKovEz3DxG9ZgSouJTl6iqlKH5+evgwUcnmtSviz6RcWzyu6lfe8fCdjJ8xadADx0Y
+         ysXbzLZXaMEf4uZx5BT+cgxdQ0Iy4z9+LQphU3f5b6F+YVlcHS99lA/lAhJSZgbdszsW
+         McN7lm+60bCCnQKSbaqDeHtwc25iDqoaMeeIQ8MrL0Sb2ngiKqDoXZdeBxX/t2upcQVI
+         61oBV41y0mo4GIU8yueJw1jbwJaLHLV+886FCekX7W7tFoe3kLOvquQbFG5mPq4xAlOb
+         ZQimvd3b+1nm6EEn4HF1A7CZ4virRb3fokwe6UTkQswHr+Jse5AkpKq1bUBQE40oa7t7
+         eVVw==
+X-Gm-Message-State: AGi0PuZ7XyVtw0F4naHAy1hUUeEw/0x2jJ1TjT51M6QgwqQAkUQCTZf6
+        NCJJGncEsApKJlHo9pIimUO7LMF+dA==
+X-Google-Smtp-Source: APiQypIMtahsMEYjmV8Fru5Ib4Vy3CKGcEFvaBi79VV4D8sXUnBPZwpbYCnBV8pQAm5P8MdHfaaPBA==
+X-Received: by 2002:a9d:2605:: with SMTP id a5mr16527573otb.259.1589295097601;
+        Tue, 12 May 2020 07:51:37 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d64sm296494oig.53.2020.05.12.07.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 07:51:36 -0700 (PDT)
+Received: (nullmailer pid 21890 invoked by uid 1000);
+        Tue, 12 May 2020 14:51:35 -0000
+Date:   Tue, 12 May 2020 09:51:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v2 01/11] dt-bindings: net: meson-dwmac: Add the
+ amlogic,rx-delay-ns property
+Message-ID: <20200512145135.GA16551@bogus>
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f86a9ef-c069-e69b-540a-2fd2731b8619@ti.com>
+In-Reply-To: <20200429201644.1144546-2-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [200512 14:35]:
-> On 12/05/2020 17:22, Tony Lindgren wrote:
-> > However, there's at least one more issue left that shows up at least
-> > on ti81xx dra62x-j5eco-evm on v5.7-rc5 that has commit b46b2b7ba6e1
-> > ("ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode").
-> > 
-> > I think this is a different issue though, any ideas?
-> > 
+On Wed, Apr 29, 2020 at 10:16:34PM +0200, Martin Blumenstingl wrote:
+> The PRG_ETHERNET registers on Meson8b and newer SoCs can add an RX
+> delay. Add a property with the known supported values so it can be
+> configured according to the board layout.
 > 
-> This seems like completely different issue.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../bindings/net/amlogic,meson-dwmac.yaml           | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> index ae91aa9d8616..8d851f59d9f2 100644
+> --- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> +++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
+> @@ -67,6 +67,19 @@ allOf:
+>              PHY and MAC are adding a delay).
+>              Any configuration is ignored when the phy-mode is set to "rmii".
+>  
+> +        amlogic,rx-delay-ns:
+> +          $ref: /schemas/types.yaml#definitions/uint32
 
-OK thanks for checking.
+Don't need to define the type when in standard units.
 
-> Could we have separate thread started for this, pls?
+> +          enum:
+> +            - 0
+> +            - 2
+> +          description:
+> +            The internal RGMII RX clock delay (provided by this IP block) in
+> +            nanoseconds. When phy-mode is set to "rgmii" then the RX delay
+> +            should be explicitly configured. When not configured a fallback of
+> +            0ns is used. When the phy-mode is set to either "rgmii-id" or
 
-Sure. No objections to the $subject fix.
+'default: 0' expresses this.
 
-Regards,
-
-Tony
+> +            "rgmii-rxid" the RX clock delay is already provided by the PHY.
+> +            Any configuration is ignored when the phy-mode is set to "rmii".
+> +
+>  properties:
+>    compatible:
+>      additionalItems: true
+> -- 
+> 2.26.2
+> 
