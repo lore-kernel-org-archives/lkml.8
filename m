@@ -2,92 +2,155 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001B5C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83701C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F66206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589287524;
-	bh=B8EsQkIZ4mWzMFetp7c3r9TqEBFzsY2l1zuTizTYPB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JWsiZLsIVTtlLRwjq976c5wo52ZZ4Dz2WZ2radRz53IGI+O/GZc1lZlCvEoJWvMWc
-	 XFeq9lweR5OACF6M1xTFq2YUmOK3EUN2/mg2jEq7EAxq8yKvMhRmNZKK3VTk0NYnRQ
-	 fFenGYofaagWPnoTPXmd0wFMYaWPWvueE5PyAQoM=
+	by mail.kernel.org (Postfix) with ESMTP id 56AA020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dPnGQf41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgELMpY (ORCPT
+        id S1729791AbgELMrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgELMpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:45:23 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Tue, 12 May 2020 08:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728283AbgELMrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 08:47:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E15C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=bdcs2L6/mzpA9xCHjIEuqDNIZw4aWdvhKMU7KiUORoo=; b=dPnGQf41OPRpUN/EuVmvdbM8Cy
+        Cc+2yd05PjD0tMeGhXBEZQ5VhmYphYhzx0kAAWyf+gBkVJ0V8MG2tOkx6l2isi3vYl+0A4P+w+8oc
+        IxQwjDilVSPq5wYo8BAprltAbBsS52VbgovsEPH0cONzoPNL19wSRkR6NRzTC0M/J3SjeFJ3qBQt2
+        X8agjTLmaJBNfoa//2MIGSdCvRvYkDCmAqbtWIMU/0Sw8mFaFzaHfjclr5f4acl/GUSLxkxucRToD
+        nAoceXi4+Rme9b25h33Z1qij+w2qMkqM+762jzi1pRc6dI2nMnXHPp5PFlJx1iNxByxNyDpcJZM9r
+        K/Yw9RZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYUJE-0007C3-26; Tue, 12 May 2020 12:46:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE13A20674;
-        Tue, 12 May 2020 12:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589287523;
-        bh=B8EsQkIZ4mWzMFetp7c3r9TqEBFzsY2l1zuTizTYPB4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mez8boHcMnR+mev15Qse9ch6E4/Ezv+JCkJDwFG9E8tW1tilmUDFKHY1Ah04d6BaH
-         Aig7VFji0wMpoH0NpnAqDOuDS+tTWi+z3cieLPwzSxsc04qLUd8ixLtn+9mb0jgCzN
-         BryR2K1An27QybVGN8qEiBY50g9twxf+3cLm4pH0=
-Date:   Tue, 12 May 2020 13:45:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 07/11] ASoC: mmp-sspa: Prepare/unprepare the clocks
-Message-ID: <20200512124520.GH5110@sirena.org.uk>
-References: <20200511210134.1224532-1-lkundrak@v3.sk>
- <20200511210134.1224532-8-lkundrak@v3.sk>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 45AFD305EEF;
+        Tue, 12 May 2020 14:46:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 2A06B20962E54; Tue, 12 May 2020 14:46:53 +0200 (CEST)
+Message-ID: <20200512124450.824507755@infradead.org>
+User-Agent: quilt/0.66
+Date:   Tue, 12 May 2020 14:41:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        sboyd@codeaurora.org, john.stultz@linaro.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 2/5] arm64: perf: Implement correct cap_user_time
+References: <20200512124058.833263033@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="smOfPzt+Qjm5bNGJ"
-Content-Disposition: inline
-In-Reply-To: <20200511210134.1224532-8-lkundrak@v3.sk>
-X-Cookie: The only perfect science is hind-sight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As reported by Leo; the existing implementation is broken when the
+clock and counter don't intersect at 0.
 
---smOfPzt+Qjm5bNGJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Use the sched_clock's struct clock_read_data information to correctly
+implement cap_user_time and cap_user_time_zero.
 
-On Mon, May 11, 2020 at 11:01:30PM +0200, Lubomir Rintel wrote:
-> The driver enables the clocks without preparing them and disables
-> without unpreparing afterwards. Fix that.
+Note that the ARM64 counter is architecturally only guaranteed to be
+56bit wide (implementations are allowed to be wider) and the existing
+perf ABI cannot deal with wrap-around.
 
-This fix should've been earlier in the series so it could be sent as a
-fix.
+This implementation should also be faster than the old; seeing how we
+don't need to recompute mult and shift all the time.
 
---smOfPzt+Qjm5bNGJ
-Content-Type: application/pgp-signature; name="signature.asc"
+Reported-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/arm64/kernel/perf_event.c |   36 +++++++++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -19,6 +19,7 @@
+ #include <linux/of.h>
+ #include <linux/perf/arm_pmu.h>
+ #include <linux/platform_device.h>
++#include <linux/sched_clock.h>
+ #include <linux/smp.h>
+ 
+ /* ARMv8 Cortex-A53 specific event types. */
+@@ -1165,28 +1166,45 @@ device_initcall(armv8_pmu_driver_init)
+ void arch_perf_update_userpage(struct perf_event *event,
+ 			       struct perf_event_mmap_page *userpg, u64 now)
+ {
+-	u32 freq;
+-	u32 shift;
++	struct clock_read_data *rd;
++	unsigned int seq;
+ 
+ 	/*
+ 	 * Internal timekeeping for enabled/running/stopped times
+ 	 * is always computed with the sched_clock.
+ 	 */
+-	freq = arch_timer_get_rate();
+ 	userpg->cap_user_time = 1;
++	userpg->cap_user_time_zero = 1;
++
++	do {
++		rd = sched_clock_read_begin(&seq);
++
++		userpg->time_mult = rd->mult;
++		userpg->time_shift = rd->shift;
++		userpg->time_zero = rd->epoch_ns;
++
++		/*
++		 * This isn't strictly correct, the ARM64 counter can be
++		 * 'short' and then we get funnies when it wraps. The correct
++		 * thing would be to extend the perf ABI with a cycle and mask
++		 * value, but because wrapping on ARM64 is very rare in
++		 * practise this 'works'.
++		 */
++		userpg->time_zero -= (rd->epoch_cyc * rd->mult) >> rd->shift;
++
++	} while (sched_clock_read_retry(seq));
++
++	userpg->time_offset = userpg->time_zero - now;
+ 
+-	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
+-			NSEC_PER_SEC, 0);
+ 	/*
+ 	 * time_shift is not expected to be greater than 31 due to
+ 	 * the original published conversion algorithm shifting a
+ 	 * 32-bit value (now specifies a 64-bit value) - refer
+ 	 * perf_event_mmap_page documentation in perf_event.h.
+ 	 */
+-	if (shift == 32) {
+-		shift = 31;
++	if (userpg->shift == 32) {
++		userpg->shift = 31;
+ 		userpg->time_mult >>= 1;
+ 	}
+-	userpg->time_shift = (u16)shift;
+-	userpg->time_offset = -now;
++
+ }
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66ml8ACgkQJNaLcl1U
-h9CzLgf+Jh8LwbiE+tnUKFZaCx9Xvm8TpBqizolD7ds1chpXzCKwvsCD05D6xK1c
-+pHm2YbWUn9S8j1WfrsfjyVqFVs04kBNbEl4gN4zNhNfT+t8bZ96c8MJLaJDBNO8
-8rjXWZwanFpNCHI3PMqZ9mtMMZciEnKCzvxOfh0Cf//nPoExjVNYu6RkdRlxhOYB
-gxWXMJhfDryXdkfiCpigwLeePjFdME9Pwfdt+i02oKnLZKGZJXJyEmzHxdWa66Wp
-7XMKQYf81z5vDKteF4X4osscnFuMDKtcbW/Jmy6PRYz00zsJF6pnrfe47bRxOSmy
-i75Py2lUbkbyLBjn/oBevQ1588aDlw==
-=3JaX
------END PGP SIGNATURE-----
 
---smOfPzt+Qjm5bNGJ--
