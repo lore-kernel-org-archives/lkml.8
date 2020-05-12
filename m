@@ -2,113 +2,158 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66651C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF0CC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F800206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="0zqyt507"
+	by mail.kernel.org (Postfix) with ESMTP id C72CB206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589301024;
+	bh=L0eqP019kfTR7Qo6y9u3ABN+4bZ/SikM2ncqFMOCaVs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=W64QMPghykTDtZmBxJ2DuOulQQQmDVOsZybOdiGfAMVTuyJ5MMncs8jL7gPpp7jJS
+	 k3FPIOCjylJHNa7WgYlAejf2ZomQ2yVvoDCZQ/KWMtejUWFUPLWtmkzxUd78ooYqha
+	 l2cNf4UIu+zHoWAi8W2tCWz/C7fZpkn4it+iZ0Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgELQaE (ORCPT
+        id S1728911AbgELQaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:30:04 -0400
-Received: from www.zeus03.de ([194.117.254.33]:42320 "EHLO mail.zeus03.de"
+        Tue, 12 May 2020 12:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727104AbgELQaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:30:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=ZEn71GyZmnBopDm0mdphrGZcrfFu
-        4JxViUbqVQHn+zg=; b=0zqyt507wiwSqlBNOG7Ks7A8T+X6tFdMttz+mbQ231eR
-        VaPNreFXkESgcHk4dXekFaNYyMTSirRHtjMF4u0T6dm6AcfqnbADXphrxaOMkgnG
-        mUZtdsMgYjbFWFlSxHoz/oRAMLVr4jwvbqhaIf8M7cT4nUsMBpCc7uJVHAYPxe0=
-Received: (qmail 3010584 invoked from network); 12 May 2020 18:30:01 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 18:30:01 +0200
-X-UD-Smtp-Session: l3s3148p1@ByWm+XWlasggAwDPXw2aAE67cgFBY+HL
-Date:   Tue, 12 May 2020 18:30:01 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
-Message-ID: <20200512163001.GK13516@ninjato>
-References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
- <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
+        id S1726610AbgELQaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:30:23 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5534C206CC;
+        Tue, 12 May 2020 16:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589301022;
+        bh=L0eqP019kfTR7Qo6y9u3ABN+4bZ/SikM2ncqFMOCaVs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fwhsVWVfk3xqaRF3bpXfTOBPzpPyi2tNKUq8dGG7LiiZfhs+Z2fNzUfGDbD5UQODR
+         0J2M7fygTdUMozj8k6JjJdhK4+01gdvg12NZB3LrJfMECB5GauSGDZU9ciGNXtMkMI
+         j1NHGHgN29KaUwLjz1ZljFIzMef1yWehBQmHgRb8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3D6473522FA4; Tue, 12 May 2020 09:30:22 -0700 (PDT)
+Date:   Tue, 12 May 2020 09:30:22 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU
+ pre-initialization test
+Message-ID: <20200512163022.GI2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+ <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
+ <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vbzKE9fGfpHIBC6T"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 11:41:01AM -0400, Joel Fernandes wrote:
+> On Tue, May 12, 2020 at 11:07 AM Akira Yokosawa <akiyks@gmail.com> wrote:
+> >
+> > From 7bb979aacd8788d174df8a56e9803ba9e5b7a381 Mon Sep 17 00:00:00 2001
+> > From: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Date: Mon, 11 May 2020 22:06:46 -0400
+> > Subject: [PATCH 4/3] docs: litmus-tests: Clarify about the RCU pre-initialization test
+> >
+> > Since this test returned to tools/memory-model/, make sure that it is
+> > at least referenced from Documentation/litmus-tests/'s README.
+> >
+> > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Co-developed-by: Akira Yokosawa <akiyks@gmail.com>
+> > [Alan: grammar nit]
+> > Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
+> > ---
+> > I said in the earlier message:
+> >
+> > > The explanation under tools/memory-model/litmus-tests/README also need the same
+> > > rewording.
+> >
+> > , but obviously I was confused. It is good as is.
+> >
+> > This is on top of my earlier patch series.
+> >
+> > Joel, Alan, does this work with you?
+> 
+> Yes, thanks a lot for doing it. Paul are you Ok with it too?
 
---vbzKE9fGfpHIBC6T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me!
 
-On Thu, Mar 26, 2020 at 10:09:58PM +0100, Wolfram Sang wrote:
-> Move away from the deprecated API.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Could one of you please send a patch series and instructions, which I
+-think- will be of the form:
 
-Can we have this now so I can remove the old API in the next merge
-window?
+o	Revert a5cca3485d92 ("Documentation: LKMM: Move
+	MP+onceassign+derefonce to new litmus-tests/rcu/")
 
-> ---
->  drivers/char/ipmi/ipmi_ssif.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 8ac390c2b514..2791b799e33d 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1945,8 +1945,8 @@ static int ssif_adapter_handler(struct device *adev=
-, void *opaque)
->  	if (adev->type !=3D &i2c_adapter_type)
->  		return 0;
-> =20
-> -	addr_info->added_client =3D i2c_new_device(to_i2c_adapter(adev),
-> -						 &addr_info->binfo);
-> +	addr_info->added_client =3D i2c_new_client_device(to_i2c_adapter(adev),
-> +							&addr_info->binfo);
-> =20
->  	if (!addr_info->adapter_name)
->  		return 1; /* Only try the first I2C adapter by default. */
-> --=20
-> 2.20.1
->=20
+o	Apply a series of patches.
 
---vbzKE9fGfpHIBC6T
-Content-Type: application/pgp-signature; name="signature.asc"
+(My head is deep within some ring-buffer code that I am reviewing, so I
+guarantee that if I try to piece this together from the current set of
+patches, I will end up producing a spectacular display of destructive
+creativity.)
 
------BEGIN PGP SIGNATURE-----
+							Thanx, Paul
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66zwkACgkQFA3kzBSg
-KbatIw/+OpAxWxUj4YPEB3LAqKA+xbgSQfEbbrzasZv8QBjMW+phFfWh9Y/6USBE
-NeQFaWWmEfWp4JvIoBL7HxryaCblQBbJ5UxIHhhSMv1BQ+4m+98L3hD1Ji0mlpx/
-LZzoXVyFvGKFQEGAFNsJ3WpP8wU8h/zFInPOqFrv5/CLQZjp6te+9hTs79ytzump
-f/4ET0MemMhSTpj4oU2soHmh2pBuZ76Gxf7ZAlASDFp+ZvHhvfx9izFRuqf2Jg9x
-txTVPh82URkPdsCWp/ngF7qRUmBOaPciGFrelfHNSHRa+n8whZIvx3LjCNFkT+8K
-mStygJj091Z6eqe1MWYhQtfVonXOQ9WUjrE3hOwRO5s+Nw7xVkV/VkjgMyVLKAFU
-/2FDkB3PVTzxXvXppVIHRzltT85C+9JxTi6wsnKGWin+YpoPvUw1RN7Me3VAuJO1
-1hRDZBk6tdzHQCYSN+BTT7hX2EblOOwWR/ne0nXlvz7THXqxUKlBtPxhhObMuP10
-NAfdSxloR7cTtWQUt6q1Xp+I+ZYTjm1xWusiwVyxXcgTN9YfJpiryo3hWOwvjm10
-yO0TDmN1Y1mWqDU49AjeNuxbIMRgNdPsX4HPXTVzMCeTBqtLbNDutPBDe6Ixxv4T
-y0DfhOcxrZt1dYu8raQQzmtbpcwq8XMxffNyl4Y6cn609p4Xbhg=
-=Dv+v
------END PGP SIGNATURE-----
-
---vbzKE9fGfpHIBC6T--
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> >
+> >         Thanks, Akira
+> > --
+> >  Documentation/litmus-tests/README | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+> > index ac0b270b456c..b79e640214b9 100644
+> > --- a/Documentation/litmus-tests/README
+> > +++ b/Documentation/litmus-tests/README
+> > @@ -24,6 +24,10 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> >  RCU (/rcu directory)
+> >  --------------------
+> >
+> > +MP+onceassign+derefonce.litmus (under tools/memory-model/litmus-tests/)
+> > +    Demonstrates the use of rcu_assign_pointer() and rcu_dereference() to
+> > +    ensure that an RCU reader will not see pre-initialization garbage.
+> > +
+> >  RCU+sync+read.litmus
+> >  RCU+sync+free.litmus
+> >      Both the above litmus tests demonstrate the RCU grace period guarantee
+> > --
+> > 2.17.1
+> >
+> >
