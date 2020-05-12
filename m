@@ -2,108 +2,214 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C10C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9BFC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC90020757
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uXTFgedf"
+	by mail.kernel.org (Postfix) with ESMTP id 490F92070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589251943;
+	bh=a61Umy7M6kHj5wgaBbb2sAVsz4OJ7Y948cNr917SORw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xJ3v3T6b8fByryY7NpeA1iQ3feGrBii8orEvceZ6EbmWLui5rIsUo16WkSqi4Q7FS
+	 9m/tkpEfZnbhaVhXDsHfuXkvunfV+sM6LAMU/jk4BckGh155Y9aPf3JW7KX1YqWh6K
+	 /835RZ0LTx39wC49UTU2rXhrnzrOfQfbOctpdMXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgELCsz (ORCPT
+        id S1728536AbgELCwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgELCsy (ORCPT
+        Mon, 11 May 2020 22:52:22 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:49524 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgELCwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:48:54 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C6CC061A0C;
-        Mon, 11 May 2020 19:48:54 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id h26so9904792qtu.8;
-        Mon, 11 May 2020 19:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+p2xh30TEJfAR+w5B4LaXMd3KNNJXJtMQbogkWpFPF8=;
-        b=uXTFgedfKAJw/mdH+r2ogZwZQTp/ZTIBRyakuBwLSXaz9PWFl3s45PRztLUO7H5FBP
-         TFYtbn1ZzJ8znyq1exL44gJ+IKnPayj/ne3+XdrgqoDlhm+JXc+fHRnDRZSCC1iZcULu
-         yhJjq9wd8k0JUQ5xuOSqJk7LCa34c2BTbb+fpES1GQHxSzMKez4IXl6KXXc2J0kHCym9
-         ikeiYA+UxdiiLcFWazU/ZZWHH2jqHQh+MyNod6nD4dNcLGcAZqgtnSBzUJkrg0cVhUou
-         AEcbyFUk/TIHzd/EwmZjEKhx+oQIh3IVZ/2yfe+rvjvi/yqZqN2j8s7+DeSsAmIJ2JGc
-         PA2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+p2xh30TEJfAR+w5B4LaXMd3KNNJXJtMQbogkWpFPF8=;
-        b=kKwYBOt97oCcvLN1z9fJF2usKS3O15hsp/c5KyiHxD31J+EB+w9yG513U02Z9xE/A7
-         UoF93Dpg8yUz39arerSvhNkoNn+3JebgYlbEAEkusIgmCP3B87qQQZCMNwG25f7jxEPk
-         drQFX2lxHGwxMG+K0RoSBFkBYZRaWzjvloVfEQw8zIGEidt7Ca2JKbQBOMX0YM6pxTUu
-         Bzm8HBYtXoILhnRqaC4MRlE7n8CNVj3IjcW8IcZPolmN1Wpp/EiqsqI0SlO9/7B2Q7GY
-         O9v5+VvFRR0TAwcRtxEmLQ2abAXUPu3OFbg4Pm54xc5Y7lcUi2+fpDBxI/lPLihsZ6fH
-         3v1g==
-X-Gm-Message-State: AGi0PuYCbs9Vi8AcgCeJc1uRviZUYTbN+U5whuuzVcMHNhVzKidtV+FB
-        ZglQIxboagmncCmkz/HLhkwy5w1ymp7q+z02RAE=
-X-Google-Smtp-Source: APiQypId7oxhT26ItzjC8bMXwsSFBjnYZNmv7Cgv/UndRHY6NfhZPgW4iFgXhDPKhepQCP0rcyNz85IZmAz5rBwh+Hs=
-X-Received: by 2002:ac8:4e2c:: with SMTP id d12mr19665595qtw.204.1589251733739;
- Mon, 11 May 2020 19:48:53 -0700 (PDT)
+        Mon, 11 May 2020 22:52:22 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 04C2q4VB018851
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 11:52:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 04C2q4VB018851
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589251925;
+        bh=/dP1/+gVU934yq2ykxBJRp/L7Knp7DBZvFbITFJXeug=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=H4eCgm9aPnNCyO/lE2noclXrw6/4Wc8eIb02C0d4UwQx8uV86rIrciTJ8v9KC/NWZ
+         h0z7KMbivSt008b4gmLyVTWEBW4u3F8npc3yIVFNTBxcJOOT9GRoxqAvuMLKnWZv8f
+         xA/q6cUF9P8KGUKZ4zAJ82Kdj5yh6pbGjYq5bm3XLXvwo3G8t5VidSXApKO3+1JlAe
+         CnZUFBHDB4eYzZf7TP6ELGSgXSJ/tNfgxrDI9svG4d0Cr5+HpWBZ5WVjgoPvJ1YFqF
+         xFGtz0lIj8dSN5eRJ/xlS9Z0G274zjVlLuEJYnl/U0zCULYgZM1l1Uz3gIyiDAjg7T
+         D2SBCa75Xf28w==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id z1so6959759vsn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 19:52:04 -0700 (PDT)
+X-Gm-Message-State: AOAM532zxtxJO0VNA60h7dN2J2OjTqAp2clCMH9lVVYjNSdHr+81kB7N
+        dmHV8dwRlVpc3ffX7SqzHGd27lgy4aBB9cDkQ30=
+X-Google-Smtp-Source: ABdhPJwOHvmc3TCk/eY55ytF1r9uMVxx5MgfvfLKamD3C4LDNNmyYuubhdGMLE2xOuvBW/i6rbPFgAN+TGVhadUX+GA=
+X-Received: by 2002:a67:d00e:: with SMTP id r14mr3160729vsi.215.1589251923295;
+ Mon, 11 May 2020 19:52:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1588320655.git.shengjiu.wang@nxp.com> <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
- <20200501102158.GA5276@sirena.org.uk> <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
-In-Reply-To: <CAA+D8ANDHHejFD1rYmFOG24yivpEJa+xO-WpVr=Vzfz9yW9H7g@mail.gmail.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 12 May 2020 10:48:41 +0800
-Message-ID: <CAA+D8ANK+Sd=nPeDZpd_=fQRFOdLtKgvsCmfQ_fRU3RCjMY+rQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200428070614.GB992660@kroah.com> <20200502052619.26457-1-xujialu@vimux.org>
+ <20200502052619.26457-2-xujialu@vimux.org>
+In-Reply-To: <20200502052619.26457-2-xujialu@vimux.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 12 May 2020 11:51:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR-t1ToAGf-4FTa+2=ii+WcTD3aFjyZOADQT9rkagKyBw@mail.gmail.com>
+Message-ID: <CAK7LNAR-t1ToAGf-4FTa+2=ii+WcTD3aFjyZOADQT9rkagKyBw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] scripts: Support compiled source, improved precise
+To:     xujialu <xujialu@vimux.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark, Nicolin
+On Sat, May 2, 2020 at 2:27 PM xujialu <xujialu@vimux.org> wrote:
+>
+> Original 'COMPILED_SOURCE=1 make cscope' collects nearly 30000 files
+> include too many unused files, this patch precisely collects source
+> files from *.cmd, in this case just 3000 files include dts and dtsi.
+>
+> Usage:
+>   1) COMPILED_SOURCE=1                           make {cscope,gtags}
+>   2) COMPILED_SOURCE=1 KBUILD_ABS_SRCTREE=1      make {cscope,gtags}
+>   3) COMPILED_SOURCE=1              ./scripts/tags.sh {cscope,gtags}
+>   4) COMPILED_SOURCE=1 ABSPWD=$PWD/ ./scripts/tags.sh {cscope,gtags}
+>
+> Signed-off-by: xujialu <xujialu@vimux.org>
+> ---
+>  scripts/tags.sh | 36 ++++++++++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 14 deletions(-)
+>
+> diff --git a/scripts/tags.sh b/scripts/tags.sh
+> index 4e18ae5282a6..941a5c61d343 100755
+> --- a/scripts/tags.sh
+> +++ b/scripts/tags.sh
+> @@ -89,22 +89,30 @@ all_sources()
+>         find_other_sources '*.[chS]'
+>  }
+>
+> +# COMPILED_SOURCE=1                           make {cscope,gtags}
+> +# COMPILED_SOURCE=1 KBUILD_ABS_SRCTREE=1      make {cscope,gtags}
+> +# COMPILED_SOURCE=1              ./scripts/tags.sh {cscope,gtags}
+> +# COMPILED_SOURCE=1 ABSPWD=$PWD/ ./scripts/tags.sh {cscope,gtags}
 
-On Wed, May 6, 2020 at 10:33 AM Shengjiu Wang <shengjiu.wang@gmail.com> wrote:
->
-> Hi
->
-> On Fri, May 1, 2020 at 6:23 PM Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Fri, May 01, 2020 at 04:12:05PM +0800, Shengjiu Wang wrote:
-> > > The difference for esai on imx8qm is that DMA device is EDMA.
-> > >
-> > > EDMA requires the period size to be multiple of maxburst. Otherwise
-> > > the remaining bytes are not transferred and thus noise is produced.
-> >
-> > If this constraint comes from the DMA controller then normally you'd
-> > expect the DMA controller integration to be enforcing this - is there no
-> > information in the DMA API that lets us know that this constraint is
-> > there?
->
-> No, I can't find one API for this.
-> Do you have a recommendation?
->
-could you please recommend which DMA API can I use?
 
-best regards
-wang shengjiu
+These comment are misleading since this sounds like
+is is only usef for cscope, gtags.
+
+
+Please do not introduce a new variable ABSPWD, which is unneeded.
+This is a rare use-case, but if you want to run this script directly,
+you must set the variables described at line 9 properly.
+
+
+
+
+> +xtags_juggle_list()
+> +{
+> +       SRCTREE=$(realpath ${tree}.)
+> +
+> +       cd $(dirname $(find -name .config -print -quit).)
+
+
+Why is this needed?
+
+You are already in objtree
+when this script is being run.
+
+If you handle the objects built with O= option,
+you need to do 'make O=... gtags'.
+
+> +
+> +       realpath -e --relative-to=${SRCTREE} $(find -name "*.cmd" -exec \
+> +               grep -Poh '(?(?=^source_.* \K).*|(?=^  \K\S).*(?= \\))' {} \+ |
+> +               awk '!a[$0]++') include/generated/autoconf.h |
+> +       sed -e "/\.\./d" -e "s,^,${ABSPWD}${tree},"
+> +}
+
+Why is --relative-to=${SRCTREE} needed?
+
+You are dropping ${SRCTREE} and adding ${ABSPWD}${tree}.
+I do not understand what this is doing back-and-forth.
+
+
+
+Lastly, the file order is currently carefully crafted
+but this patch would make it random-ordered.
+
+I am afraid the following commit would be broken.
+
+
+
+
+commit f81b1be40c44b33b9706d64c117edd29e627ad12 (HEAD)
+Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Date:   Mon Feb 8 00:25:59 2010 +0100
+
+    tags: include headers before source files
+
+    Currently looking up a structure definition in TAGS / tags takes one to
+    one of multiple "static struct X" definitions in arch sources, which makes
+    it for many structs practically impossible to get to the required header.
+    This patch changes the order of sources being tagged to first scan
+    architecture includes, then the top-level include/ directory, and only
+    then the rest. It also takes into account, that many architectures have
+    more than one include directory, i.e., not only arch/$ARCH/include, but
+    also arch/$ARCH/mach-X/include etc.
+
+    Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+    Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
+    [mmarek@suse.cz: fix 'var+=text' bashism]
+    Signed-off-by: Michal Marek <mmarek@suse.cz>
+
+> +
+>  all_compiled_sources()
+>  {
+> -       for i in $(all_sources); do
+> -               case "$i" in
+> -                       *.[cS])
+> -                               j=${i/\.[cS]/\.o}
+> -                               j="${j#$tree}"
+> -                               if [ -e $j ]; then
+> -                                       echo $i
+> -                               fi
+> -                               ;;
+> -                       *)
+> -                               echo $i
+> -                               ;;
+> -               esac
+> -       done
+> +       # Consider 'git ls-files' features:
+> +       #   1) sort and uniq target files
+> +       #   2) limit target files by index
+> +       # git ls-files $(xtags_juggle_list)
+
+
+How is this related to this ?
+
+
+
+
+
+
+> +
+> +       xtags_juggle_list | sort -u
+>  }
+>
+>  all_target_sources()
+> --
+> 2.20.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
