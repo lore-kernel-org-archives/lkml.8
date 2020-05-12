@@ -2,243 +2,108 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34132C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA752C47077
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9C420720
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990CF206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="neN2wDg8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Yf7kJP8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgELRLU (ORCPT
+        id S1729427AbgELRMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35174 "EHLO
+        Tue, 12 May 2020 13:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728941AbgELRLT (ORCPT
+        with ESMTP id S1726367AbgELRMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:11:19 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB45C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:11:18 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n14so14394992qke.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:11:18 -0700 (PDT)
+        Tue, 12 May 2020 13:12:49 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79717C05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:12:49 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f189so8726826qkd.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=cCYa1ZUuTC13LtbQrvAYo1dPxTQq8AqzPdLUyVen7vw=;
-        b=neN2wDg8OLy8/cjt4I+i0qG3mqej9995PklqhJYbRQnfixUOcw1SXAQyrPVvQAnDp8
-         4ilTf0XCK+sY/l3O+hYgI2ONLuCPJlzEkqeiV1KTGBuY+MugI0RtPwVxWi2gd+FCV+dW
-         G4r++ynTknG9XkJtdPHrwBI+fSjSuLIj9320MR3XdwRRDjgUGBgHKEpk6H4CFv8N+QS8
-         BbPtcfyWye91qVj7QY7TBBKDlVRMLSfEDwX/Oe/fhsu9AM1RCdKtlvuYEJgnLTDs5n/h
-         the3fajBq2wPFALVW+P3YQ7pnm9B2U01fBa4x06Hqlf904yRQmVC8pRv0KBKPiACEPle
-         hrpw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mhXIarFJGq4Y7o1OACEMY+CWjpNuyCrBkx0AvhbST58=;
+        b=Yf7kJP8TPOhuvK1QsyJFscagmDUQZK+pL/Y6v6hbW+/t58l6484/Vvudp5TmsD66Vt
+         ZONixv6Z6GQNvj9xxmrbpKfZiHkllK9oOmUj03VSq3CnB7zHzAVUu0g4gk29zJgYIFnZ
+         f5hjoYCB9IISk16xC5+FX5Ym/KaPYaNpy0AbL8QM25gdCBcZje70QIw0LwxqIbXeRMvH
+         axOI0kqzxQOK6xsNSCwvEpQITI75sAyJ/ZvIz+WtxJdlU0TE/X+D1Vu5mySY0N6NauSH
+         OyaW5sRpqz6N97CnWlBFBDTjsjG8qXyEDp73cGlwoZejHPhUyHE5YsJ4olE9CWho31jJ
+         mLsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=cCYa1ZUuTC13LtbQrvAYo1dPxTQq8AqzPdLUyVen7vw=;
-        b=Vmsg1fSQzv0u0nqIT6gj/z6rdWqtOwMsZRXbhE40T4YeGVaR9Kksj/dzBvFln9FQHG
-         KTSxVnZ+C8F74H1Kvr9CEIB0ieVWAJuURAF6yWeSzjEbwau6whtJSHaUillYU79CcTBp
-         SaxPBsa1kpOrqk487fZ98qayAGwAY6MEK0R6pOG54HL0SiZ5y2A1ozjF26WRfvEXqvqn
-         XDOVQVOLjRWEUGb8r25G/AtgOhI/gfPY6Yms3Cjb+UTYwsLOM7qYr1eIMmE6aKkJOvHt
-         StITbEvVLdaGFaygu+UvpPHW53XQc/WnTbKVjXV+oiiOXMU3IWMPfv/amiLiJhOylm5N
-         7uJA==
-X-Gm-Message-State: AGi0PuZyA+oSzlHjwgpFr2ZjBvCdZ11UVLk1TkLh5Zk/vOZhAKquTow+
-        FoKLcAYbrJxTOGS1oOkoNnPoQg==
-X-Google-Smtp-Source: APiQypK5kOz5MhTQkd2zcr5owUtt5S2utQcFoj6QCv0Xrdw4VqEqsfLHOoV9RtokIlAybhsuaGkLHA==
-X-Received: by 2002:a37:6843:: with SMTP id d64mr21400457qkc.24.1589303477787;
-        Tue, 12 May 2020 10:11:17 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t12sm11182754qkt.77.2020.05.12.10.11.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 10:11:17 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
- mem_cgroup_charge() API
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
-Date:   Tue, 12 May 2020 13:11:15 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
-        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mhXIarFJGq4Y7o1OACEMY+CWjpNuyCrBkx0AvhbST58=;
+        b=eRs/nPGnQybWuAHAxzI8IVSVnr0FMbZy+Ss/k4GD9vpa0IIeuQ8KFOkov7ZFLu8e44
+         den2ik11YN84+kNFH5NIaGVHzT8sYMJA94L9LK7Ps/mwY+oHgGPPmZFff0ojZ2P1hFe8
+         dRx1S/DaFEjy4Nh9JWUCIa7Lrt6C2UTHsx2YJJGXRk8gsLOc/pQveQDriGdzN0pxjk1w
+         10ichdZbgnG65TJU8fKpWc2BTAL20uyGpWyVefkD4ddG3H9yIFFFGNKIT0Fd5LiE5ZYj
+         9qVhAPSaszGxQaFW0BPoPFg/Spty5FXVqSNi3Ifx9vq2ohiljIm0S4d6+KBRS/EnV5r4
+         BIrw==
+X-Gm-Message-State: AGi0PuZhjsJkhVYxA58rXjAyMya1xcAz7Mqvy+2W6SPQToB5u8Oibdty
+        oXmuiGOS/+dSWqyZn3OFwM4PB/Oxz2PYiLR6D7YQIA==
+X-Google-Smtp-Source: APiQypJIMsGtzThZyW1lqSg5Tc9VmY8HlcF1qXM8u4OPF55cPNjhQjFyV5VLPhxjjL+KT0ArViJcIzRkt1OOy/WCwhY=
+X-Received: by 2002:a37:5b47:: with SMTP id p68mr15632193qkb.120.1589303568424;
+ Tue, 12 May 2020 10:12:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200430143019.1704-1-brgl@bgdev.pl> <20200430143019.1704-3-brgl@bgdev.pl>
+ <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
+In-Reply-To: <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 12 May 2020 19:12:37 +0200
+Message-ID: <CAMpxmJV+uO0bUa5cEqXnJT97zD8dqwuL9E5ij4Cu0o_fqWiPfg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <76E2FF28-1CD8-4A96-B2E6-5EDF51F8E3AB@lca.pw>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200508183105.225460-13-hannes@cmpxchg.org>
- <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 12 maj 2020 o 17:37 Marc Zyngier <maz@kernel.org> napisa=C5=82(a):
+>
+> > - */
+> > -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
+> > -{
+> > -     return sim->irqs[offset].irqnum;
+> > +     irq_ctx =3D irq_data_get_irq_chip_data(irqd);
+> > +
+> > +     if (irq_ctx->enabled) {
+> > +             set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
+> > +             irq_work_queue(&irq_ctx->work_ctx->work);
+> > +     }
+> >  }
+> > -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
+> > +EXPORT_SYMBOL_GPL(irq_sim_fire);
+>
+> Rather than using an ad-hoc API to queue an interrupt, why don't you
+> actually implement the interface that already exists for this at
+> the irqchip level (irq_set_irqchip_state, which allows the pending
+> state to be set)?
+>
 
+Yes, this is great, thanks for bringing this to my attention. I can
+drop another function from the API.
 
-> On May 12, 2020, at 10:38 AM, Qian Cai <cai@lca.pw> wrote:
->=20
->=20
->=20
->> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
-wrote:
->>=20
->> With the page->mapping requirement gone from memcg, we can charge =
-anon
->> and file-thp pages in one single step, right after they're allocated.
->>=20
->> This removes two out of three API calls - especially the tricky =
-commit
->> step that needed to happen at just the right time between when the
->> page is "set up" and when it's "published" - somewhat vague and fluid
->> concepts that varied by page type. All we need is a freshly allocated
->> page and a memcg context to charge.
->>=20
->> v2: prevent double charges on pre-allocated hugepages in khugepaged
->>=20
->> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
->> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->> ---
->> include/linux/mm.h      |  4 +---
->> kernel/events/uprobes.c | 11 +++--------
->> mm/filemap.c            |  2 +-
->> mm/huge_memory.c        |  9 +++------
->> mm/khugepaged.c         | 35 ++++++++++-------------------------
->> mm/memory.c             | 36 ++++++++++--------------------------
->> mm/migrate.c            |  5 +----
->> mm/swapfile.c           |  6 +-----
->> mm/userfaultfd.c        |  5 +----
->> 9 files changed, 31 insertions(+), 82 deletions(-)
-> []
->> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>=20
->> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
-mm_struct *mm,
->> out_up_write:
->> 	up_write(&mm->mmap_sem);
->> out_nolock:
->> +	if (*hpage)
->> +		mem_cgroup_uncharge(*hpage);
->> 	trace_mm_collapse_huge_page(mm, isolated, result);
->> 	return;
->> out:
->> -	mem_cgroup_cancel_charge(new_page, memcg);
->> 	goto out_up_write;
->> }
-> []
->=20
-> Some memory pressure will crash this new code. It looks like somewhat =
-racy.
-
-Reverted the whole series fixed the crash, i.e.,
-
-git revert --no-edit 6070efb8e52b..c986ddf58a95
-
-There is a minor conflict during reverting due to another linux-next =
-commit,
-
-2a6b525f0de1 (=E2=80=9Ckhugepaged: do not stop collapse if less than =
-half PTEs are referenced=E2=80=9D)
-
-which is trivial to resolve,
-
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@@ -1091,8 -1000,8 +1093,9 @@@ static void collapse_huge_page(struct m
-         * If it fails, we release mmap_sem and jump out_nolock.
-         * Continuing to collapse causes inconsistency.
-         */
- -      if (!__collapse_huge_page_swapin(mm, vma, address, pmd, =
-referenced)) {
- +      if (unmapped && !__collapse_huge_page_swapin(mm, vma, address,
- +                                                   pmd, referenced)) {
-+               mem_cgroup_cancel_charge(new_page, memcg, true);
-                up_read(&mm->mmap_sem);
-                goto out_nolock;
-        }
-
-
->=20
-> if (!page->mem_cgroup)
->=20
-> where page =3D=3D NULL in mem_cgroup_uncharge().
->=20
-> [ 2244.414421][  T726] BUG: Kernel NULL pointer dereference on read at =
-0x0000002c
-> [ 2244.414454][  T726] Faulting instruction address: =
-0xc0000000004f7e44
-> [ 2244.414467][  T726] Oops: Kernel access of bad area, sig: 11 [#1]
-> [ 2244.414488][  T726] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
-DEBUG_PAGEALLOC NUMA PowerNV
-> [ 2244.414501][  T726] Modules linked in: brd ext4 crc16 mbcache jbd2 =
-loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 libahci =
-libphy mdio libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
-> [ 2244.414556][  T726] CPU: 11 PID: 726 Comm: khugepaged Not tainted =
-5.7.0-rc5-next-20200512+ #8
-> [ 2244.414579][  T726] NIP:  c0000000004f7e44 LR: c0000000004df95c =
-CTR: c0000000001c1400
-> [ 2244.414600][  T726] REGS: c000001a2398f6e0 TRAP: 0300   Not tainted =
- (5.7.0-rc5-next-20200512+)
-> [ 2244.414630][  T726] MSR:  9000000000009033 =
-<SF,HV,EE,ME,IR,DR,RI,LE>  CR: 24000244  XER: 20040000
-> [ 2244.414656][  T726] CFAR: c0000000004df958 DAR: 000000000000002c =
-DSISR: 40000000 IRQMASK: 0=20
-> [ 2244.414656][  T726] GPR00: c0000000004df95c c000001a2398f970 =
-c00000000168a700 fffffffffffffff4=20
-> [ 2244.414656][  T726] GPR04: ffffffffffffffff c000000000bd0980 =
-0000000000000005 0000000000000080=20
-> [ 2244.414656][  T726] GPR08: 0000001ffc030000 0000000000000001 =
-0000000000000000 c00000000152bb58=20
-> [ 2244.414656][  T726] GPR12: 0000000024000222 c000001fffff5680 =
-c0000001d818ce00 c0000001d818cd00=20
-> [ 2244.414656][  T726] GPR16: 0000000000000000 c000001a2398fce0 =
-fe7fffffffffefff fffffffffffffe7f=20
-> [ 2244.414656][  T726] GPR20: c000201320aa53c8 000000000000001e =
-0000000000000017 c00020047636b868=20
-> [ 2244.414656][  T726] GPR24: 0000000000000000 0000000000000000 =
-c000000001756080 c000001a2398fce0=20
-> [ 2244.414656][  T726] GPR28: c000001a2398fa20 00007ffeeda00000 =
-c000200f28547928 c000200f28547880=20
-> [ 2244.414865][  T726] NIP [c0000000004f7e44] =
-mem_cgroup_uncharge+0x34/0xb0
-> mem_cgroup_uncharge at mm/memcontrol.c:6563
-> [ 2244.414895][  T726] LR [c0000000004df95c] =
-collapse_huge_page+0x24c/0x1000
-> collapse_huge_page at mm/khugepaged.c:1197
-> [ 2244.414924][  T726] Call Trace:
-> [ 2244.414940][  T726] [c000001a2398f970] [0000000000000001] 0x1 =
-(unreliable)
-> [ 2244.414970][  T726] [c000001a2398f9c0] [c0000000004df814] =
-collapse_huge_page+0x104/0x1000
-> collapse_huge_page at mm/khugepaged.c:1064 (discriminator 10)
-> [ 2244.414991][  T726] [c000001a2398faf0] [c0000000004e0f84] =
-khugepaged_scan_pmd+0x874/0xc70
-> [ 2244.415021][  T726] [c000001a2398fbf0] [c0000000004e2a90] =
-khugepaged+0x900/0x1920
-> [ 2244.415043][  T726] [c000001a2398fdb0] [c000000000155aa4] =
-kthread+0x1c4/0x1d0
-> [ 2244.415075][  T726] [c000001a2398fe20] [c00000000000cb28] =
-ret_from_kernel_thread+0x5c/0x74
-> [ 2244.415095][  T726] Instruction dump:
-> [ 2244.415113][  T726] 384228f0 7c0802a6 60000000 f821ffb1 e92d0c70 =
-f9210048 39200000 3d22ffec=20
-> [ 2244.415146][  T726] 3929f9f4 81290000 2f890000 409d0048 <e9230038> =
-2fa90000 419e003c 7c0802a6=20
-> [ 2244.415181][  T726] ---[ end trace 3488eb8818913a26 ]---
-
+Bart
