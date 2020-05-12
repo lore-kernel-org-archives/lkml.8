@@ -2,130 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB9AC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CC1C54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B0120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAC020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgELIoc convert rfc822-to-8bit (ORCPT
+        id S1729158AbgELIoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 12 May 2020 04:44:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37344 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725776AbgELIoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 04:44:32 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:33491 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgELIob (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:44:31 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 6C06A240007;
-        Tue, 12 May 2020 08:44:23 +0000 (UTC)
-Date:   Tue, 12 May 2020 10:44:22 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>, richard@nod.at,
-        vigneshr@ti.com, s.hauer@pengutronix.de, masonccyang@mxic.com.tw,
-        christophe.kerello@st.com, stefan@agner.ch, piotrs@cadence.com,
-        devik@eaxlabs.cz, tglx@linutronix.de,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nand: raw: use write_oob_raw for MTD_OPS_AUTO_OOB mode
-Message-ID: <20200512104422.4c31f7e0@xps13>
-In-Reply-To: <6F41AA9B-71D6-47FA-BC12-24941F84DA71@gmail.com>
-References: <20200504094253.2741109-1-noltari@gmail.com>
-        <20200504123237.5c128668@collabora.com>
-        <20200511182923.6a4961ab@xps13>
-        <6F41AA9B-71D6-47FA-BC12-24941F84DA71@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 08421AE57;
+        Tue, 12 May 2020 08:44:33 +0000 (UTC)
+Date:   Tue, 12 May 2020 10:44:29 +0200 (CEST)
+From:   Richard Biener <rguenther@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ for gcc >= 10
+In-Reply-To: <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
+Message-ID: <nycvar.YFH.7.76.2005121037491.4397@zhemvz.fhfr.qr>
+References: <20200508090202.7s3kcqpvpxx32syu@butterfly.localdomain> <20200511215720.303181-1-Jason@zx2c4.com> <CAHk-=wi87j=wj0ijkYZ3WoPVkZ9Fq1U2bLnQ66nk425B5kW0Cw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/mixed; boundary="-1609908220-634017890-1589273070=:4397"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Richard, maybe you'll have an idea to fix the situation here?
+---1609908220-634017890-1589273070=:4397
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
-10:36:25 +0200:
+On Mon, 11 May 2020, Linus Torvalds wrote:
 
-> Hi,
+> On Mon, May 11, 2020 at 2:57 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > GCC 10 appears to have changed -O2 in order to make compilation time
+> > faster when using -flto, seemingly at the expense of performance, in
+> > particular with regards to how the inliner works. Since -O3 these days
+> > shouldn't have the same set of bugs as 10 years ago, this commit
+> > defaults new kernel compiles to -O3 when using gcc >= 10.
 > 
-> > El 11 may 2020, a las 18:29, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
-> > 
-> > Hello,
-> > 
-> > Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 4 May
-> > 2020 12:32:37 +0200:
-> >   
-> >> On Mon,  4 May 2020 11:42:53 +0200
-> >> Álvaro Fernández Rojas <noltari@gmail.com> wrote:
-> >>   
-> >>> Some NAND controllers change the ECC bytes when OOB is written with ECC
-> >>> enabled.
-> >>> This is a problem in brcmnand, since adding JFFS2 cleanmarkers after the page
-> >>> has been erased will change the ECC bytes to 0 and the controller will think
-> >>> the block is bad.
-> >>> It can be fixed by using write_oob_raw, which ensures ECC is disabled.
-> >>> 
-> >>> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-> >>> ---
-> >>> drivers/mtd/nand/raw/nand_base.c | 2 +-
-> >>> 1 file changed, 1 insertion(+), 1 deletion(-)
-> >>> 
-> >>> diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> >>> index c24e5e2ba130..755d25200520 100644
-> >>> --- a/drivers/mtd/nand/raw/nand_base.c
-> >>> +++ b/drivers/mtd/nand/raw/nand_base.c
-> >>> @@ -488,7 +488,7 @@ static int nand_do_write_oob(struct nand_chip *chip, loff_t to,
-> >>> 
-> >>> 	nand_fill_oob(chip, ops->oobbuf, ops->ooblen, ops);
-> >>> 
-> >>> -	if (ops->mode == MTD_OPS_RAW)
-> >>> +	if (ops->mode == MTD_OPS_AUTO_OOB || ops->mode == MTD_OPS_RAW)
-> >>> 		status = chip->ecc.write_oob_raw(chip, page & chip->pagemask);    
-> >> 
-> >> The doc says:
-> >> 
-> >> @MTD_OPS_PLACE_OOB:  OOB data are placed at the given offset (default)
-> >> @MTD_OPS_AUTO_OOB:   OOB data are automatically placed at the free areas
-> >>                     which are defined by the internal ecclayout
-> >> @MTD_OPS_RAW:        data are transferred as-is, with no error
-> >> 		     correction; this mode implies %MTD_OPS_PLACE_OOB
-> >> 
-> >> To me, that means MTD_OPS_PLACE_OOB and MTD_OPS_AUTO_OOB do not imply
-> >> MTD_OPS_RAW. Anyway those modes are just too vague. We really should
-> >> separate the ECC-disabled/ECC-enabled concept (AKA raw vs non-raw mode)
-> >> from the OOB placement scheme. IIRC, Miquel had a patchset doing that.
-> >> 
-> >> We also should have the concept of protected OOB-region vs
-> >> unprotected-OOB-region if we want JFFS2 to work with controllers that
-> >> protect part of the OOB region. Once we have that we can patch JFFS2
-> >> to write things with "ECC-disabled"+"auto-OOB-placement-on-unprotected
-> >> area".  
-> > 
-> > I see the problem but as Boris said the fix is not valid as-is.
-> > Problem is: I don't have a better proposal yet.
-> > 
-> > Is forcing JFFS2 to write cleanmarkers in raw mode only an option?  
+> I'm not convinced this is sensible.
+
+Note the real thing that changed for GCC 10 at -O2 is that -O2
+now includes -finline-functions which means GCC considers inlining
+of functions not marked with 'inline' at -O2.  To counter code-size
+growth and tune that back to previous levels the inlining limits
+in effect at -O2 have been lowered.
+
+Note this has been done based on analyzing larger C++ code and obviously
+not because the kernel would benefit (IIRC kernel folks like 'inline'
+to behave as written and thus rather may dislike the change to default to
+-finline-functions).
+
+> -O3 historically does bad things with gcc. Including bad things for
+> performance. It traditionally makes code larger and often SLOWER.
 > 
-> The doc says that for MTD_OPS_AUTO_OOB "the data is automatically placed at the free areas which are defined by the internal ecclayout”.
-> So, if we’re placing this data in the free OOB area left by the ECC bytes it means that this automatically placed data won’t be error correctable, since it’s in the OOB, and the OOB data isn’t error corrected, right?
-
-No, free bytes sometimes are and sometimes are not covered by the ECC
-engine. It depends on the controller.
-
-> The problem is that "flash_erase -j” uses MTD_OPS_AUTO_OOB to write the OOB JFFS2 clean markers and if this is written with ECC enabled the NAND controller will change the ECC bytes to an invalid value (or at least brcmnand controller).
+> And I don't mean slower to compile (although that's an issue). I mean
+> actually generating slower code.
 > 
-> Another option could be adding another mode, something like MTD_OPS_AUTO_OOB_RAW and using it in mtd-utils and JFFS2.
+> Things like trying to unroll loops etc makes very little sense in the
+> kernel, where we very seldom have high loop counts for pretty much
+> anything.
+> 
+> There's a reason -O3 isn't even offered as an option.
 
-No, these modes already are completely wrong, I must resend my series
-fixing them.
+And I think that's completely sensible.  I would not recommend
+to use -O3 for the kernel.  Somehow feeding back profile data
+might help - though getting such data at all and with enough
+coverage is probably hard.
 
+As you said in the followup I wouldn't recommend tweaking GCCs
+defaults for the various --param affecting inlining.  The behavior
+with this is not consistent across releases.
+
+Richard.
+
+> Maybe things have changed, and maybe they've improved. But I'd like to
+> see actual numbers for something like this.
+> 
+> Not inlining as aggressively is not necessarily a bad thing. It can
+> be, of course. But I've actually also done gcc bugreports about gcc
+> inlining too much, and generating _worse_ code as a result (ie
+> inlinging things that were behind an "if (unlikely())" test, and
+> causing the likely path to grow a stack fram and stack spills as a
+> result).
+> 
+> So just "O3 inlines more" is not a valid argument.
+> 
+>               Linus
+> 
+
+-- 
+Richard Biener <rguenther@suse.de>
+SUSE Software Solutions Germany GmbH, Maxfeldstrasse 5, 90409 Nuernberg,
+Germany; GF: Felix Imendörffer; HRB 36809 (AG Nuernberg)
+---1609908220-634017890-1589273070=:4397--
