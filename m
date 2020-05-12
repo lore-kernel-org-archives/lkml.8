@@ -2,135 +2,70 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DFC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C27AC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A1B2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FacGXlpV"
+	by mail.kernel.org (Postfix) with ESMTP id 04D64207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbgELQCB (ORCPT
+        id S1728888AbgELQDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:02:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52329 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725987AbgELQCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:02:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589299320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nL6n0gs44aSe+c4xP2RS6AmyhHuCE1lHHuLbFzSoNGo=;
-        b=FacGXlpVTipMCzw5E65rtqe8Cs412aCVT9+1x6ZyhwGaeF4J+CDpxmQpYFhDUGd5KTAnmd
-        M7lADnX1RG9DtF0el8rPIdqJ6xIDmLaye3K9L7AaQuFTHtEoR9Y3EeNM+RwP2D7za5xayx
-        lvG2pcaNoGBCzswl7E6E9o+xGs4h2rk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-428-yGbGbgOGNEWr2HXPNBc0CA-1; Tue, 12 May 2020 12:01:58 -0400
-X-MC-Unique: yGbGbgOGNEWr2HXPNBc0CA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 12 May 2020 12:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgELQDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:03:04 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09855800687;
-        Tue, 12 May 2020 16:01:57 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A42EE60C05;
-        Tue, 12 May 2020 16:01:54 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment notifications
-Date:   Tue, 12 May 2020 18:01:53 +0200
-Message-Id: <20200512160153.134467-1-vkuznets@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 66EDF2054F;
+        Tue, 12 May 2020 16:03:02 +0000 (UTC)
+Date:   Tue, 12 May 2020 12:03:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+Message-ID: <20200512120301.44ed15fe@gandalf.local.home>
+In-Reply-To: <20200512155207.GF17734@linux-b0ei>
+References: <20200506211523.15077-1-keescook@chromium.org>
+        <20200512131655.GE17734@linux-b0ei>
+        <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+        <20200512155207.GF17734@linux-b0ei>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Errors during hibernation with reenlightenment notifications enabled were
-reported:
+On Tue, 12 May 2020 17:52:07 +0200
+Petr Mladek <pmladek@suse.com> wrote:
 
- [   51.730435] PM: hibernation entry
- [   51.737435] PM: Syncing filesystems ...
- ...
- [   54.102216] Disabling non-boot CPUs ...
- [   54.106633] smpboot: CPU 1 is now offline
- [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
-     write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
-     native_write_msr+0x4/0x20)
- [   54.110006] Call Trace:
- [   54.110006]  hv_cpu_die+0xd9/0xf0
- ...
+> I know that there is the "do not break existing userspace" rule. The
+> question is if there is any user and if it is worth it.
 
-Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-other CPU when the CPU receiving them goes offline. Upon hibernation, there
-is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-Disable the feature when cpumask_any_but() fails.
+If you break user space, and nobody is around to notice it, did you really
+break it?
 
-Also, as we now disable reenlightenment notifications upon hibernation we
-need to restore them on resume. Check if hv_reenlightenment_cb was
-previously set and restore from hv_resume().
+The answer is "No" ;-)
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index fd51bac11b46..acf76b466db6 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -226,10 +226,18 @@ static int hv_cpu_die(unsigned int cpu)
- 
- 	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
- 	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
--		/* Reassign to some other online CPU */
-+		/*
-+		 * Reassign reenlightenment notifications to some other online
-+		 * CPU or just disable the feature if there are no online CPUs
-+		 * left (happens on hibernation).
-+		 */
- 		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
- 
--		re_ctrl.target_vp = hv_vp_index[new_cpu];
-+		if (new_cpu < nr_cpu_ids)
-+			re_ctrl.target_vp = hv_vp_index[new_cpu];
-+		else
-+			re_ctrl.enabled = 0;
-+
- 		wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
- 	}
- 
-@@ -293,6 +301,13 @@ static void hv_resume(void)
- 
- 	hv_hypercall_pg = hv_hypercall_pg_saved;
- 	hv_hypercall_pg_saved = NULL;
-+
-+	/*
-+	 * Reenlightenment notifications are disabled by hv_cpu_die(0),
-+	 * reenable them here if hv_reenlightenment_cb was previously set.
-+	 */
-+	if (hv_reenlightenment_cb)
-+		set_hv_tscchange_cb(hv_reenlightenment_cb);
- }
- 
- /* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
--- 
-2.25.4
-
+-- Steve
