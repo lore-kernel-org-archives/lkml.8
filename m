@@ -2,354 +2,284 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E2AC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6902C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5567420736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE54420736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="KdhNASjZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WuwUwnSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgELHr7 (ORCPT
+        id S1729022AbgELHtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:47:59 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:33464 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgELHr7 (ORCPT
+        Tue, 12 May 2020 03:49:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25621 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725823AbgELHtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:47:59 -0400
-Received: from localhost.localdomain (unknown [142.147.94.151])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 9D5E320F14;
-        Tue, 12 May 2020 07:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1589269678; bh=uqS/qkV/cOZlWr119FMfbm4Ch6cVX5nOp6L8u7qoUlg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdhNASjZhXMU+yrj+cw6e5pdM5gaUhZfgT0Dk2LSwpSXDlbfUtkYK2LmL2s1QN2B4
-         9qjeSX3535DfZaf2Yb2u1iDZxt7VGHoPp0utWBbeh3hlPyti6LB8pgvfxrFA1pswE3
-         JXnukebHuvf6HmMsBN++qKyDANqbO3vzJCuLU8vZ/h+wKSzbL2aj35mG0D5pF+7mrn
-         yVF9DvWGNSrn/ZelkxRbVALx4vXN9cpztBT9eci8lFJZ0sQpI1lM5+pTy9SHHpQrJi
-         NAhHYQvp44RHTzIlbiTaiERG0qVCGwIShce7oQWjfJkGp7JcPEEL4TZnLUKRUHF3d9
-         1g2QtFL5dNjSg==
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH v9 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Date:   Tue, 12 May 2020 15:43:59 +0800
-Message-Id: <20200512074413.3557835-5-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200512074413.3557835-1-jiaxun.yang@flygoat.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200512074413.3557835-1-jiaxun.yang@flygoat.com>
+        Tue, 12 May 2020 03:49:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589269756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=5JqiYyP0ucXwE+/MaSHWpuy5KzcgTLa37etzUq/4WP0=;
+        b=WuwUwnSQulYtSvwjjt7V6OdRFTWSsNisaP1G4ZibmU9OdBR0sEXsXbQHIlPKupy/CJcLOm
+        Gb98Jl+uuS2zN8y480aX/RwiIBFhAnxijCV8NASYeVlBl8NlV209T/aMWLI4BgIEVCpqhi
+        orzFh4U/G1dT63szyoyyvwd56R8lhzc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-136-yiXSoRdbNsm59Wz8a6iiiw-1; Tue, 12 May 2020 03:49:11 -0400
+X-MC-Unique: yiXSoRdbNsm59Wz8a6iiiw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B31F580B70D;
+        Tue, 12 May 2020 07:49:09 +0000 (UTC)
+Received: from [10.36.113.77] (ovpn-113-77.ams2.redhat.com [10.36.113.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C55756C796;
+        Tue, 12 May 2020 07:49:06 +0000 (UTC)
+Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
+ <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
+ <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
+ <20200429014145.GD19958@linux.vnet.ibm.com>
+ <20200429122211.GD28637@dhcp22.suse.cz>
+ <20200430071820.GF19958@linux.vnet.ibm.com>
+ <20200504093712.GL22838@dhcp22.suse.cz>
+ <20200508130304.GA1961@linux.vnet.ibm.com>
+ <3bfe7469-1d8c-baa4-6d9d-f4786492eaa8@redhat.com>
+ <ce9d47bc-f92c-dd22-0d59-e8d59c913526@redhat.com>
+ <20200511174731.GD1961@linux.vnet.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <45d50d80-c998-9372-42eb-ca753a7258b9@redhat.com>
+Date:   Tue, 12 May 2020 09:49:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200511174731.GD1961@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can now enable generic PCI driver in Kconfig, and remove legacy
-PCI driver code.
+On 11.05.20 19:47, Srikar Dronamraju wrote:
+> * David Hildenbrand <david@redhat.com> [2020-05-08 15:42:12]:
+> 
+> Hi David,
+> 
+> Thanks for the steps to tryout.
+> 
+>>>
+>>> #! /bin/bash
+>>> sudo x86_64-softmmu/qemu-system-x86_64 \
+>>>     --enable-kvm \
+>>>     -m 4G,maxmem=20G,slots=2 \
+>>>     -smp sockets=2,cores=2 \
+>>>     -numa node,nodeid=0,cpus=0-1,mem=4G -numa node,nodeid=1,cpus=2-3,mem=0G \
+>>
+>> Sorry, this line has to be
+>>
+>> -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G \
+>>
+>>>     -kernel /home/dhildenb/git/linux/arch/x86_64/boot/bzImage \
+>>>     -append "console=ttyS0 rd.shell rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0" \
+>>>     -initrd /boot/initramfs-5.2.8-200.fc30.x86_64.img \
+>>>     -machine pc,nvdimm \
+>>>     -nographic \
+>>>     -nodefaults \
+>>>     -chardev stdio,id=serial \
+>>>     -device isa-serial,chardev=serial \
+>>>     -chardev socket,id=monitor,path=/var/tmp/monitor,server,nowait \
+>>>     -mon chardev=monitor,mode=readline
+>>>
+>>> to get a cpu-less and memory-less node 1. Never tried with node 0.
+>>>
+> 
+> I tried 
+> 
+> qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
+> 
+> and the resulting guest was.
+> 
+> [root@localhost ~]# numactl -H
+> available: 1 nodes (0)
+> node 0 cpus: 0 1 2 3
+> node 0 size: 3927 MB
+> node 0 free: 3316 MB
+> node distances:
+> node   0
+>   0:  10
+> 
+> [root@localhost ~]# lscpu
+> Architecture:        x86_64
+> CPU op-mode(s):      32-bit, 64-bit
+> Byte Order:          Little Endian
+> Address sizes:       40 bits physical, 48 bits virtual
+> CPU(s):              4
+> On-line CPU(s) list: 0-3
+> Thread(s) per core:  1
+> Core(s) per socket:  2
+> Socket(s):           2
+> NUMA node(s):        1
+> Vendor ID:           GenuineIntel
+> CPU family:          6
+> Model:               46
+> Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
+> Stepping:            6
+> CPU MHz:             2260.986
+> BogoMIPS:            4521.97
+> Virtualization:      VT-x
+> Hypervisor vendor:   KVM
+> Virtualization type: full
+> L1d cache:           32K
+> L1i cache:           32K
+> L2 cache:            4096K
+> L3 cache:            16384K
+> NUMA node0 CPU(s):   0-3
+> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
+> 
+> [root@localhost ~]# cat /sys/devices/system/node/online
+> 0
+> [root@localhost ~]# cat /sys/devices/system/node/possible
+> 0-1
+> 
+> ---------------------------------------------------------------------------------
+> 
+> I also tried
+> 
+> qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=1,cpus=0-3,mem=4G -numa node,nodeid=0,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
+> 
+> and the resulting guest was.
+> 
+> [root@localhost ~]# numactl -H
+> available: 1 nodes (0)
+> node 0 cpus: 0 1 2 3
+> node 0 size: 3927 MB
+> node 0 free: 3316 MB
+> node distances:
+> node   0
+>   0:  10
+> 
+> [root@localhost ~]# lscpu
+> Architecture:        x86_64
+> CPU op-mode(s):      32-bit, 64-bit
+> Byte Order:          Little Endian
+> Address sizes:       40 bits physical, 48 bits virtual
+> CPU(s):              4
+> On-line CPU(s) list: 0-3
+> Thread(s) per core:  1
+> Core(s) per socket:  2
+> Socket(s):           2
+> NUMA node(s):        1
+> Vendor ID:           GenuineIntel
+> CPU family:          6
+> Model:               46
+> Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
+> Stepping:            6
+> CPU MHz:             2260.986
+> BogoMIPS:            4521.97
+> Virtualization:      VT-x
+> Hypervisor vendor:   KVM
+> Virtualization type: full
+> L1d cache:           32K
+> L1i cache:           32K
+> L2 cache:            4096K
+> L3 cache:            16384K
+> NUMA node0 CPU(s):   0-3
+> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
+> 
+> [root@localhost ~]# cat /sys/devices/system/node/online
+> 0
+> [root@localhost ~]# cat /sys/devices/system/node/possible
+> 0-1
+> 
+> Even without my patch, both the combinations, I am still unable to see a
+> cpuless, memoryless node being online. And the interesting part being even
 
-Radeon vbios quirk is moved to the platform folder to fit the
-new structure.
+Yeah, I think on x86, all memory-less and cpu-less nodes are offline as
+default. Especially when hotunplugging cpus/memory, we set them offline
+as well.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v9: Fix licenses tag
----
- arch/mips/Kconfig                  |   1 +
- arch/mips/loongson64/Makefile      |   2 +-
- arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
- arch/mips/pci/Makefile             |   1 -
- arch/mips/pci/fixup-loongson3.c    |  71 ------------------
- arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
- 6 files changed, 31 insertions(+), 189 deletions(-)
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
+But as Michal mentioned, the node handling code is complicated and
+differs between various architectures.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 0519ca9f00f9..7a4fcc4ade1f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -480,6 +480,7 @@ config MACH_LOONGSON64
- 	select IRQ_MIPS_CPU
- 	select NR_CPUS_DEFAULT_64
- 	select USE_GENERIC_EARLY_PRINTK_8250
-+	select PCI_DRIVERS_GENERIC
- 	select SYS_HAS_CPU_LOONGSON64
- 	select SYS_HAS_EARLY_PRINTK
- 	select SYS_SUPPORTS_SMP
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index 6f3c2b47f66f..6f81b822aeae 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -8,5 +8,5 @@ obj-$(CONFIG_MACH_LOONGSON64) += cop2-ex.o platform.o dma.o \
- obj-$(CONFIG_SMP)	+= smp.o
- obj-$(CONFIG_NUMA)	+= numa.o
- obj-$(CONFIG_RS780_HPET) += hpet.o
--obj-$(CONFIG_PCI) += pci.o
- obj-$(CONFIG_SUSPEND) += pm.o
-+obj-$(CONFIG_PCI_QUIRKS) += vbios_quirk.o
-diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
-new file mode 100644
-index 000000000000..9a29e94d3db1
---- /dev/null
-+++ b/arch/mips/loongson64/vbios_quirk.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include <linux/pci.h>
-+#include <loongson.h>
-+
-+static void pci_fixup_radeon(struct pci_dev *pdev)
-+{
-+	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
-+
-+	if (res->start)
-+		return;
-+
-+	if (!loongson_sysconf.vgabios_addr)
-+		return;
-+
-+	pci_disable_rom(pdev);
-+	if (res->parent)
-+		release_resource(res);
-+
-+	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-+	res->end   = res->start + 256*1024 - 1;
-+	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-+		     IORESOURCE_PCI_FIXED;
-+
-+	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-+		 PCI_ROM_RESOURCE, res);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
-+				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 342ce10ef593..438f10955d89 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)		+= pci-lasat.o
- obj-$(CONFIG_MIPS_COBALT)	+= fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)	+= fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)	+= fixup-lemote2f.o ops-loongson2.o
--obj-$(CONFIG_MACH_LOONGSON64)	+= fixup-loongson3.o ops-loongson3.o
- obj-$(CONFIG_MIPS_MALTA)	+= fixup-malta.o pci-malta.o
- obj-$(CONFIG_PMC_MSP7120_GW)	+= fixup-pmcmsp.o ops-pmcmsp.o
- obj-$(CONFIG_PMC_MSP7120_EVAL)	+= fixup-pmcmsp.o ops-pmcmsp.o
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
-deleted file mode 100644
-index 8a741c2c6685..000000000000
---- a/arch/mips/pci/fixup-loongson3.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/*
-- * fixup-loongson3.c
-- *
-- * Copyright (C) 2012 Lemote, Inc.
-- * Author: Xiang Yu, xiangy@lemote.com
-- *         Chen Huacai, chenhc@lemote.com
-- *
-- * This program is free software; you can redistribute  it and/or modify it
-- * under  the terms of  the GNU General  Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- *
-- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- *
-- */
--
--#include <linux/pci.h>
--#include <boot_param.h>
--
--static void print_fixup_info(const struct pci_dev *pdev)
--{
--	dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
--			pdev->vendor, pdev->device, pdev->irq);
--}
--
--int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	print_fixup_info(dev);
--	return dev->irq;
--}
--
--static void pci_fixup_radeon(struct pci_dev *pdev)
--{
--	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
--
--	if (res->start)
--		return;
--
--	if (!loongson_sysconf.vgabios_addr)
--		return;
--
--	pci_disable_rom(pdev);
--	if (res->parent)
--		release_resource(res);
--
--	res->start = virt_to_phys((void *) loongson_sysconf.vgabios_addr);
--	res->end   = res->start + 256*1024 - 1;
--	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
--		     IORESOURCE_PCI_FIXED;
--
--	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
--		 PCI_ROM_RESOURCE, res);
--}
--
--DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
--				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
--
--/* Do platform specific device initialization at pci_enable_device() time */
--int pcibios_plat_dev_init(struct pci_dev *dev)
--{
--	return 0;
--}
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-deleted file mode 100644
-index 2f6ad36bdea6..000000000000
---- a/arch/mips/pci/ops-loongson3.c
-+++ /dev/null
-@@ -1,116 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/kernel.h>
--
--#include <asm/mips-boards/bonito64.h>
--
--#include <loongson.h>
--
--#define PCI_ACCESS_READ  0
--#define PCI_ACCESS_WRITE 1
--
--#define HT1LO_PCICFG_BASE      0x1a000000
--#define HT1LO_PCICFG_BASE_TP1  0x1b000000
--
--static int loongson3_pci_config_access(unsigned char access_type,
--		struct pci_bus *bus, unsigned int devfn,
--		int where, u32 *data)
--{
--	unsigned char busnum = bus->number;
--	int function = PCI_FUNC(devfn);
--	int device = PCI_SLOT(devfn);
--	int reg = where & ~3;
--	void *addrp;
--	u64 addr;
--
--	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
--		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
--		if (busnum == 0) {
--			if (device > 31)
--				return PCIBIOS_DEVICE_NOT_FOUND;
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
--		} else {
--			addrp = (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
--		}
--	} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
--		struct pci_dev *rootdev;
--
--		rootdev = pci_get_domain_bus_and_slot(0, 0, 0);
--		if (!rootdev)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr = pci_resource_start(rootdev, 3);
--		if (!addr)
--			return PCIBIOS_DEVICE_NOT_FOUND;
--
--		addr |= busnum << 20 | device << 15 | function << 12 | reg;
--		addrp = (void *)TO_UNCAC(addr);
--	} else {
--		return PCIBIOS_DEVICE_NOT_FOUND;
--	}
--
--	if (access_type == PCI_ACCESS_WRITE)
--		writel(*data, addrp);
--	else {
--		*data = readl(addrp);
--		if (*data == 0xffffffff) {
--			*data = -1;
--			return PCIBIOS_DEVICE_NOT_FOUND;
--		}
--	}
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
--				 int where, int size, u32 *val)
--{
--	u32 data = 0;
--	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--			bus, devfn, where, &data);
--
--	if (ret != PCIBIOS_SUCCESSFUL)
--		return ret;
--
--	if (size == 1)
--		*val = (data >> ((where & 3) << 3)) & 0xff;
--	else if (size == 2)
--		*val = (data >> ((where & 3) << 3)) & 0xffff;
--	else
--		*val = data;
--
--	return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
--				  int where, int size, u32 val)
--{
--	u32 data = 0;
--	int ret;
--
--	if (size == 4)
--		data = val;
--	else {
--		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
--				bus, devfn, where, &data);
--		if (ret != PCIBIOS_SUCCESSFUL)
--			return ret;
--
--		if (size == 1)
--			data = (data & ~(0xff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--		else if (size == 2)
--			data = (data & ~(0xffff << ((where & 3) << 3))) |
--			    (val << ((where & 3) << 3));
--	}
--
--	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
--			bus, devfn, where, &data);
--
--	return ret;
--}
--
--struct pci_ops loongson_pci_ops = {
--	.read = loongson3_pci_pcibios_read,
--	.write = loongson3_pci_pcibios_write
--};
+> if I mark node 0 as cpuless,memoryless and node 1 as actual node, the system
+> somewhere marks node 0 as the actual node.
+
+Is the kernel maybe mapping PXM 1 to node 0 in that case, because it
+always requires node 0 to be online/contain memory? Would be interesting
+what happens if you hotplug a DIMM to (QEMU )node 0 - if PXM 0 will be
+mapped to node 1 then as well.
+
+
 -- 
-2.26.2
+Thanks,
+
+David / dhildenb
 
