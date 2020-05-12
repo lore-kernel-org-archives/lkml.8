@@ -2,119 +2,100 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30005C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F8C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C5920753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73E220753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="H5iBBvNa"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="yzpK9buR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgELUHx (ORCPT
+        id S1731007AbgELUH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELUHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:07:52 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C631EC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:07:52 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x13so1002015pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=rhtiEIBdzrHkDBisACwiSoBSZLTSxhAWeD0kG6AJCFU=;
-        b=H5iBBvNakTJBq65S0nZntk6pa2kBI14r+JX5VeLNl0q/aSIb/oOQ5cr3B5ryhwWmRJ
-         Qv5/d2wU1pzVzv+HpZXfwy4Il/mtIWoxr8hE6LRJ+3uD13CSwrYAQmP3CST8spjPid1g
-         DbEQl/LlxgyBbFP2WkWeDCbufGZoDefL3Lgrh7iOORUEnZ1MWFSxG0WIYT8ZbZrDRRNM
-         24SAphwjXWQjnh72iqX+TLs4r9HVZe2WEXV9145cVwrnl5mSmCzFTDOe9o6QDbmSzE0R
-         gc6C1T6ILCw0YUviirEtZPUWm3Ey/XSn9yVSH4YZGqM/2TV+ylRvb8iwgkEctkcbcmoa
-         Cj/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=rhtiEIBdzrHkDBisACwiSoBSZLTSxhAWeD0kG6AJCFU=;
-        b=maZnpOoMPxQtRCBV9cjZLtAcMMlNmEeMUZkHN4cHtEsZZy6CWrM/6cZX3QSKCf7Or8
-         cttE9NzGkNGVtmoGWzvfGCg8TYA0piP6vbpijmirkUNEUWbcdLg46CzbSLSdTTUUUpky
-         Fapith9/7FnqF7r1AF7aFlBS2d6HD+JC/bdt0NujQt6DqJe3etNfbnZksCDbWO8RXyKG
-         M0ZHo7jCwUqsVMtDvVMqk0eQhKwnF8u2ZWbhIEC7OOXTMGKoPfnCJpbLWtE2kLTdDueL
-         nxT7tTIN8m8SfCGefqHdSQnCv8ZxVfA2/LHPEUmgD8UpdFpzDN1D+q/IN1+eLXH+0hbm
-         aUkw==
-X-Gm-Message-State: AOAM532CHU/d7FsvLcuuQZzK99xjt4sj4epglmbLRylBhSM10X23JgqM
-        Eqw9/Ret5V+kw3QYxkiOSpqcVw==
-X-Google-Smtp-Source: ABdhPJwYVudVGNEQY4Il1qQDZHj/08latFnDIYDe8ER9Rqo1bss5a2rLcmgYlaAvcJbIK4Yv5CGZ9g==
-X-Received: by 2002:a63:c04a:: with SMTP id z10mr8395941pgi.430.1589314072335;
-        Tue, 12 May 2020 13:07:52 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:a93f:12ed:b744:bd73? ([2601:646:c200:1ef2:a93f:12ed:b744:bd73])
-        by smtp.gmail.com with ESMTPSA id x132sm12819152pfc.57.2020.05.12.13.07.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 13:07:51 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC v4][PATCH part-1 0/7] ASI - Part I (ASI Infrastructure and PTI)
-Date:   Tue, 12 May 2020 13:07:28 -0700
-Message-Id: <7F322031-034E-4B36-A60F-663EAA4C99C9@amacapital.net>
-References: <a65d6cbf-41de-3001-6792-21a4233d8467@intel.com>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
-        kuzuno@gmail.com, mgross@linux.intel.com
-In-Reply-To: <a65d6cbf-41de-3001-6792-21a4233d8467@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-X-Mailer: iPhone Mail (17E262)
+        Tue, 12 May 2020 16:07:56 -0400
+Received: from www.zeus03.de ([194.117.254.33]:38446 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731168AbgELUHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 16:07:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=yUF4VJEAnlfiS6JRxzh+1bzIfJxa
+        yjiNdic4HEyYt+k=; b=yzpK9buRsJFEleBzux6A3e0nFIA5i/t9edRq+IxZk6RN
+        VzMP/oXEubqvAkWNiYZ9Ubpn8nM7Q87Nmp2cgtPUcPl+L+R3EsiIfaG9G1/T6Qt5
+        8GjkBYTqx+lxi8enBxpPXpQL8rImSvOOzoJobHFHr69PHS+THMPU3H0HBSxEg5Y=
+Received: (qmail 3071369 invoked from network); 12 May 2020 22:07:52 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 22:07:52 +0200
+X-UD-Smtp-Session: l3s3148p1@ene2BHmlEsogAwDPXw2aAE67cgFBY+HL
+Date:   Tue, 12 May 2020 22:07:51 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Corey Minyard <minyard@acm.org>
+Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
+Message-ID: <20200512200751.GA6960@ninjato>
+References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
+ <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
+ <20200512182517.GP9902@minyard.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <20200512182517.GP9902@minyard.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> On May 12, 2020, at 10:45 AM, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
-> =EF=BB=BFOn 5/4/20 7:49 AM, Alexandre Chartre wrote:
->> This version 4 of the kernel Address Space Isolation (ASI) RFC. I have
->> broken it down into three distinct parts:
->>=20
->> - Part I: ASI Infrastructure and PTI (this part)
->> - Part II: Decorated Page-Table
->> - Part III: ASI Test Driver and CLI
->>=20
->> Part I is similar to RFCv3 [3] with some small bug fixes. Parts II and II=
-I
->> extend the initial patchset: part II introduces decorated page-table in
->> order to provide convenient page-table management functions, and part III=
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> provides a driver and CLI for testing ASI (using parts I and II).
+On Tue, May 12, 2020 at 01:25:17PM -0500, Corey Minyard wrote:
+> On Thu, Mar 26, 2020 at 10:09:58PM +0100, Wolfram Sang wrote:
+> > Move away from the deprecated API.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 >=20
-> These look interesting.  I haven't found any holes in your methods,
-> although the interrupt depth tracking worries me a bit.  I tried and
-> failed to do a similar thing with PTI in the NMI path, but you might
-> have just bested me there. :)
+> Ok by me.
 >=20
-> It's very interesting that you've been able to implement PTI underneath
-> all of this, and the "test driver" is really entertaining!
+> Acked-by: Corey Minyard <cminyard@mvista.com>
 >=20
-> That said, this is working in some of the nastiest corners of the x86
-> code and this is going to take quite an investment to get reviewed.  I'm
-> not *quite* sure it's all worth it.
->=20
-> So, this isn't being ignored, I'm just not quite sure what to do with
-> it, yet.
+> Do you want me to take this, or is this part of something else?  I can
+> submit it if you like.
 
-I=E2=80=99m going to wait until the dust settles on tglx=E2=80=99s big entry=
- rework before I look at this.=
+I'd prefer if you take it. But I can take it if it is easier for you.
+
+Thanks!
+
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl67AhMACgkQFA3kzBSg
+KbYwCw//fDMbW7wdG4KvmjCNqawMQBB3jse+reI2CNpwfVGllfcKbL4a+KmcJRLK
+Pfb+JHUj313OnkfTTmgmzsLiwrHgVDuyPP/j78ChzNY2hTLs9g8EWcmnHxYzdKWj
+7ZnRYaYq9amNC2gnvyVl2mbguTU8AnpFvJGl163wb7bZ+khrUUpVSscmdVbnN/LN
+9ZbPyIP+1E+kwcr27EwyktGA56lSLTnQPOgLOOIznRw7dX2vjFvyxLK5aNzrdTml
+EzSaUfl41xghq8BOeo2DTCWUM3nGs12fGqPspCbDk7v+zmrWyboiNSNln4oBIhv7
+1UHRm4/ABF+q5J0r9nNe08m8eps3694CuStqfZPzwx3boUAxWcF9U+q3JFLsOVuH
+fBgcc/fMRX8Z9ZyRWPGlEYKkGwZzC5ug3Gs0wM3ybmSZrxdSrSces8z0ARC2j9qA
+P3OL4zucLAOXyQMdYMTUAFRyYSPH2MyPTSx6i32UcjO0aQJDAv1lq3DeGkrovaOH
+pTJH9fSJ/ggDul8H3YrwXWhoqxTWlr5HuhgWvhhgCFCW96YwUohWKcvPXMMD+wX1
+dN5Uy7fpXZA6ZKU+F0Dq0CD65nma1CRVC6AlMHLGmeQSuMYb6RCWH+ko7ymCl9M+
+hVvizVbNrJF2NZepi/5LRXHUUjvrzLXdc4cEKfiz3LeHnpMIAb4=
+=ty69
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
