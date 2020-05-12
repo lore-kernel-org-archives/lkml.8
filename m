@@ -2,139 +2,102 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB0C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6F2C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27535206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589281535;
-	bh=QcetHZ/WV7SzOJx7y3VtilFa5AxOHu2bW9ktZoVYN/8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jHPOenQD2qrYhwgclxlZvvp+oA5zeil8rc18uIi/papNYz8iHY6CqWEFgnzrTR8Ux
-	 F3tzLM3KyTc4lbFDRb6VFP6ZeEXDbq9ORCpPPfJ1AlXzpRtJpFCh76fNn9L1aNe/fF
-	 eFj2kSplUAt2okwOq7rnKkxU46TX9mzo3fqUn7fs=
+	by mail.kernel.org (Postfix) with ESMTP id 57642206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgELLFe (ORCPT
+        id S1729412AbgELLIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELLFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:05:34 -0400
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26E6D20722;
-        Tue, 12 May 2020 11:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589281533;
-        bh=QcetHZ/WV7SzOJx7y3VtilFa5AxOHu2bW9ktZoVYN/8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=g45yf8oAz8COKkI+/aNxUYoI8+RyfVkKuD/2x13IgI/2BtQix5kFieBTfvI6Q3X+a
-         Wbe4E+tvMvgSq1LGxSFgkBvIRSdnDuMc3Fa3HkwHeB6VTsLUQiadWSDzZROCKgkLur
-         7eHTpecphnAV/nINzUsnKsRXEZbDTMAVDTzd8w2w=
-Received: by mail-il1-f176.google.com with SMTP id m5so11771847ilj.10;
-        Tue, 12 May 2020 04:05:33 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZtJwfq0YMFVrTFnACtn9xegIjVrOdVHsT8++UHpXal5LixxjIP
-        Al3PLeG8etkxMazHkzvw9E3shDiJpgFjhugvUTk=
-X-Google-Smtp-Source: APiQypJ87UPF7eEiYkWix4Qz1SdTjtsmUwKgHSVI39lmUIv19DKowo9AsBvtjj+BK5//JAqLu10TWJ1qAp9cXkFgP54=
-X-Received: by 2002:a05:6e02:673:: with SMTP id l19mr1147334ilt.218.1589281532506;
- Tue, 12 May 2020 04:05:32 -0700 (PDT)
+        Tue, 12 May 2020 07:08:05 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2194 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726891AbgELLIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:08:05 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2775A39EC4767A3A9A55;
+        Tue, 12 May 2020 12:08:03 +0100 (IST)
+Received: from [127.0.0.1] (10.210.169.134) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
+ 2020 12:08:02 +0100
+Subject: Re: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
+To:     Jason Yan <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Xiang Chen <chenxiang66@hisilicon.com>
+References: <20200512063318.13825-1-yanaijie@huawei.com>
+ <66c3318d-e8fa-9ff4-c7f4-ebe23925b807@huawei.com>
+ <dacd7cbe-3d84-2b35-e63a-af6179aa5221@huawei.com>
+ <920c5d36-5637-1fba-034b-8ea3d41c131c@huawei.com>
+ <1043f72a-7f4c-eb5c-eeb2-227f5321fed5@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <a0ff79dd-d00e-a938-39c2-0ab281c7f795@huawei.com>
+Date:   Tue, 12 May 2020 12:07:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200511225324.GA1307788@rani.riverdale.lan> <20200511225849.1311869-1-nivedita@alum.mit.edu>
- <CAHbf0-HLKiq_+erhHfV9XqMhfchN2975nAsuya4-oXEOUNdhiw@mail.gmail.com>
-In-Reply-To: <CAHbf0-HLKiq_+erhHfV9XqMhfchN2975nAsuya4-oXEOUNdhiw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 12 May 2020 13:05:21 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGbUg3g-s5qoHgrYoBnoJLR9Oc7YrCO1xMHx-+Ys6=Tfg@mail.gmail.com>
-Message-ID: <CAMj1kXGbUg3g-s5qoHgrYoBnoJLR9Oc7YrCO1xMHx-+Ys6=Tfg@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Mark global variables as static
-To:     Mike Lothian <mike@fireburn.co.uk>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1043f72a-7f4c-eb5c-eeb2-227f5321fed5@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.210.169.134]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 01:12, Mike Lothian <mike@fireburn.co.uk> wrote:
->
-> Feel free to add my tested by
->
->
-> On Mon, 11 May 2020 at 23:58, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Mike Lothian reports that after commit
-> >   964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-> > gcc 10.1.0 fails with
-> >
-> >   HOSTCC  arch/x86/boot/tools/build
-> >   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
-> >   error: linker defined: multiple definition of '_end'
-> >   /usr/lib/gcc/x86_64-pc-linux-gnu/10.1.0/../../../../x86_64-pc-linux-gnu/bin/ld:
-> >   /tmp/ccEkW0jM.o: previous definition here
-> >   collect2: error: ld returned 1 exit status
-> >   make[1]: *** [scripts/Makefile.host:103: arch/x86/boot/tools/build] Error 1
-> >   make: *** [arch/x86/Makefile:303: bzImage] Error 2
-> >
-> > The issue is with the _end variable that was added, to hold the end of
-> > the compressed kernel from zoffsets.h (ZO__end). The name clashes with
-> > the linker-defined _end symbol that indicates the end of the build
-> > program itself.
-> >
-> > Even when there is no compile-time error, this causes build to use
-> > memory past the end of its .bss section.
-> >
-> > To solve this, mark _end as static, and for symmetry, mark the rest of
-> > the variables that keep track of symbols from the compressed kernel as
-> > static as well.
-> >
-> > Fixes: 964124a97b97 ("efi/x86: Remove extra headroom for setup block")
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-
-Thanks, I'll queue this as a fix.
+On 12/05/2020 11:30, Jason Yan wrote:
+> 
+> 
+> 在 2020/5/12 18:00, John Garry 写道:
+>> On 12/05/2020 10:35, Jason Yan wrote:
+>>>
+>>>
+>>> 在 2020/5/12 16:23, John Garry 写道:
+>>>> On 12/05/2020 07:33, Jason Yan wrote:
+>>>>> The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase 
+>>>>> it is
+>>>>> not initialized in scsi_host_template. It looks like:
+>>>>>
+>>>>> [root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
+>>>>> (null)
+>>>>>
+>>>>
+>>>> hmmm.. it would be good to tell us what this buys us, apart from the 
+>>>> proc_name file.
+>>>>
+>>>
+>>> When there is more than one storage cards(or controllers) in the 
+>>> system, I'm tring to find out which host is belong to which card. And 
+>>> then I found this in scsi_host in sysfs but the output is '(null)' 
+>>> which is odd.
+>>
+>> "dmesg | grep host" would give this info, like:
+>>
+>> root@(none)$ dmesg | grep host0
+>> [    8.877245] scsi host0: hisi_sas_v2_hw
+>>
+> 
+> NO, if long time after the system boot, dmesg cannot get this 
+> infomation. It is flushed by other logs.
 
 
-> > ---
-> >  arch/x86/boot/tools/build.c | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-> > index 8f8c8e386cea..c8b8c1a8d1fc 100644
-> > --- a/arch/x86/boot/tools/build.c
-> > +++ b/arch/x86/boot/tools/build.c
-> > @@ -59,14 +59,14 @@ u8 buf[SETUP_SECT_MAX*512];
-> >  #define PECOFF_COMPAT_RESERVE 0x0
-> >  #endif
-> >
-> > -unsigned long efi32_stub_entry;
-> > -unsigned long efi64_stub_entry;
-> > -unsigned long efi_pe_entry;
-> > -unsigned long efi32_pe_entry;
-> > -unsigned long kernel_info;
-> > -unsigned long startup_64;
-> > -unsigned long _ehead;
-> > -unsigned long _end;
-> > +static unsigned long efi32_stub_entry;
-> > +static unsigned long efi64_stub_entry;
-> > +static unsigned long efi_pe_entry;
-> > +static unsigned long efi32_pe_entry;
-> > +static unsigned long kernel_info;
-> > +static unsigned long startup_64;
-> > +static unsigned long _ehead;
-> > +static unsigned long _end;
-> >
-> >  /*----------------------------------------------------------------------*/
-> >
-> > --
-> > 2.26.2
-> >
+ok, so I don't see any other way to currently do this, even though using 
+proc_name is a bit suspect, so:
+
+Acked-by: John Garry <john.garry@huawei.com>
+
+And the $subject is not right. It should be simply "display proc_name in 
+sysfs".
+
+Thanks,
+John
