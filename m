@@ -2,100 +2,110 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F8C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96143C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73E220753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="yzpK9buR"
+	by mail.kernel.org (Postfix) with ESMTP id 5E4E023126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589314089;
+	bh=WIxjCGmDxQ1SCu6wVosqqN4J8w/cmTxtmOB9BUVBcds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x51QsqoI/fCK6RGroja13RByRgC/5fr8riTfgNtW54U5f14VkV+MNn0GZgMNtenUm
+	 sbxIAzWY7rxwr9BVWSswjT5RjlK1bgBC9MsIEnWxrIMVbHutOTPhTyiuBZKCsg4ggl
+	 vRAhaP2gXVuooVUB1zIptCMYDwc0Ou3CpzJcud7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgELUH4 (ORCPT
+        id S1731189AbgELUII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:07:56 -0400
-Received: from www.zeus03.de ([194.117.254.33]:38446 "EHLO mail.zeus03.de"
+        Tue, 12 May 2020 16:08:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731168AbgELUHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:07:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=yUF4VJEAnlfiS6JRxzh+1bzIfJxa
-        yjiNdic4HEyYt+k=; b=yzpK9buRsJFEleBzux6A3e0nFIA5i/t9edRq+IxZk6RN
-        VzMP/oXEubqvAkWNiYZ9Ubpn8nM7Q87Nmp2cgtPUcPl+L+R3EsiIfaG9G1/T6Qt5
-        8GjkBYTqx+lxi8enBxpPXpQL8rImSvOOzoJobHFHr69PHS+THMPU3H0HBSxEg5Y=
-Received: (qmail 3071369 invoked from network); 12 May 2020 22:07:52 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 22:07:52 +0200
-X-UD-Smtp-Session: l3s3148p1@ene2BHmlEsogAwDPXw2aAE67cgFBY+HL
-Date:   Tue, 12 May 2020 22:07:51 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
-Message-ID: <20200512200751.GA6960@ninjato>
-References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
- <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
- <20200512182517.GP9902@minyard.net>
+        id S1725950AbgELUIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 16:08:07 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B8620753;
+        Tue, 12 May 2020 20:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589314086;
+        bh=WIxjCGmDxQ1SCu6wVosqqN4J8w/cmTxtmOB9BUVBcds=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f/DDtkxBZCej+Nx2mjFkfYDYUJTVGkFshMcR7tqW33KwzWIz0t7zxHR+ea32Ey6J0
+         /iFiQYhb2aMSOdYmyUYYoAodi2SjUheEhkdBu6yi87tKZNQlqReI7UghQksf3KTrMa
+         8gQh9JxpMBDKP3R3EXYb0NGRPWXmoTupR1yj1+Io=
+Date:   Tue, 12 May 2020 13:08:05 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: linux-next: manual merge of the sound-asoc tree with the crypto
+ tree
+Message-ID: <20200512200805.GA175421@gmail.com>
+References: <20200512144949.4f933eca@canb.auug.org.au>
+ <20200512162205.GI5110@sirena.org.uk>
+ <20200512163632.GA916@sol.localdomain>
+ <20200512170801.GK5110@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512182517.GP9902@minyard.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512170801.GK5110@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 06:08:01PM +0100, Mark Brown wrote:
+> On Tue, May 12, 2020 at 09:36:32AM -0700, Eric Biggers wrote:
+> > On Tue, May 12, 2020 at 05:22:05PM +0100, Mark Brown wrote:
+> 
+> > > > from the crypto tree and commit:
+> 
+> > > >   a1304cba816e ("ASoC: cros_ec_codec: allocate shash_desc dynamically")
+> 
+> > > > from the sound-asoc tree.
+> 
+> > I Cc'ed it to the people listed in MAINTAINERS for "CHROMEOS EC CODEC DRIVER".
+> > I guess wasn't enough and I should have added alsa-devel@alsa-project.org too?
+> 
+> Yeah, you generally need to make sure the subsystem maintainers are
+> included as well as individual driver maintainers.
+> 
+> > > That doesn't seem ideal - Eric, Herbert can we get a branch with the
+> > > crypto patches in them to pull into the ASoC tree or something?
+> 
+> > We should just drop one of the patches.
+> 
+> > If you just want to eliminate the compiler warning about stack usage in
+> > wov_hotword_model_put(), then my patch in cryptodev would be better, as it moves
+> > the stack allocation into another function in another file.
+> 
+> > Alternatively, if you actually need to reduce the total stack usage (across all
+> > functions), then the kmalloc() patch in sound-asoc would be better.
+> 
+> Well, reducing the stack usage overall seems nicer overall - heads off
+> future problems if the struct grows or something, and if we still end up
+> allocating just as much on the stack then we'll have trouble at runtime
+> anyway - does that make sense?
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If you're concerned about total stack usage, then my recommendation is that
+Herbert drops my patch "ASoC: cros_ec_codec: use crypto_shash_tfm_digest()"
+from cryptodev, and you keep the patch
+"ASoC: cros_ec_codec: allocate shash_desc dynamically" in sound-asoc.
 
-On Tue, May 12, 2020 at 01:25:17PM -0500, Corey Minyard wrote:
-> On Thu, Mar 26, 2020 at 10:09:58PM +0100, Wolfram Sang wrote:
-> > Move away from the deprecated API.
-> >=20
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->=20
-> Ok by me.
->=20
-> Acked-by: Corey Minyard <cminyard@mvista.com>
->=20
-> Do you want me to take this, or is this part of something else?  I can
-> submit it if you like.
+For later: if SHASH_DESC_ON_STACK is causing problems, we really ought to find a
+better solution, since lots of users are using this macro.  A version of
+crypto_shash_tfm_digest() that falls back to heap allocation if the descsize is
+too large would be possible, but that wouldn't fully solve the problem since
+some users do incremental hashing.
 
-I'd prefer if you take it. But I can take it if it is easier for you.
-
-Thanks!
-
-
---X1bOJ3K7DJ5YkBrT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl67AhMACgkQFA3kzBSg
-KbYwCw//fDMbW7wdG4KvmjCNqawMQBB3jse+reI2CNpwfVGllfcKbL4a+KmcJRLK
-Pfb+JHUj313OnkfTTmgmzsLiwrHgVDuyPP/j78ChzNY2hTLs9g8EWcmnHxYzdKWj
-7ZnRYaYq9amNC2gnvyVl2mbguTU8AnpFvJGl163wb7bZ+khrUUpVSscmdVbnN/LN
-9ZbPyIP+1E+kwcr27EwyktGA56lSLTnQPOgLOOIznRw7dX2vjFvyxLK5aNzrdTml
-EzSaUfl41xghq8BOeo2DTCWUM3nGs12fGqPspCbDk7v+zmrWyboiNSNln4oBIhv7
-1UHRm4/ABF+q5J0r9nNe08m8eps3694CuStqfZPzwx3boUAxWcF9U+q3JFLsOVuH
-fBgcc/fMRX8Z9ZyRWPGlEYKkGwZzC5ug3Gs0wM3ybmSZrxdSrSces8z0ARC2j9qA
-P3OL4zucLAOXyQMdYMTUAFRyYSPH2MyPTSx6i32UcjO0aQJDAv1lq3DeGkrovaOH
-pTJH9fSJ/ggDul8H3YrwXWhoqxTWlr5HuhgWvhhgCFCW96YwUohWKcvPXMMD+wX1
-dN5Uy7fpXZA6ZKU+F0Dq0CD65nma1CRVC6AlMHLGmeQSuMYb6RCWH+ko7ymCl9M+
-hVvizVbNrJF2NZepi/5LRXHUUjvrzLXdc4cEKfiz3LeHnpMIAb4=
-=ty69
------END PGP SIGNATURE-----
-
---X1bOJ3K7DJ5YkBrT--
+- Eric
