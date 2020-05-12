@@ -2,108 +2,89 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA16C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C40CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FCF206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWdQqBq1"
+	by mail.kernel.org (Postfix) with ESMTP id 930C7206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589306360;
+	bh=Ys+c/TZTFYiflkI9BNZoLJ+mGuTPDRwFqy/J0V+hdow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y4jF3sP1PZdwSTY/M2gWpFW4e/AnTo8ENTzHdofo9mWU5O3J1ggty7Bp6y+8r+XcC
+	 ap4L/pRAuma0/hg+9Sra+7PVL5U5FIZXPT7jAo6xWnhVsUg3dmn10UsPLg/90H0iMW
+	 SLdBLxUE64fViBtrIWVr+48muryHXHKIf9kMhx50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgELRz4 (ORCPT
+        id S1728033AbgELR7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELRzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:55:55 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA57C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e25so14714343ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
-        b=CWdQqBq1nuGjhJoclSNUa09Dolztaz1qyxLzybRgOWH7y6Ivq+vHLMs+I0nOQr1YiA
-         uoujI+0guXsvOyLdafj1E2h+Zf6USlqbOJXX7UD0YJoir1Wy4RBNAnnV9Y3CI3Bgp2Uw
-         AsIEhnHzYauu2pddTvUCz0gmyPah5iLyZepsNGIILsejF5o3R6JY5cAfkis56zOAJpk6
-         9ri55ILWUPS510A6izprONAhGJKX0CLsIsNnkzX38ikEbtPpYognCa5YSKjWnHEOWBw7
-         UUBnCe5svoHBKfW+O14ceTksj/JOIll6zDZCTuaDoXxPCsT4fhof5njy4pdAASe0IY15
-         88Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
-        b=OeybWJTF8Rg49rGW3xeqUWS0HxHgm0nvmv/dP6xOi3MmcI0cwhSM/EH3W1Q8cl2/Ra
-         ERrGYLVhxS4tCaSHuAJlvht8iRZ5Ej3l0HXDzhJU/3jGkpTBxo+V8mcDdZ6D7bfapyLE
-         oPxJYc0zBcaBPMZgAKp+IdElXfO2xReUKOYSQU0D14kKUxCkDwfOVabNTJBu+7h0zO0J
-         BnKb3mFCuv64cYTbku3gVCnuOmHNz/vHZC/zMnAWnoYyu0MgNq1NLhunmLnqrgxbuKBL
-         kfNRvnO278k/YH8cXQKClePD+JkLuGnw+2pYytlqDB3bOw7cg6ryrm26BVQR4D5fJjyL
-         MSGw==
-X-Gm-Message-State: AOAM530YcBwwCtzNKnE1GholjhHqA8v2CFcda68kB96+kvMWMsTaFmyQ
-        uyTGTL1rJJuGy5+5GE2txEmosh1ZfJpcVwrysVB0gA==
-X-Google-Smtp-Source: ABdhPJzZacOxTdIXmG/y1xsQxdbn3Gu8/UFKbgfmJOJX/ZNurJQYUVI8JZg3cgz/pPjpbuDDAZX5z8N5dh2UjcLF3g8=
-X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr13942720ljo.168.1589306153711;
- Tue, 12 May 2020 10:55:53 -0700 (PDT)
+        Tue, 12 May 2020 13:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgELR7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:59:19 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2882620673;
+        Tue, 12 May 2020 17:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589306359;
+        bh=Ys+c/TZTFYiflkI9BNZoLJ+mGuTPDRwFqy/J0V+hdow=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sSXRV6j2IjX8e4EycPtClnLMsd3L9LvB13U2I2XmTnxDYlQWOxvFz9cESePLlpXA7
+         sznTg5A+1k3HGfelk9n/p0vM2iTd+vzi7gBK4pcYT6gQ8lpIE/zM4CyWL+ml2dLTYY
+         t3DUUndYJzAkClSgGPkwBnW/CSl6rsCxj+yuHbiM=
+Date:   Tue, 12 May 2020 13:03:52 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Melo <arnaldo.melo@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] perf tools: Replace zero-length array with flexible-array
+Message-ID: <20200512180352.GB4897@embeddedor>
+References: <20200511195643.GA9850@embeddedor>
+ <0C076F02-CEB7-4DBC-8337-CCEBC0870E44@gmail.com>
+ <20200512000404.GA4897@embeddedor>
+ <20200512080607.GD2978@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200419001858.105281-1-hector.bujanda@digi.com>
- <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
- <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
- <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
- <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
- <20200430145844.GA28588@sol> <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
-In-Reply-To: <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 19:55:42 +0200
-Message-ID: <CACRpkdbZPhkzuUvwDnBWTvweBukQRcWx0w=2seQsVBEP8Fv_BA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "Bujanda, Hector" <Hector.Bujanda@digi.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512080607.GD2978@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 12:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, May 12, 2020 at 10:06:07AM +0200, Peter Zijlstra wrote:
+> On Mon, May 11, 2020 at 07:04:04PM -0500, Gustavo A. R. Silva wrote:
+> > On Mon, May 11, 2020 at 05:20:08PM -0300, Arnaldo Melo wrote:
+> > > 
+> > > Thanks, applied
+> > > 
+> > 
+> > Thanks, Arnaldo. 
+> > 
+> > I wonder if could also take the other two:
+> > 
+> > https://lore.kernel.org/lkml/20200511200911.GA13149@embeddedor/
+> > https://lore.kernel.org/lkml/20200511201227.GA14041@embeddedor/
+> 
+> I think I have those, but let me make sure.
 
-> Ideally we'd have to introduce new versions of gpioevent_request,
-> gpioline_request, gpioline_info and gpioevent_data structs - this time
-> with enough additional padding and no alignment issues. Then we could
-> add the debounce properly.
+Great. :)
 
-Hm that sounds massive. Is it really that bad?
+Thanks
+--
+Gustavo
 
-> This would of course add a lot of cruft to the uAPI code. I'd start by
-> moving it out of drivers/gpio/gpiolib.c into a new file:
-> drivers/gpio/gpiolib-cdev.c. This way we'd have everything related to
-> the character device in one place. It would make it easier to: a) add
-> a config option for disabling it entirely and b) add a config option
-> to disable the v1 of the ioctl()s.
-
-Its good to break out for code maintenance no matter what we do
-with it :)
-
-I would however not make it in any way totally optional, because the
-big win with the character device over the legacy sysfs is to always
-be available.
-
-> Linus: about the software-debounce you mentioned: do you think it
-> somehow plugs the hole we identified here?
-
-Hm, I don't quite understand what the hole is I guess...
-
-Linus
