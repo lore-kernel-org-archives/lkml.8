@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC50C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B5CC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A36820740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E8620659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cPIFoUvm"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IkVWXnOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbgELVLV (ORCPT
+        id S1731387AbgELVL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        Tue, 12 May 2020 17:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728275AbgELVLT (ORCPT
+        by vger.kernel.org with ESMTP id S1731322AbgELVLV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:11:19 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC79C061A0C;
-        Tue, 12 May 2020 14:11:19 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f134so11674871wmf.1;
-        Tue, 12 May 2020 14:11:18 -0700 (PDT)
+        Tue, 12 May 2020 17:11:21 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECC3C061A0E;
+        Tue, 12 May 2020 14:11:21 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so17706544wrt.1;
+        Tue, 12 May 2020 14:11:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Kh7p8rdrTbAMmI3jWtK1rZ9CbIg2ia2rDs/YlOsgpNA=;
-        b=cPIFoUvmGIxlPukGMQ7uGcHJho6BH2jGg4P+6CrUS2FvkuvBR2XBMGSKjdAN7h5ivW
-         qYQPhCP3eojUqRSNOJaGa+3BBZXPvdg1NFwRq75U30hEhpvkTj2gY54W7a2GdmFmOm7N
-         zmEbNjJIscccItBYwFKUuKPWZIyBjM2r4aFer6ZssxucBg2hci+WpPC2jq4HOmK9eZRk
-         /NDY+PKGUgaah856aF+GXpuz3xL8nRZOhhMgz4A3rEZajuzbTPxjRjEmkgD1EpNorQS5
-         R/jG+yKs5kQi53KQMbB4/IbHqdmwbOFixz0i0nZNQwbwzXpWp9d/KUK2agPPEU3o7p+g
-         uQ9A==
+        bh=IyUJ8JvMJsGc3cYCEk/oX9tXJ35lckpImRBVoKxDiuw=;
+        b=IkVWXnOcNw0noWwVJlSaM9F4DAuPiIUDhBHErPYnrAZkqahoBPrDGvXKfEhorxRdGM
+         ZwhBeOoMFwmSfqjS3Rc2m5dKhzrtTm19oN4gEywvsSuuGwrdS5JleQ5gRbM2TsCIDekV
+         cMMpkU3b9D0DCSEsknWBf2t6S67nm03Zcyi5Lgd4Nj8nx8ihf4xHp3o9eTWjHuHuqqeJ
+         kobxhX70i8jXDePKLclusubDdFjnpfm24QTYCr7RfA4X8Mgcx7/Xe+YQVemebk85XnX5
+         wynWisTFZIsY+0FCEbc7I6PxionoLBNKAFXNKqIAcvoU01xS0lpTtgE5ll/BBfJwH9Fm
+         ji4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Kh7p8rdrTbAMmI3jWtK1rZ9CbIg2ia2rDs/YlOsgpNA=;
-        b=olZPmSYyEMKegy8UnkYEs1BemPmu2Df5cUwKIwqwebu0LkCIyVjoRuepxcXA79ue/M
-         KHQDCoHJrrTbrxBcH8WJ1LZ1uEzcmVRwmXtfr8BfzNiZ8w+kE2UO9tURD3GOZ93qbdT0
-         tAOgjDH/dtQI8SFDA4sXurs1AOVGyiOFL9jP7j/JIbfQPWtSwjiB7mCl3ULvbcEndxSs
-         t9CQUPM0YB7tOMWjs++CbM1/EysJME6JZRtauN1CwcgG2UWmRvsFx7IjbZJkWRctOJqc
-         /DDkBhcK9yk7hqpg4LMjqsWLUx8Qt3D4gJ7cMtsslVn2eYfqkqIEs6q83AdW/U6xHpdZ
-         V8Lg==
-X-Gm-Message-State: AGi0PubpeMUR5hmyG9S2u7ztEbuPMVXF6qdjp7/dU7je8yu+KuqMAR3x
-        Xq4MjXcCdDgNohhIenz7Lcg=
-X-Google-Smtp-Source: APiQypLgwKpieVSrD5/RT1U58B8Yxn1gsc38huXEUnq0btI1b4UmRyYIc59I/TBi1DMhTgv49hJcBQ==
-X-Received: by 2002:a1c:1d12:: with SMTP id d18mr25183480wmd.109.1589317877769;
-        Tue, 12 May 2020 14:11:17 -0700 (PDT)
+        bh=IyUJ8JvMJsGc3cYCEk/oX9tXJ35lckpImRBVoKxDiuw=;
+        b=EuM4NjwkAxektOMdtRzomhV3wgPEPhO6z71RsITAx4wQf5ubT/rR7ANSpoTj94VhG5
+         ZJJg7gqyLXIdq5J+hGLetbsnr9XWkZNypajMhpPJft8STshz9fOLCIG125SIutcx1Hvp
+         7d12PN3CWt1Eeui3T8Qvo2XeaNahOvT21+nzm0uB9latRiQubkLP4L3XFtdbNxJm+OOO
+         izkSOIybk6FosnMgBvROzWHHRnpfiJMPuTzhP7t0OzvQYNPGLoMwWC1HZlZYX6cbbcoD
+         HWcNtkONm8k3nTirgGBjNKuPGoteGXY6IdMDoOecd213sioVCk8O7nnjT4RpqX61mRXw
+         nC1g==
+X-Gm-Message-State: AOAM532CmnJE1LSy4DpSm4lIhgdD7JKmQXz+F+DHPUU2tUsa0o9zcwUp
+        FsUxZEMhPCQzv1IVvHyPCdU=
+X-Google-Smtp-Source: ABdhPJzsZwd39f5Py0zKbOGojILcU3AAoMhXT85YlKr2nSXSJ0+n1SX9DQL4m9CQffWJHRNUrocNXQ==
+X-Received: by 2002:adf:806e:: with SMTP id 101mr3351863wrk.225.1589317879749;
+        Tue, 12 May 2020 14:11:19 -0700 (PDT)
 Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.16
+        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:11:17 -0700 (PDT)
+        Tue, 12 May 2020 14:11:19 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
         linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
@@ -67,9 +67,9 @@ Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 1/8] dt-bindings: net: meson-dwmac: Add the amlogic,rx-delay-ns property
-Date:   Tue, 12 May 2020 23:10:56 +0200
-Message-Id: <20200512211103.530674-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 3/8] net: stmmac: dwmac-meson8b: use FIELD_PREP instead of open-coding it
+Date:   Tue, 12 May 2020 23:10:58 +0200
+Message-Id: <20200512211103.530674-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
 References: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
@@ -80,40 +80,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PRG_ETHERNET registers on Meson8b and newer SoCs can add an RX
-delay. Add a property with the known supported values so it can be
-configured according to the board layout.
+Use FIELD_PREP() to shift a value to the correct offset based on a
+bitmask instead of open-coding the logic.
+No functional changes.
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../bindings/net/amlogic,meson-dwmac.yaml           | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-index ae91aa9d8616..66074314e57a 100644
---- a/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.yaml
-@@ -67,6 +67,19 @@ allOf:
-             PHY and MAC are adding a delay).
-             Any configuration is ignored when the phy-mode is set to "rmii".
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+index a3934ca6a043..c9ec0cb68082 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+  */
  
-+        amlogic,rx-delay-ns:
-+          enum:
-+            - 0
-+            - 2
-+          default: 0
-+          description:
-+            The internal RGMII RX clock delay (provided by this IP block) in
-+            nanoseconds. When phy-mode is set to "rgmii" then the RX delay
-+            should be explicitly configured. When the phy-mode is set to
-+            either "rgmii-id" or "rgmii-rxid" the RX clock delay is already
-+            provided by the PHY. Any configuration is ignored when the
-+            phy-mode is set to "rmii".
-+
- properties:
-   compatible:
-     additionalItems: true
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/device.h>
+@@ -32,7 +33,6 @@
+ #define PRG_ETH0_CLK_M250_SEL_SHIFT	4
+ #define PRG_ETH0_CLK_M250_SEL_MASK	GENMASK(4, 4)
+ 
+-#define PRG_ETH0_TXDLY_SHIFT		5
+ #define PRG_ETH0_TXDLY_MASK		GENMASK(6, 5)
+ 
+ /* divider for the result of m250_sel */
+@@ -262,7 +262,8 @@ static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
+ 					PRG_ETH0_INVERTED_RMII_CLK, 0);
+ 
+ 		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
+-					tx_dly_val << PRG_ETH0_TXDLY_SHIFT);
++					FIELD_PREP(PRG_ETH0_TXDLY_MASK,
++						   tx_dly_val));
+ 
+ 		/* Configure the 125MHz RGMII TX clock, the IP block changes
+ 		 * the output automatically (= without us having to configure
 -- 
 2.26.2
 
