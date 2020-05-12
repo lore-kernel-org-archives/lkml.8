@@ -2,171 +2,105 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814BDC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C6C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C4F20746
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A7520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgELG3J (ORCPT
+        id S1728335AbgELGeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:29:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17012 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgELG3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:29:09 -0400
-IronPort-SDR: Fx5LTXu93RNPTLwZaqRKglOYx70HqVNTXzAHSsGlSpCGAln726/PXVEkyt0Tg6GbDl2uMVAJsz
- I0sR89HouAWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 23:29:05 -0700
-IronPort-SDR: /Y5kg64+S31ucd4p+4SmiR92N4ZG/BgCIhfNT4xaQeFfxwlNgLfZwi5/LlB/d7o47z4SuN7JJN
- W5kkDOGBmCXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
-   d="scan'208";a="463653475"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
-  by fmsmga006.fm.intel.com with ESMTP; 11 May 2020 23:29:02 -0700
-Date:   Tue, 12 May 2020 14:39:03 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Yongbo Zhang <giraffesnn123@gmail.com>, broonie@kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Chen Li <licheng0822@thundersoft.com>
-Cc:     kbuild-all@lists.01.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yongbo Zhang <giraffesnn123@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: Re: [PATCH] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
-Message-ID: <20200512063903.GB20612@xsang-OptiPlex-9020>
+        Tue, 12 May 2020 02:34:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726193AbgELGeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:34:19 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 08DC394D13A5D7A5300A;
+        Tue, 12 May 2020 14:34:13 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 12 May 2020
+ 14:34:05 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <john.garry@huawei.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>,
+        Xiang Chen <chenxiang66@hisilicon.com>
+Subject: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
+Date:   Tue, 12 May 2020 14:33:18 +0800
+Message-ID: <20200512063318.13825-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508074753.10362-1-giraffesnn123@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yongbo,
+The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
+not initialized in scsi_host_template. It looks like:
 
-Thank you for the patch! Perhaps something to improve:
+[root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
+(null)
 
-[auto build test WARNING on asoc/for-next]
-[also build test WARNING on v5.7-rc4 next-20200508]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+While the other driver's entry looks like:
 
-url:    https://github.com/0day-ci/linux/commits/Yongbo-Zhang/ASoC-rsnd-add-interrupt-support-for-SSI-BUSIF-buffer/20200509-035713
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-:::::: branch date: 6 hours ago
-:::::: commit date: 6 hours ago
+linux-vnMQMU:~ # cat /sys/class/scsi_host/host0/proc_name
+megaraid_sas
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> sound/soc/sh/rcar/ssi.c:531:1: warning: Unmatched '{'. Configuration: ''. [syntaxError]
-   {
-   ^
->> sound/soc/sh/rcar/ssi.c:531:1: warning: Unmatched '{'. Configuration: 'DEBUG'. [syntaxError]
-   {
-   ^
-
-# https://github.com/0day-ci/linux/commit/391d452251464b78f72ba3a1fd9b6091b3d4a942
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 391d452251464b78f72ba3a1fd9b6091b3d4a942
-vim +531 sound/soc/sh/rcar/ssi.c
-
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  527  
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  528  static int rsnd_ssi_quit(struct rsnd_mod *mod,
-2c0fac19de2cd7 Kuninori Morimoto 2015-06-15  529  			 struct rsnd_dai_stream *io,
-690602fcd85385 Kuninori Morimoto 2015-01-15  530  			 struct rsnd_priv *priv)
-ae5c322303fff5 Kuninori Morimoto 2013-07-21 @531  {
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  532  	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  533  	struct device *dev = rsnd_priv_to_dev(priv);
-391d452251464b Yongbo Zhang      2020-05-08  534  	int is_tdm, is_tdm_split;
-391d452251464b Yongbo Zhang      2020-05-08  535  	int id = rsnd_mod_id(mod);
-391d452251464b Yongbo Zhang      2020-05-08  536  	int i;
-391d452251464b Yongbo Zhang      2020-05-08  537  	u32 sys_int_enable = 0;
-391d452251464b Yongbo Zhang      2020-05-08  538  
-391d452251464b Yongbo Zhang      2020-05-08  539  	is_tdm		= rsnd_runtime_is_tdm(io);
-391d452251464b Yongbo Zhang      2020-05-08  540  	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  541  
-fd9adcfdc1434f Kuninori Morimoto 2016-02-18  542  	if (!rsnd_ssi_is_run_mods(mod, io))
-fd9adcfdc1434f Kuninori Morimoto 2016-02-18  543  		return 0;
-fd9adcfdc1434f Kuninori Morimoto 2016-02-18  544  
-e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  545  	if (!ssi->usrcnt) {
-c0ea089dbad47a Kuninori Morimoto 2018-10-30  546  		dev_err(dev, "%s usrcnt error\n", rsnd_mod_name(mod));
-e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  547  		return -EIO;
-e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  548  	}
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  549  
-26d34b11af6a34 Kuninori Morimoto 2016-02-18  550  	rsnd_ssi_master_clk_stop(mod, io);
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  551  
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  552  	rsnd_mod_power_off(mod);
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  553  
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  554  	ssi->usrcnt--;
-e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  555  
-203cdf51f28820 Kuninori Morimoto 2018-06-12  556  	if (!ssi->usrcnt) {
-203cdf51f28820 Kuninori Morimoto 2018-06-12  557  		ssi->cr_own	= 0;
-203cdf51f28820 Kuninori Morimoto 2018-06-12  558  		ssi->cr_mode	= 0;
-203cdf51f28820 Kuninori Morimoto 2018-06-12  559  		ssi->wsr	= 0;
-203cdf51f28820 Kuninori Morimoto 2018-06-12  560  	}
-203cdf51f28820 Kuninori Morimoto 2018-06-12  561  
-391d452251464b Yongbo Zhang      2020-05-08  562  	/* disable busif buffer over/under run interrupt. */
-391d452251464b Yongbo Zhang      2020-05-08  563  	if (is_tdm || is_tdm_split) {
-391d452251464b Yongbo Zhang      2020-05-08  564  		switch (id) {
-391d452251464b Yongbo Zhang      2020-05-08  565  		case 0:
-391d452251464b Yongbo Zhang      2020-05-08  566  		case 1:
-391d452251464b Yongbo Zhang      2020-05-08  567  		case 2:
-391d452251464b Yongbo Zhang      2020-05-08  568  		case 3:
-391d452251464b Yongbo Zhang      2020-05-08  569  		case 4:
-391d452251464b Yongbo Zhang      2020-05-08  570  			for (i = 0; i < 4; i++) {
-391d452251464b Yongbo Zhang      2020-05-08  571  				sys_int_enable = rsnd_mod_read(mod,
-391d452251464b Yongbo Zhang      2020-05-08  572  						SSI_SYS_INT_ENABLE(i * 2));
-391d452251464b Yongbo Zhang      2020-05-08  573  				sys_int_enable &= ~(0xf << (id * 4));
-391d452251464b Yongbo Zhang      2020-05-08  574  				rsnd_mod_write(mod,
-391d452251464b Yongbo Zhang      2020-05-08  575  					       SSI_SYS_INT_ENABLE(i * 2),
-391d452251464b Yongbo Zhang      2020-05-08  576  					       sys_int_enable);
-391d452251464b Yongbo Zhang      2020-05-08  577  			}
-391d452251464b Yongbo Zhang      2020-05-08  578  
-391d452251464b Yongbo Zhang      2020-05-08  579  			break;
-391d452251464b Yongbo Zhang      2020-05-08  580  		case 9:
-391d452251464b Yongbo Zhang      2020-05-08  581  			for (i = 0; i < 4; i++) {
-391d452251464b Yongbo Zhang      2020-05-08  582  				sys_int_enable = rsnd_mod_read(mod,
-391d452251464b Yongbo Zhang      2020-05-08  583  					SSI_SYS_INT_ENABLE((i * 2) + 1));
-391d452251464b Yongbo Zhang      2020-05-08  584  				sys_int_enable &= ~(0xf << 4);
-391d452251464b Yongbo Zhang      2020-05-08  585  				rsnd_mod_write(mod,
-391d452251464b Yongbo Zhang      2020-05-08  586  					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-391d452251464b Yongbo Zhang      2020-05-08  587  					       sys_int_enable);
-391d452251464b Yongbo Zhang      2020-05-08  588  			}
-391d452251464b Yongbo Zhang      2020-05-08  589  
-391d452251464b Yongbo Zhang      2020-05-08  590  			break;
-391d452251464b Yongbo Zhang      2020-05-08  591  		}
-391d452251464b Yongbo Zhang      2020-05-08  592  
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  593  	return 0;
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  594  }
-ae5c322303fff5 Kuninori Morimoto 2013-07-21  595  
-
-:::::: The code at line 531 was first introduced by commit
-:::::: ae5c322303fff50b93d60e34c6563f1264a5941b ASoC: add Renesas R-Car SSI feature
-
-:::::: TO: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-:::::: CC: Mark Brown <broonie@linaro.org>
-
+Cc: John Garry <john.garry@huawei.com>
+Cc: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index fa25766502a2..c205bff20943 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -1757,6 +1757,7 @@ static struct device_attribute *host_attrs_v1_hw[] = {
+ 
+ static struct scsi_host_template sht_v1_hw = {
+ 	.name			= DRV_NAME,
++	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
+ 	.target_alloc		= sas_target_alloc,
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index e05faf315dcd..c725cffe141e 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -3533,6 +3533,7 @@ static struct device_attribute *host_attrs_v2_hw[] = {
+ 
+ static struct scsi_host_template sht_v2_hw = {
+ 	.name			= DRV_NAME,
++	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
+ 	.target_alloc		= sas_target_alloc,
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 374885aa8d77..59b1421607dd 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3071,6 +3071,7 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
+ 
+ static struct scsi_host_template sht_v3_hw = {
+ 	.name			= DRV_NAME,
++	.proc_name		= DRV_NAME,
+ 	.module			= THIS_MODULE,
+ 	.queuecommand		= sas_queuecommand,
+ 	.target_alloc		= sas_target_alloc,
+-- 
+2.21.3
 
