@@ -2,121 +2,111 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBE3C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207F8C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E44220769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV2RPOe2"
+	by mail.kernel.org (Postfix) with ESMTP id EAEB520769
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589318103;
+	bh=n320LhkZ6wxkYO1Y5MNF012NtzAe10rdOlykBinlwig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jar85Kh6M/oi6vPU/NfW2V3/RVFJhejGOUy2upg3SsgPFNS1My40mSoxMcoI42huW
+	 lzAmbnJd9PIEI3OOcibC4dHkiEHcG6nRaB2AAvWaq3k21ey6whrOe6R2CX2g1PXRWR
+	 TnnpyF6ReG6C5DAubyFEz48K8Dd7eNf/Vx7VjjeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbgELVOa (ORCPT
+        id S1731359AbgELVPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgELVO3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:14:29 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA61C061A0C;
-        Tue, 12 May 2020 14:14:29 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v128so2724751oia.7;
-        Tue, 12 May 2020 14:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mX8ky5JN8pgBa+YKDvrjatRwVe22JYdHF5VmHIVTBlE=;
-        b=iV2RPOe2FrnU+h8+Up/ExtrRpnFvfhk+w+IzXzJ1UdFrcVHhC8Q2KU+oNoZrgCVVVj
-         UfWmpR8Xrv6YcwnZD7Q/sg/X8UlJpMIXb4/5VzUTAvEDFkYqpOT1/7IALm93B646bOGP
-         RQf8yWvZRpLlmbdgE3IgHH1sGeGCbD0y3zslRYAujjoQtxn36UV5NCsTnuQIJzBiN+VL
-         ILuab/8Rs5aitKxV6no/fefi31Y4PLJPcDQxnWtGw2NYAKnq/7HgawJVyuFY+NFaMxUN
-         pYlfguUMgdRyGrFSjS+3VGExqgpGKsu89IK8ReVUAaE2X5L5B3RneXsIckDYZ5C0d4n8
-         kxeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=mX8ky5JN8pgBa+YKDvrjatRwVe22JYdHF5VmHIVTBlE=;
-        b=Pvcg0aLazuX5z23YN0PVn6rrnCB6Zolr5L5NW4Lnh70NYyVX6NJaaQMCBDT9biJPG3
-         a2pvodkeXKEg05lt9UgwTeuFx+F/LB6H74N5UlHaeL7j9XJcqSsy+F/CHpRbcG/Moa2K
-         NGMY3BABmwAl/Wd70jKicsjAdUwnsyc+Llnd95UgjmZggKbwSVxiM8QW1/YnfdhtIGaA
-         YcBSzl8ZqqQko78Gtg6rgQZkx36C1ISKMSiBzVCEyodzFezIaYNjZ0qBp0kQoSdS1ZwS
-         5mOl4puBgsb2ESrPH5iPHciWZDVjGK3acVpqF4yoCmM307Vk+RVe4g8z5IS/XPTO3HIp
-         nqdw==
-X-Gm-Message-State: AGi0PuY+mvCuT/nSTj06dc/XWPlzmj0EehJim7fhHrL5yV6gFBw2Ibvp
-        nxhH1w50OFvfYu2bQybcGw==
-X-Google-Smtp-Source: APiQypJN7RiCdIUjHWyYpUVmDqReWQY+dqrjR9QQhXITyIFORnps2wrSQiLn3qpmQpwZwzhff2vhDg==
-X-Received: by 2002:aca:4ac3:: with SMTP id x186mr16258452oia.81.1589318068467;
-        Tue, 12 May 2020 14:14:28 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id d19sm2168689ooa.48.2020.05.12.14.14.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:14:27 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id 7C54C180051;
-        Tue, 12 May 2020 21:14:26 +0000 (UTC)
-Date:   Tue, 12 May 2020 16:14:25 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
-Message-ID: <20200512211425.GQ9902@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
- <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
+        Tue, 12 May 2020 17:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgELVPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:15:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB08205C9;
+        Tue, 12 May 2020 21:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589318101;
+        bh=n320LhkZ6wxkYO1Y5MNF012NtzAe10rdOlykBinlwig=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=niq+lIwyCb1vX/1DG0ZgmWcD2CGp8EgHUBOR8+Pp4zQH3MpTXGBwOTgVXExn2cCo+
+         E/CxIvJg0/v7cfuqfWO5nOrb9z8F95MPXl1ZEoCFYI35qG+ZwVdKmBu1IJLY90xu/7
+         QVCENAmb4gTvChf8qLfRrfiFuJGBJhqdBLHoKqq8=
+Date:   Tue, 12 May 2020 22:14:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Message-ID: <20200512211450.GA11062@willie-the-truck>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+ <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
+ <20200512190755.GL2957@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200512190755.GL2957@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 10:09:58PM +0100, Wolfram Sang wrote:
-> Move away from the deprecated API.
-
-Well, I should have looked a little closer first... comment inline
-
+On Tue, May 12, 2020 at 09:07:55PM +0200, Peter Zijlstra wrote:
+> On Tue, May 12, 2020 at 07:53:00PM +0200, Marco Elver wrote:
+> > I just ran a bunch of KCSAN tests. While this series alone would have
+> > passed the tests, there appears to be a problem with
+> > __READ_ONCE/__WRITE_ONCE. I think they should already be using
+> > 'data_race()', as otherwise we will get lots of false positives in
+> > future.
+> > 
+> > I noticed this when testing -tip/locking/kcsan, which breaks
+> > unfortunately, because I see a bunch of spurious data races with
+> > arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
+> > instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
+> > From what I see, the intent was to not double-instrument,
+> > unfortunately they are still double-instrumented because
+> > __READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
+> > actually). I don't think we can use __no_sanitize_or_inline for the
+> > arch_ functions, because we really want them to be __always_inline
+> > (also to avoid calls to these functions in uaccess regions, which
+> > objtool would notice).
+> > 
+> > I think the easiest way to resolve this is to wrap the accesses in
+> > __*_ONCE with data_race().
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/char/ipmi/ipmi_ssif.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> But we can't... because I need arch_atomic_*() and __READ_ONCE() to not
+> call out to _ANYTHING_.
 > 
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 8ac390c2b514..2791b799e33d 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1945,8 +1945,8 @@ static int ssif_adapter_handler(struct device *adev, void *opaque)
->  	if (adev->type != &i2c_adapter_type)
->  		return 0;
->  
-> -	addr_info->added_client = i2c_new_device(to_i2c_adapter(adev),
-> -						 &addr_info->binfo);
-> +	addr_info->added_client = i2c_new_client_device(to_i2c_adapter(adev),
-> +							&addr_info->binfo);
+> Sadly, because the compilers are 'broken' that whole __no_sanitize thing
+> didn't work, but I'll be moving a whole bunch of code into .c files with
+> all the sanitizers killed dead. And we'll be validating it'll not be
+> calling out to anything.
 
-i2c_new_client_device returns an ERR_PTR, not NULL on error.  So this
-needs some more work.  I'll send something out soon.
+Hmm, I may have just run into this problem too. I'm using clang 11.0.1,
+but even if I do something like:
 
--corey
+unsigned long __no_sanitize_or_inline foo(unsigned long *p)
+{
+	return READ_ONCE_NOCHECK(*p);
+}
 
->  
->  	if (!addr_info->adapter_name)
->  		return 1; /* Only try the first I2C adapter by default. */
-> -- 
-> 2.20.1
-> 
+then I /still/ get calls to __tcsan_func_{entry,exit} emitted by the
+compiler. Marco -- how do you turn this thing off?!
+
+I'm also not particularly fond of treating __{READ,WRITE}ONCE() as "atomic",
+since they're allowed to tear and I think callers should probably either be
+using data_race() explicitly or disabling instrumentation (assuming that's
+possible).
+
+Will
