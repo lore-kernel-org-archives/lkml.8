@@ -2,364 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9CFC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50AFC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACA9E206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD4B20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIugJU/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgELNwF (ORCPT
+        id S1730053AbgELNwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:52:05 -0400
-Received: from muru.com ([72.249.23.125]:53980 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgELNwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:52:04 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 20A598047;
-        Tue, 12 May 2020 13:52:53 +0000 (UTC)
-Date:   Tue, 12 May 2020 06:52:01 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Drew Fustini <drew@beagleboard.org>
-Subject: Re: [PATCH] arm: dts: am33xx-bone-common: add gpio-line-names
-Message-ID: <20200512135201.GE37466@atomide.com>
-References: <20200508165821.GA14555@x1>
+        Tue, 12 May 2020 09:52:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43981 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgELNwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:52:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589291553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lk3pKSgX+YyRVM5jgz1CwnQ6zaZUpV/uZOU8kmdqEBc=;
+        b=jIugJU/bhY5ck+91OaixjR/MrA2Gh7R9ndRLt7j6hUy9g024PK1t82/zO1QlXnkaBwXgO/
+        Y0b0xy5aeaK77wydbdwQBwF/LVz02Fmr82PnVvxb2Zl9NXyHySo6VWIZKUguF2+gfcFPk5
+        Wd+OSb7s1RWun0P+F5f0etzIpRr18Rg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-224-16xwI3GENvyEQpd5-BpPWA-1; Tue, 12 May 2020 09:52:28 -0400
+X-MC-Unique: 16xwI3GENvyEQpd5-BpPWA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A67ABFC1;
+        Tue, 12 May 2020 13:52:27 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-4.phx2.redhat.com [10.3.114.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 227FC5C1BB;
+        Tue, 12 May 2020 13:52:24 +0000 (UTC)
+Date:   Tue, 12 May 2020 09:52:22 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        zohooouoto@zoho.com.cn, dietmar.eggemann@arm.com
+Subject: Re: [PATCH v3] sched/fair: Fix enqueue_task_fair warning some more
+Message-ID: <20200512135222.GC2201@lorien.usersys.redhat.com>
+References: <20200506141821.GA9773@lorien.usersys.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508165821.GA14555@x1>
+In-Reply-To: <20200506141821.GA9773@lorien.usersys.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+sched/fair: Fix enqueue_task_fair warning some more
 
-Adding Linus W to Cc, would be good to get some comments on this.
+The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+did not fully resolve the issues with the rq->tmp_alone_branch !=
+&rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
+the first for_each_sched_entity loop exits due to on_rq, having incompletely
+updated the list.  In this case the second for_each_sched_entity loop can
+further modify se. The later code to fix up the list management fails to do
+what is needed because se does not point to the sched_entity which broke out
+of the first loop. The list is not fixed up because the throttled parent was
+already added back to the list by a task enqueue in a parallel child hierarchy.
 
-* Drew Fustini <drew@beagleboard.org> [200508 09:58]:
-> Add gpio-line-names properties to the gpio controller nodes.
-> BeagleBone boards have P8 and P9 headers [0] which expose many the
-> AM3358 SoC balls to stacking expansion boards called "capes", or to
-> other external connections like jumper wires to a breadboard.
-> 
-> Many of the P8/P9 header pins can muxed to a gpio line.  The
-> gpio-line-names describe which P8/P9 pin that line goes to and the
-> default mux for that P8/P9 pin.  Some lines are not routed to the
-> P8/P9 headers, but instead are dedicated to some functionality such as
-> status LEDs.  The line name will indicate this.  Some line names are
-> left empty as the corresponding AM3358 balls are not connected.
-> 
-> The goal is to make it easier for a user viewing the output of gpioinfo
-> to determine which P8/P9 pin is connected to a line.  The output of
-> gpioinfo on a BeagleBone Black will now look like this:
-> 
-> gpiochip0 - 32 lines:
-> 	line   0:   "ethernet"       unused   input  active-high
-> 	line   1:   "ethernet"       unused   input  active-high
-> 	line   2: "P9_22 spi0_sclk" unused input active-high
-> 	line   3: "P9_21 spi0_d0" unused input active-high
-> 	line   4: "P9_18 spi0_d1" unused input active-high
-> 	line   5: "P9_17 spi0_cs0" unused input active-high
-> 	line   6:    "sd card"         "cd"   input   active-low [used]
-> 	line   7: "P9_42A ecappwm0" unused input active-high
-> 	line   8: "P8_35 hdmi"       unused   input  active-high
-> 	line   9: "P8_33 hdmi"       unused   input  active-high
-> 	line  10: "P8_31 hdmi"       unused   input  active-high
-> 	line  11: "P8_32 hdmi"       unused   input  active-high
-> 	line  12: "P9_20 i2c2_sda" unused input active-high
-> 	line  13: "P9_19 i2c2_scl" unused input active-high
-> 	line  14: "P9_26 uart1_rxd" unused input active-high
-> 	line  15: "P9_24 uart1_txd" unused input active-high
-> 	line  16:   "ethernet"       unused   input  active-high
-> 	line  17:   "ethernet"       unused   input  active-high
-> 	line  18:        "usb"       unused   input  active-high
-> 	line  19:       "hdmi"       unused   input  active-high
-> 	line  20: "P9_41B gpio" unused input active-high
-> 	line  21:   "ethernet"       unused   input  active-high
-> 	line  22: "P8_19 ehrpwm2a" unused input active-high
-> 	line  23: "P8_13 ehrpwm2b" unused input active-high
-> 	line  24:      unnamed       unused   input  active-high
-> 	line  25:      unnamed       unused   input  active-high
-> 	line  26: "P8_14 gpio"       unused   input  active-high
-> 	line  27: "P8_17 gpio"       unused   input  active-high
-> 	line  28:   "ethernet"       unused   input  active-high
-> 	line  29:   "ethernet"       unused   input  active-high
-> 	line  30: "P9_11 uart4_rxd" unused input active-high
-> 	line  31: "P9_13 uart4_txd" unused input active-high
-> gpiochip1 - 32 lines:
-> 	line   0: "P8_25 emmc"       unused   input  active-high
-> 	line   1:       "emmc"       unused   input  active-high
-> 	line   2:  "P8_5 emmc"       unused   input  active-high
-> 	line   3:  "P8_6 emmc"       unused   input  active-high
-> 	line   4: "P8_23 emmc"       unused   input  active-high
-> 	line   5: "P8_22 emmc"       unused   input  active-high
-> 	line   6:  "P8_3 emmc"       unused   input  active-high
-> 	line   7:  "P8_4 emmc"       unused   input  active-high
-> 	line   8:      unnamed       unused   input  active-high
-> 	line   9:      unnamed       unused   input  active-high
-> 	line  10:      unnamed       unused   input  active-high
-> 	line  11:      unnamed       unused   input  active-high
-> 	line  12: "P8_12 gpio"       unused   input  active-high
-> 	line  13: "P8_11 gpio"       unused   input  active-high
-> 	line  14: "P8_16 gpio"       unused   input  active-high
-> 	line  15: "P8_15 gpio"       unused   input  active-high
-> 	line  16: "P9_15A gpio" unused input active-high
-> 	line  17: "P9_23 gpio"       unused   input  active-high
-> 	line  18: "P9_14 ehrpwm1a" unused input active-high
-> 	line  19: "P9_16 ehrpwm1b" unused input active-high
-> 	line  20:       "emmc"       unused   input  active-high
-> 	line  21:   "usr0 led" "beaglebone:green:heart" output active-high [used]
-> 	line  22:   "usr1 led" "beaglebone:green:mmc0" output active-high [used]
-> 	line  23:   "usr2 led" "beaglebone:green:usr2" output active-high [used]
-> 	line  24:   "usr3 led" "beaglebone:green:usr3" output active-high [used]
-> 	line  25:       "hdmi"  "interrupt"   input  active-high [used]
-> 	line  26:        "usb"       unused   input  active-high
-> 	line  27: "hdmi audio"     "enable"  output  active-high [used]
-> 	line  28: "P9_12 gpio"       unused   input  active-high
-> 	line  29: "P8_26 gpio"       unused   input  active-high
-> 	line  30: "P8_21 emmc"       unused   input  active-high
-> 	line  31: "P8_20 emmc"       unused   input  active-high
-> gpiochip2 - 32 lines:
-> 	line   0: "P9_15B gpio" unused input active-high
-> 	line   1: "P8_18 gpio"       unused   input  active-high
-> 	line   2:  "P8_7 gpio"       unused   input  active-high
-> 	line   3:  "P8_8 gpio"       unused   input  active-high
-> 	line   4: "P8_10 gpio"       unused   input  active-high
-> 	line   5:  "P8_9 gpio"       unused   input  active-high
-> 	line   6: "P8_45 hdmi"       unused   input  active-high
-> 	line   7: "P8_46 hdmi"       unused   input  active-high
-> 	line   8: "P8_43 hdmi"       unused   input  active-high
-> 	line   9: "P8_44 hdmi"       unused   input  active-high
-> 	line  10: "P8_41 hdmi"       unused   input  active-high
-> 	line  11: "P8_42 hdmi"       unused   input  active-high
-> 	line  12: "P8_39 hdmi"       unused   input  active-high
-> 	line  13: "P8_40 hdmi"       unused   input  active-high
-> 	line  14: "P8_37 hdmi"       unused   input  active-high
-> 	line  15: "P8_38 hdmi"       unused   input  active-high
-> 	line  16: "P8_36 hdmi"       unused   input  active-high
-> 	line  17: "P8_34 hdmi"       unused   input  active-high
-> 	line  18:   "ethernet"       unused   input  active-high
-> 	line  19:   "ethernet"       unused   input  active-high
-> 	line  20:   "ethernet"       unused   input  active-high
-> 	line  21:   "ethernet"       unused   input  active-high
-> 	line  22: "P8_27 hdmi"       unused   input  active-high
-> 	line  23: "P8_29 hdmi"       unused   input  active-high
-> 	line  24: "P8_28 hdmi"       unused   input  active-high
-> 	line  25: "P8_30 hdmi"       unused   input  active-high
-> 	line  26:       "emmc"       unused   input  active-high
-> 	line  27:       "emmc"       unused   input  active-high
-> 	line  28:       "emmc"       unused   input  active-high
-> 	line  29:       "emmc"       unused   input  active-high
-> 	line  30:       "emmc"       unused   input  active-high
-> 	line  31:       "emmc"       unused   input  active-high
-> gpiochip3 - 32 lines:
-> 	line   0:   "ethernet"       unused   input  active-high
-> 	line   1:   "ethernet"       unused   input  active-high
-> 	line   2:   "ethernet"       unused   input  active-high
-> 	line   3:   "ethernet"       unused   input  active-high
-> 	line   4:   "ethernet"       unused   input  active-high
-> 	line   5:       "i2c0"       unused   input  active-high
-> 	line   6:       "i2c0"       unused   input  active-high
-> 	line   7:        "emu"       unused   input  active-high
-> 	line   8:        "emu"       unused   input  active-high
-> 	line   9:   "ethernet"       unused   input  active-high
-> 	line  10:   "ethernet"       unused   input  active-high
-> 	line  11:      unnamed       unused   input  active-high
-> 	line  12:      unnamed       unused   input  active-high
-> 	line  13:        "usb"       unused   input  active-high
-> 	line  14: "P9_31 spi1_sclk" unused input active-high
-> 	line  15: "P9_29 spi1_d0" unused input active-high
-> 	line  16: "P9_30 spi1_d1" unused input active-high
-> 	line  17: "P9_28 spi1_cs0" unused input active-high
-> 	line  18: "P9_42B ecappwm0" unused input active-high
-> 	line  19: "P9_27 gpio"       unused   input  active-high
-> 	line  20: "P9_41A gpio" unused input active-high
-> 	line  21: "P9_25 gpio"       unused   input  active-high
-> 	line  22:      unnamed       unused   input  active-high
-> 	line  23:      unnamed       unused   input  active-high
-> 	line  24:      unnamed       unused   input  active-high
-> 	line  25:      unnamed       unused   input  active-high
-> 	line  26:      unnamed       unused   input  active-high
-> 	line  27:      unnamed       unused   input  active-high
-> 	line  28:      unnamed       unused   input  active-high
-> 	line  29:      unnamed       unused   input  active-high
-> 	line  30:      unnamed       unused   input  active-high
-> 	line  31:      unnamed       unused   input  active-high
-> 
-> [0] https://beagleboard.org/Support/bone101
-> [1] https://beagleboard.org/capes
-> 
-> Reviewed-by: Jason Kridner <jason@beagleboard.org>
-> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
->  1 file changed, 144 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 6c9187bc0f17..defdf68edb58 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -397,3 +397,147 @@
->  	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
->  	clock-names = "ext-clk", "int-clk";
->  };
-> +
-> +&gpio0 {
-> +	gpio-line-names =
-> +		"ethernet",
-> +		"ethernet",
-> +		"P9_22 spi0_sclk",
-> +		"P9_21 spi0_d0",
-> +		"P9_18 spi0_d1",
-> +		"P9_17 spi0_cs0",
-> +		"sd card",
-> +		"P9_42A ecappwm0",
-> +		"P8_35 hdmi",
-> +		"P8_33 hdmi",
-> +		"P8_31 hdmi",
-> +		"P8_32 hdmi",
-> +		"P9_20 i2c2_sda",
-> +		"P9_19 i2c2_scl",
-> +		"P9_26 uart1_rxd",
-> +		"P9_24 uart1_txd",
-> +		"ethernet",
-> +		"ethernet",
-> +		"usb",
-> +		"hdmi",
-> +		"P9_41B gpio",
-> +		"ethernet",
-> +		"P8_19 ehrpwm2a",
-> +		"P8_13 ehrpwm2b",
-> +		"",
-> +		"",
-> +		"P8_14 gpio",
-> +		"P8_17 gpio",
-> +		"ethernet",
-> +		"ethernet",
-> +		"P9_11 uart4_rxd",
-> +		"P9_13 uart4_txd";
-> +};
-> +
-> +&gpio1 {
-> +	gpio-line-names =
-> +		"P8_25 emmc",
-> +		"emmc",
-> +		"P8_5 emmc",
-> +		"P8_6 emmc",
-> +		"P8_23 emmc",
-> +		"P8_22 emmc",
-> +		"P8_3 emmc",
-> +		"P8_4 emmc",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"P8_12 gpio",
-> +		"P8_11 gpio",
-> +		"P8_16 gpio",
-> +		"P8_15 gpio",
-> +		"P9_15A gpio",
-> +		"P9_23 gpio",
-> +		"P9_14 ehrpwm1a",
-> +		"P9_16 ehrpwm1b",
-> +		"emmc",
-> +		"usr0 led",
-> +		"usr1 led",
-> +		"usr2 led",
-> +		"usr3 led",
-> +		"hdmi",
-> +		"usb",
-> +		"hdmi audio",
-> +		"P9_12 gpio",
-> +		"P8_26 gpio",
-> +		"P8_21 emmc",
-> +		"P8_20 emmc";
-> +};
-> +
-> +&gpio2 {
-> +	gpio-line-names =
-> +		"P9_15B gpio",
-> +		"P8_18 gpio",
-> +		"P8_7 gpio",
-> +		"P8_8 gpio",
-> +		"P8_10 gpio",
-> +		"P8_9 gpio",
-> +		"P8_45 hdmi",
-> +		"P8_46 hdmi",
-> +		"P8_43 hdmi",
-> +		"P8_44 hdmi",
-> +		"P8_41 hdmi",
-> +		"P8_42 hdmi",
-> +		"P8_39 hdmi",
-> +		"P8_40 hdmi",
-> +		"P8_37 hdmi",
-> +		"P8_38 hdmi",
-> +		"P8_36 hdmi",
-> +		"P8_34 hdmi",
-> +		"ethernet",
-> +		"ethernet",
-> +		"ethernet",
-> +		"ethernet",
-> +		"P8_27 hdmi",
-> +		"P8_29 hdmi",
-> +		"P8_28 hdmi",
-> +		"P8_30 hdmi",
-> +		"emmc",
-> +		"emmc",
-> +		"emmc",
-> +		"emmc",
-> +		"emmc",
-> +		"emmc";
-> +};
-> +
-> +&gpio3 {
-> +	gpio-line-names =
-> +		"ethernet",
-> +		"ethernet",
-> +		"ethernet",
-> +		"ethernet",
-> +		"ethernet",
-> +		"i2c0",
-> +		"i2c0",
-> +		"emu",
-> +		"emu",
-> +		"ethernet",
-> +		"ethernet",
-> +		"",
-> +		"",
-> +		"usb",
-> +		"P9_31 spi1_sclk",
-> +		"P9_29 spi1_d0",
-> +		"P9_30 spi1_d1",
-> +		"P9_28 spi1_cs0",
-> +		"P9_42B ecappwm0",
-> +		"P9_27 gpio",
-> +		"P9_41A gpio",
-> +		"P9_25 gpio",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"",
-> +		"";
-> +};
-> -- 
-> 2.20.1
-> 
+Address this by calling list_add_leaf_cfs_rq if there are throttled parents
+while doing the second for_each_sched_entity loop.
+
+v3: clean up commit message and add fixes and review tags.
+
+Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Fixes: fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+---
+ kernel/sched/fair.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b85b6d..c6d57c334d51 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5479,6 +5479,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+ 			goto enqueue_throttle;
++
++               /*
++                * One parent has been throttled and cfs_rq removed from the
++                * list. Add it back to not break the leaf list.
++                */
++               if (throttled_hierarchy(cfs_rq))
++                       list_add_leaf_cfs_rq(cfs_rq);
+ 	}
+ 
+ enqueue_throttle:
+-- 
+2.18.0
+
+
+-- 
+
