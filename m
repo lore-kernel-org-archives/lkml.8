@@ -2,264 +2,385 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC22C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111EC54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B286D20752
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C3E207DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDOD8wXZ"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ATbwFTBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgELGqb (ORCPT
+        id S1728920AbgELGq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50232 "EHLO
+        Tue, 12 May 2020 02:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728888AbgELGqa (ORCPT
+        by vger.kernel.org with ESMTP id S1728786AbgELGq6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:46:30 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F25C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id z15so301307pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:29 -0700 (PDT)
+        Tue, 12 May 2020 02:46:58 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433C4C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:57 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so12270346ljj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E4Phsh2eMHFW2nv+ZpCJ1jY+XUspl2e96HpcVdZRuj8=;
-        b=bDOD8wXZarSO4eWec1zEBoXJUeLc0sE7VwxO/+RPgQ1cZ/CkVTqBXr75hNxaWVzpiv
-         okD53HZPDlhLtdA20gqjH4ykl9no9i5tbhGILzAFWqsfdOqEp+8fhj5HgLdjE8O/bBvW
-         b449pBdx1eJ4xHY7AmFnXDZ7RyFTIH+S4l6KAy+IbOpvkWyV575h03baJsR3Rq0dXiKU
-         A9wW+BbK30Cvg0JAlNDg3iHB7OJusQnJc+KVbdITt/2poRxUAB/MNZe+qMhqkgNnre7G
-         cZ1NNgx8Wl83BGDc6b7Z1oiRdzoPUEiWzvlyua587l8tivEq5DZWwhdiSwkqgh6OUq4t
-         YvTg==
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PeTZxP3dnM+h84TinjF6yyznuz49WCl2s79pVqj9q+0=;
+        b=ATbwFTBSuTvplUyJOlciI7Lp1ImnKy2Z1dcR75tuR61TLZi/Y+DMPIn2I7YADoi13z
+         i5cWXmjznF3j2ihvlbapAJyGJUz5zuEwMRbU212gx1f1T+CHWh6CTP+E1PIHHPiw0hmB
+         n3Kl9kwm4JImiY6eC6B2xBmj5+ubeF2Pnq7cum06+dHiPgqhM1drBZJ7L3dCCBcHduFt
+         NNKk1qcVWkD1djsa878pDg0CCOfqbJrmHE7MPdaWK6f7SaTy9pGL09F4NYvR1c9KElga
+         laqWxmtcaFId7m5CbUzIfxq4nnbuV44xs5BTaEYEMh63twJEUzKEElaF+N+301C2lSuh
+         kKwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E4Phsh2eMHFW2nv+ZpCJ1jY+XUspl2e96HpcVdZRuj8=;
-        b=HxepSy0TFGzw94OBQBZIy7ZUcWfzMF+j+8XEq4S+T8aMz3C3NJfq7bB7M+79dHXf97
-         u3xCYFQEs17mG9koyHW4poUde5ux4h0MJB+MLwNwrnH+5R5j62f/CQ6m9p4TbUlq5gB7
-         p752zyAHYEvACnzsIXkAcVXpfRadrfG9TLGLeVw86t1IwamuX6qDR5jcTMwFzKV/5gYO
-         9HI+MT2YJAn/WLQDpANwWg8ZZexs8BDVX9YTppa7ESmBlyApBX4grhpPEiL8KLJaEdzs
-         4erJZJULEfuRfTcNztZSMamZfP3XN1k9EuBKEozAiePaphXDnCA7wDyVGtkU6HOxRzw8
-         QOAw==
-X-Gm-Message-State: AGi0PubkOv6S+Pcig9CO2XmaJg/c8U20hkSx7j95mSDeWLwoHv6AaS6A
-        NFEPqyVommqYc0dQ5JzhcCRT
-X-Google-Smtp-Source: APiQypJEg+ggTneK2wNSFCrv/8WbUlg9I49RmP2/vCeJvMgsXfoDFDN9+574dGJ0/gsqhagmTHx0ZQ==
-X-Received: by 2002:a17:902:8205:: with SMTP id x5mr19455407pln.82.1589265989065;
-        Mon, 11 May 2020 23:46:29 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
-        by smtp.gmail.com with ESMTPSA id y63sm11012828pfg.138.2020.05.11.23.46.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 May 2020 23:46:28 -0700 (PDT)
-Date:   Tue, 12 May 2020 12:16:21 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org
-Subject: Re: [PATCH v1 1/5] bus: mhi: core: Remove the system error worker
- thread
-Message-ID: <20200512064621.GC4928@Mani-XPS-13-9360>
-References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
- <1589248989-23824-2-git-send-email-hemantk@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PeTZxP3dnM+h84TinjF6yyznuz49WCl2s79pVqj9q+0=;
+        b=mP9JyjYWfgGOkCO2f8V7EJ5D3p+PI56zIftf71JB8Om8AIl3eNWHgqyHO3WeUAaVzE
+         5DLnlPRwbiGsJzPTa4D3piI0M5FCvYdxLFfPsb58ZM0ZXyPg9JrY+QjMM17BLbFJw6Q/
+         7inWa1QIVu4yioahMUoTl+jKElM7oTu2idEbbl95bvXCic0p4WjG38VFwEnromuvnTD2
+         yY/1gTr//Sc/AQPKLWnqmNdS+3PwlqcXbnd/GDw+1yqyk8o+iOxmz5Sz4u41V3VF26l3
+         lGS7aSLw57+GxWA7iCDgROY5xZI6zv+Gb0qhV3fYVKKQzzfwh74qqdytoALIGYgcNiUo
+         Hm0A==
+X-Gm-Message-State: AOAM532h/mNRK0d37gJs1IMPdkFNl9V/c3S4wOQNOACefQxWbnEdhFqa
+        IjRHQGvQm1ulk7uSC7XnXBG/TqTFJlpmPBMgY4Rrxw==
+X-Google-Smtp-Source: ABdhPJyZtuY9qCsHGIEz3JTPAzAjn0vfQh8ys7kF9BrqFVxmJMzK14yWT2xR6+ZOWqx/tt/hhhUEeM5HlaFKR9ToatY=
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr13052701ljk.134.1589266015481;
+ Mon, 11 May 2020 23:46:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589248989-23824-2-git-send-email-hemantk@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-11-maco@android.com>
+In-Reply-To: <20200429140341.13294-11-maco@android.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Tue, 12 May 2020 08:46:44 +0200
+Message-ID: <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
+Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 07:03:05PM -0700, Hemant Kumar wrote:
-> Remove the system error worker thread and instead have the
-> execution environment worker handle that transition to serialize
-> processing and avoid any possible race conditions during
-> shutdown.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Hi Jens,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+What do you think of this series?
 
 Thanks,
-Mani
+Martijn
 
+On Wed, Apr 29, 2020 at 4:03 PM Martijn Coenen <maco@android.com> wrote:
+>
+> This allows userspace to completely setup a loop device with a single
+> ioctl, removing the in-between state where the device can be partially
+> configured - eg the loop device has a backing file associated with it,
+> but is reading from the wrong offset.
+>
+> Besides removing the intermediate state, another big benefit of this
+> ioctl is that LOOP_SET_STATUS can be slow; the main reason for this
+> slowness is that LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to
+> freeze the associated queue; this requires waiting for RCU
+> synchronization, which I've measured can take about 15-20ms on this
+> device on average.
+>
+> In addition to doing what LOOP_SET_STATUS can do, LOOP_CONFIGURE can
+> also be used to:
+> - Set the correct block size immediately by setting
+>   loop_config.block_size (avoids LOOP_SET_BLOCK_SIZE)
+> - Explicitly request direct I/O mode by setting LO_FLAGS_DIRECT_IO
+>   in loop_config.info.lo_flags (avoids LOOP_SET_DIRECT_IO)
+> - Explicitly request read-only mode by setting LO_FLAGS_READ_ONLY
+>   in loop_config.info.lo_flags
+>
+> Here's setting up ~70 regular loop devices with an offset on an x86
+> Android device, using LOOP_SET_FD and LOOP_SET_STATUS:
+>
+> vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+>     0m03.40s real     0m00.02s user     0m00.03s system
+>
+> Here's configuring ~70 devices in the same way, but using a modified
+> losetup that uses the new LOOP_CONFIGURE ioctl:
+>
+> vsoc_x86:/system/apex # time for i in `seq 30 100`;
+> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
+>     0m01.94s real     0m00.01s user     0m00.01s system
+>
+> Signed-off-by: Martijn Coenen <maco@android.com>
 > ---
->  drivers/bus/mhi/core/init.c     |  2 +-
->  drivers/bus/mhi/core/internal.h |  3 ++-
->  drivers/bus/mhi/core/main.c     |  6 +++---
->  drivers/bus/mhi/core/pm.c       | 32 ++++++++++++++------------------
->  include/linux/mhi.h             |  2 --
->  5 files changed, 20 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> index 6882206..3a853c5 100644
-> --- a/drivers/bus/mhi/core/init.c
-> +++ b/drivers/bus/mhi/core/init.c
-> @@ -34,6 +34,7 @@
->  	[DEV_ST_TRANSITION_READY] = "READY",
->  	[DEV_ST_TRANSITION_SBL] = "SBL",
->  	[DEV_ST_TRANSITION_MISSION_MODE] = "MISSION_MODE",
-> +	[DEV_ST_TRANSITION_SYS_ERR] = "SYS_ERR",
->  };
->  
->  const char * const mhi_state_str[MHI_STATE_MAX] = {
-> @@ -834,7 +835,6 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->  	spin_lock_init(&mhi_cntrl->transition_lock);
->  	spin_lock_init(&mhi_cntrl->wlock);
->  	INIT_WORK(&mhi_cntrl->st_worker, mhi_pm_st_worker);
-> -	INIT_WORK(&mhi_cntrl->syserr_worker, mhi_pm_sys_err_worker);
->  	init_waitqueue_head(&mhi_cntrl->state_event);
->  
->  	mhi_cmd = mhi_cntrl->mhi_cmd;
-> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-> index 80b32c2..f01283b 100644
-> --- a/drivers/bus/mhi/core/internal.h
-> +++ b/drivers/bus/mhi/core/internal.h
-> @@ -386,6 +386,7 @@ enum dev_st_transition {
->  	DEV_ST_TRANSITION_READY,
->  	DEV_ST_TRANSITION_SBL,
->  	DEV_ST_TRANSITION_MISSION_MODE,
-> +	DEV_ST_TRANSITION_SYS_ERR,
->  	DEV_ST_TRANSITION_MAX,
->  };
->  
-> @@ -587,7 +588,7 @@ enum mhi_pm_state __must_check mhi_tryset_pm_state(
->  int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
->  			       enum dev_st_transition state);
->  void mhi_pm_st_worker(struct work_struct *work);
-> -void mhi_pm_sys_err_worker(struct work_struct *work);
-> +void mhi_pm_sys_err_handler(struct mhi_controller *mhi_cntrl);
->  void mhi_fw_load_worker(struct work_struct *work);
->  int mhi_ready_state_transition(struct mhi_controller *mhi_cntrl);
->  void mhi_ctrl_ev_task(unsigned long data);
-> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> index 6a80666..9ec9b36 100644
-> --- a/drivers/bus/mhi/core/main.c
-> +++ b/drivers/bus/mhi/core/main.c
-> @@ -406,7 +406,7 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
->  		if (MHI_IN_PBL(ee))
->  			mhi_cntrl->status_cb(mhi_cntrl, MHI_CB_FATAL_ERROR);
->  		else
-> -			schedule_work(&mhi_cntrl->syserr_worker);
-> +			mhi_pm_sys_err_handler(mhi_cntrl);
->  	}
->  
->  exit_intvec:
-> @@ -734,7 +734,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->  							MHI_PM_SYS_ERR_DETECT);
->  				write_unlock_irq(&mhi_cntrl->pm_lock);
->  				if (new_state == MHI_PM_SYS_ERR_DETECT)
-> -					schedule_work(&mhi_cntrl->syserr_worker);
-> +					mhi_pm_sys_err_handler(mhi_cntrl);
->  				break;
->  			}
->  			default:
-> @@ -920,7 +920,7 @@ void mhi_ctrl_ev_task(unsigned long data)
->  		}
->  		write_unlock_irq(&mhi_cntrl->pm_lock);
->  		if (pm_state == MHI_PM_SYS_ERR_DETECT)
-> -			schedule_work(&mhi_cntrl->syserr_worker);
-> +			mhi_pm_sys_err_handler(mhi_cntrl);
->  	}
+>  drivers/block/loop.c      | 107 +++++++++++++++++++++++++++-----------
+>  include/uapi/linux/loop.h |  21 ++++++++
+>  2 files changed, 99 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index cfbdd99fdb1a..a353ce55fd18 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -241,6 +241,19 @@ loop_validate_size(loff_t size)
+>         return 0;
 >  }
->  
-> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-> index 3cc238a..d9964d4 100644
-> --- a/drivers/bus/mhi/core/pm.c
-> +++ b/drivers/bus/mhi/core/pm.c
-> @@ -449,19 +449,8 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
->  		to_mhi_pm_state_str(transition_state));
->  
->  	/* We must notify MHI control driver so it can clean up first */
-> -	if (transition_state == MHI_PM_SYS_ERR_PROCESS) {
-> -		/*
-> -		 * If controller supports RDDM, we do not process
-> -		 * SYS error state, instead we will jump directly
-> -		 * to RDDM state
-> -		 */
-> -		if (mhi_cntrl->rddm_image) {
-> -			dev_dbg(dev,
-> -				 "Controller supports RDDM, so skip SYS_ERR\n");
-> -			return;
-> -		}
-> +	if (transition_state == MHI_PM_SYS_ERR_PROCESS)
->  		mhi_cntrl->status_cb(mhi_cntrl, MHI_CB_SYS_ERROR);
-> -	}
->  
->  	mutex_lock(&mhi_cntrl->pm_mutex);
->  	write_lock_irq(&mhi_cntrl->pm_lock);
-> @@ -527,7 +516,6 @@ static void mhi_pm_disable_transition(struct mhi_controller *mhi_cntrl,
->  	mutex_unlock(&mhi_cntrl->pm_mutex);
->  	dev_dbg(dev, "Waiting for all pending threads to complete\n");
->  	wake_up_all(&mhi_cntrl->state_event);
-> -	flush_work(&mhi_cntrl->st_worker);
->  
->  	dev_dbg(dev, "Reset all active channels and remove MHI devices\n");
->  	device_for_each_child(mhi_cntrl->cntrl_dev, NULL, mhi_destroy_device);
-> @@ -607,13 +595,17 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
->  }
->  
->  /* SYS_ERR worker */
-> -void mhi_pm_sys_err_worker(struct work_struct *work)
-> +void mhi_pm_sys_err_handler(struct mhi_controller *mhi_cntrl)
->  {
-> -	struct mhi_controller *mhi_cntrl = container_of(work,
-> -							struct mhi_controller,
-> -							syserr_worker);
-> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>
+> +/**
+> + * loop_validate_block_size() - validates the passed in block size
+> + * @bsize: size to validate
+> + */
+> +static int
+> +loop_validate_block_size(unsigned short bsize)
+> +{
+> +       if (bsize < 512 || bsize > PAGE_SIZE || !is_power_of_2(bsize))
+> +               return -EINVAL;
 > +
-> +	/* skip if controller supports RDDM */
-> +	if (mhi_cntrl->rddm_image) {
-> +		dev_dbg(dev, "Controller supports RDDM, skip SYS_ERROR\n");
-> +		return;
-> +	}
->  
-> -	mhi_pm_disable_transition(mhi_cntrl, MHI_PM_SYS_ERR_PROCESS);
-> +	mhi_queue_state_transition(mhi_cntrl, DEV_ST_TRANSITION_SYS_ERR);
+> +       return 0;
+> +}
+> +
+>  /**
+>   * loop_set_size() - sets device size and notifies userspace
+>   * @lo: struct loop_device to set the size for
+> @@ -1063,23 +1076,24 @@ loop_set_status_from_info(struct loop_device *lo,
+>         return 0;
 >  }
->  
->  /* Device State Transition worker */
-> @@ -661,6 +653,10 @@ void mhi_pm_st_worker(struct work_struct *work)
->  		case DEV_ST_TRANSITION_READY:
->  			mhi_ready_state_transition(mhi_cntrl);
->  			break;
-> +		case DEV_ST_TRANSITION_SYS_ERR:
-> +			mhi_pm_disable_transition
-> +				(mhi_cntrl, MHI_PM_SYS_ERR_PROCESS);
-> +			break;
->  		default:
->  			break;
->  		}
-> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-> index 2b20b9c..b008914 100644
-> --- a/include/linux/mhi.h
-> +++ b/include/linux/mhi.h
-> @@ -331,7 +331,6 @@ struct mhi_controller_config {
->   * @wlock: Lock for protecting device wakeup
->   * @mhi_link_info: Device bandwidth info
->   * @st_worker: State transition worker
-> - * @syserr_worker: System error worker
->   * @state_event: State change event
->   * @status_cb: CB function to notify power states of the device (required)
->   * @wake_get: CB function to assert device wake (optional)
-> @@ -411,7 +410,6 @@ struct mhi_controller {
->  	spinlock_t wlock;
->  	struct mhi_link_info mhi_link_info;
->  	struct work_struct st_worker;
-> -	struct work_struct syserr_worker;
->  	wait_queue_head_t state_event;
->  
->  	void (*status_cb)(struct mhi_controller *mhi_cntrl,
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+>
+> -static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+> -                      struct block_device *bdev, unsigned int arg)
+> +static int loop_configure(struct loop_device *lo, fmode_t mode,
+> +                         struct block_device *bdev,
+> +                         const struct loop_config *config)
+>  {
+>         struct file     *file;
+>         struct inode    *inode;
+>         struct address_space *mapping;
+>         struct block_device *claimed_bdev = NULL;
+> -       int             lo_flags = 0;
+>         int             error;
+>         loff_t          size;
+>         bool            partscan;
+> +       unsigned short  bsize;
+>
+>         /* This is safe, since we have a reference from open(). */
+>         __module_get(THIS_MODULE);
+>
+>         error = -EBADF;
+> -       file = fget(arg);
+> +       file = fget(config->fd);
+>         if (!file)
+>                 goto out;
+>
+> @@ -1088,7 +1102,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+>          * here to avoid changing device under exclusive owner.
+>          */
+>         if (!(mode & FMODE_EXCL)) {
+> -               claimed_bdev = bd_start_claiming(bdev, loop_set_fd);
+> +               claimed_bdev = bd_start_claiming(bdev, loop_configure);
+>                 if (IS_ERR(claimed_bdev)) {
+>                         error = PTR_ERR(claimed_bdev);
+>                         goto out_putf;
+> @@ -1110,44 +1124,58 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+>         mapping = file->f_mapping;
+>         inode = mapping->host;
+>
+> -       if (!(file->f_mode & FMODE_WRITE) || !(mode & FMODE_WRITE) ||
+> -           !file->f_op->write_iter)
+> -               lo_flags |= LO_FLAGS_READ_ONLY;
+> -
+>         size = get_loop_size(lo, file);
+>         error = loop_validate_size(size);
+>         if (error)
+>                 goto out_unlock;
+> +
+> +       if ((config->info.lo_flags & ~LOOP_CONFIGURE_SETTABLE_FLAGS) != 0) {
+> +               error = -EINVAL;
+> +               goto out_unlock;
+> +       }
+> +
+> +       if (config->block_size) {
+> +               error = loop_validate_block_size(config->block_size);
+> +               if (error)
+> +                       goto out_unlock;
+> +       }
+> +
+> +       error = loop_set_status_from_info(lo, &config->info);
+> +       if (error)
+> +               goto out_unlock;
+> +
+> +       if (!(file->f_mode & FMODE_WRITE) || !(mode & FMODE_WRITE) ||
+> +           !file->f_op->write_iter)
+> +               lo->lo_flags |= LO_FLAGS_READ_ONLY;
+> +
+>         error = loop_prepare_queue(lo);
+>         if (error)
+>                 goto out_unlock;
+>
+>         error = 0;
+>
+> -       set_device_ro(bdev, (lo_flags & LO_FLAGS_READ_ONLY) != 0);
+> +       set_device_ro(bdev, (lo->lo_flags & LO_FLAGS_READ_ONLY) != 0);
+>
+> -       lo->use_dio = false;
+> +       lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
+>         lo->lo_device = bdev;
+> -       lo->lo_flags = lo_flags;
+>         lo->lo_backing_file = file;
+> -       lo->transfer = NULL;
+> -       lo->ioctl = NULL;
+> -       lo->lo_sizelimit = 0;
+>         lo->old_gfp_mask = mapping_gfp_mask(mapping);
+>         mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
+>
+> -       if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
+> +       if (!(lo->lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
+>                 blk_queue_write_cache(lo->lo_queue, true, false);
+>
+> -       if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
+> +       if (config->block_size)
+> +               bsize = config->block_size;
+> +       else if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev)
+>                 /* In case of direct I/O, match underlying block size */
+> -               unsigned short bsize = bdev_logical_block_size(
+> -                       inode->i_sb->s_bdev);
+> +               bsize = bdev_logical_block_size(inode->i_sb->s_bdev);
+> +       else
+> +               bsize = 512;
+>
+> -               blk_queue_logical_block_size(lo->lo_queue, bsize);
+> -               blk_queue_physical_block_size(lo->lo_queue, bsize);
+> -               blk_queue_io_min(lo->lo_queue, bsize);
+> -       }
+> +       blk_queue_logical_block_size(lo->lo_queue, bsize);
+> +       blk_queue_physical_block_size(lo->lo_queue, bsize);
+> +       blk_queue_io_min(lo->lo_queue, bsize);
+>
+>         loop_update_rotational(lo);
+>         loop_update_dio(lo);
+> @@ -1170,14 +1198,14 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
+>         if (partscan)
+>                 loop_reread_partitions(lo, bdev);
+>         if (claimed_bdev)
+> -               bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
+> +               bd_abort_claiming(bdev, claimed_bdev, loop_configure);
+>         return 0;
+>
+>  out_unlock:
+>         mutex_unlock(&loop_ctl_mutex);
+>  out_bdev:
+>         if (claimed_bdev)
+> -               bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
+> +               bd_abort_claiming(bdev, claimed_bdev, loop_configure);
+>  out_putf:
+>         fput(file);
+>  out:
+> @@ -1607,8 +1635,9 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>         if (lo->lo_state != Lo_bound)
+>                 return -ENXIO;
+>
+> -       if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+> -               return -EINVAL;
+> +       err = loop_validate_block_size(arg);
+> +       if (err)
+> +               return err;
+>
+>         if (lo->lo_queue->limits.logical_block_size == arg)
+>                 return 0;
+> @@ -1670,8 +1699,27 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
+>         int err;
+>
+>         switch (cmd) {
+> -       case LOOP_SET_FD:
+> -               return loop_set_fd(lo, mode, bdev, arg);
+> +       case LOOP_SET_FD: {
+> +               /*
+> +                * Legacy case - pass in a zeroed out struct loop_config with
+> +                * only the file descriptor set , which corresponds with the
+> +                * default parameters we'd have used otherwise.
+> +                */
+> +               struct loop_config config;
+> +
+> +               memset(&config, 0, sizeof(config));
+> +               config.fd = arg;
+> +
+> +               return loop_configure(lo, mode, bdev, &config);
+> +       }
+> +       case LOOP_CONFIGURE: {
+> +               struct loop_config config;
+> +
+> +               if (copy_from_user(&config, argp, sizeof(config)))
+> +                       return -EFAULT;
+> +
+> +               return loop_configure(lo, mode, bdev, &config);
+> +       }
+>         case LOOP_CHANGE_FD:
+>                 return loop_change_fd(lo, bdev, arg);
+>         case LOOP_CLR_FD:
+> @@ -1843,6 +1891,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
+>         case LOOP_CLR_FD:
+>         case LOOP_GET_STATUS64:
+>         case LOOP_SET_STATUS64:
+> +       case LOOP_CONFIGURE:
+>                 arg = (unsigned long) compat_ptr(arg);
+>                 /* fall through */
+>         case LOOP_SET_FD:
+> diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
+> index 6b32fee80ce0..24a1c45bd1ae 100644
+> --- a/include/uapi/linux/loop.h
+> +++ b/include/uapi/linux/loop.h
+> @@ -31,6 +31,10 @@ enum {
+>  /* LO_FLAGS that can be cleared using LOOP_SET_STATUS(64) */
+>  #define LOOP_SET_STATUS_CLEARABLE_FLAGS (LO_FLAGS_AUTOCLEAR)
+>
+> +/* LO_FLAGS that can be set using LOOP_CONFIGURE */
+> +#define LOOP_CONFIGURE_SETTABLE_FLAGS (LO_FLAGS_READ_ONLY | LO_FLAGS_AUTOCLEAR \
+> +                                      | LO_FLAGS_PARTSCAN | LO_FLAGS_DIRECT_IO)
+> +
+>  #include <asm/posix_types.h>   /* for __kernel_old_dev_t */
+>  #include <linux/types.h>       /* for __u64 */
+>
+> @@ -66,6 +70,22 @@ struct loop_info64 {
+>         __u64              lo_init[2];
+>  };
+>
+> +/**
+> + * struct loop_config - Complete configuration for a loop device.
+> + * @fd: fd of the file to be used as a backing file for the loop device.
+> + * @block_size: block size to use; ignored if 0.
+> + * @info: struct loop_info64 to configure the loop device with.
+> + *
+> + * This structure is used with the LOOP_CONFIGURE ioctl, and can be used to
+> + * atomically setup and configure all loop device parameters at once.
+> + */
+> +struct loop_config {
+> +       __u32                   fd;
+> +       __u32                   block_size;
+> +       struct loop_info64      info;
+> +       __u64                   __reserved[8];
+> +};
+> +
+>  /*
+>   * Loop filter types
+>   */
+> @@ -96,6 +116,7 @@ struct loop_info64 {
+>  #define LOOP_SET_CAPACITY      0x4C07
+>  #define LOOP_SET_DIRECT_IO     0x4C08
+>  #define LOOP_SET_BLOCK_SIZE    0x4C09
+> +#define LOOP_CONFIGURE         0x4C0A
+>
+>  /* /dev/loop-control interface */
+>  #define LOOP_CTL_ADD           0x4C80
+> --
+> 2.26.2.303.gf8c07b1a785-goog
+>
