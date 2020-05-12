@@ -2,199 +2,179 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FC2C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F162C54E81
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC59206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDZQjdd9"
+	by mail.kernel.org (Postfix) with ESMTP id 7E2AE206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589297838;
+	bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UHSfx0pdxATIDVGD6DdEC1WXRyF54IW56Uqh2CiwMbu88Joobs7EBT935+PET62jU
+	 cAqRQgm3U+K1akDta1eqRx9ag47diMSmbwl+8qHiMV2sF00YuQ+AQHLidm32StfFpk
+	 j9noQIa8d33oaWDj/ATZ3LZfVOMVyKPZqboos/Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgELPgq (ORCPT
+        id S1730784AbgELPhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgELPgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:36:46 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441F7C061A0C;
-        Tue, 12 May 2020 08:36:46 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t11so6321004pgg.2;
-        Tue, 12 May 2020 08:36:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YmZaO3pcIDrfR3KhTFbwCDYoppXKfYSJXDQjUNKHEVY=;
-        b=MDZQjdd9m1y13p4rXxb5ek6crSsd2F3cWpU4AluYA6Fumci27S/F5+vMBNIFw9aPvE
-         bF7isGhus8uwkrMDA2h8CwlFw4hXQijLZQvmYE5ssEVj2iAqMuQ2QYtgJE/M0JT/OL/m
-         X7BjNlnEEBILlQ1ROroLfDCSiCg/BIE3Ix2BXd+LRVQHEtPaicCS7gI/sOvVfW2wklFN
-         qOXZadgNnekYEFqG33K0wkzXvVZAcE/dx4sGqvxLRQj2Qn1Hq8gfIGfq8WkDnNYQPRdO
-         Dl0+nEkLJs4H6G3UMN9B8YQRk/umrQgpNDr6djrOQdJ2dgAZENF/7rtsNTpqW79H8oeg
-         lrYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YmZaO3pcIDrfR3KhTFbwCDYoppXKfYSJXDQjUNKHEVY=;
-        b=NYoXbtbHjNseyfVGIJS9YzModvPiwoeuTMlihZ7n5f3pv1zEgtbKwjFZ31gGWcPNmQ
-         8KmI+GbT6qLmaG1it9hBk+oW5JfIi83mIwsNhAjJMmXMLean0iGs+3JSzhK2untCfSDP
-         VtlGSs0JhRP96o8Thvp/a+bw8P9YVCmmCeabFzefmxMhYOJgtpNk/zMV5wpSJxCdWlJ8
-         VYlzC3zT6HrNazI157PP7zELxxfZhCq8C9jBOV1bq0E6dWTm7f4HcWyMETMF/yWxiWhT
-         2s4Hbap34oWmCfe81piGH9HAg1/Q0T20GBOLDk9Q3ySnYAORmdUOGR9NTbUfe/kujylj
-         lf6g==
-X-Gm-Message-State: AGi0Puad+8uRRsHppCqxaTsWUcSddK7n0RPitIMp2f6YPs3rn66TOPIN
-        FkVAPscFyGGJzhQbKMTeQeo=
-X-Google-Smtp-Source: APiQypJwhkhYXONVdXhsZYr4EJTG7RhyBOORX0Z93ewmdJCGeWKnlMX72zG0EERnx85aomm9q1LqJg==
-X-Received: by 2002:a62:17c3:: with SMTP id 186mr22004540pfx.159.1589297805739;
-        Tue, 12 May 2020 08:36:45 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id q62sm7884906pfc.132.2020.05.12.08.36.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:36:44 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
-Date:   Tue, 12 May 2020 23:36:07 +0800
-Message-Id: <20200512153607.5560-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 12 May 2020 11:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727847AbgELPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:37:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D895206CC;
+        Tue, 12 May 2020 15:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589297836;
+        bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fqwakY8meehODH74gpckFTa+Mh+b6xO0w7sFxmlOy9XVG4nwxGnTy6d/fTPn2KKM2
+         FpnaUhXQ4zcFpBOJudkbcySubJ2+F+jCEnuxGUDYz6Hh3Axo6CPTcFQ7NCAH24bj08
+         0hH/vzANpANCy0xlayV1dZeLa4UcnByWyMsY1C90=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jYWy2-00Bh0h-Rd; Tue, 12 May 2020 16:37:14 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 May 2020 16:37:14 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
+In-Reply-To: <20200430143019.1704-3-brgl@bgdev.pl>
+References: <20200430143019.1704-1-brgl@bgdev.pl>
+ <20200430143019.1704-3-brgl@bgdev.pl>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com, Jonathan.Cameron@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is useful to preserve batches of configs when making
-localmodconfig. For example, I usually don't want any usb and fs
-modules to be disabled. Now we can do it by:
+Bartosz,
 
- $ make LMC_KEEP="drivers/usb:fs" localmodconfig
+On 2020-04-30 15:30, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The interrupt simulator API exposes a lot of custom data structures and
+> functions and doesn't reuse the interfaces already exposed by the irq
+> subsystem. This patch tries to address it.
+> 
+> We hide all the simulator-related data structures from users and 
+> instead
+> rely on the well-known irq domain. When creating the interrupt 
+> simulator
+> the user receives a pointer to a newly created irq_domain and can use 
+> it
+> to create mappings for simulated interrupts.
+> 
+> It is also possible to pass a handle to fwnode when creating the 
+> simulator
+> domain and retrieve it using irq_find_matching_fwnode().
+> 
+> The irq_sim_fire() function now only takes the virtual interrupt number
+> as argument - there's no need anymore to pass it any data structure 
+> linked
+> to the simulator.
+> 
+> We modify the two modules that use the simulator at the same time as
+> adding these changes in order to reduce the intermediate bloat that 
+> would
+> result when trying to migrate the drivers in separate patches.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
+> ---
+>  drivers/gpio/gpio-mockup.c          |  47 ++++--
+>  drivers/iio/dummy/iio_dummy_evgen.c |  32 ++--
+>  include/linux/irq_sim.h             |  34 ++---
+>  kernel/irq/Kconfig                  |   1 +
+>  kernel/irq/irq_sim.c                | 225 +++++++++++++++++-----------
+>  5 files changed, 202 insertions(+), 137 deletions(-)
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[...]
 
----
-v6: add note for localyesconfig.
-v5: use ':' as delimiter.
-v4: fix typo.
-v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-v2: fix typo in documentation. (Randy Dunlap)
----
- Documentation/admin-guide/README.rst | 11 +++++++++--
- scripts/kconfig/Makefile             |  2 ++
- scripts/kconfig/streamline_config.pl | 21 +++++++++++++++++++++
- 3 files changed, 32 insertions(+), 2 deletions(-)
+>  /**
+>   * irq_sim_fire - Enqueue an interrupt.
+>   *
+> - * @sim:        The interrupt simulator object.
+> - * @offset:     Offset of the simulated interrupt which should be 
+> fired.
+> + * @virq:       Virtual interrupt number to fire. It must be 
+> associated with
+> + *              an existing interrupt simulator.
+>   */
+> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
+> +void irq_sim_fire(int virq)
+>  {
+> -	if (sim->irqs[offset].enabled) {
+> -		set_bit(offset, sim->work_ctx.pending);
+> -		irq_work_queue(&sim->work_ctx.work);
+> +	struct irq_sim_irq_ctx *irq_ctx;
+> +	struct irq_data *irqd;
+> +
+> +	irqd = irq_get_irq_data(virq);
+> +	if (!irqd) {
+> +		pr_warn_ratelimited("%s: invalid irq number\n", __func__);
+> +		return;
+>  	}
+> -}
+> -EXPORT_SYMBOL_GPL(irq_sim_fire);
+> 
+> -/**
+> - * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
+> - *
+> - * @sim:        The interrupt simulator object.
+> - * @offset:     Offset of the simulated interrupt for which to 
+> retrieve
+> - *              the number.
+> - */
+> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
+> -{
+> -	return sim->irqs[offset].irqnum;
+> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
+> +
+> +	if (irq_ctx->enabled) {
+> +		set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
+> +		irq_work_queue(&irq_ctx->work_ctx->work);
+> +	}
+>  }
+> -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
+> +EXPORT_SYMBOL_GPL(irq_sim_fire);
 
-diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-index cc6151fc0845..5fb526900023 100644
---- a/Documentation/admin-guide/README.rst
-+++ b/Documentation/admin-guide/README.rst
-@@ -209,15 +209,22 @@ Configuring the kernel
-                            store the lsmod of that machine into a file
-                            and pass it in as a LSMOD parameter.
- 
-+                           Also, you can preserve modules in certain folders
-+                           or kconfig files by specifying their paths in
-+                           parameter LMC_KEEP.
-+
-                    target$ lsmod > /tmp/mylsmod
-                    target$ scp /tmp/mylsmod host:/tmp
- 
--                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-+                   host$ make LSMOD=/tmp/mylsmod \
-+                           LMC_KEEP="drivers/usb:drivers/gpu:fs" \
-+                           localmodconfig
- 
-                            The above also works when cross compiling.
- 
-      "make localyesconfig" Similar to localmodconfig, except it will convert
--                           all module options to built in (=y) options.
-+                           all module options to built in (=y) options. You can
-+                           also preserve modules by LMC_KEEP.
- 
-      "make kvmconfig"   Enable additional options for kvm guest kernel support.
- 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index c9d0a4a8efb3..f3355bd86aa5 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -123,7 +123,9 @@ help:
- 	@echo  '  gconfig	  - Update current config utilising a GTK+ based front-end'
- 	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
- 	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
-+	@echo  '                    except those preserved by LMC_KEEP environment variable'
- 	@echo  '  localyesconfig  - Update current config converting local mods to core'
-+	@echo  '                    except those preserved by LMC_KEEP environment variable'
- 	@echo  '  defconfig	  - New config with default from ARCH supplied defconfig'
- 	@echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
- 	@echo  '  allnoconfig	  - New config where all options are answered with no'
-diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-index e2f8504f5a2d..19857d18d814 100755
---- a/scripts/kconfig/streamline_config.pl
-+++ b/scripts/kconfig/streamline_config.pl
-@@ -143,6 +143,7 @@ my %depends;
- my %selects;
- my %prompts;
- my %objects;
-+my %config2kfile;
- my $var;
- my $iflevel = 0;
- my @ifdeps;
-@@ -201,6 +202,7 @@ sub read_kconfig {
- 	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
- 	    $state = "NEW";
- 	    $config = $2;
-+	    $config2kfile{"CONFIG_$config"} = $kconfig;
- 
- 	    # Add depends for 'if' nesting
- 	    for (my $i = 0; $i < $iflevel; $i++) {
-@@ -591,6 +593,20 @@ while ($repeat) {
- }
- 
- my %setconfigs;
-+my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
-+
-+sub in_preserved_kconfigs {
-+    my $kconfig = $config2kfile{$_[0]};
-+    if (!defined($kconfig)) {
-+        return 0;
-+    }
-+    foreach my $excl (@preserved_kconfigs) {
-+        if($kconfig =~ /^$excl/) {
-+            return 1;
-+        }
-+    }
-+    return 0;
-+}
- 
- # Finally, read the .config file and turn off any module enabled that
- # we could not find a reason to keep enabled.
-@@ -644,6 +660,11 @@ foreach my $line (@config_file) {
-     }
- 
-     if (/^(CONFIG.*)=(m|y)/) {
-+        if (in_preserved_kconfigs($1)) {
-+            dprint "Preserve config $1";
-+            print;
-+            next;
-+        }
- 	if (defined($configs{$1})) {
- 	    if ($localyesconfig) {
- 	        $setconfigs{$1} = 'y';
+Rather than using an ad-hoc API to queue an interrupt, why don't you
+actually implement the interface that already exists for this at
+the irqchip level (irq_set_irqchip_state, which allows the pending
+state to be set)?
+
+Thanks,
+
+         M.
 -- 
-2.25.1
-
+Jazz is not dead. It just smells funny...
